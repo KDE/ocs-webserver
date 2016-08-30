@@ -1,0 +1,39 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<?= $this->formLabel($this->element->getName(), $this->element->getLabel()) ?>
+<div>
+    <div class="bordered box image-preview" style="overflow: hidden;">
+        <img src="/theme/flatui/img/sample-profile-image-2.jpg"
+             alt="profile-image"
+             id="profile-picture-preview"
+             height="200"
+             width="200">
+    </div>
+    <!-- hack hack hack -->
+    <a class="btn btn-purple" id="add-profile-picture" onclick="$('input#profile_picture_upload').click();"
+       tabindex="13">
+        ADD PICTURE
+    </a>
+    <?= $this->content ?>
+</div>
+<!-- <input type="file" id="profile-image" style="opacity: 0;margin-bottom: 0;"> -->

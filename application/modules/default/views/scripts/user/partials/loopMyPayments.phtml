@@ -1,0 +1,89 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<ul class="nav nav-tabs well">
+    <?php
+    $inc = 1;
+    $bufferDate = '';
+    $index = 0;
+    foreach ($this->hits as $element) {
+        $loopProductId = 'loop' . $this->project_id . $inc++;
+        $date = $this->humanTiming($element->create_time);
+        $plingDate = new DateTime($element->create_time);
+        $printDate = $plingDate->format('M Y');
+        $print_date = str_replace(' ', '_', $printDate);
+        $index++;
+        if ($printDate != $bufferDate) {
+            $bufferDate = $printDate;
+            if ($index == 1) { ?>
+                <li class="active"><a href="#<?= $print_date ?>" data-toggle="tab"><?= $printDate ?></a></li>
+            <?php } else { ?>
+                <li><a href="#<?= $print_date ?>" data-toggle="tab"><?= $printDate ?></a></li>
+            <?php } ?>
+        <?php } ?>
+    <?php } ?>
+</ul>
+
+<div class="tab-content" id="my-earnings-tabs">
+    <div>
+        <?php
+        $inc = 1;
+        $bufferDate = '';
+        $index = 0;
+        foreach ($this->hits as $element) {
+        $loopProductId = 'loop' . $this->project_id . $inc++;
+        $date = $this->humanTiming($element->create_time);
+        $plingDate = new DateTime($element->create_time);
+        $printDate = $plingDate->format('M Y');
+        $print_date = str_replace(' ', '_', $printDate);
+        $index++;
+        if ($printDate != $bufferDate) {
+        $bufferDate = $printDate;
+        if ($index == 1) { ?>
+    </div>
+    <div class="tab-pane active" id="<?= $print_date ?>">
+        <?php } else { ?>
+    </div>
+    <div class="tab-pane" id="<?= $print_date ?>">
+        <?php } ?>
+        <?php } ?>
+
+        <div class="row" id="<?= $loopProductId ?>">
+
+            <div class="col-lg-1 col-md-2 col-sm-2 col-xs-2">
+                <img src="<?php echo $this->Image($element->image_small, array('width' => 80, 'height' => 80)); ?>"/>
+            </div>
+            <div class="col-lg-7 col-md-6 col-sm-6 col-xs-6">
+                <h3><?php echo $element->title; ?></h3>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                <h3 class="lightblue product-title">$<?= $element->amount ?></h3>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 " style="line-height: 65px;">
+                <?= $date['age'] ?> <?= $date['unit'] ?> <?= $this->translate('ago') ?>
+            </div>
+
+        </div>
+
+        <?php } ?>
+    </div>
+</div>

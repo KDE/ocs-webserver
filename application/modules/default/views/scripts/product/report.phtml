@@ -1,0 +1,151 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<div class="report-form modal-dialog content-modal">
+    <div class="modal-content">
+
+        <!-- modal header -->
+        <div class="modal-header">
+            <button type="button" class="close report-close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3><?= $this->translate('Report This Product') ?></h3>
+        </div>
+        <!-- /modal header -->
+
+        <!-- modal body -->
+
+        <?php if ($this->auth->hasIdentity()): ?>
+            <?php if ($this->form): ?>
+                <form class="standard-form form-report partial"
+                      action="<?= $this->form->getAction(); ?>"
+                      method="<?= $this->form->getMethod(); ?>"
+                      data-target="#modal-dialog"
+                      onsubmit="return false;">
+                    <div class="modal-body">
+                        <div class="field">
+                            <label class="required" for="project_report_category_id">Why do you want to report this
+                                                                                     project?</label>
+                            <input type="hidden"
+                                   name="project_report_category_id"
+                                   id="project_report_category_id"
+                                   value="0"
+                                   label="choose a category"/>
+
+                            <div class="selectbox">
+                                <div class="selectbox_select">
+                                    <span class="selectbox_selected" data-option="0">Choose a Category</span>
+                                    <a class="selectbox_button"></a>
+                                </div>
+
+                                <div class="selectbox_menu">
+                                    <div role="listbox">
+                                        <ul role="option">
+                                            <li class="selected"><a tabindex="-1" href="#" data-option="0">Choose a
+                                                                                                           Category</a>
+                                            </li>
+                                            <li><a tabindex="-1"
+                                                   href="#"
+                                                   title="Project belongs to another person"
+                                                   data-option="30">Project belongs to another person</a></li>
+                                            <li><a tabindex="-1"
+                                                   href="#"
+                                                   title="Project-content is pornographic"
+                                                   data-option="32">Project-content is pornographic</a></li>
+                                            <li><a tabindex="-1" href="#" title="Project is racist" data-option="31">Project
+                                                                                                                     is
+                                                                                                                     racist</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="field">
+                            <?= $this->form->short_text ?>
+                        </div>
+                        <div class="field purple italic">
+                            You can help us if you write a short description of the problem.
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="center">
+                            <button type="submit" id="send" name="send" class="btn btn-min-width btn-native">SEND
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            <?php else: ?>
+                <div class="modal-body">
+                    <?= $this->saveText; ?>
+                </div>
+                <div class="modal-footer w-logo">
+                    <div class="logo"></div>
+                </div>
+            <?php endif; ?>
+        <?php else: ?>
+            <div class="modal-body">
+                <?= $this->translate('projects.report.login') ?>
+            </div>
+            <div class="modal-footer w-logo">
+                <div class="logo"></div>
+            </div>
+        <?php endif; ?>
+
+        <!-- modal body -->
+
+    </div>
+
+</div><!-- /.report -->
+<!-- javascripts -->
+<script type="text/javascript">
+    var PartialForms = (function () {
+        return {
+            setup: function () {
+                $('body').on("submit", 'form.partial', function (event) {
+                    event.preventDefault();
+                    event.stopImmediatePropagation();
+                    var target = $(this).attr("data-target");
+                    var trigger = $(this).attr("data-trigger");
+
+                    jQuery.ajax({
+                        data: $(this).serialize(),
+                        url: this.action,
+                        type: this.method,
+                        error: function () {
+                            $(target).empty().html("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+                            return false;
+                        },
+                        success: function (results) {
+                            $(target).empty().html(results);
+                            $(target).find(trigger).trigger('click');
+                            return false;
+                        }
+                    });
+
+                    return false;
+                });
+            }
+        }
+    })();
+
+    PartialForms.setup();
+</script>

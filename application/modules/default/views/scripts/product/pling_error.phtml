@@ -1,0 +1,77 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+    <div class="support modal-dialog content-modal">
+
+        <div class="modal-content">
+            <!-- modal header -->
+            <div class="modal-header">
+                <button type="button" class="close support-close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 class="center"><?= $this->translate('Support The Product') ?></h3>
+            </div>
+            <!-- /modal header -->
+            <!-- modal body -->
+            <div class="modal-body">
+                <!-- product info -->
+                <div class="clearfix product-info">
+                    <!-- product-about -->
+                    <div class="product-about center left large">
+                        <div class="product-title"><?= $this->product->title ?></div>
+                        <div class="product-maker lightgrey"><?= $this->translate('made by') ?> <?= $this->product->username ?></div>
+                    </div>
+                    <!-- /product-about -->
+                    <!-- product-summary -->
+                    <div class="right">
+                        <img src="<?= $this->Image($this->product->image_small, array('width' => 132, 'height' => 88)); ?>"
+                             class=""
+                             alt="product">
+                    </div>
+                    <!-- /product-summary -->
+                </div>
+                <hr>
+                <div class="center">
+                    <div class="product-support"><?= $this->translate('We\'re sorry, but the user has no payment account stored.') ?></div>
+                    <div class="product-title"><?= $this->translate('Please try again later.') ?></div>
+                </div>
+                <!-- /product info -->
+            </div>
+            <!-- /modal body -->
+            <!-- modal footer -->
+            <div class="modal-footer">
+                <div class="product-maker lightgrey center">
+                    <button type="submit"
+                            class="btn btn-pling"
+                            data-dismiss="modal"
+                            aria-hidden="true"><?= $this->translate('Close') ?></button>
+                </div>
+
+            </div>
+            <!--/modal footer -->
+        </div>
+
+    </div><!-- /.support -->
+
+<?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){
+
+        });
+    ');

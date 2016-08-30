@@ -1,0 +1,71 @@
+#ignore pling-music and pling-books
+*/pling-books-html5/*
+*/pling-music-html5/*
+
+#ignore store specific images
+*/images_sys/store_*/
+#ignore eclipse files
+.buildpath
+.project
+.settings/*
+
+#ignore PHPStorm Files
+.idea/*
+
+#ignore local Vagrant dir
+.vagrant/*
+
+#ignore local tmp dir
+*/.tmb/*
+
+#ignore local dir
+local/*
+
+phing/*
+
+*.local*
+--.htaccess*
+.htaccess*
+.htpasswd*
+
+*.orig
+*.tsm
+
+*.ova
+
+*/.well-known
+
+loadstorm-41440.html
+mu-2cc5c638-f7c471ad-be42f5c0-99b8cf30.txt
+mu-9ff52416-7b5ae544-c8bac39d-dc810a54
+
+#ignore thumbnails created by windows
+Thumbs.db
+#Ignore files build by Visual Studio
+*.obj
+*.exe
+*.pdb
+*.user
+*.aps
+*.pch
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.tlb
+*.tlh
+*.bak
+*.cache
+*.ilk
+*.log
+[Bb]in
+[Dd]ebug*/
+*.lib
+*.sbr
+obj/
+[Rr]elease*/
+_ReSharper*/
+[Tt]est[Rr]esult*
+
+httpdocs/src/status.jsx

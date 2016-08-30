@@ -1,0 +1,43 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
+$helperAuthUser = new Default_View_Helper_GetAuthUser();
+$member = $helperAuthUser->getAuthUser();
+?>
+<ul class="dropdown-menu small" role="menu" aria-labelledby="user-dropdown-menu">
+    <li class="presentation"><a class="black"
+                                role="menuitem"
+                                href="/product/add/"><?= $this->translate('Add Product') ?></a></li>
+    <li class="presentation"><a class="black" role="menuitem"
+                                href="<?= $helperBuildMemberUrl->buildMemberUrl($member->member_id, 'products') ?>"><?= $this->translate('My Products') ?></a>
+    </li>
+    <li class="presentation"><a class="black"
+                                role="menuitem"
+                                href="/payments/"><?= $this->translate('My Payments') ?></a></li>
+    <li class="presentation"><a class="black" role="menuitem"
+                                href="/incomings/"><?= $this->translate('My Incomings') ?></a></li>
+    <li class="presentation"><a class="black"
+                                role="menuitem"
+                                href="/settings/"><?= $this->translate('My Settings') ?></a></li>
+    <li class="presentation"><a class="black" role="menuitem" href="/logout/"><?= $this->translate('Logout') ?></a></li>
+</ul><!-- END #user-menu -->

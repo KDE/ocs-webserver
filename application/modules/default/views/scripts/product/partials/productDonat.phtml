@@ -1,0 +1,180 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+//$plingData = $this->userPlings($this->product->project_id);
+$helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
+$helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
+$helperImage = new Default_View_Helper_Image();
+
+$auth = Zend_Auth::getInstance();
+$btnName = $auth->hasIdentity() ? 'Confirm Donation' : 'Anonymous Pling';
+$this->headScript()
+    ->appendFile('https://www.paypalobjects.com/js/external/dg.js');
+?>
+
+ <form id="support-form"
+          class="standard-form partialpaypal"
+          method="post"
+          action="<?= $this->urlPay ?>"
+          data-target="#overlays">
+
+ <div id="pling-box" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div class="row" style="border-bottom: 2px solid #ccc; padding-bottom: 20px">
+
+          <div class="col-lg-6">
+              <div class="row" style="text-align: center; padding-top:20px;">
+                <span style="padding-top:10px; padding-right:5px;">
+                support <?= $this->member->username ?>  </span>
+                  <div class="product-maker-thumbnail relative" style="">
+                    <a href="<?php echo $helperBuildMemberUrl->buildMemberUrl($this->member->member_id); ?>"
+                       title="<?= $this->member->username ?>">                  
+                        <img src="<?= $helperImage->Image($this->member->profile_image_url, array('width' => 40, 'height' => 40)) ?>"
+                             alt="product-maker" width="40" height="40"
+                             class="sidebar-profile-image">
+                    </a>
+                  </div>
+              </div>
+              <div class="row" style="text-align: center; padding-top:20px;">
+                  
+                      <span style="display: block; font-weight: bold; color: #2B81C5">For The Product</span> 
+                   <div style="display: block; padding-top: 10px;  margin: 0 auto; width: 40%; border-bottom: 1px solid #ccc"></div>
+                   <span style="display: block;padding-top: 10px; "><?= $this->product->title ?></span>
+              
+                  
+              </div>
+            </div>
+         
+           <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+               <img style="border-radius: 2px; max-width: 240px; max-height: 150px; padding-top: 10px" src="<?= $helperImage->Image($this->product->image_small); ?>"/>            
+           </div>
+
+           <?php /*
+           <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12" style="text-align: center; padding-top:20px;">
+               <span style="display: block; font-weight: bold; color: #2B81C5">Suport The Product</span> 
+               <div style="display: block; padding-top: 10px;  margin: 0 auto; width: 40%; border-bottom: 1px solid #ccc"></div>
+               <span style="display: block;padding-top: 10px; "><?= $this->product->title ?></span>
+               <span style="display: block; padding: 20px 0px; color: #ccc; font-size: smaller;">made by <?= $this->member->username ?></span>
+                             
+           </div>
+
+           */ ?>
+   </div>
+   <div class="row" style="padding-top: 25px">
+       <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                       <div class="donation-box" >                          
+                           <div class="donation-box-payment" >
+                               
+                           <div class="payment-options">
+                               <label for="amount"><?=$this->translate('Support with')?></label>
+
+                               <div class="number-input">
+                                    <span class="glyphicon glyphicon-usd" style="padding-top:10px;"></span>
+                                    <input name="amount" id="amount" type="number" value="10" min="1" max="500" step="0.25"/>
+                               </div>
+                               
+                               <div class="options">
+                                   <span title="5" class="option"> 5 </span><span class="optionPkt"> - </span>
+                                   <span title="10" class="option"> 10 </span><span class="optionPkt"> - </span>
+                                   <span title="25" class="option"> 25 </span><span class="optionPkt"> - </span>
+                                   <span title="50" class="option"> 50 </span><span class="optionPkt"> - </span>
+                                   <span title="100" class="option"> 100 </span><span class="optionPkt"> - </span>
+                                   <span title="200" class="option"> 200 </span><span class="optionPkt"> - </span>
+                                   <span title="500" class="option"> 500 </span>
+                                   
+                               </div>
+                           </div>
+                             
+                                   <div class="pling-it">
+                                       <?php if (empty($this->product->paypal_mail) && empty($this->product->dwolla_id)) : ?>
+                                           <a id="pling-start" href="javascript:;">
+                                               <span class="btn-pling-2 disabled">no payment option available</span>
+                                           </a>
+                                       <?php else: ?>
+                                           <div class="payment-providers" style="padding-bottom: 20px;height:40px;float:left;">
+                                               <?php if (false === empty($this->product->paypal_mail)) { ?>
+                                                   <div class="input-group" style="padding-left:10px; height:40px">
+                                                   <!-- class="input-group-addon" -->
+                                               <span>
+                                                   <input type="radio" name="provider" value="paypal" checked>
+                                               </span>
+                                               <span class="payment-icon">
+                                                   <img src="/theme/flatui/img/logo_paypal.png" style="width:55px; height:15px" />
+                                               </span>
+                                                   </div>
+                                               <?php } ?>
+                                               <?php if (false === empty($this->product->dwolla_id)) {
+                                                   $checked = '';
+                                                   if (empty($this->product->paypal_mail)) {
+                                                       $checked = 'checked';
+                                                   }
+                                                   ?>
+                                                   <div class="input-group">
+                                               <span class="input-group-addon">
+                                                   <input type="radio" name="provider" value="dwolla" <?= $checked ?>>
+                                               </span>
+                                               <span class="payment-icon">
+                                                   <img src="/theme/flatui/img/new/dwolla.png"/>
+                                               </span>
+                                                   </div>
+                                               <?php } ?>
+                                           </div>
+
+                                           
+                                       <?php endif; ?>
+                                   </div>
+                              
+                           </div>
+                       </div>
+                               
+       </div>
+       <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+           <textarea id="comment" name="comment"
+             placeholder="&nbsp;<?= $this->translate('Write a comment (publicly visible)') ?>" rows="4"
+             class="col-md-12 col-lg-12 col-sm-12 col-xs-12"></textarea>
+       </div>
+    </div>
+        
+       
+        <div class="row" style="padding-top: 30px">
+            
+               
+                <?php if ($auth->hasIdentity()) { ?>
+                    <button type="submit" id="submit_pling" class="btn btn-native pull-right">
+                        <?= $this->translate($btnName) ?>
+                    </button>
+                <?php } else { ?>
+                    <a href="javascript:;" class="btn btn-native disabled pull-right ">
+                        Please login to donate
+                    </a>
+                <?php } ?>
+            
+        </div>
+    </div>
+</form>
+
+    
+<?php
+$this->inlineScript()->appendScript(
+    '$(document).ready(function(){
+        PartialPayPal.initPayPalForm();
+    });'
+);

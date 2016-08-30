@@ -1,0 +1,101 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+  $pageCount = $this->featureProducts->count();
+?>
+    <div id="featureProducts" class="row" style=" height:100%">
+        <div id="featureProducts-content" style="height:100%; width: 100%; padding-top: 30px;padding-bottom: 30px">
+        <?php         
+        foreach ($this->featureProducts as $this->product): ?>            
+                    <div class="col-lg-12">
+                      
+                        <div style="width: 1000px; display: block;margin:0 auto; border:1px solid #DFDCDA; border-radius: 3px; background-color: white;">
+                            <a style="float: left; margin-right: 20px" title="<?=$this->truncate($this->product['description'], 200, '...', false, true)?>" href="<?=$this->buildProductUrl($this->product['project_id'],'')?>">
+                               <img class="productimg " src="<?=$this->Image($this->product['image_small'], array('width' => 500, 'height' => 300))?>"  style="width: 500px; max-height: 300px; "/>
+                            </a>
+                               <div class="" style="display:block; width:450px; float:right; margin-right:20px;padding-top: 10px">
+                               <a href="<?=$this->buildProductUrl($this->product['project_id'],'')?>"><?=$this->product['title']?></a>
+                               <span  style="display: block; font-size: small;"><?=$this->fetchCategoriesForProductAsString($this->product['project_id'])?> </span>
+
+                               <span style="display:block; padding-top: 10px; font-size: small;">
+                               <a href="<?php echo $this->buildMemberUrl($this->product['member_id']); ?>" style="float: left">
+                                   <figure >
+                                       <img src="<?php echo $this->Image($this->product['profile_image_url'], array('width' => '50', 'height' => '50', 'crop' => 2)); ?>" style="width: 30px; height: 30px; border-radius: 50%"/>
+                                   </figure>
+                                        
+                               </a>
+                                  <span style="line-height:2; padding-left:5px;"> created by <?php echo $this->product['username']; ?> </span>
+                               </span>
+                              
+
+                                <span style="display: block; font-size: small;margin-top:10px;">
+                                <?php
+                                    $count_plingers = $this->product['count_plingers'];
+                                    $count_comments = $this->product['count_comments'];
+                                    
+                                    echo ($count_plingers>0 ? '<span class="cntSupporters" style="padding-right:20px">'.$count_plingers.' supporter':'').($count_plingers>1?'s':'').($count_plingers>0?'</span>':'') ;
+                                    echo ($count_comments>0 ? '<span class="cntComments">'.$count_comments.' comment':'').($count_comments>1?'s':'').($count_comments>0?'</span>':'') ;
+                                    
+                                ?>
+                                </span>
+                                
+                                <span style="display: block; font-size: small;padding-top: 15px">                                  
+                                        <?=$this->truncate($this->product['description'], 400, '...', false, true)?>
+                                </span>
+                                <div class="rating" style="width: 100%;font-size: small;padding-top: 20px; ">
+                                    <?php                
+                                            $this->widgetRating = new stdClass();
+                                            $this->widgetRating->project_id = $this->product['project_id'];
+                                            $this->widgetRating->laplace_score = $this->product['laplace_score'];
+                                            $this->widgetRating->count_likes = $this->product['count_likes']; 
+                                            $this->widgetRating->count_dislikes =$this->product['count_dislikes'];
+                                            echo $this->render('partials/widgetRating.phtml'); 
+                                    ?>
+                                </div>
+                                <span class="time text-center" style="font-size: small;display: block"><?=$this->printDate($this->product['changed_at']==null?$this->product['created_at']:$this->product['changed_at'])?>
+                                </span>
+
+                                </div>
+
+                              <div style="clear: both"></div>
+                          </div>
+
+                         
+                           
+                    </div>                           
+        <?php endforeach;?>
+
+        
+         <div class="" style=" height: 30px; float: right ">        
+                <?php if ($pageCount > 1) echo $this->paginationControl($this->featureProducts, 'Sliding', 'home/partials/paginationControl.phtml',
+                    array('params' => array(), 'dom_target' => 'div#featureProductsContainer')); ?>
+        </div>  
+        
+      </div>
+    </div>
+
+    
+
+
+
+
+

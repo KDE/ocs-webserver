@@ -1,0 +1,58 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$titleImage = $this->Image($this->project->image_small, array('width' => 139, 'height' => 94));
+$imageTag = '<img src="' . $titleImage . '" alt="product-image" width="139">';
+if (strpos($titleImage, 'default.png') !== false) {
+    $imageTag = '';
+}
+if (null != ($this->project->image_big)): ?>
+<div id="product-profile-header" class="profile-header" style="background: url('<?= $this->Image($this->project->image_big, array('width' => 1170, 'height' => 300)); ?>');">
+    <?php else: ?>
+    <div id="product-profile-header-small" class="profile-header">
+        <?php endif; ?>
+        <div id="product-profile-header-content" class="profile-header-content clearfix">
+            <div class="alignleft textshadow" id="product-profile-image">
+                <?= $imageTag ?>
+            </div>
+
+            <div class="alignleft textshadow" id="summary">
+                <h3 id="product-profile-title" class="light"><?php echo $this->project->title; ?></h3>
+
+                <div id="product-description">
+                    <a href="<?php echo $this->buildExploreUrl($this->project->project_category_id); ?>"><?php echo $this->project->cat_title; ?></a>
+                    by <a
+                        href="<?php echo $this->buildMemberUrl($this->member->member_id, 'aboutme'); ?>"><?php echo $this->member->username; ?></a>
+                </div>
+            </div>
+            <div class="alignright" id="pling-summary">
+                <div id="pling-summary-text"
+                     class="black"><?php echo $this->project->collectPlingsAll; ?><?php echo $this->translate('projects.head.plings_collected'); ?></div>
+                <a class="btn partial" href="<?= $this->buildProductUrl($this->project->project_id, 'pling') ?>"
+                   data-target="#modal-dialog" data-toggle="#modal-dialog">
+                    <button class="bluebutton">pling</button>
+                </a>
+            </div>
+        </div>
+        <!-- END #product-profile-header-content -->
+    </div>
+    <!-- END #product-profile-header -->

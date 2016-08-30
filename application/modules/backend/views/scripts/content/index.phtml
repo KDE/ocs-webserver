@@ -1,0 +1,185 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<h3>Content</h3>
+<?php if (!count($this->paginator)): ?>
+    Keine Content-Einträge vorhanden.
+    <?php
+else:
+    $lfdNr = 0;
+    ?>
+    <div id="infomsg" style="" class="ui-state-highlight ui-corner-all"></div>
+    <div id="dialog" style="display: none;"></div>
+    <div class="row">
+        <div id="title" class="title head">Interner Titel</div>
+        <div id="status" class="status head">Aktiv</div>
+        <br style="clear: both;"/>
+    </div>
+
+    <?php foreach ($this->paginator as $item):
+    $lfdNr++;
+    ?>
+    <div id="row<?= $item->content_id; ?>" class="row">
+        <div id="title<?= $item->content_id; ?>"
+             class="title data <?= $this->evenOdd($lfdNr); ?>"><?= $item->title; ?></div>
+        <div id="status<?= $item->content_id; ?>"
+             class="status data <?= $this->evenOdd($lfdNr); ?>"><?= ($item->is_active) ? "Ja" : ""; ?></div>
+        <a href="#" id="details_<?= $item->content_id; ?>"
+           class="ui-state-default ui-corner-all button_normal showDetails">Details anschauen</a>
+        <br style="clear: both;"/>
+    </div>
+    <div class="datatable_detailsarea details_<?= $item->content_id; ?>" style="width:580px;">
+        <div class="dataDetailsContent fleft" style="width:440px;">
+            <strong>Interner Titel:</strong><br/><?= $item->title; ?><br/>
+            <strong>Inhalt:</strong><br/>
+            <?= substr(strip_tags(stripslashes($item->content)), 0, 50) . " ..."; ?>
+            <br/><br/>
+            Erstellt am: <?= $item->created_at; ?><br/>
+            Zuletzt geändert: <?= $item->changed_at; ?><br/>
+        </div>
+        <div class="dataDetailsButtons fleft">
+            <a href="/backend/content/edit/id/<?= $item->content_id; ?>"
+               class="ui-state-default ui-corner-all button_normal">Bearbeiten</a><br/><br/>
+            <?php if ($item->is_active): ?>
+                <a href="#" id="deactivate_<?= $item->content_id; ?>"
+                   class="ui-state-default ui-corner-all button_normal deactivate">Deaktivieren</a><br/><br/>
+                <a href="#" id="activate_<?= $item->content_id; ?>"
+                   class="ui-state-default ui-corner-all button_normal activate noshow">Aktivieren</a><br/><br/>
+            <?php else: ?>
+                <a href="#" id="deactivate_<?= $item->content_id; ?>"
+                   class="ui-state-default ui-corner-all button_normal deactivate noshow">Deaktivieren</a><br/><br/>
+                <a href="#" id="activate_<?= $item->content_id; ?>"
+                   class="ui-state-default ui-corner-all button_normal activate">Aktivieren</a><br/><br/>
+            <?php endif; ?>
+            <a href="#" id="delete_<?= $item->content_id; ?>"
+               class="ui-state-default ui-corner-all button_normal delete">Löschen</a>
+        </div>
+        <div class="clear"></div>
+    </div>
+<?php endforeach; ?>
+
+    <br/><?php echo $this->paginator; ?><br/>
+<?php endif; ?>
+<br/><br/>
+<a href='/backend/content/add' class="ui-state-default ui-corner-all button_normal" id="4">Content hinzufügen</a>
+<div class="legendArea">
+
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".showDetails").click(function () {
+            var elementId = $(this).attr("id");
+
+            $(".datatable_detailsarea." + elementId).slideToggle();
+
+            if ($(this).parent().hasClass("open")) {
+                $(this).parent().removeClass("open");
+            } else {
+                $(this).parent().addClass("open");
+            }
+        });
+
+        $(".activate").click(function () {
+            var itemId = $(this).attr("id");
+            var tmp = itemId.split("_");
+            itemId = tmp[1];
+
+            var clickElement = $(this);
+
+            $.post('/backend/content/setstatus/', {id: itemId, status: 1}, function (response) {
+                if (response) {
+                    $("#infomsg").html("Content erfolgreich aktiviert");
+                } else {
+                    $("#infomsg").html("Konnte Content nicht aktivieren");
+                }
+
+                $("#infomsg").fadeIn("normal");
+                $(clickElement).hide();
+                $("#deactivate_" + itemId).show();
+
+                $("#infomsg").fadeOut(4000);
+                $("#status" + itemId).html("Ja");
+            });
+        });
+
+        $(".deactivate").click(function () {
+            var itemId = $(this).attr("id");
+            var tmp = itemId.split("_");
+            itemId = tmp[1];
+
+            var clickElement = $(this);
+
+            $.post('/backend/content/setstatus/', {id: itemId, status: 0}, function (response) {
+                if (response) {
+                    $("#infomsg").html("Content erfolgreich deaktiviert");
+                } else {
+                    $("#infomsg").html("Konnte Content nicht deaktivieren");
+                }
+
+                $("#infomsg").fadeIn("normal");
+                $(clickElement).hide();
+                $("#activate_" + itemId).show();
+                $("#infomsg").fadeOut(4000);
+                $("#status" + itemId).html("");
+            });
+        });
+
+        $(".delete").click(function () {
+            var clickelement = $(this);
+            var itemId = $(this).attr("id");
+            var tmp = itemId.split("_");
+            itemId = tmp[1];
+
+
+            $("#dialog").html("Möchten Sie diesen Content wirklich löschen?");
+
+            $("#dialog").dialog(
+                {
+                    title: "Content löschen",
+                    modal: true,
+                    resizable: false,
+                    buttons: {
+                        "Nein": function () {
+                            $("#dialog").dialog('close');
+                        }, "Ja": function () {
+                            $(this).dialog('close');
+                            var url = "/backend/content/delete/id/" + itemId;
+
+                            $.post(url, function (data) {
+                                $('#infomsg').html("Content gelöscht");
+                                $('#infomsg').show();
+                                $("#infomsg").fadeOut(4000);
+                                //$('.date #'+elementid).hide();
+                                $("#row" + itemId).remove();
+                                $(".details_" + itemId).remove();
+                            });
+                        }
+                    }
+                });
+
+
+            $("#dialog").dialog('open');
+
+        });
+    });
+</script>

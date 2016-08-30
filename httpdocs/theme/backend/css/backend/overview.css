@@ -1,0 +1,29 @@
+@CHARSET "UTF-8";
+
+#overviewText {
+	float: left;
+	width: 45%;
+	padding: 10px;
+	background-color: #e8e8e8;
+	margin-right: 10px;
+}
+
+#overviewImages {
+	float: left;
+	width: 45%;
+	padding: 10px;
+	background-color: #e8e8e8;
+}
+
+#contImgList {
+	list-style-type: none;
+	padding: 0px;
+	margin: 0px;
+	background-color: #e8e8e8;
+}
+
+#contImgList li {
+	float: left;
+	margin-right: 10px;
+	margin-bottom: 5px;
+}

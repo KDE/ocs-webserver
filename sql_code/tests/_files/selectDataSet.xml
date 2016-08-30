@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+    <comment id="1" fullName="B.A. Baracus" emailAddress="ba@a-team.com" website="http://www.a-team.com"
+             comment="I pitty the fool that doesnt test!"/>
+    <comment id="2" fullName="Martin Fowler" emailAddress="fowler@acm.org" website="http://martinfowler.com/"
+             comment="Models are not right or wrong; they are more or less useful."/>
+</dataset>

@@ -1,0 +1,133 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<?= $this->partial('yui.phtml'); ?>
+
+<style type="text/css">
+    .chart {
+        width: 700px;
+        height: 450px;
+        margin-bottom: 10px;
+    }
+
+    .chart_title {
+        display: block;
+        font-size: 1.2em;
+        font-weight: bold;
+        margin-bottom: 0.4em;
+    }
+
+    #tabContainer {
+        width: 720px;
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("body").addClass("yui-skin-sam");
+
+        YAHOO.widget.Chart.SWFURL = "/tools/yui_2.9.0/build/charts/assets/charts.swf";
+
+        var dashboardTabView = new YAHOO.widget.TabView();
+
+        dashboardTabView.addTab(new YAHOO.widget.Tab({
+            label: 'New Members',
+            content: '<div class="chart" id="newmemberchart"></div>',
+            active: true
+        }));
+
+        dashboardTabView.addTab(new YAHOO.widget.Tab({
+            label: 'New Products',
+            content: '<div class="chart" id="newprojects"></div>'
+        }));
+
+        dashboardTabView.appendTo('tabContainer');
+
+
+        // source for memberChart
+        var newmemberDataSource = new YAHOO.util.XHRDataSource("/backend/index/getnewmemberstats");
+        newmemberDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
+        newmemberDataSource.responseSchema = {
+            fields: ['memberdate', 'daycount'],
+            resultsList: 'results'
+            // metaFields: {totalRecords: "totalRecords" }
+        };
+
+        var memberSeriesDef = [
+            {displayName: "Members", yField: "daycount"}
+        ];
+
+        YAHOO.pling.getMemberDataTipText = function (item, index, series) {
+            var toolTipText = item[series.yField] + " new Members at";
+            toolTipText += "\n" + item.memberdate;
+            return toolTipText;
+        }
+
+        var amountYAxis = new YAHOO.widget.NumericAxis();
+        amountYAxis.majorUnit = 2;
+
+        var newMemberChart = new YAHOO.widget.LineChart('newmemberchart', newmemberDataSource, {
+            xField: 'memberdate',
+            series: memberSeriesDef,
+            dataTipFunction: YAHOO.pling.getMemberDataTipText,
+            yAxis: amountYAxis,
+            wmode: 'opaque'
+        });
+
+        //***************************************************************************************************
+
+        // source for projectCharts
+        var newprojectDataSource = new YAHOO.util.XHRDataSource("/backend/index/getnewprojectstats");
+        newprojectDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
+        newprojectDataSource.responseSchema = {
+            fields: ['projectdate', 'daycount'],
+            resultsList: 'results'
+            // metaFields: {totalRecords: "totalRecords" }
+        };
+
+        var projectSeriesDef = [
+            {displayName: "Products", yField: "daycount"}
+        ];
+
+        YAHOO.pling.getProjectDataTipText = function (item, index, series) {
+            var toolTipText = item[series.yField] + " new Products at";
+            toolTipText += "\n" + item.projectdate;
+            return toolTipText;
+        }
+
+
+        var newProjectChart = new YAHOO.widget.LineChart('newprojects', newprojectDataSource, {
+            xField: 'projectdate',
+            series: projectSeriesDef,
+            dataTipFunction: YAHOO.pling.getProjectDataTipText,
+            yAxis: amountYAxis,
+            wmode: 'opaque'
+        });
+
+
+    });
+</script>
+<h2>pling.it Backend</h2>
+<div id="tabContainer">
+
+</div>

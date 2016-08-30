@@ -1,0 +1,44 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/theme/flatui/css/bootstrap/colorpicker/css/bootstrap-colorpicker.min.css" rel="stylesheet">
+    <link href="/theme/flatui/css/stylesheet.css" rel="stylesheet">
+
+    <script src="//code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="//code.angularjs.org/1.3.0/angular.min.js"></script>
+    <script src="/theme/flatui/js/lib/bootstrap-colorpicker-module.js"></script>
+    <script src="/theme/flatui/js/lib/jquery.zclip.min.js"></script>
+    <script src="/theme/flatui/js/script.js?<?= APPLICATION_VERSION ?>"></script>
+    <?php echo $this->authCode; ?>
+</head>
+<body class="body-external">
+<div class="supporter-box-container" data-ng-app="widgetApp" data-ng-controller="WidgetController">
+    <?php echo $this->render('widget/partial/widgetbox.phtml'); ?>
+</div>
+</body>
+</html>

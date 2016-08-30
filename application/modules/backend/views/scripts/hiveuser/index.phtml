@@ -1,0 +1,95 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<?php if($this->step ==0) {?>
+	<h3>Number of all not yet importetd users: <?= $this->coutAll ?></h3>
+	
+	
+	<form action="/backend/hiveuser">
+	<input type="hidden" name="step" value="10">
+	<button>Start Import</button>
+	</form>
+	
+	<br/><br/><br/><br/>
+	<p>Info: <?= $this->info ?></p>
+
+
+<?php } else if($this->step ==10) {?>
+
+
+	<h3>Step 2 - Import...</h3>
+	<h4><span id="info_text"></span></h4>
+	<p><span id="info"></span></p>
+	<br/><br/><br/><br/>
+	<p>Info: <?= $this->info ?></p>
+	
+	
+	<script type="text/javascript">
+		startImport(0,500);
+		var importCounter = 0;
+		var errorCounter = 0;
+		function startImport(offset, limit) {
+			
+	        var url_string = '/backend/hiveuser/start-import-all-ajax?&limit='+limit+'&offset='+offset;
+	
+	        jQuery.ajax({
+	            url: url_string,
+	            type: 'get',
+	            error: function () {
+	                //alert("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+	                //$('#info_text').html('<b>Status: ERROR ' + results['Message'] + '</b>');
+	                //abortTimer();
+	            	errorCounter++;
+	            	if(errorCounter<100) {
+	            		startImport(0,500);
+	            	} else {
+	            		alert("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+	            	}
+	                return false;
+	            },
+	            success: function (results) {
+	            	
+	                is_done = results['IsImportDone'];
+	                newOffset = results['offset'];
+	                newLimit = results['limit'];
+	                counter = results['ImportCounter'];
+	                totalCounter = results['TotalCounter'];
+	                importCounter = importCounter + counter;
+	                //$('#info_text').html('<b>' + results['ImportCounter'] + ' projects with ' + results['ImportFileCounter'] + ' files imported!</b>');
+	            	$('#info_text').html('<b>Imported ' + importCounter + ' users. ' + totalCounter + ' users left.</b>');
+	                if(is_done && counter>0) {
+	                	
+	                	//abortTimer();
+	                	//alert('Done');
+	                	$('#info').html(results['Message']);
+	                	startImport(0,500);
+	                } else if(is_done && counter==0) {
+	                	$('#info_text').html('<b>Import Done! Imported ' + importCounter + ' projects. <p><a href="/backend/hive">Back to Start</a></p></b>');
+	                }
+	                return false;
+	            }
+	        });
+		}
+	</script>
+	
+<?php }?>
+

@@ -1,0 +1,27 @@
+<main id="explore-content">
+
+    <section class="wrapper" id="products-wrapper">
+
+        <aside class="col-lg-2 col-md-2 col-sm-2 col-xs-2" id="explore-sidebar">
+            <?php
+            echo $this->render('explore/partials/filter.phtml', array('categories' => $this->categories, 'filters' => $this->filters, 'requestedFilter' => $this->requestedFilter));
+            ?>
+        </aside>
+
+        <section class="explore-products col-lg-10 col-md-10 col-sm-10 col-xs-10">
+
+            <h1 class="search-heading">Search results for "<?= $this->searchText; ?>"</h1>
+
+            <div class="product-list">
+                <?php echo $this->partialLoop('partials/searchResult.phtml', $this->hits); ?>
+            </div>
+
+            <section class="explore-footer">
+                <?php echo $this->paginationControl($this->pagination, 'Sliding', 'partials/paginationControl.phtml', array('params' => $this->inputFilter)); ?>
+            </section>
+
+        </section>
+
+    </section>
+
+</main>

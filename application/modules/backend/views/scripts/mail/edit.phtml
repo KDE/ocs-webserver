@@ -1,0 +1,61 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<h3>eMail-Template bearbeiten</h3>
+<?php if ($this->form): ?>
+    <?= $this->form; ?>
+    <br/>
+    <a href='/backend/mail' class="ui-state-default ui-corner-all button_normal" id="4">Abbrechen</a><br/><br/>
+<?php else: ?>
+    <?= $this->saveText; ?>
+<?php endif; ?>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.datepicker.regional['de'] = {
+            clearText: 'löschen', clearStatus: 'aktuelles Datum löschen',
+            closeText: 'schließen', closeStatus: 'ohne Änderungen schließen',
+            prevText: '&#x3c;zurück', prevStatus: 'letzten Monat zeigen',
+            nextText: 'Vor&#x3e;', nextStatus: 'nächsten Monat zeigen',
+            currentText: 'heute', currentStatus: '',
+            monthNames: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni',
+                'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
+            monthNamesShort: ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun',
+                'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'],
+            monthStatus: 'anderen Monat anzeigen', yearStatus: 'anderes Jahr anzeigen',
+            weekHeader: 'Wo', weekStatus: 'Woche des Monats',
+            dayNames: ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'],
+            dayNamesShort: ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'],
+            dayNamesMin: ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'],
+            dayStatus: 'Setze DD als ersten Wochentag', dateStatus: 'Wähle D, M d',
+            dateFormat: 'dd.mm.yy', firstDay: 1,
+            initStatus: 'Wähle ein Datum', isRTL: false
+        };
+        $.datepicker.setDefaults($.datepicker.regional['de']);
+
+        $("#start_date").datepicker({
+            dateFormat: 'dd.mm.yy',
+            showButtonPanel: true,
+            numberOfMonths: 2
+        });
+
+    });
+</script>

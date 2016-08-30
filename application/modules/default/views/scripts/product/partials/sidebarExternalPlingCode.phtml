@@ -1,0 +1,263 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$helperExternalSupporterBoxSource = new Default_View_Helper_ExternalSupporterBoxSource();
+$helperExternalPlingButtonSource = new Default_View_Helper_ExternalPlingButtonSource();
+$helperExternalDonationListSource = new Default_View_Helper_ExternalDonationListSource();
+$paymentProvider = true;
+if (empty($this->product->paypal_mail) && empty($this->product->dwolla_id)) :
+    $paymentProvider = false;
+endif;
+if (!isset($this->product->project_uuid)) {
+    ?>
+    <!-- error -->
+    <?php echo $this->translate('product.error.button_code'); ?>
+    <!-- /error -->
+<?php } else { ?>
+
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#support-widget" data-toggle="tab">Widget</a></li>
+        <?php if ($paymentProvider) : ?>
+            <li><a href="#support-box" data-toggle="tab">Box</a></li>
+            <li><a href="#support-button" data-toggle="tab">Button</a></li>
+            <li><a href="#support-list" data-toggle="tab">List</a></li>
+        <?php endif; ?>
+    </ul>
+
+    <div class="tab-content" id="support-panels">
+
+        <div class="tab-pane active" id="support-widget">
+
+            <!-- ANGULAR JS APP -->
+
+            <article class="col-lg-12 col-md-12 col-sm-12 col-xs-12 embed-option embed-option"
+                     data-ng-app="widgetApp"
+                     data-ng-controller="WidgetController">
+                <div class="title"><h3>Widget</h3></div>
+
+                <div id="configuration-options">
+
+                    <!-- tab menu -->
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#general-config"
+                                              data-toggle="tab"
+                                              ng-click="getEmbedCode()">General</a>
+                        </li>
+                        <li><a href="#colors-config" data-toggle="tab" ng-click="getEmbedCode()">Colors</a></li>
+                        <li><a href="#widget-embed-code" data-toggle="tab" ng-click="getEmbedCode()">Embed</a></li>
+                    </ul>
+                    <!-- /tab menu -->
+
+                    <!-- tab panels -->
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="general-config">
+                            <div class="row">
+                                <div class="field col-lg-12 col-md-12 col-sm-12 col-xs-12" ng-if="pProvider == true">
+                                    <label>show donations field</label>
+                                    <input type="checkbox" data-ng-model="amounts.showDonationAmount"
+                                           data-ng-init="amounts.showDonationAmount=<?= var_export($this->widgetConfig->amounts->showDonationAmount, true) ?>"/>
+                                </div>
+                                <div class="field col-lg-12 col-md-12 col-sm-12 col-xs-12" ng-if="pProvider == true">
+                                    <label>show supporters</label>
+                                    <input type="checkbox"
+                                           data-ng-model="showSupporters"
+                                           data-ng-init="showSupporters=<?= var_export($this->widgetConfig->showSupporters, true) ?>"/>
+                                </div>
+                                <div class="field col-lg-12 col-md-12 col-sm-12 col-xs-12" ng-if="pProvider == true">
+                                    <label>show comments</label>
+                                    <input type="checkbox"
+                                           data-ng-model="showComments"
+                                           data-ng-init="showComments=<?= var_export($this->widgetConfig->showComments, true) ?>"/>
+                                </div>
+                                <div class="field col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <label>pling logo</label>
+                                    <input type="radio" data-ng-model="logo" value="grey"><span>grey</span>
+                                    <input type="radio" data-ng-model="logo" value="orange"><span>orange</span>
+                                    <input type="radio" data-ng-model="logo" value="icon"><span>icon</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane" id="colors-config">
+                            <div class="row">
+                                <div class="field col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <label>widget background</label>
+                                    <input class="color-input" colorpicker maxlength="7" size="7"
+                                           data-ng-model="colors.widgetBg" value="{{colors.widgetBg}}"/>
+                                </div>
+                                <div class="field col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <label>widget content</label>
+                                    <input class="color-input" colorpicker maxlength="7" size="7"
+                                           data-ng-model="colors.widgetContent" value="{{colors.widgetContent}}"/>
+                                </div>
+                                <div class="field col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <label>headline</label>
+                                    <input class="color-input" colorpicker maxlength="7" size="7"
+                                           data-ng-model="colors.headline" value="{{colors.headline}}"/>
+                                </div>
+                                <div class="field col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <label>text</label>
+                                    <input class="color-input"
+                                           colorpicker
+                                           maxlength="7"
+                                           size="7"
+                                           data-ng-model="colors.text"
+                                           value="{{colors.text}}"/>
+                                </div>
+                                <div class="field col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <label>button background</label>
+                                    <input class="color-input"
+                                           colorpicker
+                                           maxlength="7"
+                                           size="7"
+                                           data-ng-model="colors.button"
+                                           value="{{colors.button}}"/>
+                                </div>
+                                <div class="field col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <label>button text</label>
+                                    <input class="color-input" colorpicker maxlength="7" size="7"
+                                           data-ng-model="colors.buttonText" value="{{colors.buttonText}}"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane" id="widget-embed-code">
+                            <div class="row">
+                                <div id="button-input" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <textarea name="widget-code" id="widget-code"
+                                              class="light full-width">{{embedCode}}</textarea>
+                                </div>
+                                <div class="button col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <button id="get-widget-box-code" class="btn btn-min-width btn-native"
+                                            data-clipboard-target="#widget-code">get the code!
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- /tab panels -->
+
+                </div>
+
+                <div id="widget-preview">
+
+                    <?php echo $this->render('widget/partial/widgetbox.phtml', array('project' => $this->product, 'supporting' => $this->supporting, 'comments' => $this->comments, 'authCode' => $this->authCode, 'widgetConfig' => $this->widgetConfig, 'paymentProvider' => $paymentProvider)); ?>
+
+                </div>
+
+            </article>
+
+            <!--  ANGULAR JS APP -->
+
+        </div>
+        <?php if ($paymentProvider) : ?>
+            <div class="tab-pane" id="support-box">
+                <!-- supporter box code -->
+                <article class="col-lg-12 col-md-12 col-sm-12 col-xs-12 embed-option" id="support-box">
+                    <div class="title"><h3>Support Box</h3></div>
+                    <div class="demo">
+                        <?php echo $this->render('supporterbox/partial/supporterbox.phtml', array('product' => $this->product, 'supporters' => $this->supporting, 'nrOfSupporters' => count($this->supporting), 'authCode' => $this->authCode)); ?>
+                    </div>
+                    <div class="embed-code">
+                        <div id="button-input">
+                        <textarea name="box-code" id="box-code"
+                                  class="light"><?= $helperExternalSupporterBoxSource->externalSupporterBoxSource($this->product->project_uuid); ?></textarea>
+                        </div>
+                        <div class="button">
+                            <button id="get-support-box-code" class="btn btn-min-width btn-native"
+                                    data-clipboard-target="#box-code">get the code!
+                            </button>
+                        </div>
+                    </div>
+                </article>
+                <!-- /supporter box code -->
+            </div>
+            <div class="tab-pane" id="support-button">
+                <!-- button code -->
+                <article class="col-lg-12 col-md-12 col-sm-12 col-xs-12 embed-option" id="support-button">
+                    <div class="title"><h3>Support Button</h3></div>
+                    <div class="demo"><?php echo $this->render('button/partials/button.phtml', array('projectId' => $this->product->project_uuid, 'config' => null)); ?></div>
+                    <div class="embed-code">
+                        <div id="button-input">
+                        <textarea name="button-code" id="button-code"
+                                  class="light"><?= $helperExternalPlingButtonSource->externalPlingButtonSource($this->product->project_uuid, array('websiteAuthCode' => $this->websiteAuthCode)); ?></textarea>
+                        </div>
+                        <div class="button">
+                            <button id="get-support-btn-code" class="btn btn-min-width btn-native"
+                                    data-clipboard-target="#button-code">get the code!
+                            </button>
+                        </div>
+                    </div>
+                </article>
+                <!-- /button code -->
+            </div>
+            <div class="tab-pane" id="support-list">
+                <!-- supporter list code -->
+                <article class="col-lg-12 col-md-12 col-sm-12 col-xs-12 embed-option" id="support-list">
+                    <div class="title"><h3>Support List</h3></div>
+                    <div class="demo"><?php echo $this->render('donationlist/partial/donationlist.phtml', array('project' => $this->product, 'donations' => $this->donations, 'authCode' => $this->authCode)); ?></div>
+                    <div class="embed-code">
+                        <div id="button-input">
+                        <textarea name="list-code" id="list-code"
+                                  class="light"><?= $helperExternalDonationListSource->externalDonationListSource($this->product->project_uuid, array('websiteAuthCode' => $this->websiteAuthCode)); ?></textarea>
+                        </div>
+                        <div class="button">
+                            <button id="get-support-list-code" class="btn btn-min-width btn-native"
+                                    data-clipboard-target="#list-code">get the code!
+                            </button>
+                        </div>
+                    </div>
+                </article>
+                <!-- /supporter list code -->
+            </div>
+        <?php endif; ?>
+    </div>
+
+<?php } ?>
+
+    <!-- WIDGET MODAL -->
+    <div id="modal-widget" class="modal hide fade">
+        <div class="modal-dialog content-modal">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 class="center"><?= $this->translate('Customize Widget') ?></h3>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    <!-- /WIDGET MODAL -->
+
+<?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){
+            //ButtonCode.setupClipboardAtProductPage();
+            ButtonCode.setupClipboardCopy(\'div#support-box\');
+            ButtonCode.setupClipboardCopy(\'div#support-button\');
+            ButtonCode.setupClipboardCopy(\'div#support-list\');
+            ButtonCode.setupClipboardCopy(\'div#widget-embed-code\');
+        });
+    ');

@@ -1,0 +1,69 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$buildMemberUrl = new Default_View_Helper_BuildMemberUrl();
+
+?>
+<div id="comments-frame">
+    <?php
+    if (count($this->donations) == 0) {
+        echo '<div> Be the first to donate</div>';
+    } else {
+        foreach ($this->donations as $donation) {
+            $currency = new Zend_Currency();
+
+            $humanTiming = new Default_View_Helper_HumanTiming();
+            $age = $humanTiming->humanTiming($donation['create_time']);
+            ?>
+            <div class="comment-row">
+                <div class="comment">
+                    <figure class="supporter-thumbnail relative">
+                        <a href="<?= $buildMemberUrl->buildMemberUrl($donation['member_id']) ?>"
+                           title="<?= $donation['username'] ?>">
+                            <img src="<?= $donation['profile_image_url']; ?>" alt="<?= $donation['username'] ?>">
+                        </a>
+                    </figure>
+                    <div class="comment-content">
+                        <div class="popover-title">
+                            <span class="name"><a
+                                    href="<?= $buildMemberUrl->buildMemberUrl($donation['member_id']) ?>"><?php echo $donation['username']; ?></a></span>
+                            <?php
+                            if (!$donation['amount'] == 0) {
+                                ?>
+                                <span class="amount"> donated $<?php echo $donation['amount'] ?></span>
+                                <?php
+                            }
+                            ?>
+                            <span class="small lightgrey"> <?= $age['age'] ?> <span class="light"><?= $age['unit'] ?>
+                                    ago</span> </span>
+                        </div>
+                        <div class="popover-content">
+                            <p><?= $donation['comment_text'] ?></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <?php
+        }
+    }
+    ?>
+</div>

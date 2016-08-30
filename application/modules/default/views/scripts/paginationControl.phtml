@@ -1,0 +1,67 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<?php if ($this->pageCount): ?>
+    <div class="projectPaginationControl">
+        <!-- Vorheriger Seitenlink -->
+        <?php if (isset($this->previous)): ?>
+            <a href="?page=<?= $this->previous . $this->parameter; ?>"
+               id="dialog_link_l"
+               class="projectPaginationBack"
+               style="float:left;">
+                <img src="/images_sys/pagination_back.png" border="0"/>
+            </a>
+        <?php else: ?>
+            <!--
+              <div id="dialog_link_l" style="float: left;">
+                  <img src="/images_sys/pagination_back.png" border="0" />
+              </div>
+            -->
+        <?php endif; ?>
+
+        <!-- Anzahl an Seitenlinks -->
+        <?php foreach ($this->pagesInRange as $page): ?>
+            <?php if ($page != $this->current): ?>
+                <a href="?page=<?= $page . $this->parameter; ?>"
+                   class="projectPaginationNormal"
+                   style="float: left;"><?php echo $page; ?></a>
+            <?php else: ?>
+                <div class="projectPaginationActive" style="float: left;"><?php echo $page; ?></div>
+            <?php endif; ?>
+        <?php endforeach; ?>
+
+        <!-- Nächster Seitenlink -->
+        <?php if (isset($this->next)): ?>
+            <a href="?page=<?= $this->next . $this->parameter; ?>"
+               id="dialog_link_r"
+               class="projectPaginationNext"
+               style="float: left;">
+                <img src="/images_sys/pagination_next.png" border="0"/>
+            </a>
+        <?php else: ?>
+            <!--
+            <div id="dialog_link_r" class="ui-state-default ui-corner-all" style="float: left;">Nächster<span class="ui-icon ui-icon-carat-1-e" ></span></div>
+            -->
+        <?php endif; ?>
+        <div class="clear"></div>
+    </div>
+<?php endif; ?>

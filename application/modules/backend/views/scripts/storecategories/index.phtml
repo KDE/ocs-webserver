@@ -1,0 +1,89 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<div class="messages">
+    <?php foreach (Zend_Controller_Action_HelperBroker::getStaticHelper('flashMessenger')
+                       ->getCurrentMessages() as $message) : ?>
+        <p><?php echo $this->escape($message); ?></p>
+    <?php endforeach; ?>
+</div>
+<div id="TableContainer"></div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#TableContainer').jtable({
+            jqueryuiTheme: true,
+            paging: true,
+            sorting: true,
+            defaultSorting: 'store_id asc',
+            title: 'Table of category configuration for stores',
+            actions: {
+                listAction: '/backend/storecategories/list',
+                createAction: '/backend/storecategories/create',
+                updateAction: '/backend/storecategories/update',
+                deleteAction: '/backend/storecategories/delete'
+            },
+            fields: {
+                store_category_id: {
+                    key: true,
+                    create: false,
+                    edit: false,
+                    list: false
+                },
+                store_id: {
+                    title: 'store',
+                    width: '10%',
+                    list: true,
+                    create: true,
+                    options: function (data) {
+                        if (data.source == 'edit') {
+                            data.clearCache();
+                            return '/backend/store/hostnames';
+                        }
+                        return '/backend/store/hostnames';
+                    }
+                },
+                project_category_id: {
+                    title: 'category',
+                    width: '10%',
+                    list: true,
+                    create: true,
+                    options: function (data) {
+                        if (data.source == 'edit') {
+                            data.clearCache();
+                            return '/backend/categories/tree?c=-1';
+                        }
+                        return '/backend/categories/tree?c=-1';
+                    }
+                },
+                order: {
+                    title: 'display order',
+                    width: '10%',
+                    list: true,
+                    create: true,
+                    edit: true
+                }
+            }
+        });
+
+        $('#TableContainer').jtable('load');
+    });
+</script>

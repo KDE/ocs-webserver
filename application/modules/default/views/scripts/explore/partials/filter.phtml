@@ -1,0 +1,205 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$this->navBackgroundColorActive = $this->template['header-nav-tabs']['background-color-active'];
+$this->navBackgroundColor = $this->template['header-nav-tabs']['background-color'];
+$this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
+?><style type="text/css">
+    .naviblock {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 12px;
+        border: none;
+        width: 100%;
+        color: #2673b0;
+    }
+
+    .navilink {
+        color: #2673b0;
+        margin: 0;
+        padding: 3px 0 0 15px;
+    }
+
+    .navilink span.title:hover {
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+  
+    
+ 
+    ul.naviblock a:hover
+    {
+        background-color:  <?=$this->navBackgroundColorActive?> !important;
+        color:  <?=$this->navColorActive?> !important;
+    }
+    
+    ul.naviblock a
+    {
+          display: block;
+            width:100%;
+    }
+
+    li.navilink.parentactive.parent a
+    {
+        color:  <?=$this->navBackgroundColorActive?>;
+    }
+
+    ul.naviblock a.active.child
+    {
+        background-color:  <?=$this->navBackgroundColorActive?>;
+        color:  <?=$this->navColorActive?>;
+    }
+    li.navilink.active.parent a.active.parent{
+
+        background-color:  <?=$this->navBackgroundColorActive?>;
+        color:  <?=$this->navColorActive?>;
+    }
+    /*
+    li.navilink.active.parent a.child{       
+        color:  <?=$this->navBackgroundColorActive?>;
+    }
+   */
+</style> 
+<?php
+$selectedCategory = 0;
+$selectedOrder = 0;
+
+
+/*if ($this->filters['category'] != null) {
+    $helperFetchCategory = new Default_View_Helper_FetchCategory();
+    $selectedCategory = $helperFetchCategory->fetchCategory($this->filters['category']);
+}*/
+if($this->cat_id!=null)
+{
+    $helperFetchCategory = new Default_View_Helper_FetchCategory();
+    $selectedCategory = $helperFetchCategory->fetchCategory($this->cat_id); 
+}else
+{
+    $selectedCategory=null;
+}
+if ($this->filters['order'] != null) {
+    $selectedOrder = $this->filters['order'];
+}
+?>
+<div class="panel-group" id="accordion">
+    <div class="panel panel-default accordion-group">
+            <?php
+            function has_children($row)
+            {
+                return ($row['rgt'] - $row['lft']) > 1 ? true : false;
+            }
+
+            function build_menu($rows, $selectedCategory, $selectedOrder, $addAllItem = false)
+            {                
+                if(!is_array($rows))
+                {
+                    $rows = array($rows);
+                }
+                $helperFetchCategory = new Default_View_Helper_FetchCategory();
+                $helperBuildExploreUrl = new Default_View_Helper_BuildExploreUrl();
+                $helperProductCount = new Default_View_Helper_CategoryProductCount();
+
+                $csschild = "parent";
+                if ($addAllItem) {
+                    $csschild = "parent";
+                } else {
+                    $csschild = "child";
+                }
+
+                $result = "<ul class='naviblock {$csschild}'>";
+
+                $result .= ($addAllItem) ? addMenuItemAll($selectedCategory, $selectedOrder) : '';
+                foreach ($rows as $row) {
+                    $currentCategory = $helperFetchCategory->fetchCategory(($row));
+                    
+                    $count = $helperProductCount->categoryProductCount($currentCategory['project_category_id']);
+
+                    $catProductCount = ($count >0)?$count:'';
+
+                    $hasChildren = has_children($currentCategory);
+                    if($selectedCategory==null) 
+                    {   $cssClassActive = ''; 
+                       
+                        $cssClassActiveReal='';
+                    }
+                    else
+                    {
+                      $cssClassActive = (($currentCategory['project_category_id'] == $selectedCategory['project_category_id']) OR (($selectedCategory['lft'] > $currentCategory['lft']) AND ($selectedCategory['rgt'] < $currentCategory['rgt']))) ? ' active' : '';
+                     
+                      $cssClassActiveReal = (($currentCategory['project_category_id'] == $selectedCategory['project_category_id'])) ? ' active' : '';
+                    }
+                    
+                    $urlExplore = $helperBuildExploreUrl->buildExploreUrl($currentCategory['project_category_id'], null, $selectedOrder);
+
+                
+                    $result .= "<li class='navilink {$cssClassActiveReal} {$csschild}'><span class='title'><a class='{$cssClassActiveReal} {$csschild}' href='{$urlExplore}'>{$currentCategory['title']} <span style='float:right; padding-right:10px'>{$catProductCount}</span> </a></span>";
+
+                    if ($hasChildren) {
+                        $helperFetchChildren = new Default_Model_DbTable_ProjectCategory();
+                        //$children = $helperFetchChildren->fetchSubCatIds($currentCategory['project_category_id'], $helperFetchChildren::ORDERED_TITLE);
+                        $children = $helperFetchChildren->fetchImmediateChildrenIds($currentCategory['project_category_id'], $helperFetchChildren::ORDERED_TITLE);
+
+                        $cssShowChildren = $cssClassActive == ' active' ? ' in' : '';
+                        $htmlChildren = build_menu($children, $selectedCategory, $selectedOrder);
+                        $result .= "<span id='{$currentCategory['project_category_id']}' class='collapse{$cssShowChildren}'>"
+                            . $htmlChildren .
+                            "</span>";
+                    }
+                    $result .= "</li>";
+                }
+                $result .= "</ul>";
+
+                return $result;
+            }
+
+            /**
+             * @param int $selectedCategory
+             * @param string $selectedOrder
+             * @return string
+             */
+            function addMenuItemAll($selectedCategory, $selectedOrder)
+            {
+                $helperBuildExploreUrl = new Default_View_Helper_BuildExploreUrl();
+                if($selectedCategory==null || empty($selectedCategory['project_category_id']))
+                {
+                    $cssClassActive =  ' active';
+                }else
+                {
+                     $cssClassActive =  $selectedCategory['project_category_id'];
+                }
+                
+                $urlExplore = $helperBuildExploreUrl->buildExploreUrl(null, null, $selectedOrder);
+                return "<li class='navilink {$cssClassActive} parent'><span class='title'><a class='{$cssClassActive} parent'href='{$urlExplore}'>All</a></span></li>";
+            }
+
+            echo build_menu($this->categories, $selectedCategory, $selectedOrder, true);
+            ?>
+    </div>
+</div>
+<?php
+//$this->inlineScript()->appendScript(
+//    ''
+//);

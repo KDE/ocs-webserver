@@ -1,0 +1,193 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$helperEncryptUrl = new Default_View_Helper_EncryptUrl();
+$requestUri = Zend_Controller_Front::getInstance()->getRequest()->getRequestUri();
+$loginUrl = '/login?redirect=' . $helperEncryptUrl->encryptUrl('/p/'.$this->product->project_id.'#comments_block', true);
+$helperHumanTiming = new Default_View_Helper_HumanTiming();
+$helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
+$helperImage = new Default_View_Helper_Image();
+$identity = Zend_Auth::getInstance()->getStorage()->read();
+$pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountPerPage();
+//$captcha = new Zend_Captcha_Image(array(
+//    'name' => 'foo',
+//    'wordLen' => 6,
+//    'timeout' => 300,
+//));
+//$captcha->setFont(APPLICATION_PATH . '/../httpdocs/theme/flatui/fonts/OpenSans-Regular.ttf');
+//$captcha->generate();
+?><style>
+    .user_name{
+        font-size:14px;
+        font-weight: bold;
+        color: rgb(102, 189, 221);
+    }
+    .comments-list .media{
+        border-bottom: 1px dotted #ccc;
+    }
+    .media-left, .comments-list img{
+        border-radius: 50%;
+        width: 42px;
+        height: 42px;
+   }
+    .history{
+        color: rgb(200, 199, 199);
+    }
+
+    #product-discussion .container {
+        padding: 0;
+        margin: 0;
+    }
+    .modal-header .close {
+        margin-top: -15px;
+    }
+
+    #comment-report img {
+        border-radius: 0;
+        width: inherit;
+    }
+</style>
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="page-header relative">
+                <h3 style="line-height: 15px;">
+                    <small class="pull-right">
+                        <div class="row" style="margin:0;padding: 0;text-align: right;"><?=$this->comments->getTotalItemCount()?> comments</div>
+                        <?php if ($pageCount > 1) echo $this->paginationControl($this->comments, 'Sliding', '/partials/paginationControlBootstrap.phtml',
+                            array('params' => array(), 'dom_target' => 'div#product-discussion')); ?></small>
+                    Comments
+                </h3>
+                <?php if (Zend_Auth::getInstance()->hasIdentity()) { ?>
+                    <p style="position: absolute; top:25px;">
+                        <small class="small"><a data-toggle="collapse" href="#add-comment"><span class="glyphicon glyphicon-share-alt"></span> Add a comment</a></small>
+                    </p>
+                    <div class="collapse" id="add-comment" style="padding-top: 8px;">
+                        <form class="full-width" action="/productcomment/addreply/">
+                            <input type="hidden" name="p" value="<?= $this->product->project_id ?>">
+                            <input type="hidden" name="m" value="<?= $identity->member_id ?>">
+                            <textarea name="msg" class="full-width"></textarea>
+                            <button type="submit" style="border:none;background: transparent;color: #2673b0;" class="small"><span class="glyphicon glyphicon-send"></span> Send</button>
+                        </form>
+                    </div>
+                <?php } else { ?>
+                    <p style="position: absolute; top:25px;">
+                        <small class="small"><span class="glyphicon glyphicon-share-alt"></span> Please <a href="<?=$loginUrl?>">login</a> or <a href="/register">register</a> to add a comment</a></small>
+                    </p>
+                <?php } ?>
+            </div>
+            <div class="comments-list"><a name="comments_block"></a>
+                <?php if (0 == $this->comments->getCurrentItemCount()) { ?>
+                <div>Be the first to comment</div>
+                <?php } ?>
+<?php foreach ($this->comments as $elementComment): ?>
+    <?php
+    $comment = $elementComment['comment'];
+    if (false == $comment['comment_active']) {
+        continue;
+    }
+    $age = $helperHumanTiming->humanTiming($comment['comment_created_at']);
+//    $captcha = new Zend_Form_Element_Captcha('realHuman',array(
+//            'captcha' => array(
+//                'captcha' => 'image',
+//                'font' => APPLICATION_PATH . '/../httpdocs/theme/flatui/fonts/OpenSans-Regular.ttf',
+//                'wordLen' => 6,
+//                'timeout' => 300,
+//                'width' => 250
+//            ))
+//    );
+//    $captcha->setAttrib('placeholder', 'Please verify you\'re a human');
+//    $captcha->setAttrib('class', 'full-width');
+    ?>
+                <div class="media" style="margin-left:<?=$elementComment['level'] * 30?>px">
+                    <p class="pull-right history">
+                        <?php if ($age['age'] > 0) { ?>
+                        <small><?= $age['age'] ?> <span class="light"><?= $age['unit'] ?> ago</span></small>
+                        <?php } ?>
+                    </p>
+                    <?php if ($comment['comment_type'] == Default_Model_DbTable_Comments::COMMENT_TYPE_PLING) : ?>
+                        <p class="pull-right history" style="display:inline-block"><span class="glyphicon glyphicon-usd"></span></p>
+                    <?php endif ?>
+                    <a class="media-left" href="<?= $helperBuildMemberUrl->buildMemberUrl($comment['member_id']) ?>">
+                        <img src="<?= $helperImage->Image($comment['profile_image_url'], array('width' => 40, 'height' => 40)) ?>">
+                    </a>
+                    <div class="media-body">
+                        <h4 class="media-heading user_name"><?= $comment['username'] ?></h4>
+                        <div class="small"><?= nl2br($comment['comment_text'],true) ?></div>
+                        <p>
+                            <small class="small">
+                            <?php if (Zend_Auth::getInstance()->hasIdentity()) { ?>
+                                <a data-toggle="collapse" href="#reply-<?= $comment['comment_id'] ?>"><span class="glyphicon glyphicon-share-alt"></span> Reply</a>
+                                <span>&nbsp;</span>
+                            <?php } ?>
+                                <a data-toggle="modal" data-target="#report-<?= $comment['comment_id'] ?>" role="button" href="#report-<?= $comment['comment_id'] ?>">
+                                    <span class="glyphicon glyphicon-alert"></span> Report
+                                </a>
+                            </small>
+                        </p>
+                        <div id="report-<?= $comment['comment_id'] ?>" class="modal" tabindex="-1" role="dialog">
+                            <div class="modal-dialog modal-sm">
+                                <div class="modal-content" style="padding: 10px 10px 0 10px;">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    </div>
+                                    <form id="comment-report" class="full-width partialjson" action="/report/comment/" data-target="#report-<?= $comment['comment_id'] ?>-message">
+                                        <input type="hidden" name="i" value="<?= $comment['comment_id'] ?>">
+                                        <input type="hidden" name="p" value="<?= $this->product->project_id ?>">
+                                        <div id="report-<?= $comment['comment_id'] ?>-message">
+                                        <p>Do you really want to report this comment?</p>
+                                        <div class="modal-footer">
+                                            <button type="submit" style="border:none;background: transparent;color: #2673b0;" class="small"><span class="glyphicon glyphicon-share-alt"></span> Yes</button>
+                                        </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <?php if (Zend_Auth::getInstance()->hasIdentity()) { ?>
+                        <div class="collapse" id="reply-<?= $comment['comment_id'] ?>">
+                            <form class="full-width" action="/productcomment/addreply/">
+                                <input type="hidden" name="i" value="<?= $comment['comment_id'] ?>">
+                                <input type="hidden" name="p" value="<?= $comment['comment_target_id'] ?>">
+                                <input type="hidden" name="m" value="<?= $identity->member_id ?>">
+                                <textarea name="msg" class="full-width"></textarea>
+                                <button type="submit" style="border:none;background: transparent;color: #2673b0;" class="small"><span class="glyphicon glyphicon-send"></span> Send</button>
+                                <?php //echo $captcha->render($this); ?>
+                            </form>
+                        </div>
+                        
+                        <?php } ?>
+                    </div>
+           </div>
+<?php endforeach;?>
+            </div>
+
+                    <div class="row" >
+                        <div class="col-lg-12">
+                        <small class="pull-right">                         
+                        <?php if ($pageCount > 1) echo $this->paginationControl($this->comments, 'Sliding', '/partials/paginationControlBootstrap.phtml',
+                            array('params' => array(), 'dom_target' => 'div#product-discussion')); ?></small>
+                            </div>
+                    </div>
+        </div>
+    </div>
+</div>

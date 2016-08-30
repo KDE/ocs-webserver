@@ -1,0 +1,40 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<div class="row-fluid supporter-comments item <?php if ($this->partialCounter === 1) {
+    echo 'active';
+} ?>">
+    <div class="span3 supporter-thumbnail relative">
+        <div class="profile-image-overlay-3 absolute"></div>
+        <img src="<?php echo $this->Image($this->profile_image_url) ?>" alt="supporter">
+
+        <p class="light supporter-comment-donation">$&nbsp;<?php echo $this->amount ?></p>
+    </div>
+    <!-- /.supporter-thumbnail -->
+    <div class="span9 supporter-comment supporter-comment-side">
+        <div>
+            <h4><?php echo $this->username ?></h4>
+
+            <p class="light"><?php echo $this->comment ?></p>
+        </div>
+    </div>
+</div>

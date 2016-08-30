@@ -1,0 +1,78 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+echo $this->buildProductUrl;
+?>
+<main id="explore-content" class="carousel-page">
+    <!-- FILTERS -->
+    <section class="fixed-filter absolute">
+        <section class="wrapper">
+            <?php
+            echo $this->render('explore/partials/filter.phtml');
+            ?>
+        </section>
+    </section>
+    <!-- /FILTERS -->
+    <!-- PRODUCT LIST -->
+    <section class="wrapper" id="products-wrapper">
+
+        <section class="explore-products">
+
+            <div id="explore-carousel">
+
+                <!-- arrows -->
+                <a class="carousel-arrow" id="left">
+                    <span class="glyphicon glyphicon-chevron-left"></span>
+                </a>
+                <a class="carousel-arrow" id="right">
+                    <span class="glyphicon glyphicon-chevron-right"></span>
+                </a>
+                <!-- /arrows -->
+
+                <!-- navigation -->
+                <div class="navigation">
+                    <ol></ol>
+                </div>
+                <!-- /navigation -->
+
+                <div class="items">
+                    <?php
+                    echo $this->partialLoop('explore/partials/product.phtml', $this->products);
+                    echo $this->formHidden('page', $this->page, array('id' => 'page'));
+                    echo $this->formHidden('ranking', $this->inputFilter['ranking'], array('id' => 'ranking'));
+                    echo $this->formHidden('category', $this->inputFilter['category'], array('id' => 'category'));
+                    ?>
+                </div>
+
+            </div>
+
+        </section>
+
+    </section>
+
+    <!-- /PRODUCT LIST -->
+</main>
+
+<main id="product-showcase"></main>
+
+<script>
+    exploreCarousel.setup();
+</script>

@@ -1,0 +1,33 @@
+# ocs-fileserver
+
+LICENSE: GNU AGPLv3+
+
+Copyright 2016 by pling GmbH.
+
+
+## Dependencies
+
+The following directories need full access rights in the file system:
+
+"project_root"/cache/
+"project_root"/cache/data
+"project_root"/cache/sessions
+"project_root"/application/log
+"project_root"/httpdocs/img/cache
+"project_root"/httpdocs/img/cache/rendered
+"project_root"/httpdocs/img/cache/request
+"project_root"/httpdocs/img/data
+"project_root"/httpdocs/img/data/tmp
+
+## Dependencies
+
+sudo apt-get install apache2 php5 php5-mysql
+sudo apt-get install git
+sudo apt-get install php5-memcached
+sudo apt-get install php5-curl
+sudo apt-get install php5-apcu
+sudo apt-get install php5-mcrypt
+
+sudo php5enmod mcrypt
+sudo service apache2 restart
+

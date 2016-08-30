@@ -1,0 +1,51 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<!-- Modal -->
+<div id="thank-you-overlay" class="modal fade hide" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog content-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="myModalLabel" class="center"><?= $this->translate('Error') ?></h3>
+            </div>
+            <div class="modal-body">
+                <div
+                    class="center"><?= $this->translate('Either your e-mail was already verified, or the link was manipulated.') ?></div>
+                <p class="small center">&nbsp;</p>
+
+                <div class="center"><a href="/" class="btn btn-native btn-min-width"><?= $this->translate('Home') ?></a>
+                </div>
+            </div>
+            <div class="modal-footer">
+
+            </div>
+        </div>
+    </div>
+
+</div>
+<?php $this->inlineScript()->appendScript("
+    $(document).ready(function(){
+        $('#thank-you-overlay').modal('show');
+    });
+    ");

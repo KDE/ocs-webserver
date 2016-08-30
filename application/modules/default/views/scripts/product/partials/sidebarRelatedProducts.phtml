@@ -1,0 +1,83 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<div class="sidebar-header">
+    <h3><?= $this->translate('PRODUCTS YOU MIGHT ALSO LOVE') ?></h3>
+</div>
+
+<div class="sidebar-content">
+    <div class="sidebar-content-section">
+        <div class="row product-row">
+            <?php
+            $countRelatedProducts = count($this->relatedProducts->toArray());
+            if ($countRelatedProducts < 4) {
+                $g = $countRelatedProducts;
+            } else {
+                $g = 4;
+            }
+            $h = 0;
+            $i = 3;
+
+            foreach ($this->relatedProducts as $product):
+                $i++;
+                $h++;
+
+                $titleImage = $this->Image($product->image_big, array('width' => 270, 'height' => 140));
+                $hasTitle = $product->image_big !== null && strpos($titleImage, 'default.png') === false;
+                ?>
+                <!-- product item -->
+                <div class="col-md-3 col-lg-3 col-sm-4 col-xs-3 product-thumbnail"
+                     data-toggle="popover"
+                     data-trigger="hover"
+                     data-html="true"
+                     data-placement="top"
+                     data-content="<div class='header-img'>
+                                                    <?php if ($hasTitle): ?>
+                                                        <img src='<?= $titleImage ?>' />
+                                                    <?php endif; ?>
+                                                </div>
+                                                <div class='profile-img'>
+                                                    <img src='<?= $this->Image($product->image_small, array('width' => 80, 'height' => 80)); ?>'/>
+                                                </div>
+                                                <div class='content'>
+                                                    <div class='title'>
+                                                        <p><?php echo $product->title; ?></p>
+                                                    </div>
+                                                    <div class='plings'>
+                                                        <span>plings</span>
+                                                        <span><?php echo (int)$product->count_plings; ?></span>
+                                                    </div>
+                                                </div>">
+                    <!-- product thumbnail -->
+                    <a
+                        href="<?= $this->buildProductUrl($product->project_id) ?>"
+                        title="<?= $this->title ?>">
+                        <img src="<?= $this->Image($product->image_small, array('width' => 80, 'height' => 80)); ?>"
+                             alt="product">
+                    </a>
+                    <!-- /product thumbnail -->
+                </div>
+                <!-- /product item -->
+            <?php endforeach; ?>
+        </div>
+    </div>
+</div>

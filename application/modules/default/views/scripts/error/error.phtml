@@ -1,0 +1,192 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$users = $this->newUsers($limit = 216,'created_at','DESC');
+$buildMemberUrl = new Default_View_Helper_BuildMemberUrl();
+$helperImage = new Default_View_Helper_Image();
+?>  <!-- new code -->
+    <style>
+        header {
+            display: none;
+        }
+
+        main#reg-page section#register-wrap {
+            top: 25%;
+        }
+
+        .btn-action {
+            background-color: #FA6914;
+            border-color: #eea236;
+            color: #fff;
+        }
+
+        .btn-action.active, .btn-action.focus, .btn-action:active, .btn-action:focus, .btn-action:hover, .open > .dropdown-toggle.btn-action {
+            background-color: #FF8A44;
+            border-color: #FFA36D;
+            color: #fff;
+        }
+
+        #sitelinks:hover .err-menu {
+            display: block;
+        }
+
+        .err-menu {
+            left: -310px;
+            margin: 0;
+            width: 410px;
+        }
+
+        .err-menu ul {
+            float: left;
+            list-style: outside none none;
+            margin-left: -20px;
+            margin-right: 8px;
+            max-height: 100px;
+            overflow: hidden;
+            font-size: 13px;
+        }
+
+        .err-menu li:before {
+            content: "»  ";
+        }
+    </style>
+    <main id="reg-page">
+
+        <section class="wrapper absolute" id="register-wrap">
+            <div id="register" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 clearfix">
+                <div id="register-box" class="">
+
+                    <div>
+                        <h1><span class="text-danger">We're sorry.</span></h1>
+
+                        <h4 class="text-danger"><?php echo $this->message ?></h4>
+
+
+                        <div class="col-lg-6 col-md-6">
+                            <form id="search" class="" action="/search">
+                                <div class="input-group">
+                                    <input type="text"
+                                           class="form-control"
+                                           placeholder="Search for..."
+                                           name="projectSearchText">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-action" type="submit">Search!</button>
+                                    </span>
+                                </div>
+                                <!-- /input-group -->
+                            </form>
+                        </div>
+                        <div class="col-lg-3 col-md-3">
+                            <button class="btn btn-primary" onclick="window.location = '/'">Homepage</button>
+                        </div>
+
+                        <?php /*
+                        <div id="sitelinks" class="col-lg-3 col-md-3">
+                            <div class="btn-group">
+                                <button type="button"
+                                        class="btn btn-primary dropdown-toggle"
+                                        data-toggle="dropdown"
+                                        aria-haspopup="true"
+                                        aria-expanded="false">
+                                    Site Links <span class="caret"></span>
+                                </button>
+                                <div class="dropdown-menu err-menu">
+
+                                    <ul>
+                                        <li><a href="/">Home</a></li>
+                                    </ul>
+                                    <ul>
+                                        <li><a href="/content/contact">Contact Us</a></li>
+                                        <li><a href="/content/privacy">Privacy Policy</a></li>
+                                        <li><a href="/content/terms">Terms & Conditions</a></li>
+                                    </ul>
+                                    <ul>
+                                        <li><a href="https://www.facebook.com/opendesktop.org" target="_blank">Facebook</a></li>
+                                        <li><a href="https://twitter.com/opendesktop" target="_blank">Twitter</a></li>
+                                        <li><a href="https://plus.google.com/115086171173715906631" target="_blank">Google+</a>
+                                        </li>
+                                    </ul>
+
+                                </div>
+                            </div>
+                        </div>
+                        */
+                        ?>
+                    
+                        <?php
+                        $config = Zend_Registry::get('config');
+                        $displayErrors = $config->phpSettings->display_errors;
+                        if (($displayErrors == 1) AND (isset($this->exception))): ?>
+
+                            <h3>Exception information:</h3>
+                            <p>
+                                <b>Message:</b> <?php echo $this->exception->getMessage() ?>
+                            </p>
+
+                            <h3>Stack trace:</h3>
+                            <pre><?php
+                                if (isset($this->exception->xdebug_message)) {
+                                    echo $this->exception->xdebug_message;
+                                } else {
+                                    echo $this->exception->getTraceAsString();
+                                }
+                                ?></pre>
+
+                            <h3>Request URI:</h3>
+                            <pre><?php echo Zend_Controller_Front::getInstance()->getRequest()->getRequestUri(); ?></pre>
+
+                            <h3>Request Parameters:</h3>
+                            <pre><?php echo var_export($this->request->getParams(), true) ?></pre>
+                        <?php endif ?>
+                    </div>
+                    <!-- /.container -->
+
+                </div>
+                <!-- END #register-box -->
+            </div>
+        </section>
+
+        <section id="thumbs">
+
+            <?php foreach ($users as $key => $user) { ?>
+
+                <div class="thumb">
+                    <a href="<?php echo $buildMemberUrl->buildMemberUrl($user['member_id']); ?>">
+                        <span></span>
+                        <img src="<?php echo $helperImage->Image($user['profile_image_url'],array('width' => 110, 'height' => 110, 'crop' => 2)); ?>"/>
+                    </a>
+                </div>
+
+            <?php } ?>
+
+        </section>
+
+    </main>
+    <!-- /new code -->
+
+
+<?php /* $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){
+            PartialJson.setup();
+        });
+    '); */
+

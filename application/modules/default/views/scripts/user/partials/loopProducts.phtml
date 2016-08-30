@@ -1,0 +1,58 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$plingData = $this->userPlings($this->project_id);
+?>
+<div class="item clearfix">
+    <div class="alignleft item-visual">
+        <a href="<?= $this->buildProductUrl($this->project_id); ?>">
+            <img src="<?php echo $this->Image($this->image_small, array('width' => 270, 'height' => 180)); ?>"
+                 class="explore-product-image"  width="101" height="81"/>
+        </a>
+
+        <div class="item-summary clearfix small">
+            <div class="item-summary-left alignleft">
+                <div><span class="lightgrey">plingers</span> <?= $plingData['plingers'] ?></div>
+                <div><span class="lightgrey">plings</span> <?= $plingData['plings'] ?></div>
+            </div>
+            <div class="item-summary-right alignright">
+                <div class="large center"><?= $plingData['plings'] ?></div>
+                <div class="lightgrey">collected</div>
+            </div>
+        </div>
+    </div>
+    <div class="item-details-small alignleft">
+        <h3 class="item-heading lightblue normal">
+            <a href="<?= $this->buildProductUrl($this->project_id); ?>">
+                <?= $this->title ?>
+            </a>
+        </h3>
+
+        <div class="small grey"><a
+                href="<?= $this->buildExploreUrl($this->project_category_id) ?>"><?= $this->catTitle ?></a></div>
+        <hr class="item-details-divider"/>
+        <div class="light"><?= strip_tags($this->description) ?></div>
+    </div>
+    <!-- END .item-details -->
+</div><!-- END .item -->
+
+<hr class="item-divider">

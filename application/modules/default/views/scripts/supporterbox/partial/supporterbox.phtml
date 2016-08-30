@@ -1,0 +1,67 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
+$helperImage = new Default_View_Helper_Image();
+$helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
+?>
+<div class="supporter-box-container">
+    <div class="supporter-box-top">
+        <div class="title">
+            <a target="_blank" href="<?php echo $helperBuildProductUrl->buildProductUrl($this->product->project_id); ?>"
+               title="<?php echo $this->product->title; ?>"><?php echo $this->product->title; ?></a>
+        </div>
+        <figure>
+            <a target="_blank" href="<?php echo $helperBuildProductUrl->buildProductUrl($this->product->project_id); ?>"
+               title="<?php echo $this->product->title; ?>">
+                <img
+                    src="<?php echo $helperImage->Image($this->product->image_small, array('width' => 80, 'height' => 80)); ?>"
+                    alt="<?php echo $this->product->title; ?>"/>
+            </a>
+        </figure>
+    </div>
+    <div class="supporter-box-body">
+        <div class="info">
+            <em class="icon pling-icon-gold"></em>
+            <span>opendesktop.org</span>
+            <span><?php echo $this->nrOfSupporters; ?> Supporters</span>
+        </div>
+        <div class="supporters">
+            <?php
+            if ($this->nrOfSupporters == 0) {
+                echo $this->translate('supporterbox.beFirstSupporter');
+            } else {
+                foreach ($this->supporters as $supporter) { ?>
+                    <figure>
+                        <a target="_blank"
+                           href="<?php echo $helperBuildMemberUrl->buildMemberUrl($supporter->member_id); ?>"
+                           title="<?php echo $supporter->username; ?>">
+                            <img src="<?php echo $supporter->profile_image_url; ?>"
+                                 alt="<?php echo $supporter->username; ?>">
+                        </a>
+                    </figure>
+                <?php }
+            }
+            ?>
+        </div>
+    </div>
+</div>

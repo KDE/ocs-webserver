@@ -1,0 +1,66 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<style>
+    td {
+        border: 1px solid #dedede;
+        padding: 2px 3px;
+    }
+
+    td.label {
+        width: 150px;
+        font-weight: bold;
+    }
+
+    td.value {
+        width: 300px;
+    }
+</style>
+<h3>Alle Details zu User <u><?= $this->member->username; ?></u></h3>
+<table>
+    <tr>
+        <td class="label">Username</td>
+        <td class="value"><?= $this->member->username; ?></td>
+    </tr>
+
+    <tr>
+        <td class="label">Name</td>
+        <td class="value"><?= $this->member->lastname; ?></td>
+    </tr>
+
+    <tr>
+        <td class="label">Vorname</td>
+        <td class="value"><?= $this->member->firstname; ?></td>
+    </tr>
+
+    <tr>
+        <td class="label">Mail</td>
+        <td class="value"><?= $this->member->mail; ?></td>
+    </tr>
+
+    <tr>
+        <td class="label">Biography</td>
+        <td class="value"><?= stripslashes($this->member->biography); ?></td>
+    </tr>
+</table>
+<br/><br/>
+<a href="/backend/member" class="ui-state-default ui-corner-all button_normal memberOverview">Zur Memberübersicht</a>

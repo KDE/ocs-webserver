@@ -1,0 +1,211 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<div class="prod-widget-box right details">  
+                                     <span class="title" > Details </span>  
+                                     
+                                    <div class="row" >
+                                     <span class="col-lg-5" > 
+                                       version
+                                      </span>
+                                      <div class="col-lg-7">
+                                      <span class="value"><?php echo $this->product->project_version; ?> </span>
+                                      </div>
+                                    </div>
+                                 
+                                   
+
+                                    <?php if($this->product->project_changed_at){ ?> 
+                                      <div class="row">
+                                        <span class="col-lg-5" > 
+                                        updated
+                                        </span>
+                                        <span class="col-lg-7 value"> <?= $this->printDate($this->product->project_changed_at) ?></span>
+                                       </div>
+                                    <?php } ?>
+
+                                      <div class="row">
+                                      <span class="col-lg-5" > 
+                                        added
+                                      </span>
+                                      <span class="col-lg-7 value"> <?= $this->printDate($this->product->project_created_at) ?></span>
+                                     </div>
+                                    <div class="row">
+                                       <span class=" col-lg-5" > 
+                                       downloads
+                                       </span>
+                                       <span class="col-lg-7 value"> <div id="downloadscnt"></div></span>
+                                      </div>
+
+                                    <div class="row">
+                                      <span class=" col-lg-5" > 
+                                      page views
+                                      </span>
+                                      <span class="col-lg-7 value"> <?= $this->product_views ?></span>
+                                     </div>
+                                
+                                    <div class="row" style="padding-top: 5px">
+                                      <div class="col-lg-12">
+                                        <div class="small " id="product-actions">
+                                            <a data-toggle="modal" data-target="#report-product-<?= $this->product->project_id ?>" role="button" href="#report-product-<?= $this->product->project_id ?>">
+                                                <span class="glyphicon glyphicon-alert"></span> Report
+                                            </a>
+                                        </div>
+                                      </div>
+                                    </div>
+                                     
+                                    
+                                      <?php 
+                                      $helperUserRole = new Backend_View_Helper_UserRole();
+                                      $userRoleName = $helperUserRole->userRole();                                
+                                      ?>
+                                      <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                                          <span class="page-views"><a target="_NEW" href="http://cp1.hive01.com/content/show.php?content=<?= $this->product->project_source_pk ?>">link to hive</a></span>
+                                          <span class="page-views"><a id="delete-this" href="/backend/project/delete?project_id=<?= $this->product->project_id ?>">delete this</a></span>
+
+                                          <div style="clear: both"> </div>
+                                            <span class="page-views">  
+                                              <input type="checkbox" id="feature-this-checkbox" <?php echo $this->product->featured==1 ? ' checked ': ''; ?> />
+                                              toggle featured                                           
+                                            </span>
+                                            <span class="page-views">  
+                                              <input type="checkbox" id="approve-this-checkbox" <?php echo $this->product->approved==1 ? ' checked ': ''; ?> />
+                                              toggle approved  
+                                              
+                                            </span>
+                                         
+                                          <script>
+                                              $('#delete-this').on('click', function (event) {
+                                                  event.stopPropagation();
+                                                  var target = $(this).attr('href');
+                                                  $.ajax({
+                                                      url: target,
+                                                      success: function (results) {
+                                                          alert('Project deleted successfully');
+                                                      },
+                                                      error: function() {
+                                                          alert('Service is temporarily unavailable.');
+                                                      }
+                                                  });
+
+                                                  return false;
+                                              });
+
+                                              $('#feature-this-checkbox').on('click', function (event) {
+                                                  event.stopPropagation();                                                  
+                                                  var feature = 1;
+                                                  if(this.checked){
+                                                      feature = 1;
+                                                  }else
+                                                  {
+                                                    feature = 0;
+                                                  }
+
+                                                 var target = "/backend/project/dofeature?project_id=<?= $this->product->project_id ?>&featured="+feature;                                                  
+                                                  $.ajax({
+                                                      url: target,
+                                                      success: function (results) {                                                          
+                                                          if(feature==0)
+                                                          {
+                                                            alert('Project remove featured successfully');           
+                                                            $('#feature-this-checkbox').prop("checked",false);
+
+                                                          }else
+                                                          {
+                                                            alert('Project set featured successfully');           
+                                                            $('#feature-this-checkbox').prop("checked",true);
+
+                                                          }
+                                                          
+                                                      },
+                                                      error: function() {
+                                                          alert('Service is temporarily unavailable.');
+                                                      }
+                                                  });
+                                                  
+                                                  return false;
+                                                  
+                                              });
+
+                                             
+                                              $('#approve-this-checkbox').on('click', function (event) {
+                                                 event.stopPropagation();                                                  
+                                                  var status = 1;
+                                                  if(this.checked){
+                                                      status = 1;
+                                                  }else
+                                                  {
+                                                    status = 0;
+                                                  }
+
+                                                 var target = "/backend/project/doapprove?project_id=<?= $this->product->project_id ?>&approved="+status;                                                  
+                                                  $.ajax({
+                                                      url: target,
+                                                      success: function (results) {                                                          
+                                                          if(status==0)
+                                                          {
+                                                            alert('Project remove approved successfully');           
+                                                            $('#approve-this-checkbox').prop("checked",false);
+
+                                                          }else
+                                                          {
+                                                            alert('Project set approved successfully');           
+                                                            $('#approve-this-checkbox').prop("checked",true);
+
+                                                          }
+                                                          
+                                                      },
+                                                      error: function() {
+                                                          alert('Service is temporarily unavailable.');
+                                                      }
+                                                  });
+                                                  
+                                                  return false;
+                                              });
+                                          </script>
+                                          
+                                          <span class="page-views"><input style="width: 40px;" type="text" id="project_category_id" value="<?php echo $this->product->project_category_id; ?>"> <button id="change_cat" data-href="/backend/project/changecat?project_id=<?= $this->product->project_id ?>&project_category_id=">change category</button></span>
+                                          <script>
+                                              $('#change_cat').on('click', function (event) {
+
+                                                  event.stopPropagation();
+                                                  var target = $(this).attr('data-href');
+                                                  var newCat = $('#project_category_id').val();
+
+                                                  $.ajax({
+                                                      url: target+newCat,
+                                                      success: function (results) {
+                                                          alert('Project updated successfully');
+                                                          location.reload();
+                                                      },
+                                                      error: function() {
+                                                          alert('Service is temporarily unavailable.');
+                                                      }
+                                                  });
+
+                                                  return false;
+                                              });
+                                          </script>
+                                          
+                                       <?php endif; ?>
+
+                              </div>   

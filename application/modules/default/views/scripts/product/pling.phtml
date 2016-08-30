@@ -1,0 +1,506 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$helperEncryptUrl = new Default_View_Helper_EncryptUrl();
+$helperGetAuthUser = new Default_View_Helper_GetAuthUser();
+$helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
+$helperUserFollowsProject = new Default_View_Helper_UserFollowsProject();
+$helperImage = new Default_View_Helper_Image();
+$helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
+$helperAddDefaultScheme = new Default_View_Helper_AddDefaultScheme();
+
+
+$user = $helperGetAuthUser->getAuthUser();
+$loginUrl = '/login?redirect=' . $helperEncryptUrl->encryptUrl(Zend_Controller_Front::getInstance()->getRequest()->getRequestUri(), true);
+$txtUserFollows = '';
+$urlUserFollows = $helperBuildProductUrl->buildProductUrl($this->product->project_id, 'unfollow');
+$imgFile = '/theme/flatui/img/icon-like-color.png';
+if (false == $helperUserFollowsProject->userFollowsProject($this->authMember->member_id, $this->product->project_id)) {
+    $txtUserFollows = '';
+    $urlUserFollows = $helperBuildProductUrl->buildProductUrl($this->product->project_id, 'follow');
+    $imgFile = '/theme/flatui/img/icon-like.png';
+}
+$titleImage = $helperImage->Image($this->product->image_big, array('width' => 1170, 'height' => 300));
+$pathParts = explode('/', $titleImage);
+$titleImageName = $pathParts[sizeof($pathParts) - 1];
+$styleAttr = ' style="background-image: url(' . $titleImage . ');"';
+
+$imageTag = '<img src="' . $titleImage . '">';
+if (strpos($titleImage, 'default.png') !== false) {
+    $imageTag = '';
+}
+$this->headScript()
+    ->appendFile('https://www.paypalobjects.com/js/external/dg.js');
+
+//$viewTopHeader = 'product/partials/productTopHeader.phtml';
+$viewTopHeader = 'product/partials/productAboutSidebar.phtml';
+if ($this->product->claimable == 1) {
+    $viewTopHeader = 'product/partials/productClaimTopHeader.phtml';
+}
+?>
+
+    <main id="product-page-content">
+
+        <section class="head-wrap">
+
+            <section class="wrapper">
+
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="product-main">
+                    <!-- HEADER -->
+                    <div id="product-header">
+
+                        <!-- LOGO -->
+                        <div id="product-logo" class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                            <img style="border-radius: 2px;"  width="120" height="96"
+                                 src="<?= $helperImage->Image($this->product->image_small, array('width' => 120, 'height' => 96)); ?>"/>
+                        </div>
+                        <!-- /LOGO -->
+
+                        <!-- TITLE -->
+                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                            <h1 id="product-title">
+                                <?php if (false === empty($this->product->link_1)): ?><a
+                                    href="<?php echo $helperAddDefaultScheme->addDefaultScheme($this->product->link_1); ?>"
+                                    target="_NEW"
+                                    title="<?php echo $helperAddDefaultScheme->addDefaultScheme($this->product->link_1); ?>"
+                                    > <?= $this->product->title; ?> <span class="fa fa-external-link"></span></a>
+                                <?php else : ?>
+                                    <?= $this->product->title; ?>
+                                <?php endif; ?>
+                            </h1>
+                            <span class="category"><?= $this->product->cat_title; ?></span>
+                        </div>
+                        <!-- /TITLE -->
+
+                        <!-- the maker -->
+                        <aside id="product-maker" class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+
+                            <?php if (empty($this->product->claimable)) { ?>
+
+                                <div class="">
+                                    <div class="well about-me-sidebar-section">
+                                        <div class="sidebar-content">
+                                            <div class="row product-maker-sidebar">
+                                                <div class="col-md-7 col-lg-7 col-sm-7 col-xs-7 product-maker-summary">
+                                                    <h5>
+                                                        <a href="<?php echo $helperBuildMemberUrl->buildMemberUrl($this->member->member_id); ?>"><?= $this->member->username; ?></a>
+                                                    </h5>
+
+                                                </div>
+                                                <div class="col-md-5 col-lg-5 col-sm-5 col-xs-5 product-maker-thumbnail relative">
+                                                    <a href="<?php echo $helperBuildMemberUrl->buildMemberUrl($this->member->member_id); ?>"
+                                                       title="<?= $this->member->username ?>">
+                                                        <div class="profile-image-overlay-4 absolute"></div>
+                                                        <img src="<?= $helperImage->Image($this->member->profile_image_url, array('width' => 40, 'height' => 40)); ?>"
+                                                             alt="product-maker"
+                                                             width="15"
+                                                             height="15"
+                                                             class="sidebar-profile-image">
+                                                    </a>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            <?php } ?>
+                        </aside>
+                        <!-- /the maker -->
+                    </div>
+                    <!-- /HEADER -->
+
+
+                    <!-- TABS -->
+                    <div id="product-tabs">
+                        <ul class="nav nav-tabs">
+                            <li><a href="#about-panel" data-toggle="tab">Product</a></li>
+
+                            <?php if (null != ($this->product->embed_code) OR count($this->galleryPictures) > 0) { ?>
+                                <li>
+                                    <a href="#media-panel" data-toggle="tab">
+                                        <?php if (null != ($this->product->embed_code)) { ?>
+                                            Media
+                                        <?php } elseif (count($this->galleryPictures) > 0) { ?>
+                                            Gallery
+                                        <?php } ?>
+                                    </a>
+                                </li>
+                            <?php } ?>
+
+                            <!-- ppload -->
+                            <?php if ($this->product->ppload_collection_id): ?>
+                                <li><a href="#files-panel" data-toggle="tab"><?= $this->translate('Files') ?></a></li>
+                            <?php endif; ?>
+                            <!-- /ppload -->
+                            <li><a href="#donations-panel" data-toggle="tab">Supporters</a></li>
+                            <li class="active" id="donate-tab"><a href="#donate-panel" data-toggle="tab">Donate</a></li>
+                        </ul>
+                    </div>
+                    <!-- /TABS -->
+
+                    <!-- PANELS -->
+
+                    <div class="tab-content row" id="product-panels">
+
+                        <!-- ABOUT -->
+                        <div class="tab-pane" id="about-panel">
+
+
+                            <div id="product-about" class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+
+                                <div class="">
+                                    <article>
+                                        <?= nl2br(strip_tags($this->product->description)) ?>
+                                    </article>
+
+                                    <article>
+                                        <?php if (count($this->updates) > 0) { ?>
+                                            <?= $this->partialLoop('product/partials/productUpdates.phtml', $this->updates); ?>
+                                        <?php } ?>
+                                    </article>
+
+                                </div>
+
+                            </div>
+
+                            <?php
+                            echo $this->partial(
+                                $viewTopHeader,
+                                array(
+                                    "member" => $this->member,
+                                    "product" => $this->product,
+                                    "loginUrl" => $loginUrl,
+                                    'product_views' => $this->product_views,
+                                    'tab' => 'product',
+                                    'supporter' => $this->supporter,
+                                    'supporting' => $this->supporting,
+                                    'plings' => $this->plings,
+                                    'paymentStatus' => $this->paymentStatus,
+                                    'paymentMessage' => $this->paymentMessage
+                                )
+                            );
+                            ?>
+
+                        </div>
+                        <!-- /ABOUT -->
+
+                        <!-- DONATIONS -->
+                        <div class="tab-pane" id="donations-panel">
+
+                            <article class="col-lg-8 col-md-8 col-sm-8 col-xs-12" id="comments-container">
+
+                                <?php echo $this->render('product/partials/productSupporterComments.phtml') ?>
+
+                            </article>
+
+
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 list panel-grey-part" id="supporters">
+                                <h3>Supporters</h3>
+                                <?php
+                                if (count($this->supporting) > 0):
+                                    $countSupporter = count($this->supporting->toArray());
+                                    if ($countSupporter < 4) {
+                                        $g = $countSupporter;
+                                    } else {
+                                        $g = 4;
+                                    }
+                                    $h = 0;
+                                    $i = 3;
+                                    foreach ($this->supporting as $supporter):
+                                        $i++;
+                                        $h++; ?>
+
+                                        <div class="user">
+                                            <div class="u-wrap">
+                                                <a href="<?php echo $helperBuildMemberUrl->buildMemberUrl($supporter->member_id); ?>">
+                                                    <figure>
+                                                        <img src="<?= $helperImage->Image($supporter->profile_image_url,array('width' => 200, 'height' => 200, 'crop' => 2)); ?>"/>
+                                                    </figure>
+                                                    <div class="u-content">
+                                                        <h3><?= $supporter->username ?></h3>
+                                                        <span>$<?= $supporter->sum_plings ?></span>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                        <?php
+                                    endforeach;
+                                endif;
+                                ?>
+                            </div>
+
+                        </div>
+                        <!-- /DONATIONS -->
+
+                        <!-- MEDIA -->
+                        <div class="tab-pane" id="media-panel">
+                            <?php if (null != ($this->product->embed_code)): ?>
+                                <?= $this->product->embed_code ?>
+                            <?php endif; ?>
+                            <?php if (count($this->galleryPictures) > 0) {
+                                echo $this->render('product/partials/gallery.phtml', array('galleryPictures' => $this->galleryPictures)); ?>
+                            <?php } ?>
+                        </div>
+                        <!-- /MEDIA -->
+
+                        <!-- ppload -->
+                        <?php if ($this->product->ppload_collection_id): ?>
+                            <div id="files-panel" class="tab-pane">
+                                <article>
+                                    <div data-ppload-api-uri="<?= PPLOAD_API_URI ?>"
+                                         data-ppload-collection-id="<?= ltrim($this->product->ppload_collection_id, '!') ?>">
+                                        <iframe src="" width="0" height="0" frameborder="0"
+                                                data-pling-music-uri="/pling-music-html5/embed.html"
+                                                seamless></iframe>
+
+                                        <table class="table table-bordered" data-ppload-files="">
+                                            <thead>
+                                            <?php /**
+                                            <?php if ($this->product->ppload_collection_id[0] == '!'): ?>
+                                                <tr>
+                                                    <th colspan="3">
+                                                        <a href=""
+                                                           class="btn btn-native btn-min-width"
+                                                           data-ppload-download-link="">
+                                                            <?= $this->translate('Download all files via Torrent') ?></a>
+                                                    </th>
+                                                </tr>
+                                            <?php endif; ?>
+                                            **/?>
+                                            <tr>
+                                                <th><?= $this->translate('Filename'); ?></th>
+                                                <th><?= $this->translate('Filetype'); ?></th>
+                                                <th style="text-align: right"><?= $this->translate('Filesize'); ?></th>
+                                            </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                            <tfoot>
+                                            </tfoot>
+                                        </table>
+
+
+                                    </div>
+                                </article>
+                            </div>
+
+                            <script type="text/javascript">
+                                $(function () {
+
+                                    var $pploadCollection = $('div[data-ppload-collection-id]');
+                                    var $plingMusic = $pploadCollection.find('iframe[data-pling-music-uri]');
+                                    var pploadApiUri = $pploadCollection.attr('data-ppload-api-uri');
+                                    var hasFilesPanelOpened = false;
+
+                                    function getPploadFiles(page) {
+                                        var collectionId = $pploadCollection.attr('data-ppload-collection-id');
+                                        if (!page) {
+                                            page = 1;
+                                        }
+                                        $.ajax({
+                                            url: pploadApiUri + 'files/index',
+                                            type: 'GET',
+                                            data: {
+                                                collection_id: collectionId,
+                                                perpage: 100,
+                                                page: page,
+                                                format: 'json',
+                                                ignore_status_code: 1
+                                            },
+                                            dataType: 'json',
+                                            success: function (data, textStatus, jqXHR) {
+                                                if (data.status != 'success') {
+                                                    return;
+                                                }
+
+                                                var isPlayable = false;
+                                                var fileSizeSum = 0;
+                                                $.each(data.files, function () {
+                                                    var fileDescription = '';
+                                                    if (this.description) {
+                                                        fileDescription = this.description;
+                                                    }
+                                                    $pploadCollection.find('table[data-ppload-files] tbody').append(
+                                                        '<tr>'
+                                                        + '<td><a href="' + pploadApiUri + 'files/download/'
+                                                        + 'id/' + this.id + '/' + this.name + '">' + this.name + '</a><br>'
+                                                        + fileDescription + '</td>'
+                                                        + '<td>' + this.type + '</td>'
+                                                        + '<td style="text-align: right">' + humanFileSize(this.size) + '</td>'
+                                                        + '</tr>'
+                                                    );
+
+                                                    fileSizeSum += parseInt(this.size);
+                                                    if (this.type == 'audio/mpeg' || this.type == 'application/ogg') {
+                                                        isPlayable = true;
+                                                    }
+                                                });
+
+                                                $pploadCollection.find('table[data-ppload-files] tfoot').append(
+                                                    '<tr>'
+                                                    + '<th colspan="2">' + data.pagination.totalItems + ' <?= $this->translate('files')?></th>'
+                                                    + '<th style="text-align: right">' + humanFileSize(fileSizeSum) + '</th>'
+                                                    + '</tr>'
+                                                );
+
+                                                $pploadCollection.find('a[data-ppload-download-link]').attr(
+                                                    'href',
+                                                    pploadApiUri + 'collections/download/id/' + collectionId
+                                                );
+                                                if (isPlayable && !$plingMusic.attr('src')) {
+                                                    $plingMusic.attr({
+                                                        src: $plingMusic.attr('data-pling-music-uri')
+                                                        + '?play_collection=' + collectionId,
+                                                        width: '100%',
+                                                        height: '500'
+                                                    });
+                                                }
+                                                if (data.pagination.next) {
+                                                    getPploadFiles(data.pagination.next);
+                                                }
+                                            },
+                                            error: function (jqXHR, textStatus, errorThrown) {
+                                                return;
+                                            }
+                                        });
+                                    }
+
+                                    function humanFileSize(bytes) {
+                                        var size = '';
+                                        size = (bytes / 1048576).toFixed(2) + ' MB';
+                                        /*
+                                         if (bytes >= 1073741824) {
+                                         size = (bytes / 1073741824).toFixed(2) + 'GB';
+                                         }
+                                         else if (bytes >= 1048576) {
+                                         size = (bytes / 1048576).toFixed(2) + 'MB';
+                                         }
+                                         else if (bytes >= 1024) {
+                                         size = (bytes / 1024).toFixed(2) + 'KB';
+                                         }
+                                         else {
+                                         size = bytes + 'bytes';
+                                         }*/
+                                        return size;
+                                    }
+
+                                    $('a[href="#files-panel"][data-toggle="tab"]').on('click', function () {
+                                        if (!hasFilesPanelOpened) {
+                                            getPploadFiles();
+                                            hasFilesPanelOpened = true;
+                                        }
+                                    });
+
+                                });
+                            </script>
+                        <?php endif; ?>
+                        <!-- /ppload -->
+
+                        <!-- DONATE -->
+                        <div class="tab-pane active" id="donate-panel">
+
+                            <article class="col-lg-12 col-md-12 col-sm-12 co-xs-12" id="payment-container">
+                                <?php
+                                echo $this->partial(
+                                    'product/partials/productPling.phtml',
+                                    array(
+                                        "member" => $this->member,
+                                        "product" => $this->product,
+                                        "loginUrl" => $loginUrl,
+                                        'product_views' => $this->product_views,
+                                        'tab' => 'product',
+                                        'auth' => $this->auth,
+                                        'txtUserFollows' => $txtUserFollows,
+                                        'urlUserFollows' => $urlUserFollows,
+                                        'imgFile' => $imgFile,
+                                        'titleImage' => $titleImage,
+                                        'imageTag' => $imageTag,
+                                        'userFollowsProject' => $this->userFollowsProject,
+                                        'paymentAmount' => $this->amount,
+                                        'paymentComment' => $this->comment,
+                                        'paymentProvider' => $this->provider,
+                                        'urlPay' => $this->urlPay
+                                    )
+                                );
+                                ?>
+                            </article>
+
+                        </div>
+                        <!-- /DONATE -->
+
+                    </div>
+
+                    <!-- /PANELS -->
+
+                    <span class="page-views"><?= $this->product_views ?> page views</span>
+
+                </div>
+
+            </section>
+
+        </section>
+
+        <section class="body-wrap full-width">
+
+            <section class="wrapper">
+
+                <!-- PAGE BODY -->
+
+                <section class="full-width product-page">
+
+                    <!-- page content -->
+
+                    <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12 product-details">
+
+                        <!-- panels -->
+                        <div class="tab-content product-description">
+
+
+                        </div>
+                        <!-- /panels -->
+
+                    </div>
+
+                    <!-- /page content -->
+
+                    <!-- sidebar -->
+
+                    <!-- /sidebar -->
+
+                </section>
+
+                <!-- /PAGE BODY -->
+
+            </section>
+
+        </section>
+
+    </main>
+
+
+<?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){
+
+            newProductPage.setup();
+        });
+    ');

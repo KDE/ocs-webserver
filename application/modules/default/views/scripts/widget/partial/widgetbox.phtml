@@ -1,0 +1,260 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
+$helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
+$helperServerUrl = new Zend_View_Helper_ServerUrl();
+?>
+<div id="pling-widget" style="background-color:{{colors.widgetBg}};">
+
+    <div class="widget-header">
+        <h3 class="padding-both-5" style="color:{{colors.headline}};">{{text.headline}}</h3>
+    </div>
+
+    <div class="widget-body" style="background-color:{{colors.widgetContent}};color:{{colors.text}};">
+        <form action="<?= $helperBuildProductUrl->buildProductUrl($this->project->project_id, 'pling') ?>"
+              target="_blank">
+
+            <div class="widget-text" style="">{{text.content}}</div>
+
+            <div class="donation-amount" data-ng-if="amounts.showDonationAmount && pProvider == true">
+                <div class="support-with">
+                    <span>Support with</span>
+                </div>
+                <div class="donation-amount-number">
+                    <span class="glyphicon glyphicon-usd"></span>
+                    <?php if (true === empty($this->project->paypal_mail) || true === empty($this->project->dwolla_id)) {
+                        $style = 'disabled';
+                    } else {
+                        $style = '';
+                    }
+                    ?>
+                    <input type="text"
+                           class="inp-pling <?php echo $style; ?>"
+                           data-ng-model="amounts.donation"
+                           name="amount"/>
+                </div>
+                <div class="button">
+                    <button class="btn btn-pling"
+                            style="background-color:{{colors.button}};color:{{colors.buttonText}};"
+                            type="submit">{{text.button}}
+                    </button>
+                </div>
+                <?php if (false === empty($this->project->paypal_mail) || false === empty($this->project->dwolla_id)) { ?>
+                    <div class="payment-providers">
+                        <div class="pay-with">
+                            <span>Pay with</span>
+                        </div>
+                        <?php if (false === empty($this->project->paypal_mail)) { ?>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <input type="radio" name="provider" value="paypal" checked>
+                                </span>
+                                <span class="payment-icon">
+                                    <img src="/theme/flatui/img/logo_paypal.png"/>
+                                </span>
+                            </div>
+                        <?php } ?>
+                        <?php if (false === empty($this->project->dwolla_id)) {
+                            $checked = '';
+                            if (empty($this->project->paypal_mail)) {
+                                $checked = 'checked';
+                            }
+                            ?>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <input type="radio" name="provider" value="dwolla" <?= $checked ?>>
+                                </span>
+                                <span class="payment-icon">
+                                    <img src="/theme/flatui/img/new/dwolla.png"/>
+                                </span>
+                            </div>
+                        <?php } ?>
+                    </div>
+                <?php } ?>
+            </div>
+
+            <div class="product-funding-info" data-ng-if="pProvider == true"
+                 data-ng-class="{ 'with-goal' : amounts.goal}">
+                <div class="goal-range-number">
+                    <span>&#36;0</span>
+                    <span data-ng-if="amounts.goal">&#36;{{amounts.goal}}</span>
+                    <span class="unlimited" data-ng-if="!amounts.goal">&#8734;</span>
+                </div>
+                <div class="achieved-amount">
+                    <div class="bar"
+                         data-ng-class="{ 'no-goal' : !amounts.goal}"
+                         style="width:{{Math.round(100*amounts.current/amounts.goal)}}%"></div>
+                </div>
+                <div class="money-raised"><?= $this->translate('Raised') ?> &#36;{{amounts.current}} <span
+                        data-ng-if="amounts.goal">of &#36;{{amounts.goal}}</span></div>
+                <div class="percentage" style="color:{{colors.widgetBg}};" data-ng-show="amounts.goal">
+                    {{Math.round(100*amounts.current/amounts.goal)}}%
+                </div>
+            </div>
+
+            <div class="supporters" data-ng-if="showSupporters && pProvider == true" ng-hide="!supporters.length">
+                <div class="supporter has-tooltip" data-ng-repeat="supporter in supporters"
+                     title="{{supporter.username}}">
+                    <a href="{{supporter.url}}">
+                        <figure><img ng-src="{{supporter.img}}"/></figure>
+                    </a>
+                </div>
+            </div>
+
+            <div class="comments" data-ng-if="showComments && pProvider == true" ng-hide="!comments.length">
+                <div class="comment" data-ng-repeat="comment in comments">
+                    <figure><img ng-src="{{comment.img}}"/></figure>
+                    <div class="content">
+                        <div class="info">{{comment.username}} donated &#36;{{comment.amount}}</div>
+                        <div class="text">{{comment.comment}}</div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="widget-footer">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 padding-both-20">
+                <div class="pay-secure">
+                    <a href="<?php echo $helperServerUrl->serverUrl() . $helperBuildProductUrl->buildProductUrl($this->project->project_id); ?>"
+                       target="_blank">visit on <?= $_SERVER['HTTP_HOST'] ?></a>
+                </div>
+                <div class="powered-by">
+                    <a href="<?php echo $helperServerUrl->serverUrl() . $helperBuildProductUrl->buildProductUrl($this->project->project_id); ?>"
+                       target="_blank" class="opendesktop-logo {{logo}}"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<?php
+$supportersArray = array();
+foreach ($this->supporting as $supporter) {
+    $new_supporter = new stdClass();
+    $new_supporter->username = $supporter->username;
+    $new_supporter->img = $supporter->profile_image_url;
+    $new_supporter->url = $helperBuildMemberUrl->buildMemberUrl($supporter->member_id, null, null, true);
+    array_push($supportersArray, $new_supporter);
+}
+
+$commentsArray = array();
+foreach ($this->comments as $comment) {
+    $new_comment = new stdClass();
+    $new_comment->username = $comment->username;
+    $new_comment->img = $comment->profile_image_url;
+    $new_comment->amount = $comment->amount;
+    $new_comment->comment = $comment->comment;
+    array_push($commentsArray, $new_comment);
+}
+?>
+
+<script type="text/javascript">
+
+    var widgetApp = angular.module('widgetApp', ['colorpicker.module']);
+
+    widgetApp.controller('WidgetController', function ($scope, $http) {
+
+        $scope.Math = window.Math;
+
+        $scope.text = {
+            content: "<?=addslashes($this->widgetConfig->text->content)?>",
+            headline: "<?=addslashes($this->widgetConfig->text->headline)?>",
+            button: "Pling it!"
+        }
+
+        $scope.amounts = {
+            donation: '<?=$this->widgetConfig->amounts->donation?>',
+            showDonationAmount:<?=$this->widgetConfig->amounts->showDonationAmount?'true':'false'?>,
+            current: '<?=(float)$this->project->amount_received;?>',
+            goal: '<?=false === empty($this->project->amount)?$this->project->amount:''; ?>'
+        };
+
+        $scope.colors = {
+            widgetBg: '<?=$this->widgetConfig->colors->widgetBg?>',
+            widgetContent: '<?=$this->widgetConfig->colors->widgetContent?>',
+            headline: '<?=$this->widgetConfig->colors->headline?>',
+            text: '<?=$this->widgetConfig->colors->text?>',
+            button: '<?=$this->widgetConfig->colors->button?>',
+            buttonText: '<?=$this->widgetConfig->colors->buttonText?>'
+        };
+
+        $scope.showSupporters = <?=$this->widgetConfig->showSupporters?'true':'false'?>;
+        $scope.supporters = angular.fromJson('<?php echo json_encode($supportersArray);?>');
+
+        $scope.showComments = <?=$this->widgetConfig->showComments?'true':'false'?>;
+        $scope.comments = angular.fromJson('<?php echo addslashes(json_encode($commentsArray));?>');
+
+        $scope.logo = '<?=$this->widgetConfig->logo?>';
+
+        $scope.project = <?=$this->project->project_id ?>;
+        $scope.uuid = '';
+        $scope.host = 'http://<?=$_SERVER ['HTTP_HOST']?>';
+        $scope.url = '';
+        $scope.embedCode = '';
+        $scope.pProvider = <?=$this->paymentProvider?>
+
+
+            $scope.getEmbedCode = function () {
+                $scope.url = $scope.host + '/widget/' + $scope.project + '/?'
+                    + 'sda=' + $scope.amounts.showDonationAmount + '&'
+                    + 'ssu=' + $scope.showSupporters + '&'
+                    + 'sco=' + $scope.showComments + '&'
+                    + 'log=' + $scope.logo + '&'
+                    + 'wbg=' + encodeURIComponent($scope.colors.widgetBg) + '&'
+                    + 'wco=' + encodeURIComponent($scope.colors.widgetContent) + '&'
+                    + 'whe=' + encodeURIComponent($scope.colors.headline) + '&'
+                    + 'wte=' + encodeURIComponent($scope.colors.text) + '&'
+                    + 'wbu=' + encodeURIComponent($scope.colors.button) + '&'
+                    + 'wbt=' + encodeURIComponent($scope.colors.buttonText)
+                ;
+                $scope.embedCode = '<iframe src="' + $scope.url + '" style="overflow:hidden;height:100%;width:100%" height="100%" width="100%" frameBorder=0 scrolling="no" allowTransparency="false" seamless ></iframe>';
+            }
+
+    });
+
+    var PlingTip = (function () {
+        return {
+            setup: function () {
+                $('.has-tooltip').hover(function (event) {
+                    event.preventDefault();
+
+                    var title = $(this).attr('title');
+
+                    $(this).tooltip({
+                        title: title
+                    });
+                    $(this).tooltip('show');
+
+                });
+            }
+        }
+    })();
+
+    $(document).ready(function () {
+        PlingTip.setup();
+    });
+
+</script>

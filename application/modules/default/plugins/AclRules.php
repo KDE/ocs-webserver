@@ -1,0 +1,169 @@
+<?php
+
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+class Default_Plugin_AclRules extends Zend_Acl
+{
+    const ROLENAME_GUEST = 'guest';
+    const ROLENAME_COOKIEUSER = 'cookieuser';
+    const ROLENAME_FEUSER = 'feuser';
+    const ROLENAME_STAFF = 'staff';
+    const ROLENAME_ADMIN = 'admin';
+
+    function __construct()
+    {
+        $this->addRole(new Zend_Acl_Role (self::ROLENAME_GUEST));
+        $this->addRole(new Zend_Acl_Role (self::ROLENAME_COOKIEUSER), self::ROLENAME_GUEST);
+        $this->addRole(new Zend_Acl_Role (self::ROLENAME_FEUSER), self::ROLENAME_COOKIEUSER);
+        $this->addRole(new Zend_Acl_Role (self::ROLENAME_STAFF), self::ROLENAME_FEUSER);
+        $this->addRole(new Zend_Acl_Role (self::ROLENAME_ADMIN));
+
+        $this->addResource(new Zend_Acl_Resource ('default_logout'));
+
+        $this->addResource(new Zend_Acl_Resource ('default_authorization'));
+        $this->addResource(new Zend_Acl_Resource ('default_button'));
+        $this->addResource(new Zend_Acl_Resource ('default_categories'));
+        $this->addResource(new Zend_Acl_Resource ('default_community'));
+        $this->addResource(new Zend_Acl_Resource ('default_content'));
+        $this->addResource(new Zend_Acl_Resource ('default_discovery'));
+        $this->addResource(new Zend_Acl_Resource ('default_donationlist'));
+        $this->addResource(new Zend_Acl_Resource ('default_error'));
+        $this->addResource(new Zend_Acl_Resource ('default_explore'));
+        $this->addResource(new Zend_Acl_Resource ('default_gateway'));
+        $this->addResource(new Zend_Acl_Resource ('default_hive'));
+        $this->addResource(new Zend_Acl_Resource ('default_home'));
+        $this->addResource(new Zend_Acl_Resource ('default_ocsv1')); // OCS API
+        $this->addResource(new Zend_Acl_Resource ('default_productcategory'));
+        $this->addResource(new Zend_Acl_Resource ('default_productcomment'));
+        $this->addResource(new Zend_Acl_Resource ('default_product'));
+        $this->addResource(new Zend_Acl_Resource ('default_report'));
+        $this->addResource(new Zend_Acl_Resource ('default_rss'));
+        $this->addResource(new Zend_Acl_Resource ('default_settings'));
+        $this->addResource(new Zend_Acl_Resource ('default_supporterbox'));
+        $this->addResource(new Zend_Acl_Resource ('default_user'));
+        $this->addResource(new Zend_Acl_Resource ('default_widget'));
+
+        $this->addResource(new Zend_Acl_Resource ('backend_categories'));
+        $this->addResource(new Zend_Acl_Resource ('backend_claim'));
+        $this->addResource(new Zend_Acl_Resource ('backend_comments'));
+        $this->addResource(new Zend_Acl_Resource ('backend_content'));
+        $this->addResource(new Zend_Acl_Resource ('backend_faq'));
+        $this->addResource(new Zend_Acl_Resource ('backend_hive'));
+        $this->addResource(new Zend_Acl_Resource ('backend_hiveuser'));
+        $this->addResource(new Zend_Acl_Resource ('backend_index'));
+        $this->addResource(new Zend_Acl_Resource ('backend_mail'));
+        $this->addResource(new Zend_Acl_Resource ('backend_member'));
+        $this->addResource(new Zend_Acl_Resource ('backend_operatingsystem'));
+        $this->addResource(new Zend_Acl_Resource ('backend_project'));
+        $this->addResource(new Zend_Acl_Resource ('backend_ranking'));
+        $this->addResource(new Zend_Acl_Resource ('backend_reportcomments'));
+        $this->addResource(new Zend_Acl_Resource ('backend_reportproducts'));
+        $this->addResource(new Zend_Acl_Resource ('backend_search'));
+        $this->addResource(new Zend_Acl_Resource ('backend_storecategories'));
+        $this->addResource(new Zend_Acl_Resource ('backend_store'));
+        $this->addResource(new Zend_Acl_Resource ('backend_tag'));
+        $this->addResource(new Zend_Acl_Resource ('backend_user'));
+
+
+        $this->allow(self::ROLENAME_GUEST, array(
+            'default_authorization',
+            'default_button',
+            'default_categories',
+            'default_content',
+            'default_community',
+            'default_error',
+            'default_explore',
+            'default_donationlist',
+            'default_gateway',
+            'default_hive',
+            'default_home',
+            'default_productcategory',
+            'default_ocsv1', // OCS API
+            'default_report',
+            'default_rss',
+            'default_supporterbox',
+        ));
+
+        $this->allow(self::ROLENAME_COOKIEUSER, array(
+            'default_logout'
+        ));
+
+        $this->allow(self::ROLENAME_FEUSER, array(
+            'default_settings',
+            'default_productcomment'
+        ));
+
+
+        $this->allow(self::ROLENAME_GUEST, 'default_widget', array('index', 'render'));
+        $this->allow(self::ROLENAME_FEUSER, 'default_widget', array('save', 'savedefault', 'config'),
+            new Default_Plugin_Acl_IsProjectOwnerAssertion());
+
+        $this->allow(self::ROLENAME_GUEST, 'default_product',
+            array('index', 'show', 'updates', 'fetch', 'getupdatesajax', 'saveupdateajaxAction'));
+
+        $this->allow(self::ROLENAME_COOKIEUSER, 'default_product', array('follow', 'unfollow', 'rating'));
+        $this->allow(self::ROLENAME_FEUSER, 'default_product',
+            array('add', 'claim', 'saveproduct', 'pling', 'pay', 'paymentok', 'paymentcancel', 'dwolla'));
+        $this->allow(self::ROLENAME_FEUSER, 'default_product', array(
+            'update',
+            'delete',
+            'edit',
+            'publish',
+            'unpublish',
+            'preview',
+            'verifycode',
+            'makerconfig',
+            'addpploadfile',
+            'updatepploadfile',
+            'deletepploadfile',
+            'deletepploadfiles',
+            'finalizepploadcollection',
+            'saveupdateajax',
+            'getupdatesajax',
+            'deleteupdateajax'
+        ), new Default_Plugin_Acl_IsProjectOwnerAssertion());
+
+        $this->allow(self::ROLENAME_GUEST, 'default_user', array('index', 'aboutme', 'share', 'report'));
+
+        $this->allow(self::ROLENAME_COOKIEUSER, 'default_user', array('follow', 'unfollow'));
+        $this->allow(self::ROLENAME_FEUSER, 'default_user', array('settings'));
+        $this->allow(self::ROLENAME_FEUSER, 'default_user',
+            array('news', 'products', 'activities', 'payments', 'income'), new Default_Plugin_Acl_IsOwnerAssertion());
+
+        $this->allow(self::ROLENAME_STAFF, array(
+                'backend_index',
+                'backend_categories',
+                'backend_claim',
+                'backend_comments',
+                'backend_content',
+                'backend_store',
+                'backend_storecategories',
+                'backend_operatingsystem',
+                'backend_reportcomments',
+                'backend_reportproducts',
+                'backend_search',
+            )
+        );
+
+        $this->allow(self::ROLENAME_ADMIN);
+    }
+
+}

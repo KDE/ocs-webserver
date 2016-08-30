@@ -1,0 +1,77 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+/*
+$plingData = $this->userPlings($this->hit->project_id);
+$plingMoney = $this->plingMoney($this->hit->project_id);
+$latestPling = $this->humanTiming($this->hit->created_at);*/
+
+$helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
+$helperFetchSubcategoriesForProduct = new Default_View_Helper_FetchCategoriesForProductAsString();
+
+
+$helperPrintDate = new Default_View_Helper_PrintDate();
+$createTime = $helperPrintDate->printDate($this->hit->created_at);
+$updateTime = $helperPrintDate->printDate($this->hit->changed_at);
+?>
+<div class="explore-product col-lg-12 col-md-12 col-sm-12 col-xs-12"
+     onclick="location.href='<?= $this->buildProductUrl($this->hit->project_id); ?>'">
+    <figure class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+        <a href="<?= $helperBuildProductUrl->buildProductUrl($this->hit->project_id); ?>">
+        	<div style="max-width: 220px; max-height: 220px;" class="text-center">
+            	<img src="<?php echo $this->Image($this->hit->image_small, array('width' => 167, 'height' => 167)); ?>" style="max-width: 167px; max-height: 167px;" class="explore-product-image"/>
+            </div>
+        </a>
+    </figure>
+    <div class="explore-product-details col-lg-7 col-md-7 col-sm-7 col-xs-7">
+        <h3>
+            <a href="<?= $helperBuildProductUrl->buildProductUrl($this->hit->project_id); ?>"><?= $this->hit->title ?></a>
+        </h3>
+        <?php if (empty($this->hit->claimable)) { ?>
+            <span>By <b><?php echo $this->hit->username; ?></b></span>
+        <?php } ?>
+        <span>In <b><?php echo $helperFetchSubcategoriesForProduct->fetchCategoriesForProductAsString($this->hit->project_id) ?></b></span>
+    </div>
+    <div class="explore-product-plings col-lg-3 col-md-3 col-sm-3 col-xs-3">
+        <!-- RATING -->
+        <?php
+        $this->widgetRating = new stdClass();
+        $this->widgetRating->project_id = $this->hit->project_id;
+        $this->widgetRating->laplace_score = $this->hit->laplace_score;
+        $this->widgetRating->count_likes = $this->hit->count_likes;
+        $this->widgetRating->count_dislikes = $this->hit->count_dislikes;
+        echo $this->render('partials/widgetRating.phtml'); ?>
+        <!-- /RATING -->
+        <div class="progress">
+            <div class="bar no-goal">
+            </div>
+        </div>
+        <div class="collected">
+        <?php /** 
+            <span
+                class="count"><?= $this->hit->amount_received ? 'Collected: ' . $this->toCurrency($this->hit->amount_received) : '' ?></span>
+                **/?>
+            <span><?= $updateTime == null ? '' : 'updated: ' . $updateTime ?> </span>
+            <span><?= $createTime == null ? '' : 'added: ' . $createTime ?> </span>
+            
+        </div>
+    </div>
+</div><!-- END .explore-product -->

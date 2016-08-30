@@ -1,0 +1,422 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$modelInfo = new Default_Model_Info();
+
+$this->comments = $modelInfo->getLastCommentsForHostStores(7);
+$this->donations = $modelInfo->getLastPlingsForHostStores(10);
+$this->users = $modelInfo->getNewActiveMembers(10);
+$this->products = $modelInfo->getLastProductsForHostStores(10);
+//$this->mostdownloads = $modelInfo->getMostDownloadedForHostStores(7);
+$featureProducts = $modelInfo->getFeaturedProductsForHostStores(100);
+
+
+/*
+$this->comments = $modelInfo->getLastCommentsForHostStores_local(5);
+$this->donations = $modelInfo->getLastPlingsForHostStores_local(10);
+$this->users = $modelInfo->getNewActiveMembers_local(10);
+$this->products = $modelInfo->getLastProductsForHostStores_local(10);
+$featureProducts = $modelInfo->getFeaturedProductsForHostStores_local(100);
+*/
+if ($featureProducts->getTotalItemCount()) {
+    /** @var Zend_Controller_Request_Http $request */
+    $request = Zend_Controller_Front::getInstance()->getRequest();
+
+    $offset = (int)$request->getParam('page');
+    $featureProducts->setItemCountPerPage(1);
+    $featureProducts->setCurrentPageNumber($offset);
+    $this->featureProducts = $featureProducts;
+}
+
+$storeCatIds = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
+$this->categories = $storeCatIds;
+
+$helperFetchCategory = new Default_View_Helper_CatTitle();
+$helperFetchCatParent = new Default_View_Helper_CatParent();
+$getAuthUser = new Default_View_Helper_GetAuthUser();
+$helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
+$helperImage = new Default_View_Helper_Image();
+
+$auth = Zend_Auth::getInstance();
+$member = $getAuthUser->getAuthUser();
+
+?>
+<style type="text/css">
+    .new-products .num
+    {
+        display: block;
+        float: left;
+        padding-left: 5px;
+        padding-right: 5px;
+        padding-top: 10px;
+    }
+    .wrapper-kde-store h3
+    {
+       padding-left: 8px;
+       padding-top: 10px;
+    }
+    .new-products .row
+    {
+        margin-top: 10px;
+    }
+
+     .new-products .rating
+    {
+        width: 80px;
+    }
+    .new-products .time
+    {
+        font-size: smaller;
+    }
+    .new-products .cntComments
+    {
+        font-size: smaller;
+    }
+    .new-products .productimg
+    {
+        width:50px;
+        height:50px;
+    }
+    .new-products .productrow
+    {
+        padding-bottom: 5px;
+        padding-top: 5px;
+        border-bottom: 1px solid #ccd4d8;
+    }
+    .new-products .productrow:last-child {
+            border-bottom: none;
+        }   
+    .newusers .u-wrap {
+    float: left;
+    width: 100%;
+    padding: 0.3em;
+    border: 0.35em solid #dee0e0;
+    border-radius: 5px;
+    height: 14em;
+    margin-bottom: 1em;
+    background: white;
+    width: 115px;
+    height: 200px;
+    margin-right: 10px;
+    -webkit-transition: all 0.2s ease-out;
+    -moz-transition: all 0.2s ease-out;
+    -ms-transition: all 0.2s ease-out;
+    -o-transition: all 0.2s ease-out;
+    }
+          
+    .newusers .u-wrap figure img {
+    width: 100%;
+    border: 1px solid #dbdbdb;
+    -webkit-border-radius: 999px;
+    -moz-border-radius: 999px;
+    border-radius: 999px;
+    -webkit-background-clip: padding-box;
+    -moz-background-clip: padding;
+    background-clip: padding-box;
+    }
+
+    .newusers .u-wrap h3 {
+    font-size: 13px;
+    font-weight: bold;
+    word-wrap: break-word;
+    line-height: 20px;
+    height: 20px;
+    padding: 0;
+    margin: 0;
+    }
+    .newusers .u-wrap span.small {    
+   font-size: 13px;
+    text-align: right;
+    color: #444;
+    margin-top: 50px;
+    float: right;
+    }
+
+    .prod-widget-box
+    {
+        width: 100% !important;
+
+    }
+    div.latestcomments
+    {
+    	width: 100%;
+        /*width: 300px;
+        float: left; 
+        margin-left: 50px;*/
+    }
+    div.newestproducts
+    {
+    	width: 100%;        
+        float: left ;
+    }
+    header div.container.header {
+            background-image: <?=$this->template['header']['background-image']?>;
+            background-color: <?=$this->template['header']['background-color']?>;
+            color: <?=$this->template['header']['color']?>;
+            height: 142px;
+        }
+</style>
+
+    <header id="page_header" xmlns="http://www.w3.org/1999/html">
+        <div class="container header">
+        <section class="container">
+            <section class="wrapper">
+
+                <section>
+
+                    <figure class="logo-header" style="height: 150px;">
+                        <a href="/">
+                            <img width="<?=$this->template['header-logo']['width']?>" border="0" src="<?=$this->template['header-logo']['image-src']?>">
+                        </a>
+                    </figure>
+                  
+                    <nav id="nav-top">
+                        <div class="pull-left col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                        </div>
+
+                        <div class="pull-right col-lg-7 col-md-7 col-sm-7 col-xs-7">
+                            <?php if ($auth->hasIdentity() && !empty($member->username)) { ?>
+                                <ul class="menu pull-right">
+                                    <li class="link relative profile-menu-container">
+                                        <a rel="profile-menu" class="menu-trigger">
+                                        <div class="absolute header-profile-image"><img
+                                                src="<?= $helperImage->Image($member->profile_image_url, array('width' => 30, 'height' => 30)) ?>"/>
+                                        </div>
+                                        <span><?= $member->username ?></span>
+                                        </a>
+                                        <ul class="profile-menu menu-dropdown">
+                                            <div class="dropdown-header"></div>
+                                            <li class="link first"><a href="/product/add/"><?= $this->translate('Add Product') ?></a>
+                                            </li>
+                                            <li class="link first"><a
+                                                    href="<?= $helperBuildMemberUrl->buildMemberUrl($member->member_id, 'products') ?>"><?= $this->translate('My Products') ?></a>
+                                            </li>
+                                            <li class="link"><a
+                                                    href="/settings/"><?= $this->translate('My Settings') ?></a>
+                                            </li>
+                                            <li class="link"><a href="/logout/"><?= $this->translate('Logout') ?></a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            <?php } else { ?>
+                            <?php } ?>
+                            <form id="search" class="pull-right" action="/search">
+                                <input type="text" name="projectSearchText" class="content-search">
+
+                                <div class="icon-search-input absolute cursor-hand"
+                                     onclick="$('#search').submit()"></div>
+                            </form>
+                        </div>
+                    </nav>
+                </section>
+
+            </section>
+        </section>
+
+            <section class="container">
+                <section class="wrapper">
+                    <span class="header_cat_link" id="header_cat_link" style="color: white;">
+                    Welcome to the KDE Store.
+                    	<!-- <a href="https://www.kde.org/community/">COMMUNITY</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://www.kde.org/applications/">PRODUCTS</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://www.kde.org/developerplatform/">DEVELOP</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://www.kde.org/community/donations/">DONATE</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://www.kde.org/support/">SUPPORT</a> -->
+                    </span>
+
+                    <?php if (false === $auth->hasIdentity() && empty($member->username)) {
+                        $helperEncryptUrl = new Default_View_Helper_EncryptUrl();
+                        $redirectString = '/login/redirect/'.$helperEncryptUrl->EncryptUrl($_SERVER["REQUEST_URI"]);
+                        ?>
+                        <ul class="menu-nav-tabs absolute-right" style="top: 77px;">
+                            <li role="presentation" class="<?php echo(strpos($_SERVER["REQUEST_URI"], 'register') ? 'active' : '') ?>">
+                                <a href="/register">Register</a></li>
+                            <li role="presentation" class="<?php echo(strpos($_SERVER["REQUEST_URI"], 'login') ? 'active' : '') ?>">
+                                <a href="/login<?=$redirectString?>">Login</a>
+                            </li>
+                        </ul>
+                    <?php } ?>
+                </section>
+            </section>
+        </div>
+    </header>
+
+    <main id="mainpage-kde-store" class="mainpage-kde-store" >
+
+    <div style="height: 353px; width: 100%; background-color: #EFF0F1; " id="featureProductsContainer">
+        
+        <?php
+        if ($this->featureProducts) {        
+                      echo $this->render('home/partials/featured-products.phtml');
+        } 
+        ?>
+       
+    </div>
+
+        <section class="wrapper-kde-store" id="intro-kde-store" >
+            <section class="container" style="height:100%; width: 100%;">                               
+                <div class="row">   
+               
+                <aside class="col-lg-2 col-md-1 col-sm-1 col-xs-11" style="padding-top: 48px">
+                     <?php  echo $this->render('explore/partials/filter.phtml'); ?>
+                </aside>               
+                
+                <div class="col-lg-10">
+                        <?php /*
+                        <div class="newestproducts" >
+                            <div class="row">
+                                <div >
+                                    <h3> Most download (6 months)
+                                    </h3>
+
+                                    <div class="prod-widget-box new-products" style="border:0px !important" >
+                                    <?php
+                                    $this->rownum = 1;                                                                                                                                            
+                                    foreach ($this->mostdownloads as $this->project) {
+                                        echo $this->render('home/partials/product.phtml');
+                                        $this->rownum++;                                        
+                                    }           
+                                    ?>
+                                    <div style="clear: both"></div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>  */
+                        ?>
+
+                        <div class="newestproducts" >
+                            <div class="row">
+                                <div >
+                                    <h3> Newest Products
+                                    </h3>
+
+                                    <div class="prod-widget-box new-products" style="border:0px !important" >
+                                    <?php
+                                    $this->rownum = 1; 
+
+                                    foreach ($this->products as $this->product) {
+                                    	
+                                        echo $this->render('home/partials/product.phtml');
+                                        $this->rownum++;
+                                        if($this->rownum>7)
+                                        	break;
+                                    }           
+                                    ?>
+                                    <div style="clear: both"></div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="latestcomments">
+                       
+                            <div class="row">
+                                <div >
+                                    <h3> Lastest Comments
+                                    </h3>
+                                        
+                                    <div class="prod-widget-box " style="border:0px !important">
+                                        <?php                                                          
+                                             foreach ($this->comments as $this->comment) {
+                                                    echo $this->render('home/partials/comment.phtml');                        
+                                                }                                 
+                                         ?> 
+
+                                          <div style="clear: both"></div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        
+                        </div>
+
+<?php /** 
+                        <div class="" style="">
+                            <div class="row">
+                                <div >
+                                    <h3> Newest 10 Users
+                                        </h3>
+                                        
+                                    <div class="prod-widget-box newusers" style="border:0px !important">
+                                         <?php 
+                                        foreach ($this->users as $user) {                                  
+                                            ?>
+                                            
+                                                <div class="user " >
+                                               
+                                                    <div class="u-wrap">
+                                                        <a href="<?php echo $this->buildMemberUrl($user['member_id']); ?>">
+                                                            <figure >
+                                                                <img src="<?php echo $this->Image($user['profile_image_url'], array('width' => '200', 'height' => '200', 'crop' => 2)); ?>"/>
+                                                            </figure>
+                                                            <h3 class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><?php echo $user['username']; ?></h3>                                                   
+                                                        </a>
+                                                         <span class="small"><?= $this->printDate($user['created_at'])?></span>
+                                                    </div>
+                                                   
+
+                                                </div>
+                                           
+                                        <?php } ?>
+
+                                        <div style="clear: both;"></div> 
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+**/?>                        
+                
+                </div>
+              
+
+                </div> <!--row -->
+
+
+                 
+            </section>
+        </section>
+        
+    </main>
+
+
+<script type="application/javascript">
+    $(document).ready(function () {
+        $('body').on('click', 'a.ajaxPartial', function (event) {
+            event.preventDefault();            
+            $(this).off();                  
+            var target = '#featureProductsContainer';  
+            if($(this).hasClass( "disabled" )) return false;
+            var url = $(this).attr("href");                        
+            $(target).load(url, function (response, status, xhr) {
+                if (status == "error") {
+                    $(target).empty().html('Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.');
+                }                
+            });
+            
+            return false;
+        });
+    });
+</script>
+
+
+  

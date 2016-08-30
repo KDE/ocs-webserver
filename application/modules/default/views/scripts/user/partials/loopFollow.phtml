@@ -1,0 +1,68 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<div class="cat-title col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div class="center">
+        <div><h3>Things i follow</h3></div>
+    </div>
+    <hr/>
+</div>
+
+<?php
+$helperProductUrl = new Default_View_Helper_BuildProductUrl();
+$helperImage = new Default_View_Helper_Image();
+if (count($this->followedProducts) < 4) {
+    $g = count($this->followedProducts);
+} else {
+    $g = 4;
+}
+$h = 0;
+$i = 3;
+foreach ($this->followedProducts as $follower):
+    $i++;
+    $h++;
+
+   // $titleImage = $this->Image($follower->image_big, array('width' => 270, 'height' => 140));
+   // $hasTitle = $follower->image_big !== null && strpos($titleImage, 'default.png') === false;
+
+    ?>
+    <div class="mini-card col-lg-2 col-md-2 col-sm-2 col-xs-2">
+        <div class="u-wrap">
+            <a href="<?= $helperProductUrl->buildProductUrl($follower->project_id) ?>" title="<?= $follower->title ?>">
+                <figure>
+                    <img src="<?= $helperImage->Image($follower->image_small, array('width' => 280, 'height' => 167)); ?>"
+                         alt="<?= $follower->title ?>"
+                         width="80">
+                </figure>
+                <div class="u-content">
+                    <h3><?= $follower->title ?></h3>
+
+                    <p style="text-align:center"><img src="/theme/flatui/img/icon-like-color.png"/></p>
+                </div>
+            </a>
+        </div>
+    </div>
+    <!-- /.supporter-thumbnail -->
+    <?php if (($h % $g == 0) OR ($h >= count($this->followedProducts))) { ?>
+    <!-- /.supporters-row -->
+<?php }
+endforeach; ?>

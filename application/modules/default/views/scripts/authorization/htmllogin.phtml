@@ -1,0 +1,96 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$auth = Zend_Auth::getInstance();
+$getAuthUser = new Default_View_Helper_GetAuthUser();
+$member = $getAuthUser->getAuthUser();
+
+$formLogin = new Default_Form_Login();
+$formLogin->setName('login_header');
+
+$helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
+$helperBuildExploreUrl = new Default_View_Helper_BuildExploreUrl();
+$helperEncryptUrl = new Default_View_Helper_EncryptUrl();
+
+if (false === $auth->hasIdentity() || empty($member->username)) { ?>
+    <li class="link profile-menu-nologin">
+        <a href="/register">
+            <span>Join</span>
+        </a>
+    </li>
+    <li class="link-partial last-link">
+        <a href="/login?redirect=<?= $helperEncryptUrl->encryptUrl(Zend_Controller_Front::getInstance()->getRequest()->getRequestUri(), true) ?>"
+           id="login-dropdown" onclick="return false;">
+            <span>Login</span>
+        </a>
+
+        <div class="header-login-container">
+            <div class="header-login-form">
+                <div class="form-top">
+                    <h3 class="report-heading lightblue"><?= $this->translate('Log in to your account') ?></h3>
+                </div>
+                <div class="form-body">
+                    <form action="<?= $formLogin->getAction(); ?>"
+                          method="<?= $formLogin->getMethod(); ?>">
+                        <?= $formLogin->redirect ?>
+                        <?= $formLogin->dologin ?>
+                        <?= $formLogin->mail ?>
+                        <?= $formLogin->password ?>
+                        <?= $formLogin->remember_me ?>
+                        <?= $formLogin->login ?>
+                    </form>
+                    <a href="/login/forgot" class="lightblue small">Forgot your
+                                                                    password?</a>
+                </div>
+                <div class="form-footer">
+                    <p><?= $this->translate('Or you can login with one of the following') ?></p>
+
+                    <div class="social">
+                        <a href="/login/facebook" class="facebook"><i
+                                class="icon-facebook"></i></a>
+                        <a href="/login/twitter" class="twitter"><i
+                                class="icon-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </li>
+<?php } ?>
+<?php if ($auth->hasIdentity() && !empty($member->username)) { ?>
+    <li class="link relative profile-menu-container">
+        <div class="absolute header-profile-image"><img
+                src="<?= $this->Image($member->profile_image_url, array('width' => 30, 'height' => 30)) ?>"/>
+        </div>
+        <a rel="profile-menu" class="menu-trigger"><span><?= $member->username ?></span></a>
+        <ul class="profile-menu menu-dropdown">
+            <div class="dropdown-header"></div>
+            <li class="link first"><a
+                    href="<?= $helperBuildMemberUrl->buildMemberUrl($member->member_id, 'products') ?>"><?= $this->translate('My Products') ?></a>
+            </li>
+            <li class="link">
+                <a href="/settings/"><?= $this->translate('My Settings') ?></a>
+            </li>
+            <li class="link"><a href="/logout/"><?= $this->translate('Logout') ?></a>
+            </li>
+        </ul>
+    </li>
+<?php } ?>

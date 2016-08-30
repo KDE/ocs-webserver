@@ -1,0 +1,40 @@
+<phpunit bootstrap="./Bootstrap.php" colors="true">
+    <testsuite name="Zend Framework Tests">
+        <directory>./</directory>
+    </testsuite>
+
+    <filter>
+        <whitelist>
+            <directory suffix=".php">../library/Local/</directory>
+            <exclude>
+                <directory suffix=".php">../library/Local/fpdf</directory>
+                <directory suffix=".php">../library/Local/fpdi</directory>
+            </exclude>
+            <directory suffix=".php">../library/Ppload/</directory>
+            <directory suffix=".php">../application/</directory>
+            <exclude>
+                <directory suffix=".phtml">../application/</directory>
+            </exclude>
+        </whitelist>
+    </filter>
+
+    <php>
+        <server name='HTTP_HOST' value='http://localhost' />
+        <server name="SERVER_NAME" value="localhost"/>
+        <server name="SERVER_PORT" value="80"/>
+        <server name="REMOTE_ADDR" value="127.0.0.1"/>
+    </php>
+<!--
+    <logging>
+        <log type="coverage-html"
+             target="./log/report"
+             charset="UTF-8"
+             yui="true"
+             highlight="true"
+             lowUpperBound="50"
+             highLowerBound="80"
+        />
+        <log type="testdox-html" target="./log/testdox.html"/>
+    </logging>
+-->
+</phpunit>

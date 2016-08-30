@@ -1,0 +1,264 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<h3>Alle Mitgleider</h3>
+<?= $this->partial('yui.phtml'); ?>
+
+
+<form id="filter">
+    <fieldset>
+        <legend>Filter</legend>
+
+        <label for="filter_firstname">Vorname</label> &nbsp;
+        <input type="text" id="filter_firstname" value=""/>
+        <span id="filter_firstname_ac"></span>
+                                                      &nbsp;&nbsp;&nbsp;
+        <label for="filter_lastname">Nachname</label> &nbsp;
+        <input type="text" id="filter_lastname" value=""/>
+        <span id="filter_lastname_ac"></span>
+                                                      &nbsp;&nbsp;&nbsp;
+        <label for="filter_username">Benutzername</label> &nbsp;
+        <input type="text" id="filter_username" value=""/>
+        <span id="filter_username_ac"></span>
+                                                      &nbsp;&nbsp;&nbsp;
+        <label for="filter_mail">E-Mail</label> &nbsp;
+        <input type="text" id="filter_mail" value=""/>
+        <span id="filter_mail_ac"></span>
+                                                      &nbsp;&nbsp;&nbsp;
+	<span id="filter_reset" class="yui-button yui-push-button">
+            <span class="first-child"> 
+                <button type="button">löschen!</button> 
+            </span>
+	</span>
+
+    </fieldset>
+</form>
+<br/>
+<div id="memberTable"></div>
+<div id="paginator"></div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("body").addClass("yui-skin-sam");
+
+        var memberColumnDefs = [
+            {key: "member_id", hidden: true},
+            {key: "firstname", label: "Vorname", sortable: true},
+            {key: "lastname", label: "Nachname", sortable: true},
+            {key: "username", label: "Benutzername", sortable: true},
+            {key: "mail", label: "E-Mail", sortable: true},
+            {key: "paypal_mail", label: "PayPal Mail", sortable: true},
+            {key: "created_at", label: "Angemeldet am", sortable: true},
+            {key: "last_online", label: "Zuletzt online", sortable: true},
+            {key: "mail_checked", label: "Active", sortable: false},
+            {key: "agb", label: "AGB", sortable: false},
+            {key: "newsletter", label: "NL", sortable: false}
+        ];
+
+        var memberFieldDefs = [
+            {key: "member_id"},
+            {key: "firstname"},
+            {key: "lastname"},
+            {key: "username"},
+            {key: "mail"},
+            {key: "paypal_mail"},
+            {key: "created_at", parser: "datetime"},
+            {key: "last_online", parser: "datetime"},
+            {key: "mail_checked"},
+            {key: "agb"},
+            {key: "newsletter"}
+        ];
+
+        var memberDataSource = new YAHOO.util.XHRDataSource("/backend/member/getmember");
+        memberDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
+        memberDataSource.responseSchema = {
+            fields: memberFieldDefs,
+            resultsList: 'results',
+            metaFields: {totalRecords: "totalRecords"}
+        };
+
+        var memberConfig = {
+            dynamicData: true,
+            generateRequest: function (state, table) {
+                var query = '?start=' + state.pagination.recordOffset;
+                query += '&count=' + state.pagination.rowsPerPage;
+
+                if (state.sortedBy) {
+                    query += '&sort=' + state.sortedBy.key;
+                    query += '&dir=' + state.sortedBy.dir;
+                }
+
+                // Filter
+                var firstname = YAHOO.util.Dom.get('filter_firstname').value;
+                var lastname = YAHOO.util.Dom.get('filter_lastname').value;
+                var mail = YAHOO.util.Dom.get('filter_mail').value;
+                var username = YAHOO.util.Dom.get('filter_username').value;
+
+                if (firstname != '')
+                    query += '&filter[firstname]=' + firstname;
+
+                if (lastname != '')
+                    query += '&filter[lastname]=' + lastname;
+
+                if (mail != '')
+                    query += '&filter[mail]=' + mail;
+
+                if (username != '')
+                    query += '&filter[username]=' + username;
+
+                return query;
+
+            },
+            paginator: new YAHOO.widget.Paginator({
+                rowsPerPage: 20,
+                containers: 'paginator',
+                template: '<strong>Page: {CurrentPageReport}</strong> ' + '<label>Page size: {RowsPerPageDropdown}</label>' +
+                '<p class="pg-nav">' +
+                '{FirstPageLink} {PreviousPageLink} {PageLinks}' +
+                '{NextPageLink} {LastPageLink}' +
+                '</p>',
+                // Options for RowsPerPageDropdown component
+                rowsPerPageDropdownClass: "yui-pg-rpp-options", // default
+                rowsPerPageOptions: [
+                    {value: 20, text: "20"},
+                    {value: 40, text: "40"},
+                    {value: 100, text: "100"}
+                ]
+            })
+        }
+
+        var memberDataTable = new YAHOO.widget.DataTable("memberTable", memberColumnDefs, memberDataSource, memberConfig);
+
+        memberDataTable.handleDataReturnPayload = function (request, response, payload) {
+            if (!payload) {
+                return {
+                    totalRecords: response.meta.totalRecords,
+                    results: response.results
+                };
+            }
+
+            payload.totalRecords = response.meta.totalRecords;
+            return payload;
+        }
+
+        memberDataTable.set("selectionMode", "single");
+        memberDataTable.subscribe("rowMouseoverEvent", memberDataTable.onEventHighlightRow);
+        memberDataTable.subscribe("rowMouseoutEvent", memberDataTable.onEventUnhighlightRow);
+
+        memberDataTable.subscribe("rowDblclickEvent", function (row) {
+            var dcMember = this.getRecord(row.target);
+
+            window.location.href = '/backend/member/details/id/' + dcMember.getData('member_id');
+        });
+
+        var memberFilter = function () {
+            var query = memberConfig.generateRequest(memberDataTable.getState(), memberDataTable);
+            memberDataSource.sendRequest(query, memberDataTable.onDataReturnInitializeTable, memberDataTable);
+        };
+
+        new YAHOO.widget.AutoComplete(
+            'filter_firstname',
+            'filter_firstname_ac',
+            new YAHOO.util.FunctionDataSource(memberFilter),
+            {minQueryLength: 0, queryDelay: 0.5}
+        );
+
+        new YAHOO.widget.AutoComplete(
+            'filter_lastname',
+            'filter_lastname_ac',
+            new YAHOO.util.FunctionDataSource(memberFilter),
+            {minQueryLength: 0, queryDelay: 0.5}
+        );
+
+        new YAHOO.widget.AutoComplete(
+            'filter_mail',
+            'filter_mail_ac',
+            new YAHOO.util.FunctionDataSource(memberFilter),
+            {minQueryLength: 0, queryDelay: 0.5}
+        );
+
+        new YAHOO.widget.AutoComplete(
+            'filter_username',
+            'filter_username_ac',
+            new YAHOO.util.FunctionDataSource(memberFilter),
+            {minQueryLength: 0, queryDelay: 0.5}
+        );
+
+        YAHOO.util.Event.addListener('filter_reset', 'click', function () {
+            YAHOO.util.Dom.get('filter').reset();
+            memberFilter();
+        });
+
+
+        var onContextMenuClick = function (p_sType, p_aArgs, p_myDataTable) {
+            var task = p_aArgs[1];
+            if (task) {
+                // Extract which TR element triggered the context menu
+                var elRow = this.contextEventTarget;
+                elRow = p_myDataTable.getTrEl(elRow);
+
+                if (elRow) {
+                    var oRecord = p_myDataTable.getRecord(elRow);
+                    switch (task.index) {
+                        case 0:
+                            if (confirm("Are you really would activate this member " +
+                                    oRecord.getData("member_id") + " (" +
+                                    oRecord.getData("username") + ")? ")) {
+                                $.post('/backend/member/activate', {'member_id': oRecord.getData("member_id")}, function (result) {
+                                    window.location = '/backend/member/';
+                                });
+                            }
+                            break;
+                        case 1:
+                            window.location = '/backend/member/edit/id/' + oRecord.getData("member_id");
+                            break;
+                        case 2:     // Delete row upon confirmation
+                            if (confirm("Are you shure to delete this member " +
+                                    oRecord.getData("member_id") + " (" +
+                                    oRecord.getData("username") + ")?")) {
+                                $.post('/backend/member/delete', {'member_id': oRecord.getData("member_id")}, function (result) {
+                                    p_myDataTable.deleteRow(elRow);
+                                });
+                            }
+                            break;
+                        default:
+                            alert('error: nothing to do.')
+                            break;
+                    }
+                }
+            }
+        };
+
+
+        var memberContextMenu = new YAHOO.widget.ContextMenu("membercontextmenu",
+            {trigger: memberDataTable.getTbodyEl()});
+        memberContextMenu.addItem("aktivieren");
+        memberContextMenu.addItem("bearbeiten");
+        memberContextMenu.addItem("löschen");
+
+        // Render the ContextMenu instance to the parent container of the DataTable
+        memberContextMenu.render("memberTable");
+        memberContextMenu.clickEvent.subscribe(onContextMenuClick, memberDataTable);
+
+    });
+</script>

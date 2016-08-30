@@ -1,0 +1,177 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
+$helperImage = new Default_View_Helper_Image();
+$helperServerUrl = new Zend_View_Helper_ServerUrl();
+$helperCheckHTTPProtocol = new Default_View_Helper_CheckHttpProtocol();
+
+$plingUrl = $helperBuildProductUrl->buildProductUrl($this->product->project_id, 'pling');
+$titleImage = $helperImage->Image($this->product->image_big, array('width' => 1170, 'height' => 300));
+$styleAttr = ' style="background-image: url(' . $titleImage . ');"';
+if (strpos($titleImage, 'default.png') !== false) {
+    $styleAttr = '';
+}
+$cssClassAuthCodeTested = $this->product->project_validated ? 'checked' : 'unchecked';
+$txtUserFollows = $this->txtUserFollows;
+$urlUserFollows = $this->urlUserFollows;
+$imgFile = $this->imgFile;
+$loginUrl = $this->loginUrl;
+?>
+
+<div id="fb-root"></div>
+<script>(function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=330711210429982&version=v2.0";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Loading Flat UI -->
+<link href="<?= $helperServerUrl->serverUrl(); ?>/theme/flatui/css/flat-ui.css" rel="stylesheet">
+
+<!-- custom styles -->
+<!-- <link href="<?= $helperServerUrl->serverUrl(); ?>/theme/flatui/css/style.css" rel="stylesheet"> -->
+
+<!-- less css -->
+<link href="<?= $helperServerUrl->serverUrl(); ?>/theme/flatui/css/stylesheet.css" rel="stylesheet" type="text/css">
+
+<style type="text/css">
+    body {
+        background-color: transparent !important;
+        padding: 0;
+        text-align: center;
+    }
+</style>
+
+<section id="product-payment-message">
+    <button id="btn-close" class="btn-close"><span class="glyphicon glyphicon-remove"></span></button>
+    <figure>
+        <img
+            src="<?= $helperImage->Image($this->product->image_small, array('width' => 240, 'height' => 240)); ?>" style="max-width: 240px; max-height:240px"/>
+   
+    </figure>
+    <h1><?= $this->product->title; ?></h1>
+ 
+    <div class="info">
+        <div class="category"><?= $this->product->cat_title; ?></div>
+     <?php /* <div class="page-views"><?= $this->product_views ?> page views</div> */ ?>
+    </div>
+    <div class="payment-message">
+        <?php if (isset($this->paymentMessage)) {
+            $cssClass = 'text-' . $this->paymentStatus;
+            ?>
+            <span class="<?= $cssClass ?>"><?= $this->paymentMessage ?></span>
+        <?php } ?>
+    </div>
+    <div style="padding-top: 20px; float:left">
+        Thank you for supporting <?= $this->product->title; ?> , show your support to your friends on 
+    </div>
+    <div class="social-share">
+
+        <div class="facebook social left">
+            <a class="partial-popup"
+               rel="nofollow"
+               target="_blank"
+               href="http://www.facebook.com/sharer.php?p[title]=test&u=<?= urlencode($this->permaLink) ?>&t=<?php echo urlencode('ocs - open content store'); ?>"
+               title="Share this post on Facebook"><em class="icon icon-facebook"></em>
+            </a>
+        </div>
+        <div class="twitter social left">
+            <a class="partial-popup"
+               rel="nofollow"
+               target="_blank"
+               href="http://twitter.com/home?status=i support <?php echo $this->product->title; ?> made by <?php echo $this->product->username; ?>: <?= $this->permaLink; ?>"
+               title="Share this article with your Twitter followers"><em class="icon icon-twitter"></em>
+            </a>
+        </div>
+        <div class="google social left">
+            <a class="partial-popup"
+               rel="nofollow"
+               target="_blank"
+               href="https://plus.google.com/share?url=<?= $this->permaLink ?>"
+               title="Share this post on Google+"><em class="icon icon-google"></em>
+            </a>
+        </div>
+
+        <?php if (false === empty($this->product->link_1) OR $this->product->facebook_code OR $this->product->twitter_code OR $this->product->google_code) : ?>
+            <div class="pull-left">
+                <span>Links:</span>
+            </div>
+            <div class="product-link">
+                <?php if (false === empty($this->product->link_1)) : ?>
+                    <a href="<?= $helperCheckHTTPProtocol->checkHttpProtocol($this->product->link_1) ?>" target="_blank"
+                       class="web-link white" title="<?= $this->product->link_1 ?>">
+                        <span class="glyphicon glyphicon-globe"></span>
+                    </a>
+                <?php endif;
+                if ($this->product->facebook_code) : ?>
+                    <a href="<?= $this->product->facebook_code ?>" class="fb-link lightblue" target="_blank"
+                       title="<?= $this->product->facebook_code ?>"><em></em></a>
+                <?php endif;
+                if ($this->product->twitter_code) : ?>
+                    <a href="<?= $this->product->twitter_code ?>" class="tw-link lightblue" target="_blank"
+                       title="<?= $this->product->twitter_code ?>"><em></em></a>
+                <?php endif;
+                if ($this->product->google_code) : ?>
+                    <a href="<?= $this->product->google_code ?>" class="gp-link lightblue" target="_blank"
+                       title="<?= $this->product->google_code ?>"><em></em></a>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
+    </div>
+    <!--
+    <div class="close-modal margin-top-10">
+        <button class="btn btn-primary btn-close">Close</button>
+    </div>
+    -->
+</section>
+
+<script src="//code.jquery.com/jquery-1.9.1.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('.btn-close').on('click', function () {
+            window.top.location.href = "<?php echo $this->permaLink ?>";
+            //window.top.location.reload();
+            if (top && top.opener && top.opener.top) {
+                try {
+                    dgFlow = top.opener.top.dgFlow;
+                    dgFlow.closeFlow();
+                } finally {
+                    top.close();
+                }
+            } else if (top.dgFlow) {
+                dgFlow = top.dgFlow;
+                dgFlow.closeFlow();
+            } else {
+                alert('Please close the window and reload to continue');
+            }
+
+        });
+    });
+</script>

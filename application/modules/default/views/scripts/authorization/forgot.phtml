@@ -1,0 +1,79 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+$users = $this->newUsers($limit = 216,'created_at','DESC');
+$buildMemberUrl = new Default_View_Helper_BuildMemberUrl();
+$helperImage = new Default_View_Helper_Image();
+?>
+
+    <!-- new code -->
+    <main id="reg-page">
+
+        <section class="wrapper" id="register-wrap">
+            <div id="register" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 clearfix">
+                <div id="register-box" class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+
+                    <?= $this->render('authorization/partials/forgot-form.phtml') ?>
+
+                </div>
+                <!-- END #login-box -->
+                <div id="social-register" class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                    <h3></h3>
+
+                    <div class="bottom">
+                        <div id="show-login-description" class="small light lightgrey">Already have an account?</div>
+                        <div class="login2">
+                            <a href="/login/"
+                               id="show-login-form"
+                               class="btn btn-native btn-min-width">
+                                <i class="icon-white icon-lock"></i>
+                                Login
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="thumbs">
+
+            <?php foreach ($users as $key => $user) { ?>
+
+                <div class="thumb">
+                    <a href="<?php echo $buildMemberUrl->buildMemberUrl($user['member_id']); ?>">
+                        <span></span>
+                        <img src="<?php echo $helperImage->Image($user['profile_image_url'],array('width' => 110, 'height' => 110, 'crop' => 2)); ?>"/>
+                    </a>
+                </div>
+
+            <?php } ?>
+
+        </section>
+
+    </main>
+    <!-- /new code -->
+
+
+<?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){
+            PartialJson.setup();
+        });
+    ');

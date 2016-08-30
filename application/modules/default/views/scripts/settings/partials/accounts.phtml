@@ -1,0 +1,68 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<div class="panel-heading">
+    <h4 class="panel-title">
+        <a data-toggle="collapse" href="#accounts-collapse" data-parent="#accordion" id="accounts-trigger">
+            <span class="glyphicon glyphicon glyphicon-link"></span>
+            <?= $this->translate('Connected Accounts') ?>
+            <span class="absolute glyphicon glyphicon-chevron-down"></span>
+        </a>
+    </h4>
+</div>
+
+<div class="panel-collapse collapse" id="accounts-collapse">
+    <div class="panel-body">
+        <form class="standard-form partial well" action="<?= $this->accounts->getAction(); ?>"
+              method="<?= $this->accounts->getMethod(); ?>" data-target="#form-connected-accounts"
+              data-trigger="#accounts-trigger">
+            <div class="row">
+                <div class="col-md-4 col-lg-4 col-sm-4 col-xs-4">
+                    <?= $this->accounts->link_facebook->setAttrib('tabindex', 8) ?>
+                </div>
+                <div class="col-md-4 col-lg-4 col-sm-4 col-xs-4">
+                    <?= $this->accounts->link_twitter->setAttrib('tabindex', 9) ?>
+                </div>
+                <div class="col-md-4 col-lg-4 col-sm-4 col-xs-4">
+                    <?= $this->accounts->link_google->setAttrib('tabindex', 10) ?>
+                </div>
+            </div>
+            <!-- /.row-fluid -->
+            <hr>
+            <div class="row">
+                <div class="col-md-4 col-lg-4 col-sm-4 col-xs-4">
+                    <?= $this->accounts->link_github->setAttrib('tabindex', 11) ?>
+                </div>
+            </div>
+            <!-- /.row-fluid -->
+            <hr>
+            <div class="row">
+                <div class="box pull-left margin-left-15" style="padding-left: 15px;">
+                    <?php echo $this->formResult($this->accounts, $this->save, null, 'Changes saved.'); ?>
+                </div>
+                <button type="submit" class="btn btn-submit btn-native pull-right"
+                        tabindex="12"><?= $this->translate('Save &amp; Update') ?>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

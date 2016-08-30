@@ -1,0 +1,68 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$helperImage = new Default_View_Helper_Image();
+foreach (array_keys($this->supportingTeaser) as $cat):
+    ?>
+
+    <div class="cat-title col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="center">
+            <div><h3><?= $cat ?></h3></div>
+        </div>
+        <hr/>
+    </div>
+
+    <?php
+    if (count($this->supportingTeaser[$cat]) < 4) {
+        $g = count($this->supportingTeaser[$cat]);
+    } else {
+        $g = 4;
+    }
+    $h = 0;
+    $i = 3;
+    foreach ($this->supportingTeaser[$cat] as $product):
+        $i++;
+        $h++;
+        $titleImage = $helperImage->Image($product['image'], array('width' => 270, 'height' => 140));
+        $hasTitle = $product['image'] !== null && strpos($titleImage, 'default.png') === false;
+        ?>
+        <div class="mini-card col-lg-2 col-md-2 col-sm-3 col-xs-2">
+            <div class="u-wrap">
+                <a href="<?= $product['url'] ?>" title="<?= $product['name'] ?>">
+                    <figure>
+                        <img src="<?= $helperImage->Image($product['image'], array('width' => 280, 'height' => 167)); ?>"
+                             alt="<?= $product['name'] ?>">
+                    </figure>
+                    <div class="u-content">
+                        <h3><?php echo $product['name']; ?></h3>
+                        <?php if ($product['sumAmount'] === '' OR $product['sumAmount'] === null) {
+                            $product['sumAmount'] = '0';
+                        } ?>
+                        <p>$<?php echo $product['sumAmount']; ?></p>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <?php if (($h % $g == 0) OR ($h >= count($this->supportingTeaser[$cat]))) { ?>
+    <?php } endforeach; ?>
+
+<?php endforeach; ?>

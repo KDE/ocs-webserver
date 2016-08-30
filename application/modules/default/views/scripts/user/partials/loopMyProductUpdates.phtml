@@ -1,0 +1,69 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$loopProductUpdate = 'productUpdate-' . $this->pid . '-' . $this->project_id;
+$urlData = new stdClass();
+$urlData->project_id = $this->pid;
+$urlData->title = $this->title;
+$urlParam = array('upid' => $this->project_id);
+$statusPayPal = $this->partialLoop()->view->member->paypal_mail;
+$cssStyleMessage = empty($statusPayPal) ? ' disabled="disabled"' : '';
+$urlPublish = empty($statusPayPal) ? 'javascript:;' : $this->buildProductUrl($this->project_id, 'publish', array('m' => $this->member_id));
+$urlPublishTitle = empty($statusPayPal) ? $this->translate('Please add a PayPal Address before publishing a product update.') : '';
+$date = $this->humanTiming($this->created_at);
+$object_text = (mb_strlen($this->description) < 300) ? $this->description : mb_substr($this->description, 0, 295, 'UTF-8') . ' ... ';
+?>
+<div class="product-update" id="<?= $loopProductUpdate ?>">
+    <h3 class="lightblue product-update-title"><?= $this->title ?></h3>
+    <span><?= $date['age'] ?> <?= $date['unit'] ?></span>
+
+    <div><?= nl2br(strip_tags($object_text)) ?></div>
+    <div class="product-buttons pull-left margin-bottom-10">
+        <a href="<?= $this->buildProductUrl($urlData->project_id, 'update', $urlParam) ?>"><?= $this->translate('Edit') ?></a>
+        <a href="#modalDelete<?= $loopProductUpdate ?>" data-toggle="modal"><?= $this->translate('Delete') ?></a>
+        <span id="<?= $loopProductUpdate ?>" class="btn-publish">
+        <?php if ($this->isProjectActive($this->status)) : ?>
+            <a id="publish-product" <?= $cssStyleMessage ?>
+               href="<?= $urlPublish ?>"
+               data-target="#<?= $loopProductUpdate ?>.btn-publish"
+               title="<?= $urlPublishTitle ?>"><?= $this->translate('Publish') ?></a>
+        <?php else : ?>
+            <a id="publish-product"
+               href="<?= $this->buildProductUrl($this->project_id, 'unpublish', array('m' => $this->member_id)) ?>"
+               data-target="#<?= $loopProductUpdate ?>.btn-publish"
+               title="<?= $urlPublishTitle ?>"><?= $this->translate('Unpublish') ?></a>
+        <?php endif; ?>
+        </span>
+    </div>
+    <div id="modalDelete<?= $loopProductUpdate ?>" class="modal hide fade">
+        <!-- dialog contents -->
+        <div class="modal-body"><?= $this->translate('Do you really want to delete this update?') ?></div>
+        <!-- dialog buttons -->
+        <div class="modal-footer"><a
+                href="<?= $this->buildProductUrl($this->project_id, 'delete', array('m' => $this->member_id)) ?>"
+                role="button" class="btn btn-primary"><?= $this->translate('YES') ?></a> <a href="#" role="button"
+                                                                                            class="btn btn-primary"
+                                                                                            data-dismiss="modal"
+                                                                                            aria-hidden="true"><?= $this->translate('NO') ?></a>
+        </div>
+    </div>
+</div><!-- /.product-update -->

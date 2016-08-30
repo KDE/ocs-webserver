@@ -1,0 +1,35 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<h3>Neuen Content hinzufügen</h3>
+<?php if ($this->form): ?>
+    <?= $this->form; ?>
+    <br/>
+    <a href='/backend/content' class="ui-state-default ui-corner-all button_normal" id="4">Abbrechen</a><br/><br/>
+    Felder mit <b>*</b> sind notwendig.
+<?php else: ?>
+    <strong><?= $this->escape($this->saveTitle); ?></strong><br/>
+    <?= $this->saveText; ?><br/><br/>
+    <a href='/backend/content' class="ui-state-default ui-corner-all button_normal" id="4">Zur Übersicht</a><br/><br/>
+    <a href='/backend/content/add' class="ui-state-default ui-corner-all button_normal" id="4">Weiteren Content
+                                                                                               hinzufügen</a>
+<?php endif; ?>

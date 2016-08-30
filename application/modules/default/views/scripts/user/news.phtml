@@ -1,0 +1,68 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<div class="container page-container">
+    <?php $this->tab = 'news'; echo $this->render('user/partials/userHeader.phtml'); ?>
+
+    <div class="row-fluid about-me">
+        <div class="span8 about-me-details">
+            <h3 class="about-me-heading"><?= $this->translate('Product News') ?></h3>
+
+
+            <?php if (count($this->activitiesProjects) > 0): ?>
+                <?php echo $this->partialLoop('user/partials/loopActivitiesProducts.phtml', $this->activitiesProjects) ?>
+            <?php elseif (count($this->followedProjects) > 0) : ?>
+                <?= $this->translate('No news for followed products.'); ?>
+            <?php else : ?>
+                <?= $this->translate('member.newsfeed.products.noitems') ?>
+            <?php endif; ?>
+            <!-- END #user-feed -->
+
+
+        </div>
+        <!-- /.about-me-details -->
+
+        <div class="span4 about-me-sidebar">
+
+            <div class="about-me-sidebar-section">
+                <h3><?= $this->translate('LAST ACTIVITIES OF MY FRIENDS') ?></h3>
+
+                <div class="sidebar-content">
+                    <?php if (count($this->activities) > 0): ?>
+                        <?php echo $this->partialLoop('user/partials/loopActivitiesFriends.phtml', $this->activities) ?>
+                    <?php elseif (count($this->followedMembers) > 0) : ?>
+                        <?= $this->translate('No news for followed members.'); ?>
+                    <?php else : ?>
+                        <?= $this->translate('member.newsfeed.friends.noitems') ?>
+                    <?php endif; ?>
+                </div>
+                <!-- /.sidebar-content -->
+            </div>
+            <!-- /.about-me-sidebar-section -->
+
+
+        </div>
+        <!-- /.about-me-sidebar -->
+    </div>
+    <!-- /.about-me -->
+</div> <!-- /.container -->
+

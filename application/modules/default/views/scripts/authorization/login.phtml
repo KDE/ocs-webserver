@@ -1,0 +1,130 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$users = $this->newUsers($limit = 216,'created_at','DESC');
+$buildMemberUrl = new Default_View_Helper_BuildMemberUrl();
+?>
+
+	<!-- new code -->
+    <main id="reg-page">
+
+        <section class="wrapper" id="register-wrap">
+            <div id="register" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 clearfix">
+                <div id="register-box" class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+
+                    <?= $this->render('authorization/partials/loginForm.phtml') ?>
+
+                </div>
+                <!-- END #register-box -->
+                <div id="social-register" class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                    <h3></h3>
+
+                    <div class="bottom">
+                        <div id="show-login-description" class="small light lightgrey">Join us?</div>
+                        <div class="login2">
+                            <a href="/register/"
+                               id="show-login-form"
+                               class="btn btn-native btn-min-width">
+                                <i class="icon-white icon-lock"></i>
+                                Register
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="thumbs" >
+
+			<?php foreach ($users as $key => $user) { ?>
+
+                <div class="thumb">
+                    <a href="<?php echo $buildMemberUrl->buildMemberUrl($user['member_id']); ?>" title="<?=$user['profile_image_url']?>">
+                        <span ></span>
+                        <img src="<?php echo $this->Image($user['profile_image_url'],array('width' => 110, 'height' => 110, 'crop' => 2)); ?>"/>
+                        
+                    </a>
+                </div>
+
+            <?php } ?>
+        
+        
+        </section>
+
+    </main>
+    <!-- /new code -->
+<script>
+    var PartialJsonLogin = (function () {
+        return {
+            setup: function () {
+                $('body').on("submit", 'form.partialjson', function (event) {
+                    event.preventDefault();
+                    event.stopImmediatePropagation();
+
+                    var target = $(this).attr("data-target");
+                    var trigger = $(this).attr("data-trigger");
+                    var loadState = $(this).attr('data-load-state');
+
+                    $(target).find(loadState).prop('disabled', true);
+                    $(target).find(loadState).find('i').removeClass('hidden');
+
+                    jQuery.ajax({
+                        data: $(this).serialize(),
+                        url: this.action,
+                        type: this.method,
+                        dataType: "json",
+                        error: function () {
+                            $(target).empty().html("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+                            $(target).find(loadState).prop('disabled', false);
+                            $(target).find(loadState).find('i').addClass('hidden');
+                        },
+                        success: function (data, textStatus) {
+                            $(target).find(loadState).prop('disabled', false);
+                            $(target).find(loadState).find('i').addClass('hidden');
+
+                            if (data.redirect) {
+                                // data.redirect contains the string URL to redirect to
+                                window.location.href = data.redirect;
+                                return;
+                            }
+                            if (target) {
+                                // data.message contains the HTML for the replacement form
+                                $(target).empty().html(data.message);
+                            }
+                            if (trigger) {
+                                $(target).find(trigger).trigger('click');
+                            }
+                        }
+                    });
+
+                    return false;
+                });
+            }
+        }
+    })();
+</script>
+
+<?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){
+            PartialJsonLogin.setup();
+        });
+    ');

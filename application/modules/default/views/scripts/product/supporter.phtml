@@ -1,0 +1,149 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$helperImage = new Default_View_Helper_Image();
+$loginUrl = '/login?redirect=' . $this->encryptUrl(Zend_Controller_Front::getInstance()->getRequest()->getRequestUri(), true);
+$txtUserFollows = '';
+$urlUserFollows = $this->buildProductUrl($this->product->project_id, 'unfollow');
+$imgFile = '/theme/flatui/img/icon-like-color.png';
+if (false == $this->userFollowsProject($this->authMember->member_id, $this->product->project_id)) {
+    $txtUserFollows = '';
+    $urlUserFollows = $this->buildProductUrl($this->product->project_id, 'follow');
+    $imgFile = '/theme/flatui/img/icon-like.png';
+}
+$titleImage = $this->Image($this->product->image_big, array('width' => 1170, 'height' => 300));
+$imageTag = '<img src="' . $titleImage . '">';
+if (strpos($titleImage, 'default.png') !== false) {
+    $imageTag = '';
+}
+?>
+
+<?php //<script src="https://www.paypalobjects.com/js/external/apdg.js"></script> ?>
+
+    <div class="container page-container">
+
+        <!-- HEADER -->
+
+        <?php
+        echo $this->render('product/partials/productTopHeader.phtml',
+            array(
+                "member" => $this->member,
+                "project" => $this->product,
+                "loginUrl" => $loginUrl,
+                'product_views' => $this->product_views,
+                'tab' => 'supporters',
+                'txtUserFollows' => $this->txtUserFollows,
+                'urlUserFollows' => $urlUserFollows,
+                'imgFile' => $this->imgFile
+            ));
+        ?>
+
+        <!-- /HEADER -->
+
+
+        <!-- PAGE BODY -->
+
+        <div class="product-right full-width supporters-page">
+
+            <!-- page content -->
+
+            <div class="margin-top-40 product-details col-md-12 col-lg-12 col-sm-12 col-xs-12">
+                <?php if (count($this->supporting) > 0):
+                    $countSupporter = count($this->supporting->toArray());
+                    if ($countSupporter < 4) {
+                        $g = $countSupporter;
+                    } else {
+                        $g = 4;
+                    }
+                    $h = 0;
+                    $i = 3;
+                    foreach ($this->supporting as $supporter):
+                        $date = $this->humanTiming($supporter->create_time);
+                        $i++;
+                        $h++;
+                        if ($i % 4 == 0) {
+                            ?>
+                            <!-- add row -->
+                            <div class="row supporters-row">
+                        <?php } ?>
+                        <!-- supporter item -->
+                        <div class="col-md-3 col-lg-3 col-sm-6 col-xs-6 post">
+                            <div class="clearfix">
+                                <!-- thumbnail -->
+                                <div class="supporter-thumbnail relative margin-left-10 pull-left">
+                                    <a href="<?php echo $this->buildMemberUrl($supporter->member_id); ?>">
+                                        <div class="profile-image-overlay-3 absolute"></div>
+                                        <img src="<?= $helperImage->Image($supporter->profile_image_url,array('width' => 60, 'height' => 60, 'crop' => 2)); ?>"
+                                             alt="<?= $supporter->username ?>" width="60">
+                                    </a>
+                                </div>
+                                <!-- /thumbnail -->
+                                <!-- details -->
+                                <div class="supporter-details pull-left">
+                                            <span class="date small lightgrey"><?= $date['age'] ?> <?= $date['unit'] ?>
+                                                ago</span>
+
+                                    <h3 class="supporter-name"><?php echo $supporter->username; ?></h3>
+                            	            <span>
+                            	            	$<?= $supporter->sum_plings ?>
+                            	            </span>
+                                            <span>
+                            	            	times supported <?= $supporter->count_support ?>
+                            	            </span>
+
+                                </div>
+                                <!-- /details -->
+                                <!-- comment -->
+                                <?php if ($supporter->comment) { ?>
+                                    <div class="supporter-comment pull-left col-md-12 col-lg-12 col-sm-12 col-xs-12">
+                                        <?php echo $supporter->comment; ?>
+                                    </div>
+                                <?php } ?>
+                                <!-- /comment -->
+                            </div>
+                        </div>
+                        <!-- /supporter item -->
+                        <?php if (($h % $g == 0) OR ($h >= $countSupporter)) { ?>
+                        </div>
+                        <!-- /add row -->
+                    <?php } ?>
+                    <?php endforeach;
+                else: ?>
+                    <div class="no-supporters">
+                        <?= $this->translate('projects.supporter.noitems') ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+
+            <!-- /page content -->
+
+        </div>
+
+        <!-- /PAGE BPDY -->
+
+    </div>
+
+<?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){
+
+        });
+    ');

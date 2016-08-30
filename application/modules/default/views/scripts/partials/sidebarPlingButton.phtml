@@ -1,0 +1,43 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<div id="button-code" class="sidebar-section">
+    <h4 id="button-code-heading" class="small upcase sidebar-heading">OCS button code</h4>
+
+    <div id="button-input"><textarea name="button-code"
+                                     id="button-code"><?php echo $this->externalPlingButtonSource($this->project_uuid); ?></textarea>
+    </div>
+    <div class="center-button-container">
+        <button class="greybutton lightgrey small light" id="get-button">Get the button</button>
+    </div>
+</div><!-- END #button-code -->
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#get-button").click(function () {
+            if ($("#button-input").is(':visible')) {
+                $("#button-input").slideUp(800);
+            } else {
+                $("#button-input").slideDown(800);
+            }
+        });
+    });
+</script>

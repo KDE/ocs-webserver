@@ -1,0 +1,116 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <?php echo $this->render('partials/htmlheader.phtml'); ?>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="alternate" type="application/rss+xml" title="Latest Products" href="/content.rdf"/>
+
+    <!-- Loading Bootstrap -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="/tools/fancybox2.1.4/jquery.fancybox.css?v=2.1.4" type="text/css" media="screen" />    
+
+    <!-- custom styles -->
+    <link href="/theme/flatui/css/style.css" rel="stylesheet">
+    <link href="/theme/flatui/css/stylesheet.css?<?= APPLICATION_VERSION ?>" rel="stylesheet" type="text/css">
+
+    <!-- third party -->
+    <link href="/theme/flatui/css/colorbox.css" media="screen" rel="stylesheet" type="text/css"/>
+
+    <link rel="shortcut icon" type="image/x-icon" href="<?=$this->template['favicon']?>"/>
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
+    <!--[if lt IE 9]>
+    <script src="/theme/flatui/js/lib/html5shiv.js"></script>
+    <![endif]-->
+
+    <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <!-- Add fancyBox -->
+
+    <script type="text/javascript" src="/tools/fancybox2.1.4/jquery.fancybox.pack.js?v=2.1.4"></script>
+
+    <script src="https://use.fontawesome.com/92ae23fcf4.js"></script>
+
+</head>
+<body class="home-page">
+
+<?php echo $this->render('partials/header/template_home.phtml'); ?>
+<?php echo $this->layout()->content; ?>
+<?php echo $this->render('partials/footer/template.phtml'); ?>
+
+<div id="overlays"><?php if (isset($this->overlay)) {
+        echo $this->overlay;
+    } ?></div>
+<div id="modal-dialog" class="modal hide fade" tabindex="-1" role="dialog">
+    <div class="modal-body"></div>
+    <div id="error"></div>
+</div>
+
+
+<!-- Load JS here for greater good =============================-->
+<script src="//code.jquery.com/ui/1.10.3/jquery-ui.min.js"></script>
+<script src="/theme/flatui/js/lib/jquery.placeholder.min.js"></script>
+<script src="/theme/flatui/js/lib/jquery.mousewheel.min.js"></script>
+<script src="/theme/flatui/js/lib/jquery.jscrollpane.min.js"></script>
+<script src="/tools/md5.js"></script>
+<script src="/theme/flatui/js/script.js?<?= APPLICATION_VERSION ?>"></script>
+<!-- home page script -->
+<script src="/theme/flatui/js/home_page.js"></script>
+
+<?= $this->inlineScript() ?>
+<?php if (APPLICATION_ENV != 'development') { ?>
+    <?php
+    $googleid ='UA-78422931-1';
+    $domainconfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
+    if($domainconfig)
+    {
+        $googleid = $domainconfig['google_id'];
+    }
+    ?>
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+        // prime domain 
+        ga('create', '<?php echo $googleid ?>', 'auto', {'allowLinker': true});
+        ga('require', 'linker');
+        ga('linker:autoLink', ['beryl-themes.org','box-look.org','cinnamon-look.org','compiz-themes.org','e17-stuff.org','mate-look.org','trinity-look.org'] );
+        ga('send', 'pageview');
+    </script>
+<?php } ?>
+</body>
+</html>

@@ -1,0 +1,301 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$plingData = $this->userPlings($this->project_id);
+$productFileInfos = $this->projectFiles($this->ppload_collection_id);
+$productUpdates = $this->projectUpdates($this->project_id);
+$loopProductId = 'product' . $this->project_id;
+//    $statusPayPal = $this->partialLoop()->view->member->paypal_mail;
+$object_text = (mb_strlen($this->description) < 300) ? $this->description : mb_substr($this->description, 0, 295, 'UTF-8') . ' ... ';
+$addedOnDate = $this->humanTiming($this->created_at);
+$addedOnText = $addedOnDate['age'] . ' ' . $addedOnDate['unit'];
+$websiteOwner = new Local_Verification_WebsiteAuthCodeExist();
+$websiteAuthCode = $websiteOwner->generateAuthCode(stripslashes($this->link_1));
+
+$helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
+$helperButton = new Default_View_Helper_ExternalPlingButton();
+$helperButtonCode = new Default_View_Helper_ExternalPlingButtonSource();
+$helperSupporterBox = new Default_View_Helper_ExternalSupporterBox();
+$helperSupporterBoxSource = new Default_View_Helper_ExternalSupporterBoxSource();
+$helperDonationList = new Default_View_Helper_ExternalDonationList();
+$helperDonationListSource = new Default_View_Helper_ExternalDonationListSource();
+?>
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 my-product-item" id="<?= $loopProductId ?>">
+    <!-- IMAGE -->
+    <figure class="col-lg-1 col-md-3 col-sm-3 col-xs-3">
+        <img src="<?php echo $this->Image($this->image_small, array('width' => 280, 'height' => 167)); ?>"
+             class="explore-product-image" width="101" height="81"/>
+    </figure>
+    <!-- /IMAGE -->
+    <!-- CONTENT -->
+    <article class="col-lg-11 col-md-9 col-sm-9 col-xs-9">
+        <!-- title -->
+        <div class="title">
+            <h3><a href="<?= $helperBuildProductUrl->buildProductUrl($this->project_id) ?>"><?php echo $this->title; ?> <?php echo $this->version; ?></a></h3>
+        </div>
+        <!-- /title -->
+        <!-- info -->
+        <div class="info">
+            <ul>
+                <li><span>in</span><span><?php echo $this->catTitle; ?></span></li>
+                <li><span>added</span><span><?= $addedOnText ?></span><span>ago</span></li>
+                <li><span><?= $this->translate('supporters') ?> </span><span><?= $plingData['plingers'] ?></span></li>
+                <li><span><?= $this->translate('collected') ?> </span><span><?= $plingData['plings'] ?></span></li>
+            </ul>
+        </div>
+        <!-- /info -->
+        <!-- text -->
+        <div class="text">
+            <p><?= nl2br(strip_tags($object_text)) ?></p>
+        </div>
+        <!-- /text -->
+        <!-- updates -->
+        <div class="updates">
+            <?php /*echo $this->partialLoop('user/partials/loopMyProductUpdates.phtml', $productUpdates); */ ?>
+        </div>
+        <!-- /updates -->
+        <!-- buttons -->
+        <div class="buttons">
+            <div class="embed-btns pull-left">
+                <!-- verification -->
+                <?php if ($this->link_1) { ?>
+                    <a href="#msg-box-code-<?= $loopProductId ?>"
+                       class="btn btn-native margin-right-10"
+                       data-toggle="modal"><?= $this->translate('Verification') ?></a>
+                <?php } ?>
+                <!-- /verification -->
+                <!-- embeded -->
+                <a href="#modal-button-code-<?= $loopProductId ?>"
+                   class="btn btn-native"
+                   data-toggle="modal"><?= $this->translate('Button') ?></a>
+                <a href="#modal-box-code-<?= $loopProductId ?>"
+                   class="btn btn-native"
+                   data-toggle="modal"><?= $this->translate('Box') ?></a>
+                <a href="#modal-list-code-<?= $loopProductId ?>"
+                   class="btn btn-native"
+                   data-toggle="modal"><?= $this->translate('List') ?></a>
+                <a href="#modal-widget-code-<?= $loopProductId ?>"
+                   rel="<?= $loopProductId ?>"
+                   class="btn btn-native widget-button"
+                   data-toggle="modal"><?= $this->translate('Widget') ?></a>
+                <!-- /embeded -->
+            </div>
+
+            <!--  manage -->
+            <div class="manage-btns pull-right margin-left-20">
+              <a role="button" href="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, 'edit') ?>" class="btn btn-native">
+                    <?= $this->translate('Edit') ?>
+                </a>
+
+                <!-- ppload -->
+                <a role="button" class="btn btn-native" href="#modal-ppload"
+                   data-toggle="modal"
+                   data-ppload-collection-id="<?= $this->ppload_collection_id ?>"
+                   data-product-id="<?= $this->project_id ?>"
+                   data-product-title="<?= $this->title ?>"
+                   data-product-version="<?= $this->version ?>"
+                   data-addpploadfile-uri="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, 'addpploadfile') ?>"
+                   data-updatepploadfile-uri="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, 'updatepploadfile') ?>"
+                   data-deletepploadfile-uri="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, 'deletepploadfile') ?>"
+                   data-deletepploadfiles-uri="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, 'deletepploadfiles') ?>"
+                   data-finalizepploadcollection-uri="<?= $helperBuildProductUrl->buildProductUrl($this->project_id,
+                       'finalizepploadcollection') ?>"><?= $this->translate('Files') ?>
+                    (<?= $productFileInfos['fileCount'] ?>)
+                </a>
+                <!-- /ppload -->
+                <?php
+                /* <a role="button" href="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, 'update') ?>" class="btn btn-native">
+                    <?= $this->translate('Update') ?>
+                </a>*/
+                ?>
+               <span class="publish-product-wrapper">
+                            <?php if ($this->isProjectActive($this->project_status)) : ?>
+                                <a href="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, 'unpublish',
+                                    array('m' => $this->member_id)) ?>"
+                                   class="btn btn-native" data-target="#<?= $loopProductId ?> .publish-product-wrapper">
+                                    <?= $this->translate('Unpublish') ?>
+                                </a>
+                            <?php else : ?>
+                                <a href="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, 'publish', array('m' => $this->member_id)) ?>"
+                                   class="btn btn-native" data-target="#<?= $loopProductId ?> .publish-product-wrapper">
+                                    <?= $this->translate('Publish') ?>
+                                </a>
+                            <?php endif; ?>
+                            </span>
+                <a role="button" href="#modalDelete<?= $loopProductId ?>" data-toggle="modal" class="btn btn-native">
+                    <?= $this->translate('Delete') ?>
+                </a>
+            </div>
+            <!-- /manage -->
+
+        </div>
+        <!-- /buttons -->
+    </article>
+    <!-- CONTENT -->
+    <!-- MODALS -->
+
+    <!-- confirm delete modal -->
+    <div id="modalDelete<?= $loopProductId ?>" class="modal fade">
+        <div class="modal-dialog content-modal">
+            <div class="modal-content">
+                <!-- dialog contents -->
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 class="center"><?= $this->translate('Delete Confirmation') ?></h3>
+                </div>
+                <div class="modal-body"><?= $this->translate('Do you really want to delete this product?') ?></div>
+                <!-- dialog buttons -->
+                <div class="modal-footer">
+                    <a href="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, 'delete', array('m' => $this->member_id)) ?>"
+                       role="button" class="btn btn-primary">
+                        <?= $this->translate('YES') ?>
+                    </a>
+                    <a href="#" role="button" class="btn btn-primary" data-dismiss="modal"
+                       aria-hidden="true"><?= $this->translate('NO') ?></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /confirm delete modal -->
+
+    <!-- button code modal -->
+    <div id="modal-button-code-<?= $loopProductId ?>" class="code-embed-modal modal fade">
+        <div class="modal-dialog content-modal">
+            <div class="modal-content">
+                <!-- dialog contents -->
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 class="center"><?= $this->translate('Button Code') ?></h3>
+                </div>
+                <div class="modal-body" id="support-button-<?= $loopProductId ?>">
+                    <div class="demo-code center"><?= $helperButton->externalPlingButton($this->project_id); ?></div>
+                    <textarea name="button-code"
+                              id="button-code-<?= $loopProductId ?>"
+                              class="code-text-area"><?= $helperButtonCode->externalPlingButtonSource($this->project_id, array('websiteAuthCode' => $websiteAuthCode)); ?></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button id="get-support-btn-code"
+                            class="btn btn-min-width btn-native"
+                            data-clipboard-target="#button-code-<?= $loopProductId ?>">get the code!
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /button code modal -->
+
+    <!-- box code modal -->
+    <div id="modal-box-code-<?= $loopProductId ?>" class="code-embed-modal modal fade">
+        <div class="modal-dialog content-modal">
+            <div class="modal-content">
+                <!-- dialog contents -->
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 class="center"><?= $this->translate('Box Code') ?></h3>
+                </div>
+                <div class="modal-body" id="support-box-<?= $loopProductId ?>">
+                    <div class="demo-code"><?= $this->externalSupporterBox($this->project_id); ?></div>
+                    <textarea name="box-code"
+                              id="box-code-<?= $loopProductId ?>"
+                              class="light"><?= $helperSupporterBoxSource->externalSupporterBoxSource($this->project_id); ?></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button id="get-support-box-code"
+                            class="btn btn-min-width btn-native"
+                            data-clipboard-target="#box-code-<?= $loopProductId ?>">get the code!
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /box code modal -->
+
+    <!-- list code modal -->
+    <div id="modal-list-code-<?= $loopProductId ?>" class="code-embed-modal modal fade">
+        <div class="modal-dialog content-modal">
+            <div class="modal-content">
+                <!-- dialog contents -->
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 class="center"><?= $this->translate('List Code') ?></h3>
+                </div>
+                <div class="modal-body" id="support-list-<?= $loopProductId ?>">
+                    <div class="demo-code"><?= $this->externalDonationList($this->project_id); ?></div>
+                    <textarea name="list-code"
+                              id="list-code-<?= $loopProductId ?>"
+                              class="light"><?= $helperDonationListSource->externalDonationListSource($this->project_id, array('websiteAuthCode' => $websiteAuthCode)); ?></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button id="get-support-list-code" class="btn btn-min-width btn-native"
+                            data-clipboard-target="#list-code-<?= $loopProductId ?>">get the code!
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /list code modal -->
+
+    <!-- widget code modal -->
+    <div id="modal-widget-code-<?= $loopProductId ?>" class="code-embed-modal modal fade">
+        <div class="modal-dialog content-modal" id="widget-code-modal">
+            <div class="modal-content">
+                <!-- dialog contents -->
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 class="center"><?= $this->translate('Widget Code') ?></h3>
+                </div>
+                <div class="modal-body" id="widget-code-<?= $loopProductId ?>">
+
+                    <iframe
+                        src="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, 'makerconfig'); ?>"
+                        height="300px"
+                        width="100%"
+                        frameBorder=0
+                        scrolling="no"
+                        allowTransparency="false"
+                        seamless
+                        ></iframe>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /widget code modal -->
+
+    <!-- verification code -->
+    <?php
+    $verificationPopup = new Default_View_Helper_VerificationCodePopup();
+    echo $verificationPopup->verificationCodePopup($this, $this->link_1, 'msg-box-code-' . $loopProductId, $this); ?>
+    <!-- /verification code -->
+
+    <?php $this->inlineScript()->appendScript(
+        '$(document).ready(function(){
+                    ButtonCode.setupClipboardCopy(\'div#modal-box-code-' . $loopProductId . '\');
+                    ButtonCode.setupClipboardCopy(\'div#modal-button-code-' . $loopProductId . '\');
+                    ButtonCode.setupClipboardCopy(\'div#modal-list-code-' . $loopProductId . '\');
+                });'
+    );
+    ?>
+    <!-- /MODALS -->
+</div>
+
+<div class="my-product-divider col-lg-12 col-md-12 col-sm-12 col-xs-12"></div>

@@ -1,0 +1,140 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$translator = $this->element->getTranslator();
+# Properties
+$properties = array();
+$properties['value'] = $this->element->getValue() === "" ? null : $this->element->getValue();
+$properties['name'] = $this->element->getName();
+?>
+<style>
+
+    div.image_handler {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        display: block;
+        clear: both;
+    }
+
+    div.image_handler label {
+        display: block;
+    }
+
+    div.image_handler div.placeholder {
+        margin-top: 5px;
+        margin-bottom: 5px;
+        display: inline-block;
+    }
+
+    div.image_handler div.placeholder img {
+        display: block;
+        border: solid 1px transparent;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    div.image_handler div.placeholder img:hover {
+        border: solid 1px #ABABAB;
+    }
+
+</style>
+
+<div class="image_handler" id="image_handler_<?php echo $properties['name']; ?>">
+    <?php if ($this->element->getLabel() !== null): ?>
+        <label for="<?php echo $properties['name']; ?>"><?php echo $translator->translate($this->element->getLabel()); ?></label>
+    <?php endif; ?>
+    <input type="hidden" <?php foreach ($properties as $key => $p): ?><?php if ($p != null): ?><?php echo $key; ?>="<?php echo $p; ?>"<?php endif; ?><?php endforeach; ?>
+    />
+    <div class="placeholder">
+        <?php if ($properties['value'] !== null): ?>
+            <img id="form_element_image_preview"
+                 src="<?php echo $this->Image($properties['value'], array('width' => 100, 'height' => 100)); ?>">
+        <?php else: ?>
+            <a href="javascript:;" class="button">
+                <?php if (isset($this->element->btnLabel)): ?>
+                    <?php echo $translator->translate($this->element->btnLabel); ?>
+                <?php else: ?>
+                    Add Image
+                <?php endif; ?>
+            </a>
+        <?php endif; ?>
+    </div>
+    <?php if ($this->element->getDescription() !== null): ?>
+        <p class="description"><?php echo $translator->translate($this->element->getDescription()); ?></p>
+    <?php endif; ?>
+
+    <script>
+        $(function () {
+            $(".fancybox").fancybox();
+
+            $("div#image_handler_<?php echo $properties['name']; ?> div.placeholder").click(function () {
+                $.fancybox.open({
+                    href: '/image?source=<?php echo $properties['name']; ?>',
+                    type: 'ajax',
+                    padding: 5
+                });
+            });
+
+            $("image_handler_btn_<?php echo $properties['name']; ?>").click(function (event) {
+                alert("As you can see, the link no longer took you to jquery.com");
+                //event.preventDefault();
+
+
+                $("image_handler_btn_<?php echo $properties['name']; ?>").fancybox({
+                    href: '/image?source=<?php echo $properties['name']; ?>',
+                    maxWidth: 800,
+                    maxHeight: 600,
+                    fitToView: false,
+                    width: '70%',
+                    height: '70%',
+                    autoSize: false,
+                    closeClick: false,
+                    openEffect: 'none',
+                    closeEffect: 'none'
+                });
+            });
+
+            /*
+             $("div#image_handler_
+            <?php echo $properties['name']; ?> div.placeholder").fancybox({
+             href: '/image?source=
+            <?php echo $properties['name']; ?>',
+             padding: 0,
+             margin: 0,
+             scrolling: 'no',
+             autoDimensions: true
+             });
+             */
+            // DO SOMETHING WITH PLACEHOLDER ABER BUTTON....
+
+            $(window).bind('image_selected', function (ev, image_id, image_filename, image_src, source) {
+                if (source === "<?php echo $properties['name']; ?>") {
+                    if ($('div#image_handler_<?php echo $properties['name']; ?> div.placeholder img').length > 0)
+                        $('div#image_handler_<?php echo $properties['name']; ?> div.placeholder img').attr('src', image_src);
+                    else
+                        $('div#image_handler_<?php echo $properties['name']; ?> div.placeholder').html("<img src='" + image_src + "'>");
+                    $('input[name="<?php echo $properties['name']; ?>"]').attr('value', image_filename);
+                }
+            });
+        });
+    </script>
+</div>

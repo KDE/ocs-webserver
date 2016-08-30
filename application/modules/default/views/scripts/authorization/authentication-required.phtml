@@ -1,0 +1,45 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+$helperEncryptUrl = new Default_View_Helper_EncryptUrl();
+?>
+<div class="modal-dialog content-modal">
+
+    <div class="modal-content auth-popup">
+
+        <div class="modal-header">
+            <button type="button" class="close popup-close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3><?= $this->translate('Authentication required!') ?></h3>
+        </div>
+        <div class="modal-body">
+            <p><?= $this->translate('Please login or register to pling a product.') ?></p>
+            <span><a href="/login?redirect=<?= $helperEncryptUrl->encryptUrl(Zend_Controller_Front::getInstance()->getRequest()->getRequestUri(), true) ?>"
+                     class="partial"
+                     data-target="#modal-dialog" data-toggle="#modal-dialog"><?= $this->translate('Login') ?></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a
+                    href="/register"><?= $this->translate('Register') ?></a> </span>
+        </div>
+        <div class="modal-footer w-logo">
+            <div class="logo"></div>
+        </div>
+
+    </div>
+
+</div>

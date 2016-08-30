@@ -1,0 +1,79 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<?php if ($this->pageCount > 1): ?>
+    <div class="paginationControl">
+        <!-- Vorheriger Seitenlink -->
+        <?php if (isset($this->previous)): ?>
+            <a href="#" title="<?= $this->previous; ?>" id="dialog_link_l" class="ui-state-default ui-corner-all"
+               style="float:left;">
+                <span class="ui-icon ui-icon-carat-1-w"></span>Vorher
+            </a>
+        <?php else: ?>
+            <div id="dialog_link_l" class="ui-state-default ui-corner-all" style="float: left;"><span
+                    class="ui-icon ui-icon-carat-1-w"></span>Vorher
+            </div>
+        <?php endif; ?>
+
+        <!-- Anzahl an Seitenlinks -->
+        <?php foreach ($this->pagesInRange as $page): ?>
+            <?php if ($page != $this->current): ?>
+                <a href="#" title="<?= $page; ?>" class="ui-state-default ui-corner-all pageButton"
+                   style="float: left;"><?php echo $page; ?></a>
+            <?php else: ?>
+                <div class="ui-state-default ui-corner-all pageButton" style="float: left;"><?php echo $page; ?></div>
+            <?php endif; ?>
+        <?php endforeach; ?>
+
+        <!-- Nächster Seitenlink -->
+        <?php if (isset($this->next)): ?>
+            <a href="#" title="<?= $this->next; ?>" id="dialog_link_r" class="ui-state-default ui-corner-all"
+               style="float: left;">Nächster <span class="ui-icon ui-icon-carat-1-e"></span></a>
+        <?php else: ?>
+            <div id="dialog_link_r" class="ui-state-default ui-corner-all" style="float: left;">Nächster<span
+                    class="ui-icon ui-icon-carat-1-e"></span></div>
+        <?php endif; ?>
+        <script type="text/javascript">
+            $(".paginationControl a").hover(
+                function () {
+                    $(this).addClass("ui-state-hover");
+                },
+                function () {
+                    $(this).removeClass("ui-state-hover");
+                }
+            );
+
+            $(".paginationControl a").click(function () {
+                var page = $(this).attr("title");
+                var ajaxUrl = '<?= $this->ajaxUrl; ?>';
+                //alert("Page: "+page+" Channel: "+channel);
+
+                var url = ajaxUrl + "/page/" + page;
+                $.post(url, function (data) {
+                    $("#<?= $this->showDiv; ?>").html(data);
+                });
+
+            });
+
+        </script>
+    </div>
+<?php endif; ?>

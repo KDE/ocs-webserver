@@ -1,0 +1,102 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$this->tab = 'add';
+$helperImage = new Default_View_Helper_Image();
+?>
+<main class="user-admin-page">
+    <section class="head-wrap">
+
+        <!-- HEADER -->
+
+        <section class="wrapper about-me-header">
+
+            <figure>
+                <img src="<?php echo $helperImage->Image($this->member->profile_image_url,array('width' => 110, 'height' => 110, 'crop' => 2)); ?>" alt="profile-image" width="110" height="110">
+            </figure>
+
+            <div class="user-menu well">
+
+                <div class="pull-left">
+                    <div class="intro">
+                        <div class="large">
+                            Hi
+                            <span class="lightblue"><?php echo $this->member->username; ?></span><?= $this->translate(', welcome to your personal start page!') ?>
+                        </div>
+                        <div class="small lightgrey">
+                            <a href="<?php echo $this->buildMemberUrl($this->member->member_id); ?>"><?= $this->translate('Click here to go to your About Me page.') ?></a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- /HEADER -->
+
+    </section>
+
+    <section class="body-wrap">
+
+        <section class="wrapper">
+
+            <!-- PAGE BODY -->
+
+            <section class="add-product-page">
+
+                <!-- NAVIGATION -->
+
+                <?php
+                echo $this->render('user/partials/userHeader.phtml');
+                ?>
+
+                <!-- /NAVIGATION -->
+
+                <!-- add product top -->
+                <div class="add-product-top clearfix">
+                    <h1 class="page-title left"><?= $this->translate($this->title) ?></h1>
+                    <ul class="steps right">
+                        <li class="active"><?= $this->translate('STEP 1 - ADD') ?></li>
+                        <li><?= $this->translate('STEP 2 - PREVIEW') ?></li>
+                    </ul>
+                </div>
+                <!-- /add product top -->
+                <!-- add product form -->
+                <div class="row add-product-container">
+                    <?= $this->form ?>
+                </div>
+                <!-- /add product form -->
+            </section>
+
+            <!-- /PAGE BODY -->
+
+        </section>
+
+    </section>
+
+</main>
+<?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){
+            ImagePreview.setup();
+        });
+    ');

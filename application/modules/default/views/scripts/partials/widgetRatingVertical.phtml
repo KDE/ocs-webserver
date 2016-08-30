@@ -1,0 +1,98 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$modelRating = new Default_Model_DbTable_ProjectRating();
+$rating = $modelRating->fetchRating($this->project_id);
+$likesAndDislikes = ($rating['count_likes'] == 0 and $rating['count_dislikes'] == 0) ? '' : '(' . $rating['count_likes'] . '/' . $rating['count_dislikes'] . ')';
+$cssNoVotes = ($rating['votes_total'] == 0) ? ';opacity:0.5;' : '';
+
+// calculate colour
+$blue = $red = $green = $default=200;
+$score = $rating['laplace_score'] * 100;
+
+if($score>50) {
+    $red=dechex($default-(($score-50)*4));
+    $green=dechex($default);
+    $blue=dechex($default-(($score-50)*4));
+}elseif($score<51) {
+    $red=dechex($default);
+    $green=dechex($default-((50-$score)*4));
+    $blue=dechex($default-((50-$score)*4));
+}
+if(strlen($green)==1) $green='0'.$green;
+if(strlen($red)==1) $red='0'.$red;
+
+?>
+	<div>
+		<?php /** 
+		<div style="float: left;width: 12px;">
+				<div id="outer">
+				    <div id="inner" style="background-color: #<?=$red.$green.$blue?>;height: <?= floor($rating['laplace_score'] * 100) ?>%;">
+				        <div></div>
+				    </div>
+				</div>
+		</div>
+		**/?>
+		<div style="float: right;width: 40px;" class="text-center">
+			<div style="padding-top: 0px;">
+				<a href="#" onclick="false;"><img src="/theme/flatui/img/new/arrow_up.png" style="width: 20px;"/></a><br/>
+				<small><?= $rating['count_likes'] ?></small> 
+			</div>
+			<div class="rating-text" style="padding-top: 5px;">
+		    	<small>Score <?= floor($rating['laplace_score'] * 100) ?>%</small>
+		    </div>
+		    <div style="padding-top: 7px;">
+				<small><?= $rating['count_dislikes'] ?><br/></small>
+				<a href="#" onclick="false;"><img src="/theme/flatui/img/new/arrow_down.png" style="width: 20px;"/></a> 
+			</div>
+		</div>
+	</div>
+	
+	
+	<?php /** 
+                <div class="rating" style="width:50%;">
+                	
+                    <div class="rating-text">
+                        <small class="center-block text-center">Score <?= floor($rating['laplace_score'] * 100) ?>%</small>
+                    </div>
+                    <div class="progress" style="margin-bottom: 0;height:12px;opacity:1.0;background-color: transparent; box-shadow: none; padding:2px;">
+                        <div class="progress-bar" style="background-color: #<?=$red.$green.$blue?>;width: <?= floor($rating['laplace_score'] * 100) ?>%;">
+                            <span class="sr-only"><?= $rating['laplace_score'] * 100 ?> Likes</span>
+                        </div>
+                        <div class="progress-bar" style="background-color:#eeeeee;width: <?= floor((1 - $rating['laplace_score']) * 100) ?>%;<?=$cssNoVotes?>">
+                            <span class="sr-only"><?= (1 - $rating['laplace_score']) * 100 ?> Dislikes</span>
+                        </div>
+                    </div>
+                    <table cellpadding="0" cellspacing="0" width="100%">
+				        <tbody>
+				        <tr>
+				            <td width="50%" class="text-left">
+				                <small><?= $rating['count_dislikes'] ?></small> 
+				            </td>
+				            <td width="50%" class="text-right">
+				                <small><?= $rating['count_likes'] ?></small> 
+				            </td>
+						</tr>
+						</tbody>                	
+                	</table>
+                </div>
+**/?>

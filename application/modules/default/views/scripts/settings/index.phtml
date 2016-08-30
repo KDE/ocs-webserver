@@ -1,0 +1,146 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$helperImage = new Default_View_Helper_Image();
+$this->tab = 'settings';
+?>
+<main class="user-admin-page">
+
+    <section class="head-wrap">
+
+        <!-- HEADER -->
+
+        <section class="wrapper about-me-header">
+
+            <figure>
+                <img src="<?php echo $helperImage->Image($this->member->profile_image_url,array('width' => 110, 'height' => 110, 'crop' => 2)); ?>" alt="profile-image" width="110" height="110">
+            </figure>
+
+            <div class="user-menu well">
+
+                <div class="pull-left">
+                    <div class="intro">
+                        <div class="large">Hi
+                            <span class="lightblue"><?php echo $this->member->username; ?></span><?= $this->translate(', welcome to your personal start page!') ?>
+                        </div>
+                        <div class="small lightgrey">
+                            <a href="/member/<?php echo $this->member->member_id; ?>/"><?= $this->translate('Click here to go to your About Me page.') ?></a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- /HEADER -->
+
+    </section>
+
+    <section class="body-wrap">
+
+        <section class="wrapper product-page">
+
+            <!-- PAGE BODY -->
+
+            <section class="my-products-page">
+
+                <!-- NAVIGATION -->
+
+                <?php echo $this->render('user/partials/userHeader.phtml'); ?>
+
+                <!-- /NAVIGATION -->
+
+                <!-- PAGE BODY -->
+                <section class="settings-page">
+
+                    <h1 class="page-title"><?= $this->translate('Settings') ?></h1>
+                    <hr/>
+                    <div class="row settings-options">
+                        <!-- main setting panel -->
+                        <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12 settings-main panel-group" id="accordion">
+                            <!-- edit profile -->
+                            <section class="panel panel-default" id="form-profile">
+                                <?php echo $this->render('settings/partials/profile.phtml'); ?>
+                            </section>
+                            <!-- /edit profile -->
+                            <!-- edit payments -->
+                            <section class="panel panel-default" id="form-payment">
+                                <?php echo $this->render('settings/partials/payment.phtml'); ?>
+                            </section>
+                            <!-- /edit payments -->
+                            <!-- edit connceted accounts -->
+                            <section class="panel panel-default" id="form-connected-accounts">
+                                <?php echo $this->render('settings/partials/accounts.phtml'); ?>
+                            </section>
+                            <!-- /edit connected accounts -->
+                            <!-- edit connected -->
+                            <section class="panel panel-default" id="form-picture">
+                                <?php echo $this->render('settings/partials/picture.phtml'); ?>
+                            </section>
+                            <!-- /edit picture -->
+                            <!-- edit password -->
+                            <section class="panel panel-default" id="form-password">
+                                <?php echo $this->render('settings/partials/password.phtml'); ?>
+                            </section>
+                            <!-- /edit password -->
+                            <!-- edit website -->
+                            <section class="panel panel-default" id="form-website">
+                                <?php echo $this->render('settings/partials/website.phtml'); ?>
+                            </section>
+                            <!-- /edit website -->
+                            <!-- edit newsletter -->
+                            <section class="panel panel-default" id="form-newsletter">
+                                <?php echo $this->render('settings/partials/newsletter.phtml'); ?>
+                            </section>
+                            <!-- /edit newsletter -->
+                            <!-- delete account
+                                    <section class="panel panel-default panel-danger" id="form-delete-account">
+                                        <?php //echo $this->partial('settings/partials/delete.phtml'); ?>
+                                    </section>
+                                     /delete account -->
+
+                        </div>
+                        <!-- /settings main -->
+                    </div>
+                </section>
+                <!-- /PAGE BODY -->
+
+            </section>
+
+            <!-- /PAGE BODY -->
+
+        </section>
+
+    </section>
+
+</main>
+
+
+<?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){
+            SettingsExpand.setup();
+            InputAvatar.setup();
+            ImagePreview.setup();
+            PartialForms.setup();
+        });
+    ');

@@ -1,0 +1,88 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<div class="panel-heading">
+    <h4 class="panel-title">
+        <a data-toggle="collapse" href="#profile-connected" data-parent="#accordion" id="profile-trigger">
+            <span class="glyphicon glyphicon-user"></span>
+            <?= $this->translate('Profile') ?>
+            <span class="absolute glyphicon glyphicon-chevron-down"></span>
+        </a>
+    </h4>
+</div>
+
+<div class="panel-collapse collapse" id="profile-connected">
+    <div class="panel-body">
+        <form class="standard-form partial well" action="<?= $this->profileform->getAction(); ?>"
+              method="<?= $this->profileform->getMethod(); ?>" data-target="#form-profile"
+              data-trigger="#profile-trigger">
+            <div class="row">
+                <div class="col-md-4 col-lg-4 col-sm-4 col-xs-4">
+                    <div class="field">
+                    	<label for="username"><?= $this->profileform->username->getLabel() ?></label>
+                    	<br/>
+                    	<div style="height: 44px;padding-top: 5px;"><?= $this->profileform->username->getValue() ?></div>
+                    	<input type="hidden" name="username" value="<?= $this->profileform->username->getValue() ?>">
+                    </div>
+                    
+                    <div class="field">
+                        <?= $this->profileform->firstname->setAttrib('tabindex', 2) ?>
+                    </div>
+                    <div class="field">
+                        <?= $this->profileform->city->setAttrib('tabindex', 4) ?>
+                    </div>
+                </div>
+                <!-- /.span4 -->
+                <div class="col-md-4 col-lg-4 col-sm-4 col-xs-4">
+                
+                    <div class="field">
+                    	<label for="mail"><?= $this->profileform->mail->getLabel() ?></label>
+                    	<br/>
+                    	<div style="height: 44px;padding-top: 5px;"><?= $this->profileform->mail->getValue() ?></div>
+                    	<input type="hidden" name="mail" value="<?= $this->profileform->mail->getValue() ?>">
+                    </div>
+                    
+                    <div class="field">
+                        <?= $this->profileform->lastname->setAttrib('tabindex', 3) ?>
+                    </div>
+                    <div class="field">
+                        <?= $this->profileform->country->setAttrib('tabindex', 5) ?>
+                    </div>
+                </div>
+                <!-- /.span4 -->
+                <div class="col-md-4 col-lg-4 col-sm-4 col-xs-4">
+                    <?= $this->profileform->aboutme->setAttrib('tabindex', 6) ?>
+                </div>
+                <!-- /.span4 -->
+            </div>
+            <!-- /.row-fluid -->
+            <hr>
+            <div class="row">
+                <div class="box pull-left margin-left-15" style="padding-left: 15px;">
+                    <?php echo $this->formResult($this->profileform, $this->save, null, 'Changes saved. Some changes will be activated at next login.'); ?>
+                </div>
+                <button type="submit" class="btn btn-native pull-right"
+                        tabindex="7"><?= $this->translate('Save &amp; Update') ?></button>
+            </div>
+        </form>
+    </div>
+</div>

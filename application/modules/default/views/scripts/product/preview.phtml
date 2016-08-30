@@ -1,0 +1,78 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<div class="add-page-preview page-container">
+    <div class="add-product-top clearfix">
+        <div class="container clearfix">
+            <div class="preview-title left">Preview</div>
+            <div class="preview-explanation left italic">
+                <?php /*                <?=$this->translate('You must enter your PayPal email address to earn money. We will save it in your Settings.')?>*/ ?>
+            </div>
+            <ul class="steps right">
+                <li><?= $this->translate('STEP 1 - ADD') ?></li>
+                <li class="active"><?= $this->translate('STEP 2 - PREVIEW') ?></li>
+            </ul>
+            <!-- .steps -->
+        </div>
+        <!-- /.container -->
+    </div>
+    <!-- /.add-product-top -->
+    <div class="container add-product-mid clearfix">
+        <?php /* <div class="left paypal-label"><span class="icon-paypal"></span><?=$this->translate('PayPal Account')?></div>*/ ?>
+        <div class="left">
+            <form class="standard-form"
+                  action="<?= $this->form->getAction(); ?>"
+                  method="<?= $this->form->getMethod(); ?>">
+                <?php /*                 <div class="clearfix preview-inputs">
+                    <?=$this->form->paypal_mail?>
+                    <?=$this->form->firstname?>
+                    <?=$this->form->lastname?>
+                    <input type="text" placeholder="Email Address" class="left preview-input">
+                    <input type="text" placeholder="First Name" class="left preview-input">
+                    <input type="text" placeholder="Last Name" class="left preview-input">
+                </div>*/ ?>
+                <div class="clearfix preview-buttons">
+                    <?= $this->form->back ?>
+                    <?= $this->form->publish ?>
+                    <?= $this->form->save ?>
+                    <?php /*                    <button type="submit" class="btn btn-grey left preview-button"><?=$this->translate('BACK')?></button>
+                    <button type="submit" class="btn btn-purple right preview-button"><?=$this->translate('PUBLISH')?></button>
+                    <button type="submit" class="btn btn-submit right preview-button"><?=$this->translate('SAVE')?></button> */ ?>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="container preview-container">
+    <div class="row-fluid">
+        <?= $this->preview ?>
+    </div>
+    <!-- /.row-fluid -->
+</div> <!-- /.container -->
+
+<?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){
+            $(\'header\').css(\'margin-top\', 0);
+        });
+    ');
+?>

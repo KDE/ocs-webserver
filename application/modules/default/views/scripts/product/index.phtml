@@ -1,0 +1,542 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$helperAddDefaultScheme = new Default_View_Helper_AddDefaultScheme();
+$helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
+$helperEncryptUrl = new Default_View_Helper_EncryptUrl();
+$helperFetchCategoriesForProduct = new Default_View_Helper_FetchCategoriesForProductAsString();
+$loginUrl = '/login?redirect=' . $helperEncryptUrl->encryptUrl(Zend_Controller_Front::getInstance()->getRequest()->getRequestUri(), true);
+$viewSidebar = 'product/partials/productAboutSidebar.phtml';
+$viewClaimBox = false;
+if ($this->product->claimable == 1) {
+    $viewClaimBox = 'product/partials/productClaimTopHeader.phtml';
+}
+
+
+
+$productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
+//$this->os = Zend_Registry::get('application_os');
+?>
+<!-- facebook -->
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.5";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+<div id="report-product-<?= $this->product->project_id ?>" class="modal report-product" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <form id="product-report" class="full-width partialjson" action="/report/product/" data-target="#report-product-<?= $this->product->project_id ?>-message">
+                <input type="hidden" name="p" value="<?= $this->product->project_id ?>">
+                <div id="report-product-<?= $this->product->project_id ?>-message">
+                    <p>Do you really want to report this product?</p>
+                    <div class="modal-footer">
+                        <button type="submit" class="small">
+                          <span class="glyphicon glyphicon-share-alt"></span> Yes
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<main id="product-page-content">
+<div class="container-fluid" style="">
+  <div class="row">
+       <div class="col-lg-10 imgsmall" id="product-main">
+           <div class="row" id="product-main-img-container">
+              <div class="col-lg-12 product-main-img" id="product-main-img">                                          
+                  <div  id="carouselContainer" class="carouselContainer">
+                      <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="false">                                
+                   
+                      <!-- Indicators -->      
+                       <ol class="carousel-indicators"> 
+                         <?php
+                         if(count($this->galleryPictures)>0)
+                         {                                   
+                             $cnt=1;                                   
+                               foreach ($this->galleryPictures as $picture): ?>      
+                                <li data-target="#myCarousel" data-slide-to="<?php echo $cnt ?>" class="<?php if(!$this->product->ppload_collection_id && $cnt==1) echo 'active';?>"></li>                            
+                        <?php 
+                             $cnt++;
+                             endforeach;                                  
+                         } 
+                         ?>
+                       </ol>
+
+                        <!-- Wrapper for slides -->
+                        <div class="carousel-inner">                             
+                          <?php
+                          $cnt=1;  
+                            foreach ($this->galleryPictures as $picture): ?>                                       
+                              <div class="item <?php if(!$this->product->ppload_collection_id && $cnt==1) echo 'active';?>">                                        
+                              <img src="<?php echo $this->Image($picture, array( 'height' => '600')); ?>" />
+                                </div>                                        
+                          <?php 
+                          $cnt++;
+                          endforeach;?>                                    
+                        </div><!-- End Carousel Inner -->
+                   
+                        <!-- Controls -->
+                        <?php if(count($this->galleryPictures)>1){ ?> 
+                        <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+                          <span class="glyphicon glyphicon-chevron-left"></span>
+                        </a>
+                        <a class="right carousel-control" href="#myCarousel" data-slide="next">
+                          <span class="glyphicon glyphicon-chevron-right"></span>
+                        </a>
+                        <?php } ?>
+                      </div><!-- End Carousel -->
+                  </div>
+
+                  <div id="product-title-div">
+                    <span id="product-title"  >
+                      
+                        <?php if (false === empty($this->product->link_1)): ?><a
+                            href="<?php echo $helperAddDefaultScheme->addDefaultScheme($this->product->link_1); ?>"
+                            target="_NEW"
+                            title="<?php echo $helperAddDefaultScheme->addDefaultScheme($this->product->link_1); ?>"
+                            > <?= $this->product->title; ?> <span class="fa fa-external-link"></span></a>
+                        <?php else : ?>
+                            <?= $this->product->title; ?>
+                        <?php endif; ?>
+                        
+                        
+                        <div class="product-logo-container">
+                          <img class="logo"  src="<?= $this->Image($this->product->image_small, array('width' => 85, 'height' => 85, 'crop' => 'crop'));?>"/>
+                        </div>
+                        <span class="product_category">
+
+                        
+                        
+                        <?php                                            
+                        //if($this->catParentTitle && 'root'!=$this->catParentTitle) { echo '<a href="/browse/cat/'.$this->catParentId.'/order/latest">'.$this->catParentTitle.'</a>'; echo " / "; }
+                        //echo  '<a href="/browse/cat/'.$this->product->project_category_id.'/order/latest">'.$this->catTitle.'</a>'; 
+                        echo  '<a href="/browse/cat/'.$this->catId.'/order/latest">'.$this->catTitle. ' </a>';
+                        ?>
+                        
+                        </span>
+                        <span class="light small">
+                        <?php if (false === empty($this->product->github_code)):
+                        	echo '<a target="_blank" href="'.$this->product->github_code.'">'.$this->product->github_code.' <span class="fa fa-external-link"></span></a>';
+                            endif;
+                        ?>
+                        
+                        </span>
+                    </span> 
+                  </div>                 
+              </div>
+           </div>
+
+                      <div class="col-lg-12" id="product-tabs-container">
+                               <!-- TABS -->
+                               <div id="product-tabs">
+                                   <ul class="nav nav-tabs">
+                                       <li class="active"><a href="#about-panel" data-toggle="tab">Product</a></li>
+                                       <?php if (null != ($this->product->embed_code) ) { /*OR count($this->galleryPictures) > 0 */ ?>
+                                           <li>
+                                               <a href="#media-panel" data-toggle="tab">
+                                                   <?php if (null != ($this->product->embed_code)) { ?>
+                                                       Media
+                                                   <?php }                                                   
+                                                    ?>
+                                               </a>
+                                           </li>
+                                       <?php } ?>
+                                        <li><a href="#files-panel" data-toggle="tab">Files (<?= $productFileInfos['fileCount'] ?>)</a></li>
+                                       <li><a href="#donations-panel" data-toggle="tab">Supporters (<?= count($this->supporting) ?>)</a></li>
+                                        
+                                   </ul>
+                               </div>
+                               <!-- /TABS -->
+                         
+                               <!-- PANELS -->
+
+                               <div class="tab-content row" id="product-panels">
+
+                                   <!-- ABOUT -->
+                                   <div class="tab-pane active" id="about-panel">
+
+
+                                       <div id="product-about" class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+
+                                           <div >
+                                               <article>
+                                               <b>Description:</b> <br /><br />
+                                                   <?= $this->product->description ?>
+                                               </article>
+                                               
+                                              
+
+                                               <article>
+                                                   <?php if (count($this->updates) > 0) { ?>
+                                                    <br /><b>Changelog:</b> <br /><br />
+                                                       <?= $this->partialLoop('product/partials/productUpdates.phtml', $this->updates); ?>
+                                                   <?php } ?>
+                                               </article>
+                                               
+                                               
+                                               <?php //if ('development' != APPLICATION_ENV) { ?>
+                                               <!-- comments -->
+                                               <div id="product-discussion">
+                                                   <?php echo $this->render('product/partials/productCommentsUX1.phtml',
+                                                       array(
+                                                           'comments' => $this->comments,
+                                                           'product' => $this->product,
+                                                           'member_id' => $this->authMember->member_id
+                                                       )); ?>
+                                               </div>
+                                               <!-- /comments -->
+                                               <?php //} ?>
+                                           </div>
+
+                                       </div>
+
+                                       <?php if ($viewClaimBox) {
+                                           echo $this->partial(
+                                               $viewClaimBox,
+                                               array(
+                                                   "member" => $this->member,
+                                                   "product" => $this->product
+                                               )
+                                           );
+                                       }
+                                       ?>
+                                  
+
+                                     
+                                   </div>
+                                   <!-- /ABOUT -->
+
+                                   
+                                   <div class="tab-pane" id="donations-panel">
+
+                                       <article class="col-lg-8 col-md-8 col-sm-8 col-xs-12" id="comments-container">
+
+                                         <h3>Supporters</h3>
+                                         <?php
+                                         if (count($this->supporting) > 0):
+                                             $countSupporter = count($this->supporting->toArray());
+                                             if ($countSupporter < 4) {
+                                                 $g = $countSupporter;
+                                             } else {
+                                                 $g = 4;
+                                             }
+                                             $h = 0;
+                                             $i = 3;
+                                             foreach ($this->supporting as $supporter):
+                                                 $i++;
+                                                 $h++; ?>
+
+                                                 <div class="user">
+                                                     <div class="u-wrap">
+                                                         <a href="<?php echo $helperBuildMemberUrl->buildMemberUrl($supporter->member_id); ?>">
+                                                             <figure>
+                                                                 <img src="<?= $this->Image($supporter->profile_image_url,array('width' => 200, 'height' => 200, 'crop' => 2)); ?>" />
+                                                             </figure>
+                                                             <div class="u-content">
+                                                                 <h3><?= $supporter->username ?></h3>
+                                                                 <span>$<?= $supporter->sum_plings ?></span>
+                                                             </div>
+                                                         </a>
+                                                     </div>
+                                                 </div>
+
+                                                 <?php
+                                             endforeach;
+                                         endif;
+                                         ?>                                           
+                                       </article>
+
+
+                                       <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 list panel-grey-part" id="supporters-product-detail-panel">
+                                          <?php echo $this->render('product/partials/productSupporterComments.phtml') ?>
+                                       </div>
+
+                                   </div>
+                                   <!-- /DONATIONS -->
+
+                                   <!-- MEDIA -->
+                                   <div class="tab-pane" id="media-panel">
+                                       <?php if (null != ($this->product->embed_code)): ?>
+                                           <?= $this->product->embed_code ?>
+                                       <?php endif; ?>                                      
+                                   </div>
+                                   <!-- /MEDIA -->
+    
+                                  <div class="tab-pane" id="files-panel">
+                                    <div class="col-lg-12">
+                                    <?php 
+                                    //if($productFileInfos['fileCount'] >0)
+                                      //{ 
+                                          echo $this->partial(
+                                          'product/partials/ppload.phtml',
+                                                array(            
+                                                    "product" => $this->product           
+                                                )
+                                            );
+									  //}
+                                      ?>
+                                      </div>
+                                  </div>
+                                   
+
+                               </div>
+
+                               <!-- /PANELS -->
+
+                              
+                      </div>
+
+
+       </div>
+       <div class="col-lg-2" id="product-maker">
+          <div class="row">
+              <div class="project-share-new col-lg-12 col-md-2 col-sm-2 col-xs-2">
+                          <script type="text/javascript">
+                                  function fbs_click(a) {
+                                      u = location.href;
+                                      t = document.title;
+                                      window.open(a.getAttribute('href') + '&t=' + encodeURIComponent(t), 'sharer', 'toolbar=0,status=0,width=626,height=436');
+                                      return false;
+                                  }
+
+                          </script>
+                        
+
+                          <div class="row">
+                              <a class="share-button facebook" href="http://www.facebook.com/sharer.php?u=<?= $this->dataUrl?>&title=<?= $this->product->title?>" target="_blank" onclick=" return fbs_click(this);">
+                                             <span class="share-verb">Share</span>
+                               </a>
+                              
+                               <a class="share-button twitter" href="http://twitter.com/share?text=I like this <?= $this->product->title?>&amp;url=<?= $this->dataUrl?>&amp;related=plingit" target="_blank" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=436,width=626');return false;">
+                                      <span class="share-verb">Tweet</span>
+                              </a>   
+                              
+                              <span style="margin-left: 5px;padding-top: 5px">
+                              <a class="g-plus" data-action="share" data-annotation="bubble"  data-width="120" data-height="24" ></a> 
+                              </span>                                                                                
+                          </div>
+                          
+                          <script >
+                            window.___gcfg = {
+                              lang: 'en-US',
+                              parsetags: 'onload'
+                            };
+                          </script>
+                          <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+                              <?php if (empty($this->product->claimable)) { ?>                              
+                                <div class="prod-widget-box prod-user right ">
+                                  <div class="sidebar-content" >
+                                    <div class="product-maker-sidebar">
+                                      <div class="product-maker-thumbnail relative">
+                                        <a href="<?php echo $helperBuildMemberUrl->buildMemberUrl($this->member->member_id); ?>"
+                                           title="<?= $this->member->username ?>">
+                                            <div class="profile-image-overlay-4 absolute"></div>
+                                            <img src="<?= $this->Image($this->member->profile_image_url, array('width' => 40, 'height' => 40)) ?>"
+                                                 alt="product-maker" width="15" height="15"
+                                                 class="sidebar-profile-image">
+                                        </a>
+                                      </div>
+                                      <div class="product-maker-summary">
+                                          <h5>
+                                              <a href="<?php echo $helperBuildMemberUrl->buildMemberUrl($this->member->member_id); ?>"><?= $this->member->username; ?></a>
+                                          </h5>
+
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              <?php } ?>
+
+                              <?php echo $this->render('partials/sidebarRating.phtml'); ?>
+        
+                             
+
+                              <div class="row">
+                                  <div class="prod-info">      
+                                  <?php /*                                                                                        
+                                    <?php if ($this->product->ppload_collection_id): ?>  
+                                       <div class="prod-download"> 
+                                      <a href="#" onclick="return activeTabFiles();"><span class="glyphicon glyphicon-download" aria-hidden="true"></span> <div class="txt"><span>download</span></div></a>
+                                      </div>
+                                    <?php endif;  ?>
+                                   */
+                                    ?>
+                                    <?php if (!empty($this->product->paypal_mail)) : ?>
+                                      <div class="prod-download">  
+                                      <a id="inline" href="#product-donate"><div class="txt"><span>Donate</span></div></a>
+                                      </div>
+                                    <?php endif; ?>                               
+                                  </div>   
+                              </div>
+                              
+                                  <!-- MORE PRODUCTS -->
+                                  
+                                  <div>
+                                      <?php                                         
+                                          echo $this->partial('product/partials/productMoreProductsWidget.phtml',
+                                          array(
+                                              'moreProducts' => $this->more_products,
+                                              'member_name' => $this->member->username,
+                                              'title' => 'More '.$this->catTitle.' from '.$this->member->username
+                                          )); ?>
+                                  </div>
+                                  
+                                  <div>
+                                      <?php                                      
+                                          echo $this->partial('product/partials/productMoreProductsWidget.phtml',
+                                          array(
+                                              'moreProducts' => $this->more_products_otheruser,
+                                              'member_name' => $this->member->username,
+                                              'title' => 'Other '.$this->catTitle
+                                          )); ?>
+                                  </div>
+                                  <!-- /MORE PRODUCTS -->
+
+                                  <?php
+                                  echo $this->partial(
+                                      $viewSidebar,
+                                      array(
+                                          "member" => $this->member,
+                                          "product" => $this->product,
+                                          "loginUrl" => $loginUrl,
+                                          'product_views' => $this->product_views,
+                                          'tab' => 'product',
+                                          'supporter' => $this->supporter,
+                                          'supporting' => $this->supporting,
+                                          'plings' => $this->plings,
+                                          'moreProducts' => $this->more_products,
+                                          'paymentStatus' => $this->paymentStatus,
+                                          'paymentMessage' => $this->paymentMessage
+                                      )
+                                  );
+                                  ?>
+
+                               <?php                                      
+                                        echo $this->render('product/partials/details.phtml');
+                                        ?>
+                               
+                  </div>
+              </div>
+            
+          </div>
+
+
+       </div> <!--end col-lg-2-->
+  </div>
+</div>
+</main>
+
+
+   
+
+    <div id="product-donate">
+    <?php
+    echo $this->partial(
+        'product/partials/productDonat.phtml',
+        array(
+            "member" => $this->member,
+            "product" => $this->product,
+            'urlPay' => $this->urlPay,
+        )
+    );
+    ?>
+    </div>
+
+    
+    
+    <script>
+        $(document).ready(function () {     
+
+          
+            $("a#inline").fancybox({
+                  'hideOnContentClick':           true,                                                           
+                  'autoScale'                     : false,                                                                                                                      
+                  'cyclic'                        : 'true',
+                  'transitionIn'                  : 'elastic',
+                  'transitionOut'                 : 'elastic'
+            });
+           
+
+            $('.carousel-inner img').each(function(index) {
+                    $(this).on("click", function(){                               
+                      
+                      $( "#product-main" ).toggleClass( "col-lg-10" );
+                      $( "#product-main" ).toggleClass( "imgfull" );   
+                      $( "#product-main" ).toggleClass( "imgsmall" );   
+                      $( "#product-tabs-container" ).toggleClass( "col-lg-10" );  
+                      $( "#product-main-img-container" ).toggleClass( "row" );    
+
+                    });
+                });
+
+            
+
+            var originHeightProdutMaker = $('#product-maker').height();
+         
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {                
+                 $('#product-maker').height(originHeightProdutMaker);
+                 fixProductMakeHeight();
+            });
+
+        });
+
+        activeTabFiles = function(e)
+       {            
+          $('.nav-tabs a[href="#files-panel"]').tab('show');
+          return false;
+       }    
+
+        fixProductMakeHeight = function()
+        {
+           if($('#product-main').height()>$('#product-maker').height())
+            {           
+              $('#product-maker').height($('#product-main').height());
+            }
+        }
+
+
+
+
+        $(window).load(function(){
+            fixProductMakeHeight();
+        })
+
+
+
+    </script>
+<?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){
+            newProductPage.setup();
+            PartialJson.setup();
+        });
+    ');

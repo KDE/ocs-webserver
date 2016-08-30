@@ -1,0 +1,399 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 embed-option embed-option"
+     data-ng-app="widgetApp"
+     data-ng-controller="WidgetController">
+
+    <?php if (!isset($this->product->project_uuid)) { ?>
+        <!-- error -->
+        <?php echo $this->translate('product.error.button_code'); ?>
+        <!-- /error -->
+    <?php } else { ?>
+
+        <!-- ANGULAR JS APP -->
+
+        <article data-ng-app="widgetApp" data-ng-controller="WidgetController">
+            <div id="configuration-options">
+
+                <!-- tab menu -->
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#general-config" data-toggle="tab" ng-click="getEmbedCode()">General</a>
+                    </li>
+                    <li><a href="#texts-config" data-toggle="tab" ng-click="getEmbedCode()">Texts</a></li>
+                    <li><a href="#colors-config" data-toggle="tab" ng-click="getEmbedCode()">Colors</a></li>
+                    <li><a href="#widget-embed-code" data-toggle="tab" ng-click="getEmbedCode()">Embed</a></li>
+                </ul>
+                <!-- /tab menu -->
+
+                <!-- tab panels -->
+                <div class="tab-content">
+                    <div class="tab-pane active" id="general-config">
+                        <div class="row">
+                            <div class="field col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <label>show donations field</label>
+                                <input type="checkbox" data-ng-model="amounts.showDonationAmount"
+                                       data-ng-init="amounts.showDonationAmount=true"/>
+                            </div>
+                            <div class="field col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <label>initial donation amount</label>
+                                <input type="text" data-ng-model="amounts.donation"/>
+                            </div>
+                            <div class="field col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <label>show supporters</label>
+                                <input type="checkbox"
+                                       data-ng-model="showSupporters"
+                                       data-ng-init="showSupporters=true"/>
+                            </div>
+                            <div class="field col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <label>show comments</label>
+                                <input type="checkbox" data-ng-model="showComments" data-ng-init="showComments=true"/>
+                            </div>
+                            <div class="field col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <label>ocs logo</label>
+                                <input type="radio" data-ng-model="logo" value="grey"><span>grey</span>
+                                <input type="radio" data-ng-model="logo" value="orange"><span>orange</span>
+                                <input type="radio" data-ng-model="logo" value="icon"><span>icon</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane" id="texts-config">
+                        <div class="row">
+                            <div class="field col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <label>headline text</label>
+                                <input type="text" data-ng-model="text.headline"/>
+                            </div>
+                            <div class="field col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <label>custom text</label>
+                                <textarea data-ng-model="text.content"></textarea>
+                            </div>
+                            <div class="field col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <label>button text</label>
+                                <input type="text" data-ng-model="text.button"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane" id="colors-config">
+                        <div class="row">
+                            <div class="field col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <label>widget background</label>
+                                <input class="color-input"
+                                       colorpicker
+                                       maxlength="7"
+                                       size="7"
+                                       data-ng-model="colors.widgetBg"
+                                       value="{{colors.widgetBg}}"/>
+                            </div>
+                            <div class="field col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <label>widget content</label>
+                                <input class="color-input" colorpicker maxlength="7" size="7"
+                                       data-ng-model="colors.widgetContent" value="{{colors.widgetContent}}"/>
+                            </div>
+                            <div class="field col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <label>headline</label>
+                                <input class="color-input"
+                                       colorpicker
+                                       maxlength="7"
+                                       size="7"
+                                       data-ng-model="colors.headline"
+                                       value="{{colors.headline}}"/>
+                            </div>
+                            <div class="field col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <label>text</label>
+                                <input class="color-input"
+                                       colorpicker
+                                       maxlength="7"
+                                       size="7"
+                                       data-ng-model="colors.text"
+                                       value="{{colors.text}}"/>
+                            </div>
+                            <div class="field col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <label>button background</label>
+                                <input class="color-input"
+                                       colorpicker
+                                       maxlength="7"
+                                       size="7"
+                                       data-ng-model="colors.button"
+                                       value="{{colors.button}}"/>
+                            </div>
+                            <div class="field col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <label>button text</label>
+                                <input class="color-input"
+                                       colorpicker
+                                       maxlength="7"
+                                       size="7"
+                                       data-ng-model="colors.buttonText"
+                                       value="{{colors.buttonText}}"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane" id="widget-embed-code">
+                        <div class="row">
+                            <div id="button-input" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <textarea name="widget-code"
+                                          id="widget-code"
+                                          class="light full-width">{{embedCode}}</textarea>
+                            </div>
+                            <div class="button col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <button id="get-widget-box-code" class="btn btn-min-width btn-native"
+                                        data-clipboard-target="#widget-code">get the code!
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /tab panels -->
+            </div>
+            <div id="widget-preview">
+                <div id="pling-widget" style="background-color:{{colors.widgetBg}};">
+
+                    <div class="widget-header">
+                        <h3 style="color:{{colors.headline}};">{{text.headline}}</h3>
+                    </div>
+
+                    <div class="widget-body" style="background-color:{{colors.widgetContent}};color:{{colors.text}};">
+
+                        <div class="widget-text" style="">{{text.content}}</div>
+
+                        <div class="donation-amount" data-ng-if="amounts.showDonationAmount">
+                            <div class="support-with">
+                                <span>Support with</span>
+                            </div>
+                            <div class="donation-amount-number">
+                                <span class="glyphicon glyphicon-usd"></span>
+                                <?php if (true === empty($this->product->paypal_mail) || true === empty($this->product->dwolla_id)) {
+                                    $style = 'disabled';
+                                } else {
+                                    $style = '';
+                                }
+                                ?>
+                                <input type="text"
+                                       class="inp-pling <?php echo $style; ?>"
+                                       data-ng-model="amounts.donation"/>
+                            </div>
+                            <div class="button">
+                                <button class="btn btn-pling"
+                                        style="background-color:{{colors.button}};color:{{colors.buttonText}};"
+                                        type="submit">{{text.button}}
+                                </button>
+                            </div>
+                            <?php if (false === empty($this->product->paypal_mail) || false === empty($this->product->dwolla_id)) { ?>
+                                <div class="payment-providers">
+                                    <div class="pay-with">
+                                        <span>Pay with</span>
+                                    </div>
+                                    <?php if (false === empty($this->product->paypal_mail)) { ?>
+                                        <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <input type="radio" name="payment_provider" value="paypal" checked>
+                                    </span>
+                                    <span class="payment-icon">
+                                        <img src="/theme/flatui/img/logo_paypal.png"/>
+                                    </span>
+                                        </div>
+                                    <?php } ?>
+                                    <?php if (false === empty($this->product->dwolla_id)) {
+                                        $checked = '';
+                                        if (empty($this->product->paypal_mail)) {
+                                            $checked = 'checked';
+                                        }
+                                        ?>
+                                        <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <input type="radio" name="payment_provider" value="dwolla" <?= $checked ?>>
+                                    </span>
+                                    <span class="payment-icon">
+                                        <img src="/theme/flatui/img/new/dwolla.png"/>
+                                    </span>
+                                        </div>
+                                    <?php } ?>
+                                </div>
+                            <?php } ?>
+                        </div>
+
+                        <div class="product-funding-info" data-ng-class="{ 'with-goal' : amounts.goal}">
+                            <div class="goal-range-number">
+                                <span>&#36;0</span>
+                                <span data-ng-if="amounts.goal">&#36;{{amounts.goal}}</span>
+                                <span class="unlimited" data-ng-if="!amounts.goal">&#8734;</span>
+                            </div>
+                            <div class="achieved-amount">
+                                <div class="bar" data-ng-class="{ 'no-goal' : !amounts.goal}"
+                                     style="width:{{Math.round(100*amounts.current/amounts.goal)}}%"></div>
+                            </div>
+                            <div class="money-raised">Raised &#36;{{amounts.current}} <span data-ng-if="amounts.goal">of &#36;{{amounts.goal}}</span>
+                            </div>
+                            <div class="percentage" style="color:{{colors.widgetBg}};" data-ng-show="amounts.goal">
+                                {{Math.round(100*amounts.current/amounts.goal)}}%
+                            </div>
+                        </div>
+
+                        <div class="supporters" data-ng-if="showSupporters" ng-hide="!supporters.length">
+                            <div class="supporter"
+                                 data-ng-repeat="supporter in supporters"
+                                 data-toggle="tooltip"
+                                 data-placement="top"
+                                 title="{{supporter.username}}">
+                                <a href="{{supporter.url}}">
+                                    <figure><img ng-src="{{supporter.img}}"/></figure>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="comments" data-ng-if="showComments" ng-hide="!comments.length">
+                            <div class="comment" data-ng-repeat="comment in comments">
+                                <figure><img ng-src="{{comment.img}}"/></figure>
+                                <div class="content">
+                                    <div class="info">{{comment.username}} donated &#36;{{comment.amount}}</div>
+                                    <div class="text">{{comment.comment}}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="widget-footer">
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="pay-secure">
+                                    <a href="<?php echo $this->serverUrl() . $this->buildProductUrl($this->product->project_id); ?>"
+                                       target="_blank">visit product on <?= $this->getRequest()->getHttpHost() ?></a>
+                                </div>
+                                <div class="powered-by">
+                                    <a href="<?php echo $this->serverUrl() . $this->buildProductUrl($this->product->project_id); ?>"
+                                       target="_blank"
+                                       class="opendesktop-logo {{logo}}"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </article>
+
+    <?php
+    $supportersArray = array();
+    foreach ($this->supporting as $supporter) {
+        $new_supporter = new stdClass();
+        $new_supporter->username = $supporter->username;
+        $new_supporter->img = $supporter->profile_image_url;
+        $new_supporter->url = $this->buildMemberUrl($supporter->member_id);
+        array_push($supportersArray, $new_supporter);
+    }
+    $commentsArray = array();
+    foreach ($this->comments as $comment) {
+        $new_comment = new stdClass();
+        $new_comment->username = $comment->username;
+        $new_comment->img = $comment->profile_image_url;
+        $new_comment->amount = $comment->amount;
+        $new_comment->comment = $comment->comment;
+        array_push($commentsArray, $new_comment);
+    }
+    ?>
+
+        <script type="text/javascript">
+
+            var widgetApp = angular.module('widgetApp', ['colorpicker.module', 'ngRoute']);
+
+            widgetApp.controller('WidgetController', function ($scope, $http) {
+
+                $scope.Math = window.Math;
+
+                $scope.text = {
+                    content: "<?=addslashes($this->widgetConfig->text->content)?>",
+                    headline: "<?=addslashes($this->widgetConfig->text->headline)?>",
+                    button: "Pling it!"
+                }
+
+                $scope.amounts = {
+                    donation: '<?=$this->widgetConfig->amounts->donation?>',
+                    showDonationAmount:<?=$this->widgetConfig->amounts->showDonationAmount?'true':'false'?>,
+                    current: '<?=(float)$this->product->amount_received;?>',
+                    goal: '<?=false === empty($this->product->amount)?$this->product->amount:''; ?>'
+                };
+
+                $scope.colors = {
+                    widgetBg: '<?=$this->widgetConfig->colors->widgetBg?>',
+                    widgetContent: '<?=$this->widgetConfig->colors->widgetContent?>',
+                    headline: '<?=$this->widgetConfig->colors->headline?>',
+                    text: '<?=$this->widgetConfig->colors->text?>',
+                    button: '<?=$this->widgetConfig->colors->button?>',
+                    buttonText: '<?=$this->widgetConfig->colors->buttonText?>'
+                };
+
+                $scope.showSupporters = <?=$this->widgetConfig->showSupporters?'true':'false'?>;
+                $scope.supporters = angular.fromJson('<?php echo json_encode($supportersArray);?>');
+
+                $scope.showComments = <?=$this->widgetConfig->showComments?'true':'false'?>;
+                $scope.comments = angular.fromJson('<?php echo json_encode($commentsArray);?>');
+
+                $scope.logo = '<?=$this->widgetConfig->logo?>';
+
+                $scope.project = <?=$this->product->project_id ?>;
+                $scope.uuid = '<?=$this->widgetConfig->uuid?>';
+                $scope.embedCode = '<?=$this->externalWidgetSource($this->product->project_id)?>';
+
+
+                $scope.getEmbedCode = function () {
+                    $http.post('/widget/savedefault/', {
+                        'uuid': $scope.uuid,
+                        'project': $scope.project,
+                        'config': {
+                            "text": $scope.text,
+                            "amounts": $scope.amounts,
+                            "colors": $scope.colors,
+                            "showSupporters": $scope.showSupporters,
+                            "showComments": $scope.showComments,
+                            "logo": $scope.logo
+                        }
+                    }).
+                        success(function (data, status) {
+                            $scope.status = status;
+                            $scope.uuid = data.data.uuid;
+                            $scope.embedCode = data.data.embedCode;
+                        })
+                        .
+                        error(function (data, status) {
+                            $scope.status = status;
+                            $scope.result = data || "Request failed";
+                        });
+                }
+
+            });
+
+        </script>
+
+        <!--  ANGULAR JS APP -->
+    <?php } ?>
+</div>
+
+<?php
+$this->inlineScript()->appendScript(
+    '    $(document).ready(function(){
+            ButtonCode.setupClipboardCopy(\'div#widget-embed-code\');
+        });
+    ');

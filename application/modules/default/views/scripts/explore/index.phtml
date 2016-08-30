@@ -1,0 +1,173 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$helperBuildExploreUrl = new Default_View_Helper_BuildExploreUrl();
+$helperProductCount = new Default_View_Helper_CategoryProductCount();
+$helperFetchCategory = new Default_View_Helper_CatTitle();
+$modelInfo = new Default_Model_Info();
+
+$catTitle = $helperFetchCategory->catTitle($this->filters['category']);
+if('all' == strtolower($catTitle) OR (false === isset($catTitle))) {
+    $labelTotalCounter = $this->totalcount == 1 ? ' Item' : ' Items';
+} else {
+    $labelTotalCounter = $catTitle;
+}
+
+?>
+<main id="explore-content">
+    <section class="wrapper" id="products-wrapper">
+
+        <aside class="col-lg-2 col-md-1 col-sm-1 col-xs-11">
+             <?php  echo $this->render('explore/partials/filter.phtml'); ?>
+        </aside>
+        
+        <section class="explore-products col-lg-8 col-md-8 col-sm-8 col-xs-11" id="explore-products">
+            <ul class="nav nav-tabs" id="sort">               
+                <li  <?=$this->filters['order'] == 'latest' ? 'class="active"' :'' ?>>
+                    <a href="<?= $helperBuildExploreUrl->buildExploreUrl($this->filters['category'], null,
+                        'latest') ?>"><span><?= $this->translate('Latest') ?></span></a>
+                </li>
+               
+                <li <?=$this->filters['order'] == 'top' ? 'class="active"' :'' ?>>
+                    <a href="<?= $helperBuildExploreUrl->buildExploreUrl($this->filters['category'], null,
+                        'top') ?>"><span><?= $this->translate('Greatest') ?></span></a>
+                </li>
+
+
+                <li <?=$this->filters['order'] == 'download' ? 'class="active"' :'' ?>>
+                    <a href="<?= $helperBuildExploreUrl->buildExploreUrl($this->filters['category'], null,
+                        'download') ?>"><span><?= $this->translate('Most Downloaded') ?></span></a>
+                </li>
+
+                <li class="right">
+                    <small><?= $this->totalcount ?> <?= $labelTotalCounter ?></small>
+                </li>
+            </ul>
+
+
+            <div class="product-list">
+                <?php
+                if (count($this->products) == 0) {
+                    echo '<div class="empty">No products to show in this category.</div>';
+                } else {
+                    $this->rownum = (1 + (($this->page - 1) * 10));
+                    foreach ($this->products as $this->product) {
+                        echo $this->render('explore/partials/product.phtml');
+                        $this->rownum++;
+                    }
+                }
+                ?>
+            </div>
+
+
+            <section class="explore-footer">
+                <?php echo $this->paginationControl($this->products, 'Sliding',
+                    'explore/partials/paginationControl.phtml',
+                    array('params' => $this->filters, 'dom_target' => 'section.explore-products')); ?>
+            </section>
+        </section>
+
+        <aside class="col-lg-2 col-md-3 col-sm-3 col-xs-11" id="explore-sidebar" style="background-color: #f1f1f1">
+                
+                      
+            <?php       
+            /**     
+            if ($this->users) {        
+                          echo $this->render('explore/partials/user.phtml');
+            } **/ 
+            ?>
+
+
+
+            <?php
+            $comments = $modelInfo->getLastCommentsForHostStores(5, $this->cat_id);
+            if (count($comments) > 0) {
+                ?>
+                <span class="commentTitle" style="margin:auto;display:table;padding:5px"> Comments</span>
+                <div class="prod-widget-box right" style=" background-color: #fff" id="lastcomments">
+                    <?php
+
+                    foreach ($comments as $this->comment) {
+                        echo $this->render('explore/partials/comment.phtml');
+                    }
+                    ?>
+                </div>
+            <?php } ?>
+
+            
+
+            <?php
+            $donations = $modelInfo->getLastPlingsForHostStores(5, $this->cat_id);
+            if (count($donations) > 0) {
+                ?>
+                <span class="donationTitle" style="margin:auto;display:table;padding:5px"> Donations</span>
+                <div class="prod-widget-box right" style=" background-color: #fff" id="lastdonations">
+                    <?php
+                    foreach ($donations as $this->donation) {
+                        echo $this->render('explore/partials/donation.phtml');
+                    }
+                    ?>
+                </div>
+            <?php } ?>
+
+
+            <?php
+            $topprods = $modelInfo->getMostDownloadedForHostStores(100, $this->cat_id);        
+            if (count($topprods) > 0) {
+                ?>
+                <span class="commentTitle" style="margin:auto;display:table;padding:5px"> 6 Months Ranking <span class="small light"> (download counts)</span></span>                 
+                
+                <div class="prod-widget-box right" style=" background-color: #fff" id="mostdownloaded">
+                    <?php
+                    $this->rownum = 1;
+                    foreach ($topprods as $this->product) {
+                        echo $this->render('explore/partials/productTop.phtml');
+                        $this->rownum++;
+                    }
+                    ?>
+                </div>
+            <?php } ?>
+
+            <?php
+            if ($this->catabout) {
+            ?>
+                <div class="prod-widget-box right" style="margin-top: 15px; " id="catcontent">
+                    <?php include $this->catabout; ?>
+                </div>
+            <?php
+            }
+            ?>
+         </aside>
+
+  </section>    
+</main>
+ 
+ 
+
+
+<script type="text/javascript">    
+    $(window).load(function () {      
+        if ($('#explore-products').height() > $('#explore-sidebar').height()) {
+            $('#explore-sidebar').height($('#explore-products').height());
+        }
+    })
+</script>

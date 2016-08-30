@@ -1,0 +1,260 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<style>
+    #dialog-form form dl dl dd {
+        margin: 0;
+        padding: 0;
+        margin-left: 10px;
+    }
+
+    #dialog-form form legend {
+        margin: 0;
+        padding: 0;
+    }
+
+    #dialog-form form dd {
+        background-color: #d9d4d7;
+    }
+
+    #dialog-form form input {
+        width: 95%;
+    }
+
+    #dialog-form form dl dd {
+        padding-top: 3px;
+        padding-bottom: 3px;
+    }
+
+    #dialog-form form dl dd fieldset dl dt#logo-label {
+        display: none;
+    }
+
+    #dialog-form form dl dt#clientname-label {
+        display: none;
+    }
+
+    #dialog-form form dl dd#clientname-element {
+        display: none;
+    }
+</style>
+<div class="messages">
+    <?php foreach (Zend_Controller_Action_HelperBroker::getStaticHelper('flashMessenger')
+                       ->getCurrentMessages() as $message) : ?>
+        <p><?php echo $this->escape($message); ?></p>
+    <?php endforeach; ?>
+</div>
+<div id="TableContainer"></div>
+<div id="dialog-form" title="Store Config"></div>
+<script type="text/javascript">
+
+    $("#dialog-form").dialog({
+        autoOpen: false,
+        //height: 350,
+        width: 600,
+        modal: true,
+        buttons: {
+            Close: function () {
+                $(this).dialog("close");
+            },
+            Save: function () {
+                $('#dialog-form form').submit();
+                $(this).dialog("close");
+            }
+        }
+    });
+
+
+    $(document).ready(function () {
+        $('#TableContainer').jtable({
+            jqueryuiTheme: true,
+            paging: true,
+            sorting: true,
+            defaultSorting: 'order asc',
+            title: 'Table of stores',
+            actions: {
+                listAction: '/backend/store/list',
+                createAction: '/backend/store/create',
+                updateAction: '/backend/store/update',
+                deleteAction: '/backend/store/delete'
+            },
+            fields: {
+                store_id: {
+                    key: true,
+                    create: false,
+                    edit: false,
+                    list: false
+                },
+                host: {
+                    title: 'hostname',
+                    width: '10%',
+                    list: true,
+                    create: true,
+                    inputTitle: 'hostname <small style="font-weight:normal; font-size: 0.7em">(45 chars)</small>'
+                },
+                mapping_id_name: {
+                    title: 'mapping id',
+                    width: '10%',
+                    list: true,
+                    create: true,
+                    inputTitle: 'mapping id <small style="font-weight:normal; font-size: 0.7em">(45 chars) when set, should be unique</small>'
+                },
+                name: {
+                    title: 'store displayname',
+                    width: '10%',
+                    list: true,
+                    create: true,
+                    inputTitle: 'store displayname <small style="font-weight:normal; font-size: 0.7em">(45 chars)</small>'
+                },
+                config_id_name: {
+                    title: 'config id',
+                    width: '10%',
+                    list: true,
+                    create: true,
+                    inputTitle: 'store id name <small style="font-weight:normal; font-size: 0.7em">(used as config id/search index id) (45 chars)</small>'
+                },
+                order: {
+                    title: 'display order',
+                    width: '10%',
+                    list: true,
+                    create: true
+                },
+                is_client: {
+                    title: 'is client config',
+                    list: false,
+                    type: 'checkbox',
+                    values: { '': 'No', '1': 'Yes' },
+                    defaultValue: '',
+                    inputTitle: 'is client <small style="font-weight:normal; font-size: 0.7em">(Please tick this if another config is used)</small>'
+                },
+                google_id: {
+                    title: 'google id',
+                    width: '10%'
+                },
+                initSearchIndex: {
+                    title: '',
+                    width: '1%',
+                    sorting: false,
+                    create: false,
+                    edit: false,
+                    list: true,
+                    display: function (data) {
+                        if (data.record) {
+                            return '<button id="create_index" title="Init Search Index" class="jtable-command-button" style="width: 15px;height: 15px;background: url(/theme/flatui/img/todo/search.png);" rel="/backend/search/init/store_id/' + data.record.store_id + '/index_id/' + data.record.config_id_name + '"><span>init search</span></button>';
+                        }
+                    }
+                },
+                editConfig: {
+                    title: '',
+                    width: '1%',
+                    sorting: false,
+                    create: false,
+                    edit: false,
+                    list: true,
+                    display: function (data) {
+                        if (data.record) {
+                            if (data.record.default == 1) {
+                                return '<a role="button" title="edit default template config" class="btn btn-primary btn-xs edit-config" style="color:white;"  data-record="' + data.record.config_id_name + '"><span>config</span></a>';
+                            } else {
+                                if (data.record.is_client == 1) {
+                                    return '<div title="config client. please edit source template." data-toggle="tooltip" data-placement="top" ><a role="button" class="btn btn-secondary btn-xs edit-config disabled" data-record="' + data.record.config_id_name + '"><span>config</span></a></div>';
+                                } else {
+                                    return '<a role="button" title="edit template config" class="btn btn-info btn-xs edit-config" style="color:white;"  data-record="' + data.record.config_id_name + '"><span>config</span></a>';
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        $('#TableContainer').jtable('load');
+    });
+
+    $('body').on("click", 'button#create_index', function (event) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        var url_string = $(this).attr('rel');
+
+        jQuery.ajax({
+            url: url_string,
+            type: 'get',
+            error: function () {
+                alert("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+                return false;
+            },
+            success: function (results) {
+                alert('Task to create search index was added successfully to the command queue.');
+                return false;
+            }
+        });
+
+        return false;
+    });
+
+    $('body').on("click", 'a.edit-config', function (event) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        var elementRecord = $(this).data("record");
+
+        jQuery.ajax({
+            data: {'c': elementRecord},
+            url: '/backend/store/loadstoreconfig/',
+            type: 'post',
+            error: function () {
+                alert("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+                return false;
+            },
+            success: function (results) {
+                $('#dialog-form').empty().html(results.ViewRecord).dialog('open');
+                return false;
+            }
+        });
+
+        return false;
+    });
+
+    $('body').on("submit", '#dialog-form form', function (event) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        jQuery.ajax({
+            data: $(this).serialize(),
+            url: '/backend/store/savestoreconfig',
+            type: 'post',
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+                return false;
+            },
+            success: function (data, textStatus, jqXHR) {
+                return false;
+            }
+        });
+
+        return false;
+    });
+
+
+</script>
+

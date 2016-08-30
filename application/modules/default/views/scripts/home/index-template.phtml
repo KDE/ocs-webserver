@@ -1,0 +1,297 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+//$helperBuildExploreUrl = new Default_View_Helper_BuildExploreUrl();
+//$randomProducts = new Default_View_Helper_FetchRandomProducts();
+
+$domainCategoryFilterId = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
+
+/*
+if (isset($domainCategoryFilterId)) {
+    $products = $randomProducts->fetchRandomProductsForCategories($domainCategoryFilterId, 5);
+} else {
+    $products = $randomProducts->fetchRandomProducts(5);
+}
+*/
+if (true === empty($this->catid) && true === empty($domainCategoryFilterId)) {
+    $mainCategories = new Default_View_Helper_FetchMainCategories();
+    $categories = $mainCategories->fetchMainCategories();
+} else {
+    if (isset($domainCategoryFilterId)) {
+        $subCategories = new Default_View_Helper_FetchSubCategories();
+        $categories = $subCategories->fetchSubCategories($domainCategoryFilterId);
+        // it's a hack.
+        if (empty($categories)) {
+            $fetchCategories = new Default_View_Helper_FetchCategory();
+            $categories = array($fetchCategories->fetchCategory($domainCategoryFilterId));
+        }
+    } else {
+        $subCategories = new Default_View_Helper_FetchSubCategories();
+        $categories = $subCategories->fetchSubCategories($this->catid);
+        // it' a hack.
+        if (empty($categories)) {
+            $fetchCategories = new Default_View_Helper_FetchCategory();
+            $categories = array($fetchCategories->fetchCategory($this->catid));
+        }
+    }
+}
+?>
+    <style>
+        body.home-page main section#intro.wrapper .container article .logo_template {
+            background-image: <?=$this->template['homepage']['logo']['background-image']?>;
+            background-position: <?=$this->template['homepage']['logo']['background-position']?>;
+            background-repeat: <?=$this->template['homepage']['logo']['background-repeat']?>;
+            float: none;
+            height: <?=$this->template['homepage']['logo']['height']?>;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+            width: <?=$this->template['homepage']['logo']['width']?>;
+        }
+    </style>
+    <main>
+        <section class="wrapper" id="intro">
+            <section class="container">
+                <div class="row">
+                    <article>
+                        <figure class="logo_template"></figure>
+                        <?=$this->template['homepage']['headline']?> 
+                    </article>
+                </div>
+            </section>
+        </section>
+
+        <?php /*
+        <section class="wrapper" id="products">
+            <section class="container">
+                <div class="row">
+                    <div class="categories">
+                        <?php
+                        foreach ($categories as $category) {
+                            echo '<a class="category" rel="' . $category['project_category_id'] . '" href="' . $helperBuildExploreUrl->buildExploreUrl($category['project_category_id']) . '">' . $category['title'] . '</a>';
+                        }
+                        ?>
+                    </div>
+                    <div class="products" id="category-products">
+                        <?php echo $this->partialLoop('partials/loopProductsHome128.phtml', $products) ?>
+                    </div>
+                </div>
+            </section>
+        </section>
+		*/?>
+        <?php
+        $helperSearchCategories = new Default_View_Helper_FetchDomainCategories();
+        $categories = $helperSearchCategories->fetchDomainCategories($domainCategoryFilterId);
+        $helperProductCount = new Default_View_Helper_CategoryProductCount();
+        $helperBuildExploreUrl = new Default_View_Helper_BuildExploreUrl();
+        $helperSubCategories = new Default_View_Helper_FetchSubCategories();
+        ?>
+        <section class="wrapper" id="cat-list">
+
+            <div class="row">
+                <div class="card-wrapper">
+                    <?php
+                    foreach ($categories as $key => $element) {
+                        echo '<div class="card-item"><div class="category" >';
+                        $catProductCount = $helperProductCount->categoryProductCount($element['project_category_id']);
+                        if ($catProductCount > 0) {
+                            $productCount = '<span class="label label-default">' . $catProductCount . '</span>';
+                        } else {
+                            $productCount = '';
+                        }
+                        echo '<a class="title" href="' . $helperBuildExploreUrl->buildExploreUrl($element['project_category_id']) . '">'
+                            . $this->translate($element['title']) . $productCount . '</a>';
+//                        $subCategories = $helperSubCategories->fetchSubCategories($element['project_category_id']);
+//                        $amount = count($subCategories);
+//                        if ($amount > 0) {
+                          if ($element['rgt']-$element['lft'] > 1 ){
+                            $subCategories = $helperSubCategories->fetchSubCategories($element['project_category_id']);
+                            $amount = count($subCategories);
+                            echo '</div><div>';
+                            $counter = 0;
+                            foreach ($subCategories as $subCat) {
+                                $comma = ', ';
+                                if ($counter == $amount - 1) {
+                                    $comma = '';
+                                }
+                                $subCatProductCount = $helperProductCount->categoryProductCount($subCat['project_category_id']);
+                                if ($subCatProductCount > 0) {
+                                    $productSubCount = '<span class="label label-default">' . $subCatProductCount . '</span>';
+                                } else {
+                                    $productSubCount = '';
+                                }
+                                echo '<div><a class="title" href="' . $helperBuildExploreUrl->buildExploreUrl($subCat['project_category_id']) . '">'
+                                    . $this->translate($subCat['title']) . $productSubCount . '</a></div>';
+                                $counter += 1;
+                            }
+
+                        }
+                        echo '</div></div>';
+                    }
+                    ?>
+                </div>
+            </div>
+        </section>
+
+        <?php /*
+
+        <section class="wrapper" id="blue">
+            <section class="container">
+                <h2>Register Your Product</h2>
+
+                <h3>to start collecting donations without additional fees</h3>
+            </section>
+        </section>
+        <section class="wrapper" id="presentation">
+            <section class="container">
+                <div class="row">
+                    <?php /
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-sm-12 section-title">
+                        <h2>A new way to do donations</h2>
+                    </div>
+                    / ?>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 item">
+                        <div class="row">
+                            <figure class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                <img src="/theme/flatui/img/new/1-icon-customize.png"/>
+                            </figure>
+                            <article class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                                <h3>Customize Button</h3>
+
+                                <p>Customize size and color of the pling button, show $ amount or # supporters.</p>
+                            </article>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 item">
+                        <div class="row">
+                            <figure class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                <img src="/theme/flatui/img/new/3-icon-list.png"/>
+                            </figure>
+                            <article class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                                <h3>Donation List</h3>
+
+                                <p>Receive donations + comments and interact via reply.</p>
+                            </article>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 item">
+                        <div class="row">
+                            <figure class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                <img src="/theme/flatui/img/new/2-icon-box.png"/>
+                            </figure>
+                            <article class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                                <h3>Supporter Box</h3>
+
+                                <p>Build a community of supporters and show them on your products site.</p>
+                            </article>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 item">
+                        <div class="row">
+                            <figure class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                <img src="/theme/flatui/img/new/4-icon-payment.png"/>
+                            </figure>
+                            <article class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                                <h3>Multiple Payment Providers</h3>
+
+                                <p>Select between different payment providers (currently: Paypal, more in the near
+                                   future)</p>
+                            </article>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </section>
+		*/?>
+    </main>
+
+
+    <div id="homepage-video" class="code-embed-modal modal fade">
+        <div class="modal-dialog pling-modal">
+            <div class="modal-content">
+                <!-- dialog contents -->
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 class="center">OCS</h3>
+                </div>
+                <div class="modal-body">
+                    <iframe width="640" height="480" src="https://www.youtube.com/embed/vfMia0UxzD0" frameborder="0"
+                            allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var colCount = 0;
+            var colWidth = 0;
+            var windowWidth = 0;
+            var blocks = [];
+
+            function positionBlocks() {
+                $('.card-item').each(function () {
+                    var min = Array.min(blocks),
+                        index = $.inArray(min, blocks),
+                        leftPos = margin + (index * (colWidth + margin));
+                    $(this).css({
+                        'left': leftPos + 'px',
+                        'top': min + 'px'
+                    });
+                    blocks[index] = min + $(this).outerHeight() + margin;
+                });
+            }
+
+            function setupBlocks() {
+                windowWidth = $('.card-wrapper').width();
+                if (windowWidth <= 768) {
+                    return;
+                }
+                colWidth = $('.card-item').outerWidth();
+                margin = (windowWidth - colWidth * 3) / 4;
+                blocks = [];
+                colCount = Math.floor(windowWidth / (colWidth + margin));
+                for (var i = 0; i < colCount; i++) {
+                    blocks.push(margin);
+                }
+                positionBlocks();
+                $('.card-wrapper').height(Array.max(blocks));
+            }
+
+            $(window).resize(setupBlocks);
+
+            // Function to get the Min value in Array
+            Array.min = function (array) {
+                return Math.min.apply(Math, array);
+            };
+            // Function to get the Max value in Array
+            Array.max = function (array) {
+                return Math.max.apply(Math, array);
+            };
+
+            setupBlocks();
+        });
+    </script>
+<?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){
+            FormCreateButton.setup();
+            //HomePageCarousel.setup();
+        });
+    ');

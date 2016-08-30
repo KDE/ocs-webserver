@@ -1,0 +1,62 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<main id="explore-content">
+
+    <section class="wrapper" id="products-wrapper">
+        <aside class="col-lg-2 col-md-1 col-sm-1 col-xs-11">
+            <?php  echo $this->render('explore/partials/filter.phtml'); ?>
+        </aside>
+
+        <section class="explore-products col-lg-8 col-md-8 col-sm-8 col-xs-11" id="explore-products">
+
+            <h1 class="search-heading">Search results for "<?= $this->searchText; ?>"</h1>
+
+            <ul class="nav nav-tabs" id="sort">
+            	<li class="text-right" style="text-align: right; width: 50%; float: right;"><small><?= $this->hitsCount; ?> hits</small></li>
+            </ul>
+            <div class="product-list">
+                <?php
+                $this->rownum = (1 + (($this->page-1) * 10));
+                if($this->rownum == -9) {
+					$this->rownum = 1;
+				}
+                foreach ($this->hits as $this->product) {
+                  echo $this->render('explore/partials/product.phtml') ;
+                    $this->rownum++;
+                }
+                ?>
+            </div>
+
+            <section class="explore-footer">
+                <?php if ($this->hits->count() > 1) { echo $this->paginationControl($this->hits, 'Sliding', 'explore/partials/paginationControl.phtml', array('params' => $this->inputFilter)); } else { echo '&nbsp;'; } ?>
+            </section>
+
+        </section>
+
+    </section>
+
+    <aside class="col-lg-2 col-md-3 col-sm-3 col-xs-11" id="explore-sidebar" style="">
+        &nbsp;
+    </aside>
+
+</main>

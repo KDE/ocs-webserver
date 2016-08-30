@@ -1,0 +1,109 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$helperAddDefaultScheme = new Default_View_Helper_AddDefaultScheme();
+$helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
+$helperImage = new Default_View_Helper_Image();
+
+?>
+<aside class="col-md-4 col-lg-4 col-sm-4 col-xs-12 about-me-sidebar">
+
+    <?php if (empty($this->product->claimable)) { ?>
+        <!-- the maker -->
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-6 col-container">
+            <div class="well about-me-sidebar-section">
+                <div class="sidebar-header">
+                    <h3><?= $this->translate('THE MAKER') ?></h3>
+                </div>
+                <div class="sidebar-content">
+                    <div class="row product-maker-sidebar">
+                        <div class="col-md-5 col-lg-5 col-sm-5 col-xs-5 product-maker-thumbnail relative">
+                            <a href="<?php echo $helperBuildMemberUrl->buildMemberUrl($this->member->member_id); ?>"
+                               title="<?= $this->member->username ?>">
+                                <div class="profile-image-overlay-4 absolute"></div>
+                                <img src="<?= $helperImage->Image($this->member->profile_image_url, array('width' => 100, 'height' => 100)); ?>"
+                                     alt="product-maker"
+                                     width="100"
+                                     height="100"
+                                     class="sidebar-profile-image">
+                            </a>
+                        </div>
+                        <div class="col-md-7 col-lg-7 col-sm-7 col-xs-7 product-maker-summary">
+                            <h4>
+                                <a href="<?php echo $helperBuildMemberUrl->buildMemberUrl($this->member->member_id); ?>"><?= $this->member->username; ?></a>
+                            </h4>
+
+                            <div class="small"><?= $this->member->firstname ?> <?= $this->member->lastname ?></div>
+                            <div class="small"><?= $this->member->city ?> <?= $this->member->country ?></div>
+                            <div class="info-div">
+                                <?php if (false === empty($this->member->link_website)): ?>
+                                    <span class="text"><a
+                                            href="<?php echo $helperAddDefaultScheme->addDefaultScheme($this->member->link_website); ?>"
+                                            target="_NEW"
+                                            title="<?php echo $helperAddDefaultScheme->addDefaultScheme($this->member->link_website); ?>"
+                                            ><span class="fa fa-globe"></span></a></span>
+                                <?php endif; ?>
+                                <?php if (false === empty($this->member->link_facebook)): ?>
+                                    <span class="text"><a
+                                            href="<?php echo $helperAddDefaultScheme->addDefaultScheme($this->member->link_facebook); ?>"
+                                            target="_NEW"
+                                            title="<?php echo $helperAddDefaultScheme->addDefaultScheme($this->member->link_facebook); ?>"
+                                            ><span class="fa fa-facebook-square"></span></a></span>
+                                <?php endif; ?>
+                                <?php if (false === empty($this->member->link_twitter)): ?>
+                                    <span class="text"><a
+                                            href="<?php echo $helperAddDefaultScheme->addDefaultScheme($this->member->link_twitter); ?>"
+                                            target="_NEW"
+                                            title="<?php echo $helperAddDefaultScheme->addDefaultScheme($this->member->link_twitter); ?>"
+                                            ><span class="fa fa-twitter-square"></span></a></span>
+                                <?php endif; ?>
+                                <?php if (false === empty($this->member->link_google)): ?>
+                                    <span class="text"><a
+                                            href="<?php echo $helperAddDefaultScheme->addDefaultScheme($this->member->link_google); ?>"
+                                            target="_NEW"
+                                            title="<?php echo $helperAddDefaultScheme->addDefaultScheme($this->member->link_google); ?>"
+                                            ><span class="fa fa-google-plus-square"></span></a></span>
+                                <?php endif; ?>
+                                <?php if (false === empty($this->member->link_github)): ?>
+                                    <span class="text"><a
+                                            href="<?php echo $helperAddDefaultScheme->addDefaultScheme($this->member->link_github); ?>"
+                                            target="_NEW"
+                                            title="<?php echo $helperAddDefaultScheme->addDefaultScheme($this->member->link_github); ?>"
+                                            ><span class="fa fa-github-square"></span></a></span>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /the maker -->
+    <?php } ?>
+    <!-- related products 
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-6 col-container even">
+        <div class="well about-me-sidebar-section sidebar-related-products">
+            <? /*php echo $this->partial('product/partials/sidebarRelatedProducts.phtml', array('relatedProducts' => $this->relatedProducts)); */ ?>
+        </div>
+    </div>
+    /related products -->
+
+</aside>

@@ -1,0 +1,17 @@
+/* 
+    Document   : search.css
+    Created on : 15.04.2011, 19:23:19
+    Author     : sysaki
+    Description:
+        css definitions for search functions at backend
+*/
+
+
+form#filter fieldset {
+    border: 1px solid #000;
+    width: 925px;
+}
+
+form#filter fieldset input {
+    border:  1px solid #000;
+}

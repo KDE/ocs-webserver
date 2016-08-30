@@ -1,0 +1,76 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<br/><br/><br/>
+<div id="legendDiv">
+    &nbsp;<strong>Button-Erklärung:</strong><br/>
+    <?php if (!$this->preview): ?>
+        <div style='line-height: 22px; margin-bottom: 2px;margin-top: 3px; margin-left: 10px;'>
+            <div class='ui-state-default ui-corner-all' style='width: 20px; height: 19px; float:left;'><span
+                    class='ui-icon ui-icon-document' style='margin: 0 2px;'></span></div>
+            &nbsp;Vorschau / Details
+        </div>
+    <?php endif; ?>
+    <?php if ($this->date): ?>
+        <div style='line-height: 22px; margin-bottom: 2px; margin-left: 10px;'>
+            <div class='ui-state-default ui-corner-all' style='width: 20px; height: 19px; float:left;'><span
+                    class='ui-icon ui-icon-calendar' style='margin: 0 2px;'></span></div>
+            &nbsp;Neuen Termin eintragen
+        </div>
+    <?php endif; ?>
+    <?php if ($this->image): ?>
+        <div style='line-height: 22px; margin-bottom: 2px; margin-left: 10px;'>
+            <div class='ui-state-default ui-corner-all' style='width: 20px; height: 19px; float:left;'><span
+                    class='ui-icon ui-icon-image' style='margin: 0 2px;'></span></div>
+            &nbsp;Bilderübersicht der Galerie
+        </div>
+    <?php endif; ?>
+    <div style='line-height: 22px; margin-bottom: 2px; margin-left: 10px;'>
+        <div class='ui-state-default ui-corner-all' style='width: 20px; height: 19px; float:left;'><span
+                class='ui-icon ui-icon-pencil' style='margin: 0 2px;'></span></div>
+        &nbsp;Bearbeiten
+    </div>
+    <div style='line-height: 22px; margin-bottom: 2px;margin-left: 10px;'>
+        <div class='ui-state-default ui-corner-all' style='width: 20px; height: 19px; float:left;'><span
+                class='ui-icon ui-icon-check' style='margin: 0 2px;'></span></div>
+        &nbsp;<?= ($this->todo) ? 'Erledigt' : 'Aktivieren'; ?>
+    </div>
+    <?php if (!$this->deactivate): ?>
+        <div style='line-height: 22px; margin-bottom: 2px;margin-left: 10px;'>
+            <div class='ui-state-default ui-corner-all' style='width: 20px; height: 19px; float:left;'><span
+                    class='ui-icon ui-icon-cancel' style='margin: 0 2px;'></span></div>
+            &nbsp;Deaktivieren
+        </div>
+    <?php endif; ?>
+    <div style='line-height: 22px; margin-bottom: 2px;margin-left: 10px;'>
+        <div class='ui-state-default ui-corner-all' style='width: 20px; height: 19px; float:left;'><span
+                class='ui-icon ui-icon-trash' style='margin: 0 2px;'></span></div>
+        &nbsp;Löschen
+    </div>
+    <?php if ($this->link): ?>
+        <div style='line-height: 22px; margin-bottom: 2px;margin-left: 10px;'>
+            <div class='ui-state-default ui-corner-all' style='width: 20px; height: 19px; float:left;'><span
+                    class='ui-icon ui-icon-link' style='margin: 0 2px;'></span></div>
+            &nbsp;Liste der Links / Neuen Link hinzufügen
+        </div>
+    <?php endif; ?>
+</div>

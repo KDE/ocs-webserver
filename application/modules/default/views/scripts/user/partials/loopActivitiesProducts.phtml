@@ -1,0 +1,42 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$object_text = (mb_strlen($this->object_text) < 250) ? $this->object_text : mb_substr($this->obj_description, 0, 235, 'UTF-8') . ' ... ';
+// caused by backwards compatibility
+$obj_img = $this->image_small;
+?>
+<div class="product-about-me row-fluid">
+    <div class="span4 product-summary">
+        <a href="<?= $this->buildProductUrl($this->project_id) ?>#anker_<?= $this->object_id ?>"><img src="<?= $this->Image($obj_img, array('width' => 270, 'height' => 180)) ?>"
+                                                                                                      class="product-image"/></a>
+    </div>
+    <!-- /.product-image -->
+    <div class="product-details span8">
+        <h3 class="product-newsfeed-update"><?php echo $this->translate('UserTitle' . $this->type_text); ?></h3>
+        <hr>
+        <div class="clearfix margin-bottom-10"><?= nl2br(strip_tags($object_text)) ?></div>
+        <div class="clearfix"><a href="<?= $this->buildProductUrl($this->project_id) ?>#anker_<?= $this->object_id ?>"
+                                 role="button"
+                                 class="btn btn-submit right">More</a></div>
+    </div>
+    <!-- /.product-details -->
+</div><!-- /.product-about-me -->

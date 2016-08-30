@@ -1,0 +1,26 @@
+/*==================*/
+/* 	    VARS        */
+/*==================*/
+/*==================*/
+/* 	    MIXINS      */
+/*==================*/
+.bg_sheet {
+  background-image: url(../img/bg_sheet.png);
+}
+.bg_sheet_statistics {
+  background-image: url(../img/statistics_sheet.png);
+}
+.unstyled_list {
+  list-style-type: none;
+  padding: 0px;
+  margin: 0px;
+}
+.hand-with-coin {
+  display: inline-block;
+  background-image: url('../img/new/button/hand-w-coin.png');
+  height: 61px;
+  width: 61px;
+}
+.hand-with-coin.v-2 {
+  background-image: url('../img/new/button/hand-w-coin-2.png');
+}

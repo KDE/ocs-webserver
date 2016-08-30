@@ -1,0 +1,102 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$modelInfo = new Default_Model_Info();
+$imgs = $modelInfo->getLast200ImgsProductsForAllStores(100);
+
+?>
+    <style>
+        body.home-page main section#intro.wrapper .container article .logo_template {
+            background-image: <?=$this->template['homepage']['logo']['background-image']?>;
+            background-position: <?=$this->template['homepage']['logo']['background-position']?>;
+            background-repeat: <?=$this->template['homepage']['logo']['background-repeat']?>;
+            float: none;
+            height: <?=$this->template['homepage']['logo']['height']?>;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+            width: <?=$this->template['homepage']['logo']['width']?>;
+        }
+    </style>
+ 
+    <main id="mainpage" class="mainpage">
+
+        <section class="wrapper" id="intro" >
+            <section class="container" >
+                <div class="row" style="">
+                    <article>
+                        <figure class="logo_template">
+                            
+                        </figure>
+                      
+                    </article>
+                </div>
+            </section>
+        </section>
+
+        <section class="wrapper"  >
+        
+                <div class="card-wrapper" >
+                <?php                    
+                    $helperStoreConfig = new Default_View_Helper_FetchStoreConfigInfo();
+                    $helperSearchCategories = new Default_View_Helper_FetchDomainCategories();
+                    $domainshelper = new Default_View_Helper_FetchDomains();
+                    $this->domains = $domainshelper->fetchDomainObjects();         
+                    foreach ($this->domains as $obj) {      
+                        $host =$obj['host'];
+                        $name =$obj['name'];
+                         $o =  $obj['order'];
+                        $curOrder = floor($obj['order']/1000);
+                        if($curOrder<10 or $curOrder>30) continue;
+                        
+                        $logo = $helperStoreConfig->getDomainLogo($host);
+                        echo '<div class="row domainobj">';                        
+                        echo '<div class="col-lg-3"><a href="http://'.$host.'"><img src="'.$logo.'"  class="logo" /></a></div>';
+                        echo '<div class="col-lg-9">'.$obj['meta_keywords'].'</div>';
+                        echo '</div>';   
+                        
+                    }
+                ?>
+                </div>
+        
+        </section>
+
+
+        
+         <section class="wrapper" id="indeximages" >            
+                         <?php     
+                         $helperImage = new Default_View_Helper_Image();
+                         foreach ($imgs as $obj) {   
+                            if($obj['image_small']=='') continue;
+                            $imgpath = $helperImage->Image($obj['image_small'],array('width' => 120, 'height' => 120));
+                            if('http://cn.pling.ws/cache/90x90/img/default.png'== $imgpath) continue;                                            
+                            ?>                    
+                           <a href="#" title="<?= $obj['title']?>"> <img class="logo"  src="<?= $imgpath?>"  alt="<?= $obj['title']?>" /></a>
+                         <?php
+                         }
+                         ?>
+                   
+        </section>          
+    </main>
+
+
+  

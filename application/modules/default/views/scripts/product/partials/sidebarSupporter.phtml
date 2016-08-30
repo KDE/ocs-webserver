@@ -1,0 +1,109 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$helperImage = new Default_View_Helper_Image();
+$countSupporter = count($this->supporter->toArray());
+?>
+
+<div class="sidebar-header">
+    <h3>
+        <?= $this->translate('SUPPORTERS') ?> (<?= $countSupporter ?>)
+        <div class="pull-right light">
+            <a href="<?= $this->buildProductUrl($this->project->project_id, 'supporter') ?>">
+                <?= $this->translate('Show All'); ?>
+            </a>
+        </div>
+    </h3>
+</div>
+
+<div class="sidebar-content">
+    <div class="sidebar-content-section">
+        <?php if ($countSupporter == 0) { ?>
+            <div>No supporters yet</div>
+        <?php } else {
+
+            if ($countSupporter < 4) {
+                $g = $countSupporter;
+            } else {
+                $g = 4;
+            }
+
+            $h = 0;
+            $i = 3;
+
+            foreach ($this->supporter as $supporter):
+                $i++;
+                $h++;
+                if ($i % 4 == 0) { ?>
+                    <!-- add row -->
+                    <div class="row supporters-row">
+                <?php } ?>
+                <!-- supporter item -->
+                <div class="col-md-3 col-lg-3 col-sm-3 col-xs-3 supporter-thumbnail relative">
+                    <!-- supporter thumbnail -->
+                    <a href="<?= $this->buildMemberUrl($supporter->member_id) ?>" title="<?= $supporter->username ?>">
+                        <div class="profile-image-overlay-3 absolute"></div>
+                        <img src="<?= $helperImage->Image($supporter->profile_image_url,array('width' => 80, 'height' => 80, 'crop' => 2)); ?>" alt="<?= $supporter->username ?>" width="80">
+                    </a>
+                    <!-- /supporter thumbnail -->
+                    <!-- tool tip -->
+                    <div class="sidebar-tooltip supporter-tooltip">
+                        <em class="icon arrow-down-gray"></em>
+
+                        <div class="inner">
+                            <div class="profile-img">
+                                <a href="<?= $this->buildMemberUrl($supporter->member_id) ?>"
+                                   title="<?= $supporter->username ?>">
+                                    <div class="profile-image-overlay-3 absolute"></div>
+                                    <img src="<?= $helperImage->Image($supporter->profile_image_url,array('width' => 80, 'height' => 80, 'crop' => 2)); ?>"
+                                         alt="<?= $supporter->username ?>"
+                                         width="80">
+                                </a>
+                            </div>
+                            <div class="content">
+                                <div class="title">
+                                    <p><?php echo $supporter->username ?></p>
+                                </div>
+                                <div class="plings">
+                                    <span>plinged:</span>
+                                    <span>$&nbsp;<?php echo $supporter->amount; ?></span>
+                                </div>
+                                <?php if ($supporter->comment != null && $supporter->comment != ''): ?>
+                                    <div class="plings">
+                                        <span>comment:</span>
+                                        <span><?php echo $supporter->comment; ?></span>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /tool tip -->
+                </div>
+                <!-- /supporter item -->
+                <?php if (($h % $g == 0) OR ($h >= $countSupporter)) { ?>
+                </div>
+                <!-- /add row -->
+            <?php } ?>
+            <?php endforeach;
+        } ?>
+    </div>
+</div>

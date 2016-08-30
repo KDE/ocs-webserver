@@ -1,0 +1,69 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$cssClassPrevious = '';
+$cssClassNext = '';
+if (false === isset($this->previous)) {
+    $cssClassPrevious = 'off';
+}
+if (false === isset($this->next)) {
+    $cssClassNext = 'off';
+}
+?>
+<div class="projectPaginationControl">
+    <?php if ($this->pageCount): ?>
+        <ul id="pagination-digg">
+            <li class="previous <?= $cssClassPrevious ?>">
+                <a href="<?php echo isset($this->previous) ? $this->url(array_merge($this->params,
+                    array('page' => $this->previous))) : 'javascript:;'; ?>"
+                   class="ajaxPartial"><span class="glyphicon glyphicon-chevron-left"></span></a></li>
+            <?php foreach ($this->pagesInRange as $page): ?>
+                <?php if ($page != $this->current): ?>
+                    <li><a href="<?php echo $this->url(array_merge($this->params, array('page' => $page))); ?>"
+                           class="ajaxPartial"><?php echo $page; ?></a></li>
+                <?php else: ?>
+                    <li class="active"><?php echo $page; ?></li>
+                <?php endif; ?>
+            <?php endforeach; ?>
+            <li class="next <?= $cssClassNext ?>">
+                <a href="<?php echo isset($this->next) ? $this->url(array_merge($this->params, array('page' => $this->next))) : 'javascript:;'; ?>"
+                   class="ajaxPartial"><span class="glyphicon glyphicon-chevron-right"></span></a></li>
+        </ul>
+    <?php endif; ?>
+</div>
+<script type="application/javascript">
+    $(document).ready(function () {
+        $('body').on('click', 'div.projectPaginationControl a.ajaxPartial', function (event) {
+            event.preventDefault();
+            var target = '<?=$this->dom_target?>';
+            var url = $(this).attr("href") + ' ' + target + ' > *';
+
+            $(target).load(url, function (response, status, xhr) {
+                if (status == "error") {
+                    $(target).empty().html('Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.');
+                }
+                exploreCarousel.setup();
+            });
+            return false;
+        });
+    });
+</script>

@@ -1,0 +1,57 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$plingData = $this->userPlings($this->project_id);
+?>
+<div class="product-about-me row-fluid">
+    <div class="span5 product-summary">
+        <a href="<?= $this->buildProductUrl($this->project_id); ?>">
+            <img src="<?php echo $this->Image($this->image_small, array('width' => 350, 'height' => 180)); ?>"
+                 class="product-image" alt="product">
+        </a>
+
+        <div class="clear"></div>
+        <div class="row-fluid pling-summary">
+            <div class="supporters pull-left">
+                <?= $this->translate('supporters') ?> <span class="count"><?= $plingData['plingers'] ?></span><br>
+                <?= $this->translate('plings') ?> <span class="count"><?= $plingData['plings'] ?></span>
+            </div>
+            <div class="total-plings pull-right span4">
+                <span class="count large"><?= $plingData['plings'] ?></span><br>
+                <?= $this->translate('collected') ?>
+            </div>
+        </div>
+        <!-- /.pling-summary -->
+    </div>
+    <!-- /.product-summary -->
+    <div class="product-details span7">
+        <h3 class="lightblue product-title"><a
+                href="<?= $this->buildProductUrl($this->project_id) ?>"><?= $this->title ?></a></h3>
+
+        <div class="small light lightgrey"><a
+                href="<?= $this->buildExploreUrl($this->project_category_id) ?>"><?= $this->catTitle ?></a></div>
+        <hr>
+        <?= strip_tags($this->description) ?>
+    </div>
+    <!-- /.product-details -->
+</div><!-- /.product-about-me -->
+

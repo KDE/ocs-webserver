@@ -1,0 +1,157 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<h3>"Was ist pling"-Slider Übersicht</h3>
+<?php if (count($this->sliderImages) == 0): ?>
+    Keine Bilder für Slider vorhanden bisher.
+<?php else: $lfdNr = 0; ?>
+    <div id="infomsg" style="" class="ui-state-highlight ui-corner-all"></div>
+    <div id="dialog" style="display: none;"></div>
+    <div class="row">
+        <div id="title" class="title head">Bild</div>
+        <div id="status" class="status head" style="width: 75px;">Aktiv</div>
+        <br style="clear: both;"/>
+    </div>
+
+    <?php foreach ($this->sliderImages as $item):
+        $lfdNr++;
+        ?>
+
+        <div id="row<?= $item->content_slider_id; ?>" class="row" style="height: auto;">
+            <div id="title<?= $item->content_slider_id; ?>" class="title data <?= $this->evenOdd($lfdNr); ?>"
+                 style="height: auto;"><img src="/images_fe/slider2/<?= $item->image; ?>" border="0" width="180px"/>
+            </div>
+            <div id="status<?= $item->content_slider_id; ?>" class="status data <?= $this->evenOdd($lfdNr); ?>"
+                 style="width: 75px;"><?= ($item->is_active) ? "Ja" : ""; ?></div>
+            <a href="/backend/slider/edit/id/<?= $item->content_slider_id; ?>"
+               class="ui-state-default ui-corner-all button_normal showDetails">Bearbeiten</a>
+            <?php if ($item->is_active): ?>
+                <a href="#" id="details_<?= $item->content_slider_id; ?>"
+                   class="ui-state-default ui-corner-all button_normal deactivate">deaktivieren</a>
+            <?php else: ?>
+                <a href="#" id="details_<?= $item->content_slider_id; ?>"
+                   class="ui-state-default ui-corner-all button_normal activate">aktivieren</a>
+            <?php endif; ?>
+            <a href="#" id="details_<?= $item->content_slider_id; ?>"
+               class="ui-state-default ui-corner-all button_normal delete">löschen</a>
+            <br style="clear: both;"/>
+        </div>
+    <?php endforeach; ?>
+    <br/>
+<?php endif; ?>
+<br/><br/>
+<a href="/backend/slider/add" class="ui-state-default ui-corner-all button_normal">Bild hinzufügen</a><br/><br/>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $(".activate").click(function () {
+            var itemId = $(this).attr("id");
+            var tmp = itemId.split("_");
+            itemId = tmp[1];
+
+            var clickElement = $(this);
+
+            $.post('/backend/slider/setstatus/', {id: itemId, status: 1}, function (response) {
+                if (response) {
+                    $("#infomsg").html("Bild erfolgreich aktiviert");
+                } else {
+                    $("#infomsg").html("Bild Kategorie nicht aktivieren");
+                }
+
+                $("#infomsg").fadeIn("normal");
+                $(clickElement).hide();
+                $("#deactivate_" + itemId).show();
+
+                $("#infomsg").fadeOut(4000);
+                $("#status" + itemId).html("Ja");
+                window.location.reload();
+            });
+        });
+
+        $(".deactivate").click(function () {
+            var itemId = $(this).attr("id");
+            var tmp = itemId.split("_");
+            itemId = tmp[1];
+
+            var clickElement = $(this);
+
+            $.post('/backend/slider/setstatus/', {id: itemId, status: 0}, function (response) {
+                if (response) {
+                    $("#infomsg").html("Bild erfolgreich deaktiviert");
+                } else {
+                    $("#infomsg").html("Konnte Bild nicht deaktivieren");
+                }
+
+                $("#infomsg").fadeIn("normal");
+                $(clickElement).hide();
+
+                $("#activate_" + itemId).show();
+                $("#infomsg").fadeOut(4000);
+                $("#status" + itemId).html("");
+                window.location.reload();
+            });
+        });
+
+
+        $(".delete").click(function () {
+            var clickelement = $(this);
+            var itemId = $(this).attr("id");
+            var tmp = itemId.split("_");
+            itemId = tmp[1];
+
+
+            $("#dialog").html("Möchten Sie diese Bild wirklich löschen?");
+
+            $("#dialog").dialog(
+                {
+                    title: "Bild löschen",
+                    modal: true,
+                    resizable: false,
+                    buttons: {
+                        "Nein": function () {
+                            $("#dialog").dialog('close');
+                        }, "Ja": function () {
+                            $(this).dialog('close');
+                            var url = "/backend/slider/delete/id/" + itemId;
+
+                            $.post(url, function (data) {
+                                $('#infomsg').html("Bild gelöscht");
+                                $('#infomsg').show();
+                                $("#infomsg").fadeOut(4000);
+                                //$('.date #'+elementid).hide();
+                                $("#row" + itemId).remove();
+                                $(".details_" + itemId).remove();
+                                window.location.reload();
+                            });
+                        }
+                    }
+                });
+
+
+            $("#dialog").dialog('open');
+
+        });
+
+    });
+
+</script>

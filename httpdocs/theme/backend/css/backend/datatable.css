@@ -1,0 +1,192 @@
+@CHARSET "UTF-8";
+
+.row {
+	margin-bottom: 2px;
+}
+
+.row div {
+	float: left;
+	display: block;
+	overflow: hidden;
+}
+
+.row .head {
+	border-bottom: 2px solid #000;
+	height: 20px;
+	line-height: 20px;
+	margin-right: 5px;
+	padding-left: 5px;
+	padding-right: 5px;
+	font-weight: bold;	
+}
+
+.row .data {
+	height: 25px;
+	line-height: 25px;
+	margin-right: 5px;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+.row .footer {
+	border-top: 2px solid #000;
+	height: 5px;
+	margin-right: 5px;
+	padding-left: 5px;
+	padding-right: 5px;
+	font-weight: bold;	
+}
+
+.row .alexIcon {
+	cursor:pointer;
+	float:left;
+	margin:0px;
+	margin-right: 1px;
+	padding:2px 0;
+	position:relative;
+}
+
+.alexIcon span.ui-icon {
+	float:left;
+	margin:0 2px;
+}
+
+.row .icons {
+	padding-top: 3px;
+}
+.row .title {
+	width: 200px;
+}
+
+.row .channel {
+	width: 150px;
+}
+
+.row .startVideo {
+	width: 60px;
+	text-align: center;	
+}
+
+.row .datecol {
+	width: 120px;
+	text-align: center;
+}
+
+.row #showdate {
+	width: 75px;
+	text-align: center;
+}
+.row #showtime {
+	width: 150px;
+	text-align: center;
+}
+.row .status {
+	width: 50px;
+	text-align: center;
+}
+
+.row #category {
+	width: 60px;
+	text-align: center;
+}
+
+.row .even {
+	background-color: #fff;
+}
+
+.row .uneven {
+	background-color: #efefef;
+}
+
+#dataPageWrapper {
+	margin-top: 12px;
+}
+.paginationControl {	
+	float: left;
+	display: block;
+	margin-right: 20px;
+}
+
+.paginationControl #prev {
+	width: 50px;
+}
+
+.paginationControl div.pageButton {
+	padding:0.4em 0.4em 0.4em 0.4em;
+	text-align: center;
+	margin-left: 3px;
+}
+
+.paginationControl a.pageButton {
+	padding:0.4em 0.4em 0.4em 0.4em;
+	text-align: center;
+	margin-left: 3px;
+}
+
+#dialog_link_l {
+	padding:0.4em 1em 0.4em 20px;
+	position:relative;
+	text-decoration:none;
+}
+
+#dialog_link_l span.ui-icon {
+	left:0.2em;
+	margin:-8px 5px 0 0;
+	position:absolute;
+	top:50%;
+}
+
+#dialog_link_r {
+	padding:0.4em 20px 0.4em 1em;
+	position:relative;
+	text-decoration:none;
+	margin-left: 3px;
+}
+
+#dialog_link_r span.ui-icon {
+	left:5em;
+	margin:-8px 5px 0 0;
+	position:absolute;
+	top:50%;
+}
+
+.totalInfos {
+	line-height: 26px;
+	height: 26px;
+}
+#infomsg, #infomsgLink {
+	display:none; 
+	padding: .7em; 
+	margin-bottom: 30px; 
+	/*width: 500px;*/
+	text-align: center;
+	border: 1px solid #000;
+}
+
+.row .cat, .row .text, .row .pic {
+	cursor: pointer;
+}
+
+.selectedField {
+	border-top: 1px solid #000;
+	border-bottom: 1px solid #000;
+}
+
+.row .button_normal {
+font-size:12px;
+font-weight:normal;
+margin-left:1px;
+padding:3px 2px;
+position:relative;
+text-decoration:none;
+top:4px;
+}
+
+
+.datatable_detailsarea { display: none; border-left: 1px solid #666; border-bottom: 1px solid #666; border-right: 1px solid #666; padding: 10px; margin-top: 0px; margin-bottom: 5px;}
+.datatable_detailsarea .dataDetailsContent { margin-right: 10px;}
+.datatable_detailsarea .dataDetailsButtons { width: 120px; border-left: 1px solid #999; text-align: right;}
+
+.row.open { border-left: 1px solid #666; margin-bottom: 0px;}
+
+.noshow {display: none;}

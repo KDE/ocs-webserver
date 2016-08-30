@@ -1,0 +1,53 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$helperBaseUrl = new Default_View_Helper_BaseUrl();
+$helperServerUrl = new Zend_View_Helper_ServerUrl();
+$helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
+$helperTruncate = new Default_View_Helper_Truncate();
+$helperImage = new Default_View_Helper_Image();
+$helperGetAuthUser = new Default_View_Helper_GetAuthUser();
+$helperAddDefaultScheme = new Default_View_Helper_AddDefaultScheme();
+
+
+$this->doctype(Zend_View_Helper_Doctype::XHTML1_RDFA);
+$this->headMeta()->appendProperty('og:type', 'website');
+$this->headMeta()->appendProperty('og:site_name', 'ocs');
+$this->headMeta()->appendProperty('og:title', $this->product->title);
+$this->headMeta()->appendProperty('og:url', $helperServerUrl->serverUrl() . $helperBaseUrl->baseUrl() . $helperBuildProductUrl->buildProductUrl($this->product->project_id));
+$this->headMeta()->appendProperty('og:description', $helperTruncate->truncate($this->product->description, 200, '...', false, true));
+$this->headMeta()->appendProperty('og:image', $helperImage->Image($this->product->image_small, array('width' => 200, 'height' => 200)));
+
+
+$titleImage = $helperImage->Image($this->product->image_big, array('width' => 1170, 'height' => 300));
+$styleAttr = ' style="background-image: url(' . $titleImage . ');"';
+if (strpos($titleImage, 'default.png') !== false) {
+    $styleAttr = '';
+}
+$cssClassAuthCodeTested = $this->product->project_validated ? 'checked' : 'unchecked';
+
+$this->inlineScript()->appendScript(
+    '    $(document).ready(function(){
+            ProductPage.setup();
+            ProductPage.setupPlingButton();
+        });
+    ');

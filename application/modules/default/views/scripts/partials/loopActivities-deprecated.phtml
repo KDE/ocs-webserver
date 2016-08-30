@@ -1,0 +1,52 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<div class="feed-item">
+    <div class="feed-header clearfix">
+        <div class="feed-summary alignleft">
+            <div><span class="lightblue"><?php echo $this->translate('UserTitle' . $this->type_text); ?></span></div>
+        </div>
+    </div>
+    <!-- END .feed-header -->
+    <div class="feed-body clearfix">
+        <div>
+            <?php if (isset($this->obj_image_small)): ?>
+                <a href="<?= $this->buildProductUrl($this->prj_project_id) ?>?#anker_<?= $this->obj_project_id ?>"><img
+                        src="<?= $this->Image($this->obj_image_small, array('width' => 268, 'height' => 179)) ?>"
+                        width="268"/></a>
+            <?php endif; ?>
+            <div>
+                <?php if ($this->obj_title): ?>
+                    <h5>
+                        <a href="<?= $this->buildProductUrl($this->prj_project_id) ?>?#anker_<?= $this->obj_project_id ?>"><?= $this->obj_title ?></a>
+                    </h5>
+                <?php endif; ?>
+                <p>
+                    <?= $this->short_text ?>
+                </p>
+            </div>
+        </div>
+    </div>
+    <!-- END .feed-body -->
+</div><!-- END .feed-item -->
+
+<hr class="feed-divider">

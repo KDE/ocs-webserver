@@ -1,0 +1,153 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
+$helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
+$helperImage = new Default_View_Helper_Image();
+$plingUrl = $helperBuildProductUrl->buildProductUrl($this->product->project_id, 'pling');
+$auth = Zend_Auth::getInstance();
+?>
+<div class="">
+
+    <!-- RATING -->
+    <?php 
+    /*
+    <?php echo $this->partial('partials/sidebarRating.phtml',
+        array(
+            'project_id' => $this->product->project_id,
+        )); ?>
+    <!-- /RATING -->
+    */
+    ?>
+    <div class="prod-widget-box right">
+
+        <div id="pling-box">
+
+            <!-- SUPPORTER -->
+             <p class="none"><?= count($this->supporter) ?>  Supporters for <b><?= $this->product->title; ?></b>:</p>
+            <div class="donation-box">               
+                <div class="row" style="margin-left: 0px; margin-right: 0px">
+                <?php
+                if (count($this->supporter) > 0):
+                    $countSupporter = count($this->supporter->toArray());                    
+                    foreach ($this->supporter as $sup):
+                         ?>
+
+                        <div class="supporter" style="width: 35px;height: 35px;float: left;padding: 2px;clear: none;border-bottom: 0px none;">
+                            <a href="<?php echo $helperBuildMemberUrl->buildMemberUrl($sup->member_id); ?>">
+                                <img width="30px" height="30px" src="<?= $helperImage->Image($sup->profile_image_url,array('width' => 30, 'height' => 30, 'crop' => 2)); ?>"/>
+                            </a>
+                        </div>
+
+                        <?php
+                    endforeach;
+                endif;
+                ?>
+                </div>
+                <!-- /SUPPORTER -->
+
+                <?php /*
+
+                <div class="collected">
+                    <?php
+                    if ($this->product->amount_received === 0 OR $this->product->amount_received === null) {
+                        $sumAmount = '0';
+                    } else {
+                        $sumAmount = $this->product->amount_received;
+                    }
+                    ?>
+                    <?php
+                    if (false === empty($this->product->amount)) {
+                        if ($sumAmount == null OR $sumAmount == '0') {
+                            $percent = '0';
+                        } else {
+                            $percent = ($sumAmount / $this->product->amount) * 100;
+                        } ?>
+                        <h3>$<?php echo $sumAmount; ?> collected of $<?= (int)$this->product->amount ?></h3>
+                        <div class="achieved-amount">
+                            <div class="bar" style="width:<?php echo $percent; ?>%;"></div>
+                        </div>
+                    <?php } else { ?>
+                        <h3>$<?php echo $sumAmount; ?> collected</h3>
+                        <?php
+                    }
+                    if (isset($this->paymentMessage)) {
+                        $cssClass = 'text-' . $this->paymentStatus;
+                        ?>
+                        <span class="<?= $cssClass ?>"><?= $this->paymentMessage ?></span>
+                    <?php } ?>
+                </div>
+                    
+                */ ?>
+
+                <div class="donation-box-payment row" style="text-align: right; margin-right: 0px;padding-top:20px;">                                           
+                        
+                        <?php /*
+                                <?php if ($auth->hasIdentity()): ?>
+                                    <a  role="button" id="inline" href="#product-donate">
+                                        <span class="btn-pling-2"><?= $this->translate('Donate') ?></span>
+                                    </a>
+                                <?php else: ?>
+                                    <a id="pling-start" href="javascript:;">
+                                        <span class="btn-pling-2 disabled">Please login to donate</span>
+                                    </a>
+                                <?php endif; ?>
+                        */ ?>
+                                <?php if (!empty($this->product->paypal_mail)) : ?>
+                                <a role="button" id="inline" href="#product-donate" style="color:blue; "><span class="btn-pling-2"> Become a supporter</span></a> 
+                                <?php endif; ?>
+                        
+                    
+                </div>
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+    <!-- SUPPORTINGS -->
+    <?php
+    $helperHumanTiming = new Default_View_Helper_HumanTiming();
+    $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
+    $helperUserIsOwner = new Default_View_Helper_UserIsOwner();
+    $countSupporter = count($this->supporter->toArray());
+    echo $this->render('product/partials/productSupporterCommentsWidget.phtml');
+    ?>
+
+    <!-- /SUPPORTER -->
+
+
+    <!-- LICENSE -->
+    <?php echo $this->render('partials/sidebarCcLicense.phtml'); ?>
+    <!-- /LICENSE -->
+
+</div>
+<?php
+$this->inlineScript()->appendScript(
+    '    $(document).ready(function(){
+        ProductPage.setup();
+        ProductPage.setupPlingButton();
+        });
+    ');

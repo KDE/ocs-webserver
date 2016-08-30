@@ -1,0 +1,414 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$helperFetchMainCategories = new Default_View_Helper_FetchMainCategories();
+$helperRatingWidget = new Default_View_Helper_PrintRatingWidget();
+
+$categories = $helperFetchMainCategories->fetchMainCategories();
+
+$helperAddDefaultScheme = new Default_View_Helper_AddDefaultScheme();
+$helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
+$helperTruncate = new Default_View_Helper_Truncate();
+$helperImage = new Default_View_Helper_Image();
+$helperPrintDate = new Default_View_Helper_PrintDate();
+$textCountryCity = $this->member->city;
+$textCountryCity .= $this->member->country ? ', ' . $this->member->country : '';
+
+?>
+    <main class="about-me-page">
+
+        <section class="head-wrap">
+
+            <!-- HEADER -->
+
+            <section class="wrapper">
+
+                <div class="page-title">
+                    <div class="center">
+                        <div><h1>Member</h1></div>
+                    </div>
+                    <hr/>
+                </div>
+ 
+                <!-- banner -->
+
+                <section class="header">
+
+                    <!-- about me summary -->
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 summary" >
+                        <article class="well" style="width: 100%">
+                            <div class="about-title">
+                                <figure class="relative inline profile-image-container">
+                                    <img src="<?php echo $helperImage->Image($this->member->profile_image_url,array('width' => 110, 'height' => 110, 'crop' => 2)); ?>"
+                                         alt="profile-image"
+                                         width="110"
+                                         height="110">
+                                </figure>
+                                <h1><span class="lightblue"><?php echo $this->member->username; ?></span></h1>
+                                <?php if($this->member->firstname ) :?>
+                                <span class="glyphicon glyphicon-user"></span>
+                                <span class="text"><?php echo $this->member->firstname; ?>&nbsp;<?php echo $this->member->lastname; ?> </span>
+                                <?php endif; ?>
+
+                               <?php if($textCountryCity):?>
+                                <span class="glyphicon glyphicon-map-marker"></span>
+                                <span class="text"><?php echo $textCountryCity ?></span>
+                               <?php endif; ?>
+                            </div>
+                            <div class="about-footer">                                                            
+                             
+                               
+
+                            <div class="col-container" >
+                            <div class="details stat" >
+                                <h3>Statistics</h3>
+                                <div  class="statContent" >
+                                    <div class="row ">
+                                       <span class="cnt"><?=$this->stat['cntProducts']?> </span> Products
+                                    </div>
+                                    <div class="row">
+                                       <span class="cnt"><?=$this->stat['cntComments']?> </span> Comments
+                                    </div>
+                                     <div class="row">
+                                       <span class="cnt"><?=$this->stat['cntPageviews']?> </span> Pageviews
+                                    </div>
+                                     <div class="row">
+                                       <span class="cnt"><?=$this->stat['cntSupporters']?> </span> Supporters
+                                    </div>
+                                     <div class="row">
+                                     
+                                       <span class="">Last time active : <?=$helperPrintDate->printDate($this->stat['userLastActiveTime'])?> </span> 
+                                    </div>
+                                     <div class="row">                                                                            
+                                        <span class="text">Joined : <?=$helperPrintDate->printDate($this->member->created_at);?></span>                                       
+                                    </div>
+                                    
+                                   
+                                </div>
+                            </div>
+                        </div>
+
+                             
+                            </div>
+                            <?php
+                            $helperUserRole = new Backend_View_Helper_UserRole();
+                            $userRoleName = $helperUserRole->userRole();
+                            ?>
+
+                            <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                                <div class="pull-right">
+                                <span class="page-views">
+                                <a id="linktohive" target="_blank" href="http://cp1.hive01.com/usermanager/search.php?username=<?= $this->member->username ?>">link to hive</a>
+                                <a id="delete-this" href="/backend/user/delete?member_id=<?= $this->member->member_id ?>">delete user</a>
+                                </span>
+                                <script>
+                                    $('#delete-this').on('click', function (event) {
+
+                                        event.stopPropagation();
+                                        var target = $(this).attr('href');
+
+                                        $.ajax({
+                                            url: target,
+                                            success: function (results) {
+                                                alert('User deleted successfully');
+                                            },
+                                            error: function() {
+                                                alert('Service is temporarily unavailable.');
+                                            }
+                                        });
+
+                                        return false;
+                                    });
+                                </script>
+                                </div>
+                            <?php endif; ?>
+                        </article>
+                    </div>
+                    <!-- /about me summary -->
+
+                </section>
+
+                <!-- /banner -->
+
+            </section>
+
+            <!-- /HEADER -->
+
+        </section>
+
+        <section class="body-wrap">
+
+            <section class="wrapper">
+               
+
+                <!-- PAGE BODY -->
+
+                <section class="product-page about-me full-width">
+
+                    <!-- page content -->
+
+                    <div class="col-md-8 col-lg-8 col-sm-8 col-xs-12 about-me-details">
+
+                        <!-- tabs nav -->
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li role="presentation" class="active">
+                                <a href="#user-aboutme" data-toggle="tab" role="tab"  aria-controls="user-aboutme" >
+                                    Products 
+                                </a>
+                            </li>
+                              <li>
+                                <a href="#user-donations" data-toggle="tab" role="tab"  aria-controls="user-donations">
+                                    Supported by 
+                                </a>
+                            </li>
+                             <li>
+                                <a href="#user-supports" data-toggle="tab" role="tab"  aria-controls="user-supports">
+                                    Supporter of
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#user-fans" data-toggle="tab" role="tab"  aria-controls="user-fans">
+                                    Fan of
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#user-comments" data-toggle="tab" role="tab"  aria-controls="user-comments">
+                                    Comments (<?=$this->comments->getTotalItemCount()?>)
+                                </a>
+                            </li>
+                            
+                          
+                        </ul>
+                        <!-- /tabs nav -->
+
+                        <!-- tab panels -->
+
+                        <div class="tab-content">
+
+                            <div role="tabpanel" class="tab-pane active" id="user-aboutme">
+
+                                <?php if ($this->userProducts) { ?>
+                                    <div class="my-products-list">
+                                        
+                                        <?php foreach ($this->userProducts as $product): ?>
+                                            <div class="product mini-card col-lg-2 col-md-2 col-sm-3 col-xs-2">
+                                                <div class="u-wrap">
+                                                    <a href="<?= $helperBuildProductUrl->buildProductUrl($product['project_id']); ?>">
+                                                        <figure>
+                                                            <img
+                                                                src="<?php echo $helperImage->Image($product['image_small'],
+                                                                    array('width' => 280, 'height' => 171)); ?>"
+                                                                class="explore-product-image" width="101" height="81"/>
+                                                        </figure>
+                                                        <div class="u-content">
+                                                            <h3><?php echo $product['title']; ?></h3>
+                                                            <span class="productCategory"> <?php echo $product['catTitle']; ?> </span>
+                                                        
+                                                         <span class="productCategory" style="width: 100%; float: left;"><?= $helperPrintDate->printDate($product['project_changed_at']) ?> </span>
+                                                        </div>
+                                                    </a>
+                                                   
+                                                    <?php
+                                                    $this->widgetRating = new stdClass();
+                                                    $this->widgetRating->project_id = $product['project_id'];
+                                                    $this->widgetRating->laplace_score = $product['laplace_score'];
+                                                    $this->widgetRating->count_likes = $product['count_likes'];
+                                                    $this->widgetRating->count_dislikes = $product['count_dislikes'];
+                                                    echo $this->render('partials/widgetRating.phtml'); ?>
+                                                                                                
+                                                </div>
+
+                                            </div>
+                                        <?php endforeach; ?>
+                                    </div>
+                                <?php } ?>
+
+                            </div>
+
+                            <div role="tabpanel" class="tab-pane " id="user-supports">
+
+                                <article>
+
+                                    <div class="my-products-list supports">
+
+                                        <?php if (count($this->supportingTeaser) > 0) { ?>
+                                            <?= $this->render('user/partials/supportProducts.phtml') ?>
+                                        <?php } else { ?>
+                                            <?= $this->translate('No supported products.') ?>
+                                        <?php } ?>
+
+                                    </div>
+
+                                </article>
+                            
+
+                            </div>
+
+                            <div role="tabpanel" class="tab-pane " id="user-fans">
+
+                              
+
+                                <article>
+
+                                    <div class="my-products-list supports">
+
+                                        <?php if (count($this->followedProducts) > 0) { ?>
+                                            <?= $this->render('user/partials/loopFollow.phtml') ?>
+                                        <?php } ?>
+
+                                    </div>
+
+                                </article>
+
+                            </div>
+                            
+                            <div  role="tabpanel" class="tab-pane " id="user-donations">                                    
+                                  <?php echo $this->render('user/partials/loopMyDonations.phtml'); ?>
+                            </div>
+                           
+                            <div  role="tabpanel" class="tab-pane " id="user-comments">                                    
+                                  <?php echo $this->render('user/partials/loopMyComments.phtml'); ?>
+                            </div>
+
+                        </div>
+
+                        <!-- /tab panels -->
+
+                    </div>
+
+                    <!-- /page content -->
+
+                    <!-- side bar -->
+
+
+                    <aside class="col-md-4 col-lg-4 col-sm-4 col-xs-12">
+                        <div class="col-container">
+                            <div class="well details about">
+                                <h3>About me</h3>
+
+                                <div>
+                                    <?= nl2br(strip_tags($this->mainProject->description)); ?>
+                                </div>
+                            </div>
+                        </div>
+                      
+                        <div class="col-container">
+                            <div class="well details">
+                                <h3>Connected Acounts</h3>
+
+                                <div class="box-content">
+
+
+                                    <?php if (false === empty($this->member->link_website)): ?>
+                                        <div class="info-div">
+                                            <div class="label">
+                                                    <span class="glyphicon glyphicon-globe" style="color:#000"></span>
+                                                </div>
+                                            <div class="text">
+                                           <a
+                                                    href="<?php echo $helperAddDefaultScheme->addDefaultScheme($this->member->link_website); ?>"
+                                                    target="_NEW"
+                                                    title="<?php echo $helperAddDefaultScheme->addDefaultScheme($this->member->link_website); ?>"
+                                                ><?php echo $this->member->link_website; ?></a>
+                                                </div>
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <?php if (isset($this->member->link_github) && $this->member->link_github != ''): ?>
+                                        <div class="github">
+                                            <div class="label">
+                                                <em class="gt-link"></em>
+                                            </div>
+                                            <div class="text">
+                                                <a href="<?php echo $this->member->link_github; ?>"><?php echo $this->member->link_github; ?></a>
+                                            </diV>
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <?php if (isset($this->member->link_facebook) && $this->member->link_facebook != ''): ?>
+                                        <div class="facebook">
+                                            <div class="label">
+                                                <em class="fb-link"></em>
+                                            </div>
+                                            <div class="text">
+                                                <a href="<?php echo $this->member->link_facebook; ?>"><?php echo $helperTruncate->truncate($this->member->link_facebook,
+                                                        50); ?></a>
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
+                                    <?php if (isset($this->member->link_twitter) && $this->member->link_twitter != ''): ?>
+                                        <div class="twitter">
+                                            <div class="label">
+                                                <em class="tw-link"></em>
+                                            </div>
+                                            <div class="text">
+                                                <a href="<?php echo $this->member->link_twitter; ?>"
+                                                   target="_NEW"><?php echo $helperTruncate->truncate($this->member->link_twitter, 50); ?></a>
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
+                                    <?php if (isset($this->member->link_google) && $this->member->link_google != ''): ?>
+                                        <div class="google">
+                                            <div class="label">
+                                                <em class="gp-link"></em>
+                                            </div>
+                                            <div class="text">
+                                                <a href="<?php echo $this->member->link_google; ?>"><?php echo $helperTruncate->truncate($this->member->link_google,
+                                                        50); ?></a>
+                                            </diV>
+                                        </div>
+                                    <?php endif; ?>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                      
+                         
+                    </aside>
+
+                    <!-- side bar -->
+
+                </section>
+
+                <!-- /PAGE BODY -->
+
+            </section>
+
+        </section>
+
+    </main>
+
+<script type="text/javascript">
+      $(document).ready(function () {   
+        var t = $(document).prop('title'); 
+        var tnew = '<?php echo $this->member->username; ?>'+"'s Profile "+t;     
+        $(document).prop('title', tnew);
+      })
+
+</script>
+
+<?php
+$this->inlineScript()->appendScript(
+    '$(document).ready(function(){
+            AboutMePage.setup();
+        });'
+);

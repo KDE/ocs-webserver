@@ -1,0 +1,87 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$helperHumanTiming = new Default_View_Helper_HumanTiming();
+$helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
+$helperUserIsOwner = new Default_View_Helper_UserIsOwner();
+$helperImage = new Default_View_Helper_Image();
+$countSupporter = count($this->supporter->toArray());
+?>
+<div class="prod-widget-box right">
+    <div id="comments">
+        <p>Recent Donations:</p>
+        <?php
+        if ($countSupporter == 0) {
+            ?>
+            <div> Be the first to donate</div>
+            <?php
+        } else {
+            ?>
+            <?php
+            $count = 0;
+            foreach ($this->plings as $comment):
+                if ($count >= 10)
+                    break;
+
+                $count++;
+                //$age = $helperHumanTiming->humanTiming($comment->create_time);
+                ?>
+                <div class="row" style="margin-left: 0; margin-right: 0">
+                    <div class="col-lg-12" style="height:35px; padding-left: 0px">
+                        <figure class="supporter-thumbnail relative">
+                            <a href="<?= $helperBuildMemberUrl->buildMemberUrl($comment['member_id']) ?>"
+                               title="<?= $comment['username'] ?>">
+                                <img src="<?= $helperImage->Image($comment['profile_image_url'],array('width' => 40, 'height' => 40, 'crop' => 2)); ?>" alt="<?= $comment['username'] ?>">
+                            </a>
+                        </figure>
+                        <div class="comment-content">
+                            <div class="" style="padding-top: 12px">
+	                            <span class="name">
+	                                <a href="<?= $helperBuildMemberUrl->buildMemberUrl($comment['member_id']) ?>"><?php echo $comment['username']; ?> </a></span>
+                                <?php
+                                if (!$comment['amount'] == 0) {
+                                    ?>
+                                    <span class="amount" style="padding-left:3px;"> ($<?php echo $comment['amount'] ?>)</span>
+                                    <?php
+                                }
+                                ?>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <?php
+            endforeach;
+        } ?>
+    </div>
+    <!-- /.comment-content -->
+
+    <a href="#" style="display: block; padding-top: 10px" onclick="activeTab();"> show all </a>
+    <script type="text/javascript">
+         activeTab = function(e)
+         {            
+            $('.nav-tabs a[href="#donations-panel"]').tab('show');
+            return false;
+         }        
+    </script>
+</div>		

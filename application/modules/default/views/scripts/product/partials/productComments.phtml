@@ -1,0 +1,105 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$helperHumanTiming = new Default_View_Helper_HumanTiming();
+$helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
+$helperUserIsOwner = new Default_View_Helper_UserIsOwner();
+$helperImage = new Default_View_Helper_Image();
+?>
+<style>
+    .background-white {
+        background-color: white;
+    }
+</style>
+<div id="comments">
+    <h3>Comments</h3>
+    <?php
+    if (count($this->comments) == 0) {
+        ?>
+        <div>Be the first to comment</div>
+        <?php
+    } else { ?>
+        <div><?php echo $this->paginationControl($this->comments, 'Sliding', '/partials/paginationControlBootstrap.phtml',
+                array('params' => array(), 'dom_target' => 'div#product-discussion')); ?></div>
+
+        <?php foreach ($this->comments as $comment):
+            //printComment($comment, $this, $this->product);
+            echo $this->render('/product/partials/partialComment.phtml', array('comment' => $comment['comment'], 'marginLeft' => 30 * $comment['level'], 'product' => $this->product));
+        endforeach; ?>
+        
+        <div><?php echo $this->paginationControl($this->comments, 'Sliding', '/partials/paginationControlBootstrap.phtml',
+                array('params' => array(), 'dom_target' => 'div#product-discussion')); ?></div>
+    <?php } ?>
+    <div><?php if (Zend_Auth::getInstance()->hasIdentity()) {
+            $identity = Zend_Auth::getInstance()->getStorage()->read();
+            ?>
+            <a class="btn btn-native small show-maker-reply" style="padding: 4px;">add comment</a>
+            <div class="popover-content maker-comment-container maker-form well" style="display:none;">
+                <div class="row">
+                    <div class="col-md-11 col-lg-11 col-sm-11 col-xs-11">
+                        <figure class="supporter-thumbnail relative">
+                            <a href="<?= $helperBuildMemberUrl->buildMemberUrl($identity->member_id) ?>"
+                               title="<?= $identity->username ?>">
+                                <img height="40" width="40" src="<?= $helperImage->Image($identity->profile_image_url,array('width' => 40, 'height' => 40, 'crop' => 2)); ?>"
+                                     alt="<?= $identity->username ?>">
+                            </a>
+                        </figure>
+                    </div>
+                    <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1">
+                        <span class="glyphicon glyphicon-remove pull-right"></span>
+                    </div>
+                </div>
+
+                <div class="maker-comment comment-content">
+                    <div class="popover-content">
+                        <form class="full-width" action="/productcomment/addreply/">
+                            <input type="hidden" name="i" value="0">
+                            <input type="hidden" name="p" value="<?= $this->product->project_id ?>">
+                            <input type="hidden" name="m" value="<?= $identity->member_id ?>">
+                            <textarea name="msg" class="full-width"></textarea>
+                            <input type="submit"
+                                   class="btn btn-native small"
+                                   style="padding:5px;margin-top:5px;"
+                                   value="Send"/>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        <?php } ?>
+    </div>
+</div><!-- /.comment-content -->
+<script>
+    $(document).ready(function () {
+        $('body').on('click', 'div#comments a.show-maker-reply', function (event) {
+            event.preventDefault();
+            $(this).parent().find('a.show-maker-reply').hide();
+            $(this).parent().find('.maker-form').show();
+            return false;
+        });
+        $('body').on('click', 'div#comments span.glyphicon-remove', function (event) {
+            event.preventDefault();
+            $(this).parent().parent().parent().parent().parent().find('a.show-maker-reply').show();
+            $(this).parent().parent().parent().parent().find('.maker-form').hide();
+            return false;
+        });
+    });
+</script>

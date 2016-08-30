@@ -1,0 +1,105 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<ul class="nav nav-tabs well">
+    <?php
+    $bufferDate = '';
+    $yearlyDonations = null;
+    $allDonations = array();
+    $active = 'active';
+    foreach ($this->donations as $donation) {
+        $currentYear = $donation->year;
+        if ($currentYear != $bufferDate) {
+            $bufferDate = $currentYear;
+            $yearlyDonations = array();
+            ?>
+        <li class="<?= $active ?>"><a href="#<?= $donation->year ?>" data-toggle="tab"><?= $donation->year ?></a>
+            </li><?php
+        }
+        $yearlyDonations[] = $donation;
+        $allDonations[$currentYear] = $yearlyDonations;
+        $active = '';
+    } ?>
+</ul>
+
+<div class="tab-content" id="my-earnings-tabs">
+    <?php
+    $index = 0;
+    $currency = new Zend_Currency();
+    $active = 'active';
+    foreach ($allDonations as $year => $yearlyDonations) {
+        $sumAmount = 0;
+        $sumCount = 0;
+        ?>
+        <div class="tab-pane <?= $active ?>" id="<?= $year ?>">
+            <div class="row margin-left-0 margin-right-0">
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                    <h3 class="lightblue product-title">Month</h3>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                    <h3 class="lightblue product-title">Amount</h3>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    <h3 class="lightblue product-title">Number</h3>
+                </div>
+            </div><?php
+
+            $active = '';
+            foreach ($yearlyDonations as $donation) {
+                $currency->setValue($donation->amount);
+                $currentYear = $donation->year;
+                $printMonth = strftime('%b', mktime(0, 0, 0, $donation->month));
+                $index++;
+                $sumAmount += $donation->amount;
+                $sumCount += $donation->count;
+
+                ?>
+            <div class="row margin-left-0 margin-right-0" id="<?= $index ?>">
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                    <h3><?= $donation->year . '-' . $printMonth ?></h3>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                    <h3><?= $currency->toString() ?></h3>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    <h3><?= $donation->count ?></h3>
+                </div>
+                </div><?php
+
+            }
+            $currency->setValue($sumAmount);
+
+            ?>
+            <div class="row bg-primary margin-left-0 margin-right-0" id="0">
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                    <h3>Totals: </h3>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                    <h3><?= $currency->toString() ?></h3>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    <h3><?= $sumCount ?></h3>
+                </div>
+            </div>
+        </div>
+    <?php } ?>
+</div>
