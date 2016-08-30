@@ -57,7 +57,7 @@ class Backend_Model_ClientFileConfig
             $this->_clientConfigData = require $clientConfigPath . $clientConfigFileName;
         } else {
             // load default config
-            $this->_clientConfigData = require $clientConfigPath . "client_pling.ini.php";
+            $this->_clientConfigData = require $clientConfigPath . "default.ini.php";
             $this->defaultConfigLoaded = true;
         }
     }

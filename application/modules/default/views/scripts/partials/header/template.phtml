@@ -31,7 +31,21 @@ $member = $getAuthUser->getAuthUser();
 ?>
    <?php echo $this->render('partials/header/metaheader.phtml'); ?>
     <header id="page_header" xmlns="http://www.w3.org/1999/html">
-        <div class="container header">
+        <div class="container header"  style="position: relative;">
+       
+             <?php if (false === $auth->hasIdentity() && empty($member->username)) {
+                        $helperEncryptUrl = new Default_View_Helper_EncryptUrl();
+                        $redirectString = '/redirect/'.$helperEncryptUrl->EncryptUrl($_SERVER["REQUEST_URI"]);
+                        ?>
+                        <ul class="menu-nav-tabs absolute-right" style="position: absolute;bottom: 0px;">
+                            <li role="presentation" class="<?php echo(strpos($_SERVER["REQUEST_URI"], 'register') ? 'active' : '') ?>">
+                                <a href="/register">Register</a></li>
+                            <li role="presentation" class="<?php echo(strpos($_SERVER["REQUEST_URI"], 'login') ? 'active' : '') ?>">
+                                <a href="/login<?=$redirectString?>">Login</a>
+                            </li>
+                        </ul>
+                    <?php } ?>
+       
         <section class="container">
             <section class="wrapper">
 
@@ -91,18 +105,7 @@ $member = $getAuthUser->getAuthUser();
                 <section class="wrapper">
                     <span class="header_cat_link" id="header_cat_link"><a href="/browse/cat/<?= isset($this->cat_id)?$this->cat_id:'all' ?>/order/latest">/<?= $helperFetchCategory->catTitle($this->cat_id) ?></a></span>
 
-                    <?php if (false === $auth->hasIdentity() && empty($member->username)) {
-                        $helperEncryptUrl = new Default_View_Helper_EncryptUrl();
-                        $redirectString = '/redirect/'.$helperEncryptUrl->EncryptUrl($_SERVER["REQUEST_URI"]);
-                        ?>
-                        <ul class="menu-nav-tabs absolute-right">
-                            <li role="presentation" class="<?php echo(strpos($_SERVER["REQUEST_URI"], 'register') ? 'active' : '') ?>">
-                                <a href="/register">Register</a></li>
-                            <li role="presentation" class="<?php echo(strpos($_SERVER["REQUEST_URI"], 'login') ? 'active' : '') ?>">
-                                <a href="/login<?=$redirectString?>">Login</a>
-                            </li>
-                        </ul>
-                    <?php } ?>
+                   
                 </section>
             </section>
         </div>

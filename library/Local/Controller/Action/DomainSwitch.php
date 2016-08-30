@@ -23,14 +23,14 @@
 class Local_Controller_Action_DomainSwitch extends Zend_Controller_Action
 {
 
-    const DEFAULT_CONFIG = 'pling';
-
     /** @var  object */
     protected $_authMember;
     protected $templateConfigData;
+    protected $defaultConfigName;
 
     public function init()
     {
+        $this->initDefaultConfigName();
         $this->initAuth();
         $this->initTemplateData();
         $this->initView();
@@ -60,7 +60,7 @@ class Local_Controller_Action_DomainSwitch extends Zend_Controller_Action
             if (file_exists($fileNameConfig)) {
                 $this->templateConfigData = require APPLICATION_PATH . '/configs/client' . $this->getDomainPostfix() . '.ini.php';
             } else {
-                $this->templateConfigData = require APPLICATION_PATH . '/configs/client_' . self::DEFAULT_CONFIG . '.ini.php';
+                $this->templateConfigData = require APPLICATION_PATH . '/configs/client_' . $this->defaultConfigName . '.ini.php';
             }
         }
     }
@@ -129,6 +129,12 @@ class Local_Controller_Action_DomainSwitch extends Zend_Controller_Action
 //            ->setHeader('Pragma', 'cache', true)
 //            ->setHeader('Cache-Control', 'private, max-age=300, pre-check=300', true)
         ;
+    }
+
+    protected function initDefaultConfigName()
+    {
+        $config = Zend_Registry::get('config');
+        $this->defaultConfigName = $config->settings->client->default->name;
     }
 
 }

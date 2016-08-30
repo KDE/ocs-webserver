@@ -22,11 +22,12 @@
 
 $modelInfo = new Default_Model_Info();
 
+
 $this->comments = $modelInfo->getLastCommentsForHostStores(7);
 $this->donations = $modelInfo->getLastPlingsForHostStores(10);
 $this->users = $modelInfo->getNewActiveMembers(10);
 $this->products = $modelInfo->getLastProductsForHostStores(10);
-//$this->mostdownloads = $modelInfo->getMostDownloadedForHostStores(7);
+$this->mostdownloads = $modelInfo->getMostDownloadedForHostStores(7);
 $featureProducts = $modelInfo->getFeaturedProductsForHostStores(100);
 
 
@@ -60,130 +61,32 @@ $auth = Zend_Auth::getInstance();
 $member = $getAuthUser->getAuthUser();
 
 ?>
-<style type="text/css">
-    .new-products .num
-    {
-        display: block;
-        float: left;
-        padding-left: 5px;
-        padding-right: 5px;
-        padding-top: 10px;
-    }
-    .wrapper-kde-store h3
-    {
-       padding-left: 8px;
-       padding-top: 10px;
-    }
-    .new-products .row
-    {
-        margin-top: 10px;
-    }
 
-     .new-products .rating
-    {
-        width: 80px;
-    }
-    .new-products .time
-    {
-        font-size: smaller;
-    }
-    .new-products .cntComments
-    {
-        font-size: smaller;
-    }
-    .new-products .productimg
-    {
-        width:50px;
-        height:50px;
-    }
-    .new-products .productrow
-    {
-        padding-bottom: 5px;
-        padding-top: 5px;
-        border-bottom: 1px solid #ccd4d8;
-    }
-    .new-products .productrow:last-child {
-            border-bottom: none;
-        }   
-    .newusers .u-wrap {
-    float: left;
-    width: 100%;
-    padding: 0.3em;
-    border: 0.35em solid #dee0e0;
-    border-radius: 5px;
-    height: 14em;
-    margin-bottom: 1em;
-    background: white;
-    width: 115px;
-    height: 200px;
-    margin-right: 10px;
-    -webkit-transition: all 0.2s ease-out;
-    -moz-transition: all 0.2s ease-out;
-    -ms-transition: all 0.2s ease-out;
-    -o-transition: all 0.2s ease-out;
-    }
-          
-    .newusers .u-wrap figure img {
-    width: 100%;
-    border: 1px solid #dbdbdb;
-    -webkit-border-radius: 999px;
-    -moz-border-radius: 999px;
-    border-radius: 999px;
-    -webkit-background-clip: padding-box;
-    -moz-background-clip: padding;
-    background-clip: padding-box;
-    }
+<link href="/theme/flatui/css/style-index-common.css" rel="stylesheet">
 
-    .newusers .u-wrap h3 {
-    font-size: 13px;
-    font-weight: bold;
-    word-wrap: break-word;
-    line-height: 20px;
-    height: 20px;
-    padding: 0;
-    margin: 0;
-    }
-    .newusers .u-wrap span.small {    
-   font-size: 13px;
-    text-align: right;
-    color: #444;
-    margin-top: 50px;
-    float: right;
-    }
-
-    .prod-widget-box
-    {
-        width: 100% !important;
-
-    }
-    div.latestcomments
-    {
-    	width: 100%;
-        /*width: 300px;
-        float: left; 
-        margin-left: 50px;*/
-    }
-    div.newestproducts
-    {
-    	width: 100%;        
-        float: left ;
-    }
-    header div.container.header {
-            background-image: <?=$this->template['header']['background-image']?>;
-            background-color: <?=$this->template['header']['background-color']?>;
-            color: <?=$this->template['header']['color']?>;
-            height: 142px;
-        }
-</style>
 
     <header id="page_header" xmlns="http://www.w3.org/1999/html">
-        <div class="container header">
+        <div class="container header" style="position: relative;">                     
+              
+                 <?php if (false === $auth->hasIdentity() && empty($member->username)) {
+                     $helperEncryptUrl = new Default_View_Helper_EncryptUrl();
+                     $redirectString = '/login/redirect/'.$helperEncryptUrl->EncryptUrl($_SERVER["REQUEST_URI"]);
+                     ?>
+                     <ul class="menu-nav-tabs absolute-right" >
+                         <li role="presentation" class="<?php echo(strpos($_SERVER["REQUEST_URI"], 'register') ? 'active' : '') ?>">
+                             <a href="/register">Register</a></li>
+                         <li role="presentation" class="<?php echo(strpos($_SERVER["REQUEST_URI"], 'login') ? 'active' : '') ?>">
+                             <a href="/login<?=$redirectString?>">Login</a>
+                         </li>
+                     </ul>
+                 <?php } ?>
+            
         <section class="container">
             <section class="wrapper">
 
                 <section>
 
-                    <figure class="logo-header" style="height: 150px;">
+                    <figure class="logo-header" >
                         <a href="/">
                             <img width="<?=$this->template['header-logo']['width']?>" border="0" src="<?=$this->template['header-logo']['image-src']?>">
                         </a>
@@ -236,30 +139,19 @@ $member = $getAuthUser->getAuthUser();
             <section class="container">
                 <section class="wrapper">
                     <span class="header_cat_link" id="header_cat_link" style="color: white;">
-                    Welcome to the KDE Store.
-                    	<!-- <a href="https://www.kde.org/community/">COMMUNITY</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://www.kde.org/applications/">PRODUCTS</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://www.kde.org/developerplatform/">DEVELOP</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://www.kde.org/community/donations/">DONATE</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://www.kde.org/support/">SUPPORT</a> -->
-                    </span>
-
-                    <?php if (false === $auth->hasIdentity() && empty($member->username)) {
-                        $helperEncryptUrl = new Default_View_Helper_EncryptUrl();
-                        $redirectString = '/login/redirect/'.$helperEncryptUrl->EncryptUrl($_SERVER["REQUEST_URI"]);
-                        ?>
-                        <ul class="menu-nav-tabs absolute-right" style="top: 77px;">
-                            <li role="presentation" class="<?php echo(strpos($_SERVER["REQUEST_URI"], 'register') ? 'active' : '') ?>">
-                                <a href="/register">Register</a></li>
-                            <li role="presentation" class="<?php echo(strpos($_SERVER["REQUEST_URI"], 'login') ? 'active' : '') ?>">
-                                <a href="/login<?=$redirectString?>">Login</a>
-                            </li>
-                        </ul>
-                    <?php } ?>
+                    Welcome to the KDE Store.                   
+                    </span>                  
                 </section>
             </section>
+
         </div>
+
+
     </header>
 
     <main id="mainpage-kde-store" class="mainpage-kde-store" >
 
-    <div style="height: 353px; width: 100%; background-color: #EFF0F1; " id="featureProductsContainer">
+    <div style="height: 353px;  background-color: #EFF0F1; " id="featureProductsContainer">
         
         <?php
         if ($this->featureProducts) {        
@@ -273,41 +165,20 @@ $member = $getAuthUser->getAuthUser();
             <section class="container" style="height:100%; width: 100%;">                               
                 <div class="row">   
                
-                <aside class="col-lg-2 col-md-1 col-sm-1 col-xs-11" style="padding-top: 48px">
+                <aside class="col-lg-2 col-md-1 col-sm-1 col-xs-11 aside" >
                      <?php  echo $this->render('explore/partials/filter.phtml'); ?>
                 </aside>               
                 
                 <div class="col-lg-10">
-                        <?php /*
-                        <div class="newestproducts" >
-                            <div class="row">
-                                <div >
-                                    <h3> Most download (6 months)
-                                    </h3>
-
-                                    <div class="prod-widget-box new-products" style="border:0px !important" >
-                                    <?php
-                                    $this->rownum = 1;                                                                                                                                            
-                                    foreach ($this->mostdownloads as $this->project) {
-                                        echo $this->render('home/partials/product.phtml');
-                                        $this->rownum++;                                        
-                                    }           
-                                    ?>
-                                    <div style="clear: both"></div>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>  */
-                        ?>
+                      
+                        
 
                         <div class="newestproducts" >
                             <div class="row">
                                 <div >
-                                    <h3> Newest Products
-                                    </h3>
+                                    <span class="title" > New and Updated </span>
 
-                                    <div class="prod-widget-box new-products" style="border:0px !important" >
+                                    <div class="prod-widget-box new-products noborder"  >
                                     <?php
                                     $this->rownum = 1; 
 
@@ -326,12 +197,33 @@ $member = $getAuthUser->getAuthUser();
                             </div>
                         </div>
 
+                        <div class="mostdownloadedproducts" >
+                            <div class="row">
+                                <div>
+                                    <span class="title" > Most Downloaded</span>                                    
+
+                                    <div class="prod-widget-box new-products noborder" >
+                                    <?php
+                                    $this->rownum = 1;                                                                                                                                           
+                                    foreach ($this->mostdownloads as $this->productmostdownload) {
+                                        echo $this->render('home/partials/product_mostdownload.phtml');
+                                        $this->rownum++;                                        
+                                    }           
+                                    ?>
+                                    <div style="clear: both"></div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div> 
+
+
                         <div class="latestcomments">
                        
                             <div class="row">
                                 <div >
-                                    <h3> Lastest Comments
-                                    </h3>
+                                    <span class="title" > Lastest Comments </span>
+                                    
                                         
                                     <div class="prod-widget-box " style="border:0px !important">
                                         <?php                                                          

@@ -23,27 +23,27 @@
 <div class="containerbox" style="width: 200px; background-color: #f1f1f1; float: left; border:1px solid #ddd; margin:2px; height:220px">
          
      <div style="display: block; background-color: #fff; height: 160px " class="text-center">        
-            <a style="display: block" href="<?=$this->buildProductUrl($this->product['project_id'],'')?>">
-            <img class="productimg" src="<?=$this->Image($this->product['image_small'], array('width' => 100, 'height' => 100))?>" style="margin:10px; width: 100px; height:100px; "/>
+            <a style="display: block" href="<?=$this->buildProductUrl($this->productmostdownload['project_id'],'')?>">
+            <img class="productimg" src="<?=$this->Image($this->productmostdownload['image_small'], array('width' => 100, 'height' => 100))?>" style="margin:10px; width: 100px; height:100px; "/>
             </a>
-            <a style="display: block" href="<?=$this->buildProductUrl($this->product['project_id'],'')?>"><?=$this->product['title']?>                
+            <a style="display: block" href="<?=$this->buildProductUrl($this->productmostdownload['project_id'],'')?>"><?=$this->productmostdownload['title']?>                
             </a>
      </div>
 
      <div style="padding:5px;" class="text-center">
      
           
-            <span style="font-size: smaller;"><?=$this->fetchCategoriesForProductAsString($this->product['project_id'])?> </span>
+            <span style="font-size: smaller;"><?=$this->fetchCategoriesForProductAsString($this->productmostdownload['project_id'])?> </span>
             
      
      
         <div class="rating text-center" style="padding-top: 5px" >
             <?php                
                     $this->widgetRating = new stdClass();
-                    $this->widgetRating->project_id = $this->product['project_id'];
-                    $this->widgetRating->laplace_score = $this->product['laplace_score'];
-                    $this->widgetRating->count_likes = $this->product['count_likes']; 
-                    $this->widgetRating->count_dislikes =$this->product['count_dislikes'];
+                    $this->widgetRating->project_id = $this->productmostdownload['project_id'];
+                    $this->widgetRating->laplace_score = $this->productmostdownload['laplace_score'];
+                    $this->widgetRating->count_likes = $this->productmostdownload['count_likes']; 
+                    $this->widgetRating->count_dislikes =$this->productmostdownload['count_dislikes'];
                     echo $this->render('partials/widgetRating.phtml'); 
             ?>
         </div>

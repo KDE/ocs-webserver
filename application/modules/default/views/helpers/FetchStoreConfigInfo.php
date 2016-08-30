@@ -33,11 +33,11 @@ class Default_View_Helper_FetchStoreConfigInfo
         $clientFileId = '_' . $configName;
         $clientConfigPath = Zend_Registry::get('config')->settings->client->config->path;
         $clientConfigFileName = "client{$clientFileId}.ini.php";
-        $clientConfigData;
+        $clientConfigData = null;
         if (file_exists($clientConfigPath . $clientConfigFileName)) {
             $clientConfigData = require $clientConfigPath . $clientConfigFileName;
         } else {
-            $clientConfigData = require $clientConfigPath . "client_pling.ini.php";
+            $clientConfigData = require $clientConfigPath . "default.ini.php";
         }
 
         return $clientConfigData['header-logo']['image-src'];

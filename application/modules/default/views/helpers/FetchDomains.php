@@ -32,11 +32,11 @@ class Default_View_Helper_FetchDomains extends Zend_View_Helper_Abstract
             $clientConfigPath = Zend_Registry::get('config')->settings->client->config->path;
             $clientConfigFileName = "client{$clientFileId}.ini.php";
 
-            $clientConfigData;
+            $clientConfigData = null;
             if (file_exists($clientConfigPath . $clientConfigFileName)) {
                 $clientConfigData = require $clientConfigPath . $clientConfigFileName;
             } else {
-                $clientConfigData = require $clientConfigPath . "client_pling.ini.php";
+                $clientConfigData = require $clientConfigPath . "default.ini.php";
             }
 
             // $obj['meta_keywords'] = $clientConfigData['head']['meta_keywords'];
