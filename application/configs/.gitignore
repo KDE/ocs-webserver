@@ -4,3 +4,4 @@
 !.gitignore
 !application.ini
 !client.ini.php
+!default.ini.php

@@ -25,12 +25,11 @@ if (false === isset($this->params)) {
 ?>
 
 
-<a class="left carousel-control ajaxPartial <?php echo isset($this->previous) ? '' : 'disabled' ?>" style="height:333px;margin-top: 160px;" href="<?php echo isset($this->previous) ? $this->url(array_merge($this->params,
-            array('page' => $this->previous))) : 'javascript:;'; ?>" data-slide="prev">
+<a class="left carousel-control ajaxPartial" style="height:333px;margin-top: 160px;" href="<?php echo isset($this->previous) ?'/showfeatureajax/page/'.$this->previous : '/showfeatureajax/page/1000'; ?>" data-slide="prev">
                           <span class="glyphicon glyphicon-chevron-left"></span>
                         </a>
 
-<a class="right carousel-control ajaxPartial <?php echo isset($this->next) ? '' : 'disabled' ?>" style="height:333px;margin-top: 160px;" href="<?php echo isset($this->next) ? '/showfeatureajax/page/'.$this->next : 'javascript:;'; ?>" data-slide="next">
+<a class="right carousel-control ajaxPartial " style="height:333px;margin-top: 160px;" href="<?php echo isset($this->next) ? '/showfeatureajax/page/'.$this->next : '/showfeatureajax/page/1'; ?>" data-slide="next">
   <span class="glyphicon glyphicon-chevron-right"></span>
 </a>
 

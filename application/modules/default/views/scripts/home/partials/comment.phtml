@@ -34,14 +34,14 @@ $helperTruncate = new Default_View_Helper_Truncate();
     
     <div style="padding:5px; display: block; height: 160px; background-color: #fff;  position: relative;">
     
-        <div style="line-height:1.5"><a
+        <div style="line-height:1.5; max-height: 145px; overflow: hidden;"><a
 					href="/p/<?= $this->comment['project_id'] ?>">
 						<?=$helperTruncate->truncate($this->comment['comment_text'], 200, '...', false, true)?>
 					</a>
 			</div>
 			
 			<span class="small" style="position: absolute; bottom: 0px;">
-    		<?= $this->comment['title'] ?>                  
+    		<?=$helperTruncate->truncate($this->comment['title'], 30, '...', false, true)?>               
 			</span>
 			
     </div>    

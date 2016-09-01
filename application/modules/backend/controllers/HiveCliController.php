@@ -76,6 +76,7 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
                     //} else if(isset($action) && $action == 'sync' && isset($context) && $context == 'downloads') {
                     //	$this->syncDownloads();
                 }
+    	
             }
         }
 

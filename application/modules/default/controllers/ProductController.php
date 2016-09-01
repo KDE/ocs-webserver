@@ -106,7 +106,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
     protected function fetchDataForIndexView()
     {
         $tableProject = new Default_Model_Project();
-        $tableProjectUpdates = new Default_Model_ProjectUpdates();
         $this->view->product = $tableProject->fetchProductInfo($this->_projectId);
         if (false === isset($this->view->product)) {
             throw new Zend_Controller_Action_Exception('This page does not exist', 404);
@@ -118,6 +117,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $this->view->supporting = $tableProject->fetchProjectSupporterWithPlings($this->_projectId);
         //$orgUpdates = $tableProjectUpdates->fetchLastProjectUpdate($this->_projectId);
+        $tableProjectUpdates = new Default_Model_ProjectUpdates();
         $orgUpdates = $tableProjectUpdates->fetchProjectUpdates($this->_projectId);
         $newUpdates = array();
         foreach ($orgUpdates as $update) {

@@ -82,7 +82,7 @@ $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountP
                         <small class="small"><a data-toggle="collapse" href="#add-comment"><span class="glyphicon glyphicon-share-alt"></span> Add a comment</a></small>
                     </p>
                     <div class="collapse" id="add-comment" style="padding-top: 8px;">
-                        <form class="full-width" action="/productcomment/addreply/">
+                        <form class="full-width product-add-comment" action="/productcomment/addreply/">
                             <input type="hidden" name="p" value="<?= $this->product->project_id ?>">
                             <input type="hidden" name="m" value="<?= $identity->member_id ?>">
                             <textarea name="msg" class="full-width"></textarea>
@@ -165,7 +165,7 @@ $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountP
                         </div>
                         <?php if (Zend_Auth::getInstance()->hasIdentity()) { ?>
                         <div class="collapse" id="reply-<?= $comment['comment_id'] ?>">
-                            <form class="full-width" action="/productcomment/addreply/">
+                            <form class="full-width product-add-comment" action="/productcomment/addreply/">
                                 <input type="hidden" name="i" value="<?= $comment['comment_id'] ?>">
                                 <input type="hidden" name="p" value="<?= $comment['comment_target_id'] ?>">
                                 <input type="hidden" name="m" value="<?= $identity->member_id ?>">
@@ -191,3 +191,8 @@ $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountP
         </div>
     </div>
 </div>
+<?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){
+            AjaxForm.setup("form.product-add-comment", "div#product-discussion");
+        });
+    ');

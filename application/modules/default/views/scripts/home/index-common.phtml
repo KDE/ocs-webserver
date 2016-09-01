@@ -23,6 +23,7 @@
 $modelInfo = new Default_Model_Info();
 
 
+
 $this->comments = $modelInfo->getLastCommentsForHostStores(7);
 $this->donations = $modelInfo->getLastPlingsForHostStores(10);
 $this->users = $modelInfo->getNewActiveMembers(10);
@@ -36,8 +37,12 @@ $this->comments = $modelInfo->getLastCommentsForHostStores_local(5);
 $this->donations = $modelInfo->getLastPlingsForHostStores_local(10);
 $this->users = $modelInfo->getNewActiveMembers_local(10);
 $this->products = $modelInfo->getLastProductsForHostStores_local(10);
+$this->mostdownloads = $modelInfo->getLastProductsForHostStores_local(7);
+
 $featureProducts = $modelInfo->getFeaturedProductsForHostStores_local(100);
 */
+
+
 if ($featureProducts->getTotalItemCount()) {
     /** @var Zend_Controller_Request_Http $request */
     $request = Zend_Controller_Front::getInstance()->getRequest();
@@ -204,11 +209,12 @@ $member = $getAuthUser->getAuthUser();
 
                                     <div class="prod-widget-box new-products noborder" >
                                     <?php
-                                    $this->rownum = 1;                                                                                                                                           
-                                    foreach ($this->mostdownloads as $this->productmostdownload) {
-                                        echo $this->render('home/partials/product_mostdownload.phtml');
+                                    $this->rownum = 1;
+                                    foreach ($this->mostdownloads as $this->product) {
+                                        echo $this->render('home/partials/product.phtml');
                                         $this->rownum++;                                        
-                                    }           
+                                    } 
+                                    
                                     ?>
                                     <div style="clear: both"></div>
                                     </div>
@@ -311,4 +317,9 @@ $member = $getAuthUser->getAuthUser();
 </script>
 
 
-  
+  <?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){
+                MenuHover.setup();                    
+                LoginContainer.update();
+            });
+        ');

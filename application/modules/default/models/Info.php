@@ -530,8 +530,10 @@ class Default_Model_Info
                 ,s.amount 
                 ,s.category_title       
                 from stat_downloads_half_year s    
-                inner join project p on s.project_id = p.project_id        
+                inner join project p on s.project_id = p.project_id
                 WHERE
+                    p.status=100
+                    and 
                     p.project_category_id IN (' .
             implode(',', $activeCategories)
             . ')

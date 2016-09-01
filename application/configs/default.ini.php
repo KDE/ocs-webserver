@@ -2,7 +2,7 @@
 
 return array(
     'favicon' => '/favicon.ico',
-    'logo' => '',
+    'logo' => '/theme/flatui/img/new/O-standard-logo.png',
 
     'head' => array(
         'browser_title' => 'ocs-webserver',
@@ -14,11 +14,11 @@ return array(
 
     'homepage' => array(
         'logo' => array(
-            'background-image' => '',
+            'background-image' => 'url(\'/theme/flatui/img/new/O-standard-logo.png\')',
             'background-position' => 'inherit',
             'background-repeat' => 'no-repeat',
-            'height' => '108px',
-            'width' => '200px'
+            'height' => '250px',
+            'width' => '400px'
         ),
         'headline' => '<h2>Your Headline</h2>
                         <h3>and more text.</h3>
@@ -50,7 +50,7 @@ return array(
         'width' => '140px',
         'top' => '10px',
         'left' => '0',
-        'image-src' => ''
+        'image-src' => '/theme/flatui/img/new/O-standard-logo.png'
     ),
 
     'header-nav' => array(

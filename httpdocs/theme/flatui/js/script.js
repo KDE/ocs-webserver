@@ -1535,6 +1535,47 @@ var PartialFormsAjax = (function () {
     }
 })();
 
+var AjaxForm = (function () {
+    return {
+        setup: function (idElement, idTargetElement) {
+            var form = $(idElement);
+            var target = $(idTargetElement);
+
+            $('body').on("submit", idElement, function (event) {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+
+                $(this).ajaxForm({
+                    error: function () {
+                        alert('Service is temporarily unavailable.');
+                    },
+                    success: function (results) {
+                        if (results.status == 'ok') {
+                            $(target).empty().html(results.data);
+                        }
+                        if (results.status == 'error') {
+                            alert('Service is temporarily unavailable.');
+                        }
+                    }
+                });
+            });
+            // form.ajaxForm({
+            //     error: function () {
+            //         alert('Service is temporarily unavailable.');
+            //     },
+            //     success: function (results) {
+            //         if (results.status == 'ok') {
+            //             $(target).empty().html(results.data);
+            //         }
+            //         if (results.status == 'error') {
+            //             alert('Service is temporarily unavailable.');
+            //         }
+            //     }
+            // });
+        }
+    }
+})();
+
 var WidgetModalAjax = (function () {
 
     return {

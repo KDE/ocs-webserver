@@ -93,7 +93,7 @@ class Default_Model_DbTable_HiveContent extends Local_Model_Table
     
     	$sql = "
                 SELECT
-                    *,convert(cast(convert(description using  latin1) as binary) using utf8) as description_utf8,from_unixtime(created) as created_at,from_unixtime(changed) as changed_at, CASE WHEN deletedat > 0 THEN FROM_UNIXTIME(deletedat) ELSE null END as deleted_at
+                    *,convert(cast(convert(description using  latin1) as binary) using utf8) as description_utf8,convert(cast(convert(name using  latin1) as binary) using utf8) as name_utf8,convert(cast(convert(changelog using  latin1) as binary) using utf8) as changelog_utf8,from_unixtime(created) as created_at,from_unixtime(changed) as changed_at, CASE WHEN deletedat > 0 THEN FROM_UNIXTIME(deletedat) ELSE null END as deleted_at
                 FROM
                     hive_content
                 WHERE
