@@ -1542,10 +1542,16 @@ var AjaxForm = (function () {
             var target = $(idTargetElement);
 
             $('body').on("submit", idElement, function (event) {
-                event.preventDefault();
-                event.stopImmediatePropagation();
+                //event.preventDefault();
+                //event.stopImmediatePropagation();
 
-                $(this).ajaxForm({
+//                $(this).ajaxForm({
+                jQuery.ajax({
+                    data: $(this).serialize(),
+                    url: this.action,
+                    type: this.method,
+                    dataType: "json",
+
                     error: function () {
                         alert('Service is temporarily unavailable.');
                     },
@@ -1558,6 +1564,8 @@ var AjaxForm = (function () {
                         }
                     }
                 });
+
+                return false;
             });
             // form.ajaxForm({
             //     error: function () {

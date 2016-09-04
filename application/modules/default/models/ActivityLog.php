@@ -380,7 +380,7 @@ class Default_Model_ActivityLog extends Default_Model_DbTable_ActivityLog
             'object_ref' => self::$referenceType[$activity_type_id],
             'object_title' => $data['title'],
             'object_text' => $object_text,
-            'object_img' => $data['image_small'] ? $data['image_small'] : null,
+            'object_img' => false === empty($data['image_small']) ? $data['image_small'] : null,
             'activity_type' => $activity_type_id
         );
 
