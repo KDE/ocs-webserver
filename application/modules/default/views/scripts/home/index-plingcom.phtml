@@ -24,7 +24,7 @@ $modelInfo = new Default_Model_Info();
 
 
 
-$this->comments = $modelInfo->getLastCommentsForHostStores(5);
+$this->comments = $modelInfo->getLastCommentsForHostStores(10);
 $this->donations = $modelInfo->getLastPlingsForHostStores(10);
 $this->users = $modelInfo->getNewActiveMembers(10);
 $this->products = $modelInfo->getLastProductsForHostStores(10);
@@ -190,7 +190,7 @@ $member = $getAuthUser->getAuthUser();
                        
                             <div class="row">
                                 <div >
-                                    <h3> Lastest 5 Comments
+                                    <h3> Lastest 10 Comments
                                     </h3>
                                         
                                     <div class="prod-widget-box ">
