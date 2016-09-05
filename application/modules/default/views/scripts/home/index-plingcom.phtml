@@ -67,7 +67,7 @@ $member = $getAuthUser->getAuthUser();
 
 ?>
 
-<link href="/theme/flatui/css/style-index-common.css" rel="stylesheet">
+<link href="/theme/flatui/css/style-index-plingcom.css" rel="stylesheet">
 
 
     <header id="page_header" xmlns="http://www.w3.org/1999/html">
@@ -160,7 +160,7 @@ $member = $getAuthUser->getAuthUser();
                 </div>
                 <div class="row">   
                
-                <aside class="col-lg-2 col-md-1 col-sm-1 col-xs-11" style="padding-top: 30px">
+                <aside class="col-lg-2 col-md-1 col-sm-1 col-xs-11" style="padding-top: 70px">
                      <?php  echo $this->render('explore/partials/filter.phtml'); ?>
                 </aside>               
                 
@@ -194,9 +194,11 @@ $member = $getAuthUser->getAuthUser();
                                     </h3>
                                         
                                     <div class="prod-widget-box ">
-                                        <?php                                                          
+                                        <?php                       
+                                        $this->rownum = 1;                                         
                                              foreach ($this->comments as $this->comment) {
-                                                    echo $this->render('home/partials/comment_plingcom.phtml');                        
+                                                    echo $this->render('home/partials/comment_plingcom.phtml');   
+                                                    $this->rownum++;                     
                                                 }                                 
                                          ?> 
                                     </div>
@@ -206,7 +208,7 @@ $member = $getAuthUser->getAuthUser();
                         
                         </div>
 
-                        <div class="" style="width: 490px; float: left;margin-left: 50px;">
+                        <div class="" style="width: 490px; float: left;margin-left: 50px;margin-top:30px">
                             <div class="row">
                                 <div >
                                     <h3> Newest 10 Users

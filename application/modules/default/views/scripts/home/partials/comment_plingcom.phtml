@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  *  ocs-webserver
  *
@@ -19,43 +19,50 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
+
+$helperPrintDate = new Default_View_Helper_PrintDate();
+$updateTime = $helperPrintDate->printDate($this->comment['comment_created_at']);
+$helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
+$helperFetchSubcategoriesForProduct = new Default_View_Helper_FetchCategoriesForProductAsString();
+$helperImage = new Default_View_Helper_Image();
+$helperTruncate = new Default_View_Helper_Truncate();
 ?>
-<div class="productrow"><div class="row">            
- <div class="col-lg-3">
-    <span class="num"><?=$this->rownum ?>.</span>
-        <div class="text-center">
-            <img class="productimg" src="<?=$this->Image($this->product['image_small'], array('width' => 90, 'height' => 90))?>" />
+
+<div class="productrow">
+<div  class="row">
+         
+    
+
+      <div class="col-lg-9">
+      
+             <?= $this->comment['title'] ?>                
+            <br>
+             <span style="font-size: smaller;"><?php echo $helperFetchSubcategoriesForProduct->fetchCategoriesForProductAsString($this->comment['project_id']) ?></span>
+             
+      
+      
+         <div class="small" style="line-height:1.3"><a
+                     href="/p/<?= $this->comment['project_id'] ?>">
+                         <?=$helperTruncate->truncate($this->comment['comment_text'], 200, '...', false, true)?>
+                     </a>
+             </div>
+         <span class="time"><?= $updateTime ?>
+         </span>
+     
+     </div>
+
+     <div class="col-lg-3">        
+         
+            <div class="userinfo">
+            <a href="/member/<?php echo $this->comment['member_id'] ?>">
+            <img src="<?= $helperImage->Image($this->comment['profile_image_url'],
+                        array('width' => 120, 'height' => 120)) ?>"  style="margin:10px; width: 40px; height:40px; border-radius: 50%"/>
+                <span style="display: block"><?= $this->comment['username'] ?></span>
+            </a>
         </div>
- </div>
- <div class="col-lg-6">
-        <a href="<?=$this->buildProductUrl($this->product['project_id'],'')?>"><?=$this->product['title']?>
-            <span class="version"><?=$this->product['version']?>
-            </span>
-        </a><br>
-        <?=$this->fetchCategoriesForProductAsString($this->product['project_id'])?> 
-        <br>
-        <?php
-            $count_plingers = $this->product['count_plingers'];
-            $count_comments = $this->product['count_comments'];
             
-            echo ($count_plingers>0 ? '<span class="cntSupporters">'.$count_plingers.' supporter':'').($count_plingers>1?'s':'').($count_plingers>0?'</span>':'') ;
-            echo ($count_comments>0 ? '<span class="cntComments">'.$count_comments.' comment':'').($count_comments>1?'s':'').($count_comments>0?'</span>':'') ;
-            
-        ?>
- </div>
- <div class="col-lg-3">
-    <div class="rating">
-        <?php                
-                $this->widgetRating = new stdClass();
-                $this->widgetRating->project_id = $this->product['project_id'];
-                $this->widgetRating->laplace_score = $this->product['laplace_score'];
-                $this->widgetRating->count_likes = $this->product['count_likes']; 
-                $this->widgetRating->count_dislikes =$this->product['count_dislikes'];
-                echo $this->render('partials/widgetRating.phtml'); 
-        ?>
-    </div>
-    <span class="time"><?=$this->printDate($this->product['changed_at']==null?$this->product['created_at']:$this->product['changed_at'])?>
-    </span>
-</div>
-</div>
+     </div>
+
+    
 </div >
+</div>
