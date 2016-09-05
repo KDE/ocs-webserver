@@ -1,5 +1,7 @@
 #ignore pling-music and pling-books
+*/pling-books-html5
 */pling-books-html5/*
+*/pling-music-html5
 */pling-music-html5/*
 
 #ignore store specific images

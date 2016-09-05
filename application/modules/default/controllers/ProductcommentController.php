@@ -38,7 +38,7 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
     public function addreplyAction()
     {
         $this->_helper->layout->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
+        //$this->_helper->viewRenderer->setNoRender(true);
         
         $data = array();
         $data['comment_target_id'] = (int)$this->getParam('p');
@@ -52,10 +52,16 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
         $status = count($result) > 0 ? 'ok' : 'error';
         $message = '';
 
-        $this->updateActivityLog($result);
+        $this->view->comments = $this->loadComments((int)$this->getParam('page'), (int)$this->getParam('p'));
+        $tableProject = new Default_Model_Project();
+        $this->view->product = $tableProject->fetchProductInfo((int)$this->getParam('p'));
+        $this->view->member_id = $this->_authMember->member_id;
+        $requestResult = $this->view->render('product/partials/productCommentsUX1.phtml');
+
+        $this->updateActivityLog($result, $this->view->product->image_small);
 
         if ($this->_request->isXmlHttpRequest()) {
-            $this->_helper->json(array('status' => $status, 'message' => $message, 'data' => $data));
+            $this->_helper->json(array('status' => $status, 'message' => $message, 'data' => $requestResult));
         } else {
             $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
             $url = $helperBuildProductUrl->buildProductUrl($data['comment_target_id']);
@@ -63,7 +69,7 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
         }
     }
 
-    private function updateActivityLog($data)
+    private function updateActivityLog($data, $image_small)
     {
         if ($data['comment_parent_id']) {
             $activity_type = Default_Model_ActivityLog::PROJECT_COMMENT_REPLY;
@@ -71,7 +77,16 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
             $activity_type = Default_Model_ActivityLog::PROJECT_COMMENT_CREATED;
         }
 
-        Default_Model_ActivityLog::logActivity($data['comment_id'], $data['comment_target_id'],$data['comment_member_id'], $activity_type, array('title'=>'','description' => $data['comment_text']));
+        Default_Model_ActivityLog::logActivity($data['comment_id'], $data['comment_target_id'],$data['comment_member_id'], $activity_type, array('title'=>'','description' => $data['comment_text'], 'image_small'=> $image_small));
     }
 
-} 
+    private function loadComments($page_offset, $project_id)
+    {
+        $modelComments = new Default_Model_ProjectComments();
+        $paginationComments = $modelComments->getAllCommentsForProject($project_id);
+        $paginationComments->setItemCountPerPage(25);
+        $paginationComments->setCurrentPageNumber($page_offset);
+        return $paginationComments;
+    }
+
+}
