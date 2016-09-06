@@ -51,9 +51,9 @@ $helperTruncate = new Default_View_Helper_Truncate();
      
      </div>
 
-     <div class="col-lg-3">        
+     <div class="col-lg-3 text-center">        
          
-            <div class="userinfo">
+            <div class="userinfo" style="overflow: hidden">
             <a href="/member/<?php echo $this->comment['member_id'] ?>">
             <img src="<?= $helperImage->Image($this->comment['profile_image_url'],
                         array('width' => 120, 'height' => 120)) ?>"  style="margin:10px; width: 40px; height:40px; border-radius: 50%"/>
