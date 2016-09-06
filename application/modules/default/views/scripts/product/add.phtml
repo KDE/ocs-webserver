@@ -1430,6 +1430,21 @@ $helperImage = new Default_View_Helper_Image();
 						
 						return false;
 					}
+
+					if (currentIndex == 0) {
+                        if (ImagePreview.hasError) {
+                            return false;
+                        }
+                        if (ProductForm.mode == 'add' && (ProductForm.project_id == '' || ProductForm.project_id == undefined)) {
+                            var result = ProductForm.saveSection(formElement.find('.body:eq(' + currentIndex + ')').attr('id'));
+                            if (result == false) {
+                                validator.showErrors(ProductForm.errors);
+                                return result;
+                            }
+                            formElement.find("#modal-ppload").attr('data-product-id', ProductForm.project_id);
+                        }
+                    }
+					
 					
                     $('[name=project_id]').val(ProductForm.project_id);
                     formElement.submit();
