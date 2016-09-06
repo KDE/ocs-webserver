@@ -309,7 +309,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $log->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . ' - setCatId New: ' . $values['project_category_id'] . "\n");
 
         // form was valid, so we can set status to inactive
-        $values['status'] = Default_Model_DbTable_Project::PROJECT_INACTIVE;
+        $values['status'] = Default_Model_DbTable_Project::PROJECT_ACTIVE;
         // save new project
         $modelProject = new Default_Model_Project();
         if (isset($values['project_id'])) {
@@ -322,6 +322,11 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         //update the gallery pics
         $mediaServerUrls = $this->saveGalleryPics($form->gallery->upload->upload_picture);
         $modelProject->updateGalleryPictures($newProject->project_id, $mediaServerUrls);
+        
+        //If there is no Logo, we take the 1. gallery pic
+        if(!isset($values['image_small'])) {
+        	$values['image_small'] = $mediaServerUrls[0];
+        }
 
         /*
         //save license information
@@ -343,9 +348,11 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         // ppload
         $this->processPploadId($newProject);
 
-        $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
-        $urlProjectShow = $helperBuildProductUrl->buildProductUrl($newProject->project_id, 'preview');
-        $this->redirect($urlProjectShow);
+        //$helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
+        //$urlProjectShow = $helperBuildProductUrl->buildProductUrl($newProject->project_id, 'preview');
+        //$this->redirect($urlProjectShow);
+        
+        $this->redirect('/member/'.$newProject->member_id.'/products/');
     }
 
     private function saveGalleryPics($form_element)
