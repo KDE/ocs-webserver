@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  *  ocs-webserver
  *
@@ -19,5 +19,264 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
+
+$modelInfo = new Default_Model_Info();
+
+
+
+$this->comments = $modelInfo->getLastCommentsForHostStores(10);
+$this->donations = $modelInfo->getLastPlingsForHostStores(10);
+$this->users = $modelInfo->getNewActiveMembers(10);
+$this->products = $modelInfo->getLastProductsForHostStores(10);
+$this->mostdownloads = $modelInfo->getMostDownloadedForHostStores(7);
+$featureProducts = $modelInfo->getFeaturedProductsForHostStores(100);
+
+
+/*
+$this->comments = $modelInfo->getLastCommentsForHostStores_local(5);
+$this->donations = $modelInfo->getLastPlingsForHostStores_local(10);
+$this->users = $modelInfo->getNewActiveMembers_local(10);
+$this->products = $modelInfo->getLastProductsForHostStores_local(10);
+$this->mostdownloads = $modelInfo->getLastProductsForHostStores_local(7);
+
+$featureProducts = $modelInfo->getFeaturedProductsForHostStores_local(100);
+*/
+
+
+if ($featureProducts->getTotalItemCount()) {
+    /** @var Zend_Controller_Request_Http $request */
+    $request = Zend_Controller_Front::getInstance()->getRequest();
+
+    $offset = (int)$request->getParam('page');
+    $featureProducts->setItemCountPerPage(1);
+    $featureProducts->setCurrentPageNumber($offset);
+    $this->featureProducts = $featureProducts;
+}
+
+$storeCatIds = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
+$this->categories = $storeCatIds;
+
+$helperFetchCategory = new Default_View_Helper_CatTitle();
+$helperFetchCatParent = new Default_View_Helper_CatParent();
+$getAuthUser = new Default_View_Helper_GetAuthUser();
+$helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
+$helperImage = new Default_View_Helper_Image();
+
+$auth = Zend_Auth::getInstance();
+$member = $getAuthUser->getAuthUser();
+
 ?>
-<?php  echo $this->render('home/index-common.phtml');
+
+<link href="/theme/flatui/css/style-index-plingcom.css" rel="stylesheet">
+
+
+    <header id="page_header" xmlns="http://www.w3.org/1999/html">
+        <div class="container header" style="position: relative;">                     
+              
+                 <?php if (false === $auth->hasIdentity() && empty($member->username)) {
+                     $helperEncryptUrl = new Default_View_Helper_EncryptUrl();
+                     $redirectString = '/login/redirect/'.$helperEncryptUrl->EncryptUrl($_SERVER["REQUEST_URI"]);
+                     ?>
+                     <ul class="menu-nav-tabs absolute-right" >
+                         <li role="presentation" class="<?php echo(strpos($_SERVER["REQUEST_URI"], 'register') ? 'active' : '') ?>">
+                             <a href="/register">Register</a></li>
+                         <li role="presentation" class="<?php echo(strpos($_SERVER["REQUEST_URI"], 'login') ? 'active' : '') ?>">
+                             <a href="/login<?=$redirectString?>">Login</a>
+                         </li>
+                     </ul>
+                 <?php } ?>
+            
+        <section class="container">
+            <section class="wrapper">
+
+                <section>
+
+                    <figure class="logo-header" >
+                        <a href="/">
+                            <img width="<?=$this->template['header-logo']['width']?>" border="0" src="<?=$this->template['header-logo']['image-src']?>">
+                        </a>
+                    </figure>
+                  
+                    <nav id="nav-top">
+                        <div class="pull-left col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                        </div>
+
+                        <div class="pull-right col-lg-7 col-md-7 col-sm-7 col-xs-7">
+                            <?php if ($auth->hasIdentity() && !empty($member->username)) { ?>
+                                <ul class="menu pull-right">
+                                    <li class="link relative profile-menu-container">
+                                        <a rel="profile-menu" class="menu-trigger">
+                                        <div class="absolute header-profile-image"><img
+                                                src="<?= $helperImage->Image($member->profile_image_url, array('width' => 30, 'height' => 30)) ?>"/>
+                                        </div>
+                                        <span><?= $member->username ?></span>
+                                        </a>
+                                        <ul class="profile-menu menu-dropdown">
+                                            <div class="dropdown-header"></div>
+                                            <li class="link first"><a href="/product/add/"><?= $this->translate('Add Product') ?></a>
+                                            </li>
+                                            <li class="link first"><a
+                                                    href="<?= $helperBuildMemberUrl->buildMemberUrl($member->member_id, 'products') ?>"><?= $this->translate('My Products') ?></a>
+                                            </li>
+                                            <li class="link"><a
+                                                    href="/settings/"><?= $this->translate('My Settings') ?></a>
+                                            </li>
+                                            <li class="link"><a href="/logout/"><?= $this->translate('Logout') ?></a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            <?php } else { ?>
+                            <?php } ?>
+                            <form id="search" class="pull-right" action="/search">
+                                <input type="text" name="projectSearchText" class="content-search">
+
+                                <div class="icon-search-input absolute cursor-hand"
+                                     onclick="$('#search').submit()"></div>
+                            </form>
+                        </div>
+                    </nav>
+                </section>
+
+            </section>
+        </section>
+            
+        </div>
+
+
+    </header>
+
+<main id="mainpage-kde-store" class="mainpage-kde-store" >
+        <section class="wrapper-kde-store" id="intro-kde-store" >
+            <section class="container" style="height:100%; width: 100%;">
+                <div class="row" style="height: 400px; width: 100%" id="featureProductsContainer">
+                    
+                    <?php
+                    if ($this->featureProducts) {        
+                                  echo $this->render('home/partials/featured-products.phtml');
+                    } 
+                    ?>
+                   
+                </div>
+                <div class="row">   
+               
+                <aside class="col-lg-2 col-md-1 col-sm-1 col-xs-11" style="padding-top: 70px">
+                     <?php  echo $this->render('explore/partials/filter.phtml'); ?>
+                </aside>               
+                
+                <div class="col-lg-10">
+                        <div class="newestproducts" >
+                            <div class="row">
+                                <div >
+                                    <h3> Newest 10 Products
+                                    </h3>
+
+                                    <div class="prod-widget-box new-products" >
+                                    <?php
+                                    $this->rownum = 1; 
+                                    foreach ($this->products as $this->product) {
+                                        echo $this->render('home/partials/product_plingcom.phtml');
+                                        $this->rownum++;
+                                    }           
+                                    ?>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="latestcomments">
+                       
+                            <div class="row">
+                                <div >
+                                    <h3> Lastest 10 Comments
+                                    </h3>
+                                        
+                                    <div class="prod-widget-box ">
+                                        <?php                       
+                                        $this->rownum = 1;                                         
+                                             foreach ($this->comments as $this->comment) {
+                                                    echo $this->render('home/partials/comment_plingcom.phtml');   
+                                                    $this->rownum++;                     
+                                                }                                 
+                                         ?> 
+                                    </div>
+
+                                </div>
+                            </div>
+                        
+                        </div>
+
+                        <div class="" style="width: 490px; float: left;margin-left: 50px;margin-top:30px">
+                            <div class="row">
+                                <div >
+                                    <h3> Newest 10 Users
+                                        </h3>
+                                        
+                                    <div class="prod-widget-box newusers">
+                                         <?php 
+                                        foreach ($this->users as $user) {                                  
+                                            ?>
+                                            
+                                                <div class="user " >
+                                               
+                                                    <div class="u-wrap">
+                                                        <a href="<?php echo $this->buildMemberUrl($user['member_id']); ?>">
+                                                            <figure >
+                                                                <img src="<?php echo $this->Image($user['profile_image_url'], array('width' => '200', 'height' => '200', 'crop' => 2)); ?>"/>
+                                                            </figure>
+                                                            <h3 class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><?php echo $user['username']; ?></h3>                                                   
+                                                        </a>
+                                                         <span class="small"><?= $this->printDate($user['created_at'])?></span>
+                                                    </div>
+                                                   
+
+                                                </div>
+                                           
+                                        <?php } ?>
+
+                                        <div style="clear: both;"></div> 
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                
+                </div>
+              
+
+                </div> <!--row -->
+            </section>
+        </section>
+        
+    </main>
+
+
+<script type="application/javascript">
+    $(document).ready(function () {
+        $('body').on('click', 'a.ajaxPartial', function (event) {
+            event.preventDefault();            
+            $(this).off();                  
+            var target = '#featureProductsContainer';  
+            if($(this).hasClass( "disabled" )) return false;
+            var url = $(this).attr("href");                        
+            $(target).load(url, function (response, status, xhr) {
+                if (status == "error") {
+                    $(target).empty().html('Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.');
+                }                
+            });
+            
+            return false;
+        });
+    });
+</script>
+
+
+  <?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){
+                MenuHover.setup();                    
+                LoginContainer.update();
+            });
+        ');
