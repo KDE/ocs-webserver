@@ -36,11 +36,11 @@ if('all' == strtolower($catTitle) OR (false === isset($catTitle))) {
 <main id="explore-content">
     <section class="wrapper" id="products-wrapper">
 
-        <aside class="col-lg-2 col-md-1 col-sm-1 col-xs-11">
+        <aside class="col-lg-2 col-md-3 col-sm-4 col-xs-6">
              <?php  echo $this->render('explore/partials/filter.phtml'); ?>
         </aside>
         
-        <section class="explore-products col-lg-8 col-md-8 col-sm-8 col-xs-11" id="explore-products">
+        <section class="explore-products col-lg-8 col-md-9 col-sm-8 col-xs-12" id="explore-products">
             <ul class="nav nav-tabs" id="sort">               
                 <li  <?=$this->filters['order'] == 'latest' ? 'class="active"' :'' ?>>
                     <a href="<?= $helperBuildExploreUrl->buildExploreUrl($this->filters['category'], null,
@@ -86,7 +86,7 @@ if('all' == strtolower($catTitle) OR (false === isset($catTitle))) {
             </section>
         </section>
 
-        <aside class="col-lg-2 col-md-3 col-sm-3 col-xs-11" id="explore-sidebar" style="background-color: #f1f1f1">
+        <aside class="col-lg-2 col-md-4 col-sm-8 col-xs-12" id="explore-sidebar" style="background-color: #f1f1f1">
                 
                       
             <?php       
