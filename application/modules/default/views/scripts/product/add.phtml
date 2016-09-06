@@ -194,6 +194,10 @@ $helperImage = new Default_View_Helper_Image();
                             <?= $this->form->project_id ?>
                             <h3>Basics</h3>
                             <section id="required">
+                            	<div class="form-group"><p class="col-sm-10">(*) Mandatory fields.</p></div>
+                            	<div id="preview_img_msg">
+                            	
+                            	</div>
                                 <?php // $this->form->title ?>
                                 <div class="form-group">
                                     <div class="col-sm-12 margin-top-15">
@@ -225,37 +229,29 @@ $helperImage = new Default_View_Helper_Image();
                                         <?php } ?>
                                     </div>
                                 </div>
-                                <?= $this->form->image_small ?>
-                                <?= $this->form->image_small_upload ?>
+                                
                                 <?= $this->form->project_category_id ?>
                                 <?= $this->form->project_subcategory_id ?>
                                 <?= $this->form->project_sub_subcategory_id ?>
                                 <?= $this->form->description ?>
                                 <?= $this->form->version ?>
-                                <?php /**
-                                <?= $this->form->amount ?>
-                                <?= $this->form->amount_period ?>
-                                **/?>
-                                <div class="form-group"><p class="col-sm-10">(*) Mandatory fields.</p></div>
-                            </section>
-
-                            <h3>Pictures and Media</h3>
-                            <section id="additional">
-                                <?= $this->form->embed_code ?>
-
+                                
+                                
+                                
+                                <?= $this->form->image_small ?>
+                                <?= $this->form->image_small_upload ?>
                                 <?php //$this->form->image_big ?>
                                 <?php //$this->form->image_big_upload ?>
-
                                 <?= $this->form->gallery ?>
-                            </section>
-
-                            <h3>Links</h3>
-                            <section id="social">
+                                <?= $this->form->embed_code ?>
                                 <?= $this->form->link_1 ?>
 								<?= $this->form->github_code ?>
                                 <?= $this->form->facebook_code ?>
                                 <?= $this->form->twitter_code ?>
                                 <?= $this->form->google_code ?>
+                                                                
+                                
+                                
                             </section>
 
                             <h3>Files</h3>
@@ -330,8 +326,9 @@ $helperImage = new Default_View_Helper_Image();
                                         <div class="modal-header">
 							                <h3 id="modal-ppload-label"><?= $this->translate('Changelog') ?></h3>
 							            </div>
+							            
 							            <div class="modal-body" style="font-size: small;">
-								            <div role="form" class="">
+							            	<div role="form" class="">
 								            	<input type="hidden" id="update-id" data-update-id="" id="update-id" value="">
 											    <div class="form-group">
 											      <label for="tile">Changelog Title:</label>
@@ -344,6 +341,7 @@ $helperImage = new Default_View_Helper_Image();
 											    <button type="submit" class="btn btn-native" data-add-update-btn="">Save Changelog</button>
 											</div>
 
+											<h4 style="padding-top: 15px;"> Your Entries:</h4>
 							            	<article id="update-list">
 
 							            	</article>
@@ -426,13 +424,13 @@ $helperImage = new Default_View_Helper_Image();
                                                                 + text + '<br/><br/>'                                                                
                                                             );                        
 
-                                                        var btnEdit = $('<button type="submit" class="btn btn-native btn-sm">Edit</button>');
+                                                        var btnEdit = $('<button type="submit" class="btn btn-native btn-sm" style="line-height: 10px;margin: 5px;">Edit</button>');
                                                         btnEdit.attr('data-change-update-btn',id);
                                                         btnEdit.attr('data-change-title',title);
                                                         btnEdit.attr('data-change-text',text);
 
 
-                                                        var btnDelete = $('<button type="submit" class="btn btn-native btn-sm">Delete</button>');
+                                                        var btnDelete = $('<button type="submit" class="btn btn-native btn-sm" style="line-height: 10px;margin: 5px;">Delete</button>');
                                                         btnDelete.attr('data-delete-update-btn',id);
 
                                                         divEl.append(btnEdit);
@@ -1371,6 +1369,8 @@ $helperImage = new Default_View_Helper_Image();
                 headerTag: "h3",
                 bodyTag: "section",
                 enableAllSteps: <?php echo ($this->mode == 'edit') ? "true" : "false"; ?>,
+                enableCancelButton: true,
+                showFinishButtonAlways: true,
                 transitionEffect: "slideLeft",
                 onStepChanging: function (event, currentIndex, newIndex) {
                     // Allways allow previous action even if the current form is not valid!
@@ -1388,6 +1388,18 @@ $helperImage = new Default_View_Helper_Image();
                         if (ImagePreview.hasError) {
                             return false;
                         }
+						//logo OR preview pic mandotory!
+						logoSrc = $('#product-picture-preview').attr('src');
+						$gallery = $('.product-gallery div:first-child');
+						$galleryPic = $gallery.find('.image'); 
+
+						if(!logoSrc && !$galleryPic.attr('style')) {
+							$btnAddPic = $('#preview_img_msg');
+							$btnAddPic.append('<label id="description-error" class="error" for="product-gallery">Please add a Product Logo or at least one Product Gallery Picture!</label>');
+							
+							return false;
+						}
+                        
                         if (formElement.valid()) {
                             if (ProductForm.mode == 'add' && (ProductForm.project_id == '' || ProductForm.project_id == undefined)) {
                                 var result = ProductForm.saveSection(formElement.find('.body:eq(' + currentIndex + ')').attr('id'));
@@ -1407,6 +1419,10 @@ $helperImage = new Default_View_Helper_Image();
                 onFinished: function (event, currentIndex) {
                     $('[name=project_id]').val(ProductForm.project_id);
                     formElement.submit();
+                },
+
+                onCanceled: function (event, currentIndex) {
+                	window.location.href = "/member/<?php echo $this->member->member_id; ?>/products/";
                 }
 
             });

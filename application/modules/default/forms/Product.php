@@ -155,7 +155,7 @@ class Default_Form_Product extends Zend_Form
             ->setDisableLoadDefaultDecorators(true)
             ->setValueDisabled(true)
             ->setTransferAdapter(new Local_File_Transfer_Adapter_Http())
-            ->setRequired(true)
+            ->setRequired(false)
             ->setMaxFileSize(2097152)
             ->addValidator('Count', false, 1)
             ->addValidator('Size', false, array('min' => '500B', 'max' => '2MB'))
