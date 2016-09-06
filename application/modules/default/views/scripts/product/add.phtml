@@ -1394,8 +1394,9 @@ $helperImage = new Default_View_Helper_Image();
 						$galleryPic = $gallery.find('.image'); 
 
 						if(!logoSrc && !$galleryPic.attr('style')) {
-							$btnAddPic = $('#preview_img_msg');
-							$btnAddPic.append('<label id="description-error" class="error" for="product-gallery">Please add a Product Logo or at least one Product Gallery Picture!</label>');
+							$msg = $('#preview_img_msg');
+							$msg.text('');
+							$msg.append('<label id="description-error" class="error" for="product-gallery">Please add a Product Logo or at least one Product Gallery Picture!</label>');
 							
 							return false;
 						}
@@ -1417,6 +1418,19 @@ $helperImage = new Default_View_Helper_Image();
                 },
 
                 onFinished: function (event, currentIndex) {
+                	//logo OR preview pic mandotory!
+					logoSrc = $('#product-picture-preview').attr('src');
+					$gallery = $('.product-gallery div:first-child');
+					$galleryPic = $gallery.find('.image'); 
+
+					if(!logoSrc && !$galleryPic.attr('style')) {
+						$msg = $('#preview_img_msg');
+						$msg.text('');
+						$msg.append('<label id="description-error" class="error" for="product-gallery">Please add a Product Logo or at least one Product Gallery Picture!</label>');
+						
+						return false;
+					}
+					
                     $('[name=project_id]').val(ProductForm.project_id);
                     formElement.submit();
                 },

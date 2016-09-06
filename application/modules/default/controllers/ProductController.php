@@ -310,6 +310,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         // form was valid, so we can set status to inactive
         $values['status'] = Default_Model_DbTable_Project::PROJECT_ACTIVE;
+        
         // save new project
         $modelProject = new Default_Model_Project();
         if (isset($values['project_id'])) {
@@ -324,8 +325,13 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $modelProject->updateGalleryPictures($newProject->project_id, $mediaServerUrls);
         
         //If there is no Logo, we take the 1. gallery pic
-        if(!isset($values['image_small'])) {
+        if(!isset($values['image_small']) || $values['image_small'] == '') {
         	$values['image_small'] = $mediaServerUrls[0];
+        	$newProject = $modelProject->updateProject($newProject->project_id, $values);
+        	$log->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . ' - set image_small: '.$values['image_small'].'\n');
+        } else {
+        	$log->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . ' - set image_small: Not neeed. '.$values['image_small'].'\n');
+        	 
         }
 
         /*
@@ -588,7 +594,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         // save changes
         $projectData->setFromArray($values);
         $projectData->changed_at = new Zend_Db_Expr('NOW()');
-        $projectData->save();
+        
 
         // store license data
         if ($values['cc_license'] == true) {
@@ -601,6 +607,16 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $pictureSources = array_merge($values['gallery']['online_picture'],
             $this->saveGalleryPics($form->gallery->upload->upload_picture));
         $projectModel->updateGalleryPictures($this->_projectId, $pictureSources);
+        
+        //If there is no Logo, we take the 1. gallery pic
+        if(!isset($projectData->image_small) || $projectData->image_small == '') {
+        	$projectData->image_small = $pictureSources[0];
+        	$log->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . ' - set image_small: '.$projectData->image_small.'\n');
+        } else {
+        	$log->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . ' - set image_small: Not neeed. '.$projectData->image_small.'\n');
+        
+        }
+        $projectData->save();
 
         $this->createTaskWebsiteOwnerVerification($projectData);
 
