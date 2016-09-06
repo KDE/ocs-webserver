@@ -36,7 +36,6 @@ if ($this->product->claimable == 1) {
 $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
 //$this->os = Zend_Registry::get('application_os');
 ?>
-<?php if ('production' == APPLICATION_ENV) : ?>
 <!-- facebook -->
 <div id="fb-root"></div>
 <script>(function(d, s, id) {
@@ -46,7 +45,7 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
   js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.5";
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));</script>
-<?php endif; ?>
+
 <div id="report-product-<?= $this->product->project_id ?>" class="modal report-product" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
@@ -71,7 +70,7 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
 <main id="product-page-content">
 <div class="container-fluid" style="">
   <div class="row">
-       <div class="col-lg-10 imgsmall" id="product-main">
+       <div class="col-lg-10 col-md-8 col-sm-8 col-xs-12 imgsmall" id="product-main">
            <div class="row" id="product-main-img-container">
               <div class="col-lg-12 product-main-img" id="product-main-img">                                          
                   <div  id="carouselContainer" class="carouselContainer">
@@ -204,6 +203,7 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
                                                </article>
                                                
                                                
+                                               <?php //if ('development' != APPLICATION_ENV) { ?>
                                                <!-- comments -->
                                                <div id="product-discussion">
                                                    <?php echo $this->render('product/partials/productCommentsUX1.phtml',
@@ -214,6 +214,7 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
                                                        )); ?>
                                                </div>
                                                <!-- /comments -->
+                                               <?php //} ?>
                                            </div>
 
                                        </div>
@@ -316,10 +317,9 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
 
 
        </div>
-       <div class="col-lg-2" id="product-maker">
+       <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12" id="product-maker">
           <div class="row">
-              <div class="project-share-new col-lg-12 col-md-2 col-sm-2 col-xs-2">
-                          <?php if ('production' == APPLICATION_ENV) : ?>
+              <div class="project-share-new col-lg-12 col-md-12 col-sm-12 col-xs-12">
                           <script type="text/javascript">
                                   function fbs_click(a) {
                                       u = location.href;
@@ -352,7 +352,6 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
                             };
                           </script>
                           <script src="https://apis.google.com/js/platform.js" async defer></script>
-                          <?php endif ?>
 
                               <?php if (empty($this->product->claimable)) { ?>                              
                                 <div class="prod-widget-box prod-user right ">
