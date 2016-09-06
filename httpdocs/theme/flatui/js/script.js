@@ -1544,6 +1544,7 @@ var AjaxForm = (function () {
             $('body').on("submit", idElement, function (event) {
                 //event.preventDefault();
                 //event.stopImmediatePropagation();
+                $(this).find('button').attr("disabled", "disabled");
 
 //                $(this).ajaxForm({
                 jQuery.ajax({
