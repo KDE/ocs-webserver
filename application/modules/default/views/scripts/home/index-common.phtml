@@ -23,24 +23,23 @@
 $modelInfo = new Default_Model_Info();
 
 
-
+/*
 $this->comments = $modelInfo->getLastCommentsForHostStores(7);
 $this->donations = $modelInfo->getLastPlingsForHostStores(10);
 $this->users = $modelInfo->getNewActiveMembers(10);
 $this->products = $modelInfo->getLastProductsForHostStores(10);
 $this->mostdownloads = $modelInfo->getMostDownloadedForHostStores(7);
 $featureProducts = $modelInfo->getFeaturedProductsForHostStores(100);
+*/
 
 
-/*
 $this->comments = $modelInfo->getLastCommentsForHostStores_local(5);
 $this->donations = $modelInfo->getLastPlingsForHostStores_local(10);
 $this->users = $modelInfo->getNewActiveMembers_local(10);
 $this->products = $modelInfo->getLastProductsForHostStores_local(10);
 $this->mostdownloads = $modelInfo->getLastProductsForHostStores_local(7);
-
 $featureProducts = $modelInfo->getFeaturedProductsForHostStores_local(100);
-*/
+
 
 
 if ($featureProducts->getTotalItemCount()) {
@@ -170,14 +169,11 @@ $member = $getAuthUser->getAuthUser();
             <section class="container" style="height:100%; width: 100%;">                               
                 <div class="row">   
                
-                <aside class="col-lg-2 col-md-1 col-sm-1 col-xs-11 aside" >
+                <aside class="col-lg-2 col-md-4 col-sm-6 col-xs-12 aside" >
                      <?php  echo $this->render('explore/partials/filter.phtml'); ?>
                 </aside>               
                 
-                <div class="col-lg-10">
-                      
-                        
-
+                <div class="col-lg-10 col-md-6 col-sm-6 col-xs-12 ">                                              
                         <div class="newestproducts" >
                             <div class="row">
                                 <div >
@@ -244,45 +240,7 @@ $member = $getAuthUser->getAuthUser();
                                 </div>
                             </div>
                         
-                        </div>
-
-<?php /** 
-                        <div class="" style="">
-                            <div class="row">
-                                <div >
-                                    <h3> Newest 10 Users
-                                        </h3>
-                                        
-                                    <div class="prod-widget-box newusers" style="border:0px !important">
-                                         <?php 
-                                        foreach ($this->users as $user) {                                  
-                                            ?>
-                                            
-                                                <div class="user " >
-                                               
-                                                    <div class="u-wrap">
-                                                        <a href="<?php echo $this->buildMemberUrl($user['member_id']); ?>">
-                                                            <figure >
-                                                                <img src="<?php echo $this->Image($user['profile_image_url'], array('width' => '200', 'height' => '200', 'crop' => 2)); ?>"/>
-                                                            </figure>
-                                                            <h3 class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><?php echo $user['username']; ?></h3>                                                   
-                                                        </a>
-                                                         <span class="small"><?= $this->printDate($user['created_at'])?></span>
-                                                    </div>
-                                                   
-
-                                                </div>
-                                           
-                                        <?php } ?>
-
-                                        <div style="clear: both;"></div> 
-
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-**/?>                        
+                        </div>       
                 
                 </div>
               
