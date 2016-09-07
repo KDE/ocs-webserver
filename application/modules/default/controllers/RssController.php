@@ -67,7 +67,7 @@ class RssController extends Local_Controller_Action_DomainSwitch
         $storeConfig = Zend_Registry::isRegistered('store_template') ? Zend_Registry::get('store_template') : null;
         return $importArray = array(
             'title'       => $storeConfig['head']['browser_title_prepend'] . ' Latest Products', //required
-            'link'        => 'http://' . $_SERVER['HTTP_HOST'] . '/content.rdf', //required
+            'link'        => 'https://' . $_SERVER['HTTP_HOST'] . '/content.rdf', //required
             'lastUpdate'  => time(), // optional
 //            'published'   => time(), //optional
             'charset'     => 'utf-8', // required
@@ -76,7 +76,7 @@ class RssController extends Local_Controller_Action_DomainSwitch
             'email'       => 'contact@opendesktop.org', //optional
             'copyright'   => 'All rights reserved. All trademarks are copyright by their respective owners. All contributors are responsible for their uploads.', //optional
             'image'       => 'https://' . $_SERVER['HTTP_HOST'] . $storeConfig['logo'] , //optional
-//            'generator'   => 'generator', // optional
+            'generator'   => $_SERVER['HTTP_HOST'] . ' atom feed generator', // optional
             'language'    => 'en-us', // optional
             'ttl'         => '15' // optional, ignored if atom is used
         );
@@ -94,7 +94,7 @@ class RssController extends Local_Controller_Action_DomainSwitch
                 'link' => $helperBuildUrl->buildProductUrl($requestedElement->project_id, '', null, true, 'https'), //required
                 'description' => $helperTruncate->truncate(strip_tags($requestedElement->description)), // only text, no html, required
 //                'guid' => 'id of the article, if not given link value will used', //optional
-                'content' => $requestedElement->description, // can contain html, optional
+                'content' => $this->createContent($requestedElement), // can contain html, optional
                 'lastUpdate' => strtotime($requestedElement->project_changed_at), // optional
 //                'comments' => 'comments page of the feed entry', // optional
 //                'commentRss' => 'the feed url of the associated comments', // optional
@@ -113,6 +113,15 @@ class RssController extends Local_Controller_Action_DomainSwitch
             );
         }
         return $returnValues;
+    }
+
+    private function createContent($requestedElement)
+    {
+        $helperBuildUrl = new Default_View_Helper_BuildProductUrl();
+        $link = $helperBuildUrl->buildProductUrl($requestedElement->project_id, '', null, true, 'https');
+        $helperImage = new Default_View_Helper_Image();
+        $image = $helperImage->Image($requestedElement->image_small, array('height' => 40, 'width' => 40));
+       return '<a href="'.$link.'"><img src="'.$image.'" alt="Thumbnail" class="thumbnail" align="left" hspace="10" vspace="10" border="0" /></a><b><big><a href="'.$link.'" style="font-weight:bold;color:#333333;text-decoration:none;">'.$requestedElement->title.'</a></big></b><br /> ('.$requestedElement->cat_title.')<br />'.$requestedElement->description.'<br /><br /><a href="'.$link.'" style="font-weight:bold;color:#333333;text-decoration:none;">[read more]</a><br /><br />';
     }
 
 }
