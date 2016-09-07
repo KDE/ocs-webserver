@@ -488,13 +488,24 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
            
 
             $('.carousel-inner img').each(function(index) {
-                    $(this).on("click", function(){                               
-                      
+                    $(this).on("click", function(){                                                     
                       $( "#product-main" ).toggleClass( "col-lg-10" );
+                      $( "#product-main" ).toggleClass( "col-lg-12" );
                       $( "#product-main" ).toggleClass( "imgfull" );   
                       $( "#product-main" ).toggleClass( "imgsmall" );   
                       $( "#product-tabs-container" ).toggleClass( "col-lg-10" );  
+                      $( "#product-tabs-container" ).toggleClass( "col-lg-12" );  
                       $( "#product-main-img-container" ).toggleClass( "row" );    
+                      
+                      if($( "#product-main" ).hasClass( "imgfull" ))
+                      {
+                        var xtop = $( "#product-tabs-container" ).position().top+100;    
+                        $("#product-maker").css({top: xtop, right: 0, position:'absolute'});
+                      }
+                      else
+                      {
+                         $("#product-maker").css("position","static");
+                      }
 
                     });
                 });
