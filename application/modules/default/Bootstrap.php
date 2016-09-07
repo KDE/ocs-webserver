@@ -294,6 +294,29 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             )
         );
 
+        $router->addRoute(
+            'rdf_store_hive',
+            new Zend_Controller_Router_Route_Regex(
+                '.*-content.rdf',
+                array(
+                    'module' => 'default',
+                    'controller' => 'rss',
+                    'action' => 'rdf'
+                )
+            )
+        );
+
+        $router->addRoute(
+            'rdf_store_hive_rss',
+            new Zend_Controller_Router_Route_Regex(
+                'rss/.*-content.rdf',
+                array(
+                    'module' => 'default',
+                    'controller' => 'rss',
+                    'action' => 'rdf'
+                )
+            )
+        );
 
         /** new store dependent routing rules */
         $router->addRoute(
