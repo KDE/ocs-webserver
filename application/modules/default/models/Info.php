@@ -390,7 +390,7 @@ class Default_Model_Info
                     AND p.project_category_id IN (' .
             implode(',', $activeCategories)
             . ')
-            ORDER BY p.changed_at DESC
+            ORDER BY IFNULL(p.changed_at,p.created_at)  DESC
             ';
 
         if (isset($limit)) {
@@ -421,7 +421,7 @@ class Default_Model_Info
                 LEFT JOIN stat_plings as sp ON p.project_id = sp.project_id
             WHERE
                 p.status = 100
-            ORDER BY p.changed_at DESC
+           ORDER BY IFNULL(p.changed_at,p.created_at)  DESC
             ';
 
         if (isset($limit)) {
@@ -577,7 +577,7 @@ class Default_Model_Info
             STRAIGHT_JOIN member on comments.comment_member_id = member.member_id
             JOIN project ON comments.comment_target_id = project.project_id AND comments.comment_type = 0
             WHERE comments.comment_active = 1            
-            AND project.status <> 30
+            AND project.status = 100
             AND project.type_id = 1
             AND project.project_category_id IN (' .
             implode(',', $activeCategories)
@@ -798,7 +798,7 @@ class Default_Model_Info
                 WHERE 
                 plings.status_id = 2        
                 AND project.is_active = 1
-                and project.status<>30
+                and project.status=100
                 and project.member_id = :member_id
                 order by create_time desc
         ';
