@@ -96,17 +96,20 @@
                                           <script>
                                               $('#delete-this').on('click', function (event) {
                                                   event.stopPropagation();
-                                                  var target = $(this).attr('href');
-                                                  $.ajax({
-                                                      url: target,
-                                                      success: function (results) {
-                                                          alert('Project deleted successfully');
-                                                      },
-                                                      error: function() {
-                                                          alert('Service is temporarily unavailable.');
-                                                      }
-                                                  });
-
+                                                  var result = confirm("delete?");
+                                                  if (result) {
+                                                     var target = $(this).attr('href');                                                  
+                                                    $.ajax({
+                                                        url: target,
+                                                        success: function (results) {
+                                                            alert('Project deleted successfully');
+                                                        },
+                                                        error: function() {
+                                                            alert('Service is temporarily unavailable.');
+                                                        }
+                                                    });
+                                                  }
+                                                  
                                                   return false;
                                               });
 
