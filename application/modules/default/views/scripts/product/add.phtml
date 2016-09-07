@@ -1372,6 +1372,11 @@ $helperImage = new Default_View_Helper_Image();
                 enableCancelButton: true,
                 showFinishButtonAlways: true,
                 transitionEffect: "slideLeft",
+                /* Labels */
+                labels: {
+                    cancel: "Cancel",
+                    finish: "Save"
+                },
                 onStepChanging: function (event, currentIndex, newIndex) {
                     // Allways allow previous action even if the current form is not valid!
                     if (currentIndex > newIndex) {
