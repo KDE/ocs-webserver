@@ -295,6 +295,18 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         );
 
         $router->addRoute(
+            'rdf_events_hive',
+            new Zend_Controller_Router_Route_Regex(
+                '.*-events.rss',
+                array(
+                    'module' => 'default',
+                    'controller' => 'rss',
+                    'action' => 'rss'
+                )
+            )
+        );
+
+        $router->addRoute(
             'rdf_store_hive',
             new Zend_Controller_Router_Route_Regex(
                 '.*-content.rdf',
