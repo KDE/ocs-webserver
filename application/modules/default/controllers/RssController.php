@@ -43,30 +43,19 @@ class RssController extends Local_Controller_Action_DomainSwitch
     {
         $storeConfig = Zend_Registry::isRegistered('store_template') ? Zend_Registry::get('store_template') : null;
         return $importArray = array(
-            'title' => $storeConfig['head']['browser_title_prepend'] . ' ' . $title,
-            //required
-            'link' => 'https://' . $_SERVER['HTTP_HOST'] . '/content.rdf',
-            //required
-            'lastUpdate' => time(),
-            // optional
-//            'published'   => time(), //optional
-            'charset' => 'utf-8',
-            // required
-//            'description' => 'short description of the feed', //optional
-            'author' => $storeConfig['head']['meta_author'],
-            //optional
-            'email' => 'contact@opendesktop.org',
-            //optional
-            'copyright' => 'All rights reserved. All trademarks are copyright by their respective owners. All contributors are responsible for their uploads.',
-            //optional
-            'image' => 'https://' . $_SERVER['HTTP_HOST'] . $storeConfig['logo'],
-            //optional
-            'generator' => $_SERVER['HTTP_HOST'] . ' atom feed generator',
-            // optional
-            'language' => 'en-us',
-            // optional
-            'ttl' => '15'
-            // optional, ignored if atom is used
+            'title' => $storeConfig['head']['browser_title_prepend'] . ' ' . $title,            //required
+            'link' => 'https://' . $_SERVER['HTTP_HOST'] . '/content.rdf',                      //required
+            'lastUpdate' => time(),                                                             // optional
+//            'published'   => time(),                                                          //optional
+            'charset' => 'utf-8',                                                               // required
+//            'description' => 'short description of the feed',                                 //optional
+            'author' => $storeConfig['head']['meta_author'],                                    //optional
+            'email' => 'contact@opendesktop.org',                                               //optional
+            'copyright' => 'All rights reserved. All trademarks are copyright by their respective owners. All contributors are responsible for their uploads.',            //optional
+            'image' => 'https://' . $_SERVER['HTTP_HOST'] . $storeConfig['logo'],               //optional
+            'generator' => $_SERVER['HTTP_HOST'] . ' atom feed generator',                      // optional
+            'language' => 'en-us',                                                              // optional
+            'ttl' => '15'                                                                       // optional, ignored if atom is used
         );
     }
 
@@ -106,17 +95,12 @@ class RssController extends Local_Controller_Action_DomainSwitch
         foreach ($requestedElements as $requestedElement) {
             $returnValues[] =
                 array(
-                    'title' => $requestedElement->title,
-                    //required
-                    'link' => $helperBuildUrl->buildProductUrl($requestedElement->project_id, '', null, true, 'https'),
-                    //required
-                    'description' => $helperTruncate->truncate(strip_tags($requestedElement->description)),
-                    // only text, no html, required
+                    'title' => $requestedElement->title,                    //required
+                    'link' => $helperBuildUrl->buildProductUrl($requestedElement->project_id, '', null, true, 'https'),                    //required
+                    'description' => $helperTruncate->truncate(strip_tags($requestedElement->description)),                    // only text, no html, required
 //                'guid' => 'id of the article, if not given link value will used', //optional
-                'content' => $this->createContent($requestedElement),
-                // can contain html, optional
-                'lastUpdate' => strtotime($requestedElement->project_changed_at),
-                // optional
+                'content' => $this->createContent($requestedElement),                // can contain html, optional
+                'lastUpdate' => strtotime($requestedElement->project_changed_at),                // optional
 //                'comments' => 'comments page of the feed entry', // optional
 //                'commentRss' => 'the feed url of the associated comments', // optional
                 'category' => array(
