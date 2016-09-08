@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -28,6 +29,45 @@ class RssController extends Local_Controller_Action_DomainSwitch
         $this->_helper->viewRenderer->setNoRender(true);
 
         $latestActions = $this->getLatestActivitiesForHost();
+
+        $rssWriter = Zend_Feed::importArray($latestActions);
+        $rssWriter->send();
+    }
+
+    private function getLatestActivitiesForHost()
+    {
+        return $this->createBaseInformation('Latest Events');
+    }
+
+    private function createBaseInformation($title)
+    {
+        $storeConfig = Zend_Registry::isRegistered('store_template') ? Zend_Registry::get('store_template') : null;
+        return $importArray = array(
+            'title' => $storeConfig['head']['browser_title_prepend'] . ' ' . $title,
+            //required
+            'link' => 'https://' . $_SERVER['HTTP_HOST'] . '/content.rdf',
+            //required
+            'lastUpdate' => time(),
+            // optional
+//            'published'   => time(), //optional
+            'charset' => 'utf-8',
+            // required
+//            'description' => 'short description of the feed', //optional
+            'author' => $storeConfig['head']['meta_author'],
+            //optional
+            'email' => 'contact@opendesktop.org',
+            //optional
+            'copyright' => 'All rights reserved. All trademarks are copyright by their respective owners. All contributors are responsible for their uploads.',
+            //optional
+            'image' => 'https://' . $_SERVER['HTTP_HOST'] . $storeConfig['logo'],
+            //optional
+            'generator' => $_SERVER['HTTP_HOST'] . ' atom feed generator',
+            // optional
+            'language' => 'en-us',
+            // optional
+            'ttl' => '15'
+            // optional, ignored if atom is used
+        );
     }
 
     public function rdfAction()
@@ -41,10 +81,6 @@ class RssController extends Local_Controller_Action_DomainSwitch
         $rssWriter->send();
     }
 
-    private function getLatestActivitiesForHost()
-    {
-    }
-
     private function getLatestProductsForHost()
     {
         $storeCatIds = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
@@ -56,30 +92,10 @@ class RssController extends Local_Controller_Action_DomainSwitch
         $modelProject = new Default_Model_Project();
         $requestedElements = $modelProject->fetchProjectsByFilter($filter, $pageLimit, $offset);
 
-        $importArray = $this->createBaseInformation();
+        $importArray = $this->createBaseInformation('Latest Products');
         $importArray['entries'] = $this->generateFeedData($requestedElements['elements']);
 
         return $importArray;
-    }
-
-    private function createBaseInformation()
-    {
-        $storeConfig = Zend_Registry::isRegistered('store_template') ? Zend_Registry::get('store_template') : null;
-        return $importArray = array(
-            'title'       => $storeConfig['head']['browser_title_prepend'] . ' Latest Products', //required
-            'link'        => 'https://' . $_SERVER['HTTP_HOST'] . '/content.rdf', //required
-            'lastUpdate'  => time(), // optional
-//            'published'   => time(), //optional
-            'charset'     => 'utf-8', // required
-//            'description' => 'short description of the feed', //optional
-            'author'      => $storeConfig['head']['meta_author'], //optional
-            'email'       => 'contact@opendesktop.org', //optional
-            'copyright'   => 'All rights reserved. All trademarks are copyright by their respective owners. All contributors are responsible for their uploads.', //optional
-            'image'       => 'https://' . $_SERVER['HTTP_HOST'] . $storeConfig['logo'] , //optional
-            'generator'   => $_SERVER['HTTP_HOST'] . ' atom feed generator', // optional
-            'language'    => 'en-us', // optional
-            'ttl'         => '15' // optional, ignored if atom is used
-        );
     }
 
     private function generateFeedData($requestedElements)
@@ -89,20 +105,26 @@ class RssController extends Local_Controller_Action_DomainSwitch
         $returnValues = array();
         foreach ($requestedElements as $requestedElement) {
             $returnValues[] =
-            array(
-                'title' => $requestedElement->title, //required
-                'link' => $helperBuildUrl->buildProductUrl($requestedElement->project_id, '', null, true, 'https'), //required
-                'description' => $helperTruncate->truncate(strip_tags($requestedElement->description)), // only text, no html, required
+                array(
+                    'title' => $requestedElement->title,
+                    //required
+                    'link' => $helperBuildUrl->buildProductUrl($requestedElement->project_id, '', null, true, 'https'),
+                    //required
+                    'description' => $helperTruncate->truncate(strip_tags($requestedElement->description)),
+                    // only text, no html, required
 //                'guid' => 'id of the article, if not given link value will used', //optional
-                'content' => $this->createContent($requestedElement), // can contain html, optional
-                'lastUpdate' => strtotime($requestedElement->project_changed_at), // optional
+                'content' => $this->createContent($requestedElement),
+                // can contain html, optional
+                'lastUpdate' => strtotime($requestedElement->project_changed_at),
+                // optional
 //                'comments' => 'comments page of the feed entry', // optional
 //                'commentRss' => 'the feed url of the associated comments', // optional
-                'category'     => array(
+                'category' => array(
                     array(
                         'term' => $requestedElement->cat_title, // required,
                     ),
-                ), // list of the attached categories // optional
+                ),
+                // list of the attached categories // optional
 //                'enclosure'    => array(
 //                array(
 //                    'url' => 'url of the linked enclosure', // required
@@ -121,7 +143,7 @@ class RssController extends Local_Controller_Action_DomainSwitch
         $link = $helperBuildUrl->buildProductUrl($requestedElement->project_id, '', null, true, 'https');
         $helperImage = new Default_View_Helper_Image();
         $image = $helperImage->Image($requestedElement->image_small, array('height' => 40, 'width' => 40));
-       return '<a href="'.$link.'"><img src="'.$image.'" alt="Thumbnail" class="thumbnail" align="left" hspace="10" vspace="10" border="0" /></a><b><big><a href="'.$link.'" style="font-weight:bold;color:#333333;text-decoration:none;">'.$requestedElement->title.'</a></big></b><br /> ('.$requestedElement->cat_title.')<br />'.$requestedElement->description.'<br /><br /><a href="'.$link.'" style="font-weight:bold;color:#333333;text-decoration:none;">[read more]</a><br /><br />';
+        return '<a href="' . $link . '"><img src="' . $image . '" alt="Thumbnail" class="thumbnail" align="left" hspace="10" vspace="10" border="0" /></a><b><big><a href="' . $link . '" style="font-weight:bold;color:#333333;text-decoration:none;">' . $requestedElement->title . '</a></big></b><br /> (' . $requestedElement->cat_title . ')<br />' . $requestedElement->description . '<br /><br /><a href="' . $link . '" style="font-weight:bold;color:#333333;text-decoration:none;">[read more]</a><br /><br />';
     }
 
 }
