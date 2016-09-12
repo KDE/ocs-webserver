@@ -23,7 +23,7 @@ class Default_Model_DbTable_HiveContent extends Local_Model_Table
 {
     protected $_keyColumnsForRow = array('id');
     protected $_key = 'id';
-    protected $_name = "hive_content";
+    protected $_name = "hive_content_category";
 
     
     
@@ -177,9 +177,9 @@ class Default_Model_DbTable_HiveContent extends Local_Model_Table
     /**
      * @return array
      */
-    public function fetchHiveCategories()
+    public function fetchHiveCategories($cat_ids)
     {
-   		$resultSet = $this->queryCategories();
+   		$resultSet = $this->queryCategories($cat_ids);
     	return $resultSet;
     }
     
@@ -234,9 +234,9 @@ class Default_Model_DbTable_HiveContent extends Local_Model_Table
     /**
      * @return array
      */
-    private function queryCategories()
+    private function queryCategories($cat_ids)
     {
-    	$sql = "SELECT id, `desc` FROM hive_content_category ORDER BY `desc`;";
+    	$sql = "SELECT id, `desc` FROM hive_content_category WHERE id in (.$cat_ids.) ORDER BY `desc`;";
     	$resultSet = $this->_db->fetchAll($sql);
     	return $resultSet;
     }
