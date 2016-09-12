@@ -101,6 +101,7 @@ class Default_Model_Info
             $sql = '
                 SELECT 
                     image_small
+                    ,project_id
                     ,title
                 FROM
                     project
