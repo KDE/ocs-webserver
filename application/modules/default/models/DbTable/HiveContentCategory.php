@@ -19,11 +19,11 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-class Default_Model_DbTable_HiveContent extends Local_Model_Table
+class Default_Model_DbTable_HiveContentCategory extends Local_Model_Table
 {
     protected $_keyColumnsForRow = array('id');
     protected $_key = 'id';
-    protected $_name = "hive_content";
+    protected $_name = "hive_content_category";
 
     
     
