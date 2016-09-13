@@ -192,6 +192,12 @@ class Default_Model_DbTable_HiveContentCategory extends Local_Model_Table
     	return $result;
     }
     
+    public function fetchOcsCategoryForHiveCategory($cat_id) {
+    	$sql = "SELECT pling_cat_id FROM hive_content_category WHERE id = ".$cat_id.";";
+    	$resultSet = $this->_db->fetchRow($sql);
+    	return $resultSet['pling_cat_id'];
+    }
+    
     /**
      * @return array
      */
