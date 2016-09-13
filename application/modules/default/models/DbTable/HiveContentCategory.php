@@ -177,9 +177,9 @@ class Default_Model_DbTable_HiveContentCategory extends Local_Model_Table
     /**
      * @return array
      */
-    public function fetchHiveCategories()
+    public function fetchHiveCategories($cat_ids)
     {
-   		$resultSet = $this->queryCategories();
+   		$resultSet = $this->queryCategories($cat_ids);
     	return $resultSet;
     }
     
@@ -211,6 +211,12 @@ class Default_Model_DbTable_HiveContentCategory extends Local_Model_Table
     	return $result;
     }
     
+    public function fetchOcsCategoryForHiveCategory($cat_id) {
+    	$sql = "SELECT pling_cat_id FROM hive_content_category WHERE id = ".$cat_id.";";
+    	$resultSet = $this->_db->fetchRow($sql);
+    	return $resultSet['pling_cat_id'];
+    }
+    
     /**
      * @return array
      */
@@ -234,9 +240,9 @@ class Default_Model_DbTable_HiveContentCategory extends Local_Model_Table
     /**
      * @return array
      */
-    private function queryCategories()
+    private function queryCategories($cat_ids)
     {
-    	$sql = "SELECT id, `desc` FROM hive_content_category ORDER BY `desc`;";
+    	$sql = "SELECT id, `desc`, pling_cat_id FROM hive_content_category WHERE id in (".$cat_ids.") ORDER BY `desc`;";
     	$resultSet = $this->_db->fetchAll($sql);
     	return $resultSet;
     }
