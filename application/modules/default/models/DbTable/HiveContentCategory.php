@@ -236,7 +236,7 @@ class Default_Model_DbTable_HiveContentCategory extends Local_Model_Table
      */
     private function queryCategories($cat_ids)
     {
-    	$sql = "SELECT id, `desc` FROM hive_content_category WHERE id in (".$cat_ids.") ORDER BY `desc`;";
+    	$sql = "SELECT id, `desc`, pling_cat_id FROM hive_content_category WHERE id in (".$cat_ids.") ORDER BY `desc`;";
     	$resultSet = $this->_db->fetchAll($sql);
     	return $resultSet;
     }
