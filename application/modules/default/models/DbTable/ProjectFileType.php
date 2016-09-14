@@ -19,7 +19,7 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-class Default_Model_DbTable_ProjectFiletype extends Local_Model_Table
+class Default_Model_DbTable_ProjectFileType extends Local_Model_Table
 {
 
     protected $_keyColumnsForRow = array('project_id','file_id');

@@ -1650,7 +1650,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
     		if(isset($_POST['file_type_id']))
 				$typeId = $_POST['file_type_id'];
 			
-			$fileTypeTable = new Default_Model_DbTable_ProjectFiletype();
+			$fileTypeTable = new Default_Model_DbTable_ProjectFileType();
 			$fileTypeTable->addFileTypeToProject($this->_projectId, $_POST['file_id'], $typeId);
 			
     	} else {
