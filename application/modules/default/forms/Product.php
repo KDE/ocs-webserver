@@ -198,7 +198,7 @@ class Default_Form_Product extends Zend_Form
                     )
                 ));
         $modelProjectCategory = new Default_Model_DbTable_ProjectCategory();
-        $categoryList = $modelProjectCategory->fetchMainCatForSelect();
+        $categoryList = $modelProjectCategory->fetchMainCatForSelect(Default_Model_DbTable_ProjectCategory::ORDERED_TITLE);
         $categoryValidator = new Zend_Validate_InArray(array_keys($categoryList));
         $fieldCategoryId->addValidator($categoryValidator);
         $fieldCategoryId->addMultiOptions($categoryList);
