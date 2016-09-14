@@ -1637,6 +1637,28 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $this->_helper->json(array('status' => 'error', 'error_text' => $error_text));
     }
+    
+    public function updatefiletypeAction()
+    {
+    	$this->_helper->layout()->disableLayout();
+    
+    	$error_text = "";
+    
+    	// Update a file information in ppload collection (does not update it if in finalized collection)
+    	if (!empty($_POST['file_id'])) {
+    		$typeId = null;
+    		if(isset($_POST['file_type_id']))
+				$typeId = $_POST['file_type_id'];
+			
+			$fileTypeTable = new Default_Model_DbTable_ProjectFiletype();
+			$fileTypeTable->addFileTypeToProject($this->_projectId, $_POST['file_id'], $typeId);
+			
+    	} else {
+    		$error_text .= 'No FileId. , FileId: ' . $_POST['file_id'];
+    	}
+    	
+    	$this->_helper->json(array('status' => 'error', 'error_text' => $error_text));
+    }
 
     /**
      * ppload
