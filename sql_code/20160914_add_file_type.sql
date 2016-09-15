@@ -22,3 +22,10 @@ INSERT INTO `pling-import`.`file_types` (`filetype_id`, `text`, `order`) VALUES 
 INSERT INTO `pling-import`.`file_types` (`filetype_id`, `text`, `order`) VALUES ('2', 'Android (APK)', '2');
 INSERT INTO `pling-import`.`file_types` (`filetype_id`, `text`, `order`) VALUES ('3', 'OS X compatible', '3');
 INSERT INTO `pling-import`.`file_types` (`filetype_id`, `text`, `order`) VALUES ('4', 'Windows executable', '4');
+
+ALTER TABLE `file_types`
+CHANGE COLUMN `text` `name` VARCHAR(255) NOT NULL ;
+
+ALTER TABLE `project_file_type`
+CHANGE COLUMN `file_type_id` `filetype_id` INT(11) NOT NULL ,
+ADD INDEX `idx_type_id` (`filetype_id` ASC);
