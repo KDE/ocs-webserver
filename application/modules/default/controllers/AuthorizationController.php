@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -196,7 +197,8 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         }
 
         if (false === $formLogin->isValid($_POST)) { // form not valid
-            Zend_Registry::get('logger')->info(__METHOD__ . ' - form not valid:' . print_r($formLogin->getMessages(), true));
+            Zend_Registry::get('logger')->info(__METHOD__ . ' - form not valid:' . print_r($formLogin->getMessages(),
+                    true));
             $this->view->formLogin = $formLogin;
             $this->view->errorText = 'index.login.error.auth';
             $this->view->error = 1;
