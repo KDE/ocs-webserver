@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -30,7 +31,7 @@ class Backend_SearchController extends Local_Controller_Action_CliAbstract
         if (isset($storeId) AND isset($indexId)) {
             $this->createStoreIndex($storeId, $indexId);
         } else {
-            $this->createindexAction();
+            Zend_Registry::get('logger')->warn(__METHOD__ . ' - storeId and/or indexId is missing.');
         }
     }
 
