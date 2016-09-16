@@ -48,7 +48,8 @@ $helperImage = new Default_View_Helper_Image();
        
         <b style="display: block; margin-bottom: 5px"><?php echo $helperFetchSubcategoriesForProduct->fetchCategoriesForProductAsString($this->product->project_id) ?></b>
          <?php 
-                $type = $this->FetchProjectFileTypes($this->product->project_id);                                          
+          $helperFileTypes = new Default_View_Helper_FetchProjectFileTypes();
+          $type = $helperFileTypes->FetchProjectFileTypes($this->product->project_id);
           if(!empty($type)){
             ?>
         <span class="filetypeos" ><?=$type ?></span>
