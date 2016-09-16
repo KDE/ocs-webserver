@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -22,9 +23,9 @@
 class Default_Model_DbTable_ProjectFileType extends Local_Model_Table
 {
 
-    protected $_keyColumnsForRow = array('project_id','file_id');
+    protected $_keyColumnsForRow = array('project_id', 'file_id');
 
-    protected $_key = array('project_id','file_id');
+    protected $_key = array('project_id', 'file_id');
 
     /**
      * @var string
@@ -63,24 +64,31 @@ class Default_Model_DbTable_ProjectFileType extends Local_Model_Table
         return $arrayModified;
     }
 
-    public function addFileTypeToProject($projectId, $fileId, $fileTypeId) {
-    	//first delte old
-    	$this->delete('project_id = '.$projectId.' AND file_id = '.$fileId);
-    	
-    	if($fileTypeId) {
-	    	$data = array();
-	    	$data['project_id'] = $projectId;
-	    	$data['file_id'] = $fileId;
-	    	$data['filetype_id'] = $fileTypeId;
-	    	
-	    	return $this->save($data);
-    	}
-    	return false;
+    public function addFileTypeToProject($projectId, $fileId, $fileTypeId)
+    {
+        //first delte old
+        $this->delete('project_id = ' . $projectId . ' AND file_id = ' . $fileId);
+
+        if ($fileTypeId) {
+            $data = array();
+            $data['project_id'] = $projectId;
+            $data['file_id'] = $fileId;
+            $data['filetype_id'] = $fileTypeId;
+
+            return $this->save($data);
+        }
+        return false;
     }
 
+    /**
+     * @param int $projectId
+     * @param int $fileId
+     * @return string
+     */
     public function getFileType($projectId, $fileId)
     {
-        $resultSet = $this->_db->fetchAll('SELECT f.name FROM project_file_type p join file_types f on p.filetype_id = f.filetype_id WHERE p.project_id = '.$projectId.' and p.file_id='.$fileId);
+        $sql = 'SELECT f.name FROM project_file_type p join file_types f on p.file_type_id = f.filetype_id WHERE p.project_id = :project_id and p.file_id= :file_id';
+        $resultSet = $this->_db->fetchAll($sql, array('project_id' => $projectId, 'file_id' => $fileId));
 
         if (count($resultSet) > 0) {
             return $resultSet[0]['name'];
@@ -89,9 +97,14 @@ class Default_Model_DbTable_ProjectFileType extends Local_Model_Table
         }
     }
 
+    /**
+     * @param int $projectId
+     * @return array|null
+     */
     public function getProjectFileTypes($projectId)
     {
-        $resultSet = $this->_db->fetchAll('SELECT p.project_id,p.file_id,p.filetype_id,f.name FROM project_file_type p join file_types f on p.filetype_id = f.filetype_id WHERE p.project_id = '.$projectId);
+        $sql = 'SELECT p.project_id,p.file_id,p.filetype_id,f.name FROM project_file_type p join file_types f on p.file_type_id = f.filetype_id WHERE p.project_id = :project_id';
+        $resultSet = $this->_db->fetchAll($sql, array('project_id' => $projectId));
         if (count($resultSet) > 0) {
             return $resultSet;
         } else {
@@ -101,15 +114,16 @@ class Default_Model_DbTable_ProjectFileType extends Local_Model_Table
 
     public function getProjectFileTypesString($projectId)
     {
-        $resultSet = $this->_db->fetchAll('SELECT f.name FROM project_file_type p join file_types f on p.filetype_id = f.filetype_id WHERE p.project_id = '.$projectId);
+        $sql = 'SELECT f.name FROM project_file_type p join file_types f on p.file_type_id = f.filetype_id WHERE p.project_id = :project_id';
+        $resultSet = $this->_db->fetchAll($sql, array('project_id' => $projectId));
         $resultString = '';
         if (count($resultSet) > 0) {
             foreach ($resultSet as $item) {
-                    $resultString = $resultString . ' ' . stripslashes($item['name']);
-             }
+                $resultString = $resultString . ' ' . stripslashes($item['name']);
+            }
             return $resultString;
-        } 
-         return '';
-      
+        }
+        return '';
     }
+
 }
