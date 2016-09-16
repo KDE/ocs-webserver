@@ -600,12 +600,13 @@ $helperImage = new Default_View_Helper_Image();
                                                         $licenseSelect.on('change', function (event) {
                                                             event.preventDefault();
                                                             $fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
+                                                            $fileTags = $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags');
                                                             $licenseId = $modalPpload.find('#data-select-license' + $fileId).val();
 
                                                             newFileTags = '';
                                                             
-                                                            if (fileTags) {
-                                                                $.each(fileTags.split(','), function () {
+                                                            if ($fileTags) {
+                                                                $.each($fileTags.split(','), function () {
                                                                 	if(this.indexOf("##")==-1) {
                                                                     	var tagStr = this.split('-');
                                                                         if (tagStr.length == 2 && tagStr[0] != 'licensetype') {
@@ -621,6 +622,7 @@ $helperImage = new Default_View_Helper_Image();
                                                             }
                                                             newFileTags += ',licensetype-'+$licenseId;
                                                             updatePploadFileTags($fileId, newFileTags);
+                                                            $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags',newFileTags);
                                                         });
 
 
@@ -633,27 +635,29 @@ $helperImage = new Default_View_Helper_Image();
                                                         $filetypeSelect.on('change', function (event) {
                                                             event.preventDefault();
                                                             $fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
+                                                            $fileTags = $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags');
                                                             $filetypeId = $modalPpload.find('#data-select-filetype' + $fileId).val();
                                                             updateFileType($fileId, $filetypeId);
 
-                                                            fileTags = '';
-                                                            if (this.tags) {
-                                                                $.each(fileTags.split(','), function () {
+                                                            newFileTags = '';
+                                                            if ($fileTags) {
+                                                                $.each($fileTags.split(','), function () {
                                                                 	if(this.indexOf("##")==-1) {
                                                                     	var tagStr = this.split('-');
                                                                         if (tagStr.length == 2 && tagStr[0] != 'filetypeid') {
-                                                                        	fileTags += ',' + tagStr;
+                                                                        	newFileTags += ',' + tagStr;
                                                                         }
                                                                     } else {
                                                                     	var tagStr = this.split('##');
                                                                         if (tagStr.length == 2 && tagStr[0] != 'filetypeid') {
-                                                                        	fileTags += ',' + tagStr;
+                                                                        	newFileTags += ',' + tagStr;
                                                                         }
                                                                     }
                                                                 });
                                                             }
-                                                            fileTags += ',filetypeid-'+$filetypeId;
-                                                            updatePploadFileTags($fileId, fileTags);
+                                                            newFileTags += ',filetypeid-'+$filetypeId;
+                                                            updatePploadFileTags($fileId, newFileTags);
+                                                            $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags',newFileTags);
                                                         });
 
                                                         if ((typeof link != 'undefined') && (link != "")) {
@@ -830,11 +834,12 @@ $helperImage = new Default_View_Helper_Image();
                                                     $licenseSelect.on('change', function (event) {
                                                         event.preventDefault();
                                                         $fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
+                                                        $fileTags = $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags');
                                                         $licenseId = $modalPpload.find('#data-select-license' + $fileId).val();
 
                                                         newFileTags = '';
-                                                        if (fileTags) {
-                                                            $.each(fileTags.split(','), function () {
+                                                        if ($fileTags) {
+                                                            $.each($fileTags.split(','), function () {
                                                             	if(this.indexOf("##")==-1) {
                                                                 	var tagStr = this.split('-');
                                                                     if (tagStr.length == 2 && tagStr[0] != 'licensetype') {
@@ -850,32 +855,36 @@ $helperImage = new Default_View_Helper_Image();
                                                         }
                                                         newFileTags += ',licensetype-'+$licenseId;
                                                         updatePploadFileTags($fileId, newFileTags);
+                                                        $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags',newFileTags);
                                                     });
 
+                                                    $filetypeSelect = $modalPpload.find('#data-select-filetype' + data.file.id);
                                                     $filetypeSelect.on('change', function (event) {
                                                         event.preventDefault();
                                                         $fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
                                                         $filetypeId = $modalPpload.find('#data-select-filetype' + $fileId).val();
+                                                        $fileTags = $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags');
                                                         updateFileType($fileId, $filetypeId);
 
-                                                        fileTags = '';
-                                                        if (this.tags) {
-                                                            $.each(fileTags.split(','), function () {
+                                                        newFileTags = '';
+                                                        if ($fileTags) {
+                                                            $.each($fileTags.split(','), function () {
                                                             	if(this.indexOf("##")==-1) {
                                                                 	var tagStr = this.split('-');
                                                                     if (tagStr.length == 2 && tagStr[0] != 'filetypeid') {
-                                                                    	fileTags += ',' + tagStr;
+                                                                    	newFileTags += ',' + tagStr;
                                                                     }
                                                                 } else {
                                                                 	var tagStr = this.split('##');
                                                                     if (tagStr.length == 2 && tagStr[0] != 'filetypeid') {
-                                                                    	fileTags += ',' + tagStr;
+                                                                    	newFileTags += ',' + tagStr;
                                                                     }
                                                                 }
                                                             });
                                                         }
-                                                        fileTags += ',filetypeid-'+$filetypeId;
-                                                        updatePploadFileTags($fileId, fileTags);
+                                                        newFileTags += ',filetypeid-'+$filetypeId;
+                                                        updatePploadFileTags($fileId, newFileTags);
+                                                        $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags',newFileTags);
                                                     });
 
                                                     $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
