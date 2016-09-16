@@ -78,4 +78,38 @@ class Default_Model_DbTable_ProjectFileType extends Local_Model_Table
     	return false;
     }
 
+    public function getFileType($projectId, $fileId)
+    {
+        $resultSet = $this->_db->fetchAll('SELECT f.name FROM project_file_type p join file_types f on p.filetype_id = f.filetype_id WHERE p.project_id = '.$projectId.' and p.file_id='.$fileId);
+
+        if (count($resultSet) > 0) {
+            return $resultSet[0]['name'];
+        } else {
+            return '';
+        }
+    }
+
+    public function getProjectFileTypes($projectId)
+    {
+        $resultSet = $this->_db->fetchAll('SELECT p.project_id,p.file_id,p.filetype_id,f.name FROM project_file_type p join file_types f on p.filetype_id = f.filetype_id WHERE p.project_id = '.$projectId);
+        if (count($resultSet) > 0) {
+            return $resultSet;
+        } else {
+            return null;
+        }
+    }
+
+    public function getProjectFileTypesString($projectId)
+    {
+        $resultSet = $this->_db->fetchAll('SELECT f.name FROM project_file_type p join file_types f on p.filetype_id = f.filetype_id WHERE p.project_id = '.$projectId);
+        $resultString = '';
+        if (count($resultSet) > 0) {
+            foreach ($resultSet as $item) {
+                    $resultString = $resultString . ' ' . stripslashes($item['name']);
+             }
+            return $resultString;
+        } 
+         return $resultString;
+      
+    }
 }

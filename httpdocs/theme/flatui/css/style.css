@@ -986,3 +986,8 @@ iframe[id^="oauth2relay"] { position: fixed !important; }
   .modal.bootstrap-dialog.in .modal-header .close {
     font-size: 50px;
   }
+
+div.explore-product-details span.filetypeos
+{
+  display: block; font-size: smaller;padding-top: 10px
+}
