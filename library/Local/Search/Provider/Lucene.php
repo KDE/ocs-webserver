@@ -132,6 +132,11 @@ class Local_Search_Provider_Lucene implements Local_Search_ProviderInterface
         $this->_index->commit();
     }
 
+    /**
+     * @param $storeId
+     * @param $searchIndexId
+     * @deprecated
+     */
     public function createStoreSearchIndex($storeId, $searchIndexId)
     {
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . print_r(func_get_args(), true));

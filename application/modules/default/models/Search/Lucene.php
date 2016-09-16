@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -160,7 +161,7 @@ class Default_Model_Search_Lucene
         $doc->addField(Zend_Search_Lucene_Field::text('title', $element['title'], 'UTF-8'));
         $doc->addField(Zend_Search_Lucene_Field::text('description', $element['description'], 'UTF-8'));
         $doc->addField(Zend_Search_Lucene_Field::text('username', $element['username'], 'UTF-8'));
-        $doc->addField(Zend_Search_Lucene_Field::text('category', $element['category_title'], 'UTF-8'));
+        $doc->addField(Zend_Search_Lucene_Field::text('category', $element['cat_title'], 'UTF-8'));
 
         $isUpdate = ($element['type_id'] == Default_Model_DbTable_Project::PROJECT_TYPE_UPDATE);
         $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();

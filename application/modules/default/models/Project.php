@@ -1615,7 +1615,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                 SELECT
                   p.*,
                   p.changed_at as project_changed_at,
-                  pc.title as category_title,
+                  pc.title as cat_title,
                   m.username,
                   m.avatar,
                   m.profile_image_url,
