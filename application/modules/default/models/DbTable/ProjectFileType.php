@@ -51,13 +51,13 @@ class Default_Model_DbTable_ProjectFileType extends Local_Model_Table
      */
     public function getSelectList()
     {
-        $selectArr = $this->_db->fetchAll('SELECT file_type_id, text FROM file_types WHERE is_active=1 ORDER BY order');
+        $selectArr = $this->_db->fetchAll('SELECT filetype_id, name FROM file_types WHERE is_active=1 ORDER BY order');
 
         $arrayModified = array();
 
         $arrayModified[0] = "ProjectFileTypesSelect";
         foreach ($selectArr as $item) {
-            $arrayModified[$item['file_type_id']] = stripslashes($item['text']);
+            $arrayModified[$item['filetype_id']] = stripslashes($item['name']);
         }
 
         return $arrayModified;
