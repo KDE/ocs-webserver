@@ -602,24 +602,25 @@ $helperImage = new Default_View_Helper_Image();
                                                             $fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
                                                             $licenseId = $modalPpload.find('#data-select-license' + $fileId).val();
 
-                                                            fileTags = '';
-                                                            if (this.tags) {
+                                                            newFileTags = '';
+                                                            
+                                                            if (fileTags) {
                                                                 $.each(fileTags.split(','), function () {
                                                                 	if(this.indexOf("##")==-1) {
                                                                     	var tagStr = this.split('-');
                                                                         if (tagStr.length == 2 && tagStr[0] != 'licensetype') {
-                                                                        	fileTags += ',' + tagStr;
+                                                                        	newFileTags += ',' + tagStr;
                                                                         }
                                                                     } else {
                                                                     	var tagStr = this.split('##');
                                                                         if (tagStr.length == 2 && tagStr[0] != 'license') {
-                                                                        	fileTags += ',' + tagStr;
+                                                                        	newFileTags += ',' + tagStr;
                                                                         }
                                                                     }
                                                                 });
                                                             }
-                                                            fileTags += ',licensetype-'+$licenseId;
-                                                            updatePploadFileTags($fileId, fileTags);
+                                                            newFileTags += ',licensetype-'+$licenseId;
+                                                            updatePploadFileTags($fileId, newFileTags);
                                                         });
 
 
@@ -831,24 +832,24 @@ $helperImage = new Default_View_Helper_Image();
                                                         $fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
                                                         $licenseId = $modalPpload.find('#data-select-license' + $fileId).val();
 
-                                                        fileTags = '';
-                                                        if (this.tags) {
+                                                        newFileTags = '';
+                                                        if (fileTags) {
                                                             $.each(fileTags.split(','), function () {
                                                             	if(this.indexOf("##")==-1) {
                                                                 	var tagStr = this.split('-');
                                                                     if (tagStr.length == 2 && tagStr[0] != 'licensetype') {
-                                                                    	fileTags += ',' + tagStr;
+                                                                    	newFileTags += ',' + tagStr;
                                                                     }
                                                                 } else {
                                                                 	var tagStr = this.split('##');
                                                                     if (tagStr.length == 2 && tagStr[0] != 'license') {
-                                                                    	fileTags += ',' + tagStr;
+                                                                    	newFileTags += ',' + tagStr;
                                                                     }
                                                                 }
                                                             });
                                                         }
-                                                        fileTags += ',licensetype-'+$licenseId;
-                                                        updatePploadFileTags($fileId, fileTags);
+                                                        newFileTags += ',licensetype-'+$licenseId;
+                                                        updatePploadFileTags($fileId, newFileTags);
                                                     });
 
                                                     $filetypeSelect.on('change', function (event) {
