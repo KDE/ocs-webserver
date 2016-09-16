@@ -523,7 +523,7 @@ $helperImage = new Default_View_Helper_Image();
                                                         var licensetype = null;
                                                         var license = '';
                                                         var licenseId = '';
-
+														var filetypeId = '';
 
 
                                                         //var packageId = null;
@@ -538,6 +538,8 @@ $helperImage = new Default_View_Helper_Image();
                                                                         osId = tagStr[1];
                                                                     } else if (tagStr.length == 2 && tagStr[0] == 'licensetype') {
                                                                         licenseId = tagStr[1];
+                                                                    } else if (tagStr.length == 2 && tagStr[0] == 'filetypeid') {
+                                                                    	filetypeId = tagStr[1];
                                                                     }
                                                                 } else {
                                                                 	var tagStr = this.split('##');
@@ -546,6 +548,8 @@ $helperImage = new Default_View_Helper_Image();
                                                                     } else if (tagStr.length == 2 && tagStr[0] == 'license') {
                                                                         license = tagStr[1];
                                                                         license = Base64.decode(license);
+                                                                    } else if (tagStr.length == 2 && tagStr[0] == 'filetypeid') {
+                                                                    	filetypeId = tagStr[1];
                                                                     }
                                                                 }
                                                             });
@@ -585,6 +589,7 @@ $helperImage = new Default_View_Helper_Image();
                                                         );
 
                                                         $("#data-select-license" + this.id + " option[value='"+licenseId+"']").attr('selected', 'selected');
+                                                        $("#data-select-filetype" + this.id + " option[value='"+filetypeId+"']").attr('selected', 'selected');
 
                                                         $licenseSelect = $modalPpload.find('#data-select-license' + this.id);
 
@@ -596,7 +601,23 @@ $helperImage = new Default_View_Helper_Image();
                                                             event.preventDefault();
                                                             $fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
                                                             $licenseId = $modalPpload.find('#data-select-license' + $fileId).val();
+
                                                             fileTags = '';
+                                                            if (this.tags) {
+                                                                $.each(fileTags.split(','), function () {
+                                                                	if(this.indexOf("##")==-1) {
+                                                                    	var tagStr = this.split('-');
+                                                                        if (tagStr.length == 2 && tagStr[0] != 'licensetype') {
+                                                                        	fileTags += ',' + tagStr;
+                                                                        }
+                                                                    } else {
+                                                                    	var tagStr = this.split('##');
+                                                                        if (tagStr.length == 2 && tagStr[0] != 'license') {
+                                                                        	fileTags += ',' + tagStr;
+                                                                        }
+                                                                    }
+                                                                });
+                                                            }
                                                             fileTags += ',licensetype-'+$licenseId;
                                                             updatePploadFileTags($fileId, fileTags);
                                                         });
@@ -613,6 +634,25 @@ $helperImage = new Default_View_Helper_Image();
                                                             $fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
                                                             $filetypeId = $modalPpload.find('#data-select-filetype' + $fileId).val();
                                                             updateFileType($fileId, $filetypeId);
+
+                                                            fileTags = '';
+                                                            if (this.tags) {
+                                                                $.each(fileTags.split(','), function () {
+                                                                	if(this.indexOf("##")==-1) {
+                                                                    	var tagStr = this.split('-');
+                                                                        if (tagStr.length == 2 && tagStr[0] != 'filetypeid') {
+                                                                        	fileTags += ',' + tagStr;
+                                                                        }
+                                                                    } else {
+                                                                    	var tagStr = this.split('##');
+                                                                        if (tagStr.length == 2 && tagStr[0] != 'filetypeid') {
+                                                                        	fileTags += ',' + tagStr;
+                                                                        }
+                                                                    }
+                                                                });
+                                                            }
+                                                            fileTags += ',filetypeid-'+$filetypeId;
+                                                            updatePploadFileTags($fileId, fileTags);
                                                         });
 
                                                         if ((typeof link != 'undefined') && (link != "")) {
@@ -790,6 +830,23 @@ $helperImage = new Default_View_Helper_Image();
                                                         event.preventDefault();
                                                         $fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
                                                         $licenseId = $modalPpload.find('#data-select-license' + $fileId).val();
+
+                                                        fileTags = '';
+                                                        if (this.tags) {
+                                                            $.each(fileTags.split(','), function () {
+                                                            	if(this.indexOf("##")==-1) {
+                                                                	var tagStr = this.split('-');
+                                                                    if (tagStr.length == 2 && tagStr[0] != 'licensetype') {
+                                                                    	fileTags += ',' + tagStr;
+                                                                    }
+                                                                } else {
+                                                                	var tagStr = this.split('##');
+                                                                    if (tagStr.length == 2 && tagStr[0] != 'license') {
+                                                                    	fileTags += ',' + tagStr;
+                                                                    }
+                                                                }
+                                                            });
+                                                        }
                                                         fileTags += ',licensetype-'+$licenseId;
                                                         updatePploadFileTags($fileId, fileTags);
                                                     });
@@ -799,6 +856,25 @@ $helperImage = new Default_View_Helper_Image();
                                                         $fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
                                                         $filetypeId = $modalPpload.find('#data-select-filetype' + $fileId).val();
                                                         updateFileType($fileId, $filetypeId);
+
+                                                        fileTags = '';
+                                                        if (this.tags) {
+                                                            $.each(fileTags.split(','), function () {
+                                                            	if(this.indexOf("##")==-1) {
+                                                                	var tagStr = this.split('-');
+                                                                    if (tagStr.length == 2 && tagStr[0] != 'filetypeid') {
+                                                                    	fileTags += ',' + tagStr;
+                                                                    }
+                                                                } else {
+                                                                	var tagStr = this.split('##');
+                                                                    if (tagStr.length == 2 && tagStr[0] != 'filetypeid') {
+                                                                    	fileTags += ',' + tagStr;
+                                                                    }
+                                                                }
+                                                            });
+                                                        }
+                                                        fileTags += ',filetypeid-'+$filetypeId;
+                                                        updatePploadFileTags($fileId, fileTags);
                                                     });
 
                                                     $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
