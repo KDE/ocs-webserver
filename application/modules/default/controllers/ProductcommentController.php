@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -19,27 +20,24 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-
 class ProductcommentController extends Local_Controller_Action_DomainSwitch
 {
 
-	/** @var  Zend_Auth */
-	protected $_auth;
-	
+    /** @var  Zend_Auth */
+    protected $_auth;
+
     public function init()
     {
-
         parent::init();
 
         $this->auth = Zend_Auth::getInstance();
-
     }
 
     public function addreplyAction()
     {
         $this->_helper->layout->disableLayout();
         //$this->_helper->viewRenderer->setNoRender(true);
-        
+
         $data = array();
         $data['comment_target_id'] = (int)$this->getParam('p');
         $data['comment_parent_id'] = (int)$this->getParam('i');
@@ -47,18 +45,18 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
         $data['comment_text'] = $this->getParam('msg');
 
         $tableReplies = new Default_Model_ProjectComments();
-
         $result = $tableReplies->save($data);
         $status = count($result) > 0 ? 'ok' : 'error';
         $message = '';
 
         $this->view->comments = $this->loadComments((int)$this->getParam('page'), (int)$this->getParam('p'));
-        $tableProject = new Default_Model_Project();
-        $this->view->product = $tableProject->fetchProductInfo((int)$this->getParam('p'));
-        $this->view->member_id = $this->_authMember->member_id;
+        $this->view->product = $this->loadProductInfo((int)$this->getParam('p'));
+        $this->view->member_id = (int)$this->_authMember->member_id;
         $requestResult = $this->view->render('product/partials/productCommentsUX1.phtml');
 
         $this->updateActivityLog($result, $this->view->product->image_small);
+
+        $this->sendNotification($this->view->product, $data['comment_text']);
 
         if ($this->_request->isXmlHttpRequest()) {
             $this->_helper->json(array('status' => $status, 'message' => $message, 'data' => $requestResult));
@@ -69,6 +67,21 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
         }
     }
 
+    private function loadComments($page_offset, $project_id)
+    {
+        $modelComments = new Default_Model_ProjectComments();
+        $paginationComments = $modelComments->getAllCommentsForProject($project_id);
+        $paginationComments->setItemCountPerPage(25);
+        $paginationComments->setCurrentPageNumber($page_offset);
+        return $paginationComments;
+    }
+
+    private function loadProductInfo($param)
+    {
+        $tableProject = new Default_Model_Project();
+        return $tableProject->fetchProductInfo($param);
+    }
+
     private function updateActivityLog($data, $image_small)
     {
         if ($data['comment_parent_id']) {
@@ -77,16 +90,22 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
             $activity_type = Default_Model_ActivityLog::PROJECT_COMMENT_CREATED;
         }
 
-        Default_Model_ActivityLog::logActivity($data['comment_id'], $data['comment_target_id'],$data['comment_member_id'], $activity_type, array('title'=>'','description' => $data['comment_text'], 'image_small'=> $image_small));
+        Default_Model_ActivityLog::logActivity($data['comment_id'], $data['comment_target_id'],
+            $data['comment_member_id'], $activity_type,
+            array('title' => '', 'description' => $data['comment_text'], 'image_small' => $image_small));
     }
 
-    private function loadComments($page_offset, $project_id)
+    private function sendNotification($product, $comment)
     {
-        $modelComments = new Default_Model_ProjectComments();
-        $paginationComments = $modelComments->getAllCommentsForProject($project_id);
-        $paginationComments->setItemCountPerPage(25);
-        $paginationComments->setCurrentPageNumber($page_offset);
-        return $paginationComments;
+        $newPasMail = new Default_Plugin_SendMail('tpl_user_comment_note');
+        $newPasMail->setReceiverMail($product->mail);
+        $newPasMail->setReceiverAlias($product->username);
+
+        $newPasMail->setTemplateVar('username', $product->username);
+        $newPasMail->setTemplateVar('product_title', $product->title);
+        $newPasMail->setTemplateVar('comment_text', $comment);
+
+        $newPasMail->send();
     }
 
 }
