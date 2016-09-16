@@ -855,13 +855,8 @@ $this->inlineScript()->appendScript(
         }
 
         function updateFileType(fileId, filetypeId) {
-            var $url = ($modalPpload.attr('data-updatefiletype-uri')).replace(/{project_id}/i, ProductForm.project_id);
-            if (typeof ProductForm.project_id == 'undefined' || ProductForm.project_id == '' || ProductForm.project_id == '0') {
-                $url = ($modalPpload.attr('data-updatefiletype-uri')).replace(/{project_id}/i, <?= (isset($this->project_id))?$this->project_id:0  ?>);
-            }
-
             $.ajax({
-                url: $url,
+                url: $modalPpload.attr('data-updatefiletype-uri'),
                 type: 'POST',
                 data: {
                     file_id: fileId,
