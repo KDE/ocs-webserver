@@ -121,6 +121,7 @@ $this->inlineScript()->appendScript(
      data-product-tile=""
      data-addpploadfile-uri=""
      data-updatepploadfile-uri=""
+     data-updatefiletype-uri=""
      data-deletepploadfile-uri=""
      data-deletepploadfiles-uri=""
      data-finalizepploadcollection-uri="">
@@ -397,6 +398,7 @@ $this->inlineScript()->appendScript(
                         var osId = '';
                         var licenseId = '';
                         var license = '';
+                        var filetypeId = '';
                         //var packageId = null;
                         //var archId = null;
                         //var deviceId = null;
@@ -409,6 +411,8 @@ $this->inlineScript()->appendScript(
                                         osId = tagStr[1];
                                     } else if (tagStr.length == 2 && tagStr[0] == 'licensetype') {
                                         licenseId = tagStr[1];
+                                    } else if (tagStr.length == 2 && tagStr[0] == 'filetypeid') {
+                                    	filetypeId = tagStr[1];
                                     }
                                 } else {
                                 	var tagStr = this.split('##');
@@ -417,6 +421,8 @@ $this->inlineScript()->appendScript(
                                     } else if (tagStr.length == 2 && tagStr[0] == 'license') {
                                         license = tagStr[1];
                                         license = Base64.decode(license);
+                                    } else if (tagStr.length == 2 && tagStr[0] == 'filetypeid') {
+                                    	filetypeId = tagStr[1];
                                     }
                                 }
                                 /*else if (tagStr.length == 2 && tagStr[0] == 'package') {
@@ -452,7 +458,12 @@ $this->inlineScript()->appendScript(
                             + '<option value=\"1000\"></option><option value=\"16\">AGPL</option><option value=\"3\">Artistic 2.0</option><option value=\"6\">BSD</option><option value=\"9\">CPL 1.0</option><option value=\"10\">Creative Commons by</option><option value=\"13\">Creative Commons by-nc</option><option value=\"15\">Creative Commons by-nc-nd</option><option value=\"14\">Creative Commons by-nc-sa</option><option value=\"12\">Creative Commons by-nd</option><option value=\"11\">Creative Commons by-sa</option><option value=\"8\">GFDL</option><option value=\"1\">GPL</option><option value=\"2\">LGPL</option><option value=\"0\">Other</option><option value=\"7\">Proprietary License</option><option value=\"5\">QPL</option><option value=\"4\">X11</option>'
                             + '</select><span id="file-tag-license'+this.id+'"><span id="file-tag-license-text'+this.id+'">'
                             + '</td>'
-                            + '<td>' + this.type + '</td>'
+                            //+ '<td>' + this.type + '</td>'
+                            + '<td>'
+                            + '<select id="data-select-filetype' + this.id + '" data-filetype-id=" name="filetype" class="form-control input-sm" style="width: 200px;">'
+                            + '<option value=\"\"></option><option value=\"1\">AppImage</option><option value=\"2\">Android (APK)</option><option value=\"3\">OS X compatible</option><option value=\"4\">Windows executable</option>'
+                            + '</select>'
+                            + '</td>'
                             + '<td>' + this.created_timestamp + '</td>'
                             
                             + '<td style="text-align: right">' + humanFileSize(this.size) + '</td>'
@@ -462,6 +473,7 @@ $this->inlineScript()->appendScript(
                         );
 
                         $("#data-select-license" + this.id + " option[value='"+licenseId+"']").attr('selected', 'selected');
+                        $("#data-select-filetype" + this.id + " option[value='"+filetypeId+"']").attr('selected', 'selected');
 
                         $licenseSelect = $modalPpload.find('#data-select-license' + this.id);
 
@@ -472,10 +484,64 @@ $this->inlineScript()->appendScript(
                         $licenseSelect.on('change', function (event) {
                             event.preventDefault();
                             $fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
+                            $fileTags = $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags');
                             $licenseId = $modalPpload.find('#data-select-license' + $fileId).val();
-                            fileTags = '';
-                            fileTags += ',licensetype-'+$licenseId;
-                            updatePploadFileTags($fileId, fileTags);
+
+                            newFileTags = '';
+                            
+                            if ($fileTags) {
+                                $.each($fileTags.split(','), function () {
+                                	if(this.indexOf("##")==-1) {
+                                    	var tagStr = this.split('-');
+                                        if (tagStr.length == 2 && tagStr[0] != 'licensetype') {
+                                        	newFileTags += ',' + this;
+                                        }
+                                    } else {
+                                    	var tagStr = this.split('##');
+                                        if (tagStr.length == 2 && tagStr[0] != 'license') {
+                                        	newFileTags += ',' + this;
+                                        }
+                                    }
+                                });
+                            }
+                            newFileTags += ',licensetype-'+$licenseId;
+                            updatePploadFileTags($fileId, newFileTags);
+                            $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags',newFileTags);
+                        });
+
+
+                        $filetypeSelect = $modalPpload.find('#data-select-filetype' + this.id);
+
+						if(this.active == '0') {
+							$filetypeSelect.prop('disabled', 'disabled');
+						}
+
+                        $filetypeSelect.on('change', function (event) {
+                            event.preventDefault();
+                            $fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
+                            $fileTags = $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags');
+                            $filetypeId = $modalPpload.find('#data-select-filetype' + $fileId).val();
+                            updateFileType($fileId, $filetypeId);
+
+                            newFileTags = '';
+                            if ($fileTags) {
+                                $.each($fileTags.split(','), function () {
+                                	if(this.indexOf("##")==-1) {
+                                    	var tagStr = this.split('-');
+                                        if (tagStr.length == 2 && tagStr[0] != 'filetypeid') {
+                                        	newFileTags += ',' + this;
+                                        }
+                                    } else {
+                                    	var tagStr = this.split('##');
+                                        if (tagStr.length == 2 && tagStr[0] != 'filetypeid') {
+                                        	newFileTags += ',' + this;
+                                        }
+                                    }
+                                });
+                            }
+                            newFileTags += ',filetypeid-'+$filetypeId;
+                            updatePploadFileTags($fileId, newFileTags);
+                            $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags',newFileTags);
                         });
 
                         if ((typeof link != 'undefined') && (link != "")) {
@@ -681,7 +747,13 @@ $this->inlineScript()->appendScript(
                         + '<option value=\"1000\"></option><option value=\"16\">AGPL</option><option value=\"3\">Artistic 2.0</option><option value=\"6\">BSD</option><option value=\"9\">CPL 1.0</option><option value=\"10\">Creative Commons by</option><option value=\"13\">Creative Commons by-nc</option><option value=\"15\">Creative Commons by-nc-nd</option><option value=\"14\">Creative Commons by-nc-sa</option><option value=\"12\">Creative Commons by-nd</option><option value=\"11\">Creative Commons by-sa</option><option value=\"8\">GFDL</option><option value=\"1\">GPL</option><option value=\"2\">LGPL</option><option value=\"0\">Other</option><option value=\"7\">Proprietary License</option><option value=\"5\">QPL</option><option value=\"4\">X11</option>'
                         + '</select>'
                         + '</td>'
-                        + '<td>' + data.file.type + '</td>'
+                        //+ '<td>' + data.file.type + '</td>'
+                        //+ '<td>' + this.type + '</td>'
+                        + '<td>'
+                        + '<select id="data-select-filetype' + data.file.id + '" data-filetype-id=" name="filetype" class="form-control input-sm" style="width: 200px;">'
+                        + '<option value=\"\"></option><option value=\"1\">AppImage</option><option value=\"2\">Android (APK)</option><option value=\"3\">OS X compatible</option><option value=\"4\">Windows executable</option>'
+                        + '</select>'
+                        + '</td>'
                         + '<td>' + data.file.created_timestamp + '</td>'
                         + '<td style="text-align: right">' + humanFileSize(data.file.size) + '</td>'
                         + '<td style="text-align: right">0</td>'
@@ -693,9 +765,57 @@ $this->inlineScript()->appendScript(
                     $licenseSelect.on('change', function (event) {
                         event.preventDefault();
                         $fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
+                        $fileTags = $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags');
                         $licenseId = $modalPpload.find('#data-select-license' + $fileId).val();
-                        fileTags += ',licensetype-'+$licenseId;
-                        updatePploadFileTags($fileId, fileTags);
+
+                        newFileTags = '';
+                        if ($fileTags) {
+                            $.each($fileTags.split(','), function () {
+                            	if(this.indexOf("##")==-1) {
+                                	var tagStr = this.split('-');
+                                    if (tagStr.length == 2 && tagStr[0] != 'licensetype') {
+                                    	newFileTags += ',' + this;
+                                    }
+                                } else {
+                                	var tagStr = this.split('##');
+                                    if (tagStr.length == 2 && tagStr[0] != 'license') {
+                                    	newFileTags += ',' + this;
+                                    }
+                                }
+                            });
+                        }
+                        newFileTags += ',licensetype-'+$licenseId;
+                        updatePploadFileTags($fileId, newFileTags);
+                        $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags',newFileTags);
+                    });
+
+                    $filetypeSelect = $modalPpload.find('#data-select-filetype' + data.file.id);
+                    $filetypeSelect.on('change', function (event) {
+                        event.preventDefault();
+                        $fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
+                        $filetypeId = $modalPpload.find('#data-select-filetype' + $fileId).val();
+                        $fileTags = $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags');
+                        updateFileType($fileId, $filetypeId);
+
+                        newFileTags = '';
+                        if ($fileTags) {
+                            $.each($fileTags.split(','), function () {
+                            	if(this.indexOf("##")==-1) {
+                                	var tagStr = this.split('-');
+                                    if (tagStr.length == 2 && tagStr[0] != 'filetypeid') {
+                                    	newFileTags += ',' + this;
+                                    }
+                                } else {
+                                	var tagStr = this.split('##');
+                                    if (tagStr.length == 2 && tagStr[0] != 'filetypeid') {
+                                    	newFileTags += ',' + this;
+                                    }
+                                }
+                            });
+                        }
+                        newFileTags += ',filetypeid-'+$filetypeId;
+                        updatePploadFileTags($fileId, newFileTags);
+                        $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags',newFileTags);
                     });
 
                     //$modalPpload.find('button[data-finalizepploadcollection-btn]').removeAttr('disabled');
@@ -719,6 +839,28 @@ $this->inlineScript()->appendScript(
                     file_id: fileId,
                     file_description: fileDescription,
                     file_category: fileCategory
+                },
+                dataType: 'json',
+                success: function (data, textStatus, jqXHR) {
+                    if (data.status != 'ok') {
+                        return;
+                    }
+
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert("Error: " + textStatus + ", " + errorThrown);
+                    return;
+                }
+            });
+        }
+
+        function updateFileType(fileId, filetypeId) {
+            $.ajax({
+                url: $modalPpload.attr('data-updatefiletype-uri'),
+                type: 'POST',
+                data: {
+                    file_id: fileId,
+                    file_type_id: filetypeId
                 },
                 dataType: 'json',
                 success: function (data, textStatus, jqXHR) {
@@ -908,6 +1050,7 @@ $this->inlineScript()->appendScript(
             $modalPpload.attr('data-product-version', $(this).attr('data-product-version'));
             $modalPpload.attr('data-addpploadfile-uri', $(this).attr('data-addpploadfile-uri'));
             $modalPpload.attr('data-updatepploadfile-uri', $(this).attr('data-updatepploadfile-uri'));
+            $modalPpload.attr('data-updatefiletype-uri', $(this).attr('data-updatefiletype-uri'));
             $modalPpload.attr('data-deletepploadfile-uri', $(this).attr('data-deletepploadfile-uri'));
             $modalPpload.attr('data-deletepploadfiles-uri', $(this).attr('data-deletepploadfiles-uri'));
             $modalPpload.attr('data-finalizepploadcollection-uri', $(this).attr('data-finalizepploadcollection-uri'));
