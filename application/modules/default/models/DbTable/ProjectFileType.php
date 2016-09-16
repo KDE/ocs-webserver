@@ -109,7 +109,7 @@ class Default_Model_DbTable_ProjectFileType extends Local_Model_Table
              }
             return $resultString;
         } 
-         return $resultString;
+         return '';
       
     }
 }
