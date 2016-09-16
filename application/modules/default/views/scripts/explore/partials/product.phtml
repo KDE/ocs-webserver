@@ -47,7 +47,7 @@ $helperImage = new Default_View_Helper_Image();
         </h3>
        
         <b><?php echo $helperFetchSubcategoriesForProduct->fetchCategoriesForProductAsString($this->product->project_id) ?></b>
-        
+        <span class="filetypeos" ><?= $this->FetchProjectFileTypes($this->product->project_id) ?></span>
         <br/><br/>
         <div class="productInfo">
        <?php
