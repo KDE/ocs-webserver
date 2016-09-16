@@ -158,7 +158,7 @@ class Backend_RssController extends Local_Controller_Action_CliAbstract
     private function saveXmlFile($resultXml, $hostname)
     {
         $filename = str_replace('.','_',$hostname);
-        $path = APPLICATION_PATH . '/../httpdocs/rss/' . $filename . '-content.rdf';
+        $path = APPLICATION_PATH . '/../httpdocs/rss/' . $filename . '-content.rss';
         if (is_dir(dirname($path)) AND is_writable(dirname($path))) {
             file_put_contents($path, $resultXml);
         } else {
