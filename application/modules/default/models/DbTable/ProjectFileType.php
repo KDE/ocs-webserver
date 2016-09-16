@@ -87,7 +87,7 @@ class Default_Model_DbTable_ProjectFileType extends Local_Model_Table
      */
     public function getFileType($projectId, $fileId)
     {
-        $sql = 'SELECT f.name FROM project_file_type p join file_types f on p.file_type_id = f.filetype_id WHERE p.project_id = :project_id and p.file_id= :file_id';
+        $sql = 'SELECT f.name FROM project_file_type p join file_types f on p.filetype_id = f.filetype_id WHERE p.project_id = :project_id and p.file_id= :file_id';
         $resultSet = $this->_db->fetchAll($sql, array('project_id' => $projectId, 'file_id' => $fileId));
 
         if (count($resultSet) > 0) {
@@ -103,7 +103,7 @@ class Default_Model_DbTable_ProjectFileType extends Local_Model_Table
      */
     public function getProjectFileTypes($projectId)
     {
-        $sql = 'SELECT p.project_id,p.file_id,p.filetype_id,f.name FROM project_file_type p join file_types f on p.file_type_id = f.filetype_id WHERE p.project_id = :project_id';
+        $sql = 'SELECT p.project_id,p.file_id,p.filetype_id,f.name FROM project_file_type p join file_types f on p.filetype_id = f.filetype_id WHERE p.project_id = :project_id';
         $resultSet = $this->_db->fetchAll($sql, array('project_id' => $projectId));
         if (count($resultSet) > 0) {
             return $resultSet;
@@ -114,7 +114,7 @@ class Default_Model_DbTable_ProjectFileType extends Local_Model_Table
 
     public function getProjectFileTypesString($projectId)
     {
-        $sql = 'SELECT f.name FROM project_file_type p join file_types f on p.file_type_id = f.filetype_id WHERE p.project_id = :project_id';
+        $sql = 'SELECT f.name FROM project_file_type p join file_types f on p.filetype_id = f.filetype_id WHERE p.project_id = :project_id';
         $resultSet = $this->_db->fetchAll($sql, array('project_id' => $projectId));
         $resultString = '';
         if (count($resultSet) > 0) {
