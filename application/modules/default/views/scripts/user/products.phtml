@@ -397,6 +397,7 @@ $this->inlineScript()->appendScript(
                         var osId = '';
                         var licenseId = '';
                         var license = '';
+                        var filetypeId = '';
                         //var packageId = null;
                         //var archId = null;
                         //var deviceId = null;
@@ -409,6 +410,8 @@ $this->inlineScript()->appendScript(
                                         osId = tagStr[1];
                                     } else if (tagStr.length == 2 && tagStr[0] == 'licensetype') {
                                         licenseId = tagStr[1];
+                                    } else if (tagStr.length == 2 && tagStr[0] == 'filetypeid') {
+                                    	filetypeId = tagStr[1];
                                     }
                                 } else {
                                 	var tagStr = this.split('##');
@@ -417,6 +420,8 @@ $this->inlineScript()->appendScript(
                                     } else if (tagStr.length == 2 && tagStr[0] == 'license') {
                                         license = tagStr[1];
                                         license = Base64.decode(license);
+                                    } else if (tagStr.length == 2 && tagStr[0] == 'filetypeid') {
+                                    	filetypeId = tagStr[1];
                                     }
                                 }
                                 /*else if (tagStr.length == 2 && tagStr[0] == 'package') {
