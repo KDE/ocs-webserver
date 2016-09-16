@@ -989,5 +989,22 @@ iframe[id^="oauth2relay"] { position: fixed !important; }
 
 div.explore-product-details span.filetypeos
 {
-  display: block; font-size: smaller;padding-top: 10px
+  
+}
+span.filetypeos
+{
+  background-color: #5bc0de;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  display: inline;
+  padding: .2em .6em .3em;
+  font-size: 75%;
+  font-weight: 700;
+  line-height: 1;
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: .25em;
+  font-size: smaller;
+  
 }

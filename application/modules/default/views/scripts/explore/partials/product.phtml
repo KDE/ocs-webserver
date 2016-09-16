@@ -46,8 +46,13 @@ $helperImage = new Default_View_Helper_Image();
             <a href="<?= $helperBuildProductUrl->buildProductUrl($this->product->project_id, ''); ?>"><?php echo $this->product->title; ?> <span style="font-size: smaller; padding-left: 20px"><?php echo $this->product->version ?> </span></a>
         </h3>
        
-        <b><?php echo $helperFetchSubcategoriesForProduct->fetchCategoriesForProductAsString($this->product->project_id) ?></b>
-        <span class="filetypeos" ><?= $this->FetchProjectFileTypes($this->product->project_id) ?></span>
+        <b style="display: block; margin-bottom: 5px"><?php echo $helperFetchSubcategoriesForProduct->fetchCategoriesForProductAsString($this->product->project_id) ?></b>
+         <?php 
+                $type = $this->FetchProjectFileTypes($this->product->project_id);                                          
+          if(!empty($type)){
+            ?>
+        <span class="filetypeos" ><?=$type ?></span>
+            <?php } ?>
         <br/><br/>
         <div class="productInfo">
        <?php

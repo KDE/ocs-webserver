@@ -67,7 +67,15 @@
                                       <span class=" col-lg-5" > 
                                       filetype_os
                                       </span>
-                                      <span class="col-lg-7 value"> <?= $this->FetchProjectFileTypes($this->product->project_id) ?></span>
+                                      <span class="col-lg-7 value ">
+                                      <?php 
+                                            $type = $this->FetchProjectFileTypes($this->product->project_id);                                          
+                                      if(!empty($type)){
+                                        ?>
+                                      <span class="filetypeos"> <?= $this->FetchProjectFileTypes($this->product->project_id) ?></span>
+                                      <?php 
+                                      }?>
+                                      </span>
                                      </div>
                                 
                                     <div class="row" style="padding-top: 5px">
