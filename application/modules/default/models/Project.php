@@ -1597,6 +1597,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
      * @param int|array $storeCategories
      * @param boolean $withoutUpdates
      * @return array
+     * @todo: update the sql. It is deprecated since we store only one cat_id for the product.
      */
     public function fetchProductsForCategories($storeCategories, $withoutUpdates = true)
     {
@@ -1632,11 +1633,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                   JOIN member AS m ON p.member_id = m.member_id AND m.is_active = 1 AND m.is_deleted = 0
                   JOIN project_category AS pc ON p.project_category_id = pc.project_category_id
                   LEFT JOIN stat_plings as sp ON p.project_id = sp.project_id
-                WHERE (p.project_category_id IN (" . implode(',', $storeCategories) . ")
-                OR p.project_id IN (SELECT p.project_id
-                                    FROM project AS p
-                                    JOIN project_subcategory AS ps ON ps.project_id = p.project_id AND ps.project_sub_category_id IN (" . implode(',',
-                $storeCategories) . ")))
+                WHERE p.project_category_id IN (" . implode(',', $storeCategories) . ")
                 AND p.status >= 100
         ";
 
