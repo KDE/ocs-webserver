@@ -52,7 +52,7 @@ $helperImage = new Default_View_Helper_Image();
           $type = $helperFileTypes->FetchProjectFileTypes($this->product->project_id);
           if(!empty($type)){
             ?>
-        <span class="filetypeos" ><?=$type ?></span>
+                <?=$type ?>
             <?php } ?>
         <br/><br/>
         <div class="productInfo">
