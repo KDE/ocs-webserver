@@ -114,7 +114,7 @@ class Default_Model_DbTable_ProjectFileType extends Local_Model_Table
 
     public function getProjectFileTypesString($projectId)
     {
-        $sql = 'SELECT f.name FROM project_file_type p join file_types f on p.filetype_id = f.filetype_id WHERE p.project_id = :project_id';
+        $sql = 'SELECT DISTINCT f.name FROM project_file_type p join file_types f on p.filetype_id = f.filetype_id WHERE p.project_id = :project_id';
         $resultSet = $this->_db->fetchAll($sql, array('project_id' => $projectId));
         $resultString = '';
         if (count($resultSet) > 0) {
