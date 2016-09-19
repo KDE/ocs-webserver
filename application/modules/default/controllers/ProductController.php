@@ -1694,7 +1694,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 ) {
                     
                     $fileTypeTable = new Default_Model_DbTable_ProjectFileType();
-                    $fileTypeTable->deleteFileTypeOnProject($this->_projectId, $_POST['file_id'], $typeId);
+                    $fileTypeTable->deleteFileTypeOnProject($this->_projectId, $_POST['file_id']);
                     
                     $this->_helper->json(array('status' => 'ok'));
                     return;
