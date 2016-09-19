@@ -1006,5 +1006,6 @@ span.filetypeos
   vertical-align: baseline;
   border-radius: .25em;
   font-size: smaller;
-  
+  float: left;
+  margin: 2px;
 }
