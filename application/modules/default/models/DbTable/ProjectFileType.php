@@ -118,8 +118,8 @@ class Default_Model_DbTable_ProjectFileType extends Local_Model_Table
         $resultSet = $this->_db->fetchAll($sql, array('project_id' => $projectId));
         $resultString = '';
         if (count($resultSet) > 0) {
-            foreach ($resultSet as $item) {
-                $resultString = $resultString . ' ' . stripslashes($item['name']);
+            foreach ($resultSet as $item) {                
+                $resultString = $resultString . ' <span class="filetypeos" > ' . stripslashes($item['name']) . '</span>';
             }
             return $resultString;
         }
