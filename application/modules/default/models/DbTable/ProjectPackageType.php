@@ -20,7 +20,7 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-class Default_Model_DbTable_ProjectFileType extends Local_Model_Table
+class Default_Model_DbTable_ProjectPackageType extends Local_Model_Table
 {
 
     protected $_keyColumnsForRow = array('project_id', 'file_id');
@@ -30,7 +30,7 @@ class Default_Model_DbTable_ProjectFileType extends Local_Model_Table
     /**
      * @var string
      */
-    protected $_name = "project_file_type";
+    protected $_name = "project_package_type";
     /**
      * @var array
      */
@@ -52,28 +52,28 @@ class Default_Model_DbTable_ProjectFileType extends Local_Model_Table
      */
     public function getSelectList()
     {
-        $selectArr = $this->_db->fetchAll('SELECT filetype_id, name FROM file_types WHERE is_active=1 ORDER BY order');
+        $selectArr = $this->_db->fetchAll('SELECT package_type_id, name FROM package_types WHERE is_active=1 ORDER BY order');
 
         $arrayModified = array();
 
-        $arrayModified[0] = "ProjectFileTypesSelect";
+        $arrayModified[0] = "ProjectPackageTypesSelect";
         foreach ($selectArr as $item) {
-            $arrayModified[$item['filetype_id']] = stripslashes($item['name']);
+            $arrayModified[$item['package_type_id']] = stripslashes($item['name']);
         }
 
         return $arrayModified;
     }
 
-    public function addFileTypeToProject($projectId, $fileId, $fileTypeId)
+    public function addPackageTypeToProject($projectId, $fileId, $packageTypeId)
     {
         //first delte old
         $this->delete('project_id = ' . $projectId . ' AND file_id = ' . $fileId);
 
-        if ($fileTypeId != null && $fileTypeId != 0) {
+        if ($packageTypeId) {
             $data = array();
             $data['project_id'] = $projectId;
             $data['file_id'] = $fileId;
-            $data['filetype_id'] = $fileTypeId;
+            $data['package_type_id'] = $packageTypeId;
             $data['test'] = 'Test: ' . $fileTypeId . ', Haha';
 
             return $this->save($data);
@@ -81,7 +81,7 @@ class Default_Model_DbTable_ProjectFileType extends Local_Model_Table
         return false;
     }
     
-    public function deleteFileTypeOnProject($projectId, $fileId)
+    public function deletePackageTypeOnProject($projectId, $fileId)
     {
         return $this->delete('project_id = ' . $projectId . ' AND file_id = ' . $fileId);
     }
@@ -91,9 +91,9 @@ class Default_Model_DbTable_ProjectFileType extends Local_Model_Table
      * @param int $fileId
      * @return string
      */
-    public function getFileType($projectId, $fileId)
+    public function getPackageType($projectId, $fileId)
     {
-        $sql = 'SELECT f.name FROM project_file_type p join file_types f on p.filetype_id = f.filetype_id WHERE p.project_id = :project_id and p.file_id= :file_id';
+        $sql = 'SELECT f.name FROM project_package_type p join package_types f on p.package_type_id = f.package_type_id WHERE p.project_id = :project_id and p.file_id= :file_id';
         $resultSet = $this->_db->fetchAll($sql, array('project_id' => $projectId, 'file_id' => $fileId));
 
         if (count($resultSet) > 0) {
@@ -107,9 +107,9 @@ class Default_Model_DbTable_ProjectFileType extends Local_Model_Table
      * @param int $projectId
      * @return array|null
      */
-    public function getProjectFileTypes($projectId)
+    public function getProjectPackageTypes($projectId)
     {
-        $sql = 'SELECT p.project_id,p.file_id,p.filetype_id,f.name FROM project_file_type p join file_types f on p.filetype_id = f.filetype_id WHERE p.project_id = :project_id';
+        $sql = 'SELECT p.project_id,p.file_id,p.package_type_id,f.name FROM project_package_type p join package_types f on p.package_type_id = f.package_type_id WHERE p.project_id = :project_id';
         $resultSet = $this->_db->fetchAll($sql, array('project_id' => $projectId));
         if (count($resultSet) > 0) {
             return $resultSet;
@@ -118,14 +118,14 @@ class Default_Model_DbTable_ProjectFileType extends Local_Model_Table
         }
     }
 
-    public function getProjectFileTypesString($projectId)
+    public function getProjectPackageTypesString($projectId)
     {
-        $sql = 'SELECT DISTINCT f.name FROM project_file_type p join file_types f on p.filetype_id = f.filetype_id WHERE p.project_id = :project_id';
+        $sql = 'SELECT DISTINCT f.name FROM project_package_type p join package_types f on p.package_type_id = f.package_type_id WHERE p.project_id = :project_id';
         $resultSet = $this->_db->fetchAll($sql, array('project_id' => $projectId));
         $resultString = '';
         if (count($resultSet) > 0) {
             foreach ($resultSet as $item) {                
-                $resultString = $resultString . ' <span class="filetypeos" > ' . stripslashes($item['name']) . '</span>';
+                $resultString = $resultString . ' <span class="packagetypeos" > ' . stripslashes($item['name']) . '</span>';
             }
             return $resultString;
         }

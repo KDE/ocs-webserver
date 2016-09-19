@@ -1638,7 +1638,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->_helper->json(array('status' => 'error', 'error_text' => $error_text));
     }
     
-    public function updatefiletypeAction()
+    public function updatepackagetypeAction()
     {
     	$this->_helper->layout()->disableLayout();
     
@@ -1647,11 +1647,11 @@ class ProductController extends Local_Controller_Action_DomainSwitch
     	// Update a file information in ppload collection (does not update it if in finalized collection)
     	if (!empty($_POST['file_id'])) {
     		$typeId = null;
-    		if(isset($_POST['file_type_id']))
-				$typeId = $_POST['file_type_id'];
+    		if(isset($_POST['package_type_id']))
+				$typeId = $_POST['package_type_id'];
 			
-			$fileTypeTable = new Default_Model_DbTable_ProjectFileType();
-			$fileTypeTable->addFileTypeToProject($this->_projectId, $_POST['file_id'], $typeId);
+			$packageTypeTable = new Default_Model_DbTable_ProjectPackageType();
+			$packageTypeTable->addPackageTypeToProject($this->_projectId, $_POST['file_id'], $typeId);
 			$this->_helper->json(array('status' => 'ok', 'params' => 'project_id: ' . $this->_projectId . ', file_id: ' . $_POST['file_id'] . ', file_type_id: ' . $typeId));
 			return;
     	} else {
@@ -1693,8 +1693,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     && $fileResponse->status == 'success'
                 ) {
                     
-                    $fileTypeTable = new Default_Model_DbTable_ProjectFileType();
-                    $fileTypeTable->deleteFileTypeOnProject($this->_projectId, $_POST['file_id']);
+                    $packageTypeTable = new Default_Model_DbTable_ProjectPackageType();
+                    $packageTypeTable->deletePackageTypeOnProject($this->_projectId, $_POST['file_id']);
                     
                     $this->_helper->json(array('status' => 'ok'));
                     return;
