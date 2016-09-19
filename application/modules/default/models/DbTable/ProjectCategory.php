@@ -701,6 +701,43 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
 
     /**
      * @param int|array $nodeId
+     * @param bool $isActive
+     * @return array Set of subnodes
+     */
+    public function fetchChildIds($nodeId, $isActive = true)
+    {
+        if (is_null($nodeId) OR $nodeId == '') {
+            return array();
+        }
+
+        $inQuery = '?';
+        if (is_array($nodeId)) {
+            $inQuery = implode(',', array_fill(0, count($nodeId), '?'));
+        }
+        $whereActive = $isActive == true ? ' AND o.is_active = 1' : '';
+        $sql = '
+            SELECT o.project_category_id
+                FROM project_category AS n,
+                     project_category AS p,
+                     project_category AS o
+               WHERE o.lft BETWEEN p.lft AND p.rgt
+                 AND o.lft BETWEEN n.lft AND n.rgt
+                 AND n.project_category_id IN (' . $inQuery . ')
+                 ' . $whereActive . '
+            GROUP BY o.lft
+            HAVING COUNT(p.project_category_id)-2 > 0
+            ORDER BY o.lft;
+        ';
+        $children = $this->_db->query($sql, $nodeId)->fetchAll();
+        if (count($children)) {
+            return $this->flattenArray($children);
+        } else {
+            return array();
+        }
+    }
+
+    /**
+     * @param int|array $nodeId
      * @param string $orderBy
      * @return array
      */
