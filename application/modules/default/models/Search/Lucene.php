@@ -121,7 +121,8 @@ class Default_Model_Search_Lucene
         }
         $modelCategories = new Default_Model_DbTable_ProjectCategory();
         $resultSet = $modelCategories->fetchMainCatIdsOrdered();
-        return $resultSet;
+        $subCatIds = $modelCategories->fetchChildIds($resultSet);
+        return array_merge($resultSet,$subCatIds);
     }
 
     /**
@@ -144,6 +145,7 @@ class Default_Model_Search_Lucene
             $doc = $this->createIndexDocument($element);
             $searchIndexEngine->addDocument($doc);
         }
+        $searchIndexEngine->optimize();
     }
 
     /**
