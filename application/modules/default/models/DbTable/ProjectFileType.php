@@ -79,6 +79,11 @@ class Default_Model_DbTable_ProjectFileType extends Local_Model_Table
         }
         return false;
     }
+    
+    public function deleteFileTypeOnProject($projectId, $fileId, $fileTypeId)
+    {
+        return $this->delete('project_id = ' . $projectId . ' AND file_id = ' . $fileId);
+    }
 
     /**
      * @param int $projectId
