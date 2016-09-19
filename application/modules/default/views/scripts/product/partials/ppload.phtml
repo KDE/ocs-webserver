@@ -72,7 +72,7 @@
                              **/?>
                              <tr>
                                  <th><?= $this->translate('Filename'); ?></th>
-                                  <th><?= $this->translate('Version'); ?></th>
+                                 <th><?= $this->translate('Version'); ?></th>
                                  <th><?= $this->translate('Description'); ?></th>
                                  <th><?= $this->translate('Filetype'); ?></th>
                                  <th><?= $this->translate('Packagetype'); ?></th>
@@ -406,6 +406,8 @@
                                                   osId = tagStr[1];
                                               } else if (tagStr.length == 2 && tagStr[0] == 'licensetype') {
                                                   licenseId = tagStr[1];
+                                              } else if (tagStr.length == 2 && tagStr[0] == 'filetypeid') {
+                                                  filetypeId = tagStr[1];
                                               }
                                              } else {
                                               var tagStr = this.split('##');
@@ -414,6 +416,8 @@
                                               } else if (tagStr.length == 2 && tagStr[0] == 'license') {
                                                   license = tagStr[1];
                                                   license = Base64.decode(license);
+                                              } else if (tagStr.length == 2 && tagStr[0] == 'filetypeid') {
+                                                  filetypeId = tagStr[1];
                                               }
                                              }
                                              /*else if (tagStr.length == 2 && tagStr[0] == 'package') {
@@ -443,6 +447,11 @@
                                              + '<td>' + version + '</td>'
 	                                         + '<td>' + fileDescription + '</td>'
 	                                         + '<td>' + this.type + '</td>'
+                                                 + '<td>'
+                                                 + '<select id="data-select-filetype' + this.id + '" data-filetype-id=" name="filetype" class="form-control input-sm" style="width: 200px;">'
+                                                 + '<option value=\"\"></option><option value=\"1\">AppImage</option><option value=\"2\">Android (APK)</option><option value=\"3\">OS X compatible</option><option value=\"4\">Windows executable</option>'
+                                                 + '</select><span id="file-tag-filetype'+this.id+'">'
+                                                 + '</td>'
 	                                         + '<td>'
 	                                         + '<select id="data-select-license' + this.id + '" data-license-id=" name="license">'
 	                                         + '<option value=\"1000\"></option><option value=\"16\">AGPL</option><option value=\"3\">Artistic 2.0</option><option value=\"6\">BSD</option><option value=\"9\">CPL 1.0</option><option value=\"10\">Creative Commons by</option><option value=\"13\">Creative Commons by-nc</option><option value=\"15\">Creative Commons by-nc-nd</option><option value=\"14\">Creative Commons by-nc-sa</option><option value=\"12\">Creative Commons by-nd</option><option value=\"11\">Creative Commons by-sa</option><option value=\"8\">GFDL</option><option value=\"1\">GPL</option><option value=\"2\">LGPL</option><option value=\"0\">Other</option><option value=\"7\">Proprietary License</option><option value=\"5\">QPL</option><option value=\"4\">X11</option>'
@@ -477,6 +486,17 @@
 	                                     if ((typeof license != 'undefined') && (license != "")) {
 	                                         $("#file-tag-license-text" + this.id).text(license);
 	                                     }
+                                             
+                                             if ((typeof filetypeId != 'undefined') && (filetypeId != "")) {
+	                                         $("#data-select-filetype" + this.id + " option[value='" + filetypeId + "']").attr('selected', 'selected');
+	                                         $filetypeIdText = $("#data-select-filetype" + this.id + " option[value='" + filetypeId + "']").text();
+	                                         $("#data-select-filetype" + this.id).hide();
+	                                         $("#file-tag-filetype" + this.id).text($filetypeIdText);
+	                                     } else {
+	                                      $("#data-select-filetype" + this.id).hide();
+	                                     }
+
+	                                     $("#data-select-filetype" + this.id).hide();
 
 	                                     if (isExternLink) {
 	                                         $("#data-link" + this.id).attr('href', decodeURIComponent(link));
@@ -514,7 +534,7 @@
 
                                  $pploadCollection.find('table[data-ppload-files] tfoot').append(
                                      '<tr>'
-                                     + '<th colspan="5">' + data.pagination.totalItems + ' <?= $this->translate("files")?> ('+myArrayActive.length+' active and <span style="color: #ccc;" ><a style="cursor:pointer" onclick="fnToggleInactiveFiles();return false;">'+myArrayInactive.length+' inactive</a></span>)</th>'
+                                     + '<th colspan="6">' + data.pagination.totalItems + ' <?= $this->translate("files")?> ('+myArrayActive.length+' active and <span style="color: #ccc;" ><a style="cursor:pointer" onclick="fnToggleInactiveFiles();return false;">'+myArrayInactive.length+' inactive</a></span>)</th>'
                                      + '<th style="text-align: left">' + downloaded_count_total + '</th>'
                                      + '<th></th>'
                                     + '<th style="text-align: right">' + fileSizeSum.toFixed(2) + ' MB</th>'
