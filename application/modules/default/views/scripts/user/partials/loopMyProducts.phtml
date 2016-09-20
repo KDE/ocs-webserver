@@ -163,7 +163,7 @@ $helperDonationListSource = new Default_View_Helper_ExternalDonationListSource()
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     <h3 class="center"><?= $this->translate('Delete Confirmation') ?></h3>
                 </div>
-                <div class="modal-body"><?= $this->translate('Do you really want to delete this product?') ?></div>
+                <div class="modal-body"><?= $this->translate('Do you really want to delete this product?<br>This is permanent and can not be undone!') ?></div>
                 <!-- dialog buttons -->
                 <div class="modal-footer">
                     <a href="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, 'delete', array('m' => $this->member_id)) ?>"
