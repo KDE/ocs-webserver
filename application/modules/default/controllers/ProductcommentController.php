@@ -67,8 +67,8 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
         //Send a notification to the parent comment writer
         if((int)$this->getParam('i')!=0) {
             $parentComment = $tableReplies->getComment((int)$this->getParam('i'));
-            $parentCommentOwner = $this->loadMemberInfo($parentComment['comment_member_id']);
-            if($parentCommentOwner && $parentCommentOwner['mail'] != $this->view->product->mail) {
+            $parentCommentOwner = $this->loadMemberInfo($parentComment->comment_member_id);
+            if($parentCommentOwner && $parentCommentOwner->mail != $this->view->product->mail) {
                 $this->sendNotificationToParent($this->view->product, $parentCommentOwner, $data['comment_text']);
             }
         }
@@ -133,10 +133,10 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
     private function sendNotificationToParent($product, $parentCommentOwner, $comment)
     {
         $newPasMail = new Default_Plugin_SendMail('tpl_user_comment_reply_note');
-        $newPasMail->setReceiverMail($parentCommentOwner['mail']);
-        $newPasMail->setReceiverAlias($parentCommentOwner['username']);
+        $newPasMail->setReceiverMail($parentCommentOwner->mail);
+        $newPasMail->setReceiverAlias($parentCommentOwner->username);
 
-        $newPasMail->setTemplateVar('username', $parentCommentOwner['username']);
+        $newPasMail->setTemplateVar('username', $parentCommentOwner->username);
         $newPasMail->setTemplateVar('product_title', $product->title);
         $newPasMail->setTemplateVar('comment_text', $comment);
 
