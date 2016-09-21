@@ -100,7 +100,7 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
     
     private function loadMemberInfo($memberId)
     {
-        $mamberTable = new Default_Model_Member();
+        $memberTable = new Default_Model_Member();
         return $memberTable->fetchMemberData($memberId);
     }
 
