@@ -96,7 +96,7 @@
                                       ?>
                                       <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
                                           <span class="page-views"><a target="_NEW" href="http://cp1.hive01.com/content/show.php?content=<?= $this->product->project_source_pk ?>">link to hive</a></span>
-                                          <span class="page-views"><a id="delete-this" href="/backend/project/delete?project_id=<?= $this->product->project_id ?>">delete this</a></span>
+                                          <span class="page-views"><a id="delete-this" href="/backend/project/delete?project_id=<?= $this->product->project_id ?>">delete product</a></span>
 
                                           <div style="clear: both"> </div>
                                             <span class="page-views">  
@@ -112,13 +112,13 @@
                                           <script>
                                               $('#delete-this').on('click', function (event) {
                                                   event.stopPropagation();
-                                                  var result = confirm("delete?");
+                                                  var result = confirm("Delete Product?");
                                                   if (result) {
                                                      var target = $(this).attr('href');                                                  
                                                     $.ajax({
                                                         url: target,
                                                         success: function (results) {
-                                                            alert('Project deleted successfully');
+                                                            alert('Product deleted successfully');
                                                         },
                                                         error: function() {
                                                             alert('Service is temporarily unavailable.');
