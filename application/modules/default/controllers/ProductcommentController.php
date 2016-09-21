@@ -66,10 +66,14 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
         
         //Send a notification to the parent comment writer
         if((int)$this->getParam('i')!=0) {
-            $parentComment = $tableReplies->getComment((int)$this->getParam('i'));
-            $parentCommentOwner = $this->loadMemberInfo($parentComment->comment_member_id);
-            if($parentCommentOwner && $parentCommentOwner->mail != $this->view->product->mail) {
-                $this->sendNotificationToParent($this->view->product, $parentCommentOwner, $data['comment_text']);
+            $parentCommentArray = (array) $tableReplies->getComment((int)$this->getParam('i'));
+            if(count($parentCommentArray)>0) {
+                $parentComment = $parentCommentArray[0];
+
+                $parentCommentOwner = $this->loadMemberInfo($parentComment['comment_member_id']);
+                if($parentCommentOwner && $parentCommentOwner->mail != $this->view->product->mail && $parentCommentOwner->member_id != $this->_authMember->member_id) {
+                    $this->sendNotificationToParent($this->view->product, $parentCommentOwner, $data['comment_text']);
+                }
             }
         }
         
