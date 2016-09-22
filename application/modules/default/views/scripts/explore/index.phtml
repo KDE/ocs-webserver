@@ -86,20 +86,26 @@ if('all' == strtolower($catTitle) OR (false === isset($catTitle))) {
             </section>
         </section>
 
-        <aside class="col-lg-2 col-md-4 col-sm-8 col-xs-12" id="explore-sidebar" style="background-color: #f1f1f1">
-                
-                      
+<?php
+     $comments = $modelInfo->getLastCommentsForHostStores(5, $this->cat_id);
+     $donations = $modelInfo->getLastPlingsForHostStores(5, $this->cat_id);
+     $topprods = $modelInfo->getMostDownloadedForHostStores(100, $this->cat_id);        
+     $asidehide = '';
+     if(!$this->catabout && count($comments)==0 && count($donations)==0 && count($topprods)==0 )
+     {
+        $asidehide = 'display:none';
+     }
+?>
+
+        <aside class="col-lg-2 col-md-4 col-sm-8 col-xs-12" id="explore-sidebar" style="background-color: #f1f1f1; <?=$asidehide?>">
+                                      
             <?php       
             /**     
             if ($this->users) {        
                           echo $this->render('explore/partials/user.phtml');
             } **/ 
             ?>
-
-
-
-            <?php
-            $comments = $modelInfo->getLastCommentsForHostStores(5, $this->cat_id);
+            <?php            
             if (count($comments) > 0) {
                 ?>
                 <span class="commentTitle" style="margin:auto;display:table;padding:5px"> Comments</span>
@@ -115,8 +121,7 @@ if('all' == strtolower($catTitle) OR (false === isset($catTitle))) {
 
             
 
-            <?php
-            $donations = $modelInfo->getLastPlingsForHostStores(5, $this->cat_id);
+            <?php        
             if (count($donations) > 0) {
                 ?>
                 <span class="donationTitle" style="margin:auto;display:table;padding:5px"> Donations</span>
@@ -131,7 +136,7 @@ if('all' == strtolower($catTitle) OR (false === isset($catTitle))) {
 
 
             <?php
-            $topprods = $modelInfo->getMostDownloadedForHostStores(100, $this->cat_id);        
+            
             if (count($topprods) > 0) {
                 ?>
                 <span class="commentTitle" style="margin:auto;display:table;padding:5px"> 6 Months Ranking <span class="small light"> (download counts)</span></span>                 
