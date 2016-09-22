@@ -55,6 +55,11 @@ class Default_Model_DbTable_Member extends Local_Model_Table
             'columns' => 'member_id',
             'refTableClass' => 'Default_Model_Project',
             'refColumns' => 'member_id'
+        ),
+        'Email' => array(
+            'columns' => 'member_id',
+            'refTableClass' => 'Default_Model_DbTable_MemberEmail',
+            'refColums' => 'email_member_id'
         )
     );
 

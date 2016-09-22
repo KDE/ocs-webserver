@@ -19,26 +19,28 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
+
+$modelMember = new Default_Model_MemberEmail();
+$listEmails = $modelMember->fetchAllMailAdresses($this->member->member_id);
 ?>
 <style>
-.boxed-group-list {
+.group-list {
     list-style: outside none none;
 }
-.boxed-group-list.standalone > li:first-child {
+.group-list > li:first-child {
     border-top: 0 none;
 }
-.boxed-group-list > li:first-child {
+.group-list > li:first-child {
     border-top: 1px solid #ddd;
 }
-.boxed-group-list > li {
+.group-list > li {
     border-bottom: 1px solid #e5e5e5;
     display: block;
     line-height: 23px;
     margin-left: -10px;
-    margin-right: -10px;
     padding: 5px 10px;
 }
-.settings-email .css-truncate-target {
+.group-list .css-truncate .css-truncate-target {
     max-width: 300px;
 }
 .css-truncate.css-truncate-target, .css-truncate .css-truncate-target {
@@ -63,8 +65,16 @@ span.label.default {
     margin-left: 4px;
     padding: 4px 6px;
 }
+span.label.attention {
+    background-color: #c64f0d;
+    border-radius: 3px;
+    color: #fff;
+    margin-left: 4px;
+    padding: 4px 6px;
+}
 .btn {
-    padding: 6px 12px;
+    line-height: 20px;
+    padding: 4px 12px;
 }
 </style>
 <div class="panel-heading">
@@ -77,78 +87,71 @@ span.label.default {
     </h4>
 </div>
 
-    <div class="panel-collapse collapse" id="email-collapse">
-        <div class="panel-body">
-            <p>Your <strong>primary email address</strong> will be used for account-related notifications
-                (e.g. account changes) as well as any web-based operations
-                (e.g. comments and other notifications).</p>
-
-            <ul>
-                <li>
-                    <span title="email@address.com" >email@address.com</span>
-                    <span class="email-actions">
-                        <form method="post" action="/settings/removeemail">
-                            <button data-confirm="Are you sure you want to remove this email from your account?" aria-label="Delete"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
-                        </form>
-                        <form method="post" action="/settings/setdefaultemail">
-                            <button>Set as primary</button>
-                        </form>
-                    </span>
-                </li>
-            </ul>
-        </div>
-    </div>
 <div class="panel-collapse collapse" id="email-collapse">
-        <div class="panel-body boxed-group">
-            <div class="boxed-group-inner">
-                <p>Your <strong>primary email address</strong> will be used for account-related notifications
-                    (e.g. account changes) as well as any web-based operations
-                    (e.g. comments and other notifications).</p>
-                <ul class="boxed-group-list standalone" id="settings-emails">
-                    <li class="clearfix css-truncate settings-email">
-                        <span title="info@dschinnweb.de" class="css-truncate-target">info@dschinnweb.de</span>
-                        <span class="email-actions">
-                            <form method="post" data-form-nonce="f26dfd37c5ab0be8646802c54dbe25a91841b151" action="/users/dschinni/emails/3800388" accept-charset="UTF-8"><div style="margin:0;padding:0;display:inline"><input type="hidden" value="✓" name="utf8"><input type="hidden" value="delete" name="_method"><input type="hidden" value="yFLDl9oRltN/6Lqonu1oh0EyCxdpOUMCiVCPpDRtCcj/Pe03746sea5fR3ISqjEFchtD8t9pHx333vnruk3VoQ==" name="authenticity_token"></div>
-                            <button data-confirm="Are you sure you want to remove this email from your account?" aria-label="Delete" class="btn btn-default settings-remove-email ">
+    <div class="panel-body">
+        <div id="form-email-body" class="well">
+        <p>Your <strong>primary email address</strong> will be used for account-related notifications
+            (e.g. account changes) as well as any web-based operations
+            (e.g. comments and other notifications).</p>
+
+        <ul class="group-list">
+            <?php
+            foreach ($listEmails as $listEmail) {
+            ?>
+            <li class="css-truncate">
+                <span title="<?=$listEmail['email_address']?>" class="css-truncate-target"><?=$listEmail['email_address']?></span>
+                <?php if ($listEmail['email_primary']) { ?>
+                <span class="label default">Primary</span>
+                <?php } ?>
+                <?php if (empty($listEmail['email_checked'])) { ?>
+                    <span class="label attention">Not confirmed</span>
+                <?php } ?>
+                <span class="email-actions">
+                    <?php if (empty($listEmail['email_primary'])) { ?>
+                        <form method="post" action="/settings/removeemail/<?=$listEmail['email_id']?>">
+                            <button data-message="Are you sure you want to remove this email from your account?" data-callback="defaultCallbackConfirmation" aria-label="Delete" class="btn remove">
                                 <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                             </button>
-                            </form>
-                            <form method="post" data-form-nonce="f26dfd37c5ab0be8646802c54dbe25a91841b151" action="/users/dschinni/emails/3800388/set_default" accept-charset="UTF-8"><div style="margin:0;padding:0;display:inline"><input type="hidden" value="✓" name="utf8"><input type="hidden" value="put" name="_method"><input type="hidden" value="fr/2ASruFI7HhwDiZWgv7HKM7Imta1KsVbJ2ATpTwB2hMQm20+2slqzq5+CakUE22SLPOH2x6ciArxQOCEcj+A==" name="authenticity_token"></div>
-                            <button class="btn btn-sm" type="submit">Set as primary</button>
-                            </form>
-                        </span>
-                    </li>
-                    <li class="clearfix css-truncate settings-email">
-                        <span title="alexander@pling.com" class="css-truncate-target">alexander@pling.com</span>
-                        <span class="label default">Primary</span>
-                        <span class="email-actions">
-                        <form method="post" data-form-nonce="f26dfd37c5ab0be8646802c54dbe25a91841b151" action="/users/dschinni/emails/7562705" accept-charset="UTF-8"><div style="margin:0;padding:0;display:inline"><input type="hidden" value="✓" name="utf8"><input type="hidden" value="delete" name="_method"><input type="hidden" value="ZqrMf3DRiOr7wjQTEmalJrKljKgJ85iN2r8BZSKvpSGBgp6R2gpQrsJ1z7MpZ/t+C+X2JBANjsxbbmXYu8CiLA==" name="authenticity_token"></div>
-                            <button data-confirm="Are you sure you want to remove this email from your account?" aria-label="Delete" class="btn btn-default settings-remove-email ">
-                              <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                            </button>
                         </form>
-                        </span>
-                    </li>
-                </ul>
+                        <?php if ($listEmail['email_checked']) { ?>
+                        <form method="post" action="/settings/setdefaultemail/<?=$listEmail['email_id']?>" class="partial">
+                            <button class="btn" type="submit">Set as primary</button>
+                        </form>
+                        <?php } ?>
+                    <?php } ?>
+                    <?php if (empty($listEmail['email_checked'])) { ?>
+                        <form method="post" action="/settings/resendverification/<?=$listEmail['email_id']?>" class="partial">
+                            <button class="btn" type="submit">Resend verification</button>
+                        </form>
+                    <?php } ?>
+                </span>
+            </li>
+            <?php } ?>
+        </ul>
 
-                <form method="post" id="new_user_email" data-form-nonce="f26dfd37c5ab0be8646802c54dbe25a91841b151" class="new_user_email" action="/users/dschinni/emails" accept-charset="UTF-8"><div style="margin:0;padding:0;display:inline"><input type="hidden" value="✓" name="utf8"><input type="hidden" value="uWElg/Bob3mEg90O77GWhFusdD+HGZK1H50YrRhMAMrzwlGXAADBC2JS1KEoJIK4VkRaIcju9mxZiRs5KsJoWQ==" name="authenticity_token"></div>
-                    <dl class="form-group new-email-form">
-                        <dt><label for="email">Add email address</label></dt>
-                        <dd>
-                            <input type="email" size="30" required="required" name="user_email[email]" id="email" class="form-control short">
-                            <button class="btn" type="submit">Add</button>
-                        </dd>
-                    </dl>
-                </form>
-                <hr class="bleed-flush">
+        <form method="post" action="/settings/addemail/" class="partial"  data-target="#form-email"
+              data-trigger="#email-trigger">
+            <dl class="inline">
+                <dt><label for="email">Add email address</label></dt>
+                <dd><input type="email" size="30" required="required" name="user_email" id="email" class="">
+                    <button class="btn" type="submit">Add</button></dd>
+            </dl>
+        </form>
 
-            </div>
+        <hr>
+        <div class="row">
+            <?php
+            if ($this->messages) {
+                foreach ($this->messages as $message) {
+                    echo "<div>{$message}</div>";
+                }
+            }
+            ?>
         </div>
-        <!-- /.standard-form -->
-    <!-- /.section-body -->
+    </div>
 </div>
-<?php $this->inlineScript()->appendScript(
+<?php  /* $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
-            ButtonCode.setupClipboardCopy(\'#container-verification-code\');
+
         });
-    ');
+    '); */

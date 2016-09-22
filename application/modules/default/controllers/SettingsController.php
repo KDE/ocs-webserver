@@ -1068,7 +1068,21 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
 
     public function addemailAction()
     {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer('partials/email');
 
+        $filterInput = $this->createFilter();
+
+        if ($filterInput->hasInvalid()) {
+            $this->view->messages = $filterInput->getMessages();
+            return;
+        }
+
+        $resultSet = $this->saveEmail($filterInput);
+
+        $this->sendConfirmationMail($resultSet->toArray());
+
+        $this->view->messages = array('success' => 'Your email was saved. Please check your email account for verification email.');
     }
 
     public function removeemailAction()
@@ -1080,4 +1094,77 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
     {
 
     }
+
+    /**
+     * @return Zend_Filter_Input
+     */
+    protected function createFilter()
+    {
+        $mailValidCheck = new Zend_Validate_EmailAddress();
+        $mailValidCheck->setMessage('RegisterFormEmailErrNotValid', Zend_Validate_EmailAddress::INVALID)
+            ->setMessage('RegisterFormEmailErrNotValid', Zend_Validate_EmailAddress::INVALID_FORMAT)
+            ->setMessage('RegisterFormEmailErrNotValid', Zend_Validate_EmailAddress::INVALID_LOCAL_PART)
+            ->setMessage("RegisterFormEmailErrWrongHost", Zend_Validate_EmailAddress::INVALID_HOSTNAME)
+            ->setMessage("RegisterFormEmailErrWrongHost2", Zend_Validate_Hostname::INVALID_HOSTNAME)
+            ->setMessage("RegisterFormEmailErrHostLocal", Zend_Validate_Hostname::LOCAL_NAME_NOT_ALLOWED)
+            ->setOptions(array('domain' => true));
+
+        // Filter-Parameter
+        $filterInput = new Zend_Filter_Input(
+            array('*' => 'StringTrim', 'user_email' => 'StripTags'),
+            array(
+                'user_email' => array(
+                    $mailValidCheck,
+                    'presence' => 'required'
+                )
+            ),
+            $this->getAllParams()
+        );
+        return $filterInput;
+    }
+
+    /**
+     * @param $filterInput
+     * @return Zend_Db_Table_Row_Abstract
+     */
+    protected function saveEmail($filterInput)
+    {
+        $data = array();
+        $data['email_member_id'] = $this->_authMember->member_id;
+        $data['email_address'] = $filterInput->getEscaped('user_email');
+        $data['email_verification_value'] = md5($data['email_address'] . $this->_authMember->username . time());
+        $modelMemberEmail = new Default_Model_DbTable_MemberEmail();
+        return $modelMemberEmail->save($data);
+    }
+
+    /**
+     * @param array $data
+     * @param string $verificationVal
+     */
+    protected function sendConfirmationMail($data)
+    {
+        $confirmMail = new Default_Plugin_SendMail('tpl_verify_email');
+        $confirmMail->setTemplateVar('servername', $this->getServerName());
+        $confirmMail->setTemplateVar('username', $this->_authMember->username);
+        $confirmMail->setTemplateVar('verificationlinktext',
+            '<a href="https://' . $this->getServerName() . '/verification/' . $data['email_verification_value'] . '">Click here to verify your email address</a>');
+        $confirmMail->setTemplateVar('verificationlink',
+            '<a href="https://' . $this->getServerName() . '/verification/' . $data['email_verification_value'] . '">https://' . $this->getServerName() . '/verification/' . $data['email_verification_value'] . '</a>');
+        $confirmMail->setTemplateVar('verificationurl',
+            'https://' . $this->getServerName() . '/verification/' . $data['email_verification_value']);
+        $confirmMail->setReceiverMail($data['email_address']);
+        $confirmMail->setFromMail('registration@opendesktop.org');
+        $confirmMail->send();
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function getServerName()
+    {
+        /** @var Zend_Controller_Request_Http $request */
+        $request = $this->getRequest();
+        return $request->getHttpHost();
+    }
+
 }

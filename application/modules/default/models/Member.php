@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -35,7 +36,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         }
 
         $allowedDirection = array('desc' => true, 'asc' => true);
-        if(false == isset($allowedDirection[strtolower($dir)])) {
+        if (false == isset($allowedDirection[strtolower($dir)])) {
             $dir = null;
         }
 
@@ -43,40 +44,37 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         $cache = Zend_Registry::get('cache');
         $cacheName = __FUNCTION__ . md5($count . $orderBy . $dir);
         $members = $cache->load($cacheName);
-        
+
         if ($members) {
             return $members;
         } else {
 
-          $sql = '
+            $sql = '
               SELECT count(*) as total_count
               FROM member
               WHERE `is_active` = :activeVal
                  AND `type` = :typeVal
                AND `profile_image_url` <> :defaultImgUrl
                AND `profile_image_url` like :likeImgUrl
-          ';                              
-   
-
-          $resultCnt = $this->_db->fetchRow($sql, array(
-              'activeVal' => Default_Model_Member::MEMBER_ACTIVE,
-              'typeVal' => Default_Model_Member::MEMBER_TYPE_PERSON,
-            'defaultImgUrl' => 'hive/user-pics/nopic.png',
-            'likeImgUrl' => 'hive/user-bigpics/0/%'
-          ));    
+          ';
 
 
-          $totalcnt =  $resultCnt['total_count'];
+            $resultCnt = $this->_db->fetchRow($sql, array(
+                'activeVal' => Default_Model_Member::MEMBER_ACTIVE,
+                'typeVal' => Default_Model_Member::MEMBER_TYPE_PERSON,
+                'defaultImgUrl' => 'hive/user-pics/nopic.png',
+                'likeImgUrl' => 'hive/user-bigpics/0/%'
+            ));
 
 
-          if($totalcnt>$count)
-          {
-            $offset =' offset '. rand(0, $totalcnt - $count);
-          }
-          else
-          {
-            $offset =''; 
-          }
+            $totalcnt = $resultCnt['total_count'];
+
+
+            if ($totalcnt > $count) {
+                $offset = ' offset ' . rand(0, $totalcnt - $count);
+            } else {
+                $offset = '';
+            }
 
             $sql = '
                 SELECT *
@@ -89,18 +87,18 @@ class Default_Model_Member extends Default_Model_DbTable_Member
             //$sql .= ' ORDER BY ' . $this->_db->quoteIdentifier($orderBy) . ' ' . $dir;
 
             $sql .= ' LIMIT ' . $this->_db->quote($count, Zend_Db::INT_TYPE);
-            $sql .=  $offset;
-            
+            $sql .= $offset;
+
             $resultMembers = $this->getAdapter()->query($sql, array(
                 'activeVal' => Default_Model_Member::MEMBER_ACTIVE,
                 'typeVal' => Default_Model_Member::MEMBER_TYPE_PERSON,
-            	'defaultImgUrl' => 'hive/user-pics/nopic.png',
-              'likeImgUrl' => 'hive/user-bigpics/0/%'
+                'defaultImgUrl' => 'hive/user-pics/nopic.png',
+                'likeImgUrl' => 'hive/user-bigpics/0/%'
             ))->fetchAll();
-                          
+
 
             $resultSet = $this->generateRowSet($resultMembers);
-                  
+
             $cache->save($resultSet, $cacheName, array(), 14400);
 
             return $resultSet;
@@ -194,10 +192,17 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         $modelComments->setAllCommentsForUserDeleted($member_id);
     }
 
-    private function setMemberPlingsDeleted($member_id)
+    private function removeMemberProjectsFromSearch($member_id)
     {
-        $modelPling = new Default_Model_Pling();
-        $modelPling->setAllPlingsForUserDeleted($member_id);
+        $modelProject = new Default_Model_Project();
+        $memberProjects = $modelProject->fetchAllProjectsForMember($member_id);
+        $modelSearch = new Default_Model_Search_Lucene();
+        foreach ($memberProjects as $memberProject) {
+            $product = array();
+            $product['project_id'] = $memberProject->project_id;
+            $product['project_category_id'] = $memberProject->project_category_id;
+            $modelSearch->deleteDocument($product);
+        }
     }
 
     /**
@@ -228,12 +233,6 @@ class Default_Model_Member extends Default_Model_DbTable_Member
     {
         $modelComment = new Default_Model_ProjectComments();
         $modelComment->setAllCommentsForUserActivated($member_id);
-    }
-
-    private function setMemberPlingsActivated($member_id)
-    {
-        $modelPling = new Default_Model_Pling();
-        $modelPling->setAllPlingsForUserActivated($member_id);
     }
 
     /**
@@ -316,28 +315,28 @@ class Default_Model_Member extends Default_Model_DbTable_Member
     public function fetchSupportedProjects($member_id, $limit = null)
     {
         /***
-        $sql = "
-                SELECT plings.project_id,
-                       plings.member_id,
-                       count(plings.member_id) AS collectPlingsFromMember,
-                       project_category.title AS catTitle,
-                       project.*,
-        			   member.*,
-                       (SELECT COUNT(DISTINCT plings.member_id) FROM plings WHERE plings.status_id >= 2 AND plings.project_id = project.project_id) AS plingers,
-                       (SELECT SUM(amount) FROM plings WHERE plings.project_id=project.project_id AND plings.status_id=2) AS sumAmount,
-                       (SELECT SUM(amount) FROM plings WHERE plings.project_id=project.project_id AND plings.status_id IN (2,3,4)) AS collectPlingsAll
-                FROM plings
-                LEFT JOIN project ON plings.project_id = project.project_id
-                LEFT JOIN project_category ON project.project_category_id = project_category.project_category_id
-        		LEFT JOIN member ON project.member_id = member.member_id
-        		WHERE plings.status_id in (2,3,4)
-                  AND plings.member_id = :member_id
-                  AND project.status = :project_status
-                  AND project.type_id = 1
-                GROUP BY plings.project_id
-                ORDER BY sumAmount DESC
-                ";
-        **/
+         * $sql = "
+         * SELECT plings.project_id,
+         * plings.member_id,
+         * count(plings.member_id) AS collectPlingsFromMember,
+         * project_category.title AS catTitle,
+         * project.*,
+         * member.*,
+         * (SELECT COUNT(DISTINCT plings.member_id) FROM plings WHERE plings.status_id >= 2 AND plings.project_id = project.project_id) AS plingers,
+         * (SELECT SUM(amount) FROM plings WHERE plings.project_id=project.project_id AND plings.status_id=2) AS sumAmount,
+         * (SELECT SUM(amount) FROM plings WHERE plings.project_id=project.project_id AND plings.status_id IN (2,3,4)) AS collectPlingsAll
+         * FROM plings
+         * LEFT JOIN project ON plings.project_id = project.project_id
+         * LEFT JOIN project_category ON project.project_category_id = project_category.project_category_id
+         * LEFT JOIN member ON project.member_id = member.member_id
+         * WHERE plings.status_id in (2,3,4)
+         * AND plings.member_id = :member_id
+         * AND project.status = :project_status
+         * AND project.type_id = 1
+         * GROUP BY plings.project_id
+         * ORDER BY sumAmount DESC
+         * ";
+         **/
         $sql = "
                 SELECT plings.project_id,                       
                        project.title,
@@ -374,26 +373,26 @@ class Default_Model_Member extends Default_Model_DbTable_Member
     public function fetchFollowedProjects($member_id, $limit = null)
     {
         /**
-        $sql = "
-                SELECT project_follower.project_id,
-                       project_follower.member_id,
-                       project_category.title AS catTitle,
-                       project.*,
-        			   member.*,
-                       (SELECT COUNT(DISTINCT plings.member_id) FROM plings WHERE plings.status_id >= 2 AND plings.project_id = project.project_id) AS plingers,
-                       (SELECT SUM(amount) FROM plings WHERE plings.project_id=project.project_id AND plings.status_id=2) AS sumAmount,
-                       (SELECT SUM(amount) FROM plings WHERE plings.project_id=project.project_id AND plings.status_id IN (2,3,4)) AS collectPlingsAll
-                FROM project_follower
-                LEFT JOIN project ON project_follower.project_id = project.project_id
-                LEFT JOIN project_category ON project.project_category_id = project_category.project_category_id
-        		LEFT JOIN member ON project.member_id = member.member_id
-        		WHERE project_follower.member_id = :member_id
-                  AND project.status = :project_status
-                  AND project.type_id = 1
-                GROUP BY project_follower.project_id
-                ORDER BY max(project_follower.project_follower_id) DESC
-                ";
-            **/
+         * $sql = "
+         * SELECT project_follower.project_id,
+         * project_follower.member_id,
+         * project_category.title AS catTitle,
+         * project.*,
+         * member.*,
+         * (SELECT COUNT(DISTINCT plings.member_id) FROM plings WHERE plings.status_id >= 2 AND plings.project_id = project.project_id) AS plingers,
+         * (SELECT SUM(amount) FROM plings WHERE plings.project_id=project.project_id AND plings.status_id=2) AS sumAmount,
+         * (SELECT SUM(amount) FROM plings WHERE plings.project_id=project.project_id AND plings.status_id IN (2,3,4)) AS collectPlingsAll
+         * FROM project_follower
+         * LEFT JOIN project ON project_follower.project_id = project.project_id
+         * LEFT JOIN project_category ON project.project_category_id = project_category.project_category_id
+         * LEFT JOIN member ON project.member_id = member.member_id
+         * WHERE project_follower.member_id = :member_id
+         * AND project.status = :project_status
+         * AND project.type_id = 1
+         * GROUP BY project_follower.project_id
+         * ORDER BY max(project_follower.project_follower_id) DESC
+         * ";
+         **/
 
         $sql = "
                 SELECT project_follower.project_id,
@@ -447,10 +446,9 @@ class Default_Model_Member extends Default_Model_DbTable_Member
 
     }
 
-
     public function fetchSupportedByProjects($member_id, $limit = null)
     {
-         $sql = "
+        $sql = "
                 SELECT project_category.title AS catTitle,
                        project.project_id,
                        project.title,
@@ -491,7 +489,8 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         if (false == isset($userData['password'])) {
             throw new Exception(__function__ . ': user password is not set.');
         }
-        $userData['password'] = Local_Auth_Adapter_Ocs::getEncryptedPassword($userData['password'], Default_Model_DbTable_Member::SOURCE_LOCAL);
+        $userData['password'] = Local_Auth_Adapter_Ocs::getEncryptedPassword($userData['password'],
+            Default_Model_DbTable_Member::SOURCE_LOCAL);
         if (false == isset($userData['roleId'])) {
             $userData['roleId'] = self::ROLE_ID_DEFAULT;
         }
@@ -611,36 +610,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         return $this->fetchRow($sel);
     }
 
-
-/*
-    public function fetchEarnings($projectIds, $limit = null)
-    {
-        $sql = "
-                SELECT project_category.title AS catTitle,
-                       project.*,
-        			   member.*,
-    				   plings.*
-                FROM plings
-                LEFT JOIN project ON plings.project_id = project.project_id
-                LEFT JOIN project_category ON project.project_category_id = project_category.project_category_id
-        		LEFT JOIN member ON project.member_id = member.member_id
-        		WHERE plings.status_id = 2
-                  AND project.status = " . Default_Model_Project::PROJECT_ACTIVE . "
-                  AND project.type_id = 1
-                  AND plings.project_id IN (" . implode(",", $projectIds) . ")
-                ORDER BY plings.create_time DESC
-                ";
-
-        if (null != $limit) {
-            $sql .= $this->_db->quoteInto(" limit ?", $limit, 'INTEGER');
-        }
-
-        $result = $this->_db->fetchAll($sql);
-        return $this->generateRowSet($result);
-    }
-*/
-
-    public function fetchEarnings($member_id,$limit = null)
+    public function fetchEarnings($member_id, $limit = null)
     {
         $sql = "
                 SELECT project_category.title AS catTitle,
@@ -654,7 +624,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
                 WHERE plings.status_id = 2
                   AND project.status = " . Default_Model_Project::PROJECT_ACTIVE . "
                   AND project.type_id = 1
-                  AND project.member_id = ". $member_id. "
+                  AND project.member_id = " . $member_id . "
                 ORDER BY plings.create_time DESC
                 ";
 
@@ -665,6 +635,36 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         $result = $this->_db->fetchAll($sql);
         return $this->generateRowSet($result);
     }
+
+
+    /*
+        public function fetchEarnings($projectIds, $limit = null)
+        {
+            $sql = "
+                    SELECT project_category.title AS catTitle,
+                           project.*,
+                           member.*,
+                           plings.*
+                    FROM plings
+                    LEFT JOIN project ON plings.project_id = project.project_id
+                    LEFT JOIN project_category ON project.project_category_id = project_category.project_category_id
+                    LEFT JOIN member ON project.member_id = member.member_id
+                    WHERE plings.status_id = 2
+                      AND project.status = " . Default_Model_Project::PROJECT_ACTIVE . "
+                      AND project.type_id = 1
+                      AND plings.project_id IN (" . implode(",", $projectIds) . ")
+                    ORDER BY plings.create_time DESC
+                    ";
+
+            if (null != $limit) {
+                $sql .= $this->_db->quoteInto(" limit ?", $limit, 'INTEGER');
+            }
+
+            $result = $this->_db->fetchAll($sql);
+            return $this->generateRowSet($result);
+        }
+    */
+
     /**
      * Finds an active user by given username or email ($identity)
      *
@@ -736,7 +736,11 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         if (isset($limit)) {
             $sql .= ' limit ' . (int)$limit;
         }
-        $result = $this->_db->fetchAll($sql, array('member_id' => $member_id, 'project_status' => Default_Model_DbTable_Project::PROJECT_ACTIVE, 'comment_status' => Default_Model_DbTable_Comments::COMMENT_ACTIVE));
+        $result = $this->_db->fetchAll($sql, array(
+            'member_id' => $member_id,
+            'project_status' => Default_Model_DbTable_Project::PROJECT_ACTIVE,
+            'comment_status' => Default_Model_DbTable_Comments::COMMENT_ACTIVE
+        ));
 
         if (count($result) > 0) {
             return new Zend_Paginator(new Zend_Paginator_Adapter_Array($result));
@@ -757,10 +761,10 @@ class Default_Model_Member extends Default_Model_DbTable_Member
                   AND project.is_deleted = 0
                   AND project.member_id = :member_id
             ';
-         $result = $this->_db->fetchAll($sql, array('member_id' => $member_id,'project_status' => Default_Model_Project::PROJECT_ACTIVE));
-         return count($result);
+        $result = $this->_db->fetchAll($sql,
+            array('member_id' => $member_id, 'project_status' => Default_Model_Project::PROJECT_ACTIVE));
+        return count($result);
     }
-
 
     public function fetchLastActiveTime($member_id)
     {
@@ -772,29 +776,27 @@ class Default_Model_Member extends Default_Model_DbTable_Member
                       SELECT max(time) lastactive from activity_log where member_id = :member_id
                   ) lastactiv
                   ';
-        
-        $result = $this->_db->fetchRow($sql,array('member_id' => $member_id));
+
+        $result = $this->_db->fetchRow($sql, array('member_id' => $member_id));
         $lastpageviewdate = null;
         if (count($result) > 0) {
-            $lastpageviewdate =  $result['lastactive'];
+            $lastpageviewdate = $result['lastactive'];
             return $lastpageviewdate;
-        }else
-        {
+        } else {
             return null;
-        }    
-    }
-
-    private function removeMemberProjectsFromSearch($member_id)
-    {
-        $modelProject = new Default_Model_Project();
-        $memberProjects = $modelProject->fetchAllProjectsForMember($member_id);
-        $modelSearch = new Default_Model_Search_Lucene();
-        foreach ($memberProjects as $memberProject) {
-            $product = array();
-            $product['project_id'] = $memberProject->project_id;
-            $product['project_category_id'] = $memberProject->project_category_id;
-            $modelSearch->deleteDocument($product);
         }
     }
-    
+
+    private function setMemberPlingsDeleted($member_id)
+    {
+        $modelPling = new Default_Model_Pling();
+        $modelPling->setAllPlingsForUserDeleted($member_id);
+    }
+
+    private function setMemberPlingsActivated($member_id)
+    {
+        $modelPling = new Default_Model_Pling();
+        $modelPling->setAllPlingsForUserActivated($member_id);
+    }
+
 }
