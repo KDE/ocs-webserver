@@ -19,13 +19,6 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-
-$helperPrintDate = new Default_View_Helper_PrintDate();
-$updateTime = $helperPrintDate->printDate($this->comment['comment_created_at']);
-$helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
-$helperFetchSubcategoriesForProduct = new Default_View_Helper_FetchCategoriesForProductAsString();
-$helperImage = new Default_View_Helper_Image();
-$helperTruncate = new Default_View_Helper_Truncate();
 ?>
 
 <div class="productrow">
@@ -37,16 +30,16 @@ $helperTruncate = new Default_View_Helper_Truncate();
       
              <?= $this->comment['title'] ?>                
             <br>
-             <span style="font-size: smaller;"><?php echo $helperFetchSubcategoriesForProduct->fetchCategoriesForProductAsString($this->comment['project_id']) ?></span>
+             <span style="font-size: smaller;"><?php echo $this->fetchCategoriesForProductAsString($this->comment['project_id']) ?></span>
              
       
       
          <div class="small" style="line-height:1.3"><a
                      href="/p/<?= $this->comment['project_id'] ?>">
-                         <?=$helperTruncate->truncate($this->comment['comment_text'], 200, '...', false, true)?>
+                         <?=$this->truncate(strip_tags($this->comment['comment_text'],' '), 200, '...', false, true)?>      
                      </a>
              </div>
-         <span class="time"><?= $updateTime ?>
+         <span class="time"><?= $this->printDate($this->comment['comment_created_at'])?>
          </span>
      
      </div>
@@ -55,7 +48,7 @@ $helperTruncate = new Default_View_Helper_Truncate();
          
             <div class="userinfo" style="overflow: hidden">
             <a href="/member/<?php echo $this->comment['member_id'] ?>">
-            <img src="<?= $helperImage->Image($this->comment['profile_image_url'],
+            <img src="<?= $this->Image($this->comment['profile_image_url'],
                         array('width' => 120, 'height' => 120)) ?>"  style="margin:10px; width: 40px; height:40px; border-radius: 50%"/>
                 <span style="display: block"><?= $this->comment['username'] ?></span>
             </a>
