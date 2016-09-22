@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -84,25 +85,24 @@ class UserController extends Local_Controller_Action_DomainSwitch
 
         //$this->view->hits = $tableMember->fetchPlingedProjects($this->_memberId);
         $this->view->hits = $tableMember->fetchSupportedByProjects($this->_memberId);
-       
+
 
         $paginationComments = $tableMember->fetchComments($this->_memberId);
-     
-        if($paginationComments)
-        {
-            $offset = (int)$this->getParam('page');                   
+
+        if ($paginationComments) {
+            $offset = (int)$this->getParam('page');
             $paginationComments->setItemCountPerPage(15);
             $paginationComments->setCurrentPageNumber($offset);
-            $this->view->comments = $paginationComments;    
-        }      
+            $this->view->comments = $paginationComments;
+        }
 
-        
-        $stat = array();  
+
+        $stat = array();
         $stat['cntProducts'] = count($this->view->userProducts);
         $stat['cntComments'] = $paginationComments->getTotalItemCount();
         $cntpv = 0;
         foreach ($this->view->userProducts as $pro) {
-            $cntpv = $cntpv+ $tableProject->fetchProjectViews($pro->project_id);
+            $cntpv = $cntpv + $tableProject->fetchProjectViews($pro->project_id);
         }
         $stat['cntPageviews'] = $cntpv;
 
@@ -120,9 +120,9 @@ class UserController extends Local_Controller_Action_DomainSwitch
         $cntmb = $tableMember->fetchCntSupporters($this->_memberId);
         $stat['cntSupporters'] = $cntmb;
         $stat['userLastActiveTime'] = $tableMember->fetchLastActiveTime($this->_memberId);
-            
 
-        $this->view->stat = $stat;        
+
+        $this->view->stat = $stat;
     }
 
     public function followsAction()
@@ -178,7 +178,8 @@ class UserController extends Local_Controller_Action_DomainSwitch
         $page = (int)$this->getParam('page', 1);
 
         $modelProject = new Default_Model_Project();
-        $userProjects = $modelProject->fetchAllProjectsForMember($this->_authMember->member_id, $pageLimit, ($page-1) * $pageLimit);
+        $userProjects = $modelProject->fetchAllProjectsForMember($this->_authMember->member_id, $pageLimit,
+            ($page - 1) * $pageLimit);
 
         $paginator = Local_Paginator::factory($userProjects);
         $paginator->setItemCountPerPage($pageLimit);
@@ -191,13 +192,12 @@ class UserController extends Local_Controller_Action_DomainSwitch
 
     public function activitiesAction()
     {
-        $modelInfo = new Default_Model_Info();    
+        $modelInfo = new Default_Model_Info();
         $this->view->member = $this->_authMember;
         $this->view->comments = $modelInfo->getLastCommentsForUsersProjects($this->_authMember->member_id);
         $this->view->votes = $modelInfo->getLastVotesForUsersProjects($this->_authMember->member_id);
-        $this->view->donations = $modelInfo->getLastDonationsForUsersProjects($this->_authMember->member_id);               
-    }    
-
+        $this->view->donations = $modelInfo->getLastDonationsForUsersProjects($this->_authMember->member_id);
+    }
 
     public function settingsAction()
     {
@@ -259,9 +259,9 @@ class UserController extends Local_Controller_Action_DomainSwitch
     public function incomeAction()
     {
         $this->view->member = $this->_authMember;
-        $tableMember = new Default_Model_Member();       
+        $tableMember = new Default_Model_Member();
         $modelPlings = new Default_Model_Pling();
-        $this->view->donations = $modelPlings->fetchRecentDonationsForUser($this->_authMember->member_id);     
+        $this->view->donations = $modelPlings->fetchRecentDonationsForUser($this->_authMember->member_id);
     }
 
     public function shareAction()

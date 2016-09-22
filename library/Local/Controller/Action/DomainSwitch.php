@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -19,7 +20,6 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-
 class Local_Controller_Action_DomainSwitch extends Zend_Controller_Action
 {
 
@@ -36,6 +36,12 @@ class Local_Controller_Action_DomainSwitch extends Zend_Controller_Action
         $this->initView();
         $this->setLayout();
         $this->_initResponseHeader();
+    }
+
+    protected function initDefaultConfigName()
+    {
+        $config = Zend_Registry::get('config');
+        $this->defaultConfigName = $config->settings->client->default->name;
     }
 
     protected function initAuth()
@@ -85,7 +91,7 @@ class Local_Controller_Action_DomainSwitch extends Zend_Controller_Action
         if (Zend_Registry::isRegistered('store_config_name')) {
             $clientName = Zend_Registry::get('store_config_name');
         }
-        
+
         return $clientName;
     }
 
@@ -104,7 +110,7 @@ class Local_Controller_Action_DomainSwitch extends Zend_Controller_Action
             ->appendName('title', $this->templateConfigData['head']['browser_title'])
             ->appendName('description', $this->templateConfigData['head']['meta_description'], array('lang' => 'en-US'))
             ->appendName('keywords', $this->templateConfigData['head']['meta_keywords'], array('lang' => 'en-US'));
-        
+
         $this->view->template = $this->templateConfigData;
     }
 
@@ -125,16 +131,11 @@ class Local_Controller_Action_DomainSwitch extends Zend_Controller_Action
 //            ->setHeader('Last-Modified', $modifiedTime, true)
             ->setHeader('Expires', $expires, true)
             ->setHeader('Pragma', 'no-cache', true)
-            ->setHeader('Cache-Control', 'private, no-store, no-cache, must-revalidate, post-check=0, pre-check=0', true)
+            ->setHeader('Cache-Control', 'private, no-store, no-cache, must-revalidate, post-check=0, pre-check=0',
+                true)
 //            ->setHeader('Pragma', 'cache', true)
 //            ->setHeader('Cache-Control', 'private, max-age=300, pre-check=300', true)
         ;
-    }
-
-    protected function initDefaultConfigName()
-    {
-        $config = Zend_Registry::get('config');
-        $this->defaultConfigName = $config->settings->client->default->name;
     }
 
 }

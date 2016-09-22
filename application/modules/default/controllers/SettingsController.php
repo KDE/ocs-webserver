@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -41,8 +42,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $this->getResponse()
             ->clearHeaders(array('Expires', 'Pragma', 'Cache-Control'))
             ->setHeader('Pragma', 'no-cache', true)
-            ->setHeader('Cache-Control', 'private, no-cache, must-revalidate', true)
-        ;
+            ->setHeader('Cache-Control', 'private, no-cache, must-revalidate', true);
 
         $this->_auth = Zend_Auth::getInstance();
         $this->_memberId = $this->_auth->getStorage()->read()->member_id;
@@ -390,8 +390,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                     'minheight' => 20,
                     'maxheight' => 1024
                 ))
-            ->addValidator('MimeType', false, $imageTable->getAllowedMimeTypes())
-        ;
+            ->addValidator('MimeType', false, $imageTable->getAllowedMimeTypes());
 
         $form->addElement($productPicture);
 
@@ -694,10 +693,6 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         return $form;
     }
 
-    /**
-     * Profile Actions. One for a form
-     */
-
     public function profileAction()
     {
         $this->_helper->layout->disableLayout();
@@ -708,7 +703,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
 
             if ($form->isValid($_POST)) {
                 $values = $form->getValues();
-                
+
                 //remove email and username
                 unset($values['username']);
                 unset($values['mail']);
@@ -825,7 +820,8 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
             if ($form->isValid($_POST)) {
 
                 $tmpProfilePictureTitle = IMAGES_UPLOAD_PATH . 'tmp/' . Local_Tools_UUID::generateUUID() . '_' . $profilePictureTitleFilename['basename'];
-                $form->getElement('profile_picture_upload')->addFilter('Rename', array('target' => $tmpProfilePictureTitle, 'overwrite' => true));
+                $form->getElement('profile_picture_upload')->addFilter('Rename',
+                    array('target' => $tmpProfilePictureTitle, 'overwrite' => true));
 
                 $values = $form->getValues();
 
@@ -886,12 +882,15 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
             if ($form->isValid($_POST)) {
                 $values = $form->getValues();
 
-                if ($this->_memberSettings->password != Local_Auth_Adapter_Ocs::getEncryptedPassword($values['passwordOld'], $this->_memberSettings->source_id)) {
+                if ($this->_memberSettings->password != Local_Auth_Adapter_Ocs::getEncryptedPassword($values['passwordOld'],
+                        $this->_memberSettings->source_id)
+                ) {
                     $form->addErrorMessage('Your old Password is wrong!');
                     $this->view->passwordform = $form;
                     $this->view->error = 1;
                 } else {
-                    $this->_memberSettings->password = Local_Auth_Adapter_Ocs::getEncryptedPassword($values['password1'], $this->_memberSettings->source_id);
+                    $this->_memberSettings->password = Local_Auth_Adapter_Ocs::getEncryptedPassword($values['password1'],
+                        $this->_memberSettings->source_id);
                     $this->_memberSettings->save();
                     $this->view->passwordform = $this->formPassword();
                     $this->view->save = 1;
@@ -916,7 +915,8 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         if ($this->_request->isGet()) {
             $websiteVerifier = new Local_Verification_WebsiteOwner();
             $authCode = $websiteVerifier->generateAuthCode($this->_memberSettings->link_website);
-            $form = $this->formHomepage($this->_memberSettings->link_website, $authCode, $this->_memberSettings->validated);
+            $form = $this->formHomepage($this->_memberSettings->link_website, $authCode,
+                $this->_memberSettings->validated);
             $this->view->homepageform = $form;
             return;
         }
@@ -1066,4 +1066,18 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $ownerResponse = $pploadApi->deleteOwner($this->_memberId);
     }
 
+    public function addemailAction()
+    {
+
+    }
+
+    public function removeemailAction()
+    {
+
+    }
+
+    public function setdefaultemailAction()
+    {
+
+    }
 }

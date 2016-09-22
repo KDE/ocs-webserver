@@ -1,0 +1,154 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<style>
+.boxed-group-list {
+    list-style: outside none none;
+}
+.boxed-group-list.standalone > li:first-child {
+    border-top: 0 none;
+}
+.boxed-group-list > li:first-child {
+    border-top: 1px solid #ddd;
+}
+.boxed-group-list > li {
+    border-bottom: 1px solid #e5e5e5;
+    display: block;
+    line-height: 23px;
+    margin-left: -10px;
+    margin-right: -10px;
+    padding: 5px 10px;
+}
+.settings-email .css-truncate-target {
+    max-width: 300px;
+}
+.css-truncate.css-truncate-target, .css-truncate .css-truncate-target {
+    display: inline-block;
+    max-width: 125px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: top;
+    white-space: nowrap;
+}
+.email-actions {
+    float: right;
+}
+.email-actions form {
+    display: inline;
+}
+
+span.label.default {
+    background-color: #6cc644;
+    border-radius: 3px;
+    color: #fff;
+    margin-left: 4px;
+    padding: 4px 6px;
+}
+.btn {
+    padding: 6px 12px;
+}
+</style>
+<div class="panel-heading">
+    <h4 class="panel-title">
+        <a data-toggle="collapse" href="#email-collapse" data-parent="#accordion" id="email-trigger">
+            <span class="glyphicon glyphicon-globe"></span>
+            <?= $this->translate('Your Emails') ?>
+            <span class="absolute glyphicon glyphicon-chevron-down"></span>
+        </a>
+    </h4>
+</div>
+
+    <div class="panel-collapse collapse" id="email-collapse">
+        <div class="panel-body">
+            <p>Your <strong>primary email address</strong> will be used for account-related notifications
+                (e.g. account changes) as well as any web-based operations
+                (e.g. comments and other notifications).</p>
+
+            <ul>
+                <li>
+                    <span title="email@address.com" >email@address.com</span>
+                    <span class="email-actions">
+                        <form method="post" action="/settings/removeemail">
+                            <button data-confirm="Are you sure you want to remove this email from your account?" aria-label="Delete"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+                        </form>
+                        <form method="post" action="/settings/setdefaultemail">
+                            <button>Set as primary</button>
+                        </form>
+                    </span>
+                </li>
+            </ul>
+        </div>
+    </div>
+<div class="panel-collapse collapse" id="email-collapse">
+        <div class="panel-body boxed-group">
+            <div class="boxed-group-inner">
+                <p>Your <strong>primary email address</strong> will be used for account-related notifications
+                    (e.g. account changes) as well as any web-based operations
+                    (e.g. comments and other notifications).</p>
+                <ul class="boxed-group-list standalone" id="settings-emails">
+                    <li class="clearfix css-truncate settings-email">
+                        <span title="info@dschinnweb.de" class="css-truncate-target">info@dschinnweb.de</span>
+                        <span class="email-actions">
+                            <form method="post" data-form-nonce="f26dfd37c5ab0be8646802c54dbe25a91841b151" action="/users/dschinni/emails/3800388" accept-charset="UTF-8"><div style="margin:0;padding:0;display:inline"><input type="hidden" value="✓" name="utf8"><input type="hidden" value="delete" name="_method"><input type="hidden" value="yFLDl9oRltN/6Lqonu1oh0EyCxdpOUMCiVCPpDRtCcj/Pe03746sea5fR3ISqjEFchtD8t9pHx333vnruk3VoQ==" name="authenticity_token"></div>
+                            <button data-confirm="Are you sure you want to remove this email from your account?" aria-label="Delete" class="btn btn-default settings-remove-email ">
+                                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                            </button>
+                            </form>
+                            <form method="post" data-form-nonce="f26dfd37c5ab0be8646802c54dbe25a91841b151" action="/users/dschinni/emails/3800388/set_default" accept-charset="UTF-8"><div style="margin:0;padding:0;display:inline"><input type="hidden" value="✓" name="utf8"><input type="hidden" value="put" name="_method"><input type="hidden" value="fr/2ASruFI7HhwDiZWgv7HKM7Imta1KsVbJ2ATpTwB2hMQm20+2slqzq5+CakUE22SLPOH2x6ciArxQOCEcj+A==" name="authenticity_token"></div>
+                            <button class="btn btn-sm" type="submit">Set as primary</button>
+                            </form>
+                        </span>
+                    </li>
+                    <li class="clearfix css-truncate settings-email">
+                        <span title="alexander@pling.com" class="css-truncate-target">alexander@pling.com</span>
+                        <span class="label default">Primary</span>
+                        <span class="email-actions">
+                        <form method="post" data-form-nonce="f26dfd37c5ab0be8646802c54dbe25a91841b151" action="/users/dschinni/emails/7562705" accept-charset="UTF-8"><div style="margin:0;padding:0;display:inline"><input type="hidden" value="✓" name="utf8"><input type="hidden" value="delete" name="_method"><input type="hidden" value="ZqrMf3DRiOr7wjQTEmalJrKljKgJ85iN2r8BZSKvpSGBgp6R2gpQrsJ1z7MpZ/t+C+X2JBANjsxbbmXYu8CiLA==" name="authenticity_token"></div>
+                            <button data-confirm="Are you sure you want to remove this email from your account?" aria-label="Delete" class="btn btn-default settings-remove-email ">
+                              <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                            </button>
+                        </form>
+                        </span>
+                    </li>
+                </ul>
+
+                <form method="post" id="new_user_email" data-form-nonce="f26dfd37c5ab0be8646802c54dbe25a91841b151" class="new_user_email" action="/users/dschinni/emails" accept-charset="UTF-8"><div style="margin:0;padding:0;display:inline"><input type="hidden" value="✓" name="utf8"><input type="hidden" value="uWElg/Bob3mEg90O77GWhFusdD+HGZK1H50YrRhMAMrzwlGXAADBC2JS1KEoJIK4VkRaIcju9mxZiRs5KsJoWQ==" name="authenticity_token"></div>
+                    <dl class="form-group new-email-form">
+                        <dt><label for="email">Add email address</label></dt>
+                        <dd>
+                            <input type="email" size="30" required="required" name="user_email[email]" id="email" class="form-control short">
+                            <button class="btn" type="submit">Add</button>
+                        </dd>
+                    </dl>
+                </form>
+                <hr class="bleed-flush">
+
+            </div>
+        </div>
+        <!-- /.standard-form -->
+    <!-- /.section-body -->
+</div>
+<?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){
+            ButtonCode.setupClipboardCopy(\'#container-verification-code\');
+        });
+    ');
