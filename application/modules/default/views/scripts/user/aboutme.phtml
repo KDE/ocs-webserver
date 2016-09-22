@@ -172,22 +172,22 @@ $textCountryCity .= $this->member->country ? ', ' . $this->member->country : '';
                         <ul class="nav nav-tabs" role="tablist">
                             <li role="presentation" class="active">
                                 <a href="#user-aboutme" data-toggle="tab" role="tab"  aria-controls="user-aboutme" >
-                                    Products 
+                                    Products <span class="small"> <?=($this->stat['cntProducts']>0?' ('.$this->stat['cntProducts'].') ':'')?></span>
                                 </a>
                             </li>
                               <li>
                                 <a href="#user-donations" data-toggle="tab" role="tab"  aria-controls="user-donations">
-                                    Supported by 
+                                    Supported by <span class="small"> <?=($this->stat['cntSupporters']>0?' ('.$this->stat['cntSupporters'].') ':'')?></span>
                                 </a>
                             </li>
                              <li>
                                 <a href="#user-supports" data-toggle="tab" role="tab"  aria-controls="user-supports">
-                                    Supporter of
+                                    Supporter of<span class="small"> <?=(count($this->supportingTeaser)>0?' ('.count($this->supportingTeaser).') ':'')?></span>
                                 </a>
                             </li>
                             <li>
                                 <a href="#user-fans" data-toggle="tab" role="tab"  aria-controls="user-fans">
-                                    Fan of
+                                    Fan of<span class="small"> <?=(count($this->followedProducts)>0?' ('.count($this->followedProducts).') ':'')?></span>
                                 </a>
                             </li>
                             <li>
