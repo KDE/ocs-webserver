@@ -1,0 +1,12 @@
+<?php if (Zend_Controller_Action_HelperBroker::getStaticHelper('flashMessenger')->hasCurrentMessages()) : ?>
+    <div class="pull-left" style="width: 100%">
+    <?php foreach (Zend_Controller_Action_HelperBroker::getStaticHelper('flashMessenger')
+                       ->getCurrentMessages() as $message) : ?>
+        <div class="alert alert-warning" style="width: 100%;">
+            <a class="close" data-dismiss="alert">×</a>
+        <?php echo $message; ?>
+        </div>
+    <?php endforeach; ?>
+    </div>
+<?php endif;
+

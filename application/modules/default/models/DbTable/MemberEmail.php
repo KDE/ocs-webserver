@@ -75,4 +75,11 @@ class Default_Model_DbTable_MemberEmail extends Local_Model_Table
         return $stmnt->rowCount();
     }
 
+    public function setPrimary($email_id)
+    {
+        $sql = "UPDATE `{$this->_name}` SET `email_primary` = 1 WHERE `{$this->_key}` = :emailId";
+        $stmnt = $this->_db->query($sql, array('emailId' => $email_id));
+        return $stmnt->rowCount();
+    }
+
 }

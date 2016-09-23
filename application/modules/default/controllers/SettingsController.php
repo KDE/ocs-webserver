@@ -1087,12 +1087,77 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
 
     public function removeemailAction()
     {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer('partials/email');
 
+        $emailId = (int) $this->getParam('i');
+
+        $modelEmail = new Default_Model_DbTable_MemberEmail();
+
+        $result = $modelEmail->delete($emailId);
+
+        $this->view->messages = array('success' => 'Your email was removed.');
     }
 
     public function setdefaultemailAction()
     {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer('partials/email');
 
+        $emailId = (int) $this->getParam('i');
+
+        $modelEmail = new Default_Model_MemberEmail();
+        $result = $modelEmail->setDefaultEmail($emailId, $this->_authMember->member_id);
+
+    }
+
+    public function resendverificationAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer('partials/email');
+
+        $emailId = (int) $this->getParam('i');
+
+        $modelEmail = new Default_Model_DbTable_MemberEmail();
+        $data = $modelEmail->find($emailId)->current();
+        $data->email_verification_value = md5($data->email_address . $this->_authMember->username . time());
+        $data->save();
+        $this->sendConfirmationMail($data);
+
+        $this->view->messages = array('success'=>'New verification mail was send. Please check your email account.');
+    }
+
+    public function verificationAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        // Filter-Parameter
+        $filterInput = new Zend_Filter_Input(
+            array('*' => 'StringTrim', 'v' => 'StripTags'),
+            array(
+                'v' => array(
+                    'presence' => 'required'
+                )
+            ),
+            $this->getAllParams()
+        );
+
+        if ($filterInput->hasInvalid()) {
+            $this->_helper->flashMessenger->addMessage('<p class="text-error">There was an error verifying your email. </p>');
+            $this->forward('index');
+            return;
+        }
+
+        $modelEmail = new Default_Model_MemberEmail();
+        $result = $modelEmail->verificationEmail($filterInput->getEscaped('v'));
+
+        if ($result == 1) {
+            $this->_helper->flashMessenger->addMessage('<p class="text-success">Your email was successfully verified. </p>');
+        } else {
+            $this->_helper->flashMessenger->addMessage('<p class="text-danger">There was an error verifying your email.</p>');
+        }
+        $this->forward('index');
     }
 
     /**
@@ -1124,7 +1189,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
     }
 
     /**
-     * @param $filterInput
+     * @param Zend_Filter_Input $filterInput
      * @return Zend_Db_Table_Row_Abstract
      */
     protected function saveEmail($filterInput)
@@ -1146,12 +1211,13 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $confirmMail = new Default_Plugin_SendMail('tpl_verify_email');
         $confirmMail->setTemplateVar('servername', $this->getServerName());
         $confirmMail->setTemplateVar('username', $this->_authMember->username);
+        $confirmMail->setTemplateVar('email_address', $data['email_address']);
         $confirmMail->setTemplateVar('verificationlinktext',
-            '<a href="https://' . $this->getServerName() . '/verification/' . $data['email_verification_value'] . '">Click here to verify your email address</a>');
+            '<a href="https://' . $this->getServerName() . '/settings/verification/v/' . $data['email_verification_value'] . '">Click here to verify your email address</a>');
         $confirmMail->setTemplateVar('verificationlink',
-            '<a href="https://' . $this->getServerName() . '/verification/' . $data['email_verification_value'] . '">https://' . $this->getServerName() . '/verification/' . $data['email_verification_value'] . '</a>');
+            '<a href="https://' . $this->getServerName() . '/settings/verification/v/' . $data['email_verification_value'] . '">https://' . $this->getServerName() . '/settings/verification/v/' . $data['email_verification_value'] . '</a>');
         $confirmMail->setTemplateVar('verificationurl',
-            'https://' . $this->getServerName() . '/verification/' . $data['email_verification_value']);
+            'https://' . $this->getServerName() . '/settings/verification/v/' . $data['email_verification_value']);
         $confirmMail->setReceiverMail($data['email_address']);
         $confirmMail->setFromMail('registration@opendesktop.org');
         $confirmMail->send();
