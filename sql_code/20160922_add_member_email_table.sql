@@ -15,7 +15,7 @@ ALTER TABLE `member_email`
 ALTER TABLE `member_email`
   CHANGE COLUMN `email_address` `email_address` VARCHAR(255) NOT NULL ,
   ADD COLUMN `email_verification_value` VARCHAR(255) NULL DEFAULT NULL AFTER `email_checked`,
-  ADD INDEX `idx_verfication` (`email_verfication_value` ASC);
+  ADD INDEX `idx_verification` (`email_verification_value` ASC);
 
 DELIMITER $$
 
