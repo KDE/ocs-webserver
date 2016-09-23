@@ -104,23 +104,26 @@ span.label.attention {
                 <span class="label default">Primary</span>
                 <?php } ?>
                 <?php if (empty($listEmail['email_checked'])) { ?>
-                    <span class="label attention">Not confirmed</span>
+                    <span class="label attention">Unverified</span>
                 <?php } ?>
                 <span class="email-actions">
                     <?php if (empty($listEmail['email_primary'])) { ?>
-                        <form method="post" action="/settings/removeemail/<?=$listEmail['email_id']?>">
-                            <button data-message="Are you sure you want to remove this email from your account?" data-callback="defaultCallbackConfirmation" aria-label="Delete" class="btn remove">
+                        <form method="post" action="/settings/removeemail/i/<?=$listEmail['email_id']?>" class="partial"  data-target="#form-email"
+                              data-trigger="#email-trigger">
+                            <button data-message="Are you sure you want to remove this email from your account?" data-callback="callbackDelete" aria-label="Delete" class="btn remove">
                                 <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                             </button>
                         </form>
                         <?php if ($listEmail['email_checked']) { ?>
-                        <form method="post" action="/settings/setdefaultemail/<?=$listEmail['email_id']?>" class="partial">
+                        <form method="post" action="/settings/setdefaultemail/i/<?=$listEmail['email_id']?>"  class="partial"  data-target="#form-email"
+                              data-trigger="#email-trigger">
                             <button class="btn" type="submit">Set as primary</button>
                         </form>
                         <?php } ?>
                     <?php } ?>
                     <?php if (empty($listEmail['email_checked'])) { ?>
-                        <form method="post" action="/settings/resendverification/<?=$listEmail['email_id']?>" class="partial">
+                        <form method="post" action="/settings/resendverification/i/<?=$listEmail['email_id']?>"  class="partial"  data-target="#form-email"
+                              data-trigger="#email-trigger">
                             <button class="btn" type="submit">Resend verification</button>
                         </form>
                     <?php } ?>
@@ -150,6 +153,17 @@ span.label.attention {
         </div>
     </div>
 </div>
+    <script>
+
+            function callbackDelete(link) {
+                // Do however you want to handle deleting
+                // We have the link element and can access it's data attributes
+
+                $(link).closest('form').submit();
+            }
+
+    </script>
+
 <?php  /* $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
 

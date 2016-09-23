@@ -26,7 +26,7 @@ class Default_Model_MemberEmail
 {
     /** @var string */
     protected $_dataTableName;
-    /** @var  Default_Model_DbTable_Comments */
+    /** @var  Default_Model_DbTable_MemberEmail */
     protected $_dataTable;
 
     /**
@@ -51,5 +51,39 @@ class Default_Model_MemberEmail
         return $stmnt->fetchAll();
     }
 
+    public function setDefaultEmail($emailId, $member_id)
+    {
+        $result = $this->resetDefaultMailAddress($member_id);
+        $this->_dataTable->setPrimary($emailId);
+        // $this->updateMemberData($member_id); /* if we change the mail in member table, we change the login. */
+        return true;
+    }
+
+    private function resetDefaultMailAddress($member_id)
+    {
+        $sql = "update member_email set email_primary = 0 where email_member_id = :member_id and email_primary = 1";
+        return $this->_dataTable->getAdapter()->query($sql, array('member_id' => $member_id))->execute();
+    }
+
+    /**
+     * @param string $verification
+     * @return int count of updated rows
+     */
+    public function verificationEmail($verification)
+    {
+        $sql = "update member_email set `email_checked` = NOW() where `email_verification_value` = :verification and `email_deleted` = 0 and `email_checked` is null";
+        $stmnt = $this->_dataTable->getAdapter()->query($sql, array('verification' => $verification));
+        return $stmnt->rowCount();
+    }
+
+    private function updateMemberData($member_id)
+    {
+        $sql = "select * from {$this->_dataTable->info('name')} where email_member_id = :member_id and email_primary = 1";
+        $dataEmail = $this->_dataTable->getAdapter()->fetchRow($sql, array('member_id' => $member_id));
+        $modelMember = new Default_Model_Member();
+        $dataMember = $modelMember->fetchMemberData($member_id);
+        $dataMember->mail = $dataEmail['email_address'];
+        $dataMember->save();
+    }
 
 }

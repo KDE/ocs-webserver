@@ -33,8 +33,8 @@ DELIMITER ;
 
 -- migrate all user email
 TRUNCATE member_email;
-INSERT INTO member_email (email_member_id, email_address, email_primary, email_created, email_checked)
-  SELECT member.member_id as email_member_id, member.mail as email_address, 1 as email_primary, member.created_at as email_created, member.created_at as email_checked
+INSERT INTO member_email (email_member_id, email_address, email_primary, email_created, email_checked, email_verification_value)
+  SELECT member.member_id as email_member_id, member.mail as email_address, 1 as email_primary, member.created_at as email_created, member.created_at as email_checked, member.verificationVal as email_verification_value
   FROM member
   WHERE member.mail_checked AND member.is_active and member.mail IS NOT NULL
 ;
