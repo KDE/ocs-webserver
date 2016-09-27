@@ -1197,7 +1197,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $data = array();
         $data['email_member_id'] = $this->_authMember->member_id;
         $data['email_address'] = $filterInput->getEscaped('user_email');
-        $data['email_verification_value'] = md5($data['email_address'] . $this->_authMember->username . time());
+        $data['email_verification_value'] = Default_Model_MemberEmail::getVerificationValue($this->_authMember->username, $filterInput->getEscaped('user_email'));
         $modelMemberEmail = new Default_Model_DbTable_MemberEmail();
         return $modelMemberEmail->save($data);
     }

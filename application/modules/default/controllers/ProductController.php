@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -60,7 +61,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->fetchDataForIndexView();
 
         //$this->view->headTitle($this->_browserTitlePrepend . $this->view->product->title, 'SET');
-        $this->view->headTitle($this->view->product->title.' - '.$_SERVER['HTTP_HOST'] , 'SET');
+        $this->view->headTitle($this->view->product->title . ' - ' . $_SERVER['HTTP_HOST'], 'SET');
 
         $this->view->cat_id = $this->view->product->project_category_id;
 
@@ -310,7 +311,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         // form was valid, so we can set status to inactive
         $values['status'] = Default_Model_DbTable_Project::PROJECT_ACTIVE;
-        
+
         // save new project
         $modelProject = new Default_Model_Project();
         if (isset($values['project_id'])) {
@@ -323,15 +324,15 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         //update the gallery pics
         $mediaServerUrls = $this->saveGalleryPics($form->gallery->upload->upload_picture);
         $modelProject->updateGalleryPictures($newProject->project_id, $mediaServerUrls);
-        
+
         //If there is no Logo, we take the 1. gallery pic
-        if(!isset($values['image_small']) || $values['image_small'] == '') {
-        	$values['image_small'] = $mediaServerUrls[0];
-        	$newProject = $modelProject->updateProject($newProject->project_id, $values);
-        	$log->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . ' - set image_small: '.$values['image_small'].'\n');
+        if (!isset($values['image_small']) || $values['image_small'] == '') {
+            $values['image_small'] = $mediaServerUrls[0];
+            $newProject = $modelProject->updateProject($newProject->project_id, $values);
+            $log->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . ' - set image_small: ' . $values['image_small'] . '\n');
         } else {
-        	$log->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . ' - set image_small: Not neeed. '.$values['image_small'].'\n');
-        	 
+            $log->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . ' - set image_small: Not neeed. ' . $values['image_small'] . '\n');
+
         }
 
         /*
@@ -357,8 +358,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         //$helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
         //$urlProjectShow = $helperBuildProductUrl->buildProductUrl($newProject->project_id, 'preview');
         //$this->redirect($urlProjectShow);
-        
-        $this->redirect('/member/'.$newProject->member_id.'/products/');
+
+        $this->redirect('/member/' . $newProject->member_id . '/products/');
     }
 
     private function saveGalleryPics($form_element)
@@ -516,7 +517,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         //read the subcategories
         $tableSubCategory = new Default_Model_SubCategory();
-        $subcategories = $tableSubCategory->fetchAllSubCategories($projectData->project_category_id, $tableSubCategory::ORDERED_TITLE);
+        $subcategories = $tableSubCategory->fetchAllSubCategories($projectData->project_category_id,
+            $tableSubCategory::ORDERED_TITLE);
         $selectedSubCategories = $tableSubCategory->fetchSelectedSubCategories($this->_projectId);
 //        $modelSubSubCategories = new Default_Model_SubSubCategory();
 //        $subSubCategories = $modelSubSubCategories->fetchAllSubCategories($selectedSubCategories);
@@ -544,7 +546,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 }
 
                 $tableSubCategory = new Default_Model_SubCategory();
-                $subcategories = $tableSubCategory->fetchAllSubCategories($main_category_id, $tableSubCategory::ORDERED_TITLE);
+                $subcategories = $tableSubCategory->fetchAllSubCategories($main_category_id,
+                    $tableSubCategory::ORDERED_TITLE);
                 $form->getElement('project_subcategory_id')->setMultiOptions($subcategories);
 
                 $form->getElement('project_category_id')->setValue($main_category_id);
@@ -594,7 +597,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         // save changes
         $projectData->setFromArray($values);
         $projectData->changed_at = new Zend_Db_Expr('NOW()');
-        
+
 
         // store license data
         if ($values['cc_license'] == true) {
@@ -607,14 +610,14 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $pictureSources = array_merge($values['gallery']['online_picture'],
             $this->saveGalleryPics($form->gallery->upload->upload_picture));
         $projectModel->updateGalleryPictures($this->_projectId, $pictureSources);
-        
+
         //If there is no Logo, we take the 1. gallery pic
-        if(!isset($projectData->image_small) || $projectData->image_small == '') {
-        	$projectData->image_small = $pictureSources[0];
-        	$log->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . ' - set image_small: '.$projectData->image_small.'\n');
+        if (!isset($projectData->image_small) || $projectData->image_small == '') {
+            $projectData->image_small = $pictureSources[0];
+            $log->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . ' - set image_small: ' . $projectData->image_small . '\n');
         } else {
-        	$log->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . ' - set image_small: Not neeed. '.$projectData->image_small.'\n');
-        
+            $log->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . ' - set image_small: Not neeed. ' . $projectData->image_small . '\n');
+
         }
         $projectData->save();
 
@@ -666,8 +669,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         //Save version number
         $version = "";
-        if(isset($params['product_version']))
-        	$version = $params['product_version'];
+        if (isset($params['product_version'])) {
+            $version = $params['product_version'];
+        }
 
         $updateArray = array();
         $updateArray['version'] = $version;
@@ -1637,28 +1641,29 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $this->_helper->json(array('status' => 'error', 'error_text' => $error_text));
     }
-    
+
     public function updatepackagetypeAction()
     {
-    	$this->_helper->layout()->disableLayout();
-    
-    	$error_text = "";
-    
-    	// Update a file information in ppload collection (does not update it if in finalized collection)
-    	if (!empty($_POST['file_id'])) {
-    		$typeId = null;
-    		if(isset($_POST['package_type_id']))
-				$typeId = $_POST['package_type_id'];
-			
-			$packageTypeTable = new Default_Model_DbTable_ProjectPackageType();
-			$packageTypeTable->addPackageTypeToProject($this->_projectId, $_POST['file_id'], $typeId);
-			$this->_helper->json(array('status' => 'ok', 'params' => 'project_id: ' . $this->_projectId . ', file_id: ' . $_POST['file_id'] . ', file_type_id: ' . $typeId));
-			return;
-    	} else {
-    		$error_text .= 'No FileId. , FileId: ' . $_POST['file_id'];
-    	}
-    	
-    	$this->_helper->json(array('status' => 'error', 'error_text' => $error_text));
+        $this->_helper->layout()->disableLayout();
+
+        $error_text = "";
+
+        // Update a file information in ppload collection (does not update it if in finalized collection)
+        if (!empty($_POST['file_id'])) {
+            $typeId = null;
+            if (isset($_POST['package_type_id'])) {
+                $typeId = $_POST['package_type_id'];
+            }
+
+            $packageTypeTable = new Default_Model_DbTable_ProjectPackageType();
+            $packageTypeTable->addPackageTypeToProject($this->_projectId, $_POST['file_id'], $typeId) 	$this->_helper->json(array('status' => 'ok', 'params' => 'project_id: ' . $this->_projectId . ', file_id: ' . $_POST['file_id'] . ', file_type_id: ' . $typeId));
+            $this->_helper->json(array('status' => 'ok', 'params' => 'project_id: ' . $this->_projectId . ', file_id: ' . $_POST['file_id'] . ', file_type_id: ' . $typeId));
+            return;
+        } else {
+            $error_text .= 'No FileId. , FileId: ' . $_POST['file_id'];
+        }
+
+        $this->_helper->json(array('status' => 'error', 'error_text' => $error_text));
     }
 
     /**
@@ -1692,10 +1697,10 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 if (isset($fileResponse->status)
                     && $fileResponse->status == 'success'
                 ) {
-                    
+
                     $packageTypeTable = new Default_Model_DbTable_ProjectPackageType();
                     $packageTypeTable->deletePackageTypeOnProject($this->_projectId, $_POST['file_id']);
-                    
+
                     $this->_helper->json(array('status' => 'ok'));
                     return;
                 } else {
