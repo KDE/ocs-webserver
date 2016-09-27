@@ -293,7 +293,8 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             $formRegisterValues = $formRegister->getValues();
             //$resultReCaptcha = $formRegisterValues['g-recaptcha-response'];
 
-            if (false == $this->validateReCaptcha($_POST['g-recaptcha-response'])) {
+            if (false == $this->validateReCaptcha($_POST['g-recaptcha-response']))
+            {
                 $this->view->formRegister = $formRegister;
                 $this->view->error = 1;
 
@@ -370,6 +371,9 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             $verificationVal = Default_Model_MemberEmail::getVerificationValue($userData['username'], $userData['mail']);
             $userData['verificationVal'] = $verificationVal;
         }
+
+        $modelEmail = new Default_Model_MemberEmail();
+        $userEmail = $modelEmail->saveEmailAsPrimary($userData['member_id'], $userData['mail'], $userData['verificationVal']);
 
         $modelEmail = new Default_Model_MemberEmail();
         $userEmail = $modelEmail->saveEmailAsPrimary($userData['member_id'], $userData['mail'], $userData['verificationVal']);
