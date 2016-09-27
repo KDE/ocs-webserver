@@ -49,6 +49,7 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
         $status = count($result) > 0 ? 'ok' : 'error';
         $message = '';
 
+
         $this->view->comments = $this->loadComments((int)$this->getParam('page'), (int)$this->getParam('p'));
         $this->view->product = $this->loadProductInfo((int)$this->getParam('p'));
         $this->view->member_id = (int)$this->_authMember->member_id;
