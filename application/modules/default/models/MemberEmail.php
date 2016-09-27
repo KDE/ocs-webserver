@@ -39,6 +39,16 @@ class Default_Model_MemberEmail
     }
 
     /**
+     * @param int $user_name
+     * @param string $member_email
+     * @return string
+     */
+    public static function getVerificationValue($user_name, $member_email)
+    {
+        return md5($user_name . $member_email . time());
+    }
+
+    /**
      * @param int $member_id
      * @param bool $email_deleted
      * @return array
@@ -74,6 +84,39 @@ class Default_Model_MemberEmail
         $sql = "update member_email set `email_checked` = NOW() where `email_verification_value` = :verification and `email_deleted` = 0 and `email_checked` is null";
         $stmnt = $this->_dataTable->getAdapter()->query($sql, array('verification' => $verification));
         return $stmnt->rowCount();
+    }
+
+    /**
+     * @param int $user_id
+     * @param string $user_mail
+     * @param null|string $user_verification
+     * @return Zend_Db_Table_Row_Abstract
+     */
+    public function saveEmail($user_id, $user_mail, $user_verification = null)
+    {
+        $data = array();
+        $data['email_member_id'] = $user_id;
+        $data['email_address'] = $user_mail;
+        $data['email_verification_value'] = empty($user_verification) ? Default_Model_MemberEmail::getVerificationValue($user_id, $user_mail) : $user_verification;
+
+        return $this->_dataTable->save($data);
+    }
+
+    /**
+     * @param int $user_id
+     * @param string $user_mail
+     * @param null|string $user_verification
+     * @return Zend_Db_Table_Row_Abstract
+     */
+    public function saveEmailAsPrimary($user_id, $user_mail, $user_verification = null)
+    {
+        $data = array();
+        $data['email_member_id'] = $user_id;
+        $data['email_address'] = $user_mail;
+        $data['email_verification_value'] = empty($user_verification) ? Default_Model_MemberEmail::getVerificationValue($user_id, $user_mail) : $user_verification;
+        $data['email_primary'] = Default_Model_DbTable_MemberEmail::EMAIL_PRIMARY;
+
+        return $this->_dataTable->save($data);
     }
 
     private function updateMemberData($member_id)

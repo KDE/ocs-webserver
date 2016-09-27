@@ -22,6 +22,7 @@
  **/
 class Default_Model_Member extends Default_Model_DbTable_Member
 {
+
     /**
      * @param int $count
      * @param string $orderBy
@@ -103,7 +104,6 @@ class Default_Model_Member extends Default_Model_DbTable_Member
 
             return $resultSet;
         }
-
     }
 
     /**
@@ -147,18 +147,19 @@ class Default_Model_Member extends Default_Model_DbTable_Member
 
     /**
      * @param int $member_id
-     * @return int
+     * @return boolean returns true if successful
      */
-    public function activateMemberFromVerification($member_id)
+    public function activateMemberFromVerification($member_id, $verification_value)
     {
-        $updateValues = array(
-            'mail_checked' => 1,
-            'is_active' => 1,
-            'is_deleted' => 0,
-            'changed_at' => new Zend_Db_Expr('Now()'),
-        );
+        $sql = "
+            UPDATE member
+              STRAIGHT_JOIN member_email ON member.member_id = member_email.email_member_id AND member_email.email_checked is null AND member.is_deleted = 0 AND member_email.email_deleted = 0
+            SET member.mail_checked = 1, member.is_active = 1, member.changed_at = NOW(), member_email.email_checked = NOW()
+            WHERE member.member_id = :memberId and member_email.email_verification_value = :verificationValue;
+        ";
+        $stmnt = $this->_db->query($sql, array('memberId' => $member_id, 'verificationValue' => $verification_value));
 
-        return $this->update($updateValues, $this->_db->quoteInto('member_id=?', $member_id, 'INTEGER'));
+        return $stmnt->rowCount() > 0 ? true : false;
     }
 
     /**
@@ -314,29 +315,6 @@ class Default_Model_Member extends Default_Model_DbTable_Member
      */
     public function fetchSupportedProjects($member_id, $limit = null)
     {
-        /***
-         * $sql = "
-         * SELECT plings.project_id,
-         * plings.member_id,
-         * count(plings.member_id) AS collectPlingsFromMember,
-         * project_category.title AS catTitle,
-         * project.*,
-         * member.*,
-         * (SELECT COUNT(DISTINCT plings.member_id) FROM plings WHERE plings.status_id >= 2 AND plings.project_id = project.project_id) AS plingers,
-         * (SELECT SUM(amount) FROM plings WHERE plings.project_id=project.project_id AND plings.status_id=2) AS sumAmount,
-         * (SELECT SUM(amount) FROM plings WHERE plings.project_id=project.project_id AND plings.status_id IN (2,3,4)) AS collectPlingsAll
-         * FROM plings
-         * LEFT JOIN project ON plings.project_id = project.project_id
-         * LEFT JOIN project_category ON project.project_category_id = project_category.project_category_id
-         * LEFT JOIN member ON project.member_id = member.member_id
-         * WHERE plings.status_id in (2,3,4)
-         * AND plings.member_id = :member_id
-         * AND project.status = :project_status
-         * AND project.type_id = 1
-         * GROUP BY plings.project_id
-         * ORDER BY sumAmount DESC
-         * ";
-         **/
         $sql = "
                 SELECT plings.project_id,                       
                        project.title,
@@ -362,7 +340,6 @@ class Default_Model_Member extends Default_Model_DbTable_Member
             array('member_id' => $member_id, 'project_status' => Default_Model_Project::PROJECT_ACTIVE));
 
         return $this->generateRowSet($result);
-
     }
 
     /**
@@ -372,28 +349,6 @@ class Default_Model_Member extends Default_Model_DbTable_Member
      */
     public function fetchFollowedProjects($member_id, $limit = null)
     {
-        /**
-         * $sql = "
-         * SELECT project_follower.project_id,
-         * project_follower.member_id,
-         * project_category.title AS catTitle,
-         * project.*,
-         * member.*,
-         * (SELECT COUNT(DISTINCT plings.member_id) FROM plings WHERE plings.status_id >= 2 AND plings.project_id = project.project_id) AS plingers,
-         * (SELECT SUM(amount) FROM plings WHERE plings.project_id=project.project_id AND plings.status_id=2) AS sumAmount,
-         * (SELECT SUM(amount) FROM plings WHERE plings.project_id=project.project_id AND plings.status_id IN (2,3,4)) AS collectPlingsAll
-         * FROM project_follower
-         * LEFT JOIN project ON project_follower.project_id = project.project_id
-         * LEFT JOIN project_category ON project.project_category_id = project_category.project_category_id
-         * LEFT JOIN member ON project.member_id = member.member_id
-         * WHERE project_follower.member_id = :member_id
-         * AND project.status = :project_status
-         * AND project.type_id = 1
-         * GROUP BY project_follower.project_id
-         * ORDER BY max(project_follower.project_follower_id) DESC
-         * ";
-         **/
-
         $sql = "
                 SELECT project_follower.project_id,
                         project.title,
@@ -414,7 +369,6 @@ class Default_Model_Member extends Default_Model_DbTable_Member
             array('member_id' => $member_id, 'project_status' => Default_Model_Project::PROJECT_ACTIVE));
 
         return $this->generateRowSet($result);
-
     }
 
     public function fetchPlingedProjects($member_id, $limit = null)
@@ -443,7 +397,6 @@ class Default_Model_Member extends Default_Model_DbTable_Member
             array('member_id' => $member_id, 'project_status' => Default_Model_Project::PROJECT_ACTIVE));
 
         return $this->generateRowSet($result);
-
     }
 
     public function fetchSupportedByProjects($member_id, $limit = null)
@@ -479,7 +432,6 @@ class Default_Model_Member extends Default_Model_DbTable_Member
             array('member_id' => $member_id, 'project_status' => Default_Model_Project::PROJECT_ACTIVE));
 
         return $this->generateRowSet($result);
-
     }
 
     public function createNewUser($userData)
@@ -503,7 +455,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
             $userData['uuid'] = $uuidMember;
         }
         if (false == isset($userData['verificationVal'])) {
-            $verificationVal = MD5($userData['mail'] . $userData['username'] . time());
+            $verificationVal = Default_Model_MemberEmail::getVerificationValue($userData['username'], $userData['mail']);
             $userData['verificationVal'] = $verificationVal;
         }
 
@@ -591,7 +543,6 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         $result = $this->_db->fetchRow($sql);
 
         return $result['total_member_count'];
-
     }
 
     /**
@@ -622,9 +573,9 @@ class Default_Model_Member extends Default_Model_DbTable_Member
                  JOIN project_category ON project.project_category_id = project_category.project_category_id
                  JOIN member ON project.member_id = member.member_id
                 WHERE plings.status_id = 2
-                  AND project.status = " . Default_Model_Project::PROJECT_ACTIVE . "
+                  AND project.status = :status
                   AND project.type_id = 1
-                  AND project.member_id = " . $member_id . "
+                  AND project.member_id = :memberId
                 ORDER BY plings.create_time DESC
                 ";
 
@@ -632,38 +583,9 @@ class Default_Model_Member extends Default_Model_DbTable_Member
             $sql .= $this->_db->quoteInto(" limit ?", $limit, 'INTEGER');
         }
 
-        $result = $this->_db->fetchAll($sql);
+        $result = $this->_db->fetchAll($sql, array('memberId' => $member_id, 'status' => Default_Model_Project::PROJECT_ACTIVE));
         return $this->generateRowSet($result);
     }
-
-
-    /*
-        public function fetchEarnings($projectIds, $limit = null)
-        {
-            $sql = "
-                    SELECT project_category.title AS catTitle,
-                           project.*,
-                           member.*,
-                           plings.*
-                    FROM plings
-                    LEFT JOIN project ON plings.project_id = project.project_id
-                    LEFT JOIN project_category ON project.project_category_id = project_category.project_category_id
-                    LEFT JOIN member ON project.member_id = member.member_id
-                    WHERE plings.status_id = 2
-                      AND project.status = " . Default_Model_Project::PROJECT_ACTIVE . "
-                      AND project.type_id = 1
-                      AND plings.project_id IN (" . implode(",", $projectIds) . ")
-                    ORDER BY plings.create_time DESC
-                    ";
-
-            if (null != $limit) {
-                $sql .= $this->_db->quoteInto(" limit ?", $limit, 'INTEGER');
-            }
-
-            $result = $this->_db->fetchAll($sql);
-            return $this->generateRowSet($result);
-        }
-    */
 
     /**
      * Finds an active user by given username or email ($identity)

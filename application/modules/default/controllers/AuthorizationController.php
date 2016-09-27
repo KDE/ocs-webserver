@@ -289,10 +289,8 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             $formRegisterValues = $formRegister->getValues();
             //$resultReCaptcha = $formRegisterValues['g-recaptcha-response'];
 
-            $res = $this->validateReCaptcha($_POST['g-recaptcha-response']);
-
-            if ($res == false) {
-
+            if (false == $this->validateReCaptcha($_POST['g-recaptcha-response']))
+            {
                 $this->view->formRegister = $formRegister;
                 $this->view->error = 1;
 
@@ -364,6 +362,9 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
     {
         $userTable = new Default_Model_Member();
         $userData = $userTable->createNewUser($userData);
+
+        $modelEmail = new Default_Model_MemberEmail();
+        $userEmail = $modelEmail->saveEmailAsPrimary($userData['member_id'], $userData['mail'], $userData['verificationVal']);
 
         return $userData;
     }
@@ -792,13 +793,17 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         $this->view->title = $translate->_('member.email.verification.title');
 
         $authModel = new Default_Model_Authorization();
-        $authUser = $authModel->getAuthUserData('verificationVal', $_vId);
+        $authUser = $authModel->getAuthUserDataFromUnverified($_vId);
 
         if ($authUser AND ($authUser->mail_checked == 0)) {
             Zend_Registry::get('logger')->info(__METHOD__ . ' - activate user from email link : ' . print_r($authUser->member_id,
                     true) . ' - username: ' . print_r($authUser->username, true));
             $modelMember = new Default_Model_Member();
-            $modelMember->activateMemberFromVerification($authUser->member_id);
+            $result = $modelMember->activateMemberFromVerification($authUser->member_id, $_vId);
+
+            if (false == $result) {
+                throw new Zend_Controller_Action_Exception('Your member account could not activated.');
+            }
 
             $this->view->member = $authUser;
             $this->view->username = $authUser->username;
