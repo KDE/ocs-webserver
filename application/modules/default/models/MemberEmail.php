@@ -116,17 +116,47 @@ class Default_Model_MemberEmail
         $data['email_verification_value'] = empty($user_verification) ? Default_Model_MemberEmail::getVerificationValue($user_id, $user_mail) : $user_verification;
         $data['email_primary'] = Default_Model_DbTable_MemberEmail::EMAIL_PRIMARY;
 
-        return $this->_dataTable->save($data);
+        $result = $this->_dataTable->save($data);
+
+        $this->updateMemberPrimaryMail($user_id);
+
+        return $result;
     }
 
-    private function updateMemberData($member_id)
+    /**
+     * @param $member_id
+     * @return mixed
+     */
+    private function updateMemberPrimaryMail($member_id)
+    {
+        $dataEmail = $this->fetchMemberPrimaryMail($member_id);
+
+        return $this->saveMemberPrimaryMail($member_id, $dataEmail);
+    }
+
+    /**
+     * @param $member_id
+     * @return mixed
+     */
+    public function fetchMemberPrimaryMail($member_id)
     {
         $sql = "select * from {$this->_dataTable->info('name')} where email_member_id = :member_id and email_primary = 1";
         $dataEmail = $this->_dataTable->getAdapter()->fetchRow($sql, array('member_id' => $member_id));
+        return $dataEmail;
+    }
+
+    /**
+     * @param $member_id
+     * @param $dataEmail
+     * @return mixed
+     */
+    protected function saveMemberPrimaryMail($member_id, $dataEmail)
+    {
         $modelMember = new Default_Model_Member();
         $dataMember = $modelMember->fetchMemberData($member_id);
-        $dataMember->mail = $dataEmail['email_address'];
-        $dataMember->save();
+        $dataMember->primary_mail = $dataEmail['email_address'];
+        $dataMember->mail_checked = $dataEmail['email_checked'] ? 1 : 0;
+        return $dataMember->save();
     }
 
 }

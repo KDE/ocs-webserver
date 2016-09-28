@@ -439,7 +439,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         $uuidMember = Local_Tools_UUID::generateUUID();
 
         if (false == isset($userData['password'])) {
-            throw new Exception(__function__ . ': user password is not set.');
+            throw new Exception(__METHOD__ . ' - user password is not set.');
         }
         $userData['password'] = Local_Auth_Adapter_Ocs::getEncryptedPassword($userData['password'],
             Default_Model_DbTable_Member::SOURCE_LOCAL);
@@ -457,6 +457,9 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         if (false == isset($userData['verificationVal'])) {
             $verificationVal = Default_Model_MemberEmail::getVerificationValue($userData['username'], $userData['mail']);
             $userData['verificationVal'] = $verificationVal;
+        }
+        if(false == isset($userData['primary_mail'])) {
+            $userData['primary_mail'] = $userData['mail'];
         }
 
         return $this->storeNewUser($userData);

@@ -143,25 +143,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $this->view->catParentTitle = $helperFetchCategory->catTitle($this->view->catParentId);
         }
 
-        /**
-         * if(isset($this->view->catParentTitle) && 'root' == $this->view->catParentTitle) {
-         * //OK, MainCat is set on product, we want see SubCat here
-         * $tableCategory = new Default_Model_SubCategory();
-         * $subCatArray = $tableCategory->fetchSubcategoriesForProduct($this->view->product->project_category_id);
-         * if(isset($subCatArray) && count($subCatArray) > 0) {
-         * //1 child, but is it a ParentCat?
-         * $child = $subCatArray[0];
-         * //ChildCat was writen in project as MainCat!
-         * $subCatId = $child['project_sub_category_id'];
-         * $this->view->catParentTitle .= ' ID: ' . $subCatId;
-         * $this->view->catTitle = $helperFetchCategory->catTitle($subCatId);
-         * $this->view->catId = $subCatId;
-         * }
-         *
-         * }
-         **/
-
-
         $AuthCodeExist = new Local_Verification_WebsiteAuthCodeExist();
         $this->view->websiteAuthCode = $AuthCodeExist->generateAuthCode(stripslashes($this->view->product->link_1));
 
@@ -1213,9 +1194,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             );
         }
 
-//        $this->setViewDataForMyProducts($memberId);
-//
-//        $this->renderScript('user/products.phtml');
         $this->forward('products', 'user', 'default');
     }
 
