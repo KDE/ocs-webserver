@@ -1,21 +1,17 @@
 CREATE TABLE `member_email` (
-  `email_id` INT NOT NULL AUTO_INCREMENT,
-  `email_member_id` INT NOT NULL,
-  `email_address` VARCHAR(254) NOT NULL,
-  `email_primary` INT(1) NULL DEFAULT 0,
-  `email_deleted` INT(1) NULL DEFAULT 0,
-  `email_created` DATETIME NULL DEFAULT NULL,
-  `email_checked` DATETIME NULL DEFAULT NULL,
+  `email_id` int(11) NOT NULL AUTO_INCREMENT,
+  `email_member_id` int(11) NOT NULL,
+  `email_address` varchar(255) NOT NULL,
+  `email_primary` int(1) DEFAULT '0',
+  `email_deleted` int(1) DEFAULT '0',
+  `email_created` datetime DEFAULT NULL,
+  `email_checked` datetime DEFAULT NULL,
+  `email_verification_value` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`email_id`),
-  INDEX `idx_address` (`email_address` ASC));
-
-ALTER TABLE `member_email`
-  ADD INDEX `idx_member` (`email_member_id` ASC);
-
-ALTER TABLE `member_email`
-  CHANGE COLUMN `email_address` `email_address` VARCHAR(255) NOT NULL ,
-  ADD COLUMN `email_verification_value` VARCHAR(255) NULL DEFAULT NULL AFTER `email_checked`,
-  ADD INDEX `idx_verification` (`email_verification_value` ASC);
+  KEY `idx_address` (`email_address`),
+  KEY `idx_member` (`email_member_id`),
+  KEY `idx_verification` (`email_verification_value`)
+) ENGINE=InnoDB;
 
 DELIMITER $$
 
@@ -31,6 +27,8 @@ CREATE DEFINER = CURRENT_USER TRIGGER `member_email_BEFORE_INSERT` BEFORE INSERT
   END$$
 DELIMITER ;
 
+START TRANSACTION;
+
 -- migrate all user email
 TRUNCATE member_email;
 INSERT INTO member_email (email_member_id, email_address, email_primary, email_created, email_checked, email_verification_value)
@@ -38,3 +36,16 @@ INSERT INTO member_email (email_member_id, email_address, email_primary, email_c
   FROM member
   WHERE member.mail_checked AND member.is_active and member.mail IS NOT NULL
 ;
+
+-- new column for member table
+ALTER TABLE `member`
+  ADD COLUMN `primary_mail` VARCHAR(255) NULL DEFAULT NULL AFTER `source_pk`;
+
+-- after migrating to member_email we can drop the column `validationVal`
+ALTER TABLE `member`
+  DROP COLUMN `verificationVal`;
+
+-- and copy addresses
+UPDATE member SET primary_mail = mail;
+
+COMMIT;
