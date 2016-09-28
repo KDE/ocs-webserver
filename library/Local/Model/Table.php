@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -19,7 +20,6 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-
 class Local_Model_Table extends Zend_Db_Table
 {
 
@@ -35,7 +35,7 @@ class Local_Model_Table extends Zend_Db_Table
     public function save($data)
     {
         if (empty($this->_keyColumnsForRow)) {
-            throw new Exception('no _keyColumnsForRow were set');
+            throw new Exception(__METHOD__ . ' - no _keyColumnsForRow were set');
         }
         $rowSet = $this->findForKeyColumns($data, $this->_keyColumnsForRow);
 

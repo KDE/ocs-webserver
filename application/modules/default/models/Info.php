@@ -311,63 +311,61 @@ class Default_Model_Info
 
         if ($resultSet) {
             return $resultSet;
+        }
+
+        if ($project_category_id == null) {
+
+            $sql = '
+            SELECT DISTINCT
+                config_store_category.project_category_id
+            FROM
+                config_store
+            JOIN
+                config_store_category ON config_store.store_id = config_store_category.store_id
+            JOIN
+                project_category ON config_store_category.project_category_id = project_category.project_category_id
+            WHERE project_category.is_active = 1
+            and config_store.host = "' . $host . '"
+            ORDER BY config_store_category.`order`;
+            ';
+
+
+            $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
+
+            $values = array_map(function ($row) {
+                return $row['project_category_id'];
+            }, $resultSet);
+
+
         } else {
 
-            if ($project_category_id == null) {
 
-                $sql = '
-                SELECT DISTINCT
-                    config_store_category.project_category_id
-                FROM
-                    config_store
-                JOIN
-                    config_store_category ON config_store.store_id = config_store_category.store_id
-                JOIN
-                    project_category ON config_store_category.project_category_id = project_category.project_category_id
-                WHERE project_category.is_active = 1
-                and config_store.host = "' . $host . '"
-                ORDER BY config_store_category.`order`;
-                ';
+            $resultSet = array(
+                array("project_category_id" => $project_category_id)
+            );
 
-
-                $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
-
-                $values = array_map(function ($row) {
-                    return $row['project_category_id'];
-                }, $resultSet);
-
-
-            } else {
-
-
-                $resultSet = array(
-                    array("project_category_id" => $project_category_id)
-                );
-
-                $values = array(
-                    $project_category_id
-                );
-
-            }
-
-            $helperFetchChildren = new Default_Model_DbTable_ProjectCategory();
-            foreach ($resultSet as $row) {
-                $children = $helperFetchChildren->fetchSubCatIds($row['project_category_id']);
-                if (count($children) > 0) {
-                    $values = array_merge($values, $children);
-                }
-            }
-
-
-            if (count($values) > 0) {
-                $cache->save($values, $cacheName, array(), 14400);
-                return $values;
-            } else {
-                return array();
-            }
-
+            $values = array(
+                $project_category_id
+            );
 
         }
+
+        $helperFetchChildren = new Default_Model_DbTable_ProjectCategory();
+        foreach ($resultSet as $row) {
+            $children = $helperFetchChildren->fetchSubCatIds($row['project_category_id']);
+            if (count($children) > 0) {
+                $values = array_merge($values, $children);
+            }
+        }
+
+
+        if (count($values) > 0) {
+            $cache->save($values, $cacheName, array(), 14400);
+            return $values;
+        } else {
+            return array();
+        }
+
     }
 
     public function getLastProductsForHostStores($limit = 10, $project_category_id = null)

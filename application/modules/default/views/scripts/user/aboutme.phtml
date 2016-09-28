@@ -172,24 +172,27 @@ $textCountryCity .= $this->member->country ? ', ' . $this->member->country : '';
                         <ul class="nav nav-tabs" role="tablist">
                             <li role="presentation" class="active">
                                 <a href="#user-aboutme" data-toggle="tab" role="tab"  aria-controls="user-aboutme" >
-                                    Products 
+                                    Products<?=($this->stat['cntProducts']>0?' ('.$this->stat['cntProducts'].') ':'')?>
                                 </a>
                             </li>
                               <li>
                                 <a href="#user-donations" data-toggle="tab" role="tab"  aria-controls="user-donations">
-                                    Supported by 
+                                    Supported by<?=($this->stat['cntSupporters']>0?' ('.$this->stat['cntSupporters'].') ':'')?>
                                 </a>
                             </li>
                              <li>
                                 <a href="#user-supports" data-toggle="tab" role="tab"  aria-controls="user-supports">
-                                    Supporter of
+                                    Supporter of<?=(count($this->supportingTeaser)>0?' ('.count($this->supportingTeaser).') ':'')?>
                                 </a>
                             </li>
+                            <?php /*
                             <li>
                                 <a href="#user-fans" data-toggle="tab" role="tab"  aria-controls="user-fans">
-                                    Fan of
+                                    Fan of<?=(count($this->followedProducts)>0?' ('.count($this->followedProducts).') ':'')?>
                                 </a>
                             </li>
+                            */
+                            ?>
                             <li>
                                 <a href="#user-comments" data-toggle="tab" role="tab"  aria-controls="user-comments">
                                     Comments (<?=$this->comments->getTotalItemCount()?>)
@@ -263,10 +266,8 @@ $textCountryCity .= $this->member->country ? ', ' . $this->member->country : '';
 
                             </div>
 
-                            <div role="tabpanel" class="tab-pane " id="user-fans">
-
-                              
-
+                            <?php /*
+                            <div role="tabpanel" class="tab-pane " id="user-fans">                              
                                 <article>
 
                                     <div class="my-products-list supports">
@@ -280,6 +281,8 @@ $textCountryCity .= $this->member->country ? ', ' . $this->member->country : '';
                                 </article>
 
                             </div>
+                            */
+                            ?>
                             
                             <div  role="tabpanel" class="tab-pane " id="user-donations">                                    
                                   <?php echo $this->render('user/partials/loopMyDonations.phtml'); ?>

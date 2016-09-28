@@ -61,6 +61,7 @@
 </head>
 <body>
 <?php echo $this->render('partials/header/template.phtml'); ?>
+<?php echo $this->render('partials/flashMessage.phtml'); ?>
 <?php echo $this->layout()->content; ?>
 <?php echo $this->render('partials/footer/template.phtml'); ?>
 
@@ -71,7 +72,7 @@
     <div class="modal-body"></div>
     <div id="error"></div>
 </div>
-
+<?php echo $this->render('partials/genericModalConfirmation.phtml'); ?>
 
 <!-- Load JS here for greater good =============================-->
 

@@ -277,6 +277,24 @@ class Default_Model_Authorization
     }
 
     /**
+     * @param string $identity
+     * @return object
+     */
+    public function getAuthUserDataFromUnverified($identity)
+    {
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - $identity: ' . print_r($identity, true));
+        $sql = "
+        SELECT member.* FROM member
+        STRAIGHT_JOIN member_email ON member.member_id = member_email.email_member_id AND email_deleted = 0 AND email_checked is null
+        WHERE member_email.email_verification_value = :verification;
+        ";
+        $resultRow = $this->_dataTable->getAdapter()->fetchRow($sql, array('verification'=>$identity));
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - $resultRow: ' . print_r($resultRow, true));
+        unset($resultRow['password']);
+        return (object)$resultRow;
+    }
+
+    /**
      * ppload and OCS
      *
      * @param string $identity

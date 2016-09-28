@@ -1,0 +1,171 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$modelMember = new Default_Model_MemberEmail();
+$listEmails = $modelMember->fetchAllMailAdresses($this->member->member_id);
+?>
+<style>
+.group-list {
+    list-style: outside none none;
+}
+.group-list > li:first-child {
+    border-top: 0 none;
+}
+.group-list > li:first-child {
+    border-top: 1px solid #ddd;
+}
+.group-list > li {
+    border-bottom: 1px solid #e5e5e5;
+    display: block;
+    line-height: 23px;
+    margin-left: -10px;
+    padding: 5px 10px;
+}
+.group-list .css-truncate .css-truncate-target {
+    max-width: 300px;
+}
+.css-truncate.css-truncate-target, .css-truncate .css-truncate-target {
+    display: inline-block;
+    max-width: 125px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: top;
+    white-space: nowrap;
+}
+.email-actions {
+    float: right;
+}
+.email-actions form {
+    display: inline;
+}
+
+span.label.default {
+    background-color: #6cc644;
+    border-radius: 3px;
+    color: #fff;
+    margin-left: 4px;
+    padding: 4px 6px;
+}
+span.label.attention {
+    background-color: #c64f0d;
+    border-radius: 3px;
+    color: #fff;
+    margin-left: 4px;
+    padding: 4px 6px;
+}
+.btn {
+    line-height: 20px;
+    padding: 4px 12px;
+}
+</style>
+<div class="panel-heading">
+    <h4 class="panel-title">
+        <a data-toggle="collapse" href="#email-collapse" data-parent="#accordion" id="email-trigger">
+            <span class="glyphicon glyphicon-envelope"></span>
+            <?= $this->translate('Your Emails') ?>
+            <span class="absolute glyphicon glyphicon-chevron-down"></span>
+        </a>
+    </h4>
+</div>
+
+<div class="panel-collapse collapse" id="email-collapse">
+    <div class="panel-body">
+        <div id="form-email-body" class="well">
+        <p>Your <strong>primary email address</strong> will be used for account-related notifications
+            (e.g. account changes) as well as any web-based operations
+            (e.g. comments and other notifications).</p>
+
+        <ul class="group-list">
+            <?php
+            foreach ($listEmails as $listEmail) {
+            ?>
+            <li class="css-truncate">
+                <span title="<?=$listEmail['email_address']?>" class="css-truncate-target"><?=$listEmail['email_address']?></span>
+                <?php if ($listEmail['email_primary']) { ?>
+                <span class="label default">Primary</span>
+                <?php } ?>
+                <?php if (empty($listEmail['email_checked'])) { ?>
+                    <span class="label attention">Unverified</span>
+                <?php } ?>
+                <span class="email-actions">
+                    <?php if (empty($listEmail['email_primary'])) { ?>
+                        <form method="post" action="/settings/removeemail/i/<?=$listEmail['email_id']?>" class="partial"  data-target="#form-email"
+                              data-trigger="#email-trigger">
+                            <button data-message="Are you sure you want to remove this email from your account?" data-callback="callbackDelete" aria-label="Delete" class="btn remove">
+                                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                            </button>
+                        </form>
+                        <?php if ($listEmail['email_checked']) { ?>
+                        <form method="post" action="/settings/setdefaultemail/i/<?=$listEmail['email_id']?>"  class="partial"  data-target="#form-email"
+                              data-trigger="#email-trigger">
+                            <button class="btn" type="submit">Set as primary</button>
+                        </form>
+                        <?php } ?>
+                    <?php } ?>
+                    <?php if (empty($listEmail['email_checked'])) { ?>
+                        <form method="post" action="/settings/resendverification/i/<?=$listEmail['email_id']?>"  class="partial"  data-target="#form-email"
+                              data-trigger="#email-trigger">
+                            <button class="btn" type="submit">Resend verification</button>
+                        </form>
+                    <?php } ?>
+                </span>
+            </li>
+            <?php } ?>
+        </ul>
+
+        <form method="post" action="/settings/addemail/" class="partial"  data-target="#form-email"
+              data-trigger="#email-trigger">
+            <dl class="inline">
+                <dt><label for="email">Add email address</label></dt>
+                <dd><input type="email" size="30" required="required" name="user_email" id="email" class="">
+                    <button class="btn" type="submit">Add</button></dd>
+            </dl>
+        </form>
+
+        <hr>
+        <div class="row">
+            <?php
+            if ($this->messages) {
+                foreach ($this->messages as $message) {
+                    echo "<div>{$message}</div>";
+                }
+            }
+            ?>
+        </div>
+    </div>
+</div>
+    <script>
+
+            function callbackDelete(link) {
+                // Do however you want to handle deleting
+                // We have the link element and can access it's data attributes
+
+                $(link).closest('form').submit();
+            }
+
+    </script>
+
+<?php  /* $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){
+
+        });
+    '); */

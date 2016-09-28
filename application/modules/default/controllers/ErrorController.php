@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -32,21 +33,15 @@ Even if you have authentication, you are still not allowed to access this page. 
 
 <p>Still no luck? Search for whatever is missing, or take a look around the rest of our site. </p>";
 
-/*
-    protected $error_404_msg = "<p>Unfortunately the page you were looking for could not be found.
-It may be temporarily unavailable, moved or no longer exist.</p>
 
-<p>Check the URL you entered for any mistakes and try again.
-Still no luck? Search for whatever is missing, or take a look around the rest of our site. </p>";
-  */
-protected $error_404_msg = "<p>We're sorry.
+    protected $error_404_msg = "<p>We're sorry.
 
 Unfortunately the page you were looking for could not be found. It may be temporarily unavailable, moved or no longer exist.
 
 Check the URL you entered for any mistakes and try again. Still no luck? Search for whatever is missing, or take a look around the rest of our site. </p>";
 
 
-protected $error_500_msg = "<p>We're sorry.
+    protected $error_500_msg = "<p>We're sorry.
 
 Unfortunately the page you were looking for could not be found. It may be temporarily unavailable, moved or no longer exist.
 
@@ -122,8 +117,7 @@ Still no luck? Search for whatever is missing, or take a look around the rest of
         $this->getResponse()
             ->clearHeaders(array('Expires', 'Pragma', 'Cache-Control'))
             ->setHeader('Pragma', 'no-cache', true)
-            ->setHeader('Cache-Control', 'private, no-cache, must-revalidate', true)
-        ;
+            ->setHeader('Cache-Control', 'private, no-cache, must-revalidate', true);
     }
 
 }

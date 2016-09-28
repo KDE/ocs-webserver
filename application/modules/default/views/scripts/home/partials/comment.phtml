@@ -20,14 +20,10 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-$helperPrintDate = new Default_View_Helper_PrintDate();
-$updateTime = $helperPrintDate->printDate($this->comment['comment_created_at']);
-$helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
-$helperFetchSubcategoriesForProduct = new Default_View_Helper_FetchCategoriesForProductAsString();
-$helperImage = new Default_View_Helper_Image();
-$helperTruncate = new Default_View_Helper_Truncate();
-?>
 
+
+
+?>
 
 
 <div  style="width: 200px; background-color: #f1f1f1; float: left; border:1px solid #ddd; margin:2px; height:220px">
@@ -35,20 +31,20 @@ $helperTruncate = new Default_View_Helper_Truncate();
     <div style="padding:5px; display: block; height: 160px; background-color: #fff;  position: relative;">
     
         <div style="line-height:1.5; max-height: 145px; overflow: hidden;"><a
-					href="/p/<?= $this->comment['project_id'] ?>">
-						<?=$helperTruncate->truncate($this->comment['comment_text'], 200, '...', false, true)?>
+					href="/p/<?= $this->comment['project_id'] ?>">						
+						<?=$this->truncate(strip_tags($this->comment['comment_text'],' '), 200, '...', false, true)?>	    
 					</a>
 			</div>
 			
-			<span class="small" style="position: absolute; bottom: 0px;">
-    		<?=$helperTruncate->truncate($this->comment['title'], 30, '...', false, true)?>               
+			<span class="small" style="position: absolute; bottom: 0px;">    		
+    		<?=$this->truncate(strip_tags($this->comment['title'],' '), 30, '...', false, true)?>	     
 			</span>
 			
     </div>    
      <div style="display: block; "  class="">        
          <div class="userinfo" >
 			<a href="/p/<?= $this->comment['project_id'] ?>">
-			<img src="<?= $helperImage->Image($this->comment['profile_image_url'],
+			<img src="<?= $this->Image($this->comment['profile_image_url'],
 						array('width' => 60, 'height' => 60)) ?>"  style="margin: 5px; width: 40px; height:40px; border-radius: 50%; float: left"/>
 				<span style="display: block;padding-top:15px;"><?= $this->comment['username'] ?></span>
 			</a>

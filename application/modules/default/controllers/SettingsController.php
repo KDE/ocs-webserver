@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -41,8 +42,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $this->getResponse()
             ->clearHeaders(array('Expires', 'Pragma', 'Cache-Control'))
             ->setHeader('Pragma', 'no-cache', true)
-            ->setHeader('Cache-Control', 'private, no-cache, must-revalidate', true)
-        ;
+            ->setHeader('Cache-Control', 'private, no-cache, must-revalidate', true);
 
         $this->_auth = Zend_Auth::getInstance();
         $this->_memberId = $this->_auth->getStorage()->read()->member_id;
@@ -390,8 +390,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                     'minheight' => 20,
                     'maxheight' => 1024
                 ))
-            ->addValidator('MimeType', false, $imageTable->getAllowedMimeTypes())
-        ;
+            ->addValidator('MimeType', false, $imageTable->getAllowedMimeTypes());
 
         $form->addElement($productPicture);
 
@@ -694,10 +693,6 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         return $form;
     }
 
-    /**
-     * Profile Actions. One for a form
-     */
-
     public function profileAction()
     {
         $this->_helper->layout->disableLayout();
@@ -708,7 +703,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
 
             if ($form->isValid($_POST)) {
                 $values = $form->getValues();
-                
+
                 //remove email and username
                 unset($values['username']);
                 unset($values['mail']);
@@ -825,7 +820,8 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
             if ($form->isValid($_POST)) {
 
                 $tmpProfilePictureTitle = IMAGES_UPLOAD_PATH . 'tmp/' . Local_Tools_UUID::generateUUID() . '_' . $profilePictureTitleFilename['basename'];
-                $form->getElement('profile_picture_upload')->addFilter('Rename', array('target' => $tmpProfilePictureTitle, 'overwrite' => true));
+                $form->getElement('profile_picture_upload')->addFilter('Rename',
+                    array('target' => $tmpProfilePictureTitle, 'overwrite' => true));
 
                 $values = $form->getValues();
 
@@ -886,12 +882,15 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
             if ($form->isValid($_POST)) {
                 $values = $form->getValues();
 
-                if ($this->_memberSettings->password != Local_Auth_Adapter_Ocs::getEncryptedPassword($values['passwordOld'], $this->_memberSettings->source_id)) {
+                if ($this->_memberSettings->password != Local_Auth_Adapter_Ocs::getEncryptedPassword($values['passwordOld'],
+                        $this->_memberSettings->source_id)
+                ) {
                     $form->addErrorMessage('Your old Password is wrong!');
                     $this->view->passwordform = $form;
                     $this->view->error = 1;
                 } else {
-                    $this->_memberSettings->password = Local_Auth_Adapter_Ocs::getEncryptedPassword($values['password1'], $this->_memberSettings->source_id);
+                    $this->_memberSettings->password = Local_Auth_Adapter_Ocs::getEncryptedPassword($values['password1'],
+                        $this->_memberSettings->source_id);
                     $this->_memberSettings->save();
                     $this->view->passwordform = $this->formPassword();
                     $this->view->save = 1;
@@ -916,7 +915,8 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         if ($this->_request->isGet()) {
             $websiteVerifier = new Local_Verification_WebsiteOwner();
             $authCode = $websiteVerifier->generateAuthCode($this->_memberSettings->link_website);
-            $form = $this->formHomepage($this->_memberSettings->link_website, $authCode, $this->_memberSettings->validated);
+            $form = $this->formHomepage($this->_memberSettings->link_website, $authCode,
+                $this->_memberSettings->validated);
             $this->view->homepageform = $form;
             return;
         }
@@ -1064,6 +1064,173 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
             'secret' => PPLOAD_SECRET
         ));
         $ownerResponse = $pploadApi->deleteOwner($this->_memberId);
+    }
+
+    public function addemailAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer('partials/email');
+
+        $filterInput = $this->createFilter();
+
+        if ($filterInput->hasInvalid()) {
+            $this->view->messages = $filterInput->getMessages();
+            return;
+        }
+
+        $resultSet = $this->saveEmail($filterInput);
+
+        $this->sendConfirmationMail($resultSet->toArray());
+
+        $this->view->messages = array('success' => 'Your email was saved. Please check your email account for verification email.');
+    }
+
+    public function removeemailAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer('partials/email');
+
+        $emailId = (int) $this->getParam('i');
+
+        $modelEmail = new Default_Model_DbTable_MemberEmail();
+
+        $result = $modelEmail->delete($emailId);
+
+        $this->view->messages = array('success' => 'Your email was removed.');
+    }
+
+    public function setdefaultemailAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer('partials/email');
+
+        $emailId = (int) $this->getParam('i');
+
+        $modelEmail = new Default_Model_MemberEmail();
+        $result = $modelEmail->setDefaultEmail($emailId, $this->_authMember->member_id);
+
+    }
+
+    public function resendverificationAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer('partials/email');
+
+        $emailId = (int) $this->getParam('i');
+
+        $modelEmail = new Default_Model_DbTable_MemberEmail();
+        $data = $modelEmail->find($emailId)->current();
+        $data->email_verification_value = md5($data->email_address . $this->_authMember->username . time());
+        $data->save();
+        $this->sendConfirmationMail($data);
+
+        $this->view->messages = array('success'=>'New verification mail was send. Please check your email account.');
+    }
+
+    public function verificationAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        // Filter-Parameter
+        $filterInput = new Zend_Filter_Input(
+            array('*' => 'StringTrim', 'v' => 'StripTags'),
+            array(
+                'v' => array(
+                    'presence' => 'required'
+                )
+            ),
+            $this->getAllParams()
+        );
+
+        if ($filterInput->hasInvalid()) {
+            $this->_helper->flashMessenger->addMessage('<p class="text-error">There was an error verifying your email. </p>');
+            $this->forward('index');
+            return;
+        }
+
+        $modelEmail = new Default_Model_MemberEmail();
+        $result = $modelEmail->verificationEmail($filterInput->getEscaped('v'));
+
+        if ($result == 1) {
+            $this->_helper->flashMessenger->addMessage('<p class="text-success">Your email was successfully verified. </p>');
+        } else {
+            $this->_helper->flashMessenger->addMessage('<p class="text-danger">There was an error verifying your email.</p>');
+        }
+        $this->forward('index');
+    }
+
+    /**
+     * @return Zend_Filter_Input
+     */
+    protected function createFilter()
+    {
+        $mailValidCheck = new Zend_Validate_EmailAddress();
+        $mailValidCheck->setMessage('RegisterFormEmailErrNotValid', Zend_Validate_EmailAddress::INVALID)
+            ->setMessage('RegisterFormEmailErrNotValid', Zend_Validate_EmailAddress::INVALID_FORMAT)
+            ->setMessage('RegisterFormEmailErrNotValid', Zend_Validate_EmailAddress::INVALID_LOCAL_PART)
+            ->setMessage("RegisterFormEmailErrWrongHost", Zend_Validate_EmailAddress::INVALID_HOSTNAME)
+            ->setMessage("RegisterFormEmailErrWrongHost2", Zend_Validate_Hostname::INVALID_HOSTNAME)
+            ->setMessage("RegisterFormEmailErrHostLocal", Zend_Validate_Hostname::LOCAL_NAME_NOT_ALLOWED)
+            ->setOptions(array('domain' => true));
+
+        // Filter-Parameter
+        $filterInput = new Zend_Filter_Input(
+            array('*' => 'StringTrim', 'user_email' => 'StripTags'),
+            array(
+                'user_email' => array(
+                    $mailValidCheck,
+                    'presence' => 'required'
+                )
+            ),
+            $this->getAllParams()
+        );
+        return $filterInput;
+    }
+
+    /**
+     * @param Zend_Filter_Input $filterInput
+     * @return Zend_Db_Table_Row_Abstract
+     */
+    protected function saveEmail($filterInput)
+    {
+        $data = array();
+        $data['email_member_id'] = $this->_authMember->member_id;
+        $data['email_address'] = $filterInput->getEscaped('user_email');
+        $data['email_verification_value'] = Default_Model_MemberEmail::getVerificationValue($this->_authMember->username, $filterInput->getEscaped('user_email'));
+        $modelMemberEmail = new Default_Model_DbTable_MemberEmail();
+        return $modelMemberEmail->save($data);
+    }
+
+    /**
+     * @param array $data
+     * @param string $verificationVal
+     */
+    protected function sendConfirmationMail($data)
+    {
+        $confirmMail = new Default_Plugin_SendMail('tpl_verify_email');
+        $confirmMail->setTemplateVar('servername', $this->getServerName());
+        $confirmMail->setTemplateVar('username', $this->_authMember->username);
+        $confirmMail->setTemplateVar('email_address', $data['email_address']);
+        $confirmMail->setTemplateVar('verificationlinktext',
+            '<a href="https://' . $this->getServerName() . '/settings/verification/v/' . $data['email_verification_value'] . '">Click here to verify your email address</a>');
+        $confirmMail->setTemplateVar('verificationlink',
+            '<a href="https://' . $this->getServerName() . '/settings/verification/v/' . $data['email_verification_value'] . '">https://' . $this->getServerName() . '/settings/verification/v/' . $data['email_verification_value'] . '</a>');
+        $confirmMail->setTemplateVar('verificationurl',
+            'https://' . $this->getServerName() . '/settings/verification/v/' . $data['email_verification_value']);
+        $confirmMail->setReceiverMail($data['email_address']);
+        $confirmMail->setFromMail('registration@opendesktop.org');
+        $confirmMail->send();
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function getServerName()
+    {
+        /** @var Zend_Controller_Request_Http $request */
+        $request = $this->getRequest();
+        return $request->getHttpHost();
     }
 
 }
