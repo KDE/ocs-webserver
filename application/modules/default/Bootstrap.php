@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -431,18 +432,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             )
         );
 
-//        $router->addRoute(
-//            'button_show',
-//            new Zend_Controller_Router_Route(
-//                '/button/show/:project_uuid/',
-//                array(
-//                    'module' => 'default',
-//                    'controller' => 'button',
-//                    'action' => 'translate'
-//                )
-//            )
-//        );
-
         $router->addRoute(
             'button_action',
             new Zend_Controller_Router_Route(
@@ -768,7 +757,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             )
         );
 
-      
 
         $router->addRoute(
             'static_terms_publish',
