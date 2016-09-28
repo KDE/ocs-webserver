@@ -30,7 +30,8 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
     //var $hive_import_categories = array(15,8,64,8300,7700,8000,8100,7800,8400,8700,7600,7900,7500);
     //var $hive_import_categories = arra(25);
     //var $hive_import_categories = array(648, 692, 649);
-    var $hive_import_categories = array(322,323,324,325,326);
+    //var $hive_import_categories = array(322,323,324,325,326);
+    var $hive_import_categories = array(637);
     protected $_allowed = array(
         'image/jpeg' => '.jpg',
         'image/jpg' => '.jpg',
