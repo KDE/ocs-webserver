@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS `member_email`;
 CREATE TABLE `member_email` (
   `email_id` int(11) NOT NULL AUTO_INCREMENT,
   `email_member_id` int(11) NOT NULL,
@@ -36,6 +37,10 @@ INSERT INTO member_email (email_member_id, email_address, email_primary, email_c
   FROM member
   WHERE member.mail_checked AND member.is_active and member.mail IS NOT NULL
 ;
+
+-- backup member table
+CREATE TABLE member_bak_20160928 LIKE member;
+INSERT member_bak_20160928 SELECT * FROM member;
 
 -- new column for member table
 ALTER TABLE `member`
