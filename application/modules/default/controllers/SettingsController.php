@@ -828,6 +828,32 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
             $this->view->accounts = $form;
         }
     }
+    
+    public function githubAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer('partials/github');
+
+        if ($this->_request->isPost()) {
+            $form = $this->formGithub();
+
+            if ($form->isValid($_POST)) {
+                $this->_memberSettings->setFromArray($form->getValues());
+                $this->_memberSettings->save();
+
+                $this->view->accounts = $form;
+                $this->view->save = 1;
+            } else {
+                $this->view->accounts = $form;
+                $this->view->error = 1;
+            }
+
+        } else {
+            $form = $this->formProfile();
+            $form->populate($this->_memberSettings->toArray());
+            $this->view->accounts = $form;
+        }
+    }
 
     public function pictureAction()
     {
