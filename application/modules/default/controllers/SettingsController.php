@@ -841,17 +841,17 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                 $this->_memberSettings->setFromArray($form->getValues());
                 $this->_memberSettings->save();
 
-                $this->view->accounts = $form;
+                $this->view->github = $form;
                 $this->view->save = 1;
             } else {
-                $this->view->accounts = $form;
+                $this->view->github = $form;
                 $this->view->error = 1;
             }
 
         } else {
             $form = $this->formProfile();
             $form->populate($this->_memberSettings->toArray());
-            $this->view->accounts = $form;
+            $this->view->github = $form;
         }
     }
 
