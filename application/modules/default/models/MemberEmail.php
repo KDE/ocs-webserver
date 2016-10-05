@@ -65,7 +65,7 @@ class Default_Model_MemberEmail
     {
         $result = $this->resetDefaultMailAddress($member_id);
         $this->_dataTable->setPrimary($emailId);
-        // $this->updateMemberData($member_id); /* if we change the mail in member table, we change the login. */
+        $this->updateMemberPrimaryMail($member_id); /* if we change the mail in member table, we change the login. */
         return true;
     }
 
@@ -154,7 +154,7 @@ class Default_Model_MemberEmail
     {
         $modelMember = new Default_Model_Member();
         $dataMember = $modelMember->fetchMemberData($member_id);
-        $dataMember->primary_mail = $dataEmail['email_address'];
+        $dataMember->mail = $dataEmail['email_address'];
         $dataMember->mail_checked = $dataEmail['email_checked'] ? 1 : 0;
         return $dataMember->save();
     }
