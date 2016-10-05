@@ -72,6 +72,9 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $this->view->accounts = $this->formConnectedAccounts();
         $this->view->accounts->populate($memberSettings);
 
+        $this->view->github = $this->formGithub();
+        $this->view->github->populate($memberSettings);
+
         $this->view->pictureform = $this->formProfilePicture();
         $this->view->pictureform->populate($memberSettings);
 
@@ -329,6 +332,36 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                     )
                 ));
         $google->addValidator(new Local_Validate_PartialUrl);
+        $form->addElement($github);
+
+        return $form;
+    }
+    
+    private function formGithub()
+    {
+        $form = new Default_Form_Settings();
+        $form->setMethod("POST")
+            ->setAttrib("id", "settingsGithub")
+            ->setAction('/settings/github');
+
+        $github = $form->createElement('text', 'link_github')
+            ->setLabel("Github Profile:")
+            ->setRequired(false)
+            ->removeDecorator('HtmlTag')
+            ->setDecorators(
+                array(
+                    'ViewHelper',
+                    'Label',
+                    'Errors',
+                    array(
+                        'ViewScript',
+                        array(
+                            'viewScript' => 'settings/viewscripts/flatui_input.phtml',
+                            'placement' => false
+                        )
+                    )
+                ));
+        $github->addValidator(new Local_Validate_PartialUrl);
         $form->addElement($github);
 
         return $form;
