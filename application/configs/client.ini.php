@@ -61,13 +61,14 @@ return array(
 
     'header-nav-tabs' => array(
         'background-color' => '#609dca',
+        'background-color-active' => '#60bcff',
+        'background-color-hover' => '#FF8743',
         'border-color' => '#a3acfd',
         'border-radius' => '5px 5px 0 0',
         'border-style' => 'solid solid none',
         'border-with' => '2px 2px 0',
         'height' => '24px',
         'margin-right' => '2px',
-        'background-color-active' => '#60bcff',
         'absolute-left' => '310px',
         'absolute-right' => '30px',
         'link' =>
