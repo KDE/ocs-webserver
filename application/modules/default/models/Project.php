@@ -1075,7 +1075,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
 
         $select->where('project.project_category_id in (' . $sqlwhereSubCat . $sqlwhereCat . ')');
 
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . $select->__toString());
+        //Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . $select->__toString());
         //$this->_db->getProfiler()->setEnabled(true);
         $resultSet = $this->fetchAll($select);
         //Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . $this->_db->getProfiler()->getLastQueryProfile()->getQuery());
@@ -1157,11 +1157,11 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             ->joinLeft('project_subcategory', 'project_subcategory.project_id = project.project_id')
             ->where('project_subcategory.project_sub_category_id = ?', $idCategory);
 
-        $this->_db->getProfiler()->setEnabled(true);
+        //$this->_db->getProfiler()->setEnabled(true);
         $resultSet = $this->fetchAll($select);
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . $this->_db->getProfiler()->getLastQueryProfile()->getQuery());
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . print_r($resultSet->toArray(), true));
-        $this->_db->getProfiler()->setEnabled(false);
+        //Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . $this->_db->getProfiler()->getLastQueryProfile()->getQuery());
+        //Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . print_r($resultSet->toArray(), true));
+        //$this->_db->getProfiler()->setEnabled(false);
 
         return (int)$resultSet[0]['count_active_projects'];
     }
@@ -1240,13 +1240,13 @@ class Default_Model_Project extends Default_Model_DbTable_Project
 
         if (false === ($returnValue = $cache->load($cacheName))) {
             $statement = $this->generateStatement($inputFilterParams, $limit, $offset);
-            Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . $statement->__toString());
+            //Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . $statement->__toString());
             /** @var Zend_Db_Table_Rowset $fetchedElements */
             $fetchedElements = $this->fetchAll($statement);
 
             $statement->reset('limitcount')->reset('limitoffset');
             $statement->reset('columns')->columns(array('count' => new Zend_Db_Expr('count(*)')));
-            Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . $statement->__toString());
+            //Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . $statement->__toString());
             $countElements = $this->fetchRow($statement);
             $returnValue = array('elements' => $fetchedElements, 'total_count' => $countElements->count);
 
