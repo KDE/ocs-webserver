@@ -111,7 +111,7 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
         }
 
         $newPasMail = new Default_Plugin_SendMail('tpl_user_comment_note');
-        $newPasMail->setReceiverMail($product->primary_mail);
+        $newPasMail->setReceiverMail($product->mail);
         $newPasMail->setReceiverAlias($product->username);
 
         $newPasMail->setTemplateVar('username', $product->username);
@@ -139,7 +139,7 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
         }
 
         $newPasMail = new Default_Plugin_SendMail('tpl_user_comment_reply_note');
-        $newPasMail->setReceiverMail($parentCommentOwner->primary_mail);
+        $newPasMail->setReceiverMail($parentCommentOwner->mail);
         $newPasMail->setReceiverAlias($parentCommentOwner->username);
 
         $newPasMail->setTemplateVar('username', $parentCommentOwner->username);

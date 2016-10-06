@@ -345,7 +345,6 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                   m.mail,
                   m.paypal_mail,
                   m.dwolla_id,
-                  m.primary_mail,
                	 (round(((p.count_likes + 6) / ((p.count_likes + p.count_dislikes) + 12)),2) * 100) as laplace_score,
                	 sp.amount_received,
                	 sp.count_plings,

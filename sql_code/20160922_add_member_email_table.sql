@@ -20,11 +20,8 @@ DROP TRIGGER IF EXISTS member_email_BEFORE_INSERT$$
 CREATE DEFINER = CURRENT_USER TRIGGER `member_email_BEFORE_INSERT` BEFORE INSERT ON `member_email` FOR EACH ROW
   BEGIN
     IF NEW.email_created IS NULL THEN
-
       SET NEW.email_created = NOW();
-
     END IF;
-
   END$$
 DELIMITER ;
 
@@ -42,15 +39,8 @@ INSERT INTO member_email (email_member_id, email_address, email_primary, email_c
 CREATE TABLE member_bak_20160928 LIKE member;
 INSERT member_bak_20160928 SELECT * FROM member;
 
--- new column for member table
-ALTER TABLE `member`
-  ADD COLUMN `primary_mail` VARCHAR(255) NULL DEFAULT NULL AFTER `source_pk`;
-
 -- after migrating to member_email we can drop the column `validationVal`
 ALTER TABLE `member`
   DROP COLUMN `verificationVal`;
-
--- and copy addresses
-UPDATE member SET primary_mail = mail;
 
 COMMIT;
