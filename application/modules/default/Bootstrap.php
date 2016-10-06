@@ -178,7 +178,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $log = new Zend_Log();
 
         $writer = new Zend_Log_Writer_Stream($settings['log']['path'] . 'all_' . date("Y-m-d"));
-        $writer->addFilter(new Local_Log_Filter_MinMax(Zend_Log::WARN, Zend_Log::DEBUG));
+        $writer->addFilter(new Local_Log_Filter_MinMax(Zend_Log::WARN, Zend_Log::INFO));
 
         $log->addWriter($writer);
 
