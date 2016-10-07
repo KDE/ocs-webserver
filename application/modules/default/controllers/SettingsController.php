@@ -125,27 +125,27 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                 ));
         $form->addElement($username);
 
-        $email = $form->createElement('text', 'mail')
-            ->setLabel("Email:")
-            ->setRequired(false)
-            ->removeDecorator('HtmlTag')
-            ->setFilters(array('StringTrim'))
-            ->setValidators(array('EmailAddress'))
-            ->setAttrib('readonly', 'true')
-            ->setDecorators(
-                array(
-                    'ViewHelper',
-                    'Label',
-                    'Errors',
-                    array(
-                        'ViewScript',
-                        array(
-                            'viewScript' => 'settings/viewscripts/flatui_input.phtml',
-                            'placement' => false
-                        )
-                    )
-                ));
-        $form->addElement($email);
+//        $email = $form->createElement('text', 'mail')
+//            ->setLabel("Email:")
+//            ->setRequired(false)
+//            ->removeDecorator('HtmlTag')
+//            ->setFilters(array('StringTrim'))
+//            ->setValidators(array('EmailAddress'))
+//            ->setAttrib('readonly', 'true')
+//            ->setDecorators(
+//                array(
+//                    'ViewHelper',
+//                    'Label',
+//                    'Errors',
+//                    array(
+//                        'ViewScript',
+//                        array(
+//                            'viewScript' => 'settings/viewscripts/flatui_input.phtml',
+//                            'placement' => false
+//                        )
+//                    )
+//                ));
+//        $form->addElement($email);
 
         $firstname = $form->createElement('text', 'firstname')
             ->setLabel("First Name:")
@@ -1141,7 +1141,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
 
         $this->sendConfirmationMail($resultSet->toArray());
 
-        $this->view->messages = array('success' => 'Your email was saved. Please check your email account for verification email.');
+        $this->view->messages = array('user_email' => array('success' => 'Your email was saved. Please check your email account for verification email.'));
     }
 
     public function removeemailAction()
@@ -1155,7 +1155,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
 
         $result = $modelEmail->delete($emailId);
 
-        $this->view->messages = array('success' => 'Your email was removed.');
+        $this->view->messages = array('user_email' => array('success' => 'Your email was removed.'));
     }
 
     public function setdefaultemailAction()
@@ -1183,7 +1183,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $data->save();
         $this->sendConfirmationMail($data);
 
-        $this->view->messages = array('success'=>'New verification mail was send. Please check your email account.');
+        $this->view->messages = array('user_email' => array('success'=>'New verification mail was send. Please check your email account.'));
     }
 
     public function verificationAction()
@@ -1225,13 +1225,14 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
     protected function createFilter()
     {
         $mailValidCheck = new Zend_Validate_EmailAddress();
-        $mailValidCheck->setMessage('RegisterFormEmailErrNotValid', Zend_Validate_EmailAddress::INVALID)
-            ->setMessage('RegisterFormEmailErrNotValid', Zend_Validate_EmailAddress::INVALID_FORMAT)
-            ->setMessage('RegisterFormEmailErrNotValid', Zend_Validate_EmailAddress::INVALID_LOCAL_PART)
-            ->setMessage("RegisterFormEmailErrWrongHost", Zend_Validate_EmailAddress::INVALID_HOSTNAME)
-            ->setMessage("RegisterFormEmailErrWrongHost2", Zend_Validate_Hostname::INVALID_HOSTNAME)
-            ->setMessage("RegisterFormEmailErrHostLocal", Zend_Validate_Hostname::LOCAL_NAME_NOT_ALLOWED)
-            ->setOptions(array('domain' => true));
+        $mailValidCheck->setOptions(array('domain' => true));
+
+        $mailExistCheck = new Zend_Validate_Db_NoRecordExists(array(
+            'table' => 'member_email',
+            'field' => 'email_address',
+            'exclude' => array('field' => 'email_deleted', 'value' => 1)
+        ));
+        $mailExistCheck->setMessage('RegisterFormEmailErrAlreadyRegistered', Zend_Validate_Db_NoRecordExists::ERROR_RECORD_FOUND);
 
         // Filter-Parameter
         $filterInput = new Zend_Filter_Input(
@@ -1239,6 +1240,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
             array(
                 'user_email' => array(
                     $mailValidCheck,
+                    $mailExistCheck,
                     'presence' => 'required'
                 )
             ),
@@ -1263,7 +1265,6 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
 
     /**
      * @param array $data
-     * @param string $verificationVal
      */
     protected function sendConfirmationMail($data)
     {

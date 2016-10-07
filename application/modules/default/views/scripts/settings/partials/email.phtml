@@ -92,7 +92,7 @@ span.label.attention {
         <div id="form-email-body" class="well">
         <p>Your <strong>primary email address</strong> will be used for account-related notifications
             (e.g. account changes) as well as any web-based operations
-            (e.g. comments and other notifications).</p>
+            (e.g. login and comment notifications).</p>
 
         <ul class="group-list">
             <?php
@@ -145,8 +145,10 @@ span.label.attention {
         <div class="row">
             <?php
             if ($this->messages) {
-                foreach ($this->messages as $message) {
-                    echo "<div>{$message}</div>";
+                foreach ($this->messages as $form_element) {
+                    foreach ($form_element as $key=>$message) {
+                        echo "<div>{$message}</div>";
+                    }
                 }
             }
             ?>

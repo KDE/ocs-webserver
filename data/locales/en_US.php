@@ -71,18 +71,12 @@ return array(
 		'ProjectRestartSubmitLabel' => 'Restart Projekt',
 		'Abort'=>'Abort',
 		
-		'ProjectDeleteHeader'=>'Delete this product',
-		'ProjectDeleteErrOwner'=>'You must be the owner of the project,<br/>to delete it.&nbsp;',
-		'ProjectDeleteErrLogin'=>'You must be loged in,<br/>to delete your project.&nbsp;',
-		
 		'ProjectPlingSummerySupporters'=>'Supporters',
 		'ProjectPlingSummeryNow'=>'plings',
 		'ProjectPlingSummeryAll'=>'total',
 		'ProjectPlingOwnerHeader'=>'project owner',
 		'ProjectReport'=>'Report this project',
-		
-		
-		
+
 		'ProjectAddHeader'=>'Create new product',
 		'ProjectAddFormTitleLable'=>'Title:',
 		'ProjectAddFormTitleInfo'=>'',
@@ -119,7 +113,6 @@ return array(
 		'ProjectAddFormDescShortInfo'=>'Needed for overviews and the homepage',
 		'ProjectAddFormDescShortErr'=>'Please write a short description for your product.',
 		
-
 		'ProjectReportFormCatLable'=>'Why do you want to report this project?',
 		'ProjectReportFormCatInfo'=>'',
 		'ProjectReportFormCatErr'=>'Please choose a category',
@@ -146,8 +139,10 @@ return array(
 		'ProjectDeleteFormInfo'=> '',
 		'ProjectDeleteFormSubmitLabel' => 'Delete product',
 		'ProjectDeleteFormErr'=>'Please click on the checkbox to confirm the deletion!',
+        'ProjectDeleteErrOwner'=>'You must be the owner of the project,<br/>to delete it.&nbsp;',
+        'ProjectDeleteErrLogin'=>'You must be loged in,<br/>to delete your project.&nbsp;',
 
-		'ForgotPassFormMailErrNotValid'=>'This eMail is not valid.',
+        'ForgotPassFormMailErrNotValid'=>'This eMail is not valid.',
 		'ForgotPassFormMailErrNoUser'=>'This eMail is not registered.',
 		'ForgotPassFormMailErrNoEMail'=> 'Please fill out the eMail-Form',
 		'ForgotPassFormMailLable' => 'Your eMail address',
@@ -156,20 +151,20 @@ return array(
 		'RegisterFormHeader'=>'Free Registration',
 		'RegisterFormUsernameLabel'=>'Username',
 		'RegisterFormUsernameErr'=>'The username is mandatory',
-		'RegisterFormEmailLabel'=>'eMail-address',
+		'RegisterFormEmailLabel'=>'email-address',
 		'RegisterFormEmailErrNotValid'=>'eMail-address is not valid',
 		'RegisterFormEmailErrWrongHost'=>"'%hostname%' is not a valid host-name for eMail '%value%'",
 		'RegisterFormEmailErrWrongHost2'=>"'%value%' is not a valid host",
 		'RegisterFormEmailErrHostLocal'=>"'%value%' seems to be a local host. Thats not valid.",
-		'RegisterFormEmailErrAllwaysRegistered'=>'This email-adress is already registered',
-		'RegisterFormEmailErrEmpty'=>'eMail-address is mandatory',
+		'RegisterFormEmailErrAlreadyRegistered'=>'This email-address is already registered',
+		'RegisterFormEmailErrEmpty'=>'email-address is mandatory',
 		'RegisterFormPasswordLabel'=>'Password',
 		'RegisterFormPasswordErr'=>'Password is mandatory',
 		'RegisterFormPassword2Label'=>'repeat password',
 		'RegisterFormPassword2Err'=>'Please repeat the password',
 		'RegisterFormAgbLabel'=>'I have read the <a href="/datenschutz" target="_blank">data protection regulations</a> and <a href="/agb" target="_blank">general business terms</a> and acept them.',
 		'RegisterFormAgbErr'=>'You must read and accept the BGTs',
-		'RegisterFormNewsletterLabel'=>'I will recieve new per eMail.',
+		'RegisterFormNewsletterLabel'=>'I will receive new per eMail.',
 		'RegisterFormSubmit'=>'Register',
 		
 		'ProjectsShowShareFriends' => 'Share this with friends',
@@ -186,7 +181,7 @@ return array(
 		'ProjectsShowDelete'=>'Delete',		
 		'ProjectsShowProjectFrom'=>'Project from',
 		'ProjectsShowProjectReport'=>'report abuse',
-		'ProjectsShowMessenge'=>'Messages',
+		'ProjectsShowMessage'=>'Messages',
 		'ProjectsShowStopFollowing'=>'Stop Following project',
 		'ProjectsShowFollowing'=>'Follow project',
 		
@@ -197,7 +192,7 @@ return array(
 		'SettingsHeadProfileInfo'=>'You have signed up Pling since ',
 		'SettingsHeadProfileShort'=>'Profile',
 		'SettingsHeadAccount'=>'Account',
-		'SettingsHeadPasswort'=>'Password',
+		'SettingsHeadPassword'=>'Password',
 		'SettingsHeadNewsletter'=>'Newsletter & Co.',
 		'SettingsHeadWeblinks'=>'Weblinks',
 		'SettingsHeadSupportProjects'=>'Projects Supported',

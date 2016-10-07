@@ -59,7 +59,7 @@ class Default_Model_ProjectComments
         if (0 == count($rowSet)) {
             return array();
         }
-        return $rowSet;
+        return $rowSet[0];
     }
 
     public function getCommentFromSource($type = 0, $source_id, $source_pk)
