@@ -63,7 +63,9 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
 
             $newPass = $this->generateNewPassword();
 
-            $this->storeNewPassword($newPass, $user);
+            $newPasswordHash = $this->storeNewPassword($newPass, $user);
+
+            Zend_Registry::get('logger')->info(__METHOD__ . ' - old password hash: ' . $user->password . ', new password hash: ' . $newPasswordHash);
 
             $this->sendNewPassword($user, $newPass);
 
@@ -99,13 +101,15 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
 
     /**
      * @param string $newPass
-     * @param $user
+     * @param Zend_Db_Table_Row_Abstract $user
+     * @return string return new password hash
      */
     protected function storeNewPassword($newPass, $user)
     {
         $user->password = Local_Auth_Adapter_Ocs::getEncryptedPassword($newPass, $user->source_id);
         $user->changed_at = new Zend_Db_Expr('Now()');
         $user->save();
+        return $user->password;
     }
 
     /**
@@ -217,8 +221,8 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
 
         if (false == $authResult->isValid()) { // authentication fail
             Zend_Registry::get('logger')->info(__METHOD__ . ' - authentication failed.');
-            Zend_Registry::get('logger')->info(__METHOD__ . ' - user = ' . print_r($values['mail'], true));
-            Zend_Registry::get('logger')->info(__METHOD__ . ' - ' . print_r($authResult->getMessages(), true));
+            Zend_Registry::get('logger')->info(__METHOD__ . ' - auth_user: ' . print_r($values['mail'], true));
+            Zend_Registry::get('logger')->info(__METHOD__ . ' - auth_result: ' . print_r($authResult->getMessages(), true));
 
             $this->view->errorText = 'index.login.error.auth';
             $this->view->formLogin = $formLogin;
@@ -233,7 +237,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         }
 
         Zend_Registry::get('logger')->info(__METHOD__ . ' - authentication successful.');
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - user = ' . print_r($values['mail'], true));
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - auth_user: ' . print_r($values['mail'], true));
 
         $auth = Zend_Auth::getInstance();
         $userId = $auth->getStorage()->read()->member_id;
@@ -289,8 +293,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             $formRegisterValues = $formRegister->getValues();
             //$resultReCaptcha = $formRegisterValues['g-recaptcha-response'];
 
-            if (false == $this->validateReCaptcha($_POST['g-recaptcha-response']))
-            {
+            if (false == $this->validateReCaptcha($_POST['g-recaptcha-response'])) {
                 $this->view->formRegister = $formRegister;
                 $this->view->error = 1;
 
