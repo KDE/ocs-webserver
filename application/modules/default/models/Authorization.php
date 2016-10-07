@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -266,10 +267,12 @@ class Default_Model_Authorization
      */
     public function getAuthUserData($identifier, $identity)
     {
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - $identifier: ' . print_r($identifier, true) . ' :: $identity: ' . print_r($identity, true));
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - $identifier: ' . print_r($identifier,
+                true) . ' :: $identity: ' . print_r($identity, true));
         /** @var Zend_Db_Table_Abstract $dataTable */
         $dataTable = $this->_dataTable;
-        $where = $dataTable->select()->where($dataTable->getAdapter()->quoteIdentifier($identifier, true) . ' = ?', $identity);
+        $where = $dataTable->select()->where($dataTable->getAdapter()->quoteIdentifier($identifier, true) . ' = ?',
+            $identity);
         $resultRow = $dataTable->fetchRow($where)->toArray();
         Zend_Registry::get('logger')->info(__METHOD__ . ' - $resultrow: ' . print_r($resultRow, true));
         unset($resultRow['password']);
@@ -288,7 +291,7 @@ class Default_Model_Authorization
         STRAIGHT_JOIN member_email ON member.member_id = member_email.email_member_id AND email_deleted = 0 AND email_checked is null
         WHERE member_email.email_verification_value = :verification;
         ";
-        $resultRow = $this->_dataTable->getAdapter()->fetchRow($sql, array('verification'=>$identity));
+        $resultRow = $this->_dataTable->getAdapter()->fetchRow($sql, array('verification' => $identity));
         Zend_Registry::get('logger')->info(__METHOD__ . ' - $resultRow: ' . print_r($resultRow, true));
         unset($resultRow['password']);
         return (object)$resultRow;
@@ -321,7 +324,8 @@ class Default_Model_Authorization
     {
 
         $dataTable = new Default_Model_DbTable_Session();
-        $where = $dataTable->getAdapter()->quoteInto($dataTable->getAdapter()->quoteIdentifier($identifier, true) . ' = ?', $identity);
+        $where = $dataTable->getAdapter()->quoteInto($dataTable->getAdapter()->quoteIdentifier($identifier,
+                true) . ' = ?', $identity);
 
         return $dataTable->delete($where);
     }

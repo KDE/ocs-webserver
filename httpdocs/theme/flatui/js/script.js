@@ -1553,15 +1553,27 @@ var AjaxForm = (function () {
                     type: this.method,
                     dataType: "json",
 
-                    error: function () {
-                        alert('Service is temporarily unavailable.');
+                    error: function ( jqXHR, textStatus, errorThrown ) {
+                        var results = JSON && JSON.parse(jqXHR.responseText) || $.parseJSON(jqXHR.responseText);
+
+                        var msgBox = $('#generic-dialog');
+                        msgBox.modal('hide');
+                        msgBox.find('.modal-header').empty().append(results.title);
+                        msgBox.find('.modal-body').empty().append(results.message);
+                        setTimeout(function () {
+                            msgBox.modal('show');
+                        }, 900);
                     },
                     success: function (results) {
                         if (results.status == 'ok') {
                             $(target).empty().html(results.data);
                         }
                         if (results.status == 'error') {
-                            alert('Service is temporarily unavailable.');
+                            if (results.message != '') {
+                                alert(results.message);
+                            } else {
+                                alert('Service is temporarily unavailable.');
+                            }
                         }
                     }
                 });

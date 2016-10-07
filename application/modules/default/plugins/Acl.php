@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -58,8 +59,10 @@ class Default_Plugin_Acl extends Zend_Controller_Plugin_Abstract
 //        Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . print_r(func_get_args(), true));
 //        Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . print_r(Zend_Auth::getInstance()->getStorage()->read(), true));
 
+        // all users are guests (at first)
         $role = Default_Plugin_AclRules::ROLENAME_GUEST;
 
+        // at this point the zend framework has already tested the session cookie and we have an auth object.
         if (false === $this->_auth->hasIdentity()) {
             //Check if permanent Login Cookie exists and authenticate user
             $config = Zend_Registry::get('config');
@@ -75,7 +78,8 @@ class Default_Plugin_Acl extends Zend_Controller_Plugin_Abstract
             }
         }
 
-        if ($this->_auth->hasIdentity() && $this->_auth->getIdentity() != null && property_exists($this->_auth->getIdentity(), 'username')) {
+        if ($this->_auth->hasIdentity() && $this->_auth->getIdentity() != null && property_exists($this->_auth->getIdentity(), 'username'))
+        {
             $authStorage = $this->_auth->getStorage()->read();
             $roleId = $authStorage->roleId;
             $role = $authStorage->roleName;
@@ -97,7 +101,7 @@ class Default_Plugin_Acl extends Zend_Controller_Plugin_Abstract
 
 
         if (false == $this->_acl->has($resource)) {
-            Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . 'No ACL rule found for ' . print_r($resource, true) . ' : ' . $request->getRequestUri());
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - No ACL rule found for ' . print_r($resource, true) . ' : ' . $request->getRequestUri());
 
             $this->_request->setModuleName($this->_noacl['module']);
             $this->_request->setControllerName($this->_noacl['controller']);
