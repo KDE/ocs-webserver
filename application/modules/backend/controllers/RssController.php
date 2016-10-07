@@ -116,7 +116,7 @@ class Backend_RssController extends Local_Controller_Action_CliAbstract
         foreach ($requestedElements as $requestedElement) {
             $returnValues[] =
                 array(
-                    'title' => $requestedElement->title,
+                    'title' => $requestedElement->title . ' [' . $requestedElement->cat_title . ']',
                     // required
                     'link' => 'https://' . $hostname . '/p/' . $requestedElement->project_id,
                     // required
