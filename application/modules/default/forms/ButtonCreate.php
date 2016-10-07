@@ -50,7 +50,7 @@ class Default_Form_ButtonCreate extends Zend_Form
         $category->addMultiOptions($categoryList);
 
         $mailExistCheck = new Zend_Validate_Db_NoRecordExists(array('table' => 'member', 'field' => 'mail', 'exclude' => array('field' => 'is_deleted', 'value' => 1)));
-        $mailExistCheck->setMessage('RegisterFormEmailErrAllwaysRegistered', Zend_Validate_Db_NoRecordExists::ERROR_RECORD_FOUND);
+        $mailExistCheck->setMessage('RegisterFormEmailErrAlreadyRegistered', Zend_Validate_Db_NoRecordExists::ERROR_RECORD_FOUND);
 
         $mailValidCheck = $this->getMailValidator();
 

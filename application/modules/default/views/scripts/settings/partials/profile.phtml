@@ -36,36 +36,31 @@
               method="<?= $this->profileform->getMethod(); ?>" data-target="#form-profile"
               data-trigger="#profile-trigger">
             <div class="row">
-                <div class="col-md-4 col-lg-4 col-sm-4 col-xs-4">
-                    <div class="field">
-                    	<label for="username"><?= $this->profileform->username->getLabel() ?></label>
-                    	<br/>
-                    	<div style="height: 44px;padding-top: 5px;"><?= $this->profileform->username->getValue() ?></div>
-                    	<input type="hidden" name="username" value="<?= $this->profileform->username->getValue() ?>">
+                <div class="col-md-8 col-lg-8 col-sm-8 col-xs-8">
+                    <div class="col-md-8 col-lg-8 col-sm-8 col-xs-8">
+                        <div class="field">
+                            <label for="username"><?= $this->profileform->username->getLabel() ?></label>
+                            <br/>
+                            <div style="height: 44px;padding-top: 5px;"><?= $this->profileform->username->getValue() ?></div>
+                            <input type="hidden" name="username" value="<?= $this->profileform->username->getValue() ?>">
+                        </div>
                     </div>
-                    
-                    <div class="field">
-                        <?= $this->profileform->firstname->setAttrib('tabindex', 2) ?>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
+                        <div class="field">
+                            <?= $this->profileform->firstname->setAttrib('tabindex', 2) ?>
+                        </div>
+                        <div class="field">
+                            <?= $this->profileform->city->setAttrib('tabindex', 4) ?>
+                        </div>
                     </div>
-                    <div class="field">
-                        <?= $this->profileform->city->setAttrib('tabindex', 4) ?>
-                    </div>
-                </div>
-                <!-- /.span4 -->
-                <div class="col-md-4 col-lg-4 col-sm-4 col-xs-4">
-                
-                    <div class="field">
-                    	<label for="mail"><?= $this->profileform->mail->getLabel() ?></label>
-                    	<br/>
-                    	<div style="height: 44px;padding-top: 5px;"><?= $this->profileform->mail->getValue() ?></div>
-                    	<input type="hidden" name="mail" value="<?= $this->profileform->mail->getValue() ?>">
-                    </div>
-                    
-                    <div class="field">
-                        <?= $this->profileform->lastname->setAttrib('tabindex', 3) ?>
-                    </div>
-                    <div class="field">
-                        <?= $this->profileform->country->setAttrib('tabindex', 5) ?>
+                    <!-- /.span4 -->
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
+                        <div class="field">
+                            <?= $this->profileform->lastname->setAttrib('tabindex', 3) ?>
+                        </div>
+                        <div class="field">
+                            <?= $this->profileform->country->setAttrib('tabindex', 5) ?>
+                        </div>
                     </div>
                 </div>
                 <!-- /.span4 -->

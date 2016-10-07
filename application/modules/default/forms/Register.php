@@ -71,11 +71,11 @@ class Default_Form_Register extends Zend_Form
             ->setOptions(array('domain' => true));
 
         $mailExistCheck = new Zend_Validate_Db_NoRecordExists(array(
-            'table' => 'member',
-            'field' => 'mail',
-            'exclude' => array('field' => 'is_deleted', 'value' => 1)
+            'table' => 'member_email',
+            'field' => 'email_address',
+            'exclude' => array('field' => 'email_deleted', 'value' => 1)
         ));
-        $mailExistCheck->setMessage('RegisterFormEmailErrAllwaysRegistered', Zend_Validate_Db_NoRecordExists::ERROR_RECORD_FOUND);
+        $mailExistCheck->setMessage('RegisterFormEmailErrAlreadyRegistered', Zend_Validate_Db_NoRecordExists::ERROR_RECORD_FOUND);
 
         $mailEmpty = new Zend_Validate_NotEmpty();
         $mailEmpty->setMessage('RegisterFormEmailErrEmpty', Zend_Validate_NotEmpty::IS_EMPTY);
