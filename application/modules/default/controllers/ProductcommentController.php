@@ -60,7 +60,7 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
         $this->sendNotificationToOwner($this->view->product, $data['comment_text']);
 
         //Send a notification to the parent comment writer
-        $this->sendNotificationToParent($this->view->product, $data['comment_text']);
+        $this->sendNotificationToParent($this->view->product, $data['comment_text'], $data['comment_parent_id']);
 
         if ($this->_request->isXmlHttpRequest()) {
             $this->_helper->json(array('status' => $status, 'message' => $message, 'data' => $requestResult));
@@ -121,21 +121,21 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
         $newPasMail->send();
     }
 
-    private function sendNotificationToParent($product, $comment)
+    private function sendNotificationToParent($product, $comment, $parent_id)
     {
-        if ((int)$this->getParam('i') != 0) {
+        if (0 == $parent_id) {
             return;
         }
 
         $tableReplies = new Default_Model_ProjectComments();
-        $parentCommentArray = (array)$tableReplies->getComment((int)$this->getParam('i'));
-        if (count($parentCommentArray) > 0) {
-            $parentComment = $parentCommentArray[0];
+        $parentComment = (array)$tableReplies->getComment($parent_id);
+        if (0 == count($parentComment)) {
+            return;
+        }
 
-            $parentCommentOwner = $this->loadMemberInfo($parentComment['comment_member_id']);
-            if (count($parentCommentOwner) == 0 || $parentCommentOwner->member_id == $this->_authMember->member_id) {
-                return;
-            }
+        $parentCommentOwner = $this->loadMemberInfo($parentComment['comment_member_id']);
+        if (count($parentCommentOwner) == 0 || $parentCommentOwner->member_id == $this->_authMember->member_id) {
+            return;
         }
 
         $newPasMail = new Default_Plugin_SendMail('tpl_user_comment_reply_note');

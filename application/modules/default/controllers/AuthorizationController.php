@@ -367,7 +367,8 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         $userData = $userTable->createNewUser($userData);
 
         $modelEmail = new Default_Model_MemberEmail();
-        $userEmail = $modelEmail->saveEmailAsPrimary($userData['member_id'], $userData['mail'], $userData['verificationVal']);
+        $userEmail = $modelEmail->saveEmailAsPrimary($userData['member_id'], $userData['mail'],
+            $userData['verificationVal']);
 
         return $userData;
     }

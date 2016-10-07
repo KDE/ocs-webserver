@@ -56,7 +56,6 @@ Still no luck? Search for whatever is missing, or take a look around the rest of
 
     public function errorAction()
     {
-
         $errors = $this->getParam('error_handler');
         $this->getResponse()->clearBody();
 
@@ -106,8 +105,8 @@ Still no luck? Search for whatever is missing, or take a look around the rest of
         /** @var Zend_Controller_Request_Http $request */
         $request = $this->getRequest();
         if ($request->isXmlHttpRequest()) {
-            $encryptedUri = $request->getParam('redirect');
-            $this->_helper->json(array('status' => 'fail', 'message' => 'Login needed', 'data' => $encryptedUri));
+            $loginUri = $request->getParam('redirect') ? '/login/redirect/'.$request->getParam('redirect') : '/login';
+            $this->_helper->json(array('status' => 'error', 'title' => '<h4 class="modal-title">Authorization required.</h4>','message' => '<p>Your session may be outdated or authorization is required. Please <strong><a href="'.$loginUri.'">login</a></strong> or <strong><a href="/register">register</a></strong> to get access to this function/page.</p>', 'data' => $loginUri));
         }
     }
 
