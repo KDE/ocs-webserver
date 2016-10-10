@@ -454,10 +454,6 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         if (false == isset($userData['uuid'])) {
             $userData['uuid'] = $uuidMember;
         }
-        if (false == isset($userData['verificationVal'])) {
-            $verificationVal = Default_Model_MemberEmail::getVerificationValue($userData['username'], $userData['mail']);
-            $userData['verificationVal'] = $verificationVal;
-        }
 
         return $this->storeNewUser($userData);
     }
