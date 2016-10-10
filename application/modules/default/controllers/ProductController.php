@@ -1652,7 +1652,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 			
 			$fileTypeTable = new Default_Model_DbTable_ProjectFileType();
 			$fileTypeTable->addFileTypeToProject($this->_projectId, $_POST['file_id'], $typeId);
-			$this->_helper->json(array('status' => 'ok'));
+			$this->_helper->json(array('status' => 'ok', 'params' => 'project_id: ' . $this->_projectId . ', file_id: ' . $_POST['file_id'] . ', file_type_id: ' . $typeId));
 			return;
     	} else {
     		$error_text .= 'No FileId. , FileId: ' . $_POST['file_id'];
