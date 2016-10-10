@@ -74,6 +74,7 @@ class Default_Model_DbTable_ProjectFileType extends Local_Model_Table
             $data['project_id'] = $projectId;
             $data['file_id'] = $fileId;
             $data['filetype_id'] = $fileTypeId;
+            $data['test'] = 'Test: ' . $fileTypeId . ', Haha';
 
             return $this->save($data);
         }
