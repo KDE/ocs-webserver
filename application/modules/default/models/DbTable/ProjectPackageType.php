@@ -74,7 +74,6 @@ class Default_Model_DbTable_ProjectPackageType extends Local_Model_Table
             $data['project_id'] = $projectId;
             $data['file_id'] = $fileId;
             $data['package_type_id'] = $packageTypeId;
-            $data['test'] = 'Test: ' . $fileTypeId . ', Haha';
 
             return $this->save($data);
         }
