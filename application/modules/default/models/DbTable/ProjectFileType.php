@@ -69,7 +69,7 @@ class Default_Model_DbTable_ProjectFileType extends Local_Model_Table
         //first delte old
         $this->delete('project_id = ' . $projectId . ' AND file_id = ' . $fileId);
 
-        if ($fileTypeId) {
+        if ($fileTypeId != null && $fileTypeId != 0) {
             $data = array();
             $data['project_id'] = $projectId;
             $data['file_id'] = $fileId;
