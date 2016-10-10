@@ -313,7 +313,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
 
         $newUserData = $this->createNewUser($formRegisterValues);
 
-        $this->sendConfirmationMail($formRegisterValues, $newUserData->verificationVal);
+        $this->sendConfirmationMail($formRegisterValues, $newUserData['verificationVal']);
 
         $this->sendAdminNotificationMail($formRegisterValues);
 
@@ -359,16 +359,20 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
 
     /**
      * @param array $userData
-     * @return Zend_Db_Table_Row_Abstract
+     * @return array
      */
     protected function createNewUser($userData)
     {
         $userTable = new Default_Model_Member();
-        $userData = $userTable->createNewUser($userData);
+        $userData = $userTable->createNewUser($userData)->toArray();
+
+        if (false == isset($userData['verificationVal'])) {
+            $verificationVal = Default_Model_MemberEmail::getVerificationValue($userData['username'], $userData['mail']);
+            $userData['verificationVal'] = $verificationVal;
+        }
 
         $modelEmail = new Default_Model_MemberEmail();
-        $userEmail = $modelEmail->saveEmailAsPrimary($userData['member_id'], $userData['mail'],
-            $userData['verificationVal']);
+        $userEmail = $modelEmail->saveEmailAsPrimary($userData['member_id'], $userData['mail'], $userData['verificationVal']);
 
         return $userData;
     }
