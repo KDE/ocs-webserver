@@ -249,8 +249,8 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
 //            $dummy = $this->_db->getProfiler()->getLastQueryProfile()->getQuery();
             $this->_db->query("UPDATE {$this->_name} SET lft = lft + 2 WHERE lft > :param_right;", array('param_right' => $data['rgt']));
 //            $dummy = $this->_db->getProfiler()->getLastQueryProfile()->getQuery();
-            $this->_db->query("INSERT INTO {$this->_name} (`lft`, `rgt`, `title`, `is_active`) VALUES (:param_right + 1, :param_right + 2, :param_title, :param_status);",
-                array('param_right' => $data['rgt'], 'param_title' => $data['title'], 'param_status' => $data['is_active']));
+            $this->_db->query("INSERT INTO {$this->_name} (`lft`, `rgt`, `title`, `is_active`, `name_legacy`, `xdg_type`) VALUES (:param_right + 1, :param_right + 2, :param_title, :param_status, :param_legacy, :param_xgd);",
+                array('param_right' => $data['rgt'], 'param_title' => $data['title'], 'param_status' => $data['is_active'], 'param_legacy' => $data['name_legacy'], 'param_xgd' => $data['xdg_type']));
 //            $dummy = $this->_db->getProfiler()->getLastQueryProfile()->getQuery();
             $this->_db->commit();
         } catch (Exception $e) {
@@ -985,7 +985,7 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
      * @param int $newParentNodeId
      * @return bool
      */
-    public function moveToParent($currentNodeId, $newParentNodeId)
+    public function moveToParent($currentNodeId, $newParentNodeId, $position = 'top')
     {
         if ($currentNodeId <= 0) {
             return false;
@@ -999,7 +999,11 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
 
         $newParentNode = $this->fetchElement($newParentNodeId);
 
-        return $this->moveTo($currentNode, $newParentNode['lft'] + 1);
+        if ($position == 'top') {
+            return $this->moveTo($currentNode, $newParentNode['lft'] + 1);
+        } else {
+            return $this->moveTo($currentNode, $newParentNode['rgt']); // move to bottom otherwise
+        }
     }
 
     /**

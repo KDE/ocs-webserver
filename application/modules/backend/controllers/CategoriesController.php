@@ -58,7 +58,7 @@ class Backend_CategoriesController extends Local_Controller_Action_Backend
             $resultRow = $this->_model->addNewElement($params)->toArray();
 
             if (false === empty($params['parent'])) {
-                $this->_model->moveToParent($resultRow['project_category_id'], (int)$params['parent']);
+                $this->_model->moveToParent($resultRow['project_category_id'], (int)$params['parent'], 'bottom');
                 $resultRow = $this->_model->fetchElement($resultRow['project_category_id']);
             }
 
