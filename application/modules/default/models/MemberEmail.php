@@ -116,39 +116,6 @@ class Default_Model_MemberEmail
         $data['email_verification_value'] = empty($user_verification) ? Default_Model_MemberEmail::getVerificationValue($user_id, $user_mail) : $user_verification;
         $data['email_primary'] = Default_Model_DbTable_MemberEmail::EMAIL_PRIMARY;
 
-        return $this->_dataTable->save($data);
-    }
-
-    /**
-     * @param int $user_id
-     * @param string $user_mail
-     * @param null|string $user_verification
-     * @return Zend_Db_Table_Row_Abstract
-     */
-    public function saveEmail($user_id, $user_mail, $user_verification = null)
-    {
-        $data = array();
-        $data['email_member_id'] = $user_id;
-        $data['email_address'] = $user_mail;
-        $data['email_verification_value'] = empty($user_verification) ? Default_Model_MemberEmail::getVerificationValue($user_id, $user_mail) : $user_verification;
-
-        return $this->_dataTable->save($data);
-    }
-
-    /**
-     * @param int $user_id
-     * @param string $user_mail
-     * @param null|string $user_verification
-     * @return Zend_Db_Table_Row_Abstract
-     */
-    public function saveEmailAsPrimary($user_id, $user_mail, $user_verification = null)
-    {
-        $data = array();
-        $data['email_member_id'] = $user_id;
-        $data['email_address'] = $user_mail;
-        $data['email_verification_value'] = empty($user_verification) ? Default_Model_MemberEmail::getVerificationValue($user_id, $user_mail) : $user_verification;
-        $data['email_primary'] = Default_Model_DbTable_MemberEmail::EMAIL_PRIMARY;
-
         $result = $this->_dataTable->save($data);
 
         $this->updateMemberPrimaryMail($user_id);
