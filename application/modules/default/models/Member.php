@@ -686,23 +686,22 @@ class Default_Model_Member extends Default_Model_DbTable_Member
 
     public function fetchLastActiveTime($member_id)
     {
-        $sql = '
-                  select max(lastactive) lastactive from
-                  (
-                      SELECT max(created_at) lastactive from stat_page_views where member_id = :member_id
-                      union all
-                      SELECT max(time) lastactive from activity_log where member_id = :member_id
-                  ) lastactiv
-                  ';
+        $sql_page_views = "SELECT created_at AS lastactive FROM stat_page_views WHERE member_id = :member_id ORDER BY created_at DESC LIMIT 1";
+        $sql_activities = "SELECT `time` AS lastactive FROM activity_log WHERE member_id = :member_id ORDER BY `time` DESC LIMIT 1";
 
-        $result = $this->_db->fetchRow($sql, array('member_id' => $member_id));
-        $lastpageviewdate = null;
-        if (count($result) > 0) {
-            $lastpageviewdate = $result['lastactive'];
-            return $lastpageviewdate;
-        } else {
-            return null;
+        $result_page_views = $this->getAdapter()->fetchRow($sql_page_views, array('member_id' => $member_id));
+        $result_activities = $this->getAdapter()->fetchRow($sql_activities, array('member_id' => $member_id));
+
+        if (count($result_page_views) > 0 AND count($result_activities) > 0) {
+            return $result_page_views['lastactive'] > $result_activities['lastactive'] ? $result_page_views['lastactive'] : $result_activities['lastactive'];
         }
+        if (count($result_page_views) > count($result_activities)) {
+            return $result_page_views['lastactive'];
+        }
+        if (count($result_activities) > count($result_page_views)) {
+            return $result_activities['lastactive'];
+        }
+        return null;
     }
 
     private function setMemberPlingsDeleted($member_id)

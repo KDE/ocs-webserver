@@ -33,8 +33,8 @@ class UserController extends Local_Controller_Action_DomainSwitch
 
     public function indexAction()
     {
-        $this->view->headScript()->setFile('');
-        $this->view->headLink()->setStylesheet('');
+//        $this->view->headScript()->setFile('');
+//        $this->view->headLink()->setStylesheet('');
 
         $this->_helper->viewRenderer('aboutme');
         $this->aboutmeAction();
@@ -42,8 +42,8 @@ class UserController extends Local_Controller_Action_DomainSwitch
 
     public function aboutmeAction()
     {
-        $this->view->headScript()->setFile('');
-        $this->view->headLink()->setStylesheet('');
+//        $this->view->headScript()->setFile('');
+//        $this->view->headLink()->setStylesheet('');
 
         $tableMember = new Default_Model_Member();
         $tableProject = new Default_Model_Project();
