@@ -235,9 +235,14 @@ $helperImage = new Default_View_Helper_Image();
                                 <?= $this->form->project_sub_subcategory_id ?>
                                 <?= $this->form->description ?>
                                 <?= $this->form->version ?>
-                                
-                                
-                                
+
+
+                                <div class="form-group">
+                                    <div class="col-sm-12 margin-top-15">
+                                        <div class="small grey bold-font pull-left margin-right-5">*</div>
+                                        <label class="form-label" for="title">Upload a Product Logo OR a Product Gallery Picture</label>
+                                    </div>
+                                </div>
                                 <?= $this->form->image_small ?>
                                 <?= $this->form->image_small_upload ?>
                                 <?php //$this->form->image_big ?>
