@@ -25,6 +25,11 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
     const IMAGE_SMALL_UPLOAD = 'image_small_upload';
     const IMAGE_BIG_UPLOAD = 'image_big_upload';
+    /**
+     * Zend_Controller_Request_Abstract object wrapping the request environment
+     * @var Zend_Controller_Request_Http
+     */
+    protected $_request = null;
     /** @var  int */
     protected $_projectId;
     /** @var  Zend_Auth */
@@ -535,7 +540,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 $form->getElement('project_subcategory_id')->setValue($projectData->project_category_id);
             } else {
                 $form->getElement('project_subcategory_id')->setValue($selectedSubCategories);
-                $form->getElement('project_sub_subcategory_id')->setValue($selectedSubSubCategories);
+//                $form->getElement('project_sub_subcategory_id')->setValue($selectedSubSubCategories);
             }
             //Bilder voreinstellen
             $form->getElement(self::IMAGE_SMALL_UPLOAD)->setValue($projectData->image_small);
@@ -559,7 +564,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $log = Zend_Registry::get('logger');
         $log->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . ' - setCatId New: ' . $values['project_category_id'] . "\n");
-        if (isset($values['project_subcategory_id']) AND is_array($values['project_subcategory_id']) AND count($values['project_subcategory_id'] == 1)) {
+        if (isset($values['project_subcategory_id']) AND is_array($values['project_subcategory_id']) AND count($values['project_subcategory_id']) == 1) {
             $values['project_category_id'] = $values['project_subcategory_id'][0];
         }
         $log->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . ' - setCatId New: ' . $values['project_category_id'] . "\n");
