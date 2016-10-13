@@ -88,8 +88,7 @@ class Default_Model_Authorization
                 $this->_setOrRefreshRememberMe();
             }
 
-            //Zend_Session::regenerateId();
-            Zend_Session::rememberMe(1209600);
+            Zend_Session::regenerateId();
 
             $this->_storeAuthSessionData();
 

@@ -101,53 +101,13 @@ class Default_Plugin_AclRules extends Zend_Acl
             'default_rss',
             'default_supporterbox',
         ));
-        $this->allow(self::ROLENAME_GUEST, 'default_product',
-            array('index', 'show', 'updates', 'fetch', 'getupdatesajax', 'saveupdateajaxAction')
-        );
-        $this->allow(self::ROLENAME_GUEST, 'default_user', array('index', 'aboutme', 'share', 'report'));
-        $this->allow(self::ROLENAME_GUEST, 'default_widget', array('index', 'render'));
-
 
         $this->allow(self::ROLENAME_COOKIEUSER, array(
-            'default_logout',
-            'default_productcomment'
+                'default_logout',
+                'default_productcomment',
+                'default_settings'
             )
         );
-        $this->allow(self::ROLENAME_COOKIEUSER, 'default_product',array('follow', 'unfollow', 'rating'));
-        $this->allow(self::ROLENAME_COOKIEUSER, 'default_user', array('follow', 'unfollow'));
-
-
-        $this->allow(self::ROLENAME_FEUSER, array(
-            'default_settings'
-        ));
-        $this->allow(self::ROLENAME_FEUSER, 'default_product',
-            array('add', 'claim', 'saveproduct', 'pling', 'pay', 'paymentok', 'paymentcancel', 'dwolla')
-        );
-        $this->allow(self::ROLENAME_FEUSER,
-            'default_widget',
-            array('save', 'savedefault', 'config'),
-            new Default_Plugin_Acl_IsProjectOwnerAssertion()
-        );
-        $this->allow(self::ROLENAME_FEUSER, 'default_product', array(
-            'update',
-            'delete',
-            'edit',
-            'publish',
-            'unpublish',
-            'preview',
-            'verifycode',
-            'makerconfig',
-            'addpploadfile',
-            'updatepploadfile',
-            'deletepploadfile',
-            'deletepploadfiles',
-            'finalizepploadcollection',
-            'saveupdateajax',
-            'getupdatesajax',
-            'deleteupdateajax'
-        ), new Default_Plugin_Acl_IsProjectOwnerAssertion());
-
-        $this->allow(self::ROLENAME_FEUSER, 'default_user', array('settings', 'products', 'news', 'activities', 'payments', 'income'));
 
         $this->allow(self::ROLENAME_STAFF, array(
                 'backend_index',
@@ -165,6 +125,45 @@ class Default_Plugin_AclRules extends Zend_Acl
         );
 
         $this->allow(self::ROLENAME_ADMIN);
+
+        // resource access rights in detail
+
+        // resource default_product
+        $this->allow(self::ROLENAME_GUEST, 'default_product', array('index', 'show', 'getupdatesajax', 'updates', 'follows', 'fetch'));
+        $this->allow(self::ROLENAME_COOKIEUSER, 'default_product',
+            array('add', 'rating', 'follow', 'unfollow', 'add', 'pling', 'pay', 'dwolla', 'paymentok', 'paymentcancel', 'saveproduct', 'claim')
+        );
+        $this->allow(self::ROLENAME_COOKIEUSER, 'default_product', array(
+            'edit',
+            'saveupdateajax',
+            'deleteupdateajax',
+            'update',
+            'preview',
+            'delete',
+            'unpublish',
+            'publish',
+            'verifycode',
+            'makerconfig',
+            'addpploadfile',
+            'updatepploadfile',
+            'deletepploadfile',
+            'deletepploadfiles',
+            'finalizepploadcollection',
+
+        ), new Default_Plugin_Acl_IsProjectOwnerAssertion());
+
+
+        // resource default_widget
+        $this->allow(self::ROLENAME_GUEST, 'default_widget', array('index', 'render'));
+        $this->allow(self::ROLENAME_COOKIEUSER, 'default_widget',
+            array('save', 'savedefault', 'config'),
+            new Default_Plugin_Acl_IsProjectOwnerAssertion()
+        );
+
+
+        // resource default_user
+        $this->allow(self::ROLENAME_GUEST, 'default_user', array('index', 'aboutme', 'share', 'report'));
+        $this->allow(self::ROLENAME_COOKIEUSER, 'default_user', array('follow', 'unfollow','settings', 'products', 'news', 'activities', 'payments', 'income'));
     }
 
 }
