@@ -20,17 +20,16 @@ We need a generic Modal to ask for confirmation.
     </div>
 </div>
 <script type="application/javascript">
+    <?php
+    // Example javascript callback function
+    ?>
+    function defaultCallbackConfirmation(link) {
+        // Do however you want to handle deleting
+        // We have the link element and can access it's data attributes
+        $(link).closest('form').submit();
+    }
+
     $(document).ready(function() {
-        <?php
-        // Example javascript callback function
-        ?>
-        function defaultCallbackConfirmation(link) {
-            // Do however you want to handle deleting
-            // We have the link element and can access it's data attributes
-
-            $(link).closest('form').submit();
-        }
-
         // Now, when the button is clicked, setup the message, attach event with button
         // and then show the modal
         $(document).on('click', '.remove, .confirm', function(e) {
