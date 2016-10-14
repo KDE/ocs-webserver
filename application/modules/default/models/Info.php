@@ -192,6 +192,7 @@ class Default_Model_Info
         }
     }
 
+
     /**
      * if category id not set the latest comments for all categories on the current host wil be returned.
      *
@@ -203,7 +204,7 @@ class Default_Model_Info
     {
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
-        $cacheName = __FUNCTION__ . '_' . md5((int)$limit . (int)$project_category_id);
+        $cacheName = __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host') . (int)$limit . (int)$project_category_id);
 
         if (($latestComments = $cache->load($cacheName))) {
             return $latestComments;
@@ -268,7 +269,7 @@ class Default_Model_Info
     {
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
-        $cacheName = __FUNCTION__ . '_' . md5((int)$limit . (int)$project_category_id);
+        $cacheName = __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host') . (int)$limit . (int)$project_category_id);
 
         if (($latestPlings = $cache->load($cacheName))) {
             return $latestPlings;
@@ -334,7 +335,7 @@ class Default_Model_Info
     {
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
-        $cacheName = __FUNCTION__ . '_' . md5((int)$limit . (int)$project_category_id);
+        $cacheName = __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host') . (int)$limit . (int)$project_category_id);
 
         if (($mostDownloaded = $cache->load($cacheName))) {
             return $mostDownloaded;
@@ -480,7 +481,7 @@ class Default_Model_Info
     {
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
-        $cacheName = __FUNCTION__ . '_' . md5((int)$limit . (int)$project_category_id);
+        $cacheName = __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host') . (int)$limit . (int)$project_category_id);
 
         if (false !== ($resultSet = $cache->load($cacheName))) {
             return new Zend_Paginator(new Zend_Paginator_Adapter_Array($resultSet));
@@ -531,8 +532,6 @@ class Default_Model_Info
     }
 
 
-
-
     public function getActiveUsersForHostStores($limit = 100, $project_category_id = null)
     {
         if (empty($project_category_id)) {
@@ -579,7 +578,7 @@ class Default_Model_Info
     {
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
-        $cacheName = __FUNCTION__ . '_' . md5((int)$limit . (int)$project_category_id);
+        $cacheName = __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host') . (int)$limit . (int)$project_category_id);
 
         if (false !== ($resultSet = $cache->load($cacheName))) {
             return $resultSet;
@@ -631,7 +630,7 @@ class Default_Model_Info
     {
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
-        $cacheName = __FUNCTION__ . '_' . md5((int)$member_id . (int)$limit);
+        $cacheName = __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host') . (int)$member_id . (int)$limit);
 
         if (false !== ($resultSet = $cache->load($cacheName))) {
             return $resultSet;
@@ -674,7 +673,7 @@ class Default_Model_Info
     {
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
-        $cacheName = __FUNCTION__ . '_' . md5((int)$member_id . (int)$limit);
+        $cacheName = __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host') . (int)$member_id . (int)$limit);
 
         if (false !== ($resultSet = $cache->load($cacheName))) {
             return $resultSet;
@@ -718,7 +717,7 @@ class Default_Model_Info
     {
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
-        $cacheName = __FUNCTION__ . '_' . md5((int)$member_id . (int)$limit);
+        $cacheName = __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host') . (int)$member_id . (int)$limit);
 
         if (false !== ($resultSet = $cache->load($cacheName))) {
             return $resultSet;
