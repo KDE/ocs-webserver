@@ -24,11 +24,11 @@ $modelInfo = new Default_Model_Info();
 
 
 
-$this->comments = $modelInfo->getLastCommentsForHostStores(10);
-$this->donations = $modelInfo->getLastPlingsForHostStores(10);
+$this->comments = $modelInfo->getLatestComments(10);
+$this->donations = $modelInfo->getLatestPlings(10);
 $this->users = $modelInfo->getNewActiveMembers(10);
 $this->products = $modelInfo->getLastProductsForHostStores(10);
-$this->mostdownloads = $modelInfo->getMostDownloadedForHostStores(7);
+$this->mostdownloads = $modelInfo->getMostDownloaded(7);
 $featureProducts = $modelInfo->getFeaturedProductsForHostStores(100);
 
 

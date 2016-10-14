@@ -87,9 +87,9 @@ if('all' == strtolower($catTitle) OR (false === isset($catTitle))) {
         </section>
 
 <?php
-     $comments = $modelInfo->getLastCommentsForHostStores(5, $this->cat_id);
-     $donations = $modelInfo->getLastPlingsForHostStores(5, $this->cat_id);
-     $topprods = $modelInfo->getMostDownloadedForHostStores(100, $this->cat_id);        
+     $comments = $modelInfo->getLatestComments(5, $this->cat_id);
+     $donations = $modelInfo->getLatestPlings(5, $this->cat_id);
+     $topprods = $modelInfo->getMostDownloaded(100, $this->cat_id);
      $asidehide = '';
      if(!$this->catabout && count($comments)==0 && count($donations)==0 && count($topprods)==0 )
      {

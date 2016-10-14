@@ -22,34 +22,21 @@
 
 $modelInfo = new Default_Model_Info();
 
-
-
-$this->comments = $modelInfo->getLastCommentsForHostStores(7);
-$this->donations = $modelInfo->getLastPlingsForHostStores(10);
+$this->comments = $modelInfo->getLatestComments(7);
+$this->donations = $modelInfo->getLatestPlings(10);
 $this->users = $modelInfo->getNewActiveMembers(10);
 $this->products = $modelInfo->getLastProductsForHostStores(10);
-$this->mostdownloads = $modelInfo->getMostDownloadedForHostStores(7);
-$featureProducts = $modelInfo->getFeaturedProductsForHostStores(100);
+$this->mostdownloads = $modelInfo->getMostDownloaded(7);
+$featuredProducts = $modelInfo->getFeaturedProductsForHostStores(100);
 
-
-/*
-$this->comments = $modelInfo->getLastCommentsForHostStores_local(5);
-$this->donations = $modelInfo->getLastPlingsForHostStores_local(10);
-$this->users = $modelInfo->getNewActiveMembers_local(10);
-$this->products = $modelInfo->getLastProductsForHostStores_local(10);
-$this->mostdownloads = $modelInfo->getLastProductsForHostStores_local(7);
-$featureProducts = $modelInfo->getFeaturedProductsForHostStores_local(100);
-*/
-
-
-if ($featureProducts->getTotalItemCount()) {
+if ($featuredProducts->getTotalItemCount()) {
     /** @var Zend_Controller_Request_Http $request */
     $request = Zend_Controller_Front::getInstance()->getRequest();
 
     $offset = (int)$request->getParam('page');
-    $featureProducts->setItemCountPerPage(1);
-    $featureProducts->setCurrentPageNumber($offset);
-    $this->featureProducts = $featureProducts;
+    $featuredProducts->setItemCountPerPage(1);
+    $featuredProducts->setCurrentPageNumber($offset);
+    $this->featureProducts = $featuredProducts;
 }
 
 $storeCatIds = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;

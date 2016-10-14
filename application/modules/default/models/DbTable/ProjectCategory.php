@@ -706,8 +706,16 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
      */
     public function fetchChildIds($nodeId, $isActive = true)
     {
-        if (is_null($nodeId) OR $nodeId == '') {
+        if (empty($nodeId) OR $nodeId == '') {
             return array();
+        }
+
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cacheName = __FUNCTION__ . '_' . md5(serialize($nodeId) . (int)$isActive);
+
+        if (($children = $cache->load($cacheName))) {
+            return $children;
         }
 
         $inQuery = '?';
@@ -730,7 +738,9 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
         ';
         $children = $this->_db->query($sql, $nodeId)->fetchAll();
         if (count($children)) {
-            return $this->flattenArray($children);
+            $result = $this->flattenArray($children);
+            $cache->save($result, $cacheName);
+            return $result;
         } else {
             return array();
         }

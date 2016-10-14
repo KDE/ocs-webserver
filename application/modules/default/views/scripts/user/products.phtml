@@ -45,8 +45,10 @@ $this->tab = 'products';
                 <div class="my-products-heading">
                     <h1 class="page-title left"><?= $this->translate('My Products') ?></h1>
 
-                    <div class="right light lightgrey num-products"><span
-                            class="label label-default"><?= $this->products->getTotalItemCount() ?> <?= $this->translate('products') ?></span>
+                    <div class="right light lightgrey num-products">
+                        <span class="label label-default">
+                            <?= $this->products->getTotalItemCount() ?> <?= $this->translate('products') ?>
+                        </span>
                     </div>
                 </div>
 

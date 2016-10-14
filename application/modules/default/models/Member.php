@@ -483,10 +483,10 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         $newUserData = $this->createRow($userData);
         $newUserData->save();
 
-        //Gleichzeitig auch ein Projekt anlegen
+        //create a user specified main project in project table
         $projectId = $this->storePersonalProject($newUserData->toArray());
 
-        //Default-Prj in Member schreiben
+        //and save the id in member table
         $newUserData->main_project_id = $projectId;
         $newUserData->save();
 

@@ -38,11 +38,12 @@ $helperSupporterBox = new Default_View_Helper_ExternalSupporterBox();
 $helperSupporterBoxSource = new Default_View_Helper_ExternalSupporterBoxSource();
 $helperDonationList = new Default_View_Helper_ExternalDonationList();
 $helperDonationListSource = new Default_View_Helper_ExternalDonationListSource();
+$helperImage = new Default_View_Helper_Image();
 ?>
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 my-product-item" id="<?= $loopProductId ?>">
     <!-- IMAGE -->
     <figure class="col-lg-1 col-md-3 col-sm-3 col-xs-3">
-        <img src="<?php echo $this->Image($this->image_small, array('width' => 280, 'height' => 167)); ?>"
+        <img src="<?php echo $helperImage->Image($this->image_small, array('width' => 280, 'height' => 167)); ?>"
              class="explore-product-image" width="101" height="81"/>
     </figure>
     <!-- /IMAGE -->
@@ -68,11 +69,6 @@ $helperDonationListSource = new Default_View_Helper_ExternalDonationListSource()
             <p><?= nl2br(strip_tags($object_text)) ?></p>
         </div>
         <!-- /text -->
-        <!-- updates -->
-        <div class="updates">
-            <?php /*echo $this->partialLoop('user/partials/loopMyProductUpdates.phtml', $productUpdates); */ ?>
-        </div>
-        <!-- /updates -->
         <!-- buttons -->
         <div class="buttons">
             <div class="embed-btns pull-left">
@@ -102,7 +98,7 @@ $helperDonationListSource = new Default_View_Helper_ExternalDonationListSource()
 
             <!--  manage -->
             <div class="manage-btns pull-right margin-left-20">
-              <a role="button" href="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, 'edit') ?>" class="btn btn-native">
+                <a role="button" href="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, 'edit') ?>" class="btn btn-native">
                     <?= $this->translate('Edit') ?>
                 </a>
 
@@ -123,28 +119,19 @@ $helperDonationListSource = new Default_View_Helper_ExternalDonationListSource()
                     (<?= $productFileInfos['fileCount'] ?>)
                 </a>
                 <!-- /ppload -->
-                <?php
-                /* <a role="button" href="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, 'update') ?>" class="btn btn-native">
-                    <?= $this->translate('Update') ?>
-                </a>*/
-                ?>
-               <span class="publish-product-wrapper">
-                            <?php if ($this->isProjectActive($this->project_status)) : ?>
-                                <a href="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, 'unpublish',
-                                    array('m' => $this->member_id)) ?>"
-                                   class="btn btn-native" data-target="#<?= $loopProductId ?> .publish-product-wrapper">
-                                    <?= $this->translate('Unpublish') ?>
-                                </a>
-                            <?php else : ?>
-                                <a href="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, 'publish', array('m' => $this->member_id)) ?>"
-                                   class="btn btn-native" data-target="#<?= $loopProductId ?> .publish-product-wrapper">
-                                    <?= $this->translate('Publish') ?>
-                                </a>
-                            <?php endif; ?>
-                            </span>
-                <a role="button" href="#modalDelete<?= $loopProductId ?>" data-toggle="modal" class="btn btn-native">
-                    <?= $this->translate('Delete') ?>
-                </a>
+                <span class="publish-product-wrapper">
+                    <?php $p_action = $this->isProjectActive($this->project_status) ? 'unpublish' : 'publish' ?>
+                    <a href="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, $p_action, array('m' => $this->member_id)) ?>"
+                       class="btn btn-native" data-target="#<?= $loopProductId ?> .publish-product-wrapper">
+                        <?=ucfirst($p_action) ?>
+                    </a>
+                </span>
+                <form method="post" action="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, 'delete', array('m' => $this->member_id)) ?>" class="inline">
+                    <button data-title="Delete Confirmation" data-callback="defaultCallbackConfirmation" data-message="Do you really want to delete this product?<br>This is permanent and can not be undone!" aria-label="Delete" class="btn btn-native remove" style="font-size: 12px;padding: 3px 6px;">
+                        Delete
+                    </button>
+                </form>
+
             </div>
             <!-- /manage -->
 
@@ -153,30 +140,6 @@ $helperDonationListSource = new Default_View_Helper_ExternalDonationListSource()
     </article>
     <!-- CONTENT -->
     <!-- MODALS -->
-
-    <!-- confirm delete modal -->
-    <div id="modalDelete<?= $loopProductId ?>" class="modal fade">
-        <div class="modal-dialog content-modal">
-            <div class="modal-content">
-                <!-- dialog contents -->
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h3 class="center"><?= $this->translate('Delete Confirmation') ?></h3>
-                </div>
-                <div class="modal-body"><?= $this->translate('Do you really want to delete this product?<br>This is permanent and can not be undone!') ?></div>
-                <!-- dialog buttons -->
-                <div class="modal-footer">
-                    <a href="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, 'delete', array('m' => $this->member_id)) ?>"
-                       role="button" class="btn btn-primary">
-                        <?= $this->translate('YES') ?>
-                    </a>
-                    <a href="#" role="button" class="btn btn-primary" data-dismiss="modal"
-                       aria-hidden="true"><?= $this->translate('NO') ?></a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- /confirm delete modal -->
 
     <!-- button code modal -->
     <div id="modal-button-code-<?= $loopProductId ?>" class="code-embed-modal modal fade">
