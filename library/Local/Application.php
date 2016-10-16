@@ -70,7 +70,7 @@ class Local_Application extends Zend_Application
             return $this->_configCache->load($cacheId, true);
         } else {
             $config = parent::_loadConfig($file);
-            $this->_configCache->save($config, $cacheId, array(), null);
+            $this->_configCache->save($config, $cacheId, array(), 14400);
 
             return $config;
         }
