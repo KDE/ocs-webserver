@@ -106,7 +106,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->view->headMeta()->appendProperty('og:image',
             $helperImage->Image($this->view->product->image_small, array('width' => 400, 'height' => 400)));
 
-
     }
 
     protected function fetchDataForIndexView()
