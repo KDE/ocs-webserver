@@ -187,6 +187,8 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
 
     public function loginAction()
     {
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - Start authenticaton on host: ' . Zend_Registry::get('store_host'));
+
         //TODO: check redirect for a local valid url.
         $this->view->redirect = $this->getParam('redirect');
 
@@ -201,8 +203,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         }
 
         if (false === $formLogin->isValid($_POST)) { // form not valid
-            Zend_Registry::get('logger')->info(__METHOD__ . ' - form not valid:' . print_r($formLogin->getMessages(),
-                    true));
+            Zend_Registry::get('logger')->info(__METHOD__ . ' - form not valid:' . print_r($formLogin->getMessages(), true));
             $this->view->formLogin = $formLogin;
             $this->view->errorText = 'index.login.error.auth';
             $this->view->error = 1;
