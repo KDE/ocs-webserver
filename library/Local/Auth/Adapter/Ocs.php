@@ -116,21 +116,21 @@ class Local_Auth_Adapter_Ocs implements Zend_Auth_Adapter_Interface
     /**
      * @param string $credential
      * @return Local_Auth_Adapter_Ocs
+     * @throws Zend_Exception
      */
     public function setCredential($credential)
     {
         switch ($this->_encryption) {
             case self::MD5 :
                 $this->_credential = md5($credential);
-                Zend_Registry::get('logger')->info(__METHOD__ . ' - pling: ' . print_r(array('$credential' => $credential, 'hash' => $this->_credential), true));
+                Zend_Registry::get('logger')->info(__METHOD__ . ' - pling: $credential = ' . $credential);
                 break;
             case self::SHA :
                 $this->_credential = sha1((self::PASSWORDSALT . $credential . self::PASSWORDSALT));
-                Zend_Registry::get('logger')->info(__METHOD__ . ' - hive: ' . print_r(array('$credential' => $credential, 'hash' => $this->_credential), true));
+                Zend_Registry::get('logger')->info(__METHOD__ . ' - hive: $credential = ' . $credential);
                 break;
             default:
-                $this->_credential = $credential;
-                Zend_Registry::get('logger')->info(__METHOD__ . ' - default: ' . print_r(array('$credential' => $credential, 'hash' => $this->_credential), true));
+                throw new Zend_Exception('There is no default case for credential encryption.');
         }
 
         return $this;
@@ -202,9 +202,10 @@ class Local_Auth_Adapter_Ocs implements Zend_Auth_Adapter_Interface
             ->where('password = ?', $this->_credential);
 
         Zend_Registry::get('logger')->info(__METHOD__ . ' - sql: ' . $select->__toString());
+        $this->_db->getProfiler()->setEnabled(true);
         $resultSet = $this->_db->fetchAll($select);
-
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - resultset: ' . print_r($resultSet, true));
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - sql take seconds: ' . $this->_db->getProfiler()->getLastQueryProfile()->getElapsedSecs());
+        $this->_db->getProfiler()->setEnabled(false);
 
         return $resultSet;
     }
@@ -220,9 +221,11 @@ class Local_Auth_Adapter_Ocs implements Zend_Auth_Adapter_Interface
             ->where('password = ?', $this->_credential);
 
         Zend_Registry::get('logger')->info(__METHOD__ . ' - sql: ' . $select->__toString());
+        $this->_db->getProfiler()->setEnabled(true);
         $resultSet = $this->_db->fetchAll($select);
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - sql take seconds: ' . $this->_db->getProfiler()->getLastQueryProfile()->getElapsedSecs());
+        $this->_db->getProfiler()->setEnabled(false);
 
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - resultset: ' . print_r($resultSet, true));
         return $resultSet;
     }
 
