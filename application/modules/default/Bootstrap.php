@@ -93,7 +93,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
             if (false == ($config = $cache->load('application_config'))) {
                 $config = new Zend_Config($this->getOptions(), true);
-                $cache->save($config, 'application_config', array(), null);
+                $cache->save($config, 'application_config', array(), 14400);
             }
         } else {
             $config = new Zend_Config($this->getOptions(), true);
