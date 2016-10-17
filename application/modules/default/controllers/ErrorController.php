@@ -81,17 +81,21 @@ Still no luck? Search for whatever is missing, or take a look around the rest of
         }
 
         $errorLog = Zend_Registry::get('logger');
-        $errorMsg = PHP_EOL;
+        $errorMsg = '';
         $errorMsg .= 'MESSAGE::' . $errors->exception->getMessage() . PHP_EOL;
-        $errorMsg .= '_SERVER::' . var_export($_SERVER, true) . PHP_EOL;
-        $errorMsg .= 'PARAMS::' . var_export($errors->request->getParams(), true) . PHP_EOL;
+        $errorMsg .= 'HOST::' . $_SERVER['HTTP_HOST'] . PHP_EOL;
+        $errorMsg .= 'USER_AGENT::' . $_SERVER['HTTP_USER_AGENT'] . PHP_EOL;
+        $errorMsg .= 'REQUEST_URI::' . $_SERVER['REQUEST_URI'] . PHP_EOL;
+        $errorMsg .= 'HOST::' . $_SERVER['HTTP_HOST'] . PHP_EOL;
+        $errorMsg .= 'FORWARDED_IP::' . $_SERVER['HTTP_X_FORWARDED_FOR'] . PHP_EOL;
+        $errorMsg .= 'REMOTE_ADDR::' . $_SERVER['REMOTE_ADDR'] . PHP_EOL;
 
         if (isset($errors->exception->xdebug_message)) {
             $errorMsg .= 'XDEBUG_MESSAGE::' . $errors->exception->xdebug_message . PHP_EOL;
         } else {
             $errorMsg .= 'TRACE_STRING::' . $errors->exception->getTraceAsString() . PHP_EOL;
         }
-        $errorLog->err(__METHOD__ . ' ---------- ' . PHP_EOL . $errorMsg . ' ---------- ' . PHP_EOL);
+        $errorLog->err(__METHOD__ . ' - ' . $errorMsg . ' ---------- ' . PHP_EOL);
     }
 
     public function privilegesAction()
@@ -105,8 +109,13 @@ Still no luck? Search for whatever is missing, or take a look around the rest of
         /** @var Zend_Controller_Request_Http $request */
         $request = $this->getRequest();
         if ($request->isXmlHttpRequest()) {
-            $loginUri = $request->getParam('redirect') ? '/login/redirect/'.$request->getParam('redirect') : '/login';
-            $this->_helper->json(array('status' => 'error', 'title' => '<h4 class="modal-title">Authorization required.</h4>','message' => '<p>Your session may be outdated or authorization is required. Please <strong><a href="'.$loginUri.'">login</a></strong> or <strong><a href="/register">register</a></strong> to get access to this function/page.</p>', 'data' => $loginUri));
+            $loginUri = $request->getParam('redirect') ? '/login/redirect/' . $request->getParam('redirect') : '/login';
+            $this->_helper->json(array(
+                'status' => 'error',
+                'title' => '<h4 class="modal-title">Authorization required.</h4>',
+                'message' => '<p>Your session may be outdated or authorization is required. Please <strong><a href="' . $loginUri . '">login</a></strong> or <strong><a href="/register">register</a></strong> to get access to this function/page.</p>',
+                'data' => $loginUri
+            ));
         }
     }
 
