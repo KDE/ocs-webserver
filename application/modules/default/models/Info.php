@@ -395,12 +395,14 @@ class Default_Model_Info
         $modelCategory = new Default_Model_DbTable_ProjectCategory();
         $activeChildren = $modelCategory->fetchChildIds($currentHostMainCategories);
         $activeCategories = array_unique(array_merge($currentHostMainCategories, $activeChildren));
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - $activeCategories:' . print_r($activeCategories, true) . ' on host: ' . $_SERVER['hostname']);
 
         if (empty($omitCategoryId)) {
             return $activeCategories;
         }
 
         $omitChildren = $modelCategory->fetchChildIds($omitCategoryId);
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - $omitChildren:' . print_r($omitChildren, true) . ' on host: ' . $_SERVER['hostname']);
         return array_diff($activeCategories, $omitChildren);
 
 //        if ($omitCategoryId == self::WALLPAPERCATEGORYID) {
