@@ -47,7 +47,7 @@ defaults('ADMIN_PASSWORD','password');  	// Admin Password - CHANGE THIS TO ENAB
 //defaults('DATE_FORMAT', "d.m.Y H:i:s");	// German
 defaults('DATE_FORMAT', 'Y/m/d H:i:s'); 	// US
 
-defaults('GRAPH_SIZE',200);					// Image size
+defaults('GRAPH_SIZE',400);					// Image size
 
 //defaults('PROXY', 'tcp://127.0.0.1:8080');
 
