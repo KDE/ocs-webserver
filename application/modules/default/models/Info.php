@@ -395,13 +395,13 @@ class Default_Model_Info
         $modelCategory = new Default_Model_DbTable_ProjectCategory();
         $activeChildren = $modelCategory->fetchChildIds($currentHostMainCategories);
         $activeCategories = array_unique(array_merge($currentHostMainCategories, $activeChildren));
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - $activeCategories:' . serialize($activeCategories) . ' on host: ' . $_SERVER['HTTP_HOST']);
 
         if (empty($omitCategoryId)) {
             return $activeCategories;
         }
 
         $omitChildren = $modelCategory->fetchChildIds($omitCategoryId);
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - $activeCategories:' . serialize($activeCategories) . ' on host: ' . $_SERVER['HTTP_HOST']);
         Zend_Registry::get('logger')->info(__METHOD__ . ' - $omitChildren:' . serialize($omitChildren) . ' on host: ' . $_SERVER['HTTP_HOST']);
         return array_diff($activeCategories, $omitChildren);
 
