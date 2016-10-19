@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -67,7 +68,7 @@ class Default_Plugin_InitGlobalStoreVars extends Zend_Controller_Plugin_Abstract
                 $storeIdName = $result[0]['config_id_name'];
                 return $storeIdName;
             } else {
-                Zend_Registry::get('logger')->warn(__METHOD__ . ' - $requestStoreIdName = ' . $requestStoreConfigName . ' :: no config id name configured');
+                Zend_Registry::get('logger')->warn(__METHOD__ . '(' . __LINE__ . ') - $requestStoreIdName = ' . $requestStoreConfigName . ' :: no config id name configured');
             }
         }
 
@@ -78,7 +79,7 @@ class Default_Plugin_InitGlobalStoreVars extends Zend_Controller_Plugin_Abstract
             $storeIdName = $store_config_list[$httpHost]['config_id_name'];
             return $storeIdName;
         } else {
-            Zend_Registry::get('logger')->warn(__METHOD__ . ' - $httpHost = ' . $httpHost . ' :: no config id name configured');
+            Zend_Registry::get('logger')->warn(__METHOD__ . '(' . __LINE__ . ') - $httpHost = ' . $httpHost . ' :: no config id name configured');
         }
 
         // search for default
@@ -87,7 +88,7 @@ class Default_Plugin_InitGlobalStoreVars extends Zend_Controller_Plugin_Abstract
         if (isset($result[0]['config_id_name'])) {
             $storeIdName = $result[0]['config_id_name'];
         } else {
-            Zend_Registry::get('logger')->warn(__METHOD__ . ' - no default store config name configured');
+            Zend_Registry::get('logger')->warn(__METHOD__ . '(' . __LINE__ . ') - no default store config name configured');
         }
 
         return $storeIdName;
@@ -132,7 +133,7 @@ class Default_Plugin_InitGlobalStoreVars extends Zend_Controller_Plugin_Abstract
                 $storeIdName = $result[0]['host'];
                 return $storeIdName;
             } else {
-                Zend_Registry::get('logger')->warn(__METHOD__ . ' - $requestStoreIdName = ' . $requestStoreConfigName . ' :: no config id name configured');
+                Zend_Registry::get('logger')->warn(__METHOD__ . '(' . __LINE__ . ') - $requestStoreIdName = ' . $requestStoreConfigName . ' :: no config id name configured');
             }
         }
 
@@ -143,7 +144,7 @@ class Default_Plugin_InitGlobalStoreVars extends Zend_Controller_Plugin_Abstract
             $storeHost = $storeConfigArray[$httpHost]['host'];
             return $storeHost;
         } else {
-            Zend_Registry::get('logger')->warn(__METHOD__ . ' - ' . $httpHost . ' :: no store config for host context configured');
+            Zend_Registry::get('logger')->warn(__METHOD__ . '(' . __LINE__ . ') - ' . $httpHost . ' :: no store config for host context configured');
         }
 
         // search for default
@@ -152,7 +153,7 @@ class Default_Plugin_InitGlobalStoreVars extends Zend_Controller_Plugin_Abstract
         if (isset($result[0]['host'])) {
             $storeHost = $result[0]['host'];
         } else {
-            Zend_Registry::get('logger')->warn(__METHOD__ . ' - ' . $httpHost . ' :: no default store configured');
+            Zend_Registry::get('logger')->warn(__METHOD__ . '(' . __LINE__ . ') - ' . $httpHost . ' :: no default store configured');
         }
 
         return $storeHost;
@@ -172,7 +173,7 @@ class Default_Plugin_InitGlobalStoreVars extends Zend_Controller_Plugin_Abstract
         if (isset($storeConfigArray[$storeHostName])) {
             $storeConfig = $storeConfigArray[$storeHostName];
         } else {
-            Zend_Registry::get('logger')->warn(__METHOD__ . ' - ' . $storeHostName . ' :: no domain config context configured');
+            Zend_Registry::get('logger')->warn(__METHOD__ . '(' . __LINE__ . ') - ' . $storeHostName . ' :: no domain config context configured');
         }
 
         return $storeConfig;
@@ -189,11 +190,13 @@ class Default_Plugin_InitGlobalStoreVars extends Zend_Controller_Plugin_Abstract
 
         if (isset($storeCategoryArray[$storeHostName])) {
             $storeCategories = $storeCategoryArray[$storeHostName];
+            Zend_Registry::get('logger')->info(__METHOD__ . '(' . __LINE__ . ') - ' . $storeHostName . ' :: ' . serialize($storeCategories));
         } else {
-            Zend_Registry::get('logger')->warn(__METHOD__ . ' - ' . $storeHostName . ' :: no categories for domain context configured. Using main categories instead');
+            Zend_Registry::get('logger')->warn(__METHOD__ . '(' . __LINE__ . ') - ' . $storeHostName . ' :: no categories for domain context configured. Using main categories instead');
             $modelCategories = new Default_Model_DbTable_ProjectCategory();
             $root = $modelCategories->fetchRoot();
-            $storeCategories = $modelCategories->fetchImmediateChildrenIds($root['project_category_id'], $modelCategories::ORDERED_TITLE);
+            $storeCategories = $modelCategories->fetchImmediateChildrenIds($root['project_category_id'],
+                $modelCategories::ORDERED_TITLE);
         }
 
         return $storeCategories;
@@ -246,7 +249,7 @@ class Default_Plugin_InitGlobalStoreVars extends Zend_Controller_Plugin_Abstract
             $storeDefaultConfig = $result[0]['store_id'];
             return $storeDefaultConfig;
         } else {
-            Zend_Registry::get('logger')->warn(__METHOD__ . ' - no default config configured');
+            Zend_Registry::get('logger')->warn(__METHOD__ . '(' . __LINE__ . ') - no default config configured');
         }
     }
 
