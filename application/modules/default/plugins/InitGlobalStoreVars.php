@@ -28,21 +28,14 @@ class Default_Plugin_InitGlobalStoreVars extends Zend_Controller_Plugin_Abstract
         /** @var Zend_Controller_Request_Http $request */
         parent::preDispatch($request);
 
-//        $defaultConfig = $this->findDefaultConfig();
-
         $storeConfigName = $this->getStoreConfigName($request);
+        Zend_Registry::set('store_config_name', $storeConfigName);
+        Zend_Registry::set('store_template', $this->getStoreTemplate($storeConfigName));
 
         $storeHost = $this->getStoreHost($request);
-
-        Zend_Registry::set('store_config_name', $storeConfigName);
-
         Zend_Registry::set('store_host', $storeHost);
-
         Zend_Registry::set('store_config', $this->getStoreConfig($storeHost));
-
         Zend_Registry::set('store_category_list', $this->getStoreCategories($storeHost));
-
-        Zend_Registry::set('store_template', $this->getStoreTemplate($storeConfigName));
     }
 
     /**
@@ -190,6 +183,9 @@ class Default_Plugin_InitGlobalStoreVars extends Zend_Controller_Plugin_Abstract
 
         if (isset($storeCategoryArray[$storeHostName])) {
             $storeCategories = $storeCategoryArray[$storeHostName];
+            if (is_string($storeCategories)) {
+                $storeCategories = array($storeCategories);
+            }
             Zend_Registry::get('logger')->info(__METHOD__ . '(' . __LINE__ . ') - ' . $storeHostName . ' :: ' . serialize($storeCategories));
         } else {
             Zend_Registry::get('logger')->warn(__METHOD__ . '(' . __LINE__ . ') - ' . $storeHostName . ' :: no categories for domain context configured. Using main categories instead');

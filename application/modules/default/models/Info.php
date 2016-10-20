@@ -401,18 +401,7 @@ class Default_Model_Info
         }
 
         $omitChildren = $modelCategory->fetchChildIds($omitCategoryId);
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - $activeCategories:' . serialize($activeCategories) . ' on host: ' . $_SERVER['HTTP_HOST']);
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - $omitChildren:' . serialize($omitChildren) . ' on host: ' . $_SERVER['HTTP_HOST']);
         return array_diff($activeCategories, $omitChildren);
-
-//        if ($omitCategoryId == self::WALLPAPERCATEGORYID) {
-//            return $this->getActiveCategoriesForHostStores_includeWallpaper($omitCategoryId);
-//        } else {
-//            $total = $this->getActiveCategoriesForHostStores_includeWallpaper($omitCategoryId);
-//            $wallp = $this->getActiveCategoriesForHostStores_includeWallpaper(self::WALLPAPERCATEGORYID);
-//            $result = array_diff($total, $wallp);
-//            return $result;
-//        }
     }
 
 
