@@ -51,12 +51,12 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         } else {
 
             $sql = '
-              SELECT count(*) as total_count
+              SELECT count(*) AS total_count
               FROM member
               WHERE `is_active` = :activeVal
                  AND `type` = :typeVal
                AND `profile_image_url` <> :defaultImgUrl
-               AND `profile_image_url` like :likeImgUrl
+               AND `profile_image_url` LIKE :likeImgUrl
           ';
 
 
@@ -83,7 +83,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
                 WHERE `is_active` = :activeVal
                    AND `type` = :typeVal
             	   AND `profile_image_url` <> :defaultImgUrl
-                 AND `profile_image_url` like :likeImgUrl
+                 AND `profile_image_url` LIKE :likeImgUrl
             ';
             //$sql .= ' ORDER BY ' . $this->_db->quoteIdentifier($orderBy) . ' ' . $dir;
 
@@ -129,7 +129,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
      */
     public function getMembersForSelectList()
     {
-        $selectArr = $this->_db->fetchAll('SELECT member_id,username,firstname, lastname FROM ' . $this->_name . ' WHERE is_active=1 AND is_deleted=0 ORDER BY username');
+        $selectArr = $this->_db->fetchAll("SELECT member_id,username,firstname, lastname FROM {$this->_name} WHERE is_active=1 AND is_deleted=0 ORDER BY username");
 
         $arrayModified = array();
 
@@ -153,9 +153,9 @@ class Default_Model_Member extends Default_Model_DbTable_Member
     {
         $sql = "
             UPDATE member
-              STRAIGHT_JOIN member_email ON member.member_id = member_email.email_member_id AND member_email.email_checked is null AND member.is_deleted = 0 AND member_email.email_deleted = 0
+              STRAIGHT_JOIN member_email ON member.member_id = member_email.email_member_id AND member_email.email_checked IS NULL AND member.is_deleted = 0 AND member_email.email_deleted = 0
             SET member.mail_checked = 1, member.is_active = 1, member.changed_at = NOW(), member_email.email_checked = NOW()
-            WHERE member.member_id = :memberId and member_email.email_verification_value = :verificationValue;
+            WHERE member.member_id = :memberId AND member_email.email_verification_value = :verificationValue;
         ";
         $stmnt = $this->_db->query($sql, array('memberId' => $member_id, 'verificationValue' => $verification_value));
 
@@ -324,7 +324,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
                 FROM plings
                  JOIN project ON plings.project_id = project.project_id
                  JOIN project_category ON project.project_category_id = project_category.project_category_id                 
-                WHERE plings.status_id in (2,3,4)
+                WHERE plings.status_id IN (2,3,4)
                   AND plings.member_id = :member_id
                   AND project.status = :project_status
                   AND project.type_id = 1
@@ -579,7 +579,8 @@ class Default_Model_Member extends Default_Model_DbTable_Member
             $sql .= $this->_db->quoteInto(" limit ?", $limit, 'INTEGER');
         }
 
-        $result = $this->_db->fetchAll($sql, array('memberId' => $member_id, 'status' => Default_Model_Project::PROJECT_ACTIVE));
+        $result = $this->_db->fetchAll($sql,
+            array('memberId' => $member_id, 'status' => Default_Model_Project::PROJECT_ACTIVE));
         return $this->generateRowSet($result);
     }
 
@@ -592,15 +593,24 @@ class Default_Model_Member extends Default_Model_DbTable_Member
      */
     public function findActiveMemberByIdentity($identity, $withLoginLocal = false)
     {
-        $select = $this->select()
-            ->where('username = ? or mail = ?', $identity)
-            ->where('is_active = ?', self::MEMBER_ACTIVE)
-            ->where('is_deleted = ?', self::MEMBER_NOT_DELETED);
+        $sqlName = "SELECT * FROM member WHERE is_active = :active AND is_deleted = :deleted AND username = :identity";
+        $sqlMail = "SELECT * FROM member WHERE is_active = :active AND is_deleted = :deleted AND mail = :identity";
         if ($withLoginLocal) {
-            $select->where('login_method = ?', self::MEMBER_LOGIN_LOCAL);
+            $sqlName .= " AND login_method = '" . self::MEMBER_LOGIN_LOCAL . "'";
+            $sqlMail .= " AND login_method = '" . self::MEMBER_LOGIN_LOCAL . "'";
         }
+        $resultName = $this->getAdapter()->fetchRow($sqlName,
+            array('active' => self::MEMBER_ACTIVE, 'deleted' => self::MEMBER_NOT_DELETED, 'identity' => $identity));
+        $resultMail = $this->getAdapter()->fetchRow($sqlMail,
+            array('active' => self::MEMBER_ACTIVE, 'deleted' => self::MEMBER_NOT_DELETED, 'identity' => $identity));
 
-        return $this->fetchRow($select);
+        if (count($resultName) > 0) {
+            return $this->generateRowClass($resultName);
+        }
+        if (count($resultMail) > 0) {
+            return $this->generateRowClass($resultMail);
+        }
+        return null;
     }
 
     /**
@@ -617,7 +627,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
 
     public function fetchActiveHiveUserByUsername($username)
     {
-        $sql = 'select * from member where username = :username and is_active = 1 and member.source_id = 1 and member.is_deleted = 0';
+        $sql = 'SELECT * FROM member WHERE username = :username AND is_active = 1 AND member.source_id = 1 AND member.is_deleted = 0';
 
         $result = $this->getAdapter()->query($sql, array('username' => $username))->fetch();
 
@@ -643,11 +653,11 @@ class Default_Model_Member extends Default_Model_DbTable_Member
                 ,title
                 ,project_id               
             FROM comments
-            STRAIGHT_JOIN member on comments.comment_member_id = member.member_id
+            STRAIGHT_JOIN member ON comments.comment_member_id = member.member_id
             JOIN project ON comments.comment_target_id = project.project_id AND comments.comment_type = 0
             WHERE comments.comment_active = :comment_status
             AND project.status = :project_status
-            And comments.comment_member_id = :member_id
+            AND comments.comment_member_id = :member_id
             ORDER BY comments.comment_created_at DESC
         ';
 
@@ -670,7 +680,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
     public function fetchCntSupporters($member_id)
     {
         $sql = '
-                SELECT distinct plings.member_id FROM plings
+                SELECT DISTINCT plings.member_id FROM plings
                  JOIN project ON plings.project_id = project.project_id                
                  JOIN member ON project.member_id = member.member_id
                 WHERE plings.status_id = 2

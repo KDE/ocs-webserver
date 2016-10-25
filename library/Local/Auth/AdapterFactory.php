@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -19,7 +20,6 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-
 class Local_Auth_AdapterFactory
 {
 
@@ -31,7 +31,7 @@ class Local_Auth_AdapterFactory
     /**
      * @param null $userIdentity
      * @param null $loginMethod
-     * @return Zend_Auth_Adapter_DbTable
+     * @return Local_Auth_Adapter_Interface
      */
     public static function getAuthAdapter($userIdentity = null, $loginMethod = null)
     {
@@ -62,7 +62,7 @@ class Local_Auth_AdapterFactory
     {
         switch ($loginMethod) {
             case self::LOGIN_INFINITY:
-                $authAdapter = new Zend_Auth_Adapter_DbTable(Zend_Registry::get('db'), 'session', 'uuid', 'member_id');
+                $authAdapter = new Local_Auth_Adapter_RememberMe(Zend_Registry::get('db'));
                 break;
 
             case self::LOGIN_HIVE:
@@ -75,7 +75,6 @@ class Local_Auth_AdapterFactory
             default:
                 $authAdapter = new Local_Auth_Adapter_Ocs(Zend_Registry::get('db'), 'member');
                 $authAdapter->setEncryption(Local_Auth_Adapter_Ocs::MD5);
-
                 break;
         }
 
