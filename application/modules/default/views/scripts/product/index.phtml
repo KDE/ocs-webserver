@@ -171,7 +171,7 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
                                            </li>
                                        <?php } ?>
                                         <li><a href="#files-panel" data-toggle="tab">Files (<?= $productFileInfos['fileCount'] ?>)</a></li>
-                                       <li><a href="#donations-panel" data-toggle="tab">Supporters <?  if(count($this->supporting))>0 echo '('.count($this->supporting).')'; ?></a></li>
+                                       <li><a href="#donations-panel" data-toggle="tab">Supporters <?php if(count($this->supporting)>0) { echo '('.count($this->supporting).')';} ?></a></li>
                                         
                                    </ul>
                                </div>
