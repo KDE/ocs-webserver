@@ -345,7 +345,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                   m.mail,
                   m.paypal_mail,
                   m.dwolla_id,
-               	 (round(((p.count_likes + 6) / ((p.count_likes + p.count_dislikes) + 12)),2) * 100) as laplace_score,
+               	 (round(((p.count_likes + 6) / ((p.count_likes + p.count_dislikes) + 12)),2) * 100) AS laplace_score,
                	 sp.amount_received,
                	 sp.count_plings,
                	 sp.count_plingers,
@@ -370,18 +370,6 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         } else {
             return null;
         }
-    }
-
-    /**
-     * @param array $data
-     * @return Zend_Db_Table_Row_Abstract
-     */
-    protected function generateRowClass($data)
-    {
-        /** @var Zend_Db_Table_Row $classRow */
-        $classRow = $this->getRowClass();
-
-        return new $classRow(array('table' => $this, 'stored' => true, 'data' => $data));
     }
 
     /**
@@ -796,7 +784,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
      */
     public function fetchMoreProjectsOfOtherUsr($project, $count = 8)
     {
-        $sql = 'select count(1) count from project where project.status = ' . self::PROJECT_ACTIVE . ' and member_id  <> ' . $project->member_id . ' and project_category_id=' . $project->project_category_id . ' and type_id=1';
+        $sql = 'SELECT count(1) count FROM project WHERE project.status = ' . self::PROJECT_ACTIVE . ' AND member_id  <> ' . $project->member_id . ' AND project_category_id=' . $project->project_category_id . ' AND type_id=1';
         $result = $this->_db->fetchRow($sql);
 
         $cnt = $result['count'];
@@ -1209,9 +1197,9 @@ class Default_Model_Project extends Default_Model_DbTable_Project
     public function setAllProjectsForMemberDeleted($member_id)
     {
         $sql = '
-                update project
-                set status = :statusValue, deleted_at = NOW()
-                where member_id = :memberId;
+                UPDATE project
+                SET status = :statusValue, deleted_at = NOW()
+                WHERE member_id = :memberId;
         ';
         $this->_db->query($sql, array('statusValue' => self::PROJECT_DELETED, 'memberId' => $member_id))->execute();
     }
@@ -1219,9 +1207,9 @@ class Default_Model_Project extends Default_Model_DbTable_Project
     public function setAllProjectsForMemberActivated($member_id)
     {
         $sql = '
-                update project
-                set status = :statusValue, changed_at = NOW()
-                where member_id = :memberId;
+                UPDATE project
+                SET status = :statusValue, changed_at = NOW()
+                WHERE member_id = :memberId;
         ';
         $this->_db->query($sql, array('statusValue' => self::PROJECT_ACTIVE, 'memberId' => $member_id))->execute();
     }
@@ -1486,8 +1474,8 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         $sql = "
                 SELECT
                   p.*,
-                  p.changed_at as project_changed_at,
-                  pc.title as cat_title,
+                  p.changed_at AS project_changed_at,
+                  pc.title AS cat_title,
                   m.username,
                   m.avatar,
                   m.profile_image_url,
@@ -1495,7 +1483,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                   m.mail,
                   m.paypal_mail,
                   m.dwolla_id,
-               	 (round(((p.count_likes + 6) / ((p.count_likes + p.count_dislikes) + 12)),2) * 100) as laplace_score,
+               	 (round(((p.count_likes + 6) / ((p.count_likes + p.count_dislikes) + 12)),2) * 100) AS laplace_score,
                	 sp.amount_received,
                	 sp.count_plings,
                	 sp.count_plingers,

@@ -19,14 +19,31 @@
  *
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *    Created: 24.10.2016
  **/
-class Default_Model_DbTable_Session extends Local_Model_Table
+interface Local_Auth_Adapter_Interface extends Zend_Auth_Adapter_Interface
 {
 
-    protected $_name = "session";
+    /**
+     * @param string $identity
+     * @return Zend_Auth_Adapter_Interface
+     */
+    public function setIdentity($identity);
 
-    protected $_keyColumnsForRow = array('member_id', 'uuid');
+    /**
+     * @param string $credential
+     * @return Zend_Auth_Adapter_Interface
+     */
+    public function setCredential($credential);
 
-    protected $_key = 'session_id';
+    /**
+     * getResultRowObject() - Returns the result row as a stdClass object
+     *
+     * @param  string|array $returnColumns
+     * @param  string|array $omitColumns
+     * @return stdClass|boolean
+     */
+    public function getResultRowObject($returnColumns = null, $omitColumns = null);
 
-} 
+}

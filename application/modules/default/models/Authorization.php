@@ -23,7 +23,7 @@
 class Default_Model_Authorization
 {
 
-    const LOGIN_INFINITY = 'infinity';
+    const LOGIN_REMEMBER_ME = 'infinity';
 
     /** @var string */
     protected $_dataModelName;
@@ -70,35 +70,28 @@ class Default_Model_Authorization
     /**
      * @param string $userId
      * @param string $userSecret
-     * @param bool $rememberMe
+     * @param bool $setRememberMe
      * @param string $loginMethod
      * @return Zend_Auth_Result
      */
-    public function authenticateUserSession($userId, $userSecret, $rememberMe, $loginMethod = null)
+    public function authenticateUser($userId, $userSecret, $setRememberMe = false, $loginMethod = null)
     {
         if (false === empty($loginMethod)) {
             $this->_loginMethod = $loginMethod;
         }
 
         $authResult = $this->authenticateCredentials($userId, $userSecret, $loginMethod);
-
         if ($authResult->isValid()) {
-
-            if (true == $rememberMe) {
-                $this->_setOrRefreshRememberMe();
-            }
-
+            $this->updateRememberMe($setRememberMe);
             Zend_Session::regenerateId();
-
             $this->_storeAuthSessionData();
-
             $this->updateUserLastOnline('member_id', $this->_authUserData->member_id);
         }
 
         return $authResult;
     }
 
-    public function authenticateCredentials($identity, $credential, $loginMethod = null)
+    protected function authenticateCredentials($identity, $credential, $loginMethod = null)
     {
         $authAdapter = Local_Auth_AdapterFactory::getAuthAdapter($identity, $loginMethod);
         $authAdapter->setIdentity($identity);
@@ -111,22 +104,21 @@ class Default_Model_Authorization
         return $authResult;
     }
 
-    protected function _setOrRefreshRememberMe()
+    /**
+     * @param bool $setRememberMe
+     */
+    protected function updateRememberMe($setRememberMe = false)
     {
-        $config = Zend_Registry::get('config');
-        $cookieName = $config->settings->auth_session->remember_me->name;
-        $remember_me_seconds = $config->settings->auth_session->remember_me->timeout;
-        $cookieExpire = time() + (int)$remember_me_seconds;
-        $domain = Zend_Controller_Front::getInstance()->getRequest()->getHttpHost();
-
-        $sessionTable = new Default_Model_Session();
-        $sessionDataRow = $sessionTable->updateOrCreateSession($this->_authUserData->member_id);
-
-        $sessionData = array();
-        $sessionData['mi'] = $sessionDataRow->member_id;
-        $sessionData['u'] = $sessionDataRow->uuid;
-
-        setcookie($cookieName, serialize($sessionData), $cookieExpire, '/', $domain, null, true);
+        $modelRememberMe = new Default_Model_RememberMe();
+        if (false == $setRememberMe) {
+            $modelRememberMe->deleteSession();
+            return;
+        }
+        if ($modelRememberMe->hasValidCookie()) {
+            $modelRememberMe->updateSession();
+        } else {
+            $modelRememberMe->createSession($this->_authUserData->member_id);
+        }
     }
 
     protected function _storeAuthSessionData()
@@ -141,10 +133,10 @@ class Default_Model_Authorization
      * @param object $authUserData
      * @return object
      */
-    public function getExtendedAuthUserData($authUserData)
+    protected function getExtendedAuthUserData($authUserData)
     {
         $extendedAuthUserData = new stdClass();
-        if (isset($this->_loginMethod) AND $this->_loginMethod == self::LOGIN_INFINITY) {
+        if (isset($this->_loginMethod) AND $this->_loginMethod == self::LOGIN_REMEMBER_ME) {
             $modelMember = new Default_Model_Member();
             $memberData = $modelMember->fetchMemberData($authUserData->member_id);
             $extendedAuthUserData->username = $memberData->username;
@@ -153,7 +145,7 @@ class Default_Model_Authorization
             $extendedAuthUserData->profile_image_url = $memberData->profile_image_url;
             $extendedAuthUserData->is_active = $memberData->is_active;
             $extendedAuthUserData->is_deleted = $memberData->is_deleted;
-            $extendedAuthUserData->roleName = Default_Plugin_AclRules::ROLENAME_COOKIEUSER;
+            $extendedAuthUserData->roleName = $this->getRoleNameForUserRole($memberData->roleId);
         } else {
             $extendedAuthUserData->roleName = $this->getRoleNameForUserRole($authUserData->roleId);
         }
@@ -254,7 +246,7 @@ class Default_Model_Authorization
      * @param string|int $identity
      * @return object
      */
-    public function getAllAuthUserData($identifier, $identity)
+    protected function getAllAuthUserData($identifier, $identity)
     {
         $authUserData = $this->getAuthUserData($identifier, $identity);
         return $this->getExtendedAuthUserData($authUserData);
@@ -265,7 +257,7 @@ class Default_Model_Authorization
      * @param string|int $identity
      * @return object
      */
-    public function getAuthUserData($identifier, $identity)
+    protected function getAuthUserData($identifier, $identity)
     {
         Zend_Registry::get('logger')->info(__METHOD__ . ' - $identifier: ' . print_r($identifier,
                 true) . ' :: $identity: ' . print_r($identity, true));
@@ -288,7 +280,7 @@ class Default_Model_Authorization
         Zend_Registry::get('logger')->info(__METHOD__ . ' - $identity: ' . print_r($identity, true));
         $sql = "
         SELECT member.* FROM member
-        STRAIGHT_JOIN member_email ON member.member_id = member_email.email_member_id AND email_deleted = 0 AND email_checked is null
+        STRAIGHT_JOIN member_email ON member.member_id = member_email.email_member_id AND email_deleted = 0 AND email_checked IS NULL
         WHERE member_email.email_verification_value = :verification;
         ";
         $resultRow = $this->_dataTable->getAdapter()->fetchRow($sql, array('verification' => $identity));

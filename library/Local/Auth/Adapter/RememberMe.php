@@ -19,19 +19,15 @@
  *
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *    Created: 22.10.2016
  **/
-class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
+class Local_Auth_Adapter_RememberMe implements Local_Auth_Adapter_Interface
 {
 
-    const MD5 = 'enc01';
-    const SHA = 'enc02';
-    const PASSWORDSALT = 'ghdfklsdfgjkldfghdklgioerjgiogkldfgndfohgfhhgfhgfhgfhgfhfghfgnndf';
-
-    protected $_db;
-    protected $_tableName;
     protected $_identity;
     protected $_credential;
-    protected $_encryption;
+    protected $_db;
     protected $_resultRow;
 
     /**
@@ -50,13 +46,26 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
                 throw new Zend_Auth_Adapter_Exception('No database adapter present');
             }
         }
-
-        $this->_tableName = $tableName;
     }
 
-    public static function getEncryptedPassword($password, $userSource)
+    /**
+     * @param string $identity
+     * @return Zend_Auth_Adapter_Interface
+     */
+    public function setIdentity($identity)
     {
-        return $userSource == Default_Model_DbTable_Member::SOURCE_HIVE ? sha1((self::PASSWORDSALT . $password . self::PASSWORDSALT)) : md5($password);
+        $this->_identity = $identity;
+        return $this;
+    }
+
+    /**
+     * @param string $credential
+     * @return Zend_Auth_Adapter_Interface
+     */
+    public function setCredential($credential)
+    {
+        $this->_credential = $credential;
+        return $this;
     }
 
     /**
@@ -67,12 +76,7 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
      */
     public function authenticate()
     {
-        $validator = new Zend_Validate_EmailAddress();
-        if ($validator->isValid($this->_identity)) {
-            $resultSet = $this->fetchUserByEmail();
-        } else {
-            $resultSet = $this->fetchUserByUsername();
-        }
+        $resultSet = $this->fetchUserData();
 
         if (count($resultSet) == 0) {
             return $this->createAuthResult(Zend_Auth_Result::FAILURE_IDENTITY_NOT_FOUND, $this->_identity,
@@ -89,17 +93,22 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
             array('Authentication successful.'));
     }
 
-    private function fetchUserByEmail()
+    private function fetchUserData()
     {
+        $config = Zend_Registry::get('config');
+        $remember_me_seconds = $config->settings->auth_session->remember_me->timeout;
+
         $sql = "
-            SELECT * 
-            FROM {$this->_tableName} 
-            WHERE 
-            is_active = :active AND 
-            is_deleted = :deleted AND 
-            login_method = :login AND 
-            mail = :mail AND 
-            password = :password";
+            SELECT member.* 
+            FROM `session`
+            JOIN member ON member.member_id = `session`.member_id
+            WHERE member.is_active = :active
+            AND member.is_deleted = :deleted
+            AND member.login_method = :login
+            AND `session`.member_id = :member
+            AND `session`.remember_me_id = :uuid
+            AND `session`.expiry >= NOW()
+            ";
 
         Zend_Registry::get('logger')->info(__METHOD__ . ' - sql: ' . $sql);
         $this->_db->getProfiler()->setEnabled(true);
@@ -107,36 +116,12 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
             'active' => Default_Model_DbTable_Member::MEMBER_ACTIVE,
             'deleted' => Default_Model_DbTable_Member::MEMBER_NOT_DELETED,
             'login' => Default_Model_DbTable_Member::MEMBER_LOGIN_LOCAL,
-            'mail' => $this->_identity,
-            'password' => $this->_credential
+            'member' => $this->_identity,
+            'uuid' => $this->_credential
         ));
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - sql take seconds: ' . $this->_db->getProfiler()->getLastQueryProfile()->getElapsedSecs());
-        $this->_db->getProfiler()->setEnabled(false);
-
-        return $resultSet;
-    }
-
-    private function fetchUserByUsername()
-    {
-        $sql = "
-            SELECT * 
-            FROM {$this->_tableName} 
-            WHERE 
-            is_active = :active AND 
-            is_deleted = :deleted AND 
-            login_method = :login AND 
-            username = :username AND 
-            password = :password";
-
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - sql: ' . $sql);
-        $this->_db->getProfiler()->setEnabled(true);
-        $resultSet = $this->_db->fetchAll($sql, array(
-            'active' => Default_Model_DbTable_Member::MEMBER_ACTIVE,
-            'deleted' => Default_Model_DbTable_Member::MEMBER_NOT_DELETED,
-            'login' => Default_Model_DbTable_Member::MEMBER_LOGIN_LOCAL,
-            'username' => $this->_identity,
-            'password' => $this->_credential
-        ));
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - sql: ' . $this->_db->getProfiler()->getLastQueryProfile()->getQuery());
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - sql params: ' . print_r($this->_db->getProfiler()->getLastQueryProfile()->getQueryParams(),
+                true));
         Zend_Registry::get('logger')->info(__METHOD__ . ' - sql take seconds: ' . $this->_db->getProfiler()->getLastQueryProfile()->getElapsedSecs());
         $this->_db->getProfiler()->setEnabled(false);
 
@@ -150,50 +135,6 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
             $identity,
             $messages
         );
-    }
-
-    /**
-     * @param string $identity
-     * @return Local_Auth_Adapter_Ocs
-     */
-    public function setIdentity($identity)
-    {
-        $this->_identity = $identity;
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - ' . print_r($identity, true));
-        return $this;
-    }
-
-    /**
-     * @param string $credential
-     * @return Local_Auth_Adapter_Ocs
-     * @throws Zend_Exception
-     */
-    public function setCredential($credential)
-    {
-        switch ($this->_encryption) {
-            case self::MD5 :
-                $this->_credential = md5($credential);
-                Zend_Registry::get('logger')->info(__METHOD__ . ' - pling: $credential = ' . $credential);
-                break;
-            case self::SHA :
-                $this->_credential = sha1((self::PASSWORDSALT . $credential . self::PASSWORDSALT));
-                Zend_Registry::get('logger')->info(__METHOD__ . ' - hive: $credential = ' . $credential);
-                break;
-            default:
-                throw new Zend_Exception('There is no default case for credential encryption.');
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param mixed $encryption
-     * @return Local_Auth_Adapter_Ocs
-     */
-    public function setEncryption($encryption)
-    {
-        $this->_encryption = $encryption;
-        return $this;
     }
 
     /**

@@ -154,7 +154,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
 
         $values = $formLogin->getValues();
         $authModel = new Default_Model_Authorization();
-        $authResult = $authModel->authenticateUserSession($values['mail'], $values['password'], $values['remember_me']);
+        $authResult = $authModel->authenticateUser($values['mail'], $values['password'], $values['remember_me']);
 
         if (false == $authResult->isValid()) { // authentication fail
             $this->view->errorText = 'index.login.error.auth';
@@ -219,7 +219,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
 
         $values = $formLogin->getValues();
         $authModel = new Default_Model_Authorization();
-        $authResult = $authModel->authenticateUserSession($values['mail'], $values['password'], $values['remember_me']);
+        $authResult = $authModel->authenticateUser($values['mail'], $values['password'], $values['remember_me']);
 
         if (false == $authResult->isValid()) { // authentication fail
             Zend_Registry::get('logger')->info(__METHOD__ . ' - authentication failed.');
@@ -369,12 +369,14 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         $userData = $userTable->createNewUser($userData)->toArray();
 
         if (false == isset($userData['verificationVal'])) {
-            $verificationVal = Default_Model_MemberEmail::getVerificationValue($userData['username'], $userData['mail']);
+            $verificationVal = Default_Model_MemberEmail::getVerificationValue($userData['username'],
+                $userData['mail']);
             $userData['verificationVal'] = $verificationVal;
         }
 
         $modelEmail = new Default_Model_MemberEmail();
-        $userEmail = $modelEmail->saveEmailAsPrimary($userData['member_id'], $userData['mail'], $userData['verificationVal']);
+        $userEmail = $modelEmail->saveEmailAsPrimary($userData['member_id'], $userData['mail'],
+            $userData['verificationVal']);
 
         return $userData;
     }
@@ -435,21 +437,8 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         Zend_Session::forgetMe();
         Zend_Session::destroy();
 
-        $config = Zend_Registry::get('config');
-        $cookieName = $config->settings->auth_session->remember_me->name;
-        $cookieData = $this->_request->getCookie($cookieName, null);
-        if ($cookieData) {
-            $cookieData = unserialize($cookieData);
-            $remember_me_seconds = $config->settings->auth_session->remember_me->timeout;
-            $domain = $this->getServerName();
-            $cookieExpire = time() - $remember_me_seconds;
-
-            setcookie($cookieName, null, $cookieExpire, '/', $domain, null, true);
-
-            //TODO: Remove Cookie from database
-            $modelAuthorization = new Default_Model_Authorization();
-            $modelAuthorization->removeAllCookieInformation('member_id', $cookieData['mi']);
-        }
+        $modelRememberMe = new Default_Model_RememberMe();
+        $modelRememberMe->deleteSession();
 
         $this->redirect('/');
     }

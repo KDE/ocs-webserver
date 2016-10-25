@@ -107,4 +107,29 @@ class Local_Model_Table extends Zend_Db_Table
         }
     }
 
+    /**
+     * @param $data
+     * @return Zend_Db_Table_Row_Abstract
+     * @throws Zend_Exception
+     */
+    public function getRow($data)
+    {
+        if (false == is_array($data)) {
+            throw new Zend_Exception('given data must be an array');
+        }
+        return $this->generateRowClass($data);
+    }
+
+    /**
+     * @param array $data
+     * @return Zend_Db_Table_Row_Abstract
+     */
+    protected function generateRowClass($data)
+    {
+        /** @var Zend_Db_Table_Row $classRow */
+        $classRow = $this->getRowClass();
+
+        return new $classRow(array('table' => $this, 'stored' => true, 'data' => $data));
+    }
+
 } 

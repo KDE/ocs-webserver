@@ -54,6 +54,10 @@ class Default_Plugin_Acl extends Zend_Controller_Plugin_Abstract
         $this->_acl = $acl;
     }
 
+    /**
+     * @param Zend_Controller_Request_Http $request
+     * @throws Zend_Exception
+     */
     public function preDispatch(Zend_Controller_Request_Abstract $request)
     {
 //        Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . print_r(func_get_args(), true));
@@ -62,34 +66,11 @@ class Default_Plugin_Acl extends Zend_Controller_Plugin_Abstract
         // all users are guests (at first)
         $role = Default_Plugin_AclRules::ROLENAME_GUEST;
 
-        // at this point the zend framework has already tested the session cookie and we have an auth object.
-        if (false === $this->_auth->hasIdentity()) {
-            //Check if permanent Login Cookie exists and authenticate user
-            $config = Zend_Registry::get('config');
-            $cookieName = $config->settings->auth_session->remember_me->name;
-            $cookieRememberMe = unserialize($request->getCookie($cookieName, null));
-            if ($cookieRememberMe) {
-                $authModel = new Default_Model_Authorization();
-                $authResult = $authModel->authenticateUserSession($cookieRememberMe['u'], $cookieRememberMe['mi'], true, 'infinity');
-                if (false === $authResult->isValid()) {
-                    Zend_Registry::get('logger')->warn(__METHOD__ . ' - ' . 'Cant authenticate user with ' . $cookieName . '. ' . implode('; ',
-                            $authResult->getMessages()));
-                }
-            }
-        }
-
-        if ($this->_auth->hasIdentity() && $this->_auth->getIdentity() != null && property_exists($this->_auth->getIdentity(), 'username'))
+        if ($this->_auth->hasIdentity() && $this->_auth->getIdentity() != null && property_exists($this->_auth->getIdentity(), 'roleName'))
         {
-            $authStorage = $this->_auth->getStorage()->read();
-            $roleId = $authStorage->roleId;
-            $role = $authStorage->roleName;
-
+            $role = $this->_auth->getIdentity()->roleName;
             if (empty($role)) {
-                $roleTable = new Default_Model_DbTable_MemberRole();
-                $roleDetails = $roleTable->find($roleId);
-
-                $roleDetails = $roleDetails[0];
-                $role = $roleDetails->shortname;
+                throw new Zend_Exception('user role is empty in auth identity object');
             }
         }
 
@@ -101,8 +82,9 @@ class Default_Plugin_Acl extends Zend_Controller_Plugin_Abstract
 
 
         if (false == $this->_acl->has($resource)) {
-            Zend_Registry::get('logger')->err(__METHOD__ . ' - No ACL rule found for ' . print_r($resource, true) . ' : ' . $request->getRequestUri());
+            Zend_Registry::get('logger')->warn(__METHOD__ . ' - No ACL rule found for ' . print_r($resource, true) . ' : ' . $request->getRequestUri());
 
+            //TODO: send users to error page
             $this->_request->setModuleName($this->_noacl['module']);
             $this->_request->setControllerName($this->_noacl['controller']);
             $this->_request->setActionName($this->_noacl['action']);
@@ -116,6 +98,7 @@ class Default_Plugin_Acl extends Zend_Controller_Plugin_Abstract
             $helperEncryptUrl = new Local_Filter_Url_Encrypt();
             $encryptUrl = $helperEncryptUrl->filter($url);
 
+            //TODO: cleanup code
             if (false === $this->_auth->hasIdentity()) {
                 if (false == $this->_request->isXmlHttpRequest()) {
                     $this->_request->setParam('redirect', $encryptUrl);
