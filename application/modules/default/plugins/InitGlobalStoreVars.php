@@ -186,7 +186,6 @@ class Default_Plugin_InitGlobalStoreVars extends Zend_Controller_Plugin_Abstract
             if (is_string($storeCategories)) {
                 $storeCategories = array($storeCategories);
             }
-            Zend_Registry::get('logger')->info(__METHOD__ . '(' . __LINE__ . ') - ' . $storeHostName . ' :: ' . serialize($storeCategories));
         } else {
             Zend_Registry::get('logger')->warn(__METHOD__ . '(' . __LINE__ . ') - ' . $storeHostName . ' :: no categories for domain context configured. Using main categories instead');
             $modelCategories = new Default_Model_DbTable_ProjectCategory();
