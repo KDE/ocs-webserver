@@ -47,10 +47,6 @@ class Local_Auth_AdapterFactory
         $modelMember = new Default_Model_Member();
         $memberData = $modelMember->findActiveMemberByIdentity($identity);
 
-        if (empty($memberData)) {
-            return self::LOGIN_DEFAULT;
-        }
-
         if ($modelMember->isHiveUser($memberData)) {
             return self::LOGIN_HIVE;
         }
