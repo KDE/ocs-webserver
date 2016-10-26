@@ -87,8 +87,11 @@ Still no luck? Search for whatever is missing, or take a look around the rest of
         $errorMsg .= 'USER_AGENT::' . $_SERVER['HTTP_USER_AGENT'] . PHP_EOL;
         $errorMsg .= 'REQUEST_URI::' . $_SERVER['REQUEST_URI'] . PHP_EOL;
         $errorMsg .= 'HOST::' . $_SERVER['HTTP_HOST'] . PHP_EOL;
-        $errorMsg .= 'FORWARDED_IP::' . $_SERVER['HTTP_X_FORWARDED_FOR'] . PHP_EOL;
-        $errorMsg .= 'REMOTE_ADDR::' . $_SERVER['REMOTE_ADDR'] . PHP_EOL;
+        if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            $errorMsg .= 'FORWARDED_IP::' . $_SERVER['HTTP_X_FORWARDED_FOR'] . PHP_EOL;
+        } else {
+            $errorMsg .= 'REMOTE_ADDR::' . $_SERVER['REMOTE_ADDR'] . PHP_EOL;
+        }
 
         if (isset($errors->exception->xdebug_message)) {
             $errorMsg .= 'XDEBUG_MESSAGE::' . $errors->exception->xdebug_message . PHP_EOL;
