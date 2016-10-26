@@ -126,6 +126,10 @@ class Local_Model_Table extends Zend_Db_Table
      */
     protected function generateRowClass($data)
     {
+        if (empty($data)) {
+            return $this->createRow();
+        }
+
         /** @var Zend_Db_Table_Row $classRow */
         $classRow = $this->getRowClass();
 

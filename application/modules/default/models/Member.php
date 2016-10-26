@@ -604,10 +604,10 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         $resultMail = $this->getAdapter()->fetchRow($sqlMail,
             array('active' => self::MEMBER_ACTIVE, 'deleted' => self::MEMBER_NOT_DELETED, 'identity' => $identity));
 
-        if (count($resultName) > 0) {
+        if ((false !== $resultName) AND (count($resultName) > 0)) {
             return $this->generateRowClass($resultName);
         }
-        if (count($resultMail) > 0) {
+        if ((false !== $resultMail) AND (count($resultMail) > 0)) {
             return $this->generateRowClass($resultMail);
         }
         return null;
