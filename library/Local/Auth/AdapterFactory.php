@@ -46,7 +46,6 @@ class Local_Auth_AdapterFactory
     {
         $modelMember = new Default_Model_Member();
         $memberData = $modelMember->findActiveMemberByIdentity($identity);
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - memberData: ' . print_r($memberData, true));
 
         if ($modelMember->isHiveUser($memberData)) {
             return self::LOGIN_HIVE;

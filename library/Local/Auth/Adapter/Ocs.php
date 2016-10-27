@@ -101,7 +101,6 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
             mail = :mail AND 
             password = :password";
 
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - sql: ' . $sql);
         $this->_db->getProfiler()->setEnabled(true);
         $resultSet = $this->_db->fetchAll($sql, array(
             'active' => Default_Model_DbTable_Member::MEMBER_ACTIVE,
@@ -128,7 +127,6 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
             username = :username AND 
             password = :password";
 
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - sql: ' . $sql);
         $this->_db->getProfiler()->setEnabled(true);
         $resultSet = $this->_db->fetchAll($sql, array(
             'active' => Default_Model_DbTable_Member::MEMBER_ACTIVE,

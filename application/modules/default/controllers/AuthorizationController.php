@@ -200,7 +200,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             return;
         }
 
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - Start authentication on host: ' . Zend_Registry::get('store_host'));
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - authentication on host: ' . Zend_Registry::get('store_host'));
         Zend_Registry::get('logger')->info(__METHOD__ . ' - param redirect: ' . $this->getParam('redirect'));
 
         if (false === $formLogin->isValid($_POST)) { // form not valid
@@ -223,8 +223,8 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
 
         if (false == $authResult->isValid()) { // authentication fail
             Zend_Registry::get('logger')->info(__METHOD__ . ' - authentication failed.');
-            Zend_Registry::get('logger')->info(__METHOD__ . ' - auth_user: ' . print_r($values['mail'], true));
-            Zend_Registry::get('logger')->info(__METHOD__ . ' - auth_result: ' . print_r($authResult->getMessages(), true));
+//            Zend_Registry::get('logger')->info(__METHOD__ . ' - auth_user: ' . print_r($values['mail'], true));
+//            Zend_Registry::get('logger')->info(__METHOD__ . ' - auth_result: ' . print_r($authResult->getMessages(), true));
 
             $this->view->errorText = 'index.login.error.auth';
             $this->view->formLogin = $formLogin;
