@@ -589,7 +589,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
      *
      * @param string $identity could be the username or users mail address
      * @param bool $withLoginLocal
-     * @return null|Zend_Db_Table_Row_Abstract
+     * @return Zend_Db_Table_Row_Abstract
      */
     public function findActiveMemberByIdentity($identity, $withLoginLocal = false)
     {
@@ -610,7 +610,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         if ((false !== $resultMail) AND (count($resultMail) > 0)) {
             return $this->generateRowClass($resultMail);
         }
-        return null;
+        return $this->createRow();
     }
 
     /**
@@ -619,6 +619,9 @@ class Default_Model_Member extends Default_Model_DbTable_Member
      */
     public function isHiveUser($memberData)
     {
+        if (empty($memberData)) {
+            return false;
+        }
         if ($memberData->source_id == self::SOURCE_HIVE) {
             return true;
         }

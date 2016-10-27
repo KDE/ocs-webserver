@@ -110,7 +110,6 @@ class Local_Auth_Adapter_RememberMe implements Local_Auth_Adapter_Interface
             AND `session`.expiry >= NOW()
             ";
 
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - sql: ' . $sql);
         $this->_db->getProfiler()->setEnabled(true);
         $resultSet = $this->_db->fetchAll($sql, array(
             'active' => Default_Model_DbTable_Member::MEMBER_ACTIVE,
