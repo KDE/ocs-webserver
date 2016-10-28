@@ -794,34 +794,40 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         $authModel = new Default_Model_Authorization();
         $authUser = $authModel->getAuthUserDataFromUnverified($_vId);
 
-        if ($authUser AND ($authUser->mail_checked == 0)) {
-            Zend_Registry::get('logger')->info(__METHOD__ . ' - activate user from email link : ' . print_r($authUser->member_id,
-                    true) . ' - username: ' . print_r($authUser->username, true));
-            $modelMember = new Default_Model_Member();
-            $result = $modelMember->activateMemberFromVerification($authUser->member_id, $_vId);
+        if (empty($authUser)) {
+            throw new Zend_Controller_Action_Exception('This member account could not activated. verification id:'.print_r($this->getParam('vid'), true));
+        }
 
-            if (false == $result) {
-                throw new Zend_Controller_Action_Exception('Your member account could not activated.');
-            }
-
-            $this->view->member = $authUser;
-            $this->view->username = $authUser->username;
-
-            $this->view->form = new Default_Form_Register();
-            $this->view->overlay = $this->view->render('authorization/registerWelcome.phtml');
-
-            $this->storeAuthSessionData($authUser->member_id);
-
-            $tableProduct = new Default_Model_Project();
-            $this->view->products = $tableProduct->fetchAllProjectsForMember($authUser->member_id);
-
-            $this->forward('index', 'settings', 'default', array('member_id' => $authUser->member_id));
-        } else {
+        if ($authUser AND (false == empty($authUser->email_checked))) {
             $this->view->formRegister = new Default_Form_Register();
+            $this->view->registerErrMsg = "<p>Your account has already been activated.</p><p class='small'><a href='/login'>Log in</a> or try to generate a <a href='/login/forgot'>new password</a> for your account. </p> ";
             $this->view->overlay = $this->view->render('authorization/registerError.phtml');
             $this->fetchTopProducts();
             $this->_helper->viewRenderer('register');
+            return;
         }
+
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - activate user from email link : ' . print_r($authUser->member_id,
+                true) . ' - username: ' . print_r($authUser->username, true));
+        $modelMember = new Default_Model_Member();
+        $result = $modelMember->activateMemberFromVerification($authUser->member_id, $_vId);
+
+        if (false == $result) {
+            throw new Zend_Controller_Action_Exception('Your member account could not activated.');
+        }
+
+        $this->view->member = $authUser;
+        $this->view->username = $authUser->username;
+
+        $this->view->form = new Default_Form_Register();
+        $this->view->overlay = $this->view->render('authorization/registerWelcome.phtml');
+
+        $this->storeAuthSessionData($authUser->member_id);
+
+        $tableProduct = new Default_Model_Project();
+        $this->view->products = $tableProduct->fetchAllProjectsForMember($authUser->member_id);
+
+        $this->forward('index', 'settings', 'default', array('member_id' => $authUser->member_id));
     }
 
     protected function fetchTopProducts()

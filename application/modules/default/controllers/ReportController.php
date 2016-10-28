@@ -44,7 +44,10 @@ class ReportController extends Zend_Controller_Action
         $this->_helper->layout()->disableLayout();
 
         $project_id = (int) $this->getParam('p');
-        $reported_by = (int) Zend_Auth::getInstance()->getStorage()->read()->member_id;
+        $reported_by = 0;
+        if (Zend_Auth::getInstance()->hasIdentity()) {
+            $reported_by = (int) Zend_Auth::getInstance()->getStorage()->read()->member_id;
+        }
 
         $tableReportComments = new Default_Model_DbTable_ReportProducts();
 

@@ -273,20 +273,25 @@ class Default_Model_Authorization
 
     /**
      * @param string $identity
-     * @return object
+     * @return null|object
      */
     public function getAuthUserDataFromUnverified($identity)
     {
         Zend_Registry::get('logger')->info(__METHOD__ . ' - $identity: ' . print_r($identity, true));
         $sql = "
-        SELECT member.* FROM member
-        STRAIGHT_JOIN member_email ON member.member_id = member_email.email_member_id AND email_deleted = 0 AND email_checked IS NULL
-        WHERE member_email.email_verification_value = :verification;
+            SELECT member_email.email_checked, member.*
+            FROM member_email
+            JOIN member on member.member_id = member_email.email_member_id
+            WHERE email_deleted = 0 AND member_email.email_verification_value = :verification
         ";
         $resultRow = $this->_dataTable->getAdapter()->fetchRow($sql, array('verification' => $identity));
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - $resultRow: ' . print_r($resultRow, true));
-        unset($resultRow['password']);
-        return (object)$resultRow;
+        if ($resultRow) {
+            Zend_Registry::get('logger')->info(__METHOD__ . ' - $resultRow: ' . print_r($resultRow, true));
+            unset($resultRow['password']);
+            return (object)$resultRow;
+        }
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - unverified user not found');
+        return null;
     }
 
     /**
