@@ -55,6 +55,7 @@ class Local_Auth_Adapter_RememberMe implements Local_Auth_Adapter_Interface
     public function setIdentity($identity)
     {
         $this->_identity = $identity;
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - ' . print_r($identity, true));
         return $this;
     }
 
@@ -65,6 +66,7 @@ class Local_Auth_Adapter_RememberMe implements Local_Auth_Adapter_Interface
     public function setCredential($credential)
     {
         $this->_credential = $credential;
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - ' . print_r($credential, true));
         return $this;
     }
 
@@ -95,9 +97,6 @@ class Local_Auth_Adapter_RememberMe implements Local_Auth_Adapter_Interface
 
     private function fetchUserData()
     {
-        $config = Zend_Registry::get('config');
-        $remember_me_seconds = $config->settings->auth_session->remember_me->timeout;
-
         $sql = "
             SELECT member.* 
             FROM `session`
@@ -118,9 +117,6 @@ class Local_Auth_Adapter_RememberMe implements Local_Auth_Adapter_Interface
             'member' => $this->_identity,
             'uuid' => $this->_credential
         ));
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - sql: ' . $this->_db->getProfiler()->getLastQueryProfile()->getQuery());
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - sql params: ' . print_r($this->_db->getProfiler()->getLastQueryProfile()->getQueryParams(),
-                true));
         Zend_Registry::get('logger')->info(__METHOD__ . ' - sql take seconds: ' . $this->_db->getProfiler()->getLastQueryProfile()->getElapsedSecs());
         $this->_db->getProfiler()->setEnabled(false);
 

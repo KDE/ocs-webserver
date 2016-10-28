@@ -171,11 +171,11 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
         switch ($this->_encryption) {
             case self::MD5 :
                 $this->_credential = md5($credential);
-                Zend_Registry::get('logger')->info(__METHOD__ . ' - pling: $credential = ' . $this->_credential);
+                Zend_Registry::get('logger')->info(__METHOD__ . ' - pling: ' . $this->_credential);
                 break;
             case self::SHA :
                 $this->_credential = sha1((self::PASSWORDSALT . $credential . self::PASSWORDSALT));
-                Zend_Registry::get('logger')->info(__METHOD__ . ' - hive: $credential = ' . $this->_credential);
+                Zend_Registry::get('logger')->info(__METHOD__ . ' - hive: ' . $this->_credential);
                 break;
             default:
                 throw new Zend_Exception('There is no default case for credential encryption.');
