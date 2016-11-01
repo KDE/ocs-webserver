@@ -296,21 +296,8 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             return;
         }
 
-        //check reCAPTCHA
-        if (false == $this->validateReCaptcha()) {
-            $this->view->formRegister = $formRegister;
-            $this->view->error = 1;
-
-            if ($this->_request->isXmlHttpRequest()) {
-                $this->_helper->json(array(
-                    'status' => 'error',
-                    'message' => '<h3>Your are not a human? Please try again: <a href="/register">Register</a></h3>'
-                ));
-            }
-            return;
-        }
-
         $formRegisterValues = $formRegister->getValues();
+        unset($formRegisterValues['realHuman']);
         $formRegisterValues['password'] = $formRegisterValues['password1'];
 
         $newUserData = $this->createNewUser($formRegisterValues);

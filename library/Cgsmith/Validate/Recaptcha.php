@@ -85,15 +85,15 @@ class Recaptcha extends \Zend_Validate_Abstract
          * Using "CN_name" will still work, but it will raise deprecated errors.
          */
         $peerKey = version_compare(PHP_VERSION, '5.6.0', '<') ? 'CN_name' : 'peer_name';
-        $context = stream_context_create([
-            'http'  => [
+        $context = stream_context_create(array(
+            'http'  => array(
                 'header'      => "Content-type: application/x-www-form-urlencoded\r\n",
                 'method'      => self::POST_METHOD,
                 'content'     => $queryString,
                 'verify_peer' => true,
                 $peerKey      => self::PEER_KEY
-            ]
-        ]);
+            )
+        ));
         $jsonObject = json_decode(file_get_contents(self::SITE_VERIFY_URL,false,$context));
 
         return $jsonObject->success;
