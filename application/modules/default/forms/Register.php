@@ -115,18 +115,20 @@ class Default_Form_Register extends Zend_Form
         $passValid = new Local_Validate_PasswordConfirm($pass2->getValue());
         $pass1->addValidator($passValid);
 
-        /**
-        $captcha = new Zend_Form_Element_Captcha('realHuman',array(
-                'captcha' => array(
-                    'captcha' => 'image',
-                    'font' => APPLICATION_PATH . '/../httpdocs/theme/flatui/fonts/OpenSans-Regular.ttf',
-                    'wordLen' => 6,
-                    'timeout' => 300,
-                ))
+        $this->addPrefixPath('Cgsmith\\Form\\Element', APPLICATION_LIB . '/Cgsmith/Form/Element', Zend_Form::ELEMENT);
+        $this->addElementPrefixPath('Cgsmith\\Validate\\', APPLICATION_LIB . '/Cgsmith/Validate/', Zend_Form_Element::VALIDATE);
+
+//        $this->addElement('recaptcha','g-recaptcha-response', [
+//            'siteKey'   => Zend_Registry::get('config')->recaptcha->sitekey,
+//            'secretKey' => Zend_Registry::get('config')->recaptcha->secretkey,
+//        ]);
+        $captcha = new Cgsmith\Form\Element\Recaptcha('realHuman',
+            array(
+                'siteKey'   => Zend_Registry::get('config')->recaptcha->sitekey,
+                'secretKey' => Zend_Registry::get('config')->recaptcha->secretkey,
+            )
         );
-        $captcha->setAttrib('placeholder', 'Please verify you\'re a human');
-        **/
-        
+
         $submit = $this->createElement('button', 'login');
         $submit->setLabel('Register');
         $submit->setDecorators(array('ViewHelper'));
@@ -137,7 +139,7 @@ class Default_Form_Register extends Zend_Form
             ->addElement($mail)
             ->addElement($pass1)
             ->addElement($pass2)
-            //->addElement($captcha)
+            ->addElement($captcha)
             ->addElement($submit);
     }
 
