@@ -118,16 +118,16 @@ class Default_Form_Register extends Zend_Form
         $this->addPrefixPath('Cgsmith\\Form\\Element', APPLICATION_LIB . '/Cgsmith/Form/Element', Zend_Form::ELEMENT);
         $this->addElementPrefixPath('Cgsmith\\Validate\\', APPLICATION_LIB . '/Cgsmith/Validate/', Zend_Form_Element::VALIDATE);
 
-//        $this->addElement('recaptcha','g-recaptcha-response', [
-//            'siteKey'   => Zend_Registry::get('config')->recaptcha->sitekey,
-//            'secretKey' => Zend_Registry::get('config')->recaptcha->secretkey,
-//        ]);
-        $captcha = new Cgsmith\Form\Element\Recaptcha('realHuman',
-            array(
-                'siteKey'   => Zend_Registry::get('config')->recaptcha->sitekey,
-                'secretKey' => Zend_Registry::get('config')->recaptcha->secretkey,
-            )
-        );
+        $captcha = $this->createElement('recaptcha','realHuman', array(
+            'siteKey'   => Zend_Registry::get('config')->recaptcha->sitekey,
+            'secretKey' => Zend_Registry::get('config')->recaptcha->secretkey,
+        ));
+//        $captcha = new Cgsmith\Form\Element\Recaptcha('realHuman',
+//            array(
+//                'siteKey'   => Zend_Registry::get('config')->recaptcha->sitekey,
+//                'secretKey' => Zend_Registry::get('config')->recaptcha->secretkey,
+//            )
+//        );
 
         $submit = $this->createElement('button', 'login');
         $submit->setLabel('Register');
