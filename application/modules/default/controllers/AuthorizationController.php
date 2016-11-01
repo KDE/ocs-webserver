@@ -204,7 +204,8 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         Zend_Registry::get('logger')->info(__METHOD__ . ' - param redirect: ' . $this->getParam('redirect'));
 
         if (false === $formLogin->isValid($_POST)) { // form not valid
-            Zend_Registry::get('logger')->info(__METHOD__ . ' - form not valid:' . print_r($formLogin->getMessages(), true));
+            Zend_Registry::get('logger')->info(__METHOD__ . ' - form not valid:' . print_r($formLogin->getMessages(),
+                    true));
             $this->view->formLogin = $formLogin;
             $this->view->errorText = 'index.login.error.auth';
             $this->view->error = 1;
@@ -290,24 +291,20 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             }
 
             return;
-        } else {
-            //check reCAPTCHA
-            $formRegisterValues = $formRegister->getValues();
-            //$resultReCaptcha = $formRegisterValues['g-recaptcha-response'];
+        }
 
-            if (false == $this->validateReCaptcha($_POST['g-recaptcha-response'])) {
-                $this->view->formRegister = $formRegister;
-                $this->view->error = 1;
+        //check reCAPTCHA
+        if (false == $this->validateReCaptcha()) {
+            $this->view->formRegister = $formRegister;
+            $this->view->error = 1;
 
-                if ($this->_request->isXmlHttpRequest()) {
-                    $this->_helper->json(array(
-                        'status' => 'error',
-                        'message' => '<h3>Your ar not a human? Please try again: <a href="/register">Register</a></h3>'
-                    ));
-                    return;
-                }
-                return;
+            if ($this->_request->isXmlHttpRequest()) {
+                $this->_helper->json(array(
+                    'status' => 'error',
+                    'message' => '<h3>Your are not a human? Please try again: <a href="/register">Register</a></h3>'
+                ));
             }
+            return;
         }
 
         $formRegisterValues = $formRegister->getValues();
@@ -327,10 +324,16 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         }
     }
 
-    private function validateReCaptcha($reCaptchaResponse)
+    private function validateReCaptcha()
     {
         if ('development' == APPLICATION_ENV) {
             return true;
+        }
+        $reCaptchaResponse = null;
+        if (isset($_POST['g-recaptcha-response'])) {
+            $reCaptchaResponse = $_POST['g-recaptcha-response'];
+        } else {
+            return false;
         }
 
         $google_url = "https://www.google.com/recaptcha/api/siteverify";
@@ -795,7 +798,8 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         $authUser = $authModel->getAuthUserDataFromUnverified($_vId);
 
         if (empty($authUser)) {
-            throw new Zend_Controller_Action_Exception('This member account could not activated. verification id:'.print_r($this->getParam('vid'), true));
+            throw new Zend_Controller_Action_Exception('This member account could not activated. verification id:' . print_r($this->getParam('vid'),
+                    true));
         }
 
         if ($authUser AND (false == empty($authUser->email_checked))) {
