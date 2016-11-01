@@ -20,7 +20,8 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-$users = $this->newUsers($limit = 216,'created_at','DESC');
+$helperNewUsers = new Default_View_Helper_NewUsers();
+$users = $helperNewUsers->newUsers($limit = 216,'created_at','DESC');
 $buildMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $helperImage = new Default_View_Helper_Image();
 ?>
@@ -72,14 +73,6 @@ $helperImage = new Default_View_Helper_Image();
     </main>
     <!-- /new code -->
 
-<script type="text/javascript">
-	var onloadCallback = function() {
-		grecaptcha.render('g-recaptcha', {
-	    	'sitekey' : '6Lej1yITAAAAAAuVqNbfQzGgeASWq4sAJ9pOpql6'
-	  	});
-  };
-</script>  
-  
 <script>
 $('document').ready(function(){
 
@@ -142,14 +135,9 @@ $('document').ready(function(){
     };
 
     ValidateAjax.initialize('<?= $this->formRegister->getAttrib('id') ?>', '/register/validate');
-
 });
 </script>
 
-<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
-        async defer>
-    </script>
-    
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
             PartialJson.setup();

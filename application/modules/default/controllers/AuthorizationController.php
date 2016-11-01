@@ -269,6 +269,9 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
 
     public function registerAction()
     {
+        $this->view->headScript()->appendFile('//www.google.com/recaptcha/api.js');
+        $this->view->addHelperPath(APPLICATION_LIB . '/Cgsmith/View/Helper', 'Cgsmith\\View\\Helper\\');
+
         $this->view->redirect = $this->getParam('redirect');
 
         $formRegister = new Default_Form_Register();
