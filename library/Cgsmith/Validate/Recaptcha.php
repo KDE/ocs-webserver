@@ -74,11 +74,11 @@ class Recaptcha extends \Zend_Validate_Abstract
      */
     protected function _verify($value)
     {
-        $queryString = http_build_query([
+        $queryString = http_build_query(array(
             'secret'   => $this->_secretKey,
             'response' => $value,
             'remoteIp' => $_SERVER['REMOTE_ADDR']
-        ]);
+        ));
 
         /**
          * PHP 5.6.0 changed the way you specify the peer name for SSL context options.
