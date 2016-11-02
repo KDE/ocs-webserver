@@ -118,7 +118,7 @@ class Default_Form_Register extends Zend_Form
         $this->addPrefixPath('Cgsmith\\Form\\Element', APPLICATION_LIB . '/Cgsmith/Form/Element', Zend_Form::ELEMENT);
         $this->addElementPrefixPath('Cgsmith\\Validate\\', APPLICATION_LIB . '/Cgsmith/Validate/', Zend_Form_Element::VALIDATE);
 
-        $captcha = $this->createElement('recaptcha','realHuman', array(
+        $captcha = $this->createElement('recaptcha','g-recaptcha-response', array(
             'siteKey'   => Zend_Registry::get('config')->recaptcha->sitekey,
             'secretKey' => Zend_Registry::get('config')->recaptcha->secretkey,
         ));

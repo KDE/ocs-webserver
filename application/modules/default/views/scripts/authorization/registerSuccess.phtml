@@ -20,28 +20,28 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+$hostname = Zend_Registry::get('store_host') ? Zend_Registry::get('store_host') : Zend_Controller_Front::getInstance()->getRequest()->getHttpHost();
 ?>
 <!-- Modal -->
-<div id="thank-you-overlay"
-     class="modal fade hide"
-     tabindex="-1"
-     role="dialog"
-     aria-labelledby="myModalLabel"
-     aria-hidden="true">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="myModalLabel" class="center"><?= $this->translate('Thank you') ?></h3>
-    </div>
-    <div class="modal-body">
-        <div class="lightblue center"><?= $this->translate('for registering at openDesktop.org') ?></div>
-        <p class="center"><?= $this->translate('Please check your email account and confirm your email address.') ?></p>
+<div id="thank-you-overlay" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog content-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="myModalLabel" class="center"><?= $this->translate('Thank you') ?></h3>
+            </div>
+            <div class="modal-body">
+                <div class="lightblue center">for registering at <?=$hostname?></div>
+                <p class="center"><?= $this->translate('Please check your email account and confirm your email address.') ?></p>
 
-        <div class="center"><a href="/settings/"
-                               data-dismiss="modal"
-                               class="btn btn-native btn-min-width"><?= $this->translate('Close') ?></a></div>
-    </div>
-    <div class="modal-footer">
+                <div class="center"><a href="/settings/"
+                                       data-dismiss="modal"
+                                       class="btn btn-native btn-min-width"><?= $this->translate('Close') ?></a></div>
+            </div>
+            <div class="modal-footer">
 
+            </div>
+        </div>
     </div>
 </div>
 <?php $this->inlineScript()->appendScript("

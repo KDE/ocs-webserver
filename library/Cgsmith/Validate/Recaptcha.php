@@ -30,6 +30,9 @@ class Recaptcha extends \Zend_Validate_Abstract
     /** @const string peer key for communication */
     const PEER_KEY = 'www.google.com';
 
+    /** @const string default name for captcha result in $_POST array */
+    const CAPTCHA_NAME = 'g-recaptcha-response';
+
     protected $_messageTemplates = array(
         self::INVALID_CAPTCHA => 'The captcha was invalid',
         self::CAPTCHA_EMPTY   => 'The captcha must be completed'
@@ -51,13 +54,18 @@ class Recaptcha extends \Zend_Validate_Abstract
      */
     public function isValid($value, $context = null)
     {
-        if (empty($value)) {
+        if (empty($value) AND (false == isset($context[self::CAPTCHA_NAME]))) {
             $this->_error(self::CAPTCHA_EMPTY);
             return false;
         }
-        $this->_value = $value;
 
-        if (!$this->_verify($value)) {
+        if (empty($value)) {
+            $this->_value = $context[self::CAPTCHA_NAME];
+        } else {
+            $this->_value = $value;
+        }
+
+        if (false == $this->_verify($this->_value)) {
             $this->_error(self::INVALID_CAPTCHA);
             return false;
         }
