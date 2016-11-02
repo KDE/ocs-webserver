@@ -297,7 +297,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         }
 
         $formRegisterValues = $formRegister->getValues();
-        unset($formRegisterValues['realHuman']);
+        unset($formRegisterValues['g-recaptcha-response']);
         $formRegisterValues['password'] = $formRegisterValues['password1'];
 
         $newUserData = $this->createNewUser($formRegisterValues);
@@ -310,46 +310,9 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             $viewRegisterForm = $this->view->render('authorization/partials/registerSuccess.phtml');
             $this->_helper->json(array('status' => 'ok', 'message' => $viewRegisterForm));
         } else {
-            $this->_helper->viewRenderer('registerSuccess');
+            $this->view->overlay = $this->view->render('authorization/registerSuccess.phtml');
+            $this->forward('index', 'explore', 'default');
         }
-    }
-
-    private function validateReCaptcha()
-    {
-        if ('development' == APPLICATION_ENV) {
-            return true;
-        }
-        $reCaptchaResponse = null;
-        if (isset($_POST['g-recaptcha-response'])) {
-            $reCaptchaResponse = $_POST['g-recaptcha-response'];
-        } else {
-            return false;
-        }
-
-        $google_url = "https://www.google.com/recaptcha/api/siteverify";
-        $secret = '6Lej1yITAAAAAO9DzumzsLBhv4J6-zKTqNDmLXPC';
-        $ip = $_SERVER['REMOTE_ADDR'];
-        $url = $google_url . "?secret=" . $secret . "&response=" . $reCaptchaResponse . "&remoteip=" . $ip;
-
-
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curl, CURLOPT_TIMEOUT, 10);
-        curl_setopt($curl, CURLOPT_USERAGENT,
-            "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.2.16) Gecko/20110319 Firefox/3.6.16");
-        $curlData = curl_exec($curl);
-        curl_close($curl);
-
-        $res = json_decode($curlData, true);
-        $log = Zend_Registry::get('logger');
-        $log->debug(__METHOD__ . " - ********** validateReCaptcha: **********");
-        $log->debug(__METHOD__ . ' - ' . print_r($res, true));
-        $log->debug(__METHOD__ . " - ********** validateReCaptcha: **********");
-
-        $success = ($res['success'] == 1);
-
-        return $success;
     }
 
     /**

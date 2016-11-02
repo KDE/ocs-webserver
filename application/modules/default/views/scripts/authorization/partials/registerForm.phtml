@@ -34,18 +34,20 @@
 
         <?php endif; ?>
     </div>
-    <form class="standard-form row-fluid center partialjson" id="<?= $this->formRegister->getAttrib('id'); ?>"
+    <form class="standard-form row-fluid center" id="<?= $this->formRegister->getAttrib('id'); ?>"
           action="<?= $this->formRegister->getAction(); ?>"
           method="<?= $this->formRegister->getMethod(); ?>"
-          data-target="#register-box">
+          data-target="#register-box"
+          data-load-state="#<?= $this->formRegister->login->getId() ?>"
+    >
         <?= $this->formRegister->csrfRegister ?>
         <div class="form-group has-feedback"><?= $this->formRegister->username ?></div>
         <div class="form-group has-feedback"><?= $this->formRegister->mail ?></div>
         <div class="form-group has-feedback"><?= $this->formRegister->password1 ?></div>
         <div class="form-group has-feedback"><?= $this->formRegister->password2 ?></div>
-        <div class="form-group has-feedback"><?= $this->formRegister->realHuman?></div>
+        <div class="form-group has-feedback"><?= $this->formRegister->grecaptcharesponse?></div>
 
-        <?= $this->formRegister->login ?>
+        <button name="<?= $this->formRegister->login->getName() ?>" id="<?= $this->formRegister->login->getId() ?>" type="submit" class="btn btn-min-width btn-native"><?= $this->formRegister->login->getLabel() ?> <i id="load-state" class="fa fa-spinner fa-pulse hidden" aria-hidden="true"></i></button>
     </form>
 
     <div class="small light lightgrey center">

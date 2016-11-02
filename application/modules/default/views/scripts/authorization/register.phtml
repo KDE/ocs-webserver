@@ -90,11 +90,17 @@ $('document').ready(function(){
                 return false;
             });
             $(form_id).on('submit', function(e){
-                e.preventDefault();
+                var target = $(this).attr("data-target");
+                var loadState = $(this).attr('data-load-state');
+
+                $(target).find(loadState).prop('disabled', true);
+                $(target).find(loadState).find('i').removeClass('hidden');
+
                 var validateValues = ValidateAjax.isClean;
                 for (var k in validateValues){
                     if (validateValues.hasOwnProperty(k)) {
                         if (!validateValues[k]) {
+                            e.preventDefault();
                             return false;
                         }
                     }
@@ -140,6 +146,6 @@ $('document').ready(function(){
 
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
-            PartialJson.setup();
+            // PartialJson.setup();
         });
     ');
