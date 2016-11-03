@@ -287,12 +287,11 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         }
 
         //update sub categories and save it in project
-        $log = Zend_Registry::get('logger');
-        $log->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . ' - setCatId New: ' . $values['project_category_id'] . "\n");
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - $values[\'project_category_id\']: ' . $values['project_category_id'] . "\n");
         if (isset($values['project_subcategory_id']) AND is_array($values['project_subcategory_id']) AND count($values['project_subcategory_id'] == 1)) {
             $values['project_category_id'] = $values['project_subcategory_id'][0];
         }
-        $log->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . ' - setCatId New: ' . $values['project_category_id'] . "\n");
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - $values[\'project_category_id\'] New: ' . $values['project_category_id'] . "\n");
 
         // form was valid, so we can set status to inactive
         $values['status'] = Default_Model_DbTable_Project::PROJECT_ACTIVE;
@@ -314,18 +313,11 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         if (!isset($values['image_small']) || $values['image_small'] == '') {
             $values['image_small'] = $mediaServerUrls[0];
             $newProject = $modelProject->updateProject($newProject->project_id, $values);
-            $log->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . ' - set image_small: ' . $values['image_small'] . '\n');
+            Zend_Registry::get('logger')->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . ' - set image_small: ' . $values['image_small'] . '\n');
         } else {
-            $log->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . ' - set image_small: Not neeed. ' . $values['image_small'] . '\n');
+            Zend_Registry::get('logger')->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . ' - set image_small: Not need. ' . $values['image_small'] . '\n');
 
         }
-
-        /*
-        //save license information
-        if ($values['cc_license'] == true) {
-            $modelProjectLicense = new Default_Model_DbTable_ProjectCcLicense();
-            $modelProjectLicense->saveByKey($values);
-        }*/
 
         //New Project in Session, for AuthValidation (owner)
         $this->_auth->getIdentity()->projects[$newProject->project_id] = array('project_id' => $newProject->project_id);
