@@ -449,10 +449,7 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
               </div>
             
           </div>
-
-
-       </div> <!--end col-lg-2-->
-  </div>
+  </div> <!--end col-lg-2-->
 </div>
 </main>
 
@@ -475,74 +472,64 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
     
     
     <script>
-        $(document).ready(function () {     
+        $(document).ready(function () {
 
-          
+
             $("a#inline").fancybox({
-                  'hideOnContentClick':           true,                                                           
-                  'autoScale'                     : false,                                                                                                                      
-                  'cyclic'                        : 'true',
-                  'transitionIn'                  : 'elastic',
-                  'transitionOut'                 : 'elastic'
+                'hideOnContentClick': true,
+                'autoScale': false,
+                'cyclic': 'true',
+                'transitionIn': 'elastic',
+                'transitionOut': 'elastic'
             });
-           
 
-            $('.carousel-inner img').each(function(index) {
-                    $(this).on("click", function(){                                                     
-                      $( "#product-main" ).toggleClass( "col-lg-10" );
-                      $( "#product-main" ).toggleClass( "col-lg-12" );
-                      $( "#product-main" ).toggleClass( "imgfull" );   
-                      $( "#product-main" ).toggleClass( "imgsmall" );   
-                      $( "#product-tabs-container" ).toggleClass( "col-lg-10" );  
-                      $( "#product-tabs-container" ).toggleClass( "col-lg-12" );  
-                      $( "#product-main-img-container" ).toggleClass( "row" );    
-                      
-                      if($( "#product-main" ).hasClass( "imgfull" ))
-                      {
-                        var xtop = $( "#product-tabs-container" ).position().top+100;    
-                        $("#product-maker").css({top: xtop, right: 0, position:'absolute'});
-                      }
-                      else
-                      {
-                         $("#product-maker").css("position","static");
-                      }
 
-                    });
+            $('.carousel-inner img').each(function (index) {
+                $(this).on("click", function () {
+                    $("#product-main").toggleClass("col-lg-10");
+                    $("#product-main").toggleClass("col-lg-12");
+                    $("#product-main").toggleClass("imgfull");
+                    $("#product-main").toggleClass("imgsmall");
+                    $("#product-tabs-container").toggleClass("col-lg-10");
+                    $("#product-tabs-container").toggleClass("col-lg-12");
+                    $("#product-main-img-container").toggleClass("row");
+
+                    if ($("#product-main").hasClass("imgfull")) {
+                        var xtop = $("#product-tabs-container").position().top + 100;
+                        $("#product-maker").css({top: xtop, right: 0, position: 'absolute'});
+                    }
+                    else {
+                        $("#product-maker").css("position", "static");
+                    }
+
                 });
+            });
 
-            
 
             var originHeightProdutMaker = $('#product-maker').height();
-         
-            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {                
-                 $('#product-maker').height(originHeightProdutMaker);
-                 fixProductMakeHeight();
+
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                $('#product-maker').height(originHeightProdutMaker);
+                fixProductMakeHeight();
             });
 
         });
 
-        activeTabFiles = function(e)
-       {            
-          $('.nav-tabs a[href="#files-panel"]').tab('show');
-          return false;
-       }    
+        activeTabFiles = function (e) {
+            $('.nav-tabs a[href="#files-panel"]').tab('show');
+            return false;
+        }
 
-        fixProductMakeHeight = function()
-        {
-           if($('#product-main').height()>$('#product-maker').height())
-            {           
-              $('#product-maker').height($('#product-main').height());
+        fixProductMakeHeight = function () {
+            if ($('#product-main').height() > $('#product-maker').height()) {
+                $('#product-maker').height($('#product-main').height());
             }
         }
 
 
-
-
-        $(window).load(function(){
+        $(window).load(function () {
             fixProductMakeHeight();
         })
-
-
 
     </script>
 <?php $this->inlineScript()->appendScript(
