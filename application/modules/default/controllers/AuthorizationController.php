@@ -60,12 +60,11 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         $user = $userTable->fetchCheckedActiveLocalMemberByEmail($emailAddress);
 
         if ($user) {
-
+            $oldPasswordHash = $user->password;
             $newPass = $this->generateNewPassword();
-
             $newPasswordHash = $this->storeNewPassword($newPass, $user);
 
-            Zend_Registry::get('logger')->info(__METHOD__ . ' - old password hash: ' . $user->password . ', new password hash: ' . $newPasswordHash);
+            Zend_Registry::get('logger')->info(__METHOD__ . ' - old password hash: ' . $oldPasswordHash . ', new password hash: ' . $newPasswordHash);
 
             $this->sendNewPassword($user, $newPass);
 
