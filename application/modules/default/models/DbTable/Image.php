@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -58,10 +59,10 @@ class Default_Model_DbTable_Image extends Zend_Db_Table_Abstract
         return $images;
     }
 
-    public function storeExternalImage($url, $fileExtention=null)
+    public function storeExternalImage($url, $fileExtension = null)
     {
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . print_r(func_get_args(), true));
-        $tmpFileName = $this->storeRemoteImage($url, $fileExtention);
+        $tmpFileName = $this->storeRemoteImage($url, $fileExtension);
 
         if (file_exists(IMAGES_UPLOAD_PATH . 'tmp/' . $tmpFileName)) {
             $content_type = mime_content_type(IMAGES_UPLOAD_PATH . 'tmp/' . $tmpFileName);
@@ -74,7 +75,7 @@ class Default_Model_DbTable_Image extends Zend_Db_Table_Abstract
         return $filename;
     }
 
-    public function storeRemoteImage($url, $fileExtention=null, &$file_info = null)
+    public function storeRemoteImage($url, $fileExtention = null, &$file_info = null)
     {
         //$host = parse_url( $url, PHP_URL_HOST );
         //$path = parse_url($url, PHP_URL_PATH);
@@ -83,8 +84,8 @@ class Default_Model_DbTable_Image extends Zend_Db_Table_Abstract
         //$url = 'http://'.$host.$path.'?'.urlencode($query);
         $limit = 4194304; #4Mb
         $filename = md5($url);
-        if($fileExtention) {
-        	$filename .= '.'.$fileExtention;
+        if ($fileExtention) {
+            $filename .= '.' . $fileExtention;
         }
         $file_info = array();
         if (file_exists(IMAGES_UPLOAD_PATH . 'tmp/' . $filename)) {
@@ -218,13 +219,25 @@ class Default_Model_DbTable_Image extends Zend_Db_Table_Abstract
         $destinationFile = IMAGES_UPLOAD_PATH . $generatedFilename . $this->_allowed[$content_type];
 
         if (copy($filePathName, $destinationFile)) {
-            Zend_Registry::get('logger')->debug(__METHOD__ . ' - Start upload picture - ' . print_r($destinationFile, true));
+            if (file_exists($filePathName)) {
+                if(false === unlink($filePathName)) {
+                    Zend_Registry::get('logger')->warn(__METHOD__ . ' - can not delete temp file: ' . $filePathName);
+                }
+            }
+            Zend_Registry::get('logger')->debug(__METHOD__ . ' - Start upload picture - ' . print_r($destinationFile,
+                    true));
             $srcPathOnMediaServer = $this->sendImageToMediaServer($destinationFile, $content_type);
+            if (file_exists($destinationFile)) {
+                if(false === unlink($destinationFile)) {
+                    Zend_Registry::get('logger')->warn(__METHOD__ . ' - can not delete file: ' . $destinationFile);
+                }
+            }
             if (!$srcPathOnMediaServer) {
                 throw new Exception("Error in upload to CDN-Server. \n Server message:\n" . $this->_errorMsg);
             }
 
-            Zend_Registry::get('logger')->debug(__METHOD__ . ' - End upload picture - ' . print_r(IMAGES_UPLOAD_PATH . $srcPathOnMediaServer, true));
+            Zend_Registry::get('logger')->debug(__METHOD__ . ' - End upload picture - ' . print_r(IMAGES_UPLOAD_PATH . $srcPathOnMediaServer,
+                    true));
 
             return $srcPathOnMediaServer;
         }
@@ -247,9 +260,6 @@ class Default_Model_DbTable_Image extends Zend_Db_Table_Abstract
 
         $client = new Zend_Http_Client($url);
         $client->setFileUpload($fullFilePath, basename($fullFilePath), null, $mimeType);
-        //$client->setConfig(array('timeout'      => 1));
-        //$client->setParameterPost('XDEBUG_SESSION_START', 'PHPSTORM');
-        //$client->setAuth('ubuntu', 'ubuntu.', Zend_Http_Client::AUTH_BASIC);
 
         $response = $client->request('POST');
 
@@ -317,19 +327,31 @@ class Default_Model_DbTable_Image extends Zend_Db_Table_Abstract
                 return null;
             }
             $contentType = mime_content_type($fileInfo['tmp_name']);
-            if (!in_array($contentType, array_keys($this->_allowed))) {
+            if (false === in_array($contentType, array_keys($this->_allowed))) {
                 throw new Zend_Exception('Format not allowed: ' . $contentType . ' for img: ' . $fileInfo['name']);
             }
             $generatedFilename = $this->_generateFilename($fileInfo['tmp_name']);
             $destinationFile = IMAGES_UPLOAD_PATH . $generatedFilename . $this->_allowed[$contentType];
 
             if (copy($fileInfo['tmp_name'], $destinationFile)) {
-                Zend_Registry::get('logger')->debug(__METHOD__ . ' - Start upload picture - ' . print_r($destinationFile, true));
+                if (file_exists($fileInfo['tmp_name'])) {
+                    if(false === unlink($fileInfo['tmp_name'])) {
+                        Zend_Registry::get('logger')->warn(__METHOD__ . ' - can not delete temp file: ' . $fileInfo['tmp_name']);
+                    }
+                }
+                Zend_Registry::get('logger')->debug(__METHOD__ . ' - Start upload picture - ' . print_r($destinationFile,
+                        true));
                 $srcPathOnMediaServer = $this->sendImageToMediaServer($destinationFile, $contentType);
+                if (file_exists($destinationFile)) {
+                    if(false === unlink($destinationFile)) {
+                        Zend_Registry::get('logger')->warn(__METHOD__ . ' - can not delete file: ' . $destinationFile);
+                    }
+                }
                 if (!$srcPathOnMediaServer) {
                     throw new Zend_Exception("Error in upload to CDN-Server. \n Server message:\n" . $this->_errorMsg);
                 }
-                Zend_Registry::get('logger')->debug(__METHOD__ . ' - End upload a picture - ' . print_r(IMAGES_UPLOAD_PATH . $srcPathOnMediaServer, true));
+                Zend_Registry::get('logger')->debug(__METHOD__ . ' - End upload a picture - ' . print_r(IMAGES_UPLOAD_PATH . $srcPathOnMediaServer,
+                        true));
 
                 return $srcPathOnMediaServer;
             }
@@ -362,12 +384,14 @@ class Default_Model_DbTable_Image extends Zend_Db_Table_Abstract
             $destinationFile = IMAGES_UPLOAD_PATH . $generatedFilename . $this->_allowed[$contentType];
 
             if (copy($fileInfo['tmp_name'], $destinationFile)) {
-                Zend_Registry::get('logger')->debug(__METHOD__ . ' - Start upload picture - ' . print_r($destinationFile, true));
+                Zend_Registry::get('logger')->debug(__METHOD__ . ' - Start upload picture - ' . print_r($destinationFile,
+                        true));
                 $srcPathOnMediaServer = $this->sendImageToMediaServer($destinationFile, $contentType);
                 if (!$srcPathOnMediaServer) {
                     throw new Zend_Exception("Error in upload to CDN-Server. \n Server message:\n" . $this->_errorMsg);
                 }
-                Zend_Registry::get('logger')->debug(__METHOD__ . ' - End upload a picture - ' . print_r(IMAGES_UPLOAD_PATH . $srcPathOnMediaServer, true));
+                Zend_Registry::get('logger')->debug(__METHOD__ . ' - End upload a picture - ' . print_r(IMAGES_UPLOAD_PATH . $srcPathOnMediaServer,
+                        true));
 
                 $resultPath[] = $srcPathOnMediaServer;
             }

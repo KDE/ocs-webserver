@@ -266,7 +266,8 @@ class Default_Model_Authorization
         $where = $dataTable->select()->where($dataTable->getAdapter()->quoteIdentifier($identifier, true) . ' = ?',
             $identity);
         $resultRow = $dataTable->fetchRow($where)->toArray();
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - $resultrow: ' . print_r($resultRow, true));
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - user found. username: ' . print_r($resultRow['username'],
+                true));
         unset($resultRow['password']);
         return (object)$resultRow;
     }
@@ -281,16 +282,16 @@ class Default_Model_Authorization
         $sql = "
             SELECT member_email.email_checked, member.*
             FROM member_email
-            JOIN member on member.member_id = member_email.email_member_id
+            JOIN member ON member.member_id = member_email.email_member_id
             WHERE email_deleted = 0 AND member_email.email_verification_value = :verification
         ";
         $resultRow = $this->_dataTable->getAdapter()->fetchRow($sql, array('verification' => $identity));
         if ($resultRow) {
-            Zend_Registry::get('logger')->info(__METHOD__ . ' - $resultRow: ' . print_r($resultRow, true));
+            Zend_Registry::get('logger')->info(__METHOD__ . " - found (member_id,mail,is_active,mail_checked): ({$resultRow['username']},{$resultRow['mail']},{$resultRow['is_active']},{$resultRow['mail_checked']})");
             unset($resultRow['password']);
             return (object)$resultRow;
         }
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - unverified user not found');
+        Zend_Registry::get('logger')->warn(__METHOD__ . ' - unverified user not found');
         return null;
     }
 
