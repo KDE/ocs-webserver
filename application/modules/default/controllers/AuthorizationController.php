@@ -763,7 +763,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             return;
         }
 
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - activate user from email link : ' . print_r($authUser->member_id,
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - activate user from email link. member_id: ' . print_r($authUser->member_id,
                 true) . ' - username: ' . print_r($authUser->username, true));
         $modelMember = new Default_Model_Member();
         $result = $modelMember->activateMemberFromVerification($authUser->member_id, $_vId);
@@ -772,6 +772,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             throw new Zend_Controller_Action_Exception('Your member account could not activated.');
         }
 
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - user activated. member_id: ' . print_r($authUser->member_id,true));
         $this->view->member = $authUser;
         $this->view->username = $authUser->username;
 
