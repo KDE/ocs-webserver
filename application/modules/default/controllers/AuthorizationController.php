@@ -268,11 +268,11 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
 
     public function registerAction()
     {
-        $this->view->headScript()->appendFile('//www.google.com/recaptcha/api.js');
-        $this->view->addHelperPath(APPLICATION_LIB . '/Cgsmith/View/Helper', 'Cgsmith\\View\\Helper\\');
 
         $this->view->redirect = $this->getParam('redirect');
 
+        $this->view->headScript()->appendFile('//www.google.com/recaptcha/api.js');
+        $this->view->addHelperPath(APPLICATION_LIB . '/Cgsmith/View/Helper', 'Cgsmith\\View\\Helper\\');
         $formRegister = new Default_Form_Register();
 
         if ($this->_request->isGet()) {
@@ -755,6 +755,8 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         }
 
         if ($authUser AND (false == empty($authUser->email_checked))) {
+            $this->view->headScript()->appendFile('//www.google.com/recaptcha/api.js');
+            $this->view->addHelperPath(APPLICATION_LIB . '/Cgsmith/View/Helper', 'Cgsmith\\View\\Helper\\');
             $this->view->formRegister = new Default_Form_Register();
             $this->view->registerErrMsg = "<p>Your account has already been activated.</p><p class='small'><a href='/login'>Log in</a> or try to generate a <a href='/login/forgot'>new password</a> for your account. </p> ";
             $this->view->overlay = $this->view->render('authorization/registerError.phtml');
@@ -776,6 +778,8 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         $this->view->member = $authUser;
         $this->view->username = $authUser->username;
 
+        $this->view->headScript()->appendFile('//www.google.com/recaptcha/api.js');
+        $this->view->addHelperPath(APPLICATION_LIB . '/Cgsmith/View/Helper', 'Cgsmith\\View\\Helper\\');
         $this->view->form = new Default_Form_Register();
         $this->view->overlay = $this->view->render('authorization/registerWelcome.phtml');
 
@@ -973,6 +977,8 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
 
+        $this->view->headScript()->appendFile('//www.google.com/recaptcha/api.js');
+        $this->view->addHelperPath(APPLICATION_LIB . '/Cgsmith/View/Helper', 'Cgsmith\\View\\Helper\\');
         $formRegister = new Default_Form_Register();
 
         $name = $this->getParam('name');
