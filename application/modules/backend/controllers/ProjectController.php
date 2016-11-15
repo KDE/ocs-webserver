@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -113,26 +114,13 @@ class Backend_ProjectController extends Local_Controller_Action_Backend
         $this->_model->setDeleted($dataId);
 
         $product = $this->_model->find($dataId)->current();
+
+        $identity = Zend_Auth::getInstance()->getIdentity();
+        Default_Model_ActivityLog::logActivity($dataId, $dataId, $identity->member_id, Default_Model_ActivityLog::BACKEND_PROJECT_DELETE, $product);
+
         // this will delete the product and request the ppload for deleting associated files
         $command = new Backend_Commands_DeleteProductExtended($product);
         $command->doCommand();
-
-        // send delete command to queue
-//        $queue = Local_Queue_Factory::getQueue('search');
-//        $command = new Backend_Commands_DeleteProductFromIndex($product->project_id, $product->project_category_id);
-//        $msg = $queue->send(serialize($command));
-
-        // ppload
-        // Delete collection
-//        if ($product->ppload_collection_id) {
-//            // require_once 'Ppload/Api.php';
-//            $pploadApi = new Ppload_Api(array(
-//                'apiUri' => PPLOAD_API_URI,
-//                'clientId' => PPLOAD_CLIENT_ID,
-//                'secret' => PPLOAD_SECRET
-//            ));
-//            $collectionResponse = $pploadApi->deleteCollection(ltrim($product->ppload_collection_id, '!'));
-//        }
 
         $jTableResult = array();
         $jTableResult['Result'] = self::RESULT_OK;
@@ -157,25 +145,22 @@ class Backend_ProjectController extends Local_Controller_Action_Backend
                 $product->featured = $featured;
                 $product->save();
 
+                Default_Model_ActivityLog::logActivity($projectId, $projectId, $identity->member_id, Default_Model_ActivityLog::BACKEND_PROJECT_FEATURE, $product);
+
                 $jTableResult = array();
                 $jTableResult['Result'] = self::RESULT_OK;
 
                 $this->_helper->json($jTableResult);
-            } else {
-                $jTableResult = array();
-                $jTableResult['Result'] = self::RESULT_ERROR;
-                $this->_helper->json($jTableResult);
             }
-        } else {
-            $jTableResult = array();
-            $jTableResult['Result'] = self::RESULT_ERROR;
-            $this->_helper->json($jTableResult);
         }
+
+        $jTableResult = array();
+        $jTableResult['Result'] = self::RESULT_ERROR;
+        $this->_helper->json($jTableResult);
     }
 
     public function doapproveAction()
     {
-
         $auth = Zend_Auth::getInstance();
         if ($auth->hasIdentity()) {
             $identity = $auth->getIdentity();
@@ -189,22 +174,17 @@ class Backend_ProjectController extends Local_Controller_Action_Backend
                 $product->approved = $approved;
                 $product->save();
 
+                Default_Model_ActivityLog::logActivity($projectId, $projectId, $identity->member_id, Default_Model_ActivityLog::BACKEND_PROJECT_APPROVED, $product);
+
                 $jTableResult = array();
                 $jTableResult['Result'] = self::RESULT_OK;
 
                 $this->_helper->json($jTableResult);
-            } else {
-                $jTableResult = array();
-                $jTableResult['Result'] = self::RESULT_ERROR;
-                $this->_helper->json($jTableResult);
             }
-        } else {
-            $jTableResult = array();
-            $jTableResult['Result'] = self::RESULT_ERROR;
-            $this->_helper->json($jTableResult);
         }
-
-
+        $jTableResult = array();
+        $jTableResult['Result'] = self::RESULT_ERROR;
+        $this->_helper->json($jTableResult);
     }
 
 
@@ -216,6 +196,9 @@ class Backend_ProjectController extends Local_Controller_Action_Backend
         $product = $this->_model->find($projectId)->current();
         $product->project_category_id = $catId;
         $product->save();
+
+        $identity = Zend_Auth::getInstance()->getIdentity();
+        Default_Model_ActivityLog::logActivity($projectId, $projectId, $identity->member_id, Default_Model_ActivityLog::BACKEND_PROJECT_CAT_CHANGE, $product);
 
         $jTableResult = array();
         $jTableResult['Result'] = self::RESULT_OK;

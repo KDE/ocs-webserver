@@ -458,14 +458,15 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
 
     <div id="product-donate">
     <?php
-    echo $this->partial(
-        'product/partials/productDonat.phtml',
-        array(
-            "member" => $this->member,
-            "product" => $this->product,
-            'urlPay' => $this->urlPay,
-        )
-    );
+//    echo $this->partial(
+//        'product/partials/productDonat.phtml',
+//        array(
+//            "member" => $this->member,
+//            "product" => $this->product,
+//            'urlPay' => $this->urlPay,
+//        )
+//    );
+    echo $this->render('product/partials/productDonat.phtml');
     ?>
     </div>
 
