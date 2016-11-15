@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -59,9 +60,9 @@ class Backend_Commands_DeleteProductFromIndex implements Local_Queue_CommandInte
         $product = array();
         $product['project_id'] = $this->productId;
         $product['project_category_id'] = $this->catId;
-        
+
         $modelSearch = new Default_Model_Search_Lucene();
         $modelSearch->deleteDocument($product);
     }
-    
+
 }

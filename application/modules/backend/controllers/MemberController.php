@@ -19,6 +19,7 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
+
 /**
  * Class Backend_MemberController
  * @deprecated
@@ -49,19 +50,6 @@ class Backend_MemberController extends Zend_Controller_Action
     public function indexAction()
     {
 
-
-//        $sel = $this->_table->select()->setIntegrityCheck(false);
-//        $sel->from($this->_table)
-//                ->where('is_deleted=0')
-//                ->where('is_active=1')
-//                ;
-//
-//        $allMembers = $this->_table->fetchAll($sel);
-//
-//        $paginator = Zend_Paginator::factory($sel);
-//        $paginator->setCurrentPageNumber($this->getParam('page'));
-//
-//        $this->view->paginator = $paginator;
     }
 
 
@@ -142,6 +130,9 @@ class Backend_MemberController extends Zend_Controller_Action
         $member_id = $this->getParam('member_id');
 
         $this->_model->setDeleted($member_id);
+
+        $identity = Zend_Auth::getInstance()->getIdentity();
+        Default_Model_ActivityLog::logActivity($member_id, null, $identity->member_id, Default_Model_ActivityLog::BACKEND_USER_DELETE, null);
 
         $this->_helper->json(true);
     }

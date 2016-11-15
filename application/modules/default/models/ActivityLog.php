@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -60,6 +61,14 @@ class Default_Model_ActivityLog extends Default_Model_DbTable_ActivityLog
     const MEMBER_UNFOLLOWED = 151;
     const MEMBER_SHARED = 152;
 
+    const BACKEND_LOGIN = 302;
+    const BACKEND_LOGOUT = 304;
+    const BACKEND_PROJECT_DELETE = 310;
+    const BACKEND_PROJECT_FEATURE = 312;
+    const BACKEND_PROJECT_APPROVED = 314;
+    const BACKEND_PROJECT_CAT_CHANGE = 316;
+    const BACKEND_USER_DELETE = 320;
+
     protected static $referenceType = array(
         0 => 'project',
         1 => 'project',
@@ -101,8 +110,60 @@ class Default_Model_ActivityLog extends Default_Model_DbTable_ActivityLog
         152 => 'member',
         200 => 'project',
         210 => 'project',
-        220 => 'project'
+        220 => 'project',
+        302 => 'backend',
+        304 => 'backend',
+        310 => 'backend',
+        312 => 'backend',
+        314 => 'backend',
+        316 => 'backend',
+        320 => 'backend'
     );
+
+    /**
+     * @param int $objectId
+     * @param int $projectId
+     * @param int $userId
+     * @param int $activity_type_id
+     * @param array|mixed $data array with ([type_id], [pid], description, title, image_small)
+     */
+    public static function logActivity($objectId, $projectId, $userId, $activity_type_id, $data)
+    {
+        // cutting description text if necessary
+        if (isset($data['description'])) {
+            $object_text = (strlen($data['description']) < 150) ? $data['description'] : mb_substr($data['description'], 0, 145, 'UTF-8') . ' ... ';
+        }
+
+        $newEntry = array(
+            'member_id' => $userId,
+            'project_id' => $projectId,
+            'object_id' => $objectId,
+            'object_ref' => self::$referenceType[$activity_type_id],
+            'object_title' => isset($data['title']) ? $data['title'] : null,
+            'object_text' => isset($object_text) ? $object_text : null,
+            'object_img' => false === empty($data['image_small']) ? $data['image_small'] : null,
+            'activity_type' => $activity_type_id
+        );
+
+        $sql = "
+            INSERT INTO activity_log
+            SET member_id = :member_id, 
+                project_id = :project_id, 
+                object_id = :object_id, 
+                object_ref = :object_ref,
+                object_title = :object_title,
+                object_text = :object_text,
+                object_img = :object_img,
+                activity_type_id = :activity_type
+                ;
+        ";
+
+        try {
+            Zend_Db_Table::getDefaultAdapter()->query($sql, $newEntry);
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ERROR write activity log - ' . print_r($e, true));
+        }
+    }
 
     /**
      * @param int $id
@@ -111,7 +172,6 @@ class Default_Model_ActivityLog extends Default_Model_DbTable_ActivityLog
      */
     public function fetchAllByMemberId($id)
     {
-
         $q = $this->select()
             ->where('member_id = ?', $id);
 
@@ -355,50 +415,6 @@ class Default_Model_ActivityLog extends Default_Model_DbTable_ActivityLog
 
         try {
             $this->insert($newLog);
-        } catch (Exception $e) {
-            Zend_Registry::get('logger')->err(__METHOD__ . ' - ERROR write activity log - ' . print_r($e, true));
-        }
-    }
-
-    /**
-     * @param int $objectId
-     * @param int $projectId
-     * @param int $userId
-     * @param int $activity_type_id
-     * @param array|mixed $data array with ([type_id], [pid], description, title, image_small)
-     */
-    public static function logActivity($objectId, $projectId, $userId, $activity_type_id, $data)
-    {
-        // cutting description text if necessary
-        $object_text = (strlen($data['description']) < 150) ? $data['description'] : mb_substr($data['description'], 0,
-                145, 'UTF-8') . ' ... ';
-
-        $newEntry = array(
-            'member_id' => $userId,
-            'project_id' => $projectId,
-            'object_id' => $objectId,
-            'object_ref' => self::$referenceType[$activity_type_id],
-            'object_title' => $data['title'],
-            'object_text' => $object_text,
-            'object_img' => false === empty($data['image_small']) ? $data['image_small'] : null,
-            'activity_type' => $activity_type_id
-        );
-
-        $sql = "
-            INSERT INTO activity_log
-            SET member_id = :member_id, 
-                project_id = :project_id, 
-                object_id = :object_id, 
-                object_ref = :object_ref,
-                object_title = :object_title,
-                object_text = :object_text,
-                object_img = :object_img,
-                activity_type_id = :activity_type
-                ;
-        ";
-
-        try {
-            Zend_Db_Table::getDefaultAdapter()->query($sql, $newEntry);
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err(__METHOD__ . ' - ERROR write activity log - ' . print_r($e, true));
         }

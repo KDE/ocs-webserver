@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -42,7 +43,6 @@ class Backend_Commands_DeleteProductExtended implements Local_Queue_CommandInter
         $this->product = $product;
     }
 
-
     public function doCommand()
     {
         $this->deleteProductFromIndex();
@@ -72,7 +72,8 @@ class Backend_Commands_DeleteProductExtended implements Local_Queue_CommandInter
                 'secret' => PPLOAD_SECRET
             ));
             $collectionResponse = $pploadApi->deleteCollection(ltrim($this->product->ppload_collection_id, '!'));
-            Zend_Registry::get('logger')->info(__METHOD__ . ' - product delete request for ppload: ' . $this->product->project_id . ' response: ' . print_r($collectionResponse, true));
+            Zend_Registry::get('logger')->info(__METHOD__ . ' - product delete request for ppload: ' . $this->product->project_id . ' response: ' . print_r($collectionResponse,
+                    true));
         }
     }
 
