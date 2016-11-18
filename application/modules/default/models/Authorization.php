@@ -110,12 +110,12 @@ class Default_Model_Authorization
     protected function updateRememberMe($setRememberMe = false)
     {
         $modelRememberMe = new Default_Model_RememberMe();
-        if (false == $setRememberMe) {
+//        if (false == $setRememberMe) {
             $modelRememberMe->deleteSession();
-            return;
-        }
+//            return;
+//        }
         if ($modelRememberMe->hasValidCookie()) {
-            $modelRememberMe->updateSession();
+            $modelRememberMe->updateSession($this->_authUserData->member_id);
         } else {
             $modelRememberMe->createSession($this->_authUserData->member_id);
         }
