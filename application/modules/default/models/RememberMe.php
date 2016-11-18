@@ -228,7 +228,7 @@ class Default_Model_RememberMe
 
     protected function deleteCookie()
     {
-        $domain = $this->request->getHttpHost();
+        $domain = Local_Tools_ParseDomain::get_domain($this->request->getHttpHost());
         $cookieExpire = time() - $this->cookieTimeout;
 
         setcookie($this->cookieName, null, $cookieExpire, '/', $domain, null, true);
