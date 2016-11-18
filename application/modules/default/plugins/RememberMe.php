@@ -44,6 +44,11 @@ class Default_Plugin_RememberMe extends Zend_Controller_Plugin_Abstract
             return;
         }
 
+        // on login page we don't need a remember me check
+        if ($request->getActionName() == 'login') {
+            return;
+        }
+
         //Check if rememberMe login cookie exists and authenticate user
         $modelRememberMe = new Default_Model_RememberMe();
         if (true === $modelRememberMe->hasValidCookie()) {

@@ -192,6 +192,12 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         $formLogin = new Default_Form_Login();
         //Default_Model_CsrfProtection::createCSRF($formLogin, 'login', 'csrfLogin');
 
+        // if the user is still logged in, we do not show the login page. They should log out first.
+        if (Zend_Auth::getInstance()->hasIdentity()) {
+            $this->_helper->flashMessenger->addMessage('<p class="text-danger center">You are still logged in. Please click <a href="/logout" class="bold">here</a> to log out first.</p>');
+            $this->forward('news', 'user', null, $this->getAllParams());
+        }
+
         if ($this->_request->isGet()) { // not a POST request
             $this->view->formLogin = $formLogin->populate(array('redirect' => $this->view->redirect));
             $this->view->error = 0;
