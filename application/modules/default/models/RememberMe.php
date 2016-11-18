@@ -97,7 +97,7 @@ class Default_Model_RememberMe
             return false;
         }
 
-        $domain = $this->request->getHttpHost();
+        $domain = Local_Tools_ParseDomain::get_domain($this->request->getHttpHost());
 
         $sessionData = array();
         $sessionData['mi'] = $newSessionData['member_id'];
