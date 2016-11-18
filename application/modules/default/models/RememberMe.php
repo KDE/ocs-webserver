@@ -61,64 +61,27 @@ class Default_Model_RememberMe
     }
 
     /**
-     * @param int $identifier
-     * @return array return new session data
+     * @param $identifier
+     * @return array|null
      */
-    public function createSession($identifier)
-    {
-        $newSessionData = $this->createSessionData($identifier);
-        $this->setCookie($newSessionData);
-        $newSessionData['expiry'] = date( 'Y-m-d H:i:s', $newSessionData['expiry']); // change to mysql datetime format
-        return $this->dataTable->save($newSessionData)->toArray();
-    }
-
-    /**
-     * @param int $identifier
-     * @return array
-     */
-    protected function createSessionData($identifier)
-    {
-        $sessionData = array();
-        $sessionData['member_id'] = (int)$identifier;
-        $sessionData['remember_me_id'] = Local_Tools_UUID::generateUUID();
-        $sessionData['expiry'] = time() + (int)$this->cookieTimeout;
-        $sessionData['token'] = base64_encode(hash('sha256',
-            $sessionData['member_id'] . $sessionData['remember_me_id'] . $this->salt));
-        return $sessionData;
-    }
-
-    /**
-     * @param array $newSessionData
-     * @return bool
-     */
-    protected function setCookie($newSessionData)
-    {
-        if (empty($newSessionData)) {
-            return false;
-        }
-
-        $domain = Local_Tools_ParseDomain::get_domain($this->request->getHttpHost());
-
-        $sessionData = array();
-        $sessionData['mi'] = $newSessionData['member_id'];
-        $sessionData['u'] = $newSessionData['remember_me_id'];
-        $sessionData['t'] = $newSessionData['token'];
-
-        return setcookie($this->cookieName, serialize($sessionData), $newSessionData['expiry'], '/', $domain, null, true);
-    }
-
-    /**
-     * @return null|array
-     */
-    public function updateSession()
+    public function updateSession($identifier)
     {
         $currentSessionCookie = $this->getCookieData();
+
         if (empty($currentSessionCookie)) {
-            return null;
+            return $this->createSession($identifier);
         }
-        $newCookieData = $this->updateSessionData($currentSessionCookie);
-        $this->setCookie($newCookieData);
-        return $newCookieData;
+
+        $newSessionData = $this->createSessionData($identifier);
+        $this->setCookie($newSessionData);
+
+        $countUpdated = $this->updateSessionData($currentSessionCookie, $newSessionData, $identifier);
+
+        if (empty($countUpdated)) {
+            $this->saveSessionData($newSessionData); // old session entry not found; we create a new one
+        }
+
+        return $newSessionData;
     }
 
     /**
@@ -142,30 +105,89 @@ class Default_Model_RememberMe
     }
 
     /**
-     * @param array $currentSessionData
-     * @return null|array returns new session data
+     * @param int $identifier
+     * @return array return new session data
      */
-    private function updateSessionData($currentSessionData)
+    public function createSession($identifier)
+    {
+        $newSessionData = $this->createSessionData($identifier);
+        $this->setCookie($newSessionData);
+        $this->saveSessionData($newSessionData);
+        return $newSessionData;
+    }
+
+    /**
+     * @param int $identifier
+     * @return array
+     */
+    protected function createSessionData($identifier)
+    {
+        $sessionData = array();
+        $sessionData['member_id'] = (int)$identifier;
+        $sessionData['remember_me_id'] = Local_Tools_UUID::generateUUID();
+        $sessionData['expiry'] = time() + (int)$this->cookieTimeout;
+        $sessionData['token'] = base64_encode(hash('sha256',
+            $sessionData['member_id'] . $sessionData['remember_me_id'] . $this->salt));
+        return $sessionData;
+    }
+
+    /**
+     * @param $newSessionData
+     * @return mixed
+     */
+    protected function saveSessionData($newSessionData)
+    {
+        $newSessionData['expiry'] = date('Y-m-d H:i:s', $newSessionData['expiry']); // change to mysql datetime format
+        $this->dataTable->save($newSessionData);
+        return $newSessionData;
+    }
+
+    /**
+     * @param array $newSessionData
+     * @return bool
+     */
+    protected function setCookie($newSessionData)
+    {
+        if (empty($newSessionData)) {
+            return false;
+        }
+
+        $domain = Local_Tools_ParseDomain::get_domain($this->request->getHttpHost());
+
+        $sessionData = array();
+        $sessionData['mi'] = $newSessionData['member_id'];
+        $sessionData['u'] = $newSessionData['remember_me_id'];
+        $sessionData['t'] = $newSessionData['token'];
+
+        // delete old cookie with wrong domain
+        setcookie($this->cookieName, null, time() - $this->cookieTimeout, '/', $this->request->getHttpHost(), null, true);
+
+        return setcookie($this->cookieName, serialize($sessionData), $newSessionData['expiry'], '/', $domain, null, true);
+    }
+
+    /**
+     * @param array $currentSessionData
+     * @param array $newSessionData
+     * @param int $identifier
+     * @return int count of updated rows
+     */
+    private function updateSessionData($currentSessionData, $newSessionData, $identifier)
     {
         if (false == isset($currentSessionData) OR (count($currentSessionData) == 0)) {
             return null;
         }
-        $newSessionData = $this->createSessionData($currentSessionData['member_id']);
 
         $sql = "UPDATE `session` SET remember_me_id = :remember_new, expiry = FROM_UNIXTIME(:expiry_new), changed = NOW() WHERE member_id = :member_id AND remember_me_id = :remember_old";
 
         $result = $this->dataTable->getAdapter()->query($sql, array(
                 'remember_new' => $newSessionData['remember_me_id'],
                 'expiry_new' => $newSessionData['expiry'],
-                'member_id' => $currentSessionData['member_id'],
+                'member_id' => $identifier,
                 'remember_old' => $currentSessionData['remember_me_id']
             )
         );
-        if ($result->rowCount() > 0) {
-            return $newSessionData;
-        } else {
-            return null;
-        }
+
+        return $result->rowCount();
     }
 
     public function hasValidCookie()
@@ -231,6 +253,7 @@ class Default_Model_RememberMe
         $domain = Local_Tools_ParseDomain::get_domain($this->request->getHttpHost());
         $cookieExpire = time() - $this->cookieTimeout;
 
+        setcookie($this->cookieName, null, $cookieExpire, '/', $this->request->getHttpHost(), null, true);
         setcookie($this->cookieName, null, $cookieExpire, '/', $domain, null, true);
     }
 
