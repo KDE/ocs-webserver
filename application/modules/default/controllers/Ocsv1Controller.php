@@ -311,6 +311,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                 'project.project_category_id = category.project_category_id',
                 array()
             )
+            
             /*
              * No Subcategories nymore. 
             ->joinLeft(
@@ -1199,7 +1200,12 @@ class Ocsv1Controller extends Zend_Controller_Action
                         $tableProjectSelect->order(new Zend_Db_Expr('(((project.count_likes + 6) / ((project.count_likes + project.count_dislikes) + 12)) * 100) DESC'));
                         break;
                     case 'down':
-                    	$tableProjectSelect->order('project.count_downloads_hive DESC');
+                        $tableProjectSelect->joinLeft(
+                            array('stat_downloads_quarter_year' => 'stat_downloads_quarter_year'),
+                            'project.project_id = stat_downloads_quarter_year.project_id',
+                            array()
+                        );
+                    	$tableProjectSelect->order('stat_downloads_quarter_year.amount DESC');
                         break;
                     default:
                         break;

@@ -42,7 +42,7 @@ class Backend_PploadController extends Local_Controller_Action_CliAbstract
         FROM
             ppload.ppload_files_downloaded as ppfd
         WHERE 
-	        ppfd.downloaded_timestamp > DATE_ADD(CURDATE(), INTERVAL - 6 MONTH)
+	        ppfd.downloaded_timestamp > DATE_ADD(CURDATE(), INTERVAL - 3 MONTH)
         GROUP BY ppfd.collection_id
         ORDER BY amount DESC;
         ";
@@ -52,8 +52,8 @@ class Backend_PploadController extends Local_Controller_Action_CliAbstract
     protected function updateProjectDownloadStat()
     {
         $sql = "
-        TRUNCATE stat_downloads_half_year;
-        INSERT INTO stat_downloads_half_year
+        TRUNCATE stat_downloads_quarter_year;
+        INSERT INTO stat_downloads_quarter_year
         SELECT p.project_id, p.project_category_id, p.ppload_collection_id, scd.amount, pc.title as category_title
         FROM project as p
         JOIN ppload.stat_collection_download as scd on p.ppload_collection_id = scd.collection_id

@@ -357,7 +357,7 @@ class Default_Model_Info
                 ,(round(((p.count_likes + 6) / ((p.count_likes + p.count_dislikes) + 12)),2) * 100) as laplace_score
                 ,s.amount 
                 ,s.category_title       
-                from stat_downloads_half_year s    
+                from stat_downloads_quarter_year s
                 inner join project p on s.project_id = p.project_id
                 WHERE
                     p.status=100

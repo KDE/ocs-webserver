@@ -52,12 +52,12 @@ if('all' == strtolower($catTitle) OR (false === isset($catTitle))) {
                         'top') ?>"><span><?= $this->translate('Greatest') ?></span></a>
                 </li>
 
-
+<?php /**
                 <li <?=$this->filters['order'] == 'download' ? 'class="active"' :'' ?>>
                     <a href="<?= $helperBuildExploreUrl->buildExploreUrl($this->filters['category'], null,
                         'download') ?>"><span><?= $this->translate('Most Downloaded') ?></span></a>
                 </li>
-
+ **/?>
                 <li class="right">
                     <small><?= $this->totalcount ?> <?= $labelTotalCounter ?></small>
                 </li>
@@ -139,7 +139,7 @@ if('all' == strtolower($catTitle) OR (false === isset($catTitle))) {
             
             if (count($topprods) > 0) {
                 ?>
-                <span class="commentTitle" style="margin:auto;display:table;padding:5px"> 6 Months Ranking <span class="small light"> (download counts)</span></span>                 
+                <span class="commentTitle" style="margin:auto;display:table;padding:5px"> 3 Months Ranking <span class="small light"> (download counts)</span></span>
                 
                 <div class="prod-widget-box right" style=" background-color: #fff" id="mostdownloaded">
                     <?php
