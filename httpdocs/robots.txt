@@ -1,7 +1,5 @@
 User-agent: *
 Allow: *
 Disallow: /login*
-Disallow: /*?
-Disallow: /*?*
 Disallow: /*/rating/*
 Disallow: /*#report-product*
