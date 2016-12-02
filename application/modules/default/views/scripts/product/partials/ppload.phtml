@@ -77,7 +77,7 @@
                                  <th><?= $this->translate('Filetype'); ?></th>
                                  <th><?= $this->translate('Packagetype'); ?></th>
                                  <th><?= $this->translate('License'); ?></th>
-                                 <th><?= $this->translate('Downloads'); ?></th>
+                                 <th style="text-align: right"><?= $this->translate('Downloads'); ?></th>
                                  <th><?= $this->translate('Date'); ?></th>
 
                                  <th style="text-align: right"><?= $this->translate('Filesize'); ?></th>
@@ -173,41 +173,42 @@
                                  var downloaded_count_total = 0;
                                  var firstRow = true;
 
-								var myArray = $.map(data.files, function(entry) {
-								    return entry;
-								});
+                                var myArray = $.map(data.files, function(entry) {
+                                    return entry;
+                                });
 
 
-								//myArray = myArray.sortOn('active');
-								myArray.sort(keysrt('active'), false);
-								myArrayActive = new Array();
-								myArrayInactive = new Array();
-								$.each(myArray, function () {
-									if(this.active == '1') {
-										myArrayActive.push(this);
-									} else {
-										myArrayInactive.push(this);
-									}
-								});
+                                //myArray = myArray.sortOn('active');
+                                myArray.sort(keysrt('active'), false);
+                                myArrayActive = new Array();
+                                myArrayInactive = new Array();
+                                $.each(myArray, function () {
+                                        if(this.active == '1') {
+                                                myArrayActive.push(this);
+                                        } else {
+                                                myArrayInactive.push(this);
+                                        }
+                                });
 
-								//sort
-								myArrayActive.sort(keysrt('created_timestamp'), false);
-								myArrayInactive.sort(keysrt('created_timestamp'), false);
+                                //sort
+                                myArrayActive.sort(keysrt('created_timestamp'), false);
+                                myArrayInactive.sort(keysrt('created_timestamp'), false);
 
-								var oldestFileId = null;
-								//Active Files
+                                var oldestFileId = null;
+                                //Active Files
                                  $.each(myArrayActive, function () {
-                                     if(firstRow) {
-                                    	 //this.downloaded_count = parseInt(this.downloaded_count) + parseInt(<?= $this->product->count_downloads_hive?>);
-                                    	 oldestFileId = this.id;
-                                     	 firstRow = false;
-                                     }
+                                    if(firstRow) {
+                                        //this.downloaded_count = parseInt(this.downloaded_count) + parseInt(<?= $this->product->count_downloads_hive?>);
+                                    	oldestFileId = this.id;
+                                     	firstRow = false;
+                                    }
 
-									 if(this.id < oldestFileId) {
-										 oldestFileId = this.id;
-									 }
+                                    if(this.id < oldestFileId) {
+                                            oldestFileId = this.id;
+                                    }
 
-                                     downloaded_count_total = downloaded_count_total+parseInt(this.downloaded_count);
+                                    count_downloads = this.downloaded_count || 0;
+                                    downloaded_count_total = downloaded_count_total+parseInt(count_downloads);
 
                                      var downloadUrl = pploadApiUri + 'files/download/id/' + this.id + '/' + this.name;
                                      var downloadLink = '<a href="' + downloadUrl + '" id="data-link' + this.id + '">' + this.name + '</a>';
@@ -282,94 +283,94 @@
                                          installButton = '<a href="' + xdgUrl + '" class="btn btn-native btn-min-width">Install</a> <a href="#modal-installation-instructions" role="button" data-toggle="modal"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></a> ';
                                      }
 
-                                     //if(this.active == '1') {
-										 var greyText = ' class="activerows"';
-                                     	 if(this.active == '0') {
-                                         	greyText = ' style="color: #ccc;"';
-                                     	 }
+                                    //if(this.active == '1') {
+                                    var greyText = ' class="activerows"';
+                                    if(this.active == '0') {
+                                           greyText = ' style="color: #ccc;"';
+                                    }
 
-                                         if(this.version==null) {version = '';} else{version = this.version;}
-                                         var isExternLink = false;
-                                         if ((typeof link != 'undefined') && (link != "")) {
-                                            isExternLink = true;
-                                         }
-	                                     $pploadCollection.find('table[data-ppload-files] tbody').append(
-	                                         '<tr' + greyText + '>'
-	                                         + '<td>' + downloadLink + '</td>'
-                                             + '<td>' + version + '</td>'
-	                                         + '<td>' + fileDescription + '</td>'
-	                                         + '<td>' + this.type + '</td>'
-                                                 + '<td>'
-                                                 + '<select id="data-select-packagetype' + this.id + '" data-packagetype-id=" name="packagetype" class="form-control input-sm" style="width: 200px;">'
-                                                 + '<option value=\"\"></option><option value=\"1\">AppImage</option><option value=\"2\">Android (APK)</option><option value=\"3\">OS X compatible</option><option value=\"4\">Windows executable</option>'
-                                                 + '</select><span id="file-tag-packagetype'+this.id+'">'
-                                                 + '</td>'   
-	                                         + '<td>'
-	                                         + '<select id="data-select-license' + this.id + '" data-license-id=" name="license">'
-	                                         + '<option value=\"1000\"></option><option value=\"16\">AGPL</option><option value=\"3\">Artistic 2.0</option><option value=\"6\">BSD</option><option value=\"17\">CC0 1.0 Universal (Public Domain)</option><option value=\"9\">CPL 1.0</option><option value=\"10\">Creative Commons by</option><option value=\"13\">Creative Commons by-nc</option><option value=\"15\">Creative Commons by-nc-nd</option><option value=\"14\">Creative Commons by-nc-sa</option><option value=\"12\">Creative Commons by-nd</option><option value=\"11\">Creative Commons by-sa</option><option value=\"8\">GFDL</option><option value=\"1\">GPL</option><option value=\"2\">LGPL</option><option value=\"0\">Other</option><option value=\"7\">Proprietary License</option><option value=\"5\">QPL</option><option value=\"4\">X11</option>'
-	                                         + '</select><span id="file-tag-license'+this.id+'"><span id="file-tag-license-text'+this.id+'">'
-	                                         + '</td>'
-	                                         + '<td style="text-align: left"><span id="download_counter_' + this.id + '">' + this.downloaded_count + '</td>'
-	                                         + '<td>' + this.created_timestamp + '</td>'
-	                                         + '<td style="text-align: right">' + humanFileSize(this.size,isExternLink) + '</td>'
-                                             + '<td style="text-align: right; white-space:nowrap">' + installButton + '</td>'
-	                                         + '</tr>'
-	                                     );
+                                    if(this.version==null) {version = '';} else{version = this.version;}
+                                    var isExternLink = false;
+                                    if ((typeof link != 'undefined') && (link != "")) {
+                                       isExternLink = true;
+                                    }
+                                        $pploadCollection.find('table[data-ppload-files] tbody').append(
+                                            '<tr' + greyText + '>'
+                                            + '<td>' + downloadLink + '</td>'
+                                            + '<td>' + version + '</td>'
+                                            + '<td>' + fileDescription + '</td>'
+                                            + '<td>' + this.type + '</td>'
+                                            + '<td>'
+                                            + '<select id="data-select-packagetype' + this.id + '" data-packagetype-id=" name="packagetype" class="form-control input-sm" style="width: 200px;">'
+                                            + '<option value=\"\"></option><option value=\"1\">AppImage</option><option value=\"2\">Android (APK)</option><option value=\"3\">OS X compatible</option><option value=\"4\">Windows executable</option>'
+                                            + '</select><span id="file-tag-packagetype'+this.id+'">'
+                                            + '</td>'   
+                                            + '<td>'
+                                            + '<select id="data-select-license' + this.id + '" data-license-id=" name="license">'
+                                            + '<option value=\"1000\"></option><option value=\"16\">AGPL</option><option value=\"3\">Artistic 2.0</option><option value=\"6\">BSD</option><option value=\"17\">CC0 1.0 Universal (Public Domain)</option><option value=\"9\">CPL 1.0</option><option value=\"10\">Creative Commons by</option><option value=\"13\">Creative Commons by-nc</option><option value=\"15\">Creative Commons by-nc-nd</option><option value=\"14\">Creative Commons by-nc-sa</option><option value=\"12\">Creative Commons by-nd</option><option value=\"11\">Creative Commons by-sa</option><option value=\"8\">GFDL</option><option value=\"1\">GPL</option><option value=\"2\">LGPL</option><option value=\"0\">Other</option><option value=\"7\">Proprietary License</option><option value=\"5\">QPL</option><option value=\"4\">X11</option>'
+                                            + '</select><span id="file-tag-license'+this.id+'"><span id="file-tag-license-text'+this.id+'">'
+                                            + '</td>'
+                                            + '<td style="text-align: right"><span id="download_counter_' + this.id + '">' + count_downloads + '</td>'
+                                            + '<td>' + this.created_timestamp + '</td>'
+                                            + '<td style="text-align: right">' + humanFileSize(this.size,isExternLink) + '</td>'
+                                        + '<td style="text-align: right; white-space:nowrap">' + installButton + '</td>'
+                                            + '</tr>'
+                                        );
 
-	                                     if ((typeof osId != 'undefined') && (osId != "")) {
-	                                         $("#data-updatepploadfile" + this.id + " option[value='" + osId + "']").attr('selected', 'selected');
-	                                         $os = $("#data-updatepploadfile" + this.id + " option[value='" + osId + "']").text();
-	                                         //alert("Text: " + $os);
-	                                         $("#data-updatepploadfile" + this.id).hide();
-	                                         $("#file-tag-os" + this.id).text($os);
-	                                     }
+                                        if ((typeof osId != 'undefined') && (osId != "")) {
+                                            $("#data-updatepploadfile" + this.id + " option[value='" + osId + "']").attr('selected', 'selected');
+                                            $os = $("#data-updatepploadfile" + this.id + " option[value='" + osId + "']").text();
+                                            //alert("Text: " + $os);
+                                            $("#data-updatepploadfile" + this.id).hide();
+                                            $("#file-tag-os" + this.id).text($os);
+                                        }
 
-	                                     if ((typeof licenseId != 'undefined') && (licenseId != "")) {
-	                                         $("#data-select-license" + this.id + " option[value='" + licenseId + "']").attr('selected', 'selected');
-	                                         $licenseIdText = $("#data-select-license" + this.id + " option[value='" + licenseId + "']").text();
-	                                         $("#data-select-license" + this.id).hide();
-	                                         $("#file-tag-license" + this.id).text($licenseIdText);
-	                                     } else {
-	                                      $("#data-select-license" + this.id).hide();
-	                                     }
+                                        if ((typeof licenseId != 'undefined') && (licenseId != "")) {
+                                            $("#data-select-license" + this.id + " option[value='" + licenseId + "']").attr('selected', 'selected');
+                                            $licenseIdText = $("#data-select-license" + this.id + " option[value='" + licenseId + "']").text();
+                                            $("#data-select-license" + this.id).hide();
+                                            $("#file-tag-license" + this.id).text($licenseIdText);
+                                        } else {
+                                         $("#data-select-license" + this.id).hide();
+                                        }
 
-	                                     if ((typeof license != 'undefined') && (license != "")) {
-	                                         $("#file-tag-license-text" + this.id).text(license);
-	                                     }
+                                        if ((typeof license != 'undefined') && (license != "")) {
+                                            $("#file-tag-license-text" + this.id).text(license);
+                                        }
 
-	                                     $("#data-select-license" + this.id).hide();
-                                             
-                                             if ((typeof packagetypeId != 'undefined') && (packagetypeId != "")) {
-	                                         $("#data-select-packagetype" + this.id + " option[value='" + packagetypeId + "']").attr('selected', 'selected');
-	                                         $packagetypeIdText = $("#data-select-packagetype" + this.id + " option[value='" + packagetypeId + "']").text();
-	                                         $("#data-select-packagetype" + this.id).hide();
-	                                         $("#file-tag-packagetype" + this.id).text($packagetypeIdText);
-	                                     } else {
-	                                      $("#data-select-packagetype" + this.id).hide();
-	                                     }
+                                        $("#data-select-license" + this.id).hide();
 
-	                                     $("#data-select-packagetype" + this.id).hide();
+                                        if ((typeof packagetypeId != 'undefined') && (packagetypeId != "")) {
+                                            $("#data-select-packagetype" + this.id + " option[value='" + packagetypeId + "']").attr('selected', 'selected');
+                                            $packagetypeIdText = $("#data-select-packagetype" + this.id + " option[value='" + packagetypeId + "']").text();
+                                            $("#data-select-packagetype" + this.id).hide();
+                                            $("#file-tag-packagetype" + this.id).text($packagetypeIdText);
+                                        } else {
+                                         $("#data-select-packagetype" + this.id).hide();
+                                        }
 
-
-	                                     if (isExternLink) {
-	                                         $("#data-link" + this.id).attr('href', decodeURIComponent(link));
-                                             $("#data-link" + this.id).attr('target','_blank');
-	                                         $("#data-link" + this.id).html($("#data-link" + this.id).html() + " (External Link)");
-	                                     }
-
-	                                     //fileSizeSum += parseInt(this.size);
-
-                                         if (!isExternLink)
-                                         {
-                                            fileSizeSum += roundFileSizeInMB(parseInt(this.size));
-                                         }
+                                        $("#data-select-packagetype" + this.id).hide();
 
 
-	                                     if (this.type == 'audio/mpeg' || this.type == 'application/ogg') {
-	                                         isPlayable = true;
-	                                     }
+                                        if (isExternLink) {
+                                            $("#data-link" + this.id).attr('href', decodeURIComponent(link));
+                                        $("#data-link" + this.id).attr('target','_blank');
+                                            $("#data-link" + this.id).html($("#data-link" + this.id).html() + " (External Link)");
+                                        }
 
-                                     //}
+                                        //fileSizeSum += parseInt(this.size);
+
+                                    if (!isExternLink)
+                                    {
+                                       fileSizeSum += roundFileSizeInMB(parseInt(this.size));
+                                    }
+
+
+                                    if (this.type == 'audio/mpeg' || this.type == 'application/ogg') {
+                                        isPlayable = true;
+                                    }
+
+                                    //}
 
 
 
@@ -377,17 +378,19 @@
 
 								//Inactive Fiels
                                  $.each(myArrayInactive, function () {
-									 if(null == oldestFileId) {
-										 oldestFileId = this.id;
-									 }
+                                    if(null == oldestFileId) {
+                                            oldestFileId = this.id;
+                                    }
 
-									 if(this.id < oldestFileId) {
-										 oldestFileId = this.id;
-									 }
+                                    if(this.id < oldestFileId) {
+                                            oldestFileId = this.id;
+                                    }
 
-                                     downloaded_count_total = downloaded_count_total+parseInt(this.downloaded_count);
+                                    cout_downloads = this.downloaded_count || 0;
 
-                                   	 downloadLink = this.name;
+                                    downloaded_count_total = downloaded_count_total+parseInt(cout_downloads);
+
+                                    downloadLink = this.name;
 
                                      var fileDescription = '';
                                      if (this.description) {
@@ -457,7 +460,7 @@
 	                                         + '<option value=\"1000\"></option><option value=\"16\">AGPL</option><option value=\"3\">Artistic 2.0</option><option value=\"6\">BSD</option><option value=\"17\">CC0 1.0 Universal (Public Domain)</option><option value=\"9\">CPL 1.0</option><option value=\"10\">Creative Commons by</option><option value=\"13\">Creative Commons by-nc</option><option value=\"15\">Creative Commons by-nc-nd</option><option value=\"14\">Creative Commons by-nc-sa</option><option value=\"12\">Creative Commons by-nd</option><option value=\"11\">Creative Commons by-sa</option><option value=\"8\">GFDL</option><option value=\"1\">GPL</option><option value=\"2\">LGPL</option><option value=\"0\">Other</option><option value=\"7\">Proprietary License</option><option value=\"5\">QPL</option><option value=\"4\">X11</option>'
 	                                         + '</select><span id="file-tag-license'+this.id+'"><span id="file-tag-license-text'+this.id+'">'
 	                                         + '</td>'
-	                                         + '<td style="text-align: left"><span id="download_counter_' + this.id + '">' + this.downloaded_count + '</td>'
+	                                         + '<td style="text-align: right"><span id="download_counter_' + this.id + '">' + cout_downloads + '</td>'
 	                                         + '<td>' + this.created_timestamp + '</td>'
 	                                         + '<td style="text-align: right">' + humanFileSize(this.size,isExternLink) + '</td>'
                                              + '<td></td>'
@@ -535,7 +538,7 @@
                                  $pploadCollection.find('table[data-ppload-files] tfoot').append(
                                      '<tr>'
                                      + '<th colspan="6">' + data.pagination.totalItems + ' <?= $this->translate("files")?> ('+myArrayActive.length+' active and <span style="color: #ccc;" ><a style="cursor:pointer" onclick="fnToggleInactiveFiles();return false;">'+myArrayInactive.length+' inactive</a></span>)</th>'
-                                     + '<th style="text-align: left">' + downloaded_count_total + '</th>'
+                                     + '<th style="text-align: right">' + downloaded_count_total + '</th>'
                                      + '<th></th>'
                                     + '<th style="text-align: right">' + fileSizeSum.toFixed(2) + ' MB</th>'
                                      //+ '<th style="text-align: right">' + humanFileSize(fileSizeSum) + '</th>'
