@@ -24,28 +24,13 @@ class Default_View_Helper_FetchCategoriesForProductAsString extends Zend_View_He
 
     public function fetchCategoriesForProductAsString($productId)
     {
-
-/*
-        $modelSubcategories = new Default_Model_SubCategory();
-        $result = $modelSubcategories->fetchSubcategoriesForProduct($productId);
-
-        if (count($result) == 0) {
-            $modelCategories = new Default_Model_DbTable_ProjectCategory();
-            $result = $modelCategories->fetchMainCategoryForProduct($productId);
-        }
-
-        $resultString = '';
-        foreach ($result as $element) {
-            $resultString .= $element['title'] . ',';
-        }
-        return substr($resultString, 0, -1);
-    
-
-    */
-
         $modelCategories = new Default_Model_DbTable_ProjectCategory();
         $result = $modelCategories->fetchMainCategoryForProduct($productId);
-        return  $result[0]['title'];
+        if(empty($result)) {
+            return '';
+        } else {
+            return  $result[0]['title'];
+        }
     }
 
 }

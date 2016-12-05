@@ -8,6 +8,5 @@ CREATE TABLE `stat_downloads_quarter_year` (
 	INDEX `idx_project_id` (`project_id`),
 	INDEX `idx_collection_id` (`ppload_collection_id`)
 )
-COLLATE='latin1_swedish_ci'
 ENGINE=InnoDB
 ;

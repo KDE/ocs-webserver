@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -126,18 +127,18 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
      */
     public function fetchAllActive()
     {
-    	
-    	$cache = Zend_Registry::get('cache');
-    	$cacheName = __FUNCTION__;
-    	if (!($categories = $cache->load($cacheName))) {
-    		$q = $this->select()
-    		->where('is_active = ?', 1)
-    		->where('is_deleted = ?', 0)
-    		->order('orderPos');
-    		$categories= $this->fetchAll($q);
-    		$cache->save($categories, $cacheName);
-    	}
-        
+
+        $cache = Zend_Registry::get('cache');
+        $cacheName = __FUNCTION__;
+        if (!($categories = $cache->load($cacheName))) {
+            $q = $this->select()
+                ->where('is_active = ?', 1)
+                ->where('is_deleted = ?', 0)
+                ->order('orderPos');
+            $categories = $this->fetchAll($q);
+            $cache->save($categories, $cacheName);
+        }
+
         return $categories;
     }
 
@@ -176,7 +177,8 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
             return array();
         }
     }
-      /**
+
+    /**
      * @param int|array $nodeId
      * @return array
      */
@@ -245,12 +247,20 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
         $this->_db->beginTransaction();
         try {
 //            $this->_db->getProfiler()->setEnabled(true);
-            $this->_db->query("UPDATE {$this->_name} SET rgt = rgt + 2 WHERE rgt > :param_right;", array('param_right' => $data['rgt']));
+            $this->_db->query("UPDATE {$this->_name} SET rgt = rgt + 2 WHERE rgt > :param_right;",
+                array('param_right' => $data['rgt']));
 //            $dummy = $this->_db->getProfiler()->getLastQueryProfile()->getQuery();
-            $this->_db->query("UPDATE {$this->_name} SET lft = lft + 2 WHERE lft > :param_right;", array('param_right' => $data['rgt']));
+            $this->_db->query("UPDATE {$this->_name} SET lft = lft + 2 WHERE lft > :param_right;",
+                array('param_right' => $data['rgt']));
 //            $dummy = $this->_db->getProfiler()->getLastQueryProfile()->getQuery();
             $this->_db->query("INSERT INTO {$this->_name} (`lft`, `rgt`, `title`, `is_active`, `name_legacy`, `xdg_type`) VALUES (:param_right + 1, :param_right + 2, :param_title, :param_status, :param_legacy, :param_xgd);",
-                array('param_right' => $data['rgt'], 'param_title' => $data['title'], 'param_status' => $data['is_active'], 'param_legacy' => $data['name_legacy'], 'param_xgd' => $data['xdg_type']));
+                array(
+                    'param_right' => $data['rgt'],
+                    'param_title' => $data['title'],
+                    'param_status' => $data['is_active'],
+                    'param_legacy' => $data['name_legacy'],
+                    'param_xgd' => $data['xdg_type']
+                ));
 //            $dummy = $this->_db->getProfiler()->getLastQueryProfile()->getQuery();
             $this->_db->commit();
         } catch (Exception $e) {
@@ -266,10 +276,50 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
         $root = $this->fetchRoot();
         $resultRows = $this->fetchImmediateChildren($root['project_category_id'], $orderBy);
 
+        $resultForSelect = $this->prepareDataForFormSelect($resultRows);
+
+        return $resultForSelect;
+    }
+
+    /**
+     * @param int|array $nodeId
+     * @param string $orderBy
+     * @return array
+     */
+    public function fetchImmediateChildren($nodeId, $orderBy = 'lft')
+    {
+        $inQuery = '?';
+        if (is_array($nodeId)) {
+            $inQuery = implode(',', array_fill(0, count($nodeId), '?'));
+        }
+        $sql = '
+            SELECT node.*, (SELECT parent.project_category_id FROM project_category AS parent WHERE parent.lft < node.lft AND parent.rgt > node.rgt ORDER BY parent.rgt-node.rgt LIMIT 1) AS parent
+            FROM project_category AS node
+            WHERE node.is_active = 1
+            HAVING parent IN (' . $inQuery . ')
+            ORDER BY node.' . $orderBy . '
+            ';
+        $children = $this->_db->query($sql, $nodeId)->fetchAll();
+        if (count($children)) {
+            return $children;
+        } else {
+            return array();
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function fetchTreeForJTable($cat_id)
+    {
+        $resultRows = $this->fetchTree(1000, 0, false, true, 5, true);
+
         $resultForSelect = array();
-        $resultForSelect[''] = '';
         foreach ($resultRows as $row) {
-            $resultForSelect[$row['project_category_id']] = $row['title'];
+            if (($row['project_category_id'] == $cat_id) OR ($row['parent'] == $cat_id)) {
+                continue;
+            }
+            $resultForSelect[] = array('DisplayText' => $row['title_show'], 'Value' => $row['project_category_id']);
         }
 
         return $resultForSelect;
@@ -283,8 +333,14 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
      * @param int $depth
      * @return array
      */
-    public function fetchTree($pageSize = 10, $startIndex = 0, $isActive = false, $withRoot = true, $depth = null, $clearCache = false)
-    {
+    public function fetchTree(
+        $pageSize = 10,
+        $startIndex = 0,
+        $isActive = false,
+        $withRoot = true,
+        $depth = null,
+        $clearCache = false
+    ) {
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
         $cacheName = __FUNCTION__ . '_' . md5((string)$pageSize . (string)$startIndex . (int)$isActive . (int)$withRoot . (string)$depth);
@@ -333,24 +389,6 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
             $cache->save($tree, $cacheName);
         }
         return $tree;
-    }
-
-    /**
-     * @return array
-     */
-    public function fetchTreeForJTable($cat_id)
-    {
-        $resultRows = $this->fetchTree(1000, 0, false, true, 5, true);
-
-        $resultForSelect = array();
-        foreach ($resultRows as $row) {
-            if (($row['project_category_id'] == $cat_id) OR ($row['parent'] == $cat_id)) {
-                continue;
-            }
-            $resultForSelect[] = array('DisplayText' => $row['title_show'], 'Value' => $row['project_category_id']);
-        }
-
-        return $resultForSelect;
     }
 
     /**
@@ -440,16 +478,16 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
     public function fetchAncestorsAsId($catId)
     {
         $sql = '
-        SELECT node.title, GROUP_CONCAT(parent.project_category_id ORDER BY parent.lft) as ancestors 
+        SELECT node.title, GROUP_CONCAT(parent.project_category_id ORDER BY parent.lft) AS ancestors 
         FROM project_category AS node
-        LEFT JOIN project_category as parent ON parent.lft < node.lft AND parent.rgt > node.rgt AND parent.lft > 0
+        LEFT JOIN project_category AS parent ON parent.lft < node.lft AND parent.rgt > node.rgt AND parent.lft > 0
         WHERE node.project_category_id = :categoryId
         GROUP BY node.project_category_id
         HAVING ancestors IS NOT NULL
         ';
-        
+
         $result = $this->_db->fetchRow($sql, array('categoryId' => $catId));
-        
+
         if ($result AND count($result) > 0) {
             return $result;
         } else {
@@ -519,7 +557,7 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
         ORDER BY (rgt-lft) DESC
         ";
         $resultRow = $this->_db->query($sql, array('category_id' => $data['project_category_id']))->fetch();
-       
+
         return $this->find($resultRow['parent'])->current();
     }
 
@@ -677,7 +715,7 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
             $inQuery = implode(',', array_fill(0, count($nodeId), '?'));
         }
         $whereActive = $isActive == true ? ' AND o.is_active = 1' : '';
-        $sql = '
+        $sql = "
             SELECT o.*,
                    COUNT(p.project_category_id)-2 AS depth
                 FROM project_category AS n,
@@ -685,12 +723,12 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
                      project_category AS o
                WHERE o.lft BETWEEN p.lft AND p.rgt
                  AND o.lft BETWEEN n.lft AND n.rgt
-                 AND n.project_category_id IN (' . $inQuery . ')
-                 ' . $whereActive . '
+                 AND n.project_category_id IN ({$inQuery})
+                 {$whereActive}
             GROUP BY o.lft
             HAVING depth > 0
             ORDER BY o.lft;
-        ';
+        ";
         $children = $this->_db->query($sql, $nodeId)->fetchAll();
         if (count($children)) {
             return $children;
@@ -723,19 +761,19 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
             $inQuery = implode(',', array_fill(0, count($nodeId), '?'));
         }
         $whereActive = $isActive == true ? ' AND o.is_active = 1' : '';
-        $sql = '
+        $sql = "
             SELECT o.project_category_id
                 FROM project_category AS n,
                      project_category AS p,
                      project_category AS o
                WHERE o.lft BETWEEN p.lft AND p.rgt
                  AND o.lft BETWEEN n.lft AND n.rgt
-                 AND n.project_category_id IN (' . $inQuery . ')
-                 ' . $whereActive . '
+                 AND n.project_category_id IN ({$inQuery})
+                 {$whereActive}
             GROUP BY o.lft
             HAVING COUNT(p.project_category_id)-2 > 0
             ORDER BY o.lft;
-        ';
+        ";
         $children = $this->_db->query($sql, $nodeId)->fetchAll();
         if (count($children)) {
             $result = $this->flattenArray($children);
@@ -747,40 +785,32 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
     }
 
     /**
-     * @param int|array $nodeId
-     * @param string $orderBy
+     *
+     * @flatten multi-dimensional array
+     *
+     * @param array $array
+     *
      * @return array
+     *
      */
-    public function fetchImmediateChildren($nodeId, $orderBy = 'lft')
+    private function flattenArray(array $array)
     {
-        $inQuery = '?';
-        if (is_array($nodeId)) {
-            $inQuery = implode(',', array_fill(0, count($nodeId), '?'));
+        $ret_array = array();
+        foreach (new RecursiveIteratorIterator(new RecursiveArrayIterator($array)) as $value) {
+            $ret_array[] = $value;
         }
-        $sql = '
-            SELECT node.*, (SELECT parent.project_category_id FROM project_category AS parent WHERE parent.lft < node.lft AND parent.rgt > node.rgt ORDER BY parent.rgt-node.rgt LIMIT 1) AS parent
-            FROM project_category AS node
-            WHERE node.is_active = 1
-            HAVING parent IN ('.$inQuery.')
-            ORDER BY node.'.$orderBy.'
-            ';
-        $children = $this->_db->query($sql, $nodeId)->fetchAll();
-        if (count($children)) {
-            return $children;
-        } else {
-            return array();
-        }
+        return $ret_array;
     }
 
-    public function fetchImmediateChildrenIds($nodeId, $orderBy = self::ORDERED_HIERACHIC)
+    public function fetchImmediateChildrenIds($nodeId, $orderBy = self::ORDERED_HIERARCHIC)
     {
-        $sql = '
+        $sql = "
                 SELECT node.project_category_id
                 FROM project_category AS node
                 WHERE node.is_active = 1
                 HAVING (SELECT parent.project_category_id FROM project_category AS parent WHERE parent.lft < node.lft AND parent.rgt > node.rgt ORDER BY parent.rgt-node.rgt LIMIT 1) = ?
-                ORDER BY node.`'.$orderBy.'`;
-            ';
+                ORDER BY node.`{$orderBy}`;
+            ";
         $children = $this->_db->query($sql, $nodeId)->fetchAll(Zend_Db::FETCH_NUM);
         if (count($children)) {
             return $this->flattenArray($children);
@@ -842,7 +872,7 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
             return $returnValue;
         }
 
-        $sql ="
+        $sql = "
                 SELECT
                     node.project_category_id
                 FROM
@@ -872,9 +902,9 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
     /**
      * @return array
      */
-   public function fetchMainCatsOrdered()
+    public function fetchMainCatsOrdered()
     {
-        $sql ="
+        $sql = "
                 SELECT
                     node.project_category_id, node.title, node.lft, node.rgt
                 FROM
@@ -890,7 +920,7 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
                 HAVING (COUNT(parent.title) - 1) = 1
                 ORDER BY node.orderPos, node.lft;
         ";
-       $result = $this->_db->query($sql)->fetchAll();
+        $result = $this->_db->query($sql)->fetchAll();
         if (count($result) > 0) {
             return $result;
         } else {
@@ -905,7 +935,7 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
      */
     public function fetchSubCatIds($cat_id, $orderBy = self::ORDERED_HIERARCHIC)
     {
-        $sql ="
+        $sql = "
                 SELECT
                     node.project_category_id
                 FROM
@@ -923,31 +953,13 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
                 ORDER BY node.`{$orderBy}`
                 ;
         ";
-        $result = $this->_db->query($sql, array('cat_id'=> $cat_id))->fetchAll(Zend_Db::FETCH_NUM);
+        $result = $this->_db->query($sql, array('cat_id' => $cat_id))->fetchAll(Zend_Db::FETCH_NUM);
         if (count($result) > 0) {
 //            array_shift($result);
             return $this->flattenArray($result);
         } else {
             return array();
         }
-    }
-
-    /**
-     *
-     * @flatten multi-dimensional array
-     *
-     * @param array $array
-     *
-     * @return array
-     *
-     */
-    private function flattenArray(array $array){
-        $ret_array = array();
-        foreach(new RecursiveIteratorIterator(new RecursiveArrayIterator($array)) as $value)
-        {
-            $ret_array[] = $value;
-        }
-        return $ret_array;
     }
 
     /**
@@ -970,24 +982,6 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
     {
         shuffle($categories);
         return array_slice($categories, 0, $count);
-    }
-
-    /**
-     * @param int $nodeId
-     * @return Zend_Db_Table_Row_Abstract
-     */
-    public function findCategory($nodeId)
-    {
-        if (is_null($nodeId) OR $nodeId == '') {
-            return $this->createRow();
-        }
-
-        $result = $this->find($nodeId);
-        if (count($result) > 0) {
-            return $result->current();
-        } else {
-            return $this->createRow();
-        }
     }
 
     /**
@@ -1121,11 +1115,62 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
 
         $countSubCat = (int)$cat->rgt - (int)$cat->lft - 1;
 
-        if ($countSubCat < 0 ) {
+        if ($countSubCat < 0) {
             return 0;
         } else {
             return $countSubCat;
         }
+    }
+
+    /**
+     * @param int $nodeId
+     * @return Zend_Db_Table_Row_Abstract
+     */
+    public function findCategory($nodeId)
+    {
+        if (is_null($nodeId) OR $nodeId == '') {
+            return $this->createRow();
+        }
+
+        $result = $this->find($nodeId);
+        if (count($result) > 0) {
+            return $result->current();
+        } else {
+            return $this->createRow();
+        }
+    }
+
+    public function fetchAncestorsForForm($valueCatId)
+    {
+        $level = 0;
+        $ancestors = array("catLevel-{$level}"=>$this->fetchMainCatForSelect(Default_Model_DbTable_ProjectCategory::ORDERED_TITLE));
+        $level++;
+
+        if (false == empty($valueCatId))
+        {
+            $categoryAncestors = $this->fetchAncestorsAsId($valueCatId);
+            $categoryPath = explode(',',$categoryAncestors['ancestors']);
+            foreach ($categoryPath as $element) {
+                $ancestors["catLevel-{$level}"] = $this->prepareDataForFormSelect($this->fetchImmediateChildren($element, Default_Model_DbTable_ProjectCategory::ORDERED_TITLE));
+                $level++;
+            }
+        }
+
+        return $ancestors;
+    }
+
+    /**
+     * @param $resultRows
+     * @return array
+     */
+    protected function prepareDataForFormSelect($resultRows)
+    {
+        $resultForSelect = array();
+        $resultForSelect[''] = '';
+        foreach ($resultRows as $row) {
+            $resultForSelect[$row['project_category_id']] = $row['title'];
+        }
+        return $resultForSelect;
     }
 
 }

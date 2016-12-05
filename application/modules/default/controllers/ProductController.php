@@ -269,8 +269,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         }
 
         if (false === $form->isValid($_POST)) { // form not valid
-            $form->initSubCatElement((int)$this->getParam('project_category_id'));
-            $form->initSubSubCatElement((int)$this->getParam('project_subcategory_id'));
             $this->view->form = $form;
             $this->view->error = 1;
             return;
@@ -286,14 +284,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             Zend_Registry::get('logger')->err(__METHOD__ . ' - ERROR upload productPicture - ' . print_r($e, true));
         }
 
-        //update sub categories and save it in project
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - $values[\'project_category_id\']: ' . $values['project_category_id'] . "\n");
-        if (isset($values['project_subcategory_id']) AND is_array($values['project_subcategory_id']) AND count($values['project_subcategory_id'] == 1)) {
-            $values['project_category_id'] = $values['project_subcategory_id'][0];
-        }
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - $values[\'project_category_id\'] New: ' . $values['project_category_id'] . "\n");
-
-        // form was valid, so we can set status to inactive
+        // form was valid, so we can set status to active
         $values['status'] = Default_Model_DbTable_Project::PROJECT_ACTIVE;
 
         // save new project
@@ -316,7 +307,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             Zend_Registry::get('logger')->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . ' - set image_small: ' . $values['image_small'] . '\n');
         } else {
             Zend_Registry::get('logger')->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . ' - set image_small: Not need. ' . $values['image_small'] . '\n');
-
         }
 
         //New Project in Session, for AuthValidation (owner)
@@ -471,19 +461,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         //read the already existing gallery pics and add them to the form
         $sources = $projectModel->getGalleryPictureSources($this->_projectId);
 
-        //read category
-        $tableCategory = new Default_Model_DbTable_ProjectCategory();
-        $childsArray = $tableCategory->fetchChildElements($projectData->project_category_id);
-        $isChildCat = false;
-        if (isset($childsArray) && count($childsArray) == 1) {
-            //1 child, but is it a ParentCat?
-            $child = $childsArray[0];
-            if ($child['project_category_id'] == $projectData->project_category_id) {
-                //ChildCat was writen in project as MainCat!
-                $isChildCat = true;
-            }
-        }
-
         //setup form
         $form = new Default_Form_Product(array('pictures' => $sources));
         if (false === empty($projectData->image_small)) {
@@ -491,18 +468,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         }
         $form->getElement('preview')->setLabel('Save');
 
-
-        //read the subcategories
-        $tableSubCategory = new Default_Model_SubCategory();
-        $subcategories = $tableSubCategory->fetchAllSubCategories($projectData->project_category_id,
-            $tableSubCategory::ORDERED_TITLE);
-        $selectedSubCategories = $tableSubCategory->fetchSelectedSubCategories($this->_projectId);
-//        $modelSubSubCategories = new Default_Model_SubSubCategory();
-//        $subSubCategories = $modelSubSubCategories->fetchAllSubCategories($selectedSubCategories);
-//        $selectedSubSubCategories = $modelSubSubCategories->fetchSelectedSubCategories($this->_projectId);
-
-        $form->getElement('project_subcategory_id')->setMultiOptions($subcategories);
-//        $form->getElement('project_sub_subcategory_id')->setMultiOptions($subSubCategories);
         $form->removeElement('project_id'); // we don't need this field in edit mode
 
         $this->view->member = $this->_authMember;
@@ -515,24 +480,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 //            $form->getElement('image_big')->setValue($projectData->image_big);
 
 
-            if ($isChildCat) {
-                $mainCat = $tableCategory->fetchParentForId($projectData);
-                $main_category_id = 'LEER';
-                if (isset($mainCat)) {
-                    $main_category_id = $mainCat->project_category_id;
-                }
-
-                $tableSubCategory = new Default_Model_SubCategory();
-                $subcategories = $tableSubCategory->fetchAllSubCategories($main_category_id,
-                    $tableSubCategory::ORDERED_TITLE);
-                $form->getElement('project_subcategory_id')->setMultiOptions($subcategories);
-
-                $form->getElement('project_category_id')->setValue($main_category_id);
-                $form->getElement('project_subcategory_id')->setValue($projectData->project_category_id);
-            } else {
-                $form->getElement('project_subcategory_id')->setValue($selectedSubCategories);
-//                $form->getElement('project_sub_subcategory_id')->setValue($selectedSubSubCategories);
-            }
             //Bilder voreinstellen
             $form->getElement(self::IMAGE_SMALL_UPLOAD)->setValue($projectData->image_small);
 //            $form->getElement(self::IMAGE_BIG_UPLOAD)->setValue($projectData->image_big);
@@ -552,14 +499,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         }
 
         $values = $form->getValues();
-
-        $log = Zend_Registry::get('logger');
-        $log->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . ' - setCatId New: ' . $values['project_category_id'] . "\n");
-        if (isset($values['project_subcategory_id']) AND is_array($values['project_subcategory_id']) AND count($values['project_subcategory_id']) == 1) {
-            $values['project_category_id'] = $values['project_subcategory_id'][0];
-        }
-        $log->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . ' - setCatId New: ' . $values['project_category_id'] . "\n");
-
 
         $imageModel = new Default_Model_DbTable_Image();
         try {
@@ -591,9 +530,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         //If there is no Logo, we take the 1. gallery pic
         if (!isset($projectData->image_small) || $projectData->image_small == '') {
             $projectData->image_small = $pictureSources[0];
-            $log->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . ' - set image_small: ' . $projectData->image_small . '\n');
+            Zend_Registry::get('logger')->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . ' - set image_small: ' . $projectData->image_small . '\n');
         } else {
-            $log->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . ' - set image_small: Not neeed. ' . $projectData->image_small . '\n');
+            Zend_Registry::get('logger')->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . ' - set image_small: Not neeed. ' . $projectData->image_small . '\n');
 
         }
         $projectData->save();

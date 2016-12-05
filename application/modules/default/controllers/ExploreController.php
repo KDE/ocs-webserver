@@ -231,7 +231,7 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
 
     public function searchAction()
     {
-        ini_set('memory_limit', '2048M');
+        ini_set('memory_limit', '3072M');
 
         $allDomainCatIds = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
         if (count($allDomainCatIds) == 0) {
