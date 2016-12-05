@@ -29,6 +29,15 @@ $this->cc_share = $this->form->sa->getValue();
 $this->tab = 'add';
 $helperImage = new Default_View_Helper_Image();
 
+$modelCategory = new Default_Model_DbTable_ProjectCategory();
+$valueCatId = $this->form->project_category_id->getValue();
+//$valueCatId = 55;
+$dummy = $modelCategory->fetchAncestorsForForm($valueCatId);
+$categoryAncestors = $modelCategory->fetchAncestorsAsId($valueCatId);
+if (count($categoryAncestors) > 0) {
+    $categoryPath = explode(',',$categoryAncestors['ancestors']);
+}
+$categoryPath[] = $valueCatId;
 ?>
     <style>
 
@@ -82,62 +91,6 @@ $helperImage = new Default_View_Helper_Image();
             width: 1em;
         }
 
-        .cc-license-icon, .cc-license-icon::before, .cc-license-icon::after {
-            background-position: center center;
-            background-repeat: no-repeat;
-            content: "";
-            display: inline-block;
-            height: 14px;
-            vertical-align: top;
-            width: 16px;
-        }
-
-        .cc-license-icon-by,
-        .cc-license-icon-by-nc::before,
-        .cc-license-icon-by-nd::before,
-        .cc-license-icon-by-sa::before,
-        .cc-license-icon-by-nc-nd::before,
-        .cc-license-icon-by-nc-sa::before {
-            background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAQAAAC1QeVaAAAAz0lEQVR4AW3QQWYEQRyF8UfTBxia0Aw5w3eGJjQhzCqrOUMIQ29DMQxDVjlVE4phGOYAWRVNVpXnv0hCUj9q8/GokuJwQ2Km2syeHmHC2FDITIw2kVnYRoxUmWgQ9yabqDwSg4UXFD5M4UChF3vOtMhueebJt6zlRBLv7FC4UO2Cwo5ZfHKHwjXiFYWBxZHx3ziy/J4dIg7fsyeRONEgW0dcI2vJvIqOQvoTDyz0iqdXEi0r3mxF8/MJxgOFM0e2diRT2KCIoSORqZZJdAj7AhNNcMbJoxPKAAAAAElFTkSuQmCC");
-        }
-
-        .cc-license-icon-by-nc,
-        .cc-license-icon-by-nc-nd::after,
-        .cc-license-icon-by-nc-sa::after {
-            background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAQAAAC1QeVaAAAA60lEQVQYGUXBQWebARwH4B+hjBJGCC+77jqe6647hTByyinXMnYNOYXxEkLpaR+g36OMnkYo4aX0G5TyEnL6r96OPk8yMNU6KOVgp8k7C72jjZmZtYOTVd5YKBujxFiTVzbKMomp3q8MLP3OwF6viZ3yYqdxq5Qnl4kLnTYeXNt7UcrW2JcMrB3ibJa49MOjcmeegW9OcTbLf+bulc6VD+ZO8WCdV0Z++uSr8tfZs3tdtDqjxGdPSvnjo6m9chMTvTYDS/sMbJ00ScyV1kVirEmMbJVl3viu9+jaysqNTm+RdyZaR6UctSYZ/ANxgGrzUQYhmwAAAABJRU5ErkJggg==");
-        }
-
-        .cc-license-icon-by-nd,
-        .cc-license-icon-by-nc-nd {
-            background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAQAAAC1QeVaAAAAwUlEQVQY022Q0aYCYRhFF9EbRPQG3a4HOETEcIg4xCGiZxjmNn4i4lyddxriMAw9xs8wV38XTWac2vtyf7ZvbQDAicHSZLI0OKWXG6OVhZmZuVejX89obbJwNDguTG4fhdEj/+TZ6AyDN8cv4djagH/mAH7423kPYO4VW1dvw6UNtmYAzj10XgCY2fS1G8vOx662xmA9xBg89PNACW9QWmeAnyZDj+PIwuR3v1H05sWdOy9WNm6HNRODlclk5ek5/B2XLFYUMFBXLwAAAABJRU5ErkJggg==");
-        }
-
-        .cc-license-icon-by-sa,
-        .cc-license-icon-by-nc-sa {
-            background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAQAAAC1QeVaAAAA6klEQVQYGUXBwUZscQAH4B+HwzzAEL1B22/V6q5iOMQQEdEb3O1huKv4ExFDtJrHaBVtY4gYhnmGVodhVv87ptT3JQfGiqWqWiqO8suFwcpMp9N7N7jMF1PVTJMfZqqrJMYGt9lz7smTLnvuDY6j2GgTf1WDjeox0Vor8aFPtD4tNYmF6k+i9x47k8SpwUKTmKhuE2e2sdNlz0kOTFQl0dnGhz4x8maePXPVNNFbR7HWJBaqN8+qV43W2jzGBiUx0lt68c8ocW/nOIlzVdHmm8ZMdZ0vpgYbD27ceLCydZVfxoqVqlq5c5SD/2E4aRYS9a2xAAAAAElFTkSuQmCC");
-        }
-
-        .cc-license-icon-by-nc,
-        .cc-license-icon-by-nd,
-        .cc-license-icon-by-sa {
-            margin-left: 16px;
-        }
-
-        .cc-license-icon-by-nc::before,
-        .cc-license-icon-by-nd::before,
-        .cc-license-icon-by-sa::before,
-        .cc-license-icon-by-nc-nd::before,
-        .cc-license-icon-by-nc-sa::before {
-            margin-left: -16px;
-        }
-
-        .cc-license-icon-by-nc-nd::before, .cc-license-icon-by-nc-sa::before {
-            margin-left: -32px;
-        }
-
-        .cc-license-icon-by-nc-nd, .cc-license-icon-by-nc-sa {
-            margin-left: 32px;
-        }
     </style>
     <main class="user-admin-page">
 
@@ -155,11 +108,9 @@ $helperImage = new Default_View_Helper_Image();
 
                     <div class="pull-left">
                         <div class="intro">
-                            <div class="large">Hi <span
-                                    class="lightblue"><?php echo $this->member->username; ?></span><?= $this->translate(', welcome to your personal start page!') ?>
+                            <div class="large">Hi <span class="lightblue"><?= $this->member->username; ?></span><?= $this->translate(', welcome to your personal start page!') ?>
                             </div>
-                            <div class="small lightgrey"><a
-                                    href="/member/<?php echo $this->member->member_id; ?>/"><?= $this->translate('Click here to go to your About Me page.') ?></a>
+                            <div class="small lightgrey"><a href="/member/<?= $this->member->member_id; ?>/"><?= $this->translate('Click here to go to your About Me page.') ?></a>
                             </div>
                         </div>
                     </div>
@@ -250,13 +201,10 @@ $helperImage = new Default_View_Helper_Image();
                                 <?= $this->form->gallery ?>
                                 <?= $this->form->embed_code ?>
                                 <?= $this->form->link_1 ?>
-								<?= $this->form->github_code ?>
+                                <?= $this->form->github_code ?>
                                 <?= $this->form->facebook_code ?>
                                 <?= $this->form->twitter_code ?>
                                 <?= $this->form->google_code ?>
-                                                                
-                                
-                                
                             </section>
 
                             <h3>Files</h3>
@@ -336,10 +284,10 @@ $helperImage = new Default_View_Helper_Image();
 							            
 							            <div class="modal-body" style="font-size: small;">
 							            	<div role="form" class="">
-								            	<input type="hidden" id="update-id" data-update-id="" id="update-id" value="">
+								            	<input type="hidden" data-update-id="" id="update-id" value="">
 											    <div class="form-group">
 											      <label for="tile">Changelog Title:</label>
-											      <input type="text" id="update-title" data-update-title="" class="form-control input-sm" id="title" placeholder="Enter Changelog Title">
+											      <input type="text" id="update-title" data-update-title="" class="form-control input-sm" placeholder="Enter Changelog Title">
 											    </div>
 											    <div class="form-group">
 											      <label for="text">Changelog Text:</label>
@@ -1364,6 +1312,64 @@ $helperImage = new Default_View_Helper_Image();
                             </section>
 
                             <?php /**
+                             <style>
+                            .cc-license-icon, .cc-license-icon::before, .cc-license-icon::after {
+                            background-position: center center;
+                            background-repeat: no-repeat;
+                            content: "";
+                            display: inline-block;
+                            height: 14px;
+                            vertical-align: top;
+                            width: 16px;
+                            }
+
+                            .cc-license-icon-by,
+                            .cc-license-icon-by-nc::before,
+                            .cc-license-icon-by-nd::before,
+                            .cc-license-icon-by-sa::before,
+                            .cc-license-icon-by-nc-nd::before,
+                            .cc-license-icon-by-nc-sa::before {
+                            background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAQAAAC1QeVaAAAAz0lEQVR4AW3QQWYEQRyF8UfTBxia0Aw5w3eGJjQhzCqrOUMIQ29DMQxDVjlVE4phGOYAWRVNVpXnv0hCUj9q8/GokuJwQ2Km2syeHmHC2FDITIw2kVnYRoxUmWgQ9yabqDwSg4UXFD5M4UChF3vOtMhueebJt6zlRBLv7FC4UO2Cwo5ZfHKHwjXiFYWBxZHx3ziy/J4dIg7fsyeRONEgW0dcI2vJvIqOQvoTDyz0iqdXEi0r3mxF8/MJxgOFM0e2diRT2KCIoSORqZZJdAj7AhNNcMbJoxPKAAAAAElFTkSuQmCC");
+                            }
+
+                            .cc-license-icon-by-nc,
+                            .cc-license-icon-by-nc-nd::after,
+                            .cc-license-icon-by-nc-sa::after {
+                            background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAQAAAC1QeVaAAAA60lEQVQYGUXBQWebARwH4B+hjBJGCC+77jqe6647hTByyinXMnYNOYXxEkLpaR+g36OMnkYo4aX0G5TyEnL6r96OPk8yMNU6KOVgp8k7C72jjZmZtYOTVd5YKBujxFiTVzbKMomp3q8MLP3OwF6viZ3yYqdxq5Qnl4kLnTYeXNt7UcrW2JcMrB3ibJa49MOjcmeegW9OcTbLf+bulc6VD+ZO8WCdV0Z++uSr8tfZs3tdtDqjxGdPSvnjo6m9chMTvTYDS/sMbJ00ScyV1kVirEmMbJVl3viu9+jaysqNTm+RdyZaR6UctSYZ/ANxgGrzUQYhmwAAAABJRU5ErkJggg==");
+                            }
+
+                            .cc-license-icon-by-nd,
+                            .cc-license-icon-by-nc-nd {
+                            background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAQAAAC1QeVaAAAAwUlEQVQY022Q0aYCYRhFF9EbRPQG3a4HOETEcIg4xCGiZxjmNn4i4lyddxriMAw9xs8wV38XTWac2vtyf7ZvbQDAicHSZLI0OKWXG6OVhZmZuVejX89obbJwNDguTG4fhdEj/+TZ6AyDN8cv4djagH/mAH7423kPYO4VW1dvw6UNtmYAzj10XgCY2fS1G8vOx662xmA9xBg89PNACW9QWmeAnyZDj+PIwuR3v1H05sWdOy9WNm6HNRODlclk5ek5/B2XLFYUMFBXLwAAAABJRU5ErkJggg==");
+                            }
+
+                            .cc-license-icon-by-sa,
+                            .cc-license-icon-by-nc-sa {
+                            background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAQAAAC1QeVaAAAA6klEQVQYGUXBwUZscQAH4B+HwzzAEL1B22/V6q5iOMQQEdEb3O1huKv4ExFDtJrHaBVtY4gYhnmGVodhVv87ptT3JQfGiqWqWiqO8suFwcpMp9N7N7jMF1PVTJMfZqqrJMYGt9lz7smTLnvuDY6j2GgTf1WDjeox0Vor8aFPtD4tNYmF6k+i9x47k8SpwUKTmKhuE2e2sdNlz0kOTFQl0dnGhz4x8maePXPVNNFbR7HWJBaqN8+qV43W2jzGBiUx0lt68c8ocW/nOIlzVdHmm8ZMdZ0vpgYbD27ceLCydZVfxoqVqlq5c5SD/2E4aRYS9a2xAAAAAElFTkSuQmCC");
+                            }
+
+                            .cc-license-icon-by-nc,
+                            .cc-license-icon-by-nd,
+                            .cc-license-icon-by-sa {
+                            margin-left: 16px;
+                            }
+
+                            .cc-license-icon-by-nc::before,
+                            .cc-license-icon-by-nd::before,
+                            .cc-license-icon-by-sa::before,
+                            .cc-license-icon-by-nc-nd::before,
+                            .cc-license-icon-by-nc-sa::before {
+                            margin-left: -16px;
+                            }
+
+                            .cc-license-icon-by-nc-nd::before, .cc-license-icon-by-nc-sa::before {
+                            margin-left: -32px;
+                            }
+
+                            .cc-license-icon-by-nc-nd, .cc-license-icon-by-nc-sa {
+                            margin-left: 32px;
+                            }
+                            </style>
                             <h3>License</h3>
                             <section id="license">
                                 <div class="form-group">
@@ -1523,7 +1529,7 @@ $helperImage = new Default_View_Helper_Image();
                 enableCancelButton: true,
                 showFinishButtonAlways: true,
                 transitionEffect: "slideLeft",
-                /* Labels */
+              /* Labels */
                 labels: {
                     cancel: "Cancel",
                     finish: "Save"
@@ -1544,19 +1550,19 @@ $helperImage = new Default_View_Helper_Image();
                         if (ImagePreview.hasError) {
                             return false;
                         }
-						//logo OR preview pic mandotory!
-						logoSrc = $('#product-picture-preview').attr('src');
-						$gallery = $('.product-gallery div:first-child');
-						$galleryPic = $gallery.find('.image'); 
+                        //logo OR preview pic mandatory!
+                        var logoSrc = $('#product-picture-preview').attr('src');
+                        var gallery = $('.product-gallery div:first-child');
+                        var galleryPic = gallery.find('.image');
 
-						if(!logoSrc && !$galleryPic.attr('style')) {
-							$msg = $('#preview_img_msg');
-							$msg.text('');
-							$msg.append('<label id="description-error" class="error" for="product-gallery">Please add a Product Logo or at least one Product Gallery Picture!</label>');
-							
-							return false;
-						}
-                        
+                        if (!logoSrc && !galleryPic.attr('style')) {
+                            var msg = $('#preview_img_msg');
+                            msg.text('');
+                            msg.append('<label id="description-error" class="error" for="product-gallery">Please add a product logo or at least one product gallery picture!</label>');
+
+                            return false;
+                        }
+
                         if (formElement.valid()) {
                             if (ProductForm.mode == 'add' && (ProductForm.project_id == '' || ProductForm.project_id == undefined)) {
                                 var result = ProductForm.saveSection(formElement.find('.body:eq(' + currentIndex + ')').attr('id'));
@@ -1574,20 +1580,20 @@ $helperImage = new Default_View_Helper_Image();
                 },
 
                 onFinished: function (event, currentIndex) {
-                	//logo OR preview pic mandotory!
-					logoSrc = $('#product-picture-preview').attr('src');
-					$gallery = $('.product-gallery div:first-child');
-					$galleryPic = $gallery.find('.image'); 
+                    //logo OR preview pic mandatory!
+                    var logoSrc = $('#product-picture-preview').attr('src');
+                    var gallery = $('.product-gallery div:first-child');
+                    var galleryPic = gallery.find('.image');
 
-					if(!logoSrc && !$galleryPic.attr('style')) {
-						$msg = $('#preview_img_msg');
-						$msg.text('');
-						$msg.append('<label id="description-error" class="error" for="product-gallery">Please add a Product Logo or at least one Product Gallery Picture!</label>');
-						
-						return false;
-					}
+                    if (!logoSrc && !galleryPic.attr('style')) {
+                        var msg = $('#preview_img_msg');
+                        msg.text('');
+                        msg.append('<label id="description-error" class="error" for="product-gallery">Please add a product logo or at least one product gallery picture!</label>');
 
-					if (currentIndex == 0) {
+                        return false;
+                    }
+
+                    if (currentIndex == 0) {
                         if (ImagePreview.hasError) {
                             return false;
                         }
@@ -1600,194 +1606,197 @@ $helperImage = new Default_View_Helper_Image();
                             formElement.find("#modal-ppload").attr('data-product-id', ProductForm.project_id);
                         }
                     }
-					
-					
+
+
                     $('[name=project_id]').val(ProductForm.project_id);
                     formElement.submit();
                 },
 
                 onCanceled: function (event, currentIndex) {
-                	window.location.href = "/member/<?php echo $this->member->member_id; ?>/products/";
+                    window.location.href = "/member/<?php echo $this->member->member_id; ?>/products/";
                 }
 
             });
 
         });
     </script>
-    <script>
-        ProductForm = {
+  <script>
+      ProductForm = {
 
-            mode: "<?=$this->mode?>",
-            project_id: $('#project_id').val(),
-            errors: "",
-            cc_license_isStored: <?=$this->form->cc_license->getValue() == true ? 'true' : 'false'?>,
-            cc_license_data: {
-                by:<?=$this->cc_attribution == true ? 'true' : 'false'?>,
-                nc:<?=$this->cc_commercial == true ? 'true' : 'false'?>,
-                nd:<?=$this->cc_derivate_works == true ? 'true' : 'false'?>,
-                sa:<?=$this->cc_share == true ? 'true' : 'false'?>
-            },
+          mode: "<?=$this->mode?>",
+          project_id: $('#project_id').val(),
+          errors: "",
+          cc_license_isStored: <?=$this->form->cc_license->getValue() == true ? 'true' : 'false'?>,
+          cc_license_data: {
+              by:<?=$this->cc_attribution == true ? 'true' : 'false'?>,
+              nc:<?=$this->cc_commercial == true ? 'true' : 'false'?>,
+              nd:<?=$this->cc_derivate_works == true ? 'true' : 'false'?>,
+              sa:<?=$this->cc_share == true ? 'true' : 'false'?>
+          },
+          cat_id_data: <?=json_encode($dummy)?>,
+          cat_id_path: <?=json_encode($categoryPath)?>,
 
 
-            setup: function () {
-                //this.setupAmountPeriod();
-                this.setupProductCat();
-                this.setupCcLicenseActions();
-                this.setLicenseCheckbox();
-                this.setCssLicenseSummary();
-                this.setCCLicenseVisibilty();
-            },
+          setup: function () {
+              this.setupCategorySelect();
+              this.setupCategoryAjax();
+              this.setupCcLicenseActions();
+              this.setLicenseCheckbox();
+              this.setCssLicenseSummary();
+              this.setCCLicenseVisibility();
+          },
 
-            setupAmountPeriod: function () {
-                if (!$('input[name=amount_period]:checked').val()) {
-                    $('[name=amount_period]').first().parent().parent().parent().addClass('hidden');
-                }
+          setupCategorySelect: function() {
+              var level = 0;
+              for (var form_elem_name in this.cat_id_data) {
+                  var nextElementName = form_elem_name.substring(0, form_elem_name.length - 1) + (level + 1);
+                  var new_html_element = '<select name="' + form_elem_name + '" id="' + form_elem_name + '" class="required form-control product_select_cat" data-target="'+nextElementName+'" data-level="'+level+'">';
+                  for (var form_select_option in this.cat_id_data[form_elem_name]) {
+                      var attr_selected = '';
+                      if (form_select_option == this.cat_id_path[level]) {
+                          attr_selected = ' selected="selected"'
+                      }
+                      new_html_element += '<option value="' + form_select_option + '" ' + attr_selected + '>' + this.cat_id_data[form_elem_name][form_select_option] + '</option>';
+                  }
+                  new_html_element += '</select>';
+                  $('#wrapper_cat_id').append(new_html_element);
+                  level++;
+              }
+          },
 
-                //Not needed for now
-                $('input[name=amount_period]').attr("disabled", true);
+          setupCategoryAjax: function () {
+              $('body').on('change', 'div#wrapper_cat_id select.product_select_cat', function () {
 
-                $('#amount').blur(function (event) {
-                    if ($(this).val() > 0) {
-                        event.preventDefault();
-                        $('input[name=amount_period]').attr('disabled', false);
-                    } else {
-                        $('input[name=amount_period]').attr('disabled', true);
-                    }
-                })
-            },
+                  var cat_id = $(this).val();
+                  var name_new_elem = $(this).data('target');
+                  var level_elem = $(this).data('level') + 1;
+                  var level_new_elem = level_elem + 1;
+                  var name_new_target = name_new_elem.substring(0,name_new_elem.length - 1) + level_new_elem;
 
-            setupProductCat: function () {
-                $('body').on('change', 'select.product_select_cat', function (e) {
+                  if (!cat_id) {
+                      $('#wrapper_form_cat input:hidden:first').val($('#wrapper_cat_id').find("[data-level]:lt(" + (level_elem - 1) + ")").val());
+                      $('#wrapper_cat_id').find("[data-level]:gt(" + (level_elem - 1) + ")").remove();
+                      return;
+                  }
+                  $('#wrapper_form_cat input:hidden:first').val(cat_id);
 
-                    var cat_id = $(this).val();
-                    var name_elem_wrapper = $(this).data('target');
-                    var name_elem_target = name_elem_wrapper.substring(5);
-                    var name_elem_sub_target = $(this).data('sub-target');
+                  jQuery.ajax({
+                      data: {'cat_id': cat_id},
+                      url: '/productcategory/fetchchildren/',
+                      type: 'post',
+                      success: function (results) {
+                          $('#wrapper_cat_id').find("[data-level]:gt(" + (level_elem - 1) + ")").remove();
+                          if (!$.isEmptyObject(results)) {
+                              var new_html_element = '<select name="' + name_new_elem + '" id="' + name_new_elem + '" class="required form-control product_select_cat" data-target="'+name_new_target+'" data-level="'+level_elem+'">';
+                              new_html_element += '<option value=""> </option>';
+                              for (var i in results) {
+                                  new_html_element += '<option value="' + results[i].project_category_id + '">' + results[i].title + '</option>';
+                              }
+                              new_html_element += '</select>';
 
-                    var attr_class = '';
-                    var attr_data = '';
-                    if (name_elem_sub_target) {
-                        attr_class = 'product_select_cat';
-                        attr_data = 'data-target="wrap_' + name_elem_sub_target + '" ';
-                    }
-
-                    jQuery.ajax({
-                        data: {'cat_id': cat_id},
-                        url: '/productcategory/fetchchildren/',
-                        type: 'post',
-                        success: function (results) {
-                            $('#' + name_elem_wrapper).empty();
-                            if (!$.isEmptyObject(results)) {
-                                var new_html_element = '<select size="9"' + attr_data + 'name="' + name_elem_target + '[]" id="' + name_elem_target + '" class="required form-control ' + attr_class + '">';
-                                for (var i in results) {
-                                    new_html_element += '<option value="' + results[i].project_category_id + '">' + results[i].title + '</option>';
-                                }
-                                new_html_element += '</select>';
-
-                                $('#' + name_elem_wrapper).append(new_html_element);
-                            }
+                              $('#wrapper_cat_id').append(new_html_element);
                         }
-                    });
-                });
-            },
-
-            setupCcLicenseActions: function () {
-                $('body').on('change', '#license-text input[type="checkbox"]', function (event) {
-                    if ($(this).attr('data-name') == 'sa') {
-                        $('#cc_non_derivative_works').prop('checked', false);
-                        ProductForm.cc_license_data.nd = false;
                     }
-                    if ($(this).attr('data-name') == 'nd') {
-                        $('#cc_share_alike').prop('checked', false);
-                        ProductForm.cc_license_data.sa = false;
-                    }
-                    ProductForm.updateLicenseData($(this).attr('data-name'), $(this).is(':checked'));
-                });
-                $('body').on('click', '#cc_attribution', function (event) {
-                    event.stopPropagation();
-                    return false;
-                });
-            },
+                  });
+              });
+          },
 
-            saveSection: function (sectionId) {
-                var pid = $('#project_id').val();
-                if (pid != '') {
-                    return;
-                }
+          setupCcLicenseActions: function () {
+              $('body').on('change', '#license-text input[type="checkbox"]', function () {
+                  if ($(this).attr('data-name') == 'sa') {
+                      $('#cc_non_derivative_works').prop('checked', false);
+                      ProductForm.cc_license_data.nd = false;
+                  }
+                  if ($(this).attr('data-name') == 'nd') {
+                      $('#cc_share_alike').prop('checked', false);
+                      ProductForm.cc_license_data.sa = false;
+                  }
+                  ProductForm.updateLicenseData($(this).attr('data-name'), $(this).is(':checked'));
+              }).on('click', '#cc_attribution', function (event) {
+                  event.stopPropagation();
+                  return false;
+              });
+          },
 
-                var url = '/p/save/';
-                var data = $('#' + sectionId + ' :input').serialize();
-                var result = false;
+          saveSection: function (sectionId) {
+              var pid = $('#project_id').val();
+              if (pid != '') {
+                  return;
+              }
 
-                requestResult = jQuery.ajax({
-                    data: data,
-                    url: url,
-                    type: 'post',
-                    async: false
-                }).done(function (data, textStatus, jqXHR) {
-                    if (data.project_id == undefined) {
-                        ProductForm.project_id = '';
-                    } else {
-                        ProductForm.project_id = data.project_id;
-                    }
-                    if (data.status == 'error') {
-                        ProductForm.errors = data.messages;
-                        result = false;
-                    } else {
-                        result = true;
-                    }
+              var url = '/p/save/';
+              var data = $('#' + sectionId + ' :input').serialize();
+              var result = false;
 
-                }).fail(function (jqXHR, textStatus, errorThrown) {
+              jQuery.ajax({
+                  data: data,
+                  url: url,
+                  type: 'post',
+                  async: false
+              }).done(function (data, textStatus, jqXHR) {
+                  if (data.project_id == undefined) {
+                      ProductForm.project_id = '';
+                  } else {
+                      ProductForm.project_id = data.project_id;
+                  }
+                  if (data.status == 'error') {
+                      ProductForm.errors = data.messages;
+                      result = false;
+                  } else {
+                      result = true;
+                  }
 
-                }).always(function (data, textStatus, errorThrown) {
+              }).fail(function (jqXHR, textStatus, errorThrown) {
 
-                });
+              }).always(function (data, textStatus, errorThrown) {
 
-                return result;
-            },
+              });
 
-            showErrors: function () {
-                $.each(this.errors, function (index, value) {
-                    $('[name=' + index + ']').append('<label id="title-error" class="error" for="title">' + value + '</label>');
-                });
-            },
+              return result;
+          },
 
-            setLicenseCheckbox: function () {
-                $('#cc_license').prop('checked', this.cc_license_isStored);
-                $('#cc_attribution').prop('checked', this.cc_license_data.by);
-                $('#cc_commercial').prop('checked', this.cc_license_data.nc);
-                $('#cc_non_derivative_works').prop('checked', this.cc_license_data.nd);
-                $('#cc_share_alike').prop('checked', this.cc_license_data.sa);
-            },
+          showErrors: function () {
+              $.each(this.errors, function (index, value) {
+                  $('[name=' + index + ']').append('<label id="title-error" class="error" for="title">' + value + '</label>');
+              });
+          },
 
-            setCssLicenseSummary: function () {
-                css_license = this.buildCssLicense(this.cc_license_data);
-                $('.cc-license-icon').attr('class', css_license);
-            },
+          setLicenseCheckbox: function () {
+              $('#cc_license').prop('checked', this.cc_license_isStored);
+              $('#cc_attribution').prop('checked', this.cc_license_data.by);
+              $('#cc_commercial').prop('checked', this.cc_license_data.nc);
+              $('#cc_non_derivative_works').prop('checked', this.cc_license_data.nd);
+              $('#cc_share_alike').prop('checked', this.cc_license_data.sa);
+          },
 
-            buildCssLicense: function (obj) {
-                var result = "cc-license-icon cc-license-icon";
-                for (var i in obj) {
-                    if (obj.hasOwnProperty(i) && obj[i]) {
-                        result += "-" + i;
-                    }
-                }
-                return result;
-            },
+          setCssLicenseSummary: function () {
+              var css_license = this.buildCssLicense(this.cc_license_data);
+              $('.cc-license-icon').attr('class', css_license);
+          },
 
-            updateLicenseData: function (attr, value) {
-                this.cc_license_data[attr] = value;
-                this.setCssLicenseSummary();
-            },
+          buildCssLicense: function (obj) {
+              var result = "cc-license-icon cc-license-icon";
+              for (var i in obj) {
+                  if (obj.hasOwnProperty(i) && obj[i]) {
+                      result += "-" + i;
+                  }
+              }
+              return result;
+          },
 
-            setCCLicenseVisibilty: function () {
-                if (this.cc_license_isStored == false) {
-                    $('#cc_summary').collapse();
-                    $('#license-text').collapse();
-                }
-            }
+          updateLicenseData: function (attr, value) {
+              this.cc_license_data[attr] = value;
+              this.setCssLicenseSummary();
+          },
 
-        };
+          setCCLicenseVisibility: function () {
+              if (this.cc_license_isStored == false) {
+                  $('#cc_summary').collapse();
+                  $('#license-text').collapse();
+              }
+          }
+
+      };
     </script>
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){

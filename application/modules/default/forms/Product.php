@@ -53,8 +53,6 @@ class Default_Form_Product extends Zend_Form
             ->addElement($this->getSmallImageElement())
             ->addElement($this->getImageUploadElement())
             ->addElement($this->getCategoryIdElement())
-            ->addElement($this->getSubCategoryElement())
-            ->addElement($this->getSubSubCategoryElement())
             ->addElement($this->getDescriptionElement())
             ->addElement($this->getVersionElement())
 //            ->addElement($this->getBigImageElement())
@@ -184,61 +182,16 @@ class Default_Form_Product extends Zend_Form
 
     private function getCategoryIdElement()
     {
-        $fieldCategoryId = $this->createElement('SelectNotEscaped', 'project_category_id')
+        return $this->createElement('number', 'project_category_id', array())
             ->setRequired(true)
-            ->setFilters(array('StringTrim', new Zend_Filter_Callback('stripslashes')))
+            ->addValidator('Digits')
+            ->addFilter('Digits')
             ->setDecorators(
                 array(
                     array(
                         'ViewScript',
                         array(
-                            'viewScript' => 'product/viewscripts/input_select_cat.phtml',
-                            'placement' => false
-                        )
-                    )
-                ));
-        $modelProjectCategory = new Default_Model_DbTable_ProjectCategory();
-        $categoryList = $modelProjectCategory->fetchMainCatForSelect(Default_Model_DbTable_ProjectCategory::ORDERED_TITLE);
-        $categoryValidator = new Zend_Validate_InArray(array_keys($categoryList));
-        $fieldCategoryId->addValidator($categoryValidator);
-        $fieldCategoryId->addMultiOptions($categoryList);
-        return $fieldCategoryId;
-    }
-
-    private function getSubCategoryElement()
-    {
-        return $this->createElement('multiselect', 'project_subcategory_id')
-            ->setRequired(true)
-            ->setRegisterInArrayValidator(false)
-            ->addValidators(array('digits'))
-            ->setFilters(array('StringTrim', new Zend_Filter_Callback('stripslashes')))
-            ->setDecorators(
-                array(
-                    array(
-                        'ViewScript',
-                        array(
-                            'viewScript' => 'product/viewscripts/input_select_sub_cat.phtml',
-                            'placement' => false
-                        )
-                    )
-                ));
-    }
-    
-    
-
-    private function getSubSubCategoryElement()
-    {
-        return $this->createElement('multiselect', 'project_sub_subcategory_id')
-            ->setRequired(false)
-            ->setRegisterInArrayValidator(false)
-            ->addValidators(array('digits'))
-            ->setFilters(array('StringTrim', new Zend_Filter_Callback('stripslashes')))
-            ->setDecorators(
-                array(
-                    array(
-                        'ViewScript',
-                        array(
-                            'viewScript' => 'product/viewscripts/input_select_sub_sub_cat.phtml',
+                            'viewScript' => 'product/viewscripts/input_cat_id.phtml',
                             'placement' => false
                         )
                     )

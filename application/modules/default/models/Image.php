@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -19,7 +20,6 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-
 class Default_Model_Image extends Default_Model_DbTable_Image
 {
 
@@ -56,7 +56,12 @@ class Default_Model_Image extends Default_Model_DbTable_Image
                 $upload->receive();
             }
         }
-        return array('status' => $upload->isReceived(), 'messages' => $upload->getMessages(), 'filename' => basename($tmpFilePathName));
+
+        return array(
+            'status' => $upload->isReceived(),
+            'messages' => $upload->getMessages(),
+            'filename' => basename($tmpFilePathName)
+        );
     }
 
 }

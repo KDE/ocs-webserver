@@ -66,7 +66,7 @@ class Default_Plugin_Acl extends Zend_Controller_Plugin_Abstract
         // all users are guests (at first)
         $role = Default_Plugin_AclRules::ROLENAME_GUEST;
 
-        if ($this->_auth->hasIdentity() && $this->_auth->getIdentity() != null && property_exists($this->_auth->getIdentity(), 'roleName'))
+        if ($this->_auth->hasIdentity() && $this->_auth->getIdentity() != null && property_exists($this->_auth->getIdentity(),'roleName'))
         {
             $role = $this->_auth->getIdentity()->roleName;
             if (empty($role)) {
@@ -82,7 +82,8 @@ class Default_Plugin_Acl extends Zend_Controller_Plugin_Abstract
 
 
         if (false == $this->_acl->has($resource)) {
-            Zend_Registry::get('logger')->warn(__METHOD__ . ' - No ACL rule found for ' . print_r($resource, true) . ' : ' . $request->getRequestUri());
+            Zend_Registry::get('logger')->warn(__METHOD__ . ' - No ACL rule found for ' . print_r($resource,
+                    true) . ' : ' . $request->getRequestUri());
 
             //TODO: send users to error page
             $this->_request->setModuleName($this->_noacl['module']);

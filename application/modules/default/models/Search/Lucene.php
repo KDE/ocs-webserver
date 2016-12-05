@@ -122,7 +122,7 @@ class Default_Model_Search_Lucene
         $modelCategories = new Default_Model_DbTable_ProjectCategory();
         $resultSet = $modelCategories->fetchMainCatIdsOrdered();
         $subCatIds = $modelCategories->fetchChildIds($resultSet);
-        return array_merge($resultSet,$subCatIds);
+        return array_merge($resultSet, $subCatIds);
     }
 
     /**
