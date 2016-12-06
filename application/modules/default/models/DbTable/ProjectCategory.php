@@ -1166,7 +1166,7 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
     protected function prepareDataForFormSelect($resultRows)
     {
         $resultForSelect = array();
-        $resultForSelect[''] = '';
+        //$resultForSelect[''] = '';
         foreach ($resultRows as $row) {
             $resultForSelect[$row['project_category_id']] = $row['title'];
         }

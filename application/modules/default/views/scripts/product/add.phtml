@@ -1651,6 +1651,7 @@ $categoryPath[] = $valueCatId;
               for (var form_elem_name in this.cat_id_data) {
                   var nextElementName = form_elem_name.substring(0, form_elem_name.length - 1) + (level + 1);
                   var new_html_element = '<select name="' + form_elem_name + '" id="' + form_elem_name + '" class="required form-control product_select_cat" data-target="'+nextElementName+'" data-level="'+level+'">';
+                  new_html_element += '<option value=""> </option>';
                   for (var form_select_option in this.cat_id_data[form_elem_name]) {
                       var attr_selected = '';
                       if (form_select_option == this.cat_id_path[level]) {
