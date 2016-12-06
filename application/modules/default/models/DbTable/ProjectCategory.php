@@ -1140,7 +1140,7 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
         }
     }
 
-    public function fetchAncestorsForForm($valueCatId)
+    public function fetchCategoriesForForm($valueCatId)
     {
         $level = 0;
         $ancestors = array("catLevel-{$level}"=>$this->fetchMainCatForSelect(Default_Model_DbTable_ProjectCategory::ORDERED_TITLE));
@@ -1169,6 +1169,20 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
         //$resultForSelect[''] = '';
         foreach ($resultRows as $row) {
             $resultForSelect[$row['project_category_id']] = $row['title'];
+        }
+        return $resultForSelect;
+    }
+
+    /**
+     * @param $resultRows
+     * @return array
+     */
+    protected function prepareDataForFormSelectWithTitleKey($resultRows)
+    {
+        $resultForSelect = array();
+        //$resultForSelect[''] = '';
+        foreach ($resultRows as $row) {
+            $resultForSelect[$row['title']] = $row['project_category_id'];
         }
         return $resultForSelect;
     }

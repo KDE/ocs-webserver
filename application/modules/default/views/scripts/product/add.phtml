@@ -32,7 +32,7 @@ $helperImage = new Default_View_Helper_Image();
 $modelCategory = new Default_Model_DbTable_ProjectCategory();
 $valueCatId = $this->form->project_category_id->getValue();
 //$valueCatId = 55;
-$dummy = $modelCategory->fetchAncestorsForForm($valueCatId);
+$categories = $modelCategory->fetchCategoriesForForm($valueCatId);
 $categoryAncestors = $modelCategory->fetchAncestorsAsId($valueCatId);
 if (count($categoryAncestors) > 0) {
     $categoryPath = explode(',',$categoryAncestors['ancestors']);
@@ -1621,6 +1621,24 @@ $categoryPath[] = $valueCatId;
         });
     </script>
   <script>
+      $.fn.sortSelect = function() {
+          var op = this.children("option");
+          op.sort(function(a, b) {
+              return a.text > b.text ? 1 : -1;
+          })
+          return this.empty().append(op);
+      }
+
+      $.fn.sort_select_box = function(){
+          var my_options = $("option", $(this));
+          my_options.sort(function(a,b) {
+              if (a.text > b.text) return 1;
+              else if (a.text < b.text) return -1;
+              else return 0
+          });
+          $(this).empty().append(my_options);
+      }
+
       ProductForm = {
 
           mode: "<?=$this->mode?>",
@@ -1633,7 +1651,7 @@ $categoryPath[] = $valueCatId;
               nd:<?=$this->cc_derivate_works == true ? 'true' : 'false'?>,
               sa:<?=$this->cc_share == true ? 'true' : 'false'?>
           },
-          cat_id_data: <?=json_encode($dummy)?>,
+          cat_id_data: <?=json_encode($categories)?>,
           cat_id_path: <?=json_encode($categoryPath)?>,
 
 
@@ -1661,9 +1679,24 @@ $categoryPath[] = $valueCatId;
                   }
                   new_html_element += '</select>';
                   $('#wrapper_cat_id').append(new_html_element);
+                  this.sortOptionByValue(form_elem_name);
                   level++;
               }
           },
+
+          sortOptionByValue: function(element_id) {
+              var my_options = $("#"+element_id + " option");
+              var selected = $("#"+element_id).val();
+
+              my_options.sort(function(a,b) {
+                  if (a.text > b.text) return 1;
+                  else if (a.text < b.text) return -1;
+                  else return 0;
+              })
+              $("#"+element_id).empty().append( my_options );
+              $("#"+element_id).val(selected);
+          },
+
 
           setupCategoryAjax: function () {
               $('body').on('change', 'div#wrapper_cat_id select.product_select_cat', function () {
