@@ -583,16 +583,18 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $params = $this->getAllParams();
         $update_id = $params['update_id'];
 
+        /**
         //Save version number
         $version = "";
         if (isset($params['product_version'])) {
             $version = $params['product_version'];
         }
-
+        
         $updateArray = array();
         $updateArray['version'] = $version;
         $tableProject->update($updateArray, 'project_id = ' . $this->_projectId);
-
+        **/
+        
         //Save title and Text
         $title = null;
         $text = null;

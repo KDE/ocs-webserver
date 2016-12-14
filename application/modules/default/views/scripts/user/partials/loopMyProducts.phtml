@@ -101,7 +101,7 @@ $helperImage = new Default_View_Helper_Image();
                 <a role="button" href="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, 'edit') ?>" class="btn btn-native">
                     <?= $this->translate('Edit') ?>
                 </a>
-
+                   
                 <!-- ppload -->
                 <a role="button" class="btn btn-native" href="#modal-ppload"
                    data-toggle="modal"
@@ -119,6 +119,13 @@ $helperImage = new Default_View_Helper_Image();
                     (<?= $productFileInfos['fileCount'] ?>)
                 </a>
                 <!-- /ppload -->
+                <!-- updates -->
+                <a role="button" class="btn btn-native" href="#modal-updates"
+                   data-toggle="modal"
+                   data-product-id="<?= $this->project_id ?>"
+                   data-product-title="<?= $this->title ?>"
+                ><?= $this->translate('Changelog') ?></a>
+                <!-- /updates -->
                 <span class="publish-product-wrapper">
                     <?php $p_action = $this->isProjectActive($this->project_status) ? 'unpublish' : 'publish' ?>
                     <a href="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, $p_action, array('m' => $this->member_id)) ?>"
