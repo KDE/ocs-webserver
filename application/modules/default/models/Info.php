@@ -342,9 +342,9 @@ class Default_Model_Info
         }
 
         if (empty($project_category_id)) {
-            $activeCategories = $this->getActiveCategoriesForCurrentHost(self::WALLPAPERCATEGORYID);
+            $activeCategories = $this->getActiveCategoriesForCurrentHost();
         } else {
-            $activeCategories = $this->getActiveCategoriesForCatId($project_category_id, self::WALLPAPERCATEGORYID);
+            $activeCategories = $this->getActiveCategoriesForCatId($project_category_id);
         }
 
         if (count($activeCategories) == 0) {
