@@ -117,6 +117,7 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
 
         $newPasMail->setTemplateVar('username', $product->username);
         $newPasMail->setTemplateVar('product_title', $product->title);
+        $newPasMail->setTemplateVar('product_id', $product->project_id);
         $newPasMail->setTemplateVar('comment_text', $comment);
 
         $newPasMail->send();
@@ -145,6 +146,7 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
 
         $newPasMail->setTemplateVar('username', $parentCommentOwner->username);
         $newPasMail->setTemplateVar('product_title', $product->title);
+        $newPasMail->setTemplateVar('product_id', $product->project_id);
         $newPasMail->setTemplateVar('comment_text', $comment);
 
         $newPasMail->send();
