@@ -293,7 +293,7 @@ $this->inlineScript()->appendScript(
         $modalPpload.on('click', 'button[data-delete-update-btn]', function (event) {
         	var updateId = $(this).attr('data-delete-update-btn');
         	var productId = $modalPpload.attr('data-product-id');
-            event.preventDefault();
+                event.preventDefault();
 
         	$.ajax({
                 url: '/p/'+productId+'/deleteupdateajax',
@@ -318,15 +318,14 @@ $this->inlineScript()->appendScript(
         	var updateId = $(this).attr('data-change-update-btn');
         	var title = $(this).attr('data-change-title');
         	var text = $(this).attr('data-change-text');
-        	var productId = $modalPpload.attr('data-product-id');
 
-            $modalPpload.find('#update-title').val(title);
+                $modalPpload.find('#update-title').val(title);
         	$modalPpload.find('#update-text').val(text);
         	$modalPpload.find('#update-id').val(updateId);
 
         	$modalPpload.find('#update-title').focus();
 
-            event.preventDefault();
+                event.preventDefault();
 
         });
         
