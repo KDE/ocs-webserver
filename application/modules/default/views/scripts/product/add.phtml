@@ -1238,7 +1238,7 @@ $categoryPath[] = $valueCatId;
                                         	var title = $modalPpload.find('#update-title').val();
                                         	var text = $modalPpload.find('#update-text').val();
                                         	var productId = <?= isset($this->project_id)?$this->project_id:0 ?>;
-                                            event.preventDefault();
+                                                event.preventDefault();
 
                                         	$.ajax({
                                                 url: '/p/'+productId+'/saveupdateajax',
@@ -1250,7 +1250,8 @@ $categoryPath[] = $valueCatId;
                                                         return;
                                                     }
                                                     $modalPpload.find('#update-title').val('');
-                                                	$modalPpload.find('#update-text').val('');
+                                                    $modalPpload.find('#update-text').val('');
+                                                    $modalPpload.find('#update-id').val('');
                                                     getUpdates();
                                                 },
                                                 error: function (jqXHR, textStatus, errorThrown) {
@@ -1262,8 +1263,8 @@ $categoryPath[] = $valueCatId;
 
                                         $modalPpload.on('click', 'button[data-delete-update-btn]', function (event) {
                                         	var updateId = $(this).attr('data-delete-update-btn');
-                                        	var productId = $modalPpload.attr('data-product-id');
-                                            event.preventDefault();
+                                        	var productId = <?= isset($this->project_id)?$this->project_id:0 ?>;
+                                                event.preventDefault();
 
                                         	$.ajax({
                                                 url: '/p/'+productId+'/deleteupdateajax',
@@ -1288,15 +1289,14 @@ $categoryPath[] = $valueCatId;
                                         	var updateId = $(this).attr('data-change-update-btn');
                                         	var title = $(this).attr('data-change-title');
                                         	var text = $(this).attr('data-change-text');
-                                        	var productId = $modalPpload.attr('data-product-id');
 
-                                            $modalPpload.find('#update-title').val(title);
+                                                $modalPpload.find('#update-title').val(title);
                                         	$modalPpload.find('#update-text').val(text);
                                         	$modalPpload.find('#update-id').val(updateId);
 
                                         	$modalPpload.find('#update-title').focus();
 
-                                            event.preventDefault();
+                                                event.preventDefault();
 
                                         });
 
