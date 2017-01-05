@@ -1083,8 +1083,20 @@ class Default_Model_Project extends Default_Model_DbTable_Project
     {
         //Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . print_r(func_get_args(), true));
 
+        /*
         if (is_null($idCategory) OR $idCategory == '' OR is_array($idCategory)) {
             return $this->countActiveProjects();
+        }*/
+        
+        
+        
+        $cacheName = __FUNCTION__ . md5(serialize($idCategory));
+        $cache = Zend_Registry::get('cache');
+        
+        $resultSet = $cache->load($cacheName);
+
+        if ($resultSet) {
+            return (int)$resultSet[0]['count_active_projects'];
         }
 
         $select = $this->select()->setIntegrityCheck(false)->from($this->_name,
@@ -1092,23 +1104,26 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             ->group('member_id')
             ->where('project.status = ? ', self::PROJECT_ACTIVE)
             ->where('project.type_id = ?', self::PROJECT_TYPE_STANDARD);
+
+        $sqlwhereCat = "";
+        $sqlwhereSubCat = "";
+
+        if (false === is_array($idCategory)) {
+            $idCategory = array($idCategory);
+        }
+        $sqlwhereCat .= implode(',', $idCategory);
+
         $modelCategory = new Default_Model_DbTable_ProjectCategory();
         $subCategories = $modelCategory->fetchChildElements($idCategory);
 
-        $sqlwhere = "{$idCategory},";
         if (count($subCategories) > 0) {
             foreach ($subCategories as $element) {
-                $sqlwhere .= "{$element['project_category_id']},";
+                $sqlwhereSubCat .= "{$element['project_category_id']},";
             }
         }
-        $sqlwhere = substr($sqlwhere, 0, -1);
-        $select->where('project.project_category_id in (' . $sqlwhere . ') OR (project.project_id IN (SELECT project_id FROM project_subcategory WHERE project_sub_category_id = ' . $idCategory . '))');
 
-//    	$this->_db->getProfiler()->setEnabled(true);
+        $select->where('project.project_category_id in (' . $sqlwhereSubCat . $sqlwhereCat . ')');
         $resultSet = $this->fetchAll($select);
-//    	Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . $this->_db->getProfiler()->getLastQueryProfile()->getQuery());
-//    	Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . print_r($resultSet->toArray(),true));
-//    	$this->_db->getProfiler()->setEnabled(false);
 
         if (count($resultSet) > 0) {
             return (int)$resultSet[0]['count_active_projects'];
