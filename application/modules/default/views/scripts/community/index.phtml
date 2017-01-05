@@ -21,8 +21,11 @@
  **/
 
 $helperImage = new Default_View_Helper_Image();
-$newUsers = new Default_View_Helper_NewUsers();
-$users = $newUsers->newUsers($limit = 12);
+//$newUsers = new Default_View_Helper_NewUsers();
+//$users = $newUsers->newUsers($limit = 12);
+
+$modelInfo = new Default_Model_Info();
+$users = $modelInfo->getNewActiveMembers(12);
 
 $recentDonations = new Default_View_Helper_FetchRecentDonations();
 $donations = $recentDonations->fetchRecentDonations($limit = 12);

@@ -1093,18 +1093,21 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         $cacheName = __FUNCTION__ . md5(serialize($idCategory));
         $cache = Zend_Registry::get('cache');
         
-        $resultSet = $cache->load($cacheName);
+        $result = $cache->load($cacheName);
 
-        if ($resultSet) {
-            return (int)$resultSet[0]['count_active_projects'];
+        if ($result) {
+            return (int)$result['count_active_members'];
         }
-
+        
+        
+        
+        /**
         $select = $this->select()->setIntegrityCheck(false)->from($this->_name,
             array('count_active_projects' => 'COUNT(1)'))
             ->group('member_id')
             ->where('project.status = ? ', self::PROJECT_ACTIVE)
             ->where('project.type_id = ?', self::PROJECT_TYPE_STANDARD);
-
+        */
         $sqlwhereCat = "";
         $sqlwhereSubCat = "";
 
@@ -1122,14 +1125,23 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             }
         }
 
-        $select->where('project.project_category_id in (' . $sqlwhereSubCat . $sqlwhereCat . ')');
-        $resultSet = $this->fetchAll($select);
-
-        if (count($resultSet) > 0) {
-            return (int)$resultSet[0]['count_active_projects'];
-        } else {
-            return 0;
-        }
+        //$select->where('project.project_category_id in (' . $sqlwhereSubCat . $sqlwhereCat . ')');
+        $selectWhere = 'AND p.project_category_id in (' . $sqlwhereSubCat . $sqlwhereCat . ')';
+        
+        $sql = "select count(1) as count_active_members from (                    
+                    select count(1) as count_active_projects from pling.project p
+                    where p.`status` = 100
+                    and p.type_id = 1
+                    " . $selectWhere . "group by p.member_id
+                ) A;";
+        
+        //$resultSet = $this->fetchRow($select);
+        $result = $this->_db->fetchRow($sql);
+        $cache->save($result,$cacheName);
+        
+        return (int)$result['count_active_members'];
+        
+        
     }
 
     /**
