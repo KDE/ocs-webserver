@@ -344,8 +344,8 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
             ->setAttrib("id", "settingsGithub")
             ->setAction('/settings/github');
 
-        $github = $form->createElement('text', 'link_github')
-            ->setLabel("Github Profile:")
+        $github = new Default_Form_Element_Url('link_github');
+        $github->setLabel("Github Profile:")
             ->setRequired(false)
             ->removeDecorator('HtmlTag')
             ->setDecorators(
@@ -361,7 +361,6 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                         )
                     )
                 ));
-        $github->addValidator(new Local_Validate_PartialUrl);
         $form->addElement($github);
 
         return $form;
@@ -576,7 +575,6 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
             ->setLabel("Website:")
             ->setRequired(false)
             ->setValue($valHomepage)
-            ->setAttrib('style', 'width:90%;')
             ->addValidator(new Local_Validate_PartialUrl)
             ->setDecorators(
                 array(
