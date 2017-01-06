@@ -38,7 +38,8 @@
             <?= $this->homepageform->csrf; ?>
             <div class="row">
                 <div class="col-md-8 col-lg-8 col-sm-8 col-xs-8">
-                    <?= $this->homepageform->link_website->setAttrib('tabindex', 19) ?>
+                  <?= $this->homepageform->link_website->setAttrib('tabindex', 19)->setAttrib('class', 'form-control')->setAttrib('style', 'width:92%;display:inline-block;') ?>
+                  <p class="help-block small">Insert the full URL for your website here.</p>
                 </div>
             </div>
             <!-- /.row-fluid -->

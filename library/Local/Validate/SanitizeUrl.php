@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -19,7 +20,6 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-
 class Local_Validate_SanitizeUrl extends Zend_Validate_Abstract
 {
     const INVALID_URL = 'invalidUrl';
@@ -154,7 +154,6 @@ class Local_Validate_SanitizeUrl extends Zend_Validate_Abstract
         $this->_setValue($valueString);
 
         return $this->isUrlValid($value);
-
     }
 
     /**
