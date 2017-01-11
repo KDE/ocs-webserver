@@ -20,7 +20,7 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-class Local_Validate_PartialUrl extends Zend_Validate_Abstract
+class Local_Validate_Url extends Zend_Validate_Abstract
 {
 
     const INVALID_URL = 'invalidUrl';
@@ -31,17 +31,11 @@ class Local_Validate_PartialUrl extends Zend_Validate_Abstract
 
     public function isValid($value)
     {
-        $valueString = ( string )$value;
-        $this->_setValue($valueString);
+        $this->_setValue((string)$value);
 
         Zend_Uri::setConfig(array('allow_unwise' => true));
 
-        // Check if the url contain the words http:// or https://
-        if (strpos($value, 'http://') !== false || strpos($value, 'https://') !== false) {
-            $isValidURL = Zend_Uri::check($value);
-        } else {
-            $isValidURL = Zend_Uri::check('http://' . $value);
-        }
+        $isValidURL = Zend_Uri::check($value);
 
         if (false == $isValidURL) {
             $this->_error(self::INVALID_URL);

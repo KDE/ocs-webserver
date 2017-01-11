@@ -29,7 +29,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             'namespace' => 'Default',
             'basePath' => realpath(dirname(__FILE__)),
         ));
-
+        $autoloader->addResourceType('formelements', 'forms/elements', 'Form_Element');
         return $autoloader;
     }
 
