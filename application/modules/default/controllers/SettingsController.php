@@ -344,7 +344,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
             ->setAttrib("id", "settingsGithub")
             ->setAction('/settings/github');
 
-        $github = new Default_Form_Element_Url('link_github');
+        $github = new Default_Form_Element_UsernameGithub('link_github');
         $github->setLabel("Github Profile:")
             ->setRequired(false)
             ->removeDecorator('HtmlTag')
@@ -362,6 +362,25 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                     )
                 ));
         $form->addElement($github);
+
+        $token = new Default_Form_Element_TokenGithub('token_github');
+        $token->setLabel("Github Access Token:")
+            ->setRequired(false)
+            ->removeDecorator('HtmlTag')
+            ->setDecorators(
+                array(
+                    'ViewHelper',
+                    'Label',
+                    'Errors',
+                    array(
+                        'ViewScript',
+                        array(
+                            'viewScript' => 'settings/viewscripts/flatui_input.phtml',
+                            'placement' => false
+                        )
+                    )
+                ));
+        $form->addElement($token);
 
         return $form;
     }
