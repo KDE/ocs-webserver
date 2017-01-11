@@ -121,6 +121,13 @@ class Ocsv1Controller extends Zend_Controller_Action
         }
 
         $baseUri = $this->_uriScheme . '://' . $credentials . $_SERVER['SERVER_NAME'];
+        
+        $webSite = $_SERVER['SERVER_NAME'];
+        
+        //Mask api.kde-look.org to store.kde.org
+        if(strpos($_SERVER['SERVER_NAME'], 'api.kde-look.org') !== false) {
+            $webSite = 'store.kde.org';
+        }
 
         $this->_config = array(
             'id' => $_SERVER['SERVER_NAME'],
@@ -129,7 +136,7 @@ class Ocsv1Controller extends Zend_Controller_Action
             'icon' => $baseUri . $clientConfig['logo'],
             'termsofuse' => $baseUri . '/content/terms',
             'register' => $baseUri . '/register',
-            'website' => $_SERVER['SERVER_NAME'],
+            'website' => $webSite,
             'host' => $_SERVER['SERVER_NAME']
         ) + $this->_config;
     }
