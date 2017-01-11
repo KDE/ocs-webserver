@@ -37,6 +37,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addRole(new Zend_Acl_Role (self::ROLENAME_ADMIN));
 
         $this->addResource(new Zend_Acl_Resource ('default_logout'));
+        $this->addResource(new Zend_Acl_Resource ('default_oauth'));
 
         $this->addResource(new Zend_Acl_Resource ('default_authorization'));
         $this->addResource(new Zend_Acl_Resource ('default_button'));
@@ -100,6 +101,7 @@ class Default_Plugin_AclRules extends Zend_Acl
             'default_report',
             'default_rss',
             'default_supporterbox',
+            'default_oauth'
         ));
 
         $this->allow(self::ROLENAME_COOKIEUSER, array(
@@ -129,10 +131,26 @@ class Default_Plugin_AclRules extends Zend_Acl
         // resource access rights in detail
 
         // resource default_product
-        $this->allow(self::ROLENAME_GUEST, 'default_product', array('index', 'show', 'getupdatesajax', 'updates', 'follows', 'fetch'));
+        $this->allow(self::ROLENAME_GUEST, 'default_product',
+            array('index', 'show', 'getupdatesajax', 'updates', 'follows', 'fetch'));
+
         $this->allow(self::ROLENAME_COOKIEUSER, 'default_product',
-            array('add', 'rating', 'follow', 'unfollow', 'add', 'pling', 'pay', 'dwolla', 'paymentok', 'paymentcancel', 'saveproduct', 'claim')
+            array(
+                'add',
+                'rating',
+                'follow',
+                'unfollow',
+                'add',
+                'pling',
+                'pay',
+                'dwolla',
+                'paymentok',
+                'paymentcancel',
+                'saveproduct',
+                'claim'
+            )
         );
+
         $this->allow(self::ROLENAME_COOKIEUSER, 'default_product', array(
             'edit',
             'saveupdateajax',
@@ -163,7 +181,9 @@ class Default_Plugin_AclRules extends Zend_Acl
 
         // resource default_user
         $this->allow(self::ROLENAME_GUEST, 'default_user', array('index', 'aboutme', 'share', 'report'));
-        $this->allow(self::ROLENAME_COOKIEUSER, 'default_user', array('follow', 'unfollow','settings', 'products', 'news', 'activities', 'payments', 'income'));
+
+        $this->allow(self::ROLENAME_COOKIEUSER, 'default_user',
+            array('follow', 'unfollow', 'settings', 'products', 'news', 'activities', 'payments', 'income'));
     }
 
 }

@@ -24,11 +24,21 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
 {
 
     const DEFAULT_ROLE_ID = 300;
-    const LOGIN_METHOD_FACEBOOK = 'facebook';
     const PROFILE_IMG_SRC_LOCAL = 'local';
-    const LOGIN_METHOD_TWITTER = 'twitter';
-    const LOGIN_METHOD_AMAZON = 'amazon';
 
+    public function githubAction()
+    {
+        $this->forward('login', 'oauth', 'default', array('provider' => 'github', 'redirect' => $this->getParam('redirect')));
+    }
+
+    public function redirectAction()
+    {
+        $param = null;
+        if (preg_match("/redirect\/(.*?)$/i", $this->getRequest()->getRequestUri(), $result)) {
+            $param = array('redirect' => $result[1]);
+        }
+        $this->forward('login', null, null, $param);
+    }
 
     public function forgotAction()
     {
@@ -126,7 +136,10 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         $newPasMail->send();
     }
 
-    public function loginfromcookieAction()
+    /**
+     * login from cookie
+     */
+    public function lfcAction()
     {
         $this->view->success = 0;
         $this->view->noPopup = true;
@@ -209,8 +222,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         Zend_Registry::get('logger')->info(__METHOD__ . ' - param redirect: ' . $this->getParam('redirect'));
 
         if (false === $formLogin->isValid($_POST)) { // form not valid
-            Zend_Registry::get('logger')->info(__METHOD__ . ' - form not valid:' . print_r($formLogin->getMessages(),
-                    true));
+            Zend_Registry::get('logger')->info(__METHOD__ . ' - form not valid:' . print_r($formLogin->getMessages(), true));
             $this->view->formLogin = $formLogin;
             $this->view->errorText = 'index.login.error.auth';
             $this->view->error = 1;
@@ -336,8 +348,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         }
 
         $modelEmail = new Default_Model_MemberEmail();
-        $userEmail = $modelEmail->saveEmailAsPrimary($userData['member_id'], $userData['mail'],
-            $userData['verificationVal']);
+        $userEmail = $modelEmail->saveEmailAsPrimary($userData['member_id'], $userData['mail'], $userData['verificationVal']);
 
         return $userData;
     }
@@ -413,328 +424,6 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             ->setHeader('Cache-Control', 'private, no-cache, must-revalidate', true);
     }
 
-    public function facebookAction()
-    {
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . print_r($this->getRequest(), true));
-
-        if ($this->hasParam('error_reason') && $this->getParam('error_reason') == 'user_denied') {
-            Zend_Registry::get('logger')->err(__METHOD__ . ' - User denied access. Forwarded to register page. - ' . print_r($this->getAllParams(),
-                    true));
-            $this->redirect('/register');
-            return;
-        }
-
-        if ($this->hasParam('error')) {
-            Zend_Registry::get('logger')->err(__METHOD__ . ' - Undefined error. Throw error. - ' . print_r($this->getAllParams(),
-                    true));
-            throw new Zend_Controller_Action_Exception('Undefined error at facebook login', 500);
-        }
-
-        $this->_helper->layout->disableLayout();
-        include_once 'facebook/facebook.php';
-        $facebook = new Facebook(
-            array(
-                'appId' => FACEBOOK_APP_ID,
-                'secret' => FACEBOOK_SECRET,
-                'cookie' => true,
-            ));
-
-        $user_uid = $facebook->getUser();
-
-        if (empty($user_uid)) {
-            Zend_Registry::get('logger')->info(__METHOD__ . ' - No Facebook Login. Get Login URL from Facebook and redirect user - ' . print_r($facebook->getAppId(),
-                    true));
-            $loginUrl = $facebook->getLoginUrl(array('scope' => 'email'));
-            $this->redirect($loginUrl);
-        }
-
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - has user id - ' . print_r($user_uid, true));
-
-        $facebookUserData = $facebook->api('/me');
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - facebook user data - ' . print_r($facebookUserData, true));
-
-        $authModelData = new Default_Model_Authorization();
-        $authMember = $authModelData->getAuthDataFromSocialUser($facebookUserData['username'], 'facebook');
-
-        if (null !== $authMember) {
-            Zend_Registry::get('logger')->info(__METHOD__ . ' - update user data and init auth session - ');
-
-            $this->updateMemberDataFromFacebook($authMember->member_id, $facebookUserData);
-
-            $this->storeAuthSessionData($authMember->member_id);
-
-            $authModelData->updateUserLastOnline('member_id', $authMember->member_id);
-
-            $member_id = $authMember->member_id;
-
-        } else {
-            Zend_Registry::get('logger')->info(__METHOD__ . ' - register new facebook user - ');
-
-            $location = $facebookUserData['location']['name'];
-            $locationArr = explode(",", $location);
-
-            //update profile-img
-            $imageModel = new Default_Model_DbTable_Image();
-            $fileName = $imageModel->storeExternalImage('https://graph.facebook.com/' . $facebookUserData['username'] . '/picture?type=large');
-
-            $newUserValues = array(
-                'username' => $facebookUserData['username'],
-                'firstname' => $facebookUserData['first_name'],
-                'lastname' => $facebookUserData['last_name'],
-                'mail' => $facebookUserData['email'],
-                'roleId' => self::DEFAULT_ROLE_ID,
-                'mail_checked' => 1,
-                'agb' => 1,
-                'city' => trim($locationArr[0]),
-                'country' => trim($locationArr[1]),
-                'avatar' => $fileName,
-                'login_method' => self::LOGIN_METHOD_FACEBOOK,
-                'profile_img_src' => self::PROFILE_IMG_SRC_LOCAL,
-                'profile_image_url' => IMAGES_MEDIA_SERVER . '/cache/200x200-2/img/' . $fileName,
-                'social_username' => $facebookUserData['username'],
-                'social_user_id' => $facebookUserData['id'],
-                'link_facebook' => $facebookUserData['link'],
-                'created_at' => new Zend_Db_Expr('Now()'),
-                'changed_at' => new Zend_Db_Expr('Now()'),
-                'uuid' => Local_Tools_UUID::generateUUID(),
-                'verificationVal' => MD5($facebookUserData['id'] . $facebookUserData['username'] . time())
-            );
-
-            $member_id = $this->storeNewUser($newUserValues);
-
-            $this->storeAuthSessionData($member_id);
-
-            $authModelData->updateUserLastOnline('member_id', $member_id);
-
-            $this->sendAdminNotificationMail($newUserValues);
-        }
-
-        $this->redirect("/member/{$member_id}/activities/");
-    }
-
-    /**
-     * @param int $member_id
-     * @param array $facebookUserData
-     */
-    public function updateMemberDataFromFacebook($member_id, $facebookUserData)
-    {
-        $tableMember = new Default_Model_Member();
-        $member = $tableMember->find($member_id)->current();
-        $member->mail = $facebookUserData['email'];
-        $member->link_facebook = $facebookUserData['link'];
-        $member->changed_at = new Zend_Db_Expr('Now()');
-        $member->save();
-    }
-
-    /**
-     * @param string|int $identity
-     */
-    protected function storeAuthSessionData($identity)
-    {
-        $authDataModel = new Default_Model_Authorization();
-        $authDataModel->storeAuthSessionDataByIdentity($identity);
-    }
-
-    /**
-     * @param array $userData
-     * @return int
-     */
-    protected function storeNewUser($userData)
-    {
-        $userTable = new Default_Model_Member();
-        $userData = $userTable->storeNewUser($userData);
-
-        return $userData->member_id;
-    }
-
-    public function twitterAction()
-    {
-        $this->_helper->layout->disableLayout();
-
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . print_r($this->getRequest(), true));
-
-        if ($this->hasParam('denied')) {
-            Zend_Registry::get('logger')->err(__METHOD__ . ' - User denied access. Forwarded to register page. - ' . print_r($this->getAllParams(),
-                    true));
-            $this->redirect('/register');
-            return;
-        }
-
-        // require_once('Zend/Oauth/Consumer.php');
-        $consumer = new Zend_Oauth_Consumer($this->getTwitterAuthConfig());
-
-        // require_once('Zend/Session/Namespace.php');
-        $session = new Zend_Session_Namespace('oauth');
-
-        if (strlen($session->request_token) > 0 && strlen($session->request_secret) > 0) {
-            $this->getAccessToken($session, $this->getTwitterAuthConfig());
-            // return to login user
-            $this->redirect('/login/twitter');
-        }
-
-        if (strlen($session->access_token) > 0 && strlen($session->access_secret) > 0) {
-            $twitterUserData = $this->getUserDataFromTwitter($session);
-            Zend_Registry::get('logger')->info(__METHOD__ . ' - twitter user data - ' . print_r($twitterUserData,
-                    true));
-
-            $authModel = new Default_Model_Authorization();
-            $authMember = $authModel->getAuthDataFromSocialUser($twitterUserData->id, 'twitter');
-
-            if (count((array)$authMember) > 0) {
-                Zend_Registry::get('logger')->info(__METHOD__ . ' - twitter login - ');
-
-                $this->storeAuthSessionData($authMember->member_id);
-
-                $authModel->updateUserLastOnline('member_id', $authMember->member_id);
-
-                $member_id = $authMember->member_id;
-
-            } else {
-                Zend_Registry::get('logger')->info(__METHOD__ . ' - twitter register user - ');
-
-                //update profile-img
-                $imageModel = new Default_Model_DbTable_Image();
-                $fileName = $imageModel->storeExternalImage(str_replace('_normal', '',
-                    $twitterUserData->profile_image_url));
-                $location = $twitterUserData->time_zone;
-                $locationArr = explode(",", $location);
-                $name = $twitterUserData->name;
-                $nameArr = explode(" ", $name);
-
-                $newUserValues = array(
-                    'username' => $twitterUserData->screen_name,
-                    'firstname' => $nameArr[0],
-                    'lastname' => $nameArr[1],
-                    'roleId' => self::DEFAULT_ROLE_ID,
-                    'mail_checked' => 1,
-                    'agb' => 1,
-                    'city' => trim($locationArr[0]),
-                    'country' => trim($locationArr[1]),
-                    'profile_image_url' => IMAGES_MEDIA_SERVER . '/cache/200x200-2/img/' . $fileName,
-                    'profile_img_src' => self::PROFILE_IMG_SRC_LOCAL,
-                    'social_username' => $twitterUserData->screen_name,
-                    'social_user_id' => $twitterUserData->id,
-                    'avatar' => $fileName,
-                    'login_method' => self::LOGIN_METHOD_TWITTER,
-                    'created_at' => new Zend_Db_Expr('Now()'),
-                    'changed_at' => new Zend_Db_Expr('Now()'),
-                    'uuid' => Local_Tools_UUID::generateUUID(),
-                    'verificationVal' => MD5($twitterUserData->id . $twitterUserData->screen_name . time())
-                );
-
-                $member_id = $this->storeNewUser($newUserValues);
-
-                $this->storeAuthSessionData($member_id);
-
-                $authModel->updateUserLastOnline('member_id', $member_id);
-
-                $this->sendAdminNotificationMail($newUserValues);
-            }
-
-            $this->redirect("/member/{$member_id}/activities/");
-        }
-
-        $this->getRequestToken($session, $consumer);
-    }
-
-    /**
-     * @return array
-     */
-    protected function getTwitterAuthConfig()
-    {
-        return array(
-            'callbackUrl' => 'http://' . $this->getServerName() . '/login/twitter',
-            'siteUrl' => 'https://twitter.com/oauth',
-            'consumerKey' => TWITTER_CONSUMER_KEY,
-            'consumerSecret' => TWITTER_CONSUMER_SECRET
-        );
-    }
-
-    /**
-     * @param Zend_Session_Namespace $session
-     * @param array $authConfig
-     * @throws Zend_Controller_Action_Exception
-     */
-    protected function getAccessToken($session, $authConfig)
-    {
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . print_r(func_get_args(), true));
-
-        // build the token request based on the original token and secret
-        $request = new Zend_Oauth_Token_Request();
-        $request->setToken($session->request_token)
-            ->setTokenSecret($session->request_secret);
-        try {
-            // try to retrieve the token
-            $consumer = new Zend_Oauth_Consumer($authConfig);
-            $accessToken = $consumer->getAccessToken($_GET, $request);
-            Zend_Registry::get('logger')->debug(__METHOD__ . ' - twitter access token - ' . print_r($accessToken,
-                    true));
-
-            if (false === $accessToken->isValid()) {
-                Zend_Registry::get('logger')->info(__METHOD__ . ' - twitter access token invalid - ');
-                return;
-            }
-
-            // we now have a token to access, insert into session
-            $session->access_token = $accessToken->getToken();
-            $session->access_secret = $accessToken->getTokenSecret();
-
-            // clear the request tokens from session
-            unset($session->request_token);
-            unset($session->request_secret);
-
-            return;
-        } catch (Exception $ex) {
-            // error retrieving token, handle accordingly
-            throw new Zend_Controller_Action_Exception('Error while request access token');
-        }
-    }
-
-    /**
-     * @param Zend_Session_Namespace $session
-     * @return Zend_Rest_Client_Result
-     */
-    protected function getUserDataFromTwitter($session)
-    {
-        // require_once('Zend/Oauth/Token/Access.php');
-        $token = new Zend_Oauth_Token_Access();
-        $token->setToken($session->access_token)->setTokenSecret($session->access_secret);
-
-        // require_once('Zend/Service/Twitter.php');
-        $twitter = new Zend_Service_Twitter();
-        $twitter->setHttpClient(
-            $token->getHttpClient($this->getTwitterAuthConfig())
-        );
-
-        $userData = $twitter->accountVerifyCredentials();
-        return $userData;
-    }
-
-    /**
-     * @param Zend_Session_Namespace $session
-     * @param Zend_Oauth_Consumer $consumer
-     * @param array|null $customServiceParameters
-     */
-    protected function getRequestToken($session, $consumer, $customServiceParameters = null)
-    {
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . print_r(func_get_args(), true));
-        // fetch a request token
-        $token = $consumer->getRequestToken($customServiceParameters);
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - twitter request token - ' . print_r($token, true));
-
-        if (false === $token->isValid()) {
-            Zend_Registry::get('logger')->info(__METHOD__ . ' - twitter request token invalid - ');
-            return;
-        }
-
-        // save the token to session
-        $session->request_token = $token->getToken();
-        $session->request_secret = $token->getTokenSecret();
-
-        // redirect the user to third-party
-        $consumer->redirect();
-    }
-
     public function verificationAction()
     {
         $filterInput = new Zend_Filter_Input(
@@ -780,7 +469,8 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             throw new Zend_Controller_Action_Exception('Your member account could not activated.');
         }
 
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - user activated. member_id: ' . print_r($authUser->member_id,true));
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - user activated. member_id: ' . print_r($authUser->member_id,
+                true));
         $this->view->member = $authUser;
         $this->view->username = $authUser->username;
 
@@ -803,132 +493,13 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         $this->view->projects = $tableProjects->fetchTopProducts();
     }
 
-    public function amazonAction()
-    {
-        $this->_helper->layout->disableLayout();
-
-        $log = Zend_Registry::get('logger');
-        $log->debug("********** amazon-auth: Start **********");
-
-        $config = Zend_Registry::get('config');
-        $amazonConfig = $config->third_party->amazon;
-
-        $serviceConfig = array(
-            'callbackUrl' => 'https://' . $this->getServerName() . '/login/amazon',
-            'siteUrl' => 'https://www.amazon.com/ap/oa',
-            'consumerKey' => $amazonConfig->consumer->key,
-            'consumerSecret' => $amazonConfig->consumer->secret
-        );
-
-        $extendedServiceParam = array('client_id' => $amazonConfig->consumer->key, 'sandbox' => true);
-
-
-        // require_once('Zend/Oauth/Consumer.php');
-        $consumer = new Zend_Oauth_Consumer($serviceConfig);
-
-        // require_once('Zend/Session/Namespace.php');
-        $session = new Zend_Session_Namespace('oauth_amazon');
-
-        foreach ($_GET as $name => $value) {
-            $session->$name = $value;
-        }
-
-
-        if (strlen($session->request_token) > 0 && strlen($session->request_secret) > 0) {
-            $this->getAccessToken($session, $serviceConfig);
-            // return to login user
-            $this->redirect('/login/amazon');
-        }
-
-        if (strlen($session->access_token) > 0) {
-            $userData = $this->getUserDataFromAmazon($session, $amazonConfig);
-            $log->debug(__FUNCTION__ . ': ' . print_r($userData, true));
-
-            $authModel = new Default_Model_Authorization();
-            $authMember = $authModel->getAuthDataFromSocialUser($userData->user_id, self::LOGIN_METHOD_AMAZON);
-
-            if (count((array)$authMember) > 0) {
-                $log->debug("amazon-auth: Login");
-
-                $this->storeAuthSessionData($authMember->member_id);
-
-                $authModel->updateUserLastOnline('member_id', $authMember->member_id);
-
-                $member_id = $authMember->member_id;
-
-            } else {
-                $log->debug("amazon-auth: Register");
-
-                $name = $userData->name;
-                $nameArr = explode(" ", $name);
-
-                $newUserValues = array(
-                    'username' => $userData->email,
-                    'mail' => $userData->email,
-                    'firstname' => $nameArr[0],
-                    'lastname' => $nameArr[1],
-                    'roleId' => self::DEFAULT_ROLE_ID,
-                    'mail_checked' => 1,
-                    'agb' => 1,
-                    'social_username' => $userData->screen_name,
-                    'social_user_id' => $userData->user_id,
-                    'login_method' => self::LOGIN_METHOD_AMAZON
-                );
-
-                $userData = $this->createNewUser($newUserValues);
-
-                $this->storeAuthSessionData($userData->member_id);
-
-                $authModel->updateUserLastOnline('member_id', $userData->member_id);
-
-                $this->sendAdminNotificationMail($newUserValues);
-            }
-
-            $log->debug("********** amazon-auth: Stop **********");
-
-            $this->redirect("/member/{$userData->member_id}/activities/");
-        }
-
-        $this->getRequestToken($session, $consumer, $extendedServiceParam);
-
-        $log->debug("********** amazon-auth: Stop **********");
-    }
-
     /**
-     * @param Zend_Session_Namespace $session
-     * @param Zend_Config $amazonConfig
-     * @throws Zend_Controller_Exception
-     * @return Zend_Rest_Client_Result
+     * @param string|int $identity
      */
-    protected function getUserDataFromAmazon($session, $amazonConfig)
+    protected function storeAuthSessionData($identity)
     {
-        // verify that the access token belongs to us
-        $c = curl_init('https://api.sandbox.amazon.com/auth/o2/tokeninfo?access_token=' . urlencode($session->access_token));
-        curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
-
-        $response = curl_exec($c);
-        curl_close($c);
-        $data = json_decode($response);
-
-        if ($data->aud != $amazonConfig->consumer->key) {
-            // the access token does not belong to us
-            throw new Zend_Controller_Exception('Amazon access token was not validated.');
-        }
-
-        // exchange the access token for user profile
-        $c = curl_init('https://api.sandbox.amazon.com/user/profile');
-        curl_setopt($c, CURLOPT_HTTPHEADER, array('Authorization: bearer ' . $session->access_token));
-        curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
-
-        $response = curl_exec($c);
-        curl_close($c);
-        $userData = json_decode($response);
-
-        if ($userData->error) {
-            throw new Zend_Controller_Exception('Error while request user data from amazon.');
-        }
-
-        return $userData;
+        $authDataModel = new Default_Model_Authorization();
+        $authDataModel->storeAuthSessionDataByIdentity($identity);
     }
 
     /**
@@ -996,25 +567,24 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
     }
 
     /**
+     * @param array $userData
+     * @return int
+     */
+    protected function storeNewUser($userData)
+    {
+        $userTable = new Default_Model_Member();
+        $userData = $userTable->storeNewUser($userData);
+
+        return $userData->member_id;
+    }
+
+    /**
      * @param int $identity
      */
     protected function updateUsersLastOnline($identity)
     {
         $authModel = new Default_Model_Authorization();
         $authModel->updateUserLastOnline('member_id', $identity);
-    }
-
-    /**
-     * @return array
-     */
-    protected function getThingiverseAuthConfig()
-    {
-        return array(
-            'callbackUrl' => 'http://' . $this->getServerName() . '/login/thingiverse',
-            'siteUrl' => 'https://www.thingiverse.com/login/oauth/authorize',
-            'consumerKey' => THINGIVERSE_CONSUMER_KEY,
-            'consumerSecret' => THINGIVERSE_CONSUMER_SECRET
-        );
     }
 
 }
