@@ -19,6 +19,9 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
+$modelMemberToken = new Default_Model_DbTable_MemberToken();
+$tokenData = $modelMemberToken->fetchRow('token_member_id = ' . Zend_Auth::getInstance()->getIdentity()->member_id . ' and token_deleted is null');
+$tokenValue = isset($tokenData->token_value) ? $tokenData->token_value : null;
 ?>
 <div class="panel-heading">
     <h4 class="panel-title">
@@ -51,11 +54,11 @@
                     ->setAttrib('tabindex', 11)
                     ->setAttrib('class', 'form-control')
                     ->setAttrib('pattern', '^[\w\-\.\/\+\~]+$')
+                    ->setValue($tokenValue)
                 ?>
-              <p class="help-block small">Insert your access token value from Github here.</p>
+              <p class="help-block small">Insert your personal access token from Github here.</p>
             </div>
           </div>
-
           <!-- /.row-fluid -->
             <hr>
             <div class="row">

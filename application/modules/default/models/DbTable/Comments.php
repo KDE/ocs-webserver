@@ -47,12 +47,12 @@ class Default_Model_DbTable_Comments extends Local_Model_Table
     );
 
     /**
-     * @param int $identifer
+     * @param int $identifier
      * @return int
      */
-    public function setDelete($identifer)
+    public function setDelete($identifier)
     {
-        return $this->delete($this->getAdapter()->quoteInto("$this->_key = ?", $identifer, 'INTEGER'));
+        return $this->delete($this->getAdapter()->quoteInto("$this->_key = ?", $identifier, 'INTEGER'));
     }
 
 }

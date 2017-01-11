@@ -61,7 +61,7 @@ class Local_Model_Table extends Zend_Db_Table
             $keyColumns = array($keyColumns);
         }
         if (0 < count(array_diff($keyColumns, array_keys($data)))) {
-            // if data doesn't contain ay key column we can stop here
+            // if data doesn't contain any key column we can stop here
             return null;
         }
         $statement = $this->select()->setIntegrityCheck(false)->from($this->_name);
