@@ -55,10 +55,17 @@ class OAuthController extends Zend_Controller_Action
             $this->forward('index', 'explore', 'default');
         }
 
-        $authAdapter->authenticate();
-        $authAdapter->storeAccessToken($access_token);
+        $authResult = $authAdapter->authenticate();
+        if ($authResult->isValid()) {
+            $authAdapter->storeAccessToken($access_token);
+        } else {
+            $this->_helper->flashMessenger->addMessage('<p class="text-danger center">An error occurred while trying authenticate you. Please try later or try our local login or register.</p>');
+            $this->forward('index', 'explore', 'default');
+        }
 
-        $this->forward('products', 'user');
+        if (false === $authAdapter->gotoRedirect()) {
+            $this->forward('products', 'user');
+        }
     }
 
 }

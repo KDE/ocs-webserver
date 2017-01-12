@@ -27,7 +27,7 @@ class Default_Model_DbTable_MemberToken extends Local_Model_Table
 
     protected $_name = "member_token";
 
-    protected $_keyColumnsForRow = array('token_id');
+    protected $_keyColumnsForRow = array('token_member_id', 'token_provider_name');
 
     protected $_key = 'token_id';
 
@@ -61,6 +61,5 @@ class Default_Model_DbTable_MemberToken extends Local_Model_Table
         $stmnt = $this->_db->query($sql, array('elementId' => $id));
         return $stmnt->rowCount();
     }
-
 
 }

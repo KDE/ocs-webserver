@@ -864,7 +864,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                         'token_member_id' => $this->_memberId,
                         'token_provider_name' => 'github_personal',
                         'token_value' => $form->getValue('token_github'),
-                        'token_providerw_username' => $form->getValue('link_github')
+                        'token_provider_username' => $form->getValue('link_github')
                         ));
 
                 $this->view->github = $form;
