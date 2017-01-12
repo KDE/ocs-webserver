@@ -23,6 +23,7 @@
 $helperAddDefaultScheme = new Default_View_Helper_AddDefaultScheme();
 $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $helperEncryptUrl = new Default_View_Helper_EncryptUrl();
+$helperUserIsOwner = new Default_View_Helper_UserIsOwner();
 $helperFetchCategoriesForProduct = new Default_View_Helper_FetchCategoriesForProductAsString();
 $loginUrl = '/login?redirect=' . $helperEncryptUrl->encryptUrl(Zend_Controller_Front::getInstance()->getRequest()->getRequestUri(), true);
 $viewSidebar = 'product/partials/productAboutSidebar.phtml';
@@ -393,9 +394,14 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
                                     ?>
                                     <?php if (!empty($this->product->paypal_mail)) : ?>
                                       <div class="prod-download">  
-                                      <a id="inline" href="#product-donate"><div class="txt"><span>Donate</span></div></a>
+                                        <a id="inline" href="#product-donate"><div class="txt"><span>Donate</span></div></a>
                                       </div>
-                                    <?php endif; ?>                               
+                                    <?php endif; ?>   
+                                    <?php if (!empty($this->product->member_id) && $helperUserIsOwner->userIsOwner($this->product->member_id)) : ?>
+                                      <div class="prod-download">  
+                                        <a id="inline" href="edit"><div class="txt"><span>Edit Product</span></div></a>
+                                      </div>
+                                    <?php endif; ?> 
                                   </div>   
                               </div>
                               
