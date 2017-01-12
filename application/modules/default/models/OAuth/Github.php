@@ -126,19 +126,6 @@ class Default_Model_Oauth_Github
 
         $access_token = $this->requestAccessToken($request_code);
 
-//        $username = $this->requestUsername();
-//        $this->session->username = $username;
-//
-//        $this->storeAccessToken($access_token, $username);
-
-        if ($this->session->redirect) {
-            $redirect = $this->session->redirect;
-            $this->session->redirect = null;
-            /** @var Zend_Controller_Action_Helper_Redirector $redirection */
-            $redirection = Zend_Controller_Action_HelperBroker::getStaticHelper('redirector');
-            $redirection->gotoUrl($redirect);
-        }
-
         return $access_token;
     }
 
@@ -218,6 +205,9 @@ class Default_Model_Oauth_Github
         $this->session->state_token = null;
     }
 
+    /**
+     * @return Zend_Auth_Result
+     */
     public function authenticate()
     {
         $userEmail = $this->getUserEmail();
@@ -228,11 +218,34 @@ class Default_Model_Oauth_Github
             $authModel = new Default_Model_Authorization();
             $authModel->storeAuthSessionDataByIdentity($this->memberData['member_id']);
             $authModel->updateUserLastOnline('member_id', $this->memberData['member_id']);
-            return true;
+            return $authResult;
         }
 
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - error while authenticate user from oauth provider: ' . implode(",\n",$authResult->getMessages()));
-        return false;
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - error while authenticate user from oauth provider: ' . implode(",\n",
+                $authResult->getMessages()));
+        return $authResult;
+    }
+
+    public function getUserEmail()
+    {
+        $httpClient = new Zend_Http_Client(self::URI_EMAIL);
+        $httpClient->setHeaders('Authorization', 'token ' . $this->session->access_token);
+        $httpClient->setHeaders('Accept', 'application/json');
+        $response = $httpClient->request();
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - last request: \n' . $httpClient->getLastRequest());
+        Zend_Registry::getInstance()->get('logger')->debug(__METHOD__ . ' - response from post request\n' . $response->getHeadersAsString());
+        $data = $this->parseResponse($response);
+        Zend_Registry::getInstance()->get('logger')->debug(__METHOD__ . ' - response from post request\n' . print_r($data,
+                true));
+        if ($response->getStatus() > 200) {
+            throw new Zend_Exception('error while request users data');
+        }
+        foreach ($data as $datum) {
+            if ($datum['primary']) {
+                return $datum['email'];
+            }
+        }
+        return '';
     }
 
     private function authenticateUserEmail($userEmail)
@@ -316,28 +329,6 @@ class Default_Model_Oauth_Github
         );
     }
 
-    public function getUserEmail()
-    {
-        $httpClient = new Zend_Http_Client(self::URI_EMAIL);
-        $httpClient->setHeaders('Authorization', 'token ' . $this->session->access_token);
-        $httpClient->setHeaders('Accept', 'application/json');
-        $response = $httpClient->request();
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - last request: \n' . $httpClient->getLastRequest());
-        Zend_Registry::getInstance()->get('logger')->debug(__METHOD__ . ' - response from post request\n' . $response->getHeadersAsString());
-        $data = $this->parseResponse($response);
-        Zend_Registry::getInstance()->get('logger')->debug(__METHOD__ . ' - response from post request\n' . print_r($data,
-                true));
-        if ($response->getStatus() > 200) {
-            throw new Zend_Exception('error while request users data');
-        }
-        foreach ($data as $datum) {
-            if ($datum['primary']) {
-                return $datum['email'];
-            }
-        }
-        return '';
-    }
-
     public function findActiveMemberByEmail($email)
     {
         $modelMember = new Default_Model_Member();
@@ -390,17 +381,6 @@ class Default_Model_Oauth_Github
         return false;
     }
 
-    /**
-     * @return string
-     */
-    protected function generateNewPassword()
-    {
-        include_once('PWGen.php');
-        $pwgen = new PWGen();
-        $newPass = $pwgen->generate();
-        return $newPass;
-    }
-
     public function getUserInfo()
     {
         $httpClient = new Zend_Http_Client(self::URI_USER);
@@ -418,29 +398,60 @@ class Default_Model_Oauth_Github
         return $data;
     }
 
+    /**
+     * @return string
+     */
+    protected function generateNewPassword()
+    {
+        include_once('PWGen.php');
+        $pwgen = new PWGen();
+        $newPass = $pwgen->generate();
+        return $newPass;
+    }
+
+    /**
+     * @return bool
+     */
     public function isConnected()
     {
         return isset($this->session->access_token);
     }
 
+    /**
+     * @param $access_token
+     * @param null $username
+     * @return mixed
+     */
     public function storeAccessToken($access_token, $username = null)
     {
         $member_id = Zend_Auth::getInstance()->getIdentity()->member_id;
 
         $modelToken = new Default_Model_DbTable_MemberToken();
-        $rowToken = $modelToken->createRow(array(
+        $rowToken = $modelToken->save(array(
             'token_member_id' => $member_id,
-            'token_provider_name' => 'github',
+            'token_provider_name' => 'github_login',
             'token_value' => $access_token,
             'token_provider_username' => $username
         ));
-        return $rowToken->save();
+        return $rowToken;
     }
 
     public function requestUsername()
     {
         $userinfo = $this->getUserInfo();
         return (array_key_exists('login', $userinfo)) ? $userinfo['login'] : '';
+    }
+
+    public function gotoRedirect()
+    {
+        if ($this->session->redirect) {
+            $redirect = $this->session->redirect;
+            $this->session->redirect = null;
+            /** @var Zend_Controller_Action_Helper_Redirector $redirection */
+            $redirection = Zend_Controller_Action_HelperBroker::getStaticHelper('redirector');
+            $redirection->gotoUrl($redirect);
+        }
+        return false;
     }
 
 }

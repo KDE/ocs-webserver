@@ -48,4 +48,5 @@ class Default_Model_OAuth
 
         return $authAdapter;
     }
+
 }
