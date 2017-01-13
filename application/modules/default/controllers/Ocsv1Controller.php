@@ -819,7 +819,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                 }
                 else {
                     $categoryTitle = $category->title;
-                    $categoryDisplayName = $subCategory['title'];
+                    $categoryDisplayName = $category->title;
                     if (!empty($category->name_legacy)) {
                         $categoryTitle = $category->name_legacy;
                     }
