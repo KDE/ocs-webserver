@@ -794,6 +794,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                 if (!empty($subCategories)) {
                     foreach ($subCategories as $subCategory) {
                         $categoryTitle = $subCategory['title'];
+                        $categoryDisplayName = $subCategory['title'];
                         if (!empty($subCategory['name_legacy'])) {
                             $categoryTitle = $subCategory['name_legacy'];
                         }
@@ -803,19 +804,22 @@ class Ocsv1Controller extends Zend_Controller_Action
                         if ($this->_format == 'json') {
                             $categoriesList[] = array(
                                 'id' => $subCategory['project_category_id'],
-                                'name' => $categoryTitle
+                                'name' => $categoryTitle,
+                                'display_name' => $categoryDisplayName
                             );
                         }
                         else {
                             $categoriesList[] = array(
                                 'id' => array('@text' => $subCategory['project_category_id']),
-                                'name' => array('@text' => $categoryTitle)
+                                'name' => array('@text' => $categoryTitle),
+                                'display_name' => array('@text' => $categoryDisplayName)
                             );
                         }
                     }
                 }
                 else {
                     $categoryTitle = $category->title;
+                    $categoryDisplayName = $subCategory['title'];
                     if (!empty($category->name_legacy)) {
                         $categoryTitle = $category->name_legacy;
                     }
@@ -825,13 +829,15 @@ class Ocsv1Controller extends Zend_Controller_Action
                     if ($this->_format == 'json') {
                         $categoriesList[] = array(
                             'id' => $category->project_category_id,
-                            'name' => $categoryTitle
+                            'name' => $categoryTitle,
+                            'display_name' => $categoryDisplayName
                         );
                     }
                     else {
                         $categoriesList[] = array(
                             'id' => array('@text' => $category->project_category_id),
-                            'name' => array('@text' => $categoryTitle)
+                            'name' => array('@text' => $categoryTitle),
+                            'display_name' => array('@text' => $categoryDisplayName)
                         );
                     }
                 }
