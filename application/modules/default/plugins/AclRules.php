@@ -51,7 +51,8 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addResource(new Zend_Acl_Resource ('default_gateway'));
         $this->addResource(new Zend_Acl_Resource ('default_hive'));
         $this->addResource(new Zend_Acl_Resource ('default_home'));
-        $this->addResource(new Zend_Acl_Resource ('default_ocsv1')); // OCS API
+        $this->addResource(new Zend_Acl_Resource ('default_ocsv1')); // OCS API v1
+        $this->addResource(new Zend_Acl_Resource ('default_ocsv2')); // OCS API v2
         $this->addResource(new Zend_Acl_Resource ('default_productcategory'));
         $this->addResource(new Zend_Acl_Resource ('default_productcomment'));
         $this->addResource(new Zend_Acl_Resource ('default_product'));
@@ -96,7 +97,8 @@ class Default_Plugin_AclRules extends Zend_Acl
             'default_gateway',
             'default_hive',
             'default_home',
-            'default_ocsv1', // OCS API
+            'default_ocsv1', // OCS API v1
+            'default_ocsv2', // OCS API v2
             'default_productcategory',
             'default_report',
             'default_rss',
