@@ -949,9 +949,11 @@ class Ocsv2Controller extends Zend_Controller_Action
             //else if (!empty($project->subcategory_title)) {
             //    $categoryTitle = $project->subcategory_title;
             //}
-            //if (!empty($project->subcategory_xdg_type)) {
-            //    $categoryTitle = $project->subcategory_xdg_type;
-            //}
+
+            $categoryXdgType = '';
+            if (!empty($project->xdg_type)) {
+                $categoryXdgType = $project->xdg_type;
+            }
 
             $created = date('c', strtotime($project->created_at));
             $changed = date('c', strtotime($project->changed_at));
@@ -1064,6 +1066,7 @@ class Ocsv2Controller extends Zend_Controller_Action
                             'version' => $project->version,
                             'typeid' => $categoryId,
                             'typename' => $categoryTitle,
+                            'xdg_type' => $categoryXdgType,
                             'language' => '',
                             'personid' => $project->member_username,
                             'created' => $created,
@@ -1118,6 +1121,7 @@ class Ocsv2Controller extends Zend_Controller_Action
                             'version' => array('@text' => $project->version),
                             'typeid' => array('@text' => $categoryId),
                             'typename' => array('@text' => $categoryTitle),
+                            'xdg_type' => array('@text' => $categoryXdgType),
                             'language' => array('@text' => ''),
                             'personid' => array('@text' => $project->member_username),
                             'created' => array('@text' => $created),
@@ -1300,9 +1304,11 @@ class Ocsv2Controller extends Zend_Controller_Action
                 //else if (!empty($project->subcategory_title)) {
                 //    $categoryTitle = $project->subcategory_title;
                 //}
-                //if (!empty($project->subcategory_xdg_type)) {
-                //    $categoryTitle = $project->subcategory_xdg_type;
-                //}
+
+                $categoryXdgType = '';
+                if (!empty($project->xdg_type)) {
+                    $categoryXdgType = $project->xdg_type;
+                }
 
                 $created = date('c', strtotime($project->created_at));
                 $changed = date('c', strtotime($project->changed_at));
@@ -1408,6 +1414,7 @@ class Ocsv2Controller extends Zend_Controller_Action
                         'version' => $project->version,
                         'typeid' => $categoryId,
                         'typename' => $categoryTitle,
+                        'xdg_type' => $categoryXdgType,
                         'language' => '',
                         'personid' => $project->member_username,
                         'created' => $created,
@@ -1440,6 +1447,7 @@ class Ocsv2Controller extends Zend_Controller_Action
                         'version' => array('@text' => $project->version),
                         'typeid' => array('@text' => $categoryId),
                         'typename' => array('@text' => $categoryTitle),
+                        'xdg_type' => array('@text' => $categoryXdgType),
                         'language' => array('@text' => ''),
                         'personid' => array('@text' => $project->member_username),
                         'created' => array('@text' => $created),
