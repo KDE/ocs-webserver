@@ -1179,6 +1179,9 @@ class Ocsv2Controller extends Zend_Controller_Action
                     $allCategories
                 );
             }
+            if (!empty($this->_params['xdg_type'])) {
+                $tableProjectSelect->where('category.xdg_type = ?', $this->_params['xdg_type']);
+            }
             if (!empty($this->_params['search'])) {
                 $isSearchable = false;
                 foreach (explode(' ', $this->_params['search']) as $keyword) {
