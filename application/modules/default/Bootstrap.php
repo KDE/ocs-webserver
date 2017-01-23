@@ -824,7 +824,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             )
         );
 
-        // OCS API
+        // OCS API v1
         $router->addRoute(
             'ocs_providers_xml',
             new Zend_Controller_Router_Route(
@@ -931,6 +931,118 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 array(
                     'module' => 'default',
                     'controller' => 'ocsv1',
+                    'action' => 'contentdownload'
+                )
+            )
+        );
+
+        // OCS API v2
+        /*$router->addRoute(
+            'ocs_providers_xml',
+            new Zend_Controller_Router_Route(
+                '/ocs/providers.xml',
+                array(
+                    'module' => 'default',
+                    'controller' => 'ocsv2',
+                    'action' => 'providers'
+                )
+            )
+        );*/
+        $router->addRoute(
+            'ocs_v2_config',
+            new Zend_Controller_Router_Route(
+                '/ocs/v2/config',
+                array(
+                    'module' => 'default',
+                    'controller' => 'ocsv2',
+                    'action' => 'config'
+                )
+            )
+        );
+        $router->addRoute(
+            'ocs_v2_person_check',
+            new Zend_Controller_Router_Route(
+                '/ocs/v2/person/check',
+                array(
+                    'module' => 'default',
+                    'controller' => 'ocsv2',
+                    'action' => 'personcheck'
+                )
+            )
+        );
+        $router->addRoute(
+            'ocs_v2_person_data',
+            new Zend_Controller_Router_Route(
+                '/ocs/v2/person/data',
+                array(
+                    'module' => 'default',
+                    'controller' => 'ocsv2',
+                    'action' => 'persondata'
+                )
+            )
+        );
+        $router->addRoute(
+            'ocs_v2_person_data_personid',
+            new Zend_Controller_Router_Route(
+                '/ocs/v2/person/data/:personid',
+                array(
+                    'module' => 'default',
+                    'controller' => 'ocsv2',
+                    'action' => 'persondata'
+                )
+            )
+        );
+        $router->addRoute(
+            'ocs_v2_person_self',
+            new Zend_Controller_Router_Route(
+                '/ocs/v2/person/self',
+                array(
+                    'module' => 'default',
+                    'controller' => 'ocsv2',
+                    'action' => 'personself'
+                )
+            )
+        );
+        $router->addRoute(
+            'ocs_v2_content_categories',
+            new Zend_Controller_Router_Route(
+                '/ocs/v2/content/categories',
+                array(
+                    'module' => 'default',
+                    'controller' => 'ocsv2',
+                    'action' => 'contentcategories'
+                )
+            )
+        );
+        $router->addRoute(
+            'ocs_v2_content_data',
+            new Zend_Controller_Router_Route(
+                '/ocs/v2/content/data',
+                array(
+                    'module' => 'default',
+                    'controller' => 'ocsv2',
+                    'action' => 'contentdata'
+                )
+            )
+        );
+        $router->addRoute(
+            'ocs_v2_content_data_contentid',
+            new Zend_Controller_Router_Route(
+                '/ocs/v2/content/data/:contentid',
+                array(
+                    'module' => 'default',
+                    'controller' => 'ocsv2',
+                    'action' => 'contentdata'
+                )
+            )
+        );
+        $router->addRoute(
+            'ocs_v2_content_download_contentid_itemid',
+            new Zend_Controller_Router_Route(
+                '/ocs/v2/content/download/:contentid/:itemid',
+                array(
+                    'module' => 'default',
+                    'controller' => 'ocsv2',
                     'action' => 'contentdownload'
                 )
             )
