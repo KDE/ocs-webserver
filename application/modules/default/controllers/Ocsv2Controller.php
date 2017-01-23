@@ -798,21 +798,24 @@ class Ocsv2Controller extends Zend_Controller_Action
                         if (!empty($subCategory['name_legacy'])) {
                             $categoryTitle = $subCategory['name_legacy'];
                         }
-                        //if (!empty($subCategory['xdg_type'])) {
-                        //    $categoryTitle = $subCategory['xdg_type'];
-                        //}
+                        $categoryXdgType = '';
+                        if (!empty($subCategory['xdg_type'])) {
+                            $categoryXdgType = $subCategory['xdg_type'];
+                        }
                         if ($this->_format == 'json') {
                             $categoriesList[] = array(
                                 'id' => $subCategory['project_category_id'],
                                 'name' => $categoryTitle,
-                                'display_name' => $categoryDisplayName
+                                'display_name' => $categoryDisplayName,
+                                'xdg_type' => $categoryXdgType
                             );
                         }
                         else {
                             $categoriesList[] = array(
                                 'id' => array('@text' => $subCategory['project_category_id']),
                                 'name' => array('@text' => $categoryTitle),
-                                'display_name' => array('@text' => $categoryDisplayName)
+                                'display_name' => array('@text' => $categoryDisplayName),
+                                'xdg_type' => array('@text' => $categoryXdgType)
                             );
                         }
                     }
@@ -823,21 +826,24 @@ class Ocsv2Controller extends Zend_Controller_Action
                     if (!empty($category->name_legacy)) {
                         $categoryTitle = $category->name_legacy;
                     }
-                    //if (!empty($category->xdg_type)) {
-                    //    $categoryTitle = $category->xdg_type;
-                    //}
+                    $categoryXdgType = '';
+                    if (!empty($category->xdg_type)) {
+                        $categoryXdgType = $category->xdg_type;
+                    }
                     if ($this->_format == 'json') {
                         $categoriesList[] = array(
                             'id' => $category->project_category_id,
                             'name' => $categoryTitle,
-                            'display_name' => $categoryDisplayName
+                            'display_name' => $categoryDisplayName,
+                            'xdg_type' => $categoryXdgType
                         );
                     }
                     else {
                         $categoriesList[] = array(
                             'id' => array('@text' => $category->project_category_id),
                             'name' => array('@text' => $categoryTitle),
-                            'display_name' => array('@text' => $categoryDisplayName)
+                            'display_name' => array('@text' => $categoryDisplayName),
+                            'xdg_type' => array('@text' => $categoryXdgType)
                         );
                     }
                 }
