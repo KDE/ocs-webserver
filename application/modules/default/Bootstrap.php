@@ -178,7 +178,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $log = new Zend_Log();
 
         $writer = new Zend_Log_Writer_Stream($settings['log']['path'] . 'all_' . date("Y-m-d"));
-        $writer->addFilter(new Local_Log_Filter_MinMax(Zend_Log::WARN, Zend_Log::INFO));
+        $writer->addFilter(new Local_Log_Filter_MinMax(Zend_Log::WARN, Zend_Log::DEBUG));
 
         $log->addWriter($writer);
 
@@ -661,7 +661,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $router->addRoute(
             'login',
             new Zend_Controller_Router_Route(
-                '/login/*',
+                '/login',
                 array(
                     'module' => 'default',
                     'controller' => 'authorization',
@@ -671,28 +671,40 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         );
 
         $router->addRoute(
-            'login_forgot',
+            'login',
             new Zend_Controller_Router_Route(
-                '/login/forgot',
+                '/login/:action/*',
                 array(
                     'module' => 'default',
                     'controller' => 'authorization',
-                    'action' => 'forgot'
+                    'action' => 'login'
                 )
             )
         );
 
-        $router->addRoute(
-            'login_from_cookie',
-            new Zend_Controller_Router_Route(
-                '/login/lfc',
-                array(
-                    'module' => 'default',
-                    'controller' => 'authorization',
-                    'action' => 'loginfromcookie'
-                )
-            )
-        );
+//        $router->addRoute(
+//            'login_forgot',
+//            new Zend_Controller_Router_Route(
+//                '/login/forgot',
+//                array(
+//                    'module' => 'default',
+//                    'controller' => 'authorization',
+//                    'action' => 'forgot'
+//                )
+//            )
+//        );
+//
+//        $router->addRoute(
+//            'login_from_cookie',
+//            new Zend_Controller_Router_Route(
+//                '/login/lfc',
+//                array(
+//                    'module' => 'default',
+//                    'controller' => 'authorization',
+//                    'action' => 'lfc'
+//                )
+//            )
+//        );
 
         $router->addRoute(
             'content',

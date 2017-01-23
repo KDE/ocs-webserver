@@ -19,6 +19,9 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
+$modelMemberToken = new Default_Model_DbTable_MemberToken();
+$tokenData = $modelMemberToken->fetchRow('token_member_id = ' . Zend_Auth::getInstance()->getIdentity()->member_id . ' and token_deleted is null and token_provider_name = "github_personal"');
+$tokenValue = isset($tokenData->token_value) ? $tokenData->token_value : null;
 ?>
 <div class="panel-heading">
     <h4 class="panel-title">
@@ -37,11 +40,26 @@
               data-trigger="#github-trigger">
             <div class="row">
                 <div class="col-md-4 col-lg-4 col-sm-4 col-xs-4">
-                  <?= $this->github->link_github->setAttrib('tabindex', 11)->setAttrib('class', 'form-control') ?>
-                  <p class="help-block small">Insert the full URL for your Github profile here.</p>
+                  <?= $this->github->link_github
+                      ->setAttrib('tabindex', 11)
+                      ->setAttrib('class', 'form-control')
+                      ->setAttrib('pattern', '^\w+-?\w+(?!-)$')
+                  ?>
+                  <p class="help-block small">Insert your Github username here.</p>
                 </div>
             </div>
-            <!-- /.row-fluid -->
+          <div class="row">
+            <div class="col-md-4 col-lg-4 col-sm-4 col-xs-4">
+                <?= $this->github->token_github
+                    ->setAttrib('tabindex', 11)
+                    ->setAttrib('class', 'form-control')
+                    ->setAttrib('pattern', '^[\w\-\.\/\+\~]+$')
+                    ->setValue($tokenValue)
+                ?>
+              <p class="help-block small">Insert your personal access token from Github here.</p>
+            </div>
+          </div>
+          <!-- /.row-fluid -->
             <hr>
             <div class="row">
                 <div class="box pull-left margin-left-15" style="padding-left: 15px;">

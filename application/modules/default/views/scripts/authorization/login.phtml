@@ -23,7 +23,13 @@
 $users = $this->newUsers($limit = 216,'created_at','DESC');
 $buildMemberUrl = new Default_View_Helper_BuildMemberUrl();
 ?>
-
+  <link href="/theme/flatui/css/bootstrap/social-buttons.css" rel="stylesheet" type="text/css">
+  <style>
+    .btn-github {
+      border: 1px solid;
+      border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    }
+  </style>
 	<!-- new code -->
     <main id="reg-page">
 
@@ -35,22 +41,29 @@ $buildMemberUrl = new Default_View_Helper_BuildMemberUrl();
 
                 </div>
                 <!-- END #register-box -->
-                <div id="social-register" class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                    <h3></h3>
+              <div id="social-register" class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                <h3></h3>
 
-                    <div class="bottom">
-                        <div id="show-login-description" class="small light lightgrey">Join us?</div>
-                        <div class="login2">
-                            <a href="/register/"
-                               id="show-login-form"
-                               class="btn btn-native btn-min-width">
-                                <i class="icon-white icon-lock"></i>
-                                Register
-                            </a>
-                        </div>
+                <div id="social-login-elements">
+                  <?php /*<div class="register-facebook">
+
+                    <a  href="/login/github/" class="btn btn-block btn-social btn-github">
+                      <span class="fa fa-github"></span>
+                      with Github
+                    </a>
+                  </div> */ ?>
+
+                  <div class="bottom margin-top-15">
+                    <div id="show-login-description" class="small light lightgrey">Join us?</div>
+                    <div class="login2">
+                      <a href="/register/" id="show-login-form" class="btn btn-native btn-min-width">
+                        <i class="icon-white icon-lock"></i>
+                        Register
+                      </a>
                     </div>
+                  </div>
                 </div>
-            </div>
+              </div>
         </section>
 
         <section id="thumbs" >

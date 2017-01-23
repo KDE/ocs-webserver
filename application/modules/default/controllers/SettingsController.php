@@ -336,7 +336,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
 
         return $form;
     }
-    
+
     private function formGithub()
     {
         $form = new Default_Form_Settings();
@@ -344,7 +344,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
             ->setAttrib("id", "settingsGithub")
             ->setAction('/settings/github');
 
-        $github = new Default_Form_Element_Url('link_github');
+        $github = new Default_Form_Element_UsernameGithub('link_github');
         $github->setLabel("Github Profile:")
             ->setRequired(false)
             ->removeDecorator('HtmlTag')
@@ -362,6 +362,25 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                     )
                 ));
         $form->addElement($github);
+
+        $token = new Default_Form_Element_TokenGithub('token_github');
+        $token->setLabel("Github Access Token:")
+            ->setRequired(false)
+            ->removeDecorator('HtmlTag')
+            ->setDecorators(
+                array(
+                    'ViewHelper',
+                    'Label',
+                    'Errors',
+                    array(
+                        'ViewScript',
+                        array(
+                            'viewScript' => 'settings/viewscripts/flatui_input.phtml',
+                            'placement' => false
+                        )
+                    )
+                ));
+        $form->addElement($token);
 
         return $form;
     }
@@ -826,7 +845,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
             $this->view->accounts = $form;
         }
     }
-    
+
     public function githubAction()
     {
         $this->_helper->layout->disableLayout();
@@ -838,6 +857,15 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
             if ($form->isValid($_POST)) {
                 $this->_memberSettings->setFromArray($form->getValues());
                 $this->_memberSettings->save();
+
+                $memberToken = new Default_Model_DbTable_MemberToken();
+                $memberToken->save(
+                    array(
+                        'token_member_id' => $this->_memberId,
+                        'token_provider_name' => 'github_personal',
+                        'token_value' => $form->getValue('token_github'),
+                        'token_provider_username' => $form->getValue('link_github')
+                        ));
 
                 $this->view->github = $form;
                 $this->view->save = 1;
@@ -1123,6 +1151,15 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $ownerResponse = $pploadApi->deleteOwner($this->_memberId);
     }
 
+    public function githubtokenAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer('partials/github');
+
+        $modelGithubOauth = new Default_Model_Oauth_Github();
+        $modelGithubOauth->authStart('/settings');
+    }
+
     public function addemailAction()
     {
         $this->_helper->layout->disableLayout();
@@ -1142,12 +1179,88 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $this->view->messages = array('user_email' => array('success' => 'Your email was saved. Please check your email account for verification email.'));
     }
 
+    /**
+     * @return Zend_Filter_Input
+     */
+    protected function createFilter()
+    {
+        $mailValidCheck = new Zend_Validate_EmailAddress();
+        $mailValidCheck->setOptions(array('domain' => true));
+
+        $mailExistCheck = new Zend_Validate_Db_NoRecordExists(array(
+            'table' => 'member_email',
+            'field' => 'email_address',
+            'exclude' => array('field' => 'email_deleted', 'value' => 1)
+        ));
+        $mailExistCheck->setMessage('RegisterFormEmailErrAlreadyRegistered',
+            Zend_Validate_Db_NoRecordExists::ERROR_RECORD_FOUND);
+
+        // Filter-Parameter
+        $filterInput = new Zend_Filter_Input(
+            array('*' => 'StringTrim', 'user_email' => 'StripTags'),
+            array(
+                'user_email' => array(
+                    $mailValidCheck,
+                    $mailExistCheck,
+                    'presence' => 'required'
+                )
+            ),
+            $this->getAllParams()
+        );
+        return $filterInput;
+    }
+
+    /**
+     * @param Zend_Filter_Input $filterInput
+     * @return Zend_Db_Table_Row_Abstract
+     */
+    protected function saveEmail($filterInput)
+    {
+        $data = array();
+        $data['email_member_id'] = $this->_authMember->member_id;
+        $data['email_address'] = $filterInput->getEscaped('user_email');
+        $data['email_verification_value'] = Default_Model_MemberEmail::getVerificationValue($this->_authMember->username,
+            $filterInput->getEscaped('user_email'));
+        $modelMemberEmail = new Default_Model_DbTable_MemberEmail();
+        return $modelMemberEmail->save($data);
+    }
+
+    /**
+     * @param array $data
+     */
+    protected function sendConfirmationMail($data)
+    {
+        $confirmMail = new Default_Plugin_SendMail('tpl_verify_email');
+        $confirmMail->setTemplateVar('servername', $this->getServerName());
+        $confirmMail->setTemplateVar('username', $this->_authMember->username);
+        $confirmMail->setTemplateVar('email_address', $data['email_address']);
+        $confirmMail->setTemplateVar('verificationlinktext',
+            '<a href="https://' . $this->getServerName() . '/settings/verification/v/' . $data['email_verification_value'] . '">Click here to verify your email address</a>');
+        $confirmMail->setTemplateVar('verificationlink',
+            '<a href="https://' . $this->getServerName() . '/settings/verification/v/' . $data['email_verification_value'] . '">https://' . $this->getServerName() . '/settings/verification/v/' . $data['email_verification_value'] . '</a>');
+        $confirmMail->setTemplateVar('verificationurl',
+            'https://' . $this->getServerName() . '/settings/verification/v/' . $data['email_verification_value']);
+        $confirmMail->setReceiverMail($data['email_address']);
+        $confirmMail->setFromMail('registration@opendesktop.org');
+        $confirmMail->send();
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function getServerName()
+    {
+        /** @var Zend_Controller_Request_Http $request */
+        $request = $this->getRequest();
+        return $request->getHttpHost();
+    }
+
     public function removeemailAction()
     {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer('partials/email');
 
-        $emailId = (int) $this->getParam('i');
+        $emailId = (int)$this->getParam('i');
 
         $modelEmail = new Default_Model_DbTable_MemberEmail();
 
@@ -1161,7 +1274,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer('partials/email');
 
-        $emailId = (int) $this->getParam('i');
+        $emailId = (int)$this->getParam('i');
 
         $modelEmail = new Default_Model_MemberEmail();
         $result = $modelEmail->setDefaultEmail($emailId, $this->_authMember->member_id);
@@ -1173,7 +1286,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer('partials/email');
 
-        $emailId = (int) $this->getParam('i');
+        $emailId = (int)$this->getParam('i');
 
         $modelEmail = new Default_Model_DbTable_MemberEmail();
         $data = $modelEmail->find($emailId)->current();
@@ -1181,7 +1294,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $data->save();
         $this->sendConfirmationMail($data);
 
-        $this->view->messages = array('user_email' => array('success'=>'New verification mail was send. Please check your email account.'));
+        $this->view->messages = array('user_email' => array('success' => 'New verification mail was send. Please check your email account.'));
     }
 
     public function verificationAction()
@@ -1215,80 +1328,6 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
             $this->_helper->flashMessenger->addMessage('<p class="text-danger">There was an error verifying your email.</p>');
         }
         $this->forward('index');
-    }
-
-    /**
-     * @return Zend_Filter_Input
-     */
-    protected function createFilter()
-    {
-        $mailValidCheck = new Zend_Validate_EmailAddress();
-        $mailValidCheck->setOptions(array('domain' => true));
-
-        $mailExistCheck = new Zend_Validate_Db_NoRecordExists(array(
-            'table' => 'member_email',
-            'field' => 'email_address',
-            'exclude' => array('field' => 'email_deleted', 'value' => 1)
-        ));
-        $mailExistCheck->setMessage('RegisterFormEmailErrAlreadyRegistered', Zend_Validate_Db_NoRecordExists::ERROR_RECORD_FOUND);
-
-        // Filter-Parameter
-        $filterInput = new Zend_Filter_Input(
-            array('*' => 'StringTrim', 'user_email' => 'StripTags'),
-            array(
-                'user_email' => array(
-                    $mailValidCheck,
-                    $mailExistCheck,
-                    'presence' => 'required'
-                )
-            ),
-            $this->getAllParams()
-        );
-        return $filterInput;
-    }
-
-    /**
-     * @param Zend_Filter_Input $filterInput
-     * @return Zend_Db_Table_Row_Abstract
-     */
-    protected function saveEmail($filterInput)
-    {
-        $data = array();
-        $data['email_member_id'] = $this->_authMember->member_id;
-        $data['email_address'] = $filterInput->getEscaped('user_email');
-        $data['email_verification_value'] = Default_Model_MemberEmail::getVerificationValue($this->_authMember->username, $filterInput->getEscaped('user_email'));
-        $modelMemberEmail = new Default_Model_DbTable_MemberEmail();
-        return $modelMemberEmail->save($data);
-    }
-
-    /**
-     * @param array $data
-     */
-    protected function sendConfirmationMail($data)
-    {
-        $confirmMail = new Default_Plugin_SendMail('tpl_verify_email');
-        $confirmMail->setTemplateVar('servername', $this->getServerName());
-        $confirmMail->setTemplateVar('username', $this->_authMember->username);
-        $confirmMail->setTemplateVar('email_address', $data['email_address']);
-        $confirmMail->setTemplateVar('verificationlinktext',
-            '<a href="https://' . $this->getServerName() . '/settings/verification/v/' . $data['email_verification_value'] . '">Click here to verify your email address</a>');
-        $confirmMail->setTemplateVar('verificationlink',
-            '<a href="https://' . $this->getServerName() . '/settings/verification/v/' . $data['email_verification_value'] . '">https://' . $this->getServerName() . '/settings/verification/v/' . $data['email_verification_value'] . '</a>');
-        $confirmMail->setTemplateVar('verificationurl',
-            'https://' . $this->getServerName() . '/settings/verification/v/' . $data['email_verification_value']);
-        $confirmMail->setReceiverMail($data['email_address']);
-        $confirmMail->setFromMail('registration@opendesktop.org');
-        $confirmMail->send();
-    }
-
-    /**
-     * @return mixed
-     */
-    protected function getServerName()
-    {
-        /** @var Zend_Controller_Request_Http $request */
-        $request = $this->getRequest();
-        return $request->getHttpHost();
     }
 
 }

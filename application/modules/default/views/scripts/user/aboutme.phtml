@@ -342,7 +342,7 @@ $textCountryCity .= $this->member->country ? ', ' . $this->member->country : '';
                                                 <em class="gt-link"></em>
                                             </div>
                                             <div class="text">
-                                                <a href="<?php echo $this->member->link_github; ?>"><?php echo $this->member->link_github; ?></a>
+                                                <a href="<?php echo 'https://github.com/'.$this->member->link_github; ?>" target="_blank"><?php echo $this->member->link_github; ?></a>
                                             </diV>
                                         </div>
                                     <?php endif; ?>

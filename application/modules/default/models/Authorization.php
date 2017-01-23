@@ -48,6 +48,7 @@ class Default_Model_Authorization
      * @param string $identity
      * @param string $socialNetwork
      * @return null|object
+     * @deprecated
      */
     public function getAuthDataFromSocialUser($identity, $socialNetwork)
     {
@@ -111,7 +112,7 @@ class Default_Model_Authorization
     {
         $modelRememberMe = new Default_Model_RememberMe();
 //        if (false == $setRememberMe) {
-            $modelRememberMe->deleteSession();
+        $modelRememberMe->deleteSession();
 //            return;
 //        }
         if ($modelRememberMe->hasValidCookie()) {
@@ -259,15 +260,11 @@ class Default_Model_Authorization
      */
     protected function getAuthUserData($identifier, $identity)
     {
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - $identifier: ' . print_r($identifier,
-                true) . ' :: $identity: ' . print_r($identity, true));
-        /** @var Zend_Db_Table_Abstract $dataTable */
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - $identifier: ' . print_r($identifier,true) . ' :: $identity: ' . print_r($identity, true));
         $dataTable = $this->_dataTable;
-        $where = $dataTable->select()->where($dataTable->getAdapter()->quoteIdentifier($identifier, true) . ' = ?',
-            $identity);
+        $where = $dataTable->select()->where($dataTable->getAdapter()->quoteIdentifier($identifier, true) . ' = ?', $identity);
         $resultRow = $dataTable->fetchRow($where)->toArray();
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - user found. username: ' . print_r($resultRow['username'],
-                true));
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - user found. username: ' . print_r($resultRow['username'], true));
         unset($resultRow['password']);
         return (object)$resultRow;
     }

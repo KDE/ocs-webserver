@@ -54,9 +54,9 @@ class Local_Auth_AdapterFactory
         return self::LOGIN_DEFAULT;
     }
 
-    protected static function createAuthAdapter($loginMethod)
+    protected static function createAuthAdapter($provider)
     {
-        switch ($loginMethod) {
+        switch ($provider) {
             case self::LOGIN_INFINITY:
                 $authAdapter = new Local_Auth_Adapter_RememberMe(Zend_Registry::get('db'));
                 break;

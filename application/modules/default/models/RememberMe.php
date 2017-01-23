@@ -126,8 +126,7 @@ class Default_Model_RememberMe
         $sessionData['member_id'] = (int)$identifier;
         $sessionData['remember_me_id'] = Local_Tools_UUID::generateUUID();
         $sessionData['expiry'] = time() + (int)$this->cookieTimeout;
-        $sessionData['token'] = base64_encode(hash('sha256',
-            $sessionData['member_id'] . $sessionData['remember_me_id'] . $this->salt));
+        $sessionData['token'] = base64_encode(hash('sha256', $sessionData['member_id'] . $sessionData['remember_me_id'] . $this->salt));
         return $sessionData;
     }
 
