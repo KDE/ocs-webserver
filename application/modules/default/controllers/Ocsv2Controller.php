@@ -1559,6 +1559,7 @@ class Ocsv2Controller extends Zend_Controller_Action
 
         $downloadLink = PPLOAD_API_URI . 'files/download/'
             . 'id/' . $file->id . '/' . $file->name;
+        $tags = $this->_parseFileTags($file->tags);
 
         if ($this->_format == 'json') {
             $response = array(
@@ -1574,7 +1575,8 @@ class Ocsv2Controller extends Zend_Controller_Action
                         'gpgfingerprint' => '',
                         'gpgsignature' => '',
                         'packagename' => '',
-                        'repository' => ''
+                        'repository' => '',
+                        'download_package_type' => $tags['packagetypeid']
                     )
                 )
             );
@@ -1595,7 +1597,8 @@ class Ocsv2Controller extends Zend_Controller_Action
                         'gpgfingerprint' => array('@text' => ''),
                         'gpgsignature' => array('@text' => ''),
                         'packagename' => array('@text' => ''),
-                        'repository' => array('@text' => '')
+                        'repository' => array('@text' => ''),
+                        'download_package_type' => array('@text' => $tags['packagetypeid'])
                     )
                 )
             );
