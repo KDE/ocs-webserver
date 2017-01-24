@@ -358,6 +358,33 @@ class Ocsv2Controller extends Zend_Controller_Action
         return $tableProjectSelect;
     }
 
+    /**
+     * @param string $fileTags
+     * @return array
+     */
+    protected function _parseFileTags($fileTags)
+    {
+        $tags = explode(',', $fileTags);
+        $parsedTags = array(
+            'link' => '',
+            'licensetype' => '',
+            'packagetypeid' => ''
+        );
+        foreach ($tags as $tag) {
+            $tag = trim($tag);
+            if (strpos($tag, 'link##') === 0) {
+                $parsedTags['link'] = str_replace('link##', '', $tag);
+            }
+            else if (strpos($tag, 'licensetype-') === 0) {
+                $parsedTags['licensetype'] = str_replace('licensetype-', '', $tag);
+            }
+            else if (strpos($tag, 'packagetypeid-') === 0) {
+                $parsedTags['packagetypeid'] = str_replace('packagetypeid-', '', $tag);
+            }
+        }
+        return $parsedTags;
+    }
+
     public function indexAction()
     {
         $this->_sendErrorResponse(999, 'unknown request');
