@@ -1065,6 +1065,7 @@ class Ocsv2Controller extends Zend_Controller_Action
                         $downloads += (int)$file->downloaded_count;
                         $downloadLink = PPLOAD_API_URI . 'files/download/'
                             . 'id/' . $file->id . '/' . $file->name;
+                        $tags = $this->_parseFileTags($file->tags);
                         $downloadItems['downloadway' . $i] = 1;
                         $downloadItems['downloadtype' . $i] = '';
                         $downloadItems['downloadprice' . $i] = '0';
@@ -1075,6 +1076,7 @@ class Ocsv2Controller extends Zend_Controller_Action
                         $downloadItems['downloadgpgsignature' . $i] = '';
                         $downloadItems['downloadpackagename' . $i] = '';
                         $downloadItems['downloadrepository' . $i] = '';
+                        $downloadItems['download_package_type' . $i] = $tags['packagetypeid'];
                         $i++;
                     }
                 }
@@ -1421,6 +1423,7 @@ class Ocsv2Controller extends Zend_Controller_Action
                             $downloads += (int)$file->downloaded_count;
                             $downloadLink = PPLOAD_API_URI . 'files/download/'
                                 . 'id/' . $file->id . '/' . $file->name;
+                            $tags = $this->_parseFileTags($file->tags);
                             $downloadItems['downloadway' . $i] = 1;
                             $downloadItems['downloadtype' . $i] = '';
                             $downloadItems['downloadprice' . $i] = '0';
@@ -1431,6 +1434,7 @@ class Ocsv2Controller extends Zend_Controller_Action
                             $downloadItems['downloadgpgsignature' . $i] = '';
                             $downloadItems['downloadpackagename' . $i] = '';
                             $downloadItems['downloadrepository' . $i] = '';
+                            $downloadItems['download_package_type' . $i] = $tags['packagetypeid'];
                             $i++;
                         }
                     }
