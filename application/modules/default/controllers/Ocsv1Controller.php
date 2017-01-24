@@ -358,6 +358,33 @@ class Ocsv1Controller extends Zend_Controller_Action
         return $tableProjectSelect;
     }
 
+    /**
+     * @param string $fileTags
+     * @return array
+     */
+    protected function _parseFileTags($fileTags)
+    {
+        $tags = explode(',', $fileTags);
+        $parsedTags = array(
+            'link' => '',
+            'licensetype' => '',
+            'packagetypeid' => ''
+        );
+        foreach ($tags as $tag) {
+            $tag = trim($tag);
+            if (strpos($tag, 'link##') === 0) {
+                $parsedTags['link'] = str_replace('link##', '', $tag);
+            }
+            else if (strpos($tag, 'licensetype-') === 0) {
+                $parsedTags['licensetype'] = str_replace('licensetype-', '', $tag);
+            }
+            else if (strpos($tag, 'packagetypeid-') === 0) {
+                $parsedTags['packagetypeid'] = str_replace('packagetypeid-', '', $tag);
+            }
+        }
+        return $parsedTags;
+    }
+
     public function indexAction()
     {
         $this->_sendErrorResponse(999, 'unknown request');
@@ -798,21 +825,24 @@ class Ocsv1Controller extends Zend_Controller_Action
                         if (!empty($subCategory['name_legacy'])) {
                             $categoryTitle = $subCategory['name_legacy'];
                         }
-                        //if (!empty($subCategory['xdg_type'])) {
-                        //    $categoryTitle = $subCategory['xdg_type'];
-                        //}
+                        $categoryXdgType = '';
+                        if (!empty($subCategory['xdg_type'])) {
+                            $categoryXdgType = $subCategory['xdg_type'];
+                        }
                         if ($this->_format == 'json') {
                             $categoriesList[] = array(
                                 'id' => $subCategory['project_category_id'],
                                 'name' => $categoryTitle,
-                                'display_name' => $categoryDisplayName
+                                'display_name' => $categoryDisplayName,
+                                'xdg_type' => $categoryXdgType
                             );
                         }
                         else {
                             $categoriesList[] = array(
                                 'id' => array('@text' => $subCategory['project_category_id']),
                                 'name' => array('@text' => $categoryTitle),
-                                'display_name' => array('@text' => $categoryDisplayName)
+                                'display_name' => array('@text' => $categoryDisplayName),
+                                'xdg_type' => array('@text' => $categoryXdgType)
                             );
                         }
                     }
@@ -823,21 +853,24 @@ class Ocsv1Controller extends Zend_Controller_Action
                     if (!empty($category->name_legacy)) {
                         $categoryTitle = $category->name_legacy;
                     }
-                    //if (!empty($category->xdg_type)) {
-                    //    $categoryTitle = $category->xdg_type;
-                    //}
+                    $categoryXdgType = '';
+                    if (!empty($category->xdg_type)) {
+                        $categoryXdgType = $category->xdg_type;
+                    }
                     if ($this->_format == 'json') {
                         $categoriesList[] = array(
                             'id' => $category->project_category_id,
                             'name' => $categoryTitle,
-                            'display_name' => $categoryDisplayName
+                            'display_name' => $categoryDisplayName,
+                            'xdg_type' => $categoryXdgType
                         );
                     }
                     else {
                         $categoriesList[] = array(
                             'id' => array('@text' => $category->project_category_id),
                             'name' => array('@text' => $categoryTitle),
-                            'display_name' => array('@text' => $categoryDisplayName)
+                            'display_name' => array('@text' => $categoryDisplayName),
+                            'xdg_type' => array('@text' => $categoryXdgType)
                         );
                     }
                 }
@@ -943,9 +976,11 @@ class Ocsv1Controller extends Zend_Controller_Action
             //else if (!empty($project->subcategory_title)) {
             //    $categoryTitle = $project->subcategory_title;
             //}
-            //if (!empty($project->subcategory_xdg_type)) {
-            //    $categoryTitle = $project->subcategory_xdg_type;
-            //}
+
+            $categoryXdgType = '';
+            if (!empty($project->xdg_type)) {
+                $categoryXdgType = $project->xdg_type;
+            }
 
             $created = date('c', strtotime($project->created_at));
             $changed = date('c', strtotime($project->changed_at));
@@ -1030,6 +1065,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                         $downloads += (int)$file->downloaded_count;
                         $downloadLink = PPLOAD_API_URI . 'files/download/'
                             . 'id/' . $file->id . '/' . $file->name;
+                        $tags = $this->_parseFileTags($file->tags);
                         $downloadItems['downloadway' . $i] = 1;
                         $downloadItems['downloadtype' . $i] = '';
                         $downloadItems['downloadprice' . $i] = '0';
@@ -1040,6 +1076,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                         $downloadItems['downloadgpgsignature' . $i] = '';
                         $downloadItems['downloadpackagename' . $i] = '';
                         $downloadItems['downloadrepository' . $i] = '';
+                        $downloadItems['download_package_type' . $i] = $tags['packagetypeid'];
                         $i++;
                     }
                 }
@@ -1058,6 +1095,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                             'version' => $project->version,
                             'typeid' => $categoryId,
                             'typename' => $categoryTitle,
+                            'xdg_type' => $categoryXdgType,
                             'language' => '',
                             'personid' => $project->member_username,
                             'created' => $created,
@@ -1112,6 +1150,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                             'version' => array('@text' => $project->version),
                             'typeid' => array('@text' => $categoryId),
                             'typename' => array('@text' => $categoryTitle),
+                            'xdg_type' => array('@text' => $categoryXdgType),
                             'language' => array('@text' => ''),
                             'personid' => array('@text' => $project->member_username),
                             'created' => array('@text' => $created),
@@ -1148,6 +1187,101 @@ class Ocsv1Controller extends Zend_Controller_Action
             $limit = 10; // 1 - 100
             $offset = 0;
 
+            if (!empty($this->_params['package_type'])) {
+                // FIXME: When using this parameter 'package_type', product sorting and paginating will go crazy
+                $filesRequest = array(
+                    'tags' => 'packagetypeid-' . $this->_params['package_type'],
+                    'sort' => 'name',
+                    'perpage' => $limit,
+                    'page' => 1
+                );
+                if (!empty($this->_params['sortmode'])) {
+                    // sortmode parameter: new|alpha|high|down
+                    switch (strtolower($this->_params['sortmode'])) {
+                        case 'new':
+                            $filesRequest['sort'] = 'newest';
+                            break;
+                        case 'alpha':
+                            $filesRequest['sort'] = 'name';
+                            break;
+                        case 'high':
+                            $filesRequest['sort'] = 'frequent'; // 'frequent' is not the same mode of the 'high'
+                            break;
+                        case 'down':
+                            $filesRequest['sort'] = 'frequent'; // 'frequent' is not the same mode of the 'down'
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                if (isset($this->_params['pagesize'])
+                    && ctype_digit((string)$this->_params['pagesize'])
+                    && $this->_params['pagesize'] > 0
+                    && $this->_params['pagesize'] < 101
+                ) {
+                    $filesRequest['perpage'] = $this->_params['pagesize'];
+                }
+                if (isset($this->_params['page'])
+                    && ctype_digit((string)$this->_params['page'])
+                ) {
+                    // page parameter: the first page is 0
+                    $filesRequest['page'] = $this->_params['page'] + 1;
+                }
+                $cacheName = __FUNCTION__ . '_package_type_filesResponse_' . md5(implode('_', $filesRequest));
+                if (!($filesResponse = $cache->load($cacheName))) {
+                    Zend_Registry::get('logger')->debug(
+                        __METHOD__ . ' - Start Caching PackagetypefilesResponse - '
+                        . print_r($filesRequest, true)
+                    );
+                    $filesResponse = $pploadApi->getFiles($filesRequest);
+                    $cache->save($filesResponse, $cacheName);
+                }
+                else {
+                    Zend_Registry::get('logger')->debug(
+                        __METHOD__ . ' - Loading from Cache PackagetypefilesResponse - '
+                        . print_r($cacheName, true)
+                    );
+                }
+                if (isset($filesResponse->status)
+                    && $filesResponse->status == 'success'
+                ) {
+                    $collectionIds = array();
+                    foreach ($filesResponse->files as $file) {
+                        $collectionIds[] = $file->collection_id;
+                    }
+                    $collectionIds = array_unique($collectionIds);
+                    $tableProjectSelect->where(
+                        "project.ppload_collection_id IN (?)",
+                        $collectionIds
+                    );
+                }
+                else {
+                    if ($this->_format == 'json') {
+                        $response = array(
+                            'status' => 'ok',
+                            'statuscode' => 100,
+                            'message' => '',
+                            'totalitems' => 0,
+                            'itemsperpage' => $filesRequest['perpage'],
+                            'data' => array()
+                        );
+                    }
+                    else {
+                        $response = array(
+                            'meta' => array(
+                                'status' => array('@text' => 'ok'),
+                                'statuscode' => array('@text' => 100),
+                                'message' => array('@text' => ''),
+                                'totalitems' => array('@text' => 0),
+                                'itemsperpage' => array('@text' => $filesRequest['perpage'])
+                            ),
+                            'data' => array()
+                        );
+                    }
+                    $this->_sendResponse($response, $this->_format);
+                }
+            }
+
             if (!empty($this->_params['categories'])) {
                 // categories parameter: category ids seperated by "x"
                 $catList = explode('x', $this->_params['categories']);
@@ -1168,6 +1302,9 @@ class Ocsv1Controller extends Zend_Controller_Action
                     /*. " OR proj_subcategory.project_sub_category_id IN (?)"*/,
                     $allCategories
                 );
+            }
+            if (!empty($this->_params['xdg_type'])) {
+                $tableProjectSelect->where('category.xdg_type = ?', $this->_params['xdg_type']);
             }
             if (!empty($this->_params['search'])) {
                 $isSearchable = false;
@@ -1294,9 +1431,11 @@ class Ocsv1Controller extends Zend_Controller_Action
                 //else if (!empty($project->subcategory_title)) {
                 //    $categoryTitle = $project->subcategory_title;
                 //}
-                //if (!empty($project->subcategory_xdg_type)) {
-                //    $categoryTitle = $project->subcategory_xdg_type;
-                //}
+
+                $categoryXdgType = '';
+                if (!empty($project->xdg_type)) {
+                    $categoryXdgType = $project->xdg_type;
+                }
 
                 $created = date('c', strtotime($project->created_at));
                 $changed = date('c', strtotime($project->changed_at));
@@ -1379,6 +1518,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                             $downloads += (int)$file->downloaded_count;
                             $downloadLink = PPLOAD_API_URI . 'files/download/'
                                 . 'id/' . $file->id . '/' . $file->name;
+                            $tags = $this->_parseFileTags($file->tags);
                             $downloadItems['downloadway' . $i] = 1;
                             $downloadItems['downloadtype' . $i] = '';
                             $downloadItems['downloadprice' . $i] = '0';
@@ -1389,6 +1529,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                             $downloadItems['downloadgpgsignature' . $i] = '';
                             $downloadItems['downloadpackagename' . $i] = '';
                             $downloadItems['downloadrepository' . $i] = '';
+                            $downloadItems['download_package_type' . $i] = $tags['packagetypeid'];
                             $i++;
                         }
                     }
@@ -1402,6 +1543,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                         'version' => $project->version,
                         'typeid' => $categoryId,
                         'typename' => $categoryTitle,
+                        'xdg_type' => $categoryXdgType,
                         'language' => '',
                         'personid' => $project->member_username,
                         'created' => $created,
@@ -1434,6 +1576,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                         'version' => array('@text' => $project->version),
                         'typeid' => array('@text' => $categoryId),
                         'typename' => array('@text' => $categoryTitle),
+                        'xdg_type' => array('@text' => $categoryXdgType),
                         'language' => array('@text' => ''),
                         'personid' => array('@text' => $project->member_username),
                         'created' => array('@text' => $created),
@@ -1511,6 +1654,7 @@ class Ocsv1Controller extends Zend_Controller_Action
 
         $downloadLink = PPLOAD_API_URI . 'files/download/'
             . 'id/' . $file->id . '/' . $file->name;
+        $tags = $this->_parseFileTags($file->tags);
 
         if ($this->_format == 'json') {
             $response = array(
@@ -1526,7 +1670,8 @@ class Ocsv1Controller extends Zend_Controller_Action
                         'gpgfingerprint' => '',
                         'gpgsignature' => '',
                         'packagename' => '',
-                        'repository' => ''
+                        'repository' => '',
+                        'download_package_type' => $tags['packagetypeid']
                     )
                 )
             );
@@ -1547,7 +1692,8 @@ class Ocsv1Controller extends Zend_Controller_Action
                         'gpgfingerprint' => array('@text' => ''),
                         'gpgsignature' => array('@text' => ''),
                         'packagename' => array('@text' => ''),
-                        'repository' => array('@text' => '')
+                        'repository' => array('@text' => ''),
+                        'download_package_type' => array('@text' => $tags['packagetypeid'])
                     )
                 )
             );
