@@ -1187,6 +1187,101 @@ class Ocsv2Controller extends Zend_Controller_Action
             $limit = 10; // 1 - 100
             $offset = 0;
 
+            if (!empty($this->_params['package_type'])) {
+                // FIXME: When using this parameter 'package_type', product sorting and paginating will go crazy.
+                $filesRequest = array(
+                    'tags' => 'packagetypeid-' . $this->_params['package_type'],
+                    'sort' => 'name',
+                    'perpage' => $limit,
+                    'page' => 1
+                );
+                if (!empty($this->_params['sortmode'])) {
+                    // sortmode parameter: new|alpha|high|down
+                    switch (strtolower($this->_params['sortmode'])) {
+                        case 'new':
+                            $filesRequest['sort'] = 'newest';
+                            break;
+                        case 'alpha':
+                            $filesRequest['sort'] = 'name';
+                            break;
+                        case 'high':
+                            $filesRequest['sort'] = 'frequent'; // 'frequent' is not the same mode of the 'high'
+                            break;
+                        case 'down':
+                            $filesRequest['sort'] = 'frequent'; // 'frequent' is not the same mode of the 'down'
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                if (isset($this->_params['pagesize'])
+                    && ctype_digit((string)$this->_params['pagesize'])
+                    && $this->_params['pagesize'] > 0
+                    && $this->_params['pagesize'] < 101
+                ) {
+                    $filesRequest['perpage'] = $this->_params['pagesize'];
+                }
+                if (isset($this->_params['page'])
+                    && ctype_digit((string)$this->_params['page'])
+                ) {
+                    // page parameter: the first page is 0
+                    $filesRequest['page'] = $this->_params['page'] + 1;
+                }
+                $cacheName = __FUNCTION__ . '_package_type_filesResponse_' . md5(implode('_', $filesRequest));
+                if (!($filesResponse = $cache->load($cacheName))) {
+                    Zend_Registry::get('logger')->debug(
+                        __METHOD__ . ' - Start Caching PackagetypefilesResponse - '
+                        . print_r($filesRequest, true)
+                    );
+                    $filesResponse = $pploadApi->getFiles($filesRequest);
+                    $cache->save($filesResponse, $cacheName);
+                }
+                else {
+                    Zend_Registry::get('logger')->debug(
+                        __METHOD__ . ' - Loading from Cache PackagetypefilesResponse - '
+                        . print_r($cacheName, true)
+                    );
+                }
+                if (isset($filesResponse->status)
+                    && $filesResponse->status == 'success'
+                ) {
+                    $collectionIds = array();
+                    foreach ($filesResponse->files as $file) {
+                        $collectionIds[] = $file->collection_id;
+                    }
+                    $collectionIds = array_unique($collectionIds);
+                    $tableProjectSelect->where(
+                        "project.ppload_collection_id IN (?)",
+                        $collectionIds
+                    );
+                }
+                else {
+                    if ($this->_format == 'json') {
+                        $response = array(
+                            'status' => 'ok',
+                            'statuscode' => 100,
+                            'message' => '',
+                            'totalitems' => 0,
+                            'itemsperpage' => $filesRequest['perpage'],
+                            'data' => array()
+                        );
+                    }
+                    else {
+                        $response = array(
+                            'meta' => array(
+                                'status' => array('@text' => 'ok'),
+                                'statuscode' => array('@text' => 100),
+                                'message' => array('@text' => ''),
+                                'totalitems' => array('@text' => 0),
+                                'itemsperpage' => array('@text' => $filesRequest['perpage'])
+                            ),
+                            'data' => array()
+                        );
+                    }
+                    $this->_sendResponse($response, $this->_format);
+                }
+            }
+
             if (!empty($this->_params['categories'])) {
                 // categories parameter: category ids seperated by "x"
                 $catList = explode('x', $this->_params['categories']);
