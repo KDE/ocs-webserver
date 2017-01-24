@@ -30,6 +30,10 @@ class Local_Payment_PayPal_Response
      */
     public static function buildResponse($rawResponse = null)
     {
+        if (isset($rawResponse['txn_type']) AND ($rawResponse['txn_type'] == 'masspay')) {
+            return new Local_Payment_PayPal_Masspay_ResponseMasspay($rawResponse);
+        }
+        
         if (isset($rawResponse['responseEnvelope_ack'])) {
             return new Local_Payment_PayPal_AdaptivePayment_ResponsePayRequest($rawResponse);
         }
