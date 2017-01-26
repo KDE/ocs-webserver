@@ -775,6 +775,17 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             ->where('project.project_category_id = ?', $project->project_category_id, 'INTEGER')
             ->limit($count)
             ->order('project.created_at DESC');
+        
+        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
+        $storePackageTypeIds = null;
+        if($storeConfig) {
+            $storePackageTypeIds = $storeConfig['package_type'];
+        }
+        
+        if($storePackageTypeIds) {
+            $q = $this->generatePackageTypeFilter($q, array(self::FILTER_NAME_PACKAGETYPE=>$storePackageTypeIds));
+        }
+        
         return $this->generateRowSet($q->query()->fetchAll());
     }
 
@@ -807,7 +818,18 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             ->where('project.type_id = ?', 1)
             ->where('project.project_category_id = ?', $project->project_category_id, 'INTEGER')
             ->limit($count, $offset)
-            ->order('project.created_at DESC');;
+            ->order('project.created_at DESC');
+        
+        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
+        $storePackageTypeIds = null;
+        if($storeConfig) {
+            $storePackageTypeIds = $storeConfig['package_type'];
+        }
+        
+        if($storePackageTypeIds) {
+            $q = $this->generatePackageTypeFilter($q, array(self::FILTER_NAME_PACKAGETYPE=>$storePackageTypeIds));
+        }
+        
         return $this->generateRowSet($q->query()->fetchAll());
     }
 
