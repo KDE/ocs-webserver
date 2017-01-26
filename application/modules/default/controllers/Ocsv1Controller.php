@@ -1187,8 +1187,15 @@ class Ocsv1Controller extends Zend_Controller_Action
             $offset = 0;
 
             if (!empty($this->_params['categories'])) {
-                // categories parameter: category ids seperated by "x"
-                $catList = explode('x', $this->_params['categories']);
+                // categories parameter: values seperated by ","
+                // legacy OCS API compatible: values seperated by "x"
+                if (strpos($this->_params['categories'], ',') !== false) {
+                    $catList = explode(',', $this->_params['categories']);
+                }
+                else {
+                    $catList = explode('x', $this->_params['categories']);
+                }
+
                 $modelProjectCategories = new Default_Model_DbTable_ProjectCategory();
                 $allCategories = array();
                 foreach ($catList as $catId) {
@@ -1202,21 +1209,37 @@ class Ocsv1Controller extends Zend_Controller_Action
                 }
 
                 $tableProjectSelect->where(
-                    "project.project_category_id IN (?)"
-                    /*. " OR proj_subcategory.project_sub_category_id IN (?)"*/,
+                    'project.project_category_id IN (?)'
+                    /*. ' OR proj_subcategory.project_sub_category_id IN (?)'*/,
                     $allCategories
                 );
             }
-            if (!empty($this->_params['xdg_type'])) {
-                $tableProjectSelect->where('category.xdg_type = ?', $this->_params['xdg_type']);
+            if (!empty($this->_params['xdg_types'])) {
+                // xdg_types parameter: values seperated by ","
+                $xdgTypeList = explode(',', $this->_params['xdg_types']);
+                $tableProjectSelect->where('category.xdg_type IN (?)', $xdgTypeList);
             }
-            if (!empty($this->_params['package_type'])) {
-                $tableProjectSelect->joinLeft(
-                    array('package_type' => '(SELECT DISTINCT project_id,package_type_id FROM project_package_type)'),
-                    'project.project_id = package_type.project_id',
-                    array()
-                );
-                $tableProjectSelect->where('package_type.package_type_id = ?', $this->_params['package_type']);
+            if (!empty($this->_params['package_types'])) {
+                // package_types parameter: values seperated by ","
+                $packageTypeList = explode(',', $this->_params['package_types']);
+
+                $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
+                $storePackageTypeIds = null;
+                if ($storeConfig) {
+                    $storePackageTypeIds = $storeConfig['package_type'];
+                }
+
+                if ($storePackageTypeIds) {
+                    $tableProjectSelect->join(
+                        array('package_type' => new Zend_Db_Expr(
+                            '(SELECT DISTINCT project_id FROM project_package_type WHERE '
+                            . $tableProject->getAdapter()->quoteInto('package_type_id IN (?)', $packageTypeList)
+                            . ')'
+                        )),
+                        'project.project_id = package_type.project_id',
+                        array()
+                    );
+                }
             }
             if (!empty($this->_params['search'])) {
                 $isSearchable = false;
