@@ -219,6 +219,12 @@ class Default_Model_Info
         if (count($activeCategories) == 0) {
             return array();
         }
+        
+        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
+        $storePackageTypeIds = null;
+        if($storeConfig) {
+            $storePackageTypeIds = $storeConfig['package_type'];
+        }
 
         $sql = '
             SELECT
@@ -230,11 +236,16 @@ class Default_Model_Info
                 ,username
                 ,comment_target_id
                 ,title
-                ,project_id               
+                ,project.project_id               
             FROM comments
             STRAIGHT_JOIN member on comments.comment_member_id = member.member_id
-            JOIN project ON comments.comment_target_id = project.project_id AND comments.comment_type = 0
-            WHERE comments.comment_active = 1            
+            JOIN project ON comments.comment_target_id = project.project_id AND comments.comment_type = 0';
+        
+        if($storePackageTypeIds) {
+            $sql .= ' JOIN (SELECT DISTINCT project_id FROM project_package_type WHERE package_type_id in ('.$storePackageTypeIds.')) package_type  ON project.project_id = package_type.project_id';
+        }
+        
+            $sql .= ' WHERE comments.comment_active = 1            
             AND project.status = 100
             AND project.type_id = 1
             AND project.project_category_id IN (' .
@@ -284,6 +295,12 @@ class Default_Model_Info
         if (count($activeCategories) == 0) {
             return array();
         }
+        
+        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
+        $storePackageTypeIds = null;
+        if($storeConfig) {
+            $storePackageTypeIds = $storeConfig['package_type'];
+        }
 
         $sql = '
         SELECT 
@@ -298,8 +315,13 @@ class Default_Model_Info
         ,project.title
         FROM plings
         JOIN project ON project.project_id = plings.project_id   
-        STRAIGHT_JOIN member on plings.member_id = member.member_id     
-        WHERE 
+        STRAIGHT_JOIN member on plings.member_id = member.member_id';
+        
+        if($storePackageTypeIds) {
+            $sql .= ' JOIN (SELECT DISTINCT project_id FROM project_package_type WHERE package_type_id in ('.$storePackageTypeIds.')) package_type  ON project.project_id = package_type.project_id';
+        }
+        
+        $sql .= ' WHERE 
         plings.status_id = 2        
         AND project.status <> 30
         AND project.project_category_id IN (' .
@@ -350,6 +372,12 @@ class Default_Model_Info
         if (count($activeCategories) == 0) {
             return array();
         }
+        
+        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
+        $storePackageTypeIds = null;
+        if($storeConfig) {
+            $storePackageTypeIds = $storeConfig['package_type'];
+        }
 
         $sql = '
             SELECT 
@@ -358,8 +386,13 @@ class Default_Model_Info
                 ,s.amount 
                 ,s.category_title       
                 from stat_downloads_quarter_year s
-                inner join project p on s.project_id = p.project_id
-                WHERE
+                inner join project p on s.project_id = p.project_id';
+        
+            if($storePackageTypeIds) {
+                $sql .= ' JOIN (SELECT DISTINCT project_id FROM project_package_type WHERE package_type_id in ('.$storePackageTypeIds.')) package_type  ON p.project_id = package_type.project_id';
+            }
+        
+            $sql .= ' WHERE
                     p.status=100
                     and 
                     p.project_category_id IN (' .
