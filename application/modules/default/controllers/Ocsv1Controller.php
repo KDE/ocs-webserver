@@ -121,9 +121,9 @@ class Ocsv1Controller extends Zend_Controller_Action
         }
 
         $baseUri = $this->_uriScheme . '://' . $credentials . $_SERVER['SERVER_NAME'];
-        
+
         $webSite = $_SERVER['SERVER_NAME'];
-        
+
         //Mask api.kde-look.org to store.kde.org
         if(strpos($_SERVER['SERVER_NAME'], 'api.kde-look.org') !== false) {
             $webSite = 'store.kde.org';
@@ -318,9 +318,8 @@ class Ocsv1Controller extends Zend_Controller_Action
                 'project.project_category_id = category.project_category_id',
                 array()
             )
-            
             /*
-             * No Subcategories nymore. 
+             * No Subcategories nymore.
             ->joinLeft(
                 array('proj_subcategory' => 'project_subcategory'),
                 'project.project_id = proj_subcategory.project_id',
@@ -356,6 +355,33 @@ class Ocsv1Controller extends Zend_Controller_Action
             //->group('project.project_id')
         ;
         return $tableProjectSelect;
+    }
+
+    /**
+     * @param string $fileTags
+     * @return array
+     */
+    protected function _parseFileTags($fileTags)
+    {
+        $tags = explode(',', $fileTags);
+        $parsedTags = array(
+            'link' => '',
+            'licensetype' => '',
+            'packagetypeid' => ''
+        );
+        foreach ($tags as $tag) {
+            $tag = trim($tag);
+            if (strpos($tag, 'link##') === 0) {
+                $parsedTags['link'] = str_replace('link##', '', $tag);
+            }
+            else if (strpos($tag, 'licensetype-') === 0) {
+                $parsedTags['licensetype'] = str_replace('licensetype-', '', $tag);
+            }
+            else if (strpos($tag, 'packagetypeid-') === 0) {
+                $parsedTags['packagetypeid'] = str_replace('packagetypeid-', '', $tag);
+            }
+        }
+        return $parsedTags;
     }
 
     public function indexAction()
@@ -798,21 +824,24 @@ class Ocsv1Controller extends Zend_Controller_Action
                         if (!empty($subCategory['name_legacy'])) {
                             $categoryTitle = $subCategory['name_legacy'];
                         }
-                        //if (!empty($subCategory['xdg_type'])) {
-                        //    $categoryTitle = $subCategory['xdg_type'];
-                        //}
+                        $categoryXdgType = '';
+                        if (!empty($subCategory['xdg_type'])) {
+                            $categoryXdgType = $subCategory['xdg_type'];
+                        }
                         if ($this->_format == 'json') {
                             $categoriesList[] = array(
                                 'id' => $subCategory['project_category_id'],
                                 'name' => $categoryTitle,
-                                'display_name' => $categoryDisplayName
+                                'display_name' => $categoryDisplayName,
+                                'xdg_type' => $categoryXdgType
                             );
                         }
                         else {
                             $categoriesList[] = array(
                                 'id' => array('@text' => $subCategory['project_category_id']),
                                 'name' => array('@text' => $categoryTitle),
-                                'display_name' => array('@text' => $categoryDisplayName)
+                                'display_name' => array('@text' => $categoryDisplayName),
+                                'xdg_type' => array('@text' => $categoryXdgType)
                             );
                         }
                     }
@@ -823,21 +852,24 @@ class Ocsv1Controller extends Zend_Controller_Action
                     if (!empty($category->name_legacy)) {
                         $categoryTitle = $category->name_legacy;
                     }
-                    //if (!empty($category->xdg_type)) {
-                    //    $categoryTitle = $category->xdg_type;
-                    //}
+                    $categoryXdgType = '';
+                    if (!empty($category->xdg_type)) {
+                        $categoryXdgType = $category->xdg_type;
+                    }
                     if ($this->_format == 'json') {
                         $categoriesList[] = array(
                             'id' => $category->project_category_id,
                             'name' => $categoryTitle,
-                            'display_name' => $categoryDisplayName
+                            'display_name' => $categoryDisplayName,
+                            'xdg_type' => $categoryXdgType
                         );
                     }
                     else {
                         $categoriesList[] = array(
                             'id' => array('@text' => $category->project_category_id),
                             'name' => array('@text' => $categoryTitle),
-                            'display_name' => array('@text' => $categoryDisplayName)
+                            'display_name' => array('@text' => $categoryDisplayName),
+                            'xdg_type' => array('@text' => $categoryXdgType)
                         );
                     }
                 }
@@ -943,9 +975,11 @@ class Ocsv1Controller extends Zend_Controller_Action
             //else if (!empty($project->subcategory_title)) {
             //    $categoryTitle = $project->subcategory_title;
             //}
-            //if (!empty($project->subcategory_xdg_type)) {
-            //    $categoryTitle = $project->subcategory_xdg_type;
-            //}
+
+            $categoryXdgType = '';
+            if (!empty($project->xdg_type)) {
+                $categoryXdgType = $project->xdg_type;
+            }
 
             $created = date('c', strtotime($project->created_at));
             $changed = date('c', strtotime($project->changed_at));
@@ -1030,6 +1064,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                         $downloads += (int)$file->downloaded_count;
                         $downloadLink = PPLOAD_API_URI . 'files/download/'
                             . 'id/' . $file->id . '/' . $file->name;
+                        $tags = $this->_parseFileTags($file->tags);
                         $downloadItems['downloadway' . $i] = 1;
                         $downloadItems['downloadtype' . $i] = '';
                         $downloadItems['downloadprice' . $i] = '0';
@@ -1040,6 +1075,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                         $downloadItems['downloadgpgsignature' . $i] = '';
                         $downloadItems['downloadpackagename' . $i] = '';
                         $downloadItems['downloadrepository' . $i] = '';
+                        $downloadItems['download_package_type' . $i] = $tags['packagetypeid'];
                         $i++;
                     }
                 }
@@ -1055,15 +1091,16 @@ class Ocsv1Controller extends Zend_Controller_Action
                             'details' => 'full',
                             'id' => $project->project_id,
                             'name' => $project->title,
-                        	'version' => $project->version,
+                            'version' => $project->version,
                             'typeid' => $categoryId,
                             'typename' => $categoryTitle,
+                            'xdg_type' => $categoryXdgType,
                             'language' => '',
                             'personid' => $project->member_username,
                             'created' => $created,
                             'changed' => $changed,
                             'downloads' => $downloads,
-                        	'score' => round((($project->count_likes + 6) / (($project->count_likes + $project->count_dislikes) + 12)) * 100),
+                            'score' => round((($project->count_likes + 6) / (($project->count_likes + $project->count_dislikes) + 12)) * 100),
                             'summary' => '',
                             'description' => $project->description,
                             'changelog' => '',
@@ -1071,7 +1108,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                             'homepage' => $previewPage,
                             'homepagetype' => '',
                             'donationpage' => $donationPage,
-                        	'comments' => $project->count_comments,
+                            'comments' => $project->count_comments,
                             'commentspage' => $previewPage,
                             'fans' => null,
                             'fanspage' => '',
@@ -1106,39 +1143,40 @@ class Ocsv1Controller extends Zend_Controller_Action
                     ),
                     'data' => array(
                         'content' => array(
-                                'details' => 'full',
-                                'id' => array('@text' => $project->project_id),
-                                'name' => array('@text' => $project->title),
-                                'version' => array('@text' => $project->version),
-                                'typeid' => array('@text' => $categoryId),
-                                'typename' => array('@text' => $categoryTitle),
-                                'language' => array('@text' => ''),
-                                'personid' => array('@text' => $project->member_username),
-                                'created' => array('@text' => $created),
-                                'changed' => array('@text' => $changed),
-                                'downloads' => array('@text' => $downloads),
-                                'score' => array('@text' => round((($project->count_likes + 6) / (($project->count_likes + $project->count_dislikes) + 12)) * 100)),
-                                'summary' => array('@text' => ''),
-                                'description' => array('@text' => $project->description),
-                                'changelog' => array('@text' => ''),
-                                'feedbackurl' => array('@text' => $previewPage),
-                                'homepage' => array('@text' => $previewPage),
-                                'homepagetype' => array('@text' => ''),
-                                'donationpage' => array('@text' => $donationPage),
-                                'comments' => array('@text' => $project->count_comments),
-                                'commentspage' => array('@text' => $previewPage),
-                                'fans' => array('@text' => null),
-                                'fanspage' => array('@text' => ''),
-                                'knowledgebaseentries' => array('@text' => null),
-                                'knowledgebasepage' => array('@text' => ''),
-                                'depend' => array('@text' => ''),
-                                'preview1' => array('@text' => $previewPage),
-                                //'previewpic1' => array('@text' => $previewPic),
-                                //'smallpreviewpic1' => array('@text' => $previewPicSmall),
-                                'icon' => array('@text' => ''),
-                                'video' => array('@text' => ''),
-                                'detailpage' => array('@text' => $previewPage)
-                            ) + $previewPics + $smallPreviewPics + $downloadItems
+                            'details' => 'full',
+                            'id' => array('@text' => $project->project_id),
+                            'name' => array('@text' => $project->title),
+                            'version' => array('@text' => $project->version),
+                            'typeid' => array('@text' => $categoryId),
+                            'typename' => array('@text' => $categoryTitle),
+                            'xdg_type' => array('@text' => $categoryXdgType),
+                            'language' => array('@text' => ''),
+                            'personid' => array('@text' => $project->member_username),
+                            'created' => array('@text' => $created),
+                            'changed' => array('@text' => $changed),
+                            'downloads' => array('@text' => $downloads),
+                            'score' => array('@text' => round((($project->count_likes + 6) / (($project->count_likes + $project->count_dislikes) + 12)) * 100)),
+                            'summary' => array('@text' => ''),
+                            'description' => array('@text' => $project->description),
+                            'changelog' => array('@text' => ''),
+                            'feedbackurl' => array('@text' => $previewPage),
+                            'homepage' => array('@text' => $previewPage),
+                            'homepagetype' => array('@text' => ''),
+                            'donationpage' => array('@text' => $donationPage),
+                            'comments' => array('@text' => $project->count_comments),
+                            'commentspage' => array('@text' => $previewPage),
+                            'fans' => array('@text' => null),
+                            'fanspage' => array('@text' => ''),
+                            'knowledgebaseentries' => array('@text' => null),
+                            'knowledgebasepage' => array('@text' => ''),
+                            'depend' => array('@text' => ''),
+                            'preview1' => array('@text' => $previewPage),
+                            //'previewpic1' => array('@text' => $previewPic),
+                            //'smallpreviewpic1' => array('@text' => $previewPicSmall),
+                            'icon' => array('@text' => ''),
+                            'video' => array('@text' => ''),
+                            'detailpage' => array('@text' => $previewPage)
+                        ) + $previewPics + $smallPreviewPics + $downloadItems
                     )
                 );
             }
@@ -1168,6 +1206,17 @@ class Ocsv1Controller extends Zend_Controller_Action
                     /*. " OR proj_subcategory.project_sub_category_id IN (?)"*/,
                     $allCategories
                 );
+            }
+            if (!empty($this->_params['xdg_type'])) {
+                $tableProjectSelect->where('category.xdg_type = ?', $this->_params['xdg_type']);
+            }
+            if (!empty($this->_params['package_type'])) {
+                $tableProjectSelect->joinLeft(
+                    array('package_type' => '(SELECT DISTINCT project_id,package_type_id FROM project_package_type)'),
+                    'project.project_id = package_type.project_id',
+                    array()
+                );
+                $tableProjectSelect->where('package_type.package_type_id = ?', $this->_params['package_type']);
             }
             if (!empty($this->_params['search'])) {
                 $isSearchable = false;
@@ -1218,7 +1267,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                             'project.project_id = stat_downloads_quarter_year.project_id',
                             array()
                         );
-                    	$tableProjectSelect->order('stat_downloads_quarter_year.amount DESC');
+                        $tableProjectSelect->order('stat_downloads_quarter_year.amount DESC');
                         break;
                     default:
                         break;
@@ -1294,9 +1343,11 @@ class Ocsv1Controller extends Zend_Controller_Action
                 //else if (!empty($project->subcategory_title)) {
                 //    $categoryTitle = $project->subcategory_title;
                 //}
-                //if (!empty($project->subcategory_xdg_type)) {
-                //    $categoryTitle = $project->subcategory_xdg_type;
-                //}
+
+                $categoryXdgType = '';
+                if (!empty($project->xdg_type)) {
+                    $categoryXdgType = $project->xdg_type;
+                }
 
                 $created = date('c', strtotime($project->created_at));
                 $changed = date('c', strtotime($project->changed_at));
@@ -1379,6 +1430,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                             $downloads += (int)$file->downloaded_count;
                             $downloadLink = PPLOAD_API_URI . 'files/download/'
                                 . 'id/' . $file->id . '/' . $file->name;
+                            $tags = $this->_parseFileTags($file->tags);
                             $downloadItems['downloadway' . $i] = 1;
                             $downloadItems['downloadtype' . $i] = '';
                             $downloadItems['downloadprice' . $i] = '0';
@@ -1389,6 +1441,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                             $downloadItems['downloadgpgsignature' . $i] = '';
                             $downloadItems['downloadpackagename' . $i] = '';
                             $downloadItems['downloadrepository' . $i] = '';
+                            $downloadItems['download_package_type' . $i] = $tags['packagetypeid'];
                             $i++;
                         }
                     }
@@ -1396,24 +1449,25 @@ class Ocsv1Controller extends Zend_Controller_Action
 
                 if ($this->_format == 'json') {
                     $contentsList[] = array(
-                            'details' => 'summary',
-                            'id' => $project->project_id,
-                            'name' => $project->title,
-                            'version' => $project->version,
-                            'typeid' => $categoryId,
-                            'typename' => $categoryTitle,
-                            'language' => '',
-                            'personid' => $project->member_username,
-                            'created' => $created,
-                            'changed' => $changed,
-                            'downloads' => $downloads,
-                            'score' => round((($project->count_likes + 6) / (($project->count_likes + $project->count_dislikes) + 12)) * 100),
-                            'summary' => '',
-                            'description' => $project->description,
-                            'comments' => $project->count_comments,
-                            'preview1' => $previewPage,
-                            'detailpage' => $previewPage
-                        ) + $previewPics + $smallPreviewPics + $downloadItems;
+                        'details' => 'summary',
+                        'id' => $project->project_id,
+                        'name' => $project->title,
+                        'version' => $project->version,
+                        'typeid' => $categoryId,
+                        'typename' => $categoryTitle,
+                        'xdg_type' => $categoryXdgType,
+                        'language' => '',
+                        'personid' => $project->member_username,
+                        'created' => $created,
+                        'changed' => $changed,
+                        'downloads' => $downloads,
+                        'score' => round((($project->count_likes + 6) / (($project->count_likes + $project->count_dislikes) + 12)) * 100),
+                        'summary' => '',
+                        'description' => $project->description,
+                        'comments' => $project->count_comments,
+                        'preview1' => $previewPage,
+                        'detailpage' => $previewPage
+                    ) + $previewPics + $smallPreviewPics + $downloadItems;
                 }
                 else {
                     foreach ($previewPics as $key => $value) {
@@ -1428,24 +1482,25 @@ class Ocsv1Controller extends Zend_Controller_Action
                         }
                     }
                     $contentsList[] = array(
-                            'details' => 'summary',
-                            'id' => array('@text' => $project->project_id),
-                            'name' => array('@text' => $project->title),
-                            'version' => array('@text' => $project->version),
-                            'typeid' => array('@text' => $categoryId),
-                            'typename' => array('@text' => $categoryTitle),
-                            'language' => array('@text' => ''),
-                            'personid' => array('@text' => $project->member_username),
-                            'created' => array('@text' => $created),
-                            'changed' => array('@text' => $changed),
-                            'downloads' => array('@text' => $downloads),
-                            'score' => array('@text' => round((($project->count_likes + 6) / (($project->count_likes + $project->count_dislikes) + 12)) * 100)),
-                            'summary' => array('@text' => ''),
-                            'description' => array('@text' => $project->description),
-                            'comments' => array('@text' => $project->count_comments),
-                            'preview1' => array('@text' => $previewPage),
-                            'detailpage' => array('@text' => $previewPage)
-                        ) + $previewPics + $smallPreviewPics + $downloadItems;
+                        'details' => 'summary',
+                        'id' => array('@text' => $project->project_id),
+                        'name' => array('@text' => $project->title),
+                        'version' => array('@text' => $project->version),
+                        'typeid' => array('@text' => $categoryId),
+                        'typename' => array('@text' => $categoryTitle),
+                        'xdg_type' => array('@text' => $categoryXdgType),
+                        'language' => array('@text' => ''),
+                        'personid' => array('@text' => $project->member_username),
+                        'created' => array('@text' => $created),
+                        'changed' => array('@text' => $changed),
+                        'downloads' => array('@text' => $downloads),
+                        'score' => array('@text' => round((($project->count_likes + 6) / (($project->count_likes + $project->count_dislikes) + 12)) * 100)),
+                        'summary' => array('@text' => ''),
+                        'description' => array('@text' => $project->description),
+                        'comments' => array('@text' => $project->count_comments),
+                        'preview1' => array('@text' => $previewPage),
+                        'detailpage' => array('@text' => $previewPage)
+                    ) + $previewPics + $smallPreviewPics + $downloadItems;
                 }
             }
 
@@ -1511,6 +1566,7 @@ class Ocsv1Controller extends Zend_Controller_Action
 
         $downloadLink = PPLOAD_API_URI . 'files/download/'
             . 'id/' . $file->id . '/' . $file->name;
+        $tags = $this->_parseFileTags($file->tags);
 
         if ($this->_format == 'json') {
             $response = array(
@@ -1526,7 +1582,8 @@ class Ocsv1Controller extends Zend_Controller_Action
                         'gpgfingerprint' => '',
                         'gpgsignature' => '',
                         'packagename' => '',
-                        'repository' => ''
+                        'repository' => '',
+                        'download_package_type' => $tags['packagetypeid']
                     )
                 )
             );
@@ -1547,7 +1604,8 @@ class Ocsv1Controller extends Zend_Controller_Action
                         'gpgfingerprint' => array('@text' => ''),
                         'gpgsignature' => array('@text' => ''),
                         'packagename' => array('@text' => ''),
-                        'repository' => array('@text' => '')
+                        'repository' => array('@text' => ''),
+                        'download_package_type' => array('@text' => $tags['packagetypeid'])
                     )
                 )
             );
