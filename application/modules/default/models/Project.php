@@ -26,6 +26,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
     const FILTER_NAME_PROJECT_ID_NOT_IN = 'project_id_not_in';
     const FILTER_NAME_RANKING = 'ranking';
     const FILTER_NAME_CATEGORY = 'category';
+    const FILTER_NAME_PACKAGETYPE = 'package_type';
     const FILTER_NAME_MEMBER = 'member';
     const FILTER_NAME_ORDER = 'order';
     const FILTER_NAME_LOCATION = 'location';
@@ -1255,6 +1256,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         $statement = $this->generateBaseStatement();
         $statement = $this->generateCategoryFilter($statement, $inputFilterParams);
         $statement = $this->generateOrderFilter($statement, $inputFilterParams);
+        $statement = $this->generatePackageTypeFilter($statement, $inputFilterParams);
 
         $statement->limit($limit, $offset);
         return $statement;
@@ -1323,6 +1325,28 @@ class Default_Model_Project extends Default_Model_DbTable_Project
 
         return $statement;
     }
+    
+    /**
+     * @param Zend_Db_Select $statement
+     * @param array $filterArrayValue
+     * @return Zend_Db_Select
+     */
+    protected function generatePackageTypeFilter(Zend_Db_Select $statement, $filterArrayValue)
+    {
+        if (false == isset($filterArrayValue[self::FILTER_NAME_PACKAGETYPE])) {
+            return $statement;
+        }
+
+        $filter = $filterArrayValue[self::FILTER_NAME_PACKAGETYPE];
+        
+        $statement->join(
+            array('package_type' => new Zend_Db_Expr('(SELECT DISTINCT project_id FROM project_package_type WHERE package_type_id in ('.$filter.'))')),
+            'project.project_id = package_type.project_id',
+            array()
+        );
+
+        return $statement;
+    }    
 
     /**
      * @param Zend_Db_Select $statement
