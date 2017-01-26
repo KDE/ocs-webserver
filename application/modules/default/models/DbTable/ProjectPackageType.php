@@ -124,7 +124,7 @@ class Default_Model_DbTable_ProjectPackageType extends Local_Model_Table
         $resultString = '';
         if (count($resultSet) > 0) {
             foreach ($resultSet as $item) {                
-                $resultString = $resultString . ' <span class="packagetypeos" > ' . stripslashes($item['name']) . '</span></br>';
+                $resultString = $resultString . ' <span class="packagetypeos" > ' . stripslashes($item['name']) . '</span>';
             }
             return $resultString;
         }
