@@ -1028,8 +1028,14 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         if (empty($idCategory)) {
             throw new Zend_Exception('idCategory param was not set');
         }
+        
+        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
+        $storePackageTypeIds = null;
+        if($storeConfig) {
+            $storePackageTypeIds = $storeConfig['package_type'];
+        }
 
-        $cacheName = __FUNCTION__ . md5(serialize($idCategory) . $withSubCat);
+        $cacheName = __FUNCTION__ . md5(serialize($idCategory) . $withSubCat . '-package_type'. serialize($storePackageTypeIds));
         $cache = Zend_Registry::get('cache');
 
         if ($resultSet = $cache->load($cacheName)) {
@@ -1042,6 +1048,10 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                 'member.member_id = project.member_id AND member.is_active = 1 AND member.is_deleted = 0')
             ->where('project.status = ? ', self::PROJECT_ACTIVE)
             ->where('project.type_id = ?', self::PROJECT_TYPE_STANDARD);
+        
+        if($storePackageTypeIds) {
+            $select = $this->generatePackageTypeFilter($select, array(self::FILTER_NAME_PACKAGETYPE=>$storePackageTypeIds));
+        }
 
         $sqlwhereCat = "";
         $sqlwhereSubCat = "";
