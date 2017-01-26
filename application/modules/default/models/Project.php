@@ -1499,6 +1499,12 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         if (empty($storeCategories)) {
             return array();
         }
+        
+        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
+        $storePackageTypeIds = null;
+        if($storeConfig) {
+            $storePackageTypeIds = $storeConfig['package_type'];
+        }
 
 //        $inQuery = '?';
 //        if (is_array($storeCategories)) {
@@ -1525,10 +1531,15 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                 FROM project AS p
                   JOIN member AS m ON p.member_id = m.member_id AND m.is_active = 1 AND m.is_deleted = 0
                   JOIN project_category AS pc ON p.project_category_id = pc.project_category_id
-                  LEFT JOIN stat_plings AS sp ON p.project_id = sp.project_id
-                WHERE p.project_category_id IN (" . implode(',', $storeCategories) . ")
-                AND p.status >= 100
-        ";
+                  LEFT JOIN stat_plings AS sp ON p.project_id = sp.project_id';
+        
+                if($storePackageTypeIds) {
+                    $sql .= ' JOIN (SELECT DISTINCT project_id FROM project_package_type WHERE package_type_id in ('.$storePackageTypeIds.')) package_type  ON p.project_id = package_type.project_id';
+                }
+        
+                $sql .= ' WHERE p.project_category_id IN (" . implode(',', $storeCategories) . ")
+                        AND p.status >= 100
+                ";
 
         if ($withoutUpdates) {
             $sql .= ' AND p.type_id = 1';
