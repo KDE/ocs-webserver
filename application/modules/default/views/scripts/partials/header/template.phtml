@@ -103,13 +103,15 @@ $member = $getAuthUser->getAuthUser();
 
             <section class="container">
                 <section class="wrapper">
-                    <?php 
+                    <?php /*
                         if(strpos($_SERVER['REQUEST_URI'], 'p/') != FALSE || strpos($_SERVER['REQUEST_URI'], 'browse/') != FALSE) {
                     ?>
                     <span class="header_cat_link" id="header_cat_link"><a href="/browse/cat/<?= isset($this->cat_id)?$this->cat_id:'all' ?>/order/latest">/<?= $helperFetchCategory->catTitle($this->cat_id) ?></a></span>
                     <?php } else { ?>
                     <span class="header_cat_link" id="header_cat_link"><a href="/community">/Community</a></span>
-                    <?php } ?>
+                    <?php } */ ?>
+                    <span class="header_cat_link" id="header_cat_link"><a href="/browse/cat/<?= isset($this->cat_id)?$this->cat_id:'all' ?>/order/latest">/<?= $helperFetchCategory->catTitle($this->cat_id) ?></a></span>
+
                 </section>
             </section>
         </div>
