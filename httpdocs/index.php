@@ -22,6 +22,9 @@ defined('APPLICATION_CACHE')
 defined('APPLICATION_ENV')
 || define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'));
 
+defined('APPLICATION_DATA')
+|| define('APPLICATION_DATA', realpath(dirname(__FILE__) . '/../data'));
+
 // Ensure library/ is on include_path
 set_include_path(implode(PATH_SEPARATOR, array(
     APPLICATION_LIB,

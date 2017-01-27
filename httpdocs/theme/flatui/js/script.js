@@ -1558,7 +1558,7 @@ var AjaxForm = (function () {
 
                         var msgBox = $('#generic-dialog');
                         msgBox.modal('hide');
-                        msgBox.find('.modal-header').empty().append(results.title);
+                        msgBox.find('.modal-header-text').empty().append(results.title);
                         msgBox.find('.modal-body').empty().append(results.message);
                         setTimeout(function () {
                             msgBox.modal('show');

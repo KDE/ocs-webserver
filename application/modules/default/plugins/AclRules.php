@@ -61,6 +61,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addResource(new Zend_Acl_Resource ('default_supporterbox'));
         $this->addResource(new Zend_Acl_Resource ('default_user'));
         $this->addResource(new Zend_Acl_Resource ('default_widget'));
+        $this->addResource(new Zend_Acl_Resource ('default_file'));
 
         $this->addResource(new Zend_Acl_Resource ('backend_categories'));
         $this->addResource(new Zend_Acl_Resource ('backend_claim'));
@@ -107,7 +108,8 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->allow(self::ROLENAME_COOKIEUSER, array(
                 'default_logout',
                 'default_productcomment',
-                'default_settings'
+                'default_settings',
+                'default_file'
             )
         );
 

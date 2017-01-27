@@ -40,6 +40,9 @@ define('APPLICATION_ENV', 'testing');
 defined('TEST_PATH')
 || define('TEST_PATH', realpath(dirname(__FILE__) . '/../tests'));
 
+defined('APPLICATION_DATA')
+|| define('APPLICATION_DATA', realpath(dirname(__FILE__) . '/../data'));
+
 // Ensure library/ is on include_path
 set_include_path(implode(PATH_SEPARATOR, array(
     '.',

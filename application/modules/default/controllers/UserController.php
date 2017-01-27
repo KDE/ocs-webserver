@@ -187,7 +187,8 @@ class UserController extends Local_Controller_Action_DomainSwitch
         $paginator->setTotalItemCount($modelProject->countAllProjectsForMember($this->_authMember->member_id));
 
         $this->view->products = $paginator;
-        $this->view->member = $this->_authMember;
+        $modelMember = new Default_Model_Member();
+        $this->view->member = $modelMember->fetchMemberData($this->_authMember->member_id);
     }
 
     public function activitiesAction()
