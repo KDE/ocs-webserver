@@ -89,7 +89,7 @@ $totalAMountSupported = new Default_View_Helper_FetchTotalAmountSupported();
             <div id="community-tabs" style="margin-bottom:20px;">
                 <ul class="nav nav-tabs">
                     <li class="active"><a href="#recentDonationsPanel" data-toggle="tab"><?= $this->translate('Recent Donations') ?></a></li>
-                    <li><a href="#newMemberPanel" data-toggle="tab"><?= $this->translate('New Members') ?></a></li>                  
+                    <li><a href="#newMemberPanel" data-toggle="tab"><?= $this->translate('New Members') ?></a></li>
                 </ul>
             </div>
         
@@ -127,7 +127,7 @@ $totalAMountSupported = new Default_View_Helper_FetchTotalAmountSupported();
             </div> <!-- end row -->
             <div class="row tab-pane" id="newMemberPanel">
                 <div class="list col-lg-10 col-md-10 col-sm-10 col-xs-10 "
-                     id="new-members">              
+                     id="new-members">
                     <?php foreach ($users as $key => $user) {
                         $age = $humanTiming->humanTiming($user['created_at']);
                         ?>
