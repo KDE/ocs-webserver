@@ -1116,38 +1116,65 @@ class Default_Model_Project extends Default_Model_DbTable_Project
     {
         //Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . print_r(func_get_args(), true));
 
+        /*
         if (is_null($idCategory) OR $idCategory == '' OR is_array($idCategory)) {
             return $this->countActiveProjects();
+        }*/
+
+
+
+        $cacheName = __FUNCTION__ . md5(serialize($idCategory));
+        $cache = Zend_Registry::get('cache');
+
+        $result = $cache->load($cacheName);
+
+        if ($result) {
+            return (int)$result['count_active_members'];
         }
 
+
+
+        /**
         $select = $this->select()->setIntegrityCheck(false)->from($this->_name,
             array('count_active_projects' => 'COUNT(1)'))
             ->group('member_id')
             ->where('project.status = ? ', self::PROJECT_ACTIVE)
             ->where('project.type_id = ?', self::PROJECT_TYPE_STANDARD);
+        */
+        $sqlwhereCat = "";
+        $sqlwhereSubCat = "";
+
+        if (false === is_array($idCategory)) {
+            $idCategory = array($idCategory);
+        }
+        $sqlwhereCat .= implode(',', $idCategory);
+
         $modelCategory = new Default_Model_DbTable_ProjectCategory();
         $subCategories = $modelCategory->fetchChildElements($idCategory);
 
-        $sqlwhere = "{$idCategory},";
         if (count($subCategories) > 0) {
             foreach ($subCategories as $element) {
-                $sqlwhere .= "{$element['project_category_id']},";
+                $sqlwhereSubCat .= "{$element['project_category_id']},";
             }
         }
-        $sqlwhere = substr($sqlwhere, 0, -1);
-        $select->where('project.project_category_id in (' . $sqlwhere . ') OR (project.project_id IN (SELECT project_id FROM project_subcategory WHERE project_sub_category_id = ' . $idCategory . '))');
 
-//    	$this->_db->getProfiler()->setEnabled(true);
-        $resultSet = $this->fetchAll($select);
-//    	Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . $this->_db->getProfiler()->getLastQueryProfile()->getQuery());
-//    	Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . print_r($resultSet->toArray(),true));
-//    	$this->_db->getProfiler()->setEnabled(false);
+        //$select->where('project.project_category_id in (' . $sqlwhereSubCat . $sqlwhereCat . ')');
+        $selectWhere = 'AND p.project_category_id in (' . $sqlwhereSubCat . $sqlwhereCat . ')';
 
-        if (count($resultSet) > 0) {
-            return (int)$resultSet[0]['count_active_projects'];
-        } else {
-            return 0;
-        }
+        $sql = "select count(1) as count_active_members from (                    
+                    select count(1) as count_active_projects from pling.project p
+                    where p.`status` = 100
+                    and p.type_id = 1
+                    " . $selectWhere . "group by p.member_id
+                ) A;";
+
+        //$resultSet = $this->fetchRow($select);
+        $result = $this->_db->fetchRow($sql);
+        $cache->save($result,$cacheName);
+
+        return (int)$result['count_active_members'];
+
+
     }
 
     /**
@@ -1533,7 +1560,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
 //            $inQuery = implode(',', array_fill(0, count($storeCategories), '?'));
 //        }
 
-        $sql = "
+        $sql = '
                 SELECT
                   p.*,
                   p.changed_at AS project_changed_at,
@@ -1555,13 +1582,11 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                   JOIN project_category AS pc ON p.project_category_id = pc.project_category_id
                   LEFT JOIN stat_plings AS sp ON p.project_id = sp.project_id';
         
-                if($storePackageTypeIds) {
-                    $sql .= ' JOIN (SELECT DISTINCT project_id FROM project_package_type WHERE package_type_id in ('.$storePackageTypeIds.')) package_type  ON p.project_id = package_type.project_id';
-                }
-        
-                $sql .= ' WHERE p.project_category_id IN (" . implode(',', $storeCategories) . ")
-                        AND p.status >= 100
-                ";
+        if($storePackageTypeIds) {
+            $sql .= ' JOIN (SELECT DISTINCT project_id FROM project_package_type WHERE package_type_id in ('.$storePackageTypeIds.')) package_type  ON p.project_id = package_type.project_id';
+        }
+
+        $sql .= ' WHERE p.project_category_id IN (' . implode(',', $storeCategories) . ') AND p.status >= 100';
 
         if ($withoutUpdates) {
             $sql .= ' AND p.type_id = 1';
