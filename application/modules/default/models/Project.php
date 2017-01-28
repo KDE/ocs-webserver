@@ -1166,7 +1166,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                     where p.`status` = 100
                     and p.type_id = 1
                     " . $selectWhere . "group by p.member_id
-                );";
+                ) as A;";
 
         //$resultSet = $this->fetchRow($select);
         $result = $this->_db->fetchRow($sql);
