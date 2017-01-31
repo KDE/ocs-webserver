@@ -108,8 +108,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->allow(self::ROLENAME_COOKIEUSER, array(
                 'default_logout',
                 'default_productcomment',
-                'default_settings',
-                'default_file'
+                'default_settings'
             )
         );
 
@@ -181,6 +180,9 @@ class Default_Plugin_AclRules extends Zend_Acl
             new Default_Plugin_Acl_IsProjectOwnerAssertion()
         );
 
+        $this->allow(self::ROLENAME_COOKIEUSER, 'default_file', array(
+            'gitlink',
+        ), new Default_Plugin_Acl_IsProjectOwnerAssertion());
 
         // resource default_user
         $this->allow(self::ROLENAME_GUEST, 'default_user', array('index', 'aboutme', 'share', 'report'));

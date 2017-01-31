@@ -53,23 +53,12 @@ $tokenValue = isset($tokenData->token_value) ? $tokenData->token_value : null;
                 <?= $this->github->token_github
                     ->setAttrib('tabindex', 11)
                     ->setAttrib('class', 'form-control')
-                    ->setAttrib('pattern', '^[\w\-\.\/\+\~]+$')
+                    ->setAttrib('pattern', '^[\w\-\.\/\+~]+$')
                     ->setValue($tokenValue)
                 ?>
               <p class="help-block small">Insert your personal access token from Github here.</p>
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-4 col-lg-4 col-sm-4 col-xs-4">
-                <?= $this->github->token_github
-                    ->setAttrib('tabindex', 11)
-                    ->setAttrib('class', 'form-control')
-                    ->setAttrib('pattern', '^[\w\-\.\/\+\~]+$')
-                ?>
-              <p class="help-block small">Insert your access token value from Github here.</p>
-            </div>
-          </div>
-
           <!-- /.row-fluid -->
             <hr>
             <div class="row">

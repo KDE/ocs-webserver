@@ -412,8 +412,8 @@ $this->inlineScript()->appendScript(
                 <button class="btn btn-danger pull-left" data-file-upload-cancel-btn="">
                     <?= $this->translate('Cancel Upload') ?>
                 </button>
-                <button id="github_picker" class="btn btn-native pull-left" data-toggle="" data-target="#generic-dialog" data-username="<?=$this->member->link_github?>">
-                    <?= $this->translate('Pick from github') ?>
+                <button id="github_picker" class="btn btn-native pull-left" data-toggle="" data-target="#generic-dialog" data-username="<?=$this->member->link_github?>" title="add an URL here">
+                    <?= $this->translate('add github file') ?>
                 </button>
                 <?php /**
                 <button class="btn btn-native pull-left"
@@ -439,51 +439,52 @@ $this->inlineScript()->appendScript(
     $(function () {
 
         $('body').on("click", "#github_picker", function (event) {
-            $.ajax({
-                url: "https://api.github.com/users/"+$(this).attr('data-username')+"/repos",
-                dataType: "jsonp",
-                success: function (returned_data) {
-                    html = '<div class="list-group">';
-                    $.each( returned_data.data, function ( i, item ) {
-                        console.log(i);
-                        console.log(item);
-                        html += '<a class="list-group-item github-repository-name" href="" data-archive_url="'+item.archive_url.replace('{archive_format}', 'zipball').replace('{/ref}','')+'"';
-                        html += 'data-description="'+item.description+'"';
-                        html += 'data-filename="'+item.name+'"';
-                        html += 'data-projectid="'+$('#modal-ppload').attr('data-product-id')+'"';
-                        html += '>';
-                        html += item.name;
-                        html += '</a>';
-                    });
-                    html += "</div>";
 
-                    var msgBox = $('#generic-dialog');
-                    msgBox.modal('hide');
-                    msgBox.find('.modal-header-text').empty().append('Choose your repository:');
-                    msgBox.find('.modal-body').empty().append(html);
-                    setTimeout(function () {
-                        msgBox.modal('show');
-                    }, 900);
-                }
-            });
+            html = '<form id="git-url-form">' +
+                '<div class="form-group">' +
+                '<input type="url" class="form-control" id="git-url" placeholder="put URL to Github release here" required="required" pattern="^https:\/\/(?:www\.)?github\.com\/.+$">' +
+                '<span id="git-url-help" class="help-block small"></span></div>' +
+                '<button type="submit" class="btn btn-default btn-sm" id="git-url-submit">Submit</button>' +
+                '</form>';
+
+            var msgBox = $('#generic-dialog');
+            msgBox.modal('hide');
+            msgBox.find('.modal-header-text').empty().append('Enter a download URL:');
+            msgBox.find('.modal-body').empty().append(html);
+            setTimeout(function () {
+                msgBox.modal('show');
+            }, 900);
+
         });
 
-        $('body').on('click', 'a.github-repository-name', function(event) {
+        $('body').on('submit', '#git-url-form', function(event) {
+            if (! $('#git-url-form').validate()) {
+                return true;
+            }
             event.preventDefault();
             $.ajax({
-                url: '/file/pplink/',
+                url: '/file/gitlink/',
                 type: 'post',
                 data: {
-                    pid: $(this).attr('data-projectid'),
-                    u: $(this).attr('data-archive_url'),
-                    fn: $(this).attr('data-filename'),
-                    fd: $(this).attr('data-description')
+                    project_id: $('#modal-ppload').attr('data-product-id'),
+                    u: $('#git-url').val()
                 },
                 success: function(returned_data) {
-                    console.log(returned_data);
+                    if (!returned_data.file) {
+                        $('#git-url').addClass('hasError').focus();
+                        $('#git-url-help').html('An Error occurred. Please check your URL or try again later.');
+                        return;
+                    }
                     data_file = returned_data.file;
                     $modalPpload.attr('data-ppload-collection-id', data_file.collection_id);
+                    $('#git-url').val('').removeClass('hasError');
+                    $('#git-url-help').html('');
+                    $('#generic-dialog').modal('hide');
                     getPploadFiles();
+                },
+                error: function() {
+                    $('#git-url').addClass('hasError').focus();
+                    $('#git-url-help').html('An Error occurred. Please check your URL or try again later.');
                 }
             });
         });
@@ -595,6 +596,7 @@ $this->inlineScript()->appendScript(
             }
             if (!page) {
                 page = 1;
+                $modalPpload.find('table[data-ppload-files] tbody').empty();
             }
             $.ajax({
                 url: pploadApiUri + 'files/index',
@@ -822,6 +824,7 @@ $this->inlineScript()->appendScript(
 
                         $modalPpload.find('p[data-file-upload-msg]').hide();
                         $modalPpload.find('button[data-addpploadfile-btn]').attr('disabled', 'disabled');
+                        $modalPpload.find('#github_picker').attr('disabled', 'disabled');
                         //$modalPpload.find('button[data-finalizepploadcollection-btn]').attr('disabled', 'disabled');
                         $modalPpload.find('button[data-file-upload-ok-btn]').removeAttr('disabled');
                         $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
@@ -839,8 +842,10 @@ $this->inlineScript()->appendScript(
 
                         if ($modalPpload.find('input[data-accept-checkbox]').is(':checked')) {
                             $modalPpload.find('button[data-addpploadfile-btn]').removeAttr('disabled');
+                            $modalPpload.find('#github_picker').removeAttr('disabled');
                         } else {
                             $modalPpload.find('button[data-addpploadfile-btn]').attr('disabled', 'disabled');
+                            $modalPpload.find('#github_picker').attr('disabled', 'disabled');
                         }
                     }
                     if (data.pagination.next) {
@@ -1408,9 +1413,11 @@ $this->inlineScript()->appendScript(
 
                 //event.preventDefault();
                 $modalPpload.find('button[data-addpploadfile-btn]').removeAttr('disabled');
+                $modalPpload.find('#github_picker').removeAttr('disabled');
             } else {
                 //event.preventDefault();
                 $modalPpload.find('button[data-addpploadfile-btn]').attr('disabled', 'disabled');
+                $modalPpload.find('#github_picker').attr('disabled', 'disabled');
             }
         });
 

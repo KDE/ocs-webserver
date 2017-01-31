@@ -25,15 +25,30 @@
 class FileController extends Zend_Controller_Action
 {
 
-    public function pplinkAction()
+    public function gitlinkAction()
     {
+        if(false == $this->validateGithubLink($this->getParam('u'))) {
+            $this->_helper->json(false);
+        }
         $modelPpLoad = new Default_Model_PpLoad();
-        $project_id = (int) $this->getParam('pid');
+        $project_id = (int) $this->getParam('project_id');
         $url = $this->getParam('u');
-        $filename = $this->getParam('fn');
+        $filename = $this->getParam('fn') ? $this->getParam('fn') : $this->getFilenameFromUrl($this->getParam('u'));
         $fileDescription = $this->getParam('fd');
         $result = $modelPpLoad->uploadEmptyFileWithLink($project_id, $url, $filename, $fileDescription);
         $this->_helper->json($result);
+    }
+
+    private function getFilenameFromUrl($getParam)
+    {
+        $url = parse_url($getParam);
+        return basename($url['path']);
+    }
+
+    private function validateGithubLink($getParam)
+    {
+        $validate = new Zend_Validate_Regex('/^https:\/\/(?:www\.)?github\.com\/.+$/');
+        return $validate->isValid($getParam);
     }
 
 }

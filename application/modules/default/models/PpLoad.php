@@ -45,9 +45,8 @@ class Default_Model_PpLoad
         $pploadApi = $this->getPpLoadApi();
 
         // create empty text file
-//        $fileDummy = APPLICATION_DATA . '/uploads/'.$filename . '.zip';
-//        touch($fileDummy);
-        $fileDummy = '/dev/null';
+//        $fileDummy = '/dev/null';
+        $fileDummy = '../../data/files/empty';
 
         $fileRequest = array(
 //            'file' => $fileDummy,
