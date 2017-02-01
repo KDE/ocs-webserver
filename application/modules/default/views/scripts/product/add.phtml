@@ -268,10 +268,15 @@ $categoryPath[] = $valueCatId;
                                             </span>
                                             </div>
                                             <div class="modal-footer">
-                                                <button class="btn btn-native pull-left"
-                                                        data-addpploadfile-btn=""><?= $this->translate('Add File(s)') ?></button>
-                                                <button class="btn btn-danger pull-right"
-                                                        data-file-upload-cancel-btn=""><?= $this->translate('Cancel Upload') ?></button>
+                                                <button class="btn btn-native pull-left" data-addpploadfile-btn="">
+                                                    <?= $this->translate('Add File(s)') ?>
+                                                </button>
+                                                <button class="btn btn-danger pull-right" data-file-upload-cancel-btn="">
+                                                    <?= $this->translate('Cancel Upload') ?>
+                                                </button>
+                                                <a role="button" id="github_picker" class="btn btn-native pull-left" data-toggle="" data-target="#generic-dialog" data-username="<?=$this->member->link_github?>" title="add an URL here">
+                                                    <?= $this->translate('Add GitHub File') ?>
+                                                </a>
                                             </div>
                                         </div>
 
@@ -308,7 +313,60 @@ $categoryPath[] = $valueCatId;
                                 <script type="text/javascript">
 
                                     $(function () {
-                                    	var Base64={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",encode:function(e){var t="";var n,r,i,s,o,u,a;var f=0;e=Base64._utf8_encode(e);while(f<e.length){n=e.charCodeAt(f++);r=e.charCodeAt(f++);i=e.charCodeAt(f++);s=n>>2;o=(n&3)<<4|r>>4;u=(r&15)<<2|i>>6;a=i&63;if(isNaN(r)){u=a=64}else if(isNaN(i)){a=64}t=t+this._keyStr.charAt(s)+this._keyStr.charAt(o)+this._keyStr.charAt(u)+this._keyStr.charAt(a)}return t},decode:function(e){var t="";var n,r,i;var s,o,u,a;var f=0;e=e.replace(/[^A-Za-z0-9\+\/\=]/g,"");while(f<e.length){s=this._keyStr.indexOf(e.charAt(f++));o=this._keyStr.indexOf(e.charAt(f++));u=this._keyStr.indexOf(e.charAt(f++));a=this._keyStr.indexOf(e.charAt(f++));n=s<<2|o>>4;r=(o&15)<<4|u>>2;i=(u&3)<<6|a;t=t+String.fromCharCode(n);if(u!=64){t=t+String.fromCharCode(r)}if(a!=64){t=t+String.fromCharCode(i)}}t=Base64._utf8_decode(t);return t},_utf8_encode:function(e){e=e.replace(/\r\n/g,"\n");var t="";for(var n=0;n<e.length;n++){var r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r)}else if(r>127&&r<2048){t+=String.fromCharCode(r>>6|192);t+=String.fromCharCode(r&63|128)}else{t+=String.fromCharCode(r>>12|224);t+=String.fromCharCode(r>>6&63|128);t+=String.fromCharCode(r&63|128)}}return t},_utf8_decode:function(e){var t="";var n=0;var r=c1=c2=0;while(n<e.length){r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r);n++}else if(r>191&&r<224){c2=e.charCodeAt(n+1);t+=String.fromCharCode((r&31)<<6|c2&63);n+=2}else{c2=e.charCodeAt(n+1);c3=e.charCodeAt(n+2);t+=String.fromCharCode((r&15)<<12|(c2&63)<<6|c3&63);n+=3}}return t}}
+
+                                        $('body').on("click", "#github_picker", function (event) {
+
+                                            html = '<form id="git-url-form">' +
+                                                '<div class="form-group">' +
+                                                '<input type="url" class="form-control" id="git-url" placeholder="put URL to GitHub release here" required="required" pattern="^https:\/\/(?:www\.)?github\.com\/.+$">' +
+                                                '<span id="git-url-help" class="help-block small"></span></div>' +
+                                                '<button type="submit" class="btn btn-default btn-sm" id="git-url-submit">Submit</button>' +
+                                                '</form>';
+
+                                            var msgBox = $('#generic-dialog');
+                                            msgBox.modal('hide');
+                                            msgBox.find('.modal-header-text').empty().append('Enter a download URL:');
+                                            msgBox.find('.modal-body').empty().append(html);
+                                            setTimeout(function () {
+                                                msgBox.modal('show');
+                                            }, 900);
+
+                                        });
+
+                                        $('body').on('submit', '#git-url-form', function(event) {
+                                            if (! $('#git-url-form').validate()) {
+                                                return true;
+                                            }
+                                            event.preventDefault();
+                                            $.ajax({
+                                                url: '/file/gitlink/',
+                                                type: 'post',
+                                                data: {
+                                                    project_id: ProductForm.project_id,
+                                                    u: $('#git-url').val()
+                                                },
+                                                success: function(returned_data) {
+                                                    if (!returned_data.file) {
+                                                        $('#git-url').addClass('hasError').focus();
+                                                        $('#git-url-help').html('An Error occurred. Please check your URL or try again later.');
+                                                        return;
+                                                    }
+                                                    data_file = returned_data.file;
+                                                    $modalPpload.attr('data-ppload-collection-id', data_file.collection_id);
+                                                    $('#git-url').val('').removeClass('hasError');
+                                                    $('#git-url-help').html('');
+                                                    $('#generic-dialog').modal('hide');
+                                                    getPploadFiles();
+                                                },
+                                                error: function() {
+                                                    $('#git-url').addClass('hasError').focus();
+                                                    $('#git-url-help').html('An Error occurred. Please check your URL or try again later.');
+                                                }
+                                            });
+                                        });
+
+
+                                        var Base64={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",encode:function(e){var t="";var n,r,i,s,o,u,a;var f=0;e=Base64._utf8_encode(e);while(f<e.length){n=e.charCodeAt(f++);r=e.charCodeAt(f++);i=e.charCodeAt(f++);s=n>>2;o=(n&3)<<4|r>>4;u=(r&15)<<2|i>>6;a=i&63;if(isNaN(r)){u=a=64}else if(isNaN(i)){a=64}t=t+this._keyStr.charAt(s)+this._keyStr.charAt(o)+this._keyStr.charAt(u)+this._keyStr.charAt(a)}return t},decode:function(e){var t="";var n,r,i;var s,o,u,a;var f=0;e=e.replace(/[^A-Za-z0-9\+\/\=]/g,"");while(f<e.length){s=this._keyStr.indexOf(e.charAt(f++));o=this._keyStr.indexOf(e.charAt(f++));u=this._keyStr.indexOf(e.charAt(f++));a=this._keyStr.indexOf(e.charAt(f++));n=s<<2|o>>4;r=(o&15)<<4|u>>2;i=(u&3)<<6|a;t=t+String.fromCharCode(n);if(u!=64){t=t+String.fromCharCode(r)}if(a!=64){t=t+String.fromCharCode(i)}}t=Base64._utf8_decode(t);return t},_utf8_encode:function(e){e=e.replace(/\r\n/g,"\n");var t="";for(var n=0;n<e.length;n++){var r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r)}else if(r>127&&r<2048){t+=String.fromCharCode(r>>6|192);t+=String.fromCharCode(r&63|128)}else{t+=String.fromCharCode(r>>12|224);t+=String.fromCharCode(r>>6&63|128);t+=String.fromCharCode(r&63|128)}}return t},_utf8_decode:function(e){var t="";var n=0;var r=c1=c2=0;while(n<e.length){r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r);n++}else if(r>191&&r<224){c2=e.charCodeAt(n+1);t+=String.fromCharCode((r&31)<<6|c2&63);n+=2}else{c2=e.charCodeAt(n+1);c3=e.charCodeAt(n+2);t+=String.fromCharCode((r&15)<<12|(c2&63)<<6|c3&63);n+=3}}return t}}
                                         $('button[rel="tooltip"]').tooltip();
 
                                         var $modalPpload = $('#modal-ppload');
@@ -411,6 +469,7 @@ $categoryPath[] = $valueCatId;
                                             }
                                             if (!page) {
                                                 page = 1;
+                                                $modalPpload.find('table[data-ppload-files] tbody').empty();
                                             }
                                             $.ajax({
                                                 url: pploadApiUri + 'files/index',
@@ -477,7 +536,7 @@ $categoryPath[] = $valueCatId;
                                                         var licensetype = null;
                                                         var license = '';
                                                         var licenseId = '';
-							var packagetypeId = '';
+							                            var packagetypeId = '';
 
 
                                                         //var packageId = null;
@@ -631,11 +690,14 @@ $categoryPath[] = $valueCatId;
 
                                                     $modalPpload.find('p[data-file-upload-msg]').show();
                                                     $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
+                                                    $modalPpload.find('#github_picker').attr('disabled', 'disabled');
 
                                                     if ($modalPpload.find('input[data-accept-checkbox]').is(':checked')) {
                                                         $modalPpload.find('button[data-addpploadfile-btn]').removeAttr('disabled');
+                                                        $modalPpload.find('#github_picker').removeAttr('disabled');
                                                     } else {
                                                         $modalPpload.find('button[data-addpploadfile-btn]').attr('disabled', 'disabled');
+                                                        $modalPpload.find('#github_picker').attr('disabled', 'disabled');
                                                     }
                                                     if (data.pagination.next) {
                                                         getPploadFiles(data.pagination.next);
@@ -1024,6 +1086,7 @@ $categoryPath[] = $valueCatId;
                                                     $modalPpload.find('div[info-finalized]').html('');
                                                     $modalPpload.find('input[data-accept-checkbox]').removeAttr('disabled');
                                                     $modalPpload.find('button[data-addpploadfile-btn]').attr('disabled', 'disabled');
+                                                    $modalPpload.find('#github_picker').attr('disabled', 'disabled');
                                                 },
                                                 error: function (jqXHR, textStatus, errorThrown) {
                                                 	alert("Error: " + textStatus + ", " + errorThrown);
@@ -1052,6 +1115,7 @@ $categoryPath[] = $valueCatId;
                                                     $modalPpload.attr('data-ppload-collection-id', '!' + $modalPpload.attr('data-ppload-collection-id'));
                                                     $modalPpload.find('p[data-file-upload-msg]').hide();
                                                     $modalPpload.find('button[data-addpploadfile-btn]').attr('disabled', 'disabled');
+                                                    $modalPpload.find('#github_picker').attr('disabled', 'disabled');
                                                     $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
 
                                                     //$modalPpload.find('div[info-finalized]').append('<?= $this->translate('<br/><b>Your files are finalized (and via torrent downloadable). If you want to add new files, click on "Delete All" and upload all of your files again.</b>')?>');
@@ -1107,6 +1171,7 @@ $categoryPath[] = $valueCatId;
 
 
                                         $modalPpload.find('button[data-addpploadfile-btn]').attr('disabled', 'disabled');
+                                        $modalPpload.find('#github_picker').attr('disabled', 'disabled');
                                         $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
 
                                         if ($modalPpload.attr('data-ppload-collection-id')) {
@@ -1172,9 +1237,11 @@ $categoryPath[] = $valueCatId;
 
                                                 //event.preventDefault();
                                                 $modalPpload.find('button[data-addpploadfile-btn]').removeAttr('disabled');
+                                                $modalPpload.find('#github_picker').removeAttr('disabled');
                                             } else {
                                                 //event.preventDefault();
                                                 $modalPpload.find('button[data-addpploadfile-btn]').attr('disabled', 'disabled');
+                                                $modalPpload.find('#github_picker').attr('disabled', 'disabled');
                                             }
                                         });
 
@@ -1300,8 +1367,6 @@ $categoryPath[] = $valueCatId;
 
                                         });
 
-
-
                                     });
 
                                 </script>
@@ -1311,196 +1376,6 @@ $categoryPath[] = $valueCatId;
 
                             </section>
 
-                            <?php /**
-                             <style>
-                            .cc-license-icon, .cc-license-icon::before, .cc-license-icon::after {
-                            background-position: center center;
-                            background-repeat: no-repeat;
-                            content: "";
-                            display: inline-block;
-                            height: 14px;
-                            vertical-align: top;
-                            width: 16px;
-                            }
-
-                            .cc-license-icon-by,
-                            .cc-license-icon-by-nc::before,
-                            .cc-license-icon-by-nd::before,
-                            .cc-license-icon-by-sa::before,
-                            .cc-license-icon-by-nc-nd::before,
-                            .cc-license-icon-by-nc-sa::before {
-                            background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAQAAAC1QeVaAAAAz0lEQVR4AW3QQWYEQRyF8UfTBxia0Aw5w3eGJjQhzCqrOUMIQ29DMQxDVjlVE4phGOYAWRVNVpXnv0hCUj9q8/GokuJwQ2Km2syeHmHC2FDITIw2kVnYRoxUmWgQ9yabqDwSg4UXFD5M4UChF3vOtMhueebJt6zlRBLv7FC4UO2Cwo5ZfHKHwjXiFYWBxZHx3ziy/J4dIg7fsyeRONEgW0dcI2vJvIqOQvoTDyz0iqdXEi0r3mxF8/MJxgOFM0e2diRT2KCIoSORqZZJdAj7AhNNcMbJoxPKAAAAAElFTkSuQmCC");
-                            }
-
-                            .cc-license-icon-by-nc,
-                            .cc-license-icon-by-nc-nd::after,
-                            .cc-license-icon-by-nc-sa::after {
-                            background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAQAAAC1QeVaAAAA60lEQVQYGUXBQWebARwH4B+hjBJGCC+77jqe6647hTByyinXMnYNOYXxEkLpaR+g36OMnkYo4aX0G5TyEnL6r96OPk8yMNU6KOVgp8k7C72jjZmZtYOTVd5YKBujxFiTVzbKMomp3q8MLP3OwF6viZ3yYqdxq5Qnl4kLnTYeXNt7UcrW2JcMrB3ibJa49MOjcmeegW9OcTbLf+bulc6VD+ZO8WCdV0Z++uSr8tfZs3tdtDqjxGdPSvnjo6m9chMTvTYDS/sMbJ00ScyV1kVirEmMbJVl3viu9+jaysqNTm+RdyZaR6UctSYZ/ANxgGrzUQYhmwAAAABJRU5ErkJggg==");
-                            }
-
-                            .cc-license-icon-by-nd,
-                            .cc-license-icon-by-nc-nd {
-                            background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAQAAAC1QeVaAAAAwUlEQVQY022Q0aYCYRhFF9EbRPQG3a4HOETEcIg4xCGiZxjmNn4i4lyddxriMAw9xs8wV38XTWac2vtyf7ZvbQDAicHSZLI0OKWXG6OVhZmZuVejX89obbJwNDguTG4fhdEj/+TZ6AyDN8cv4djagH/mAH7423kPYO4VW1dvw6UNtmYAzj10XgCY2fS1G8vOx662xmA9xBg89PNACW9QWmeAnyZDj+PIwuR3v1H05sWdOy9WNm6HNRODlclk5ek5/B2XLFYUMFBXLwAAAABJRU5ErkJggg==");
-                            }
-
-                            .cc-license-icon-by-sa,
-                            .cc-license-icon-by-nc-sa {
-                            background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAQAAAC1QeVaAAAA6klEQVQYGUXBwUZscQAH4B+HwzzAEL1B22/V6q5iOMQQEdEb3O1huKv4ExFDtJrHaBVtY4gYhnmGVodhVv87ptT3JQfGiqWqWiqO8suFwcpMp9N7N7jMF1PVTJMfZqqrJMYGt9lz7smTLnvuDY6j2GgTf1WDjeox0Vor8aFPtD4tNYmF6k+i9x47k8SpwUKTmKhuE2e2sdNlz0kOTFQl0dnGhz4x8maePXPVNNFbR7HWJBaqN8+qV43W2jzGBiUx0lt68c8ocW/nOIlzVdHmm8ZMdZ0vpgYbD27ceLCydZVfxoqVqlq5c5SD/2E4aRYS9a2xAAAAAElFTkSuQmCC");
-                            }
-
-                            .cc-license-icon-by-nc,
-                            .cc-license-icon-by-nd,
-                            .cc-license-icon-by-sa {
-                            margin-left: 16px;
-                            }
-
-                            .cc-license-icon-by-nc::before,
-                            .cc-license-icon-by-nd::before,
-                            .cc-license-icon-by-sa::before,
-                            .cc-license-icon-by-nc-nd::before,
-                            .cc-license-icon-by-nc-sa::before {
-                            margin-left: -16px;
-                            }
-
-                            .cc-license-icon-by-nc-nd::before, .cc-license-icon-by-nc-sa::before {
-                            margin-left: -32px;
-                            }
-
-                            .cc-license-icon-by-nc-nd, .cc-license-icon-by-nc-sa {
-                            margin-left: 32px;
-                            }
-                            </style>
-                            <h3>License</h3>
-                            <section id="license">
-                                <div class="form-group">
-                                    <div class="row margin-left-10">
-                                        <div class="form-group inline pull-left">
-                                            <label class="">
-                                                <input type="checkbox"
-                                                       class=""
-                                                       name="cc_license"
-                                                       id="cc_license"
-                                                       aria-required="false"
-                                                       data-toggle="collapse"
-                                                       data-target="#license-text,#cc_summary"
-                                                       aria-expanded="true"
-                                                       checked="checked"
-                                                       value="1">
-                                                Creative Commons license
-                                            </label>
-
-                                            <div class="checkbox_validation"></div>
-                                        </div>
-                                        <div class="section licenseSummary inline-block pull-left collapse in" id="cc_summary">
-                                            <div class="margin-left-10">
-                                                <a target="_blank" href="http://creativecommons.org/licenses/" class="small">
-                                                    <span class="cc-license-icon cc-license-icon-by-sa"></span>
-                                                    Some rights reserved
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row margin-left-10 collapse in" id="license-text">
-                                        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                                            <div class="">
-                                                <input type="checkbox"
-                                                       id="cc_attribution"
-                                                       name="by"
-                                                       aria-required="true"
-                                                       class="hidden"
-                                                       data-name="by"
-                                                       value="1"
-                                                       checked="checked"/>
-                                                <label for="cc_attribution" class="inline"></label>
-
-                                                <div class="inline">
-                                                    <label for="cc_attribution" class="title">Attribution</label>
-
-                                                    <div class="blockContent">
-
-                                                        Allow others to copy, distribute, display and perform your copyrighted work but
-                                                        only if they give credit the way you request.
-
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                                            <div class="">
-                                                <input type="checkbox"
-                                                       id="cc_commercial"
-                                                       name="nc"
-                                                       aria-required="true"
-                                                       class="hidden"
-                                                       data-name="nc"
-                                                       value="1"/>
-                                                <label for="cc_commercial" class="inline"></label>
-
-                                                <div class="inline">
-                                                    <label for="cc_commercial" class="title">Noncommercial</label>
-
-                                                    <div class="blockContent">
-
-                                                        Allow others to distribute, display and perform your work - and dervative works
-                                                        based upon it - but for noncommercial purposes only.
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                                            <div class="">
-                                                <input type="checkbox"
-                                                       id="cc_non_derivative_works"
-                                                       name="nd"
-                                                       aria-required="true"
-                                                       class="hidden"
-                                                       data-name="nd"
-                                                       value="1"/>
-                                                <label for="cc_non_derivative_works" class="inline"></label>
-
-
-                                                <div class="inline">
-                                                    <label for="cc_non_derivative_works" class="title">No Derivative Works</label>
-
-                                                    <div class="blockContent">
-
-                                                        Allow others to copy, distribute, display and perform only verbatim copies of your
-                                                        work, not derivative works based upon it.
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                                            <div class="blockCheckbox m-checked">
-                                                <input type="checkbox"
-                                                       id="cc_share_alike"
-                                                       name="sa"
-                                                       aria-required="true"
-                                                       class="hidden"
-                                                       data-name="sa"
-                                                       value="1"/>
-                                                <label for="cc_share_alike" class="inline"></label>
-
-
-                                                <div class="inline">
-                                                    <label for="cc_share_alike" class="title">Share Alike</label>
-
-                                                    <div class="blockContent">
-
-                                                        Allow others to distribute derivative works only under a license identical to the
-                                                        license that governs your work.
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </section>
-							*/?>
                         </form>
 
                         <!-- /PAGE BODY -->
@@ -1642,7 +1517,7 @@ $categoryPath[] = $valueCatId;
       ProductForm = {
 
           mode: "<?=$this->mode?>",
-          project_id: $('#project_id').val(),
+          project_id: <?php echo ($this->mode == 'edit') ? $this->project_id : '$(\'#project_id\').val()'?>,
           errors: "",
           cc_license_isStored: <?=$this->form->cc_license->getValue() == true ? 'true' : 'false'?>,
           cc_license_data: {
@@ -1658,10 +1533,10 @@ $categoryPath[] = $valueCatId;
           setup: function () {
               this.setupCategorySelect();
               this.setupCategoryAjax();
-              this.setupCcLicenseActions();
-              this.setLicenseCheckbox();
-              this.setCssLicenseSummary();
-              this.setCCLicenseVisibility();
+//              this.setupCcLicenseActions();
+//              this.setLicenseCheckbox();
+//              this.setCssLicenseSummary();
+//              this.setCCLicenseVisibility();
           },
 
           setupCategorySelect: function() {
@@ -1753,7 +1628,7 @@ $categoryPath[] = $valueCatId;
           },
 
           saveSection: function (sectionId) {
-              var pid = $('#project_id').val();
+              var pid = <?php echo ($this->mode == 'edit') ? $this->project_id : '$(\'#project_id\').val()'?>;
               if (pid != '') {
                   return;
               }

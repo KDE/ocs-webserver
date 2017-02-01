@@ -125,17 +125,17 @@ $this->inlineScript()->appendScript(
             </div>
             <div class="modal-body" style="font-size: small;">
 	            <div role="form" class="">
-	            	<input type="hidden" id="update-id" data-update-id="" id="update-id" value="">
+	            	<input type="hidden" id="update-id" data-update-id="" value="">
                         <?php /**
 				    <div class="form-group">
 				      <label for="tile">Product Version:</label>
-				      <input type="text" id="product-version" data-product-version="" class="form-control input-sm" id="title" placeholder="Product Version Number">
+				      <input type="text" id="product-version" data-product-version="" class="form-control input-sm" placeholder="Product Version Number">
 				    </div>
                          * 
                          */?>
 	            	<div class="form-group">
 				      <label for="tile">Changelog Title:</label>
-				      <input type="text" id="update-title" data-update-title="" class="form-control input-sm" id="title" placeholder="Enter a Changelog Title">
+				      <input type="text" id="update-title" data-update-title="" class="form-control input-sm" placeholder="Enter a Changelog Title">
 				    </div>
 				    <div class="form-group">
 				      <label for="text">Changelog Text:</label>
@@ -153,8 +153,6 @@ $this->inlineScript()->appendScript(
             <div class="modal-footer">
 
             </div>
-            </div>
-        </div>
     </div>
 </div>
 
@@ -398,29 +396,24 @@ $this->inlineScript()->appendScript(
             </div>
 
             <div class="modal-footer" style="margin-top: 20px;">
-                <span class="pull-left"><input type="checkbox"
-                                               data-accept-checkbox=""> <?= $this->translate('I accept the ') ?>
-                    <a href="/content/terms"><?= $this->translate('Terms and Conditions') ?></a></span>
+                <span class="pull-left">
+                    <input type="checkbox" data-accept-checkbox="">
+                    <?= $this->translate('I accept the ') ?>
+                    <a href="/content/terms"><?= $this->translate('Terms and Conditions') ?></a>
+                </span>
                 
             </div>
             <div class="modal-footer">
-                <button class="btn btn-native pull-left"
-                        data-addpploadfile-btn=""><?= $this->translate('Add File(s)') ?></button>
-                <button class="btn btn-danger pull-left" data-file-upload-cancel-btn=""><?= $this->translate('Cancel Upload') ?></button>
-                <?php /**
-                <button class="btn btn-native pull-left"
-                        rel="tooltip"
-                        data-placement="top"
-                        data-original-title="<?= $this->translate('Finalized Torrents can not be changed later, only deleted.') ?>"
-                        data-finalizepploadcollection-btn=""><?= $this->translate('Finalize') ?></button>
-                
-                <button class="btn btn-danger pull-left"
-                        data-deletepploadfiles-btn=""><?= $this->translate('Delete All') ?></button>
-				**/?>
-                
+                <button class="btn btn-native pull-left" data-addpploadfile-btn="">
+                    <?= $this->translate('Add File(s)') ?>
+                </button>
+                <button class="btn btn-danger pull-left" data-file-upload-cancel-btn="">
+                    <?= $this->translate('Cancel Upload') ?>
+                </button>
+                <button id="github_picker" class="btn btn-native pull-left" data-toggle="" data-target="#generic-dialog" data-username="<?=$this->member->link_github?>" title="add an URL here">
+                    <?= $this->translate('Add GitHub File') ?>
+                </button>
                 <button class="btn btn-native pull-right" data-ppload-cancel-btn=""><?= $this->translate('Cancel') ?></button>
-                
-                
             </div>
             <div class="modal-footer">
 
@@ -432,7 +425,59 @@ $this->inlineScript()->appendScript(
 <script type="text/javascript">
 
     $(function () {
-    	var Base64={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",encode:function(e){var t="";var n,r,i,s,o,u,a;var f=0;e=Base64._utf8_encode(e);while(f<e.length){n=e.charCodeAt(f++);r=e.charCodeAt(f++);i=e.charCodeAt(f++);s=n>>2;o=(n&3)<<4|r>>4;u=(r&15)<<2|i>>6;a=i&63;if(isNaN(r)){u=a=64}else if(isNaN(i)){a=64}t=t+this._keyStr.charAt(s)+this._keyStr.charAt(o)+this._keyStr.charAt(u)+this._keyStr.charAt(a)}return t},decode:function(e){var t="";var n,r,i;var s,o,u,a;var f=0;e=e.replace(/[^A-Za-z0-9\+\/\=]/g,"");while(f<e.length){s=this._keyStr.indexOf(e.charAt(f++));o=this._keyStr.indexOf(e.charAt(f++));u=this._keyStr.indexOf(e.charAt(f++));a=this._keyStr.indexOf(e.charAt(f++));n=s<<2|o>>4;r=(o&15)<<4|u>>2;i=(u&3)<<6|a;t=t+String.fromCharCode(n);if(u!=64){t=t+String.fromCharCode(r)}if(a!=64){t=t+String.fromCharCode(i)}}t=Base64._utf8_decode(t);return t},_utf8_encode:function(e){e=e.replace(/\r\n/g,"\n");var t="";for(var n=0;n<e.length;n++){var r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r)}else if(r>127&&r<2048){t+=String.fromCharCode(r>>6|192);t+=String.fromCharCode(r&63|128)}else{t+=String.fromCharCode(r>>12|224);t+=String.fromCharCode(r>>6&63|128);t+=String.fromCharCode(r&63|128)}}return t},_utf8_decode:function(e){var t="";var n=0;var r=c1=c2=0;while(n<e.length){r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r);n++}else if(r>191&&r<224){c2=e.charCodeAt(n+1);t+=String.fromCharCode((r&31)<<6|c2&63);n+=2}else{c2=e.charCodeAt(n+1);c3=e.charCodeAt(n+2);t+=String.fromCharCode((r&15)<<12|(c2&63)<<6|c3&63);n+=3}}return t}}
+
+        $('body').on("click", "#github_picker", function (event) {
+
+            html = '<form id="git-url-form">' +
+                '<div class="form-group">' +
+                '<input type="url" class="form-control" id="git-url" placeholder="put URL to download files here" required="required" pattern="^https:\/\/(?:www\.)?github\.com\/.+$" />' +
+                '<span id="git-url-help" class="help-block small"></span></div>' +
+                '<button type="submit" class="btn btn-default btn-sm" id="git-url-submit">Submit</button>' +
+                '</form>';
+
+            var msgBox = $('#generic-dialog');
+            msgBox.modal('hide');
+            msgBox.find('.modal-header-text').empty().append('Enter a download URL:');
+            msgBox.find('.modal-body').empty().append(html);
+            setTimeout(function () {
+                msgBox.modal('show');
+            }, 900);
+
+        });
+
+        $('body').on('submit', '#git-url-form', function(event) {
+            if (! $('#git-url-form').validate()) {
+                return true;
+            }
+            event.preventDefault();
+            $.ajax({
+                url: '/file/gitlink/',
+                type: 'post',
+                data: {
+                    project_id: $('#modal-ppload').attr('data-product-id'),
+                    u: $('#git-url').val()
+                },
+                success: function(returned_data) {
+                    if (!returned_data.file) {
+                        $('#git-url').addClass('hasError').focus();
+                        $('#git-url-help').html('An Error occurred. Please check your URL or try again later.');
+                        return;
+                    }
+                    data_file = returned_data.file;
+                    $modalPpload.attr('data-ppload-collection-id', data_file.collection_id);
+                    $('#git-url').val('').removeClass('hasError');
+                    $('#git-url-help').html('');
+                    $('#generic-dialog').modal('hide');
+                    getPploadFiles();
+                },
+                error: function() {
+                    $('#git-url').addClass('hasError').focus();
+                    $('#git-url-help').html('An Error occurred. Please check your URL or try again later.');
+                }
+            });
+        });
+
+        var Base64={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",encode:function(e){var t="";var n,r,i,s,o,u,a;var f=0;e=Base64._utf8_encode(e);while(f<e.length){n=e.charCodeAt(f++);r=e.charCodeAt(f++);i=e.charCodeAt(f++);s=n>>2;o=(n&3)<<4|r>>4;u=(r&15)<<2|i>>6;a=i&63;if(isNaN(r)){u=a=64}else if(isNaN(i)){a=64}t=t+this._keyStr.charAt(s)+this._keyStr.charAt(o)+this._keyStr.charAt(u)+this._keyStr.charAt(a)}return t},decode:function(e){var t="";var n,r,i;var s,o,u,a;var f=0;e=e.replace(/[^A-Za-z0-9\+\/\=]/g,"");while(f<e.length){s=this._keyStr.indexOf(e.charAt(f++));o=this._keyStr.indexOf(e.charAt(f++));u=this._keyStr.indexOf(e.charAt(f++));a=this._keyStr.indexOf(e.charAt(f++));n=s<<2|o>>4;r=(o&15)<<4|u>>2;i=(u&3)<<6|a;t=t+String.fromCharCode(n);if(u!=64){t=t+String.fromCharCode(r)}if(a!=64){t=t+String.fromCharCode(i)}}t=Base64._utf8_decode(t);return t},_utf8_encode:function(e){e=e.replace(/\r\n/g,"\n");var t="";for(var n=0;n<e.length;n++){var r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r)}else if(r>127&&r<2048){t+=String.fromCharCode(r>>6|192);t+=String.fromCharCode(r&63|128)}else{t+=String.fromCharCode(r>>12|224);t+=String.fromCharCode(r>>6&63|128);t+=String.fromCharCode(r&63|128)}}return t},_utf8_decode:function(e){var t="";var n=0;var r=c1=c2=0;while(n<e.length){r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r);n++}else if(r>191&&r<224){c2=e.charCodeAt(n+1);t+=String.fromCharCode((r&31)<<6|c2&63);n+=2}else{c2=e.charCodeAt(n+1);c3=e.charCodeAt(n+2);t+=String.fromCharCode((r&15)<<12|(c2&63)<<6|c3&63);n+=3}}return t}}
 
         $('button[rel="tooltip"]').tooltip();
 
@@ -539,6 +584,7 @@ $this->inlineScript()->appendScript(
             }
             if (!page) {
                 page = 1;
+                $modalPpload.find('table[data-ppload-files] tbody').empty();
             }
             $.ajax({
                 url: pploadApiUri + 'files/index',
@@ -662,13 +708,13 @@ $this->inlineScript()->appendScript(
                             + '<td>' + version + '</td>'
                             + '<td>' + inputFileDescription + '</td>'
                             + '<td>'
-                            + '<select id="data-select-license' + this.id + '" data-license-id=" name="license" class="form-control input-sm">'
+                            + '<select id="data-select-license' + this.id + '" data-license-id="" name="license" class="form-control input-sm">'
                             + '<option value=\"1000\"></option><option value=\"16\">AGPL</option><option value=\"3\">Artistic 2.0</option><option value=\"6\">BSD</option><option value=\"17\">CC0 1.0 Universal (Public Domain)</option><option value=\"9\">CPL 1.0</option><option value=\"10\">Creative Commons by</option><option value=\"13\">Creative Commons by-nc</option><option value=\"15\">Creative Commons by-nc-nd</option><option value=\"14\">Creative Commons by-nc-sa</option><option value=\"12\">Creative Commons by-nd</option><option value=\"11\">Creative Commons by-sa</option><option value=\"8\">GFDL</option><option value=\"1\">GPL</option><option value=\"2\">LGPL</option><option value=\"0\">Other</option><option value=\"7\">Proprietary License</option><option value=\"5\">QPL</option><option value=\"4\">X11</option>'
                             + '</select><span id="file-tag-license'+this.id+'"><span id="file-tag-license-text'+this.id+'">'
                             + '</td>'
                             + '<td>' + this.type + '</td>'
                             + '<td>'
-                            + '<select id="data-select-packagetype' + this.id + '" data-packagetype-id=" name="packagetype" class="form-control input-sm" style="width: 200px;">'
+                            + '<select id="data-select-packagetype' + this.id + '" data-packagetype-id="" name="packagetype" class="form-control input-sm" style="width: 200px;">'
                             + '<option value=\"\"></option><option value=\"1\">AppImage</option><option value=\"6\">Snappy</option><option value=\"5\">Debian</option><option value=\"2\">Android (APK)</option><option value=\"3\">OS X compatible</option><option value=\"4\">Windows executable</option>'
                             + '</select>'
                             + '</td>'
@@ -761,11 +807,12 @@ $this->inlineScript()->appendScript(
                     if (hasFinalized) {
                         $modalPpload.find('tr[data-ppload-file-id] select[data-os-id]').attr('disabled', 'disabled');
 
-                        $modalPpload.find('div[info-finalized]').append('<?= $this->translate('<br/><b>Your files are finalized (and via torrent downloadable). If you want to add new files, click on "Delete All" and upload all of your files again.</b>')?>');
+                        $modalPpload.find('div[info-finalized]').append('<br/><b>Your files are finalized (and via torrent downloadable). If you want to add new files, click on "Delete All" and upload all of your files again.</b>');
                         $modalPpload.find('input[data-accept-checkbox]').attr('disabled', 'disabled');
 
                         $modalPpload.find('p[data-file-upload-msg]').hide();
                         $modalPpload.find('button[data-addpploadfile-btn]').attr('disabled', 'disabled');
+                        $modalPpload.find('#github_picker').attr('disabled', 'disabled');
                         //$modalPpload.find('button[data-finalizepploadcollection-btn]').attr('disabled', 'disabled');
                         $modalPpload.find('button[data-file-upload-ok-btn]').removeAttr('disabled');
                         $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
@@ -783,8 +830,10 @@ $this->inlineScript()->appendScript(
 
                         if ($modalPpload.find('input[data-accept-checkbox]').is(':checked')) {
                             $modalPpload.find('button[data-addpploadfile-btn]').removeAttr('disabled');
+                            $modalPpload.find('#github_picker').removeAttr('disabled');
                         } else {
                             $modalPpload.find('button[data-addpploadfile-btn]').attr('disabled', 'disabled');
+                            $modalPpload.find('#github_picker').attr('disabled', 'disabled');
                         }
                     }
                     if (data.pagination.next) {
@@ -947,17 +996,17 @@ $this->inlineScript()->appendScript(
                         '<tr data-ppload-file-id="' + data.file.id + '" data-ppload-file-category="' + fileCategory + '" data-ppload-file-tags="' + fileTags + '">'
                         + '<td><a href="' + pploadApiUri + 'files/download/id/' + data.file.id + '/' + data.file.name + '">' + data.file.name + '</a></td>'
                         + '<td>' + version + '</td>' 
-                        + '<td><input data-ppload-file-description="" class="form-control input-sm'
+                        + '<td><input data-ppload-file-description="" class="form-control input-sm"'
                         + ' type="text" maxlength="140" placeholder="File description"'
                         + ' value="' + fileDescription + '"></td>'
                         + '<td>'
-                        + '<select id="data-select-license' + data.file.id + '" data-license-id=" name="license" class="form-control input-sm">'
+                        + '<select id="data-select-license' + data.file.id + '" data-license-id="" name="license" class="form-control input-sm">'
                         + '<option value=\"1000\"></option><option value=\"16\">AGPL</option><option value=\"3\">Artistic 2.0</option><option value=\"6\">BSD</option><option value=\"17\">CC0 1.0 Universal (Public Domain)</option><option value=\"9\">CPL 1.0</option><option value=\"10\">Creative Commons by</option><option value=\"13\">Creative Commons by-nc</option><option value=\"15\">Creative Commons by-nc-nd</option><option value=\"14\">Creative Commons by-nc-sa</option><option value=\"12\">Creative Commons by-nd</option><option value=\"11\">Creative Commons by-sa</option><option value=\"8\">GFDL</option><option value=\"1\">GPL</option><option value=\"2\">LGPL</option><option value=\"0\">Other</option><option value=\"7\">Proprietary License</option><option value=\"5\">QPL</option><option value=\"4\">X11</option>'
                         + '</select>'
                         + '</td>'
                         + '<td>' + data.file.type + '</td>'
                         + '<td>'
-                        + '<select id="data-select-packagetype' + data.file.id + '" data-packagetype-id=" name="packagetype" class="form-control input-sm" style="width: 200px;">'
+                        + '<select id="data-select-packagetype' + data.file.id + '" data-packagetype-id="" name="packagetype" class="form-control input-sm" style="width: 200px;">'
                         + '<option value=\"\"></option><option value=\"1\">AppImage</option><option value=\"6\">Snappy</option><option value=\"5\">Debian</option><option value=\"2\">Android (APK)</option><option value=\"3\">OS X compatible</option><option value=\"4\">Windows executable</option>'
                         + '</select>'
                         + '</td>'
@@ -1105,7 +1154,6 @@ $this->inlineScript()->appendScript(
             });
         }
 
-
         function updatePploadFileTags(fileId, fileTags) {
             $.ajax({
                 url: $modalPpload.attr('data-updatepploadfile-uri'),
@@ -1220,7 +1268,7 @@ $this->inlineScript()->appendScript(
                     $modalPpload.find('button[data-file-upload-ok-btn]').removeAttr('disabled');
                     $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
 
-                    $modalPpload.find('div[info-finalized]').append('<?= $this->translate('<br/><b>Your files are finalized (and via torrent downloadable). If you want to add new files, click on "Delete All" and upload all of your files again.</b>')?>');
+                    $modalPpload.find('div[info-finalized]').append('<br/><b>Your files are finalized (and via torrent downloadable). If you want to add new files, click on "Delete All" and upload all of your files again.</b>');
                     $modalPpload.find('input[data-accept-checkbox]').attr('disabled', 'disabled');
 
                 },
@@ -1353,9 +1401,11 @@ $this->inlineScript()->appendScript(
 
                 //event.preventDefault();
                 $modalPpload.find('button[data-addpploadfile-btn]').removeAttr('disabled');
+                $modalPpload.find('#github_picker').removeAttr('disabled');
             } else {
                 //event.preventDefault();
                 $modalPpload.find('button[data-addpploadfile-btn]').attr('disabled', 'disabled');
+                $modalPpload.find('#github_picker').attr('disabled', 'disabled');
             }
         });
 
@@ -1509,7 +1559,6 @@ $this->inlineScript()->appendScript(
             event.preventDefault();
 
         });
-
 
     });
 
