@@ -100,7 +100,13 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
     {
         $storeCatIds = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
         $this->view->categories = $storeCatIds;
-
+        
+        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
+        $storePackageTypeIds = null;
+        if($storeConfig) {
+            $storePackageTypeIds = $storeConfig['package_type'];
+            $this->view->package_type = $storePackageTypeIds;
+        }
         // Filter-Parameter
         $inputCatId = (int)$this->getParam('cat', null);
 
@@ -119,6 +125,9 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
 
         $filter['category'] = $inputCatId ? $inputCatId : $storeCatIds;
         $filter['order'] = $this->getParam('ord', 'latest');
+        if($storePackageTypeIds) {
+            $filter['package_type'] = $storePackageTypeIds;
+        }
 
         $page = (int)$this->getParam('page', 1);
         $pageLimit = 10;

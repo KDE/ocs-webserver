@@ -26,6 +26,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
     const FILTER_NAME_PROJECT_ID_NOT_IN = 'project_id_not_in';
     const FILTER_NAME_RANKING = 'ranking';
     const FILTER_NAME_CATEGORY = 'category';
+    const FILTER_NAME_PACKAGETYPE = 'package_type';
     const FILTER_NAME_MEMBER = 'member';
     const FILTER_NAME_ORDER = 'order';
     const FILTER_NAME_LOCATION = 'location';
@@ -774,6 +775,17 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             ->where('project.project_category_id = ?', $project->project_category_id, 'INTEGER')
             ->limit($count)
             ->order('project.created_at DESC');
+        
+        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
+        $storePackageTypeIds = null;
+        if($storeConfig) {
+            $storePackageTypeIds = $storeConfig['package_type'];
+        }
+        
+        if($storePackageTypeIds) {
+            $q = $this->generatePackageTypeFilter($q, array(self::FILTER_NAME_PACKAGETYPE=>$storePackageTypeIds));
+        }
+        
         return $this->generateRowSet($q->query()->fetchAll());
     }
 
@@ -806,7 +818,18 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             ->where('project.type_id = ?', 1)
             ->where('project.project_category_id = ?', $project->project_category_id, 'INTEGER')
             ->limit($count, $offset)
-            ->order('project.created_at DESC');;
+            ->order('project.created_at DESC');
+        
+        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
+        $storePackageTypeIds = null;
+        if($storeConfig) {
+            $storePackageTypeIds = $storeConfig['package_type'];
+        }
+        
+        if($storePackageTypeIds) {
+            $q = $this->generatePackageTypeFilter($q, array(self::FILTER_NAME_PACKAGETYPE=>$storePackageTypeIds));
+        }
+        
         return $this->generateRowSet($q->query()->fetchAll());
     }
 
@@ -1027,8 +1050,14 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         if (empty($idCategory)) {
             throw new Zend_Exception('idCategory param was not set');
         }
+        
+        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
+        $storePackageTypeIds = null;
+        if($storeConfig) {
+            $storePackageTypeIds = $storeConfig['package_type'];
+        }
 
-        $cacheName = __FUNCTION__ . md5(serialize($idCategory) . $withSubCat);
+        $cacheName = __FUNCTION__ . md5(serialize($idCategory) . $withSubCat . '-package_type'. serialize($storePackageTypeIds));
         $cache = Zend_Registry::get('cache');
 
         if ($resultSet = $cache->load($cacheName)) {
@@ -1041,6 +1070,10 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                 'member.member_id = project.member_id AND member.is_active = 1 AND member.is_deleted = 0')
             ->where('project.status = ? ', self::PROJECT_ACTIVE)
             ->where('project.type_id = ?', self::PROJECT_TYPE_STANDARD);
+        
+        if($storePackageTypeIds) {
+            $select = $this->generatePackageTypeFilter($select, array(self::FILTER_NAME_PACKAGETYPE=>$storePackageTypeIds));
+        }
 
         $sqlwhereCat = "";
         $sqlwhereSubCat = "";
@@ -1083,38 +1116,65 @@ class Default_Model_Project extends Default_Model_DbTable_Project
     {
         //Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . print_r(func_get_args(), true));
 
+        /*
         if (is_null($idCategory) OR $idCategory == '' OR is_array($idCategory)) {
             return $this->countActiveProjects();
+        }*/
+
+
+
+        $cacheName = __FUNCTION__ . md5(serialize($idCategory));
+        $cache = Zend_Registry::get('cache');
+
+        $result = $cache->load($cacheName);
+
+        if ($result) {
+            return (int)$result['count_active_members'];
         }
 
+
+
+        /**
         $select = $this->select()->setIntegrityCheck(false)->from($this->_name,
             array('count_active_projects' => 'COUNT(1)'))
             ->group('member_id')
             ->where('project.status = ? ', self::PROJECT_ACTIVE)
             ->where('project.type_id = ?', self::PROJECT_TYPE_STANDARD);
+        */
+        $sqlwhereCat = "";
+        $sqlwhereSubCat = "";
+
+        if (false === is_array($idCategory)) {
+            $idCategory = array($idCategory);
+        }
+        $sqlwhereCat .= implode(',', $idCategory);
+
         $modelCategory = new Default_Model_DbTable_ProjectCategory();
         $subCategories = $modelCategory->fetchChildElements($idCategory);
 
-        $sqlwhere = "{$idCategory},";
         if (count($subCategories) > 0) {
             foreach ($subCategories as $element) {
-                $sqlwhere .= "{$element['project_category_id']},";
+                $sqlwhereSubCat .= "{$element['project_category_id']},";
             }
         }
-        $sqlwhere = substr($sqlwhere, 0, -1);
-        $select->where('project.project_category_id in (' . $sqlwhere . ') OR (project.project_id IN (SELECT project_id FROM project_subcategory WHERE project_sub_category_id = ' . $idCategory . '))');
 
-//    	$this->_db->getProfiler()->setEnabled(true);
-        $resultSet = $this->fetchAll($select);
-//    	Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . $this->_db->getProfiler()->getLastQueryProfile()->getQuery());
-//    	Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . print_r($resultSet->toArray(),true));
-//    	$this->_db->getProfiler()->setEnabled(false);
+        //$select->where('project.project_category_id in (' . $sqlwhereSubCat . $sqlwhereCat . ')');
+        $selectWhere = 'AND p.project_category_id in (' . $sqlwhereSubCat . $sqlwhereCat . ')';
 
-        if (count($resultSet) > 0) {
-            return (int)$resultSet[0]['count_active_projects'];
-        } else {
-            return 0;
-        }
+        $sql = "select count(1) as count_active_members from (                    
+                    select count(1) as count_active_projects from pling.project p
+                    where p.`status` = 100
+                    and p.type_id = 1
+                    " . $selectWhere . "group by p.member_id
+                ) as A;";
+
+        //$resultSet = $this->fetchRow($select);
+        $result = $this->_db->fetchRow($sql);
+        $cache->save($result,$cacheName);
+
+        return (int)$result['count_active_members'];
+
+
     }
 
     /**
@@ -1255,6 +1315,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         $statement = $this->generateBaseStatement();
         $statement = $this->generateCategoryFilter($statement, $inputFilterParams);
         $statement = $this->generateOrderFilter($statement, $inputFilterParams);
+        $statement = $this->generatePackageTypeFilter($statement, $inputFilterParams);
 
         $statement->limit($limit, $offset);
         return $statement;
@@ -1323,6 +1384,28 @@ class Default_Model_Project extends Default_Model_DbTable_Project
 
         return $statement;
     }
+    
+    /**
+     * @param Zend_Db_Select $statement
+     * @param array $filterArrayValue
+     * @return Zend_Db_Select
+     */
+    protected function generatePackageTypeFilter(Zend_Db_Select $statement, $filterArrayValue)
+    {
+        if (false == isset($filterArrayValue[self::FILTER_NAME_PACKAGETYPE])) {
+            return $statement;
+        }
+
+        $filter = $filterArrayValue[self::FILTER_NAME_PACKAGETYPE];
+        
+        $statement->join(
+            array('package_type' => new Zend_Db_Expr('(SELECT DISTINCT project_id FROM project_package_type WHERE package_type_id in ('.$filter.'))')),
+            'project.project_id = package_type.project_id',
+            array()
+        );
+
+        return $statement;
+    }    
 
     /**
      * @param Zend_Db_Select $statement
@@ -1465,13 +1548,19 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         if (empty($storeCategories)) {
             return array();
         }
+        
+        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
+        $storePackageTypeIds = null;
+        if($storeConfig) {
+            $storePackageTypeIds = $storeConfig['package_type'];
+        }
 
 //        $inQuery = '?';
 //        if (is_array($storeCategories)) {
 //            $inQuery = implode(',', array_fill(0, count($storeCategories), '?'));
 //        }
 
-        $sql = "
+        $sql = '
                 SELECT
                   p.*,
                   p.changed_at AS project_changed_at,
@@ -1491,10 +1580,13 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                 FROM project AS p
                   JOIN member AS m ON p.member_id = m.member_id AND m.is_active = 1 AND m.is_deleted = 0
                   JOIN project_category AS pc ON p.project_category_id = pc.project_category_id
-                  LEFT JOIN stat_plings AS sp ON p.project_id = sp.project_id
-                WHERE p.project_category_id IN (" . implode(',', $storeCategories) . ")
-                AND p.status >= 100
-        ";
+                  LEFT JOIN stat_plings AS sp ON p.project_id = sp.project_id';
+        
+        if($storePackageTypeIds) {
+            $sql .= ' JOIN (SELECT DISTINCT project_id FROM project_package_type WHERE package_type_id in ('.$storePackageTypeIds.')) package_type  ON p.project_id = package_type.project_id';
+        }
+
+        $sql .= ' WHERE p.project_category_id IN (' . implode(',', $storeCategories) . ') AND p.status >= 100';
 
         if ($withoutUpdates) {
             $sql .= ' AND p.type_id = 1';
