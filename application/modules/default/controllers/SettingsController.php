@@ -315,7 +315,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $form->addElement($google);
 
         $github = $form->createElement('text', 'link_github')
-            ->setLabel("Github Profile:")
+            ->setLabel("GitHub Profile:")
             ->setRequired(false)
             ->removeDecorator('HtmlTag')
             ->setDecorators(
@@ -345,7 +345,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
             ->setAction('/settings/github');
 
         $github = new Default_Form_Element_UsernameGithub('link_github');
-        $github->setLabel("Github Profile:")
+        $github->setLabel("GitHub Profile:")
             ->setRequired(false)
             ->removeDecorator('HtmlTag')
             ->setDecorators(
@@ -364,7 +364,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $form->addElement($github);
 
         $token = new Default_Form_Element_TokenGithub('token_github');
-        $token->setLabel("Github Access Token:")
+        $token->setLabel("GitHub Access Token:")
             ->setRequired(false)
             ->removeDecorator('HtmlTag')
             ->setDecorators(

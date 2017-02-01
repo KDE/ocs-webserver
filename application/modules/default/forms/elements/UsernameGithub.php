@@ -42,7 +42,7 @@ class Default_Form_Element_UsernameGithub extends Default_Form_Element_Html5
         $regexValidator->setMessages(
             array(
                 Zend_Validate_Regex::ERROROUS => 'There was an internal error while validate your input.',
-                Zend_Validate_Regex::NOT_MATCH => "'%value%' does not match against pattern for valid Github username."
+                Zend_Validate_Regex::NOT_MATCH => "'%value%' does not match against pattern for valid GitHub username."
             ));
         $this->addValidator($regexValidator);
         $this->addFilter('StringTrim');
