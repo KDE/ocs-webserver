@@ -309,9 +309,6 @@ class Zend_Captcha_Image extends Zend_Captcha_Word
      */
     public function setFont($font)
     {
-        if (false === file_exists($font)) {
-            throw new Exception('font not found or not accessible');
-        }
         $this->_font = $font;
         return $this;
     }
