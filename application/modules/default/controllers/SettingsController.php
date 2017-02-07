@@ -82,8 +82,11 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
 
         $websiteOwner = new Local_Verification_WebsiteOwner();
         $linkWebsite = stripslashes($this->_memberSettings->link_website);
-        $this->view->homepageform = $this->formHomepage($linkWebsite, $websiteOwner->generateAuthCode($linkWebsite),
-            $this->_memberSettings->validated);
+        $this->view->homepageform = $this->formHomepage(
+            $linkWebsite,
+            $websiteOwner->generateAuthCode($linkWebsite),
+            $this->_memberSettings->validated
+        );
 
         $this->view->newsletterform = $this->formNewsletter(stripslashes($this->_memberSettings->newsletter));
 
