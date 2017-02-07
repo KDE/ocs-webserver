@@ -1509,20 +1509,19 @@ class Ocsv1Controller extends Zend_Controller_Action
         $parsedTags = array(
             'link' => '',
             'licensetype' => '',
-            'packagetypeid' => ''
+            'packagetypeid' => '',
+            'packagearch' => ''
         );
         foreach ($tags as $tag) {
             $tag = trim($tag);
             if (strpos($tag, 'link##') === 0) {
                 $parsedTags['link'] = urldecode(str_replace('link##', '', $tag));
-            } else {
-                if (strpos($tag, 'licensetype-') === 0) {
-                    $parsedTags['licensetype'] = str_replace('licensetype-', '', $tag);
-                } else {
-                    if (strpos($tag, 'packagetypeid-') === 0) {
-                        $parsedTags['packagetypeid'] = str_replace('packagetypeid-', '', $tag);
-                    }
-                }
+            } else if (strpos($tag, 'licensetype-') === 0) {
+                $parsedTags['licensetype'] = str_replace('licensetype-', '', $tag);
+            } else if (strpos($tag, 'packagetypeid-') === 0) {
+                $parsedTags['packagetypeid'] = str_replace('packagetypeid-', '', $tag);
+            } else if (strpos($tag, 'packagearch-') === 0) {
+                $parsedTags['packagearch'] = str_replace('packagearch-', '', $tag);
             }
         }
         return $parsedTags;
