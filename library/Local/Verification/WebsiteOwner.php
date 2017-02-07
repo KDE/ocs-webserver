@@ -141,7 +141,8 @@ class Local_Verification_WebsiteOwner
         if ($count > 0) {
             return current($matches[1]);
         } else {
-            throw new Exception(__FILE__ . '(' . __LINE__ . '): ' . 'Error while parsing the domain name = ' . $domain);
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - Error while parsing the domain = ' . $domain);
+            return '';
         }
     }
 
