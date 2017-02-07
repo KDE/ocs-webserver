@@ -961,9 +961,14 @@ class Ocsv1Controller extends Zend_Controller_Action
                     $i = 1;
                     foreach ($filesResponse->files as $file) {
                         $downloads += (int)$file->downloaded_count;
-                        $downloadLink = PPLOAD_API_URI . 'files/download/'
-                            . 'id/' . $file->id . '/' . $file->name;
                         $tags = $this->_parseFileTags($file->tags);
+                        $downloadLink = '';
+                        if (!empty($tags['link'])) {
+                            $downloadLink = $tags['link'];
+                        } else {
+                            $downloadLink = PPLOAD_API_URI . 'files/download/'
+                                . 'id/' . $file->id . '/' . $file->name;
+                        }
                         $downloadItems['downloadway' . $i] = 1;
                         $downloadItems['downloadtype' . $i] = '';
                         $downloadItems['downloadprice' . $i] = '0';
@@ -1347,9 +1352,14 @@ class Ocsv1Controller extends Zend_Controller_Action
                         $i = 1;
                         foreach ($filesResponse->files as $file) {
                             $downloads += (int)$file->downloaded_count;
-                            $downloadLink = PPLOAD_API_URI . 'files/download/'
-                                . 'id/' . $file->id . '/' . $file->name;
                             $tags = $this->_parseFileTags($file->tags);
+                            $downloadLink = '';
+                            if (!empty($tags['link'])) {
+                                $downloadLink = $tags['link'];
+                            } else {
+                                $downloadLink = PPLOAD_API_URI . 'files/download/'
+                                    . 'id/' . $file->id . '/' . $file->name;
+                            }
                             $downloadItems['downloadway' . $i] = 1;
                             $downloadItems['downloadtype' . $i] = '';
                             $downloadItems['downloadprice' . $i] = '0';
@@ -1568,9 +1578,14 @@ class Ocsv1Controller extends Zend_Controller_Action
             $this->_sendErrorResponse(103, 'content item not found');
         }
 
-        $downloadLink = PPLOAD_API_URI . 'files/download/'
-            . 'id/' . $file->id . '/' . $file->name;
         $tags = $this->_parseFileTags($file->tags);
+        $downloadLink = '';
+        if (!empty($tags['link'])) {
+            $downloadLink = $tags['link'];
+        } else {
+            $downloadLink = PPLOAD_API_URI . 'files/download/'
+                . 'id/' . $file->id . '/' . $file->name;
+        }
 
         if ($this->_format == 'json') {
             $response = array(
