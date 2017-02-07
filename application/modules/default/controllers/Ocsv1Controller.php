@@ -1504,7 +1504,7 @@ class Ocsv1Controller extends Zend_Controller_Action
         foreach ($tags as $tag) {
             $tag = trim($tag);
             if (strpos($tag, 'link##') === 0) {
-                $parsedTags['link'] = str_replace('link##', '', $tag);
+                $parsedTags['link'] = urldecode(str_replace('link##', '', $tag));
             } else {
                 if (strpos($tag, 'licensetype-') === 0) {
                     $parsedTags['licensetype'] = str_replace('licensetype-', '', $tag);
