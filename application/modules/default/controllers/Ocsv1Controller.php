@@ -980,6 +980,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                         $downloadItems['downloadpackagename' . $i] = '';
                         $downloadItems['downloadrepository' . $i] = '';
                         $downloadItems['download_package_type' . $i] = $tags['packagetypeid'];
+                        $downloadItems['download_package_arch' . $i] = $tags['packagearch'];
                         $i++;
                     }
                 }
@@ -1371,6 +1372,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                             $downloadItems['downloadpackagename' . $i] = '';
                             $downloadItems['downloadrepository' . $i] = '';
                             $downloadItems['download_package_type' . $i] = $tags['packagetypeid'];
+                            $downloadItems['download_package_arch' . $i] = $tags['packagearch'];
                             $i++;
                         }
                     }
@@ -1601,7 +1603,8 @@ class Ocsv1Controller extends Zend_Controller_Action
                         'gpgsignature' => '',
                         'packagename' => '',
                         'repository' => '',
-                        'download_package_type' => $tags['packagetypeid']
+                        'download_package_type' => $tags['packagetypeid'],
+                        'download_package_arch' => $tags['packagearch']
                     )
                 )
             );
@@ -1622,7 +1625,8 @@ class Ocsv1Controller extends Zend_Controller_Action
                         'gpgsignature' => array('@text' => ''),
                         'packagename' => array('@text' => ''),
                         'repository' => array('@text' => ''),
-                        'download_package_type' => array('@text' => $tags['packagetypeid'])
+                        'download_package_type' => array('@text' => $tags['packagetypeid']),
+                        'download_package_arch' => array('@text' => $tags['packagearch'])
                     )
                 )
             );
