@@ -440,7 +440,7 @@ $categoryPath[] = $valueCatId;
                         '<div class="form-group">' +
                         '<input type="url" class="form-control" id="git-url" placeholder="put URL to GitHub release here" required="required" pattern="^https:\/\/(?:(?:(?:www\.)?github)?|(?:raw\.githubusercontent)?)\.com\/.+$">' +
                         '<span id="git-url-help" class="help-block small">e.g. https://github.com/mongodb/mongo/archive/r3.5.2.tar.gz</span></div>' +
-                        '<button type="submit" class="btn btn-default btn-sm" id="git-url-submit">Submit</button>' +
+                        '<button type="submit" class="btn btn-native btn-sm" id="git-url-submit">Submit</button>' +
                         '</form>';
 
                     var msgBox = $('#generic-dialog');
@@ -609,7 +609,7 @@ $categoryPath[] = $valueCatId;
                             }
                             var deletePploadFileBtn = '';
                             if (!hasFinalized) {
-                                deletePploadFileBtn = deletePploadFileBtn = '<a href="#" class="btn btn-danger btn-xs btn-file-dropzone" data-deletepploadfile-btn=""><span class="glyphicon glyphicon-trash"></span></a>';;
+                                deletePploadFileBtn = deletePploadFileBtn = '<a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-deletepploadfile-btn=""><span class="glyphicon glyphicon-trash"></span></a>';;
                             }
                             var deletePploadFileBtnPerFile = '';
 
@@ -962,7 +962,7 @@ $categoryPath[] = $valueCatId;
                                 + '</td>'
                                 + '<td>' + data.file.created_timestamp + '</td>'
                                 + '<td style="text-align: right">' + humanFileSize(data.file.size) + '</td>'
-                                + '<td><a href="#" class="btn btn-danger btn-xs btn-file-dropzone" data-deletepploadfile-btn=""><span class="glyphicon glyphicon-trash"></span></a></td>'
+                                + '<td><a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-deletepploadfile-btn=""><span class="glyphicon glyphicon-trash"></span></a></td>'
                                 + '</tr>'
                             );
 
