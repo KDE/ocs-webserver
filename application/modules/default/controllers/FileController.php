@@ -47,7 +47,8 @@ class FileController extends Zend_Controller_Action
 
     private function validateGithubLink($getParam)
     {
-        $validate = new Zend_Validate_Regex('/^https:\/\/(?:www\.)?github\.com\/.+$/');
+        /** regex tested in https://regex101.com/r/VFsvSd/1 */
+        $validate = new Zend_Validate_Regex('/^https:\/\/(?:(?:(?:www\.)?github)?|(?:raw\.githubusercontent)?)\.com\/.+$/');
         return $validate->isValid($getParam);
     }
 
