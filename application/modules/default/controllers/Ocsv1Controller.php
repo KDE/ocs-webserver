@@ -961,9 +961,14 @@ class Ocsv1Controller extends Zend_Controller_Action
                     $i = 1;
                     foreach ($filesResponse->files as $file) {
                         $downloads += (int)$file->downloaded_count;
-                        $downloadLink = PPLOAD_API_URI . 'files/download/'
-                            . 'id/' . $file->id . '/' . $file->name;
                         $tags = $this->_parseFileTags($file->tags);
+                        $downloadLink = '';
+                        if (!empty($tags['link'])) {
+                            $downloadLink = $tags['link'];
+                        } else {
+                            $downloadLink = PPLOAD_API_URI . 'files/download/'
+                                . 'id/' . $file->id . '/' . $file->name;
+                        }
                         $downloadItems['downloadway' . $i] = 1;
                         $downloadItems['downloadtype' . $i] = '';
                         $downloadItems['downloadprice' . $i] = '0';
@@ -975,6 +980,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                         $downloadItems['downloadpackagename' . $i] = '';
                         $downloadItems['downloadrepository' . $i] = '';
                         $downloadItems['download_package_type' . $i] = $tags['packagetypeid'];
+                        $downloadItems['download_package_arch' . $i] = $tags['packagearch'];
                         $i++;
                     }
                 }
@@ -1347,9 +1353,14 @@ class Ocsv1Controller extends Zend_Controller_Action
                         $i = 1;
                         foreach ($filesResponse->files as $file) {
                             $downloads += (int)$file->downloaded_count;
-                            $downloadLink = PPLOAD_API_URI . 'files/download/'
-                                . 'id/' . $file->id . '/' . $file->name;
                             $tags = $this->_parseFileTags($file->tags);
+                            $downloadLink = '';
+                            if (!empty($tags['link'])) {
+                                $downloadLink = $tags['link'];
+                            } else {
+                                $downloadLink = PPLOAD_API_URI . 'files/download/'
+                                    . 'id/' . $file->id . '/' . $file->name;
+                            }
                             $downloadItems['downloadway' . $i] = 1;
                             $downloadItems['downloadtype' . $i] = '';
                             $downloadItems['downloadprice' . $i] = '0';
@@ -1361,6 +1372,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                             $downloadItems['downloadpackagename' . $i] = '';
                             $downloadItems['downloadrepository' . $i] = '';
                             $downloadItems['download_package_type' . $i] = $tags['packagetypeid'];
+                            $downloadItems['download_package_arch' . $i] = $tags['packagearch'];
                             $i++;
                         }
                     }
@@ -1499,20 +1511,19 @@ class Ocsv1Controller extends Zend_Controller_Action
         $parsedTags = array(
             'link' => '',
             'licensetype' => '',
-            'packagetypeid' => ''
+            'packagetypeid' => '',
+            'packagearch' => ''
         );
         foreach ($tags as $tag) {
             $tag = trim($tag);
             if (strpos($tag, 'link##') === 0) {
-                $parsedTags['link'] = str_replace('link##', '', $tag);
-            } else {
-                if (strpos($tag, 'licensetype-') === 0) {
-                    $parsedTags['licensetype'] = str_replace('licensetype-', '', $tag);
-                } else {
-                    if (strpos($tag, 'packagetypeid-') === 0) {
-                        $parsedTags['packagetypeid'] = str_replace('packagetypeid-', '', $tag);
-                    }
-                }
+                $parsedTags['link'] = urldecode(str_replace('link##', '', $tag));
+            } else if (strpos($tag, 'licensetype-') === 0) {
+                $parsedTags['licensetype'] = str_replace('licensetype-', '', $tag);
+            } else if (strpos($tag, 'packagetypeid-') === 0) {
+                $parsedTags['packagetypeid'] = str_replace('packagetypeid-', '', $tag);
+            } else if (strpos($tag, 'packagearch-') === 0) {
+                $parsedTags['packagearch'] = str_replace('packagearch-', '', $tag);
             }
         }
         return $parsedTags;
@@ -1568,9 +1579,14 @@ class Ocsv1Controller extends Zend_Controller_Action
             $this->_sendErrorResponse(103, 'content item not found');
         }
 
-        $downloadLink = PPLOAD_API_URI . 'files/download/'
-            . 'id/' . $file->id . '/' . $file->name;
         $tags = $this->_parseFileTags($file->tags);
+        $downloadLink = '';
+        if (!empty($tags['link'])) {
+            $downloadLink = $tags['link'];
+        } else {
+            $downloadLink = PPLOAD_API_URI . 'files/download/'
+                . 'id/' . $file->id . '/' . $file->name;
+        }
 
         if ($this->_format == 'json') {
             $response = array(
@@ -1587,7 +1603,8 @@ class Ocsv1Controller extends Zend_Controller_Action
                         'gpgsignature' => '',
                         'packagename' => '',
                         'repository' => '',
-                        'download_package_type' => $tags['packagetypeid']
+                        'download_package_type' => $tags['packagetypeid'],
+                        'download_package_arch' => $tags['packagearch']
                     )
                 )
             );
@@ -1608,7 +1625,8 @@ class Ocsv1Controller extends Zend_Controller_Action
                         'gpgsignature' => array('@text' => ''),
                         'packagename' => array('@text' => ''),
                         'repository' => array('@text' => ''),
-                        'download_package_type' => array('@text' => $tags['packagetypeid'])
+                        'download_package_type' => array('@text' => $tags['packagetypeid']),
+                        'download_package_arch' => array('@text' => $tags['packagearch'])
                     )
                 )
             );
