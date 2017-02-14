@@ -47,8 +47,8 @@
             $count_plingers = $this->product['count_plingers'];
             $count_comments = $this->product['count_comments'];
             
-            echo ($count_plingers>0 ? '<br><span style="display: block; padding-top: 5px;" class="cntSupporters">'.$count_plingers.' supporter':'').($count_plingers>1?'s':'').($count_plingers>0?'</span>':'') ;
-            echo ($count_comments>0 ? '<br><span style="display: block; padding-top: 5px;" class="cntComments">'.$count_comments.' comment':'').($count_comments>1?'s':'').($count_comments>0?'</span>':'') ;
+            echo ($count_plingers>0 ? '<span style="display: block; padding-top: 5px;" class="cntSupporters">'.$count_plingers.' supporter':'').($count_plingers>1?'s':'').($count_plingers>0?'</span>':'') ;
+            echo ($count_comments>0 ? '<span style="display: block; padding-top: 5px;" class="cntComments">'.$count_comments.' comment':'').($count_comments>1?'s':'').($count_comments>0?'</span>':'') ;
             
         ?>
         </div>
