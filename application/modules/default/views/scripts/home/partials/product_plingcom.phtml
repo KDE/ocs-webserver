@@ -31,17 +31,27 @@
         <a href="<?=$this->buildProductUrl($this->product['project_id'],'')?>"><?=$this->product['title']?>
             <span class="version"><?=$this->product['version']?>
             </span>
-        </a><br>
-        <?=$this->fetchCategoriesForProductAsString($this->product['project_id'])?> 
-        <br>
+        </a>
+        <span style="display: block; margin-bottom: 5px"><?=$this->fetchCategoriesForProductAsString($this->product['project_id'])?></span>
+        
+        <?php 
+          $helperPackageTypes = new Default_View_Helper_FetchProjectPackageTypes();
+          $type = $helperPackageTypes->FetchProjectPackageTypes($this->product['project_id']);
+          if(!empty($type)){
+            ?>
+            <?=$type ?>
+        <?php } ?>
+        <div class="productInfo" style="float: left;">
+               
         <?php
             $count_plingers = $this->product['count_plingers'];
             $count_comments = $this->product['count_comments'];
             
-            echo ($count_plingers>0 ? '<span class="cntSupporters">'.$count_plingers.' supporter':'').($count_plingers>1?'s':'').($count_plingers>0?'</span>':'') ;
+            echo ($count_plingers>0 ? '<span style="padding-top: 5px; padding-right: 6px; font-size: smaller;" class="cntSupporters">'.$count_plingers.' supporter':'').($count_plingers>1?'s':'').($count_plingers>0?'</span>':'') ;
             echo ($count_comments>0 ? '<span class="cntComments">'.$count_comments.' comment':'').($count_comments>1?'s':'').($count_comments>0?'</span>':'') ;
             
         ?>
+        </div>
  </div>
  <div class="col-lg-3 col-md-3 col-sm-4 col-xs-4">
     <div class="rating">
