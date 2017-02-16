@@ -217,13 +217,8 @@ class Default_Model_Oauth_Github
         if ($authResult->isValid()) {
             $authModel = new Default_Model_Authorization();
             $authModel->storeAuthSessionDataByIdentity($this->memberData['member_id']);
-            $authModel->updateRememberMe();
             $authModel->updateUserLastOnline('member_id', $this->memberData['member_id']);
             return $authResult;
-        }
-
-        if ($authResult->getCode() == Zend_Auth_Result::FAILURE_IDENTITY_NOT_FOUND AND $this->session->doRegister == true) {
-            return $this->registerLocal();
         }
 
         Zend_Registry::get('logger')->info(__METHOD__ . ' - error while authenticate user from oauth provider: ' . implode(",\n",
@@ -344,13 +339,8 @@ class Default_Model_Oauth_Github
         return $member;
     }
 
-    /**
-     * @return Zend_Auth_Result
-     */
     public function registerLocal()
     {
-        $this->setRegisterAfterLogin(false);
-
         $userInfo = $this->getUserInfo();
         $userInfo['email'] = $this->getUserEmail();
 
@@ -375,7 +365,6 @@ class Default_Model_Oauth_Github
             'verificationVal' => MD5($userInfo['id'] . $userInfo['login'] . time())
         );
 
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - new user data: '. print_r($newUserValues, true));
         $modelMember = new Default_Model_Member();
         $member = $modelMember->createNewUser($newUserValues);
         $modelEmail = new Default_Model_MemberEmail();
@@ -386,13 +375,10 @@ class Default_Model_Oauth_Github
         if ($member->member_id) {
             $authModel = new Default_Model_Authorization();
             $authModel->storeAuthSessionDataByIdentity($member->member_id);
-            $authModel->updateRememberMe();
             $authModel->updateUserLastOnline('member_id', $member->member_id);
-            return $this->createAuthResult(Zend_Auth_Result::SUCCESS, $member['mail'],
-                array('Authentication successful.'));
+            return true;
         }
-        return $this->createAuthResult(Zend_Auth_Result::FAILURE, $userEmail,
-            array('A user with given data could not registered.'));
+        return false;
     }
 
     public function getUserInfo()
@@ -466,15 +452,6 @@ class Default_Model_Oauth_Github
             $redirection->gotoUrl($redirect);
         }
         return false;
-    }
-
-    public function setRegisterAfterLogin($doRegister = false)
-    {
-        if ($doRegister) {
-            $this->session->doRegister = true;
-        } else {
-            $this->session->doRegister = null;
-        }
     }
 
 }
