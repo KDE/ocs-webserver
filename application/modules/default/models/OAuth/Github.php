@@ -222,7 +222,7 @@ class Default_Model_Oauth_Github
             return $authResult;
         }
 
-        if ($authResult->getCode() == Zend_Auth_Result::FAILURE_IDENTITY_NOT_FOUND AND $this->session->doRegister == true) {
+        if ($authResult->getCode() == Zend_Auth_Result::FAILURE_IDENTITY_NOT_FOUND) {
             return $this->registerLocal();
         }
 
@@ -368,7 +368,7 @@ class Default_Model_Oauth_Github
             'profile_image_url' => $userInfo['avatar_url'],
             'social_username' => $userInfo['login'],
             'social_user_id' => $userInfo['id'],
-            'link_github' => $userInfo['html_url'],
+            'link_github' => $userInfo['name'],
             'created_at' => new Zend_Db_Expr('Now()'),
             'changed_at' => new Zend_Db_Expr('Now()'),
             'uuid' => Local_Tools_UUID::generateUUID(),
