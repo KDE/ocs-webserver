@@ -249,8 +249,8 @@ class Default_Model_Authorization
      */
     protected function getAllAuthUserData($identifier, $identity)
     {
-        $authUserData = $this->getAuthUserData($identifier, $identity);
-        return $this->getExtendedAuthUserData($authUserData);
+        $this->_authUserData = $this->getAuthUserData($identifier, $identity);
+        return $this->getExtendedAuthUserData($this->_authUserData);
     }
 
     /**
