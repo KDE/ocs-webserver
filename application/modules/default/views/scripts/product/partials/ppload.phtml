@@ -558,7 +558,7 @@
 
                                  $pploadCollection.find('table[data-ppload-files] tfoot').append(
                                      '<tr>'
-                                     + '<th colspan="6">' + data.pagination.totalItems + ' <?= $this->translate("files")?> ('+myArrayActive.length+' active and <span style="color: #ccc;" ><a style="cursor:pointer" onclick="fnToggleInactiveFiles();return false;">'+myArrayInactive.length+' inactive</a></span>)</th>'
+                                     + '<th colspan="6">' + myArrayActive.length + ' <?= $this->translate("files")?> (<span style="color: #ccc;" ><a style="cursor:pointer" onclick="fnToggleInactiveFiles();return false;">'+myArrayInactive.length+' inactive</a></span>)</th>'
                                      + '<th style="text-align: right">' + downloaded_count_total + '</th>'
                                      + '<th></th>'
                                     + '<th style="text-align: right">' + fileSizeSum.toFixed(2) + ' MB</th>'
