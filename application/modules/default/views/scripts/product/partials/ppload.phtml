@@ -359,9 +359,18 @@
 
 
                                         if (isExternLink) {
-                                            //$("#data-link" + this.id).attr('href', decodeURIComponent(link));
+                                            $fileserverLink = $("#data-link" + this.id).attr('href');
+                                            $("#data-link" + this.id).attr('href', decodeURIComponent(link));
+                                            $("#data-link" + this.id).attr('data-link-org', $fileserverLink);
+                                            
                                             $("#data-link" + this.id).attr('target','_blank');
                                             $("#data-link" + this.id).html($("#data-link" + this.id).html() + " (External Link)");
+                                            
+                                            $("#data-link" + this.id).click(function (event) {
+                                                event.preventDefault();
+                                                $fileserverLink = $(this).attr('data-link-org');
+                                                window.open($fileserverLink, '_blank');
+                                            });
                                         }
 
                                         //fileSizeSum += parseInt(this.size);
@@ -514,9 +523,9 @@
 	                                     $("#data-select-packagetype" + this.id).hide();
 
 	                                     if (isExternLink) {
-	                                         //$("#data-link" + this.id).attr('href', decodeURIComponent(link));
-                                             $("#data-link" + this.id).attr('target','_blank');
-	                                         $("#data-link" + this.id).html($("#data-link" + this.id).html() + " (External Link)");
+	                                        //$("#data-link" + this.id).attr('href', decodeURIComponent(link));
+                                                $("#data-link" + this.id).attr('target','_blank');
+	                                        $("#data-link" + this.id).html($("#data-link" + this.id).html() + " (External Link)");
 	                                     }
 
 	                                     //fileSizeSum += parseInt(this.size);
