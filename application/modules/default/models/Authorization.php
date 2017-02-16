@@ -108,7 +108,7 @@ class Default_Model_Authorization
     /**
      * @param bool $setRememberMe
      */
-    protected function updateRememberMe($setRememberMe = false)
+    public function updateRememberMe($setRememberMe = false)
     {
         $modelRememberMe = new Default_Model_RememberMe();
 //        if (false == $setRememberMe) {

@@ -39,13 +39,23 @@ $helperImage = new Default_View_Helper_Image();
                 <div id="social-register" class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                     <h3></h3>
 
-                    <div class="bottom">
-                        <div id="show-login-description" class="small light lightgrey">Already have an account?</div>
-                        <div class="login2">
-                            <a href="/login/" id="show-login-form" class="btn btn-native btn-min-width">
-                                <i class="icon-white icon-lock"></i>
-                                Login
+                    <div id="social-login-elements">
+                        <div class="register-facebook">
+                            <p class="small center light greylight">Register</p>
+                            <a  href="/oauth/register/provider/github/" class="btn btn-block btn-social btn-github">
+                                <span class="fa fa-github"></span>
+                                with Github
                             </a>
+                        </div>
+
+                        <div class="bottom margin-top-15">
+                            <div id="show-login-description" class="small light lightgrey">Already have an account?</div>
+                            <div class="login2">
+                                <a href="/login/" id="show-login-form" class="btn btn-native btn-min-width">
+                                    <i class="icon-white icon-lock"></i>
+                                    Login
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
