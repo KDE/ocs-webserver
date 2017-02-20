@@ -40,7 +40,7 @@
                                 </div>
                                 <div class="modal-body">
 
-                                <iframe src="https://xdgurl.github.io/xdgurl/opendesktoporg-help.html" width="100%" height="500" frameborder="0" seamless id="iframeInstallInstruction"></iframe>
+                                <iframe src="https://ocs-url.github.io/ocs-url/opendesktoporg-help.html" width="100%" height="500" frameborder="0" seamless id="iframeInstallInstruction"></iframe>
                                 </div>
                             </div>
                         </div>
@@ -262,16 +262,16 @@
                                          });
                                      }
 
-                                     var xdgUrl = '';
+                                     var ocsUrl = '';
                                      /*if (typeof link !== 'undefined' && link) {
-                                         xdgUrl = generateXdgUrl(
+                                         ocsUrl = generateOcsUrl(
                                              decodeURIComponent(link),
                                              $pploadCollection.attr('data-xdg-type')
                                          );
                                      }
                                      else {*/
                                      if (!link) {
-                                         xdgUrl = generateXdgUrl(
+                                         ocsUrl = generateOcsUrl(
                                              downloadUrl,
                                              $pploadCollection.attr('data-xdg-type'),
                                              this.name
@@ -279,8 +279,8 @@
                                      }
 
                                      var installButton = '';
-                                     if (this.active && xdgUrl) {
-                                         installButton = '<a href="' + xdgUrl + '" class="btn btn-native btn-min-width">Install</a> <a href="#modal-installation-instructions" role="button" data-toggle="modal"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></a> ';
+                                     if (this.active && ocsUrl) {
+                                         installButton = '<a href="' + ocsUrl + '" class="btn btn-native btn-min-width">Install</a> <a href="#modal-installation-instructions" role="button" data-toggle="modal"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></a> ';
                                      }
 
                                     //if(this.active == '1') {
@@ -602,14 +602,14 @@
                          });
                      }
 
-                     function generateXdgUrl(url, type, filename) {
+                     function generateOcsUrl(url, type, filename) {
                          if (!url || !type) {
                              return '';
                          }
                          if (!filename) {
                              filename = url.split('/').pop().split('?').shift();
                          }
-                         return 'xdg://install'
+                         return 'xdg://install' // 'ocs://install'
                             + '?url=' + encodeURIComponent(url)
                             + '&type=' + encodeURIComponent(type)
                             + '&filename=' + encodeURIComponent(filename);
@@ -713,7 +713,7 @@
                     $('#modal-installation-instructions').on('show.bs.modal', function (e) {
                               var iframe = document.getElementById('iframeInstallInstruction');
                               var leg=$(iframe).attr("src");
-                              $(iframe).attr("src","https://xdgurl.github.io/xdgurl/opendesktoporg-help.html");
+                              $(iframe).attr("src","https://ocs-url.github.io/ocs-url/opendesktoporg-help.html");
                         });
 
                 });
