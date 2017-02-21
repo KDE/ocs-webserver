@@ -1504,217 +1504,333 @@ $categoryPath[] = $valueCatId;
         });
     </script>
   <script>
-      $.fn.sortSelect = function() {
-          var op = this.children("option");
-          op.sort(function(a, b) {
-              return a.text > b.text ? 1 : -1;
-          })
-          return this.empty().append(op);
-      }
+ //     $(document).ready(function(){
 
-      $.fn.sort_select_box = function(){
-          var my_options = $("option", $(this));
-          my_options.sort(function(a,b) {
-              if (a.text > b.text) return 1;
-              else if (a.text < b.text) return -1;
-              else return 0
-          });
-          $(this).empty().append(my_options);
-      }
+          $.fn.sortSelect = function() {
+              var op = this.children("option");
+              op.sort(function(a, b) {
+                  return a.text > b.text ? 1 : -1;
+              })
+              return this.empty().append(op);
+          }
 
-      ProductForm = {
-
-          mode: "<?=$this->mode?>",
-          project_id: <?php echo ($this->mode == 'edit') ? $this->project_id : '$(\'#project_id\').val()'?>,
-          errors: "",
-          cc_license_isStored: <?=$this->form->cc_license->getValue() == true ? 'true' : 'false'?>,
-          cc_license_data: {
-              by:<?=$this->cc_attribution == true ? 'true' : 'false'?>,
-              nc:<?=$this->cc_commercial == true ? 'true' : 'false'?>,
-              nd:<?=$this->cc_derivate_works == true ? 'true' : 'false'?>,
-              sa:<?=$this->cc_share == true ? 'true' : 'false'?>
-          },
-          cat_id_data: <?=json_encode($categories)?>,
-          cat_id_path: <?=json_encode($categoryPath)?>,
-
-
-          setup: function () {
-              this.setupCategorySelect();
-              this.setupCategoryAjax();
-//              this.setupCcLicenseActions();
-//              this.setLicenseCheckbox();
-//              this.setCssLicenseSummary();
-//              this.setCCLicenseVisibility();
-          },
-
-          setupCategorySelect: function() {
-              var level = 0;
-              for (var form_elem_name in this.cat_id_data) {
-                  var nextElementName = form_elem_name.substring(0, form_elem_name.length - 1) + (level + 1);
-                  var new_html_element = '<select name="' + form_elem_name + '" id="' + form_elem_name + '" class="required form-control product_select_cat" data-target="'+nextElementName+'" data-level="'+level+'">';
-                  new_html_element += '<option value=""> </option>';
-                  for (var form_select_option in this.cat_id_data[form_elem_name]) {
-                      var attr_selected = '';
-                      if (form_select_option == this.cat_id_path[level]) {
-                          attr_selected = ' selected="selected"'
-                      }
-                      new_html_element += '<option value="' + form_select_option + '" ' + attr_selected + '>' + this.cat_id_data[form_elem_name][form_select_option] + '</option>';
-                  }
-                  new_html_element += '</select>';
-                  $('#wrapper_cat_id').append(new_html_element);
-                  this.sortOptionByValue(form_elem_name);
-                  level++;
-              }
-          },
-
-          sortOptionByValue: function(element_id) {
-              var my_options = $("#"+element_id + " option");
-              var selected = $("#"+element_id).val();
-
+          $.fn.sort_select_box = function(){
+              var my_options = $("option", $(this));
               my_options.sort(function(a,b) {
                   if (a.text > b.text) return 1;
                   else if (a.text < b.text) return -1;
-                  else return 0;
-              })
-              $("#"+element_id).empty().append( my_options );
-              $("#"+element_id).val(selected);
-          },
-
-
-          setupCategoryAjax: function () {
-              $('body').on('change', 'div#wrapper_cat_id select.product_select_cat', function () {
-
-                  var cat_id = $(this).val();
-                  var name_new_elem = $(this).data('target');
-                  var level_elem = $(this).data('level') + 1;
-                  var level_new_elem = level_elem + 1;
-                  var name_new_target = name_new_elem.substring(0,name_new_elem.length - 1) + level_new_elem;
-
-                  if (!cat_id) {
-                      $('#wrapper_form_cat input:hidden:first').val($('#wrapper_cat_id').find("[data-level]:lt(" + (level_elem - 1) + ")").val());
-                      $('#wrapper_cat_id').find("[data-level]:gt(" + (level_elem - 1) + ")").remove();
-                      return;
-                  }
-                  $('#wrapper_form_cat input:hidden:first').val(cat_id);
-
-                  jQuery.ajax({
-                      data: {'cat_id': cat_id},
-                      url: '/productcategory/fetchchildren/',
-                      type: 'post',
-                      success: function (results) {
-                          $('#wrapper_cat_id').find("[data-level]:gt(" + (level_elem - 1) + ")").remove();
-                          if (!$.isEmptyObject(results)) {
-                              var new_html_element = '<select name="' + name_new_elem + '" id="' + name_new_elem + '" class="required form-control product_select_cat" data-target="'+name_new_target+'" data-level="'+level_elem+'">';
-                              new_html_element += '<option value=""> </option>';
-                              for (var i in results) {
-                                  new_html_element += '<option value="' + results[i].project_category_id + '">' + results[i].title + '</option>';
-                              }
-                              new_html_element += '</select>';
-
-                              $('#wrapper_cat_id').append(new_html_element);
-                        }
-                    }
-                  });
+                  else return 0
               });
-          },
-
-          setupCcLicenseActions: function () {
-              $('body').on('change', '#license-text input[type="checkbox"]', function () {
-                  if ($(this).attr('data-name') == 'sa') {
-                      $('#cc_non_derivative_works').prop('checked', false);
-                      ProductForm.cc_license_data.nd = false;
-                  }
-                  if ($(this).attr('data-name') == 'nd') {
-                      $('#cc_share_alike').prop('checked', false);
-                      ProductForm.cc_license_data.sa = false;
-                  }
-                  ProductForm.updateLicenseData($(this).attr('data-name'), $(this).is(':checked'));
-              }).on('click', '#cc_attribution', function (event) {
-                  event.stopPropagation();
-                  return false;
-              });
-          },
-
-          saveSection: function (sectionId) {
-              var pid = <?php echo ($this->mode == 'edit') ? $this->project_id : '$(\'#project_id\').val()'?>;
-              if (pid != '') {
-                  return;
-              }
-
-              var url = '/p/save/';
-              var data = $('#' + sectionId + ' :input').serialize();
-              var result = false;
-
-              jQuery.ajax({
-                  data: data,
-                  url: url,
-                  type: 'post',
-                  async: false
-              }).done(function (data, textStatus, jqXHR) {
-                  if (data.project_id == undefined) {
-                      ProductForm.project_id = '';
-                  } else {
-                      ProductForm.project_id = data.project_id;
-                  }
-                  if (data.status == 'error') {
-                      ProductForm.errors = data.messages;
-                      result = false;
-                  } else {
-                      result = true;
-                  }
-
-              }).fail(function (jqXHR, textStatus, errorThrown) {
-
-              }).always(function (data, textStatus, errorThrown) {
-
-              });
-
-              return result;
-          },
-
-          showErrors: function () {
-              $.each(this.errors, function (index, value) {
-                  $('[name=' + index + ']').append('<label id="title-error" class="error" for="title">' + value + '</label>');
-              });
-          },
-
-          setLicenseCheckbox: function () {
-              $('#cc_license').prop('checked', this.cc_license_isStored);
-              $('#cc_attribution').prop('checked', this.cc_license_data.by);
-              $('#cc_commercial').prop('checked', this.cc_license_data.nc);
-              $('#cc_non_derivative_works').prop('checked', this.cc_license_data.nd);
-              $('#cc_share_alike').prop('checked', this.cc_license_data.sa);
-          },
-
-          setCssLicenseSummary: function () {
-              var css_license = this.buildCssLicense(this.cc_license_data);
-              $('.cc-license-icon').attr('class', css_license);
-          },
-
-          buildCssLicense: function (obj) {
-              var result = "cc-license-icon cc-license-icon";
-              for (var i in obj) {
-                  if (obj.hasOwnProperty(i) && obj[i]) {
-                      result += "-" + i;
-                  }
-              }
-              return result;
-          },
-
-          updateLicenseData: function (attr, value) {
-              this.cc_license_data[attr] = value;
-              this.setCssLicenseSummary();
-          },
-
-          setCCLicenseVisibility: function () {
-              if (this.cc_license_isStored == false) {
-                  $('#cc_summary').collapse();
-                  $('#license-text').collapse();
-              }
+              $(this).empty().append(my_options);
           }
 
-      };
-    </script>
+          ProductForm = {
+
+              mode: "<?=$this->mode?>",
+              project_id: <?php echo ($this->mode == 'edit') ? $this->project_id : '$(\'#project_id\').val()'?>,
+              errors: "",
+              cc_license_isStored: <?=$this->form->cc_license->getValue() == true ? 'true' : 'false'?>,
+              cc_license_data: {
+                  by:<?=$this->cc_attribution == true ? 'true' : 'false'?>,
+                  nc:<?=$this->cc_commercial == true ? 'true' : 'false'?>,
+                  nd:<?=$this->cc_derivate_works == true ? 'true' : 'false'?>,
+                  sa:<?=$this->cc_share == true ? 'true' : 'false'?>
+              },
+              cat_id_data: <?=json_encode($categories)?>,
+              cat_id_path: <?=json_encode($categoryPath)?>,
+
+
+              setup: function () {
+                  this.setupCategorySelect();
+                  this.setupCategoryAjax();
+    //              this.setupCcLicenseActions();
+    //              this.setLicenseCheckbox();
+    //              this.setCssLicenseSummary();
+    //              this.setCCLicenseVisibility();
+              },
+
+              setupCategorySelect: function() {
+                  var level = 0;
+                  for (var form_elem_name in this.cat_id_data) {
+                      var nextElementName = form_elem_name.substring(0, form_elem_name.length - 1) + (level + 1);
+                      var new_html_element = '<select name="' + form_elem_name + '" id="' + form_elem_name + '" class="required form-control product_select_cat" data-target="'+nextElementName+'" data-level="'+level+'">';
+                      new_html_element += '<option value=""> </option>';
+                      for (var form_select_option in this.cat_id_data[form_elem_name]) {
+                          var attr_selected = '';
+                          if (form_select_option == this.cat_id_path[level]) {
+                              attr_selected = ' selected="selected"'
+                          }
+                          new_html_element += '<option value="' + form_select_option + '" ' + attr_selected + '>' + this.cat_id_data[form_elem_name][form_select_option] + '</option>';
+                      }
+                      new_html_element += '</select>';
+                      $('#wrapper_cat_id').append(new_html_element);
+                      this.sortOptionByValue(form_elem_name);
+                      level++;
+                  }
+              },
+
+              sortOptionByValue: function(element_id) {
+                  var my_options = $("#"+element_id + " option");
+                  var selected = $("#"+element_id).val();
+
+                  my_options.sort(function(a,b) {
+                      if (a.text > b.text) return 1;
+                      else if (a.text < b.text) return -1;
+                      else return 0;
+                  })
+                  $("#"+element_id).empty().append( my_options );
+                  $("#"+element_id).val(selected);
+              },
+
+
+              setupCategoryAjax: function () {
+                  $('body').on('change', 'div#wrapper_cat_id select.product_select_cat', function () {
+
+                      var cat_id = $(this).val();
+                      var name_new_elem = $(this).data('target');
+                      var level_elem = $(this).data('level') + 1;
+                      var level_new_elem = level_elem + 1;
+                      var name_new_target = name_new_elem.substring(0,name_new_elem.length - 1) + level_new_elem;
+
+                      if (!cat_id) {
+                          $('#wrapper_form_cat input:hidden:first').val($('#wrapper_cat_id').find("[data-level]:lt(" + (level_elem - 1) + ")").val());
+                          $('#wrapper_cat_id').find("[data-level]:gt(" + (level_elem - 1) + ")").remove();
+                          return;
+                      }
+                      $('#wrapper_form_cat input:hidden:first').val(cat_id);
+
+                      jQuery.ajax({
+                          data: {'cat_id': cat_id},
+                          url: '/productcategory/fetchchildren/',
+                          type: 'post',
+                          success: function (results) {
+                              $('#wrapper_cat_id').find("[data-level]:gt(" + (level_elem - 1) + ")").remove();
+                              if (!$.isEmptyObject(results)) {
+                                  var new_html_element = '<select name="' + name_new_elem + '" id="' + name_new_elem + '" class="required form-control product_select_cat" data-target="'+name_new_target+'" data-level="'+level_elem+'">';
+                                  new_html_element += '<option value=""> </option>';
+                                  for (var i in results) {
+                                      new_html_element += '<option value="' + results[i].project_category_id + '">' + results[i].title + '</option>';
+                                  }
+                                  new_html_element += '</select>';
+
+                                  $('#wrapper_cat_id').append(new_html_element);
+                            }
+                        }
+                      });
+                  });
+              },
+
+              setupCcLicenseActions: function () {
+                  $('body').on('change', '#license-text input[type="checkbox"]', function () {
+                      if ($(this).attr('data-name') == 'sa') {
+                          $('#cc_non_derivative_works').prop('checked', false);
+                          ProductForm.cc_license_data.nd = false;
+                      }
+                      if ($(this).attr('data-name') == 'nd') {
+                          $('#cc_share_alike').prop('checked', false);
+                          ProductForm.cc_license_data.sa = false;
+                      }
+                      ProductForm.updateLicenseData($(this).attr('data-name'), $(this).is(':checked'));
+                  }).on('click', '#cc_attribution', function (event) {
+                      event.stopPropagation();
+                      return false;
+                  });
+              },
+
+              saveSection: function (sectionId) {
+                  var pid = <?php echo ($this->mode == 'edit') ? $this->project_id : '$(\'#project_id\').val()'?>;
+                  if (pid != '') {
+                      return;
+                  }
+
+                  var url = '/p/save/';
+                  var data = $('#' + sectionId + ' :input').serialize();
+                  var result = false;
+
+                  jQuery.ajax({
+                      data: data,
+                      url: url,
+                      type: 'post',
+                      async: false
+                  }).done(function (data, textStatus, jqXHR) {
+                      if (data.project_id == undefined) {
+                          ProductForm.project_id = '';
+                      } else {
+                          ProductForm.project_id = data.project_id;
+                      }
+                      if (data.status == 'error') {
+                          ProductForm.errors = data.messages;
+                          result = false;
+                      } else {
+                          result = true;
+                      }
+
+                  }).fail(function (jqXHR, textStatus, errorThrown) {
+
+                  }).always(function (data, textStatus, errorThrown) {
+
+                  });
+
+                  return result;
+              },
+
+              showErrors: function () {
+                  $.each(this.errors, function (index, value) {
+                      $('[name=' + index + ']').append('<label id="title-error" class="error" for="title">' + value + '</label>');
+                  });
+              },
+
+              setLicenseCheckbox: function () {
+                  $('#cc_license').prop('checked', this.cc_license_isStored);
+                  $('#cc_attribution').prop('checked', this.cc_license_data.by);
+                  $('#cc_commercial').prop('checked', this.cc_license_data.nc);
+                  $('#cc_non_derivative_works').prop('checked', this.cc_license_data.nd);
+                  $('#cc_share_alike').prop('checked', this.cc_license_data.sa);
+              },
+
+              setCssLicenseSummary: function () {
+                  var css_license = this.buildCssLicense(this.cc_license_data);
+                  $('.cc-license-icon').attr('class', css_license);
+              },
+
+              buildCssLicense: function (obj) {
+                  var result = "cc-license-icon cc-license-icon";
+                  for (var i in obj) {
+                      if (obj.hasOwnProperty(i) && obj[i]) {
+                          result += "-" + i;
+                      }
+                  }
+                  return result;
+              },
+
+              updateLicenseData: function (attr, value) {
+                  this.cc_license_data[attr] = value;
+                  this.setCssLicenseSummary();
+              },
+
+              setCCLicenseVisibility: function () {
+                  if (this.cc_license_isStored == false) {
+                      $('#cc_summary').collapse();
+                      $('#license-text').collapse();
+                  }
+              }
+
+          };
+
+          var ProductGallery = (function () {
+              var maxImageCount = 5;
+
+              return {
+
+                  setup: function () {
+                      $('body').on({
+                          mouseenter: function () {
+                              $(this).find('.icon-check').hide();
+                              $(this).find('.icon-cross').show();
+                          },
+                          mouseleave: function () {
+                              $(this).find('.icon-check').show();
+                              $(this).find('.icon-cross').hide();
+                          }
+                      }, '.product-image');
+                      $('body').on('click', '.icon-cross', function () {
+                          $(this).closest('.product-image').remove();
+                          ProductGallery.incImageCount();
+                      });
+                  },
+
+                  previewImage: function (input) {
+
+                      if (!input.files.length) {
+                          return;
+                      }
+
+                      maxImageCount--;
+
+                      var reader = new FileReader();
+                      var image = new Image();
+                      var file = input.files[0];
+
+                      reader.readAsDataURL(file);
+                      reader.onload = function (_image) {
+
+                          $('#gallery-error').remove();
+
+                          $('.product-image').last().append('<div class="absolute icon-check"></div>' +
+                              '<div class="absolute icon-cross"></div>' +
+                              '<div class="image" style="background-image: url(' + _image.target.result + ');"></div>'
+                          );
+                          $('.product-image').last().after('<div class="product-image relative">' +
+                              '<input type="file" name="upload_picture[]" class="gallery-picture" onchange="ProductGallery.previewImage(this);"></div>'
+                          );
+                          if (maxImageCount <= 0) {
+                              $('.upload-image-container').hide();
+                          }
+
+                          image.src = _image.target.result;              // url.createObjectURL(file);
+                          image.onload = function () {
+                              var w = this.width,
+                                  h = this.height,
+                                  t = file.type,                           // ext only: // file.type.split('/')[1],
+                                  n = file.name,
+                                  s = ~~(file.size / 5120)// +'KB';
+                              //if (w > 1024 || w < 100 || h > 768 || h < 75) {
+                              //    $('.product-image').last().prev()
+                              //        .find('div.icon-check')
+                              //        .after('<div class="image-error">Wrong image dimensions</div>')
+                              //        .removeClass('icon-check')
+                              //        .addClass('icon-report')
+                              //    ;
+                              //    $('.product-image').last().prev()
+                              //        .find('input.gallery-picture').remove()
+                              //        .append('<input type="file" name="upload_picture[]" class="gallery-picture" onchange="ProductGallery.previewImage(this);"></div>')
+                              //    ;
+                              //}
+                              if (s > 5120) {
+                                  $('.product-image').last().prev()
+                                      .find('div.icon-check')
+                                      .after('<div class="image-error">File too large</div>')
+                                      .removeClass('icon-check')
+                                      .addClass('icon-report')
+                                  ;
+                                  $('.product-image').last().prev()
+                                      .find('input.gallery-picture').remove()
+                                      .append('<input type="file" name="upload_picture[]" class="gallery-picture" onchange="ProductGallery.previewImage(this);"></div>')
+                                  ;
+                              }
+                          };
+                          ;
+                          image.onerror = function () {
+                              $('.product-image').last().prev().find('div.image').append('Invalid file type: ' + file.type);
+                          };
+                      }
+                  },
+                  thumbClick: function (element) {
+                      var index = $(element).attr('data-index');
+                      $('.thumb').removeClass('thumb-active');
+                      $(element).parent().addClass('thumb-active');
+                      $('#gallery-carousel').find('.active').removeClass('active');
+                      $('#gallery-carousel').find('.item[data-index="' + index + '"]').addClass('active');
+
+                  },
+                  gallerySlide: function () {
+                      var index = $('#gallery-carousel').find('.active').attr('data-index');
+                      $('.thumb-active').removeClass('thumb-active');
+                      $('.thumb a[data-index="' + index + '"]').parent().addClass('thumb-active');
+                  },
+                  incImageCount: function () {
+                      if (maxImageCount < 5) {
+                          maxImageCount = maxImageCount + 1;
+                      }
+                      $('.upload-image-container').show();
+                  }
+
+              };
+          })();
+
+//      });
+
+  </script>
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
             ImagePreview.setup();

@@ -79,24 +79,6 @@ if (true === empty($this->catid) && true === empty($domainCategoryFilterId)) {
             </section>
         </section>
 
-        <?php /*
-        <section class="wrapper" id="products">
-            <section class="container">
-                <div class="row">
-                    <div class="categories">
-                        <?php
-                        foreach ($categories as $category) {
-                            echo '<a class="category" rel="' . $category['project_category_id'] . '" href="' . $helperBuildExploreUrl->buildExploreUrl($category['project_category_id']) . '">' . $category['title'] . '</a>';
-                        }
-                        ?>
-                    </div>
-                    <div class="products" id="category-products">
-                        <?php echo $this->partialLoop('partials/loopProductsHome128.phtml', $products) ?>
-                    </div>
-                </div>
-            </section>
-        </section>
-		*/?>
         <?php
         $helperSearchCategories = new Default_View_Helper_FetchDomainCategories();
         $categories = $helperSearchCategories->fetchDomainCategories($domainCategoryFilterId);
@@ -150,77 +132,6 @@ if (true === empty($this->catid) && true === empty($domainCategoryFilterId)) {
                 </div>
             </div>
         </section>
-
-        <?php /*
-
-        <section class="wrapper" id="blue">
-            <section class="container">
-                <h2>Register Your Product</h2>
-
-                <h3>to start collecting donations without additional fees</h3>
-            </section>
-        </section>
-        <section class="wrapper" id="presentation">
-            <section class="container">
-                <div class="row">
-                    <?php /
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-sm-12 section-title">
-                        <h2>A new way to do donations</h2>
-                    </div>
-                    / ?>
-                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 item">
-                        <div class="row">
-                            <figure class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                                <img src="/theme/flatui/img/new/1-icon-customize.png"/>
-                            </figure>
-                            <article class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-                                <h3>Customize Button</h3>
-
-                                <p>Customize size and color of the pling button, show $ amount or # supporters.</p>
-                            </article>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 item">
-                        <div class="row">
-                            <figure class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                                <img src="/theme/flatui/img/new/3-icon-list.png"/>
-                            </figure>
-                            <article class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-                                <h3>Donation List</h3>
-
-                                <p>Receive donations + comments and interact via reply.</p>
-                            </article>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 item">
-                        <div class="row">
-                            <figure class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                                <img src="/theme/flatui/img/new/2-icon-box.png"/>
-                            </figure>
-                            <article class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-                                <h3>Supporter Box</h3>
-
-                                <p>Build a community of supporters and show them on your products site.</p>
-                            </article>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 item">
-                        <div class="row">
-                            <figure class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                                <img src="/theme/flatui/img/new/4-icon-payment.png"/>
-                            </figure>
-                            <article class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-                                <h3>Multiple Payment Providers</h3>
-
-                                <p>Select between different payment providers (currently: Paypal, more in the near
-                                   future)</p>
-                            </article>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </section>
-		*/?>
     </main>
 
 
@@ -291,7 +202,6 @@ if (true === empty($this->catid) && true === empty($domainCategoryFilterId)) {
     </script>
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
-            FormCreateButton.setup();
-            //HomePageCarousel.setup();
+
         });
     ');

@@ -144,12 +144,62 @@ $this->tab = 'settings';
     </section>
 
 </main>
+<script type="application/javascript">
+    var SettingsExpand = (function () {
+        return {
+            setup: function () {
+                $('.panel-heading').on('click', function () {
 
+                    var this_panel = $(this).parents('.panel');
+                    var this_panel_body = this_panel.find('.panel-collapse');
+
+                    if (this_panel_body.hasClass('in')) {
+                        $(this).removeClass('active');
+                    } else {
+                        $(this).addClass('active');
+                    }
+
+                });
+            }
+        };
+    })();
+
+    var InputAvatar = (function () {
+        return {
+            setup: function () {
+                $('body').on("change", 'input.avatar', function (event) {
+                    event.preventDefault();
+                    var username = this.value;
+                    var dataHref = $(this).attr("data-href");
+                    var target = $(this).attr("data-target");
+                    var dataFunc = $(this).attr("data-func");
+                    var dataSrc = $(this).data('src');
+
+                    if (dataFunc) {
+                        var funcCall = dataFunc + '(\'' + username + '\')';
+                        username = eval(funcCall);
+                    }
+
+                    var imageSrc = dataHref.replace('{username}', username);
+                    $(target).attr('src', imageSrc);
+                    $('#profile_img_src').val(dataSrc);
+
+                    return false;
+                });
+                $('body').on("change", 'input#profile_picture_upload', function (event) {
+                    event.preventDefault();
+                    $('#profile_img_src').val('local');
+                });
+            }
+        }
+    })();
+
+    SettingsExpand.setup();
+    InputAvatar.setup();
+</script>
 
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
-            SettingsExpand.setup();
-            InputAvatar.setup();
             ImagePreview.setup();
             PartialForms.setup();
         });
