@@ -40,7 +40,7 @@ class Ocsv1Controller extends Zend_Controller_Action
         'icon' => '',
         'termsofuse' => 'https://www.opendesktop.org/terms',
         'register' => 'https://www.opendesktop.org/register',
-        'version' => '1.6',
+        'version' => '1.7',
         'website' => 'www.opendesktop.org',
         'host' => 'www.opendesktop.org',
         'contact' => 'contact@opendesktop.org',
@@ -976,6 +976,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                         $downloadItems['downloadrepository' . $i] = '';
                         $downloadItems['download_package_type' . $i] = $tags['packagetypeid'];
                         $downloadItems['download_package_arch' . $i] = $tags['packagearch'];
+                        $downloadItems['download_ghns' . $i] = $tags['ghns'];
                         $i++;
                     }
                 }
@@ -1363,6 +1364,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                             $downloadItems['downloadrepository' . $i] = '';
                             $downloadItems['download_package_type' . $i] = $tags['packagetypeid'];
                             $downloadItems['download_package_arch' . $i] = $tags['packagearch'];
+                            $downloadItems['download_ghns' . $i] = $tags['ghns'];
                             $i++;
                         }
                     }
@@ -1502,7 +1504,8 @@ class Ocsv1Controller extends Zend_Controller_Action
             'link' => '',
             'licensetype' => '',
             'packagetypeid' => '',
-            'packagearch' => ''
+            'packagearch' => '',
+            'ghns' => ''
         );
         foreach ($tags as $tag) {
             $tag = trim($tag);
@@ -1514,6 +1517,8 @@ class Ocsv1Controller extends Zend_Controller_Action
                 $parsedTags['packagetypeid'] = str_replace('packagetypeid-', '', $tag);
             } else if (strpos($tag, 'packagearch-') === 0) {
                 $parsedTags['packagearch'] = str_replace('packagearch-', '', $tag);
+            } else if (strpos($tag, 'ghns-') === 0) {
+                $parsedTags['ghns'] = str_replace('ghns-', '', $tag);
             }
         }
         return $parsedTags;
@@ -1589,7 +1594,8 @@ class Ocsv1Controller extends Zend_Controller_Action
                         'packagename' => '',
                         'repository' => '',
                         'download_package_type' => $tags['packagetypeid'],
-                        'download_package_arch' => $tags['packagearch']
+                        'download_package_arch' => $tags['packagearch'],
+                        'download_ghns' => $tags['ghns']
                     )
                 )
             );
@@ -1611,7 +1617,8 @@ class Ocsv1Controller extends Zend_Controller_Action
                         'packagename' => array('@text' => ''),
                         'repository' => array('@text' => ''),
                         'download_package_type' => array('@text' => $tags['packagetypeid']),
-                        'download_package_arch' => array('@text' => $tags['packagearch'])
+                        'download_package_arch' => array('@text' => $tags['packagearch']),
+                        'download_ghns' => array('@text' => $tags['ghns'])
                     )
                 )
             );
