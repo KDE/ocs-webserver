@@ -40,7 +40,7 @@ class Ocsv1Controller extends Zend_Controller_Action
         'icon' => '',
         'termsofuse' => 'https://www.opendesktop.org/terms',
         'register' => 'https://www.opendesktop.org/register',
-        'version' => '1.6',
+        'version' => '1.7',
         'website' => 'www.opendesktop.org',
         'host' => 'www.opendesktop.org',
         'contact' => 'contact@opendesktop.org',
