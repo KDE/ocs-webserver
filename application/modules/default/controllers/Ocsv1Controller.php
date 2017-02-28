@@ -976,6 +976,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                         $downloadItems['downloadrepository' . $i] = '';
                         $downloadItems['download_package_type' . $i] = $tags['packagetypeid'];
                         $downloadItems['download_package_arch' . $i] = $tags['packagearch'];
+                        $downloadItems['download_ghns' . $i] = $tags['ghns'];
                         $i++;
                     }
                 }
@@ -1363,6 +1364,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                             $downloadItems['downloadrepository' . $i] = '';
                             $downloadItems['download_package_type' . $i] = $tags['packagetypeid'];
                             $downloadItems['download_package_arch' . $i] = $tags['packagearch'];
+                            $downloadItems['download_ghns' . $i] = $tags['ghns'];
                             $i++;
                         }
                     }
@@ -1592,7 +1594,8 @@ class Ocsv1Controller extends Zend_Controller_Action
                         'packagename' => '',
                         'repository' => '',
                         'download_package_type' => $tags['packagetypeid'],
-                        'download_package_arch' => $tags['packagearch']
+                        'download_package_arch' => $tags['packagearch'],
+                        'download_ghns' => $tags['ghns']
                     )
                 )
             );
@@ -1614,7 +1617,8 @@ class Ocsv1Controller extends Zend_Controller_Action
                         'packagename' => array('@text' => ''),
                         'repository' => array('@text' => ''),
                         'download_package_type' => array('@text' => $tags['packagetypeid']),
-                        'download_package_arch' => array('@text' => $tags['packagearch'])
+                        'download_package_arch' => array('@text' => $tags['packagearch']),
+                        'download_ghns' => array('@text' => $tags['ghns'])
                     )
                 )
             );
