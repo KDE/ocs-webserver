@@ -1502,7 +1502,8 @@ class Ocsv1Controller extends Zend_Controller_Action
             'link' => '',
             'licensetype' => '',
             'packagetypeid' => '',
-            'packagearch' => ''
+            'packagearch' => '',
+            'ghns' => ''
         );
         foreach ($tags as $tag) {
             $tag = trim($tag);
@@ -1514,6 +1515,8 @@ class Ocsv1Controller extends Zend_Controller_Action
                 $parsedTags['packagetypeid'] = str_replace('packagetypeid-', '', $tag);
             } else if (strpos($tag, 'packagearch-') === 0) {
                 $parsedTags['packagearch'] = str_replace('packagearch-', '', $tag);
+            } else if (strpos($tag, 'ghns-') === 0) {
+                $parsedTags['ghns'] = str_replace('ghns-', '', $tag);
             }
         }
         return $parsedTags;
