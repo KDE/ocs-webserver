@@ -528,12 +528,13 @@ var Partials = (function () {
                         if (xhr.status == 401) {
                             if (response) {
                                 var data = jQuery.parseJSON(response);
-                                var redirect = data.data;
+                                var redirect = data.login_url;
                                 if (redirect) {
-                                    var urlParam = '?redirect=' + redirect;
+                                    window.location = redirect;
+                                } else {
+                                    window.location = "/login";
                                 }
                             }
-                            window.location = "/login" + urlParam;
                         } else {
                             $(target).empty().html('Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.');
                         }
@@ -599,7 +600,7 @@ var PartialJson = (function () {
                     success: function (data, textStatus) {
                         if (data.redirect) {
                             // data.redirect contains the string URL to redirect to
-                            window.location.href = data.redirect;
+                            window.location = data.redirect;
                             return;
                         }
                         if (target) {
