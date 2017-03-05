@@ -609,7 +609,7 @@
                          if (!filename) {
                              filename = url.split('/').pop().split('?').shift();
                          }
-                         return 'xdg://install' // 'ocs://install'
+                         return 'ocs://install'
                             + '?url=' + encodeURIComponent(url)
                             + '&type=' + encodeURIComponent(type)
                             + '&filename=' + encodeURIComponent(filename);
