@@ -117,7 +117,7 @@ Still no luck? Search for whatever is missing, or take a look around the rest of
                 'status' => 'error',
                 'title' => '<h4 class="modal-title">Authorization required.</h4>',
                 'message' => '<p>Your session may be outdated or authorization is required. Please <strong><a href="' . $loginUri . '">login</a></strong> or <strong><a href="/register">register</a></strong> to get access to this function/page.</p>',
-                'data' => $loginUri
+                'login_url' => $loginUri
             ));
         }
     }

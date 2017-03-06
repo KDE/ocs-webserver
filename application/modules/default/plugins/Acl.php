@@ -107,7 +107,7 @@ class Default_Plugin_Acl extends Zend_Controller_Plugin_Abstract
                     $this->_request->setControllerName($this->_noauth['controller']);
                     $this->_request->setActionName($this->_noauth['action']);
                 } else {
-                    $this->_request->setParam('redirect', urlencode($encryptUrl));
+                    $this->_request->setParam('redirect', $encryptUrl);
                     $this->_request->setModuleName($this->_authRequired['module']);
                     $this->_request->setControllerName($this->_authRequired['controller']);
                     $this->_request->setActionName($this->_authRequired['action']);
