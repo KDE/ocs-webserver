@@ -252,8 +252,8 @@ class Default_Model_RememberMe
         $domain = Local_Tools_ParseDomain::get_domain($this->request->getHttpHost());
         $cookieExpire = time() - $this->cookieTimeout;
 
-        setcookie($this->cookieName, null, $cookieExpire, '/', $this->request->getHttpHost(), null, true);
-        setcookie($this->cookieName, null, $cookieExpire, '/', $domain, null, true);
+        setcookie($this->cookieName, false, $cookieExpire, '/', $this->request->getHttpHost(), null, true);
+        setcookie($this->cookieName, false, $cookieExpire, '/', $domain, null, true);
     }
 
 } 

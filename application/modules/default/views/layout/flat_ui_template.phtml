@@ -19,8 +19,7 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-?>
-<!doctype html>
+?><!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -111,6 +110,11 @@
 <script type="text/javascript" src="/tools/fancybox2.1.4/jquery.fancybox.pack.js?v=2.1.4"></script>
 
 <script src="/theme/flatui/js/script.js?<?= APPLICATION_VERSION ?>"></script>
+
+<?php
+echo $this->render('partials/propagateLogin.phtml');
+echo $this->render('partials/propagateLogout.phtml');
+?>
 
 <?=$this->inlineScript() ?>
 <?php if (APPLICATION_ENV != 'development') { ?>

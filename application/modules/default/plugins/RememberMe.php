@@ -40,7 +40,7 @@ class Default_Plugin_RememberMe extends Zend_Controller_Plugin_Abstract
     public function preDispatch(Zend_Controller_Request_Abstract $request)
     {
         // at this point the zend framework has already tested the session cookie and we should have an auth object.
-        if (true === $this->_auth->hasIdentity()) {
+        if ($this->_auth->hasIdentity()) {
             return;
         }
 
@@ -56,7 +56,7 @@ class Default_Plugin_RememberMe extends Zend_Controller_Plugin_Abstract
             $authModel = new Default_Model_Authorization();
             $authResult = $authModel->authenticateUser($cookieData['member_id'], $cookieData['remember_me_id'], true, Default_Model_Authorization::LOGIN_REMEMBER_ME);
             if (false === $authResult->isValid()) {
-                Zend_Registry::get('logger')->warn(__METHOD__ . ' - ' . 'Can not authenticate user ('.$cookieData['member_id'].','.$cookieData['remember_me_id'].') with "remember me" cookie. ' .
+                Zend_Registry::get('logger')->warn(__METHOD__ . ' - Can not authenticate user (' . $cookieData['member_id'] . ',' . $cookieData['remember_me_id'] . ') with "remember me" cookie. ' .
                     implode('; ', $authResult->getMessages())
                 );
             }

@@ -44,6 +44,20 @@ class Default_Model_Authorization
         $this->_dataTable = new $this->_dataModelName;
     }
 
+    public function logout()
+    {
+        $auth = Zend_Auth::getInstance();
+        $auth->clearIdentity();
+
+        $session = new Zend_Session_Namespace();
+        $session->unsetAll();
+        Zend_Session::forgetMe();
+//        Zend_Session::destroy();
+
+        $modelRememberMe = new Default_Model_RememberMe();
+        $modelRememberMe->deleteSession();
+    }
+
     /**
      * @param string $identity
      * @param string $socialNetwork
@@ -111,10 +125,10 @@ class Default_Model_Authorization
     public function updateRememberMe($setRememberMe = false)
     {
         $modelRememberMe = new Default_Model_RememberMe();
-//        if (false == $setRememberMe) {
-        $modelRememberMe->deleteSession();
-//            return;
-//        }
+        if (false == $setRememberMe) {
+            $modelRememberMe->deleteSession();
+            return;
+        }
         if ($modelRememberMe->hasValidCookie()) {
             $modelRememberMe->updateSession($this->_authUserData->member_id);
         } else {
