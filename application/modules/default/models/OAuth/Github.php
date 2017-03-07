@@ -459,7 +459,8 @@ class Default_Model_Oauth_Github
     public function gotoRedirect()
     {
         if ($this->session->redirect) {
-            $redirect = $this->session->redirect;
+            $filterRedirect = new Local_Filter_Url_Decrypt();
+            $redirect = $filterRedirect->filter($this->session->redirect);
             $this->session->redirect = null;
             /** @var Zend_Controller_Action_Helper_Redirector $redirection */
             $redirection = Zend_Controller_Action_HelperBroker::getStaticHelper('redirector');

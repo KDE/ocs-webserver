@@ -46,7 +46,7 @@ class OAuthController extends Zend_Controller_Action
             $this->getAllParams()
         );
 
-        if (false == $filterInput->hasInvalid()) {
+        if ($filterInput->hasInvalid()) {
             Zend_Registry::get('logger')->warn(__METHOD__ . ' - ' . print_r($this->getAllParams(), true));
             $this->_helper->flashMessenger->addMessage(self::ERR_MSG_DEFAULT);
             $this->forward('index', 'explore', 'default');
