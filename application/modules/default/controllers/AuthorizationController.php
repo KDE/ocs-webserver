@@ -28,7 +28,8 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
 
     public function githubAction()
     {
-        $this->forward('login', 'oauth', 'default', array('provider' => 'github', 'redirect' => $this->getParam('redirect')));
+        $this->forward('login', 'oauth', 'default',
+            array('provider' => 'github', 'redirect' => $this->getParam('redirect')));
     }
 
     public function redirectAction()
@@ -643,7 +644,6 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
                 $this->_helper->json(array('status' => 'ok', 'redirect' => '/member/' . $userId . '/activities/'));
             } else {
                 $this->getRequest()->setParam('member_id', $userId);
-                //$this->forward('news', 'user', null, $this->getAllParams());
                 $this->redirect('/member/' . $userId . '/activities/', $this->getAllParams());
             }
         }

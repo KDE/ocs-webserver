@@ -159,7 +159,7 @@ class Default_Model_RememberMe
         $sessionData['t'] = $newSessionData['token'];
 
         // delete old cookie with wrong domain
-        setcookie($this->cookieName, null, time() - $this->cookieTimeout, '/', $this->request->getHttpHost(), null, true);
+        //setcookie($this->cookieName, null, time() - $this->cookieTimeout, '/', $this->request->getHttpHost(), null, true);
 
         return setcookie($this->cookieName, serialize($sessionData), $newSessionData['expiry'], '/', $domain, null, true);
     }

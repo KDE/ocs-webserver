@@ -386,7 +386,7 @@ class Default_Model_Oauth_Github
         if ($member->member_id) {
             $authModel = new Default_Model_Authorization();
             $authModel->storeAuthSessionDataByIdentity($member->member_id);
-            $authModel->updateRememberMe();
+            $authModel->updateRememberMe(true);
             $authModel->updateUserLastOnline('member_id', $member->member_id);
             return $this->createAuthResult(Zend_Auth_Result::SUCCESS, $member['mail'],
                 array('Authentication successful.'));
