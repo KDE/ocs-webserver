@@ -68,12 +68,17 @@ class OAuthController extends Zend_Controller_Action
         }
 
         $authResult = $authAdapter->authenticate();
-        if ($authResult->isValid()) {
-            $authAdapter->storeAccessToken($access_token);
-        } else {
+        if (false == $authResult->isValid()) {
             $this->_helper->flashMessenger->addMessage(self::ERR_MSG_DEFAULT);
             $this->forward('index', 'explore', 'default');
         }
+
+        $authAdapter->storeAccessToken($access_token);
+
+        $modelToken = new Default_Model_SingleSignOnToken();
+        $token = $modelToken->createAuthToken(Zend_Auth::getInstance()->getIdentity()->member_id, true, Default_Model_SingleSignOnToken::ACTION_LOGIN);
+
+        setcookie(Default_Model_SingleSignOnToken::ACTION_LOGIN, $token, time() + 120, '/',Local_Tools_ParseDomain::get_domain($this->getRequest()->getHttpHost()), null, true);
 
         if (false === $authAdapter->gotoRedirect()) {
             $this->forward('products', 'user');
