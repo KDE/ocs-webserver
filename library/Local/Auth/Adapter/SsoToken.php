@@ -98,14 +98,12 @@ class Local_Auth_Adapter_SsoToken implements Local_Auth_Adapter_Interface
     private function fetchUserData()
     {
         $sql = "
-            SELECT member.* 
-            FROM `sso_auth_token`
-            JOIN member ON member.member_id = `sso_auth_token`.token_member_id
+            SELECT member.*
+            FROM member
             WHERE member.is_active = :active
             AND member.is_deleted = :deleted
             AND member.login_method = :login
-            AND `sso_auth_token`.token_value = :token_value
-            AND `sso_auth_token`.token_expired >= NOW()
+            AND member.member_id = :memberId
             ";
 
         $this->_db->getProfiler()->setEnabled(true);
@@ -113,7 +111,7 @@ class Local_Auth_Adapter_SsoToken implements Local_Auth_Adapter_Interface
             'active' => Default_Model_DbTable_Member::MEMBER_ACTIVE,
             'deleted' => Default_Model_DbTable_Member::MEMBER_NOT_DELETED,
             'login' => Default_Model_DbTable_Member::MEMBER_LOGIN_LOCAL,
-            'token_value' => $this->_identity
+            'memberId' => $this->_identity
         ));
         Zend_Registry::get('logger')->info(__METHOD__ . ' - sql take seconds: ' . $this->_db->getProfiler()->getLastQueryProfile()->getElapsedSecs());
         $this->_db->getProfiler()->setEnabled(false);

@@ -52,8 +52,15 @@ class OAuthController extends Zend_Controller_Action
             $this->forward('index', 'explore', 'default');
         }
 
+        $modelToken = new Default_Model_SingleSignOnToken();
+        $data = array('remember_me' => true, 'redirect' => $this->getParam('redirect'), 'action' => Default_Model_SingleSignOnToken::ACTION_LOGIN);
+        $token_id = $modelToken->createToken($data);
+        setcookie(Default_Model_SingleSignOnToken::ACTION_LOGIN, $token_id, time() + 120, '/',Local_Tools_ParseDomain::get_domain($this->getRequest()->getHttpHost()), null, true);
+
         $authAdapter = Default_Model_OAuth::factory($this->getParam(self::PARAM_NAME_PROVIDER));
-        $authAdapter->authStart($this->getParam('redirect'));
+        $requestUrl = $authAdapter->authStartWithToken($token_id);
+
+        $this->redirect($requestUrl);
     }
 
     public function githubAction()
@@ -68,16 +75,20 @@ class OAuthController extends Zend_Controller_Action
         }
 
         $authResult = $authAdapter->authenticate();
-        if ($authResult->isValid()) {
-            $authAdapter->storeAccessToken($access_token);
-        } else {
+        if (false == $authResult->isValid()) {
             $this->_helper->flashMessenger->addMessage(self::ERR_MSG_DEFAULT);
             $this->forward('index', 'explore', 'default');
         }
 
-        if (false === $authAdapter->gotoRedirect()) {
+        $modelToken = new Default_Model_SingleSignOnToken();
+        $modelToken->addData($this->getParam('state'), array('member_id' => Zend_Auth::getInstance()->getIdentity()->member_id));
+        $authAdapter->storeAccessToken($access_token);
+        $redirect_url = $authAdapter->getRedirect();
+
+        if (false === $redirect_url) {
             $this->forward('products', 'user');
         }
+        $this->redirect($redirect_url);
     }
 
     public function registerAction()
@@ -95,7 +106,6 @@ class OAuthController extends Zend_Controller_Action
         }
 
         $authAdapter = Default_Model_OAuth::factory($filterInput->getEscaped(self::PARAM_NAME_PROVIDER));
-        $authAdapter->setRegisterAfterLogin(true);
         $authAdapter->authStart($this->getParam('redirect'));
     }
 

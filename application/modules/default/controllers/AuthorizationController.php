@@ -208,11 +208,16 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         }
 
         $modelAuthToken = new Default_Model_SingleSignOnToken();
-        $token_data = $modelAuthToken->getValidTokenData($this->getParam('token'), Default_Model_SingleSignOnToken::ACTION_LOGIN);
-        $remember_me = isset($token_data['remember_me']) ? $token_data['remember_me'] : false;
+        $token_data = $modelAuthToken->getData($this->getParam('token'), Default_Model_SingleSignOnToken::ACTION_LOGIN);
+        if (false === $token_data) {
+            Zend_Registry::get('logger')->warn(__METHOD__ . ' - Login failed: no token present');
+            $this->_helper->json(array('status' => 'fail', 'message' => 'Login failed.'));
+        }
+        $remember_me = isset($token_data['remember_me']) ? (boolean)$token_data['remember_me'] : false;
+        $member_id = isset($token_data['member_id']) ? (int)$token_data['member_id'] : null;
 
         $modelAuth = new Default_Model_Authorization();
-        $authResult = $modelAuth->authenticateUser($this->getParam('token'), null, $remember_me, Local_Auth_AdapterFactory::LOGIN_SSO);
+        $authResult = $modelAuth->authenticateUser($member_id, null, $remember_me, Local_Auth_AdapterFactory::LOGIN_SSO);
 
         if ($authResult->isValid()) {
             $this->getResponse()
@@ -293,10 +298,14 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         $auth = Zend_Auth::getInstance();
         $userId = $auth->getStorage()->read()->member_id;
 
-        $modelToken = new Default_Model_SingleSignOnToken();
-        $token = $modelToken->createAuthToken($userId, $values['remember_me'], Default_Model_SingleSignOnToken::ACTION_LOGIN);
+//        $modelToken = new Default_Model_SingleSignOnToken();
+//        $token = $modelToken->createAuthToken($userId, $values['remember_me'], Default_Model_SingleSignOnToken::ACTION_LOGIN);
+//        setcookie(Default_Model_SingleSignOnToken::ACTION_LOGIN, $token, time() + 120, '/',Local_Tools_ParseDomain::get_domain($this->getRequest()->getHttpHost()), null, true);
 
-        setcookie(Default_Model_SingleSignOnToken::ACTION_LOGIN, $token, time() + 120, '/',Local_Tools_ParseDomain::get_domain($this->getRequest()->getHttpHost()), null, true);
+        $modelToken = new Default_Model_SingleSignOnToken();
+        $data = array('remember_me' => $values['remember_me'], 'redirect' => $this->getParam('redirect'), 'action' => Default_Model_SingleSignOnToken::ACTION_LOGIN, 'member_id'=>$userId);
+        $token_id = $modelToken->createToken($data);
+        setcookie(Default_Model_SingleSignOnToken::ACTION_LOGIN, $token_id, time() + 120, '/',Local_Tools_ParseDomain::get_domain($this->getRequest()->getHttpHost()), null, true);
 
         // handle redirect
         $this->handleRedirect($userId);
@@ -435,14 +444,18 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         $this->_helper->viewRenderer->setNoRender(true);
 
         if (Zend_Auth::getInstance()->hasIdentity()) {
-            $member_id = Zend_Auth::getInstance()->getIdentity()->member_id;
+//            $member_id = Zend_Auth::getInstance()->getIdentity()->member_id;
             $modelAuth = new Default_Model_Authorization();
             $modelAuth->logout();
 
-            $modelToken = new Default_Model_SingleSignOnToken();
-            $token = $modelToken->createAuthToken($member_id, false, Default_Model_SingleSignOnToken::ACTION_LOGOUT);
+//            $modelToken = new Default_Model_SingleSignOnToken();
+//            $token = $modelToken->createAuthToken($member_id, false, Default_Model_SingleSignOnToken::ACTION_LOGOUT);
+//            setcookie(Default_Model_SingleSignOnToken::ACTION_LOGOUT, $token, time() + 120, '/',Local_Tools_ParseDomain::get_domain($this->getRequest()->getHttpHost()), null, true);
 
-            setcookie(Default_Model_SingleSignOnToken::ACTION_LOGOUT, $token, time() + 120, '/',Local_Tools_ParseDomain::get_domain($this->getRequest()->getHttpHost()), null, true);
+            $modelToken = new Default_Model_SingleSignOnToken();
+            $data = array('remember_me' => false, 'redirect' => $this->getParam('redirect'), 'action' => Default_Model_SingleSignOnToken::ACTION_LOGOUT);
+            $token_id = $modelToken->createToken($data);
+            setcookie(Default_Model_SingleSignOnToken::ACTION_LOGOUT, $token_id, time() + 120, '/',Local_Tools_ParseDomain::get_domain($this->getRequest()->getHttpHost()), null, true);
         }
 
         if ($this->_request->isXmlHttpRequest()) {

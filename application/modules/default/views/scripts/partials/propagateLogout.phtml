@@ -3,7 +3,7 @@
 $request =  Zend_Controller_Front::getInstance()->getRequest();
 $token = $request->getCookie(Default_Model_SingleSignOnToken::ACTION_LOGOUT, null);
 $modelSso = new Default_Model_SingleSignOnToken();
-if (isset($token) AND $modelSso->isValidToken($token, Default_Model_SingleSignOnToken::ACTION_LOGOUT)) :
+if (isset($token) AND $modelSso->isValid($token)) :
     $store_config_list = Zend_Registry::get('application_store_config_list');
 
     $urls = '';
