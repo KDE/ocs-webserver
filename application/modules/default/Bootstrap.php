@@ -210,8 +210,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
     protected function _initAclRules()
     {
-        $aclRules = new Default_Plugin_AclRules();
-        Zend_Registry::set('acl', $aclRules);
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+
+        if (false == ($aclRules = $cache->load('AclRules'))) {
+            $aclRules = new Default_Plugin_AclRules();
+            Zend_Registry::set('acl', $aclRules);
+            $cache->save($aclRules, 'AclRules', array('AclRules'), 14400);
+        }
         return $aclRules;
     }
 
@@ -279,9 +285,17 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         /** @var $front Zend_Controller_Front */
         $front = $this->getResource('frontController');
 
+
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+
+        if (($router = $cache->load('ProjectRouter'))) {
+            $front->setRouter($router);
+            return $router;
+        }
+
         /** @var $router Zend_Controller_Router_Rewrite */
         $router = $front->getRouter();
-
 
         /** RSS Feed */
         $router->addRoute(
@@ -947,6 +961,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 )
             )
         );
+        $cache->save($router, 'ProjectRouter', array('router'), 14400);
     }
 
     protected function _initCss()
