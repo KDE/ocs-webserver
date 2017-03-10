@@ -22,7 +22,7 @@
  *
  *    Created: 21.10.2016
  **/
-class Default_Plugin_RememberMe extends Zend_Controller_Plugin_Abstract
+class Default_Plugin_SignOn extends Zend_Controller_Plugin_Abstract
 {
 
     /** @var Zend_Auth */
@@ -45,18 +45,26 @@ class Default_Plugin_RememberMe extends Zend_Controller_Plugin_Abstract
         }
 
         // on login page we don't need a remember me check
-        if ($request->getActionName() == 'login') {
+//        if ($request->getActionName() == 'login') {
+//            return;
+//        }
+
+        if (false === ($token_id = $request->getCookie(Default_Model_SingleSignOnToken::ACTION_LOGIN, false))) {
             return;
         }
 
-        //Check if rememberMe login cookie exists and authenticate user
-        $modelRememberMe = new Default_Model_RememberMe();
-        if (true === $modelRememberMe->hasValidCookie()) {
-            $cookieData = $modelRememberMe->getCookieData();
-            $authModel = new Default_Model_Authorization();
-            $authResult = $authModel->authenticateUser($cookieData['member_id'], $cookieData['remember_me_id'], true, Default_Model_Authorization::LOGIN_REMEMBER_ME);
+        $modelAuthToken = new Default_Model_SingleSignOnToken();
+        if (false === $modelAuthToken->isValid($token_id)) {
+            return;
+        }
+
+        $token_data = $modelAuthToken->getData($token_id);
+
+        if (isset($token_data['member_id']) AND isset($token_data['auth_result'])) {
+            $modelAuth = new Default_Model_Authorization();
+            $authResult = $modelAuth->authenticateUser($token_data['member_id'], null, $token_data['remember_me'], Local_Auth_AdapterFactory::LOGIN_SSO);
             if (false === $authResult->isValid()) {
-                Zend_Registry::get('logger')->warn(__METHOD__ . ' - "Remember Me" failed: Can not authenticate user (' . $cookieData['member_id'] . ',' . $cookieData['remember_me_id'] . ')' .
+                Zend_Registry::get('logger')->warn(__METHOD__ . ' - Sign on with OAuth failed: Can not authenticate user (' . $token_data['member_id'] . ',' . $token_id . ')' .
                     implode('; ', $authResult->getMessages())
                 );
             }

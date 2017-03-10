@@ -22,7 +22,7 @@
  *
  *    Created: 09.12.2016
  **/
-class Default_Model_SingleSignOnToken extends Local_Model_Table
+class Default_Model_SingleSignOnToken
 {
 
     const LOGIN_CACHE_NAME_PREFIX = 'sso_token_login_';
@@ -31,20 +31,6 @@ class Default_Model_SingleSignOnToken extends Local_Model_Table
     const ACTION_LOGIN = 'login';
     const ACTION_LOGOUT = 'logout';
     const REMEMBER_ME = true;
-
-    protected $_name = "sso_auth_token";
-
-    protected $_keyColumnsForRow = array('token_member_id', 'token_value', 'token_action');
-
-    protected $_key = 'sso_auth_token_id';
-
-    protected $_defaultValues = array(
-        'token_member_id' => null,
-        'token_value' => 0,
-        'token_created' => null,
-        'token_changed' => null,
-        'token_expired' => null
-    );
 
     /**
      * @param $data
@@ -65,12 +51,13 @@ class Default_Model_SingleSignOnToken extends Local_Model_Table
      */
     public function isValid($token_id)
     {
+        $token_id = preg_replace('/[^-a-zA-Z0-9_]/', '',  $token_id);
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
         return (boolean) $cache->test($token_id);
     }
 
-    public function getData($token_id, $action)
+    public function getData($token_id)
     {
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');

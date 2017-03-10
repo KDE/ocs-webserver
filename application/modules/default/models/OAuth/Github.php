@@ -111,7 +111,6 @@ class Default_Model_Oauth_Github
     public function authFinish($http_params)
     {
         $error = (array_key_exists('error', $http_params)) ? $http_params['error'] : null;
-
         if ($error) {
             throw new Zend_Exception('Authentication failed. OAuth provider returned an error: ' . $error);
         }
@@ -240,8 +239,8 @@ class Default_Model_Oauth_Github
             return $this->registerLocal();
         }
 
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - error while authenticate user from oauth provider: ' . implode(",\n",
-                $authResult->getMessages()));
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - error while authenticate user from oauth provider: ' .
+            implode(",\n", $authResult->getMessages()));
         return $authResult;
     }
 

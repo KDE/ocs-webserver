@@ -43,7 +43,7 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
                         <a href="/register">Register</a></li>
                     <li role="presentation"
                         class="<?php echo(strpos($_SERVER["REQUEST_URI"], 'login') ? 'active' : '') ?>">
-                        <a href="/login<?= $redirectString ?>">Login</a>
+                        <a href="/login<?php echo strpos($_SERVER["REQUEST_URI"], 'login') ? '' : $redirectString ?>">Login</a>
                     </li>
                 </ul>
             <?php } ?>

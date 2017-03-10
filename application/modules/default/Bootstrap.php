@@ -230,6 +230,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $front->unregisterPlugin('Zend_Controller_Plugin_ErrorHandler');
         $front->registerPlugin(new Default_Plugin_ErrorHandler());
         $front->registerPlugin(new Default_Plugin_RememberMe(Zend_Auth::getInstance()));
+        $front->registerPlugin(new Default_Plugin_SignOn(Zend_Auth::getInstance()));
         $front->registerPlugin(new Default_Plugin_Acl(Zend_Auth::getInstance(), $aclRules));
 
         $loader = new Zend_Loader_PluginLoader();

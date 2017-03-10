@@ -28,8 +28,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
 
     public function githubAction()
     {
-        $this->forward('login', 'oauth', 'default',
-            array('provider' => 'github', 'redirect' => $this->getParam('redirect')));
+        $this->forward('login', 'oauth', 'default', array('provider' => 'github', 'redirect' => $this->getParam('redirect')));
     }
 
     public function redirectAction()
@@ -208,7 +207,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         }
 
         $modelAuthToken = new Default_Model_SingleSignOnToken();
-        $token_data = $modelAuthToken->getData($this->getParam('token'), Default_Model_SingleSignOnToken::ACTION_LOGIN);
+        $token_data = $modelAuthToken->getData($this->getParam('token'));
         if (false === $token_data) {
             Zend_Registry::get('logger')->warn(__METHOD__ . ' - Login failed: no token present');
             $this->_helper->json(array('status' => 'fail', 'message' => 'Login failed.'));

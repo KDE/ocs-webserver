@@ -24,6 +24,7 @@
  **/
 class OAuthController extends Zend_Controller_Action
 {
+
     const PARAM_NAME_PROVIDER = 'provider';
     const ERR_MSG_DEFAULT = '<p class="text-danger center">An error occurred while trying authenticate you. Please try later or try our local login or register.</p>';
 
@@ -52,10 +53,8 @@ class OAuthController extends Zend_Controller_Action
             $this->forward('index', 'explore', 'default');
         }
 
-        $modelToken = new Default_Model_SingleSignOnToken();
         $data = array('remember_me' => true, 'redirect' => $this->getParam('redirect'), 'action' => Default_Model_SingleSignOnToken::ACTION_LOGIN);
-        $token_id = $modelToken->createToken($data);
-        setcookie(Default_Model_SingleSignOnToken::ACTION_LOGIN, $token_id, time() + 120, '/',Local_Tools_ParseDomain::get_domain($this->getRequest()->getHttpHost()), null, true);
+        $token_id = $this->createAToken($data);
 
         $authAdapter = Default_Model_OAuth::factory($this->getParam(self::PARAM_NAME_PROVIDER));
         $requestUrl = $authAdapter->authStartWithToken($token_id);
@@ -66,7 +65,6 @@ class OAuthController extends Zend_Controller_Action
     public function githubAction()
     {
         $authAdapter = Default_Model_OAuth::factory('github');
-
         $access_token = $authAdapter->authFinish($this->getAllParams());
 
         if (false == $authAdapter->isConnected()) {
@@ -81,7 +79,8 @@ class OAuthController extends Zend_Controller_Action
         }
 
         $modelToken = new Default_Model_SingleSignOnToken();
-        $modelToken->addData($this->getParam('state'), array('member_id' => Zend_Auth::getInstance()->getIdentity()->member_id));
+        $modelToken->addData($this->getParam('state'), array('member_id' => Zend_Auth::getInstance()->getIdentity()->member_id, 'auth_result' => $authResult->isValid()));
+
         $authAdapter->storeAccessToken($access_token);
         $redirect_url = $authAdapter->getRedirect();
 
@@ -107,6 +106,19 @@ class OAuthController extends Zend_Controller_Action
 
         $authAdapter = Default_Model_OAuth::factory($filterInput->getEscaped(self::PARAM_NAME_PROVIDER));
         $authAdapter->authStart($this->getParam('redirect'));
+    }
+
+    /**
+     * @param $data
+     * @return string
+     */
+    protected function createAToken($data)
+    {
+        $modelToken = new Default_Model_SingleSignOnToken();
+        $token_id = $modelToken->createToken($data);
+        setcookie(Default_Model_SingleSignOnToken::ACTION_LOGIN, $token_id, time() + 120, '/',
+            Local_Tools_ParseDomain::get_domain($this->getRequest()->getHttpHost()), null, true);
+        return $token_id;
     }
 
 }
