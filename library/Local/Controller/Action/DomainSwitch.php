@@ -23,6 +23,12 @@
 class Local_Controller_Action_DomainSwitch extends Zend_Controller_Action
 {
 
+    /**
+     * Zend_Controller_Request_Abstract object wrapping the request environment
+     * @var Zend_Controller_Request_Http
+     */
+    protected $_request = null;
+
     /** @var  object */
     protected $_authMember;
     protected $templateConfigData;

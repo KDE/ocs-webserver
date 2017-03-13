@@ -27,6 +27,7 @@ class Local_Auth_AdapterFactory
     const LOGIN_HIVE = 'encryptionHive01';
     const LOGIN_PLING = 'encryptionPling01';
     const LOGIN_DEFAULT = 'default';
+    const LOGIN_SSO = 'singleSingOn';
 
     /**
      * @param null $userIdentity
@@ -59,6 +60,10 @@ class Local_Auth_AdapterFactory
         switch ($provider) {
             case self::LOGIN_INFINITY:
                 $authAdapter = new Local_Auth_Adapter_RememberMe(Zend_Registry::get('db'));
+                break;
+
+            case self::LOGIN_SSO:
+                $authAdapter = new Local_Auth_Adapter_SsoToken(Zend_Registry::get('db'));
                 break;
 
             case self::LOGIN_HIVE:

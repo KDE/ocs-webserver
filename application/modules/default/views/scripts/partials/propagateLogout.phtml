@@ -1,0 +1,45 @@
+<?php
+/** @var Zend_Controller_Request_Http $request */
+$request =  Zend_Controller_Front::getInstance()->getRequest();
+$token = $request->getCookie(Default_Model_SingleSignOnToken::ACTION_LOGOUT, null);
+$modelSso = new Default_Model_SingleSignOnToken();
+if (isset($token) AND $modelSso->isValid($token)) :
+    $store_config_list = Zend_Registry::get('application_store_config_list');
+
+    $urls = '';
+    foreach ($store_config_list as $key => $item) {
+        $urls .= "'//{$key}/logout/propagate/',";
+    }
+    $urls = substr($urls, 0, -1); ?>
+    <script type="application/javascript">
+        $(document).ready(function(){
+            urls = [<?=$urls?>];
+            origin = 'http://<?=$_SERVER["HTTP_HOST"]?>';
+
+            var propagateLogout = (function () {
+                return {
+                    process: function (origin, urls) {
+                        for (var i = 0; i < urls.length; i++) {
+                            var data = {'origin': origin}
+                            var request_config = {
+                                'type': 'POST',
+                                'dataType': 'text',
+                                'cache': false,
+                                'data': data,
+                                'url': urls[i],
+                                'xhrFields': {
+                                    'withCredentials': true
+                                }
+                            }
+                            $.ajax(request_config);
+                        }
+                    }
+                }
+            })();
+
+            propagateLogout.process(origin, urls);
+        });
+    </script>
+<?php
+    setcookie(Default_Model_SingleSignOnToken::ACTION_LOGOUT, false, time() - 38500, '/',Local_Tools_ParseDomain::get_domain($request->getHttpHost()), null, true);
+endif;

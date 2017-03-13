@@ -117,6 +117,19 @@
 </div><!-- /.report -->
 <!-- javascripts -->
 <script type="text/javascript">
+    // report form custom select function
+    $('body').on('click', '.selectbox_select', function () {
+        $('.report-form').find('.selectbox_menu').show();
+    });
+
+    $('body').on('click', '.selectbox_menu a', function () {
+        var thisDataValue = $(this).attr('data-option');
+        var thisTitle = $(this).attr('title');
+        $('.report-form').find('#project_report_category_id').attr('value', thisDataValue).attr('label', thisTitle);
+        $('.report-form').find('.selectbox_selected').text(thisTitle);
+        $('.report-form').find('.selectbox_menu').hide();
+    });
+
     var PartialForms = (function () {
         return {
             setup: function () {

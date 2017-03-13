@@ -74,5 +74,344 @@ echo $this->buildProductUrl;
 <main id="product-showcase"></main>
 
 <script>
+
+    var catpage_url;
+
+    var exploreCarousel = (function () {
+
+        return {
+
+
+            setup: function () {
+
+                $(document).ready(function () {
+
+                    // This event is triggered when you visit a page in the history
+                    // like when yu push the "back" button
+                    $(window).on('popstate', function (e) {
+                        //alert('State: ' + e.originalEvent.state.command);
+                        if (e.originalEvent.state.command == 'showList') {
+                            $('.bootstrap-dialog').hide();
+                            $('#explore-content').css('visibility', 'visible');
+                            $('body > #page_header').css('visibility', 'visible');
+                            $('body > footer').css('visibility', 'visible');
+
+                        } else {
+                            $('body > #page_header').css('visibility', 'hidden');
+                            $('#explore-content').css('visibility', 'hidden');
+                            $('body > footer').css('visibility', 'hidden');
+                            $('.bootstrap-dialog').show();
+
+                        }
+                        //console.log(e.originalEvent.state);
+                    });
+
+
+                    adjustMainHeight();
+                    /*
+                     adjustMainHeight();
+                     initializeCarousel();
+
+                     // carousel slide animation
+                     $('.navigation').delegate('ul > li', 'click', function () {
+                     var this_li = $(this);
+                     //slotMachineAnimation(this_li);
+                     animateExploreCarousel(this_li);
+                     });
+
+                     // carousel arrows
+                     $('#explore-carousel').delegate('a.carousel-arrow', 'click', function () {
+                     if ($(this).attr('id') == 'right') {
+                     this_li = $('li.active').next('li');
+                     } else {
+                     this_li = $('li.active').prev('li');
+                     }
+                     if (this_li.size()) {
+                     animateExploreCarousel(this_li);
+                     }
+                     });
+                     */
+                    // show product
+                    $('.explore-product').delegate('a', 'click', function (e) {
+                        e.preventDefault();
+                        var this_url = $(this).attr('href');
+                        catpage_url = window.location.href;
+                        var app_elememnt = $('#explore-product-modal').find('.modal-body').find('#support-widget');
+
+                        var stateObj = {url: this_url, title: "a title", command: 'showDetail'};
+                        history.pushState(stateObj, "Product", this_url);
+
+                        BootstrapDialog.show({
+                            //id: 'product_popup',
+                            message: function (dialog) {
+                                var $message = $('<div></div>');
+                                var pageToLoad = dialog.getData('pageToLoad');
+
+                                $('#explore-content').css('visibility', 'hidden');
+                                $('body > #page_header').css('visibility', 'hidden');
+                                $('body > footer').css('visibility', 'hidden');
+
+
+                                $.get(pageToLoad, function (data) {
+                                    $message.html(data);
+
+                                    var slideShowInterval;
+                                    SlideShowRender.setup();
+                                    ProductSlideShow.setup();
+
+                                    var app_elememnt = $('#support-widget');
+                                    angular.bootstrap(app_elememnt, ['widgetApp']);
+                                });
+
+                                /*
+                                 $message.load(pageToLoad, function(response, status, xhr) {
+
+                                 })
+                                 */
+                                return $message;
+                            },
+                            data: {
+                                'pageToLoad': this_url
+                            },
+                            onhide: function (dialogRef) {
+                                //window.history.replaceState('object or string', 'title', catpage_url);
+                                var stateObj = {url: catpage_url, title: "a title", command: 'showList'};
+                                history.pushState(stateObj, "Product List", catpage_url);
+
+                                $('body > #page_header').css('visibility', 'visible');
+                                $('body > footer').css('visibility', 'visible');
+                                $('#explore-content').css('visibility', 'visible');
+                            },
+                            onshow: function (dialogRef) {
+                                adjustMainHeight();
+                            },
+                            onshown: function (dialogRef) {
+                                $('body > #page_header').css('visibility', 'hidden');
+                                $('body > footer').css('visibility', 'hidden');
+                                $('#explore-content').css('visibility', 'hidden');
+                            }
+                        });
+
+                    });
+                    /**
+                     e.preventDefault();
+                     var this_url = $(this).attr('href');
+                     var catpage_url = window.location.href;
+
+
+                     $( "#dialog_iframe" ).attr('src',this_url);
+
+                     $( "#dialog" ).dialog( "open" );
+                     });
+                     $("#dialog").dialog({
+                	    autoOpen: false,
+                	    position: 'center' ,
+                	    title: false,
+                	    draggable: false,
+                	    width : '100%',
+                	    height : '100%',
+                	    resizable : false,
+                	    modal : true,
+                	});
+                     */
+                    /**
+                     $.ajax({
+                        url: this_url,
+                        type: 'post',
+                        success: function (results) {
+                            var $response = $(results);
+                            //var product_page = $response.filter('#product-page-content').html();
+                            var header = $response.html();
+                            var product_page = $response.filter('#product-page-content').html();
+                            var app_elememnt = $('#explore-product-modal').find('.modal-body').find('#support-widget');
+
+
+                            window.history.replaceState('object or string', 'title', this_url);
+                            $('#explore-product-modal').find('.modal-body').html(header);
+                            //$('#explore-product-modal').find('.modal-body').html(product_page);
+                            angular.bootstrap(app_elememnt,['widgetApp']);
+                            $('#explore-product-modal').modal('show');
+                            adjustMainHeight();
+
+                            $('#explore-product-modal').on('hide.bs.modal', function (e) {
+                                window.history.replaceState('object or string', 'title', catpage_url);
+                                $('#explore-product-modal').find('.modal-body').html('');
+                            });
+                        }
+                    });
+
+                     });
+                     */
+                });
+
+                $(window).on('resize', function () {
+                    adjustMainHeight();
+                });
+
+                /** ADJUST MAIN SIZE **/
+
+                function adjustMainHeight() {
+                    if ($('#product-showcase').is(':empty')) {
+                        var win_height = $(window).height();
+                        var header_height = $('header').height();
+                        var modal_body_height = win_height - header_height;
+                        $('#explore-product-modal').find('.modal-body').css('height', modal_body_height);
+                    }
+                }
+
+                /** ADJUST MAIN SIZE **/
+
+                /** CAROUSEL INITIALIZATION **/
+
+                function initializeCarousel() {
+
+                    var crousel_items = $(".explore-product");
+
+                    for (var i = 0; i < crousel_items.length; i += 10) {
+                        var carousel_i = i / 10;
+
+                        if (carousel_i == 0) {
+                            crousel_items.slice(i, i + 10).wrapAll('<div class="item active" id="slide-' + carousel_i + '"></div>');
+                            var this_indicator = '<li class="active" rel="' + carousel_i + '"><a>1</a></li>';
+                        } else {
+                            var carousel_slide_number = parseInt(carousel_i) + 1;
+                            crousel_items.slice(i, i + 10).wrapAll('<div class="item" id="slide-' + carousel_i + '"></div>');
+                            var this_indicator = '<li rel="' + carousel_i + '"><a>' + carousel_slide_number + '</a></li>';
+                        }
+
+                        $('#explore-carousel').find('ul').append(this_indicator);
+                    }
+
+                    $('.item').each(function () {
+                        var item_number = 0;
+                        var this_item = $(this);
+                        $(this).find('.explore-product').each(function () {
+                            item_number++;
+                            $(this).addClass('col-' + item_number);
+                            if (this_item.hasClass('active')) {
+                                $(this).css('top', '0px');
+                            }
+                        });
+                    });
+                }
+
+                /** /CAROUSEL INITIALIZATION **/
+
+                /** ANIMATE EXPLORE CAROUSEL **/
+
+                function animateExploreCarousel(this_li) {
+                    var current_li = $('li.active');
+                    var current_slide_id = current_li.attr('rel');
+                    var next_slide_id = this_li.attr('rel');
+                    var current_slide = $('.item.active');
+                    var next_slide = $('.item#slide-' + next_slide_id);
+
+                    if (current_slide_id < next_slide_id) {
+                        var cur_left = '-100%';
+                        var next_left = '100%';
+                    } else {
+                        var cur_left = '100%';
+                        var next_left = '-100%';
+                    }
+                    next_slide.css('left', next_left);
+
+                    current_slide.stop().animate({left: cur_left}, 300, 'easeInCubic', function () {
+                        current_slide.removeClass('active');
+                        current_li.removeClass('active');
+                    });
+
+                    next_slide.stop().animate({left: '0px'}, 300, 'easeInCubic', function () {
+                        next_slide.addClass('active');
+                        this_li.addClass('active');
+                    });
+
+                }
+
+                /** /ANIMATE EXPLORE CAROUSEL **/
+
+                /** SLOT MACHINE SLIDE EFFECT
+
+                 function slotMachineAnimation(this_li){
+                    var this_rel = this_li.attr('rel');
+                    var this_slide = $('.item#slide-'+this_rel);
+                    var active_slide = $('.item.active');
+                    if ( (!this_slide.hasClass('active')) && ($(":animated").length == 0 ) ) {
+
+                        var speed_1 = Math.floor(Math.random()*1000) + 300;
+                        var speed_2 = Math.floor(Math.random()*1000) + 300;
+                        var speed_3 = Math.floor(Math.random()*1000) + 300;
+                        var speed_4 = Math.floor(Math.random()*1000) + 300;
+                        var speed_5 = Math.floor(Math.random()*1000) + 300;
+
+                        var item_height = $('.items').height();
+                        var item_animation_counter = 0;
+
+                        this_slide.find('.explore-product').each(function(){
+                            if ($(this).hasClass('col-1')){
+                                $(this).animate({top:'0px'},speed_1,function(){
+
+                                });
+                            } else if ($(this).hasClass('col-2')){
+                                $(this).animate({top:'0px'},speed_2,function(){
+
+                                });
+                            } else if ($(this).hasClass('col-3')){
+                                $(this).animate({top:'0px'},speed_3,function(){
+
+                                });
+                            } else if ($(this).hasClass('col-4')){
+                                $(this).animate({top:'0px'},speed_4,function(){
+
+                                });
+                            } else if ($(this).hasClass('col-5')){
+                                $(this).animate({top:'0px'},speed_5,function(){
+
+                                });
+                            }
+                        });
+
+                        $('.item.active').find('.explore-product').each(function(){
+
+                            item_animation_counter++;
+
+                            if ($(this).hasClass('col-1')){
+                                $(this).animate({top:'-'+item_height+'px'},speed_1,function(){
+                                    $(this).css('top',item_height);
+                                });
+                            } else if ($(this).hasClass('col-2')){
+                                $(this).animate({top:'-'+item_height+'px'},speed_2,function(){
+                                    $(this).css('top',item_height);
+                                });
+                            } else if ($(this).hasClass('col-3')){
+                                $(this).animate({top:'-'+item_height+'px'},speed_3,function(){
+                                    $(this).css('top',item_height);
+                                });
+                            } else if ($(this).hasClass('col-4')){
+                                $(this).animate({top:'-'+item_height+'px'},speed_4,function(){
+                                    $(this).css('top',item_height);
+                                });
+                            } else if ($(this).hasClass('col-5')){
+                                $(this).animate({top:'-'+item_height+'px'},speed_5,function(){
+                                    $(this).css('top',item_height);
+                                });
+                            }
+
+                            if (item_animation_counter == 5){
+                                $('.item.active').removeClass('active');
+                                this_slide.addClass('active');
+                                $('#explore-carousel').find('li.active').removeClass('active');
+                                this_li.addClass('active');
+                            }
+                        });
+                    }
+                }
+
+                 /SLOT MACHINE SLIDE EFFECT **/
+
+            }
+        }
+
+    })();
+
     exploreCarousel.setup();
 </script>

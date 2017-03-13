@@ -197,19 +197,56 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         return $decodeFilter->filter($string);
     }
 
+    public function propagateAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        if (Zend_Auth::getInstance()->hasIdentity()) {
+            $this->_helper->json(array('status' => 'ok', 'message' => 'Already logged in.'));
+        }
+
+        $modelAuthToken = new Default_Model_SingleSignOnToken();
+        $token_data = $modelAuthToken->getData($this->getParam('token'));
+        if (false === $token_data) {
+            Zend_Registry::get('logger')->warn(__METHOD__ . ' - Login failed: no token present');
+            $this->_helper->json(array('status' => 'fail', 'message' => 'Login failed.'));
+        }
+        $remember_me = isset($token_data['remember_me']) ? (boolean)$token_data['remember_me'] : false;
+        $member_id = isset($token_data['member_id']) ? (int)$token_data['member_id'] : null;
+
+        $modelAuth = new Default_Model_Authorization();
+        $authResult = $modelAuth->authenticateUser($member_id, null, $remember_me, Local_Auth_AdapterFactory::LOGIN_SSO);
+
+        if ($authResult->isValid()) {
+            $this->getResponse()
+                ->setHeader('Access-Control-Allow-Origin', $this->getParam('origin'))
+                ->setHeader('Access-Control-Allow-Credentials', 'true')
+                ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+                ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
+            ;
+
+            $this->_helper->json(array('status' => 'ok', 'message' => 'Login successful.'));
+        } else {
+            Zend_Registry::get('logger')->warn(__METHOD__ . ' - Login failed: '. print_r($authResult->getMessages(), true));
+            $this->_helper->json(array('status' => 'fail', 'message' => 'Login failed.'));
+        }
+    }
+
     public function loginAction()
     {
         //TODO: check redirect for a local valid url.
         $this->view->redirect = $this->getParam('redirect');
 
-        $formLogin = new Default_Form_Login();
-        //Default_Model_CsrfProtection::createCSRF($formLogin, 'login', 'csrfLogin');
-
         // if the user is still logged in, we do not show the login page. They should log out first.
         if (Zend_Auth::getInstance()->hasIdentity()) {
             $this->_helper->flashMessenger->addMessage('<p class="text-danger center">You are still logged in. Please click <a href="/logout" class="bold">here</a> to log out first.</p>');
-            $this->forward('news', 'user', null, $this->getAllParams());
+            //$this->forward('news', 'user', null, $this->getAllParams());
+            $this->handleRedirect(Zend_Auth::getInstance()->getIdentity()->member_id);
         }
+
+        $formLogin = new Default_Form_Login();
+        //Default_Model_CsrfProtection::createCSRF($formLogin, 'login', 'csrfLogin');
 
         if ($this->_request->isGet()) { // not a POST request
             $this->view->formLogin = $formLogin->populate(array('redirect' => $this->view->redirect));
@@ -241,8 +278,6 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
 
         if (false == $authResult->isValid()) { // authentication fail
             Zend_Registry::get('logger')->info(__METHOD__ . ' - authentication failed.');
-//            Zend_Registry::get('logger')->info(__METHOD__ . ' - auth_user: ' . print_r($values['mail'], true));
-//            Zend_Registry::get('logger')->info(__METHOD__ . ' - auth_result: ' . print_r($authResult->getMessages(), true));
 
             $this->view->errorText = 'index.login.error.auth';
             $this->view->formLogin = $formLogin;
@@ -262,26 +297,17 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         $auth = Zend_Auth::getInstance();
         $userId = $auth->getStorage()->read()->member_id;
 
+//        $modelToken = new Default_Model_SingleSignOnToken();
+//        $token = $modelToken->createAuthToken($userId, $values['remember_me'], Default_Model_SingleSignOnToken::ACTION_LOGIN);
+//        setcookie(Default_Model_SingleSignOnToken::ACTION_LOGIN, $token, time() + 120, '/',Local_Tools_ParseDomain::get_domain($this->getRequest()->getHttpHost()), null, true);
+
+        $modelToken = new Default_Model_SingleSignOnToken();
+        $data = array('remember_me' => $values['remember_me'], 'redirect' => $this->getParam('redirect'), 'action' => Default_Model_SingleSignOnToken::ACTION_LOGIN, 'member_id'=>$userId);
+        $token_id = $modelToken->createToken($data);
+        setcookie(Default_Model_SingleSignOnToken::ACTION_LOGIN, $token_id, time() + 120, '/',Local_Tools_ParseDomain::get_domain($this->getRequest()->getHttpHost()), null, true);
+
         // handle redirect
-        if (false === empty($this->view->redirect)) {
-            $redirect = $this->decodeString($this->view->redirect);
-            if (false !== strpos('/register', $redirect)) {
-                $redirect = '/member/' . $userId . '/activities/';
-            }
-            if ($this->_request->isXmlHttpRequest()) {
-                $this->_helper->json(array('status' => 'ok', 'redirect' => $redirect));
-            } else {
-                $this->redirect($redirect);
-            }
-        } else {
-            if ($this->_request->isXmlHttpRequest()) {
-                $this->_helper->json(array('status' => 'ok', 'redirect' => '/member/' . $userId . '/activities/'));
-            } else {
-                $this->getRequest()->setParam('member_id', $userId);
-                //$this->forward('news', 'user', null, $this->getAllParams());
-                $this->redirect('/member/' . $userId . '/activities/', $this->getAllParams());
-            }
-        }
+        $this->handleRedirect($userId);
     }
 
     public function registerAction()
@@ -396,23 +422,46 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         $oNotificationMail->send();
     }
 
+    public function propagatelogoutAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        if (false == Zend_Auth::getInstance()->hasIdentity()) {
+            $this->_helper->json(array('status' => 'ok', 'message' => 'Already logged out.'));
+        }
+
+        $modelAuth = new Default_Model_Authorization();
+        $modelAuth->logout();
+
+        $this->_helper->json(array('status' => 'ok', 'message' => 'Logout successful.'));
+    }
+
     public function logoutAction()
     {
         $this->_helper->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
 
-        $auth = Zend_Auth::getInstance();
-        $auth->clearIdentity();
+        if (Zend_Auth::getInstance()->hasIdentity()) {
+//            $member_id = Zend_Auth::getInstance()->getIdentity()->member_id;
+            $modelAuth = new Default_Model_Authorization();
+            $modelAuth->logout();
 
-        $session = new Zend_Session_Namespace();
-        $session->unsetAll();
-        Zend_Session::forgetMe();
-        Zend_Session::destroy();
+//            $modelToken = new Default_Model_SingleSignOnToken();
+//            $token = $modelToken->createAuthToken($member_id, false, Default_Model_SingleSignOnToken::ACTION_LOGOUT);
+//            setcookie(Default_Model_SingleSignOnToken::ACTION_LOGOUT, $token, time() + 120, '/',Local_Tools_ParseDomain::get_domain($this->getRequest()->getHttpHost()), null, true);
 
-        $modelRememberMe = new Default_Model_RememberMe();
-        $modelRememberMe->deleteSession();
+            $modelToken = new Default_Model_SingleSignOnToken();
+            $data = array('remember_me' => false, 'redirect' => $this->getParam('redirect'), 'action' => Default_Model_SingleSignOnToken::ACTION_LOGOUT);
+            $token_id = $modelToken->createToken($data);
+            setcookie(Default_Model_SingleSignOnToken::ACTION_LOGOUT, $token_id, time() + 120, '/',Local_Tools_ParseDomain::get_domain($this->getRequest()->getHttpHost()), null, true);
+        }
 
-        $this->redirect('/');
+        if ($this->_request->isXmlHttpRequest()) {
+            $this->_helper->json(array('status' => 'ok', 'message' => 'Logout successful.'));
+        } else {
+            $this->redirect('/');
+        }
     }
 
     public function init()
@@ -585,6 +634,31 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
     {
         $authModel = new Default_Model_Authorization();
         $authModel->updateUserLastOnline('member_id', $identity);
+    }
+
+    /**
+     * @param $userId
+     */
+    protected function handleRedirect($userId)
+    {
+        if (false === empty($this->view->redirect)) {
+            $redirect = $this->decodeString($this->view->redirect);
+            if (false !== strpos('/register', $redirect)) {
+                $redirect = '/member/' . $userId . '/activities/';
+            }
+            if ($this->_request->isXmlHttpRequest()) {
+                $this->_helper->json(array('status' => 'ok', 'redirect' => $redirect));
+            } else {
+                $this->redirect($redirect);
+            }
+        } else {
+            if ($this->_request->isXmlHttpRequest()) {
+                $this->_helper->json(array('status' => 'ok', 'redirect' => '/member/' . $userId . '/activities/'));
+            } else {
+                $this->getRequest()->setParam('member_id', $userId);
+                $this->redirect('/member/' . $userId . '/activities/', $this->getAllParams());
+            }
+        }
     }
 
 }

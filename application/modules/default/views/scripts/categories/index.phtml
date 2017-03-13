@@ -120,6 +120,32 @@ $helperBuildExploreUrl = new Default_View_Helper_BuildExploreUrl();
 
 <script>
     $(document).ready(function () {
+        var BrowseCategoriesPage = (function () {
+
+            return {
+
+                setup: function () {
+
+                    $(window).load(function () {
+
+                        $('#cat-list').find('.container').each(function () {
+
+                            var $container = $(this).find('.row');
+
+                            $container.masonry({
+                                itemSelector: '.item'
+                            });
+
+                        });
+
+                    });
+
+                }
+            }
+
+        })();
+
+
         BrowseCategoriesPage.setup();
     });
 </script>

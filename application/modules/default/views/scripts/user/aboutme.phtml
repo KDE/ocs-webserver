@@ -402,16 +402,23 @@ $textCountryCity .= $this->member->country ? ', ' . $this->member->country : '';
 
 <script type="text/javascript">
       $(document).ready(function () {   
-        var t = $(document).prop('title'); 
-        var tnew = '<?php echo $this->member->username; ?>'+"'s Profile "+t;     
-        $(document).prop('title', tnew);
+
+        var AboutMePage = (function () {
+
+          return {
+
+              setup: function () {
+
+                  var t = $(document).prop('title');
+                  var tnew = '<?php echo $this->member->username; ?>'+"'s Profile "+t;
+                  $(document).prop('title', tnew);
+
+              }
+          }
+
+        })();
+
+        AboutMePage.setup();
       })
 
 </script>
-
-<?php
-$this->inlineScript()->appendScript(
-    '$(document).ready(function(){
-            AboutMePage.setup();
-        });'
-);

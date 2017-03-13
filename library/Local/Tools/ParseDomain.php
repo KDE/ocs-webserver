@@ -32,6 +32,10 @@ class Local_Tools_ParseDomain
      */
     public static function get_domain($domain, $debug = false)
     {
+        if (false == isset($domain)) {
+            return null;
+        }
+
         $original = $domain = strtolower($domain);
         if (filter_var($domain, FILTER_VALIDATE_IP)) {
             return $domain;

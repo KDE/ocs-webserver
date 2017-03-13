@@ -1,0 +1,47 @@
+<?php
+/** @var Zend_Controller_Request_Http $request */
+$request =  Zend_Controller_Front::getInstance()->getRequest();
+$token = $request->getCookie(Default_Model_SingleSignOnToken::ACTION_LOGIN, null);
+$modelSso = new Default_Model_SingleSignOnToken();
+if (isset($token) AND $modelSso->isValid($token)) :
+    $store_config_list = Zend_Registry::get('application_store_config_list');
+
+    $urls = '';
+    foreach ($store_config_list as $key => $item) {
+        $urls .= "'//{$key}/login/propagate/',";
+    }
+    $urls = substr($urls, 0, -1); ?>
+    <script type="application/javascript">
+        $(document).ready(function(){
+            urls = [<?=$urls?>];
+            origin = 'http://<?=$_SERVER["HTTP_HOST"]?>';
+            token = '<?=$token?>';
+
+            var propagateLogin = (function () {
+                return {
+                    process: function (origin, token, urls) {
+                        for (var i = 0; i < urls.length; i++) {
+                            var data = {'origin': origin, 'token': token}
+                            var request_config = {
+                                'type': 'POST',
+                                'dataType': 'text',
+                                'cache': false,
+                                'data': data,
+                                'url': urls[i],
+                                'xhrFields': {
+                                    'withCredentials': true
+                                }
+                            }
+                            $.ajax(request_config);
+                        }
+                    }
+                }
+            })();
+
+            propagateLogin.process(origin, token, urls);
+        });
+    </script>
+<?php
+    setcookie(Default_Model_SingleSignOnToken::ACTION_LOGIN, false, time() - 38500, '/',Local_Tools_ParseDomain::get_domain($request->getHttpHost()), null, true);
+endif;
+

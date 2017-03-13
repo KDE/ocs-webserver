@@ -1133,7 +1133,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         if ($cookieData) {
             $cookieData = unserialize($cookieData);
             $remember_me_seconds = $config->settings->auth_session->remember_me->timeout;
-            $domain = $this->getRequest()->getHttpHost();
+            $domain = Local_Tools_ParseDomain::get_domain($this->getRequest()->getHttpHost());
             $cookieExpire = time() - $remember_me_seconds;
 
             setcookie($cookieName, null, $cookieExpire, '/', $domain, null, true);

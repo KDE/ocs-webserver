@@ -80,6 +80,11 @@
 <!-- home page script -->
 <script src="/theme/flatui/js/home_page.js"></script>
 
+<?php
+echo $this->render('partials/propagateLogin.phtml');
+echo $this->render('partials/propagateLogout.phtml');
+?>
+
 <?= $this->inlineScript() ?>
 <?php if (APPLICATION_ENV != 'development') { ?>
     <?php

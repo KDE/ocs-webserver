@@ -43,6 +43,12 @@ class Default_Model_Oauth_Github
     protected $session;
     /** @var  Zend_Db_Table_Row_Abstract */
     protected $memberData;
+    /** @var  string */
+    protected $access_token;
+    /** @var  boolean */
+    protected $connected;
+    /** @var  string */
+    protected $redirect;
 
     /**
      * @inheritDoc
@@ -69,8 +75,8 @@ class Default_Model_Oauth_Github
 
     public function authStart($redirectUrlAfterSuccess = null)
     {
-        $this->storeRedirectUrl($redirectUrlAfterSuccess);
-        $state_token = $this->getStateToken('auth');
+        $state_token = $this->generateToken('auth');
+        $this->saveStateData($state_token, $redirectUrlAfterSuccess);
 
         $requestUrl = self::URI_AUTH . "?client_id={$this->config->client_id}&redirect_uri=" . urlencode($this->config->client_callback) . "&scope=user&state={$state_token}";
 
@@ -81,18 +87,11 @@ class Default_Model_Oauth_Github
         $redirection->gotoUrl($requestUrl);
     }
 
-    private function storeRedirectUrl($redirectUrlAfterSuccess)
+    private function saveStateData($token, $redirect = null)
     {
-        $this->session->redirect = $redirectUrlAfterSuccess;
-    }
-
-    private function getStateToken($prefix_state)
-    {
-        if (isset($this->session->state_token)) {
-            return $this->session->state_token;
-        } else {
-            return $this->generateToken($prefix_state);
-        }
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        return $cache->save(array('redirect' => $redirect), $token, array('auth', 'github'), 120);
     }
 
     private function generateToken($prefix_state)
@@ -101,9 +100,7 @@ class Default_Model_Oauth_Github
         if (false == empty($prefix_state)) {
             $prefix = $prefix_state . self::PREFIX_SEPARATOR;
         }
-        $token = $prefix . Local_Tools_UUID::generateUUID();
-        $this->session->state_token = $token;
-        return $token;
+        return $prefix . Local_Tools_UUID::generateUUID();
     }
 
     /**
@@ -114,62 +111,76 @@ class Default_Model_Oauth_Github
     public function authFinish($http_params)
     {
         $error = (array_key_exists('error', $http_params)) ? $http_params['error'] : null;
-
         if ($error) {
             throw new Zend_Exception('Authentication failed. OAuth provider returned an error: ' . $error);
         }
 
         $request_code = (array_key_exists('code', $http_params)) ? $http_params['code'] : null;
-        $session_state = (array_key_exists('state', $http_params)) ? $http_params['state'] : null;
+        $session_state_token = (array_key_exists('state', $http_params)) ? $http_params['state'] : null;
 
-        $this->validateStateCode($session_state);
+        $result = $this->isValidStateCode($session_state_token);
+        if ($result === false) {
+            $this->connected = false;
+            return false;
+        }
 
-        $access_token = $this->requestAccessToken($request_code);
+        $this->access_token = $this->requestAccessToken($request_code, $session_state_token);
 
-        return $access_token;
+        if(isset($this->access_token)) {
+            $this->connected = true;
+        }
+
+        $this->redirect = $this->getRedirectFromState($session_state_token);
+//        $this->clearStateToken($session_state_token);
+
+        return $this->access_token;
     }
 
     /**
      * @param $session_state
-     * @throws Zend_Exception
+     * @return bool
      */
-    protected function validateStateCode($session_state)
+    protected function isValidStateCode($session_state)
     {
-        if ($session_state != $this->session->state_token) {
-            throw new Zend_Exception('Authentication failed. OAuth provider send a token that does not match.');
+        if (empty($session_state)) {
+            return false;
         }
+
+        /** @var Zend_Cache_Backend_Apc $cache */
+        $cache = Zend_Registry::get('cache');
+        if (false == $cache->test($session_state)) {
+           Zend_Registry::get('logger')->err(__METHOD__ . ' - Authentication failed. OAuth provider send a token that does not match.');
+           return false;
+        }
+        return true;
     }
 
     /**
      * @param string $code
-     * @return string|null
+     * @param $state_token
+     * @return null|string
      * @throws Zend_Exception
      */
-    protected function requestAccessToken($code)
+    protected function requestAccessToken($code, $state_token)
     {
-        $response = $this->requestHttpAccessToken($code);
+        $response = $this->requestHttpAccessToken($code, $state_token);
         $data = $this->parseResponse($response);
 
         if ($response->getStatus() != 200) {
             throw new Zend_Exception('Authentication failed. OAuth provider send error message: ' . $data['error'] . ' : ' . $data['error_description']);
         }
 
-        $this->clearStateToken();
+        Zend_Registry::getInstance()->get('logger')->debug(__METHOD__ . ' - response for post request\n' . print_r($data, true));
 
-        Zend_Registry::getInstance()->get('logger')->debug(__METHOD__ . ' - response for post request\n' . print_r($data,
-                true));
-
-        $access_token = (array_key_exists('access_token', $data)) ? $data['access_token'] : null;
-        $this->session->access_token = $access_token;
-
-        return $access_token;
+        return (array_key_exists('access_token', $data)) ? $data['access_token'] : null;
     }
 
     /**
-     * @param $code
+     * @param $request_code
+     * @param $state_token
      * @return Zend_Http_Response
      */
-    protected function requestHttpAccessToken($code)
+    protected function requestHttpAccessToken($request_code, $state_token)
     {
         $httpClient = new Zend_Http_Client(self::URI_ACCESS);
         $httpClient->setMethod(Zend_Http_Client::POST);
@@ -177,9 +188,9 @@ class Default_Model_Oauth_Github
         $httpClient->setParameterPost(array(
             'client_id' => $this->config->client_id,
             'client_secret' => $this->config->client_secret,
-            'code' => $code,
+            'code' => $request_code,
             'redirect_uri' => $this->config->client_callback,
-            'state' => $this->getStateToken('auth')
+            'state' => $state_token
         ));
 
         $response = $httpClient->request();
@@ -200,9 +211,11 @@ class Default_Model_Oauth_Github
         return $data;
     }
 
-    protected function clearStateToken()
+    protected function clearStateToken($token)
     {
-        $this->session->state_token = null;
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        return $cache->remove($token);
     }
 
     /**
@@ -217,26 +230,30 @@ class Default_Model_Oauth_Github
         if ($authResult->isValid()) {
             $authModel = new Default_Model_Authorization();
             $authModel->storeAuthSessionDataByIdentity($this->memberData['member_id']);
+            $authModel->updateRememberMe(true);
             $authModel->updateUserLastOnline('member_id', $this->memberData['member_id']);
             return $authResult;
         }
 
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - error while authenticate user from oauth provider: ' . implode(",\n",
-                $authResult->getMessages()));
+        if ($authResult->getCode() == Zend_Auth_Result::FAILURE_IDENTITY_NOT_FOUND) {
+            return $this->registerLocal();
+        }
+
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - error while authenticate user from oauth provider: ' .
+            implode(",\n", $authResult->getMessages()));
         return $authResult;
     }
 
     public function getUserEmail()
     {
         $httpClient = new Zend_Http_Client(self::URI_EMAIL);
-        $httpClient->setHeaders('Authorization', 'token ' . $this->session->access_token);
+        $httpClient->setHeaders('Authorization', 'token ' . $this->access_token);
         $httpClient->setHeaders('Accept', 'application/json');
         $response = $httpClient->request();
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - last request: \n' . $httpClient->getLastRequest());
         Zend_Registry::getInstance()->get('logger')->debug(__METHOD__ . ' - response from post request\n' . $response->getHeadersAsString());
         $data = $this->parseResponse($response);
-        Zend_Registry::getInstance()->get('logger')->debug(__METHOD__ . ' - response from post request\n' . print_r($data,
-                true));
+        Zend_Registry::getInstance()->get('logger')->debug(__METHOD__ . ' - response from post request\n' . print_r($data, true));
         if ($response->getStatus() > 200) {
             throw new Zend_Exception('error while request users data');
         }
@@ -269,7 +286,7 @@ class Default_Model_Oauth_Github
         $this->memberData = array_shift($resultSet);
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - this->memberData: ' . print_r($this->memberData, true));
         return $this->createAuthResult(Zend_Auth_Result::SUCCESS, $userEmail,
-            array('Authentication successful.'));
+                array('Authentication successful.'));
     }
 
     private function fetchUserByEmail($userEmail)
@@ -339,8 +356,13 @@ class Default_Model_Oauth_Github
         return $member;
     }
 
+    /**
+     * @return Zend_Auth_Result
+     */
     public function registerLocal()
     {
+        $this->setRegisterAfterLogin(false);
+
         $userInfo = $this->getUserInfo();
         $userInfo['email'] = $this->getUserEmail();
 
@@ -358,13 +380,14 @@ class Default_Model_Oauth_Github
             'profile_image_url' => $userInfo['avatar_url'],
             'social_username' => $userInfo['login'],
             'social_user_id' => $userInfo['id'],
-            'link_github' => $userInfo['html_url'],
+            'link_github' => $userInfo['name'],
             'created_at' => new Zend_Db_Expr('Now()'),
             'changed_at' => new Zend_Db_Expr('Now()'),
             'uuid' => Local_Tools_UUID::generateUUID(),
             'verificationVal' => MD5($userInfo['id'] . $userInfo['login'] . time())
         );
 
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - new user data: '. print_r($newUserValues, true));
         $modelMember = new Default_Model_Member();
         $member = $modelMember->createNewUser($newUserValues);
         $modelEmail = new Default_Model_MemberEmail();
@@ -375,16 +398,19 @@ class Default_Model_Oauth_Github
         if ($member->member_id) {
             $authModel = new Default_Model_Authorization();
             $authModel->storeAuthSessionDataByIdentity($member->member_id);
+            $authModel->updateRememberMe(true);
             $authModel->updateUserLastOnline('member_id', $member->member_id);
-            return true;
+            return $this->createAuthResult(Zend_Auth_Result::SUCCESS, $member['mail'],
+                array('Authentication successful.'));
         }
-        return false;
+        return $this->createAuthResult(Zend_Auth_Result::FAILURE, $userEmail,
+            array('A user with given data could not registered.'));
     }
 
     public function getUserInfo()
     {
         $httpClient = new Zend_Http_Client(self::URI_USER);
-        $httpClient->setHeaders('Authorization', 'token ' . $this->session->access_token);
+        $httpClient->setHeaders('Authorization', 'token ' . $this->access_token);
         $httpClient->setHeaders('Accept', 'application/json');
         $response = $httpClient->request();
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - last request: \n' . $httpClient->getLastRequest());
@@ -414,7 +440,7 @@ class Default_Model_Oauth_Github
      */
     public function isConnected()
     {
-        return isset($this->session->access_token);
+        return (boolean)$this->connected;
     }
 
     /**
@@ -442,16 +468,36 @@ class Default_Model_Oauth_Github
         return (array_key_exists('login', $userinfo)) ? $userinfo['login'] : '';
     }
 
-    public function gotoRedirect()
+    public function getRedirect()
     {
-        if ($this->session->redirect) {
-            $redirect = $this->session->redirect;
-            $this->session->redirect = null;
-            /** @var Zend_Controller_Action_Helper_Redirector $redirection */
-            $redirection = Zend_Controller_Action_HelperBroker::getStaticHelper('redirector');
-            $redirection->gotoUrl($redirect);
+        if ($this->redirect) {
+            $filterRedirect = new Local_Filter_Url_Decrypt();
+            $redirect = $filterRedirect->filter($this->redirect);
+            $this->redirect = null;
+            return $redirect;
         }
         return false;
+    }
+
+    private function getRedirectFromState($session_state_token)
+    {
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $data = $cache->load($session_state_token);
+        return (is_array($data) AND array_key_exists('redirect', $data)) ? $data['redirect'] : null;
+    }
+
+    /**
+     * @param $token_id
+     * @return string
+     */
+    public function authStartWithToken($token_id)
+    {
+        $requestUrl = self::URI_AUTH . "?client_id={$this->config->client_id}&redirect_uri=" . urlencode($this->config->client_callback) . "&scope=user&state={$token_id}";
+
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - redirectUrl: ' . print_r($requestUrl, true));
+
+        return $requestUrl;
     }
 
 }

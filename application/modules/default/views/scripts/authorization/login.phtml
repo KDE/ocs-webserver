@@ -22,6 +22,7 @@
 
 $users = $this->newUsers($limit = 216,'created_at','DESC');
 $buildMemberUrl = new Default_View_Helper_BuildMemberUrl();
+$url_param_redirect = isset($this->redirect) ? 'redirect/'.$this->redirect : null;
 ?>
   <link href="/theme/flatui/css/bootstrap/social-buttons.css" rel="stylesheet" type="text/css">
   <style>
@@ -45,13 +46,13 @@ $buildMemberUrl = new Default_View_Helper_BuildMemberUrl();
                 <h3></h3>
 
                 <div id="social-login-elements">
-                  <?php /*<div class="register-facebook">
-
-                    <a  href="/login/github/" class="btn btn-block btn-social btn-github">
+                  <div class="register-facebook">
+                    <p class="small center light greylight">Login</p>
+                    <a  href="/login/github/<?=$url_param_redirect?>" class="btn btn-block btn-social btn-github">
                       <span class="fa fa-github"></span>
                       with Github
                     </a>
-                  </div> */ ?>
+                  </div>
 
                   <div class="bottom margin-top-15">
                     <div id="show-login-description" class="small light lightgrey">Join us?</div>
