@@ -361,7 +361,6 @@ class Default_Model_Oauth_Github
      */
     public function registerLocal()
     {
-        $this->setRegisterAfterLogin(false);
 
         $userInfo = $this->getUserInfo();
         $userInfo['email'] = $this->getUserEmail();
