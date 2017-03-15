@@ -259,7 +259,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         Zend_Registry::get('logger')->info(__METHOD__ . ' - param redirect: ' . $this->getParam('redirect'));
 
         if (false === $formLogin->isValid($_POST)) { // form not valid
-            Zend_Registry::get('logger')->info(__METHOD__ . ' - form not valid:' . print_r($formLogin->getMessages(), true));
+            Zend_Registry::get('logger')->info(__METHOD__ . ' - ip: '.$this->_request->getClientIp().' - form not valid:' . print_r($formLogin->getMessages(), true));
             $this->view->formLogin = $formLogin;
             $this->view->errorText = 'index.login.error.auth';
             $this->view->error = 1;
@@ -277,7 +277,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         $authResult = $authModel->authenticateUser($values['mail'], $values['password'], $values['remember_me']);
 
         if (false == $authResult->isValid()) { // authentication fail
-            Zend_Registry::get('logger')->info(__METHOD__ . ' - authentication failed.');
+            Zend_Registry::get('logger')->info(__METHOD__ . ' - ip: '.$this->_request->getClientIp().' - authentication failed.');
 
             $this->view->errorText = 'index.login.error.auth';
             $this->view->formLogin = $formLogin;

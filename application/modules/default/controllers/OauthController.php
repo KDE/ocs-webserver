@@ -74,9 +74,12 @@ class OAuthController extends Zend_Controller_Action
 
         $authResult = $authAdapter->authenticate();
         if (false == $authResult->isValid()) {
+            Zend_Registry::get('logger')->info(__METHOD__ . ' - ip: '.$this->_request->getClientIp().' - authentication failed.');
             $this->_helper->flashMessenger->addMessage(self::ERR_MSG_DEFAULT);
             $this->forward('index', 'explore', 'default');
         }
+
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - authentication successful - member_id: ' . Zend_Auth::getInstance()->getIdentity()->member_id);
 
         $modelToken = new Default_Model_SingleSignOnToken();
         $modelToken->addData($this->getParam('state'), array('member_id' => Zend_Auth::getInstance()->getIdentity()->member_id, 'auth_result' => $authResult->isValid()));
