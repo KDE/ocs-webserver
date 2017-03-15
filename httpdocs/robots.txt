@@ -4,4 +4,7 @@ Disallow: /login*
 Disallow: /logout*
 Disallow: /register*
 Disallow: /*/rating/*
-Disallow: /*#report-product*
+Disallow: /*#report*
+Disallow: /*#reply*
+Disallow: /*#add-comment*
+Disallow: /search*
