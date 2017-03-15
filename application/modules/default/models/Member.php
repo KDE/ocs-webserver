@@ -441,8 +441,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         if (false == isset($userData['password'])) {
             throw new Exception(__METHOD__ . ' - user password is not set.');
         }
-        $userData['password'] = Local_Auth_Adapter_Ocs::getEncryptedPassword($userData['password'],
-            Default_Model_DbTable_Member::SOURCE_LOCAL);
+        $userData['password'] = Local_Auth_Adapter_Ocs::getEncryptedPassword($userData['password'], Default_Model_DbTable_Member::SOURCE_LOCAL);
         if (false == isset($userData['roleId'])) {
             $userData['roleId'] = self::ROLE_ID_DEFAULT;
         }

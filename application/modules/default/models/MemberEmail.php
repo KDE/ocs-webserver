@@ -155,7 +155,7 @@ class Default_Model_MemberEmail
         $modelMember = new Default_Model_Member();
         $dataMember = $modelMember->fetchMemberData($member_id);
         $dataMember->mail = $dataEmail['email_address'];
-        $dataMember->mail_checked = $dataEmail['email_checked'] ? 1 : 0;
+        $dataMember->mail_checked = isset($dataEmail['email_checked']) ? 1 : 0;
         return $dataMember->save();
     }
 
