@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -19,7 +20,6 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-
 class Default_View_Helper_BuildMemberUrl extends Zend_View_Helper_Abstract
 {
 
@@ -61,7 +61,26 @@ class Default_View_Helper_BuildMemberUrl extends Zend_View_Helper_Abstract
             $action = $action . '/';
         }
 
+        $member_host = Zend_Registry::get('config')->settings->member->page->host;
+
         return "{$host}/{$storeId}member/{$member_id}/{$action}{$url_param}";
+    }
+
+    public function buildUrl($member_id, $action = null, $params = null)
+    {
+        $url_param = '';
+        if (is_array($params)) {
+            array_walk($params, create_function('&$i,$k', '$i="$k/$i/";'));
+            $url_param = implode('/', $params);
+        }
+
+        if (isset($action)) {
+            $action .= '/';
+        }
+
+        $member_host = Zend_Registry::get('config')->settings->member->page->server;
+
+        return "{$member_host}/me/{$member_id}/{$action}{$url_param}";
     }
 
 }

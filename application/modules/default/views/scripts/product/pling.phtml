@@ -102,12 +102,12 @@ if ($this->product->claimable == 1) {
                                             <div class="row product-maker-sidebar">
                                                 <div class="col-md-7 col-lg-7 col-sm-7 col-xs-7 product-maker-summary">
                                                     <h5>
-                                                        <a href="<?php echo $helperBuildMemberUrl->buildMemberUrl($this->member->member_id); ?>"><?= $this->member->username; ?></a>
+                                                        <a href="<?php echo $helperBuildMemberUrl->buildUrl($this->member->member_id); ?>"><?= $this->member->username; ?></a>
                                                     </h5>
 
                                                 </div>
                                                 <div class="col-md-5 col-lg-5 col-sm-5 col-xs-5 product-maker-thumbnail relative">
-                                                    <a href="<?php echo $helperBuildMemberUrl->buildMemberUrl($this->member->member_id); ?>"
+                                                    <a href="<?php echo $helperBuildMemberUrl->buildUrl($this->member->member_id); ?>"
                                                        title="<?= $this->member->username ?>">
                                                         <div class="profile-image-overlay-4 absolute"></div>
                                                         <img src="<?= $helperImage->Image($this->member->profile_image_url, array('width' => 40, 'height' => 40)); ?>"
@@ -232,7 +232,7 @@ if ($this->product->claimable == 1) {
 
                                         <div class="user">
                                             <div class="u-wrap">
-                                                <a href="<?php echo $helperBuildMemberUrl->buildMemberUrl($supporter->member_id); ?>">
+                                                <a href="<?php echo $helperBuildMemberUrl->buildUrl($supporter->member_id); ?>">
                                                     <figure>
                                                         <img src="<?= $helperImage->Image($supporter->profile_image_url,array('width' => 200, 'height' => 200, 'crop' => 2)); ?>"/>
                                                     </figure>

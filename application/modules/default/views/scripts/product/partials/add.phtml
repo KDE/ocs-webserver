@@ -22,6 +22,7 @@
 
 $this->tab = 'add';
 $helperImage = new Default_View_Helper_Image();
+$helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
 ?>
 <main class="user-admin-page">
     <section class="head-wrap">
@@ -43,7 +44,7 @@ $helperImage = new Default_View_Helper_Image();
                             <span class="lightblue"><?php echo $this->member->username; ?></span><?= $this->translate(', welcome to your personal start page!') ?>
                         </div>
                         <div class="small lightgrey">
-                            <a href="<?php echo $this->buildMemberUrl($this->member->member_id); ?>"><?= $this->translate('Click here to go to your About Me page.') ?></a>
+                            <a href="<?php echo $helpMemberUrl->buildUrl($this->member->member_id); ?>"><?= $this->translate('Click here to go to your About Me page.') ?></a>
                         </div>
                     </div>
                 </div>

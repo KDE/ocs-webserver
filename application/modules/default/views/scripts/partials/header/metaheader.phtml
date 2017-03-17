@@ -22,9 +22,9 @@
 
 $helperFetchCategory = new Default_View_Helper_CatTitle();
 $helperFetchCatParent = new Default_View_Helper_CatParent();
-$getAuthUser = new Default_View_Helper_GetAuthUser();
-$helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
-$helperImage = new Default_View_Helper_Image();
+//$getAuthUser = new Default_View_Helper_GetAuthUser();
+//$helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
+//$helperImage = new Default_View_Helper_Image();
 $cat_title = $helperFetchCategory->catTitle($this->cat_id);
 $category_id = $this->cat_id;
 $category_id_parent = $helperFetchCatParent->getCatParentId(array('project_category_id' =>  $category_id));

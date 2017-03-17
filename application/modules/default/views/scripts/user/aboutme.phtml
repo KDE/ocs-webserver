@@ -309,7 +309,7 @@ $textCountryCity .= $this->member->country ? ', ' . $this->member->country : '';
                                 <h3>About me</h3>
 
                                 <div>
-                                    <?= nl2br(strip_tags($this->mainProject->description)); ?>
+                                    <?php echo isset($this->mainProject->description) ? nl2br(strip_tags($this->mainProject->description)): ''; ?>
                                 </div>
                             </div>
                         </div>

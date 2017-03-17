@@ -626,6 +626,18 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         );
 
         $router->addRoute(
+            'user_show_short',
+            new Zend_Controller_Router_Route(
+                '/me/:member_id/:action/*',
+                array(
+                    'module' => 'default',
+                    'controller' => 'user',
+                    'action' => 'index'
+                )
+            )
+        );
+
+        $router->addRoute(
             'register',
             new Zend_Controller_Router_Route_Static(
                 '/register',
@@ -708,30 +720,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 )
             )
         );
-
-//        $router->addRoute(
-//            'login_forgot',
-//            new Zend_Controller_Router_Route(
-//                '/login/forgot',
-//                array(
-//                    'module' => 'default',
-//                    'controller' => 'authorization',
-//                    'action' => 'forgot'
-//                )
-//            )
-//        );
-//
-//        $router->addRoute(
-//            'login_from_cookie',
-//            new Zend_Controller_Router_Route(
-//                '/login/lfc',
-//                array(
-//                    'module' => 'default',
-//                    'controller' => 'authorization',
-//                    'action' => 'lfc'
-//                )
-//            )
-//        );
 
         $router->addRoute(
             'content',

@@ -22,7 +22,6 @@
 
 $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
 $helperImage = new Default_View_Helper_Image();
-$helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
 ?>
 <div class="supporter-box-container">
     <div class="supporter-box-top">
@@ -50,10 +49,11 @@ $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
             if ($this->nrOfSupporters == 0) {
                 echo $this->translate('supporterbox.beFirstSupporter');
             } else {
+                $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
                 foreach ($this->supporters as $supporter) { ?>
                     <figure>
                         <a target="_blank"
-                           href="<?php echo $helperBuildMemberUrl->buildMemberUrl($supporter->member_id); ?>"
+                           href="<?php echo $helperBuildMemberUrl->buildUrl($supporter->member_id); ?>"
                            title="<?php echo $supporter->username; ?>">
                             <img src="<?php echo $supporter->profile_image_url; ?>"
                                  alt="<?php echo $supporter->username; ?>">

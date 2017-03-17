@@ -55,7 +55,7 @@ $pageCount = $this->users->count();
             	</div>
 				<div class="col-lg-7" >
 				<img src="<?php echo $this->Image( $this->user['profile_image_url'], array('width' => '50', 'height' => '50', 'crop' => 2)); ?>" style="max-width: 22px; max-height:22px;margin-right: 10px; border-radius: 50%;float: left"/>
-				<a href="<?php echo $this->buildMemberUrl($this->user['member_id']); ?>" style="vertical-align:middle;"><?php echo  $this->user['username']; ?></a>
+				<a href="<?php echo $this->buildUrl($this->user['member_id']); ?>" style="vertical-align:middle;"><?php echo  $this->user['username']; ?></a>
 				
 				</div>
 				<div class="col-lg-3">

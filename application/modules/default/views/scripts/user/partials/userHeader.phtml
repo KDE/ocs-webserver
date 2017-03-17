@@ -23,14 +23,14 @@
 <?php $helperMember = new Default_View_Helper_BuildMemberUrl(); ?><ul class="nav nav-tabs">
     
     <li class="<?php echo $this->tab == 'activities' ? 'active' : ''; ?>">
-        <a href="<?php echo $helperMember->buildMemberUrl($this->member->member_id, 'activities'); ?>">
+        <a href="<?php echo $helperMember->buildUrl($this->member->member_id, 'activities'); ?>">
             <span class="glyphicon glyphicon-align-justify"></span>
             <?= $this->translate('Activities') ?>
         </a>
     </li>
     
     <li class="<?php echo $this->tab == 'products' ? 'active' : ''; ?>">
-        <a href="<?php echo $helperMember->buildMemberUrl($this->member->member_id, 'products'); ?>">
+        <a href="<?php echo $helperMember->buildUrl($this->member->member_id, 'products'); ?>">
             <span class="glyphicon glyphicon-th-list"></span>
             <?= $this->translate('My Products') ?>
         </a>
@@ -49,13 +49,13 @@
         <?php endif ?>
     </li>
     <li class="header-menu-left-item <?php echo $this->tab == 'earnings' ? 'active' : ''; ?>">
-        <a href="<?php echo $helperMember->buildMemberUrl($this->member->member_id, 'income'); ?>">
+        <a href="<?php echo $helperMember->buildUrl($this->member->member_id, 'income'); ?>">
             <span class="glyphicon glyphicon-usd"></span>
             <?= $this->translate('My Income') ?>
         </a>
     </li>
     <li class="header-menu-left-item <?php echo $this->tab == 'payment' ? 'active' : ''; ?>">
-        <a href="<?php echo $helperMember->buildMemberUrl($this->member->member_id, 'payments'); ?>">
+        <a href="<?php echo $helperMember->buildUrl($this->member->member_id, 'payments'); ?>">
             <span class="glyphicon glyphicon-usd"></span>
             <?= $this->translate('My Payments') ?>
         </a>

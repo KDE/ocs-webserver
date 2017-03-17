@@ -116,7 +116,7 @@ $member = $getAuthUser->getAuthUser();
                                             <li class="link first"><a href="/product/add/"><?= $this->translate('Add Product') ?></a>
                                             </li>
                                             <li class="link first"><a
-                                                    href="<?= $helperBuildMemberUrl->buildMemberUrl($member->member_id, 'products') ?>"><?= $this->translate('My Products') ?></a>
+                                                    href="<?= $helperBuildMemberUrl->buildUrl($member->member_id, 'products') ?>"><?= $this->translate('My Products') ?></a>
                                             </li>
                                             <li class="link"><a
                                                     href="/settings/"><?= $this->translate('My Settings') ?></a>
@@ -222,7 +222,7 @@ $member = $getAuthUser->getAuthUser();
                                                 <div class="user " >
                                                
                                                     <div class="u-wrap">
-                                                        <a href="<?php echo $this->buildMemberUrl($user['member_id']); ?>">
+                                                        <a href="<?php echo $helperBuildMemberUrl->buildUrl($user['member_id']); ?>">
                                                             <figure >
                                                                 <img src="<?php echo $this->Image($user['profile_image_url'], array('width' => '200', 'height' => '200', 'crop' => 2)); ?>"/>
                                                             </figure>

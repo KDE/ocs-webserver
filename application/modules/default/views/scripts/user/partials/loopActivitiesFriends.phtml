@@ -19,6 +19,8 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
+$helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
+$helpProductUrl = new Default_View_Helper_BuildProductUrl();
 ?>
 <div class="friend-activity row-fluid">
     <div class="span3 supporter-thumbnail relative">
@@ -27,8 +29,8 @@
     </div>
     <!-- /.supporter-thumbnail -->
     <div class="span9 friend-activity-summary">
-        <a href="<?= $this->buildMemberUrl($this->member_id) ?>"><?php echo $this->username; ?></a><?php echo $this->translate('User' . $this->type_text); ?>
-        <a href="<?= $this->buildProductUrl($this->prj_project_id); ?>"><?= $this->obj_title ?></a>
+        <a href="<?= $helpMemberUrl->buildUrl($this->member_id) ?>"><?php echo $this->username; ?></a><?php echo $this->translate('User' . $this->type_text); ?>
+        <a href="<?= $helpProductUrl->buildProductUrl($this->prj_project_id); ?>"><?= $this->obj_title ?></a>
     </div>
     <!-- /.friend-activity-summary -->
 </div><!-- /.friend-activity -->

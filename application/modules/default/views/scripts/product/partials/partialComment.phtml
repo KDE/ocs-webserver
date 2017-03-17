@@ -32,13 +32,13 @@ $age = $helperHumanTiming->humanTiming($comment['comment_created_at']);
         <div class="row">
             <div class="col-md-9 col-lg-9 col-sm-9 col-xs-9">
                             <span class="name">
-                               by <a href="<?= $helperBuildMemberUrl->buildMemberUrl($comment['member_id']) ?>"><?php echo $comment['username']; ?></a></span>
+                               by <a href="<?= $helperBuildMemberUrl->buildUrl($comment['member_id']) ?>"><?php echo $comment['username']; ?></a></span>
                 on: <span class="small lightgrey"> <?= $age['age'] ?> <span class="light"><?= $age['unit'] ?> ago</span> </span>
             </div>
             <div class="col-md-3 col-lg-3 col-sm-3 col-xs-3">
                 <figure class="well relative row" style="width:150px;padding:0;margin-bottom: 0;">
                     <div class="col-md-5 col-lg-5 col-sm-5 col-xs-5 product-maker-thumbnail relative">
-                        <a title="<?= $comment['username'] ?>" href="<?= $helperBuildMemberUrl->buildMemberUrl($comment['member_id']) ?>">
+                        <a title="<?= $comment['username'] ?>" href="<?= $helperBuildMemberUrl->buildUrl($comment['member_id']) ?>">
                             <div class="profile-image-overlay-4 absolute"></div>
                             <img width="40"
                                  height="40"
@@ -48,7 +48,7 @@ $age = $helperHumanTiming->humanTiming($comment['comment_created_at']);
                     </div>
                     <div class="col-md-7 col-lg-7 col-sm-7 col-xs-7 product-maker-summary">
                         <h6>
-                            <a href="<?= $helperBuildMemberUrl->buildMemberUrl($comment['member_id']) ?>" class="small"><?= $comment['username'] ?></a>
+                            <a href="<?= $helperBuildMemberUrl->buildUrl($comment['member_id']) ?>" class="small"><?= $comment['username'] ?></a>
                         </h6>
                     </div>
                 </figure>
@@ -66,7 +66,7 @@ $age = $helperHumanTiming->humanTiming($comment['comment_created_at']);
                     <div class="row">
                         <div class="col-md-11 col-lg-11 col-sm-11 col-xs-11">
                             <figure class="supporter-thumbnail relative">
-                                <a href="<?= $helperBuildMemberUrl->buildMemberUrl($identity->member_id) ?>"
+                                <a href="<?= $helperBuildMemberUrl->buildUrl($identity->member_id) ?>"
                                    title="<?= $identity->username ?>">
                                     <img height="40" width="40" src="<?= $helperImage->Image($identity->profile_image_url,array('width' => 40, 'height' => 40, 'crop' => 2)); ?>"
                                          alt="<?= $identity->username ?>">

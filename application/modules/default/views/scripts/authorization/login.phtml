@@ -72,7 +72,7 @@ $url_param_redirect = isset($this->redirect) ? 'redirect/'.$this->redirect : nul
 			<?php foreach ($users as $key => $user) { ?>
 
                 <div class="thumb">
-                    <a href="<?php echo $buildMemberUrl->buildMemberUrl($user['member_id']); ?>" title="<?=$user['profile_image_url']?>">
+                    <a href="<?php echo $buildMemberUrl->buildUrl($user['member_id']); ?>" title="<?=$user['profile_image_url']?>">
                         <span ></span>
                         <img src="<?php echo $this->Image($user['profile_image_url'],array('width' => 110, 'height' => 110, 'crop' => 2)); ?>"/>
                         
