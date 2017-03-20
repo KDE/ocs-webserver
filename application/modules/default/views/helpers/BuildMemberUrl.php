@@ -80,7 +80,7 @@ class Default_View_Helper_BuildMemberUrl extends Zend_View_Helper_Abstract
 
         $member_host = Zend_Registry::get('config')->settings->member->page->server;
 
-        return "{$member_host}/me/{$member_id}/{$action}{$url_param}";
+        return "//{$member_host}/me/{$member_id}/{$action}{$url_param}";
     }
 
 }

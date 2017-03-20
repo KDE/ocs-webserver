@@ -25,6 +25,10 @@
     <meta charset="utf-8">
     <?php echo $this->render('partials/htmlheader.phtml'); ?>
 
+    <?php if (strpos(Zend_Controller_Front::getInstance()->getRequest()->getHttpHost(),Zend_Registry::get('config')->settings->member->page->server) !== false) : ?>
+    <base href="https://opendesktop.org/">
+    <?php endif; ?>
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="alternate" type="application/rss+xml" title="Latest Products" href="/content.rdf"/>
 
