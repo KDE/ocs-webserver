@@ -66,7 +66,7 @@ class Default_View_Helper_BuildMemberUrl extends Zend_View_Helper_Abstract
         return "{$host}/{$storeId}member/{$member_id}/{$action}{$url_param}";
     }
 
-    public function buildUrl($member_id, $action = null, $params = null)
+    public function buildExternalUrl($member_id, $action = null, $params = null)
     {
         $url_param = '';
         if (is_array($params)) {

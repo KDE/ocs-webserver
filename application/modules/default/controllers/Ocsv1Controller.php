@@ -44,7 +44,8 @@ class Ocsv1Controller extends Zend_Controller_Action
         'website' => 'www.opendesktop.org',
         'host' => 'www.opendesktop.org',
         'contact' => 'contact@opendesktop.org',
-        'ssl' => true
+        'ssl' => true,
+        'user_host' => 'pling.me'
     );
 
     protected $_params = array();
@@ -433,7 +434,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                 $this->_sendErrorResponse(101, 'person not found');
             }
 
-            $profilePage = $this->_uriScheme . '://' . $this->_config['website']
+            $profilePage = $this->_uriScheme . '://' . $this->_config['user_host']
                 . '/member/' . $member->member_id;
 
             if ($this->_format == 'json') {

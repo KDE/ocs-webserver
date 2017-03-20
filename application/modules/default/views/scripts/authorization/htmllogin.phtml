@@ -83,7 +83,7 @@ if (false === $auth->hasIdentity() || empty($member->username)) { ?>
         <ul class="profile-menu menu-dropdown">
             <div class="dropdown-header"></div>
             <li class="link first"><a
-                    href="<?= $helperBuildMemberUrl->buildUrl($member->member_id, 'products') ?>"><?= $this->translate('My Products') ?></a>
+                    href="<?= $helperBuildMemberUrl->buildMemberUrl($member->member_id, 'products') ?>"><?= $this->translate('My Products') ?></a>
             </li>
             <li class="link">
                 <a href="/settings/"><?= $this->translate('My Settings') ?></a>

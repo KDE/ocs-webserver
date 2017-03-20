@@ -75,7 +75,7 @@ $users = $this->newUsers($limit = 216,'created_at','DESC');
             foreach ($users as $key => $user) { ?>
 
                 <div class="thumb">
-                    <a href="<?php echo $helperMemberUrl->buildUrl($user['member_id']); ?>">
+                    <a href="<?php echo $helperMemberUrl->buildExternalUrl($user['member_id']); ?>">
                         <span></span>
                         <img src="<?php echo $helperImage->Image($user['profile_image_url'],array('width' => 110, 'height' => 110, 'crop' => 2)); ?>"/>
                     </a>

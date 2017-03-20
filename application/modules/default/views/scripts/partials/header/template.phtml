@@ -81,7 +81,7 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
                                                             href="/product/add/"><?= $this->translate('Add Product') ?></a>
                                                 </li>
                                                 <li class="link first"><a
-                                                            href="<?= $helperBuildMemberUrl->buildUrl($member->member_id,
+                                                            href="<?= $helperBuildMemberUrl->buildExternalUrl($member->member_id,
                                                                 'products') ?>"><?= $this->translate('My Products') ?></a>
                                                 </li>
                                                 <li class="link"><a

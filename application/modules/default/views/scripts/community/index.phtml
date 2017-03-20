@@ -134,7 +134,7 @@ $totalAMountSupported = new Default_View_Helper_FetchTotalAmountSupported();
 
                         <div class="user col-lg-1 col-md-2 col-sm-2 col-xs-2">
                             <div class="u-wrap">
-                                <a href="<?php echo $buildMemberUrl->buildUrl($user['member_id']); ?>">
+                                <a href="<?php echo $buildMemberUrl->buildExternalUrl($user['member_id']); ?>">
                                     <figure >
                                         <img src="<?php echo $helperImage->Image($user['profile_image_url'], array('width' => '200', 'height' => '200', 'crop' => 2)); ?>"/>
                                     </figure>

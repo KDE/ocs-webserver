@@ -274,9 +274,11 @@ class UserController extends Local_Controller_Action_DomainSwitch
         $form = new Default_Form_ProjectShare();
         $form->setAction('/member/' . $this->_memberId . '/share/');
 
-        $helperBaseUrl = new Default_View_Helper_BaseUrl();
-        $helperServerUrl = new Zend_View_Helper_ServerUrl();
-        $this->view->permaLink = $helperServerUrl->serverUrl() . $helperBaseUrl->baseUrl() . '/member/' . $this->_memberId . '/';
+//        $helperBaseUrl = new Default_View_Helper_BaseUrl();
+//        $helperServerUrl = new Zend_View_Helper_ServerUrl();
+        $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
+        $this->view->permaLink = $helpMemberUrl->buildExternalUrl($this->_memberId);
+//        $this->view->permaLink = $helperServerUrl->serverUrl() . $helperBaseUrl->baseUrl() . '/member/' . $this->_memberId . '/';
         if ($this->_request->isGet()) {
             $this->view->form = $form;
             $this->renderScript('product/share.phtml');

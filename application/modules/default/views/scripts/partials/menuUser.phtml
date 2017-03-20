@@ -29,7 +29,7 @@ $member = $helperAuthUser->getAuthUser();
                                 role="menuitem"
                                 href="/product/add/"><?= $this->translate('Add Product') ?></a></li>
     <li class="presentation"><a class="black" role="menuitem"
-                                href="<?= $helperBuildMemberUrl->buildUrl($member->member_id, 'products') ?>"><?= $this->translate('My Products') ?></a>
+                                href="<?= $helperBuildMemberUrl->buildMemberUrl($member->member_id, 'products') ?>"><?= $this->translate('My Products') ?></a>
     </li>
     <li class="presentation"><a class="black"
                                 role="menuitem"

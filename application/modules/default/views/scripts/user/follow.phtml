@@ -23,7 +23,8 @@
 $txtUserFollows = '';
 $urlUserFollows = '/member/' . $this->member_id . '/unfollow/';
 $imgFile = '/theme/flatui/img/icon-like-color.png';
-if (false == $this->userFollows($this->member_id, $this->authMember->member_id)) {
+$helpFollows = new Default_View_Helper_UserFollows();
+if (false == $helpFollows->userFollows($this->member_id, $this->authMember->member_id)) {
     $txtUserFollows = '';
     $urlUserFollows = '/member/' . $this->member_id . '/follow/';
     $imgFile = '/theme/flatui/img/icon-like.png';

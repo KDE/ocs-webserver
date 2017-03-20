@@ -48,7 +48,7 @@ $countSupporter = count($this->supporter->toArray());
                 <div class="row" style="margin-left: 0; margin-right: 0">
                     <div class="col-lg-12" style="height:35px; padding-left: 0px">
                         <figure class="supporter-thumbnail relative">
-                            <a href="<?= $helperBuildMemberUrl->buildUrl($comment['member_id']) ?>"
+                            <a href="<?= $helperBuildMemberUrl->buildExternalUrl($comment['member_id']) ?>"
                                title="<?= $comment['username'] ?>">
                                 <img src="<?= $helperImage->Image($comment['profile_image_url'],array('width' => 40, 'height' => 40, 'crop' => 2)); ?>" alt="<?= $comment['username'] ?>">
                             </a>
@@ -56,7 +56,7 @@ $countSupporter = count($this->supporter->toArray());
                         <div class="comment-content">
                             <div class="" style="padding-top: 12px">
 	                            <span class="name">
-	                                <a href="<?= $helperBuildMemberUrl->buildUrl($comment['member_id']) ?>"><?php echo $comment['username']; ?> </a></span>
+	                                <a href="<?= $helperBuildMemberUrl->buildExternalUrl($comment['member_id']) ?>"><?php echo $comment['username']; ?> </a></span>
                                 <?php
                                 if (!$comment['amount'] == 0) {
                                     ?>

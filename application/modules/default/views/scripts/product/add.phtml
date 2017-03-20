@@ -28,6 +28,8 @@ $this->cc_share = $this->form->sa->getValue();
 //$this->os = Zend_Registry::get('application_os');
 $this->tab = 'add';
 $helperImage = new Default_View_Helper_Image();
+$helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
+$helpProductUrl = new Default_View_Helper_BuildProductUrl();
 
 $modelCategory = new Default_Model_DbTable_ProjectCategory();
 $valueCatId = $this->form->project_category_id->getValue();
@@ -108,9 +110,13 @@ $categoryPath[] = $valueCatId;
 
                     <div class="pull-left">
                         <div class="intro">
-                            <div class="large">Hi <span class="lightblue"><?= $this->member->username; ?></span><?= $this->translate(', welcome to your personal start page!') ?>
+                            <div class="large">
+                                Hi <span class="lightblue"><?= $this->member->username; ?></span><?= $this->translate(', welcome to your personal start page!') ?>
                             </div>
-                            <div class="small lightgrey"><a href="/member/<?= $this->member->member_id; ?>/"><?= $this->translate('Click here to go to your About Me page.') ?></a>
+                            <div class="small lightgrey">
+                                <a href="<?= $helpMemberUrl->buildExternalUrl($this->member->member_id); ?>">
+                                    <?= $this->translate('Click here to go to your About Me page.') ?>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -217,12 +223,12 @@ $categoryPath[] = $valueCatId;
                                 <div id="modal-ppload" aria-labelledby="modal-ppload-label"
                                      data-ppload-api-uri="<?= PPLOAD_API_URI ?>"
                                      data-ppload-collection-id="<?= $this->ppload_collection_id ?>" data-product-id=""
-                                     data-addpploadfile-uri="<?= $this->buildProductUrl('@@project_id@@', 'addpploadfile') ?>"
-                                     data-updatepploadfile-uri="<?= $this->buildProductUrl('@@project_id@@', 'updatepploadfile') ?>"
-                                     data-updatepackagetype-uri="<?= $this->buildProductUrl('@@project_id@@', 'updatepackagetype') ?>"
-                                     data-deletepploadfile-uri="<?= $this->buildProductUrl('@@project_id@@', 'deletepploadfile') ?>"
-                                     data-deletepploadfiles-uri="<?= $this->buildProductUrl('@@project_id@@', 'deletepploadfiles') ?>"
-                                     data-finalizepploadcollection-uri="<?= $this->buildProductUrl('@@project_id@@', 'finalizepploadcollection') ?>">
+                                     data-addpploadfile-uri="<?= $helpProductUrl->buildProductUrl('@@project_id@@', 'addpploadfile') ?>"
+                                     data-updatepploadfile-uri="<?= $helpProductUrl->buildProductUrl('@@project_id@@', 'updatepploadfile') ?>"
+                                     data-updatepackagetype-uri="<?= $helpProductUrl->buildProductUrl('@@project_id@@', 'updatepackagetype') ?>"
+                                     data-deletepploadfile-uri="<?= $helpProductUrl->buildProductUrl('@@project_id@@', 'deletepploadfile') ?>"
+                                     data-deletepploadfiles-uri="<?= $helpProductUrl->buildProductUrl('@@project_id@@', 'deletepploadfiles') ?>"
+                                     data-finalizepploadcollection-uri="<?= $helpProductUrl->buildProductUrl('@@project_id@@', 'finalizepploadcollection') ?>">
                                     <div class="pling-modal" style="width: 100%;">
                                         <div class="">
                                             <div class="modal-header">

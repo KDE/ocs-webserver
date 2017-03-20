@@ -21,6 +21,7 @@
  **/
 
 $helperImage = new Default_View_Helper_Image();
+$helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $this->tab = 'settings';
 ?>
 <main class="user-admin-page">
@@ -43,7 +44,7 @@ $this->tab = 'settings';
                             <span class="lightblue"><?php echo $this->member->username; ?></span><?= $this->translate(', welcome to your personal start page!') ?>
                         </div>
                         <div class="small lightgrey">
-                            <a href="/member/<?php echo $this->member->member_id; ?>/"><?= $this->translate('Click here to go to your About Me page.') ?></a>
+                            <a href="<?php echo $helpMemberUrl->buildExternalUrl($this->member->member_id); ?>"><?= $this->translate('Click here to go to your About Me page.') ?></a>
                         </div>
                     </div>
                 </div>

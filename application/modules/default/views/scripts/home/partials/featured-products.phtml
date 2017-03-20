@@ -24,22 +24,28 @@
 ?>
     <div id="featureProducts" class="" style=" height:100%">
         <div id="featureProducts-content" style="height:100%; width: 100%; padding-top: 30px;padding-bottom: 30px">
-        <?php         
+        <?php
+        $helpTruncate = new Default_View_Helper_Truncate();
+        $helpImage = new Default_View_Helper_Image();
+        $helpProductUrl = new Default_View_Helper_BuildProductUrl();
+        $helpCategories = new Default_View_Helper_FetchCategoriesForProductAsString();
+        $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
+        $helpDate = new Default_View_Helper_PrintDate();
         foreach ($this->featureProducts as $this->product): ?>            
                     <div class="col-lg-12">
                       
                         <div style="width: 1000px; display: block;margin:0 auto; border:1px solid #DFDCDA; border-radius: 3px; background-color: white;">
-                            <a style="float: left; margin-right: 20px" title="<?=$this->truncate($this->product['description'], 200, '...', false, true)?>" href="<?=$this->buildProductUrl($this->product['project_id'],'')?>">
-                               <img class="productimg " src="<?=$this->Image($this->product['image_small'], array('width' => 500, 'height' => 300))?>"  style="width: 500px; max-height: 300px; "/>
+                            <a style="float: left; margin-right: 20px" title="<?=$helpTruncate->truncate($this->product['description'], 200, '...', false, true)?>" href="<?=$helpProductUrl->buildProductUrl($this->product['project_id'],'')?>">
+                               <img class="productimg " src="<?=$helpImage->Image($this->product['image_small'], array('width' => 500, 'height' => 300))?>"  style="width: 500px; max-height: 300px; "/>
                             </a>
                                <div class="" style="display:block; width:450px; float:right; margin-right:20px;padding-top: 10px">
-                               <a href="<?=$this->buildProductUrl($this->product['project_id'],'')?>"><?=$this->product['title']?></a>
-                               <span  style="display: block; font-size: small;"><?=$this->fetchCategoriesForProductAsString($this->product['project_id'])?> </span>
+                               <a href="<?=$helpProductUrl->buildProductUrl($this->product['project_id'],'')?>"><?=$this->product['title']?></a>
+                               <span  style="display: block; font-size: small;"><?=$helpCategories->fetchCategoriesForProductAsString($this->product['project_id'])?> </span>
 
                                <span style="display:block; padding-top: 10px; font-size: small;">
-                               <a href="<?php echo $this->buildUrl($this->product['member_id']); ?>" style="float: left">
+                               <a href="<?php echo $helpMemberUrl->buildExternalUrl($this->product['member_id']); ?>" style="float: left">
                                    <figure >
-                                       <img src="<?php echo $this->Image($this->product['profile_image_url'], array('width' => '50', 'height' => '50', 'crop' => 2)); ?>" style="width: 30px; height: 30px; border-radius: 50%"/>
+                                       <img src="<?php echo $helpImage->Image($this->product['profile_image_url'], array('width' => '50', 'height' => '50', 'crop' => 2)); ?>" style="width: 30px; height: 30px; border-radius: 50%"/>
                                    </figure>
                                         
                                </a>
@@ -59,7 +65,7 @@
                                 </span>
                                 
                                 <span style="display: block; font-size: small;padding-top: 15px">                                  
-                                        <?=$this->truncate($this->product['description'], 400, '...', false, true)?>
+                                        <?=$helpTruncate->truncate($this->product['description'], 400, '...', false, true)?>
                                 </span>
                                 <div class="rating" style="width: 100%;font-size: small;padding-top: 20px; ">
                                     <?php                
@@ -71,7 +77,7 @@
                                             echo $this->render('partials/widgetRating.phtml'); 
                                     ?>
                                 </div>
-                                <span class="time text-center" style="font-size: small;display: block"><?=$this->printDate($this->product['changed_at']==null?$this->product['created_at']:$this->product['changed_at'])?>
+                                <span class="time text-center" style="font-size: small;display: block"><?=$helpDate->printDate($this->product['changed_at']==null?$this->product['created_at']:$this->product['changed_at'])?>
                                 </span>
 
                                 </div>
