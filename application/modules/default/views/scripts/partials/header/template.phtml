@@ -77,18 +77,17 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
                                             </a>
                                             <ul class="profile-menu menu-dropdown">
                                                 <div class="dropdown-header"></div>
-                                                <li class="link first"><a
-                                                            href="/product/add/"><?= $this->translate('Add Product') ?></a>
+                                                <li class="link first">
+                                                    <a href="/product/add/"><?= $this->translate('Add Product') ?></a>
                                                 </li>
-                                                <li class="link first"><a
-                                                            href="<?= $helperBuildMemberUrl->buildExternalUrl($member->member_id,
-                                                                'products') ?>"><?= $this->translate('My Products') ?></a>
+                                                <li class="link first">
+                                                    <a href="<?= $helperBuildMemberUrl->buildMemberUrl($member->member_id, 'products') ?>"><?= $this->translate('My Products') ?></a>
                                                 </li>
-                                                <li class="link"><a
-                                                            href="/settings/"><?= $this->translate('My Settings') ?></a>
+                                                <li class="link">
+                                                    <a href="/settings/"><?= $this->translate('My Settings') ?></a>
                                                 </li>
-                                                <li class="link"><a
-                                                            href="/logout/"><?= $this->translate('Logout') ?></a>
+                                                <li class="link">
+                                                    <a href="/logout/"><?= $this->translate('Logout') ?></a>
                                                 </li>
                                             </ul>
                                         </li>
