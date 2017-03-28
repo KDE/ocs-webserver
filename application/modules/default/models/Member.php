@@ -264,6 +264,28 @@ class Default_Model_Member extends Default_Model_DbTable_Member
     }
 
     /**
+     * @param $member_id
+     * @param bool $active
+     * @param bool $deleted
+     * @return null|Zend_Db_Table_Row_Abstract
+     */
+    public function fetchMember($member_id, $active = true, $deleted = false)
+    {
+        if (empty($member_id)) {
+            return null;
+        }
+
+        $sql = 'SELECT * FROM member WHERE is_deleted = :deleted AND is_active = :active AND member.member_id = :memberId';
+        $stmnt = $this->_db->query($sql, array('deleted'=>$deleted, 'active'=>$active, 'memberId'=>$member_id));
+
+        if ($stmnt->rowCount() == 0) {
+            return null;
+        }
+
+        return $this->generateRowClass($stmnt->fetch());
+    }
+
+    /**
      * @param string $user_name
      * @return Zend_Db_Table_Row
      */
@@ -399,7 +421,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         return $this->generateRowSet($result);
     }
 
-    public function fetchSupportedByProjects($member_id, $limit = null)
+    public function fetchProjectsSupported($member_id, $limit = null)
     {
         $sql = "
                 SELECT project_category.title AS catTitle,
@@ -691,8 +713,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
                   AND project.is_deleted = 0
                   AND project.member_id = :member_id
             ';
-        $result = $this->_db->fetchAll($sql,
-            array('member_id' => $member_id, 'project_status' => Default_Model_Project::PROJECT_ACTIVE));
+        $result = $this->_db->fetchAll($sql, array('member_id' => $member_id, 'project_status' => Default_Model_Project::PROJECT_ACTIVE));
         return count($result);
     }
 
@@ -714,6 +735,34 @@ class Default_Model_Member extends Default_Model_DbTable_Member
             return $result_activities['lastactive'];
         }
         return null;
+    }
+
+    /**
+     * @param int $member_id
+     * @return array
+     */
+    public function fetchContributedProjectsByCat($member_id)
+    {
+        $projects = $this->fetchSupportedProjects($member_id);
+        $catArray = array();
+        if (count($projects) == 0) {
+            return $catArray;
+        }
+
+        foreach ($projects as $pro) {
+            $catArray[$pro->catTitle] = array();
+        }
+
+        $helperProductUrl = new Default_View_Helper_BuildProductUrl();
+        foreach ($projects as $pro) {
+            $projArr = array();
+            $projArr['name'] = $pro->title;
+            $projArr['image'] = $pro->image_small;
+            $projArr['url'] = $helperProductUrl->buildProductUrl($pro->project_id);
+            $projArr['sumAmount'] = $pro->sumAmount;
+            array_push($catArray[$pro->catTitle], $projArr);
+        }
+        return $catArray;
     }
 
     private function setMemberPlingsDeleted($member_id)

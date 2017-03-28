@@ -1,0 +1,250 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$this->headTitle("{$this->member['username']}'s Profile - ", Zend_View_Helper_Placeholder_Container_Abstract::PREPEND);
+
+$helpAddDefaultScheme = new Default_View_Helper_AddDefaultScheme();
+$helpTruncate = new Default_View_Helper_Truncate();
+
+$modelProject = new Default_Model_Project();
+$this->userProducts = $modelProject->fetchAllProjectsForMember($this->member['member_id'], null, null, true);
+
+$modelMember = new Default_Model_Member();
+$this->earnings = $modelMember->fetchProjectsSupported($this->member['member_id']);
+$this->cntSupporter = $modelMember->fetchCntSupporters($this->member['member_id']);
+$this->mainProject = $modelProject->fetchMainProject($this->member['member_id']);
+
+$this->contributedProjects = $modelMember->fetchContributedProjectsByCat($this->member['member_id']);
+
+$paginationComments = $modelMember->fetchComments($this->member['member_id']);
+
+if ($paginationComments) {
+    $paginationComments->setItemCountPerPage(15);
+    $paginationComments->setCurrentPageNumber($this->currentPageOffset);
+    $this->comments = $paginationComments;
+}
+
+?>
+<style>
+    .info-social{
+        margin-top: .5em;
+    }
+    .details h3 {
+        line-height: 2em;
+        font-size: 1em;
+        margin: 0;
+        color: #a3a2a2;
+        border-bottom: 1px solid #e1e1e1;
+        margin-bottom: 0.5em;
+    }
+</style>
+<main class="about-me-page">
+
+    <section class="head-wrap">
+
+        <!-- HEADER -->
+        <div style="height:400px;background-image: url(/images/system/1-opendesktop-bg.png); background-position: bottom 0px left 0px;">&nbsp;</div>
+        <div class="container-fluid">
+            <div class="row" style="transform: translateY(-40px);">
+                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                    <div style="border-radius: 50%;width: 6.9em;height:6.9em;overflow: hidden;border: 4px solid white;background-color: white;float: left;">
+                        <img src="<?=$this->member['profile_image_url']?>" style="height:6.8em;width:6.8em;"/>
+                    </div>
+                    <div style="transform: translateY(20px);">
+                        <h1><?=$this->member['username']?></h1>
+                    </div>
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+        </div>
+
+        <!-- /HEADER -->
+
+    </section>
+
+    <section class="body-wrap">
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-8 col-md-8 col-xs-12">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active">
+                            <a href="#products" aria-controls="products" role="tab" data-toggle="tab">
+                                Products<?php echo (count($this->userProducts->toArray())>0?' ('.count($this->userProducts->toArray()).') ':'')?>
+                            </a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#earnings" aria-controls="supported" role="tab" data-toggle="tab">
+                                Supported by<?php echo ($this->cntSupporter>0?' ('.$this->cntSupporter.') ':'')?>
+                            </a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#supporter" aria-controls="supporter" role="tab" data-toggle="tab">
+                                Supporter of<?php echo (count($this->contributedProjects)>0?' ('.count($this->contributedProjects).') ':'')?>
+                            </a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#comments" aria-controls="comments" role="tab" data-toggle="tab">
+                                Comments (<?php echo $this->comments->getTotalItemCount()?>)
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content" style="margin-top: 2em;">
+                        <div role="tabpanel" class="tab-pane fade in active" id="products">
+                            <?php echo $this->render('user/partials/aboutProducts.phtml'); ?>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="earnings">
+                            <?php if (count($this->cntSupporter) > 0) { ?>
+                                <?php echo $this->render('user/partials/loopProductEarnings.phtml'); ?>
+                            <?php } else { ?>
+                                <?= $this->translate('No supporter yet.') ?>
+                            <?php } ?>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="supporter">
+                            <?php if (count($this->contributedProjects) > 0) { ?>
+                                <?= $this->render('user/partials/loopContributedProducts.phtml') ?>
+                            <?php } else { ?>
+                                <?= $this->translate('No supported products.') ?>
+                            <?php } ?>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="comments">
+                            <?php echo $this->render('user/partials/loopMyComments.phtml'); ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-xs-12" style="margin-top: 3em;">
+
+                    <?php if (false === empty($this->mainProject['description'])): ?>
+                    <div class="col-container">
+                        <div class="well details about">
+                            <h3>About me</h3>
+
+                            <div>
+                                <?php echo nl2br(strip_tags($this->mainProject['description'])); ?>
+                            </div>
+                        </div>
+                    </div>
+                    <?php endif; ?>
+
+                    <div class="col-container">
+                        <div class="well details">
+                            <h3>Connected Acounts</h3>
+
+                            <div class="box-content">
+
+                                <?php if (false === empty($this->member['link_website'])): ?>
+                                    <div class="info-social">
+                                        <div class="text">
+                                            <span class="glyphicon glyphicon-globe" style="color:#000; width: 20px;"></span>
+                                            <a href="<?php echo $helpAddDefaultScheme->addDefaultScheme($this->member['link_website']); ?>"
+                                               target="_NEW"
+                                               title="<?php echo $helpAddDefaultScheme->addDefaultScheme($this->member['link_website']); ?>"
+                                            ><?php echo $this->member['link_website']; ?></a>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
+
+                                <?php if (false === empty($this->member['link_github'])): ?>
+                                    <div class="info-social">
+                                        <div class="text">
+                                            <i class="fa fa-github" aria-hidden="true" style="color:#000; width: 20px;"></i>
+                                            <a href="<?php echo 'https://github.com/'.$this->member['link_github']; ?>" target="_NEW"><?php echo $this->member['link_github']; ?></a>
+                                        </diV>
+                                    </div>
+                                <?php endif; ?>
+
+                                <?php if (false === empty($this->member['link_facebook'])): ?>
+                                    <div class="info-social">
+                                        <div class="text">
+                                            <i class="fa fa-facebook-official" aria-hidden="true" style="color:#000; width: 20px;"></i>
+                                            <a href="<?php echo $this->member['link_facebook']; ?>" target="_NEW"><?php echo $helpTruncate->truncate($this->member['link_facebook'],50); ?></a>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
+
+                                <?php if (false === empty($this->member['link_twitter'])): ?>
+                                    <div class="info-social">
+                                        <div class="text">
+                                            <i class="fa fa-twitter" aria-hidden="true" style="color:#000; width: 20px;"></i>
+                                            <a href="<?php echo $this->member['link_twitter']; ?>" target="_NEW"><?php echo $helpTruncate->truncate($this->member['link_twitter'], 50); ?></a>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
+
+                                <?php if (false === empty($this->member['link_google'])): ?>
+                                    <div class="info-social">
+                                        <div class="text">
+                                            <i class="fa fa-google-plus-official" aria-hidden="true" style="color:#000; width: 20px;"></i>
+                                            <a href="<?php echo $this->member['link_google']; ?>" target="_NEW"><?php echo $helpTruncate->truncate($this->member['link_google'],50); ?></a>
+                                        </diV>
+                                    </div>
+                                <?php endif; ?>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-container">
+                        <div class="well details">
+                            <h3>Admin Panel</h3>
+
+                            <div>
+
+                                <?php
+                                $helperUserRole = new Backend_View_Helper_UserRole();
+                                $userRoleName = $helperUserRole->userRole();
+                                if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                                    <div><a id="linktohive" target="_blank" href="http://cp1.hive01.com/usermanager/search.php?username=<?= $this->member['username'] ?>">link to hive</a></div>
+                                    <div><a id="delete-this" href="/backend/user/delete?member_id=<?= $this->member['member_id'] ?>">delete user</a></div>
+                                    <script>
+                                        $('#delete-this').on('click', function (event) {
+
+                                            event.stopPropagation();
+                                            var target = $(this).attr('href');
+
+                                            $.ajax({
+                                                url: target,
+                                                success: function (results) {
+                                                    alert('User deleted successfully');
+                                                },
+                                                error: function() {
+                                                    alert('Service is temporarily unavailable.');
+                                                }
+                                            });
+
+                                            return false;
+                                        });
+                                    </script>
+                                <?php endif; ?>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+</main>

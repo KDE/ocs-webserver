@@ -1598,4 +1598,24 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         return $result;
     }
 
+    /**
+     * @param int $member_id
+     * @return array|mixed
+     */
+    public function fetchMainProject($member_id)
+    {
+        $sql = "SELECT * FROM {$this->_name} WHERE type_id = :type AND member_id = :member";
+
+        $this->_db->getProfiler()->setEnabled(true);
+        $result = $this->_db->fetchRow($sql, array('type' => self::PROJECT_TYPE_PERSONAL, 'member' => (int)$member_id));
+        $dummy = $this->_db->getProfiler()->getLastQueryProfile()->getQuery();
+        $this->_db->getProfiler()->setEnabled(true);
+
+        if (count($result) > 0) {
+            return $result;
+        } else {
+            return array();
+        }
+    }
+
 }

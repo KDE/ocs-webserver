@@ -398,7 +398,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             )
         );
 
-        /** general routing rules */
         $router->addRoute(
             'home_ajax',
             new Zend_Controller_Router_Route(
