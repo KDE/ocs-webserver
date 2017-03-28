@@ -205,42 +205,40 @@ if ($paginationComments) {
                         </div>
                     </div>
 
+                    <?php
+                    $helperUserRole = new Backend_View_Helper_UserRole();
+                    $userRoleName = $helperUserRole->userRole();
+                    if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
                     <div class="col-container">
                         <div class="well details">
                             <h3>Admin Panel</h3>
-
                             <div>
+                                <div><a id="linktohive" target="_blank" href="http://cp1.hive01.com/usermanager/search.php?username=<?= $this->member['username'] ?>">link to hive</a></div>
+                                <div><a id="delete-this" href="/backend/user/delete?member_id=<?= $this->member['member_id'] ?>">delete user</a></div>
+                                <script>
+                                    $('#delete-this').on('click', function (event) {
 
-                                <?php
-                                $helperUserRole = new Backend_View_Helper_UserRole();
-                                $userRoleName = $helperUserRole->userRole();
-                                if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
-                                    <div><a id="linktohive" target="_blank" href="http://cp1.hive01.com/usermanager/search.php?username=<?= $this->member['username'] ?>">link to hive</a></div>
-                                    <div><a id="delete-this" href="/backend/user/delete?member_id=<?= $this->member['member_id'] ?>">delete user</a></div>
-                                    <script>
-                                        $('#delete-this').on('click', function (event) {
+                                        event.stopPropagation();
+                                        var target = $(this).attr('href');
 
-                                            event.stopPropagation();
-                                            var target = $(this).attr('href');
-
-                                            $.ajax({
-                                                url: target,
-                                                success: function (results) {
-                                                    alert('User deleted successfully');
-                                                },
-                                                error: function() {
-                                                    alert('Service is temporarily unavailable.');
-                                                }
-                                            });
-
-                                            return false;
+                                        $.ajax({
+                                            url: target,
+                                            success: function (results) {
+                                                alert('User deleted successfully');
+                                            },
+                                            error: function() {
+                                                alert('Service is temporarily unavailable.');
+                                            }
                                         });
-                                    </script>
-                                <?php endif; ?>
 
+                                        return false;
+                                    });
+                                </script>
                             </div>
                         </div>
                     </div>
+                    <?php endif; ?>
+                    
                 </div>
             </div>
         </div>
