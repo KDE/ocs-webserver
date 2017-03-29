@@ -24,6 +24,7 @@ $this->headTitle("{$this->member['username']}'s Profile - ", Zend_View_Helper_Pl
 
 $helpAddDefaultScheme = new Default_View_Helper_AddDefaultScheme();
 $helpTruncate = new Default_View_Helper_Truncate();
+$helpPrintDate = new Default_View_Helper_PrintDate();
 
 $modelProject = new Default_Model_Project();
 $this->userProducts = $modelProject->fetchAllProjectsForMember($this->member['member_id'], null, null, true);
@@ -32,8 +33,9 @@ $modelMember = new Default_Model_Member();
 $this->earnings = $modelMember->fetchProjectsSupported($this->member['member_id']);
 $this->cntSupporter = $modelMember->fetchCntSupporters($this->member['member_id']);
 $this->mainProject = $modelProject->fetchMainProject($this->member['member_id']);
-
+$this->cntPageViewsOverall = $modelProject->fetchOverallPageViewsByMember($this->member['member_id']);
 $this->contributedProjects = $modelMember->fetchContributedProjectsByCat($this->member['member_id']);
+$this->lastActiveTime = $modelMember->fetchLastActiveTime($this->member['member_id']);
 
 $paginationComments = $modelMember->fetchComments($this->member['member_id']);
 
@@ -238,6 +240,36 @@ if ($paginationComments) {
                         </div>
                     </div>
                     <?php endif; ?>
+
+                    <div class="col-container">
+                        <div class="well details about">
+                            <h3>Statistics</h3>
+
+                            <div  class="statContent" >
+                                <div class="row ">
+                                    <span class="cnt"><?=count($this->userProducts->toArray())?> </span> Products
+                                </div>
+                                <div class="row">
+                                    <span class="cnt"><?=$this->comments->getTotalItemCount()?> </span> Comments
+                                </div>
+                                <div class="row">
+                                    <span class="cnt"><?=$this->cntPageViewsOverall?> </span> Pageviews
+                                </div>
+                                <div class="row">
+                                    <span class="cnt"><?=$this->cntSupporter?> </span> Supporters
+                                </div>
+                                <div class="row">
+                                    <span class="">Last time active : <?=$helpPrintDate->printDate($this->lastActiveTime)?> </span>
+                                </div>
+                                <div class="row">
+                                    <span class="text">Joined : <?=$helpPrintDate->printDate($this->member['created_at']);?></span>
+                                </div>
+
+
+                            </div>
+
+                        </div>
+                    </div>
 
                 </div>
             </div>

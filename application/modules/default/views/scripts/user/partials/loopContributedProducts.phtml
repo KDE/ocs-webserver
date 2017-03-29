@@ -42,21 +42,23 @@ foreach (array_keys($this->contributedProjects) as $cat):?>
         $titleImage = $helperImage->Image($product['image'], array('width' => 270, 'height' => 140));
         $hasTitle = $product['image'] !== null && strpos($titleImage, 'default.png') === false;
         ?>
-        <div class="mini-card col-lg-2 col-md-2 col-sm-3 col-xs-2">
-            <div class="u-wrap">
-                <a href="<?= $product['url'] ?>" title="<?= $product['name'] ?>">
-                    <figure>
-                        <img src="<?= $helperImage->Image($product['image'], array('width' => 280, 'height' => 167)); ?>"
-                             alt="<?= $product['name'] ?>">
-                    </figure>
-                    <div class="u-content">
-                        <h3><?php echo $product['name']; ?></h3>
-                        <?php if ($product['sumAmount'] === '' OR $product['sumAmount'] === null) {
-                            $product['sumAmount'] = '0';
-                        } ?>
-                        <p>$<?php echo $product['sumAmount']; ?></p>
-                    </div>
-                </a>
+        <div class="row-fluid">
+            <div class="mini-card col-lg-2 col-md-2 col-sm-3 col-xs-2">
+                <div class="u-wrap">
+                    <a href="<?= $product['url'] ?>" title="<?= $product['name'] ?>">
+                        <figure>
+                            <img src="<?= $helperImage->Image($product['image'], array('width' => 280, 'height' => 167)); ?>"
+                                 alt="<?= $product['name'] ?>">
+                        </figure>
+                        <div class="u-content">
+                            <h3><?php echo $product['name']; ?></h3>
+                            <?php if ($product['sumAmount'] === '' OR $product['sumAmount'] === null) {
+                                $product['sumAmount'] = '0';
+                            } ?>
+                            <p>$<?php echo $product['sumAmount']; ?></p>
+                        </div>
+                    </a>
+                </div>
             </div>
         </div>
     <?php endforeach; ?>
