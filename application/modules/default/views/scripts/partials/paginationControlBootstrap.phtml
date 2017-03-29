@@ -23,26 +23,27 @@
 if (false === isset($this->params)) {
     $this->params = array();
 }
+$serverUrl = $this->serverUrl();
 ?>
 <ul class="pagination pagination-sm" style="margin: 0;padding:0;">
     <li class="<?php echo isset($this->previous) ? '' : 'disabled' ?>">
         <a class="<?php echo isset($this->previous) ? 'paginationPartial' : '' ?>"
-           href="<?php echo isset($this->previous) ? $this->url(array_merge($this->params, array('page' => $this->previous))) : 'javascript:;'; ?>">
+           href="<?php echo isset($this->previous) ? $serverUrl . $this->url(array_merge($this->params, array('page' => $this->previous))) : 'javascript:;'; ?>">
             <span class="glyphicon glyphicon-chevron-left"></span>
         </a>
     </li>
 
     <?php foreach ($this->pagesInRange as $page): ?>
         <?php if ($page != $this->current): ?>
-            <li><a class="ajaxPartial paginationPartial" href="<?php echo $this->url(array_merge($this->params, array('page' => $page))); ?>"><?php echo $page; ?></a></li>
+            <li><a class="ajaxPartial paginationPartial" href="<?php echo $serverUrl . $this->url(array_merge($this->params, array('page' => $page))); ?>"><?php echo $page; ?></a></li>
         <?php else: ?>
-            <li class="active"><a class="paginationPartial" href="<?php echo $this->url(array_merge($this->params, array('page' => $page))); ?>"><?php echo $page; ?></a>
+            <li class="active"><a class="paginationPartial" href="<?php echo $serverUrl . $this->url(array_merge($this->params, array('page' => $page))); ?>"><?php echo $page; ?></a>
         <?php endif; ?>
     <?php endforeach; ?>
 
     <li class="<?php echo isset($this->next) ? '' : 'disabled' ?>">
         <a class="<?php echo isset($this->next) ? 'paginationPartial' : ''?>"
-           href="<?php echo isset($this->next) ? $this->url(array_merge($this->params, array('page' => $this->next))) : 'javascript:;'; ?>">
+           href="<?php echo isset($this->next) ? $serverUrl . $this->url(array_merge($this->params, array('page' => $this->next))) : 'javascript:;'; ?>">
             <span class="glyphicon glyphicon-chevron-right"></span>
         </a>
     </li>
