@@ -28,6 +28,7 @@ $helperImage = new Default_View_Helper_Image();
 
 $auth = Zend_Auth::getInstance();
 $member = $getAuthUser->getAuthUser();
+$serverUrl = $this->serverUrl();
 
 echo $this->render('partials/header/metaheader.phtml'); ?>
     <header id="page_header" xmlns="http://www.w3.org/1999/html">
@@ -40,10 +41,10 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
                 <ul class="menu-nav-tabs absolute-right" style="position: absolute;bottom: 0px;">
                     <li role="presentation"
                         class="<?php echo(strpos($_SERVER["REQUEST_URI"], 'register') ? 'active' : '') ?>">
-                        <a href="/register">Register</a></li>
+                        <a href="<?=$serverUrl?>/register">Register</a></li>
                     <li role="presentation"
                         class="<?php echo(strpos($_SERVER["REQUEST_URI"], 'login') ? 'active' : '') ?>">
-                        <a href="/login<?php echo strpos($_SERVER["REQUEST_URI"], 'login') ? '' : $redirectString ?>">Login</a>
+                        <a href="<?=$serverUrl?>/login<?php echo strpos($_SERVER["REQUEST_URI"], 'login') ? '' : $redirectString ?>">Login</a>
                     </li>
                 </ul>
             <?php } ?>
@@ -87,7 +88,7 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
                                                     <a href="/settings/"><?= $this->translate('My Settings') ?></a>
                                                 </li>
                                                 <li class="link">
-                                                    <a href="/logout/"><?= $this->translate('Logout') ?></a>
+                                                    <a href="<?=$serverUrl?>/logout/"><?= $this->translate('Logout') ?></a>
                                                 </li>
                                             </ul>
                                         </li>
