@@ -33,13 +33,23 @@ set_include_path(implode(PATH_SEPARATOR, array(
 
 
 // Initialising Autoloader
-require_once APPLICATION_LIB . '/Zend/Loader/Autoloader.php';
-$autoloader = Zend_Loader_Autoloader::getInstance();
-$autoloader->setDefaultAutoloader(create_function('$class', "include str_replace('_', '/', \$class) . '.php';"));
+//require_once APPLICATION_LIB . '/Zend/Loader/Autoloader.php';
+//$autoloader = Zend_Loader_Autoloader::getInstance();
+//$autoloader->setDefaultAutoloader(create_function('$class', "include str_replace('_', '/', \$class) . '.php';"));
 
-require_once APPLICATION_LIB . '/Zend/Registry.php';
-Zend_Registry::set('autoloader', $autoloader);
-
+//require_once APPLICATION_LIB . '/Zend/Registry.php';
+//Zend_Registry::set('autoloader', $autoloader);
+require APPLICATION_LIB . '/Zend/Loader/SplAutoloader.php';
+require APPLICATION_LIB . '/Zend/Loader/StandardAutoloader.php';
+require APPLICATION_LIB . '/Zend/Loader/AutoloaderFactory.php';
+Zend_Loader_AutoloaderFactory::factory([
+    'Zend_Loader_StandardAutoloader' => [
+        'autoregister_zf' => true,
+        'namespaces' => [
+            'Application' => APPLICATION_PATH,
+        ]
+    ]
+]);
 
 // Including plugin cache file
 if (file_exists(APPLICATION_CACHE . DIRECTORY_SEPARATOR . 'pluginLoaderCache.php')) {
