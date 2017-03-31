@@ -722,6 +722,36 @@ class Ocsv1Controller extends Zend_Controller_Action
                 if (is_array($category)) {
                     $category = (object)$category;
                 }
+
+                // Top-level category
+                $categoryTitle = $category->title;
+                $categoryDisplayName = $category->title;
+                if (!empty($category->name_legacy)) {
+                    $categoryTitle = $category->name_legacy;
+                }
+                $categoryXdgType = '';
+                if (!empty($category->xdg_type)) {
+                    $categoryXdgType = $category->xdg_type;
+                }
+                if ($this->_format == 'json') {
+                    $categoriesList[] = array(
+                        'id' => $category->project_category_id,
+                        'name' => $categoryTitle,
+                        'display_name' => $categoryDisplayName,
+                        'parent_id' => '',
+                        'xdg_type' => $categoryXdgType
+                    );
+                } else {
+                    $categoriesList[] = array(
+                        'id' => array('@text' => $category->project_category_id),
+                        'name' => array('@text' => $categoryTitle),
+                        'display_name' => array('@text' => $categoryDisplayName),
+                        'parent_id' => array('@text' => ''),
+                        'xdg_type' => array('@text' => $categoryXdgType)
+                    );
+                }
+
+                // Sub-categories
                 $subCategories = $tableCategories->fetchImmediateChildren($category->project_category_id);
                 if (!empty($subCategories)) {
                     foreach ($subCategories as $subCategory) {
@@ -739,6 +769,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                                 'id' => $subCategory['project_category_id'],
                                 'name' => $categoryTitle,
                                 'display_name' => $categoryDisplayName,
+                                'parent_id' => $category->project_category_id,
                                 'xdg_type' => $categoryXdgType
                             );
                         } else {
@@ -746,34 +777,10 @@ class Ocsv1Controller extends Zend_Controller_Action
                                 'id' => array('@text' => $subCategory['project_category_id']),
                                 'name' => array('@text' => $categoryTitle),
                                 'display_name' => array('@text' => $categoryDisplayName),
+                                'parent_id' => array('@text' => $category->project_category_id),
                                 'xdg_type' => array('@text' => $categoryXdgType)
                             );
                         }
-                    }
-                } else {
-                    $categoryTitle = $category->title;
-                    $categoryDisplayName = $category->title;
-                    if (!empty($category->name_legacy)) {
-                        $categoryTitle = $category->name_legacy;
-                    }
-                    $categoryXdgType = '';
-                    if (!empty($category->xdg_type)) {
-                        $categoryXdgType = $category->xdg_type;
-                    }
-                    if ($this->_format == 'json') {
-                        $categoriesList[] = array(
-                            'id' => $category->project_category_id,
-                            'name' => $categoryTitle,
-                            'display_name' => $categoryDisplayName,
-                            'xdg_type' => $categoryXdgType
-                        );
-                    } else {
-                        $categoriesList[] = array(
-                            'id' => array('@text' => $category->project_category_id),
-                            'name' => array('@text' => $categoryTitle),
-                            'display_name' => array('@text' => $categoryDisplayName),
-                            'xdg_type' => array('@text' => $categoryXdgType)
-                        );
                     }
                 }
             }
