@@ -364,7 +364,6 @@ class Ocsv1Controller extends Zend_Controller_Action
             || strrpos($_SERVER['SERVER_NAME'], 'pling.cc') !== false
             || strrpos($_SERVER['SERVER_NAME'], 'pling.to') !== false
             || strrpos($_SERVER['SERVER_NAME'], 'ocs-store.com') !== false
-            || strrpos($_SERVER['SERVER_NAME'], 'store.kde.org') !== false
         ) {
             $authData = new stdClass;
             $authData->username = 'dummy';
