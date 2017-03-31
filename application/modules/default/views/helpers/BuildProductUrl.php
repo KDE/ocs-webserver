@@ -33,6 +33,10 @@ class Default_View_Helper_BuildProductUrl
      */
     public function buildProductUrl($product_id, $action = '', $params = null, $withHost = false, $scheme = null)
     {
+        if (empty($product_id)) {
+            return '';
+        }
+
         /** @var Zend_Controller_Request_Http $request */
         $request = Zend_Controller_Front::getInstance()->getRequest();
 

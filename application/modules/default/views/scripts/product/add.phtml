@@ -527,7 +527,7 @@ $categoryPath[] = $valueCatId;
 
                     var productId = <?= isset($this->project_id)?$this->project_id:0 ?>;
                     $.ajax({
-                        url: '/p/'+productId+'/getupdatesajax/',
+                        url: '<?=$helpProductUrl->buildProductUrl($this->project_id, 'getupdatesajax')?>',
                         type: 'GET',
                         data: {
                             format: 'json',
@@ -1451,7 +1451,7 @@ $categoryPath[] = $valueCatId;
                     event.preventDefault();
 
                     $.ajax({
-                        url: '/p/'+productId+'/saveupdateajax',
+                        url: '<?=$helpProductUrl->buildProductUrl($this->project_id, 'saveupdateajax')?>',
                         type: 'POST',
                         data: {title: title, text: text, update_id: update_id},
                         dataType: 'json',
@@ -1477,7 +1477,7 @@ $categoryPath[] = $valueCatId;
                     event.preventDefault();
 
                     $.ajax({
-                        url: '/p/'+productId+'/deleteupdateajax',
+                        url: '<?=$helpProductUrl->buildProductUrl($this->project_id, 'deleteupdateajax')?>',
                         type: 'POST',
                         data: {update_id: updateId},
                         dataType: 'json',

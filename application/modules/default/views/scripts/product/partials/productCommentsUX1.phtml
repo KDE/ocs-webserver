@@ -22,7 +22,9 @@
 
 $helperEncryptUrl = new Default_View_Helper_EncryptUrl();
 $requestUri = Zend_Controller_Front::getInstance()->getRequest()->getRequestUri();
-$loginUrl = '/login?redirect=' . $helperEncryptUrl->encryptUrl('/p/'.$this->product->project_id.'#comments_block', true);
+$helpProductUrl = new Default_View_Helper_BuildProductUrl();
+$productUrl = $helpProductUrl->buildProductUrl($this->product->project_id);
+$loginUrl = '/login?redirect=' . $helperEncryptUrl->encryptUrl($productUrl.'#comments_block', true);
 $helperHumanTiming = new Default_View_Helper_HumanTiming();
 $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $helperImage = new Default_View_Helper_Image();

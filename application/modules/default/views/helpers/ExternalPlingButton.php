@@ -54,8 +54,8 @@ class Default_View_Helper_ExternalPlingButton extends Zend_View_Helper_Abstract
      */
     protected function getProjectUrl($projectId)
     {
-        $url = '/p/' . $projectId;
-        return $url;
+        $helpProductUrl = new Default_View_Helper_BuildProductUrl();
+        return $helpProductUrl->buildProductUrl($projectId);
     }
 
 }
