@@ -42,14 +42,14 @@ set_include_path(implode(PATH_SEPARATOR, array(
 require APPLICATION_LIB . '/Zend/Loader/SplAutoloader.php';
 require APPLICATION_LIB . '/Zend/Loader/StandardAutoloader.php';
 require APPLICATION_LIB . '/Zend/Loader/AutoloaderFactory.php';
-Zend_Loader_AutoloaderFactory::factory([
-    'Zend_Loader_StandardAutoloader' => [
+Zend_Loader_AutoloaderFactory::factory(array(
+    'Zend_Loader_StandardAutoloader' => array(
         'autoregister_zf' => true,
-        'namespaces' => [
+        'namespaces' => array(
             'Application' => APPLICATION_PATH,
-        ]
-    ]
-]);
+        )
+    )
+));
 
 // Including plugin cache file
 if (file_exists(APPLICATION_CACHE . DIRECTORY_SEPARATOR . 'pluginLoaderCache.php')) {
