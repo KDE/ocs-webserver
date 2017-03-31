@@ -61,8 +61,6 @@ class Ocsv1Controller extends Zend_Controller_Action
 
     public function initView()
     {
-        //parent::initView();
-
         // Disable render view
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
@@ -197,8 +195,6 @@ class Ocsv1Controller extends Zend_Controller_Action
     protected function _sendResponse($response, $format = 'xml', $xmlRootTag = 'ocs')
     {
         if ($format == 'json') {
-            //$this->_helper->json($response);
-            //return;
             header('Content-Type: application/json; charset=UTF-8');
             echo json_encode($response);
         } else {
@@ -395,7 +391,7 @@ class Ocsv1Controller extends Zend_Controller_Action
         }
 
         if ($force) {
-            #header('WWW-Authenticate: Basic realm="Your valid user account or api key"');
+            //header('WWW-Authenticate: Basic realm="Your valid user account or api key"');
             header('WWW-Authenticate: Basic realm="Your valid user account"');
             header('HTTP/1.0 401 Unauthorized');
             exit;
@@ -842,7 +838,6 @@ class Ocsv1Controller extends Zend_Controller_Action
         $cache = Zend_Registry::get('cache');
 
         $tableProject = new Default_Model_Project();
-        //$tableProjectCat = new Default_Model_DbRow_ProjectCategory();
         $tableProjectSelect = $this->_buildProjectSelect($tableProject);
 
         // Specific content data
@@ -866,23 +861,12 @@ class Ocsv1Controller extends Zend_Controller_Action
                 );
             }
 
-
             if (!$project) {
                 $this->_sendErrorResponse(101, 'content not found');
             }
 
             $categoryId = $project->project_category_id;
-            //if (!empty($project->subcategory_id)) {
-            //    $categoryId = $project->subcategory_id;
-            //}
-
             $categoryTitle = $project->category_title;
-            //if (!empty($project->subcategory_name_legacy)) {
-            //    $categoryTitle = $project->subcategory_name_legacy;
-            //}
-            //else if (!empty($project->subcategory_title)) {
-            //    $categoryTitle = $project->subcategory_title;
-            //}
 
             $categoryXdgType = '';
             if (!empty($project->xdg_type)) {
@@ -894,6 +878,7 @@ class Ocsv1Controller extends Zend_Controller_Action
 
             $previewPage = $this->_uriScheme . '://' . $this->_config['website']
                 . '/p/' . $project->project_id;
+
             $donationPage = $previewPage;
             if (empty($project->paypal_mail) && empty($project->dwolla_id)) {
                 $donationPage = '';
@@ -911,6 +896,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                     $smallPreviewPicSize
                 )
             );
+
             $cacheName = __FUNCTION__ . '_project_galleryPics_' . md5((string)$project->project_id);
             if (!($galleryPics = $cache->load($cacheName))) {
                 Zend_Registry::get('logger')->debug(
@@ -925,6 +911,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                     . print_r($cacheName, true)
                 );
             }
+
             if ($galleryPics) {
                 $i = 2;
                 foreach ($galleryPics as $galleryPic) {
@@ -1078,8 +1065,6 @@ class Ocsv1Controller extends Zend_Controller_Action
                                 'knowledgebasepage' => array('@text' => ''),
                                 'depend' => array('@text' => ''),
                                 'preview1' => array('@text' => $previewPage),
-                                //'previewpic1' => array('@text' => $previewPic),
-                                //'smallpreviewpic1' => array('@text' => $previewPicSmall),
                                 'icon' => array('@text' => ''),
                                 'video' => array('@text' => ''),
                                 'detailpage' => array('@text' => $previewPage)
@@ -1113,12 +1098,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                     }
                     $allCategories = array_merge($allCategories, $childIds);
                 }
-
-                $tableProjectSelect->where(
-                    'project.project_category_id IN (?)'
-                    /*. ' OR proj_subcategory.project_sub_category_id IN (?)'*/,
-                    $allCategories
-                );
+                $tableProjectSelect->where('project.project_category_id IN (?)', $allCategories);
             }
             if (!empty($this->_params['xdg_types'])) {
                 // xdg_types parameter: values seperated by ","
@@ -1262,17 +1242,7 @@ class Ocsv1Controller extends Zend_Controller_Action
             $contentsList = array();
             foreach ($projects as $project) {
                 $categoryId = $project->project_category_id;
-                //if (!empty($project->subcategory_id)) {
-                //    $categoryId = $project->subcategory_id;
-                //}
-
                 $categoryTitle = $project->category_title;
-                //if (!empty($project->subcategory_name_legacy)) {
-                //    $categoryTitle = $project->subcategory_name_legacy;
-                //}
-                //else if (!empty($project->subcategory_title)) {
-                //    $categoryTitle = $project->subcategory_title;
-                //}
 
                 $categoryXdgType = '';
                 if (!empty($project->xdg_type)) {
@@ -1281,6 +1251,7 @@ class Ocsv1Controller extends Zend_Controller_Action
 
                 $created = date('c', strtotime($project->created_at));
                 $changed = date('c', strtotime($project->changed_at));
+
                 $previewPage = $this->_uriScheme . '://' . $this->_config['website']
                     . '/p/' . $project->project_id;
 
@@ -1462,41 +1433,14 @@ class Ocsv1Controller extends Zend_Controller_Action
                 'project.project_category_id = category.project_category_id',
                 array()
             )
-            /*
-             * No Subcategories nymore.
-            ->joinLeft(
-                array('proj_subcategory' => 'project_subcategory'),
-                'project.project_id = proj_subcategory.project_id',
-                array()
-            )
-            ->joinLeft(
-                array('subcategory' => 'project_category'),
-                'proj_subcategory.project_sub_category_id = subcategory.project_category_id',
-                array()
-            )
-            */
-            /*
-             * We donnot need plings for score. We use count_likes and count_dislikes.
-            ->joinLeft(
-                array('plings' => 'plings'),
-                'project.project_id = plings.project_id',
-                array()
-            )
-            */
             ->columns(array(
                 'member_username' => 'member.username',
                 'category_title' => 'category.title',
-                //'subcategory_id' => 'proj_subcategory.project_sub_category_id',
-                //'subcategory_title' => 'subcategory.title',
                 'xdg_type' => 'category.xdg_type',
-                //'subcategory_xdg_type' => 'subcategory.xdg_type',
                 'name_legacy' => 'category.name_legacy'
-                //'subcategory_name_legacy' => 'subcategory.name_legacy',
-                //'plings_amount' => 'stat_plings.amount_received'
             ))
             ->where('project.status = ?', Default_Model_Project::PROJECT_ACTIVE)
-            ->where('project.ppload_collection_id IS NOT NULL')//->group('project.project_id')
-        ;
+            ->where('project.ppload_collection_id IS NOT NULL');
         return $tableProjectSelect;
     }
 
