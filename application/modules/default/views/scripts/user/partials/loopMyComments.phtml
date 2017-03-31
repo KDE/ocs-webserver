@@ -30,24 +30,27 @@ $helperPrintDate = new Default_View_Helper_PrintDate();
     <div id="my-comments-tabs-content">
     <small class="pull-right">
         <div class="row rownomargin rownopadding pull-right"><?=$this->comments->getTotalItemCount()?> comments</div>
-        <?php if ($pageCount > 1) echo $this->paginationControl($this->comments, 'Sliding', '/partials/paginationControlBootstrap.phtml',
-            array('params' => array(), 'dom_target' => 'div#my-comments-tabs-content')); ?>
+        <?php
+        if ($pageCount > 1) {
+            echo $this->paginationControl($this->comments, 'Sliding', '/partials/paginationControlBootstrap.phtml', array('params' => array(), 'dom_target' => 'div#my-comments-tabs-content'));
+        }
+        ?>
     </small>        
     <?php foreach ($this->comments as $elementComment): ?>
-    
-            <div class="row rownomargin" >
+        <div class="row rownomargin" >
             <?= $elementComment['title'] ?>
             <span  class="category" ><?php echo $helperFetchSubcategoriesForProduct->fetchCategoriesForProductAsString($elementComment['project_id']) ?></span>
-            </div>
-            <div class="row rownomargin" >                
-                <div class="info">      
-                    <div class="small"><a href="/p/<?=$elementComment['project_id']?>"><?= nl2br($elementComment['comment_text'],true) ?></a></div>   
+        </div>
+        <div class="row rownomargin" >
+            <div class="info">
+                <div class="small">
+                    <a href="<?=$helperBuildProductUrl->buildProductUrl($elementComment['project_id'])?>"><?= nl2br($elementComment['comment_text'],true) ?></a>
                 </div>
             </div>
-            <div class="row commentstore rownomargin" >
+        </div>
+        <div class="row commentstore rownomargin" >
             <span class="createat"><?= $helperPrintDate->printDate($elementComment['comment_created_at']); ?> </span>
-            </div>
-
+        </div>
     <?php endforeach;?>
     </div>
 </div>

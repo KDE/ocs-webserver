@@ -38,7 +38,7 @@ class Default_View_Helper_PlingButton extends Zend_View_Helper_Abstract
         if (isset($config['size'])) {
             $size = $config['size'];
         }
-        $url = $this->getProjectUrl($projectId);
+        $url = $this->getPlingUrl($projectId);
         $countPlings = $this->getPlingsForProject($projectId);
 
         $htmlCode = '<a href="' . $url . '" class="plingbutton ' . $size . '"' . $target . '><span><span>' . $countPlings . '</span></span></a>';
@@ -58,10 +58,10 @@ class Default_View_Helper_PlingButton extends Zend_View_Helper_Abstract
      * @param $projectId
      * @return string
      */
-    protected function getProjectUrl($projectId)
+    protected function getPlingUrl($projectId)
     {
-        $url = '/p/' . $projectId . '/pling/';
-        return $url;
+        $helpProductUrl = new Default_View_Helper_BuildProductUrl();
+        return $helpProductUrl->buildProductUrl($projectId, 'pling');
     }
 
     /**

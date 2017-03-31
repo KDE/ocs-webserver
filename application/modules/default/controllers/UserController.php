@@ -40,11 +40,15 @@ class UserController extends Local_Controller_Action_DomainSwitch
         $this->aboutmeAction();
     }
 
+    public function aboutAction()
+    {
+        $modelMember = new Default_Model_Member();
+        $this->view->member = $modelMember->fetchMember($this->_memberId)->toArray();
+        $this->view->currentPageOffset = (int)$this->getParam('page');
+    }
+
     public function aboutmeAction()
     {
-//        $this->view->headScript()->setFile('');
-//        $this->view->headLink()->setStylesheet('');
-
         $tableMember = new Default_Model_Member();
         $tableProject = new Default_Model_Project();
 
@@ -75,17 +79,12 @@ class UserController extends Local_Controller_Action_DomainSwitch
         }
         $this->view->supportingTeaser = $catArray;
 
-        // no need anymore
-        //$this->view->followedUser = $tableMember->fetchFollowedMembers($this->_memberId, 6);
         $this->view->followedProducts = $tableMember->fetchFollowedProjects($this->_memberId, null);
 
         $tableProject = new Default_Model_Project();
-        // $this->view->userProducts = $tableProject->fetchProjectsForMember($this->_memberId);
         $this->view->userProducts = $tableProject->fetchAllProjectsForMember($this->_memberId, null, null, true);
 
-        //$this->view->hits = $tableMember->fetchPlingedProjects($this->_memberId);
-        $this->view->hits = $tableMember->fetchSupportedByProjects($this->_memberId);
-
+        $this->view->hits = $tableMember->fetchProjectsSupported($this->_memberId);
 
         $paginationComments = $tableMember->fetchComments($this->_memberId);
 
@@ -106,21 +105,9 @@ class UserController extends Local_Controller_Action_DomainSwitch
         }
         $stat['cntPageviews'] = $cntpv;
 
-        /*
-        $cntmb = 0;
-        $tmp = array();
-        foreach ($this->view->hits as $pro) {
-            if(!$tmp[$pro->member_id])
-            {
-                $cntmb++;
-                $tmp[$pro->member_id] = $pro->member_id;
-            }
-        }
-        */
         $cntmb = $tableMember->fetchCntSupporters($this->_memberId);
         $stat['cntSupporters'] = $cntmb;
         $stat['userLastActiveTime'] = $tableMember->fetchLastActiveTime($this->_memberId);
-
 
         $this->view->stat = $stat;
     }

@@ -21,6 +21,8 @@
  **/
 
 $this->tab = 'activities';
+$helpProductUrl = new Default_View_Helper_BuildProductUrl();
+$helpDate = new Default_View_Helper_PrintDate();
 ?>
 <main class="user-admin-page">
     <?php echo $this->render('user/partials/userHeader_top.phtml'); ?>  
@@ -31,8 +33,7 @@ $this->tab = 'activities';
                 <!-- NAVIGATION -->
                 <?php echo $this->render('user/partials/userHeader.phtml'); ?>
                 <!-- /NAVIGATION -->
-               
-                <?php 
+                <?php
                     if(count($this->comments)==0 and count($this->votes)==0 and count($this->donations)==0){ 
                     ?>
                <div class="my-products-heading">
@@ -54,11 +55,11 @@ $this->tab = 'activities';
                 <?php  foreach ($this->comments as $comment) { ?>
                     <div class="row">
                         <div class="col-lg-12"> 
-                        <span>
+                            <span>
                             <?php 
-                            echo $comment['username'].' comments on <span class="projecTitle"><a href="/p/'.$comment['project_id'].'">'. $comment['title'] . '</a></span> : <span class="commentText"> '.$comment['comment_text'].' </span> <span class="commentTime"> '.$this->printDate($comment['comment_created_at']).'</span>';
+                            echo $comment['username'].' comments on <span class="projecTitle"><a href="'.$helpProductUrl->buildProductUrl($comment['project_id']).'">'. $comment['title'] . '</a></span> : <span class="commentText"> '.$comment['comment_text'].' </span> <span class="commentTime"> '.$helpDate->printDate($comment['comment_created_at']).'</span>';
                             ?>
-                        </span>
+                            </span>
                         </div>
                     </div>
 
@@ -75,7 +76,7 @@ $this->tab = 'activities';
                         <div class="col-lg-12"> 
                         <span>
                             <?php
-                            echo '1 '.($vote['user_like']==1?' upvote':' downvote').'  on <span class="projecTitle"><a href="/p/'.$vote['project_id'].'">'. $vote['title'] . '</a></span><span class="commentTime"> '.$this->printDate($vote['created_at']).'</span>';
+                            echo '1 '.($vote['user_like']==1?' upvote':' downvote').'  on <span class="projecTitle"><a href="'.$helpProductUrl->buildProductUrl($vote['project_id']).'">'. $vote['title'] . '</a></span><span class="commentTime"> '.$helpDate->printDate($vote['created_at']).'</span>';
                             ?>
                         </span>
                         </div>
@@ -94,7 +95,7 @@ $this->tab = 'activities';
                         <div class="col-lg-12"> 
                         <span>
                             <?php 
-                            echo $donation['username'].' donates on <span class="projecTitle"><a href="/p/'.$donation['project_id'].'">'. $donation['title'] . '</a></span> : <span class="commentText"> '.$donation['comment'].' </span><span class="commentTime"> '.$this->printDate($donation['create_time']).'</span>';
+                            echo $donation['username'].' donates on <span class="projecTitle"><a href="'.$helpProductUrl->buildProductUrl($donation['project_id']).'">'. $donation['title'] . '</a></span> : <span class="commentText"> '.$donation['comment'].' </span><span class="commentTime"> '.$helpDate->printDate($donation['create_time']).'</span>';
                             ?>
                         </span>
                         </div>

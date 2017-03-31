@@ -1,0 +1,78 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$helperHumanTiming = new Default_View_Helper_HumanTiming();
+$helperImage = new Default_View_Helper_Image();
+$helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
+$helpProductUrl = new Default_View_Helper_BuildProductUrl();
+?>
+<div class="tab-content" id="my-earnings-tabs">
+    <div>
+        <?php
+        $inc = 1;
+        $bufferDate = '';
+        $index = 0;
+        $helperImage = new Default_View_Helper_Image();
+        foreach ($this->earnings as $element) {
+        $loopProductId = 'loop' . $this->project_id . $inc++;
+        $date = $helperHumanTiming->humanTiming($element->create_time);
+        $plingDate = new DateTime($element->create_time);
+        $printDate = $plingDate->format('Y');
+        $print_date = str_replace(' ', '_', $printDate);
+        $index++;
+        if ($printDate != $bufferDate) {
+        $bufferDate = $printDate;
+        echo '<div style="line-height: 0.1em;border-bottom:1px solid #f1f1f1; width:100%; text-align: right; margin-bottom:20px"><span style="font-size:24px; font-weight:bold; background-color: white; padding-left: 10px;">'.$printDate.'</span> </div>';
+        } ?>
+
+        <div class="row" id="<?= $loopProductId ?>" style="padding-bottom:10px;">
+            <div class="col-lg-3 col-md-2 col-sm-2 col-xs-2 ">
+                <a href="<?= $helpMemberUrl->buildExternalUrl($element->member_id) ?>">
+                <img src="<?php echo $helperImage->Image($element->profile_image_url,array('width' => 50, 'height' => 50)); ?>"
+                         alt="profile-image"                         
+                         style="border-radius:50%;  width: 50px; height: 50px; margin-right: 10px"
+                         >
+                </a>
+
+                <span  style="padding-top: 10px"><?= $element->username ?></span>
+
+                <h3 class="lightblue product-title" style="float: right; padding-right: 30px; padding-top: 10px" >$<?= $element->amount ?></h3>
+
+            </div>
+           
+
+            <div class="col-lg-7 col-md-2 col-sm-2 col-xs-2" >
+                <div style="padding-left: 50px">
+                <a href="<?=$helpProductUrl->buildProductUrl($element->project_id)?>"><img src="<?php echo $helperImage->Image($element->image_small, array('width' => 80, 'height' => 80)); ?>" style="max-width: 80px; max-height: 80px"/></a>
+                <a href="<?=$helpProductUrl->buildProductUrl($element->project_id)?>"> <span class="" style="padding-left: 20px"><?php echo $element->title; ?></span></a>
+                </div>
+            </div>
+           
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 " style="">
+                <?=$plingDate->format('d M Y')?>
+            </div>
+
+        </div>
+
+        <?php } ?>
+    </div>
+</div>

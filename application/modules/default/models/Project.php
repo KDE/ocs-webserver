@@ -933,16 +933,17 @@ class Default_Model_Project extends Default_Model_DbTable_Project
     public function fetchProjectViews($project_id)
     {
         $sql = "
-    SELECT
-        `stat_page_views`.`project_id` AS `project_id`,
-        count(1) AS `count_views`,
-        count(DISTINCT `stat_page_views`.`ip`) AS `count_visitor`,
-        max(`stat_page_views`.`created_at`) AS `last_view`
-    FROM
-        `stat_page_views`
-	WHERE `stat_page_views`.`project_id` = ?
-    GROUP BY `stat_page_views`.`project_id`
-	ORDER BY NULL";
+                SELECT
+                    `stat_page_views`.`project_id` AS `project_id`,
+                    count(1) AS `count_views`,
+                    count(DISTINCT `stat_page_views`.`ip`) AS `count_visitor`,
+                    max(`stat_page_views`.`created_at`) AS `last_view`
+                FROM
+                    `stat_page_views`
+                WHERE `stat_page_views`.`project_id` = ?
+                GROUP BY `stat_page_views`.`project_id`
+                ORDER BY NULL
+                ";
         $database = Zend_Db_Table::getDefaultAdapter();
         $sql = $database->quoteInto($sql, $project_id, 'INTEGER', 1);
         $resultSet = $database->query($sql)->fetchAll();
@@ -954,7 +955,29 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         }
 
         return $result;
+    }
 
+    /**
+     * @param int $member_id
+     * @return int
+     */
+    public function fetchOverallPageViewsByMember($member_id)
+    {
+        $sql = "
+                select sum(stat.amount) as page_views
+                from project
+                join (select project_id, count(project_id) as amount from stat_page_views group by project_id) as stat on stat.project_id = project.project_id
+                where project.member_id = :member_id and project.status = :project_status
+                group by member_id
+              ";
+
+        $result = $this->_db->query($sql, array('member_id'=> $member_id, 'project_status' => self::PROJECT_ACTIVE));
+        if ($result->rowCount() > 0) {
+            $row = $result->fetch();
+            return $row['page_views'];
+        } else {
+            return 0;
+        }
     }
 
     public function getStatsForNewProjects()
@@ -1596,6 +1619,26 @@ class Default_Model_Project extends Default_Model_DbTable_Project
 //        $dummy = $this->_db->getProfiler()->getLastQueryProfile()->getQuery();
 //        $this->_db->getProfiler()->setEnabled(true);
         return $result;
+    }
+
+    /**
+     * @param int $member_id
+     * @return array|mixed
+     */
+    public function fetchMainProject($member_id)
+    {
+        $sql = "SELECT * FROM {$this->_name} WHERE type_id = :type AND member_id = :member";
+
+//        $this->_db->getProfiler()->setEnabled(true);
+        $result = $this->_db->fetchRow($sql, array('type' => self::PROJECT_TYPE_PERSONAL, 'member' => (int)$member_id));
+//        $dummy = $this->_db->getProfiler()->getLastQueryProfile()->getQuery();
+//        $this->_db->getProfiler()->setEnabled(true);
+
+        if (count($result) > 0) {
+            return $result;
+        } else {
+            return array();
+        }
     }
 
 }
