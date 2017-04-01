@@ -701,86 +701,7 @@ class Ocsv1Controller extends Zend_Controller_Action
             //$this->_sendErrorResponse(999, '');
         }
 
-        //$catArray = Zend_Registry::get('application_store_category_list');
-        $tableCategories = new Default_Model_DbTable_ProjectCategory();
-        $categories = null;
-
-        if (Zend_Registry::isRegistered('store_category_list')) {
-            $categories = $tableCategories->fetchActive(Zend_Registry::get('store_category_list'));
-        } else {
-            $categories = $tableCategories->fetchAllActive();
-        }
-
-        $categoriesList = array();
-
-        if ($categories) {
-            foreach ($categories as $category) {
-                if (is_array($category)) {
-                    $category = (object)$category;
-                }
-
-                // Top-level category
-                $categoryTitle = $category->title;
-                $categoryDisplayName = $category->title;
-                if (!empty($category->name_legacy)) {
-                    $categoryTitle = $category->name_legacy;
-                }
-                $categoryXdgType = '';
-                if (!empty($category->xdg_type)) {
-                    $categoryXdgType = $category->xdg_type;
-                }
-                if ($this->_format == 'json') {
-                    $categoriesList[] = array(
-                        'id' => $category->project_category_id,
-                        'name' => $categoryTitle,
-                        'display_name' => $categoryDisplayName,
-                        'parent_id' => '',
-                        'xdg_type' => $categoryXdgType
-                    );
-                } else {
-                    $categoriesList[] = array(
-                        'id' => array('@text' => $category->project_category_id),
-                        'name' => array('@text' => $categoryTitle),
-                        'display_name' => array('@text' => $categoryDisplayName),
-                        'parent_id' => array('@text' => ''),
-                        'xdg_type' => array('@text' => $categoryXdgType)
-                    );
-                }
-
-                // Sub-categories
-                $subCategories = $tableCategories->fetchImmediateChildren($category->project_category_id);
-                if (!empty($subCategories)) {
-                    foreach ($subCategories as $subCategory) {
-                        $categoryTitle = $subCategory['title'];
-                        $categoryDisplayName = $subCategory['title'];
-                        if (!empty($subCategory['name_legacy'])) {
-                            $categoryTitle = $subCategory['name_legacy'];
-                        }
-                        $categoryXdgType = '';
-                        if (!empty($subCategory['xdg_type'])) {
-                            $categoryXdgType = $subCategory['xdg_type'];
-                        }
-                        if ($this->_format == 'json') {
-                            $categoriesList[] = array(
-                                'id' => $subCategory['project_category_id'],
-                                'name' => $categoryTitle,
-                                'display_name' => $categoryDisplayName,
-                                'parent_id' => $category->project_category_id,
-                                'xdg_type' => $categoryXdgType
-                            );
-                        } else {
-                            $categoriesList[] = array(
-                                'id' => array('@text' => $subCategory['project_category_id']),
-                                'name' => array('@text' => $categoryTitle),
-                                'display_name' => array('@text' => $categoryDisplayName),
-                                'parent_id' => array('@text' => $category->project_category_id),
-                                'xdg_type' => array('@text' => $categoryXdgType)
-                            );
-                        }
-                    }
-                }
-            }
-        }
+        $categoriesList = $this->_buildCategoriesList();
 
         if ($this->_format == 'json') {
             $response = array(
@@ -808,6 +729,73 @@ class Ocsv1Controller extends Zend_Controller_Action
             }
         }
         $this->_sendResponse($response, $this->_format);
+    }
+
+    protected function _buildCategoriesList($tableCategories = null, $parentCategoryId = null, $categoriesList = array())
+    {
+        $categories = null;
+
+        // Top-level categories
+        if (!$tableCategories) {
+            $tableCategories = new Default_Model_DbTable_ProjectCategory();
+            if (Zend_Registry::isRegistered('store_category_list')) {
+                $categories = $tableCategories->fetchActive(Zend_Registry::get('store_category_list'));
+            }
+            else {
+                $categories = $tableCategories->fetchAllActive();
+            }
+        }
+        // Sub-categories
+        else if ($parentCategoryId) {
+            $categories = $tableCategories->fetchImmediateChildren($parentCategoryId);
+        }
+
+        // Build categories list
+        if (!empty($categories)) {
+            foreach ($categories as $category) {
+                if (is_array($category)) {
+                    $category = (object)$category;
+                }
+
+                $categoryName = $category->title;
+                $categoryDisplayName = $category->title;
+                if (!empty($category->name_legacy)) {
+                    $categoryName = $category->name_legacy;
+                }
+                $categoryParentId = '';
+                if (!empty($parentCategoryId)) {
+                    $categoryParentId = $parentCategoryId;
+                }
+                $categoryXdgType = '';
+                if (!empty($category->xdg_type)) {
+                    $categoryXdgType = $category->xdg_type;
+                }
+
+                if ($this->_format == 'json') {
+                    $categoriesList[] = array(
+                        'id' => $category->project_category_id,
+                        'name' => $categoryName,
+                        'display_name' => $categoryDisplayName,
+                        'parent_id' => $categoryParentId,
+                        'xdg_type' => $categoryXdgType
+                    );
+                }
+                else {
+                    $categoriesList[] = array(
+                        'id' => array('@text' => $category->project_category_id),
+                        'name' => array('@text' => $categoryName),
+                        'display_name' => array('@text' => $categoryDisplayName),
+                        'parent_id' => array('@text' => $categoryParentId),
+                        'xdg_type' => array('@text' => $categoryXdgType)
+                    );
+                }
+
+                // Update the list recursive
+                $categoriesList = $this->_buildCategoriesList($tableCategories, $category->project_category_id, $categoriesList);
+            }
+        }
+
+        return $categoriesList;
     }
 
     public function contentdataAction()
