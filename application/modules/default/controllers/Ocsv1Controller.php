@@ -810,6 +810,73 @@ class Ocsv1Controller extends Zend_Controller_Action
         $this->_sendResponse($response, $this->_format);
     }
 
+    protected function _buildCategoriesList($tableCategories = null, $parentCategoryId = null, $categoriesList = array())
+    {
+        $categories = null;
+
+        // Top-level categories
+        if (!$tableCategories) {
+            $tableCategories = new Default_Model_DbTable_ProjectCategory();
+            if (Zend_Registry::isRegistered('store_category_list')) {
+                $categories = $tableCategories->fetchActive(Zend_Registry::get('store_category_list'));
+            }
+            else {
+                $categories = $tableCategories->fetchAllActive();
+            }
+        }
+        // Sub-categories
+        else if ($parentCategoryId) {
+            $categories = $tableCategories->fetchImmediateChildren($parentCategoryId);
+        }
+
+        // Build categories list
+        if (!empty($categories)) {
+            foreach ($categories as $category) {
+                if (is_array($category)) {
+                    $category = (object)$category;
+                }
+
+                $categoryName = $category->title;
+                $categoryDisplayName = $category->title;
+                if (!empty($category->name_legacy)) {
+                    $categoryName = $category->name_legacy;
+                }
+                $categoryParentId = '';
+                if (!empty($parentCategoryId)) {
+                    $categoryParentId = $parentCategoryId;
+                }
+                $categoryXdgType = '';
+                if (!empty($category->xdg_type)) {
+                    $categoryXdgType = $category->xdg_type;
+                }
+
+                if ($this->_format == 'json') {
+                    $categoriesList[] = array(
+                        'id' => $category->project_category_id,
+                        'name' => $categoryName,
+                        'display_name' => $categoryDisplayName,
+                        'parent_id' => $categoryParentId,
+                        'xdg_type' => $categoryXdgType
+                    );
+                }
+                else {
+                    $categoriesList[] = array(
+                        'id' => array('@text' => $category->project_category_id),
+                        'name' => array('@text' => $categoryName),
+                        'display_name' => array('@text' => $categoryDisplayName),
+                        'parent_id' => array('@text' => $categoryParentId),
+                        'xdg_type' => array('@text' => $categoryXdgType)
+                    );
+                }
+
+                // Update the list recursive
+                $categoriesList = $this->_buildCategoriesList($tableCategories, $category->project_category_id, $categoriesList);
+            }
+        }
+
+        return $categoriesList;
+    }
+
     public function contentdataAction()
     {
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . print_r(func_get_args(), true));
