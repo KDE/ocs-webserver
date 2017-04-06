@@ -43,8 +43,15 @@ class Default_View_Helper_BuildProductUrl
 
         $host = '';
         if ($withHost) {
+            $member_host = Zend_Registry::get('config')->settings->member->page->server;
+            $http_host = Zend_Registry::get('config')->settings->member->product->server; // set http_host to product server
+
+            if (false === strpos($request->getHttpHost(), $member_host)) {
+                $http_host = $request->getHttpHost();
+            }
+
             $http_scheme = isset($scheme) ? $scheme : $request->getScheme();
-            $host = $http_scheme . '://' . $request->getHttpHost();
+            $host = $http_scheme . '://' . $http_host;
         }
 
         $storeId = null;

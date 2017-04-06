@@ -756,9 +756,10 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         $helperProductUrl = new Default_View_Helper_BuildProductUrl();
         foreach ($projects as $pro) {
             $projArr = array();
+            $projArr['id'] = $pro->project_id;
             $projArr['name'] = $pro->title;
             $projArr['image'] = $pro->image_small;
-            $projArr['url'] = $helperProductUrl->buildProductUrl($pro->project_id);
+            $projArr['url'] = $helperProductUrl->buildProductUrl($pro->project_id, '', null, true);
             $projArr['sumAmount'] = $pro->sumAmount;
             array_push($catArray[$pro->catTitle], $projArr);
         }

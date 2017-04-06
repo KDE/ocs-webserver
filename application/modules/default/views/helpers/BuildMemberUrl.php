@@ -28,17 +28,18 @@ class Default_View_Helper_BuildMemberUrl extends Zend_View_Helper_Abstract
      * @param string $action
      * @param array $params
      * @param bool $withHost
-     * @param string $protocol
+     * @param string $scheme
      * @return string
      */
-    public function buildMemberUrl($member_id, $action = '', $params = null, $withHost = false, $protocol = 'http')
+    public function buildMemberUrl($member_id, $action = '', $params = null, $withHost = false, $scheme = null)
     {
         /** @var Zend_Controller_Request_Http $request */
         $request = Zend_Controller_Front::getInstance()->getRequest();
 
         $host = '';
         if ($withHost) {
-            $host = $protocol . '://' . $request->getHttpHost();
+            $http_scheme = isset($scheme) ? $scheme : $request->getScheme();
+            $host = $http_scheme . '://' . $request->getHttpHost();
         }
 
         $storeId = null;
@@ -60,8 +61,6 @@ class Default_View_Helper_BuildMemberUrl extends Zend_View_Helper_Abstract
         if ($action != '') {
             $action = $action . '/';
         }
-
-        $member_host = Zend_Registry::get('config')->settings->member->page->host;
 
         return "{$host}/{$storeId}member/{$member_id}/{$action}{$url_param}";
     }

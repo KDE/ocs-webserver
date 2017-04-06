@@ -257,18 +257,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     {
         $appConfig = $this->getResource('config');
 
-        $facebookConfig = $appConfig->third_party->facebook;
-        defined('FACEBOOK_APP_ID') || define('FACEBOOK_APP_ID', $facebookConfig->app_id);
-        defined('FACEBOOK_SECRET') || define('FACEBOOK_SECRET', $facebookConfig->secret);
-
-        $twitterConfig = $appConfig->third_party->twitter->consumer;
-        defined('TWITTER_CONSUMER_KEY') || define('TWITTER_CONSUMER_KEY', $twitterConfig->key);
-        defined('TWITTER_CONSUMER_SECRET') || define('TWITTER_CONSUMER_SECRET', $twitterConfig->secret);
-
-        $thingiverseConfig = $appConfig->third_party->thingiverse->consumer;
-        defined('THINGIVERSE_CONSUMER_KEY') || define('THINGIVERSE_CONSUMER_KEY', $thingiverseConfig->key);
-        defined('THINGIVERSE_CONSUMER_SECRET') || define('THINGIVERSE_CONSUMER_SECRET', $thingiverseConfig->secret);
-
         $imageConfig = $appConfig->images;
         defined('IMAGES_UPLOAD_PATH') || define('IMAGES_UPLOAD_PATH', $imageConfig->upload->path);
         defined('IMAGES_MEDIA_SERVER') || define('IMAGES_MEDIA_SERVER', $imageConfig->media->server);
