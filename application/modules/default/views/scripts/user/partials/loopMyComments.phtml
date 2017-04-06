@@ -44,7 +44,7 @@ $helperPrintDate = new Default_View_Helper_PrintDate();
         <div class="row rownomargin" >
             <div class="info">
                 <div class="small">
-                    <a href="<?=$helperBuildProductUrl->buildProductUrl($elementComment['project_id'])?>"><?= nl2br($elementComment['comment_text'],true) ?></a>
+                    <a href="<?=$helperBuildProductUrl->buildProductUrl($elementComment['project_id'], '', null, true)?>"><?= nl2br($elementComment['comment_text'],true) ?></a>
                 </div>
             </div>
         </div>
