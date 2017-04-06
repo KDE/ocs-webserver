@@ -45,6 +45,9 @@ if ($paginationComments) {
     $this->comments = $paginationComments;
 }
 
+$textCountryCity = $this->member['city'];
+$textCountryCity .= $this->member['country'] ? ', ' . $this->member['country'] : '';
+
 ?>
 <style>
     .info-social {
@@ -193,7 +196,21 @@ if ($paginationComments) {
                             <h3>About me</h3>
 
                             <div class="box-content">
+                                <?php if($this->member['firstname']) :?>
+                                <div class="info-text">
+                                        <span class="glyphicon glyphicon-user"></span>
+                                        <span class="text"><?php echo $this->member['firstname']; ?>&nbsp;<?php echo $this->member['lastname']; ?> </span>
+                                </div>
+                                <?php endif; ?>
+                                <?php if($textCountryCity):?>
+                                <div class="info-text">
+                                        <span class="glyphicon glyphicon-map-marker"></span>
+                                        <span class="text"><?php echo $textCountryCity ?></span>
+                                </div>
+                                <?php endif; ?>
+                                <div class="info-text">
                                 <?php echo nl2br(strip_tags($this->mainProject['description'])); ?>
+                                </div>
                             </div>
                         </div>
                     </div>

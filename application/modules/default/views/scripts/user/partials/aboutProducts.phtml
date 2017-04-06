@@ -8,9 +8,8 @@
             <div class="u-wrap">
                 <a href="<?= $helperBuildProductUrl->buildProductUrl($product['project_id']); ?>">
                     <figure>
-                        <img
-                                src="<?php echo $helperImage->Image($product['image_small'], array('width' => 280, 'height' => 171)); ?>"
-                                class="explore-product-image" width="101" height="81"/>
+                        <img src="<?php echo $helperImage->Image($product['image_small'], array('width' => 280, 'height' => 171)); ?>"
+                             class="explore-product-image" width="101" height="81" />
                     </figure>
                     <div class="u-content">
                         <h3><?php echo $product['title']; ?></h3>
@@ -21,7 +20,6 @@
                         </span>
                     </div>
                 </a>
-
                 <?php
                 $this->widgetRating = new stdClass();
                 $this->widgetRating->project_id = $product['project_id'];
@@ -29,9 +27,7 @@
                 $this->widgetRating->count_likes = $product['count_likes'];
                 $this->widgetRating->count_dislikes = $product['count_dislikes'];
                 echo $this->render('partials/widgetRating.phtml'); ?>
-
             </div>
-
         </div>
     <?php endforeach; ?>
 </div>
