@@ -122,6 +122,7 @@ class Default_Model_PayPal_MasspayIpnMessage extends Local_Payment_PayPal_Masspa
     }
 
     public function _processIpn() {
+        $this->_logger->debug(__METHOD__ . ' - ' . $this->_ipnMessage->getTransactionId());
         $iMax = 250;
         $payoutsArray = array();
         

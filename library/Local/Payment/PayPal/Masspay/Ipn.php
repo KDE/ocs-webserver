@@ -176,96 +176,46 @@ abstract class Local_Payment_PayPal_Masspay_Ipn extends Local_Payment_PayPal_Bas
     protected function processPaymentStatus()
     {
         switch ($this->_dataIpn['payment_status']) {
-            case 'COMPLETED':
+            case 'Completed':
                 $this->_statusCompleted();
                 break;
-            case 'INCOMPLETE':
-                $this->_statusIncomplete();
+            case 'Denied':
+                $this->_statusDenied();
                 break;
-            case 'CREATED':
-                $this->_statusCreated();
-                break;
-            case 'ERROR':
-                $this->_statusError();
-                break;
-            case 'REVERSALERROR':
-                $this->_statusReversalError();
-                break;
-            case 'PROCESSING':
-                $this->_statusProcessing();
-                break;
-            case 'PENDING':
-                $this->_statusPending();
+            case 'Processed':
+                $this->_statusProcessed();
                 break;
             default:
-                throw new Local_Payment_Exception('Unknown status from PayPal: ' . $this->_ipnMessage->getStatus());
+                throw new Local_Payment_Exception('Unknown status from PayPal: ' . $this->_dataIpn['ipn_track_id']);
         }
     }
 
     /**
      * Transaction/Payment completed.
      *
-     * This is typically the most important method you'll need to override to perform
-     * some sort of action when a successful transaction has been completed.
-     *
-     * You could override the other status's (such as reverse or denied) to
-     * reverse whatever was done, but that could interfere if you're denying a
-     * payment or refunding someone for a good reason. In those cases, it's
-     * probably best to simply do whatever steps are required manually.
+     * For Mass Payments, this means that all of your payments have been claimed, 
+     * or after a period of 30 days, unclaimed payments have been returned to you. 
      */
     protected function _statusCompleted()
     {
-        $this->_logger->info('Not doing anything in statusCompleted ' . $this->_ipnMessage->getPaymentId());
+        $this->_logger->info('Not doing anything in statusCompleted ' . $this->_dataIpn['ipn_track_id']);
     }
 
     /**
-     * Some transfers succeeded and some failed for a parallel payment or, for a delayed chained payment, secondary receivers have not been paid
+     * For Mass Payments, this means that your funds were not sent and the Mass Payment was not initiated. 
+     * This may have been caused by lack of funds. 
      */
-    protected function _statusIncomplete()
+    protected function _statusDenied()
     {
-        $this->_logger->info('Not doing anything in _statusIncomplete ' . $this->_ipnMessage->getPaymentId());
+        $this->_logger->info('Not doing anything in _statusDenied ' . $this->_dataIpn['ipn_track_id']);
     }
 
     /**
-     * The payment request was received; funds will be transferred once the payment is approved
+     * Your Mass Payment has been processed and all payments have been sent.
      */
-    protected function _statusCreated()
+    protected function _statusProcessed()
     {
-        $this->_logger->info('Not doing anything in _statusCreated ' . $this->_ipnMessage->getPaymentId());
-    }
-
-    /**
-     * The payment failed and all attempted transfers failed or all completed transfers were successfully reversed
-     */
-    protected function _statusError()
-    {
-        $this->_logger->info('Not doing anything in _statusError ' . $this->_ipnMessage->getPaymentId());
-    }
-
-    /**
-     * One or more transfers failed when attempting to reverse a payment
-     *
-     */
-    protected function _statusReversalError()
-    {
-        $this->_logger->info('Not doing anything in _statusReversalError ' . $this->_ipnMessage->getPaymentId() . '::' . $this->_dataIpn['reason_code']);
-    }
-
-    /**
-     * The payment is in progress
-     */
-    protected function _statusProcessing()
-    {
-        $this->_logger->info('Not doing anything in _statusProcessing ' . $this->_ipnMessage->getPaymentId());
-    }
-
-    /**
-     * Pending state
-     * Look at $this->_dataIpn['pending_reason']
-     */
-    protected function _statusPending()
-    {
-        $this->_logger->info('Not doing anything in _statusPending: ' . $this->_ipnMessage->getPaymentId() . '::' . $this->_dataIpn['pending_reason']);
+        $this->_logger->info('Not doing anything in _statusProcessing ' . $this->_dataIpn['ipn_track_id']);
     }
 
     public function getCharset($rawDataIpn)
