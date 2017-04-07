@@ -39,13 +39,15 @@ class GatewayController extends Zend_Controller_Action
         $rawPostData = file_get_contents('php://input');
 
         Zend_Registry::get('logger')->info(__METHOD__ . ' - Start Process PayPal IPN - ');
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - rawpostdata - ' . print_r($rawPostData, true));
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - rawpostdata - ' . print_r($rawPostData, true));
         
         //Switch betwee AdaptivePayment and Masspay
         if (isset($rawPostData['txn_type']) AND ($rawPostData['txn_type'] == 'masspay')) {
+            Zend_Registry::get('logger')->info(__METHOD__ . ' - Start Process Masspay IPN - ');
             $modelPayPal = new Default_Model_PayPal_MasspayIpnMessage();
             $modelPayPal->processIpn($rawPostData);
         } else {
+            Zend_Registry::get('logger')->info(__METHOD__ . ' - Start Process Normal IPN - ');
             $modelPayPal = new Default_Model_PayPal_IpnMessage();
             $modelPayPal->processIpn($rawPostData);
             
