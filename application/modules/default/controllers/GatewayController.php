@@ -39,10 +39,14 @@ class GatewayController extends Zend_Controller_Action
         $rawPostData = file_get_contents('php://input');
 
         Zend_Registry::get('logger')->info(__METHOD__ . ' - Start Process PayPal IPN - ');
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - rawpostdata - ' . print_r($rawPostData, true));
+        
+        $ipnArray = $this->_parseRawMessage($rawPostData);
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - rawpostdata - ' . print_r($ipnArray, true));
+        
+        
         
         //Switch betwee AdaptivePayment and Masspay
-        if (isset($rawPostData['txn_type']) AND ($rawPostData['txn_type'] == 'masspay')) {
+        if (isset($ipnArray['txn_type']) AND ($ipnArray['txn_type'] == 'masspay')) {
             Zend_Registry::get('logger')->info(__METHOD__ . ' - Start Process Masspay IPN - ');
             $modelPayPal = new Default_Model_PayPal_MasspayIpnMessage();
             $modelPayPal->processIpn($rawPostData);
@@ -53,6 +57,63 @@ class GatewayController extends Zend_Controller_Action
             
         }
 
+    }
+    
+    private function _parseRawMessage($raw_post)
+    {
+        //log_message('error', "testing");
+        if (empty($raw_post)) {
+            return array();
+        } # else:
+        $parsedPost = array();
+        $pairs = explode('&', $raw_post);
+        foreach ($pairs as $pair) {
+            list($key, $value) = explode('=', $pair, 2);
+            $key = urldecode($key);
+            $value = urldecode($value);
+            # This is look for a key as simple as 'return_url' or as complex as 'somekey[x].property'
+//            preg_match('/(\w+)(?:\[(\d+)\])?(?:\.(\w+))?/', $key, $key_parts);
+            preg_match('/(\w+)(?:(?:\[|\()(\d+)(?:\]|\)))?(?:\.(\w+))?/', $key, $key_parts);
+            switch (count($key_parts)) {
+                case 4:
+                    # Original key format: somekey[x].property
+                    # Converting to $post[somekey][x][property]
+                    if (false === isset($parsedPost[$key_parts[1]])) {
+                        if (empty($key_parts[2]) && '0' != $key_parts[2]) {
+                            $parsedPost[$key_parts[1]] = array($key_parts[3] => $value);
+                        } else {
+                            $parsedPost[$key_parts[1]] = array($key_parts[2] => array($key_parts[3] => $value));
+                        }
+                    } else {
+                        if (false === isset($parsedPost[$key_parts[1]][$key_parts[2]])) {
+                            if (empty($key_parts[2]) && '0' != $key_parts[2]) {
+                                $parsedPost[$key_parts[1]][$key_parts[3]] = $value;
+                            } else {
+                                $parsedPost[$key_parts[1]][$key_parts[2]] = array($key_parts[3] => $value);
+                            }
+                        } else {
+                            $parsedPost[$key_parts[1]][$key_parts[2]][$key_parts[3]] = $value;
+                        }
+                    }
+                    break;
+                case 3:
+                    # Original key format: somekey[x]
+                    # Converting to $post[somekey][x]
+                    if (!isset($parsedPost[$key_parts[1]])) {
+                        $parsedPost[$key_parts[1]] = array();
+                    }
+                    $parsedPost[$key_parts[1]][$key_parts[2]] = $value;
+                    break;
+                default:
+                    # No special format
+                    $parsedPost[$key] = $value;
+                    break;
+            }
+            #switch
+        }
+        #foreach
+
+        return $parsedPost;
     }
 
     public function dwollaAction()
