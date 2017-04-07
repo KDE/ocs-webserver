@@ -41,9 +41,6 @@ class GatewayController extends Zend_Controller_Action
         Zend_Registry::get('logger')->info(__METHOD__ . ' - Start Process PayPal IPN - ');
         
         $ipnArray = $this->_parseRawMessage($rawPostData);
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - rawpostdata - ' . print_r($ipnArray, true));
-        
-        
         
         //Switch betwee AdaptivePayment and Masspay
         if (isset($ipnArray['txn_type']) AND ($ipnArray['txn_type'] == 'masspay')) {

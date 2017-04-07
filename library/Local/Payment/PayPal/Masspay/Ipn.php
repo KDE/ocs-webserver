@@ -42,6 +42,7 @@ abstract class Local_Payment_PayPal_Masspay_Ipn extends Local_Payment_PayPal_Bas
     {
         if (false === $this->verifyIpnOrigin($rawData)) {
             $this->_logger->err(__FUNCTION__ . '::Abort IPN processing. IPN not verified: ' . $rawData);
+            $this->_logger->info(__FUNCTION__ . '::Abort IPN processing. IPN not verified: ' . $rawData);
             return;
         }
 
