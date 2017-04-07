@@ -42,7 +42,7 @@ class GatewayController extends Zend_Controller_Action
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - rawpostdata - ' . print_r($rawPostData, true));
         
         //Switch betwee AdaptivePayment and Masspay
-        if (isset($rawPostData['txn_type']) AND ($rawResponse['txn_type'] == 'masspay')) {
+        if (isset($rawPostData['txn_type']) AND ($rawPostData['txn_type'] == 'masspay')) {
             $modelPayPal = new Default_Model_PayPal_MasspayIpnMessage();
             $modelPayPal->processIpn($rawPostData);
         } else {
