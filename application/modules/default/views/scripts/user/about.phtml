@@ -100,7 +100,7 @@ $textCountryCity .= $this->member['country'] ? ', ' . $this->member['country'] :
                         <img src="<?=$this->member['profile_image_url']?>" style="height:6.8em;width:6.8em;"/>
                     </div>
                     <div style="transform: translateY(20px);padding-left: 7.5em;">
-                        <h1><?=$this->member['username']?><span class="badge badge-primary badge-super">C xx</span><span class="badge badge-info badge-super">P xx</span></h1>
+                        <h1><?=$this->member['username']?><?php echo ($this->member['paypal_mail']) ? '<span class="badge badge-info badge-super">P</span>' : '' ?><?php // echo ($this->member['subscription']) ? '<span class="badge badge-info badge-super">S</span>' : '' ?></h1>
                     </div>
                     <div style="transform: translateY(20px);">
                         <ul class="nav nav-pills profile-nav">
@@ -129,22 +129,22 @@ $textCountryCity .= $this->member['country'] ? ', ' . $this->member['country'] :
                     <ul class="nav nav-tabs" role="tablist">
                         <li role="presentation" class="active">
                             <a href="#products" aria-controls="products" role="tab" data-toggle="tab">
-                                Products<?php echo (count($this->userProducts->toArray())>0?' ('.count($this->userProducts->toArray()).') ':'')?>
+                                Products<?php echo (count($this->userProducts->toArray())>0?' <span class="badge badge-primary badge-super">'.count($this->userProducts->toArray()).'</span> ':'')?>
                             </a>
                         </li>
                         <li role="presentation">
                             <a href="#earnings" aria-controls="supported" role="tab" data-toggle="tab">
-                                Supported by<?php echo ($this->cntSupporter>0?' ('.$this->cntSupporter.') ':'')?>
+                                Supported by<?php echo ($this->cntSupporter>0?' <span class="badge badge-primary badge-super">'.$this->cntSupporter.'</span> ':'')?>
                             </a>
                         </li>
                         <li role="presentation">
                             <a href="#supporter" aria-controls="supporter" role="tab" data-toggle="tab">
-                                Supporter of<?php echo (count($this->contributedProjects)>0?' ('.count($this->contributedProjects).') ':'')?>
+                                Supporter of<?php echo (count($this->contributedProjects)>0?' <span class="badge badge-primary badge-super">'.count($this->contributedProjects).'</span> ':'')?>
                             </a>
                         </li>
                         <li role="presentation">
                             <a href="#comments" aria-controls="comments" role="tab" data-toggle="tab">
-                                Comments (<?php echo $this->comments->getTotalItemCount()?>)
+                                Comments <?php echo ($this->comments->getTotalItemCount() >0) ? '<span class="badge badge-primary badge-super">'.$this->comments->getTotalItemCount() .'</span> ':''?>
                             </a>
                         </li>
                     </ul>

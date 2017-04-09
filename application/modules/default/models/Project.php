@@ -793,6 +793,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
      * @param $project
      * @param int $count
      * @return Zend_Db_Table_Rowset_Abstract
+     * @todo improve processing speed
      */
     public function fetchMoreProjectsOfOtherUsr($project, $count = 8)
     {

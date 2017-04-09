@@ -128,28 +128,6 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                 ));
         $form->addElement($username);
 
-//        $email = $form->createElement('text', 'mail')
-//            ->setLabel("Email:")
-//            ->setRequired(false)
-//            ->removeDecorator('HtmlTag')
-//            ->setFilters(array('StringTrim'))
-//            ->setValidators(array('EmailAddress'))
-//            ->setAttrib('readonly', 'true')
-//            ->setDecorators(
-//                array(
-//                    'ViewHelper',
-//                    'Label',
-//                    'Errors',
-//                    array(
-//                        'ViewScript',
-//                        array(
-//                            'viewScript' => 'settings/viewscripts/flatui_input.phtml',
-//                            'placement' => false
-//                        )
-//                    )
-//                ));
-//        $form->addElement($email);
-
         $firstname = $form->createElement('text', 'firstname')
             ->setLabel("First Name:")
             ->setRequired(false)
@@ -868,7 +846,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                         'token_provider_name' => 'github_personal',
                         'token_value' => $form->getValue('token_github'),
                         'token_provider_username' => $form->getValue('link_github')
-                        ));
+                    ));
 
                 $this->view->github = $form;
                 $this->view->save = 1;
