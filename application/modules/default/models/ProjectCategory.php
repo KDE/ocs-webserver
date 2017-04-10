@@ -58,7 +58,8 @@ class Default_Model_ProjectCategory
     public function fetchCategoryTreeForStore($store_id = null)
     {
         if (empty($store_id)) {
-            $store_id = Zend_Registry::get('store_config')['store_id'];
+            $store_config = Zend_Registry::get('store_config');
+            $store_id = $store_config['store_id'];
         }
 
         /** @var Zend_Cache_Core $cache */
@@ -77,7 +78,8 @@ class Default_Model_ProjectCategory
 
     public function fetchCategoryTreeCurrentStore()
     {
-        $store_id = Zend_Registry::get('store_config')['store_id'];
+        $store_config = Zend_Registry::get('store_config');
+        $store_id = $store_config['store_id'];
 
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
