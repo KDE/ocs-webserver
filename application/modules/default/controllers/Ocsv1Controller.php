@@ -21,9 +21,66 @@
  **/
 
 /**
- * OCS API
+ * What changes from official OCS v1 spec
+ *
+ * OCS specification:
  * http://www.freedesktop.org/wiki/Specifications/open-collaboration-services/
+ *
+ * ----
+ *
+ * Allow delimiter ',' of value of parameter 'categories'
+ *
+ * Example:
+ * /content/data?categories=1,2,3
+ * /content/data?categories=1x2x3
+ *
+ * ----
+ *
+ * Additional URL queries to '/content/data'
+ *
+ * xdg_types
+ * package_types
+ *
+ * Example:
+ * /content/data?xdg_types=icons,themes,wallpapers
+ * /content/data?package_types=1,2,3
+ *
+ * package_types:
+ * 1 = AppImage
+ * 2 = Android (apk)
+ * 3 = OS X compatible
+ * 4 = Windows executable
+ * 5 = Debian
+ * 6 = Snappy
+ * 7 = Flatpak
+ * 8 = Electron-Webapp
+ *
+ * ----
+ *
+ * Additional data field of '/content/categories'
+ *
+ * display_name
+ * parent_id
+ * xdg_type
+ *
+ * ----
+ *
+ * Additional data field of '/content/data'
+ *
+ * xdg_type
+ * download_package_type{n}
+ * download_package_arch{n}
+ * download_ghns{n}
+ *
+ * ----
+ *
+ * Additional data field of '/content/download'
+ *
+ * download_package_type
+ * download_package_arch
+ * download_ghns
  */
+
 class Ocsv1Controller extends Zend_Controller_Action
 {
 
