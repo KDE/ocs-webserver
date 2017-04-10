@@ -40,7 +40,7 @@ class Backend_MemberPayoutCliController extends Local_Controller_Action_CliAbstr
     /**
      * Run php code as cronjob.
      * I.e.:
-     * /usr/bin/php /var/www/ocs-www/httpdocs/cron.php -a /backend/hive-cli/run/action/sync/context/users/ >> /var/www/ocs-www/logs/hive_sync.log $
+     * /usr/bin/php /var/www/pling.it/pling/scripts/cron.php -a /backend/member-payout-cli/run/action/payout/context/all >> /var/www/ocs-www/logs/masspay.log $
      *
      * @see Local_Controller_Action_CliInterface::runAction()
      */
