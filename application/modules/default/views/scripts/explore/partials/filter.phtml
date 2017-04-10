@@ -95,9 +95,8 @@ $this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
                 {
                     $rows = array($rows);
                 }
-                $helperFetchCategory = new Default_View_Helper_FetchCategory();
                 $helperBuildExploreUrl = new Default_View_Helper_BuildExploreUrl();
-                $helperProductCount = new Default_View_Helper_CategoryProductCount();
+                $helpTruncate = new Default_View_Helper_Truncate();
 
                 $csschild = "child";
                 if ($addAllItem) {
@@ -113,7 +112,7 @@ $this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
                     $urlExplore = $helperBuildExploreUrl->buildExploreUrl($row['id'], null, $selectedOrder);
                     $product_count = empty($row['product_count']) ? '' : $row['product_count'];
 
-                    $result .= "<li class='navilink {$csschild}'><span class='title'><a class='{$csschild}' href='{$urlExplore}' data-id='{$row['id']}'>{$row['title']} <span style='float:right; padding-right:10px'>{$product_count}</span> </a></span>";
+                    $result .= "<li class='navilink {$csschild}'><span class='title'><a class='{$csschild}' href='{$urlExplore}' data-id='{$row['id']}' title='{$row['title']}'>{$helpTruncate->truncate($row['title'],17)} <span style='float:right; padding-right:10px'>{$product_count}</span> </a></span>";
 
                     if ($row['has_children']) {
                         $children = $row['children'];
