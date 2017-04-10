@@ -31,7 +31,6 @@ if('all' == strtolower($catTitle) OR (false === isset($catTitle))) {
 } else {
     $labelTotalCounter = $catTitle;
 }
-
 ?>
 <main id="explore-content">
     <section class="wrapper" id="products-wrapper">
@@ -46,18 +45,10 @@ if('all' == strtolower($catTitle) OR (false === isset($catTitle))) {
                     <a href="<?= $helperBuildExploreUrl->buildExploreUrl($this->filters['category'], null,
                         'latest') ?>"><span><?= $this->translate('Latest') ?></span></a>
                 </li>
-               
                 <li <?=$this->filters['order'] == 'top' ? 'class="active"' :'' ?>>
                     <a href="<?= $helperBuildExploreUrl->buildExploreUrl($this->filters['category'], null,
                         'top') ?>"><span><?= $this->translate('Greatest') ?></span></a>
                 </li>
-
-<?php /**
-                <li <?=$this->filters['order'] == 'download' ? 'class="active"' :'' ?>>
-                    <a href="<?= $helperBuildExploreUrl->buildExploreUrl($this->filters['category'], null,
-                        'download') ?>"><span><?= $this->translate('Most Downloaded') ?></span></a>
-                </li>
- **/?>
                 <li class="right">
                     <small><?= $this->totalcount ?> <?= $labelTotalCounter ?></small>
                 </li>
@@ -99,13 +90,7 @@ if('all' == strtolower($catTitle) OR (false === isset($catTitle))) {
 
         <aside class="col-lg-2 col-md-4 col-sm-8 col-xs-12" id="explore-sidebar" style="background-color: #f1f1f1; <?=$asidehide?>">
                                       
-            <?php       
-            /**     
-            if ($this->users) {        
-                          echo $this->render('explore/partials/user.phtml');
-            } **/ 
-            ?>
-            <?php            
+            <?php
             if (count($comments) > 0) {
                 ?>
                 <span class="commentTitle" style="margin:auto;display:table;padding:5px"> Comments</span>
@@ -119,9 +104,7 @@ if('all' == strtolower($catTitle) OR (false === isset($catTitle))) {
                 </div>
             <?php } ?>
 
-            
-
-            <?php        
+            <?php
             if (count($donations) > 0) {
                 ?>
                 <span class="donationTitle" style="margin:auto;display:table;padding:5px"> Donations</span>
@@ -134,9 +117,7 @@ if('all' == strtolower($catTitle) OR (false === isset($catTitle))) {
                 </div>
             <?php } ?>
 
-
             <?php
-            
             if (count($topprods) > 0) {
                 ?>
                 <span class="commentTitle" style="margin:auto;display:table;padding:5px"> 3 Months Ranking <span class="small light"> (download counts)</span></span>
@@ -165,11 +146,8 @@ if('all' == strtolower($catTitle) OR (false === isset($catTitle))) {
 
   </section>    
 </main>
- 
- 
 
-
-<script type="text/javascript">    
+<script type="text/javascript">
     $(window).load(function () {      
         if ($('#explore-products').height() > $('#explore-sidebar').height()) {
             $('#explore-sidebar').height($('#explore-products').height());
