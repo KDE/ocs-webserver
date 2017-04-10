@@ -134,7 +134,7 @@ class Backend_MemberPayoutCliController extends Local_Controller_Action_CliAbstr
         $payouts = $stmt->fetchAll();
         
         $payoutsArray = array();
-        //Insert/Update users in table project_rating
+        
         foreach ($payouts as $payout) {
             $payoutsArray[] = $payout;
         }
@@ -157,13 +157,13 @@ class Backend_MemberPayoutCliController extends Local_Controller_Action_CliAbstr
         echo(APPLICATION_ENV);
         
         //curl 
-        $nvpreq = "METHOD=MassPay&VERSION=90&PWD=".$this->_config->third_party->paypal->security->password."&USER=".$this->_config->third_party->paypal->security->userid."&SIGNATURE=".$this->_config->third_party->paypal->security->signature;
+        $nvpreq = "METHOD=MassPay&RECEIVERTYPE=EmailAddress&CURRENCYCODE=USD&EMAILSUBJECT=You have a payment from opendesktop.org&VERSION=90&PWD=".$this->_config->third_party->paypal->security->password."&USER=".$this->_config->third_party->paypal->security->userid."&SIGNATURE=".$this->_config->third_party->paypal->security->signature;
 
 
         $i = 0;
         foreach ($payoutsArray as $payout) {
-            //$mpUrl .= "-d L_EMAIL" . $i . "=" . $payout['mail'] . "-d L_AMT" . $i . "=" . $payout['amount'] . " -d L_NOTE" . $i . "=Opendesktop.org: Your monthly payout for " . $payout['num_downloads']. " downloads.";
-            $nvpreq .= "&L_EMAIL" . $i . "=maker@pling.com&L_AMT" . $i . "=" . $payout['amount'] . "&L_NOTE" . $i . "=Opendesktop.org: Your monthly payout for " . $payout['num_downloads']. " downloads.";
+            //$mpUrl .= "-d L_EMAIL" . $i . "=" . $payout['paypal_mail'] . "-d L_AMT" . $i . "=" . $payout['amount'] . " -d L_NOTE" . $i . "=Opendesktop.org: Your monthly payout for " . $payout['num_downloads']. " downloads.";
+            $nvpreq .= "&L_UNIQUEID".$i."=".$payout['id']."&L_EMAIL" . $i . "=maker@pling.com&L_AMT" . $i . "=" . $payout['amount'];
             $i++;
             //mark payout as requested
             $payoutTable->update(array("status" => $this::$PAYOUT_STATUS_REQUESTED, "timestamp_masspay_start" => new Zend_Db_Expr('Now()')), "id = " . $payout['id']);

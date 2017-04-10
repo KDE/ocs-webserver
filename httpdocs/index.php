@@ -19,8 +19,14 @@ defined('APPLICATION_CACHE')
 || define('APPLICATION_CACHE', realpath(dirname(__FILE__) . '/../data/cache'));
 
 // Define application environment
-defined('APPLICATION_ENV')
-|| define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'));
+$crawler = crawlerDetect($_SERVER['HTTP_USER_AGENT']);
+if ($crawler )
+{   
+    define('APPLICATION_ENV', 'searchbotenv');
+} else {
+    defined('APPLICATION_ENV')
+    || define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'));
+}
 
 defined('APPLICATION_DATA')
 || define('APPLICATION_DATA', realpath(dirname(__FILE__) . '/../data'));
@@ -98,6 +104,56 @@ if (file_exists(APPLICATION_PATH . '/configs/application.local.ini')) {
         )
     );
 }
+
+
+//crawler detection
+function crawlerDetect($USER_AGENT)
+{
+    $crawlers = array(
+    array('Google', 'Google'),
+    array('MSN', 'MSN'),
+    array('msnbot-media', 'MSN'),
+    array('bingbot', 'MSN'),
+    array('MegaIndex.ru' , 'MegaIndex.ru'),
+    array('Baiduspider', 'Baiduspider'),
+    array('YandexBot', 'YandexBot'),
+    array('AhrefsBot', 'AhrefsBot'),
+    array('ltx71', 'ltx71'),
+    array('msnbot', 'MSN'),
+    array('Rambler', 'Rambler'),
+    array('Yahoo', 'Yahoo'),
+    array('AbachoBOT', 'AbachoBOT'),
+    array('accoona', 'Accoona'),
+    array('AcoiRobot', 'AcoiRobot'),
+    array('ASPSeek', 'ASPSeek'),
+    array('CrocCrawler', 'CrocCrawler'),
+    array('Dumbot', 'Dumbot'),
+    array('FAST-WebCrawler', 'FAST-WebCrawler'),
+    array('GeonaBot', 'GeonaBot'),
+    array('Gigabot', 'Gigabot'),
+    array('Lycos', 'Lycos spider'),
+    array('MSRBOT', 'MSRBOT'),
+    array('Scooter', 'Altavista robot'),
+    array('AltaVista', 'Altavista robot'),
+    array('IDBot', 'ID-Search Bot'),
+    array('eStyle', 'eStyle Bot'),
+    array('Scrubby', 'Scrubby robot')
+    );
+
+    foreach ($crawlers as $c)
+    {
+        if (stristr($USER_AGENT, $c[0]))
+        {
+            return($c[1]);
+        }
+    }
+
+    return false;
+}
+
+
+
+
 
 
 // Init and start Zend_Application
