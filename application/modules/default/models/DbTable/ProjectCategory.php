@@ -246,13 +246,10 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
     {
         $this->_db->beginTransaction();
         try {
-//            $this->_db->getProfiler()->setEnabled(true);
             $this->_db->query("UPDATE {$this->_name} SET rgt = rgt + 2 WHERE rgt > :param_right;",
                 array('param_right' => $data['rgt']));
-//            $dummy = $this->_db->getProfiler()->getLastQueryProfile()->getQuery();
             $this->_db->query("UPDATE {$this->_name} SET lft = lft + 2 WHERE lft > :param_right;",
                 array('param_right' => $data['rgt']));
-//            $dummy = $this->_db->getProfiler()->getLastQueryProfile()->getQuery();
             $this->_db->query("INSERT INTO {$this->_name} (`lft`, `rgt`, `title`, `is_active`, `name_legacy`, `xdg_type`) VALUES (:param_right + 1, :param_right + 2, :param_title, :param_status, :param_legacy, :param_xgd);",
                 array(
                     'param_right' => $data['rgt'],
@@ -261,7 +258,6 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
                     'param_legacy' => $data['name_legacy'],
                     'param_xgd' => $data['xdg_type']
                 ));
-//            $dummy = $this->_db->getProfiler()->getLastQueryProfile()->getQuery();
             $this->_db->commit();
         } catch (Exception $e) {
             $this->_db->rollBack();

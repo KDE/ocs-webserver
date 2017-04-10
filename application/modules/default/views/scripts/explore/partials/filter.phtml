@@ -20,6 +20,9 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+$modelCategory = new Default_Model_ProjectCategory();
+$this->categories = $modelCategory->fetchCategoryTreeForStore();
+
 $this->navBackgroundColorActive = $this->template['header-nav-tabs']['background-color-active'];
 $this->navBackgroundColor = $this->template['header-nav-tabs']['background-color'];
 $this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
@@ -83,36 +86,10 @@ $this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
     }
    */
 </style> 
-<?php
-$selectedCategory = 0;
-$selectedOrder = 0;
-
-
-/*if ($this->filters['category'] != null) {
-    $helperFetchCategory = new Default_View_Helper_FetchCategory();
-    $selectedCategory = $helperFetchCategory->fetchCategory($this->filters['category']);
-}*/
-if($this->cat_id!=null)
-{
-    $helperFetchCategory = new Default_View_Helper_FetchCategory();
-    $selectedCategory = $helperFetchCategory->fetchCategory($this->cat_id); 
-}else
-{
-    $selectedCategory=null;
-}
-if ($this->filters['order'] != null) {
-    $selectedOrder = $this->filters['order'];
-}
-?>
 <div class="panel-group" id="accordion">
     <div class="panel panel-default accordion-group">
             <?php
-            function has_children($row)
-            {
-                return ($row['rgt'] - $row['lft']) > 1 ? true : false;
-            }
-
-            function build_menu($rows, $selectedCategory, $selectedOrder, $addAllItem = false)
+            function build_tree($rows, $selectedOrder, $addAllItem = false)
             {                
                 if(!is_array($rows))
                 {
@@ -122,49 +99,27 @@ if ($this->filters['order'] != null) {
                 $helperBuildExploreUrl = new Default_View_Helper_BuildExploreUrl();
                 $helperProductCount = new Default_View_Helper_CategoryProductCount();
 
-                $csschild = "parent";
+                $csschild = "child";
                 if ($addAllItem) {
                     $csschild = "parent";
-                } else {
-                    $csschild = "child";
                 }
 
-                $result = "<ul class='naviblock {$csschild}'>";
+                $result = "<ul id='cat-tree' class='naviblock {$csschild}'>";
 
-                $result .= ($addAllItem) ? addMenuItemAll($selectedCategory, $selectedOrder) : '';
+                $result .= ($addAllItem) ? addRoot($selectedOrder) : '';
+
                 foreach ($rows as $row) {
-                    $currentCategory = $helperFetchCategory->fetchCategory(($row));
-                    
-                    $count = $helperProductCount->categoryProductCount($currentCategory['project_category_id']);
 
-                    $catProductCount = ($count >0)?$count:'';
+                    $urlExplore = $helperBuildExploreUrl->buildExploreUrl($row['id'], null, $selectedOrder);
+                    $product_count = empty($row['product_count']) ? '' : $row['product_count'];
 
-                    $hasChildren = has_children($currentCategory);
-                    if($selectedCategory==null) 
-                    {   $cssClassActive = ''; 
-                       
-                        $cssClassActiveReal='';
-                    }
-                    else
-                    {
-                      $cssClassActive = (($currentCategory['project_category_id'] == $selectedCategory['project_category_id']) OR (($selectedCategory['lft'] > $currentCategory['lft']) AND ($selectedCategory['rgt'] < $currentCategory['rgt']))) ? ' active' : '';
-                     
-                      $cssClassActiveReal = (($currentCategory['project_category_id'] == $selectedCategory['project_category_id'])) ? ' active' : '';
-                    }
-                    
-                    $urlExplore = $helperBuildExploreUrl->buildExploreUrl($currentCategory['project_category_id'], null, $selectedOrder);
+                    $result .= "<li class='navilink {$csschild}'><span class='title'><a class='{$csschild}' href='{$urlExplore}' data-id='{$row['id']}'>{$row['title']} <span style='float:right; padding-right:10px'>{$product_count}</span> </a></span>";
 
-                
-                    $result .= "<li class='navilink {$cssClassActiveReal} {$csschild}'><span class='title'><a class='{$cssClassActiveReal} {$csschild}' href='{$urlExplore}'>{$currentCategory['title']} <span style='float:right; padding-right:10px'>{$catProductCount}</span> </a></span>";
+                    if ($row['has_children']) {
+                        $children = $row['children'];
 
-                    if ($hasChildren) {
-                        $helperFetchChildren = new Default_Model_DbTable_ProjectCategory();
-                        //$children = $helperFetchChildren->fetchSubCatIds($currentCategory['project_category_id'], $helperFetchChildren::ORDERED_TITLE);
-                        $children = $helperFetchChildren->fetchImmediateChildrenIds($currentCategory['project_category_id'], $helperFetchChildren::ORDERED_TITLE);
-
-                        $cssShowChildren = $cssClassActive == ' active' ? ' in' : '';
-                        $htmlChildren = build_menu($children, $selectedCategory, $selectedOrder);
-                        $result .= "<span id='{$currentCategory['project_category_id']}' class='collapse{$cssShowChildren}'>"
+                        $htmlChildren = build_tree($children, $selectedOrder);
+                        $result .= "<span id='{$row['id']}' class='collapse'>"
                             . $htmlChildren .
                             "</span>";
                     }
@@ -180,26 +135,30 @@ if ($this->filters['order'] != null) {
              * @param string $selectedOrder
              * @return string
              */
-            function addMenuItemAll($selectedCategory, $selectedOrder)
+            function addRoot($selectedOrder)
             {
-                $helperBuildExploreUrl = new Default_View_Helper_BuildExploreUrl();
-                if($selectedCategory==null || empty($selectedCategory['project_category_id']))
-                {
-                    $cssClassActive =  ' active';
-                }else
-                {
-                     $cssClassActive =  $selectedCategory['project_category_id'];
-                }
-                
-                $urlExplore = $helperBuildExploreUrl->buildExploreUrl(null, null, $selectedOrder);
-                return "<li class='navilink {$cssClassActive} parent'><span class='title'><a class='{$cssClassActive} parent'href='{$urlExplore}'>All</a></span></li>";
+                $helpExploreUrl = new Default_View_Helper_BuildExploreUrl();
+                $urlExplore = $helpExploreUrl->buildExploreUrl(null, null, $selectedOrder);
+                return "<li class='navilink parent'><span class='title'><a class='parent' href='{$urlExplore}'>All</a></span></li>";
             }
 
-            echo build_menu($this->categories, $selectedCategory, $selectedOrder, true);
+            $selectedOrder = isset($this->filters['order']) ? $this->filters['order'] : null;
+            echo build_tree($this->categories, $selectedOrder, true);
             ?>
     </div>
 </div>
-<?php
-//$this->inlineScript()->appendScript(
-//    ''
-//);
+<script type="application/javascript">
+    $(document).ready(function(){
+        var hierarchy = (function () {
+            return {
+                setup: function (cat_id) {
+                    $('#cat-tree').find('[data-id='+cat_id+']').addClass('active').parents('li').addClass('active').parents('span.collapse').addClass('in');
+                    $('#cat-tree').find('[data-id='+cat_id+']').parent().siblings('span.collapse').addClass('in');
+                }
+            }
+        })();
+
+        hierarchy.setup(<?=$this->cat_id?>);
+
+    });
+</script>
