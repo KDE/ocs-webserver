@@ -57,16 +57,34 @@ class Default_Model_ProjectCategory
      */
     public function fetchCategoryTreeForStore($store_id = null)
     {
+        if (empty($store_id)) {
+            $store_id = Zend_Registry::get('store_config')['store_id'];
+        }
+
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
         $cache_id = __FUNCTION__ . '_' . $store_id;
+
         if (false === ($tree = $cache->load($cache_id))) {
-            if (isset($store_id)) {
-                $modelCategoryStore = new Default_Model_DbTable_ConfigStoreCategory();
-                $rows = $modelCategoryStore->fetchAllCategoriesForStore((int)$store_id);
-            } else {
-                $rows = self::fetchCatIdsForCurrentStore();
-            }
+            $modelCategoryStore = new Default_Model_DbTable_ConfigStoreCategory();
+            $rows = $modelCategoryStore->fetchAllCategoriesForStore((int)$store_id);
+            $tree = $this->buildTree($rows);
+            $cache->save($tree, $cache_id, array(), 300);
+        }
+
+        return $tree;
+    }
+
+    public function fetchCategoryTreeCurrentStore()
+    {
+        $store_id = Zend_Registry::get('store_config')['store_id'];
+
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cache_id = __FUNCTION__ . '_' . $store_id;
+
+        if (false === ($tree = $cache->load($cache_id))) {
+            $rows = self::fetchCatIdsForCurrentStore();
             $tree = $this->buildTree($rows);
             $cache->save($tree, $cache_id, array(), 300);
         }

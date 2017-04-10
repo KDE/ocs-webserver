@@ -21,7 +21,7 @@
  **/
 
 $modelCategory = new Default_Model_ProjectCategory();
-$this->categories = $modelCategory->fetchCategoryTreeForStore();
+$this->categories = $modelCategory->fetchCategoryTreeCurrentStore();
 
 $this->navBackgroundColorActive = $this->template['header-nav-tabs']['background-color-active'];
 $this->navBackgroundColor = $this->template['header-nav-tabs']['background-color'];
