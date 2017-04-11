@@ -392,7 +392,7 @@
 
                                  });
 
-								//Inactive Fiels
+				//Inactive Fiels
                                  $.each(myArrayInactive, function () {
                                     if(null == oldestFileId) {
                                             oldestFileId = this.id;
@@ -452,7 +452,7 @@
                                      }
 
                                      //if(this.active == '1') {
-  									   var greyText = ' class="inactiverows" style="color: #ccc; display:none;"';
+                                       var greyText = ' class="inactiverows" style="color: #ccc; display:none;"';
 
                                        if(this.version==null) {version = '';} else{version = this.version;}
 
@@ -485,7 +485,7 @@
 	                                        + '</td>'
 	                                        + '<td style="text-align: right"><span id="download_counter_' + this.id + '">' + cout_downloads + '</td>'
 	                                        + '<td>' + this.created_timestamp + '</td>'
-	                                        + '<td style="text-align: right">' + humanFileSize(this.size,isExternLink) + '</td>'
+	                                        + '<td style="text-align: right">' + humanFileSize(this.size,false) + '</td>'
                                                 + '<td></td>'
 	                                        + '</tr>'
 	                                     );
@@ -533,10 +533,10 @@
 	                                     //fileSizeSum += parseInt(this.size);
                                          //fileSizeSum += roundFileSizeInMB(parseInt(this.size));
 
-                                         if (!isExternLink)
-                                         {
+                                         //if (!isExternLink)
+                                         //{
                                             fileSizeSum += roundFileSizeInMB(parseInt(this.size));
-                                         }
+                                         //}
 
 
 	                                     if (this.type == 'audio/mpeg' || this.type == 'application/ogg') {
