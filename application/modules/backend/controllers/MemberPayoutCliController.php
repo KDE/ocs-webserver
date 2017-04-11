@@ -27,7 +27,9 @@ class Backend_MemberPayoutCliController extends Local_Controller_Action_CliAbstr
     
     public static $PAYOUT_STATUS_NEW = 0;
     public static $PAYOUT_STATUS_REQUESTED = 1;
-    public static $PAYOUT_STATUS_MONEY_REVIED = 2;
+    public static $PAYOUT_STATUS_PROCESSED = 10;
+    public static $PAYOUT_STATUS_COMPLETED = 100;
+    public static $PAYOUT_STATUS_DENIED = 30;
     public static $PAYOUT_STATUS_ERROR = 99;
     
     

@@ -41,19 +41,19 @@ abstract class Local_Payment_PayPal_Masspay_Ipn extends Local_Payment_PayPal_Bas
     public function processIpn($rawData)
     {
         if (false === $this->verifyIpnOrigin($rawData)) {
-            $this->_logger->err(__FUNCTION__ . '::Abort IPN processing. IPN not verified: ' . $rawData);
-            $this->_logger->info(__FUNCTION__ . '::Abort IPN processing. IPN not verified: ' . $rawData);
+            $this->_logger->err('Masspay '.__FUNCTION__ . '::Abort Masspay IPN processing. IPN not verified: ' . $rawData);
+            $this->_logger->info('Masspay '.__FUNCTION__ . '::Abort Masspay IPN processing. IPN not verified: ' . $rawData);
             return;
         }
 
         $this->_dataIpn = $this->_parseRawMessage($rawData);
-        $this->_logger->info(__FUNCTION__ . '::_dataIpn: ' . print_r($this->_dataIpn, true) . "\n");
+        $this->_logger->info('Masspay '.__FUNCTION__ . '::_dataIpn: ' . print_r($this->_dataIpn, true) . "\n");
 
         $this->_ipnMessage = Local_Payment_PayPal_Response::buildResponse($this->_dataIpn);
-        $this->_logger->info(__FUNCTION__ . '::_ipnMessage: ' . print_r($this->_ipnMessage, true) . "\n");
+        $this->_logger->info('Masspay '.__FUNCTION__ . '::_ipnMessage: ' . print_r($this->_ipnMessage, true) . "\n");
 
         if (false === $this->validateTransaction()) {
-            $this->_logger->err(__FUNCTION__ . '::Abort IPN processing. Transaction not valid:' . $rawData);
+            $this->_logger->err('Masspay '.__FUNCTION__ . '::Abort IPN processing. Transaction not valid:' . $rawData);
             return;
         }
 
@@ -121,7 +121,8 @@ abstract class Local_Payment_PayPal_Masspay_Ipn extends Local_Payment_PayPal_Bas
         // Make sure the receiver email address is one of yours and the
         // amount of money is correct
 
-        return $this->_checkEmail() AND $this->_checkTxnId() AND $this->_checkAmount();
+        //return $this->_checkEmail() AND $this->_checkTxnId() AND $this->_checkAmount();
+        return true;
     }
 
     /**
@@ -199,7 +200,51 @@ abstract class Local_Payment_PayPal_Masspay_Ipn extends Local_Payment_PayPal_Bas
      */
     protected function _statusCompleted()
     {
-        $this->_logger->info('Not doing anything in statusCompleted ' . $this->_dataIpn['ipn_track_id']);
+        $this->_logger->info('Masspay _statusCompleted');
+        
+        /*
+        $payer_id = $this->_dataIpn['payer_id'];
+        $payment_date = $this->_dataIpn['payment_date'];
+        $first_name = $this->_dataIpn['first_name'];
+        $last_name = $this->_dataIpn['last_name'];
+        $notify_version = $this->_dataIpn['notify_version'];
+        $payer_status = $this->_dataIpn['payer_status'];
+        $verify_sign = $this->_dataIpn['verify_sign'];
+        $payer_email = $this->_dataIpn['payer_email'];
+        $payer_business_name = $this->_dataIpn['payer_business_name'];
+        $residence_country = $this->_dataIpn['residence_country'];
+        $test_ipn = $this->_dataIpn['test_ipn'];
+        $ipn_track_id = $this->_dataIpn['ipn_track_id'];
+        */
+        $payment_gross_x;
+        $receiver_email_x;
+        $mc_currency_x;
+        $masspay_txn_id_x;
+        $unique_id_x;
+        $status_x;
+        $mc_gross_x;
+        $payment_fee_x;
+        $mc_fee_x;
+        
+        
+        for ($i = 1; i <= 250; $i++) {
+            if(isset($this->_dataIpn['payment_gross_'.$i])) {
+                //$payment_gross_x = $this->_dataIpn['payment_gross_'.$i];
+                //$receiver_email_x = $this->_dataIpn['receiver_email_'.$i];
+                //$mc_currency_x = $this->_dataIpn['mc_currency_'.$i];
+                //$masspay_txn_id_x = $this->_dataIpn['masspay_txn_id_'.$i];
+                $unique_id_x = $this->_dataIpn['unique_id_'.$i];
+                $status_x = $this->_dataIpn['status_'.$i];
+                //$mc_gross_x = $this->_dataIpn['mc_gross_'.$i];
+                //$payment_fee_x = $this->_dataIpn['payment_fee_'.$i];
+                //$mc_fee_x = $this->_dataIpn['mc_fee_'.$i];
+                //save in db
+                $payoutTable = new Default_Model_DbTable_Payout();
+                $payoutTable->update(array("status" => $payoutTable::$PAYOUT_STATUS_COMPLETED, "timestamp_masspay_last_ipn" => new Zend_Db_Expr('Now()'), "paypal_ipn" => $this->_dataIpn, "paypal_status" => $status_x), "id = " . $unique_id_x);
+            } else {
+                break;
+            }
+        }
     }
 
     /**
@@ -208,7 +253,51 @@ abstract class Local_Payment_PayPal_Masspay_Ipn extends Local_Payment_PayPal_Bas
      */
     protected function _statusDenied()
     {
-        $this->_logger->info('Not doing anything in _statusDenied ' . $this->_dataIpn['ipn_track_id']);
+        $this->_logger->info('Masspay _statusDenied');
+        
+        /*
+        $payer_id = $this->_dataIpn['payer_id'];
+        $payment_date = $this->_dataIpn['payment_date'];
+        $first_name = $this->_dataIpn['first_name'];
+        $last_name = $this->_dataIpn['last_name'];
+        $notify_version = $this->_dataIpn['notify_version'];
+        $payer_status = $this->_dataIpn['payer_status'];
+        $verify_sign = $this->_dataIpn['verify_sign'];
+        $payer_email = $this->_dataIpn['payer_email'];
+        $payer_business_name = $this->_dataIpn['payer_business_name'];
+        $residence_country = $this->_dataIpn['residence_country'];
+        $test_ipn = $this->_dataIpn['test_ipn'];
+        $ipn_track_id = $this->_dataIpn['ipn_track_id'];
+        */
+        $payment_gross_x;
+        $receiver_email_x;
+        $mc_currency_x;
+        $masspay_txn_id_x;
+        $unique_id_x;
+        $status_x;
+        $mc_gross_x;
+        $payment_fee_x;
+        $mc_fee_x;
+        
+        
+        for ($i = 1; i <= 250; $i++) {
+            if(isset($this->_dataIpn['payment_gross_'.$i])) {
+                //$payment_gross_x = $this->_dataIpn['payment_gross_'.$i];
+                //$receiver_email_x = $this->_dataIpn['receiver_email_'.$i];
+                //$mc_currency_x = $this->_dataIpn['mc_currency_'.$i];
+                //$masspay_txn_id_x = $this->_dataIpn['masspay_txn_id_'.$i];
+                $unique_id_x = $this->_dataIpn['unique_id_'.$i];
+                $status_x = $this->_dataIpn['status_'.$i];
+                //$mc_gross_x = $this->_dataIpn['mc_gross_'.$i];
+                //$payment_fee_x = $this->_dataIpn['payment_fee_'.$i];
+                //$mc_fee_x = $this->_dataIpn['mc_fee_'.$i];
+                //save in db
+                $payoutTable = new Default_Model_DbTable_Payout();
+                $payoutTable->update(array("status" => $payoutTable::$PAYOUT_STATUS_DENIED, "timestamp_masspay_last_ipn" => new Zend_Db_Expr('Now()'), "paypal_ipn" => $this->_dataIpn, "paypal_status" => $status_x), "id = " . $unique_id_x);
+            } else {
+                break;
+            }
+        }
     }
 
     /**
@@ -216,7 +305,52 @@ abstract class Local_Payment_PayPal_Masspay_Ipn extends Local_Payment_PayPal_Bas
      */
     protected function _statusProcessed()
     {
-        $this->_logger->info('Not doing anything in _statusProcessing ' . $this->_dataIpn['ipn_track_id']);
+        $this->_logger->info('Masspay _statusProcessed');
+        
+        /*
+        $payer_id = $this->_dataIpn['payer_id'];
+        $payment_date = $this->_dataIpn['payment_date'];
+        $first_name = $this->_dataIpn['first_name'];
+        $last_name = $this->_dataIpn['last_name'];
+        $notify_version = $this->_dataIpn['notify_version'];
+        $payer_status = $this->_dataIpn['payer_status'];
+        $verify_sign = $this->_dataIpn['verify_sign'];
+        $payer_email = $this->_dataIpn['payer_email'];
+        $payer_business_name = $this->_dataIpn['payer_business_name'];
+        $residence_country = $this->_dataIpn['residence_country'];
+        $test_ipn = $this->_dataIpn['test_ipn'];
+        $ipn_track_id = $this->_dataIpn['ipn_track_id'];
+        */
+        $payment_gross_x;
+        $receiver_email_x;
+        $mc_currency_x;
+        $masspay_txn_id_x;
+        $unique_id_x;
+        $status_x;
+        $mc_gross_x;
+        $payment_fee_x;
+        $mc_fee_x;
+        
+        
+        for ($i = 1; i <= 250; $i++) {
+            if(isset($this->_dataIpn['payment_gross_'.$i])) {
+                //$payment_gross_x = $this->_dataIpn['payment_gross_'.$i];
+                //$receiver_email_x = $this->_dataIpn['receiver_email_'.$i];
+                //$mc_currency_x = $this->_dataIpn['mc_currency_'.$i];
+                //$masspay_txn_id_x = $this->_dataIpn['masspay_txn_id_'.$i];
+                $unique_id_x = $this->_dataIpn['unique_id_'.$i];
+                $status_x = $this->_dataIpn['status_'.$i];
+                //$mc_gross_x = $this->_dataIpn['mc_gross_'.$i];
+                //$payment_fee_x = $this->_dataIpn['payment_fee_'.$i];
+                //$mc_fee_x = $this->_dataIpn['mc_fee_'.$i];
+                //save in db
+                $payoutTable = new Default_Model_DbTable_Payout();
+                $payoutTable->update(array("status" => $payoutTable::$PAYOUT_STATUS_PROCESSED, "timestamp_masspay_last_ipn" => new Zend_Db_Expr('Now()'), "paypal_ipn" => $this->_dataIpn, "paypal_status" => $status_x), "id = " . $unique_id_x);
+            } else {
+                break;
+            }
+        }
+        
     }
 
     public function getCharset($rawDataIpn)
