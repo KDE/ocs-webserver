@@ -36,7 +36,7 @@ if (($this->partialCounter<4 && $this->partialCounter  % 5 == 0) || ($this->part
         <div class="clearfix">
             <div class="supporter-thumbnail relative">
                 <?php echo $this->myCounter; ?>
-                <a href="<?php echo $helpMemberUrl->buildExternalUrl($this->member_id); ?>">
+                <a href="<?php echo $helpMemberUrl->buildMemberUrl($this->member_id); ?>">
                     <div class="profile-image-overlay-3 absolute"></div>
                     <img src="<?= $helperImage->Image($this->profile_image_url,array('width' => 89, 'height' => 80, 'crop' => 2)); ?>" alt="<?= $this->username ?>" width="80">
                 </a>

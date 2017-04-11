@@ -90,7 +90,7 @@ if (strpos($titleImage, 'default.png') !== false) {
                             <div class="clearfix">
                                 <!-- thumbnail -->
                                 <div class="supporter-thumbnail relative margin-left-10 pull-left">
-                                    <a href="<?php echo $helperMember->buildExternalUrl($supporter->member_id); ?>">
+                                    <a href="<?php echo $helperMember->buildMemberUrl($supporter->member_id); ?>">
                                         <div class="profile-image-overlay-3 absolute"></div>
                                         <img src="<?= $helperImage->Image($supporter->profile_image_url,array('width' => 60, 'height' => 60, 'crop' => 2)); ?>"
                                              alt="<?= $supporter->username ?>" width="60">

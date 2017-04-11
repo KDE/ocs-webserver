@@ -43,7 +43,7 @@
                                <span  style="display: block; font-size: small;"><?=$helpCategories->fetchCategoriesForProductAsString($this->product['project_id'])?> </span>
 
                                <span style="display:block; padding-top: 10px; font-size: small;">
-                               <a href="<?php echo $helpMemberUrl->buildExternalUrl($this->product['member_id']); ?>" style="float: left">
+                               <a href="<?php echo $helpMemberUrl->buildMemberUrl($this->product['member_id']); ?>" style="float: left">
                                    <figure >
                                        <img src="<?php echo $helpImage->Image($this->product['profile_image_url'], array('width' => '50', 'height' => '50', 'crop' => 2)); ?>" style="width: 30px; height: 30px; border-radius: 50%"/>
                                    </figure>

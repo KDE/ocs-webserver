@@ -178,7 +178,7 @@ class WidgetController extends Zend_Controller_Action
             $new_supporter = new stdClass();
             $new_supporter->username = $supporter->username;
             $new_supporter->img = $supporter->profile_image_url;
-            $new_supporter->url = $helperBuildMemberUrl->buildExternalUrl($supporter->member_id);
+            $new_supporter->url = $helperBuildMemberUrl->buildMemberUrl($supporter->member_id);
             array_push($supportersArray, $new_supporter);
         }
         $commentsArray = array();

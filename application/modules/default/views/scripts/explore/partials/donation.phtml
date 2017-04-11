@@ -38,7 +38,7 @@ $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
 	<div class="row" style="margin-left: 0;margin-right: 0;">
 		<div class="userinfo">
 			<div>
-				<a href="<?php echo $helpMemberUrl->buildExternalUrl($this->donation['member_id']) ?>">
+				<a href="<?php echo $helpMemberUrl->buildMemberUrl($this->donation['member_id']) ?>">
                     <img src="<?= $helperImage->Image($this->donation['profile_image_url'],	array('width' => 40, 'height' => 40)) ?>" />
 					<span style="display: block"><?= $this->donation['username'] ?></span>
 				</a>

@@ -41,7 +41,7 @@ $helperImage = new Default_View_Helper_Image();
             <div class="comment-row">
                 <div class="comment">
                     <figure class="supporter-thumbnail relative">
-                        <a href="<?= $helperBuildMemberUrl->buildExternalUrl($comment['member_id']) ?>"
+                        <a href="<?= $helperBuildMemberUrl->buildMemberUrl($comment['member_id']) ?>"
                            title="<?= $comment['username'] ?>">
                             <img src="<?= $helperImage->Image($comment['profile_image_url'],array('width' => 100, 'height' => 100, 'crop' => 2)); ?>" alt="<?= $comment['username'] ?>">
                         </a>
@@ -49,7 +49,7 @@ $helperImage = new Default_View_Helper_Image();
                     <div class="comment-content">
                         <div class="popover-title">
                             <span class="name">
-                                <a href="<?= $helperBuildMemberUrl->buildExternalUrl($comment['member_id']) ?>"><?php echo $comment['username'] ?></a></span>
+                                <a href="<?= $helperBuildMemberUrl->buildMemberUrl($comment['member_id']) ?>"><?php echo $comment['username'] ?></a></span>
                             <?php
                             if (!$comment['amount'] == 0) {
                                 ?>

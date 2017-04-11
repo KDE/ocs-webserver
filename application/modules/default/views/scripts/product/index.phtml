@@ -259,7 +259,7 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
 
                                                  <div class="user">
                                                      <div class="u-wrap">
-                                                         <a href="<?php echo $helperBuildMemberUrl->buildExternalUrl($supporter->member_id); ?>">
+                                                         <a href="<?php echo $helperBuildMemberUrl->buildMemberUrl($supporter->member_id); ?>">
                                                              <figure>
                                                                  <img src="<?= $helpImage->Image($supporter->profile_image_url,array('width' => 200, 'height' => 200, 'crop' => 2)); ?>" />
                                                              </figure>
@@ -360,7 +360,7 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
                                   <div class="sidebar-content" >
                                     <div class="product-maker-sidebar">
                                       <div class="product-maker-thumbnail relative">
-                                        <a href="<?php echo $helperBuildMemberUrl->buildExternalUrl($this->member->member_id); ?>"
+                                        <a href="<?php echo $helperBuildMemberUrl->buildMemberUrl($this->member->member_id); ?>"
                                            title="<?= $this->member->username ?>">
                                             <div class="profile-image-overlay-4 absolute"></div>
                                             <img src="<?= $helpImage->Image($this->member->profile_image_url, array('width' => 80, 'height' => 80)) ?>"
@@ -370,7 +370,7 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
                                       </div>
                                       <div class="product-maker-summary">
                                           <h5>
-                                              <a href="<?php echo $helperBuildMemberUrl->buildExternalUrl($this->member->member_id); ?>">
+                                              <a href="<?php echo $helperBuildMemberUrl->buildMemberUrl($this->member->member_id); ?>">
                                                   <?= $this->member->username; ?>
                                               </a>
                                           </h5>

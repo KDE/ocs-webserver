@@ -37,7 +37,7 @@ $buildMemberUrl = new Default_View_Helper_BuildMemberUrl();
             <div class="comment-row">
                 <div class="comment">
                     <figure class="supporter-thumbnail relative">
-                        <a href="<?= $buildMemberUrl->buildExternalUrl($donation['member_id']) ?>"
+                        <a href="<?= $buildMemberUrl->buildMemberUrl($donation['member_id']) ?>"
                            title="<?= $donation['username'] ?>">
                             <img src="<?= $donation['profile_image_url']; ?>" alt="<?= $donation['username'] ?>">
                         </a>
@@ -45,7 +45,7 @@ $buildMemberUrl = new Default_View_Helper_BuildMemberUrl();
                     <div class="comment-content">
                         <div class="popover-title">
                             <span class="name"><a
-                                    href="<?= $buildMemberUrl->buildExternalUrl($donation['member_id']) ?>"><?php echo $donation['username']; ?></a></span>
+                                    href="<?= $buildMemberUrl->buildMemberUrl($donation['member_id']) ?>"><?php echo $donation['username']; ?></a></span>
                             <?php
                             if (!$donation['amount'] == 0) {
                                 ?>

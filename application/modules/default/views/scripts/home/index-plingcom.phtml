@@ -230,7 +230,7 @@ $member = $getAuthUser->getAuthUser();
                                             ?>
                                                 <div class="user " >
                                                     <div class="u-wrap">
-                                                        <a href="<?php echo $helperBuildMemberUrl->buildExternalUrl($user['member_id']); ?>">
+                                                        <a href="<?php echo $helperBuildMemberUrl->buildMemberUrl($user['member_id']); ?>">
                                                             <figure >
                                                                 <img src="<?php echo $helperImage->Image($user['profile_image_url'], array('width' => '200', 'height' => '200', 'crop' => 2)); ?>"/>
                                                             </figure>

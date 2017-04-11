@@ -57,7 +57,7 @@ $helperImage = new Default_View_Helper_Image();
                 <div class="row">
                     <div class="col-md-11 col-lg-11 col-sm-11 col-xs-11">
                         <figure class="supporter-thumbnail relative">
-                            <a href="<?= $helperBuildMemberUrl->buildExternalUrl($identity->member_id) ?>"
+                            <a href="<?= $helperBuildMemberUrl->buildMemberUrl($identity->member_id) ?>"
                                title="<?= $identity->username ?>">
                                 <img height="40" width="40" src="<?= $helperImage->Image($identity->profile_image_url,array('width' => 40, 'height' => 40, 'crop' => 2)); ?>"
                                      alt="<?= $identity->username ?>">

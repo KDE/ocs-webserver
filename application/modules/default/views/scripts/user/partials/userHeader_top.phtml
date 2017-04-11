@@ -40,7 +40,7 @@ $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
                             <span class="lightblue"><?php echo $this->member->username; ?></span><?= $this->translate(', welcome to your personal start page!') ?>
                         </div>
                         <div class="small lightgrey">
-                            <a href="<?php echo $helpMemberUrl->buildExternalUrl($this->member->member_id); ?>"><?= $this->translate('Click here to go to your About Me page.') ?></a>
+                            <a href="<?php echo $helpMemberUrl->buildMemberUrl($this->member->member_id); ?>"><?= $this->translate('Click here to go to your About Me page.') ?></a>
                         </div>
                     </div>
                 </div>

@@ -264,7 +264,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
 //        $helperBaseUrl = new Default_View_Helper_BaseUrl();
 //        $helperServerUrl = new Zend_View_Helper_ServerUrl();
         $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
-        $this->view->permaLink = $helpMemberUrl->buildExternalUrl($this->_memberId);
+        $this->view->permaLink = $helpMemberUrl->buildMemberUrl($this->_memberId);
 //        $this->view->permaLink = $helperServerUrl->serverUrl() . $helperBaseUrl->baseUrl() . '/member/' . $this->_memberId . '/';
         if ($this->_request->isGet()) {
             $this->view->form = $form;
