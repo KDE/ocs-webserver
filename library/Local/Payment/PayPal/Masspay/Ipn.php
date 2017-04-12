@@ -51,10 +51,7 @@ abstract class Local_Payment_PayPal_Masspay_Ipn extends Local_Payment_PayPal_Bas
         }
 
         $this->_dataIpn = $this->_parseRawMessage($rawData);
-        $this->_logger->info('Masspay '.__FUNCTION__ . '::_dataIpn: ' . print_r($this->_dataIpn, true) . "\n");
-
         $this->_ipnMessage = Local_Payment_PayPal_Response::buildResponse($this->_dataIpn);
-        $this->_logger->info('Masspay '.__FUNCTION__ . '::_ipnMessage: ' . print_r($this->_ipnMessage, true) . "\n");
 
         if (false === $this->validateTransaction()) {
             $this->_logger->err('Masspay '.__FUNCTION__ . '::Abort IPN processing. Transaction not valid:' . $rawData);
@@ -71,21 +68,6 @@ abstract class Local_Payment_PayPal_Masspay_Ipn extends Local_Payment_PayPal_Bas
      */
     public function verifyIpnOrigin($rawDataIpn)
     {
-        /**
-        $rawDataIpnCmd = 'cmd=_notify-validate&';
-        $requestParams = $rawDataIpnCmd . $rawDataIpn;
-
-        $url = $this->_config->masspay->ipn->endpoint . '/webscr';
-
-        $response = $this->_makeRequest($requestParams, $url);
-
-        if (strcmp($response, self::VERIFIED) == 0) {
-            return true;
-        }
-
-        return false;
-        **/
-        
         $raw_post_array = explode('&', $rawDataIpn);
         $myPost = array();
         foreach ($raw_post_array as $keyval) {
@@ -231,6 +213,7 @@ abstract class Local_Payment_PayPal_Masspay_Ipn extends Local_Payment_PayPal_Bas
 
     protected function processPaymentStatus()
     {
+        $this->_logger->info('Masspay' . __FUNCTION__.' Status = ' . $this->_dataIpn['payment_status']);
         switch ($this->_dataIpn['payment_status']) {
             case 'Completed':
                 $this->_statusCompleted();
@@ -254,7 +237,7 @@ abstract class Local_Payment_PayPal_Masspay_Ipn extends Local_Payment_PayPal_Bas
      */
     protected function _statusCompleted()
     {
-        $this->_logger->info('Masspay _statusCompleted');
+        $this->_logger->info('Masspay '.__FUNCTION__.' Start');
         
         /*
         $payer_id = $this->_dataIpn['payer_id'];
@@ -299,6 +282,8 @@ abstract class Local_Payment_PayPal_Masspay_Ipn extends Local_Payment_PayPal_Bas
                 break;
             }
         }
+        
+        $this->_logger->info('Masspay '.__FUNCTION__.' End');
     }
 
     /**
