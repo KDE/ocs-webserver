@@ -120,6 +120,8 @@ abstract class Local_Payment_PayPal_Masspay_Ipn extends Local_Payment_PayPal_Bas
         
         if (strcmp ($res, "INVALID") == 0) {
             // IPN invalid, log for manual investigation
+            $this->_logger->err("Masspay ".__FUNCTION__ . "Rsult. Got " . $res);
+            $this->_logger->info("Masspay ".__FUNCTION__ . "Rsult. Got " . $res);
             return false;
         }
         return true;
