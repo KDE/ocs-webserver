@@ -268,9 +268,7 @@
                                              decodeURIComponent(link),
                                              $pploadCollection.attr('data-xdg-type')
                                          );
-                                     }
-                                     else {
-                                     if (!link) {
+                                     } else if (!link) {
                                          ocsUrl = generateOcsUrl(
                                              downloadUrl,
                                              $pploadCollection.attr('data-xdg-type'),
