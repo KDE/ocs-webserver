@@ -372,7 +372,10 @@
                                             });
                                         }
 
-                                        fileSizeSum += parseInt(this.size);
+                                        //fileSizeSum += parseInt(this.size);
+                                        if(parseInt(this.size)>0) {
+                                            fileSizeSum += roundFileSizeInMB(parseInt(this.size));
+                                        }
 
                                     //if (!isExternLink)
                                     //{
@@ -528,9 +531,10 @@
 	                                        $("#data-link" + this.id).html($("#data-link" + this.id).html() + " (External Link)");
 	                                     }
 
-	                                     fileSizeSum += parseInt(this.size);
-                                         //fileSizeSum += roundFileSizeInMB(parseInt(this.size));
-
+	                                    //fileSizeSum += parseInt(this.size);
+                                            if(parseInt(this.size)>0) {
+                                                fileSizeSum += roundFileSizeInMB(parseInt(this.size));
+                                            }
                                          //if (!isExternLink)
                                          //{
                                             //fileSizeSum += roundFileSizeInMB(parseInt(this.size));
