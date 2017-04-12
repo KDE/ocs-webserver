@@ -112,6 +112,7 @@ abstract class Local_Payment_PayPal_Masspay_Ipn extends Local_Payment_PayPal_Bas
         if ( !($res = curl_exec($ch)) ) {
           // error_log("Got " . curl_error($ch) . " when processing IPN data");
           $this->_logger->err("Masspay ".__FUNCTION__ . "Got " . curl_error($ch) . " when processing IPN data");
+          $this->_logger->info("Masspay ".__FUNCTION__ . "Got " . curl_error($ch) . " when processing IPN data");
           curl_close($ch);
           exit;
         }
