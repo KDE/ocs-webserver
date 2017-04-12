@@ -263,20 +263,20 @@
                                      }
 
                                      var ocsUrl = '';
-                                     /*if (typeof link !== 'undefined' && link) {
+                                     if (typeof link !== 'undefined' && link) {
                                          ocsUrl = generateOcsUrl(
                                              decodeURIComponent(link),
                                              $pploadCollection.attr('data-xdg-type')
                                          );
                                      }
-                                     else {*/
-                                     //if (!link) {
+                                     else {
+                                     if (!link) {
                                          ocsUrl = generateOcsUrl(
                                              downloadUrl,
                                              $pploadCollection.attr('data-xdg-type'),
                                              this.name
                                          );
-                                     //}
+                                     }
 
                                      var installButton = '';
                                      if (this.active && ocsUrl) {
