@@ -268,9 +268,7 @@
                                              decodeURIComponent(link),
                                              $pploadCollection.attr('data-xdg-type')
                                          );
-                                     }
-                                     else {
-                                     if (!link) {
+                                     } else if (!link) {
                                          ocsUrl = generateOcsUrl(
                                              downloadUrl,
                                              $pploadCollection.attr('data-xdg-type'),
@@ -375,10 +373,13 @@
                                         }
 
                                         //fileSizeSum += parseInt(this.size);
+                                        if(parseInt(this.size)>0) {
+                                            fileSizeSum += roundFileSizeInMB(parseInt(this.size));
+                                        }
 
                                     //if (!isExternLink)
                                     //{
-                                       fileSizeSum += roundFileSizeInMB(parseInt(this.size));
+                                       //fileSizeSum += roundFileSizeInMB(parseInt(this.size));
                                     //}
 
 
@@ -530,12 +531,13 @@
 	                                        $("#data-link" + this.id).html($("#data-link" + this.id).html() + " (External Link)");
 	                                     }
 
-	                                     //fileSizeSum += parseInt(this.size);
-                                         //fileSizeSum += roundFileSizeInMB(parseInt(this.size));
-
+	                                    //fileSizeSum += parseInt(this.size);
+                                            if(parseInt(this.size)>0) {
+                                                fileSizeSum += roundFileSizeInMB(parseInt(this.size));
+                                            }
                                          //if (!isExternLink)
                                          //{
-                                            fileSizeSum += roundFileSizeInMB(parseInt(this.size));
+                                            //fileSizeSum += roundFileSizeInMB(parseInt(this.size));
                                          //}
 
 
