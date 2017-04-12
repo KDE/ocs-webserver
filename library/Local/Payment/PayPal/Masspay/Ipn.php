@@ -253,6 +253,8 @@ abstract class Local_Payment_PayPal_Masspay_Ipn extends Local_Payment_PayPal_Bas
         $test_ipn = $this->_dataIpn['test_ipn'];
         $ipn_track_id = $this->_dataIpn['ipn_track_id'];
         */
+        
+        
         $payment_gross_x;
         $receiver_email_x;
         $mc_currency_x;
@@ -263,8 +265,8 @@ abstract class Local_Payment_PayPal_Masspay_Ipn extends Local_Payment_PayPal_Bas
         $payment_fee_x;
         $mc_fee_x;
         
-        
         for ($i = 1; i <= 250; $i++) {
+            
             if(isset($this->_dataIpn['payment_gross_'.$i])) {
                 //$payment_gross_x = $this->_dataIpn['payment_gross_'.$i];
                 //$receiver_email_x = $this->_dataIpn['receiver_email_'.$i];
@@ -277,7 +279,12 @@ abstract class Local_Payment_PayPal_Masspay_Ipn extends Local_Payment_PayPal_Bas
                 //$mc_fee_x = $this->_dataIpn['mc_fee_'.$i];
                 //save in db
                 $payoutTable = new Default_Model_DbTable_Payout();
-                $payoutTable->update(array("status" => $payoutTable::$PAYOUT_STATUS_COMPLETED, "timestamp_masspay_last_ipn" => new Zend_Db_Expr('Now()'), "paypal_ipn" => $this->_dataIpn, "paypal_status" => $status_x), "id = " . $unique_id_x);
+                
+                //check if old status < 100
+                $payout = $payoutTable->fetchRow("id = ".$unique_id_x);
+                if(isset($payout) && $payout['status'] < $payoutTable::$PAYOUT_STATUS_COMPLETED) {
+                    $payoutTable->update(array("status" => $payoutTable::$PAYOUT_STATUS_COMPLETED, "timestamp_masspay_last_ipn" => new Zend_Db_Expr('Now()'), "paypal_ipn" => $this->_dataIpn, "paypal_status" => $status_x), "id = " . $unique_id_x);
+                }
             } else {
                 break;
             }
@@ -332,7 +339,10 @@ abstract class Local_Payment_PayPal_Masspay_Ipn extends Local_Payment_PayPal_Bas
                 //$mc_fee_x = $this->_dataIpn['mc_fee_'.$i];
                 //save in db
                 $payoutTable = new Default_Model_DbTable_Payout();
-                $payoutTable->update(array("status" => $payoutTable::$PAYOUT_STATUS_DENIED, "timestamp_masspay_last_ipn" => new Zend_Db_Expr('Now()'), "paypal_ipn" => $this->_dataIpn, "paypal_status" => $status_x), "id = " . $unique_id_x);
+                $payout = $payoutTable->fetchRow("id = ".$unique_id_x);
+                if(isset($payout) && $payout['status'] < $payoutTable::$PAYOUT_STATUS_DENIED) {
+                    $payoutTable->update(array("status" => $payoutTable::$PAYOUT_STATUS_DENIED, "timestamp_masspay_last_ipn" => new Zend_Db_Expr('Now()'), "paypal_ipn" => $this->_dataIpn, "paypal_status" => $status_x), "id = " . $unique_id_x);
+                }
             } else {
                 break;
             }
@@ -384,7 +394,11 @@ abstract class Local_Payment_PayPal_Masspay_Ipn extends Local_Payment_PayPal_Bas
                 //$mc_fee_x = $this->_dataIpn['mc_fee_'.$i];
                 //save in db
                 $payoutTable = new Default_Model_DbTable_Payout();
-                $payoutTable->update(array("status" => $payoutTable::$PAYOUT_STATUS_PROCESSED, "timestamp_masspay_last_ipn" => new Zend_Db_Expr('Now()'), "paypal_ipn" => $this->_dataIpn, "paypal_status" => $status_x), "id = " . $unique_id_x);
+                                //check if old status < 100
+                $payout = $payoutTable->fetchRow("id = ".$unique_id_x);
+                if(isset($payout) && $payout['status'] < $payoutTable::$PAYOUT_STATUS_PROCESSED) {
+                    $payoutTable->update(array("status" => $payoutTable::$PAYOUT_STATUS_PROCESSED, "timestamp_masspay_last_ipn" => new Zend_Db_Expr('Now()'), "paypal_ipn" => $this->_dataIpn, "paypal_status" => $status_x), "id = " . $unique_id_x);
+                }
             } else {
                 break;
             }
