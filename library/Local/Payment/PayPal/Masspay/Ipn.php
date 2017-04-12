@@ -40,6 +40,10 @@ abstract class Local_Payment_PayPal_Masspay_Ipn extends Local_Payment_PayPal_Bas
      */
     public function processIpn($rawData)
     {
+        if($this->_logger == null) {
+            $this->_logger = Zend_Registry::get('logger');
+        }
+        
         if (false === $this->verifyIpnOrigin($rawData)) {
             $this->_logger->err('Masspay '.__FUNCTION__ . '::Abort Masspay IPN processing. IPN not verified: ' . $rawData);
             $this->_logger->info('Masspay '.__FUNCTION__ . '::Abort Masspay IPN processing. IPN not verified: ' . $rawData);

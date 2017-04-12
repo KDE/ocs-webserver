@@ -57,7 +57,6 @@ class Default_Model_PayPal_MasspayIpnMessage extends Local_Payment_PayPal_Masspa
 
         $this->_tablePayment = new Default_Model_DbTable_Payout();
         
-        $_payoutsArray = $this->_processIpn();
     }
 
     protected function validateTransaction()
@@ -121,41 +120,6 @@ class Default_Model_PayPal_MasspayIpnMessage extends Local_Payment_PayPal_Masspa
         //$this->_tablePayment->deactivatePlingsFromResponse($this->_ipnMessage);
     }
 
-    public function _processIpn() {
-        $this->_logger->debug(__METHOD__ . ' - ' . $this->_ipnMessage->getTransactionId());
-        $iMax = 250;
-        $payoutsArray = array();
-        
-        $payment_gross_1;
-        $receiver_email_1;
-        $mc_currency_1;
-        $masspay_txn_id_1;
-        $unique_id_1;
-        $status_1;
-        $mc_gross_1;
-        payment_fee_1;
-        mc_fee_1;
-        
-        $_payer_id = $this->get;
-        $_payment_date;
-        $_payment_status;
-        $_charset;
-        $_first_name;
-        $_notify_version;
-        $_payer_status;
-        $_verify_sign;
-        $_payer_email;
-        $_payer_business_name;
-        $_last_name;
-        $_txn_type;
-        $_residence_country;
-        $_test_ipn;
-        $_ipn_track_id;        
-        
-        for ($i = 1; $i < $iMax; $i++) {
-            
-        }
-        
-    }
+    
 
 } 
