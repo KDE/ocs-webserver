@@ -120,14 +120,14 @@ abstract class Local_Payment_PayPal_Masspay_Ipn extends Local_Payment_PayPal_Bas
         $this->_logger->info('Masspay '.__FUNCTION__ . '::IPN verify result: ' . print_r($res));
         
         // inspect IPN validation result and act accordingly
-        if ($res == 1) {
+        if (strcmp ($res, "VERIFIED") == 0 || strcmp ($res, "1") == 0) {
             // The IPN is verified, process it
             return true;
-        } else {
+        } else if (strcmp ($res, "INVALID") == 0) {
             // IPN invalid, log for manual investigation
             return false;
         }
-        
+        return false;
         
     }
 
