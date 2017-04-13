@@ -90,7 +90,7 @@ class Default_Model_PayPal_MasspayIpnMessage extends Local_Payment_PayPal_Masspa
         return $this->_ipnMessage->getTransactionReceiver() == $email;
     }
 
-    protected function _statusCompleted()
+    protected function _statusComplete()
     {
         $this->processTransactionStatus();
     }
