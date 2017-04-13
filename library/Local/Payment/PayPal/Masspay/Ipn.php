@@ -42,9 +42,8 @@ abstract class Local_Payment_PayPal_Masspay_Ipn extends Local_Payment_PayPal_Bas
      */
     public function processIpn($rawData)
     {
-        if($this->_logger == null) {
-            $this->_logger = Zend_Registry::get('logger');
-        }
+        $this->_config = Zend_Registry::get('config');
+        $this->_logger = Zend_Registry::get('logger');
         
         if (false === $this->verifyIpnOrigin($rawData)) {
             $this->_logger->err('Masspay '.__FUNCTION__ . '::Abort Masspay IPN processing. IPN not verified: ' . $rawData);
@@ -94,7 +93,7 @@ abstract class Local_Payment_PayPal_Masspay_Ipn extends Local_Payment_PayPal_Bas
         }
 
         // Step 2: POST IPN data back to PayPal to validate
-        $url = $this->_config->masspay->ipn->endpoint . '/webscr';
+        $url = $this->_config->third_party->paypal->masspay->ipn->endpoint . "/webscr";
         //$ch = curl_init('https://ipnpb.paypal.com/cgi-bin/webscr');
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
