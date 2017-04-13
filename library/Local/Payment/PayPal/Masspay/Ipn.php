@@ -117,14 +117,14 @@ abstract class Local_Payment_PayPal_Masspay_Ipn extends Local_Payment_PayPal_Bas
         }
         curl_close($ch);
         
-        if (strcmp ($res, "INVALID") == 0) {
+        if (strcmp ($res, "VERIFIED") == 0) {
+            // The IPN is verified, process it
+            return true;
+        } else if (strcmp ($res, "INVALID") == 0) {
             // IPN invalid, log for manual investigation
-            $this->_logger->err("Masspay ".__FUNCTION__ . " Result. Got " . $res);
-            $this->_logger->info("Masspay ".__FUNCTION__ . " Result from:".$url.$req ." . Got " . $res);
             return false;
         }
-        return true;
-        
+        return false;
     }
 
     /**
