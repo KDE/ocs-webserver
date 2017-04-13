@@ -238,6 +238,7 @@ abstract class Local_Payment_PayPal_Masspay_Ipn extends Local_Payment_PayPal_Bas
                 //throw new Local_Payment_Exception('Unknown status from PayPal: ' . $this->_dataIpn['ipn_track_id']);
                 $this->_logger->info('Masspay ' . __FUNCTION__.' Status not found: ' . $this->_dataIpn['payment_status']);
         }
+        $this->_logger->info('Masspay ' . __FUNCTION__.' Status = ' . $this->_dataIpn['payment_status'] . ' DONE');
     }
 
     /**
