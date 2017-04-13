@@ -29,7 +29,7 @@ class Default_Model_DbTable_Payout extends Local_Model_Table
     public static $PAYOUT_STATUS_REQUESTED = 1;
     public static $PAYOUT_STATUS_PROCESSED = 10;
     public static $PAYOUT_STATUS_COMPLETED = 100;
-    public static $PAYOUT_STATUS_DENIED = 30;
+    public static $PAYOUT_STATUS_DENIED = 999;
     public static $PAYOUT_STATUS_ERROR = 99;
     
     
