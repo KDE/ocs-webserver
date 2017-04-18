@@ -23,7 +23,7 @@
 $this->tab = 'payment';
 ?>
 <main class="user-admin-page">
-   <?php echo $this->render('user/partials/userHeader_top.phtml'); ?>  
+    <?php echo $this->render('user/partials/userHeader_top.phtml'); ?>
     <section class="body-wrap">
         <section class="wrapper product-page">
             <!-- PAGE BODY -->
@@ -34,8 +34,8 @@ $this->tab = 'payment';
                 <div class="my-products-heading">
                     <h1 class="page-title left"><?= $this->translate('My Payments') ?></h1>
 
-                    <div class="right light lightgrey num-products"><span
-                            class="label label-default"><?= count($this->hits) ?> <?= $this->translate('donations') ?></span>
+                    <div class="right light lightgrey num-products">
+                        <span class="label label-default"><?= count($this->hits) ?> <?= $this->translate('donations') ?></span>
                     </div>
                 </div>
                 <div class="my-products-list" id="my-earnings-list">
