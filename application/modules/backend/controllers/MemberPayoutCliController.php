@@ -110,9 +110,9 @@ class Backend_MemberPayoutCliController extends Local_Controller_Action_CliAbstr
 
         $sql = "SELECT * FROM stat_dl_payment_last_month s";
         
-        if(!$this->_config->third_party->paypal->sandbox->active) {
-            $sql.=" WHERE s.num_downloads > 100";
-        }
+        //if(!$this->_config->third_party->paypal->sandbox->active) {
+        //    $sql.=" WHERE s.num_downloads > 100";
+        //}
 
         $stmt = $db->query($sql);
         $payouts = $stmt->fetchAll();
@@ -123,7 +123,7 @@ class Backend_MemberPayoutCliController extends Local_Controller_Action_CliAbstr
         foreach ($payouts as $payout) {
             //Insert item in payment table
             //INSERT IGNORE INTO `pling`.`payout` (`yearmonth`, `member_id`, `amount`) VALUES ('201612', '223978', '181.0500');
-            $sql = "INSERT IGNORE INTO `payout` (`yearmonth`, `member_id`, `mail`, `paypal_mail`, `amount`, `num_downloads`) VALUES ('" . $payout['yearmonth'] . "','" . $payout['member_id'] . "','" . $payout['mail'] . "','" . $payout['paypal_mail'] . "'," . $payout['amount'] . "," . $payout['num_downloads'] . ")";
+            $sql = "INSERT IGNORE INTO `member_payout` (`yearmonth`, `member_id`, `mail`, `paypal_mail`, `amount`, `num_downloads`) VALUES ('" . $payout['yearmonth'] . "','" . $payout['member_id'] . "','" . $payout['mail'] . "','" . $payout['paypal_mail'] . "'," . $payout['amount'] . "," . $payout['num_downloads'] . ")";
             $stmt = $db->query($sql);
             $stmt->execute();
         }
@@ -131,7 +131,7 @@ class Backend_MemberPayoutCliController extends Local_Controller_Action_CliAbstr
     
     private function getPayouts() {
         $db = Zend_Db_Table::getDefaultAdapter();
-        $sql = "SELECT * FROM payout p WHERE p.status = ".$this::$PAYOUT_STATUS_NEW;
+        $sql = "SELECT * FROM member_payout p WHERE p.status = ".$this::$PAYOUT_STATUS_NEW;
         $stmt = $db->query($sql);
         $payouts = $stmt->fetchAll();
         
@@ -147,7 +147,7 @@ class Backend_MemberPayoutCliController extends Local_Controller_Action_CliAbstr
         if(!$payoutsArray || count($payoutsArray) == 0) {
             throw new Exception("Method startMassPay needs array of payouts.");
         }
-        $payoutTable = new Default_Model_DbTable_Payout();
+        $payoutTable = new Default_Model_DbTable_MemberPayout();
         $log = $this->_logger;
 
         $log->info('********** Start PayPal Masspay **********\n');
@@ -164,8 +164,11 @@ class Backend_MemberPayoutCliController extends Local_Controller_Action_CliAbstr
 
         $i = 0;
         foreach ($payoutsArray as $payout) {
-            //$mpUrl .= "-d L_EMAIL" . $i . "=" . $payout['paypal_mail'] . "-d L_AMT" . $i . "=" . $payout['amount'] . " -d L_NOTE" . $i . "=Opendesktop.org: Your monthly payout for " . $payout['num_downloads']. " downloads.";
-            $nvpreq .= "&L_UNIQUEID".$i."=".$payout['id']."&L_EMAIL" . $i . "=maker@pling.com&L_AMT" . $i . "=" . $payout['amount'];
+            if($this->_config->third_party->paypal->sandbox->active) {
+                $nvpreq .= "&L_UNIQUEID".$i."=".$payout['id']."&L_EMAIL" . $i . "=maker@pling.com&L_AMT" . $i . "=" . $payout['amount'];
+            } else {
+                $nvpreq .= "&L_UNIQUEID".$i."=".$payout['id']."&L_EMAIL" . $i . "=".$payout['paypal_mail']."&L_AMT" . $i . "=" . $payout['amount'];
+            }
             $i++;
             //mark payout as requested
             $payoutTable->update(array("status" => $this::$PAYOUT_STATUS_REQUESTED, "timestamp_masspay_start" => new Zend_Db_Expr('Now()')), "id = " . $payout['id']);
