@@ -291,7 +291,7 @@ abstract class Local_Payment_PayPal_Masspay_Ipn extends Local_Payment_PayPal_Bas
                 //$payment_fee_x = $this->_dataIpn['payment_fee_'.$i];
                 //$mc_fee_x = $this->_dataIpn['mc_fee_'.$i];
                 //save in db
-                $payoutTable = new Default_Model_DbTable_Payout();
+                $payoutTable = new Default_Model_DbTable_MemberPayout();
                 
                 //check if old status < 100
                 $payout = $payoutTable->fetchRow("id = ".$unique_id_x);
@@ -350,7 +350,7 @@ abstract class Local_Payment_PayPal_Masspay_Ipn extends Local_Payment_PayPal_Bas
                 //$payment_fee_x = $this->_dataIpn['payment_fee_'.$i];
                 //$mc_fee_x = $this->_dataIpn['mc_fee_'.$i];
                 //save in db
-                $payoutTable = new Default_Model_DbTable_Payout();
+                $payoutTable = new Default_Model_DbTable_MemberPayout();
                 $payout = $payoutTable->fetchRow("id = ".$unique_id_x);
                 $this->_logger->info('Masspay _statusDenied old dataset: '. print_r($payout['status']));
                 $payoutTable->update(array("status" => $payoutTable::$PAYOUT_STATUS_DENIED, "timestamp_masspay_last_ipn" => new Zend_Db_Expr('Now()'), "paypal_ipn" => $this->_dataRaw, "paypal_status" => $status_x), "id = " . $unique_id_x);
@@ -405,7 +405,7 @@ abstract class Local_Payment_PayPal_Masspay_Ipn extends Local_Payment_PayPal_Bas
                 //$payment_fee_x = $this->_dataIpn['payment_fee_'.$i];
                 //$mc_fee_x = $this->_dataIpn['mc_fee_'.$i];
                 //save in db
-                $payoutTable = new Default_Model_DbTable_Payout();
+                $payoutTable = new Default_Model_DbTable_MemberPayout();
                                 //check if old status < 100
                 $payout = $payoutTable->fetchRow("id = ".$unique_id_x);
                 $this->_logger->info('Masspay _statusProcessed old dataset: '. print_r($payout['status']));
