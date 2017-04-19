@@ -35,6 +35,7 @@ $helperMember = new Default_View_Helper_BuildMemberUrl();
             <?= $this->translate('My Products') ?>
         </a>
     </li>
+
     <li class="header-menu-left-item <?php echo $this->tab == 'add' ? 'active' : ''; ?>">
         <?php if ($this->mode == 'edit') : ?>
             <a href="<?= Zend_Controller_Front::getInstance()->getRequest()->getRequestUri() ?>">
@@ -48,19 +49,28 @@ $helperMember = new Default_View_Helper_BuildMemberUrl();
             </a>
         <?php endif ?>
     </li>
+
     <li class="header-menu-left-item <?php echo $this->tab == 'earnings' ? 'active' : ''; ?>">
         <a href="<?php echo $helperMember->buildMemberUrl($this->member->member_id, 'income'); ?>">
             <span class="glyphicon glyphicon-usd"></span>
             <?= $this->translate('My Income') ?>
         </a>
     </li>
+
     <li class="header-menu-left-item <?php echo $this->tab == 'payment' ? 'active' : ''; ?>">
         <a href="<?php echo $helperMember->buildMemberUrl($this->member->member_id, 'payments'); ?>">
             <span class="glyphicon glyphicon-usd"></span>
             <?= $this->translate('My Payments') ?>
         </a>
     </li>
-  
+
+    <li class="header-menu-left-item <?php echo $this->tab == 'payout' ? 'active' : ''; ?>">
+        <a href="<?php echo $helperMember->buildMemberUrl($this->member->member_id, 'payout'); ?>">
+            <span class="glyphicon glyphicon-usd"></span>
+            <?= $this->translate('My Payouts') ?>
+        </a>
+    </li>
+
     <li class="header-menu-left-item <?php echo $this->tab == 'settings' ? 'active' : ''; ?>">
         <a href="/settings/">
             <span class="glyphicon glyphicon-cog"></span>

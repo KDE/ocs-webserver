@@ -20,7 +20,13 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-$this->tab = 'earnings';
+$this->tab = 'payout';
+$this->countDownloadsOverall = 0;
+
+$modelDownload = new Default_Model_StatDownload();
+$this->downloads = $modelDownload->getUserDownloads($this->member->member_id);
+
+$this->countDownloadsOverall = count($this->downloads);
 ?>
 <main class="user-admin-page">
     <?php echo $this->render('user/partials/userHeader_top.phtml'); ?>
@@ -32,14 +38,10 @@ $this->tab = 'earnings';
                 <?php echo $this->render('user/partials/userHeader.phtml'); ?>
                 <!-- /NAVIGATION -->
                 <div class="my-products-heading">
-                    <h1 class="page-title left"><?= $this->translate('My Income') ?></h1>
-
-                    <div class="right light lightgrey num-products">
-                        <span class="label label-default"><?= count($this->donations) ?> <?= $this->translate('donations') ?></span>
-                    </div>
+                    <h1 class="page-title left"><?= $this->translate('My Payouts') ?></h1>
                 </div>
-                <div class="my-products-list" id="my-earnings-list">
-                    <?php echo $this->render('user/partials/loopMyEarnings.phtml', array('donations' => $this->donations)); ?>
+                <div class="my-products-list" id="my-payout-list">
+                    <?php echo $this->render('user/partials/loopPayout.phtml'); ?>
                 </div>
             </section>
             <!-- /PAGE BODY -->

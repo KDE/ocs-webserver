@@ -1,0 +1,114 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+?>
+<style>
+    .cell-default {
+        line-height: 4em;
+        vertical-align: middle;
+    }
+    .row-total {
+        border-top: #1595ee solid thin;
+        padding-top: 1em;
+    }
+</style>
+<ul class="nav nav-tabs margin-bottom-10">
+    <?php
+    $currentMonth = '';
+    $monthlyDownload = null;
+    $allDownloads = array();
+    $css_active = 'active';
+    foreach ($this->downloads as $download) {
+        $printMonth = new DateTime($download['yearmonth'].'01');
+        $printDate = $printMonth->format('M Y');
+        if ($printDate != $currentMonth) {
+            $monthlyDownload = array();
+            $currentMonth = $printDate;
+    ?><li class="<?=$css_active?>"><a href="#<?= $download['yearmonth'] ?>" data-toggle="tab"><?= $printDate ?></a></li><?php
+        }
+        $css_active = '';
+        $monthlyDownload[] = $download;
+        $allDownloads[$download['yearmonth']] = $monthlyDownload;
+    } ?>
+</ul>
+<div class="container-fluid margin-bottom-10" style="padding-left: 0; padding-right: 0;">
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-5 text-left text-uppercase"><strong>product</strong></div>
+        <div class="col-md-2 text-right text-uppercase"><strong>downloads</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Popover title" data-trigger="hover" data-content="And here's some amazing content. It's very engaging. Right?"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+        <div class="col-md-2 text-right text-uppercase"><strong>factor</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Popover title" data-trigger="hover" data-content="And here's some amazing content. It's very engaging. Right?"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+        <div class="col-md-2 text-right text-uppercase"><strong>plings</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Popover title" data-trigger="hover" data-content="And here's some amazing content. It's very engaging. Right?"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+    </div>
+</div>
+<div class="tab-content">
+<?php
+$helpImage = new Default_View_Helper_Image();
+$css_active = ' in active';
+foreach ($allDownloads as $month => $products) {
+    $sum_total_month = 0;
+    $sum_total_text = '';
+    ?>
+    <div class="tab-pane fade <?=$css_active?>" id="<?=$month?>">
+        <?php
+        $css_active = '';
+        foreach ($products as $product) { ?>
+            <div class="row margin-bottom-10">
+
+                <div class="col-md-1 cell-default">
+                    <img src="<?php echo $helpImage->Image($product['image_small'],
+                        array('width' => 80, 'height' => 80)); ?>"/>
+                </div>
+                <div class="col-md-5 text-left cell-default">
+                    <span><?= $product['title']; ?></span>
+                </div>
+                <div class="col-md-2 text-right cell-default">
+                    <span><?= $product['num_downloads'] ?></span>
+                </div>
+                <div class="col-md-2 text-right cell-default">
+                    <span><?= $product['dl_pling_factor'] ?></span>
+                </div>
+                <div class="col-md-2 text-right cell-default">
+                    <span><?= $product['num_downloads'] * $product['dl_pling_factor'] ?></span>
+                </div>
+
+            </div>
+            <?php
+            $sum_total_month += $product['num_downloads'] * $product['dl_pling_factor'];
+            $sum_total_text = 'potential payout for this month:';
+            if ($product['status'] == Default_Model_DbTable_MemberPayout::$PAYOUT_STATUS_COMPLETED) {
+                $sum_total_month = $product['amount'];
+                $sum_total_text = 'executed pay out this month:';
+            }
+        }
+            ?>
+        <div class='row row-total'>
+            <div class='col-md-11 text-right'><?=$sum_total_text?></div><div class='col-md-1 text-right'><?=$sum_total_month?></div>
+        </div>
+    </div>
+<?php
+    }
+?>
+</div><?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){
+            $(\'[data-toggle="popover"]\').popover();
+        });
+    ');

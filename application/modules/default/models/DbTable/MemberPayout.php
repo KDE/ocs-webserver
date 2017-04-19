@@ -19,11 +19,11 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-class Default_Model_DbTable_Payout extends Local_Model_Table
+class Default_Model_DbTable_MemberPayout extends Local_Model_Table
 {
     protected $_keyColumnsForRow = array('id');
     protected $_key = 'id';
-    protected $_name = "payout";
+    protected $_name = "member_payout";
     
     public static $PAYOUT_STATUS_NEW = 0;
     public static $PAYOUT_STATUS_REQUESTED = 1;
