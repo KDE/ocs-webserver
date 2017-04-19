@@ -55,7 +55,7 @@ class Default_Model_PayPal_MasspayIpnMessage extends Local_Payment_PayPal_Masspa
 
         parent::__construct($config->third_party->paypal->masspay, $logger);
 
-        $this->_tablePayment = new Default_Model_DbTable_Payout();
+        $this->_tablePayment = new Default_Model_DbTable_MemberPayout();
         
     }
 
