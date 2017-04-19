@@ -295,8 +295,8 @@ abstract class Local_Payment_PayPal_Masspay_Ipn extends Local_Payment_PayPal_Bas
                 
                 //check if old status < 100
                 $payout = $payoutTable->fetchRow("id = ".$unique_id_x);
-                $this->_logger->info('Masspay _statusCompleted dataset: id = '. print_r($payout[0]['status']).' - old status = '. print_r($payout[0]['status']));
-                if(isset($payout) && $payout[0]['status'] < $payoutTable::$PAYOUT_STATUS_COMPLETED) {
+                $this->_logger->info('Masspay _statusCompleted dataset: id = '. print_r($payout['id']).' - old status = '. print_r($payout['status']));
+                if(isset($payout) && $payout['status'] < $payoutTable::$PAYOUT_STATUS_COMPLETED) {
                     $payoutTable->update(array("status" => $payoutTable::$PAYOUT_STATUS_COMPLETED, "timestamp_masspay_last_ipn" => new Zend_Db_Expr('Now()'), "last_paypal_ipn" => $this->_dataRaw, "last_paypal_status" => $status_x), "id = " . $unique_id_x);
                 }
             } else {
@@ -408,9 +408,9 @@ abstract class Local_Payment_PayPal_Masspay_Ipn extends Local_Payment_PayPal_Bas
                 $payoutTable = new Default_Model_DbTable_MemberPayout();
                                 //check if old status < 100
                 $payout = $payoutTable->fetchRow("id = ".$unique_id_x);
-                $this->_logger->info('Masspay _statusProcessed dataset: id = '. print_r($payout[0]['status']).' - old status = '. print_r($payout[0]['status']));
+                $this->_logger->info('Masspay _statusProcessed dataset: id = '. print_r($payout['id']).' - old status = '. print_r($payout['status']));
                 
-                if($payout && $payout[0]['status'] < $payoutTable::$PAYOUT_STATUS_PROCESSED) {
+                if($payout && $payout['status'] < $payoutTable::$PAYOUT_STATUS_PROCESSED) {
                     $payoutTable->update(array("status" => $payoutTable::$PAYOUT_STATUS_PROCESSED, "timestamp_masspay_last_ipn" => new Zend_Db_Expr('Now()'), "last_paypal_ipn" => $this->_dataRaw, "last_paypal_status" => $status_x), "id = " . $unique_id_x);
                 }
             } else {
