@@ -21,6 +21,16 @@
  **/
 
 ?>
+<style>
+    .cell-default {
+        line-height: 4em;
+        vertical-align: middle;
+    }
+    .row-total {
+        border-top: #1595ee solid thin;
+        padding-top: 1em;
+    }
+</style>
 <ul class="nav nav-tabs margin-bottom-10">
     <?php
     $currentMonth = '';
@@ -42,10 +52,11 @@
 </ul>
 <div class="container-fluid margin-bottom-10" style="padding-left: 0; padding-right: 0;">
     <div class="row">
-        <div class="col-md-6 text-center text-uppercase"><strong>product</strong></div>
-        <div class="col-md-2 text-right text-uppercase"><strong>downloads</strong></div>
-        <div class="col-md-2 text-right text-uppercase"><strong>factor</strong></div>
-        <div class="col-md-2 text-right text-uppercase"><strong>plings</strong></div>
+        <div class="col-md-1"></div>
+        <div class="col-md-5 text-left text-uppercase"><strong>product</strong></div>
+        <div class="col-md-2 text-right text-uppercase"><strong>downloads</strong><div class="inline" style="margin-left:.2em;" data-placement="left" data-toggle="popover" title="Popover title" data-trigger="hover" data-content="And here's some amazing content. It's very engaging. Right?"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+        <div class="col-md-2 text-right text-uppercase"><strong>factor</strong><div class="inline" style="margin-left:.2em;" data-placement="left" data-toggle="popover" title="Popover title" data-trigger="hover" data-content="And here's some amazing content. It's very engaging. Right?"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+        <div class="col-md-2 text-right text-uppercase"><strong>plings</strong><div class="inline" style="margin-left:.2em;" data-placement="left" data-toggle="popover" title="Popover title" data-trigger="hover" data-content="And here's some amazing content. It's very engaging. Right?"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
     </div>
 </div>
 <div class="tab-content">
@@ -61,20 +72,20 @@ foreach ($allDownloads as $month => $products) {
         foreach ($products as $product) { ?>
             <div class="row margin-bottom-10">
 
-                <div class="col-md-2">
+                <div class="col-md-1 cell-default">
                     <img src="<?php echo $helpImage->Image($product['image_small'],
                         array('width' => 80, 'height' => 80)); ?>"/>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-5 text-left cell-default">
                     <span><?= $product['title']; ?></span>
                 </div>
-                <div class="col-md-2 text-right">
+                <div class="col-md-2 text-right cell-default">
                     <span><?= $product['num_downloads'] ?></span>
                 </div>
-                <div class="col-md-2 text-right">
+                <div class="col-md-2 text-right cell-default">
                     <span><?= $product['dl_pling_factor'] ?></span>
                 </div>
-                <div class="col-md-2 text-right">
+                <div class="col-md-2 text-right cell-default">
                     <span><?= $product['num_downloads'] * $product['dl_pling_factor'] ?></span>
                 </div>
 
@@ -83,11 +94,15 @@ foreach ($allDownloads as $month => $products) {
             $sum_total_month += $product['num_downloads'] * $product['dl_pling_factor'];
         }
             ?>
-        <div class='row' style='border-top: #1595ee solid thin;'>
+        <div class='row row-total'>
             <div class='col-md-11 text-right'>sum total for month:</div><div class='col-md-1 text-right'><?=$sum_total_month?></div>
         </div>
     </div>
 <?php
     }
 ?>
-</div>
+</div><?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){
+            $(\'[data-toggle="popover"]\').popover();
+        });
+    ');
