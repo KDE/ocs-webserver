@@ -68,6 +68,7 @@ $currency = new Zend_Currency('en_US');
 foreach ($allDownloads as $month => $products) {
     $sum_total_month = 0;
     $sum_total_text = '';
+    $sum_total_payout = 0;
     ?>
     <div class="tab-pane fade <?=$css_active?>" id="<?=$month?>">
         <?php
@@ -95,11 +96,11 @@ foreach ($allDownloads as $month => $products) {
             </div>
             <?php
             $sum_total_month += $product['num_downloads'] * $product['dl_pling_factor'];
-            $sum_total_text = 'potential payout for this month:';
+            $sum_total_text = 'expected payout for this month:';
             $sum_total_payout = $currency->toCurrency($sum_total_month/100);
             if ($product['status'] == Default_Model_DbTable_MemberPayout::$PAYOUT_STATUS_COMPLETED) {
                 $sum_total_payout = $currency->toCurrency($product['amount']);
-                $sum_total_text = 'executed pay out this month:';
+                $sum_total_text = 'executed payout this month:';
             }
             $has_paypal = $product['paypal_mail'] ? true : false;
         }
