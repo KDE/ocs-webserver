@@ -297,7 +297,7 @@ abstract class Local_Payment_PayPal_Masspay_Ipn extends Local_Payment_PayPal_Bas
                 $payout = $payoutTable->fetchRow("id = ".$unique_id_x);
                 $this->_logger->info('Masspay _statusCompleted dataset: id = '. print_r($payout['status']).' - old status = '. print_r($payout['status']));
                 if(isset($payout) && $payout['status'] < $payoutTable::$PAYOUT_STATUS_COMPLETED) {
-                    $payoutTable->update(array("status" => $payoutTable::$PAYOUT_STATUS_COMPLETED, "timestamp_masspay_last_ipn" => new Zend_Db_Expr('Now()'), "paypal_ipn" => $this->_dataRaw, "paypal_status" => $status_x), "id = " . $unique_id_x);
+                    $payoutTable->update(array("status" => $payoutTable::$PAYOUT_STATUS_COMPLETED, "timestamp_masspay_last_ipn" => new Zend_Db_Expr('Now()'), "last_paypal_ipn" => $this->_dataRaw, "last_paypal_status" => $status_x), "id = " . $unique_id_x);
                 }
             } else {
                 break;
@@ -353,7 +353,7 @@ abstract class Local_Payment_PayPal_Masspay_Ipn extends Local_Payment_PayPal_Bas
                 $payoutTable = new Default_Model_DbTable_MemberPayout();
                 $payout = $payoutTable->fetchRow("id = ".$unique_id_x);
                 $this->_logger->info('Masspay _statusDenied old dataset: '. print_r($payout['status']));
-                $payoutTable->update(array("status" => $payoutTable::$PAYOUT_STATUS_DENIED, "timestamp_masspay_last_ipn" => new Zend_Db_Expr('Now()'), "paypal_ipn" => $this->_dataRaw, "paypal_status" => $status_x), "id = " . $unique_id_x);
+                $payoutTable->update(array("status" => $payoutTable::$PAYOUT_STATUS_DENIED, "timestamp_masspay_last_ipn" => new Zend_Db_Expr('Now()'), "last_paypal_ipn" => $this->_dataRaw, "last_paypal_status" => $status_x), "id = " . $unique_id_x);
                 
             } else {
                 break;
@@ -411,7 +411,7 @@ abstract class Local_Payment_PayPal_Masspay_Ipn extends Local_Payment_PayPal_Bas
                 $this->_logger->info('Masspay _statusProcessed dataset: id = '. print_r($payout['status']).' - old status = '. print_r($payout['status']));
                 
                 if($payout && $payout['status'] < $payoutTable::$PAYOUT_STATUS_PROCESSED) {
-                    $payoutTable->update(array("status" => $payoutTable::$PAYOUT_STATUS_PROCESSED, "timestamp_masspay_last_ipn" => new Zend_Db_Expr('Now()'), "paypal_ipn" => $this->_dataRaw, "paypal_status" => $status_x), "id = " . $unique_id_x);
+                    $payoutTable->update(array("status" => $payoutTable::$PAYOUT_STATUS_PROCESSED, "timestamp_masspay_last_ipn" => new Zend_Db_Expr('Now()'), "last_paypal_ipn" => $this->_dataRaw, "last_paypal_status" => $status_x), "id = " . $unique_id_x);
                 }
             } else {
                 break;
