@@ -199,7 +199,7 @@ class Backend_MemberPayoutCliController extends Local_Controller_Action_CliAbstr
         echo '********** Finished PayPal Masspay **********' . print_r($response, true)."\n\n";;
 
         if (false === $this->isSuccessful($response)) {
-            throw new Exception('PayPal Masspay request failed. Request response:' . print_r($response, true));
+            throw new Exception('PayPal Masspay request failed. Request ('.$this->_config->third_party->paypal->masspay->endpoint . '?' . $nvpreq .') response: ' . print_r($response, true));
         }
 
         return $response;
