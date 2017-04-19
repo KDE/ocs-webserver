@@ -119,7 +119,7 @@ class Backend_MemberPayoutCliController extends Local_Controller_Action_CliAbstr
         foreach ($payouts as $payout) {
             //Insert item in payment table
             //INSERT IGNORE INTO `pling`.`payout` (`yearmonth`, `member_id`, `amount`) VALUES ('201612', '223978', '181.0500');
-            $sql = "INSERT IGNORE INTO `member_payout` (`yearmonth`, `member_id`, `mail`, `paypal_mail`, `amount`, `num_downloads`) VALUES ('" . $payout['yearmonth'] . "','" . $payout['member_id'] . "','" . $payout['mail'] . "','" . $payout['paypal_mail'] . "'," . $payout['amount'] . "," . $payout['num_downloads'] . ")";
+            $sql = "INSERT IGNORE INTO `member_payout` (`yearmonth`, `member_id`, `mail`, `paypal_mail`, `amount`, `num_downloads`, `created_at`) VALUES ('" . $payout['yearmonth'] . "','" . $payout['member_id'] . "','" . $payout['mail'] . "','" . $payout['paypal_mail'] . "'," . $payout['amount'] . "," . $payout['num_downloads'] . ", NOW()" . ")";
             $stmt = $db->query($sql);
             $stmt->execute();
         }
