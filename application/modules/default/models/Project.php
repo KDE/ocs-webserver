@@ -1104,9 +1104,10 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         }
 
         $cacheName = __FUNCTION__ . md5(serialize($idCategory) . $withSubCat . '-package_type' . serialize($storePackageTypeIds));
+        /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
 
-        if (false === ($resultSet = $cache->load($cacheName))) {
+        if (false !== ($resultSet = $cache->load($cacheName))) {
             return (int)$resultSet[0]['count_active_projects'];
         }
 

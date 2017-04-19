@@ -42,7 +42,7 @@ $this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
     .navilink {
         color: #2673b0;
         margin: 0;
-        padding: 3px 5px 0 5px;
+        padding: 3px 0 0 5px;
     }
 
     .navilink span.title:hover {
@@ -152,7 +152,7 @@ $this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
             {
                 $helpExploreUrl = new Default_View_Helper_BuildExploreUrl();
                 $urlExplore = $helpExploreUrl->buildExploreUrl(null, null, $selectedOrder);
-                return "<li class='navilink parent'><span class='title'><a class='parent' href='{$urlExplore}'>All</a></span></li>";
+                return "<li class='navilink parent'><span class='title'><a class='parent' href='{$urlExplore}'><span class='cat-title'>All</span></a></span></li>";
             }
 
             $selectedOrder = isset($this->filters['order']) ? $this->filters['order'] : null;
