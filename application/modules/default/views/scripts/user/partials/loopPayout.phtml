@@ -65,6 +65,7 @@ $helpImage = new Default_View_Helper_Image();
 $css_active = ' in active';
 foreach ($allDownloads as $month => $products) {
     $sum_total_month = 0;
+    $sum_total_text = '';
     ?>
     <div class="tab-pane fade <?=$css_active?>" id="<?=$month?>">
         <?php
@@ -92,10 +93,15 @@ foreach ($allDownloads as $month => $products) {
             </div>
             <?php
             $sum_total_month += $product['num_downloads'] * $product['dl_pling_factor'];
+            $sum_total_text = 'potential payout for this month:';
+            if ($product['status'] == Default_Model_DbTable_MemberPayout::$PAYOUT_STATUS_COMPLETED) {
+                $sum_total_month = $product['amount'];
+                $sum_total_text = 'executed pay out this month:';
+            }
         }
             ?>
         <div class='row row-total'>
-            <div class='col-md-11 text-right'>potential payout for this month:</div><div class='col-md-1 text-right'><?=$sum_total_month?></div>
+            <div class='col-md-11 text-right'><?=$sum_total_text?></div><div class='col-md-1 text-right'><?=$sum_total_month?></div>
         </div>
     </div>
 <?php

@@ -35,11 +35,22 @@ class Default_Model_StatDownload
     public function getUserDownloads($member_id)
     {
         $sql = "
-            SELECT member_dl_plings.*, project.title, project.image_small 
-            FROM member_dl_plings
-             STRAIGHT_JOIN project ON project.project_id = member_dl_plings.project_id
-            WHERE member_dl_plings.member_id = :member_id 
-            ORDER BY `yearmonth` DESC
+                SELECT 
+                    member_dl_plings.*,
+                    project.title,
+                    project.image_small,
+                    member_payout.amount,
+                    member_payout.`status`
+                FROM
+                    member_dl_plings
+                        STRAIGHT_JOIN
+                    project ON project.project_id = member_dl_plings.project_id
+                        LEFT JOIN
+                    member_payout ON member_payout.member_id = member_dl_plings.member_id
+                        AND member_payout.yearmonth = member_dl_plings.yearmonth
+                WHERE
+                    member_dl_plings.member_id = :member_id
+                ORDER BY member_dl_plings.`yearmonth` DESC
             ";
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('member_id' => $member_id));
 
