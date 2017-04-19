@@ -108,12 +108,8 @@ class Backend_MemberPayoutCliController extends Local_Controller_Action_CliAbstr
         echo "prepareMasspaymentTable()\n";
         $db = Zend_Db_Table::getDefaultAdapter();
 
-        $sql = "SELECT * FROM stat_dl_payment_last_month s";
+        $sql = "SELECT * FROM stat_dl_payment_last_month s WHERE s.amount >= 1";
         
-        //if(!$this->_config->third_party->paypal->sandbox->active) {
-        //    $sql.=" WHERE s.num_downloads > 100";
-        //}
-
         $stmt = $db->query($sql);
         $payouts = $stmt->fetchAll();
         
