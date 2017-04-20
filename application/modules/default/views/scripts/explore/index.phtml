@@ -164,7 +164,7 @@ if('all' == strtolower($catTitle) OR (false === isset($catTitle))) {
                            }
                            var m = moment(item.pubDate);
                            crss+='<div class="commentstore"><a href="'+item.link+'"><span style="text-decoration: underline;">'+item.title +'</span></a><br/>' + item.description
-                           +'<br/><span style="font-size: smaller; text-align:right">'+m.format('MMM DD YYYY HH:mm LT')+'</span></div>';                           
+                           +'<br/><span style="font-size: smaller; text-align:right">'+m.format('MMM DD YYYY LT')+'</span></div>';                           
                          }); 
                 $("#rss-feeds").html(crss);
           });                
