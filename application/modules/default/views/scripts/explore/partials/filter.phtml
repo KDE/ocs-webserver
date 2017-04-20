@@ -38,38 +38,29 @@ $this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
         width: 100%;
         color: #2673b0;
     }
-
     .navilink {
         color: #2673b0;
         margin: 0;
-        padding: 3px 0 0 15px;
+        padding: 3px 0 0 5px;
     }
-
     .navilink span.title:hover {
         font-weight: bold;
         cursor: pointer;
     }
-
-  
-    
- 
     ul.naviblock a:hover
     {
         background-color:  <?=$this->navBackgroundColorActive?> !important;
         color:  <?=$this->navColorActive?> !important;
     }
-    
     ul.naviblock a
     {
           display: block;
             width:100%;
     }
-
     li.navilink.parentactive.parent a
     {
         color:  <?=$this->navBackgroundColorActive?>;
     }
-
     ul.naviblock a.active.child
     {
         background-color:  <?=$this->navBackgroundColorActive?>;
@@ -79,6 +70,21 @@ $this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
 
         background-color:  <?=$this->navBackgroundColorActive?>;
         color:  <?=$this->navColorActive?>;
+    }
+    li.navilink span.cat-title {
+        display: inline-block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 75%;
+        vertical-align: middle;
+        padding-left: 3px;
+    }
+    li.navilink span.product-counter {
+        display: inline-block;
+        vertical-align: middle;
+        text-align: end;
+        width: 20%;
     }
     /*
     li.navilink.active.parent a.child{       
@@ -111,7 +117,7 @@ $this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
                     $urlExplore = $helperBuildExploreUrl->buildExploreUrl($row['id'], null, $selectedOrder);
                     $product_count = empty($row['product_count']) ? '' : $row['product_count'];
 
-                    $result .= "<li class='navilink {$csschild}'><span class='title'><a class='{$csschild}' href='{$urlExplore}' data-id='{$row['id']}' title='{$row['title']}'>{$row['title']} <span style='float:right; padding-right:10px'>{$product_count}</span> </a></span>";
+                    $result .= "<li class='navilink {$csschild}'><span class='title'><a class='{$csschild}' href='{$urlExplore}' data-id='{$row['id']}' title='{$row['title']}'><span class='cat-title'>{$row['title']}</span> <span class='product-counter'>{$product_count}</span> </a></span>";
 
                     if ($row['has_children']) {
                         $children = $row['children'];
@@ -129,7 +135,6 @@ $this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
             }
 
             /**
-             * @param int $selectedCategory
              * @param string $selectedOrder
              * @return string
              */
@@ -137,7 +142,7 @@ $this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
             {
                 $helpExploreUrl = new Default_View_Helper_BuildExploreUrl();
                 $urlExplore = $helpExploreUrl->buildExploreUrl(null, null, $selectedOrder);
-                return "<li class='navilink parent'><span class='title'><a class='parent' href='{$urlExplore}'>All</a></span></li>";
+                return "<li class='navilink parent'><span class='title'><a class='parent' href='{$urlExplore}' data-id='0'><span class='cat-title'>All</span></a></span></li>";
             }
 
             $selectedOrder = isset($this->filters['order']) ? $this->filters['order'] : null;
@@ -157,6 +162,5 @@ $this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
         })();
 
         hierarchy.setup(<?=$this->cat_id?>);
-
     });
 </script>
