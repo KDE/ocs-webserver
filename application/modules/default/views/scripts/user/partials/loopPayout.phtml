@@ -109,6 +109,10 @@ foreach ($allDownloads as $month => $products) {
             <div class='col-md-11 text-right'>total plings:</div><div class='col-md-1 text-right'><?=$sum_total_month?></div>
             <div class='col-md-11 text-right'><?=$sum_total_text?></div><div class='col-md-1 text-right'><strong><?=$sum_total_payout?></strong></div>
         </div>
+        <?php if ($sum_total_payout < 1) {
+            echo '<div class="alert alert-info" role="alert">As long as the total amount is less than $ 1.00, there is no payout.</div>';
+        }
+        ?>
     </div>
 <?php
     }
