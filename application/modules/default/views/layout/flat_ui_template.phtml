@@ -105,6 +105,7 @@
 <script src="/theme/flatui/js/lib/jquery.validate.min.js"></script>
 <script src="/theme/flatui/js/lib/additional-methods.min.js"></script>
 <script src="/theme/flatui/js/lib/jquery.steps.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
 
 <script src="/tools/md5.js"></script>
 <script type="text/javascript" src="/tools/fancybox2.1.4/jquery.fancybox.pack.js?v=2.1.4"></script>
@@ -117,6 +118,7 @@ echo $this->render('partials/propagateLogout.phtml');
 ?>
 
 <?=$this->inlineScript() ?>
+
 <?php if (APPLICATION_ENV != 'development') { ?>
     <?php
     $googleid ='UA-78422931-1';
@@ -146,5 +148,6 @@ echo $this->render('partials/propagateLogout.phtml');
 
     </script>
 <?php } ?>
+
 </body>
 </html>

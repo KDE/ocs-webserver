@@ -56,7 +56,7 @@ if('all' == strtolower($catTitle) OR (false === isset($catTitle))) {
 
 
             <div class="product-list">
-                <?php
+                <?php                
                 if (count($this->products) == 0) {
                     echo '<div class="empty">No products to show in this category.</div>';
                 } else {
@@ -66,6 +66,7 @@ if('all' == strtolower($catTitle) OR (false === isset($catTitle))) {
                         $this->rownum++;
                     }
                 }
+                
                 ?>
             </div>
 
@@ -88,8 +89,18 @@ if('all' == strtolower($catTitle) OR (false === isset($catTitle))) {
      }
 ?>
 
-        <aside class="col-lg-2 col-md-4 col-sm-8 col-xs-12" id="explore-sidebar" style="background-color: #f1f1f1; <?=$asidehide?>">
-                                      
+        <aside class="col-lg-2 col-md-4 col-sm-8 col-xs-12" id="explore-sidebar" style="padding-right: 0px; <?=$asidehide?>">
+            
+            <div style="width: 100%; background-color: #fff; padding-bottom: 10px; text-align: center;">
+                <a href="https://www.linux-apps.com/p/1175480/" target="_blank"><img src="/images/system/download-app.png" class="img-download" style="width: 92%; " /></a>
+            </div>
+
+            <div  class="row" style="background-color: #f1f1f1; margin-left: 0px; margin-right:0px;padding-right:10px">            
+          
+            <span class="commentTitle" style="margin:auto;display:table;padding:5px"> News </span>
+            <div class="prod-widget-box right" style=" background-color: #fff" id="rss-feeds">                
+            </div>
+        
             <?php
             if (count($comments) > 0) {
                 ?>
@@ -102,20 +113,7 @@ if('all' == strtolower($catTitle) OR (false === isset($catTitle))) {
                     }
                     ?>
                 </div>
-            <?php } ?>
-
-            <?php
-            if (count($donations) > 0) {
-                ?>
-                <span class="donationTitle" style="margin:auto;display:table;padding:5px"> Donations</span>
-                <div class="prod-widget-box right" style=" background-color: #fff" id="lastdonations">
-                    <?php
-                    foreach ($donations as $this->donation) {
-                        echo $this->render('explore/partials/donation.phtml');
-                    }
-                    ?>
-                </div>
-            <?php } ?>
+            <?php } ?>        
 
             <?php
             if (count($topprods) > 0) {
@@ -142,6 +140,8 @@ if('all' == strtolower($catTitle) OR (false === isset($catTitle))) {
             <?php
             }
             ?>
+
+          </div>
          </aside>
 
   </section>    
@@ -149,8 +149,25 @@ if('all' == strtolower($catTitle) OR (false === isset($catTitle))) {
 
 <script type="text/javascript">
     $(window).load(function () {      
-        if ($('#explore-products').height() > $('#explore-sidebar').height()) {
+        if ($('#explore-products').height() > ($('#explore-sidebar').height())) {
             $('#explore-sidebar').height($('#explore-products').height());
-        }
+        }        
     })
+
+    $(document).ready(function() {        
+         var yql = "https://query.yahooapis.com/v1/public/yql?q=select%20title%2Clink%2CpubDate%2Cdescription%20from%20rss%20where%20url%3D%22http%3A%2F%2Fblog.opendesktop.org%2Ffeed%22&format=json&diagnostics=true&callback=";          
+          $.getJSON(yql, function(res) {                
+                var crss ='';
+                $.each( res.query.results.item, function( i, item ) {                           
+                           if ( i >= 3 ) {
+                             return false;
+                           }
+                           var m = moment(item.pubDate);
+                           crss+='<div class="commentstore"><a href="'+item.link+'"><span style="text-decoration: underline;">'+item.title +'</span></a><br/>' + item.description
+                           +'<br/><span style="font-size: smaller; text-align:right">'+m.format('MMM DD YYYY LT')+'</span></div>';                           
+                         }); 
+                $("#rss-feeds").html(crss);
+          });                
+    });
+
 </script>
