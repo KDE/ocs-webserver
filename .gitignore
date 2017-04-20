@@ -1,3 +1,6 @@
+#ignore google files
+google*.html
+
 #ignore pling-music and pling-books
 */pling-books-html5
 */pling-books-html5/*
@@ -6,6 +9,7 @@
 
 #ignore store specific images
 */images_sys/store_*/
+
 #ignore eclipse files
 .buildpath
 .project
@@ -37,9 +41,11 @@ phing/*
 
 */.well-known
 
+#ignore special files on sever
 loadstorm-41440.html
 mu-2cc5c638-f7c471ad-be42f5c0-99b8cf30.txt
 mu-9ff52416-7b5ae544-c8bac39d-dc810a54
+historical-look.org.le.ssl.conf
 
 #ignore thumbnails created by windows
 Thumbs.db
