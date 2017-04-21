@@ -198,6 +198,23 @@ $this->tab = 'settings';
 
     SettingsExpand.setup();
     InputAvatar.setup();
+    
+</script>
+
+
+<script>
+    $(document).ready(function(){
+        if(document.location.hash) {
+            $myform = $(document.location.hash);
+            var this_panel = $myform.parents('.panel');
+            this_panel.addClass('in');
+            var this_header = this_panel.find('.panel-heading');
+            this_header.addClass('active');
+            var this_body = this_panel.find(document.location.hash);
+            this_body.addClass('in');
+        }
+    });
+
 </script>
 
 <?php $this->inlineScript()->appendScript(

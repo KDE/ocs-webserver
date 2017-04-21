@@ -34,7 +34,7 @@
     }
     
     .popover {
-        min-width:300px;
+        min-width:350px;
     }
     
     .popover-title { 
@@ -72,7 +72,7 @@
         <div class="col-md-5 text-left text-uppercase"><strong>Product</strong></div>
         <div class="col-md-2 text-right text-uppercase"><strong>Downloads</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Downloads" data-trigger="hover" data-html="true" data-content="Sum of all downloads of all files of this product within this month."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
         <div class="col-md-2 text-right text-uppercase"><strong>Factor</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Factor" data-trigger="hover" data-html="true" data-content="The factor is the ratio of download to pling. The factor depends on the product category.<br>A factor of 1.0 means 1 download = 1 pling."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
-        <div class="col-md-2 text-right text-uppercase"><strong>plings</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="pling" data-trigger="hover" data-html="true" data-content="You can collect new plings every month. The number of plings results from the pling factor. At the beginning of each month you will be paid the plings of the previous month to your PayPal account: 1 pling = $ 0.01.<br>A valid PayPal address must be maintained in your settings and the payout amount must be at least one dollar. If you do not meet these requirements, we can not pay you anything. We check again to the next payment date, if we can pay you something for this month."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+        <div class="col-md-2 text-right text-uppercase"><strong>plings</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="plings" data-trigger="hover" data-html="true" data-content="You can collect new plings every month. The number of plings results from the pling factor. At the beginning of each month you will be paid the plings of the previous month to your PayPal account. Where: <b>1 pling = $0.01</b>.<br>A valid PayPal address must be maintained in your settings and the payout amount must be at least one dollar. If you do not meet these requirements, we can not pay you anything. We check again to the next payment date, if we can pay you something for this month."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
     </div>
 </div>
 <div class="tab-content">
@@ -82,6 +82,7 @@ $css_active = ' in active';
 $has_paypal = false;
 $currency = new Zend_Currency('en_US');
 foreach ($allDownloads as $month => $products) {
+    $printMonth = new DateTime($month.'01');
     $sum_total_month = 0;
     $sum_total_text = '';
     $sum_total_payout = 0;
@@ -94,47 +95,65 @@ foreach ($allDownloads as $month => $products) {
 
                 <div class="col-md-1 cell-default">
                     <img src="<?php echo $helpImage->Image($product['image_small'],
-                        array('width' => 80, 'height' => 65)); ?>"/>
+                        array('width' => 80, 'height' => 65)); ?> " height="81" width="101"/>
                 </div>
                 <div class="col-md-5 text-left cell-default">
-                    <span><?= $product['title']; ?> (<?=$product['cat_title']?>)</span>
+                    <span style="line-height: 3em;"><?= $product['title']; ?></span>
+                    <b style="display: block; margin-bottom: 5px; font-size: 10pt; line-height: 0em;"><?=$product['cat_title']?></b>
                 </div>
                 <div class="col-md-2 text-right cell-default">
-                    <span><?= $product['num_downloads'] ?></span>
+                    <span><?= number_format($product['num_downloads']) ?></span>
                 </div>
                 <div class="col-md-2 text-right cell-default">
                     <span><?= $product['dl_pling_factor'] ?></span>
                 </div>
                 <div class="col-md-2 text-right cell-default">
-                    <span><?= $product['num_downloads'] * $product['dl_pling_factor'] ?></span>
+                    <span><?= number_format($product['num_downloads'] * $product['dl_pling_factor']) ?></span>
                 </div>
 
             </div>
             <?php
             $sum_total_month += $product['num_downloads'] * $product['dl_pling_factor'];
-            $sum_total_text = 'expected payout for this month:';
+            $sum_total_text = 'Possible payment amount for this month:';
             $sum_total_payout = $currency->toCurrency($sum_total_month/100);
             if ($product['status'] == Default_Model_DbTable_MemberPayout::$PAYOUT_STATUS_COMPLETED) {
                 $sum_total_payout = $currency->toCurrency($product['amount']);
-                $sum_total_text = 'executed payout this month:';
+                $sum_total_text = 'Actually successfully paid amount:';
             }
             $has_paypal = $product['paypal_mail'] ? true : false;
         }
+        $sum_total_month_view = number_format($sum_total_month);
         ?>
         <div class='row row-total'>
-            <div class='col-md-11 text-right'>total plings:</div><div class='col-md-1 text-right'><?=$sum_total_month?></div>
+            <div class='col-md-11 text-right'>Sum of all plings:</div><div class='col-md-1 text-right'><?=$sum_total_month_view?></div>
             <div class='col-md-11 text-right'><?=$sum_total_text?></div><div class='col-md-1 text-right'><strong><?=$sum_total_payout?></strong></div>
         </div>
-        <?php if ($sum_total_payout < 1) {
-            echo '<div class="alert alert-info" role="alert">As long as the total amount is less than $ 1.00, there is no payout.</div>';
+        <?php 
+        
+        
+        $currentDate = date("Ym",time());
+        $viewDate = $month."";
+        $paypalWarning = '';
+        if($currentDate == $viewDate) {
+            $paypalWarning = 'You have no PayPal account configured. Please go to your settings page <a href="/settings#payments-collapse">here</a>.';
+        } else {
+            $paypalWarning = 'We found no valid Paypal account for this month. That\'s why we could not pay you any money. In order to receive money for the current month, please make sure that a paypal account is registered. Go to your settings page <a href="/settings#payments-collapse">here</a>.';
         }
+        if (false == $has_paypal) {
+            echo '<div class="alert alert-warning" role="alert">'.$paypalWarning.'</div>';
+        }
+        
+        if (($sum_total_month/100) < 1) {
+            echo '<div class="alert alert-warning" role="alert">We only pay out money if the amount is over $1.</div>';
+        }
+        
+        
         ?>
     </div>
 <?php
     }
-     if (false == $has_paypal) {
-        echo '<div class="alert alert-warning" role="alert">You have no PayPal account configured. Please configure a PayPal account <a href="/settings#payments-collapse">here</a>.</div>';
-     }
+    
+    
 ?>
 </div><?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
