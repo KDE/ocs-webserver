@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  *  ocs-webserver
  *
@@ -40,7 +40,7 @@
                                 </div>
                                 <div class="modal-body">
 
-                                <iframe src="https://ocs-url.github.io/ocs-url/opendesktoporg-help.html" width="100%" height="500" frameborder="0" seamless id="iframeInstallInstruction"></iframe>
+                                <iframe src="https://opendesktop.github.io/ocs-url/opendesktoporg-help.html" width="100%" height="500" frameborder="0" seamless id="iframeInstallInstruction"></iframe>
                                 </div>
                             </div>
                         </div>
@@ -309,7 +309,7 @@
                                             + '<option value=\"3\">OS X compatible</option>'
                                             + '<option value=\"6\">Snappy</option>'
                                             + '<option value=\"4\">Windows executable</option>'                                            + '</select><span id="file-tag-packagetype'+this.id+'">'
-                                            + '</td>'   
+                                            + '</td>'
                                             + '<td>'
                                             + '<select id="data-select-license' + this.id + '" data-license-id=" name="license">'
                                             + '<option value=\"1000\"></option><option value=\"16\">AGPL</option><option value=\"3\">Artistic 2.0</option><option value=\"6\">BSD</option><option value=\"17\">CC0 1.0 Universal (Public Domain)</option><option value=\"9\">CPL 1.0</option><option value=\"10\">Creative Commons by</option><option value=\"13\">Creative Commons by-nc</option><option value=\"15\">Creative Commons by-nc-nd</option><option value=\"14\">Creative Commons by-nc-sa</option><option value=\"12\">Creative Commons by-nd</option><option value=\"11\">Creative Commons by-sa</option><option value=\"8\">GFDL</option><option value=\"1\">GPLv2 or later</option><option value=\"18\">GPLv2 only</option><option value=\"19\">GPLv3</option><option value=\"2\">LGPL</option><option value=\"0\">Other</option><option value=\"7\">Proprietary License</option><option value=\"5\">QPL</option><option value=\"4\">X11</option>'
@@ -361,10 +361,10 @@
                                             $fileserverLink = $("#data-link" + this.id).attr('href');
                                             $("#data-link" + this.id).attr('href', decodeURIComponent(link));
                                             $("#data-link" + this.id).attr('data-link-org', $fileserverLink);
-                                            
+
                                             $("#data-link" + this.id).attr('target','_blank');
                                             $("#data-link" + this.id).html($("#data-link" + this.id).html() + " (External Link)");
-                                            
+
                                             $("#data-link" + this.id).click(function (event) {
                                                 event.preventDefault();
                                                 $fileserverLink = $(this).attr('data-link-org');
@@ -513,7 +513,7 @@
 	                                     if ((typeof license != 'undefined') && (license != "")) {
 	                                         $("#file-tag-license-text" + this.id).text(license);
 	                                     }
-                                             
+
                                              if ((typeof packagetypeId != 'undefined') && (packagetypeId != "")) {
 	                                         $("#data-select-packagetype" + this.id + " option[value='" + packagetypeId + "']").attr('selected', 'selected');
 	                                         $packagetypeIdText = $("#data-select-packagetype" + this.id + " option[value='" + packagetypeId + "']").text();
@@ -717,7 +717,7 @@
                     $('#modal-installation-instructions').on('show.bs.modal', function (e) {
                               var iframe = document.getElementById('iframeInstallInstruction');
                               var leg=$(iframe).attr("src");
-                              $(iframe).attr("src","https://ocs-url.github.io/ocs-url/opendesktoporg-help.html");
+                              $(iframe).attr("src","https://opendesktop.github.io/ocs-url/opendesktoporg-help.html");
                         });
 
                 });
