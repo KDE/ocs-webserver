@@ -50,6 +50,13 @@ $helperMember = new Default_View_Helper_BuildMemberUrl();
         <?php endif ?>
     </li>
 
+    <li class="header-menu-left-item <?php echo $this->tab == 'payout' ? 'active' : ''; ?>">
+        <a href="<?php echo $helperMember->buildMemberUrl($this->member->member_id, 'payout'); ?>">
+            <span class="glyphicon glyphicon-usd"></span>
+            <?= $this->translate('My plings') ?>
+        </a>
+    </li>
+
     <li class="header-menu-left-item <?php echo $this->tab == 'earnings' ? 'active' : ''; ?>">
         <a href="<?php echo $helperMember->buildMemberUrl($this->member->member_id, 'income'); ?>">
             <span class="glyphicon glyphicon-usd"></span>
@@ -61,13 +68,6 @@ $helperMember = new Default_View_Helper_BuildMemberUrl();
         <a href="<?php echo $helperMember->buildMemberUrl($this->member->member_id, 'payments'); ?>">
             <span class="glyphicon glyphicon-usd"></span>
             <?= $this->translate('My Payments') ?>
-        </a>
-    </li>
-
-    <li class="header-menu-left-item <?php echo $this->tab == 'payout' ? 'active' : ''; ?>">
-        <a href="<?php echo $helperMember->buildMemberUrl($this->member->member_id, 'payout'); ?>">
-            <span class="glyphicon glyphicon-usd"></span>
-            <?= $this->translate('My plings') ?>
         </a>
     </li>
 

@@ -109,6 +109,11 @@ $member = $getAuthUser->getAuthUser();
                                                     <?= $this->translate('My Products') ?>
                                                 </a>
                                             </li>
+                                            <li class="link first">
+                                                <a href="<?= $helperBuildMemberUrl->buildMemberUrl($member->member_id, 'payout') ?>">
+                                                    <?= $this->translate('My plings') ?>
+                                                </a>
+                                            </li>
                                             <li class="link">
                                                 <a href="/settings/">
                                                     <?= $this->translate('My Settings') ?>
