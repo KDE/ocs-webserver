@@ -69,9 +69,9 @@
 <div class="container-fluid margin-bottom-10" style="padding-left: 0; padding-right: 0;">
     <div class="row">
         <div class="col-md-1"></div>
-        <div class="col-md-3 text-left text-uppercase"><strong>Product</strong></div>
-        <div class="col-md-2 text-right text-uppercase"><strong>Downloads</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Downloads" data-trigger="hover" data-html="true" data-content="Sum of all downloads of all files of this product within this month."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+        <div class="col-md-3 text-left text-uppercase"><strong>Products</strong></div>
         <div class="col-md-2 text-right text-uppercase"><strong>Factor</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Factor" data-trigger="hover" data-html="true" data-content="The factor is the ratio of download to pling. The factor depends on the product category.<br>A factor of 1.0 means 1 download = 1 pling."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+        <div class="col-md-2 text-right text-uppercase"><strong>Downloads</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Downloads" data-trigger="hover" data-html="true" data-content="Sum of all downloads of all files of this product within this month."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
         <div class="col-md-2 text-right text-uppercase"><strong>plings</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="plings" data-trigger="hover" data-html="true" data-content="You can collect new plings every month. The number of plings results from the pling factor. At the beginning of each month you will be paid the plings of the previous month to your PayPal account. Where: <b>1 pling = $0.01</b>.<br>A valid PayPal address must be maintained in your settings and the payout amount must be at least one dollar. If you do not meet these requirements, we can not pay you anything. We will check these requirements every month."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
         <div class="col-md-2 text-right text-uppercase"><strong>Earned</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="plings" data-trigger="hover" data-html="true" data-content="You can collect new plings every month. The number of plings results from the pling factor. At the beginning of each month you will be paid the plings of the previous month to your PayPal account. Where: <b>1 pling = $0.01</b>.<br>A valid PayPal address must be maintained in your settings and the payout amount must be at least one dollar. If you do not meet these requirements, we can not pay you anything. We will check these requirements every month."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
     </div>
@@ -103,10 +103,10 @@ foreach ($allDownloads as $month => $products) {
                     <b style="display: block; margin-bottom: 5px; font-size: 10pt; line-height: 0em;"><?=$product['cat_title']?></b>
                 </div>
                 <div class="col-md-2 text-right cell-default">
-                    <span><?= $product['num_downloads'] ?></span>
+                    <span><?= round($product['dl_pling_factor'],0) ?></span>
                 </div>
                 <div class="col-md-2 text-right cell-default">
-                    <span><?= round($product['dl_pling_factor'],0) ?></span>
+                    <span><?= $product['num_downloads'] ?></span>
                 </div>
                 <div class="col-md-2 text-right cell-default">
                     <span><?= $product['num_downloads'] * $product['dl_pling_factor'] ?></span>
