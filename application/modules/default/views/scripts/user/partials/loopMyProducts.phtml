@@ -51,16 +51,16 @@ $helperImage = new Default_View_Helper_Image();
     <article class="col-lg-11 col-md-9 col-sm-9 col-xs-9">
         <!-- title -->
         <div class="title">
-            <h3><a href="<?= $helperBuildProductUrl->buildProductUrl($this->project_id) ?>"><?php echo $this->title; ?> <?php echo $this->version; ?></a></h3>
+            <h3><a href="<?= $helperBuildProductUrl->buildProductUrl($this->project_id) ?>"><?php echo $this->title; ?> <?php echo $this->version; ?></a><span style="font-weight: 700;">added <?= $addedOnText ?> ago</span></h3>
         </div>
         <!-- /title -->
         <!-- info -->
         <div class="info">
             <ul>
                 <li><span>in</span><span><?php echo $this->catTitle; ?></span></li>
-                <li><span>added</span><span><?= $addedOnText ?></span><span>ago</span></li>
-                <li><span><?= $this->translate('supporters') ?> </span><span><?= $plingData['plingers'] ?></span></li>
-                <li><span><?= $this->translate('collected') ?> </span><span><?= $plingData['plings'] ?></span></li>
+                
+                <?php /**<li><span><?= $this->translate('supporters') ?> </span><span><?= $plingData['plingers'] ?></span></li>
+                <li><span><?= $this->translate('collected') ?> </span><span><?= $plingData['plings'] ?></span></li> **/?>
             </ul>
         </div>
         <!-- /info -->
