@@ -84,13 +84,13 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
                                                 <li class="link first">
                                                     <a href="<?= $helperBuildMemberUrl->buildMemberUrl($member->member_id, 'products') ?>"><?= $this->translate('My Products') ?></a>
                                                 </li>
-                                                <li class="link first">
-                                                <a href="<?= $helperBuildMemberUrl->buildMemberUrl($member->member_id, 'payout') ?>">
-                                                    <?= $this->translate('My plings') ?>
-                                                </a>
-                                                </li>
                                                 <li class="link">
                                                     <a href="/settings/"><?= $this->translate('My Settings') ?></a>
+                                                </li>
+                                                <li class="link first">
+                                                    <a href="<?= $helperBuildMemberUrl->buildMemberUrl($member->member_id, 'payout') ?>">
+                                                        <?= $this->translate('Plings') ?>
+                                                    </a>
                                                 </li>
                                                 <li class="link">
                                                     <a href="<?=$serverUrl?>/logout/"><?= $this->translate('Logout') ?></a>
