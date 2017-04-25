@@ -139,9 +139,8 @@ foreach ($allDownloads as $month => $products) {
         $viewDate = $month."";
         $paypalWarning = '';
         if($currentDate == $viewDate) {
-            $getAuthUser = new Default_View_Helper_GetAuthUser();
-            $member = $getAuthUser->getAuthUser();
-            if(!isset($member->paypal_mail)) {
+            $member = $this->view_member;
+            if(!isset($member['paypal_mail']) || $member['paypal_mail'] == '') {
                 $has_paypal = false;
                 $paypalWarning = 'You have no PayPal account configured. Please go to your settings page <a href="/settings#payments-collapse">here</a>.';
             } else {
