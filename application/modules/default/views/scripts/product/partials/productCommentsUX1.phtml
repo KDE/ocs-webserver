@@ -90,7 +90,7 @@ $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountP
 //    $captcha->setAttrib('placeholder', 'Please verify you\'re a human');
 //    $captcha->setAttrib('class', 'full-width');
     ?>
-                <div class="media" style="margin-left:<?=$elementComment['level'] * 30?>px">
+                <div class="media" style="margin-left:<?=($elementComment['level']-1) * 30?>px">
                     
                     <?php if ($comment['comment_type'] == Default_Model_DbTable_Comments::COMMENT_TYPE_PLING) : ?>
                         <p class="pull-right history" style="display:inline-block"><span class="glyphicon glyphicon-usd"></span></p>
