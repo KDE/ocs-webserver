@@ -134,7 +134,7 @@ if ($this->countDownloadsOverall > 0) {
                 </div>
                 <?php
                 $sum_total_month += $product['num_downloads'] * $product['dl_pling_factor'];
-                $sum_total_text = 'Possible payment amount for this month <a id="payout_info" href="#"><span class="glyphicon glyphicon-asterisk"></span></a>:';
+                $sum_total_text = 'Possible payment amount for this month (*):';
                 $sum_total_payout = $currency->toCurrency($sum_total_month/100);
                 if ($product['status'] == Default_Model_DbTable_MemberPayout::$PAYOUT_STATUS_COMPLETED) {
                     $sum_total_payout = $currency->toCurrency($product['amount']);
@@ -182,16 +182,20 @@ if ($this->countDownloadsOverall > 0) {
     echo '<div class="tab-pane fade in active" id="'.$printDate.'">';
     echo '    <div style="text-align: center;" class="row margin-bottom-12"><div class="col-md-12 cell-default">No Data</div></div>';
     echo '    <div class="row row-total">';
-    echo '        <div class="col-md-11 text-right">Possible payment amount for this month <a id="payout_info" href="#"><span class="glyphicon glyphicon-asterisk"></span></a>:</div><div class="col-md-1 text-right"><strong>$0.00</strong></div>';
+    echo '        <div class="col-md-11 text-right">Possible payment amount for this month (*):</div><div class="col-md-1 text-right"><strong>$0.00</strong></div>';
     echo '    </div>';
     echo '</div>';
 }
     
     
 ?>
-    <div id="le-alert"  class="alert alert-warning alert-block fade" role="alert"><button href="#" type="button" class="close">&times;</button>
-        <h4>Warning</h4>
-        This service will start as live on May 01 2017. All previous amounts are for testing only.<br>This service is completely voluntary...
+    <div id="le-alert"  class="alert alert-warning alert-block" role="alert"><button href="#" type="button" class="close">&times;</button>
+        (*) Info: This service will go live on May first 2017. All previously shown amounts are for testing only.<br>
+        <p>TOS: This service is completely voluntary. It is within Hive01 full rights to deside:</p>
+        <p>a) when and how much</p>
+        <p>b) how much of the shown calculated amount is to be paied or</p>
+        <p>c) to cancel partly or complete payment with or without any reason</p>
+            
     </div>
 </div>
 
