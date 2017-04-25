@@ -57,16 +57,20 @@ if('all' == strtolower($catTitle) OR (false === isset($catTitle))) {
 
             <div class="product-list">
                 <?php                
+//                if (count($this->products) == 0) {
+//                    echo '<div class="empty">No products to show in this category.</div>';
+//                } else {
+//                    $this->rownum = (1 + (($this->page - 1) * 10));
+//                    foreach ($this->products as $this->product) {
+//                        echo $this->render('explore/partials/product.phtml');
+//                        $this->rownum++;
+//                    }
+//                }
                 if (count($this->products) == 0) {
                     echo '<div class="empty">No products to show in this category.</div>';
                 } else {
-                    $this->rownum = (1 + (($this->page - 1) * 10));
-                    foreach ($this->products as $this->product) {
-                        echo $this->render('explore/partials/product.phtml');
-                        $this->rownum++;
-                    }
+                    echo $this->render('explore/partials/products.phtml');
                 }
-                
                 ?>
             </div>
 

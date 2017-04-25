@@ -25,6 +25,7 @@ $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $helperEncryptUrl = new Default_View_Helper_EncryptUrl();
 $helperUserIsOwner = new Default_View_Helper_UserIsOwner();
 $helperFetchCategoriesForProduct = new Default_View_Helper_FetchCategoriesForProductAsString();
+$helpImage = new Default_View_Helper_Image();
 $loginUrl = '/login?redirect=' . $helperEncryptUrl->encryptUrl(Zend_Controller_Front::getInstance()->getRequest()->getRequestUri(), true);
 $viewSidebar = 'product/partials/productAboutSidebar.phtml';
 $viewClaimBox = false;
@@ -260,7 +261,7 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
                                                      <div class="u-wrap">
                                                          <a href="<?php echo $helperBuildMemberUrl->buildMemberUrl($supporter->member_id); ?>">
                                                              <figure>
-                                                                 <img src="<?= $this->Image($supporter->profile_image_url,array('width' => 200, 'height' => 200, 'crop' => 2)); ?>" />
+                                                                 <img src="<?= $helpImage->Image($supporter->profile_image_url,array('width' => 200, 'height' => 200, 'crop' => 2)); ?>" />
                                                              </figure>
                                                              <div class="u-content">
                                                                  <h3><?= $supporter->username ?></h3>
@@ -362,14 +363,16 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
                                         <a href="<?php echo $helperBuildMemberUrl->buildMemberUrl($this->member->member_id); ?>"
                                            title="<?= $this->member->username ?>">
                                             <div class="profile-image-overlay-4 absolute"></div>
-                                            <img src="<?= $this->Image($this->member->profile_image_url, array('width' => 80, 'height' => 80)) ?>"
+                                            <img src="<?= $helpImage->Image($this->member->profile_image_url, array('width' => 80, 'height' => 80)) ?>"
                                                  alt="product-maker" width="15" height="15"
                                                  class="sidebar-profile-image">
                                         </a>
                                       </div>
                                       <div class="product-maker-summary">
                                           <h5>
-                                              <a href="<?php echo $helperBuildMemberUrl->buildMemberUrl($this->member->member_id); ?>"><?= $this->member->username; ?></a>
+                                              <a href="<?php echo $helperBuildMemberUrl->buildMemberUrl($this->member->member_id); ?>">
+                                                  <?= $this->member->username; ?>
+                                              </a>
                                           </h5>
 
                                       </div>
@@ -379,8 +382,6 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
                               <?php } ?>
 
                               <?php echo $this->render('partials/sidebarRating.phtml'); ?>
-        
-                             
 
                               <div class="row">
                                   <div class="prod-info">      
@@ -458,9 +459,6 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
   </div> <!--end col-lg-2-->
 </div>
 </main>
-
-
-   
 
     <div id="product-donate">
     <?php

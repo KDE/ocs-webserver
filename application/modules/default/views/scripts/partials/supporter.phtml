@@ -21,6 +21,7 @@
  **/
 
 $helperImage = new Default_View_Helper_Image();
+$helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $this->myCounter = $this->myCounter + 1;
 
 if (($this->partialCounter<4 && $this->partialCounter  % 5 == 0) || ($this->partialCounter>4 && $this->partialCounter  % 4 == 0)):?>
@@ -35,7 +36,7 @@ if (($this->partialCounter<4 && $this->partialCounter  % 5 == 0) || ($this->part
         <div class="clearfix">
             <div class="supporter-thumbnail relative">
                 <?php echo $this->myCounter; ?>
-                <a href="<?php echo $this->buildMemberUrl($this->member_id); ?>">
+                <a href="<?php echo $helpMemberUrl->buildMemberUrl($this->member_id); ?>">
                     <div class="profile-image-overlay-3 absolute"></div>
                     <img src="<?= $helperImage->Image($this->profile_image_url,array('width' => 89, 'height' => 80, 'crop' => 2)); ?>" alt="<?= $this->username ?>" width="80">
                 </a>
@@ -45,13 +46,10 @@ if (($this->partialCounter<4 && $this->partialCounter  % 5 == 0) || ($this->part
             <div class="supporter-details">
                 <h3 class="supporter-name?>"><?php echo $this->username; ?></h3>
                 <?php if ($this->comment) { ?>
-
                     <div class="supporter-comment">
                         <?php echo $this->comment; ?>
                     </div>
-
                 <?php } ?>
-
                 <span>
             	$<?= $this->amount ?>
             </span>

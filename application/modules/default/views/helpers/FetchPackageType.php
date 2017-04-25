@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -19,13 +20,13 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-
 class Default_View_Helper_FetchPackageType extends Zend_View_Helper_Abstract
 {
+
     public function FetchPackageType($projectId, $fileId)
-    {        
-    	
-    	 $tbl = new Default_Model_DbTable_ProjectPackageType();
-    	 return $tbl->getPackageType($projectId,$fileId);
+    {
+        $tbl = new Default_Model_DbTable_ProjectPackageType();
+        return $tbl->getPackageType($projectId, $fileId);
     }
+
 }

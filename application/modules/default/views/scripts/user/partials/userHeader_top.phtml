@@ -21,13 +21,15 @@
  **/
 
 $this->headLink()->appendStylesheet('/theme/flatui/css/stylesheets/general.css');
+$helpImage = new Default_View_Helper_Image();
+$helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
 ?>
     <section class="head-wrap">
         <!-- HEADER -->
         <section class="wrapper about-me-header">
 
             <figure>
-                <img src="<?php echo $this->Image($this->member->profile_image_url,array('width' => 110, 'height' => 110, 'crop' => 2)); ?>" alt="profile-image" width="110" height="110">
+                <img src="<?php echo $helpImage->Image($this->member->profile_image_url,array('width' => 110, 'height' => 110, 'crop' => 2)); ?>" alt="profile-image" width="110" height="110">
             </figure>
 
             <div class="user-menu well">
@@ -38,7 +40,7 @@ $this->headLink()->appendStylesheet('/theme/flatui/css/stylesheets/general.css')
                             <span class="lightblue"><?php echo $this->member->username; ?></span><?= $this->translate(', welcome to your personal start page!') ?>
                         </div>
                         <div class="small lightgrey">
-                            <a href="/member/<?php echo $this->member->member_id; ?>/"><?= $this->translate('Click here to go to your About Me page.') ?></a>
+                            <a href="<?php echo $helpMemberUrl->buildMemberUrl($this->member->member_id); ?>"><?= $this->translate('Click here to go to your About Me page.') ?></a>
                         </div>
                     </div>
                 </div>

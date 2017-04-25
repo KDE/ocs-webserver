@@ -28,17 +28,30 @@ class Default_View_Helper_BuildProductUrl
      * @param string $action
      * @param array $params
      * @param bool $withHost
-     * @param string $protocol
+     * @param string $scheme
      * @return string
      */
-    public function buildProductUrl($product_id, $action = '', $params = null, $withHost = false, $protocol = 'http')
+    public function buildProductUrl($product_id, $action = '', $params = null, $withHost = false, $scheme = null)
     {
+        if (empty($product_id)) {
+            return '';
+        }
+
         /** @var Zend_Controller_Request_Http $request */
         $request = Zend_Controller_Front::getInstance()->getRequest();
 
+
         $host = '';
         if ($withHost) {
-            $host = $protocol . '://' . $request->getHttpHost();
+            $member_host = Zend_Registry::get('config')->settings->member->page->server;
+            $http_host = Zend_Registry::get('config')->settings->member->product->server; // set http_host to product server
+
+            if (false === strpos($request->getHttpHost(), $member_host)) {
+                $http_host = $request->getHttpHost();
+            }
+
+            $http_scheme = isset($scheme) ? $scheme : $request->getScheme();
+            $host = $http_scheme . '://' . $http_host;
         }
 
         $storeId = null;

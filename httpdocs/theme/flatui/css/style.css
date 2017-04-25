@@ -1009,3 +1009,45 @@ span.packagetypeos
   float: left;
   margin: 2px;
 }
+
+.comments-list .user_name{
+        font-size:14px;
+        font-weight: bold;
+        color: rgb(102, 189, 221);
+        border-bottom: 1px dashed #000;
+        margin-left: 10px;
+    }
+.comments-list .media-body{
+    border-bottom: 1px solid #ccc;
+}
+.comments-list .media-body .text{
+    padding-left: 10px
+}    
+ .comments-list img{
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #ccc;
+}
+
+.comments-list img.img1{        
+    width: 60px;
+    height: 60px;
+}
+.comments-list .history{
+    color: rgb(200, 199, 199);
+}
+
+.comments-list #product-discussion .container {
+    padding: 0;
+    margin: 0;
+}
+.comments-list .modal-header .close {
+    margin-top: -15px;
+}
+
+
+.comments-list #comment-report img {
+    border-radius: 0;
+    width: inherit;
+}

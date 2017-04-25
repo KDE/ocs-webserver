@@ -191,8 +191,8 @@ var MenuHover = (function () {
                 event.stopPropagation();
             }).on('click', 'a.menu-trigger', function (event) {
                 event.stopPropagation();
-                var html_menu_element = $(this).attr('rel');
-                $('.' + html_menu_element).toggleClass('active');
+                var html_menu_element = '.' + $(this).attr('rel');
+                $(html_menu_element).toggleClass('active');
             }).on('mouseup', function (event) {
                 var container = $('ul.profile-menu');
                 var trigger = $('li.profile-menu-container a.menu-trigger');

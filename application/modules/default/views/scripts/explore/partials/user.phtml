@@ -20,18 +20,14 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-	if($this->users->getTotalItemCount()>0)
-	{
+if($this->users->getTotalItemCount()>0)
+{
 ?>
-
 <span class="commentTitle" style="margin:auto;display:table;padding:5px"> Community </span>
 <div class="prod-widget-box right newusers" style=" background-color: #fff" id="activeuserscontainer">
 <?php 
-
 $pageCount = $this->users->count();
-
 ?>
-
     <div id="active-users-content">
 
     <div class="row" style="padding-bottom: 10px;">
@@ -48,15 +44,18 @@ $pageCount = $this->users->count();
 
     <?php 
     $this->rownum = (1 + (($this->page - 1) * 10));
+    $helpImage = new Default_View_Helper_Image();
+    $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
     foreach ($this->users as $this->user): ?>
             <div class="row" style="padding-bottom: 5px;">
             	<div class="col-lg-1">
-            	<?=$this->rownum?>.
+                    <?=$this->rownum?>.
             	</div>
 				<div class="col-lg-7" >
-				<img src="<?php echo $this->Image( $this->user['profile_image_url'], array('width' => '50', 'height' => '50', 'crop' => 2)); ?>" style="max-width: 22px; max-height:22px;margin-right: 10px; border-radius: 50%;float: left"/>
-				<a href="<?php echo $this->buildMemberUrl($this->user['member_id']); ?>" style="vertical-align:middle;"><?php echo  $this->user['username']; ?></a>
-				
+                    <img src="<?php echo $helpImage->Image( $this->user['profile_image_url'], array('width' => '50', 'height' => '50', 'crop' => 2)); ?>" style="max-width: 22px; max-height:22px;margin-right: 10px; border-radius: 50%;float: left"/>
+				    <a href="<?php echo $helpMemberUrl->buildMemberUrl($this->user['member_id']); ?>" style="vertical-align:middle;">
+                        <?php echo  $this->user['username']; ?>
+                    </a>
 				</div>
 				<div class="col-lg-3">
 					<span style="float: right">

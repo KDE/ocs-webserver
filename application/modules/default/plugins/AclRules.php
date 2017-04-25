@@ -185,10 +185,10 @@ class Default_Plugin_AclRules extends Zend_Acl
         ), new Default_Plugin_Acl_IsProjectOwnerAssertion());
 
         // resource default_user
-        $this->allow(self::ROLENAME_GUEST, 'default_user', array('index', 'aboutme', 'share', 'report'));
+        $this->allow(self::ROLENAME_GUEST, 'default_user', array('index', 'aboutme', 'share', 'report', 'about'));
 
         $this->allow(self::ROLENAME_COOKIEUSER, 'default_user',
-            array('follow', 'unfollow', 'settings', 'products', 'news', 'activities', 'payments', 'income'));
+            array('follow', 'unfollow', 'settings', 'products', 'news', 'activities', 'payments', 'income', 'payout'));
     }
 
 }

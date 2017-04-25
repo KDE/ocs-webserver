@@ -32,7 +32,7 @@ $helpProductUrl = new Default_View_Helper_BuildProductUrl();
         $bufferDate = '';
         $index = 0;
         $helperImage = new Default_View_Helper_Image();
-        foreach ($this->hits as $element) {
+        foreach ($this->earnings as $element) {
         $loopProductId = 'loop' . $this->project_id . $inc++;
         $date = $helperHumanTiming->humanTiming($element->create_time);
         $plingDate = new DateTime($element->create_time);
@@ -41,7 +41,7 @@ $helpProductUrl = new Default_View_Helper_BuildProductUrl();
         $index++;
         if ($printDate != $bufferDate) {
         $bufferDate = $printDate;
-        echo '<div style="line-height: 0.1em;border-bottom:1px solid #f1f1f1; width:100%; text-align: right; margin-bottom:20px"><span style="font-size:24px; font-weight:bold; background-color:#F5F5F5">'.$printDate.'</span> </div>';
+        echo '<div style="line-height: 0.1em;border-bottom:1px solid #f1f1f1; width:100%; text-align: right; margin-bottom:20px"><span style="font-size:24px; font-weight:bold; background-color: white; padding-left: 10px;">'.$printDate.'</span> </div>';
         } ?>
 
         <div class="row" id="<?= $loopProductId ?>" style="padding-bottom:10px;">
@@ -62,8 +62,8 @@ $helpProductUrl = new Default_View_Helper_BuildProductUrl();
 
             <div class="col-lg-7 col-md-2 col-sm-2 col-xs-2" >
                 <div style="padding-left: 50px">
-                <a href="<?=$helpProductUrl->buildProductUrl($element->project_id)?>"><img src="<?php echo $helperImage->Image($element->image_small, array('width' => 80, 'height' => 80)); ?>" style="max-width: 80px; max-height: 80px"/></a>
-                <a href="<?=$helpProductUrl->buildProductUrl($element->project_id)?>"> <span class="" style="padding-left: 20px"><?php echo $element->title; ?></span></a>
+                <a href="<?=$helpProductUrl->buildProductUrl($element->project_id, '', null, true)?>"><img src="<?php echo $helperImage->Image($element->image_small, array('width' => 80, 'height' => 80)); ?>" style="max-width: 80px; max-height: 80px"/></a>
+                <a href="<?=$helpProductUrl->buildProductUrl($element->project_id, '', null, true)?>"> <span class="" style="padding-left: 20px"><?php echo $element->title; ?></span></a>
                 </div>
             </div>
            

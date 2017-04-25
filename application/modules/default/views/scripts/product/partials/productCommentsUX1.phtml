@@ -22,7 +22,9 @@
 
 $helperEncryptUrl = new Default_View_Helper_EncryptUrl();
 $requestUri = Zend_Controller_Front::getInstance()->getRequest()->getRequestUri();
-$loginUrl = '/login?redirect=' . $helperEncryptUrl->encryptUrl('/p/'.$this->product->project_id.'#comments_block', true);
+$helpProductUrl = new Default_View_Helper_BuildProductUrl();
+$productUrl = $helpProductUrl->buildProductUrl($this->product->project_id);
+$loginUrl = '/login?redirect=' . $helperEncryptUrl->encryptUrl($productUrl.'#comments_block', true);
 $helperHumanTiming = new Default_View_Helper_HumanTiming();
 $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $helperImage = new Default_View_Helper_Image();
@@ -35,37 +37,7 @@ $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountP
 //));
 //$captcha->setFont(APPLICATION_PATH . '/../httpdocs/theme/flatui/fonts/OpenSans-Regular.ttf');
 //$captcha->generate();
-?><style>
-    .user_name{
-        font-size:14px;
-        font-weight: bold;
-        color: rgb(102, 189, 221);
-    }
-    .comments-list .media{
-        border-bottom: 1px dotted #ccc;
-    }
-    .media-left, .comments-list img{
-        border-radius: 50%;
-        width: 42px;
-        height: 42px;
-   }
-    .history{
-        color: rgb(200, 199, 199);
-    }
-
-    #product-discussion .container {
-        padding: 0;
-        margin: 0;
-    }
-    .modal-header .close {
-        margin-top: -15px;
-    }
-
-    #comment-report img {
-        border-radius: 0;
-        width: inherit;
-    }
-</style>
+?>
 <div class="container">
     <div class="row">
         <div class="col-md-8">
@@ -118,23 +90,27 @@ $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountP
 //    $captcha->setAttrib('placeholder', 'Please verify you\'re a human');
 //    $captcha->setAttrib('class', 'full-width');
     ?>
-                <div class="media" style="margin-left:<?=$elementComment['level'] * 30?>px">
-                    <p class="pull-right history">
-                        <?php if ($age['age'] > 0) { ?>
-                        <small><?= $age['age'] ?> <span class="light"><?= $age['unit'] ?> ago</span></small>
-                        <?php } ?>
-                    </p>
+                <div class="media" style="margin-left:<?=($elementComment['level']-1) * 30?>px">
+                    
                     <?php if ($comment['comment_type'] == Default_Model_DbTable_Comments::COMMENT_TYPE_PLING) : ?>
                         <p class="pull-right history" style="display:inline-block"><span class="glyphicon glyphicon-usd"></span></p>
                     <?php endif ?>
                     <a class="media-left" href="<?= $helperBuildMemberUrl->buildMemberUrl($comment['member_id']) ?>">
-                        <img src="<?= $helperImage->Image($comment['profile_image_url'], array('width' => 40, 'height' => 40)) ?>">
+                        <img src="<?= $helperImage->Image($comment['profile_image_url'], array('width' => 60, 'height' => 60)) ?>" class="img<?=$elementComment['level']?>">
                     </a>
                     <div class="media-body">
-                        <h4 class="media-heading user_name"><?= $comment['username'] ?></h4>
-                        <div class="small"><?= nl2br($comment['comment_text'],true) ?></div>
+                        <h4 class="media-heading user_name"><?= $comment['username'] ?>
+
+                                <p class="pull-right history" >
+                                    <?php if ($age['age'] > 0) { ?>
+                                    <small><?= $age['age'] ?> <span class="light"><?= $age['unit'] ?> ago</span></small>
+                                    <?php } ?>
+                                </p>
+                        </h4>
+
+                        <div class="text"><?= nl2br($comment['comment_text'],true) ?></div>
                         <p>
-                            <small class="small">
+                            <small class="small pull-right">
                             <?php if (Zend_Auth::getInstance()->hasIdentity()) { ?>
                                 <a data-toggle="collapse" href="#reply-<?= $comment['comment_id'] ?>"><span class="glyphicon glyphicon-share-alt"></span> Reply</a>
                                 <span>&nbsp;</span>

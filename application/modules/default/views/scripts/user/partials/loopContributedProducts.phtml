@@ -21,44 +21,44 @@
  **/
 
 $helperImage = new Default_View_Helper_Image();
-foreach (array_keys($this->supportingTeaser) as $cat):
-    ?>
+foreach (array_keys($this->contributedProjects) as $cat):?>
     <div class="cat-title col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <div class="center">
-            <div><h3><?= $cat ?></h3></div>
+        <div style="line-height: 0.1em;border-bottom:1px solid #f1f1f1; width:100%; text-align: left; margin-bottom:20px; margin-top: 10px;">
+            <span style="font-size:24px; font-weight:bold;background-color: white;padding-right:10px;"><?= $cat ?></span>
         </div>
-        <hr/>
     </div>
 
     <?php
-    if (count($this->supportingTeaser[$cat]) < 4) {
+    if (count($this->contributedProjects[$cat]) < 4) {
         $g = count($this->supportingTeaser[$cat]);
     } else {
         $g = 4;
     }
     $h = 0;
     $i = 3;
-    foreach ($this->supportingTeaser[$cat] as $product):
+    foreach ($this->contributedProjects[$cat] as $product):
         $i++;
         $h++;
         $titleImage = $helperImage->Image($product['image'], array('width' => 270, 'height' => 140));
         $hasTitle = $product['image'] !== null && strpos($titleImage, 'default.png') === false;
         ?>
-        <div class="mini-card col-lg-2 col-md-2 col-sm-3 col-xs-2">
-            <div class="u-wrap">
-                <a href="<?= $product['url'] ?>" title="<?= $product['name'] ?>">
-                    <figure>
-                        <img src="<?= $helperImage->Image($product['image'], array('width' => 280, 'height' => 167)); ?>"
-                             alt="<?= $product['name'] ?>">
-                    </figure>
-                    <div class="u-content">
-                        <h3><?php echo $product['name']; ?></h3>
-                        <?php if ($product['sumAmount'] === '' OR $product['sumAmount'] === null) {
-                            $product['sumAmount'] = '0';
-                        } ?>
-                        <p>$<?php echo $product['sumAmount']; ?></p>
-                    </div>
-                </a>
+        <div class="row-fluid">
+            <div class="mini-card col-lg-2 col-md-2 col-sm-3 col-xs-2">
+                <div class="u-wrap">
+                    <a href="<?= $product['url'] ?>" title="<?= $product['name'] ?>">
+                        <figure>
+                            <img src="<?= $helperImage->Image($product['image'], array('width' => 280, 'height' => 167)); ?>"
+                                 alt="<?= $product['name'] ?>">
+                        </figure>
+                        <div class="u-content">
+                            <h3><?php echo $product['name']; ?></h3>
+                            <?php if ($product['sumAmount'] === '' OR $product['sumAmount'] === null) {
+                                $product['sumAmount'] = '0';
+                            } ?>
+                            <p>$<?php echo $product['sumAmount']; ?></p>
+                        </div>
+                    </a>
+                </div>
             </div>
         </div>
     <?php endforeach; ?>

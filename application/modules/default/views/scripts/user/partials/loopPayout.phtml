@@ -1,0 +1,236 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+?>
+<style>
+    .cell-default {
+        line-height: 4em;
+        vertical-align: middle;
+    }
+    .row-total {
+        border-top: #1595ee solid thin;
+        padding-top: 1em;
+        padding-bottom: 1em;
+        line-height: 30px;
+    }
+    
+    .popover {
+        min-width:350px;
+    }
+    
+    .popover-title { 
+        text-transform: none;
+        font-size: 11pt;
+    }
+    
+    .popover-content { 
+        text-transform: none;
+        font-size: 11pt;
+    }
+</style>
+<ul class="nav nav-tabs margin-bottom-10">
+<?php
+    
+if ($this->countDownloadsOverall > 0) {    
+    $currentMonth = '';
+    $monthlyDownload = null;
+    $allDownloads = array();
+    $css_active = 'active';
+    $currentDate = date("Ym",time());
+    $printCurrentMonth = new DateTime($currentDate.'01');
+    
+    foreach ($this->downloads as $download) {
+        $printMonth = new DateTime($download['yearmonth'].'01');
+        
+        $printDate = $printMonth->format('M Y');
+        $printDateNow = $printCurrentMonth->format('M Y');
+        
+        if($printDateNow == $printDate) {
+            $printDate = 'Current month';
+        }
+        
+        if ($printDate != $currentMonth) {
+            $monthlyDownload = array();
+            $currentMonth = $printDate;
+        
+    ?>
+    <li class="<?=$css_active?>"><a href="#<?= $download['yearmonth'] ?>" data-toggle="tab"><?= $printDate ?></a></li>
+    <?php
+        }
+        $css_active = '';
+        $monthlyDownload[] = $download;
+        $allDownloads[$download['yearmonth']] = $monthlyDownload;
+    }
+     
+} else {
+    $currentMonth = '';
+    $currentDate = date("Ym",time());
+    $printMonth = new DateTime($currentDate.'01');
+    
+    $printDate = $printMonth->format('M Y');
+    $printDate = 'Current month';
+    ?>
+    <li class="in active"><a href="#<?= $currentDate  ?>" data-toggle="tab"><?= $printDate ?></a></li>
+<?php
+}
+?>
+</ul>
+<div class="container-fluid margin-bottom-10" style="padding-left: 0; padding-right: 0;">
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-5 text-left text-uppercase"><strong>Products</strong></div>
+        <div class="col-md-2 text-right text-uppercase"><strong>Downloads</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Downloads" data-trigger="hover" data-html="true" data-content="Sum of all downloads of all files of this product within this month."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+        <div class="col-md-2 text-right text-uppercase"><strong>Pling-Factor</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Pling-Factor" data-trigger="hover" data-html="true" data-content="The Pling-Factor's base is cent and depends on the product category.<br>A factor of 1 means 1 download = 1 cent."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+        <!--<div class="col-md-2 text-right text-uppercase"><strong>plings</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="plings" data-trigger="hover" data-html="true" data-content="You can collect new plings every month. The number of plings results from the pling factor. At the beginning of each month you will be paid the plings of the previous month to your PayPal account. Where: <b>1 pling = $0.01</b>.<br>A valid PayPal address must be maintained in your settings and the payout amount must be at least one dollar. If you do not meet these requirements, we can not pay you anything. We will check these requirements every month."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>-->
+        <div class="col-md-2 text-right text-uppercase"><strong>Earned</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="payout" data-trigger="hover" data-html="true" data-content="The payout amount results from the Pling-Factor of each product, where the result in $-cent is the number of downloads multiplied by the Pling-Factor."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+    </div>
+</div>
+<div class="tab-content">
+<?php
+$helpImage = new Default_View_Helper_Image();
+$css_active = ' in active';
+$has_paypal = false;
+$currency = new Zend_Currency('en_US');
+if ($this->countDownloadsOverall > 0) {
+    foreach ($allDownloads as $month => $products) {
+        $printMonth = new DateTime($month.'01');
+        $sum_total_month = 0;
+        $sum_total_text = '';
+        $sum_total_payout = 0;
+        ?>
+        <div class="tab-pane fade <?=$css_active?>" id="<?=$month?>">
+            <?php
+            $css_active = '';
+
+            foreach ($products as $product) { ?>
+                <div class="row margin-bottom-10">
+
+                    <div class="col-md-1 cell-default">
+                        <img src="<?php echo $helpImage->Image($product['image_small'],
+                            array('width' => 80, 'height' => 65)); ?> " height="81" width="101"/>
+                    </div>
+                    <div class="col-md-5 text-left cell-default">
+                        <span style="line-height: 3em;"><?= $product['title']; ?></span>
+                        <b style="display: block; margin-bottom: 5px; font-size: 10pt; line-height: 0em;"><?=$product['cat_title']?></b>
+                    </div>
+                    <div class="col-md-2 text-right cell-default">
+                        <span><?= $product['num_downloads'] ?></span>
+                    </div>
+                    <div class="col-md-2 text-right cell-default">
+                        <span><?= round($product['dl_pling_factor'],0) ?></span>
+                    </div>
+                    <?php /*
+                    <div class="col-md-2 text-right cell-default">
+                        <span><?= $product['num_downloads'] * $product['dl_pling_factor'] ?></span>
+                    </div> */ ?>
+                    <div class="col-md-2 text-right cell-default">
+                        <span><?= $currency->toCurrency($product['num_downloads'] * $product['dl_pling_factor'] / 100) ?></span>
+                    </div>
+
+                </div>
+                <?php
+                $sum_total_month += $product['num_downloads'] * $product['dl_pling_factor'];
+                $sum_total_text = 'Possible payment amount for this month (<span style="font-size: smaller;">*</span>):';
+                $sum_total_payout = $currency->toCurrency($sum_total_month/100);
+                if ($product['status'] == Default_Model_DbTable_MemberPayout::$PAYOUT_STATUS_COMPLETED) {
+                    $sum_total_payout = $currency->toCurrency($product['amount']);
+                    $sum_total_text = 'Actually successfully paid amount:';
+                }
+                $has_paypal = $product['paypal_mail'] ? true : false;
+            }
+
+            $sum_total_month_view = number_format($sum_total_month);
+            ?>
+            <div class='row row-total'>
+                <div class='col-md-11 text-right'><?=$sum_total_text?></div><div class='col-md-1 text-right'><strong><?=$sum_total_payout?></strong></div>
+            </div>
+            <?php 
+
+
+            $currentDate = date("Ym",time());
+            $viewDate = $month."";
+            $paypalWarning = '';
+            if($currentDate == $viewDate) {
+                $member = $this->view_member;
+                if(!isset($member['paypal_mail']) || $member['paypal_mail'] == '') {
+                    $has_paypal = false;
+                    $paypalWarning = 'You have no PayPal account configured. Please go to your settings page <a href="/settings#payments-collapse">here</a>.';
+                } else {
+                    $has_paypal = true;
+                }
+            } else {
+                $paypalWarning = 'We found no valid Paypal account for this month. That\'s why we could not pay you any money. In order to receive money for the current month, please make sure that a paypal account is registered. Go to your settings page <a href="/settings#payments-collapse">here</a>.';
+            }
+            if (false == $has_paypal) {
+                echo '<div class="alert alert-warning" role="alert">'.$paypalWarning.'</div>';
+            }
+
+            if (($sum_total_month/100) < 1) {
+                echo '<div class="alert alert-warning" role="alert">We only pay out money if the amount is over $1.</div>';
+            }
+?>
+            
+        </div>
+<?php
+    }
+} else {
+    
+    echo '<div class="tab-pane fade in active" id="'.$printDate.'">';
+    echo '    <div style="text-align: center;" class="row margin-bottom-12"><div class="col-md-12 cell-default">No Data</div></div>';
+    echo '    <div class="row row-total">';
+    echo '        <div class="col-md-11 text-right">Possible payment amount for this month (<span style="font-size: smaller;">*</span>):</div><div class="col-md-1 text-right"><strong>$0.00</strong></div>';
+    echo '    </div>';
+    echo '</div>';
+}
+    
+    
+?>
+    <div id="le-alert"  class="alert alert-warning alert-block" role="alert">
+        <p>(*) Info:</p><p>This service will go live on May, 1st 2017. All previously shown amounts are for testing only.</p>
+        <br>
+        <p>TOS:</p>
+        <p>This payout service is completely voluntarily. It is within Hive01's full rights to decide at any time:</p>
+        <p>a) when and</p>
+        <p>b) how much of the shown calculated amount is to be paid or</p>
+        <p>c) to cancel partly or complete payment without giving any reasons.</p>
+        <p><br>A valid PayPal address must be maintained in your settings at the time of the payout. The total payout amount for a completed month must be at least one dollar. Lesser amounts will not be paid out and can not be transferred to the next month. If you do not meet these requirements, we can not pay you out anything that month. Non-paid-out months can not be retroactively will not be paid out in the future. We will check these requirements every month. If all requirements were met and we have no reasons to decide otherwise you will be receiving the payout amount to your PayPal account within the following month.</p>
+            
+    </div>
+</div>
+
+<script>
+    $('#payout_info').click(function (event ) {
+        event.preventDefault();
+        $('#le-alert').addClass('in'); // shows alert with Bootstrap CSS3 implem
+    });
+
+    $('.close').click(function () {
+        $(this).parent().removeClass('in'); // hides alert with Bootstrap CSS3 implem
+    });
+
+</script>    
+
+<?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){
+            $(\'[data-toggle="popover"]\').popover();
+        });
+    ');

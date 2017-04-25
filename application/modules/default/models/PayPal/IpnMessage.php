@@ -43,28 +43,30 @@ class Default_Model_PayPal_IpnMessage extends Local_Payment_PayPal_AdaptivePayme
 
     protected function validateTransaction()
     {
-        $dataTransaction = $this->_tablePling->fetchPlingFromResponse($this->_ipnMessage);
-        if (null === $dataTransaction) {
+        $this->_dataIpn = $this->_tablePling->fetchPlingFromResponse($this->_ipnMessage)->toArray();
+        if (empty($this->_dataIpn)) {
             $this->_logger->err(__METHOD__ . ' - ' . 'No transaction found for IPN message.' . PHP_EOL);
             return false;
         }
 
         $tableProject = new Default_Model_Project();
-        $member = $tableProject->find($dataTransaction->project_id)->current()->findDependentRowset('Default_Model_DbTable_Member', 'Owner')->current();
+        $member = $tableProject->find($this->_dataIpn['project_id'])->current()->findDependentRowset('Default_Model_DbTable_Member', 'Owner')->current();
 
-        return $this->_checkAmount($dataTransaction->amount) AND $this->_checkEmail($member->paypal_mail);
+        return $this->_checkAmount() AND $this->_checkEmail($member->paypal_mail);
     }
 
-    protected function _checkAmount($amount)
+    protected function _checkAmount()
     {
+        $amount = isset($this->_dataIpn['amount']) ? $this->_dataIpn['amount'] : 0;
         $receiver_amount = (float)$amount - (float)$this->_config->facilitator_fee;
         $currency = new Zend_Currency('en_US');
         $this->_logger->debug(__METHOD__ . ' - ' . $this->_ipnMessage->getTransactionAmount() . ' == ' . $currency->getShortName() . ' ' . $receiver_amount);
         return $this->_ipnMessage->getTransactionAmount() == $currency->getShortName() . ' ' . $amount;
     }
 
-    protected function _checkEmail($email)
+    protected function _checkEmail()
     {
+        $email = isset($this->_dataIpn['email']) ? $this->_dataIpn['email'] : '';
         $this->_logger->debug(__METHOD__ . ' - ' . $this->_ipnMessage->getTransactionReceiver() . ' == ' . $email);
         return $this->_ipnMessage->getTransactionReceiver() == $email;
     }

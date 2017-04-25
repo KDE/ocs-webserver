@@ -21,6 +21,7 @@
  **/
 
 $helperImage = new Default_View_Helper_Image();
+$helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $this->tab = 'settings';
 ?>
 <main class="user-admin-page">
@@ -43,7 +44,7 @@ $this->tab = 'settings';
                             <span class="lightblue"><?php echo $this->member->username; ?></span><?= $this->translate(', welcome to your personal start page!') ?>
                         </div>
                         <div class="small lightgrey">
-                            <a href="/member/<?php echo $this->member->member_id; ?>/"><?= $this->translate('Click here to go to your About Me page.') ?></a>
+                            <a href="<?php echo $helpMemberUrl->buildMemberUrl($this->member->member_id); ?>"><?= $this->translate('Click here to go to your About Me page.') ?></a>
                         </div>
                     </div>
                 </div>
@@ -103,11 +104,11 @@ $this->tab = 'settings';
                                 <?php echo $this->render('settings/partials/accounts.phtml'); ?>
                             </section>
                             <!-- /edit connected accounts -->
-                            <!-- edit connected -->
+                            <!-- edit avatar -->
                             <section class="panel panel-default" id="form-picture">
                                 <?php echo $this->render('settings/partials/picture.phtml'); ?>
                             </section>
-                            <!-- /edit picture -->
+                            <!-- /edit avatar -->
                             <!-- edit password -->
                             <section class="panel panel-default" id="form-password">
                                 <?php echo $this->render('settings/partials/password.phtml'); ?>
@@ -132,6 +133,7 @@ $this->tab = 'settings';
                         </div>
                         <!-- /settings main -->
                     </div>
+
                 </section>
                 <!-- /PAGE BODY -->
 
@@ -196,6 +198,23 @@ $this->tab = 'settings';
 
     SettingsExpand.setup();
     InputAvatar.setup();
+    
+</script>
+
+
+<script>
+    $(document).ready(function(){
+        if(document.location.hash) {
+            $myform = $(document.location.hash);
+            var this_panel = $myform.parents('.panel');
+            this_panel.addClass('in');
+            var this_header = this_panel.find('.panel-heading');
+            this_header.addClass('active');
+            var this_body = this_panel.find(document.location.hash);
+            this_body.addClass('in');
+        }
+    });
+
 </script>
 
 <?php $this->inlineScript()->appendScript(

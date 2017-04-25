@@ -19,7 +19,7 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-
+$helperMember = new Default_View_Helper_BuildMemberUrl();
 $helperImage = new Default_View_Helper_Image();
 $loginUrl = '/login?redirect=' . $this->encryptUrl(Zend_Controller_Front::getInstance()->getRequest()->getRequestUri(), true);
 $txtUserFollows = '';
@@ -90,7 +90,7 @@ if (strpos($titleImage, 'default.png') !== false) {
                             <div class="clearfix">
                                 <!-- thumbnail -->
                                 <div class="supporter-thumbnail relative margin-left-10 pull-left">
-                                    <a href="<?php echo $this->buildMemberUrl($supporter->member_id); ?>">
+                                    <a href="<?php echo $helperMember->buildMemberUrl($supporter->member_id); ?>">
                                         <div class="profile-image-overlay-3 absolute"></div>
                                         <img src="<?= $helperImage->Image($supporter->profile_image_url,array('width' => 60, 'height' => 60, 'crop' => 2)); ?>"
                                              alt="<?= $supporter->username ?>" width="60">

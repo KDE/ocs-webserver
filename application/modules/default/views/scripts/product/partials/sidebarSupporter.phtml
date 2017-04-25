@@ -19,8 +19,7 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-
-$helperImage = new Default_View_Helper_Image();
+$helpProductUrl = NEW Default_View_Helper_BuildProductUrl();
 $countSupporter = count($this->supporter->toArray());
 ?>
 
@@ -28,7 +27,7 @@ $countSupporter = count($this->supporter->toArray());
     <h3>
         <?= $this->translate('SUPPORTERS') ?> (<?= $countSupporter ?>)
         <div class="pull-right light">
-            <a href="<?= $this->buildProductUrl($this->project->project_id, 'supporter') ?>">
+            <a href="<?= $helpProductUrl->buildProductUrl($this->project->project_id, 'supporter') ?>">
                 <?= $this->translate('Show All'); ?>
             </a>
         </div>
@@ -50,6 +49,9 @@ $countSupporter = count($this->supporter->toArray());
             $h = 0;
             $i = 3;
 
+            $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
+            $helperImage = new Default_View_Helper_Image();
+
             foreach ($this->supporter as $supporter):
                 $i++;
                 $h++;
@@ -60,7 +62,7 @@ $countSupporter = count($this->supporter->toArray());
                 <!-- supporter item -->
                 <div class="col-md-3 col-lg-3 col-sm-3 col-xs-3 supporter-thumbnail relative">
                     <!-- supporter thumbnail -->
-                    <a href="<?= $this->buildMemberUrl($supporter->member_id) ?>" title="<?= $supporter->username ?>">
+                    <a href="<?= $helpMemberUrl->buildMemberUrl($supporter->member_id) ?>" title="<?= $supporter->username ?>">
                         <div class="profile-image-overlay-3 absolute"></div>
                         <img src="<?= $helperImage->Image($supporter->profile_image_url,array('width' => 80, 'height' => 80, 'crop' => 2)); ?>" alt="<?= $supporter->username ?>" width="80">
                     </a>
@@ -71,7 +73,7 @@ $countSupporter = count($this->supporter->toArray());
 
                         <div class="inner">
                             <div class="profile-img">
-                                <a href="<?= $this->buildMemberUrl($supporter->member_id) ?>"
+                                <a href="<?= $helpMemberUrl->buildMemberUrl($supporter->member_id) ?>"
                                    title="<?= $supporter->username ?>">
                                     <div class="profile-image-overlay-3 absolute"></div>
                                     <img src="<?= $helperImage->Image($supporter->profile_image_url,array('width' => 80, 'height' => 80, 'crop' => 2)); ?>"

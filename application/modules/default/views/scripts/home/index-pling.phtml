@@ -22,7 +22,7 @@
 
 $modelInfo = new Default_Model_Info();
 $imgs = $modelInfo->getLast200ImgsProductsForAllStores(100);
-
+$helpBuildUrl = new Default_View_Helper_BuildProductUrl();
 ?>
     <style>
         body.home-page main section#intro.wrapper .container article .logo_template {
@@ -90,7 +90,7 @@ $imgs = $modelInfo->getLast200ImgsProductsForAllStores(100);
                             $imgpath = $helperImage->Image($obj['image_small'],array('width' => 120, 'height' => 120));
                             if('http://cn.pling.ws/cache/90x90/img/default.png'== $imgpath) continue;                                            
                             ?>                    
-                           <a href="/p/<?= $obj['project_id']?>" title="<?= $obj['title']?>"> <img class="logo"  src="<?= $imgpath?>"  alt="<?= $obj['title']?>" /></a>
+                           <a href="<?= $helpBuildUrl->buildProductUrl($obj['project_id'])?>" title="<?= $obj['title']?>"> <img class="logo"  src="<?= $imgpath?>"  alt="<?= $obj['title']?>" /></a>
                          <?php
                          }
                          ?>

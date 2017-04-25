@@ -28,6 +28,7 @@ $helperImage = new Default_View_Helper_Image();
 
 $auth = Zend_Auth::getInstance();
 $member = $getAuthUser->getAuthUser();
+$serverUrl = $this->serverUrl();
 
 echo $this->render('partials/header/metaheader.phtml'); ?>
     <header id="page_header" xmlns="http://www.w3.org/1999/html">
@@ -40,10 +41,10 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
                 <ul class="menu-nav-tabs absolute-right" style="position: absolute;bottom: 0px;">
                     <li role="presentation"
                         class="<?php echo(strpos($_SERVER["REQUEST_URI"], 'register') ? 'active' : '') ?>">
-                        <a href="/register">Register</a></li>
+                        <a href="<?=$serverUrl?>/register">Register</a></li>
                     <li role="presentation"
                         class="<?php echo(strpos($_SERVER["REQUEST_URI"], 'login') ? 'active' : '') ?>">
-                        <a href="/login<?php echo strpos($_SERVER["REQUEST_URI"], 'login') ? '' : $redirectString ?>">Login</a>
+                        <a href="<?=$serverUrl?>/login<?php echo strpos($_SERVER["REQUEST_URI"], 'login') ? '' : $redirectString ?>">Login</a>
                     </li>
                 </ul>
             <?php } ?>
@@ -77,18 +78,22 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
                                             </a>
                                             <ul class="profile-menu menu-dropdown">
                                                 <div class="dropdown-header"></div>
-                                                <li class="link first"><a
-                                                            href="/product/add/"><?= $this->translate('Add Product') ?></a>
+                                                <li class="link first">
+                                                    <a href="/product/add/"><?= $this->translate('Add Product') ?></a>
                                                 </li>
-                                                <li class="link first"><a
-                                                            href="<?= $helperBuildMemberUrl->buildMemberUrl($member->member_id,
-                                                                'products') ?>"><?= $this->translate('My Products') ?></a>
+                                                <li class="link first">
+                                                    <a href="<?= $helperBuildMemberUrl->buildMemberUrl($member->member_id, 'products') ?>"><?= $this->translate('My Products') ?></a>
                                                 </li>
-                                                <li class="link"><a
-                                                            href="/settings/"><?= $this->translate('My Settings') ?></a>
+                                                <li class="link">
+                                                    <a href="/settings/"><?= $this->translate('My Settings') ?></a>
                                                 </li>
-                                                <li class="link"><a
-                                                            href="/logout/"><?= $this->translate('Logout') ?></a>
+                                                <li class="link first">
+                                                    <a href="<?= $helperBuildMemberUrl->buildMemberUrl($member->member_id, 'payout') ?>">
+                                                        <?= $this->translate('Plings') ?>
+                                                    </a>
+                                                </li>
+                                                <li class="link">
+                                                    <a href="<?=$serverUrl?>/logout/"><?= $this->translate('Logout') ?></a>
                                                 </li>
                                             </ul>
                                         </li>
@@ -110,16 +115,11 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
 
             <section class="container">
                 <section class="wrapper">
-                    <?php /*
-                        if(strpos($_SERVER['REQUEST_URI'], 'p/') != FALSE || strpos($_SERVER['REQUEST_URI'], 'browse/') != FALSE) {
-                    ?>
-                    <span class="header_cat_link" id="header_cat_link"><a href="/browse/cat/<?= isset($this->cat_id)?$this->cat_id:'all' ?>/order/latest">/<?= $helperFetchCategory->catTitle($this->cat_id) ?></a></span>
-                    <?php } else { ?>
-                    <span class="header_cat_link" id="header_cat_link"><a href="/community">/Community</a></span>
-                    <?php } */ ?>
-                    <span class="header_cat_link" id="header_cat_link"><a
-                                href="/browse/cat/<?= isset($this->cat_id) ? $this->cat_id : 'all' ?>/order/latest">/<?= $helperFetchCategory->catTitle($this->cat_id) ?></a></span>
-
+                    <span class="header_cat_link" id="header_cat_link">
+                        <a href="/browse/cat/<?= isset($this->cat_id) ? $this->cat_id : 'all' ?>/order/latest">
+                            /<?= $helperFetchCategory->catTitle($this->cat_id) ?>
+                        </a>
+                    </span>
                 </section>
             </section>
         </div>

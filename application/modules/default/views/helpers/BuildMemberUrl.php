@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -19,7 +20,6 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-
 class Default_View_Helper_BuildMemberUrl extends Zend_View_Helper_Abstract
 {
 
@@ -28,17 +28,18 @@ class Default_View_Helper_BuildMemberUrl extends Zend_View_Helper_Abstract
      * @param string $action
      * @param array $params
      * @param bool $withHost
-     * @param string $protocol
+     * @param string $scheme
      * @return string
      */
-    public function buildMemberUrl($member_id, $action = '', $params = null, $withHost = false, $protocol = 'http')
+    public function buildMemberUrl($member_id, $action = '', $params = null, $withHost = false, $scheme = null)
     {
         /** @var Zend_Controller_Request_Http $request */
         $request = Zend_Controller_Front::getInstance()->getRequest();
 
         $host = '';
         if ($withHost) {
-            $host = $protocol . '://' . $request->getHttpHost();
+            $http_scheme = isset($scheme) ? $scheme : $request->getScheme();
+            $host = $http_scheme . '://' . $request->getHttpHost();
         }
 
         $storeId = null;
@@ -62,6 +63,23 @@ class Default_View_Helper_BuildMemberUrl extends Zend_View_Helper_Abstract
         }
 
         return "{$host}/{$storeId}member/{$member_id}/{$action}{$url_param}";
+    }
+
+    public function buildExternalUrl($member_id, $action = null, $params = null)
+    {
+        $url_param = '';
+        if (is_array($params)) {
+            array_walk($params, create_function('&$i,$k', '$i="$k/$i/";'));
+            $url_param = implode('/', $params);
+        }
+
+        if (isset($action)) {
+            $action .= '/';
+        }
+
+        $member_host = Zend_Registry::get('config')->settings->member->page->server;
+
+        return "//{$member_host}/me/{$member_id}/{$action}{$url_param}";
     }
 
 }

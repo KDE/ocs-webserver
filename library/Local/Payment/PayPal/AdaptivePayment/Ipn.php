@@ -71,7 +71,7 @@ abstract class Local_Payment_PayPal_AdaptivePayment_Ipn extends Local_Payment_Pa
 
         $url = $this->_config->ipn->endpoint . '/webscr';
 
-        $response = $this->_makeRequest($requestParams, $url);
+        $response = $this->_processRequest($requestParams, $url);
 
         if (strcmp($response, self::VERIFIED) == 0) {
             return true;
@@ -86,7 +86,7 @@ abstract class Local_Payment_PayPal_AdaptivePayment_Ipn extends Local_Payment_Pa
      * @throws Local_Payment_Exception
      * @return string
      */
-    protected function _makeRequest($requestData, $url)
+    protected function _processRequest($requestData, $url)
     {
         $http = new Zend_Http_Client($url);
         $http->setMethod(Zend_Http_Client::POST);

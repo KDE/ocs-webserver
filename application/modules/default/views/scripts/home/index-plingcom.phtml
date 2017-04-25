@@ -61,14 +61,13 @@ $helperFetchCatParent = new Default_View_Helper_CatParent();
 $getAuthUser = new Default_View_Helper_GetAuthUser();
 $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $helperImage = new Default_View_Helper_Image();
+$helpPrintDate = new Default_View_Helper_PrintDate();
 
 $auth = Zend_Auth::getInstance();
 $member = $getAuthUser->getAuthUser();
 
 ?>
-
 <link href="/theme/flatui/css/style-index-plingcom.css" rel="stylesheet">
-
 
     <header id="page_header" xmlns="http://www.w3.org/1999/html">
         <div class="container header" style="position: relative;">                     
@@ -79,7 +78,8 @@ $member = $getAuthUser->getAuthUser();
                      ?>
                      <ul class="menu-nav-tabs absolute-right" >
                          <li role="presentation" class="<?php echo(strpos($_SERVER["REQUEST_URI"], 'register') ? 'active' : '') ?>">
-                             <a href="/register">Register</a></li>
+                             <a href="/register">Register</a>
+                         </li>
                          <li role="presentation" class="<?php echo(strpos($_SERVER["REQUEST_URI"], 'login') ? 'active' : '') ?>">
                              <a href="/login<?=$redirectString?>">Login</a>
                          </li>
@@ -113,15 +113,31 @@ $member = $getAuthUser->getAuthUser();
                                         </a>
                                         <ul class="profile-menu menu-dropdown">
                                             <div class="dropdown-header"></div>
-                                            <li class="link first"><a href="/product/add/"><?= $this->translate('Add Product') ?></a>
+                                            <li class="link first">
+                                                <a href="/product/add/">
+                                                    <?= $this->translate('Add Product') ?>
+                                                </a>
                                             </li>
-                                            <li class="link first"><a
-                                                    href="<?= $helperBuildMemberUrl->buildMemberUrl($member->member_id, 'products') ?>"><?= $this->translate('My Products') ?></a>
+                                            <li class="link first">
+                                                <a href="<?= $helperBuildMemberUrl->buildMemberUrl($member->member_id, 'products') ?>">
+                                                    <?= $this->translate('My Products') ?>
+                                                </a>
                                             </li>
-                                            <li class="link"><a
-                                                    href="/settings/"><?= $this->translate('My Settings') ?></a>
+                                            
+                                            <li class="link">
+                                                <a href="/settings/">
+                                                    <?= $this->translate('My Settings') ?>
+                                                </a>
                                             </li>
-                                            <li class="link"><a href="/logout/"><?= $this->translate('Logout') ?></a>
+                                            <li class="link first">
+                                                <a href="<?= $helperBuildMemberUrl->buildMemberUrl($member->member_id, 'payout') ?>">
+                                                    <?= $this->translate('Plings') ?>
+                                                </a>
+                                            </li>
+                                            <li class="link">
+                                                <a href="/logout/">
+                                                    <?= $this->translate('Logout') ?>
+                                                </a>
                                             </li>
                                         </ul>
                                     </li>
@@ -153,7 +169,7 @@ $member = $getAuthUser->getAuthUser();
                     
                     <?php
                     if ($this->featureProducts) {        
-                                  echo $this->render('home/partials/featured-products.phtml');
+                        echo $this->render('home/partials/featured-products.phtml');
                     } 
                     ?>
                    
@@ -218,22 +234,17 @@ $member = $getAuthUser->getAuthUser();
                                          <?php 
                                         foreach ($this->users as $user) {                                  
                                             ?>
-                                            
                                                 <div class="user " >
-                                               
                                                     <div class="u-wrap">
-                                                        <a href="<?php echo $this->buildMemberUrl($user['member_id']); ?>">
+                                                        <a href="<?php echo $helperBuildMemberUrl->buildMemberUrl($user['member_id']); ?>">
                                                             <figure >
-                                                                <img src="<?php echo $this->Image($user['profile_image_url'], array('width' => '200', 'height' => '200', 'crop' => 2)); ?>"/>
+                                                                <img src="<?php echo $helperImage->Image($user['profile_image_url'], array('width' => '200', 'height' => '200', 'crop' => 2)); ?>"/>
                                                             </figure>
                                                             <h3 class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><?php echo $user['username']; ?></h3>                                                   
                                                         </a>
-                                                         <span class="small"><?= $this->printDate($user['created_at'])?></span>
+                                                         <span class="small"><?= $helpPrintDate->printDate($user['created_at'])?></span>
                                                     </div>
-                                                   
-
                                                 </div>
-                                           
                                         <?php } ?>
 
                                         <div style="clear: both;"></div> 

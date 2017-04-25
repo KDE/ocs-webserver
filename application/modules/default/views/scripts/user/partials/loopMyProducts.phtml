@@ -20,7 +20,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-$plingData = $this->userPlings($this->project_id);
+//$plingData = $this->userPlings($this->project_id);
 $productFileInfos = $this->projectFiles($this->ppload_collection_id);
 $productUpdates = $this->projectUpdates($this->project_id);
 $loopProductId = 'product' . $this->project_id;
@@ -28,6 +28,8 @@ $loopProductId = 'product' . $this->project_id;
 $object_text = (mb_strlen($this->description) < 300) ? $this->description : mb_substr($this->description, 0, 295, 'UTF-8') . ' ... ';
 $addedOnDate = $this->humanTiming($this->created_at);
 $addedOnText = $addedOnDate['age'] . ' ' . $addedOnDate['unit'];
+$updatedOnDate = $this->humanTiming($this->changed_at);
+$updatedOnText = $updatedOnDate['age'] . ' ' . $updatedOnDate['unit'];
 $websiteOwner = new Local_Verification_WebsiteAuthCodeExist();
 $websiteAuthCode = $websiteOwner->generateAuthCode(stripslashes($this->link_1));
 
@@ -51,16 +53,17 @@ $helperImage = new Default_View_Helper_Image();
     <article class="col-lg-11 col-md-9 col-sm-9 col-xs-9">
         <!-- title -->
         <div class="title">
-            <h3><a href="<?= $helperBuildProductUrl->buildProductUrl($this->project_id) ?>"><?php echo $this->title; ?> <?php echo $this->version; ?></a></h3>
+            <h3><a href="<?= $helperBuildProductUrl->buildProductUrl($this->project_id) ?>"><?php echo $this->title; ?> <?php echo $this->version; ?></a><span  style="font-weight: normal; font-size: small; color: #4e4e4e"> added </span><span  style="font-weight: 700; font-size: small; color: #4e4e4e"><?= $addedOnText ?> ago</span><span style="font-weight: 700; font-size: small; float: right; color: #4e4e4e"> <?= $updatedOnText ?> ago</span><span style="font-weight: normal; font-size: small; float: right; color: #4e4e4e">updated&nbsp;</span></h3>
+            
         </div>
         <!-- /title -->
         <!-- info -->
         <div class="info">
             <ul>
                 <li><span>in</span><span><?php echo $this->catTitle; ?></span></li>
-                <li><span>added</span><span><?= $addedOnText ?></span><span>ago</span></li>
-                <li><span><?= $this->translate('supporters') ?> </span><span><?= $plingData['plingers'] ?></span></li>
-                <li><span><?= $this->translate('collected') ?> </span><span><?= $plingData['plings'] ?></span></li>
+                
+                <?php /**<li><span><?= $this->translate('supporters') ?> </span><span><?= $plingData['plingers'] ?></span></li>
+                <li><span><?= $this->translate('collected') ?> </span><span><?= $plingData['plings'] ?></span></li> **/?>
             </ul>
         </div>
         <!-- /info -->

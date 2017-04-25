@@ -19,8 +19,8 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-?>
-<?php $helperMember = new Default_View_Helper_BuildMemberUrl(); ?><ul class="nav nav-tabs">
+$helperMember = new Default_View_Helper_BuildMemberUrl();
+?><ul class="nav nav-tabs">
     
     <li class="<?php echo $this->tab == 'activities' ? 'active' : ''; ?>">
         <a href="<?php echo $helperMember->buildMemberUrl($this->member->member_id, 'activities'); ?>">
@@ -35,6 +35,7 @@
             <?= $this->translate('My Products') ?>
         </a>
     </li>
+
     <li class="header-menu-left-item <?php echo $this->tab == 'add' ? 'active' : ''; ?>">
         <?php if ($this->mode == 'edit') : ?>
             <a href="<?= Zend_Controller_Front::getInstance()->getRequest()->getRequestUri() ?>">
@@ -48,23 +49,34 @@
             </a>
         <?php endif ?>
     </li>
+
+    
+
     <li class="header-menu-left-item <?php echo $this->tab == 'earnings' ? 'active' : ''; ?>">
         <a href="<?php echo $helperMember->buildMemberUrl($this->member->member_id, 'income'); ?>">
             <span class="glyphicon glyphicon-usd"></span>
             <?= $this->translate('My Income') ?>
         </a>
     </li>
+
     <li class="header-menu-left-item <?php echo $this->tab == 'payment' ? 'active' : ''; ?>">
         <a href="<?php echo $helperMember->buildMemberUrl($this->member->member_id, 'payments'); ?>">
             <span class="glyphicon glyphicon-usd"></span>
             <?= $this->translate('My Payments') ?>
         </a>
     </li>
-  
+
     <li class="header-menu-left-item <?php echo $this->tab == 'settings' ? 'active' : ''; ?>">
         <a href="/settings/">
             <span class="glyphicon glyphicon-cog"></span>
             <?= $this->translate('My Settings') ?>
+        </a>
+    </li>
+    
+    <li class="header-menu-left-item <?php echo $this->tab == 'payout' ? 'active' : ''; ?>">
+        <a href="<?php echo $helperMember->buildMemberUrl($this->member->member_id, 'payout'); ?>">
+            <span class="glyphicon glyphicon-usd"></span>
+            <?= $this->translate('Pling') ?>
         </a>
     </li>
 </ul>

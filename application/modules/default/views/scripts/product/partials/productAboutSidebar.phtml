@@ -130,7 +130,6 @@ $auth = Zend_Auth::getInstance();
     <!-- SUPPORTINGS -->
     <?php
     $helperHumanTiming = new Default_View_Helper_HumanTiming();
-    $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
     $helperUserIsOwner = new Default_View_Helper_UserIsOwner();
     $countSupporter = count($this->supporter->toArray());
     echo $this->render('product/partials/productSupporterCommentsWidget.phtml');
