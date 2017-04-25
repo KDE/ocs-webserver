@@ -87,6 +87,7 @@ if ($this->countDownloadsOverall > 0) {
     $printMonth = new DateTime($currentDate.'01');
     
     $printDate = $printMonth->format('M Y');
+    $printDate = 'Current month';
     ?>
     <li class="in active"><a href="#<?= $currentDate  ?>" data-toggle="tab"><?= $printDate ?></a></li>
 <?php
