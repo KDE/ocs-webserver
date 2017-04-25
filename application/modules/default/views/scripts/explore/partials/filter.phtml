@@ -38,38 +38,29 @@ $this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
         width: 100%;
         color: #2673b0;
     }
-
     .navilink {
         color: #2673b0;
         margin: 0;
         padding: 3px 0 0 5px;
     }
-
     .navilink span.title:hover {
         font-weight: bold;
         cursor: pointer;
     }
-
-  
-    
- 
     ul.naviblock a:hover
     {
         background-color:  <?=$this->navBackgroundColorActive?> !important;
         color:  <?=$this->navColorActive?> !important;
     }
-    
     ul.naviblock a
     {
           display: block;
             width:100%;
     }
-
     li.navilink.parentactive.parent a
     {
         color:  <?=$this->navBackgroundColorActive?>;
     }
-
     ul.naviblock a.active.child
     {
         background-color:  <?=$this->navBackgroundColorActive?>;
@@ -144,7 +135,6 @@ $this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
             }
 
             /**
-             * @param int $selectedCategory
              * @param string $selectedOrder
              * @return string
              */
