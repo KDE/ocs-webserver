@@ -55,24 +55,39 @@ if ($this->countDownloadsOverall > 0) {
     $monthlyDownload = null;
     $allDownloads = array();
     $css_active = 'active';
+    $currentDate = date("Ym",time());
+    $printCurrentMonth = new DateTime($currentDate.'01');
+    
     foreach ($this->downloads as $download) {
         $printMonth = new DateTime($download['yearmonth'].'01');
+        
         $printDate = $printMonth->format('M Y');
+        $printDateNow = $printCurrentMonth->format('M Y');
+        
+        if($printDateNow == $printDate) {
+            $printDate = 'Current month';
+        }
+        
         if ($printDate != $currentMonth) {
             $monthlyDownload = array();
             $currentMonth = $printDate;
-    ?><li class="<?=$css_active?>"><a href="#<?= $download['yearmonth'] ?>" data-toggle="tab"><?= $printDate ?></a></li><?php
+        
+    ?>
+    <li class="<?=$css_active?>"><a href="#<?= $download['yearmonth'] ?>" data-toggle="tab"><?= $printDate ?></a></li>
+    <?php
         }
         $css_active = '';
         $monthlyDownload[] = $download;
         $allDownloads[$download['yearmonth']] = $monthlyDownload;
-    } 
+    }
+     
 } else {
     $currentMonth = '';
     $currentDate = date("Ym",time());
     $printMonth = new DateTime($currentDate.'01');
     
     $printDate = $printMonth->format('M Y');
+    $printDate = 'Current month';
     ?>
     <li class="in active"><a href="#<?= $currentDate  ?>" data-toggle="tab"><?= $printDate ?></a></li>
 <?php
@@ -134,7 +149,7 @@ if ($this->countDownloadsOverall > 0) {
                 </div>
                 <?php
                 $sum_total_month += $product['num_downloads'] * $product['dl_pling_factor'];
-                $sum_total_text = 'Possible payment amount for this month (*):';
+                $sum_total_text = 'Possible payment amount for this month (<span style="font-size: smaller;">*</span>):';
                 $sum_total_payout = $currency->toCurrency($sum_total_month/100);
                 if ($product['status'] == Default_Model_DbTable_MemberPayout::$PAYOUT_STATUS_COMPLETED) {
                     $sum_total_payout = $currency->toCurrency($product['amount']);
@@ -182,7 +197,7 @@ if ($this->countDownloadsOverall > 0) {
     echo '<div class="tab-pane fade in active" id="'.$printDate.'">';
     echo '    <div style="text-align: center;" class="row margin-bottom-12"><div class="col-md-12 cell-default">No Data</div></div>';
     echo '    <div class="row row-total">';
-    echo '        <div class="col-md-11 text-right">Possible payment amount for this month (*):</div><div class="col-md-1 text-right"><strong>$0.00</strong></div>';
+    echo '        <div class="col-md-11 text-right">Possible payment amount for this month (<span style="font-size: smaller;">*</span>):</div><div class="col-md-1 text-right"><strong>$0.00</strong></div>';
     echo '    </div>';
     echo '</div>';
 }
@@ -190,13 +205,13 @@ if ($this->countDownloadsOverall > 0) {
     
 ?>
     <div id="le-alert"  class="alert alert-warning alert-block" role="alert">
-        <p>(*)</p>
-        <p>Info: This service will go live on May first 2017. All previously shown amounts are for testing only.</p>
+        <p>(*) Info:</p><p>This service will go live on May, 1st 2017. All previously shown amounts are for testing only.</p>
         <br>
-        <p>TOS: This service is completely voluntary. It is within Hive01 full rights to deside:</p>
+        <p>TOS:</p>
+        <p>This payout service is completely voluntarily. It is within Hive01's full rights to decide at any time:</p>
         <p>a) when and</p>
         <p>b) how much of the shown calculated amount is to be paid or</p>
-        <p>c) to cancel partly or complete payment with or without any reason</p>
+        <p>c) to cancel partly or complete payment without giving any reasons.</p>
             
     </div>
 </div>
