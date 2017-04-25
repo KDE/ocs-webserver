@@ -73,7 +73,7 @@ $helperMember = new Default_View_Helper_BuildMemberUrl();
         </a>
     </li>
     
-    <li class="header-menu-left-item <?php echo $this->tab == 'plings' ? 'active' : ''; ?>">
+    <li class="header-menu-left-item <?php echo $this->tab == 'payout' ? 'active' : ''; ?>">
         <a href="<?php echo $helperMember->buildMemberUrl($this->member->member_id, 'payout'); ?>">
             <span class="glyphicon glyphicon-usd"></span>
             <?= $this->translate('Pling') ?>
