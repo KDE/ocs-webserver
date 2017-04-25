@@ -98,6 +98,11 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
 
     public function indexAction()
     {
+        $this->getResponse()
+            ->setHeader('Pragma', 'cache', true)
+            ->setHeader('Cache-Control', 'private, max-age=300, pre-check=300', true)
+        ;
+
         $storeCatIds = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
         $this->view->categories = $storeCatIds;
         

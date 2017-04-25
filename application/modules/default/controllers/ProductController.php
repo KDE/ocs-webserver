@@ -57,6 +57,11 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
     public function indexAction()
     {
+        $this->getResponse()
+            ->setHeader('Pragma', 'cache', true)
+            ->setHeader('Cache-Control', 'private, max-age=300, pre-check=300', true)
+            ;
+
         if (empty($this->_projectId)) {
             $this->redirect('/explore');
         }
@@ -1820,7 +1825,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 //            ->setHeader('Last-Modified', $modifiedTime, true)
             ->setHeader('Expires', $expires, true)
             ->setHeader('Pragma', 'no-cache', true)
-            ->setHeader('Cache-Control', 'private, no-cache, must-revalidate', true);
+            ->setHeader('Cache-Control', 'private, no-cache, must-revalidate', true)
+        ;
     }
 
     /**
