@@ -48,7 +48,9 @@
     }
 </style>
 <ul class="nav nav-tabs margin-bottom-10">
-    <?php
+<?php
+    
+if ($this->countDownloadsOverall > 0) {    
     $currentMonth = '';
     $monthlyDownload = null;
     $allDownloads = array();
@@ -64,7 +66,18 @@
         $css_active = '';
         $monthlyDownload[] = $download;
         $allDownloads[$download['yearmonth']] = $monthlyDownload;
-    } ?>
+    } 
+} else {
+    $currentMonth = '';
+    $currentDate = date("Ym",time());
+    $printMonth = new DateTime($currentDate.'01');
+    
+    $printDate = $printMonth->format('M Y');
+    ?>
+    <li class="in active"><a href="#<?= $currentDate  ?>" data-toggle="tab"><?= $printDate ?></a></li>
+<?php
+}
+?>
 </ul>
 <div class="container-fluid margin-bottom-10" style="padding-left: 0; padding-right: 0;">
     <div class="row">
@@ -82,90 +95,119 @@ $helpImage = new Default_View_Helper_Image();
 $css_active = ' in active';
 $has_paypal = false;
 $currency = new Zend_Currency('en_US');
-foreach ($allDownloads as $month => $products) {
-    $printMonth = new DateTime($month.'01');
-    $sum_total_month = 0;
-    $sum_total_text = '';
-    $sum_total_payout = 0;
-    ?>
-    <div class="tab-pane fade <?=$css_active?>" id="<?=$month?>">
-        <?php
-        $css_active = '';
-        foreach ($products as $product) { ?>
-            <div class="row margin-bottom-10">
-
-                <div class="col-md-1 cell-default">
-                    <img src="<?php echo $helpImage->Image($product['image_small'],
-                        array('width' => 80, 'height' => 65)); ?> " height="81" width="101"/>
-                </div>
-                <div class="col-md-5 text-left cell-default">
-                    <span style="line-height: 3em;"><?= $product['title']; ?></span>
-                    <b style="display: block; margin-bottom: 5px; font-size: 10pt; line-height: 0em;"><?=$product['cat_title']?></b>
-                </div>
-                <div class="col-md-2 text-right cell-default">
-                    <span><?= $product['num_downloads'] ?></span>
-                </div>
-                <div class="col-md-2 text-right cell-default">
-                    <span><?= round($product['dl_pling_factor'],0) ?></span>
-                </div>
-                <?php /*
-                <div class="col-md-2 text-right cell-default">
-                    <span><?= $product['num_downloads'] * $product['dl_pling_factor'] ?></span>
-                </div> */ ?>
-                <div class="col-md-2 text-right cell-default">
-                    <span><?= $currency->toCurrency($product['num_downloads'] * $product['dl_pling_factor'] / 100) ?></span>
-                </div>
-
-            </div>
+if ($this->countDownloadsOverall > 0) {
+    foreach ($allDownloads as $month => $products) {
+        $printMonth = new DateTime($month.'01');
+        $sum_total_month = 0;
+        $sum_total_text = '';
+        $sum_total_payout = 0;
+        ?>
+        <div class="tab-pane fade <?=$css_active?>" id="<?=$month?>">
             <?php
-            $sum_total_month += $product['num_downloads'] * $product['dl_pling_factor'];
-            $sum_total_text = 'Possible payment amount for this month:';
-            $sum_total_payout = $currency->toCurrency($sum_total_month/100);
-            if ($product['status'] == Default_Model_DbTable_MemberPayout::$PAYOUT_STATUS_COMPLETED) {
-                $sum_total_payout = $currency->toCurrency($product['amount']);
-                $sum_total_text = 'Actually successfully paid amount:';
+            $css_active = '';
+
+            foreach ($products as $product) { ?>
+                <div class="row margin-bottom-10">
+
+                    <div class="col-md-1 cell-default">
+                        <img src="<?php echo $helpImage->Image($product['image_small'],
+                            array('width' => 80, 'height' => 65)); ?> " height="81" width="101"/>
+                    </div>
+                    <div class="col-md-5 text-left cell-default">
+                        <span style="line-height: 3em;"><?= $product['title']; ?></span>
+                        <b style="display: block; margin-bottom: 5px; font-size: 10pt; line-height: 0em;"><?=$product['cat_title']?></b>
+                    </div>
+                    <div class="col-md-2 text-right cell-default">
+                        <span><?= $product['num_downloads'] ?></span>
+                    </div>
+                    <div class="col-md-2 text-right cell-default">
+                        <span><?= round($product['dl_pling_factor'],0) ?></span>
+                    </div>
+                    <?php /*
+                    <div class="col-md-2 text-right cell-default">
+                        <span><?= $product['num_downloads'] * $product['dl_pling_factor'] ?></span>
+                    </div> */ ?>
+                    <div class="col-md-2 text-right cell-default">
+                        <span><?= $currency->toCurrency($product['num_downloads'] * $product['dl_pling_factor'] / 100) ?></span>
+                    </div>
+
+                </div>
+                <?php
+                $sum_total_month += $product['num_downloads'] * $product['dl_pling_factor'];
+                $sum_total_text = 'Possible payment amount for this month <a id="payout_info" href="#"><span class="glyphicon glyphicon-asterisk"></span></a>:';
+                $sum_total_payout = $currency->toCurrency($sum_total_month/100);
+                if ($product['status'] == Default_Model_DbTable_MemberPayout::$PAYOUT_STATUS_COMPLETED) {
+                    $sum_total_payout = $currency->toCurrency($product['amount']);
+                    $sum_total_text = 'Actually successfully paid amount:';
+                }
+                $has_paypal = $product['paypal_mail'] ? true : false;
             }
-            $has_paypal = $product['paypal_mail'] ? true : false;
-        }
-        $sum_total_month_view = number_format($sum_total_month);
-        ?>
-        <div class='row row-total'>
-            <div class='col-md-11 text-right'><?=$sum_total_text?></div><div class='col-md-1 text-right'><strong><?=$sum_total_payout?></strong></div>
-        </div>
-        <?php 
-        
-        
-        $currentDate = date("Ym",time());
-        $viewDate = $month."";
-        $paypalWarning = '';
-        if($currentDate == $viewDate) {
-            $member = $this->view_member;
-            if(!isset($member['paypal_mail']) || $member['paypal_mail'] == '') {
-                $has_paypal = false;
-                $paypalWarning = 'You have no PayPal account configured. Please go to your settings page <a href="/settings#payments-collapse">here</a>.';
+
+            $sum_total_month_view = number_format($sum_total_month);
+            ?>
+            <div class='row row-total'>
+                <div class='col-md-11 text-right'><?=$sum_total_text?></div><div class='col-md-1 text-right'><strong><?=$sum_total_payout?></strong></div>
+            </div>
+            <?php 
+
+
+            $currentDate = date("Ym",time());
+            $viewDate = $month."";
+            $paypalWarning = '';
+            if($currentDate == $viewDate) {
+                $member = $this->view_member;
+                if(!isset($member['paypal_mail']) || $member['paypal_mail'] == '') {
+                    $has_paypal = false;
+                    $paypalWarning = 'You have no PayPal account configured. Please go to your settings page <a href="/settings#payments-collapse">here</a>.';
+                } else {
+                    $has_paypal = true;
+                }
             } else {
-                $has_paypal = true;
+                $paypalWarning = 'We found no valid Paypal account for this month. That\'s why we could not pay you any money. In order to receive money for the current month, please make sure that a paypal account is registered. Go to your settings page <a href="/settings#payments-collapse">here</a>.';
             }
-        } else {
-            $paypalWarning = 'We found no valid Paypal account for this month. That\'s why we could not pay you any money. In order to receive money for the current month, please make sure that a paypal account is registered. Go to your settings page <a href="/settings#payments-collapse">here</a>.';
-        }
-        if (false == $has_paypal) {
-            echo '<div class="alert alert-warning" role="alert">'.$paypalWarning.'</div>';
-        }
-        
-        if (($sum_total_month/100) < 1) {
-            echo '<div class="alert alert-warning" role="alert">We only pay out money if the amount is over $1.</div>';
-        }
-        
-        
-        ?>
-    </div>
+            if (false == $has_paypal) {
+                echo '<div class="alert alert-warning" role="alert">'.$paypalWarning.'</div>';
+            }
+
+            if (($sum_total_month/100) < 1) {
+                echo '<div class="alert alert-warning" role="alert">We only pay out money if the amount is over $1.</div>';
+            }
+?>
+            
+        </div>
 <?php
     }
+} else {
+    
+    echo '<div class="tab-pane fade in active" id="'.$printDate.'">';
+    echo '    <div style="text-align: center;" class="row margin-bottom-12"><div class="col-md-12 cell-default">No Data</div></div>';
+    echo '    <div class="row row-total">';
+    echo '        <div class="col-md-11 text-right">Possible payment amount for this month <a id="payout_info" href="#"><span class="glyphicon glyphicon-asterisk"></span></a>:</div><div class="col-md-1 text-right"><strong>$0.00</strong></div>';
+    echo '    </div>';
+    echo '</div>';
+}
     
     
 ?>
-</div><?php $this->inlineScript()->appendScript(
+    <div id="le-alert"  class="alert alert-warning alert-block fade" role="alert"><button href="#" type="button" class="close">&times;</button>
+        <h4>Warning</h4>
+        This service will start as live on May 01 2017. All previous amounts are for testing only.<br>This service is completely voluntary...
+    </div>
+</div>
+
+<script>
+    $('#payout_info').click(function (event ) {
+        event.preventDefault();
+        $('#le-alert').addClass('in'); // shows alert with Bootstrap CSS3 implem
+    });
+
+    $('.close').click(function () {
+        $(this).parent().removeClass('in'); // hides alert with Bootstrap CSS3 implem
+    });
+
+</script>    
+
+<?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
             $(\'[data-toggle="popover"]\').popover();
         });
