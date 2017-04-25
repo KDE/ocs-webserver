@@ -298,15 +298,13 @@ class UserController extends Local_Controller_Action_DomainSwitch
         $this->_helper->json(array('status' => 'ok', 'redirect' => $this->view->permaLink));
     }
 
-    public function payoutAction()
+    
+    public function plingsAction()
     {
-//        $this->view->headScript()->setFile('');
-//        $this->view->headLink()->setStylesheet('');
 
         $tableMember = new Default_Model_Member();
         $this->view->view_member = $tableMember->fetchMemberData($this->_memberId);
         
         $this->view->member = $this->_authMember;
     }
-
 }

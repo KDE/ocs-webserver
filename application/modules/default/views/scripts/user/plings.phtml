@@ -20,7 +20,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-$this->tab = 'payout';
+$this->tab = 'plings';
 $this->countDownloadsOverall = 0;
 
 $modelDownload = new Default_Model_StatDownload();
@@ -43,9 +43,9 @@ $this->countDownloadsOverall = count($this->downloads);
                 <div class="my-products-list" id="my-payout-list">
                     <?php
                     if ($this->countDownloadsOverall > 0) {
-                        echo $this->render('user/partials/loopPayout.phtml');
+                        echo $this->render('user/partials/loopPlings.phtml');
                     } else {
-                        echo '<div class="well well-sm" role="alert">You have no downloads.</div>';
+                        echo '<div class="well well-sm" role="alert">You have no downloads and no plings.</div>';
                     }
                      ?>
                 </div>
