@@ -52,7 +52,7 @@ class Default_Model_DbTable_ProjectPackageType extends Local_Model_Table
      */
     public function getSelectList()
     {
-        $selectArr = $this->_db->fetchAll('SELECT package_type_id, name FROM package_types WHERE is_active=1 ORDER BY order');
+        $selectArr = $this->_db->fetchAll('SELECT package_type_id, name FROM package_types WHERE is_active=1 ORDER BY `order`');
 
         $arrayModified = array();
 

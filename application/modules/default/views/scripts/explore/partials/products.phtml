@@ -75,7 +75,9 @@ foreach ($this->products as $this->product) {
         $this->widgetRating->laplace_score = $this->product->laplace_score;
         $this->widgetRating->count_likes = $this->product->count_likes;
         $this->widgetRating->count_dislikes = $this->product->count_dislikes;
-        echo $this->render('partials/widgetRating.phtml'); ?>
+        // it is a trial
+        include APPLICATION_PATH . '/modules/default/views/scripts/partials/widgetRating.phtml';
+        //echo $this->render('partials/widgetRating.phtml'); ?>
         <!-- /RATING -->
         <div class="progress">
             <div class="bar no-goal">
