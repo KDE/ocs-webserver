@@ -85,27 +85,32 @@ class Backend_StorecategoriesController extends Local_Controller_Action_Backend
         $cache = Zend_Registry::get('cache');
         $cache->remove(Default_Model_ProjectCategory::CACHE_TREE_STORE . "_{$store_id}");
         $cache->remove(Default_Model_DbTable_ConfigStore::CACHE_STORE_CONFIG . "_{$store_id}");
-        (new Default_Model_DbTable_ConfigStore())->fetchAllStoresAndCategories(true);
-        (new Default_Model_DbTable_ConfigStore())->fetchAllStoresConfigArray(true);
+        $modelConfigStore = new Default_Model_DbTable_ConfigStore();
+        $modelConfigStore->fetchAllStoresAndCategories(true);
+        $modelConfigStore->fetchAllStoresConfigArray(true);
     }
 
     protected function initCache($store_id)
     {
-        (new Default_Model_ProjectCategory())->fetchCategoryTreeForStore($store_id, true);
+        $modelPCat = new Default_Model_ProjectCategory();
+        $modelPCat->fetchCategoryTreeForStore($store_id, true);
 
-        (new Default_Model_DbTable_ConfigStore())->fetchConfigForStore($store_id, true);
-        (new Default_Model_DbTable_ConfigStore())->fetchAllStoresAndCategories(true);
-        (new Default_Model_DbTable_ConfigStore())->fetchAllStoresConfigArray(true);
+        $modelConfigStore = new Default_Model_DbTable_ConfigStore();
+        $modelConfigStore->fetchConfigForStore($store_id, true);
+        $modelConfigStore->fetchAllStoresAndCategories(true);
+        $modelConfigStore->fetchAllStoresConfigArray(true);
     }
 
     public function initcacheAction()
     {
-        $allStoresCat = (new Default_Model_DbTable_ConfigStore())->fetchAllStoresAndCategories(true);
-        $allStoresConfig = (new Default_Model_DbTable_ConfigStore())->fetchAllStoresConfigArray(true);
+        $modelConfigStore = new Default_Model_DbTable_ConfigStore();
+        $allStoresCat = $modelConfigStore->fetchAllStoresAndCategories(true);
+        $allStoresConfig = $modelConfigStore->fetchAllStoresConfigArray(true);
 
+        $modelPCat = new Default_Model_ProjectCategory();
         foreach ($allStoresConfig as $config) {
-            (new Default_Model_ProjectCategory())->fetchCategoryTreeForStore($config['store_id'], true);
-            (new Default_Model_DbTable_ConfigStore())->fetchConfigForStore($config['store_id'], true);
+            $modelPCat->fetchCategoryTreeForStore($config['store_id'], true);
+            $modelConfigStore->fetchConfigForStore($config['store_id'], true);
         }
     }
 

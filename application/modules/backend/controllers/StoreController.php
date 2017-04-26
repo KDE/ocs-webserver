@@ -76,7 +76,8 @@ class Backend_StoreController extends Local_Controller_Action_Backend
 
     protected function initCache($store_id)
     {
-        (new Default_Model_ProjectCategory())->fetchCategoryTreeForStore($store_id, true);
+        $modelPCat = new Default_Model_ProjectCategory();
+        $modelPCat->fetchCategoryTreeForStore($store_id, true);
 
         $this->_model->fetchConfigForStore($store_id, true);
         $this->_model->fetchAllStoresAndCategories(true);
@@ -88,8 +89,9 @@ class Backend_StoreController extends Local_Controller_Action_Backend
         $allStoresCat = $this->_model->fetchAllStoresAndCategories(true);
         $allStoresConfig = $this->_model->fetchAllStoresConfigArray(true);
 
+        $modelPCat = new Default_Model_ProjectCategory();
         foreach ($allStoresConfig as $config) {
-            (new Default_Model_ProjectCategory())->fetchCategoryTreeForStore($config['store_id'], true);
+            $modelPCat->fetchCategoryTreeForStore($config['store_id'], true);
             $this->_model->fetchConfigForStore($config['store_id'], true);
         }
     }
