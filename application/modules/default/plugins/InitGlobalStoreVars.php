@@ -190,8 +190,7 @@ class Default_Plugin_InitGlobalStoreVars extends Zend_Controller_Plugin_Abstract
             Zend_Registry::get('logger')->debug(__METHOD__ . '(' . __LINE__ . ') - ' . $storeHostName . ' :: no categories for domain context configured. Using main categories instead');
             $modelCategories = new Default_Model_DbTable_ProjectCategory();
             $root = $modelCategories->fetchRoot();
-            $storeCategories = $modelCategories->fetchImmediateChildrenIds($root['project_category_id'],
-                $modelCategories::ORDERED_TITLE);
+            $storeCategories = $modelCategories->fetchImmediateChildrenIds($root['project_category_id'], $modelCategories::ORDERED_TITLE);
         }
 
         return $storeCategories;

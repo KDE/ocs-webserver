@@ -68,7 +68,8 @@ var aItemData = [
             id: "stores",
             itemdata: [
                 {text: "Config", url: "/backend/store"},
-                {text: "Categories", url: "/backend/storecategories"}
+                {text: "Categories", url: "/backend/storecategories"},
+                {text: "Init Cache", url: "/backend/store/initcache"}
             ]
         }
     },

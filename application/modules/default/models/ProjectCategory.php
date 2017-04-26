@@ -22,6 +22,7 @@
  **/
 class Default_Model_ProjectCategory
 {
+    const CACHE_TREE_STORE = 'store_cat_tree';
 
     /** @var string */
     protected $_dataTableName;
@@ -55,7 +56,7 @@ class Default_Model_ProjectCategory
      * @param int|null $store_id If not set, the tree for the current store will be returned
      * @return array
      */
-    public function fetchCategoryTreeForStore($store_id = null)
+    public function fetchCategoryTreeForStore($store_id = null, $clearCache = false)
     {
         if (empty($store_id)) {
             $store_config = Zend_Registry::get('store_config');
@@ -64,26 +65,41 @@ class Default_Model_ProjectCategory
 
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
-        $cache_id = __FUNCTION__ . '_' . $store_id;
+        $cache_id = self::CACHE_TREE_STORE . "_{$store_id}";
+
+        if ($clearCache) {
+            $cache->remove($cache_id);
+        }
 
         if (false === ($tree = $cache->load($cache_id))) {
             $modelCategoryStore = new Default_Model_DbTable_ConfigStoreCategory();
             $rows = $modelCategoryStore->fetchAllCategoriesForStore((int)$store_id);
+
+            if (count($rows) < 1) {
+                $modelCategories = new Default_Model_DbTable_ProjectCategory();
+                $root = $modelCategories->fetchRoot();
+                $rows = $modelCategories->fetchImmediateChildrenIds($root['project_category_id'], $modelCategories::ORDERED_TITLE);
+            }
+
             $tree = $this->buildTree($rows);
-            $cache->save($tree, $cache_id, array(), 300);
+            $cache->save($tree, $cache_id, array(), 14400);
         }
 
         return $tree;
     }
 
-    public function fetchCategoryTreeCurrentStore()
+    public function fetchCategoryTreeCurrentStore($clearCache = false)
     {
         $store_config = Zend_Registry::get('store_config');
         $store_id = $store_config['store_id'];
 
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
-        $cache_id = __FUNCTION__ . '_' . $store_id;
+        $cache_id = self::CACHE_TREE_STORE . "_{$store_id}";
+
+        if ($clearCache) {
+            $cache->remove($cache_id);
+        }
 
         if (false === ($tree = $cache->load($cache_id))) {
             $rows = self::fetchCatIdsForCurrentStore();

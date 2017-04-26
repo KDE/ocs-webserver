@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -28,7 +29,6 @@ class Backend_StoreController extends Local_Controller_Action_Backend
 
     /** @var Default_Model_DbTable_ConfigStore */
     protected $_model;
-
     protected $_modelName = 'Default_Model_DbTable_ConfigStore';
     protected $_pageTitle = 'Manage Store Config';
 
@@ -60,7 +60,7 @@ class Backend_StoreController extends Local_Controller_Action_Backend
             $newRow = $this->_model->createRow($allParams);
             $result = $newRow->save();
 
-            $this->cacheClear();
+            $this->initCache($result);
 
             $jTableResult['Result'] = self::RESULT_OK;
             $jTableResult['Record'] = $newRow->toArray();
@@ -74,21 +74,23 @@ class Backend_StoreController extends Local_Controller_Action_Backend
         $this->_helper->json($jTableResult);
     }
 
-    protected function cacheClear()
+    protected function initCache($store_id)
     {
-        /** @var Zend_Cache_Core $cache */
-        $cache = Zend_Registry::get('cache');
-        if ($cache->test('application_store_category_list')) {
-            $cache->remove('application_store_category_list');
-        }
-        if ($cache->test('fetchDomainCatPostfixConfig')) {
-            $cache->remove('fetchDomainCatPostfixConfig');
-        }
-        if ($cache->test('fetchDomains')) {
-            $cache->remove('fetchDomains');
-        }
-        if ($cache->test('fetchDomainCatConfig')) {
-            $cache->remove('fetchDomainCatConfig');
+        (new Default_Model_ProjectCategory())->fetchCategoryTreeForStore($store_id, true);
+
+        $this->_model->fetchConfigForStore($store_id, true);
+        $this->_model->fetchAllStoresAndCategories(true);
+        $this->_model->fetchAllStoresConfigArray(true);
+    }
+
+    public function initcacheAction()
+    {
+        $allStoresCat = $this->_model->fetchAllStoresAndCategories(true);
+        $allStoresConfig = $this->_model->fetchAllStoresConfigArray(true);
+
+        foreach ($allStoresConfig as $config) {
+            (new Default_Model_ProjectCategory())->fetchCategoryTreeForStore($config['store_id'], true);
+            $this->_model->fetchConfigForStore($config['store_id'], true);
         }
     }
 
@@ -106,7 +108,7 @@ class Backend_StoreController extends Local_Controller_Action_Backend
 
             $record = $this->_model->save($values);
 
-            $this->cacheClear();
+            $this->initCache($record->store_id);
 
             $jTableResult = array();
             $jTableResult['Result'] = self::RESULT_OK;
@@ -127,12 +129,22 @@ class Backend_StoreController extends Local_Controller_Action_Backend
 
         $this->_model->deleteId($dataId);
 
-        $this->cacheClear();
+        $this->cacheClear($dataId);
 
         $jTableResult = array();
         $jTableResult['Result'] = self::RESULT_OK;
 
         $this->_helper->json($jTableResult);
+    }
+
+    protected function cacheClear($store_id)
+    {
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cache->remove(Default_Model_ProjectCategory::CACHE_TREE_STORE . "_{$store_id}");
+        $cache->remove(Default_Model_DbTable_ConfigStore::CACHE_STORE_CONFIG . "_{$store_id}");
+        $this->_model->fetchAllStoresAndCategories(true);
+        $this->_model->fetchAllStoresConfigArray(true);
     }
 
     public function listAction()
@@ -143,14 +155,12 @@ class Backend_StoreController extends Local_Controller_Action_Backend
         $filter['hostname'] = $this->getParam('filter_hostname');
         $filter['category_id'] = $this->getParam('filter_category_id');
 
-
         $select = $this->_model->select()->order($sorting)->limit($pageSize, $startIndex);
         foreach ($filter as $key => $value) {
             if (false === empty($value)) {
                 $select->where("{$key} like ?", $value);
             }
         }
-
 
         $reports = $this->_model->fetchAll($select);
 
