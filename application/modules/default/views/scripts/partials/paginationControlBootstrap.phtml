@@ -25,6 +25,7 @@ if (false === isset($this->params)) {
 }
 $serverUrl = $this->serverUrl();
 ?>
+<span class="glyphicon glyphicon-refresh spinning" style="display: none"></span> 
 <ul class="pagination pagination-sm" style="margin: 0;padding:0;">
     <li class="<?php echo isset($this->previous) ? '' : 'disabled' ?>">
         <a class="<?php echo isset($this->previous) ? 'paginationPartial' : '' ?>"
@@ -54,12 +55,13 @@ $serverUrl = $this->serverUrl();
                 event.preventDefault();
                 var target = '<?=$this->dom_target?>';            
                 var url = $(this).attr("href") + ' ' + target + ' > *';   
-                $('html, body').scrollTop($(target).offset().top);                                         
+                $('html, body').scrollTop($(target).offset().top);    
+                $('.glyphicon.glyphicon-refresh.spinning').show();
                 $(target).load(url, function (response, status, xhr) {
                     if (status == "error") {
                         $(target).empty().html('Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.');
                     }
-                });
+                });                
                 return false;
            });         
     });

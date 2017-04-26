@@ -718,7 +718,9 @@ var AjaxForm = (function () {
             $('body').on("submit", idElement, function (event) {
                 //event.preventDefault();
                 //event.stopImmediatePropagation();
-                $(this).find('button').attr("disabled", "disabled");
+                                
+                $(idElement).find('button').attr("disabled", "disabled");
+                $(idElement).find('.glyphicon.glyphicon-send').removeClass('glyphicon-send').addClass('glyphicon-refresh spinning');
 
 //                $(this).ajaxForm({
                 jQuery.ajax({
@@ -729,7 +731,6 @@ var AjaxForm = (function () {
 
                     error: function ( jqXHR, textStatus, errorThrown ) {
                         var results = JSON && JSON.parse(jqXHR.responseText) || $.parseJSON(jqXHR.responseText);
-
                         var msgBox = $('#generic-dialog');
                         msgBox.modal('hide');
                         msgBox.find('.modal-header-text').empty().append(results.title);
@@ -739,7 +740,7 @@ var AjaxForm = (function () {
                         }, 900);
                     },
                     success: function (results) {
-                        if (results.status == 'ok') {
+                        if (results.status == 'ok') {                           
                             $(target).empty().html(results.data);
                         }
                         if (results.status == 'error') {
