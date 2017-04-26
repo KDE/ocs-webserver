@@ -35,7 +35,7 @@ $serverUrl = $this->serverUrl();
 
     <?php foreach ($this->pagesInRange as $page): ?>
         <?php if ($page != $this->current): ?>
-            <li><a class="ajaxPartial paginationPartial" href="<?php echo $serverUrl . $this->url(array_merge($this->params, array('page' => $page))); ?>"><?php echo $page; ?></a></li>
+            <li><a  class="ajaxPartial paginationPartial" href="<?php echo $serverUrl . $this->url(array_merge($this->params, array('page' => $page))); ?>"><?php echo $page; ?></a></li>
         <?php else: ?>
             <li class="active"><a class="paginationPartial" href="<?php echo $serverUrl . $this->url(array_merge($this->params, array('page' => $page))); ?>"><?php echo $page; ?></a>
         <?php endif; ?>
@@ -50,16 +50,17 @@ $serverUrl = $this->serverUrl();
 </ul>
 <script type="application/javascript">
     $(document).ready(function () {
-        $('body').on('click', 'ul.pagination a.paginationPartial', function (event) {
-            event.preventDefault();
-            var target = '<?=$this->dom_target?>';
-            var url = $(this).attr("href") + ' ' + target + ' > *';                       
-            $(target).load(url, function (response, status, xhr) {
-                if (status == "error") {
-                    $(target).empty().html('Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.');
-                }
-            });
-            return false;
-        });
+        $('body').off('click', 'ul.pagination a.paginationPartial').on('click', 'ul.pagination a.paginationPartial',function(event) {
+                event.preventDefault();
+                var target = '<?=$this->dom_target?>';            
+                var url = $(this).attr("href") + ' ' + target + ' > *';   
+                $('html, body').scrollTop($(target).offset().top);                                         
+                $(target).load(url, function (response, status, xhr) {
+                    if (status == "error") {
+                        $(target).empty().html('Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.');
+                    }
+                });
+                return false;
+           });         
     });
 </script>
