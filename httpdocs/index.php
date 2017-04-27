@@ -6,6 +6,9 @@ define('APC_EXTENSION_LOADED', extension_loaded('apc') && ini_get('apc.enabled')
 // Define if APC extension is loaded
 define('MEMCACHED_EXTENSION_LOADED', extension_loaded('memcached'));
 
+// Define if APC extension is loaded
+define('MEMCACHE_EXTENSION_LOADED', extension_loaded('memcache'));
+
 // Define path to application directory
 defined('APPLICATION_PATH')
 || define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../application'));
@@ -57,7 +60,7 @@ $frontendOptions = array(
 );
 
 
-if (MEMCACHED_EXTENSION_LOADED) {
+if (MEMCACHED_EXTENSION_LOADED && MEMCACHE_EXTENSION_LOADED) {
     $frontendOpts = array(
         'caching' => true,
         'lifetime' => 1800,
