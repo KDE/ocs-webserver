@@ -62,7 +62,28 @@ Zend_Loader_PluginLoader::setIncludeFileCache(APPLICATION_CACHE . DIRECTORY_SEPA
 $frontendOptions = array(
     'automatic_serialization' => true
 );
-if (APC_EXTENSION_LOADED) {
+
+
+if (MEMCACHED_EXTENSION_LOADED) {
+    $frontendOpts = array(
+        'caching' => true,
+        'lifetime' => 1800,
+        'automatic_serialization' => true
+    );
+  
+    $backendOpts = array(
+        'servers' =>array(
+            array(
+            'host' => 'localhost',
+            'port' => 11211
+            )
+        ),
+        'compression' => false
+    );
+    
+    $cache = Zend_Cache::factory('Core', 'Memcached', $frontendOpts, $backendOpts);
+    
+} else if (APC_EXTENSION_LOADED) {
     $backendOptions = array();
 
     $cache = Zend_Cache::factory(
