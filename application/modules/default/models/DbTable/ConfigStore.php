@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -21,6 +22,10 @@
  **/
 class Default_Model_DbTable_ConfigStore extends Local_Model_Table
 {
+
+    const CACHE_STORES_CATEGORIES = 'stores_categories_list';
+    const CACHE_STORES_CONFIGS = 'stores_configs_list';
+    const CACHE_STORE_CONFIG = 'store_config';
 
     protected $_keyColumnsForRow = array('store_id');
     protected $_key = 'store_id';
@@ -48,20 +53,20 @@ class Default_Model_DbTable_ConfigStore extends Local_Model_Table
     /**
      * @return array
      */
-    public function fetchAllStoresAndCategories()
+    public function fetchAllStoresAndCategories($clearCache = false)
     {
-        if (Zend_Registry::isRegistered('cache')) {
-            /** @var Zend_Cache_Core $cache */
-            $cache = Zend_Registry::get('cache');
-            $cacheName = __FUNCTION__;
-            if (false == ($configArray = $cache->load($cacheName))) {
-                $resultSet = $this->queryAllStoresAndCategories();
-                $configArray = $this->createArrayAllStoresAndCategories($resultSet);
-                $cache->save($configArray, $cacheName);
-            }
-        } else {
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cacheName = self::CACHE_STORES_CATEGORIES;
+
+        if ($clearCache) {
+            $cache->remove($cacheName);
+        }
+
+        if (false == ($configArray = $cache->load($cacheName))) {
             $resultSet = $this->queryAllStoresAndCategories();
             $configArray = $this->createArrayAllStoresAndCategories($resultSet);
+            $cache->save($configArray, $cacheName, array(), 28800);
         }
 
         return $configArray;
@@ -212,16 +217,21 @@ class Default_Model_DbTable_ConfigStore extends Local_Model_Table
     /**
      * @return array
      */
-    public function fetchAllStoresConfigArray()
+    public function fetchAllStoresConfigArray($clearCache = false)
     {
         if (Zend_Registry::isRegistered('cache')) {
             /** @var Zend_Cache_Core $cache */
             $cache = Zend_Registry::get('cache');
-            $cacheName = __FUNCTION__;
+            $cacheName = self::CACHE_STORES_CONFIGS;
+
+            if ($clearCache) {
+                $cache->remove($cacheName);
+            }
+
             if (false == ($configArray = $cache->load($cacheName))) {
                 $resultSet = $this->queryStoreConfigArray();
                 $configArray = $this->createStoreConfigArray($resultSet);
-                $cache->save($configArray, $cacheName);
+                $cache->save($configArray, $cacheName, array(), 28800);
             }
         } else {
             $resultSet = $this->queryStoreConfigArray();
@@ -252,6 +262,36 @@ class Default_Model_DbTable_ConfigStore extends Local_Model_Table
             $result[$element['host']] = $element;
         }
         return $result;
+    }
+
+    public function fetchConfigForStore($store_id, $clearCache = false)
+    {
+        if (Zend_Registry::isRegistered('cache')) {
+            /** @var Zend_Cache_Core $cache */
+            $cache = Zend_Registry::get('cache');
+            $cacheName = self::CACHE_STORE_CONFIG . "_{$store_id}";
+
+            if ($clearCache) {
+                $cache->remove($cacheName);
+            }
+
+            if (false == ($config = $cache->load($cacheName))) {
+                $config = $this->queryStoreConfig($store_id);
+                $cache->save($config, $cacheName, array(), 28800);
+            }
+        } else {
+            $config = $this->queryStoreConfig($store_id);
+        }
+
+        return $config;
+    }
+
+    private function queryStoreConfig($store_id)
+    {
+        $sql = "SELECT * FROM config_store WHERE store_id = :store;";
+        $resultSet = $this->_db->fetchRow($sql, array('store' => (int)$store_id));
+        return $resultSet;
+
     }
 
 }

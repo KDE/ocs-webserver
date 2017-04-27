@@ -130,7 +130,7 @@
                     width: '10%',
                     list: true,
                     create: true,
-                    inputTitle: 'store id name <small style="font-weight:normal; font-size: 0.7em">(used as config id/search index id) (45 chars)</small>'
+                    inputTitle: '(config id) store id name <small style="font-weight:normal; font-size: 0.7em">(used as id for config and search) (45 chars)</small>'
                 },
                 order: {
                     title: 'display order',
@@ -142,9 +142,9 @@
                     title: 'is client config',
                     list: false,
                     type: 'checkbox',
-                    values: { '': 'No', '1': 'Yes' },
+                    values: { '0': 'No', '1': 'Yes' },
                     defaultValue: '',
-                    inputTitle: 'is client <small style="font-weight:normal; font-size: 0.7em">(Please tick this if another config is used)</small>'
+                    inputTitle: 'is client <small style="font-weight:normal; font-size: 0.7em">(If \'yes\' then don\'t forget to set the config id to right store which config is used)</small>'
                 },
                 google_id: {
                     title: 'google id',
@@ -262,6 +262,5 @@
         return false;
     });
 
-
+    $('[data-toggle="popover"]').popover();
 </script>
-

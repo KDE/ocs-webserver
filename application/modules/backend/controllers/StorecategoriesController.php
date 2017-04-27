@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -53,7 +54,7 @@ class Backend_StorecategoriesController extends Local_Controller_Action_Backend
             $newRow = $this->_model->createRow($this->prepareEmptyValues($this->getAllParams()));
             $result = $newRow->save();
 
-            $this->cacheClear();
+            $this->initCache($newRow->store_id);
 
             $jTableResult['Result'] = self::RESULT_OK;
             $jTableResult['Record'] = $newRow->toArray();
@@ -78,21 +79,38 @@ class Backend_StorecategoriesController extends Local_Controller_Action_Backend
         }, $inputParams);
     }
 
-    protected function cacheClear()
+    protected function cacheClear($store_id)
     {
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
-        if ($cache->test('application_store_category_list')) {
-            $cache->remove('application_store_category_list');
-        }
-        if ($cache->test('fetchDomainCatPostfixConfig')) {
-            $cache->remove('fetchDomainCatPostfixConfig');
-        }
-        if ($cache->test('fetchDomains')) {
-            $cache->remove('fetchDomains');
-        }
-        if ($cache->test('fetchDomainCatConfig')) {
-            $cache->remove('fetchDomainCatConfig');
+        $cache->remove(Default_Model_ProjectCategory::CACHE_TREE_STORE . "_{$store_id}");
+        $cache->remove(Default_Model_DbTable_ConfigStore::CACHE_STORE_CONFIG . "_{$store_id}");
+        $modelConfigStore = new Default_Model_DbTable_ConfigStore();
+        $modelConfigStore->fetchAllStoresAndCategories(true);
+        $modelConfigStore->fetchAllStoresConfigArray(true);
+    }
+
+    protected function initCache($store_id)
+    {
+        $modelPCat = new Default_Model_ProjectCategory();
+        $modelPCat->fetchCategoryTreeForStore($store_id, true);
+
+        $modelConfigStore = new Default_Model_DbTable_ConfigStore();
+        $modelConfigStore->fetchConfigForStore($store_id, true);
+        $modelConfigStore->fetchAllStoresAndCategories(true);
+        $modelConfigStore->fetchAllStoresConfigArray(true);
+    }
+
+    public function initcacheAction()
+    {
+        $modelConfigStore = new Default_Model_DbTable_ConfigStore();
+        $allStoresCat = $modelConfigStore->fetchAllStoresAndCategories(true);
+        $allStoresConfig = $modelConfigStore->fetchAllStoresConfigArray(true);
+
+        $modelPCat = new Default_Model_ProjectCategory();
+        foreach ($allStoresConfig as $config) {
+            $modelPCat->fetchCategoryTreeForStore($config['store_id'], true);
+            $modelConfigStore->fetchConfigForStore($config['store_id'], true);
         }
     }
 
@@ -110,7 +128,7 @@ class Backend_StorecategoriesController extends Local_Controller_Action_Backend
 
             $record = $this->_model->save($values);
 
-            $this->cacheClear();
+            $this->initCache($record->store_id);
 
             $jTableResult = array();
             $jTableResult['Result'] = self::RESULT_OK;
@@ -129,9 +147,10 @@ class Backend_StorecategoriesController extends Local_Controller_Action_Backend
     {
         $dataId = (int)$this->getParam(self::DATA_ID_NAME, null);
 
+        $row = $this->_model->fetchRow(array('store_category_id = ?' => $dataId));
         $this->_model->deleteId($dataId);
 
-        $this->cacheClear();
+        $this->initCache($row->store_id);
 
         $jTableResult = array();
         $jTableResult['Result'] = self::RESULT_OK;

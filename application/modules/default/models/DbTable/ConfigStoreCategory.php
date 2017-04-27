@@ -86,4 +86,19 @@ class Default_Model_DbTable_ConfigStoreCategory extends Local_Model_Table
         }
     }
 
+    public function fetchCatIdsForStore($store_id)
+    {
+        $sql = "
+            SELECT csc.project_category_id 
+            FROM config_store_category AS csc
+            JOIN project_category AS pc ON pc.project_category_id = csc.project_category_id
+            WHERE csc.store_id = :store_id
+            AND csc.deleted_at IS NULL
+             ORDER BY csc.`order`, pc.title
+        ";
+        $results = $this->_db->fetchAll($sql, array('store_id' => $store_id));
+        $values = array_map(function($row) { return $row['project_category_id']; }, $results);
+        return $values;
+    }
+
 }
