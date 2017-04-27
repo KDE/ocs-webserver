@@ -6,6 +6,9 @@ define('APC_EXTENSION_LOADED', extension_loaded('apc') && ini_get('apc.enabled')
 // Define if APC extension is loaded
 define('MEMCACHED_EXTENSION_LOADED', extension_loaded('memcached'));
 
+// Define if APC extension is loaded
+define('MEMCACHE_EXTENSION_LOADED', extension_loaded('memcache'));
+
 // Define path to application directory
 defined('APPLICATION_PATH')
 || define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../application'));
@@ -18,15 +21,8 @@ defined('APPLICATION_LIB')
 defined('APPLICATION_CACHE')
 || define('APPLICATION_CACHE', realpath(dirname(__FILE__) . '/../data/cache'));
 
-// Define application environment
-$crawler = crawlerDetect($_SERVER['HTTP_USER_AGENT']);
-if ($crawler )
-{   
-    define('APPLICATION_ENV', 'searchbotenv');
-} else {
-    defined('APPLICATION_ENV')
-    || define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'));
-}
+defined('APPLICATION_ENV')
+|| define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'));
 
 defined('APPLICATION_DATA')
 || define('APPLICATION_DATA', realpath(dirname(__FILE__) . '/../data'));
@@ -62,7 +58,28 @@ Zend_Loader_PluginLoader::setIncludeFileCache(APPLICATION_CACHE . DIRECTORY_SEPA
 $frontendOptions = array(
     'automatic_serialization' => true
 );
-if (APC_EXTENSION_LOADED) {
+
+
+if (MEMCACHED_EXTENSION_LOADED && MEMCACHE_EXTENSION_LOADED) {
+    $frontendOpts = array(
+        'caching' => true,
+        'lifetime' => 1800,
+        'automatic_serialization' => true
+    );
+  
+    $backendOpts = array(
+        'servers' =>array(
+            array(
+            'host' => 'localhost',
+            'port' => 11211
+            )
+        ),
+        'compression' => false
+    );
+    
+    $cache = Zend_Cache::factory('Core', 'Memcached', $frontendOpts, $backendOpts);
+    
+} else if (APC_EXTENSION_LOADED) {
     $backendOptions = array();
 
     $cache = Zend_Cache::factory(
