@@ -1014,11 +1014,11 @@ span.packagetypeos
         font-size:14px;
         font-weight: bold;
         color: rgb(102, 189, 221);
-        border-bottom: 1px dashed #000;
+        border-bottom: 1px dashed #ccc;
         margin-left: 10px;
     }
 .comments-list .media-body{
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid #000;
 }
 .comments-list .media-body .text{
     padding-left: 10px
