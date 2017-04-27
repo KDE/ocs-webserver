@@ -73,7 +73,7 @@ class Default_Model_ProjectCategory
 
         if (false === ($tree = $cache->load($cache_id))) {
             $modelCategoryStore = new Default_Model_DbTable_ConfigStoreCategory();
-            $rows = $modelCategoryStore->fetchAllCategoriesForStore((int)$store_id);
+            $rows = $modelCategoryStore->fetchCatIdsForStore((int)$store_id);
 
             if (count($rows) < 1) {
                 $modelCategories = new Default_Model_DbTable_ProjectCategory();
@@ -82,7 +82,7 @@ class Default_Model_ProjectCategory
             }
 
             $tree = $this->buildTree($rows);
-            $cache->save($tree, $cache_id, array(), 14400);
+            $cache->save($tree, $cache_id, array(), 28800);
         }
 
         return $tree;
@@ -104,7 +104,7 @@ class Default_Model_ProjectCategory
         if (false === ($tree = $cache->load($cache_id))) {
             $rows = self::fetchCatIdsForCurrentStore();
             $tree = $this->buildTree($rows);
-            $cache->save($tree, $cache_id, array(), 300);
+            $cache->save($tree, $cache_id, array(), 28800);
         }
 
         return $tree;
