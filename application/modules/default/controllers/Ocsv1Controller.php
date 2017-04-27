@@ -196,6 +196,19 @@ class Ocsv1Controller extends Zend_Controller_Action
                 'host' => $_SERVER['SERVER_NAME']
             ) + $this->_config;
     }
+    
+    protected function _initResponseHeader()
+    {
+        $duration = 1800; // in seconds
+        $expires = gmdate("D, d M Y H:i:s", time() + $duration) . " GMT";
+
+        $this->getResponse()
+            ->setHeader('X-FRAME-OPTIONS', 'SAMEORIGIN', true)
+//            ->setHeader('Last-Modified', $modifiedTime, true)
+            ->setHeader('Expires', $expires, true)
+            ->setHeader('Pragma', 'public', true)
+            ->setHeader('Cache-Control', 'public', true);
+    }
 
     /**
      * @return array|null

@@ -1812,15 +1812,15 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
     protected function _initResponseHeader()
     {
-        $duration = 3600; // in seconds
+        $duration = 1800; // in seconds
         $expires = gmdate("D, d M Y H:i:s", time() + $duration) . " GMT";
 
         $this->getResponse()
             ->setHeader('X-FRAME-OPTIONS', 'SAMEORIGIN', true)
 //            ->setHeader('Last-Modified', $modifiedTime, true)
             ->setHeader('Expires', $expires, true)
-            ->setHeader('Pragma', 'no-cache', true)
-            ->setHeader('Cache-Control', 'private, no-cache, must-revalidate', true);
+            ->setHeader('Pragma', 'public', true)
+            ->setHeader('Cache-Control', 'public', true);
     }
 
     /**

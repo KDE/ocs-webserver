@@ -31,6 +31,19 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         parent::init();
         $this->_auth = Zend_Auth::getInstance();
     }
+    
+    protected function _initResponseHeader()
+    {
+        $duration = 1800; // in seconds
+        $expires = gmdate("D, d M Y H:i:s", time() + $duration) . " GMT";
+
+        $this->getResponse()
+            ->setHeader('X-FRAME-OPTIONS', 'SAMEORIGIN', true)
+//            ->setHeader('Last-Modified', $modifiedTime, true)
+            ->setHeader('Expires', $expires, true)
+            ->setHeader('Pragma', 'public', true)
+            ->setHeader('Cache-Control', 'public', true);
+    }
 
     public function categoriesAction()
     {
