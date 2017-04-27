@@ -206,8 +206,8 @@ class Ocsv1Controller extends Zend_Controller_Action
             ->setHeader('X-FRAME-OPTIONS', 'SAMEORIGIN', true)
 //            ->setHeader('Last-Modified', $modifiedTime, true)
             ->setHeader('Expires', $expires, true)
-            ->setHeader('Pragma', 'public', true)
-            ->setHeader('Cache-Control', 'public', true);
+            ->setHeader('Pragma', 'cache', true)
+            ->setHeader('Cache-Control', 'max-age=1800, public', true);
     }
 
     /**
