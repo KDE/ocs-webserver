@@ -347,24 +347,30 @@ $textCountryCity .= $this->member->country ? ', ' . $this->member->country : '';
                                         </div>
                                     <?php endif; ?>
 
-                                    <?php if (isset($this->member->link_facebook) && $this->member->link_facebook != ''): ?>
+                                    <?php if (isset($this->member->link_facebook) && $this->member->link_facebook != ''):
+                                        $helpFaceBookUrl = new Default_View_Helper_FacebookLink();
+                                        $facebookLink = $helpFaceBookUrl->facebookLink($this->member->link_facebook);
+                                        ?>
                                         <div class="facebook">
                                             <div class="label">
                                                 <em class="fb-link"></em>
                                             </div>
                                             <div class="text">
-                                                <a href="<?php echo $this->member->link_facebook; ?>"><?php echo $helperTruncate->truncate($this->member->link_facebook,
+                                                <a href="<?php echo $facebookLink; ?>"><?php echo $helperTruncate->truncate($this->member->link_facebook,
                                                         50); ?></a>
                                             </div>
                                         </div>
                                     <?php endif; ?>
-                                    <?php if (isset($this->member->link_twitter) && $this->member->link_twitter != ''): ?>
+                                    <?php if (isset($this->member->link_twitter) && $this->member->link_twitter != ''):
+                                        $helpTwitterLink = new Default_View_Helper_TwitterLink();
+                                        $twitterLink = $helpTwitterLink->twitterLink($this->member->link_twitter);
+                                        ?>
                                         <div class="twitter">
                                             <div class="label">
                                                 <em class="tw-link"></em>
                                             </div>
                                             <div class="text">
-                                                <a href="<?php echo $this->member->link_twitter; ?>"
+                                                <a href="<?php echo $twitterLink; ?>"
                                                    target="_NEW"><?php echo $helperTruncate->truncate($this->member->link_twitter, 50); ?></a>
                                             </div>
                                         </div>
