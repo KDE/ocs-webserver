@@ -399,7 +399,7 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
             if (($row['project_category_id'] == $cat_id) OR ($row['parent'] == $cat_id)) {
                 continue;
             }
-            $resultForSelect[] = array('DisplayText' => $row['title'], 'Value' => $row['project_category_id']);
+            $resultForSelect[] = array('DisplayText' => $row['title_show'], 'Value' => $row['project_category_id']);
         }
 
         return $resultForSelect;

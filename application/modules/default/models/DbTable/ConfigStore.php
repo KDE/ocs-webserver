@@ -66,7 +66,7 @@ class Default_Model_DbTable_ConfigStore extends Local_Model_Table
         if (false == ($configArray = $cache->load($cacheName))) {
             $resultSet = $this->queryAllStoresAndCategories();
             $configArray = $this->createArrayAllStoresAndCategories($resultSet);
-            $cache->save($configArray, $cacheName);
+            $cache->save($configArray, $cacheName, array(), 28800);
         }
 
         return $configArray;
@@ -231,7 +231,7 @@ class Default_Model_DbTable_ConfigStore extends Local_Model_Table
             if (false == ($configArray = $cache->load($cacheName))) {
                 $resultSet = $this->queryStoreConfigArray();
                 $configArray = $this->createStoreConfigArray($resultSet);
-                $cache->save($configArray, $cacheName);
+                $cache->save($configArray, $cacheName, array(), 28800);
             }
         } else {
             $resultSet = $this->queryStoreConfigArray();
@@ -277,7 +277,7 @@ class Default_Model_DbTable_ConfigStore extends Local_Model_Table
 
             if (false == ($config = $cache->load($cacheName))) {
                 $config = $this->queryStoreConfig($store_id);
-                $cache->save($config, $cacheName);
+                $cache->save($config, $cacheName, array(), 28800);
             }
         } else {
             $config = $this->queryStoreConfig($store_id);
