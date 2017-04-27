@@ -114,6 +114,7 @@ class Ocsv1Controller extends Zend_Controller_Action
         $this->_initUriScheme();
         $this->_initRequestParamsAndFormat();
         $this->_initConfig();
+        $this->_initResponseHeader();
     }
 
     public function initView()
