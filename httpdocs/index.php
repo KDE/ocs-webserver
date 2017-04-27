@@ -18,15 +18,8 @@ defined('APPLICATION_LIB')
 defined('APPLICATION_CACHE')
 || define('APPLICATION_CACHE', realpath(dirname(__FILE__) . '/../data/cache'));
 
-// Define application environment
-$crawler = crawlerDetect($_SERVER['HTTP_USER_AGENT']);
-if ($crawler )
-{   
-    define('APPLICATION_ENV', 'searchbotenv');
-} else {
-    defined('APPLICATION_ENV')
-    || define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'));
-}
+defined('APPLICATION_ENV')
+|| define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'));
 
 defined('APPLICATION_DATA')
 || define('APPLICATION_DATA', realpath(dirname(__FILE__) . '/../data'));
