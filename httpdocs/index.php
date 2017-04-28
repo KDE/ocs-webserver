@@ -21,6 +21,7 @@ defined('APPLICATION_LIB')
 defined('APPLICATION_CACHE')
 || define('APPLICATION_CACHE', realpath(dirname(__FILE__) . '/../data/cache'));
 
+// Define application environment
 defined('APPLICATION_ENV')
 || define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'));
 
@@ -35,6 +36,9 @@ set_include_path(implode(PATH_SEPARATOR, array(
 
 
 // Initialising Autoloader
+require_once APPLICATION_LIB . '/Zend/Loader/Autoloader.php';
+$autoloader = Zend_Loader_Autoloader::getInstance();
+$autoloader->setDefaultAutoloader(create_function('$class', "include str_replace('_', '/', \$class) . '.php';"));
 require APPLICATION_LIB . '/Zend/Loader/SplAutoloader.php';
 require APPLICATION_LIB . '/Zend/Loader/StandardAutoloader.php';
 require APPLICATION_LIB . '/Zend/Loader/AutoloaderFactory.php';
@@ -47,6 +51,10 @@ Zend_Loader_AutoloaderFactory::factory(array(
     )
 ));
 
+require_once APPLICATION_LIB . '/Zend/Registry.php';
+Zend_Registry::set('autoloader', $autoloader);
+
+
 // Including plugin cache file
 if (file_exists(APPLICATION_CACHE . DIRECTORY_SEPARATOR . 'pluginLoaderCache.php')) {
     include_once APPLICATION_CACHE . DIRECTORY_SEPARATOR . 'pluginLoaderCache.php';
@@ -58,6 +66,7 @@ Zend_Loader_PluginLoader::setIncludeFileCache(APPLICATION_CACHE . DIRECTORY_SEPA
 $frontendOptions = array(
     'automatic_serialization' => true
 );
+if (APC_EXTENSION_LOADED) {
 
 
 if (MEMCACHED_EXTENSION_LOADED && MEMCACHE_EXTENSION_LOADED) {

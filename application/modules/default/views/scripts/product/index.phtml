@@ -72,6 +72,7 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
 <main id="product-page-content">
 <div class="container-fluid" style="">
   <div class="row">
+       <div class="col-lg-10 imgsmall" id="product-main">
        <div class="col-lg-10 col-md-8 col-sm-8 col-xs-12 imgsmall" id="product-main">
            <div class="row" id="product-main-img-container">
               <div class="col-lg-12 product-main-img" id="product-main-img">                                          
@@ -172,6 +173,8 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
                                                </a>
                                            </li>
                                        <?php } ?>
+                                        <li><a href="#files-panel" data-toggle="tab">Files (<?= $productFileInfos['fileCount'] ?>)</a></li>
+                                       <li><a href="#donations-panel" data-toggle="tab">Supporters (<?= count($this->supporting) ?>)</a></li>
                                         <li><a href="#files-panel" data-toggle="tab">Files <?php  if($productFileInfos['fileCount']>0) {echo '('.$productFileInfos['fileCount'].')'; } ?></a></li>
                                       <?php /* <li><a href="#donations-panel" data-toggle="tab">Supporters <?php if(count($this->supporting)>0) { echo '('.count($this->supporting).')';} ?></a></li> */ ?>
                                        <li><a href="#updates-panel" data-toggle="tab">Changelogs <?php if(count($this->updates)>0) { echo '('.count($this->updates).')';} ?></a></li>
@@ -200,6 +203,8 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
 
                                                <article>
                                                    <?php if (count($this->updates) > 0) { ?>
+                                                    <br /><b>Changelog:</b> <br /><br />
+                                                       <?= $this->partialLoop('product/partials/productUpdates.phtml', $this->updates); ?>
                                                     <br /><b>Last changelog:</b> 
                                                       
                                                     <?= $this->partial('product/partials/productUpdates.phtml', $this->updates[0]); ?>
@@ -240,6 +245,7 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
                                    </div>
                                    <!-- /ABOUT -->
 
+                                   
                                    <?php /*
                                    <div class="tab-pane" id="donations-panel">
 
@@ -264,6 +270,7 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
                                                      <div class="u-wrap">
                                                          <a href="<?php echo $helperBuildMemberUrl->buildMemberUrl($supporter->member_id); ?>">
                                                              <figure>
+                                                                 <img src="<?= $this->Image($supporter->profile_image_url,array('width' => 200, 'height' => 200, 'crop' => 2)); ?>" />
                                                                  <img src="<?= $helpImage->Image($supporter->profile_image_url,array('width' => 200, 'height' => 200, 'crop' => 2)); ?>" />
                                                              </figure>
                                                              <div class="u-content">
@@ -297,6 +304,10 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
                                    </div>
                                    <!-- /MEDIA -->
 
+
+
+
+
                                    <!-- updates panel -->
                                    <div class="tab-pane" id="updates-panel">
                                       <article>                                      
@@ -305,6 +316,7 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
                                           <?php } ?>
                                       </article>                             
                                    </div>
+
     
                                   <div class="tab-pane" id="files-panel">
                                     <div class="col-lg-12">
@@ -332,8 +344,10 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
 
 
        </div>
+       <div class="col-lg-2" id="product-maker">
        <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12" id="product-maker">
           <div class="row">
+              <div class="project-share-new col-lg-12 col-md-2 col-sm-2 col-xs-2">
               <div class="project-share-new col-lg-12 col-md-12 col-sm-12 col-xs-12">
                           <script type="text/javascript">
                                   function fbs_click(a) {
@@ -376,6 +390,7 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
                                         <a href="<?php echo $helperBuildMemberUrl->buildMemberUrl($this->member->member_id); ?>"
                                            title="<?= $this->member->username ?>">
                                             <div class="profile-image-overlay-4 absolute"></div>
+                                            <img src="<?= $this->Image($this->member->profile_image_url, array('width' => 40, 'height' => 40)) ?>"
                                             <img src="<?= $helpImage->Image($this->member->profile_image_url, array('width' => 80, 'height' => 80)) ?>"
                                                  alt="product-maker" width="15" height="15"
                                                  class="sidebar-profile-image">
@@ -383,6 +398,7 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
                                       </div>
                                       <div class="product-maker-summary">
                                           <h5>
+                                              <a href="<?php echo $helperBuildMemberUrl->buildMemberUrl($this->member->member_id); ?>"><?= $this->member->username; ?></a>
                                               <a href="<?php echo $helperBuildMemberUrl->buildMemberUrl($this->member->member_id); ?>">
                                                   <?= $this->member->username; ?>
                                               </a>
@@ -395,21 +411,28 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
                               <?php } ?>
 
                               <?php echo $this->render('partials/sidebarRating.phtml'); ?>
+        
+                             
 
                             <?php /* 
                               <div class="row">
                                   <div class="prod-info">      
+                                  <?php /*                                                                                        
                                                                                                                          
                                     <?php if ($this->product->ppload_collection_id): ?>  
                                        <div class="prod-download"> 
                                       <a href="#" onclick="return activeTabFiles();"><span class="glyphicon glyphicon-download" aria-hidden="true"></span> <div class="txt"><span>download</span></div></a>
                                       </div>
                                     <?php endif;  ?>
+                                   */
+                                    ?>
                                   
                                     <?php if (!empty($this->product->paypal_mail)) : ?>
                                       <div class="prod-download">  
+                                      <a id="inline" href="#product-donate"><div class="txt"><span>Donate</span></div></a>
                                         <a id="inline" href="#product-donate"><div class="txt"><span>Donate</span></div></a>
                                       </div>
+                                    <?php endif; ?>                               
                                     <?php endif; ?>   
                                     <?php if (!empty($this->product->member_id) && $helperUserIsOwner->userIsOwner($this->product->member_id)) : ?>
                                       <div class="prod-download">  
@@ -418,6 +441,7 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
                                     <?php endif; ?> 
                                   </div>   
                               </div>
+                              
                                */
                                     ?>
 
@@ -443,6 +467,8 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
                                           )); ?>
                                   </div>
                                   <!-- /MORE PRODUCTS -->
+
+                                  <?php
   
                                   <?php /*
                                   echo $this->partial(
@@ -474,12 +500,27 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
               </div>
             
           </div>
+
+
+       </div> <!--end col-lg-2-->
+  </div>
   </div> <!--end col-lg-2-->
 </div>
 </main>
 
+
+   
+
     <div id="product-donate">
     <?php
+    echo $this->partial(
+        'product/partials/productDonat.phtml',
+        array(
+            "member" => $this->member,
+            "product" => $this->product,
+            'urlPay' => $this->urlPay,
+        )
+    );
 //    echo $this->partial(
 //        'product/partials/productDonat.phtml',
 //        array(
@@ -495,18 +536,35 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
     
     
     <script>
+        $(document).ready(function () {     
         $(document).ready(function () {
 
+          
 
             $("a#inline").fancybox({
+                  'hideOnContentClick':           true,                                                           
+                  'autoScale'                     : false,                                                                                                                      
+                  'cyclic'                        : 'true',
+                  'transitionIn'                  : 'elastic',
+                  'transitionOut'                 : 'elastic'
                 'hideOnContentClick': true,
                 'autoScale': false,
                 'cyclic': 'true',
                 'transitionIn': 'elastic',
                 'transitionOut': 'elastic'
             });
+           
 
+            $('.carousel-inner img').each(function(index) {
+                    $(this).on("click", function(){                               
+                      
+                      $( "#product-main" ).toggleClass( "col-lg-10" );
+                      $( "#product-main" ).toggleClass( "imgfull" );   
+                      $( "#product-main" ).toggleClass( "imgsmall" );   
+                      $( "#product-tabs-container" ).toggleClass( "col-lg-10" );  
+                      $( "#product-main-img-container" ).toggleClass( "row" );    
 
+                    });
             $('.carousel-inner img').each(function (index) {
                 $(this).on("click", function () {
                     $("#product-main").toggleClass("col-lg-10");
@@ -528,8 +586,13 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
                 });
             });
 
+            
 
             var originHeightProdutMaker = $('#product-maker').height();
+         
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {                
+                 $('#product-maker').height(originHeightProdutMaker);
+                 fixProductMakeHeight();
 
             $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
                 $('#product-maker').height(originHeightProdutMaker);
@@ -538,11 +601,21 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
 
         });
 
+        activeTabFiles = function(e)
+       {            
+          $('.nav-tabs a[href="#files-panel"]').tab('show');
+          return false;
+       }    
         activeTabFiles = function (e) {
             $('.nav-tabs a[href="#files-panel"]').tab('show');
             return false;
         }
 
+        fixProductMakeHeight = function()
+        {
+           if($('#product-main').height()>$('#product-maker').height())
+            {           
+              $('#product-maker').height($('#product-main').height());
         fixProductMakeHeight = function () {
             if ($('#product-main').height() > $('#product-maker').height()) {
                 $('#product-maker').height($('#product-main').height());
@@ -550,9 +623,14 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
         }
 
 
+
+
+        $(window).load(function(){
         $(window).load(function () {
             fixProductMakeHeight();
         })
+
+
 
     </script>
 <?php $this->inlineScript()->appendScript(

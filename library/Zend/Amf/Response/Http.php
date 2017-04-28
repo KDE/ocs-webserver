@@ -45,12 +45,20 @@ class Zend_Amf_Response_Http extends Zend_Amf_Response
                 header('Cache-Control: cache, must-revalidate');
                 header('Pragma: public');
             } else {
-                header('Cache-Control: no-cache, must-revalidate');
-                header('Pragma: no-cache');
+                header('Cache-Control: cache, must-revalidate');
+                header('Pragma: public');
             }
-            header('Expires: Thu, 19 Nov 1981 08:52:00 GMT');
+            //header('Expires: Thu, 19 Nov 1981 08:52:00 GMT');
+            //header('Content-Type: application/x-amf');
+            $duration = 1800; // in seconds
+            $expires = gmdate("D, d M Y H:i:s", time() + $duration) . " GMT";
+            header('Expires: '.$expires);
             header('Content-Type: application/x-amf');
+
+            
         }
+        
+        
         return parent::getResponse();
     }
 
