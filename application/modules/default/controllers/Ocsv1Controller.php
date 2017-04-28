@@ -114,6 +114,7 @@ class Ocsv1Controller extends Zend_Controller_Action
         $this->_initUriScheme();
         $this->_initRequestParamsAndFormat();
         $this->_initConfig();
+        $this->_initResponseHeader();
     }
 
     public function initView()
@@ -251,11 +252,26 @@ class Ocsv1Controller extends Zend_Controller_Action
 
     protected function _sendResponse($response, $format = 'xml', $xmlRootTag = 'ocs')
     {
+        header('Pragma: public');
+        header('Cache-Control: cache, must-revalidate');
+        $duration = 1800; // in seconds
+        $expires = gmdate("D, d M Y H:i:s", time() + $duration) . " GMT";
+        header('Expires: '.$expires);
         if ($format == 'json') {
             header('Content-Type: application/json; charset=UTF-8');
+            header('Pragma: public');
+            header('Cache-Control: cache, must-revalidate');
+            $duration = 1800; // in seconds
+            $expires = gmdate("D, d M Y H:i:s", time() + $duration) . " GMT";
+            header('Expires: '.$expires);
             echo json_encode($response);
         } else {
             header('Content-Type: application/xml; charset=UTF-8');
+            header('Pragma: public');
+            header('Cache-Control: cache, must-revalidate');
+            $duration = 1800; // in seconds
+            $expires = gmdate("D, d M Y H:i:s", time() + $duration) . " GMT";
+            header('Expires: '.$expires);
             echo $this->_convertXmlDom($response, $xmlRootTag)->saveXML();
         }
         exit;
