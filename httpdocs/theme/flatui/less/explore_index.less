@@ -1,0 +1,84 @@
+#explore-content{	
+	.hide{
+		display: none
+	}	
+	.bgwhite{
+		background-color: #fff;
+	}
+	.wrapper{
+		width: 100%;
+	}
+
+	.GridFlex {
+	  display: flex;
+	  flex-wrap: wrap;
+	  display: -webkit-flex; /* Safari */
+	  -webkit-flex-wrap: wrap; /* Safari 6.1+ */
+	  list-style: none;
+	  margin:0;
+	  padding: 0;  
+	  .GridFlex-cell {
+		  flex: 1;
+		
+		}	
+	  .sidebar-left{
+	  	 flex: 0 0 16.66666667%;
+	  	 padding-right: 15px;
+		 padding-left: 15px;
+		 min-width: 200px;
+	  }
+	  .sidebar-right{
+	  	 flex: 0 0 16.66666667%;
+	  	 padding-right: 15px;
+	  	 min-width: 200px;
+		
+	  }	
+	  .content{
+	  	padding-right: 15px;
+	  	min-width: 500px;
+	  }
+	}
+	.togglesidebar{
+		float: right; 
+		font-size: 20px; 
+		margin-right: -20px;
+		display: none;
+	}
+	.downloadDiv{
+		width: 100%; 
+		background-color: #fff; 
+		padding-bottom: 10px; 
+		text-align: center;
+		img{
+			width: 92%;
+		}
+	}
+	.sidebar-right-info{
+		background-color: #f1f1f1; 
+		margin-left: 0px; 
+		margin-right:0px;
+		padding-right:10px;
+		.newsTitle, .commentTitle{
+			margin:auto;
+			display:table;
+			padding:5px;
+		}
+		.catabout{
+			margin-top: 15px;
+		}
+		.commentstore {
+			span.title{
+				text-decoration: underline;
+			}
+			span.date{
+				font-size: smaller; text-align:right
+			}
+		}
+	}
+	.explore-products{
+		padding-left: 0px;
+	}
+
+}
+
+
