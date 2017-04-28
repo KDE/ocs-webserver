@@ -31,56 +31,52 @@ if('all' == strtolower($catTitle) OR (false === isset($catTitle))) {
 } else {
     $labelTotalCounter = $catTitle;
 }
+$this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
 ?>
+
+
 <main id="explore-content">
     <section class="wrapper" id="products-wrapper">
-
-        <aside class="col-lg-2 col-md-3 col-sm-4 col-xs-6">
-             <?php  echo $this->render('explore/partials/filter.phtml'); ?>
-        </aside>
-        
-        <section class="explore-products col-lg-8 col-md-9 col-sm-8 col-xs-12" id="explore-products">
-            <ul class="nav nav-tabs" id="sort">               
-                <li  <?=$this->filters['order'] == 'latest' ? 'class="active"' :'' ?>>
-                    <a href="<?= $helperBuildExploreUrl->buildExploreUrl($this->filters['category'], null,
-                        'latest') ?>"><span><?= $this->translate('Latest') ?></span></a>
-                </li>
-                <li <?=$this->filters['order'] == 'top' ? 'class="active"' :'' ?>>
-                    <a href="<?= $helperBuildExploreUrl->buildExploreUrl($this->filters['category'], null,
-                        'top') ?>"><span><?= $this->translate('Greatest') ?></span></a>
-                </li>
-                <li class="right">
-                    <small><?= $this->totalcount ?> <?= $labelTotalCounter ?></small>
-                </li>
-            </ul>
-
-
-            <div class="product-list">
-                <?php                
-//                if (count($this->products) == 0) {
-//                    echo '<div class="empty">No products to show in this category.</div>';
-//                } else {
-//                    $this->rownum = (1 + (($this->page - 1) * 10));
-//                    foreach ($this->products as $this->product) {
-//                        echo $this->render('explore/partials/product.phtml');
-//                        $this->rownum++;
-//                    }
-//                }
-                if (count($this->products) == 0) {
-                    echo '<div class="empty">No products to show in this category.</div>';
-                } else {
-                    echo $this->render('explore/partials/products.phtml');
-                }
-                ?>
-            </div>
+    <span class="glyphicon  togglesidebar" id="btnTogglesidebar" ></span>
+    <div class="GridFlex">
+      <div class="GridFlex-cell sidebar-left" >          
+          <?php  echo $this->render('explore/partials/filter.phtml'); ?>          
+      </div>
+      <div class="GridFlex-cell content">
+        <section class="explore-products" id="explore-products">
+              <ul class="nav nav-tabs" id="sort">               
+                  <li  <?=$this->filters['order'] == 'latest' ? 'class="active"' :'' ?>>
+                      <a href="<?= $helperBuildExploreUrl->buildExploreUrl($this->filters['category'], null,
+                          'latest') ?>"><span><?= $this->translate('Latest') ?></span></a>
+                  </li>
+                  <li <?=$this->filters['order'] == 'top' ? 'class="active"' :'' ?>>
+                      <a href="<?= $helperBuildExploreUrl->buildExploreUrl($this->filters['category'], null,
+                          'top') ?>"><span><?= $this->translate('Greatest') ?></span></a>
+                  </li>
+                  <li class="right">
+                      <small><?= $this->totalcount ?> <?= $labelTotalCounter ?></small>
+                  </li>
+              </ul>
 
 
-            <section class="explore-footer">
-                <?php echo $this->paginationControl($this->products, 'Sliding',
-                    'explore/partials/paginationControl.phtml',
-                    array('params' => $this->filters, 'dom_target' => 'section.explore-products')); ?>
-            </section>
-        </section>
+              <div class="product-list">
+                  <?php                
+                  if (count($this->products) == 0) {
+                      echo '<div class="empty">No products to show in this category.</div>';
+                  } else {
+                      echo $this->render('explore/partials/products.phtml');
+                  }
+                  ?>
+              </div>
+
+
+              <section class="explore-footer">
+                  <?php echo $this->paginationControl($this->products, 'Sliding',
+                      'explore/partials/paginationControl.phtml',
+                      array('params' => $this->filters, 'dom_target' => 'section.explore-products')); ?>
+              </section>
+          </section>
+      </div>
 
 <?php
      $comments = $modelInfo->getLatestComments(5, $this->cat_id);
@@ -89,89 +85,68 @@ if('all' == strtolower($catTitle) OR (false === isset($catTitle))) {
      $asidehide = '';
      if(!$this->catabout && count($comments)==0 && count($donations)==0 && count($topprods)==0 )
      {
-        $asidehide = 'display:none';
+        $asidehide = 'hide';
      }
 ?>
+      <div class="GridFlex-cell sidebar-right">
+          <aside  id="explore-sidebar <?=$asidehide?>" >                      
+                      <div class="downloadDiv" >
+                          <a href="https://www.linux-apps.com/p/1175480/" target="_blank"><img src="/images/system/download-app.png" /></a>
+                      </div>
 
-        <aside class="col-lg-2 col-md-4 col-sm-8 col-xs-12" id="explore-sidebar" style="padding-right: 0px; <?=$asidehide?>">
-            
-            <div style="width: 100%; background-color: #fff; padding-bottom: 10px; text-align: center;">
-                <a href="https://www.linux-apps.com/p/1175480/" target="_blank"><img src="/images/system/download-app.png" class="img-download" style="width: 92%; " /></a>
-            </div>
+                      <div  class="row sidebar-right-info" >                                
+                          <span class="newsTitle"> News </span>
+                          <div class="prod-widget-box right bgwhite" id="rss-feeds"> </div>                  
+                      <?php
+                      if (count($comments) > 0) {
+                          ?>
+                          <span class="commentTitle"> Comments</span>
+                          <div class="prod-widget-box right bgwhite" id="lastcomments">
+                              <?php
 
-            <div  class="row" style="background-color: #f1f1f1; margin-left: 0px; margin-right:0px;padding-right:10px">            
-          
-            <span class="commentTitle" style="margin:auto;display:table;padding:5px"> News </span>
-            <div class="prod-widget-box right" style=" background-color: #fff" id="rss-feeds">                
-            </div>
-        
-            <?php
-            if (count($comments) > 0) {
-                ?>
-                <span class="commentTitle" style="margin:auto;display:table;padding:5px"> Comments</span>
-                <div class="prod-widget-box right" style=" background-color: #fff" id="lastcomments">
-                    <?php
+                              foreach ($comments as $this->comment) {
+                                  echo $this->render('explore/partials/comment.phtml');
+                              }
+                              ?>
+                          </div>
+                      <?php } ?>        
 
-                    foreach ($comments as $this->comment) {
-                        echo $this->render('explore/partials/comment.phtml');
-                    }
-                    ?>
-                </div>
-            <?php } ?>        
+                      <?php
+                      if (count($topprods) > 0) {
+                          ?>
+                          <span class="commentTitle"> 3 Months Ranking <span class="small light"> (based on downloads)</span></span>
+                          
+                          <div class="prod-widget-box right bgwhite" id="mostdownloaded">
+                              <?php
+                              $this->rownum = 1;
+                              foreach ($topprods as $this->product) {
+                                  echo $this->render('explore/partials/productTop.phtml');
+                                  $this->rownum++;
+                              }
+                              ?>
+                          </div>
+                      <?php } ?>
 
-            <?php
-            if (count($topprods) > 0) {
-                ?>
-                <span class="commentTitle" style="margin:auto;display:table;padding:5px"> 3 Months Ranking <span class="small light"> (download counts)</span></span>
-                
-                <div class="prod-widget-box right" style=" background-color: #fff" id="mostdownloaded">
-                    <?php
-                    $this->rownum = 1;
-                    foreach ($topprods as $this->product) {
-                        echo $this->render('explore/partials/productTop.phtml');
-                        $this->rownum++;
-                    }
-                    ?>
-                </div>
-            <?php } ?>
+                      <?php
+                      if ($this->catabout) {
+                      ?>
+                          <div class="prod-widget-box right catabout" id="catcontent">
+                              <?php include $this->catabout; ?>
+                          </div>
+                      <?php
+                      }
+                      ?>
+                    </div>
+        </aside>
 
-            <?php
-            if ($this->catabout) {
-            ?>
-                <div class="prod-widget-box right" style="margin-top: 15px; " id="catcontent">
-                    <?php include $this->catabout; ?>
-                </div>
-            <?php
-            }
-            ?>
-
-          </div>
-         </aside>
-
-  </section>    
+      </div>
+    </div>
+    </section>
 </main>
 
-<script type="text/javascript">
-    $(window).load(function () {      
-        if ($('#explore-products').height() > ($('#explore-sidebar').height())) {
-            $('#explore-sidebar').height($('#explore-products').height());
-        }        
-    })
-
-    $(document).ready(function() {        
-         var yql = "https://query.yahooapis.com/v1/public/yql?q=select%20title%2Clink%2CpubDate%2Cdescription%20from%20rss%20where%20url%3D%22http%3A%2F%2Fblog.opendesktop.org%2Ffeed%22&format=json&diagnostics=true&callback=";          
-          $.getJSON(yql, function(res) {                
-                var crss ='';
-                $.each( res.query.results.item, function( i, item ) {                           
-                           if ( i >= 3 ) {
-                             return false;
-                           }
-                           var m = moment(item.pubDate);
-                           crss+='<div class="commentstore"><a href="'+item.link+'"><span style="text-decoration: underline;">'+item.title +'</span></a><br/>' + item.description
-                           +'<br/><span style="font-size: smaller; text-align:right">'+m.format('MMM DD YYYY LT')+'</span></div>';                           
-                         }); 
-                $("#rss-feeds").html(crss);
-          });                
-    });
-
-</script>
+<?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){
+            RssNews.setup();    
+            //ToggleSidebar.setup();        
+        });
+    ');

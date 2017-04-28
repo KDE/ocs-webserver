@@ -174,6 +174,8 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
                                        <?php } ?>
                                         <li><a href="#files-panel" data-toggle="tab">Files <?php  if($productFileInfos['fileCount']>0) {echo '('.$productFileInfos['fileCount'].')'; } ?></a></li>
                                        <li><a href="#donations-panel" data-toggle="tab">Supporters <?php if(count($this->supporting)>0) { echo '('.count($this->supporting).')';} ?></a></li>
+                                      <?php /* <li><a href="#donations-panel" data-toggle="tab">Supporters <?php if(count($this->supporting)>0) { echo '('.count($this->supporting).')';} ?></a></li> */ ?>
+                                       <li><a href="#updates-panel" data-toggle="tab">Changelogs <?php if(count($this->updates)>0) { echo '('.count($this->updates).')';} ?></a></li>
                                         
                                    </ul>
                                </div>
@@ -237,7 +239,7 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
                                    </div>
                                    <!-- /ABOUT -->
 
-                                   
+                                   <?php /*
                                    <div class="tab-pane" id="donations-panel">
 
                                        <article class="col-lg-8 col-md-8 col-sm-8 col-xs-12" id="comments-container">
@@ -283,6 +285,7 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
                                        </div>
 
                                    </div>
+                                   */ ?>
                                    <!-- /DONATIONS -->
 
                                    <!-- MEDIA -->
