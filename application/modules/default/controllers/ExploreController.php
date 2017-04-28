@@ -32,6 +32,11 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         $this->_auth = Zend_Auth::getInstance();
     }
 
+    protected function _initResponseHeader()
+    {
+        $duration = 3600; // in seconds
+        $expires = gmdate("D, d M Y H:i:s", time() + $duration) . " GMT";
+
         $this->getResponse()
             ->setHeader('X-FRAME-OPTIONS', 'SAMEORIGIN', true)
 //            ->setHeader('Last-Modified', $modifiedTime, true)
