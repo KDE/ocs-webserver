@@ -616,7 +616,6 @@ a.partial{
 
 .dropdown:hover .dropdown-menu {
     display: block;
-    margin-top: 0; // remove the gap so it doesn't close
     margin-top: 0; /*remove the gap so it doesn't close*/
  }
  .metamenu a{
@@ -986,35 +985,6 @@ iframe[id^="oauth2relay"] { position: fixed !important; }
 
   .modal.bootstrap-dialog.in .modal-header .close {
     font-size: 50px;
-  }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   }
 
 div.explore-product-details span.packagetypeos
