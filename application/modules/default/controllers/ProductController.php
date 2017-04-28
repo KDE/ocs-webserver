@@ -57,11 +57,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
     public function indexAction()
     {
-        $this->getResponse()
-            ->setHeader('Pragma', 'cache', true)
-            ->setHeader('Cache-Control', 'private, max-age=300, pre-check=300', true)
-            ;
-
         if (empty($this->_projectId)) {
             $this->redirect('/explore');
         }
@@ -1817,7 +1812,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
     protected function _initResponseHeader()
     {
-        $duration = 3600; // in seconds
+        $duration = 1800; // in seconds
         $expires = gmdate("D, d M Y H:i:s", time() + $duration) . " GMT";
 
         $this->getResponse()
