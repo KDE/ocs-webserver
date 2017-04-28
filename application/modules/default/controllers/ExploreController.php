@@ -31,10 +31,10 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         parent::init();
         $this->_auth = Zend_Auth::getInstance();
     }
-
+    
     protected function _initResponseHeader()
     {
-        $duration = 3600; // in seconds
+        $duration = 1800; // in seconds
         $expires = gmdate("D, d M Y H:i:s", time() + $duration) . " GMT";
 
         $this->getResponse()
@@ -111,11 +111,6 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
 
     public function indexAction()
     {
-        $this->getResponse()
-            ->setHeader('Pragma', 'cache', true)
-            ->setHeader('Cache-Control', 'private, max-age=300, pre-check=300', true)
-        ;
-
         $storeCatIds = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
         $this->view->categories = $storeCatIds;
         
