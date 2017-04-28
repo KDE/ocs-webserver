@@ -173,7 +173,6 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
                                            </li>
                                        <?php } ?>
                                         <li><a href="#files-panel" data-toggle="tab">Files <?php  if($productFileInfos['fileCount']>0) {echo '('.$productFileInfos['fileCount'].')'; } ?></a></li>
-                                       <li><a href="#donations-panel" data-toggle="tab">Supporters <?php if(count($this->supporting)>0) { echo '('.count($this->supporting).')';} ?></a></li>
                                       <?php /* <li><a href="#donations-panel" data-toggle="tab">Supporters <?php if(count($this->supporting)>0) { echo '('.count($this->supporting).')';} ?></a></li> */ ?>
                                        <li><a href="#updates-panel" data-toggle="tab">Changelogs <?php if(count($this->updates)>0) { echo '('.count($this->updates).')';} ?></a></li>
                                         
@@ -201,8 +200,10 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
 
                                                <article>
                                                    <?php if (count($this->updates) > 0) { ?>
-                                                    <br /><b>Changelog:</b> <br /><br />
-                                                       <?= $this->partialLoop('product/partials/productUpdates.phtml', $this->updates); ?>
+                                                    <br /><b>Last changelog:</b> <br /><br />
+                                                      
+                                                    <?= $this->partial('product/partials/productUpdates.phtml', $this->updates[0]); ?>
+                                                       
                                                    <?php } ?>
                                                </article>
                                                
@@ -295,6 +296,16 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
                                        <?php endif; ?>                                      
                                    </div>
                                    <!-- /MEDIA -->
+
+                                   <!-- updates panel -->
+                                   <div class="tab-pane" id="updates-panel">
+                                      <article>                                      
+                                          <?php if (count($this->updates) > 0) { ?>
+                                           <br /><b>Changelog:</b> <br /><br />
+                                              <?= $this->partialLoop('product/partials/productUpdates.phtml', $this->updates); ?>
+                                          <?php } ?>
+                                      </article>                             
+                                   </div>
     
                                   <div class="tab-pane" id="files-panel">
                                     <div class="col-lg-12">
@@ -386,16 +397,16 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
 
                               <?php echo $this->render('partials/sidebarRating.phtml'); ?>
 
+                            <?php /* 
                               <div class="row">
                                   <div class="prod-info">      
-                                  <?php /*                                                                                        
+                                                                                                                         
                                     <?php if ($this->product->ppload_collection_id): ?>  
                                        <div class="prod-download"> 
                                       <a href="#" onclick="return activeTabFiles();"><span class="glyphicon glyphicon-download" aria-hidden="true"></span> <div class="txt"><span>download</span></div></a>
                                       </div>
                                     <?php endif;  ?>
-                                   */
-                                    ?>
+                                  
                                     <?php if (!empty($this->product->paypal_mail)) : ?>
                                       <div class="prod-download">  
                                         <a id="inline" href="#product-donate"><div class="txt"><span>Donate</span></div></a>
@@ -408,7 +419,9 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
                                     <?php endif; ?> 
                                   </div>   
                               </div>
-                              
+                               */
+                                    ?>
+
                                   <!-- MORE PRODUCTS -->
                                   
                                   <div>
@@ -431,8 +444,8 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
                                           )); ?>
                                   </div>
                                   <!-- /MORE PRODUCTS -->
-
-                                  <?php
+  
+                                  <?php /*
                                   echo $this->partial(
                                       $viewSidebar,
                                       array(
@@ -449,7 +462,10 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
                                           'paymentMessage' => $this->paymentMessage
                                       )
                                   );
+                                  */
                                   ?>
+
+                               <?php echo $this->render('partials/sidebarCcLicense.phtml'); ?>
 
                                <?php                                      
                                         echo $this->render('product/partials/details.phtml');
