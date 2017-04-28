@@ -200,7 +200,7 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
 
                                                <article>
                                                    <?php if (count($this->updates) > 0) { ?>
-                                                    <br /><b>Last changelog:</b> <br /><br />
+                                                    <br /><b>Last changelog:</b> 
                                                       
                                                     <?= $this->partial('product/partials/productUpdates.phtml', $this->updates[0]); ?>
                                                        
@@ -300,8 +300,7 @@ $productFileInfos = $this->projectFiles($this->product->ppload_collection_id);
                                    <!-- updates panel -->
                                    <div class="tab-pane" id="updates-panel">
                                       <article>                                      
-                                          <?php if (count($this->updates) > 0) { ?>
-                                           <br /><b>Changelog:</b> <br /><br />
+                                          <?php if (count($this->updates) > 0) { ?>                                         
                                               <?= $this->partialLoop('product/partials/productUpdates.phtml', $this->updates); ?>
                                           <?php } ?>
                                       </article>                             
