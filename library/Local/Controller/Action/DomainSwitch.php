@@ -136,9 +136,8 @@ class Local_Controller_Action_DomainSwitch extends Zend_Controller_Action
             ->setHeader('X-FRAME-OPTIONS', 'SAMEORIGIN', true)
 //            ->setHeader('Last-Modified', $modifiedTime, true)
             ->setHeader('Expires', $expires, true)
-            ->setHeader('Pragma', 'no-cache', true)
-            ->setHeader('Cache-Control', 'private, no-store, no-cache, must-revalidate, post-check=0, pre-check=0',true)
-//            ->setHeader('Pragma', 'cache', true)
+            >setHeader('Pragma', 'cache', true)
+            ->setHeader('Cache-Control', 'max-age='.$duration.', public', true)//            ->setHeader('Pragma', 'cache', true)
 //            ->setHeader('Cache-Control', 'private, max-age=300, pre-check=300', true)
         ;
     }
