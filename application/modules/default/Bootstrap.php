@@ -111,6 +111,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view->addHelperPath(APPLICATION_LIB . '/Zend/View/Helper', 'Zend_View_Helper_');
 
         $config = $this->getResource('config');
+        
+        //fallback, if config is not realy set in registry
+        if(!$config || !isset($config)) {
+            $config = new Zend_Config($this->getOptions(), true);
+            Zend_Registry::set('config', $config);
+        }
 
         $docType = $config->resources->view->doctype ? $config->resources->view->doctype : 'XHTML1_TRANSITIONAL';
         $view->doctype($docType);
@@ -147,6 +153,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         }
         $translateOptions = isset($options['options']) ? $options['options'] : array();
         $cache = $this->getResource('cache');
+        
+        if(!$cache || !isset($cache)) {
+            $this->_initCache();
+        }
+        
         Zend_Translate::setCache($cache);
         $translate = new Zend_Translate($adapter, $data, $locale, $translateOptions);
         Zend_Form::setDefaultTranslator($translate);
@@ -212,6 +223,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     {
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
+        
+        //fallback, if config is not realy set in registry
+        if(!$cache || !isset($cache)) {
+            $this->_initCache();
+        }
+
 
         if (false == ($aclRules = $cache->load('AclRules'))) {
             $aclRules = new Default_Plugin_AclRules();
@@ -245,6 +262,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     protected function _initAuthSessionNamespace()
     {
         $config = $this->getResource('config');
+        
+        //fallback, if config is not realy set in registry
+        if(!$config || !isset($config)) {
+            $config = new Zend_Config($this->getOptions(), true);
+            Zend_Registry::set('config', $config);
+        }
+        
         $auth_config = $config->settings->auth_session;
 
         $objSessionNamespace = new Zend_Session_Namespace($auth_config->name);
