@@ -6,13 +6,14 @@ if (Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIde
 
     if ($profiler->getEnabled() && $profiler->getTotalNumQueries() > 0) :
     ?>
-    <div class="well">
-    <div style='text-align:center'>
+<div class="panel panel-default">
+    <div class="panel-heading">
         <h2>Database Profiling Report</h2>
         <p>Total queries executed: <?php echo $profiler->getTotalNumQueries() ?></p>
-        <p>Total elapsed time: <?php echo $profiler->getTotalElapsedSecs() ?></p>
+        <p>Total elapsed time: <?php echo $profiler->getTotalElapsedSecs() ?> seconds</p>
     </div>
-    <table class='table table-bordered table-responsive' width="100%">
+    <div class="panel-body">
+    <table class="table table-bordered">
         <thead>
         <tr>
             <th>#</th>
@@ -36,6 +37,7 @@ if (Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIde
         <?php endforeach ?>
         </tbody>
     </table>
+    </div>
     </div>
 <?php endif ?>
 <?php } ?>

@@ -40,7 +40,10 @@ $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
     <span class="glyphicon  togglesidebar" id="btnTogglesidebar" ></span>
     <div class="GridFlex">
       <div class="GridFlex-cell sidebar-left" >          
-          <?php  echo $this->render('explore/partials/filter.phtml'); ?>          
+          <?php  $time_start = microtime(true);echo $this->render('explore/partials/filter.phtml'); $time_elapsed = microtime(true) - $time_start; ?>
+          <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
+             echo '<div class="alert alert-warning" role="alert"><strong>Rendering Time: </strong>'.$time_elapsed.' s</div>';
+          }?>
       </div>
       <div class="GridFlex-cell content">
         <section class="explore-products" id="explore-products">
@@ -64,10 +67,13 @@ $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
                   if (count($this->products) == 0) {
                       echo '<div class="empty">No products to show in this category.</div>';
                   } else {
-                      echo $this->render('explore/partials/products.phtml');
+                       $time_start = microtime(true);echo $this->render('explore/partials/products.phtml');$time_elapsed = microtime(true) - $time_start;
                   }
                   ?>
               </div>
+            <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
+                echo '<div class="alert alert-warning" role="alert"><strong>Rendering Time: </strong>'.$time_elapsed.' s</div>';
+            }?>
 
 
               <section class="explore-footer">
@@ -79,6 +85,7 @@ $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
       </div>
 
 <?php
+$time_start = microtime(true);
      $comments = $modelInfo->getLatestComments(5, $this->cat_id);
      $donations = $modelInfo->getLatestPlings(5, $this->cat_id);
      $topprods = $modelInfo->getMostDownloaded(100, $this->cat_id);
@@ -138,7 +145,11 @@ $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
                       ?>
                     </div>
         </aside>
-
+          <?php
+          $time_elapsed = microtime(true) - $time_start;
+          if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
+              echo '<div class="alert alert-warning" role="alert"><strong>Rendering Time: </strong>'.$time_elapsed.' s</div>';
+          }?>
       </div>
     </div>
     </section>
