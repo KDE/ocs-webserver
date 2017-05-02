@@ -955,6 +955,8 @@ class Default_Model_Project extends Default_Model_DbTable_Project
      */
     public function fetchProjectViews($project_id)
     {
+        return 0;
+        /*
         $sql = "
                 SELECT
                     `stat_page_views`.`project_id` AS `project_id`,
@@ -978,6 +980,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         }
 
         return $result;
+         */
     }
 
     /**
