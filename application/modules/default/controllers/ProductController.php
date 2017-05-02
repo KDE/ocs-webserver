@@ -120,7 +120,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $newDesc = $this->bbcode2html($desc);
         $this->view->product->description = $newDesc;
 
-        $this->view->supporting = $tableProject->fetchProjectSupporterWithPlings($this->_projectId);
+        // switch off temporally 02.05.2017
+        //$this->view->supporting = $tableProject->fetchProjectSupporterWithPlings($this->_projectId);
         //$orgUpdates = $tableProjectUpdates->fetchLastProjectUpdate($this->_projectId);
         $tableProjectUpdates = new Default_Model_ProjectUpdates();
         $orgUpdates = $tableProjectUpdates->fetchProjectUpdates($this->_projectId);
@@ -133,7 +134,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         }
 
         $this->view->updates = $newUpdates;
-        $this->view->supporter = $tableProject->fetchProjectSupporter($this->_projectId);
+        // switch off temporally 02.05.2017
+        //$this->view->supporter = $tableProject->fetchProjectSupporter($this->_projectId);
+
         $this->view->galleryPictures = $tableProject->getGalleryPictureSources($this->_projectId);
         $this->view->product_views = $tableProject->fetchProjectViews($this->_projectId);
 
@@ -157,8 +160,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $paginationComments->setCurrentPageNumber($offset);
         $this->view->comments = $paginationComments;
 
-        $modelPlings = new Default_Model_DbTable_Plings();
-        $this->view->plings = $modelPlings->getDonationsForProject($this->_projectId, 10);
+        // switch off temporally 02.05.2017
+        //$modelPlings = new Default_Model_DbTable_Plings();
+        //$this->view->plings = $modelPlings->getDonationsForProject($this->_projectId, 10);
 
         $tableMember = new Default_Model_Member();
         $this->view->member = $tableMember->fetchMemberData($this->view->product->member_id);
