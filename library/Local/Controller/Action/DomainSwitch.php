@@ -42,6 +42,7 @@ class Local_Controller_Action_DomainSwitch extends Zend_Controller_Action
         $this->initView();
         $this->setLayout();
         $this->_initResponseHeader();
+        $this->_initAdminDbLogger();
     }
 
     protected function initDefaultConfigName()
@@ -141,6 +142,21 @@ class Local_Controller_Action_DomainSwitch extends Zend_Controller_Action
 //            ->setHeader('Pragma', 'cache', true)
 //            ->setHeader('Cache-Control', 'private, max-age=300, pre-check=300', true)
         ;
+    }
+
+    private function _initAdminDbLogger()
+    {
+        if (Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
+            $profiler = new Zend_Db_Profiler();
+            $profiler->setEnabled(true);
+
+            // Attach the profiler to your db adapter
+            Zend_Db_Table::getDefaultAdapter()->setProfiler($profiler);
+            /** @var Zend_Db_Adapter_Abstract $db */
+            $db =  Zend_Registry::get('db');
+            $db->setProfiler($profiler);
+            Zend_Registry::set('db', $db);
+        }
     }
 
 }

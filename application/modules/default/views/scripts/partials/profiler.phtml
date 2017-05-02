@@ -1,0 +1,41 @@
+<?php
+// get the default db adapter
+$adapter = Zend_Db_Table::getDefaultAdapter();
+$profiler = $adapter->getProfiler();
+if (Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
+
+    if ($profiler->getEnabled() && $profiler->getTotalNumQueries() > 0) :
+    ?>
+    <div class="well">
+    <div style='text-align:center'>
+        <h2>Database Profiling Report</h2>
+        <p>Total queries executed: <?php echo $profiler->getTotalNumQueries() ?></p>
+        <p>Total elapsed time: <?php echo $profiler->getTotalElapsedSecs() ?></p>
+    </div>
+    <table class='table table-bordered table-responsive'>
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Query</th>
+            <th>Params</th>
+            <th>Time</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php
+        /**
+         * @var int $queryNumber
+         * @var Zend_Db_Profiler_Query $query */
+        foreach ($profiler->getQueryProfiles() as $queryNumber => $query) : ?>
+            <tr>
+                <td>(<?php echo $queryNumber + 1 ?>)</td>
+                <td style="width:150px;word-wrap:break-word;"><?php echo $query->getQuery(); ?></td>
+                <td><?php print_r($query->getQueryParams()); ?></td>
+                <td><?php echo $query->getElapsedSecs(); ?> s</td>
+            </tr>
+        <?php endforeach ?>
+        </tbody>
+    </table>
+    </div>
+<?php endif ?>
+<?php } ?>
