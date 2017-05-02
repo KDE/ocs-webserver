@@ -862,3 +862,21 @@ var ToggleSidebar = (function () {
         }
     }
 })();
+
+var ProductDetailCarousel = (function () {
+    return {
+        setup: function () {            
+            $('.carousel-inner img').each(function (index) {
+                $(this).on("click", function () {
+                  if($("#product-main-img-container").hasClass("imgfull")){
+                    $('#product-main-img-container').prependTo($('#product-main')); 
+                  }else{
+                    $('#product-main-img-container').prependTo($('#product-page-content')); 
+                  }                    
+                  $("#product-main-img-container").toggleClass("imgfull");
+                  $("#product-main-img-container").toggleClass("imgsmall");
+                });
+            });
+        }
+    }
+})();
