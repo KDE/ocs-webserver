@@ -471,6 +471,20 @@ class Default_Model_Info
             SELECT 
                 p.*
                 ,(round(((p.count_likes + 6) / ((p.count_likes + p.count_dislikes) + 12)),2) * 100) as laplace_score
+            FROM
+                project as p
+            WHERE
+                p.status = 100
+                    AND p.project_category_id IN (' .
+            implode(',', $activeCategories)
+            . ')
+            ORDER BY IFNULL(p.changed_at,p.created_at)  DESC
+            ';
+/*
+        $sql = '
+            SELECT 
+                p.*
+                ,(round(((p.count_likes + 6) / ((p.count_likes + p.count_dislikes) + 12)),2) * 100) as laplace_score
                 ,sp.count_plingers
             FROM
                 project as p
@@ -482,7 +496,7 @@ class Default_Model_Info
             . ')
             ORDER BY IFNULL(p.changed_at,p.created_at)  DESC
             ';
-
+*/
         if (isset($limit)) {
             $sql .= ' limit ' . (int)$limit;
         }
@@ -525,6 +539,24 @@ class Default_Model_Info
             SELECT 
                 p.*
                 ,(round(((p.count_likes + 6) / ((p.count_likes + p.count_dislikes) + 12)),2) * 100) as laplace_score
+                ,(select profile_image_url from member m where m.member_id = p.member_id) as profile_image_url
+                ,(select username from member m where m.member_id = p.member_id) as username
+            FROM
+                project as p
+            WHERE
+                p.status = 100
+                and p.type_id = 1
+                and p.featured = 1
+                    AND p.project_category_id IN (' .
+            implode(',', $activeCategories)
+            . ')
+            ORDER BY p.changed_at DESC
+            ';
+/*        
+        $sql = '
+            SELECT 
+                p.*
+                ,(round(((p.count_likes + 6) / ((p.count_likes + p.count_dislikes) + 12)),2) * 100) as laplace_score
                 ,sp.count_plingers
                 ,(select profile_image_url from member m where m.member_id = p.member_id) as profile_image_url
                 ,(select username from member m where m.member_id = p.member_id) as username
@@ -540,7 +572,7 @@ class Default_Model_Info
             . ')
             ORDER BY p.changed_at DESC
             ';
-
+*/
         if (isset($limit)) {
             $sql .= ' limit ' . (int)$limit;
         }

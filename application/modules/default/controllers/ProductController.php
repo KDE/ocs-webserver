@@ -169,7 +169,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $widgetDefaultModel = new Default_Model_DbTable_ProjectWidgetDefault();
         $widgetDefault = $widgetDefaultModel->fetchConfig($this->_projectId);
         $widgetDefault->text->headline = $this->view->product->title;
-        $widgetDefault->amounts->current = $this->view->product->amount_received;
+        //$widgetDefault->amounts->current = $this->view->product->amount_received;
         $widgetDefault->amounts->goal = $this->view->product->amount;
         $widgetDefault->project = $this->_projectId;
         $this->view->widgetConfig = $widgetDefault;
