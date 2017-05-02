@@ -110,7 +110,7 @@ class Default_Model_ProjectCategory
         return $tree;
     }
 
-    private function buildTree($list)
+    private function buildTree($list, $parent_id = null)
     {
         if (false === is_array($list)) {
             $list = array($list);
@@ -122,12 +122,24 @@ class Default_Model_ProjectCategory
             $currentCategory = $modelCategories->fetchElement($cat_id);
             $countProduct = $modelProject->countProductsInCategory($cat_id, true);
 
-            $result_element = array('id'=> $cat_id, 'title' => $currentCategory['title'], 'product_count' => $countProduct, 'has_children' => false);
+            $result_element = array(
+                'id'=> $cat_id,
+                'title' => $currentCategory['title'],
+                'product_count' => $countProduct,
+                'xdg_type' => $currentCategory['xdg_type'],
+                'name_legacy' => $currentCategory['name_legacy'],
+                'has_children' => false
+            );
+
+            if (isset($parent_id)) {
+                $result_element['parent_id'] = $parent_id;
+            }
+
             //has children?
             if (($currentCategory['rgt'] - $currentCategory['lft']) > 1) {
                 $result_element['has_children'] = true;
                 $ids = $modelCategories->fetchImmediateChildrenIds($currentCategory['project_category_id'], $modelCategories::ORDERED_TITLE);
-                $result_element['children'] = $this->buildTree($ids);
+                $result_element['children'] = $this->buildTree($ids, $currentCategory['project_category_id']);
             }
             $result[] = $result_element;
         }
