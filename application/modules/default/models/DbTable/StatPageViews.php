@@ -27,12 +27,13 @@ class Default_Model_DbTable_StatPageViews extends Zend_Db_Table_Abstract
     public function savePageView($project_id, $clientIp, $member_id)
     {
 
-        $newData = array(
-            'project_id' => $project_id,
-            'ip' => $clientIp,
-            'member_id' => $member_id
-        );
-        $this->insert($newData);
+        $this->_db->query("INSERT LOW_PRIORITY INTO {$this->_name} (`project_id`, `ip`, `member_id`) VALUES (:param1, :param2, :param3);",
+            array(
+                'param1' => $project_id,
+                'param2' => $clientIp,
+                'param3' => $member_id
+            ));
+        $this->_db->commit();
 
     }
 
