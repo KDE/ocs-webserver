@@ -25,7 +25,7 @@ class ReportController extends Zend_Controller_Action
     public function commentAction()
     {
         $this->_helper->layout()->disableLayout();
-        if(APPLICATION_ENV != searchbotenv) {
+        if(APPLICATION_ENV != 'searchbotenv') {
             $comment_id = (int) $this->getParam('i');
             $project_id = (int) $this->getParam('p');
             $reported_by = (int) Zend_Auth::getInstance()->getStorage()->read()->member_id;
@@ -44,7 +44,7 @@ class ReportController extends Zend_Controller_Action
     {
         $this->_helper->layout()->disableLayout();
         
-        if(APPLICATION_ENV != searchbotenv) {
+        if(APPLICATION_ENV != 'searchbotenv') {
 
             $project_id = (int) $this->getParam('p');
             $reported_by = 0;
