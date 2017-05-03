@@ -1402,16 +1402,17 @@ class Default_Model_Project extends Default_Model_DbTable_Project
     protected function generateBaseStatement()
     {
         $statement = $this->select()->setIntegrityCheck(false);
-        $statement->from(array('project' => $this->_name), array(
-            '*',
-            'project_changed_at' => 'changed_at',
-            'laplace_score' => new Zend_Db_Expr('(round(((count_likes + 6) / ((count_likes + count_dislikes) + 12)),2) * 100)')
+        //$statement->from(array('project' => $this->_name), array(
+        $statement->from(array('project' => 'stat_projects'), array(
+            '*'
         ));
+        /*
         $statement->join(array('member' => 'member'),
             'project.member_id = member.member_id AND member.is_active = 1 AND member.is_deleted = 0');
         $statement->join(array('project_category' => 'project_category'),
             'project.project_category_id = project_category.project_category_id',
             array('cat_title' => 'title'));
+        */
         /*
         $statement->joinLeft(array('stat_plings' => 'stat_plings'), 'project.project_id = stat_plings.project_id',
             array('amount_received', 'count_plings', 'count_plingers', 'latest_pling'));
