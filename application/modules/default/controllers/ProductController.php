@@ -76,9 +76,11 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             throw new Zend_Controller_Action_Exception('This page does not exist', 404);
         }
 
-        $tablePageViews = new Default_Model_DbTable_StatPageViews();
-        $tablePageViews->savePageView($this->_projectId, $this->getRequest()->getClientIp(),
-            $this->_authMember->member_id);
+        if(APPLICATION_ENV != searchbotenv) {
+            $tablePageViews = new Default_Model_DbTable_StatPageViews();
+            $tablePageViews->savePageView($this->_projectId, $this->getRequest()->getClientIp(),
+                $this->_authMember->member_id);
+        }
 
 
         $helperBaseUrl = new Default_View_Helper_BaseUrl();
