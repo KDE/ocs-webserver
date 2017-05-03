@@ -26,14 +26,22 @@ class Default_Model_DbTable_StatPageViews extends Zend_Db_Table_Abstract
 
     public function savePageView($project_id, $clientIp, $member_id)
     {
+        $this->_db->beginTransaction();
+        
+        try {
+            $this->_db->query("INSERT LOW_PRIORITY INTO {$this->_name} (`project_id`, `ip`, `member_id`) VALUES (:param1, :param2, :param3);",
+                array(
+                    'param1' => $project_id,
+                    'param2' => $clientIp,
+                    'param3' => $member_id
+                ));
+            $this->_db->commit();
+            
+        } catch (Exception $ex) {
+            $this->_db->rollBack();
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . print_r($e, true));
+        }
 
-        $this->_db->query("INSERT LOW_PRIORITY INTO {$this->_name} (`project_id`, `ip`, `member_id`) VALUES (:param1, :param2, :param3);",
-            array(
-                'param1' => $project_id,
-                'param2' => $clientIp,
-                'param3' => $member_id
-            ));
-        $this->_db->commit();
 
     }
 
