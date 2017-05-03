@@ -60,8 +60,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
      */
     private function get_domain($domain)
     {
-//        $pieces = parse_url($url);
-//        $domain = isset($pieces['host']) ? $pieces['host'] : '';
         if (preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $domain, $regs)) {
             return $regs['domain'];
         }
@@ -70,16 +68,57 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
     protected function _initCache()
     {
-        if (false === Zend_Registry::isRegistered('cache')) {
-            return;
+        $cache = null;
+        $options = $this->getOptions();
+
+        if (isset($options['settings']['cache'])) {
+
+            $cache = Zend_Cache::factory(
+                $options['settings']['cache']['frontend']['type'],
+                $options['settings']['cache']['backend']['type'],
+                $options['settings']['cache']['frontend']['options'],
+                $options['settings']['cache']['backend']['options']
+            );
+        } else {
+        // Fallback settings for some (maybe development) environments with where no cache management is installed.
+
+            if (false === is_writeable(APPLICATION_CACHE)) {
+                error_log('directory for cache files does not exists or not writable: ' . APPLICATION_CACHE);
+                exit('directory for cache files does not exists or not writable: ' . APPLICATION_CACHE);
+            }
+
+            $frontendOptions = array(
+                'lifetime' => 600,
+                'automatic_serialization' => true,
+                'cache_id_prefix' => 'front',
+                'cache' => true
+            );
+
+            $backendOptions = array(
+                'cache_dir' => APPLICATION_CACHE,
+                'file_locking' => true,
+                'read_control' => true,
+                'read_control_type' => 'adler32', // default 'crc32'
+                'hashed_directory_level' => 0,
+                'hashed_directory_perm' => 0700,
+                'file_name_prefix' => 'backend',
+                'cache_file_perm' => 700
+            );
+
+            $cache = Zend_Cache::factory(
+                'Core',
+                'File',
+                $frontendOptions,
+                $backendOptions
+            );
         }
 
-        $cache = Zend_Registry::get('cache');
+        Zend_Registry::set('cache', $cache);
+
         Zend_Locale_Data::setCache($cache);
         Zend_Locale::setCache($cache);
         Zend_Currency::setCache($cache);
         Zend_Translate::setCache($cache);
-
         Zend_Db_Table_Abstract::setDefaultMetadataCache($cache);
 
         return $cache;

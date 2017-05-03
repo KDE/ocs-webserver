@@ -43,9 +43,9 @@ class Local_Application extends Zend_Application
      * @throws Zend_Application_Exception
      * @return \Local_Application
      */
-    public function __construct($environment, $options = null, Zend_Cache_Core $configCache = null)
+    public function __construct($environment, $options = null)
     {
-        $this->_configCache = $configCache;
+        $this->_configCache = $this->_initCache();
         parent::__construct($environment, $options);
     }
 
@@ -78,11 +78,12 @@ class Local_Application extends Zend_Application
 
     protected function _cacheId($file)
     {
-        return md5($file) . '_' . $this->getEnvironment();
+        return 'app_config_' . $this->getEnvironment() . '_' . md5_file($file);
     }
 
     /**
      * @param string $file
+     * @param $cacheId
      * @return bool|string
      */
     protected function _testCache($file, $cacheId)
@@ -96,6 +97,31 @@ class Local_Application extends Zend_Application
         }
 
         return false;
+    }
+
+    protected function _initCache()
+    {
+        $frontendOptions = array(
+            'automatic_serialization' => true
+        );
+
+        $backendOptions = array(
+            'cache_dir' => APPLICATION_CACHE,
+            'file_locking' => true,
+            'read_control' => true,
+            'read_control_type' => 'adler32', // default 'crc32'
+            'hashed_directory_level' => 0,
+            'hashed_directory_perm' => 0700,
+            'file_name_prefix' => 'app',
+            'cache_file_perm' => 700
+        );
+
+        return Zend_Cache::factory(
+            'Core',
+            'File',
+            $frontendOptions,
+            $backendOptions
+        );
     }
 
 } 
