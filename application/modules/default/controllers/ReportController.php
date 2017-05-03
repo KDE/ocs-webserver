@@ -25,33 +25,37 @@ class ReportController extends Zend_Controller_Action
     public function commentAction()
     {
         $this->_helper->layout()->disableLayout();
+        if(APPLICATION_ENV != searchbotenv) {
+            $comment_id = (int) $this->getParam('i');
+            $project_id = (int) $this->getParam('p');
+            $reported_by = (int) Zend_Auth::getInstance()->getStorage()->read()->member_id;
 
-        $comment_id = (int) $this->getParam('i');
-        $project_id = (int) $this->getParam('p');
-        $reported_by = (int) Zend_Auth::getInstance()->getStorage()->read()->member_id;
+            $tableReportComments = new Default_Model_DbTable_ReportComments();
 
-        $tableReportComments = new Default_Model_DbTable_ReportComments();
-
-        $tableReportComments->save(array('project_id' => $project_id, 'comment_id' => $comment_id, 'reported_by' => $reported_by));
-
+            $tableReportComments->save(array('project_id' => $project_id, 'comment_id' => $comment_id, 'reported_by' => $reported_by));
+        }
         $this->_helper->json(array('status' => 'ok', 'message' => '<p>Thank you, we received your message.</p><div class="modal-footer">
-                                            <button type="button" style="border:none;background: transparent;color: #2673b0;" class="small close" data-dismiss="modal" > Close</button>
-                                        </div>', 'data' => array()));
+                                    <button type="button" style="border:none;background: transparent;color: #2673b0;" class="small close" data-dismiss="modal" > Close</button>
+                                </div>', 'data' => array()));
+
     }
 
     public function productAction()
     {
         $this->_helper->layout()->disableLayout();
+        
+        if(APPLICATION_ENV != searchbotenv) {
 
-        $project_id = (int) $this->getParam('p');
-        $reported_by = 0;
-        if (Zend_Auth::getInstance()->hasIdentity()) {
-            $reported_by = (int) Zend_Auth::getInstance()->getStorage()->read()->member_id;
+            $project_id = (int) $this->getParam('p');
+            $reported_by = 0;
+            if (Zend_Auth::getInstance()->hasIdentity()) {
+                $reported_by = (int) Zend_Auth::getInstance()->getStorage()->read()->member_id;
+            }
+
+            $tableReportComments = new Default_Model_DbTable_ReportProducts();
+
+            $tableReportComments->save(array('project_id' => $project_id, 'reported_by' => $reported_by));
         }
-
-        $tableReportComments = new Default_Model_DbTable_ReportProducts();
-
-        $tableReportComments->save(array('project_id' => $project_id, 'reported_by' => $reported_by));
 
         $this->_helper->json(array('status' => 'ok', 'message' => '<p>Thank you, we received your message.</p><div class="modal-footer">
                                             <button type="button" style="border:none;background: transparent;color: #2673b0;" class="small close" data-dismiss="modal" > Close</button>
