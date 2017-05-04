@@ -66,14 +66,11 @@ class Local_Application extends Zend_Application
 
         $cacheId = $this->_cacheId($file);
 
-        if ($this->_testCache($file, $cacheId)) { //Valid cache?
-            return $this->_configCache->load($cacheId, true);
-        } else {
+        if (false  === ($config = $this->_configCache->load($cacheId, true))) {
             $config = parent::_loadConfig($file);
-            $this->_configCache->save($config, $cacheId, array(), 14400);
-
-            return $config;
+            $this->_configCache->save($config, $cacheId, array(), null);
         }
+        return $config;
     }
 
     protected function _cacheId($file)
@@ -102,6 +99,7 @@ class Local_Application extends Zend_Application
     protected function _initCache()
     {
         $frontendOptions = array(
+            'lifetime' => null,
             'automatic_serialization' => true
         );
 
