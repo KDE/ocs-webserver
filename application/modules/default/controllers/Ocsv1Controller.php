@@ -777,7 +777,8 @@ class Ocsv1Controller extends Zend_Controller_Action
             //$this->_sendErrorResponse(999, '');
         }
 
-        $categoriesList = $this->_buildCategoriesList();
+//        $categoriesList = $this->_buildCategoriesList();
+        $categoriesList = $this->_buildCategories();
 
         if ($this->_format == 'json') {
             $response = array(
@@ -821,19 +822,19 @@ class Ocsv1Controller extends Zend_Controller_Action
             if ($this->_format == 'json') {
                 $result[] = array(
                     'id' => $element['id'],
-                    'name' => $element['title'],
-                    'display_name' => isset($element['name_legacy']) ? $element['name_legacy'] : $element['title'],
-                    'parent_id' => isset($element['parent_id']) ? $element['parent_id'] : '',
-                    'xdg_type' => isset($element['xdg_type']) ? $element['xdg_type'] : ''
+                    'name' => (false === empty($element['name_legacy'])) ? $element['name_legacy'] : $element['title'],
+                    'display_name' => $element['title'],
+                    'parent_id' => (false === empty($element['parent_id'])) ? $element['parent_id'] : '',
+                    'xdg_type' => (false === empty($element['xdg_type'])) ? $element['xdg_type'] : ''
                 );
             }
             else {
                 $result[] = array(
                     'id' => array('@text' => $element['id']),
-                    'name' => array('@text' => $element['title']),
-                    'display_name' => array('@text' => isset($element['name_legacy']) ? $element['name_legacy'] : $element['title']),
-                    'parent_id' => array('@text' => isset($element['parent_id']) ? $element['parent_id'] : ''),
-                    'xdg_type' => array('@text' => isset($element['xdg_type']) ? $element['xdg_type'] : '')
+                    'name' => array('@text' => (false === empty($element['name_legacy'])) ? $element['name_legacy'] : $element['title']),
+                    'display_name' => array('@text' => $element['title']),
+                    'parent_id' => array('@text' => (false === empty($element['parent_id'])) ? $element['parent_id'] : ''),
+                    'xdg_type' => array('@text' => (false === empty($element['xdg_type'])) ? $element['xdg_type'] : '')
                 );
             }
             if ($element['has_children']) {
