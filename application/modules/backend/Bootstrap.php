@@ -49,23 +49,23 @@ class Backend_Bootstrap extends Zend_Application_Module_Bootstrap
      * @throws Zend_Exception
      * @todo: When the storm is over let's check if we really need this. In usual cases we don't need this.
      */
-    protected function _initConfig()
-    {
-    	if (Zend_Registry::isRegistered('cache')) {
-    		/** @var Zend_Cache_Core $cache */
-    		$cache = Zend_Registry::get('cache');
-    
-    		if (false == ($config = $cache->load('application_config'))) {
-    			$config = new Zend_Config($this->getOptions(), true);
-    			$cache->save($config, 'application_config', array(), 14400);
-    		}
-    	} else {
-    		$config = new Zend_Config($this->getOptions(), true);
-    	}
-    
-    	Zend_Registry::set('config', $config);
-    	return $config;
-    }
+//    protected function _initConfig()
+//    {
+//    	if (Zend_Registry::isRegistered('cache')) {
+//    		/** @var Zend_Cache_Core $cache */
+//    		$cache = Zend_Registry::get('cache');
+//
+//    		if (false == ($config = $cache->load('application_config'))) {
+//    			$config = new Zend_Config($this->getOptions(), true);
+//    			$cache->save($config, 'application_config', array(), 14400);
+//    		}
+//    	} else {
+//    		$config = new Zend_Config($this->getOptions(), true);
+//    	}
+//
+//    	Zend_Registry::set('config', $config);
+//    	return $config;
+//    }
 
     protected function _initIncludePath () {
         set_include_path(implode(PATH_SEPARATOR, array(

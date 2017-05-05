@@ -27,7 +27,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     {
         $autoloader = new Zend_Application_Module_Autoloader(array(
             'namespace' => 'Default',
-            'basePath' => realpath(dirname(__FILE__)),
+            'basePath'  => realpath(dirname(__FILE__)),
         ));
         $autoloader->addResourceType('formelements', 'forms/elements', 'Form_Element');
         return $autoloader;
@@ -56,6 +56,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
     /**
      * @param string $domain
+     *
      * @return bool|string
      */
     private function get_domain($domain)
@@ -66,8 +67,20 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         return false;
     }
 
+    protected function _initConfig()
+    {
+        /** $config Zend_Config */
+        $config = $this->getApplication()->getApplicationConfig();
+        Zend_Registry::set('config', $config);
+        return $config;
+    }
+
     protected function _initCache()
     {
+        if (Zend_Registry::isRegistered('cache')) {
+            return Zend_Registry::get('cache');
+        }
+
         $cache = null;
         $options = $this->getOptions();
 
@@ -80,7 +93,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 $options['settings']['cache']['backend']['options']
             );
         } else {
-        // Fallback settings for some (maybe development) environments with where no cache management is installed.
+            // Fallback settings for some (maybe development) environments with where no cache management is installed.
 
             if (false === is_writeable(APPLICATION_CACHE)) {
                 error_log('directory for cache files does not exists or not writable: ' . APPLICATION_CACHE);
@@ -88,21 +101,21 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             }
 
             $frontendOptions = array(
-                'lifetime' => 600,
+                'lifetime'                => 600,
                 'automatic_serialization' => true,
-                'cache_id_prefix' => 'front',
-                'cache' => true
+                'cache_id_prefix'         => 'front',
+                'cache'                   => true
             );
 
             $backendOptions = array(
-                'cache_dir' => APPLICATION_CACHE,
-                'file_locking' => true,
-                'read_control' => true,
-                'read_control_type' => 'adler32', // default 'crc32'
+                'cache_dir'              => APPLICATION_CACHE,
+                'file_locking'           => true,
+                'read_control'           => true,
+                'read_control_type'      => 'adler32', // default 'crc32'
                 'hashed_directory_level' => 0,
-                'hashed_directory_perm' => 0700,
-                'file_name_prefix' => 'backend',
-                'cache_file_perm' => 700
+                'hashed_directory_perm'  => 0700,
+                'file_name_prefix'       => 'backend',
+                'cache_file_perm'        => 700
             );
 
             $cache = Zend_Cache::factory(
@@ -115,31 +128,15 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         Zend_Registry::set('cache', $cache);
 
-        Zend_Locale_Data::setCache($cache);
         Zend_Locale::setCache($cache);
+        Zend_Locale_Data::setCache($cache);
         Zend_Currency::setCache($cache);
         Zend_Translate::setCache($cache);
+        Zend_Translate_Adapter::setCache($cache);
         Zend_Db_Table_Abstract::setDefaultMetadataCache($cache);
+        Zend_Paginator::setCache($cache);
 
         return $cache;
-    }
-
-    protected function _initConfig()
-    {
-        if (Zend_Registry::isRegistered('cache')) {
-            /** @var Zend_Cache_Core $cache */
-            $cache = Zend_Registry::get('cache');
-
-            if (false == ($config = $cache->load('application_config'))) {
-                $config = new Zend_Config($this->getOptions(), true);
-                $cache->save($config, 'application_config', array(), 14400);
-            }
-        } else {
-            $config = new Zend_Config($this->getOptions(), true);
-        }
-
-        Zend_Registry::set('config', $config);
-        return $config;
     }
 
     protected function _initViewConfig()
@@ -149,19 +146,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view->addHelperPath(APPLICATION_PATH . '/modules/default/views/helpers', 'Default_View_Helper_');
         $view->addHelperPath(APPLICATION_LIB . '/Zend/View/Helper', 'Zend_View_Helper_');
 
-        $config = $this->getResource('config');
-        
-        //fallback, if config is not realy set in registry
-        if(!$config || !isset($config)) {
-            $config = new Zend_Config($this->getOptions(), true);
-            Zend_Registry::set('config', $config);
-        }
+        $options = $this->getOptions();
 
-        $docType = $config->resources->view->doctype ? $config->resources->view->doctype : 'XHTML1_TRANSITIONAL';
+        $docType = $options['resources']['view']['doctype'] ? $options['resources']['view']['doctype'] : 'XHTML1_TRANSITIONAL';
         $view->doctype($docType);
-
-        //$contentType = $config->resources->view->contentType ? $config->resources->view->contentType : 'text/html;charset=utf-8';
-        //$view->headMeta()->appendHttpEquiv('Content-Type', $contentType);
     }
 
     protected function _initLocale()
@@ -191,13 +179,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             $data = $options['data'][$locale];
         }
         $translateOptions = isset($options['options']) ? $options['options'] : array();
-        $cache = $this->getResource('cache');
-        
-        if(!$cache || !isset($cache)) {
-            $this->_initCache();
-        }
-        
-        Zend_Translate::setCache($cache);
         $translate = new Zend_Translate($adapter, $data, $locale, $translateOptions);
         Zend_Form::setDefaultTranslator($translate);
         Zend_Validate_Abstract::setDefaultTranslator($translate);
@@ -253,26 +234,19 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         Zend_Filter::addDefaultNamespaces('Local_Filter');
 
-        $appConfig = $this->getResource('config');
-        defined('APPLICATION_VERSION') ||
-        define('APPLICATION_VERSION', $appConfig->version);
+        $version = $this->getOption('version');
+        defined('APPLICATION_VERSION') || define('APPLICATION_VERSION', $version);
     }
 
     protected function _initAclRules()
     {
-        /** @var Zend_Cache_Core $cache */
-        $cache = Zend_Registry::get('cache');
-        
-        //fallback, if config is not realy set in registry
-        if(!$cache || !isset($cache)) {
-            $this->_initCache();
-        }
+        /** @var Zend_Cache_Core $appCache */
+        $appCache = $this->getResource('cache');
 
-
-        if (false == ($aclRules = $cache->load('AclRules'))) {
+        if (false == ($aclRules = $appCache->load('AclRules'))) {
             $aclRules = new Default_Plugin_AclRules();
             Zend_Registry::set('acl', $aclRules);
-            $cache->save($aclRules, 'AclRules', array('AclRules'), 14400);
+            $appCache->save($aclRules, 'AclRules', array('AclRules'), 14400);
         }
         return $aclRules;
     }
@@ -348,9 +322,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route(
                 '/content.rdf',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'rss',
-                    'action' => 'rdf'
+                    'action'     => 'rdf'
                 )
             )
         );
@@ -360,9 +334,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route_Regex(
                 '.*-events.rss',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'rss',
-                    'action' => 'rss'
+                    'action'     => 'rss'
                 )
             )
         );
@@ -372,9 +346,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route_Regex(
                 '.*-content.rdf',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'rss',
-                    'action' => 'rdf'
+                    'action'     => 'rdf'
                 )
             )
         );
@@ -384,9 +358,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route_Regex(
                 'rss/.*-content.rdf',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'rss',
-                    'action' => 'rdf'
+                    'action'     => 'rdf'
                 )
             )
         );
@@ -397,9 +371,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route(
                 '/s/:domain_store_id/',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'home',
-                    'action' => 'index'
+                    'action'     => 'index'
                 )
             )
         );
@@ -409,9 +383,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route(
                 '/s/:domain_store_id/browse/*',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'explore',
-                    'action' => 'index'
+                    'action'     => 'index'
                 )
             )
         );
@@ -421,9 +395,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route(
                 '/s/:domain_store_id/p/:project_id/:action/*',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'product',
-                    'action' => 'show'
+                    'action'     => 'show'
                 )
             )
         );
@@ -435,9 +409,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route(
                 '/',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'home',
-                    'action' => 'index'
+                    'action'     => 'index'
                 )
             )
         );
@@ -447,9 +421,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route(
                 '/showfeatureajax/*',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'home',
-                    'action' => 'showfeatureajax'
+                    'action'     => 'showfeatureajax'
                 )
             )
         );
@@ -459,9 +433,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route(
                 '/backend/:controller/:action/*',
                 array(
-                    'module' => 'backend',
+                    'module'     => 'backend',
                     'controller' => 'index',
-                    'action' => 'index'
+                    'action'     => 'index'
                 )
             )
         );
@@ -471,9 +445,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route(
                 '/browse/*',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'explore',
-                    'action' => 'index'
+                    'action'     => 'index'
                 )
             )
         );
@@ -483,10 +457,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route(
                 '/button/:project_id/:size/',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'button',
-                    'action' => 'render',
-                    'size' => 'large'
+                    'action'     => 'render',
+                    'size'       => 'large'
                 )
             )
         );
@@ -496,9 +470,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route(
                 '/button/a/:action/',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'button',
-                    'action' => 'index'
+                    'action'     => 'index'
                 )
             )
         );
@@ -508,9 +482,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route(
                 '/supporterbox/:project_uuid/',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'supporterbox',
-                    'action' => 'render'
+                    'action'     => 'render'
                 )
             )
         );
@@ -520,9 +494,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route(
                 '/donationlist/:project_id/',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'donationlist',
-                    'action' => 'render'
+                    'action'     => 'render'
                 )
             )
         );
@@ -532,9 +506,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route(
                 '/widget/:project_id/',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'widget',
-                    'action' => 'render'
+                    'action'     => 'render'
                 )
             )
         );
@@ -544,9 +518,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route(
                 '/widget/save/*',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'widget',
-                    'action' => 'save'
+                    'action'     => 'save'
                 )
             )
         );
@@ -556,9 +530,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route(
                 '/widget/config/:project_id/',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'widget',
-                    'action' => 'config'
+                    'action'     => 'config'
                 )
             )
         );
@@ -568,9 +542,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route(
                 '/widget/savedefault/*',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'widget',
-                    'action' => 'savedefault'
+                    'action'     => 'savedefault'
                 )
             )
         );
@@ -584,9 +558,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 '/p/:project_id/:action/*',
                 array(
                     'projecttitle' => '',
-                    'module' => 'default',
-                    'controller' => 'product',
-                    'action' => 'show'
+                    'module'       => 'default',
+                    'controller'   => 'product',
+                    'action'       => 'show'
                 )
             )
         );
@@ -597,9 +571,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 '/p/:project_id/er/:er/*',
                 array(
                     'projecttitle' => '',
-                    'module' => 'default',
-                    'controller' => 'product',
-                    'action' => 'show'
+                    'module'       => 'default',
+                    'controller'   => 'product',
+                    'action'       => 'show'
                 )
             )
         );
@@ -609,9 +583,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route(
                 '/product/add',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'product',
-                    'action' => 'add'
+                    'action'     => 'add'
                 )
             )
         );
@@ -621,9 +595,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route(
                 '/search/*',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'explore',
-                    'action' => 'search'
+                    'action'     => 'search'
                 )
             )
         );
@@ -633,9 +607,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route(
                 '/p/save/*',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'product',
-                    'action' => 'saveproduct'
+                    'action'     => 'saveproduct'
                 )
             )
         );
@@ -649,9 +623,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route(
                 '/settings/:action/*',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'settings',
-                    'action' => 'index'
+                    'action'     => 'index'
                 )
             )
         );
@@ -661,9 +635,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route(
                 '/member/:member_id/:action/*',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'user',
-                    'action' => 'index'
+                    'action'     => 'index'
                 )
             )
         );
@@ -673,9 +647,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route(
                 '/me/:member_id/:action/*',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'user',
-                    'action' => 'index'
+                    'action'     => 'index'
                 )
             )
         );
@@ -685,9 +659,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route_Static(
                 '/register',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'authorization',
-                    'action' => 'register'
+                    'action'     => 'register'
                 )
             )
         );
@@ -697,9 +671,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route_Static(
                 '/register/validate',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'authorization',
-                    'action' => 'validate'
+                    'action'     => 'validate'
                 )
             )
         );
@@ -709,9 +683,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route(
                 '/verification/:vid',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'authorization',
-                    'action' => 'verification'
+                    'action'     => 'verification'
                 )
             )
         );
@@ -721,9 +695,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route_Static(
                 '/logout',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'authorization',
-                    'action' => 'logout'
+                    'action'     => 'logout'
                 )
             )
         );
@@ -733,9 +707,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route_Static(
                 '/logout/propagate',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'authorization',
-                    'action' => 'propagatelogout'
+                    'action'     => 'propagatelogout'
                 )
             )
         );
@@ -745,9 +719,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route(
                 '/login',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'authorization',
-                    'action' => 'login'
+                    'action'     => 'login'
                 )
             )
         );
@@ -757,9 +731,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route(
                 '/login/:action/*',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'authorization',
-                    'action' => 'login'
+                    'action'     => 'login'
                 )
             )
         );
@@ -769,9 +743,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route(
                 '/content/:page',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'content',
-                    'action' => 'index'
+                    'action'     => 'index'
                 )
             )
         );
@@ -781,9 +755,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route(
                 '/cat/:page/about',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'categories',
-                    'action' => 'about'
+                    'action'     => 'about'
                 )
             )
         );
@@ -794,10 +768,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route_Static(
                 '/faq',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'content',
-                    'action' => 'index',
-                    'page' => 'faq'
+                    'action'     => 'index',
+                    'page'       => 'faq'
                 )
             )
         );
@@ -807,10 +781,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route_Static(
                 '/terms',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'content',
-                    'action' => 'index',
-                    'page' => 'terms'
+                    'action'     => 'index',
+                    'page'       => 'terms'
                 )
             )
         );
@@ -820,10 +794,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route_Static(
                 '/terms/general',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'content',
-                    'action' => 'index',
-                    'page' => 'terms-general'
+                    'action'     => 'index',
+                    'page'       => 'terms-general'
                 )
             )
         );
@@ -834,10 +808,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route_Static(
                 '/terms/publishing',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'content',
-                    'action' => 'index',
-                    'page' => 'terms-publishing'
+                    'action'     => 'index',
+                    'page'       => 'terms-publishing'
                 )
             )
         );
@@ -847,10 +821,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route_Static(
                 '/privacy',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'content',
-                    'action' => 'index',
-                    'page' => 'privacy'
+                    'action'     => 'index',
+                    'page'       => 'privacy'
                 )
             )
         );
@@ -860,10 +834,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route_Static(
                 '/contact',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'content',
-                    'action' => 'index',
-                    'page' => 'contact'
+                    'action'     => 'index',
+                    'page'       => 'contact'
                 )
             )
         );
@@ -875,9 +849,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route(
                 '/pploadlogin/*',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'authorization',
-                    'action' => 'pploadlogin'
+                    'action'     => 'pploadlogin'
                 )
             )
         );
@@ -888,9 +862,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route(
                 '/ocs/providers.xml',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'ocsv1',
-                    'action' => 'providers'
+                    'action'     => 'providers'
                 )
             )
         );
@@ -899,9 +873,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route(
                 '/ocs/v1/config',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'ocsv1',
-                    'action' => 'config'
+                    'action'     => 'config'
                 )
             )
         );
@@ -910,9 +884,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route(
                 '/ocs/v1/person/check',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'ocsv1',
-                    'action' => 'personcheck'
+                    'action'     => 'personcheck'
                 )
             )
         );
@@ -921,9 +895,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route(
                 '/ocs/v1/person/data',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'ocsv1',
-                    'action' => 'persondata'
+                    'action'     => 'persondata'
                 )
             )
         );
@@ -932,9 +906,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route(
                 '/ocs/v1/person/data/:personid',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'ocsv1',
-                    'action' => 'persondata'
+                    'action'     => 'persondata'
                 )
             )
         );
@@ -943,9 +917,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route(
                 '/ocs/v1/person/self',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'ocsv1',
-                    'action' => 'personself'
+                    'action'     => 'personself'
                 )
             )
         );
@@ -954,9 +928,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route(
                 '/ocs/v1/content/categories',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'ocsv1',
-                    'action' => 'contentcategories'
+                    'action'     => 'contentcategories'
                 )
             )
         );
@@ -965,9 +939,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route(
                 '/ocs/v1/content/data',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'ocsv1',
-                    'action' => 'contentdata'
+                    'action'     => 'contentdata'
                 )
             )
         );
@@ -976,9 +950,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route(
                 '/ocs/v1/content/data/:contentid',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'ocsv1',
-                    'action' => 'contentdata'
+                    'action'     => 'contentdata'
                 )
             )
         );
@@ -987,9 +961,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route(
                 '/ocs/v1/content/download/:contentid/:itemid',
                 array(
-                    'module' => 'default',
+                    'module'     => 'default',
                     'controller' => 'ocsv1',
-                    'action' => 'contentdownload'
+                    'action'     => 'contentdownload'
                 )
             )
         );
