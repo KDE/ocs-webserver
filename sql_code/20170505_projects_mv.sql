@@ -1,5 +1,9 @@
+ALTER TABLE `pling`.`project`
+	ADD COLUMN `hive_category_id` INT(11) NOT NULL DEFAULT 0 AFTER `source_type`;
+
+
 #create view and tables
-DROP VIEW stat_projects_v;
+DROP VIEW IF EXISTS stat_projects_v;
 CREATE VIEW stat_projects_v AS
 SELECT 
 	`project`.`project_id` AS `project_id`,
