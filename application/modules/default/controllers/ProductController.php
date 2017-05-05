@@ -290,12 +290,25 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $values['status'] = Default_Model_DbTable_Project::PROJECT_ACTIVE;
 
         // save new project
+        $valid = true;
         $modelProject = new Default_Model_Project();
-        if (isset($values['project_id'])) {
-            $newProject = $modelProject->updateProject($values['project_id'], $values);
-        } else {
-            $newProject = $modelProject->createProject($this->_authMember->member_id, $values,
-                $this->_authMember->username);
+        
+        try {
+            if (isset($values['project_id'])) {
+                $newProject = $modelProject->updateProject($values['project_id'], $values);
+            } else {
+                $newProject = $modelProject->createProject($this->_authMember->member_id, $values,
+                    $this->_authMember->username);
+            }
+            
+        } catch (Exception $exc) {
+            echo $exc->getTraceAsString();
+        }
+
+        if(!$newProject) {
+            $this->_helper->flashMessenger->addMessage('<p class="text-error">You did not choose a Category in the last level.</p>');
+            $this->forward('add');
+            return;
         }
 
         //update the gallery pics
