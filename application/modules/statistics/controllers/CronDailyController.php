@@ -24,8 +24,9 @@ class Statistics_CronDailyController extends Local_Controller_Action_CliAbstract
 
     public function runAction()
     {
-        $stat = new Statistics_Model_Stat();
-        $stat->dailyPageviews();
+        //20170505 Ronald: remove this for now, we do not use this table
+        //$stat = new Statistics_Model_Stat();
+        //$stat->dailyPageviews();
     }
 
 }
