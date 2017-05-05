@@ -777,7 +777,7 @@ class Ocsv1Controller extends Zend_Controller_Action
             //$this->_sendErrorResponse(999, '');
         }
 
-        $categoriesList = $this->_buildCategories();
+        $categoriesList = $this->_buildCategoriesList();
 
         if ($this->_format == 'json') {
             $response = array(
