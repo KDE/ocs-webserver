@@ -1532,6 +1532,14 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         if (empty($username)) {
             throw new Zend_Db_Table_Exception('username is not set');
         }
+        //check if the project categoriy is the last child in tree
+        $cat = $values['project_category_id'];
+        $tableCat = new Default_Model_DbTable_ProjectCategory();
+        $catChildIds = $tableCat->fetchChildIds($cat);
+        if(!$catChildIds || count($catChildIds) <> 1 || $catChildIds[0] != $cat) {
+            throw new Exception('Error in updateProject: category is no in the right level!');
+        }
+        
         // check important values for a new project
         $values['uuid'] = (!array_key_exists('uuid', $values)) ? Local_Tools_UUID::generateUUID() : $values['uuid'];
         $values['member_id'] = (!array_key_exists('member_id', $values)) ? $member_id : $values['member_id'];
@@ -1565,6 +1573,15 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         if (empty($projectData)) {
             throw new Zend_Db_Table_Exception('project_id not found');
         }
+        
+        //check if the project categoriy is the last child in tree
+        $cat = $values['project_category_id'];
+        $tableCat = new Default_Model_DbTable_ProjectCategory();
+        $catChildIds = $tableCat->fetchChildIds($cat);
+        if(!$catChildIds || count($catChildIds) <> 1 || $catChildIds[0] != $cat) {
+            throw new Exception('Error in updateProject: category is no in the right level!');
+        }
+        
         $projectData->setFromArray($values)->save();
         return $projectData;
     }
