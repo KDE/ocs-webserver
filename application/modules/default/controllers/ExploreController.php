@@ -41,8 +41,8 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
             ->setHeader('X-FRAME-OPTIONS', 'SAMEORIGIN', true)
 //            ->setHeader('Last-Modified', $modifiedTime, true)
             ->setHeader('Expires', $expires, true)
-            ->setHeader('Pragma', 'cache', true)
-            ->setHeader('Cache-Control', 'max-age=1800, public', true);
+            ->setHeader('Pragma', 'no-cache', true)
+            ->setHeader('Cache-Control', 'private, no-store, no-cache, must-revalidate, post-check=0, pre-check=0', true);
     }
 
     public function categoriesAction()
