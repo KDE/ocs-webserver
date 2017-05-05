@@ -138,7 +138,7 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
      */
     public function fetchAllActive()
     {
-        $cache = Zend_Registry::get('cache');
+        $cache = $this->cache;
         $cacheName = __FUNCTION__;
         if (!($categories = $cache->load($cacheName))) {
             $q = $this->select()
@@ -192,6 +192,7 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
             }
             $cache->save($active, $cacheName, array(), 3600);
         }
+        return $active;
     }
 
     /**
