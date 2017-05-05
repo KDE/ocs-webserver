@@ -303,6 +303,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             
         } catch (Exception $exc) {
             echo $exc->getTraceAsString();
+            return;
         }
 
         if(!$newProject) {
@@ -550,6 +551,15 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             Zend_Registry::get('logger')->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . ' - set image_small: Not neeed. ' . $projectData->image_small . '\n');
 
         }
+        
+        //check if the project categoriy is the last child in tree
+        $cat = $projectData->project_category_id;
+        $tableCat = new Default_Model_DbTable_ProjectCategory();
+        $catChildIds = $tableCat->fetchChildIds($cat);
+        if(!$catChildIds || count($catChildIds) <> 1 || $catChildIds[0] != $cat) {
+            throw new Exception('Error in updateProject: category is no in the right level!');
+        }
+        
         $projectData->save();
 
         $this->createTaskWebsiteOwnerVerification($projectData);
