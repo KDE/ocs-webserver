@@ -557,7 +557,10 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $tableCat = new Default_Model_DbTable_ProjectCategory();
         $catChildIds = $tableCat->fetchChildIds($cat);
         if(!$catChildIds || count($catChildIds) <> 1 || $catChildIds[0] != $cat) {
-            throw new Exception('Error in updateProject: category is no in the right level!');
+            //throw new Exception('Error in updateProject: category is no in the right level!');
+            $this->_helper->flashMessenger->addMessage('<p class="text-error">You did not choose a Category in the last level.</p>');
+            $this->forward('add');
+            return;
         }
         
         $projectData->save();
