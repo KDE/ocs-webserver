@@ -103,7 +103,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             $frontendOptions = array(
                 'lifetime'                => 600,
                 'automatic_serialization' => true,
-                'cache_id_prefix'         => 'front',
+                'cache_id_prefix'         => 'front_cache',
                 'cache'                   => true
             );
 
@@ -111,11 +111,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 'cache_dir'              => APPLICATION_CACHE,
                 'file_locking'           => true,
                 'read_control'           => true,
-                'read_control_type'      => 'adler32', // default 'crc32'
+                'read_control_type'      => 'crc32',
                 'hashed_directory_level' => 0,
                 'hashed_directory_perm'  => 0700,
-                'file_name_prefix'       => 'backend',
-                'cache_file_perm'        => 700
+                'file_name_prefix'       => 'ocs',
+                'cache_file_perm'        => 0700
             );
 
             $cache = Zend_Cache::factory(

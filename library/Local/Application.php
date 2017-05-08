@@ -62,11 +62,11 @@ class Local_Application extends Zend_Application
             'cache_dir'              => APPLICATION_CACHE,
             'file_locking'           => true,
             'read_control'           => true,
-            'read_control_type'      => 'adler32', // default 'crc32'
-            'hashed_directory_level' => 0,
+            'read_control_type'      => 'crc32',
+            'hashed_directory_level' => 1,
             'hashed_directory_perm'  => 0700,
             'file_name_prefix'       => 'ocs',
-            'cache_file_perm'        => 700
+            'cache_file_perm'        => 0700
         );
 
         return Zend_Cache::factory(
@@ -75,6 +75,15 @@ class Local_Application extends Zend_Application
             $frontendOptions,
             $backendOptions
         );
+    }
+
+    public function getApplicationConfig()
+    {
+        if (false === ($config = $this->_configCache->load(self::CACHE_APP_INI))) {
+            $config = new Zend_Config($this->getOptions(), true);
+            $this->_configCache->save($config, self::CACHE_APP_INI, array(), 300);
+        }
+        return $config;
     }
 
     /**
@@ -124,15 +133,6 @@ class Local_Application extends Zend_Application
         }
 
         return false;
-    }
-
-    public function getApplicationConfig()
-    {
-        if (false === ($config = $this->_configCache->load(self::CACHE_APP_INI))) {
-            $config = new Zend_Config($this->getOptions(), true);
-            $this->_configCache->save($config, self::CACHE_APP_INI, array(), 300);
-        }
-        return $config;
     }
 
 } 
