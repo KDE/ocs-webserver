@@ -327,34 +327,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
      */
     public function fetchProductInfo($project_id)
     {
-        $sql = '
-                SELECT
-                  p.*,
-                  p.validated AS project_validated,
-                  p.uuid AS project_uuid,
-                  p.status AS project_status,
-                  p.created_at AS project_created_at,
-                  p.changed_at AS project_changed_at,
-                  p.member_id AS project_member_id,
-                  p.source_pk AS project_source_pk,
-                  p.version AS project_version,
-                  pc.title AS cat_title,
-                  m.username,
-                  m.avatar,
-                  m.profile_image_url,
-                  m.roleId,
-                  m.mail,
-                  m.paypal_mail,
-                  m.dwolla_id,
-               	 (round(((p.count_likes + 6) / ((p.count_likes + p.count_dislikes) + 12)),2) * 100) AS laplace_score
-                FROM project AS p
-                  JOIN member AS m ON p.member_id = m.member_id AND m.is_active = 1 AND m.is_deleted = 0
-                  JOIN project_category AS pc ON p.project_category_id = pc.project_category_id
-                WHERE 
-                  p.project_id = :projectId
-                  AND p.status >= :projectStatus AND p.type_id = :typeId
-        ';
-/*        
+        
         $sql = '
                 SELECT
                   p.*,
@@ -388,7 +361,6 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                   AND p.status >= :projectStatus AND p.type_id = :typeId
         ';
 
-*/
         $result = $this->_db->fetchRow($sql, array(
             'projectId' => $project_id,
             'projectStatus' => self::PROJECT_INACTIVE,
@@ -1648,23 +1620,6 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                   m.mail,
                   m.paypal_mail,
                   m.dwolla_id,
-               	 (round(((p.count_likes + 6) / ((p.count_likes + p.count_dislikes) + 12)),2) * 100) AS laplace_score
-                FROM project AS p
-                  JOIN member AS m ON p.member_id = m.member_id AND m.is_active = 1 AND m.is_deleted = 0
-                  JOIN project_category AS pc ON p.project_category_id = pc.project_category_id';
-/*
-        $sql = '
-                SELECT
-                  p.*,
-                  p.changed_at AS project_changed_at,
-                  pc.title AS cat_title,
-                  m.username,
-                  m.avatar,
-                  m.profile_image_url,
-                  m.roleId,
-                  m.mail,
-                  m.paypal_mail,
-                  m.dwolla_id,
                	 (round(((p.count_likes + 6) / ((p.count_likes + p.count_dislikes) + 12)),2) * 100) AS laplace_score,
                	 sp.amount_received,
                	 sp.count_plings,
@@ -1675,7 +1630,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                   JOIN project_category AS pc ON p.project_category_id = pc.project_category_id
                   LEFT JOIN stat_plings AS sp ON p.project_id = sp.project_id';
 
-*/        
+
         
         if ($storePackageTypeIds) {
             $sql .= ' JOIN (SELECT DISTINCT project_id FROM project_package_type WHERE package_type_id in (' . $storePackageTypeIds . ')) package_type  ON p.project_id = package_type.project_id';
