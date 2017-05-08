@@ -959,15 +959,13 @@ class Default_Model_Project extends Default_Model_DbTable_Project
     {
         $sql = "
                 SELECT
-                    `stat_page_views`.`project_id` AS `project_id`,
-                    count(1) AS `count_views`,
-                    count(DISTINCT `stat_page_views`.`ip`) AS `count_visitor`,
-                    max(`stat_page_views`.`created_at`) AS `last_view`
+                    `project_id`,
+                    `count_views`,
+                    `count_visitor`,
+                    `last_view`
                 FROM
-                    `stat_page_views`
-                WHERE `stat_page_views`.`project_id` = ?
-                GROUP BY `stat_page_views`.`project_id`
-                ORDER BY NULL
+                    `stat_page_views_mv`
+                WHERE `project_id` = ?
                 ";
         $database = Zend_Db_Table::getDefaultAdapter();
         $sql = $database->quoteInto($sql, $project_id, 'INTEGER', 1);
