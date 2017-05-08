@@ -63,7 +63,7 @@ class Local_Application extends Zend_Application
             'file_locking'           => true,
             'read_control'           => true,
             'read_control_type'      => 'crc32',
-            'hashed_directory_level' => 1,
+            'hashed_directory_level' => 0,
             'hashed_directory_perm'  => 0700,
             'file_name_prefix'       => 'ocs',
             'cache_file_perm'        => 0700
