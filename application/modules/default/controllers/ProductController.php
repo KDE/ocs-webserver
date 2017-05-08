@@ -283,7 +283,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $values['image_small'] = $imageModel->saveImage($form->getElement(self::IMAGE_SMALL_UPLOAD));
 //            $values['image_big'] = $imageModel->saveImage($form->getElement(self::IMAGE_BIG_UPLOAD));
         } catch (Exception $e) {
-            Zend_Registry::get('logger')->err(__METHOD__ . ' - ERROR upload productPicture - ' . print_r($e, true));
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ERROR upload productPicture - ' . $e->getTraceAsString());
         }
 
         // form was valid, so we can set status to active
@@ -302,7 +302,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             }
             
         } catch (Exception $exc) {
-            echo $exc->getTraceAsString();
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ERROR while updating project data - ' . $exc->getTraceAsString());
             return;
         }
 

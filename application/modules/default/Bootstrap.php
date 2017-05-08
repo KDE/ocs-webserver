@@ -275,13 +275,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     protected function _initAuthSessionNamespace()
     {
         $config = $this->getResource('config');
-        
-        //fallback, if config is not realy set in registry
-        if(!$config || !isset($config)) {
-            $config = new Zend_Config($this->getOptions(), true);
-            Zend_Registry::set('config', $config);
-        }
-        
         $auth_config = $config->settings->auth_session;
 
         $objSessionNamespace = new Zend_Session_Namespace($auth_config->name);
