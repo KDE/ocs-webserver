@@ -328,6 +328,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
     public function fetchProductInfo($project_id)
     {
         
+       
         $sql = '
                 SELECT
                   p.*,
@@ -956,8 +957,6 @@ class Default_Model_Project extends Default_Model_DbTable_Project
      */
     public function fetchProjectViews($project_id)
     {
-        return 0;
-        /*
         $sql = "
                 SELECT
                     `stat_page_views`.`project_id` AS `project_id`,
@@ -982,7 +981,6 @@ class Default_Model_Project extends Default_Model_DbTable_Project
 
         return $result;
          
-         */
     }
 
     /**
@@ -1629,8 +1627,6 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                   JOIN member AS m ON p.member_id = m.member_id AND m.is_active = 1 AND m.is_deleted = 0
                   JOIN project_category AS pc ON p.project_category_id = pc.project_category_id
                   LEFT JOIN stat_plings AS sp ON p.project_id = sp.project_id';
-
-
         
         if ($storePackageTypeIds) {
             $sql .= ' JOIN (SELECT DISTINCT project_id FROM project_package_type WHERE package_type_id in (' . $storePackageTypeIds . ')) package_type  ON p.project_id = package_type.project_id';
