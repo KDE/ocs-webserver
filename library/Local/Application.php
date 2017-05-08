@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -19,9 +20,9 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-
 class Local_Application extends Zend_Application
 {
+    const CACHE_APP_INI = 'cache_app_ini';
 
     /**
      *
@@ -37,22 +38,50 @@ class Local_Application extends Zend_Application
      * Initialize application. Potentially initializes include_paths, PHP
      * settings, and bootstrap class.
      *
-     * @param  string $environment
+     * @param  string                   $environment
      * @param  string|array|Zend_Config $options String path to configuration file, or array/Zend_Config of configuration options
-     * @param Zend_Cache_Core $configCache
+     * @param Zend_Cache_Core           $configCache
+     *
      * @throws Zend_Application_Exception
      * @return \Local_Application
      */
-    public function __construct($environment, $options = null, Zend_Cache_Core $configCache = null)
+    public function __construct($environment, $options = null)
     {
-        $this->_configCache = $configCache;
+        $this->_configCache = $this->_initCache();
         parent::__construct($environment, $options);
+    }
+
+    protected function _initCache()
+    {
+        $frontendOptions = array(
+            'lifetime'                => null,
+            'automatic_serialization' => true
+        );
+
+        $backendOptions = array(
+            'cache_dir'              => APPLICATION_CACHE,
+            'file_locking'           => true,
+            'read_control'           => true,
+            'read_control_type'      => 'adler32', // default 'crc32'
+            'hashed_directory_level' => 0,
+            'hashed_directory_perm'  => 0700,
+            'file_name_prefix'       => 'ocs',
+            'cache_file_perm'        => 700
+        );
+
+        return Zend_Cache::factory(
+            'Core',
+            'File',
+            $frontendOptions,
+            $backendOptions
+        );
     }
 
     /**
      * Load configuration file of options
      *
      * @param  string $file
+     *
      * @throws Zend_Application_Exception When invalid configuration file is provided
      * @return array
      */
@@ -66,23 +95,22 @@ class Local_Application extends Zend_Application
 
         $cacheId = $this->_cacheId($file);
 
-        if ($this->_testCache($file, $cacheId)) { //Valid cache?
-            return $this->_configCache->load($cacheId, true);
-        } else {
+        if (false === ($config = $this->_configCache->load($cacheId))) {
             $config = parent::_loadConfig($file);
-            $this->_configCache->save($config, $cacheId, array(), 14400);
-
-            return $config;
+            $this->_configCache->save($config, $cacheId, array(), null);
         }
+        return $config;
     }
 
     protected function _cacheId($file)
     {
-        return md5($file) . '_' . $this->getEnvironment();
+        return 'config_' . $this->getEnvironment() . '_' . md5_file($file);
     }
 
     /**
      * @param string $file
+     * @param        $cacheId
+     *
      * @return bool|string
      */
     protected function _testCache($file, $cacheId)
@@ -96,6 +124,15 @@ class Local_Application extends Zend_Application
         }
 
         return false;
+    }
+
+    public function getApplicationConfig()
+    {
+        if (false === ($config = $this->_configCache->load(self::CACHE_APP_INI))) {
+            $config = new Zend_Config($this->getOptions(), true);
+            $this->_configCache->save($config, self::CACHE_APP_INI, array(), 300);
+        }
+        return $config;
     }
 
 } 
