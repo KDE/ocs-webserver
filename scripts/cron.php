@@ -118,7 +118,8 @@ $application->bootstrap(array(
     'ThirdParty',
     'FrontController',
     'Modules',
-    'Db'
+    'Db',
+    'GlobalApplicationVars'
 ));
 
 $consoleOptions = new Zend_Console_Getopt(array(

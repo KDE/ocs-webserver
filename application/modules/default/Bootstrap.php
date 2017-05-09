@@ -1002,6 +1002,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $modelDomainConfig = new Default_Model_DbTable_ConfigStore();
         Zend_Registry::set('application_store_category_list', $modelDomainConfig->fetchAllStoresAndCategories());
         Zend_Registry::set('application_store_config_list', $modelDomainConfig->fetchAllStoresConfigArray());
+        Zend_Registry::set('application_store_config_id_list', $modelDomainConfig->fetchAllStoresConfigByIdArray());
     }
 
     protected function _initStoreDependentVars()

@@ -26,6 +26,7 @@ class Default_Model_DbTable_ConfigStore extends Local_Model_Table
     const CACHE_STORES_CATEGORIES = 'stores_categories_list';
     const CACHE_STORES_CONFIGS = 'stores_configs_list';
     const CACHE_STORE_CONFIG = 'store_config';
+    const CACHE_STORES_CONFIGS_BY_ID = 'stores_configs_id_list';
 
     protected $_keyColumnsForRow = array('store_id');
     protected $_key = 'store_id';
@@ -215,6 +216,8 @@ class Default_Model_DbTable_ConfigStore extends Local_Model_Table
     }
 
     /**
+     * @param bool $clearCache
+     *
      * @return array
      */
     public function fetchAllStoresConfigArray($clearCache = false)
@@ -242,6 +245,35 @@ class Default_Model_DbTable_ConfigStore extends Local_Model_Table
     }
 
     /**
+     * @param bool $clearCache
+     *
+     * @return array
+     */
+    public function fetchAllStoresConfigByIdArray($clearCache = false)
+    {
+        if (Zend_Registry::isRegistered('cache')) {
+            /** @var Zend_Cache_Core $cache */
+            $cache = Zend_Registry::get('cache');
+            $cacheName = self::CACHE_STORES_CONFIGS_BY_ID;
+
+            if ($clearCache) {
+                $cache->remove($cacheName);
+            }
+
+            if (false == ($configArray = $cache->load($cacheName))) {
+                $resultSet = $this->queryStoreConfigArray();
+                $configArray = $this->createStoreConfigArray($resultSet, 'store_id');
+                $cache->save($configArray, $cacheName, array(), 28800);
+            }
+        } else {
+            $resultSet = $this->queryStoreConfigArray();
+            $configArray = $this->createStoreConfigArray($resultSet, 'store_id');
+        }
+
+        return $configArray;
+    }
+
+    /**
      * @return array
      */
     private function queryStoreConfigArray()
@@ -252,14 +284,16 @@ class Default_Model_DbTable_ConfigStore extends Local_Model_Table
     }
 
     /**
-     * @param array $resultSetConfig
+     * @param array  $resultSetConfig
+     * @param string $key
+     *
      * @return array
      */
-    private function createStoreConfigArray($resultSetConfig)
+    private function createStoreConfigArray($resultSetConfig, $key = 'host')
     {
         $result = array();
         foreach ($resultSetConfig as $element) {
-            $result[$element['host']] = $element;
+            $result[$element[$key]] = $element;
         }
         return $result;
     }

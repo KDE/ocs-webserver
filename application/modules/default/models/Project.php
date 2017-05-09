@@ -1088,23 +1088,28 @@ class Default_Model_Project extends Default_Model_DbTable_Project
 
     /**
      * @param int|array $idCategory id of a category or an array of id's
-     * @param bool $withSubCat if was set true it will also count products in sub categories
-     * @return int                   count of products in given category
+     * @param bool      $withSubCat if was set true it will also count products in sub categories
+     * @param null      $store_id
+     *
+     * @return int count of products in given category
      * @throws Zend_Exception
      */
-    public function countProductsInCategory($idCategory = null, $withSubCat = true)
+    public function countProductsInCategory($idCategory = null, $withSubCat = true, $store_id = null)
     {
         if (empty($idCategory)) {
             throw new Zend_Exception('idCategory param was not set');
         }
 
-        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
-        $storePackageTypeIds = null;
-        if ($storeConfig) {
-            $storePackageTypeIds = $storeConfig['package_type'];
+        $store_config = null;
+        if (isset($store_id)) {
+            $configurations = Zend_Registry::get('application_store_config_id_list');
+            $store_config = $configurations[$store_id];
+        } else {
+            $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
         }
+        $storePackageTypeIds = (false === empty($storeConfig['package_type'])) ? $storeConfig['package_type'] : null;
 
-        $cacheName = __FUNCTION__ . md5(serialize($idCategory) . $withSubCat . '-package_type' . serialize($storePackageTypeIds));
+        $cacheName = __FUNCTION__ . '_'.md5(serialize($idCategory) . $withSubCat . serialize($storePackageTypeIds));
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
 
