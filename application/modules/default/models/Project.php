@@ -1105,9 +1105,9 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             $configurations = Zend_Registry::get('application_store_config_id_list');
             $store_config = $configurations[$store_id];
         } else {
-            $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
+            $store_config = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
         }
-        $storePackageTypeIds = (false === empty($storeConfig['package_type'])) ? $storeConfig['package_type'] : null;
+        $storePackageTypeIds = (false === empty($store_config['package_type'])) ? $store_config['package_type'] : null;
 
         $cacheName = __FUNCTION__ . '_'.md5(serialize($idCategory) . $withSubCat . serialize($storePackageTypeIds));
         /** @var Zend_Cache_Core $cache */
