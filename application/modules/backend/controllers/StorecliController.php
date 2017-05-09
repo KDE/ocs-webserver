@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -21,7 +22,6 @@
  *
  * Created: 08.05.2017
  */
-
 class Backend_StorecliController extends Local_Controller_Action_CliAbstract
 {
 
@@ -29,23 +29,14 @@ class Backend_StorecliController extends Local_Controller_Action_CliAbstract
 
     public function runAction()
     {
+        $allStoresConfig = Zend_Registry::get('application_store_config_id_list');
+
         $this->_model = new Default_Model_DbTable_ConfigStore();
-
-        $this->initGlobalApplicationVars();
-        $allStoresConfig = $this->_model->fetchAllStoresConfigArray(true);
-
         $modelPCat = new Default_Model_ProjectCategory();
         foreach ($allStoresConfig as $config) {
             $modelPCat->fetchCategoryTreeForStore($config['store_id'], true);
             $this->_model->fetchConfigForStore($config['store_id'], true);
         }
-    }
-
-    private function initGlobalApplicationVars()
-    {
-        $modelDomainConfig = new Default_Model_DbTable_ConfigStore();
-        Zend_Registry::set('application_store_category_list', $modelDomainConfig->fetchAllStoresAndCategories());
-        Zend_Registry::set('application_store_config_list', $modelDomainConfig->fetchAllStoresConfigArray());
     }
 
 }
