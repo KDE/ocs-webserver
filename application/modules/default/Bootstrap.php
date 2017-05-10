@@ -35,21 +35,21 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
     protected function _initSessionManagement()
     {
-        // fallback procedure for default "session handler" on (maybe development) environments which have no memcached installed
-        if (false === MEMCACHED_EXTENSION_LOADED) {
+        $config = $this->getOption('settings');
+        if ($config['session']['saveHandler']['replace']['enabled'] == false) {
             return;
         }
 
-        $config = $this->getOption('settings');
         if (APPLICATION_ENV != 'development') {
             $domain = $this->get_domain($_SERVER['SERVER_NAME']);
         } else {
             $domain = $_SERVER['SERVER_NAME'];
         }
 
-        $_cache = new Zend_Cache_Backend_Libmemcached($config['session']['saveHandler']['options']);
-        Zend_Loader::loadClass('Local_Session_Handler_Memcache');
-        Zend_Session::setSaveHandler(new Local_Session_Handler_Memcache($_cache));
+        $cacheClass = 'Zend_Cache_Backend_'.$config['session']['saveHandler']['cache']['type'];
+        $_cache = new $cacheClass($config['session']['saveHandler']['options']);
+        Zend_Loader::loadClass($config['session']['saveHandler']['class']);
+        Zend_Session::setSaveHandler(new $config['session']['saveHandler']['class']($_cache));
         Zend_Session::setOptions(array('cookie_domain' => $domain));
         Zend_Session::start();
     }
@@ -82,15 +82,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         }
 
         $cache = null;
-        $options = $this->getOptions();
+        $options = $this->getOption('settings');
 
-        if (isset($options['settings']['cache'])) {
-
+        if (true == $options['cache']['enabled']) {
             $cache = Zend_Cache::factory(
-                $options['settings']['cache']['frontend']['type'],
-                $options['settings']['cache']['backend']['type'],
-                $options['settings']['cache']['frontend']['options'],
-                $options['settings']['cache']['backend']['options']
+                $options['cache']['frontend']['type'],
+                $options['cache']['backend']['type'],
+                $options['cache']['frontend']['options'],
+                $options['cache']['backend']['options']
             );
         } else {
             // Fallback settings for some (maybe development) environments with where no cache management is installed.
@@ -112,7 +111,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 'file_locking'           => true,
                 'read_control'           => true,
                 'read_control_type'      => 'crc32',
-                'hashed_directory_level' => 0,
+                'hashed_directory_level' => 1,
                 'hashed_directory_perm'  => 0700,
                 'file_name_prefix'       => 'ocs',
                 'cache_file_perm'        => 0700

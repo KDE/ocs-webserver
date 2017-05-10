@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -19,29 +20,29 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-
 class Default_View_Helper_ProjectFiles extends Zend_View_Helper_Abstract
 {
 
     /**
-     * @param $ppload_collection_id
-     * @return null|Zend_Db_Table_Row_Abstract
+     * @param int $ppload_collection_id
+     *
+     * @return array
      */
     public function projectFiles($ppload_collection_id)
     {
         $filesInfos = array();
         // require_once 'Ppload/Api.php';
         $pploadApi = new Ppload_Api(array(
-            'apiUri' => PPLOAD_API_URI,
+            'apiUri'   => PPLOAD_API_URI,
             'clientId' => PPLOAD_CLIENT_ID,
-            'secret' => PPLOAD_SECRET
+            'secret'   => PPLOAD_SECRET
         ));
 
         $fileCount = 0;
         if ($ppload_collection_id) {
             $filesRequest = array(
                 'collection_id' => ltrim($ppload_collection_id, '!'),
-                'perpage' => 100
+                'perpage'       => 100
             );
             $filesResponse = $pploadApi->getFiles($filesRequest);
             if (isset($filesResponse->status)

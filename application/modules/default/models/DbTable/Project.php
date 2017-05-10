@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -33,7 +34,7 @@ class Default_Model_DbTable_Project extends Local_Model_Table
     const PROJECT_ACTIVE = 100;     // project is active and visible to the world
     const PROJECT_CLAIMED = 1;
     const PROJECT_CLAIMABLE = 1;
-    const PROJECT_DEFAULT = NULL;
+    const PROJECT_DEFAULT = null;
     const MYSQL_DATE_FORMAT = "Y-m-d H:i:s";
 
     protected $_keyColumnsForRow = array('project_id');
@@ -41,57 +42,65 @@ class Default_Model_DbTable_Project extends Local_Model_Table
     protected $_name = "project";
     protected $_rowClass = 'Default_Model_DbRow_Project';
 
-    protected $_referenceMap = array(
-        'Owner' => array(
-            'columns' => 'member_id',
-            'refTableClass' => 'Default_Model_DbTable_Member',
-            'refColumns' => 'member_id'
-        ),
-        'Category' => array(
-            'columns' => 'project_category_id',
-            'refTableClass' => 'Default_Model_DbTable_ProjectCategory',
-            'refColumns' => 'project_category_id'
-        ),
-        'MainProject' => array(
-            'columns' => 'project_id',
-            'refTableClass' => 'Default_Model_Member',
-            'refColumns' => 'main_project_id'
-        )
-    );
+    protected $_referenceMap
+        = array(
+            'Owner'       => array(
+                'columns'       => 'member_id',
+                'refTableClass' => 'Default_Model_DbTable_Member',
+                'refColumns'    => 'member_id'
+            ),
+            'Category'    => array(
+                'columns'       => 'project_category_id',
+                'refTableClass' => 'Default_Model_DbTable_ProjectCategory',
+                'refColumns'    => 'project_category_id'
+            ),
+            'MainProject' => array(
+                'columns'       => 'project_id',
+                'refTableClass' => 'Default_Model_Member',
+                'refColumns'    => 'main_project_id'
+            )
+        );
 
-    protected $_types = array(
-        'person' => self::PROJECT_TYPE_PERSONAL,
-        'collection' => self::PROJECT_TYPE_STANDARD,
-        'item' => self::PROJECT_TYPE_UPDATE
-    );
+    protected $_types
+        = array(
+            'person'     => self::PROJECT_TYPE_PERSONAL,
+            'collection' => self::PROJECT_TYPE_STANDARD,
+            'item'       => self::PROJECT_TYPE_UPDATE
+        );
 
-    protected $_allowedStatusTypes = array(
-        self::PROJECT_FAULTY,
-        self::PROJECT_INCOMPLETE,
-        self::PROJECT_ILLEGAL,
-        self::PROJECT_INACTIVE,
-        self::PROJECT_ACTIVE,
-        self::PROJECT_DELETED
-    );
+    protected $_allowedStatusTypes
+        = array(
+            self::PROJECT_FAULTY,
+            self::PROJECT_INCOMPLETE,
+            self::PROJECT_ILLEGAL,
+            self::PROJECT_INACTIVE,
+            self::PROJECT_ACTIVE,
+            self::PROJECT_DELETED
+        );
 
     /**
      * Override the insert method.
      *
      * @see Zend_Db_Table_Abstract::insert()
+     *
      * @param array $data
+     *
      * @return mixed
      */
     public function insert(array $data)
     {
         //Insert
-        if (!isset($data['description']))
-            $data['description'] = NULL;
+        if (!isset($data['description'])) {
+            $data['description'] = null;
+        }
 
-        if (!isset($data['title']))
-            $data['title'] = NULL;
+        if (!isset($data['title'])) {
+            $data['title'] = null;
+        }
 
-        if (!isset($data['image_small']))
-            $data['image_small'] = NULL;
+        if (!isset($data['image_small'])) {
+            $data['image_small'] = null;
+        }
 
         if (!isset($data['project_category_id'])) {
             if ($data['type_id'] == 2) {

@@ -21,12 +21,13 @@
  **/
 
 $helperHumanTiming = new Default_View_Helper_HumanTiming();
-$date = $helperHumanTiming->humanTiming($this->changed_at);
+$date = $helperHumanTiming->humanTiming($this->productUpdate['changed_at']);
+$helpBBCode = new Default_View_Helper_Bbcode2html();
 ?>
-<a name="anker_<?= $this->project_updates_id ?>"></a>
+<a name="anker_<?= $this->productUpdate['project_update_id'] ?>"></a>
 <h3 class="product-heading product-update-heading" style="float: left; width: 100%">
-    <?= $this->title ?><span class="small light lightgrey product-update-date"
+    <?= $this->productUpdate['title'] ?><span class="small light lightgrey product-update-date"
                              style="padding-left: 10px;"> <?= $date['age'] ?> <?= $date['unit'] ?> ago</span>
 </h3>
 
-<p><?= $this->text ?></p>
+<p><?= $helpBBCode->Bbcode2html($this->productUpdate['text']) ?></p>

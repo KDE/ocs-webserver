@@ -27,6 +27,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
     const IMAGE_BIG_UPLOAD = 'image_big_upload';
     /**
      * Zend_Controller_Request_Abstract object wrapping the request environment
+     *
      * @var Zend_Controller_Request_Http
      */
     protected $_request = null;
@@ -57,56 +58,32 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
     public function indexAction()
     {
+
         if (empty($this->_projectId)) {
             $this->redirect('/explore');
         }
 
+        $this->view->paramPageId = (int)$this->getParam('page');
         $this->view->authMember = $this->_authMember;
 
-        $this->fetchDataForIndexView();
+//        $this->fetchDataForIndexView();
 
-        //$this->view->headTitle($this->_browserTitlePrepend . $this->view->product->title, 'SET');
-        $this->view->headTitle($this->view->product->title . ' - ' . $_SERVER['HTTP_HOST'], 'SET');
-
-        $this->view->cat_id = $this->view->product->project_category_id;
+        $modelProduct = new Default_Model_Project();
+        $this->view->product = $modelProduct->fetchProductInfo($this->_projectId);
 
         $helperUserIsOwner = new Default_View_Helper_UserIsOwner();
         $helperIsProjectActive = new Default_View_Helper_IsProjectActive();
-        if ((false === $helperIsProjectActive->isProjectActive($this->view->product->project_status)) AND (false === $helperUserIsOwner->UserIsOwner($this->view->product->member_id))) {
+        if ((false === $helperIsProjectActive->isProjectActive($this->view->product->project_status)) AND (false
+                === $helperUserIsOwner->UserIsOwner($this->view->product->member_id))
+        ) {
             throw new Zend_Controller_Action_Exception('This page does not exist', 404);
         }
 
-        if(APPLICATION_ENV != 'searchbotenv') {
+        if (APPLICATION_ENV != 'searchbotenv') {
             $tablePageViews = new Default_Model_DbTable_StatPageViews();
             $tablePageViews->savePageView($this->_projectId, $this->getRequest()->getClientIp(),
                 $this->_authMember->member_id);
         }
-
-
-        $helperBaseUrl = new Default_View_Helper_BaseUrl();
-        $helperServerUrl = new Zend_View_Helper_ServerUrl();
-        $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
-        $helperTruncate = new Default_View_Helper_Truncate();
-        $this->view->dataUrl = $helperServerUrl->serverUrl() . $helperBaseUrl->baseUrl() . $helperBuildProductUrl->buildProductUrl($this->_projectId);
-
-        $this->view->doctype(Zend_View_Helper_Doctype::XHTML1_RDFA);
-
-        $this->view->headMeta()->setName('description',
-            $helperTruncate->truncate($this->view->product->description, 200, '...', false, true));
-        $this->view->headMeta()->setName('title',
-            $helperTruncate->truncate($this->view->product->description, 200, '...', false, true));
-
-
-        $this->view->headMeta()->appendProperty('og:url',
-            $helperServerUrl->serverUrl() . $helperBaseUrl->baseUrl() . $helperBuildProductUrl->buildProductUrl($this->_projectId));
-
-        $this->view->headMeta()->appendProperty('og:type', 'website');
-        $this->view->headMeta()->appendProperty('og:title', $this->view->product->title);
-        $this->view->headMeta()->appendProperty('og:description',
-            $helperTruncate->truncate($this->view->product->description, 200, '...', false, true));
-        $helperImage = new Default_View_Helper_Image();
-        $this->view->headMeta()->appendProperty('og:image',
-            $helperImage->Image($this->view->product->image_small, array('width' => 400, 'height' => 400)));
 
     }
 
@@ -147,20 +124,14 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $this->view->catId = $this->view->product->project_category_id;
         $this->view->catTitle = $helperFetchCategory->catTitle($this->view->product->project_category_id);
-        $this->view->catParentId = $helperFetchCatParent->getCatParentId(array('project_category_id' => $this->view->product->project_category_id));
+        $this->view->catParentId
+            = $helperFetchCatParent->getCatParentId(array('project_category_id' => $this->view->product->project_category_id));
         if ($this->view->catParentId) {
             $this->view->catParentTitle = $helperFetchCategory->catTitle($this->view->catParentId);
         }
 
         $AuthCodeExist = new Local_Verification_WebsiteAuthCodeExist();
         $this->view->websiteAuthCode = $AuthCodeExist->generateAuthCode(stripslashes($this->view->product->link_1));
-
-        $modelComments = new Default_Model_ProjectComments();
-        $offset = (int)$this->getParam('page');
-        $paginationComments = $modelComments->getAllCommentsForProject($this->_projectId);
-        $paginationComments->setItemCountPerPage(25);
-        $paginationComments->setCurrentPageNumber($offset);
-        $this->view->comments = $paginationComments;
 
         // switch off temporally 02.05.2017
         //$modelPlings = new Default_Model_DbTable_Plings();
@@ -194,7 +165,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
      * transforms a string with bbcode markup into html
      *
      * @param string $txt
-     * @param bool $nl2br
+     * @param bool   $nl2br
+     *
      * @return html-string
      */
     private function bbcode2html($txt, $nl2br = true, $forcecolor = '')
@@ -228,7 +200,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             '<li' . $fc . ' style="margin-left:20px;">\\1</li>',
             '<strike' . $fc . '>\\1</strike>',
             '<a href="\1\2" rel="nofollow" target="_blank">\1\2</a>',
-            '<strong' . $fc . '>Quote:</strong><div style="margin:0px 10px;padding:5px;background-color:#F7F7F7;border:1px dotted #CCCCCC;width:80%;"><em>\1</em></div>',
+            '<strong' . $fc
+            . '>Quote:</strong><div style="margin:0px 10px;padding:5px;background-color:#F7F7F7;border:1px dotted #CCCCCC;width:80%;"><em>\1</em></div>',
             '<pre' . $fc . '>\\1</pre>'
         );
 
@@ -296,7 +269,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         // save new project
         $valid = true;
         $modelProject = new Default_Model_Project();
-        
+
         try {
             if (isset($values['project_id'])) {
                 $newProject = $modelProject->updateProject($values['project_id'], $values);
@@ -304,12 +277,12 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 $newProject = $modelProject->createProject($this->_authMember->member_id, $values,
                     $this->_authMember->username);
             }
-            
+
         } catch (Exception $exc) {
             echo $exc->getTraceAsString();
         }
 
-        if(!$newProject) {
+        if (!$newProject) {
             $this->_helper->flashMessenger->addMessage('<p class="text-error">You did not choose a Category in the last level.</p>');
             $this->forward('add');
             return;
@@ -323,9 +296,11 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         if (!isset($values['image_small']) || $values['image_small'] == '') {
             $values['image_small'] = $mediaServerUrls[0];
             $newProject = $modelProject->updateProject($newProject->project_id, $values);
-            Zend_Registry::get('logger')->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . ' - set image_small: ' . $values['image_small'] . '\n');
+            Zend_Registry::get('logger')->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . ' - set image_small: '
+                . $values['image_small'] . '\n');
         } else {
-            Zend_Registry::get('logger')->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . ' - set image_small: Not need. ' . $values['image_small'] . '\n');
+            Zend_Registry::get('logger')->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . ' - set image_small: Not need. '
+                . $values['image_small'] . '\n');
         }
 
         //New Project in Session, for AuthValidation (owner)
@@ -376,9 +351,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         if ($projectData->ppload_collection_id) {
             // require_once 'Ppload/Api.php';
             $pploadApi = new Ppload_Api(array(
-                'apiUri' => PPLOAD_API_URI,
+                'apiUri'   => PPLOAD_API_URI,
                 'clientId' => PPLOAD_CLIENT_ID,
-                'secret' => PPLOAD_SECRET
+                'secret'   => PPLOAD_SECRET
             ));
             // Update collection information
             $collectionCategory = $projectData->project_category_id;
@@ -386,10 +361,10 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 $collectionCategory .= '-published';
             }
             $collectionRequest = array(
-                'title' => $projectData->title,
+                'title'       => $projectData->title,
                 'description' => $projectData->description,
-                'category' => $collectionCategory,
-                'content_id' => $projectData->project_id
+                'category'    => $collectionCategory,
+                'content_id'  => $projectData->project_id
             );
             $collectionResponse = $pploadApi->putCollection(
                 ltrim($projectData->ppload_collection_id, '!'),
@@ -413,9 +388,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         // require_once 'Ppload/Api.php';
         $pploadApi = new Ppload_Api(array(
-            'apiUri' => PPLOAD_API_URI,
+            'apiUri'   => PPLOAD_API_URI,
             'clientId' => PPLOAD_CLIENT_ID,
-            'secret' => PPLOAD_SECRET
+            'secret'   => PPLOAD_SECRET
         ));
 
         $filename = sys_get_temp_dir() . '/' . $projectData->image_small;
@@ -426,7 +401,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $uri = $viewHelperImage->Image(
             $projectData->image_small,
             array(
-                'width' => 600,
+                'width'  => 600,
                 'height' => 600
             )
         );
@@ -549,9 +524,11 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         //If there is no Logo, we take the 1. gallery pic
         if (!isset($projectData->image_small) || $projectData->image_small == '') {
             $projectData->image_small = $pictureSources[0];
-            Zend_Registry::get('logger')->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . ' - set image_small: ' . $projectData->image_small . '\n');
+            Zend_Registry::get('logger')->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . ' - set image_small: '
+                . $projectData->image_small . '\n');
         } else {
-            Zend_Registry::get('logger')->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . ' - set image_small: Not neeed. ' . $projectData->image_small . '\n');
+            Zend_Registry::get('logger')->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . ' - set image_small: Not neeed. '
+                . $projectData->image_small . '\n');
 
         }
         $projectData->save();
@@ -603,17 +580,17 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $update_id = $params['update_id'];
 
         /**
-        //Save version number
-        $version = "";
-        if (isset($params['product_version'])) {
-            $version = $params['product_version'];
-        }
-        
-        $updateArray = array();
-        $updateArray['version'] = $version;
-        $tableProject->update($updateArray, 'project_id = ' . $this->_projectId);
-        **/
-        
+         * //Save version number
+         * $version = "";
+         * if (isset($params['product_version'])) {
+         * $version = $params['product_version'];
+         * }
+         *
+         * $updateArray = array();
+         * $updateArray['version'] = $version;
+         * $tableProject->update($updateArray, 'project_id = ' . $this->_projectId);
+         **/
+
         //Save title and Text
         $title = null;
         $text = null;
@@ -851,7 +828,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $helperUserIsOwner = new Default_View_Helper_UserIsOwner();
         $helperIsProjectActive = new Default_View_Helper_IsProjectActive();
-        if ((false === $helperIsProjectActive->isProjectActive($this->view->product->project_status)) AND (false === $helperUserIsOwner->UserIsOwner($this->view->product->member_id))) {
+        if ((false === $helperIsProjectActive->isProjectActive($this->view->product->project_status)) AND (false
+                === $helperUserIsOwner->UserIsOwner($this->view->product->member_id))
+        ) {
             throw new Zend_Controller_Action_Exception('This page does not exist', 404);
         }
 
@@ -904,11 +883,11 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         if (false == empty($comment)) {
             $modelComments = new Default_Model_ProjectComments();
             $dataComment = array(
-                'comment_type' => Default_Model_DbTable_Comments::COMMENT_TYPE_PLING,
+                'comment_type'      => Default_Model_DbTable_Comments::COMMENT_TYPE_PLING,
                 'comment_target_id' => $project->project_id,
                 'comment_member_id' => $memberId,
-                'comment_pling_id' => $plingId,
-                'comment_text' => $comment
+                'comment_pling_id'  => $plingId,
+                'comment_text'      => $comment
             );
             $modelComments->save($dataComment);
         }
@@ -920,6 +899,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
     /**
      * @param string $paymentProvider
+     *
      * @throws Zend_Controller_Exception
      * @return Local_Payment_GatewayInterface
      */
@@ -1033,9 +1013,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         if ($product->ppload_collection_id) {
             // require_once 'Ppload/Api.php';
             $pploadApi = new Ppload_Api(array(
-                'apiUri' => PPLOAD_API_URI,
+                'apiUri'   => PPLOAD_API_URI,
                 'clientId' => PPLOAD_CLIENT_ID,
-                'secret' => PPLOAD_SECRET
+                'secret'   => PPLOAD_SECRET
             ));
             $collectionResponse = $pploadApi->deleteCollection(ltrim($product->ppload_collection_id, '!'));
         }
@@ -1082,9 +1062,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         if ($product->ppload_collection_id) {
             // require_once 'Ppload/Api.php';
             $pploadApi = new Ppload_Api(array(
-                'apiUri' => PPLOAD_API_URI,
+                'apiUri'   => PPLOAD_API_URI,
                 'clientId' => PPLOAD_CLIENT_ID,
-                'secret' => PPLOAD_SECRET
+                'secret'   => PPLOAD_SECRET
             ));
             // Update collection information
             $collectionRequest = array(
@@ -1136,9 +1116,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         if ($product->ppload_collection_id) {
             // require_once 'Ppload/Api.php';
             $pploadApi = new Ppload_Api(array(
-                'apiUri' => PPLOAD_API_URI,
+                'apiUri'   => PPLOAD_API_URI,
                 'clientId' => PPLOAD_CLIENT_ID,
-                'secret' => PPLOAD_SECRET
+                'secret'   => PPLOAD_SECRET
             ));
             // Update collection information
             $collectionRequest = array(
@@ -1191,12 +1171,12 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         if ($projectData->ppload_collection_id) {
             // require_once 'Ppload/Api.php';
             $pploadApi = new Ppload_Api(array(
-                'apiUri' => PPLOAD_API_URI,
+                'apiUri'   => PPLOAD_API_URI,
                 'clientId' => PPLOAD_CLIENT_ID,
-                'secret' => PPLOAD_SECRET
+                'secret'   => PPLOAD_SECRET
             ));
             $favoriteRequest = array(
-                'user_id' => $this->_authMember->member_id,
+                'user_id'       => $this->_authMember->member_id,
                 'collection_id' => ltrim($projectData->ppload_collection_id, '!')
             );
             $favoriteResponse = $pploadApi->postFavorite($favoriteRequest);
@@ -1229,12 +1209,12 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         if ($projectData->ppload_collection_id) {
             // require_once 'Ppload/Api.php';
             $pploadApi = new Ppload_Api(array(
-                'apiUri' => PPLOAD_API_URI,
+                'apiUri'   => PPLOAD_API_URI,
                 'clientId' => PPLOAD_CLIENT_ID,
-                'secret' => PPLOAD_SECRET
+                'secret'   => PPLOAD_SECRET
             ));
             $favoriteRequest = array(
-                'user_id' => $this->_authMember->member_id,
+                'user_id'       => $this->_authMember->member_id,
                 'collection_id' => ltrim($projectData->ppload_collection_id, '!')
             );
             $favoriteResponse = $pploadApi->postFavorite($favoriteRequest); // This post call will retrieve existing favorite info
@@ -1259,6 +1239,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
     /**
      * @param $list
+     *
      * @return array
      */
     protected function generateFollowedProjectsViewData($list)
@@ -1324,7 +1305,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
             $helperUserIsOwner = new Default_View_Helper_UserIsOwner();
             $helperIsProjectActive = new Default_View_Helper_IsProjectActive();
-            if ((false === $helperIsProjectActive->isProjectActive($this->view->product->project_status)) AND (false === $helperUserIsOwner->UserIsOwner($this->view->product->member_id))) {
+            if ((false === $helperIsProjectActive->isProjectActive($this->view->product->project_status)) AND (false
+                    === $helperUserIsOwner->UserIsOwner($this->view->product->member_id))
+            ) {
                 throw new Zend_Controller_Action_Exception('This page does not exist', 404);
             }
 
@@ -1362,7 +1345,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $claimMailConfirm->setTemplateVar('sender', 'contact@opendesktop.org');
             $claimMailConfirm->setTemplateVar('producttitle', $productInfo->title);
             $claimMailConfirm->setTemplateVar('productlink',
-                'http://' . $this->getRequest()->getHttpHost() . $helperBuildProductUrl->buildProductUrl($productInfo->project_id));
+                'http://' . $this->getRequest()->getHttpHost()
+                . $helperBuildProductUrl->buildProductUrl($productInfo->project_id));
             $claimMailConfirm->setTemplateVar('username', $this->_authMember->username);
             $claimMailConfirm->setReceiverMail($this->_authMember->mail);
             $claimMailConfirm->send();
@@ -1392,7 +1376,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $plingModel = new Default_Model_DbTable_Plings();
             $this->view->comments = $plingModel->getCommentsForProject($widgetProjectId, 10);
             $websiteOwner = new Local_Verification_WebsiteAuthCodeExist();
-            $this->view->authCode = '<meta name="ocs-site-verification" content="' . $websiteOwner->generateAuthCode(stripslashes($this->view->product->link_1)) . '" />';
+            $this->view->authCode = '<meta name="ocs-site-verification" content="'
+                . $websiteOwner->generateAuthCode(stripslashes($this->view->product->link_1)) . '" />';
         }
 
     }
@@ -1420,13 +1405,13 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
             // require_once 'Ppload/Api.php';
             $pploadApi = new Ppload_Api(array(
-                'apiUri' => PPLOAD_API_URI,
+                'apiUri'   => PPLOAD_API_URI,
                 'clientId' => PPLOAD_CLIENT_ID,
-                'secret' => PPLOAD_SECRET
+                'secret'   => PPLOAD_SECRET
             ));
 
             $fileRequest = array(
-                'file' => $tmpFilename,
+                'file'     => $tmpFilename,
                 'owner_id' => $this->_authMember->member_id
             );
             if ($projectData->ppload_collection_id) {
@@ -1476,10 +1461,10 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                         }
                     }
                     $profileRequest = array(
-                        'owner_id' => $this->_authMember->member_id,
-                        'name' => $profileName,
-                        'email' => $memberSettings->mail,
-                        'homepage' => $memberSettings->link_website,
+                        'owner_id'    => $this->_authMember->member_id,
+                        'name'        => $profileName,
+                        'email'       => $memberSettings->mail,
+                        'homepage'    => $memberSettings->link_website,
                         'description' => $mainproject->description
                     );
                     $profileResponse = $pploadApi->postProfile($profileRequest);
@@ -1489,10 +1474,10 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                         $collectionCategory .= '-published';
                     }
                     $collectionRequest = array(
-                        'title' => $projectData->title,
+                        'title'       => $projectData->title,
                         'description' => $projectData->description,
-                        'category' => $collectionCategory,
-                        'content_id' => $projectData->project_id
+                        'category'    => $collectionCategory,
+                        'content_id'  => $projectData->project_id
                     );
                     $collectionResponse = $pploadApi->putCollection(
                         $projectData->ppload_collection_id,
@@ -1504,7 +1489,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
                 $this->_helper->json(array(
                     'status' => 'ok',
-                    'file' => $fileResponse->file
+                    'file'   => $fileResponse->file
                 ));
                 return;
             }
@@ -1532,9 +1517,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         ) {
             // require_once 'Ppload/Api.php';
             $pploadApi = new Ppload_Api(array(
-                'apiUri' => PPLOAD_API_URI,
+                'apiUri'   => PPLOAD_API_URI,
                 'clientId' => PPLOAD_CLIENT_ID,
-                'secret' => PPLOAD_SECRET
+                'secret'   => PPLOAD_SECRET
             ));
 
             $fileResponse = $pploadApi->getFile($_POST['file_id']);
@@ -1560,17 +1545,21 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 ) {
                     $this->_helper->json(array(
                         'status' => 'ok',
-                        'file' => $fileResponse->file
+                        'file'   => $fileResponse->file
                     ));
                     return;
                 } else {
-                    $error_text .= 'Response: $pploadApi->putFile(): ' . json_encode($fileResponse) . '; $fileResponse->status: ' . $fileResponse->status;
+                    $error_text .= 'Response: $pploadApi->putFile(): ' . json_encode($fileResponse) . '; $fileResponse->status: '
+                        . $fileResponse->status;
                 }
             } else {
-                $error_text .= 'PPload Response: ' . json_encode($fileResponse) . '; fileResponse->file->collection_id: ' . $fileResponse->file->collection_id . ' != $projectData->ppload_collection_id: ' . $projectData->ppload_collection_id;
+                $error_text .= 'PPload Response: ' . json_encode($fileResponse) . '; fileResponse->file->collection_id: '
+                    . $fileResponse->file->collection_id . ' != $projectData->ppload_collection_id: '
+                    . $projectData->ppload_collection_id;
             }
         } else {
-            $error_text .= 'No CollectionId or no FileId. CollectionId: ' . $projectData->ppload_collection_id . ', FileId: ' . $_POST['file_id'];
+            $error_text .= 'No CollectionId or no FileId. CollectionId: ' . $projectData->ppload_collection_id . ', FileId: '
+                . $_POST['file_id'];
         }
 
         $this->_helper->json(array('status' => 'error', 'error_text' => $error_text));
@@ -1618,9 +1607,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         ) {
             // require_once 'Ppload/Api.php';
             $pploadApi = new Ppload_Api(array(
-                'apiUri' => PPLOAD_API_URI,
+                'apiUri'   => PPLOAD_API_URI,
                 'clientId' => PPLOAD_CLIENT_ID,
-                'secret' => PPLOAD_SECRET
+                'secret'   => PPLOAD_SECRET
             ));
 
             $fileResponse = $pploadApi->getFile($_POST['file_id']);
@@ -1638,7 +1627,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     $this->_helper->json(array('status' => 'ok'));
                     return;
                 } else {
-                    $error_text .= 'Response: $pploadApi->putFile(): ' . json_encode($fileResponse) . '; $fileResponse->status: ' . $fileResponse->status;
+                    $error_text .= 'Response: $pploadApi->putFile(): ' . json_encode($fileResponse) . '; $fileResponse->status: '
+                        . $fileResponse->status;
                 }
             }
         }
@@ -1660,14 +1650,14 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         if ($projectData->ppload_collection_id) {
             // require_once 'Ppload/Api.php';
             $pploadApi = new Ppload_Api(array(
-                'apiUri' => PPLOAD_API_URI,
+                'apiUri'   => PPLOAD_API_URI,
                 'clientId' => PPLOAD_CLIENT_ID,
-                'secret' => PPLOAD_SECRET
+                'secret'   => PPLOAD_SECRET
             ));
 
             $filesRequest = array(
                 'collection_id' => ltrim($projectData->ppload_collection_id, '!'),
-                'perpage' => 100
+                'perpage'       => 100
             );
             $filesResponse = $pploadApi->getFiles($filesRequest);
 
@@ -1802,6 +1792,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
     /**
      * @param $errors
+     *
      * @return array
      */
     protected function getErrorMessages($errors)
@@ -1844,6 +1835,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
     /**
      * @param $hits
+     *
      * @return array
      */
     protected function generateProjectsArrayForView($hits)
@@ -1863,21 +1855,21 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     $plingUrl = $helperBuildProductUrl->buildProductUrl($project->project_id, 'pling');
                 }
                 $projectArr = array(
-                    'score' => $hit->score,
-                    'id' => $project->project_id,
-                    'type_id' => $project->type_id,
-                    'title' => $project->title,
-                    'description' => $project->description,
-                    'image' => $project->image_small,
-                    'plings' => 0,
-                    'urlGoal' => $showUrl,
-                    'urlPling' => $plingUrl,
+                    'score'        => $hit->score,
+                    'id'           => $project->project_id,
+                    'type_id'      => $project->type_id,
+                    'title'        => $project->title,
+                    'description'  => $project->description,
+                    'image'        => $project->image_small,
+                    'plings'       => 0,
+                    'urlGoal'      => $showUrl,
+                    'urlPling'     => $plingUrl,
                     'showUrlPling' => ($project->paypal_mail != null),
-                    'member' => array(
-                        'name' => $project->username,
-                        'url' => 'member/' . $project->member_id,
+                    'member'       => array(
+                        'name'  => $project->username,
+                        'url'   => 'member/' . $project->member_id,
                         'image' => $project->profile_image_url,
-                        'id' => $project->member_id
+                        'id'    => $project->member_id
                     )
                 );
                 $viewArray[] = $projectArr;
