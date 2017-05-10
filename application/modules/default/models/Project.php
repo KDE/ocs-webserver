@@ -328,6 +328,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
     public function fetchProductInfo($project_id)
     {
         
+       
         $sql = '
                 SELECT
                   p.*,
@@ -956,19 +957,15 @@ class Default_Model_Project extends Default_Model_DbTable_Project
      */
     public function fetchProjectViews($project_id)
     {
-        return 0;
-        /*
         $sql = "
                 SELECT
-                    `stat_page_views`.`project_id` AS `project_id`,
-                    count(1) AS `count_views`,
-                    count(DISTINCT `stat_page_views`.`ip`) AS `count_visitor`,
-                    max(`stat_page_views`.`created_at`) AS `last_view`
+                    `project_id`,
+                    `count_views`,
+                    `count_visitor`,
+                    `last_view`
                 FROM
-                    `stat_page_views`
-                WHERE `stat_page_views`.`project_id` = ?
-                GROUP BY `stat_page_views`.`project_id`
-                ORDER BY NULL
+                    `stat_page_views_mv`
+                WHERE `project_id` = ?
                 ";
         $database = Zend_Db_Table::getDefaultAdapter();
         $sql = $database->quoteInto($sql, $project_id, 'INTEGER', 1);
@@ -982,7 +979,6 @@ class Default_Model_Project extends Default_Model_DbTable_Project
 
         return $result;
          
-         */
     }
 
     /**
@@ -1092,23 +1088,28 @@ class Default_Model_Project extends Default_Model_DbTable_Project
 
     /**
      * @param int|array $idCategory id of a category or an array of id's
-     * @param bool $withSubCat if was set true it will also count products in sub categories
-     * @return int                   count of products in given category
+     * @param bool      $withSubCat if was set true it will also count products in sub categories
+     * @param null      $store_id
+     *
+     * @return int count of products in given category
      * @throws Zend_Exception
      */
-    public function countProductsInCategory($idCategory = null, $withSubCat = true)
+    public function countProductsInCategory($idCategory = null, $withSubCat = true, $store_id = null)
     {
         if (empty($idCategory)) {
             throw new Zend_Exception('idCategory param was not set');
         }
 
-        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
-        $storePackageTypeIds = null;
-        if ($storeConfig) {
-            $storePackageTypeIds = $storeConfig['package_type'];
+        $store_config = null;
+        if (isset($store_id)) {
+            $configurations = Zend_Registry::get('application_store_config_id_list');
+            $store_config = $configurations[$store_id];
+        } else {
+            $store_config = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
         }
+        $storePackageTypeIds = (false === empty($store_config['package_type'])) ? $store_config['package_type'] : null;
 
-        $cacheName = __FUNCTION__ . md5(serialize($idCategory) . $withSubCat . '-package_type' . serialize($storePackageTypeIds));
+        $cacheName = __FUNCTION__ . '_'.md5(serialize($idCategory) . $withSubCat . serialize($storePackageTypeIds));
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
 
@@ -1629,8 +1630,6 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                   JOIN member AS m ON p.member_id = m.member_id AND m.is_active = 1 AND m.is_deleted = 0
                   JOIN project_category AS pc ON p.project_category_id = pc.project_category_id
                   LEFT JOIN stat_plings AS sp ON p.project_id = sp.project_id';
-
-
         
         if ($storePackageTypeIds) {
             $sql .= ' JOIN (SELECT DISTINCT project_id FROM project_package_type WHERE package_type_id in (' . $storePackageTypeIds . ')) package_type  ON p.project_id = package_type.project_id';

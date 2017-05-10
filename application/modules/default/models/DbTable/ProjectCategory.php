@@ -663,6 +663,14 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
             return array();
         }
 
+        /** @var Zend_Cache_Core $cache */
+        $cache = $this->cache;
+        $cacheName = __FUNCTION__ . '_' . md5(serialize($nodeId) . (int)$isActive);
+
+        if (($children = $cache->load($cacheName))) {
+            return $children;
+        }
+
         $inQuery = '?';
         if (is_array($nodeId)) {
             $inQuery = implode(',', array_fill(0, count($nodeId), '?'));
@@ -683,6 +691,7 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
             ORDER BY o.lft;
         ";
         $children = $this->_db->query($sql, $nodeId)->fetchAll();
+        $cache->save($children, $cacheName);
         if (count($children)) {
             return $children;
         } else {

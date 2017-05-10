@@ -54,6 +54,8 @@ class Default_Model_ProjectCategory
 
     /**
      * @param int|null $store_id If not set, the tree for the current store will be returned
+     * @param bool     $clearCache
+     *
      * @return array
      */
     public function fetchCategoryTreeForStore($store_id = null, $clearCache = false)
@@ -81,7 +83,7 @@ class Default_Model_ProjectCategory
                 $rows = $modelCategories->fetchImmediateChildrenIds($root['project_category_id'], $modelCategories::ORDERED_TITLE);
             }
 
-            $tree = $this->buildTree($rows);
+            $tree = $this->buildTree($rows, null, (int)$store_id);
             $cache->save($tree, $cache_id, array(), 28800);
         }
 
@@ -110,7 +112,7 @@ class Default_Model_ProjectCategory
         return $tree;
     }
 
-    private function buildTree($list, $parent_id = null)
+    private function buildTree($list, $parent_id = null, $store_id = null)
     {
         if (false === is_array($list)) {
             $list = array($list);
@@ -120,7 +122,7 @@ class Default_Model_ProjectCategory
         $result = array();
         foreach ($list as $cat_id) {
             $currentCategory = $modelCategories->fetchElement($cat_id);
-            $countProduct = $modelProject->countProductsInCategory($cat_id, true);
+            $countProduct = $modelProject->countProductsInCategory($cat_id, true, $store_id);
 
             $result_element = array(
                 'id'=> $cat_id,
@@ -139,7 +141,7 @@ class Default_Model_ProjectCategory
             if (($currentCategory['rgt'] - $currentCategory['lft']) > 1) {
                 $result_element['has_children'] = true;
                 $ids = $modelCategories->fetchImmediateChildrenIds($currentCategory['project_category_id'], $modelCategories::ORDERED_TITLE);
-                $result_element['children'] = $this->buildTree($ids, $currentCategory['project_category_id']);
+                $result_element['children'] = $this->buildTree($ids, $currentCategory['project_category_id'], $store_id);
             }
             $result[] = $result_element;
         }
