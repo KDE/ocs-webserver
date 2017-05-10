@@ -1247,11 +1247,12 @@ class Ocsv1Controller extends Zend_Controller_Action
                         $isSearchable = true;
                     }
                 }
-                if (!$isSearchable) {
+                $keyword = $this->_params['search'];
+                if (!$isSearchable && $keyword && strlen($keyword) > 2) {
                     $tableProjectSelect->where(
                         'project.title LIKE ?'
                         . ' OR project.description LIKE ?',
-                        "%{$this->_params['search']}%"
+                        "%$keyword%"
                     );
                 }
             }
