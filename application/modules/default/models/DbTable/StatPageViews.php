@@ -39,7 +39,7 @@ class Default_Model_DbTable_StatPageViews extends Zend_Db_Table_Abstract
             
         } catch (Exception $ex) {
             $this->_db->rollBack();
-            Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . print_r($e, true));
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . print_r($ex, true));
         }
 
 
