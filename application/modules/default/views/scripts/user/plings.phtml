@@ -38,12 +38,12 @@ $this->countDownloadsOverall = count($this->downloads);
                 <?php echo $this->render('user/partials/userHeader.phtml'); ?>
                 <!-- /NAVIGATION -->
                 <div class="my-products-heading">
-                    <h1 class="page-title left"><?= $this->translate('Plings') ?></h1>
+                    <h1 class="page-title left"><?= $this->translate('Payout') ?></h1>
                 </div>
                 <div class="my-products-list" id="my-payout-list">
                     <?php
                     //if ($this->countDownloadsOverall > 0) {
-                        echo $this->render('user/partials/loopPlings.phtml');
+                        echo $this->render('user/partials/loopPayout.phtml');
                     //} else {
                     //    echo '<div class="well well-sm" role="alert">You have no downloads and no plings.</div>';
                     //}
