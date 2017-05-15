@@ -70,6 +70,7 @@ class Backend_StorecategoriesController extends Local_Controller_Action_Backend
 
     /**
      * @param $inputParams
+     *
      * @return array
      */
     protected function prepareEmptyValues($inputParams)
@@ -79,26 +80,20 @@ class Backend_StorecategoriesController extends Local_Controller_Action_Backend
         }, $inputParams);
     }
 
-    protected function cacheClear($store_id)
-    {
-        /** @var Zend_Cache_Core $cache */
-        $cache = Zend_Registry::get('cache');
-        $cache->remove(Default_Model_ProjectCategory::CACHE_TREE_STORE . "_{$store_id}");
-        $cache->remove(Default_Model_DbTable_ConfigStore::CACHE_STORE_CONFIG . "_{$store_id}");
-        $modelConfigStore = new Default_Model_DbTable_ConfigStore();
-        $modelConfigStore->fetchAllStoresAndCategories(true);
-        $modelConfigStore->fetchAllStoresConfigArray(true);
-    }
-
     protected function initCache($store_id)
     {
         $modelPCat = new Default_Model_ProjectCategory();
         $modelPCat->fetchCategoryTreeForStore($store_id, true);
 
         $modelConfigStore = new Default_Model_DbTable_ConfigStore();
-        $modelConfigStore->fetchConfigForStore($store_id, true);
         $modelConfigStore->fetchAllStoresAndCategories(true);
-        $modelConfigStore->fetchAllStoresConfigArray(true);
+    }
+
+    protected function createJobInitCache($storeId) {
+        $queue = Local_Queue_Factory::getQueue();
+        $command = new Backend_Commands_InitCacheStoreCategories($storeId);
+        $msg = $queue->send(serialize($command));
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - ' . print_r($msg, true));
     }
 
     public function initcacheAction()
@@ -188,6 +183,17 @@ class Backend_StorecategoriesController extends Local_Controller_Action_Backend
         $jTableResult['TotalRecordCount'] = $reportsAll->current()->countAll;
 
         $this->_helper->json($jTableResult);
+    }
+
+    protected function cacheClear($store_id)
+    {
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cache->remove(Default_Model_ProjectCategory::CACHE_TREE_STORE . "_{$store_id}");
+        $cache->remove(Default_Model_DbTable_ConfigStore::CACHE_STORE_CONFIG . "_{$store_id}");
+        $modelConfigStore = new Default_Model_DbTable_ConfigStore();
+        $modelConfigStore->fetchAllStoresAndCategories(true);
+        $modelConfigStore->fetchAllStoresConfigArray(true);
     }
 
 }

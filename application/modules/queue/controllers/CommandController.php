@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -30,6 +31,10 @@ class Queue_CommandController extends Local_Controller_Action_CliAbstract
     protected $queue;
     /** @var  Zend_Config */
     protected $config;
+    /** @var int $timeout */
+    protected $timeout;
+    /** @var int $message_count */
+    protected $message_count;
 
     public function __construct(
         Zend_Controller_Request_Abstract $request,
@@ -38,6 +43,8 @@ class Queue_CommandController extends Local_Controller_Action_CliAbstract
     ) {
         parent::__construct($request, $response, $invokeArgs);
         $this->config = Zend_Registry::get('config');
+        $this->timeout = isset($this->config->queue->general->timeout) ? $this->config->queue->general->timeout : self::DEFAULT_MSG_TIMEOUT;
+        $this->message_count = isset($this->config->queue->general->message_count) ? $this->config->queue->general->message_count : self::DEFAULT_MSG_COUNT;
     }
 
     public function runAction()
@@ -45,7 +52,7 @@ class Queue_CommandController extends Local_Controller_Action_CliAbstract
         $queue = $this->initQueue($this->getParam('q'));
 
         /** @var Zend_Queue_Message_Iterator $messages */
-        $messages = $queue->receive(self::DEFAULT_MSG_COUNT, self::DEFAULT_MSG_TIMEOUT);
+        $messages = $queue->receive($this->message_count, $this->timeout);
         /** @var Zend_Queue_Message $message */
         foreach ($messages as $message) {
             $cmdObject = unserialize($message->body);
@@ -53,13 +60,11 @@ class Queue_CommandController extends Local_Controller_Action_CliAbstract
                 try {
                     $cmdObject->doCommand();
                 } catch (Exception $e) {
-                    Zend_Registry::get('logger')->err(__METHOD__ . " - " . print_r($e,
-                            true) . PHP_EOL . print_r($cmdObject, true) . PHP_EOL);
+                    Zend_Registry::get('logger')->err(__METHOD__ . " - " . print_r($e,true) . PHP_EOL . print_r($cmdObject, true) . PHP_EOL);
                 }
                 $queue->deleteMessage($message);
             } else {
-                Zend_Registry::get('logger')->err(__METHOD__ . " - Unknown command - " . print_r($message->body,
-                        true) . PHP_EOL);
+                Zend_Registry::get('logger')->err(__METHOD__ . " - Unknown command - " . print_r($message->body,true) . PHP_EOL);
 
                 $queue->deleteMessage($message);
                 trigger_error('Unknown command: ' . print_r($message->body, true), E_USER_ERROR);
@@ -70,6 +75,7 @@ class Queue_CommandController extends Local_Controller_Action_CliAbstract
 
     /**
      * @param string $identifier
+     *
      * @return Zend_Queue
      */
     protected function initQueue($identifier)

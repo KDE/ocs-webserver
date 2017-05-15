@@ -35,7 +35,9 @@ class Backend_Commands_DeleteProductExtended implements Local_Queue_CommandInter
      * In order to run a parent constructor, a call to parent::__construct() within the child constructor is required.
      *
      * param [ mixed $args [, $... ]]
+     *
      * @param Zend_Db_Table_Row_Abstract $product
+     *
      * @link http://php.net/manual/en/language.oop5.decon.php
      */
     public function __construct($product)
@@ -67,12 +69,13 @@ class Backend_Commands_DeleteProductExtended implements Local_Queue_CommandInter
         if ($this->product->ppload_collection_id) {
             // require_once 'Ppload/Api.php';
             $pploadApi = new Ppload_Api(array(
-                'apiUri' => PPLOAD_API_URI,
+                'apiUri'   => PPLOAD_API_URI,
                 'clientId' => PPLOAD_CLIENT_ID,
-                'secret' => PPLOAD_SECRET
+                'secret'   => PPLOAD_SECRET
             ));
             $collectionResponse = $pploadApi->deleteCollection(ltrim($this->product->ppload_collection_id, '!'));
-            Zend_Registry::get('logger')->info(__METHOD__ . ' - product delete request for ppload: ' . $this->product->project_id . ' response: ' . print_r($collectionResponse,
+            Zend_Registry::get('logger')->info(__METHOD__ . ' - product delete request for ppload: ' . $this->product->project_id
+                . ' response: ' . print_r($collectionResponse,
                     true));
         }
     }

@@ -91,38 +91,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 $options['cache']['frontend']['options'],
                 $options['cache']['backend']['options']
             );
-        } else {
-            // Fallback settings for some (maybe development) environments with where no cache management is installed.
-
-            if (false === is_writeable(APPLICATION_CACHE)) {
-                error_log('directory for cache files does not exists or not writable: ' . APPLICATION_CACHE);
-                exit('directory for cache files does not exists or not writable: ' . APPLICATION_CACHE);
-            }
-
-            $frontendOptions = array(
-                'lifetime'                => 600,
-                'automatic_serialization' => true,
-                'cache_id_prefix'         => 'front_cache',
-                'cache'                   => true
-            );
-
-            $backendOptions = array(
-                'cache_dir'              => APPLICATION_CACHE,
-                'file_locking'           => true,
-                'read_control'           => true,
-                'read_control_type'      => 'crc32',
-                'hashed_directory_level' => 1,
-                'hashed_directory_perm'  => 0700,
-                'file_name_prefix'       => 'ocs',
-                'cache_file_perm'        => 0700
-            );
-
-            $cache = Zend_Cache::factory(
-                'Core',
-                'File',
-                $frontendOptions,
-                $backendOptions
-            );
         }
 
         Zend_Registry::set('cache', $cache);
