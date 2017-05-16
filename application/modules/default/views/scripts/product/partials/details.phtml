@@ -21,7 +21,7 @@
  **/
 
 $tableProject = new Default_Model_Project();
-$this->product_views = $tableProject->fetchProjectViews($this->_projectId);
+$this->product_views = $tableProject->fetchProjectViews($this->product->project_id);
 ?>
 <div class="prod-widget-box right details">
     <span class="title"> Details </span>
