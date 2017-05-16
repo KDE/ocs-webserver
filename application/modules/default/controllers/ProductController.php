@@ -70,6 +70,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $modelProduct = new Default_Model_Project();
         $this->view->product = $modelProduct->fetchProductInfo($this->_projectId);
+        $this->view->cat_id = $this->view->product->project_category_id;
 
         $helperUserIsOwner = new Default_View_Helper_UserIsOwner();
         $helperIsProjectActive = new Default_View_Helper_IsProjectActive();
