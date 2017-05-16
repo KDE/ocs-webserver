@@ -67,10 +67,10 @@ class Default_View_Helper_BuildExploreUrl
         $storeId = null;
         if (false === isset($params['store_id'])) {
             if ($request->getParam('domain_store_id')) {
-                $storeId = $request->getParam('domain_store_id') . '/';
+                $storeId = 's/' . $request->getParam('domain_store_id') . '/';
             }
         } else {
-            $storeId = "{$params['store_id']}/";
+            $storeId = "s/{$params['store_id']}/";
             unset($params['store_id']);
         }
 
