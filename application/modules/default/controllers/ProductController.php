@@ -58,7 +58,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
     public function indexAction()
     {
-
         if (empty($this->_projectId)) {
             $this->redirect('/explore');
         }
@@ -74,8 +73,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $helperUserIsOwner = new Default_View_Helper_UserIsOwner();
         $helperIsProjectActive = new Default_View_Helper_IsProjectActive();
-        if ((false === $helperIsProjectActive->isProjectActive($this->view->product->project_status)) AND (false
-                === $helperUserIsOwner->UserIsOwner($this->view->product->member_id))
+        if ((false === $helperIsProjectActive->isProjectActive($this->view->product->project_status))
+            AND
+            (false === $helperUserIsOwner->UserIsOwner($this->view->product->member_id))
         ) {
             throw new Zend_Controller_Action_Exception('This page does not exist', 404);
         }
@@ -85,7 +85,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $tablePageViews->savePageView($this->_projectId, $this->getRequest()->getClientIp(),
                 $this->_authMember->member_id);
         }
-
     }
 
     protected function fetchDataForIndexView()

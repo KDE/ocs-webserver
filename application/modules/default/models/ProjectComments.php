@@ -27,6 +27,10 @@ class Default_Model_ProjectComments
     protected $_dataTableName;
     /** @var  Default_Model_DbTable_Comments */
     protected $_dataTable;
+    /** @var  array */
+    protected $data;
+    /** @var  array */
+    protected $index;
 
     /**
      * PHP 5 allows developers to declare constructor methods for classes.
@@ -37,7 +41,9 @@ class Default_Model_ProjectComments
      * In order to run a parent constructor, a call to parent::__construct() within the child constructor is required.
      *
      * param [ mixed $args [, $... ]]
+     *
      * @param string $_dataTableName
+     *
      * @link http://php.net/manual/en/language.oop5.decon.php
      */
     public function __construct($_dataTableName = 'Default_Model_DbTable_Comments')
@@ -48,9 +54,10 @@ class Default_Model_ProjectComments
 
     public function getComment($comment_id)
     {
-        $sql = "    SELECT *
+        $sql
+            = "    SELECT *
                     FROM comments
-                    STRAIGHT_JOIN member on comments.comment_member_id = member.member_id
+                    STRAIGHT_JOIN member ON comments.comment_member_id = member.member_id
                     WHERE comment_id = :comment_id
                     ORDER BY comments.comment_created_at DESC, comment_parent_id
         ";
@@ -59,27 +66,100 @@ class Default_Model_ProjectComments
         if (0 == count($rowSet)) {
             return array();
         }
+
         return $rowSet[0];
     }
 
     public function getCommentFromSource($type = 0, $source_id, $source_pk)
     {
-        $sql = "
+        $sql
+            = "
                     SELECT *
                     FROM comments
                     WHERE comment_type = :type AND source_id = :source_id AND source_pk = :source_pk 
         ";
 
-        $rowset = $this->_dataTable->getAdapter()->fetchRow($sql,
-            array('type' => $type, 'source_id' => $source_id, 'source_pk' => $source_pk));
+        $rowset = $this->_dataTable->getAdapter()->fetchRow(
+            $sql, array('type' => $type, 'source_id' => $source_id, 'source_pk' => $source_pk)
+        );
         if (!$rowset) {
             return false;
         }
+
         return $rowset;
     }
 
     /**
+     * @param $project_id
+     *
+     * @return Zend_Paginator
+     */
+    public function getCommentTreeForProject($project_id)
+    {
+        $sql
+            = "
+                SELECT comment_id, comment_parent_id, comment_text, comment_created_at, comment_active, comment_type, member_id, username, profile_image_url  
+                FROM comments 
+                STRAIGHT_JOIN member ON comments.comment_member_id = member.member_id 
+                WHERE comment_active = :status_active AND comment_type = :type_id AND comment_target_id = :project_id AND comment_parent_id = 0 
+                ORDER BY comment_created_at DESC
+                ";
+        $rowset = $this->_dataTable->getAdapter()->fetchAll(
+            $sql, array('status_active' => 1,
+                        'type_id' => Default_Model_DbTable_Comments::COMMENT_TYPE_PRODUCT,
+                        'project_id'    => $project_id)
+        );
+        $sql
+            = "
+                SELECT comment_id, comment_parent_id, comment_text, comment_created_at, comment_active, comment_type, member_id, username, profile_image_url  
+                FROM comments 
+                STRAIGHT_JOIN member ON comments.comment_member_id = member.member_id 
+                WHERE comment_active = :status_active AND comment_type = :type_id AND comment_target_id = :project_id AND comment_parent_id <> 0 
+                ORDER BY comment_created_at, comment_id
+                ";
+        $rowset2 = $this->_dataTable->getAdapter()->fetchAll(
+            $sql, array('status_active' => 1,
+                        'type_id' => Default_Model_DbTable_Comments::COMMENT_TYPE_PRODUCT,
+                        'project_id'    => $project_id)
+        );
+        $rowset = array_merge($rowset, $rowset2);
+        /* create array with comment_id as key */
+        foreach ($rowset as $item) {
+            $this->data[$item['comment_id']] = $item;
+        }
+        /* create an array with all parent_id's and their immediate children */
+        foreach ($rowset as $item) {
+            $this->index[$item['comment_parent_id']][] = $item['comment_id'];
+        }
+        /* create the final sorted array */
+        $list = array();
+        $this->sort_child_nodes(0, 1, $list);
+
+        return new Zend_Paginator(new Zend_Paginator_Adapter_Array($list));
+    }
+
+    /**
+     * @param int  $parent_id
+     * @param int  $level
+     * @param null $result
+     *
+     * @return array|null
+     */
+    function sort_child_nodes($parent_id, $level, &$result = null)
+    {
+        // array(array('comment' => $rootElement, 'level' => 1));
+        $parent_id = $parent_id === null ? "NULL" : $parent_id;
+        if (isset($this->index[$parent_id])) {
+            foreach ($this->index[$parent_id] as $id) {
+                $result[] = array('comment' => $this->data[$id], 'level' => $level);
+                $this->sort_child_nodes($id, $level + 1, $result);
+            }
+        }
+    }
+
+    /**
      * @param int $project_id
+     *
      * @return Zend_Paginator
      */
     public function getAllCommentsForProject($project_id)
@@ -95,19 +175,22 @@ class Default_Model_ProjectComments
                 $returnValue = array_merge($returnValue, $childs);
             }
         }
+
         return new Zend_Paginator(new Zend_Paginator_Adapter_Array($returnValue));
     }
 
     /**
      * @param int $_projectId
+     *
      * @return array
      */
     public function getRootCommentsForProject($_projectId)
     {
-        $sql = '
+        $sql
+            = '
                 SELECT *
                     FROM comments
-                    STRAIGHT_JOIN member on comments.comment_member_id = member.member_id
+                    STRAIGHT_JOIN member ON comments.comment_member_id = member.member_id
                     WHERE comment_target_id = :project_id
                       AND comment_parent_id = 0
                       AND comment_type = :type_id
@@ -115,19 +198,20 @@ class Default_Model_ProjectComments
                     ORDER BY comments.comment_created_at DESC, comment_parent_id
         ';
 
-        $rowset = $this->_dataTable->getAdapter()->fetchAll($sql, array(
-            'project_id' => $_projectId,
-            'status' => Default_Model_DbTable_Comments::COMMENT_ACTIVE,
-            'type_id' => Default_Model_DbTable_Comments::COMMENT_TYPE_PRODUCT
-        ));
+        $rowset = $this->_dataTable->getAdapter()->fetchAll(
+            $sql, array('project_id' => $_projectId, 'status' => Default_Model_DbTable_Comments::COMMENT_ACTIVE,
+                        'type_id'    => Default_Model_DbTable_Comments::COMMENT_TYPE_PRODUCT)
+        );
         if (0 == count($rowset)) {
             return array();
         }
+
         return $rowset;
     }
 
     /**
      * @param array $element
+     *
      * @return array
      */
     private function getAllChildComments($element)
@@ -147,32 +231,38 @@ class Default_Model_ProjectComments
                 $returnValue = array_merge($returnValue, $subChilds);
             }
         }
+
         return array_merge($element, $returnValue);
     }
 
     /**
      * @param int $parent_id
+     *
      * @return array
      */
     public function getChildCommentsForId($parent_id)
     {
-        $sql = "SELECT *
+        $sql
+            = "SELECT *
                     FROM comments
                     STRAIGHT_JOIN member ON comments.comment_member_id = member.member_id
                     WHERE comment_parent_id = :parent_id
                     AND comment_active = :status
                     ORDER BY comments.comment_created_at, comments.comment_id
                ";
-        $rowset = $this->_dataTable->getAdapter()->fetchAll($sql,
-            array('parent_id' => $parent_id, 'status' => Default_Model_DbTable_Comments::COMMENT_ACTIVE));
+        $rowset = $this->_dataTable->getAdapter()->fetchAll(
+            $sql, array('parent_id' => $parent_id, 'status' => Default_Model_DbTable_Comments::COMMENT_ACTIVE)
+        );
         if (0 == count($rowset)) {
             return array();
         }
+
         return $rowset;
     }
 
     /**
      * @param array $data
+     *
      * @return Zend_Db_Table_Row
      * @throws Exception
      */
@@ -183,37 +273,41 @@ class Default_Model_ProjectComments
 
     public function setAllCommentsForUserDeleted($member_id)
     {
-        $sql = '
-                update comments
-                set comment_active = 0
-                where comment_member_id = :member_id';
+        $sql
+            = '
+                UPDATE comments
+                SET comment_active = 0
+                WHERE comment_member_id = :member_id';
         $this->_dataTable->getAdapter()->query($sql, array('member_id' => $member_id))->execute();
     }
 
     public function setAllCommentsForUserActivated($member_id)
     {
-        $sql = '
-                update comments
-                set comment_active = 1
-                where comment_member_id = :member_id';
+        $sql
+            = '
+                UPDATE comments
+                SET comment_active = 1
+                WHERE comment_member_id = :member_id';
         $this->_dataTable->getAdapter()->query($sql, array('member_id' => $member_id))->execute();
     }
 
     public function setAllCommentsForProjectDeleted($project_id)
     {
-        $sql = '
-                update comments
-                set comment_active = 0
-                where comment_target_id = :projectId';
+        $sql
+            = '
+                UPDATE comments
+                SET comment_active = 0
+                WHERE comment_target_id = :projectId';
         $this->_dataTable->getAdapter()->query($sql, array('projectId' => $project_id))->execute();
     }
 
     public function setAllCommentsForProjectActivated($project_id)
     {
-        $sql = '
-                update comments
-                set comment_active = 1
-                where comment_target_id = :projectId';
+        $sql
+            = '
+                UPDATE comments
+                SET comment_active = 1
+                WHERE comment_target_id = :projectId';
         $this->_dataTable->getAdapter()->query($sql, array('projectId' => $project_id))->execute();
     }
 

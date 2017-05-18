@@ -232,12 +232,18 @@ $this->updates = $tableProjectUpdates->fetchProjectUpdates($this->product->proje
                                         <?php
                                         $modelComments = new Default_Model_ProjectComments();
                                         $offset = $this->paramPageId;
-                                        $paginationComments = $modelComments->getAllCommentsForProject($this->product->project_id);
-                                        $paginationComments->setItemCountPerPage(25);
-                                        $paginationComments->setCurrentPageNumber($offset);
-                                        $this->comments = $paginationComments;
+                                        $testComments = $modelComments->getCommentTreeForProject($this->product->project_id);
+                                        $testComments->setItemCountPerPage(25);
+                                        $testComments->setCurrentPageNumber($offset);
+                                        $this->comments = $testComments;
+                                        echo $this->render('product/partials/productCommentsUX1.phtml');
 
-                                        echo $this->render('product/partials/productCommentsUX1.phtml'); ?>
+                                        //$paginationComments = $modelComments->getAllCommentsForProject($this->product->project_id);
+                                        //$paginationComments->setItemCountPerPage(25);
+                                        //$paginationComments->setCurrentPageNumber($offset);
+                                        //$this->comments = $paginationComments;
+                                        //
+                                        //echo $this->render('product/partials/productCommentsUX1.phtml'); ?>
                                     </div>
                                     <!-- /comments -->
                                 </div>
