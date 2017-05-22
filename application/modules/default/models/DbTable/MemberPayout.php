@@ -198,7 +198,7 @@ class Default_Model_DbTable_MemberPayout extends Local_Model_Table
         );
 
         $this->update($updateValues,
-            "payment_transaction_id='" . $payment_response->getTransactionId() . "' and (status_id=0 or status_id=1 or status_id=2)");
+            "payment_transaction_id='" . $payment_response->getTransactionId() . "' and status>1");
 
     }
     
