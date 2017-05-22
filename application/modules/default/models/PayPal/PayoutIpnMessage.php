@@ -141,6 +141,9 @@ class Default_Model_PayPal_PayoutIpnMessage extends Local_Payment_PayPal_Adaptiv
     protected function processTransactionStatus()
     {
         Zend_Registry::get('logger')->info(__METHOD__ . ' - IPN Status: ' .$this->_ipnMessage->getTransactionStatus());
+        $this->_tablePayout->updatePayoutTransactionStatusFromResponse($this->_ipnMessage);
+        
+        
         switch (strtoupper($this->_ipnMessage->getTransactionStatus())) {
             case 'COMPLETED':
                 $this->_processTransactionStatusCompleted();
@@ -167,22 +170,22 @@ class Default_Model_PayPal_PayoutIpnMessage extends Local_Payment_PayPal_Adaptiv
     protected function _processTransactionStatusCompleted()
     {
         Zend_Registry::get('logger')->info(__METHOD__);
-        $this->_tablePayout->activatePayoutFromResponse($this->_ipnMessage);
+        $this->_tablePayout->setPayoutStatusCompletedFromResponse($this->_ipnMessage);
     }
 
     protected function _processTransactionStatusPending()
     {
-        $this->_tablePayout->activatePayoutFromResponse($this->_ipnMessage);
+        $this->_tablePayout->setPayoutStatusPendingFromResponse($this->_ipnMessage);
     }
 
     protected function _processTransactionStatusRefunded()
     {
-        $this->_tablePayout->deactivatePayoutFromResponse($this->_ipnMessage);
+        $this->_tablePayout->setPayoutStatusRefundFromResponse($this->_ipnMessage);
     }
 
     protected function _processTransactionStatusDenied()
     {
-        $this->_tablePayout->deactivatePayoutFromResponse($this->_ipnMessage);
+        $this->_tablePayout->setPayoutStatusDeniedFromResponse($this->_ipnMessage);
     }
 
 } 
