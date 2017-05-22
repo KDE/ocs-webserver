@@ -107,8 +107,11 @@ class Default_Model_PayPal_PayoutIpnMessage extends Local_Payment_PayPal_Adaptiv
             $this->_logger->err(__METHOD__ . ' - ' . 'No transaction found for IPN message.' . PHP_EOL);
             return false;
         }
+        
+        $ckAmount = $this->_checkAmount();
+        $ckEmail = $this->_checkEmail($this->_dataIpn['paypal_mail']);
 
-        return $this->_checkAmount() AND $this->_checkEmail($this->_dataIpn['paypal_mail']);
+        return $ckAmount AND $ckEmail;
     }
 
     protected function _checkAmount()
@@ -116,14 +119,14 @@ class Default_Model_PayPal_PayoutIpnMessage extends Local_Payment_PayPal_Adaptiv
         $amount = isset($this->_dataIpn['amount']) ? $this->_dataIpn['amount'] : 0;
         $receiver_amount = (float)$amount - (float)$this->_config->facilitator_fee;
         $currency = new Zend_Currency('en_US');
-        $this->_logger->debug(__METHOD__ . ' - ' . $this->_ipnMessage->getTransactionAmount() . ' == ' . $currency->getShortName() . ' ' . $receiver_amount);
+        $this->_logger->info(__METHOD__ . ' - ' . $this->_ipnMessage->getTransactionAmount() . ' == ' . $currency->getShortName() . ' ' . $receiver_amount);
         return $this->_ipnMessage->getTransactionAmount() == $currency->getShortName() . ' ' . $amount;
     }
 
     protected function _checkEmail()
     {
         $email = isset($this->_dataIpn['email']) ? $this->_dataIpn['email'] : '';
-        $this->_logger->debug(__METHOD__ . ' - ' . $this->_ipnMessage->getTransactionReceiver() . ' == ' . $email);
+        $this->_logger->info(__METHOD__ . ' - ' . $this->_ipnMessage->getTransactionReceiver() . ' == ' . $email);
         return $this->_ipnMessage->getTransactionReceiver() == $email;
     }
 
