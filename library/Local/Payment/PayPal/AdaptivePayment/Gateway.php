@@ -63,7 +63,7 @@ abstract class Local_Payment_PayPal_AdaptivePayment_Gateway
      * @throws Local_Payment_Exception
      * @return Local_Payment_PayPal_AdaptivePayment_ResponsePay | mixed
      */
-    public function requestPayment($amount, $requestMsg = null)
+    public function requestPayment($amount, $requestMsg = null, $senderMail = null)
     {
         $log = $this->_logger;
 
@@ -104,6 +104,10 @@ abstract class Local_Payment_PayPal_AdaptivePayment_Gateway
             'ipnNotificationUrl' => $this->_ipnNotificationUrl,
             'memo' => $requestMsg
         );
+        
+        if($senderMail) {
+            $bodyParameter['senderEmail'] = $senderMail;
+        }
 
         if ((float)$this->_config->facilitator_fee > 0.00 AND isset($this->_config->facilitator_fee_receiver)) {
             $bodyParameter['receiverList.receiver(1).email'] = $this->_config->facilitator_fee_receiver;
@@ -114,6 +118,66 @@ abstract class Local_Payment_PayPal_AdaptivePayment_Gateway
         $response = $this->_makeRequest($bodyParameter, self::API_ADAPTIVE_PAYMENTS, self::OPERATION_PAY);
 
         $log->info('********** Finished PayPal Payment **********');
+
+        $paypalResponse = new Local_Payment_PayPal_AdaptivePayment_ResponsePayRequest($response);
+        if (false === $paypalResponse->isSuccessful()) {
+            throw new Local_Payment_Exception('PayPal payment request failed. Request response:' . print_r($paypalResponse->getRawMessage(), true));
+        }
+
+        return $paypalResponse;
+    }
+    
+    /**
+     * @param float $amount
+     * @param string $requestMsg
+     * @throws Local_Payment_Exception
+     * @return Local_Payment_PayPal_AdaptivePayment_ResponsePay | mixed
+     */
+    public function requestPaymentForPayout($senderMail, $receiverMail, $amount, $trackingId)
+    {
+        $log = $this->_logger;
+
+        $log->info('********** Start PayPal Payment for Payout **********');
+        $log->info(__FUNCTION__);
+        $log->debug(APPLICATION_ENV);
+
+        if (empty($this->_returnUrl)) {
+            throw new Local_Payment_Exception('return url was not set.');
+        }
+
+        if (empty($this->_cancelUrl)) {
+            throw new Local_Payment_Exception('cancel return url was not set.');
+        }
+
+        if (empty($this->_ipnNotificationUrl)) {
+            throw new Local_Payment_Exception('ipn notification url was not set.');
+        }
+
+        $receiver_amount = $amount - (float)$this->_config->facilitator_fee;
+
+        $bodyParameter = array(
+            'requestEnvelope.errorLanguage' => "en_US",
+            'senderEmail' => $senderMail,
+            'actionType' => self::ATTRIBUTE_ACTION_PAY,
+            'currencyCode' => self::ATTRIBUTE_CURRENCY_USD,
+            'feesPayer' => self::ATTRIBUTE_FEE_PAYER_EACH,
+            'trackingId' => $trackingId,
+            'receiverList.receiver(0).email' => $receiverMail,
+            'receiverList.receiver(0).amount' => $receiver_amount,
+            'receiverList.receiver(0).primary' => self::ATTRIBUTE_FALSE,
+            'requestEnvelope.detailLevel' => 'ReturnAll',
+            'reverseAllParallelPaymentsOnError' => self::ATTRIBUTE_TRUE,
+            'clientDetails.applicationId' => $this->_config->client->application_id,
+            'clientDetails.partnerName' => $this->_config->client->partner_name,
+            'cancelUrl' => $this->_cancelUrl,
+            'returnUrl' => $this->_returnUrl,
+            'ipnNotificationUrl' => $this->_ipnNotificationUrl,
+            'memo' => 'Your monthly pling payout.'
+        );
+        
+        $response = $this->_makeRequest($bodyParameter, self::API_ADAPTIVE_PAYMENTS, self::OPERATION_PAY);
+
+        $log->info('********** Finished PayPal Payment for Payout **********');
 
         $paypalResponse = new Local_Payment_PayPal_AdaptivePayment_ResponsePayRequest($response);
         if (false === $paypalResponse->isSuccessful()) {

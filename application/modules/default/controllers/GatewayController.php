@@ -29,6 +29,27 @@ class GatewayController extends Zend_Controller_Action
     /**
      * Official OCS API to receive messages from PayPal.
      */
+    public function paypalpayoutAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        // It is really important to receive the information in this way. In some cases Zend can destroy the information
+        // when parsing the data
+        $rawPostData = file_get_contents('php://input');
+
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - Start Process PayPal Payout IPN - ');
+        
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - Start Process Payout IPN - ');
+        $modelPayPal = new Default_Model_PayPal_PayoutIpnMessage();
+        $modelPayPal->processIpn($rawPostData);
+            
+    }
+    
+    
+    /**
+     * Official OCS API to receive messages from PayPal.
+     */
     public function paypalAction()
     {
         $this->_helper->layout->disableLayout();

@@ -56,4 +56,74 @@ class Default_Model_DbTable_MemberPayout extends Local_Model_Table
     }
     
     
+    /**
+     * Mark plings as payed.
+     * So they can be used to pling.
+     *
+     * @param Local_Payment_ResponseInterface $payment_response
+     *
+     */
+    public function activatePlingsFromResponse($payment_response)
+    {
+        $updateValues = array(
+            'status_id' => self::STATUS_PLINGED,
+            'payment_transaction_id' => $payment_response->getTransactionId(),
+            'payment_raw_Message' => serialize($payment_response->getRawMessage()),
+            'payment_status' => $payment_response->getTransactionStatus(),
+            'active_time' => new Zend_Db_Expr ('Now()')
+        );
+
+        $this->update($updateValues, "payment_reference_key='" . $payment_response->getPaymentId() . "'");
+    }
+
+    /**
+     * @param Local_Payment_ResponseInterface $payment_response
+     */
+    public function deactivatePlingsFromResponse($payment_response)
+    {
+        $updateValues = array(
+            'status_id' => 0,
+            'payment_status' => $payment_response->getTransactionStatus(),
+            'payment_raw_error' => serialize($payment_response->getRawMessage())
+        );
+
+        $this->update($updateValues,
+            "payment_transaction_id='" . $payment_response->getTransactionId() . "' and (status_id=1 or status_id=2)");
+
+    }
+
+    /**
+     * @param Local_Payment_ResponseInterface $payment_response
+     * @return null|\Zend_Db_Table_Row_Abstract
+     */
+    public function fetchPlingFromResponse($payment_response)
+    {
+        if ($payment_response->getPaymentId() != null) {
+            $where = array('payment_reference_key = ?' => $payment_response->getPaymentId());
+        } elseif ($payment_response->getTransactionId() != null) {
+            $where = array('payment_transaction_id = ?' => $payment_response->getTransactionId());
+        } else {
+            return null;
+        }
+
+        return $this->fetchRow($where);
+
+    }
+
+    /**
+     * @param Local_Payment_ResponseInterface $payment_response
+     */
+    public function updatePlingTransactionStatusFromResponse($payment_response)
+    {
+        $updateValues = array(
+            'payment_status' => $payment_response->getTransactionStatus(),
+            'payment_raw_error' => serialize($payment_response->getRawMessage())
+        );
+
+        $this->update($updateValues,
+            "payment_transaction_id='" . $payment_response->getTransactionId() . "' and (status_id=0 or status_id=1 or status_id=2)");
+
+    }
+    
+    
 }
