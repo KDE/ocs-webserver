@@ -24,7 +24,7 @@ class Default_Model_PayPal_PayoutIpnMessage extends Local_Payment_PayPal_Adaptiv
 {
 
     /** @var \Default_Model_Pling */
-    private $_tablePayout;
+    protected $_tablePayout;
 
     function __construct($config = null, $logger = null)
     {
@@ -69,7 +69,7 @@ class Default_Model_PayPal_PayoutIpnMessage extends Local_Payment_PayPal_Adaptiv
 
     }
     
-    public function processPaymentStatus()
+    protected function processPaymentStatus()
     {
         Zend_Registry::get('logger')->info(__METHOD__ . ' - Status: ' .$this->_dataIpn['status']);
         
@@ -100,7 +100,7 @@ class Default_Model_PayPal_PayoutIpnMessage extends Local_Payment_PayPal_Adaptiv
         }
     }
 
-    public function validateTransaction()
+    protected function validateTransaction()
     {
         $this->_dataIpn = $this->_tablePayout->fetchPayoutFromResponse($this->_ipnMessage)->toArray();
         if (empty($this->_dataIpn)) {
@@ -114,7 +114,7 @@ class Default_Model_PayPal_PayoutIpnMessage extends Local_Payment_PayPal_Adaptiv
         return $this->_checkAmount() AND $this->_checkEmail($member->paypal_mail);
     }
 
-    public function _checkAmount()
+    protected function _checkAmount()
     {
         $amount = isset($this->_dataIpn['amount']) ? $this->_dataIpn['amount'] : 0;
         $receiver_amount = (float)$amount - (float)$this->_config->facilitator_fee;
@@ -123,20 +123,20 @@ class Default_Model_PayPal_PayoutIpnMessage extends Local_Payment_PayPal_Adaptiv
         return $this->_ipnMessage->getTransactionAmount() == $currency->getShortName() . ' ' . $amount;
     }
 
-    public function _checkEmail()
+    protected function _checkEmail()
     {
         $email = isset($this->_dataIpn['email']) ? $this->_dataIpn['email'] : '';
         $this->_logger->debug(__METHOD__ . ' - ' . $this->_ipnMessage->getTransactionReceiver() . ' == ' . $email);
         return $this->_ipnMessage->getTransactionReceiver() == $email;
     }
 
-    public function _statusCompleted()
+    protected function _statusCompleted()
     {
         Zend_Registry::get('logger')->info(__METHOD__);
         $this->processTransactionStatus();
     }
     
-    public function processTransactionStatus()
+    protected function processTransactionStatus()
     {
         Zend_Registry::get('logger')->info(__METHOD__ . ' - IPN Status: ' .$this->_ipnMessage->getTransactionStatus());
         switch (strtoupper($this->_ipnMessage->getTransactionStatus())) {
@@ -157,28 +157,28 @@ class Default_Model_PayPal_PayoutIpnMessage extends Local_Payment_PayPal_Adaptiv
         }
     }
 
-    private function _statusError()
+    protected function _statusError()
     {
         $this->_tablePayout->deactivatePayoutFromResponse($this->_ipnMessage);
     }
 
-    private function _processTransactionStatusCompleted()
+    protected function _processTransactionStatusCompleted()
     {
         Zend_Registry::get('logger')->info(__METHOD__);
         $this->_tablePayout->activatePayoutFromResponse($this->_ipnMessage);
     }
 
-    private function _processTransactionStatusPending()
+    protected function _processTransactionStatusPending()
     {
         $this->_tablePayout->activatePayoutFromResponse($this->_ipnMessage);
     }
 
-    private function _processTransactionStatusRefunded()
+    protected function _processTransactionStatusRefunded()
     {
         $this->_tablePayout->deactivatePayoutFromResponse($this->_ipnMessage);
     }
 
-    private function _processTransactionStatusDenied()
+    protected function _processTransactionStatusDenied()
     {
         $this->_tablePayout->deactivatePayoutFromResponse($this->_ipnMessage);
     }
