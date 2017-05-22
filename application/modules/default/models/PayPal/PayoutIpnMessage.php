@@ -108,10 +108,7 @@ class Default_Model_PayPal_PayoutIpnMessage extends Local_Payment_PayPal_Adaptiv
             return false;
         }
 
-        $tableProject = new Default_Model_Project();
-        $member = $tableProject->find($this->_dataIpn['project_id'])->current()->findDependentRowset('Default_Model_DbTable_Member', 'Owner')->current();
-
-        return $this->_checkAmount() AND $this->_checkEmail($member->paypal_mail);
+        return $this->_checkAmount() AND $this->_checkEmail($this->_dataIpn['paypal_mail']);
     }
 
     protected function _checkAmount()
