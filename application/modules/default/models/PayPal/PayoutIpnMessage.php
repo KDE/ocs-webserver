@@ -48,6 +48,7 @@ class Default_Model_PayPal_PayoutIpnMessage extends Local_Payment_PayPal_Adaptiv
      */
     public function processIpn($rawData)
     {
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - Start Process Payout IPN in Default_Model_PayPal_PayoutIpnMessage - ');
         if (false === $this->verifyIpnOrigin($rawData)) {
             $this->_logger->err(__FUNCTION__ . '::Abort IPN processing. IPN not verified: ' . $rawData);
             return;
@@ -70,6 +71,8 @@ class Default_Model_PayPal_PayoutIpnMessage extends Local_Payment_PayPal_Adaptiv
     
     public function processPaymentStatus()
     {
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - Status: ' .$this->_dataIpn['status']);
+        
         switch ($this->_dataIpn['status']) {
             case 'COMPLETED':
                 $this->_statusCompleted();
@@ -129,11 +132,13 @@ class Default_Model_PayPal_PayoutIpnMessage extends Local_Payment_PayPal_Adaptiv
 
     public function _statusCompleted()
     {
+        Zend_Registry::get('logger')->info(__METHOD__);
         $this->processTransactionStatus();
     }
     
     public function processTransactionStatus()
     {
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - IPN Status: ' .$this->_ipnMessage->getTransactionStatus());
         switch (strtoupper($this->_ipnMessage->getTransactionStatus())) {
             case 'COMPLETED':
                 $this->_processTransactionStatusCompleted();
@@ -159,6 +164,7 @@ class Default_Model_PayPal_PayoutIpnMessage extends Local_Payment_PayPal_Adaptiv
 
     private function _processTransactionStatusCompleted()
     {
+        Zend_Registry::get('logger')->info(__METHOD__);
         $this->_tablePayout->activatePayoutFromResponse($this->_ipnMessage);
     }
 
