@@ -24,7 +24,7 @@ class Default_Model_PayPal_PayoutIpnMessage extends Local_Payment_PayPal_Adaptiv
 {
 
     /** @var \Default_Model_Pling */
-    protected $_tablePayout;
+    private $_tablePayout;
 
     function __construct($config = null, $logger = null)
     {
@@ -46,7 +46,7 @@ class Default_Model_PayPal_PayoutIpnMessage extends Local_Payment_PayPal_Adaptiv
      * @param $rawData
      * @throws Exception
      */
-    protected function processIpn($rawData)
+    public function processIpn($rawData)
     {
         if (false === $this->verifyIpnOrigin($rawData)) {
             $this->_logger->err(__FUNCTION__ . '::Abort IPN processing. IPN not verified: ' . $rawData);
@@ -68,7 +68,7 @@ class Default_Model_PayPal_PayoutIpnMessage extends Local_Payment_PayPal_Adaptiv
 
     }
     
-    protected function processPaymentStatus()
+    public function processPaymentStatus()
     {
         switch ($this->_dataIpn['status']) {
             case 'COMPLETED':
@@ -97,9 +97,9 @@ class Default_Model_PayPal_PayoutIpnMessage extends Local_Payment_PayPal_Adaptiv
         }
     }
 
-    protected function validateTransaction()
+    public function validateTransaction()
     {
-        $this->_dataIpn = $this->_tablePayout->fetchPlingFromResponse($this->_ipnMessage)->toArray();
+        $this->_dataIpn = $this->_tablePayout->fetchPayoutFromResponse($this->_ipnMessage)->toArray();
         if (empty($this->_dataIpn)) {
             $this->_logger->err(__METHOD__ . ' - ' . 'No transaction found for IPN message.' . PHP_EOL);
             return false;
@@ -111,7 +111,7 @@ class Default_Model_PayPal_PayoutIpnMessage extends Local_Payment_PayPal_Adaptiv
         return $this->_checkAmount() AND $this->_checkEmail($member->paypal_mail);
     }
 
-    protected function _checkAmount()
+    public function _checkAmount()
     {
         $amount = isset($this->_dataIpn['amount']) ? $this->_dataIpn['amount'] : 0;
         $receiver_amount = (float)$amount - (float)$this->_config->facilitator_fee;
@@ -120,19 +120,19 @@ class Default_Model_PayPal_PayoutIpnMessage extends Local_Payment_PayPal_Adaptiv
         return $this->_ipnMessage->getTransactionAmount() == $currency->getShortName() . ' ' . $amount;
     }
 
-    protected function _checkEmail()
+    public function _checkEmail()
     {
         $email = isset($this->_dataIpn['email']) ? $this->_dataIpn['email'] : '';
         $this->_logger->debug(__METHOD__ . ' - ' . $this->_ipnMessage->getTransactionReceiver() . ' == ' . $email);
         return $this->_ipnMessage->getTransactionReceiver() == $email;
     }
 
-    protected function _statusCompleted()
+    public function _statusCompleted()
     {
         $this->processTransactionStatus();
     }
     
-    protected function processTransactionStatus()
+    public function processTransactionStatus()
     {
         switch (strtoupper($this->_ipnMessage->getTransactionStatus())) {
             case 'COMPLETED':
@@ -152,29 +152,29 @@ class Default_Model_PayPal_PayoutIpnMessage extends Local_Payment_PayPal_Adaptiv
         }
     }
 
-    protected function _statusError()
+    private function _statusError()
     {
-        $this->_tablePayout->deactivatePlingsFromResponse($this->_ipnMessage);
+        $this->_tablePayout->deactivatePayoutFromResponse($this->_ipnMessage);
     }
 
-    protected function _processTransactionStatusCompleted()
+    private function _processTransactionStatusCompleted()
     {
-        $this->_tablePayout->activatePlingsFromResponse($this->_ipnMessage);
+        $this->_tablePayout->activatePayoutFromResponse($this->_ipnMessage);
     }
 
-    protected function _processTransactionStatusPending()
+    private function _processTransactionStatusPending()
     {
-        $this->_tablePayout->activatePlingsFromResponse($this->_ipnMessage);
+        $this->_tablePayout->activatePayoutFromResponse($this->_ipnMessage);
     }
 
-    protected function _processTransactionStatusRefunded()
+    private function _processTransactionStatusRefunded()
     {
-        $this->_tablePayout->deactivatePlingsFromResponse($this->_ipnMessage);
+        $this->_tablePayout->deactivatePayoutFromResponse($this->_ipnMessage);
     }
 
-    protected function _processTransactionStatusDenied()
+    private function _processTransactionStatusDenied()
     {
-        $this->_tablePayout->deactivatePlingsFromResponse($this->_ipnMessage);
+        $this->_tablePayout->deactivatePayoutFromResponse($this->_ipnMessage);
     }
 
 } 

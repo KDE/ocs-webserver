@@ -63,7 +63,7 @@ class Default_Model_DbTable_MemberPayout extends Local_Model_Table
      * @param Local_Payment_ResponseInterface $payment_response
      *
      */
-    public function activatePlingsFromResponse($payment_response)
+    public function activatePayoutFromResponse($payment_response)
     {
         $updateValues = array(
             'status_id' => self::STATUS_PLINGED,
@@ -79,7 +79,7 @@ class Default_Model_DbTable_MemberPayout extends Local_Model_Table
     /**
      * @param Local_Payment_ResponseInterface $payment_response
      */
-    public function deactivatePlingsFromResponse($payment_response)
+    public function deactivatePayoutFromResponse($payment_response)
     {
         $updateValues = array(
             'status_id' => 0,
@@ -96,7 +96,7 @@ class Default_Model_DbTable_MemberPayout extends Local_Model_Table
      * @param Local_Payment_ResponseInterface $payment_response
      * @return null|\Zend_Db_Table_Row_Abstract
      */
-    public function fetchPlingFromResponse($payment_response)
+    public function fetchPayoutFromResponse($payment_response)
     {
         if ($payment_response->getPaymentId() != null) {
             $where = array('payment_reference_key = ?' => $payment_response->getPaymentId());
@@ -113,7 +113,7 @@ class Default_Model_DbTable_MemberPayout extends Local_Model_Table
     /**
      * @param Local_Payment_ResponseInterface $payment_response
      */
-    public function updatePlingTransactionStatusFromResponse($payment_response)
+    public function updatePayoutTransactionStatusFromResponse($payment_response)
     {
         $updateValues = array(
             'payment_status' => $payment_response->getTransactionStatus(),
