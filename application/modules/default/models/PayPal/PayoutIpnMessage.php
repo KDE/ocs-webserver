@@ -71,9 +71,9 @@ class Default_Model_PayPal_PayoutIpnMessage extends Local_Payment_PayPal_Adaptiv
     
     protected function processPaymentStatus()
     {
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - Status: ' .$this->_dataIpn['status']);
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - Status: ' .$this->_ipnMessage->getStatus());
         
-        switch ($this->_dataIpn['status']) {
+        switch ($this->_ipnMessage->getStatus()) {
             case 'COMPLETED':
                 $this->_statusCompleted();
                 break;
