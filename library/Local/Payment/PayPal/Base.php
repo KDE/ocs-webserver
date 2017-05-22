@@ -71,6 +71,8 @@ abstract class Local_Payment_PayPal_Base
         }
         $http->setMethod(Zend_Http_Client::POST);
         $http->setParameterPost($request);
+        // Increasing the HTTP timeout
+        $http->setConfig(array('timeout'=>60));
 
         try {
             $response = $http->request();
