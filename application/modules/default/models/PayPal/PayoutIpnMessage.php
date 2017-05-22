@@ -40,6 +40,62 @@ class Default_Model_PayPal_PayoutIpnMessage extends Local_Payment_PayPal_Adaptiv
 
         $this->_tablePayout = new Default_Model_DbTable_MemberPayout();
     }
+    
+    
+    /**
+     * @param $rawData
+     * @throws Exception
+     */
+    protected function processIpn($rawData)
+    {
+        if (false === $this->verifyIpnOrigin($rawData)) {
+            $this->_logger->err(__FUNCTION__ . '::Abort IPN processing. IPN not verified: ' . $rawData);
+            return;
+        }
+
+        $this->_dataIpn = $this->_parseRawMessage($rawData);
+        $this->_logger->info(__FUNCTION__ . '::_dataIpn: ' . print_r($this->_dataIpn, true) . "\n");
+
+        $this->_ipnMessage = Local_Payment_PayPal_Response::buildResponse($this->_dataIpn);
+        $this->_logger->info(__FUNCTION__ . '::_ipnMessage: ' . print_r($this->_ipnMessage, true) . "\n");
+
+        if (false === $this->validateTransaction()) {
+            $this->_logger->err(__FUNCTION__ . '::Abort IPN processing. Transaction not valid:' . $rawData);
+            return;
+        }
+
+        $this->processPaymentStatus();
+
+    }
+    
+    protected function processPaymentStatus()
+    {
+        switch ($this->_dataIpn['status']) {
+            case 'COMPLETED':
+                $this->_statusCompleted();
+                break;
+            case 'INCOMPLETE':
+                $this->_statusIncomplete();
+                break;
+            case 'CREATED':
+                $this->_statusCreated();
+                break;
+            case 'ERROR':
+                $this->_statusError();
+                break;
+            case 'REVERSALERROR':
+                $this->_statusReversalError();
+                break;
+            case 'PROCESSING':
+                $this->_statusProcessing();
+                break;
+            case 'PENDING':
+                $this->_statusPending();
+                break;
+            default:
+                throw new Local_Payment_Exception('Unknown status from PayPal: ' . $this->_ipnMessage->getStatus());
+        }
+    }
 
     protected function validateTransaction()
     {
@@ -74,6 +130,26 @@ class Default_Model_PayPal_PayoutIpnMessage extends Local_Payment_PayPal_Adaptiv
     protected function _statusCompleted()
     {
         $this->processTransactionStatus();
+    }
+    
+    protected function processTransactionStatus()
+    {
+        switch (strtoupper($this->_ipnMessage->getTransactionStatus())) {
+            case 'COMPLETED':
+                $this->_processTransactionStatusCompleted();
+                break;
+            case 'PENDING':
+                $this->_processTransactionStatusPending();
+                break;
+            case 'REFUNDED':
+                $this->_processTransactionStatusRefunded();
+                break;
+            case 'DENIED':
+                $this->_processTransactionStatusDenied();
+                break;
+            default:
+                throw new Local_Payment_Exception('Unknown transaction status from PayPal: ' . $this->_ipnMessage->getTransactionStatus());
+        }
     }
 
     protected function _statusError()
