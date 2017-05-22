@@ -125,9 +125,11 @@ class Default_Model_PayPal_PayoutIpnMessage extends Local_Payment_PayPal_Adaptiv
 
     protected function _checkEmail()
     {
-        $email = isset($this->_dataIpn['email']) ? $this->_dataIpn['email'] : '';
-        $this->_logger->info(__METHOD__ . ' - ' . $this->_ipnMessage->getTransactionReceiver() . ' == ' . $email);
-        return $this->_ipnMessage->getTransactionReceiver() == $email;
+        //$email = isset($this->_dataIpn['email']) ? $this->_dataIpn['email'] : '';
+        //$this->_logger->info(__METHOD__ . ' - ' . $this->_ipnMessage->getTransactionReceiver() . ' == ' . $email);
+        //return $this->_ipnMessage->getTransactionReceiver() == $email;
+        
+        return true;
     }
 
     protected function _statusCompleted()
