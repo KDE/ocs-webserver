@@ -55,7 +55,7 @@ class Default_Plugin_InitGlobalStoreVars extends Zend_Controller_Plugin_Abstract
             $requestStoreConfigName = $request->getParam('domain_store_id') ? preg_replace('/[^-a-zA-Z0-9_]/', '',
                 $request->getParam('domain_store_id')) : null;
 
-            $result = $this->search($store_config_list, 'store_id', $requestStoreConfigName);
+            $result = $this->search($store_config_list, 'name', $requestStoreConfigName);
 
             if (isset($result[0]['config_id_name'])) {
                 $storeIdName = $result[0]['config_id_name'];
@@ -120,7 +120,7 @@ class Default_Plugin_InitGlobalStoreVars extends Zend_Controller_Plugin_Abstract
             $requestStoreConfigName = $request->getParam('domain_store_id') ? preg_replace('/[^-a-zA-Z0-9_]/', '',
                 $request->getParam('domain_store_id')) : null;
 
-            $result = $this->search($storeConfigArray, 'store_id', $requestStoreConfigName);
+            $result = $this->search($storeConfigArray, 'name', $requestStoreConfigName);
 
             if (isset($result[0]['host'])) {
                 $storeIdName = $result[0]['host'];
