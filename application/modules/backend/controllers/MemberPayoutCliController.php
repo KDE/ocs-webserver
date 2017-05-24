@@ -56,38 +56,6 @@ class Backend_MemberPayoutCliController extends Local_Controller_Action_CliAbstr
         );
         
     }
-    
-    public function _paypalSend($data,$call){
-        echo "Start _paypalSend.";
-        
-        
-        
-        $url = $this->_config->third_party->paypal->api->endpoint."/AdaptivePayments/Pay";
-        
-        
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-        curl_setopt($ch, CURLOPT_HEADER, $this->headers);
-        $response = json_decode(curl_exec($ch),true);
-        
-        echo " Result: " .$response;
-        
-        if( !$response)
-        {
-            echo 'Payout failed: ' . curl_error($ch) . '(' . curl_errno($ch) .')';
-            curl_close($ch);
-            return false;
-        }
-        curl_close($ch);
-        
-        return $response;
-
-    }
-
 
     /**
      * Run php code as cronjob.
