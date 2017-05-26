@@ -46,7 +46,14 @@ class ReportController extends Zend_Controller_Action
         
         if(APPLICATION_ENV != 'searchbotenv') {
 
+            $session = new Zend_Session_Namespace();
+            $reportedProducts = isset($session->reportedProducts) ? $session->reportedProducts : array();
             $project_id = (int) $this->getParam('p');
+            if (in_array($project_id, $reportedProducts)) {
+                $this->_helper->json(array('status' => 'ok', 'message' => '<p>Thank you, but you have already reported this product.</p><div class="modal-footer">
+                                            <button type="button" style="border:none;background: transparent;color: #2673b0;" class="small close" data-dismiss="modal" > Close</button>
+                                        </div>', 'data' => array()));
+            }
             $reported_by = 0;
             if (Zend_Auth::getInstance()->hasIdentity()) {
                 $reported_by = (int) Zend_Auth::getInstance()->getStorage()->read()->member_id;
@@ -55,6 +62,8 @@ class ReportController extends Zend_Controller_Action
             $tableReportComments = new Default_Model_DbTable_ReportProducts();
 
             $tableReportComments->save(array('project_id' => $project_id, 'reported_by' => $reported_by));
+
+            $session->reportedProducts[] = $project_id;
         }
 
         $this->_helper->json(array('status' => 'ok', 'message' => '<p>Thank you, we received your message.</p><div class="modal-footer">
