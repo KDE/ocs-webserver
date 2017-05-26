@@ -53,7 +53,7 @@ class Backend_Model_Reports
         return count($rowSet);
     }
 
-    public function getReportsForProjects($startIndex = 0, $pageSize = 10)
+    public function getReportsForProjects($startIndex = 0, $pageSize = 10, $orderBy = 'counter DESC, reports_project.project_id')
     {
         $sql = "select reports_project.*, project.status, count(reports_project.project_id) as counter
                 from reports_project
@@ -62,7 +62,7 @@ class Backend_Model_Reports
         ";
 
         $limit = ' limit ' . (int)$startIndex . ',' . (int)$pageSize;
-        $orderBy = ' order by counter DESC, reports_project.project_id';
+        $orderBy = ' order by ' . $orderBy;
 
         $rowSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql.$orderBy.$limit);
         if (0 == count($rowSet)) {
