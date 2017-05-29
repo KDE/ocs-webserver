@@ -101,12 +101,13 @@ class Backend_ReportProductsController extends Local_Controller_Action_Backend
     {
         $startIndex = (int)$this->getParam('jtStartIndex');
         $pageSize = (int)$this->getParam('jtPageSize');
+        $sorting = $this->getParam('jtSorting');
 
         $dataModel = new Backend_Model_Reports();
 
         $jTableResult = array();
         $jTableResult['Result'] = self::RESULT_OK;
-        $jTableResult['Records'] = $dataModel->getReportsForProjects($startIndex, $pageSize);
+        $jTableResult['Records'] = $dataModel->getReportsForProjects($startIndex, $pageSize, $sorting);
         $jTableResult['TotalRecordCount'] = $dataModel->getTotalCountForReportedProject();
 
         $this->_helper->json($jTableResult);
