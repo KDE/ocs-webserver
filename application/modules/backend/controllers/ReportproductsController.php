@@ -97,18 +97,33 @@ class Backend_ReportProductsController extends Local_Controller_Action_Backend
         $this->_helper->json($jTableResult);
     }
 
+    public function deletereportsAction()
+    {
+        $projectId = (int)$this->getParam('p', null);
+
+        $dataModel = new Backend_Model_Reports();
+
+        $result = $dataModel->setDelete($projectId);
+
+        $jTableResult = array();
+        $jTableResult['Result'] = self::RESULT_OK;
+
+        $this->_helper->json($jTableResult);
+    }
+
     public function listAction()
     {
         $startIndex = (int)$this->getParam('jtStartIndex');
         $pageSize = (int)$this->getParam('jtPageSize');
         $sorting = $this->getParam('jtSorting');
+        $filterDeleted = (int)$this->getParam('filter_deleted', 0);
 
         $dataModel = new Backend_Model_Reports();
 
         $jTableResult = array();
         $jTableResult['Result'] = self::RESULT_OK;
-        $jTableResult['Records'] = $dataModel->getReportsForProjects($startIndex, $pageSize, $sorting);
-        $jTableResult['TotalRecordCount'] = $dataModel->getTotalCountForReportedProject();
+        $jTableResult['Records'] = $dataModel->getReportsForProjects($startIndex, $pageSize, $sorting, $filterDeleted);
+        $jTableResult['TotalRecordCount'] = $dataModel->getTotalCountForReportedProject($filterDeleted);
 
         $this->_helper->json($jTableResult);
     }

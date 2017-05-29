@@ -53,18 +53,19 @@ class Backend_Model_Reports
         return count($rowSet);
     }
 
-    public function getReportsForProjects($startIndex = 0, $pageSize = 10, $orderBy = 'counter DESC, reports_project.project_id')
+    public function getReportsForProjects($startIndex = 0, $pageSize = 10, $orderBy = 'counter DESC, reports_project.project_id', $filterDeleted = 0)
     {
-        $sql = "select reports_project.*, project.status, count(reports_project.project_id) as counter
+        $sql = "select reports_project.*, project.status, count(reports_project.project_id) as counter, max(reports_project.created_at) as last_report_date
                 from reports_project
                 straight_join project on project.project_id = reports_project.project_id
+                where reports_project.is_deleted = :deleted
                 group by reports_project.project_id
         ";
 
         $limit = ' limit ' . (int)$startIndex . ',' . (int)$pageSize;
         $orderBy = ' order by ' . $orderBy;
 
-        $rowSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql.$orderBy.$limit);
+        $rowSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql.$orderBy.$limit, array('deleted' => $filterDeleted));
         if (0 == count($rowSet)) {
             return array();
         }
@@ -72,17 +73,27 @@ class Backend_Model_Reports
         return $rowSet;
     }
 
-    public function getTotalCountForReportedProject()
+    public function getTotalCountForReportedProject($filterDeleted = 0)
     {
         $sql = "select '1'
                 from reports_project
                 straight_join project on project.project_id = reports_project.project_id
+                where reports_project.is_deleted = :deleted
                 group by reports_project.project_id
               ";
 
-        $rowSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
+        $rowSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql, array('deleted' => $filterDeleted));
 
         return count($rowSet);
+    }
+
+    public function setDelete($projectId)
+    {
+        $sql = "update reports_project set is_deleted = 1 where project_id = :projectId";
+
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('projectId' => $projectId))->execute();
+
+        return $result;
     }
 
 }
