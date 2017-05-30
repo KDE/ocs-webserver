@@ -401,6 +401,18 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             )
         );
 
+        $router->addRoute(
+            'store_user',
+            new Zend_Controller_Router_Route(
+                '/s/:domain_store_id/member/:member_id/:action/*',
+                array(
+                    'module'     => 'default',
+                    'controller' => 'user',
+                    'action'     => 'index'
+                )
+            )
+        );
+
 
         /** general routing rules */
         $router->addRoute(

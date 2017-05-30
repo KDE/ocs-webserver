@@ -31,9 +31,14 @@ class HomeController extends Local_Controller_Action_DomainSwitch
          *  SetEnvIfNoCase Host opendesktop\.org$ SHOW_HOME_PAGE
          */
         if (false == getenv('SHOW_HOME_PAGE')) {
-            $this->redirect('browse/ord/latest/');
+//            $paramStoreId = $this->getParam('domain_store_id') ? "s/".$this->getParam('domain_store_id'). '/' : '';
+//            $this->redirect($paramStoreId . 'browse/ord/latest/');
             // forward is the faster way, but you have no influence to the url. On redirect the url changes.
-//            $this->forward('index', 'explore', 'default', array('ord' => 'latest'));
+            $params = array('ord' => 'latest');
+            if ($this->hasParam('domain_store_id')) {
+                $params['domain_store_id'] = $this->getParam('domain_store_id');
+            }
+            $this->forward('index', 'explore', 'default', $params);
             return;
         }
 
