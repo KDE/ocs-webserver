@@ -1406,6 +1406,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         $statement = $this->generateCategoryFilter($statement, $inputFilterParams);
         $statement = $this->generateOrderFilter($statement, $inputFilterParams);
         $statement = $this->generatePackageTypeFilter($statement, $inputFilterParams);
+        $statement = $this->generateReportedSpamFilter($statement);
 
         $statement->limit($limit, $offset);
         return $statement;
@@ -1531,6 +1532,11 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         }
 
         return $statement;
+    }
+
+    protected function generateReportedSpamFilter(Zend_Db_Select $statement)
+    {
+        return $statement->where('((amount_reports is null) or (amount_reports < 3))');
     }
 
     /**

@@ -31,6 +31,15 @@
         <p><?php echo $this->escape($message); ?></p>
     <?php endforeach; ?>
 </div>
+<div class="filtering">
+    <form>
+        <span style="margin-right: 0.9em;">show deleted reports: <input type="checkbox" name="deletedreports"
+                                                                       id="deletedreports" value="1"
+                                                                       /></span>
+        <button type="submit" id="LoadRecordsButton"><?= $this->translate('Load records'); ?></button>
+        <button type="reset" id="RemoveFilterButton"><?= $this->translate('Remove filter'); ?></button>
+    </form>
+</div>
 <div id="TableContainer"></div>
 <div id="dialog-form" title="Object Details"></div>
 <script type="text/javascript">
@@ -40,12 +49,12 @@
             paging: true,
             title: 'Table of reports',
             sorting: true, //Enable sorting
-            defaultSorting: 'created_at DESC', //Set default sorting
+            defaultSorting: 'last_report_date DESC', //Set default sorting
             actions: {
                 listAction: '/backend/reportproducts/list',
                 createAction: '/backend/reportproducts/create',
-                updateAction: '/backend/reportproducts/update',
-                deleteAction: '/backend/reportproducts/delete'
+                // updateAction: '/backend/reportproducts/update',
+                // deleteAction: '/backend/reportproducts/delete'
             },
             fields: {
                 report_id: {
@@ -83,6 +92,14 @@
                     width: '10%',
                     type: 'date',
                     create: false,
+                    edit: false,
+                    list: false
+                },
+                last_report_date: {
+                    title: 'Created (newest report)',
+                    width: '10%',
+                    type: 'date',
+                    create: false,
                     edit: false
                 },
                 counter: {
@@ -105,13 +122,50 @@
                             } else {
                                 btn_title = 'activate';
                             }
-                            return '<a role="button" title="' + btn_title + ' this product" class="btn btn-warning btn-xs toggle-status pull-right" style="color:white;"  data-record="' + data.record.project_id + '"><span>' + btn_title + '</span></a>'
-                                ;
+                            if (data.record.is_deleted == 1) {
+                                css_deactivated = "disabled";
+                            } else {
+                                css_deactivated = '';
+                            }
+                            return '<a role="button" title="' + btn_title + ' this product" class="btn btn-warning btn-xs toggle-status pull-right ' + css_deactivated + '" style="color:white;"  data-record="' + data.record.project_id + '"><span>' + btn_title + '</span></a>';
                         }
+                    }
+                },
+                del_reports: {
+                    title: '',
+                    width: '1%',
+                    sorting: false,
+                    create: false,
+                    edit: false,
+                    list: true,
+                    display: function (data) {
+                        if (data.record.is_deleted == 1) {
+                            css_deactivated = "disabled";
+                        } else {
+                            css_deactivated = '';
+                        }
+                         return '<a role="button" title="delete reports for this product" class="btn btn-warning btn-xs del-reports pull-right ' + css_deactivated + '" style="color:white;"  data-record="' + data.record.project_id + '"><span>delete</span></a>';
                     }
                 }
 
             }
+        });
+
+        //Re-load records when user click 'load records' button.
+        $('#LoadRecordsButton').click(function (e) {
+            e.preventDefault();
+            $('#TableContainer').jtable('load', {
+                filter_deleted: $('#deletedreports:checked').val()
+            });
+        });
+
+        //Re-load records when user click 'remove filter' button.
+        $('#RemoveFilterButton').click(function (e) {
+            e.preventDefault();
+            $('#deletedreports').prop('checked', false);
+            $('#TableContainer').jtable('load', {
+                filter_deleted: null
+            });
         });
 
         $('#TableContainer').jtable('load');
@@ -160,6 +214,29 @@
             jQuery.ajax({
                 data: {'c': elementRecord},
                 url: '/backend/reportproducts/status/',
+                type: 'post',
+                error: function () {
+                    alert("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+                    return false;
+                },
+                success: function (results) {
+                    $('#TableContainer').jtable('reload');
+                    return false;
+                }
+            });
+
+            return false;
+        });
+
+        $('body').on("click", 'a.del-reports', function (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            var elementRecord = $(this).data("record");
+
+            jQuery.ajax({
+                data: {'p': elementRecord},
+                url: '/backend/reportproducts/deletereports/',
                 type: 'post',
                 error: function () {
                     alert("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
