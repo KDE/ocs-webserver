@@ -880,3 +880,22 @@ var ProductDetailCarousel = (function () {
         }
     }
 })();
+
+var Metaheader = (function () {
+    return {
+        setup: function () {                                             
+            $('body').on('click', '#toggleStoreBtn', function (event) {
+                event.stopPropagation();
+                //$( "#toggleStoreContainer" ).slideToggle( "slow" );
+                $( "#toggleStoreContainer" ).toggle();
+            }).click(function () {
+                let t = $('#toggleStoreContainer');
+                if(t.css('display') == 'block'){
+                 //t.slideToggle( "slow" );
+                 t.toggle();
+               }  
+            });
+
+        }
+    }
+})();
