@@ -178,8 +178,14 @@ $idCat = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get
                 {
                     echo '<li>';
                 }
+                // z.b 150001 ende ==1 go real link otherwise /s/$name 
+                $last_char_check = substr($o, -1);
+                if($last_char_check=='1'){                    
+                    echo '<a href="http://' . $host . '">'.  $name .'</a></li>';     
+                }else{
+                    echo '<a href="/s/'.$name.'">'. $name.'</a></li>';     
+                }
                 
-                echo '<a href="/s/'.$name.'">'. $name.'</a></li>'; 
                 echo '<div style="clear:both;"></div>';
 
                 $preOrder = floor($obj['order']/1000);  
