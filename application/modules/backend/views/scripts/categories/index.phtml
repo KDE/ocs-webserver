@@ -87,6 +87,12 @@
             </div>
         </div>
         <div class="jtable-input-field-container">
+            <div class="jtable-input-label">Pling Factor</div>
+            <div class="jtable-input jtable-text-input">
+                <input class="" id="dl_pling_factor" name="dl_pling_factor" type="text">
+            </div>
+        </div>
+        <div class="jtable-input-field-container">
             <div class="jtable-input-label">Status</div>
             <div class="jtable-input jtable-dropdown-input">
                 <select id="subcat-status" name="is_active" class="validate[required]">
@@ -208,6 +214,7 @@
                             "is_active": $("#subcat-status").val(),
                             "name_legacy": $("#subcat-legacy").val(),
                             "xdg_type": $("#subcat-xdg").val(),
+                            "dl_pling_factor": $("#dl_pling_factor").val(),
                             "rgt": sendPostId
                         }
                     });
@@ -388,6 +395,13 @@
                 },
                 name_legacy: {
                     title: 'Legacy Name',
+                    type: 'input',
+                    create: true,
+                    edit: true,
+                    width: '30%'
+                },
+                dl_pling_factor: {
+                    title: 'Pling Factor',
                     type: 'input',
                     create: true,
                     edit: true,
