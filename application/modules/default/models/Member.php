@@ -179,6 +179,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         $this->setMemberCommentsDeleted($member_id);
         // $this->setMemberPlingsDeleted($member_id);
         $this->removeMemberProjectsFromSearch($member_id);
+        $this->setDeletedInMaterializedView($member_id);
     }
 
     private function setMemberProjectsDeleted($member_id)
@@ -775,6 +776,13 @@ class Default_Model_Member extends Default_Model_DbTable_Member
     {
         $modelPling = new Default_Model_Pling();
         $modelPling->setAllPlingsForUserActivated($member_id);
+    }
+
+    private function setDeletedInMaterializedView($member_id)
+    {
+        $sql = "update stat_projects set status = :new_status where member_id = :member_id";
+
+        $this->_db->query($sql, array('new_status' => Default_Model_DbTable_Project::PROJECT_DELETED, 'member_id' => $member_id))->execute();
     }
 
 }

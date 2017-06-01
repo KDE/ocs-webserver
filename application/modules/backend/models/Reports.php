@@ -92,8 +92,14 @@ class Backend_Model_Reports
         $sql = "update reports_project set is_deleted = 1 where project_id = :projectId";
 
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('projectId' => $projectId))->execute();
-
+        $this->updateMaterializedView($projectId);
         return $result;
+    }
+
+    private function updateMaterializedView($project_id)
+    {
+        $sql = "update stat_projects set amount_reports = 0 where project_id = :project_id";
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('project_id' => $project_id))->execute();
     }
 
 }
