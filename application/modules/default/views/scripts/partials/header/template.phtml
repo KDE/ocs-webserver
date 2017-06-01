@@ -25,10 +25,16 @@ $helperFetchCatParent = new Default_View_Helper_CatParent();
 $getAuthUser = new Default_View_Helper_GetAuthUser();
 $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $helperImage = new Default_View_Helper_Image();
-
 $auth = Zend_Auth::getInstance();
 $member = $getAuthUser->getAuthUser();
 $serverUrl = $this->serverUrl();
+
+$baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
+$sname = Zend_Registry::get('store_host');  
+$store_config = Zend_Registry::get('store_config');
+$store_order = $store_config['order'];
+$store_name = $store_config['name'];
+ $last_char_store_order = substr($store_order, -1); 
 
 echo $this->render('partials/header/metaheader.phtml'); ?>
     <header id="page_header" xmlns="http://www.w3.org/1999/html">
@@ -54,8 +60,8 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
 
                     <section>
 
-                        <figure class="logo-header">
-                            <a href="/">
+                        <figure class="logo-header">                           
+                           <a href="http://<?php echo $last_char_store_order=='1'?$sname:$baseurl.'/s/'.$store_name ?>">
                                 <img width="<?= $this->template['header-logo']['width'] ?>" border="0"
                                      src="<?= $this->template['header-logo']['image-src'] ?>">
                             </a>
