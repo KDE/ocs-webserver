@@ -144,7 +144,7 @@ $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
             foreach ($this->domainobjects as $obj) {
                 $o =  $obj['order'];   
                 $curOrder = floor($obj['order']/1000);      
-                if($curOrder<10 or $curOrder>30) continue;
+                if($curOrder<10 or $curOrder>50) continue;
                 $host =$obj['host'];
                 $name =$obj['name'];
                 if($curOrder!= $preOrder) $i=0;
@@ -166,7 +166,11 @@ $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
                 }else if($curOrder ==40 && $i ==0){
                     // multimedia                    
                     echo '<li class="dropdown"><a href="#">Artwork</a><ul class="dropdown-menu">';                                                                  
-                }                
+                }   
+                else if($curOrder ==50 && $i ==0){
+                    // multimedia                    
+                    echo '<li class="dropdown"><a href="#">Other</a><ul class="dropdown-menu">';                                                                  
+                }               
                 if($sname == $host )
                 {
                     echo '<li class="active">';
