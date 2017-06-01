@@ -177,6 +177,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
 
         $this->setDeletedForUpdates($id);
         $this->setDeletedForComments($id);
+        $this->setDeletedInMaterializedView($id);
     }
 
     /**
@@ -356,10 +357,12 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                   m.mail,
                   m.paypal_mail,
                   m.dwolla_id,
-               	 (round(((p.count_likes + 6) / ((p.count_likes + p.count_dislikes) + 12)),2) * 100) AS laplace_score
+               	 (round(((p.count_likes + 6) / ((p.count_likes + p.count_dislikes) + 12)),2) * 100) AS laplace_score,
+                 `view_reported_projects`.`amount_reports` AS `amount_reports`
                 FROM project AS p
                   JOIN member AS m ON p.member_id = m.member_id AND m.is_active = 1 AND m.is_deleted = 0
                   JOIN project_category AS pc ON p.project_category_id = pc.project_category_id
+                  LEFT JOIN `view_reported_projects` ON ((`view_reported_projects`.`project_id` = p.`project_id`))
                 WHERE 
                   p.project_id = :projectId
                   AND p.status >= :projectStatus AND p.type_id = :typeId
@@ -1739,6 +1742,14 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         } else {
             return array();
         }
+    }
+
+    private function setDeletedInMaterializedView($id)
+    {
+        $sql = "update stat_projects set status = :new_status WHERE project_id = :project_id";
+
+        $result = $this->_db->query($sql, array('new_status' => self::PROJECT_DELETED, 'project_id' => $id))->execute();
+
     }
 
 }

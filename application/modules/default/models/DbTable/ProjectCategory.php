@@ -331,6 +331,7 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
 
 
             $limit = " LIMIT {$startIndex},{$pageSize} ;";
+            //@TODO: rewrite sql code project.is_active and is_deleted is deprecated
             $sql = "
                 SELECT node.*,CONCAT( REPEAT( '&nbsp;&nbsp;', (COUNT(parent.title) - 1) ), node.title) AS title_show, pc.product_counter, (COUNT(parent.title) - 1) as depth,
                   (SELECT
@@ -353,7 +354,7 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
                         count(project.project_category_id) AS product_counter
                         FROM
                             project
-                        WHERE project.is_active = 1 AND project.is_deleted = 0 and project.type_id = 1
+                        WHERE project.status = 100 AND project.type_id = 1
                         GROUP BY project.project_category_id) AS pc ON pc.project_category_id = node.project_category_id
                     WHERE node.lft BETWEEN parent.lft AND parent.rgt
                 " . $whereActive . $whereWithRoot . "
