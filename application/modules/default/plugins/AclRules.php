@@ -63,6 +63,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addResource(new Zend_Acl_Resource ('default_widget'));
         $this->addResource(new Zend_Acl_Resource ('default_file'));
         $this->addResource(new Zend_Acl_Resource ('default_plings'));
+        $this->addResource(new Zend_Acl_Resource ('default_spam'));
 
         $this->addResource(new Zend_Acl_Resource ('backend_categories'));
         $this->addResource(new Zend_Acl_Resource ('backend_claim'));
