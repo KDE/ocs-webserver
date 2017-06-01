@@ -24,6 +24,7 @@ class Backend_MemberPayoutCliController extends Local_Controller_Action_CliAbstr
 
     public static $ACTION_PAYOUT = "payout";
     public static $CONTEXT_ALL = "all";
+    public static $CONTEXT_PREPARE = "prepare";
     public static $NVP_MODULE_ADAPTIVE_PAYMENT = "/AdaptivePayments";
     public static $NVP_ACTION_PAY = "/Pay";
     
@@ -82,6 +83,8 @@ class Backend_MemberPayoutCliController extends Local_Controller_Action_CliAbstr
         echo "context: " . $context . "\n";
         if (isset($action) && $action == $this::$ACTION_PAYOUT && isset($context) && $context == $this::$CONTEXT_ALL) {
             $this->payoutMembers();
+        } else if (isset($action) && $action == $this::$ACTION_PAYOUT && isset($context) && $context == $this::$CONTEXT_PREPARE) {
+            $this->prepareMasspaymentTable();
         }
     }
 
