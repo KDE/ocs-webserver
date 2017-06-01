@@ -19,7 +19,7 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-  
+
 $helperFetchCategory = new Default_View_Helper_CatTitle();
 $helperFetchCatParent = new Default_View_Helper_CatParent();
 //$getAuthUser = new Default_View_Helper_GetAuthUser();
@@ -98,8 +98,8 @@ $baselogo= Zend_Registry::get('config')->settings->client->default->baselogo;
             line-height: 24px;
             margin-right: <?=$this->template['header-nav-tabs']['margin-right']?>;
         }
-   
-       
+    
+        
         ul.menu-nav-tabs li.active {
             background: <?=$this->template['header-nav-tabs']['background-color-active']?> none repeat scroll 0 0;
         }
@@ -114,8 +114,8 @@ $baselogo= Zend_Registry::get('config')->settings->client->default->baselogo;
 
         .header_cat_link {
               bottom: 0; position: absolute; color: blue; font-size: 18pt; left: <?= $cat_title_left ?>px;
-        }
-   
+        } 
+    
         .nav-divider-pling{
             color:#E2E2E2;
         }
@@ -132,47 +132,47 @@ $baselogo= Zend_Registry::get('config')->settings->client->default->baselogo;
     </style>
  <?php
         $domainshelper = new Default_View_Helper_FetchDomains();
-        $this->domainobjects = $domainshelper->fetchDomainObjects();   
+        $this->domainobjects = $domainshelper->fetchDomainObjects();    
         $sname = Zend_Registry::get('store_host');
         $store_config = Zend_Registry::get('store_config');
     ?>
 
-    <div class="small metamenu" >
-        <a href="http://openDesktop.org" class="home-link">
-         <img src="<?php echo $baselogo ?>" class="logo"/> openDesktop.org
-         </a>
+    <div class="small metamenu" > 
+        <a href="http://openDesktop.org" class="home-link" style="margin-left:5px">
+         <img src="images/system/ocs-logo-rounded-16x16.png" class="logo" /> openDesktop.org 
+         </a> 
         <a href="#" id="toggleStoreBtn">Browse : <?php echo $store_config['name'];?></a>
-                                 
+                                  
         <div class="dropdown-menu" id="toggleStoreContainer" >
           <div>
             <div class="row">
             <?php
-           
+            
             $preOrder = 0;
             $curOrder = 0;
-            foreach ($this->domainobjects as $obj) {               
-                $o =  $obj['order'];  
-                $curOrder = floor($obj['order']/1000);     
+            foreach ($this->domainobjects as $obj) {                
+                $o =  $obj['order'];   
+                $curOrder = floor($obj['order']/1000);      
                 if($curOrder<10 or $curOrder>30) continue;
                 $host =$obj['host'];
-                $name =$obj['name'];
+                $name =$obj['name']; 
                 if($curOrder!= $preOrder) $i=0;
 
                 if($curOrder > $preOrder && $preOrder !=0){
-                   echo '</div>';     
+                   echo '</div>';      
                 }
-               
+                
                 if($curOrder==10 && $i==0){
-                    // applications                   
-                    echo '<div class="col-lg-4"><b>Applications</b><ul>';                                                                
+                    // applications                    
+                    echo '<div class="col-lg-4"><b>Applications</b><ul>';                                                                 
                 }else if($curOrder ==20 && $i ==0){
-                    // artworks                   
-                    echo '<div class="col-lg-4"><b>Desktops</b><ul>';                                                                 
+                    // artworks                    
+                    echo '<div class="col-lg-4"><b>Desktops</b><ul>';                                                                  
                 }else if($curOrder ==30 && $i ==0){
-                    // multimedia                  
-                    echo '<div class="col-lg-4"><b>Artworks</b><ul>';
-                                                                                   
-                }               
+                    // multimedia                   
+                    echo '<div class="col-lg-4"><b>Artworks</b><ul>'; 
+                                                                                    
+                }                
                 if($sname == $host )
                 {
                     echo '<li class="active">';
@@ -180,36 +180,37 @@ $baselogo= Zend_Registry::get('config')->settings->client->default->baselogo;
                 {
                     echo '<li>';
                 }
-                // z.b 150001 ende ==1 go real link otherwise /s/$name
+                // z.b 150001 ende ==1 go real link otherwise /s/$name 
                 $last_char_check = substr($o, -1);
-                if($last_char_check=='1'){                   
-                    echo '<a href="http://' . $host . '">'.  $name .'</a></li>';    
+                if($last_char_check=='1'){                    
+                    echo '<a href="http://' . $host . '">'.  $name .'</a></li>';     
                 }else{
-                    echo '<a href="http://'.$baseurl.'/s/'.$name.'">'. $name.'</a></li>';    
+                    echo '<a href="http://'.$baseurl.'/s/'.$name.'">'. $name.'</a></li>';     
                 }
-               
+                
                 echo '<div style="clear:both;"></div>';
 
-                $preOrder = floor($obj['order']/1000); 
-                 $i++;                                                 
+                $preOrder = floor($obj['order']/1000);  
+                 $i++;                                                  
             }
                echo '</div>';
             ?>
-         
-            </div> 
+          
+            </div>  
           </div>
         </div>
          <ul class="meta-nav-top meta-nav-top-right" >
                <li><a href="http://blog.opendesktop.org/" target="_blank"> Blog</a> </li>
                <li><a href="http://forum.opendesktop.org/" target="_blank"> Forum</a> </li>
-               <li> <a id="aboutContent" href="#">About </a>   </li>             
-               <li> <a id="plings" href="/plings/">Plings </a>   </li>         
+               <li> <a id="aboutContent" href="#">About </a>   </li>              
+               <!--<li> <a id="plings" href="/plings/">Plings </a>   </li>  -->
           </ul>
-         
+          
         </div>
 
         <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
-            Metaheader.setup();                 
+            Metaheader.setup();                  
         });
     ');
+
