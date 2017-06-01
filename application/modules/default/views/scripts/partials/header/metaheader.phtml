@@ -136,11 +136,17 @@ $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
     <div class="small metamenu" >   
         <?php            
             $domainshelper = new Default_View_Helper_FetchDomains();
-            $this->domainobjects = $domainshelper->fetchDomainObjects();            
+            $this->domainobjects = $domainshelper->fetchDomainObjects();    
+            $sname = Zend_Registry::get('store_host');  
+            $store_config = Zend_Registry::get('store_config');
+            $store_order = $store_config['order'];
+            $store_name = $store_config['name'];
+             $last_char_store_order = substr($store_order, -1);  
+            
             echo '<ul class="nav nav-pills meta-nav-top left">';
             $i = 0;
-            echo '<li class="" style="background-color:#eee; -moz-border-radius: 5px; border-radius: 5px; "><a href="http://openDesktop.org"><img src="/images/system/ocs-logo-rounded-16x16.png" class="logo"/> openDesktop.org :</a> </li>';                             
-            $sname = Zend_Registry::get('store_host');
+            echo '<li class="" style="background-color:#eee; -moz-border-radius: 5px; border-radius: 5px; "><a href="http://' . ($last_char_store_order=='1'?$sname:$baseurl.'/s/'.$store_name) . '"><img src="/images/system/ocs-logo-rounded-16x16.png" class="logo"/> openDesktop.org :</a> </li>';                             
+            
             $preOrder = 0;
             $curOrder = 0;
             foreach ($this->domainobjects as $obj) {
