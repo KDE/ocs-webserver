@@ -710,7 +710,6 @@ class Default_Model_Member extends Default_Model_DbTable_Member
                 WHERE plings.status_id = 2
                   AND project.status = :project_status
                   AND project.type_id = 1
-                  AND project.is_deleted = 0
                   AND project.member_id = :member_id
             ';
         $result = $this->_db->fetchAll($sql, array('member_id' => $member_id, 'project_status' => Default_Model_Project::PROJECT_ACTIVE));
