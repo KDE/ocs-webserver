@@ -848,6 +848,15 @@ class Default_Model_Project extends Default_Model_DbTable_Project
     {
         $sql = 'SELECT count(1) count FROM project WHERE project.status = ' . self::PROJECT_ACTIVE . ' AND member_id  <> '
             . $project->member_id . ' AND project_category_id=' . $project->project_category_id . ' AND type_id=1';
+        //$sql = "
+        //        SELECT count(1) as `count`
+        //        FROM project
+        //        WHERE project.status = :current_status
+        //          AND project.member_id <> :current_member_id
+        //          AND project.project_category_id = :category_id
+        //          AND type_id = :poject_type
+        //";
+        //
         $result = $this->_db->fetchRow($sql);
 
         $cnt = $result['count'];
@@ -1540,7 +1549,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
 
     protected function generateReportedSpamFilter(Zend_Db_Select $statement)
     {
-        return $statement->where('((amount_reports is null) or (amount_reports < 3))');
+        return $statement->where('((amount_reports is null) or (amount_reports >= 2))');
     }
 
     /**
