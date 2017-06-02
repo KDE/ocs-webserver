@@ -150,7 +150,7 @@ $time_start = microtime(true);
           <?php
           $time_elapsed = microtime(true) - $time_start;
           if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
-              echo '<div class="alert alert-warning" role="alert"><strong>Rendering Time: </strong>'.$time_elapsed.' s</div>';
+              echo '<section><div class="alert alert-warning" role="alert"><strong>Rendering Time: </strong>'.$time_elapsed.' s</div></section>\n';
           }?>
       </div>
     </div>
