@@ -50,14 +50,13 @@ foreach ($this->products as $this->product) {
         </h3>
        
         <b style="display: block; margin-bottom: 5px"><?php echo $this->product->cat_title?></b>
-         <?php 
-          $helperPackageTypes = new Default_View_Helper_FetchProjectPackageTypes();
-          $type = $helperPackageTypes->FetchProjectPackageTypes($this->product->project_id);
-          if(!empty($type)){
-            ?>
-                <?=$type ?>
-            <?php } ?>
-        
+        <b style="display: block; margin-bottom: 5px" class="small">by <a href="<?php echo $this->buildMemberUrl($this->product['member_id'])?>"><?php echo $this->product['username']?></a></b>
+        <div style="display: block; float: left">
+         <?php           
+          $type = $this->FetchProjectPackageTypes($this->product->project_id);
+          if(!empty($type)){ echo $type;} ?>
+        </div>
+
         <div class="productInfo">
        <?php
                 //$count_plingers = $this->product->count_plingers;

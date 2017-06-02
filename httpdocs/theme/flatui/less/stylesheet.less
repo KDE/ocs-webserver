@@ -901,6 +901,7 @@ ul.meta-nav-top
       padding-top: 20px;
   }
 
+/*
   .explore-products {
     padding-left: 30px;
 
@@ -1136,7 +1137,198 @@ ul.meta-nav-top
 
     }
   }
+*/
 
+/* .explore-products css cleanup*/
+  .explore-products {
+    padding-left: 30px;
+    width: 1200px;
+    margin-top: -10px;
+    .nav-tabs{
+      > li{
+          background-color:#F5F5F5; 
+          
+          > a{
+            border: 0;   
+            color: #777;         
+            font-size: 13px;
+          }
+          > a:hover{
+            border: 0;   
+            color: #222;  
+            background-color: #F5F5F5;       
+          }
+          &.right {
+            float: right;
+          }
+        } 
+      > li.active{
+        > a {
+          background-color: #F5F5F5;
+          border: 0px;
+          border-bottom: 3px solid #2673b0;
+          color: #2673b0;
+          font-weight: bold;          
+        }   
+      }
+
+      >li.totoalcnt{
+        padding: 10px 15px;
+      }
+    } 
+
+    
+
+    .product-list {
+      width: 100%;
+      float: left;
+      padding: 0 10px;      
+      .border_radius(0 0 5px 5px);
+
+      .explore-product {
+        padding: 10px 0;
+        font-size: 12px;
+        border-top: 1px solid #ccc;
+        .rownum{
+          font-size: 12px;
+          float:left;
+        }
+        .explore-product-imgcolumn
+        {
+          padding-left: 5px;
+          padding-right: 5px;
+        }
+        .explore-product-image {
+            max-width: 95%;
+            max-height: 167px;
+        }
+        img{
+          max-width: 100%;
+        }
+        .contentLeft
+        {
+          float: left; 
+          padding-right: 0px;
+          width: 270px;
+          img{
+            max-width: 167px; 
+            max-height: 167px;          
+          }
+         
+          div.productimg
+          {
+             width: 167px;
+             height: 167px;
+          }
+        }
+        
+
+        .explore-product-details {
+          padding-left: 0px;
+          
+          h3 {
+           
+            font-size: 24px;            
+            font-weight: bold;
+            color: #2673b0;
+            span.version
+            {
+              font-size: smaller; 
+              padding-left: 20px;
+            }
+          }
+         
+          .productInfo
+          {
+            clear: left;
+            padding-top: 5px;
+            span.cntSupporters
+            {
+              padding-right: 20px;
+            }
+          }
+        }
+
+        .explore-product-plings {
+          padding: 0;          
+         
+          .rating {
+             width: 50%;
+
+          }
+
+          .progress {
+            margin-bottom: 10px;
+            padding: 3px;
+            opacity:0;
+            margin-bottom: 0;
+            height:12px;
+            opacity:1.0;
+            background-color: transparent; 
+            box-shadow: none; 
+            padding:2px;
+            
+            .bar {
+                width: 4px;
+                max-width: 100%;
+                height: 14px;
+                background-color: #2673b0;
+                .border_radius(5px);
+                .box_shadow(inset 0 6px 0 rgba(255,255,255,0.2));
+
+                &.no-goal {
+                  width: 50%;
+                  opacity: 0;
+                }
+
+            }
+          }
+
+          .collected {
+            span {
+              display: block;
+              width: 100%;
+              float: left;
+            }
+          }
+        }
+
+        &:first-of-type {
+          border-top:0;
+        }
+
+      }
+
+    }
+
+    .explore-footer {
+      width: 100%;
+      text-align: center;
+    
+      .projectPaginationControl {
+          width: auto;
+          display: table;
+          margin: 0 auto;
+
+          ul#pagination-digg {
+              padding: 0;
+              list-style-type: none;
+              margin: 20px 0;
+              height: auto;
+              overflow: hidden;
+
+              li {
+                float: left;
+                font-size: 16px;
+                font-weight: normal;
+                margin: 0 4px;
+              }
+          }
+
+      }
+
+    }
+  }
   aside#explore-sidebar {
     padding-left: 0;
     margin-bottom: 20px;
@@ -5100,4 +5292,22 @@ main#plings-page{
   }
 }
 /** plings END**/
+
+/* new look test */
+@contentbgcolor: #f5f5f5;
+
+main#explore-content {
+  background-color: @contentbgcolor;
+  .sidebar-right-info{
+    background-color: @contentbgcolor;
+  }
+  .downloadDiv{
+   background-color: @contentbgcolor; 
+  }
+  .product-list{
+    border: 0px;
+    border-top: 0px solid #ccc;
+    background-color: transparent;
+  }
+}
 
