@@ -1548,7 +1548,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
 
     protected function generateReportedSpamFilter(Zend_Db_Select $statement)
     {
-        return $statement->where('((amount_reports is null) or (amount_reports >= 2))');
+        return $statement->where('((amount_reports is null) or (amount_reports < 2))');
     }
 
     /**
