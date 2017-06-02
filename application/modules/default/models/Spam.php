@@ -33,7 +33,7 @@ class Default_Model_Spam
             SELECT *
             FROM stat_projects
             WHERE stat_projects.amount_reports >= :threshold AND stat_projects.status = 100
-            ORDER BY stat_projects.created_at DESC, stat_projects.amount_reports
+            ORDER BY stat_projects.changed_at DESC, stat_projects.created_at DESC, stat_projects.amount_reports DESC
         ";
 
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('threshold' => self::SPAM_THRESHOLD));

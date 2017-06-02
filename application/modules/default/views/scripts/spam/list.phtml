@@ -49,7 +49,7 @@
                     foreach ($this->products as $this->product) {
                         $updateTime = $helperPrintDate->printDate($this->product['project_changed_at']);
                         ?>
-                        <div class="explore-product col-lg-11 col-md-11 col-sm-11 col-xs-11" style="border-top: 1px solid #ccc;font-size: 12px;padding: 10px 0;">
+                        <div class="explore-product col-lg-10 col-md-10 col-sm-10 col-xs-10" style="border-top: 1px solid #ccc;font-size: 12px;padding: 10px 0;">
                             <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
                                 <div class="rownum">
                                     <?= intval($this->rownum)?>.
@@ -107,12 +107,12 @@
 
                             </div>
                         </div><!-- END .explore-product -->
-                        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 small"  style="border-top: 1px solid #ccc;font-size: 12px;padding: 10px 0;">
+                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 small text-right"  style="border-top: 1px solid #ccc;font-size: 12px;padding: 10px 0;">
                             <a href="/backend/project/delete?project_id=<?=$this->product['project_id']?>" class="delete-this" data-title="Delete this product?">delete product</a>
                             <hr/>
                             <a href="/backend/user/delete?member_id=<?=$this->product['member_id']?>" class="delete-this" data-title="Delete this member and all his products and comments?">delete user</a>
                             <hr/>
-                            <a href="/backend/reportproducts/deletereports?p=<?=$this->product['project_id']?>" class="delete-this" data-title="Reset reports and make product visible again?">delete reports</a>
+                            <a href="/backend/reportproducts/deletereports?p=<?=$this->product['project_id']?>" class="delete-this" data-title="Reset reports and make product visible again?">delete reports (<?=$this->product['amount_reports']?>)</a>
                         </div>
                         <?php
                             $this->rownum++;
