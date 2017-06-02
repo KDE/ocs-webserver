@@ -131,6 +131,9 @@ $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
         .dropdown-menu li{
             width: 100%;
         }
+
+        ul.dropdown-menu  li span{ color:#999; }
+        ul.dropdown-menu  li.active span{ color:#eee; }
     </style>
 
     <div class="small metamenu" >   
@@ -194,7 +197,7 @@ $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
                  // z.b 150001 ende ==1 go real link otherwise /s/$name 
                 $last_char_check = substr($o, -1);                
 
-                echo '<a href="http://' . ($last_char_check=='1'?$host:$baseurl.'/s/'.$name) . '">'.  $name .' <span style="font-size:11px; color:#065893">'.$keyword.'</span></a> </li>';    
+                echo '<a href="http://' . ($last_char_check=='1'?$host:$baseurl.'/s/'.$name) . '">'.  $name .' <span style="font-size:11px; ">'.$keyword.'</span></a> </li>';    
 
                 $preOrder = floor($obj['order']/1000);  
                  $i++;                                                  
