@@ -46,6 +46,9 @@
                     //$paginator->setTotalItemCount(count($candidateProducts));
 
                     $this->products = $paginator;
+                    if ($paginator->count() == 0) {
+                        echo '<div class="alert alert-success" role="alert"><p class="text-success">Congratulations. No more SPAM in sight. (For the moment)</p></div>';
+                    }
                     foreach ($this->products as $this->product) {
                         $updateTime = $helperPrintDate->printDate($this->product['project_changed_at']);
                         ?>
