@@ -35,6 +35,8 @@ $cat_title_left = $logoWidth+60;
 $tabs_left = (int)$this->template['header-nav-tabs']['absolute-left'];
 $tabs_left += $cat_title_length*10;
 $idCat = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
+$baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
+
 ?>
     <style>
 
@@ -126,23 +128,29 @@ $idCat = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get
         .dropdown:hover .dropdown-menu {
             margin-left: -16px;
         }
-
+        .dropdown-menu li{
+            width: 100%;
+        }
     </style>
 
     <div class="small metamenu" >   
         <?php            
             $domainshelper = new Default_View_Helper_FetchDomains();
-            $this->domainobjects = $domainshelper->fetchDomainObjects();            
+            $this->domainobjects = $domainshelper->fetchDomainObjects();    
+            $sname = Zend_Registry::get('store_host');  
+            $store_config = Zend_Registry::get('store_config');
+                       
             echo '<ul class="nav nav-pills meta-nav-top left">';
             $i = 0;
-            echo '<li class="" style="background-color:#eee; -moz-border-radius: 5px; border-radius: 5px; "><a href="http://openDesktop.org"><img src="/images/system/storeLogo.png" style="width:16px; height:16px"/> openDesktop.org :</a> </li>';                             
-            $sname = Zend_Registry::get('store_host');
+                        
+            echo '<li class="" style="background-color:#eee; -moz-border-radius: 5px; border-radius: 5px; "><a href="http://openDesktop.org"><img src="/images/system/ocs-logo-rounded-16x16.png" class="logo"/> openDesktop.org :</a> </li>';                             
+           
             $preOrder = 0;
             $curOrder = 0;
             foreach ($this->domainobjects as $obj) {
                 $o =  $obj['order'];   
                 $curOrder = floor($obj['order']/1000);      
-                if($curOrder<10 or $curOrder>30) continue;
+                if($curOrder<10 or $curOrder>50) continue;
                 $host =$obj['host'];
                 $name =$obj['name'];
                 if($curOrder!= $preOrder) $i=0;
@@ -157,11 +165,18 @@ $idCat = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get
                     echo '<li class="dropdown"><a href="#">Applications</a><ul class="dropdown-menu">';                                                                 
                 }else if($curOrder ==20 && $i ==0){
                     // artworks                    
-                    echo '<li class="dropdown"><a href="#">Desktops</a><ul class="dropdown-menu">';                                                                  
+                    echo '<li class="dropdown"><a href="#">Addons</a><ul class="dropdown-menu">';                                                                  
                 }else if($curOrder ==30 && $i ==0){
+                    // artworks                    
+                    echo '<li class="dropdown"><a href="#">Desktops</a><ul class="dropdown-menu">';                                                                  
+                }else if($curOrder ==40 && $i ==0){
                     // multimedia                    
                     echo '<li class="dropdown"><a href="#">Artwork</a><ul class="dropdown-menu">';                                                                  
-                }                
+                }   
+                else if($curOrder ==50 && $i ==0){
+                    // multimedia                    
+                    echo '<li class="dropdown"><a href="#">Other</a><ul class="dropdown-menu">';                                                                  
+                }               
                 if($sname == $host )
                 {
                     echo '<li class="active">';
@@ -176,7 +191,10 @@ $idCat = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get
                 {
                     $keyword = ' - '.$keyword;
                 }
-                echo '<a href="http://' . $host . '">'.  $name .' <span style="font-size:11px; color:#065893">'.$keyword.'</span></a> </li>';    
+                 // z.b 150001 ende ==1 go real link otherwise /s/$name 
+                $last_char_check = substr($o, -1);                
+
+                echo '<a href="http://' . ($last_char_check=='1'?$host:$baseurl.'/s/'.$name) . '">'.  $name .' <span style="font-size:11px; color:#065893">'.$keyword.'</span></a> </li>';    
 
                 $preOrder = floor($obj['order']/1000);  
                  $i++;                                                  
