@@ -88,7 +88,10 @@ $this->updates = $tableProjectUpdates->fetchProjectUpdates($this->product->proje
 
     <main id="product-page-content">
         <div class="flex-column">
-            <div class="flex-item-20 " id="product-main">
+            <div class="flex-item-4 flex-left" style="padding:15px;min-width: 200px;padding-top: 20px;">
+                <?php  echo $this->render('explore/partials/filter.phtml'); ?>       
+            </div>
+            <div class="flex-item-16 " id="product-main">
                 <div class="flex-row imgsmall" id="product-main-img-container">
                     <div class="product-main-img flex-item-24" id="product-main-img">
                         <div id="carouselContainer" class="carouselContainer">
