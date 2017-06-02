@@ -39,6 +39,8 @@ class Default_Model_Spam
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('threshold' => self::SPAM_THRESHOLD));
         if ($result->rowCount() > 0) {
             return $result->fetchAll();
+        } else {
+            return array();
         }
     }
 
