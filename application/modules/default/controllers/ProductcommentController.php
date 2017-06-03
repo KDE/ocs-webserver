@@ -75,7 +75,7 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
     private function loadComments($page_offset, $project_id)
     {
         $modelComments = new Default_Model_ProjectComments();
-        $paginationComments = $modelComments->getAllCommentsForProject($project_id);
+        $paginationComments = $modelComments->getCommentTreeForProject($project_id);
         $paginationComments->setItemCountPerPage(25);
         $paginationComments->setCurrentPageNumber($page_offset);
         return $paginationComments;

@@ -98,7 +98,7 @@ class Default_Model_ProjectComments
     {
         $sql
             = "
-                SELECT comment_id, comment_parent_id, comment_text, comment_created_at, comment_active, comment_type, member_id, username, profile_image_url  
+                SELECT comment_id, comment_target_id, comment_parent_id, comment_text, comment_created_at, comment_active, comment_type, member_id, username, profile_image_url  
                 FROM comments 
                 STRAIGHT_JOIN member ON comments.comment_member_id = member.member_id 
                 WHERE comment_active = :status_active AND comment_type = :type_id AND comment_target_id = :project_id AND comment_parent_id = 0 
@@ -111,7 +111,7 @@ class Default_Model_ProjectComments
         );
         $sql
             = "
-                SELECT comment_id, comment_parent_id, comment_text, comment_created_at, comment_active, comment_type, member_id, username, profile_image_url  
+                SELECT comment_id, comment_target_id, comment_parent_id, comment_text, comment_created_at, comment_active, comment_type, member_id, username, profile_image_url  
                 FROM comments 
                 STRAIGHT_JOIN member ON comments.comment_member_id = member.member_id 
                 WHERE comment_active = :status_active AND comment_type = :type_id AND comment_target_id = :project_id AND comment_parent_id <> 0 
