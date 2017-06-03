@@ -22,6 +22,8 @@
 
 $tableProject = new Default_Model_Project();
 $this->product_views = $tableProject->fetchProjectViews($this->product->project_id);
+ $helperUserRole = new Backend_View_Helper_UserRole();
+$userRoleName = $helperUserRole->userRole();
 ?>
 <div class="prod-widget-box right details">
     <span class="title"> Details </span>
@@ -53,11 +55,14 @@ $this->product_views = $tableProject->fetchProjectViews($this->product->project_
         <span class=" col-lg-5">page views</span>
         <span class="col-lg-7 value"> <?= $this->product_views ?></span>
     </div>
-
+    
+    <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+     
     <div class="row">
         <span class=" col-lg-5">spam reports</span>
         <span class="col-lg-7 value"> <?= $this->product->amount_reports ?></span>
     </div>
+     <?php endif; ?>
 
     <?php /**
      * <div class="row">
@@ -87,10 +92,7 @@ $this->product_views = $tableProject->fetchProjectViews($this->product->project_
     </div>
 
 
-    <?php
-    $helperUserRole = new Backend_View_Helper_UserRole();
-    $userRoleName = $helperUserRole->userRole();
-    ?>
+  
     <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
         <span class="page-views">
             <a target="_NEW" href="http://cp1.hive01.com/content/show.php?content=<?= $this->product->project_source_pk ?>">link to hive</a>
