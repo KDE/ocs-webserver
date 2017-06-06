@@ -57,7 +57,7 @@ $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountP
                         <form class="full-width product-add-comment" action="/productcomment/addreply/">
                             <input type="hidden" name="p" value="<?= $this->product->project_id ?>">
                             <input type="hidden" name="m" value="<?= $identity->member_id ?>">
-                            <textarea name="msg" class="full-width"></textarea>
+                            <textarea name="msg" class="full-width" required="required"></textarea>
                             <button type="submit" style="border:none;background: transparent;color: #2673b0;" class="small"><span class="glyphicon glyphicon-send"></span> Send</button>
                         </form>
                     </div>
@@ -145,7 +145,7 @@ $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountP
                                 <input type="hidden" name="i" value="<?= $comment['comment_id'] ?>">
                                 <input type="hidden" name="p" value="<?= $comment['comment_target_id'] ?>">
                                 <input type="hidden" name="m" value="<?= $identity->member_id ?>">
-                                <textarea name="msg" class="full-width"></textarea>
+                                <textarea name="msg" class="full-width" required="required"></textarea>
                                 <button type="submit" style="border:none;background: transparent;color: #2673b0;" class="small"><span class="glyphicon glyphicon-send"></span> Send</button>
                                 <?php //echo $captcha->render($this); ?>
                             </form>
