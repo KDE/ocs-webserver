@@ -460,7 +460,7 @@
                                          var isExternLink = false;
                                          if ((typeof link != 'undefined') && (link != "")) {
                                             isExternLink = true;
-                                            downloadLink = '<a href="' + decodeURIComponent(link) + '" id="data-link' + this.id + '">' + this.name + '</a>';
+                                            downloadLink = '<a href="' + decodeURIComponent(link) + '" id="data-link' + this.id + '" style="color: #ccc;">' + this.name + '</a>';
                                          }
 	                                     $pploadCollection.find('table[data-ppload-files] tbody').append(
 	                                        '<tr' + greyText + '>'
