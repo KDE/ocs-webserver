@@ -652,7 +652,7 @@ a.partial{
   font-size: 25px; color: #2673b0; font-weight: bold;
 }
 #myCarousel{  
-  padding-top: 15px;
+  padding-top: 25px;
 }
 
 #product-title img.logo{
@@ -702,22 +702,6 @@ a.partial{
   width:200px;
 }
 
-
-.carousel-indicators {
-  top: -5px;  
-  z-index: 31;
-  background-color: transparent;
-  height: 20px;
-}
-.carousel-indicators .active
-{
-  background-color: #E2E2E2;
-}
-.carousel-indicators li {    
-    border: 1px solid #C4D7EF;
-}
-
-
 .carousel-inner > .item > img {
     display: block;
     margin-left: auto;
@@ -749,23 +733,6 @@ a.partial{
   margin-bottom: 10px !important;
   /*background: linear-gradient(#eee,#fff);*/
 }
-
-/*
-
-#community-page #user-lists .list .user
-{
-  padding:0px !important;
-  width:120px; 
-  height:220px; 
-  float: left;  
-  margin-bottom: 8px;
-  margin-left: 5px;
-}
-
-#new-members{
-  padding-right: 0px;
-}
-*/
 
 input#amount{
 width: 94%;
