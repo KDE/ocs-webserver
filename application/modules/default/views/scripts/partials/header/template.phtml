@@ -122,7 +122,8 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
             <section class="container">
                 <section class="wrapper">
                     <span class="header_cat_link" id="header_cat_link">
-                        <a href="/browse/cat/<?= isset($this->cat_id) ? $this->cat_id : 'all' ?>/order/latest">
+                       <?php /* <a href="/browse/cat/<?= isset($this->cat_id) ? $this->cat_id : 'all' ?>/order/latest"> */?>
+                        <a href="http://<?php echo $last_char_store_order=='1'?$sname:$baseurl.'/s/'.$store_name ?>">
                             <?=$store_name?>
                         </a>
                     </span>
