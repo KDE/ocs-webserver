@@ -23,6 +23,33 @@
 class Default_View_Helper_BuildMemberUrl extends Zend_View_Helper_Abstract
 {
 
+    
+    /**
+     * @param int $member_id
+     * @param string $action
+     * @param array $params
+     * @param bool $withHost
+     * @param string $scheme
+     * @return string
+     */    
+    public function buildMemberUrl($member_id, $action = '', $params = null)
+    {      
+        $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
+
+        $url_param = '';
+        if (is_array($params)) {
+            array_walk($params, create_function('&$i,$k', '$i="$k/$i/";'));
+            $url_param = implode('/', $params);
+        }
+
+        if ($action != '') {
+            $action = $action . '/';
+        }
+
+        return "http://{$baseurl}/member/{$member_id}/{$action}{$url_param}";
+    }
+
+
     /**
      * @param int $member_id
      * @param string $action
@@ -31,9 +58,9 @@ class Default_View_Helper_BuildMemberUrl extends Zend_View_Helper_Abstract
      * @param string $scheme
      * @return string
      */
+    /*
     public function buildMemberUrl($member_id, $action = '', $params = null, $withHost = false, $scheme = null)
-    {
-        /** @var Zend_Controller_Request_Http $request */
+    {      
         $request = Zend_Controller_Front::getInstance()->getRequest();
 
         $host = '';
@@ -64,6 +91,7 @@ class Default_View_Helper_BuildMemberUrl extends Zend_View_Helper_Abstract
 
         return "{$host}/{$storeId}member/{$member_id}/{$action}{$url_param}";
     }
+    */
 
     public function buildExternalUrl($member_id, $action = null, $params = null)
     {
