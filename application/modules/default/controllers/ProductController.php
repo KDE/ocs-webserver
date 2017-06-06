@@ -99,7 +99,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $newDesc = $this->bbcode2html($desc);
         $this->view->product->description = $newDesc;
 
-        $this->view->supporting = $tableProject->fetchProjectSupporterWithPlings($this->_projectId);
+        // switch off temporally 02.05.2017
+        //$this->view->supporting = $tableProject->fetchProjectSupporterWithPlings($this->_projectId);
         //$orgUpdates = $tableProjectUpdates->fetchLastProjectUpdate($this->_projectId);
         $tableProjectUpdates = new Default_Model_ProjectUpdates();
         $orgUpdates = $tableProjectUpdates->fetchProjectUpdates($this->_projectId);
@@ -112,7 +113,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         }
 
         $this->view->updates = $newUpdates;
-        $this->view->supporter = $tableProject->fetchProjectSupporter($this->_projectId);
+        // switch off temporally 02.05.2017
+        //$this->view->supporter = $tableProject->fetchProjectSupporter($this->_projectId);
+
         $this->view->galleryPictures = $tableProject->getGalleryPictureSources($this->_projectId);
         $this->view->product_views = $tableProject->fetchProjectViews($this->_projectId);
 
@@ -130,8 +133,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $AuthCodeExist = new Local_Verification_WebsiteAuthCodeExist();
         $this->view->websiteAuthCode = $AuthCodeExist->generateAuthCode(stripslashes($this->view->product->link_1));
 
-        $modelPlings = new Default_Model_DbTable_Plings();
-        $this->view->plings = $modelPlings->getDonationsForProject($this->_projectId, 10);
+        // switch off temporally 02.05.2017
+        //$modelPlings = new Default_Model_DbTable_Plings();
+        //$this->view->plings = $modelPlings->getDonationsForProject($this->_projectId, 10);
 
         $tableMember = new Default_Model_Member();
         $this->view->member = $tableMember->fetchMemberData($this->view->product->member_id);
@@ -142,7 +146,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $widgetDefaultModel = new Default_Model_DbTable_ProjectWidgetDefault();
         $widgetDefault = $widgetDefaultModel->fetchConfig($this->_projectId);
         $widgetDefault->text->headline = $this->view->product->title;
-        $widgetDefault->amounts->current = $this->view->product->amount_received;
+        //$widgetDefault->amounts->current = $this->view->product->amount_received;
         $widgetDefault->amounts->goal = $this->view->product->amount;
         $widgetDefault->project = $this->_projectId;
         $this->view->widgetConfig = $widgetDefault;
@@ -256,7 +260,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $values['image_small'] = $imageModel->saveImage($form->getElement(self::IMAGE_SMALL_UPLOAD));
 //            $values['image_big'] = $imageModel->saveImage($form->getElement(self::IMAGE_BIG_UPLOAD));
         } catch (Exception $e) {
-            Zend_Registry::get('logger')->err(__METHOD__ . ' - ERROR upload productPicture - ' . $e->getTraceAsString());
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ERROR upload productPicture - ' . print_r($e, true));
         }
 
         // form was valid, so we can set status to active
@@ -275,8 +279,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             }
 
         } catch (Exception $exc) {
-            Zend_Registry::get('logger')->err(__METHOD__ . ' - ERROR while updating project data - ' . $exc->getTraceAsString());
-            return;
+            echo $exc->getTraceAsString();
         }
 
         if (!$newProject) {
@@ -528,18 +531,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 . $projectData->image_small . '\n');
 
         }
-        
-        //check if the project categoriy is the last child in tree
-        $cat = $projectData->project_category_id;
-        $tableCat = new Default_Model_DbTable_ProjectCategory();
-        $catChildIds = $tableCat->fetchChildIds($cat);
-        if(!$catChildIds || count($catChildIds) <> 1 || $catChildIds[0] != $cat) {
-            //throw new Exception('Error in updateProject: category is no in the right level!');
-            $this->_helper->flashMessenger->addMessage('<p class="text-error">You did not choose a Category in the last level.</p>');
-            $this->forward('add');
-            return;
-        }
-        
         $projectData->save();
 
         $this->createTaskWebsiteOwnerVerification($projectData);
@@ -1838,8 +1829,10 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             ->setHeader('X-FRAME-OPTIONS', 'SAMEORIGIN', true)
 //            ->setHeader('Last-Modified', $modifiedTime, true)
             ->setHeader('Expires', $expires, true)
+            ->setHeader('Pragma', 'cache', true)
+            ->setHeader('Cache-Control', 'max-age=1800, public', true);
             ->setHeader('Pragma', 'no-cache', true)
-            ->setHeader('Cache-Control', 'private, no-store, no-cache, must-revalidate, post-check=0, pre-check=0', true);
+            ->setHeader('Cache-Control', 'private, no-cache, must-revalidate', true);
     }
 
     /**
