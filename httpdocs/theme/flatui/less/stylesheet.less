@@ -1565,19 +1565,18 @@ ul.meta-nav-top
 
 /** PRODUCT PAGE **/
 
-  #product-main {
+  #product-page-content {
     padding: 0;
-    padding-top: 20px;
-
+   
     #product-main-img {
 
       #product-title-div {
         padding-left: 30px;
-       
+        min-height:85px;
+        padding-top: 20px;
         .product-logo-container {
           float: left; 
-          width: 85px; 
-          min-height:65px;
+          width: 85px;           
         }
 
         .product_category {
@@ -5344,5 +5343,23 @@ main#plings-page{
     padding-left: 15px;
     min-width: 200px; 
     padding-top: 20px;
+   
   }
 }
+
+#carouselContainer{
+  .carousel-indicators {    
+    z-index: 31;
+    background-color: transparent;
+    height: 20px; 
+    bottom: -30px;
+    & .active{
+      background-color: #E2E2E2;   
+    }
+    li{
+      border: 1px solid #C4D7EF;
+    }   
+  }
+}
+
+
