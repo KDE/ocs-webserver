@@ -34,7 +34,7 @@ $sname = Zend_Registry::get('store_host');
 $store_config = Zend_Registry::get('store_config');
 $store_order = $store_config['order'];
 $store_name = $store_config['name'];
- $last_char_store_order = substr($store_order, -1); 
+$last_char_store_order = substr($store_order, -1); 
 
 echo $this->render('partials/header/metaheader.phtml'); ?>
     <header id="page_header" xmlns="http://www.w3.org/1999/html">
@@ -123,7 +123,7 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
                 <section class="wrapper">
                     <span class="header_cat_link" id="header_cat_link">
                         <a href="/browse/cat/<?= isset($this->cat_id) ? $this->cat_id : 'all' ?>/order/latest">
-                            /<?= $helperFetchCategory->catTitle($this->cat_id) ?>
+                            /<?=$store_name?>
                         </a>
                     </span>
                 </section>
