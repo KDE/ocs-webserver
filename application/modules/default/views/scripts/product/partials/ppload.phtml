@@ -71,7 +71,7 @@
                              <?php endif; ?>
                              **/?>
                              <tr>
-                                 <th><?= $this->translate('Filename'); ?></th>
+                                 <th><?= $this->translate('File (click to download)'); ?></th>
                                  <th><?= $this->translate('Version'); ?></th>
                                  <th><?= $this->translate('Description'); ?></th>
                                  <th><?= $this->translate('Filetype'); ?></th>
@@ -83,7 +83,7 @@
                                  <th style="text-align: right"><?= $this->translate('Filesize'); ?></th>
                                 <!-- <th style="text-align: right"><a href="#modal-installation-instructions" role="button" data-toggle="modal"><?= $this->translate('Install ?'); ?></a></th>
                                 -->
-                                 <th style="text-align: right"><?= $this->translate('Install'); ?></th>
+                                 <th style="text-align: right"><?= $this->translate('OCS-Install'); ?></th>
                              </tr>
                              </thead>
                              <tbody></tbody>
@@ -393,7 +393,7 @@
 
                                  });
 
-				//Inactive Fiels
+								 //Inactive Fiels
                                  $.each(myArrayInactive, function () {
                                     if(null == oldestFileId) {
                                             oldestFileId = this.id;
@@ -460,6 +460,7 @@
                                          var isExternLink = false;
                                          if ((typeof link != 'undefined') && (link != "")) {
                                             isExternLink = true;
+                                            downloadLink = '<a href="' + decodeURIComponent(link) + '" id="data-link' + this.id + '" style="color: #ccc;">' + this.name + '</a>';
                                          }
 	                                     $pploadCollection.find('table[data-ppload-files] tbody').append(
 	                                        '<tr' + greyText + '>'
@@ -525,11 +526,15 @@
 
 	                                     $("#data-select-packagetype" + this.id).hide();
 
+	                                     
+										
 	                                     if (isExternLink) {
 	                                        //$("#data-link" + this.id).attr('href', decodeURIComponent(link));
                                                 $("#data-link" + this.id).attr('target','_blank');
 	                                        $("#data-link" + this.id).html($("#data-link" + this.id).html() + " (External Link)");
 	                                     }
+
+	                                    
 
 	                                    //fileSizeSum += parseInt(this.size);
                                             if(parseInt(this.size)>0) {
@@ -562,7 +567,7 @@
 
                                  $pploadCollection.find('table[data-ppload-files] tfoot').append(
                                      '<tr>'
-                                     + '<th colspan="6">' + myArrayActive.length + ' <?= $this->translate("files")?> (<span style="color: #ccc;" ><a style="cursor:pointer" onclick="fnToggleInactiveFiles();return false;">'+myArrayInactive.length+' inactive</a></span>)</th>'
+                                     + '<th colspan="6">' + myArrayActive.length + ' <?= $this->translate("files")?> (<span style="color: #ccc;" ><a style="cursor:pointer" onclick="fnToggleInactiveFiles();return false;">'+myArrayInactive.length+' archived</a></span>)</th>'
                                      + '<th style="text-align: right">' + downloaded_count_total + '</th>'
                                      + '<th></th>'
                                     + '<th style="text-align: right">' + fileSizeSum.toFixed(2) + ' MB</th>'
