@@ -88,9 +88,45 @@ $this->updates = $tableProjectUpdates->fetchProjectUpdates($this->product->proje
 
     <main id="product-page-content">
         <div class="flex-column">
-            <div class="flex-item-20 " id="product-main">
+            <div class="flex-item-4 sidebar-left" style="">
+                <?php  echo $this->render('explore/partials/filter.phtml'); ?>          
+            </div>
+
+            <div class="flex-item-16 " id="product-main">
                 <div class="flex-row imgsmall" id="product-main-img-container">
                     <div class="product-main-img flex-item-24" id="product-main-img">
+                        <div id="product-title-div">
+                            <span id="product-title">
+                              
+                                <?php if (false === empty($this->product->link_1)): ?><a
+                                    href="<?php echo $helpAddDefaultScheme->addDefaultScheme($this->product->link_1); ?>"
+                                    target="_NEW"
+                                    title="<?php echo $helpAddDefaultScheme->addDefaultScheme($this->product->link_1); ?>"
+                                    > <?= $this->product->title; ?> <span class="fa fa-external-link"></span></a>
+                                <?php else : ?>
+                                    <?= $this->product->title; ?>
+                                <?php endif; ?>
+
+
+                                <div class="product-logo-container">
+                                  <img class="logo" src="<?= $helpImage->Image($this->product->image_small,
+                                      array('width' => 85, 'height' => 85, 'crop' => 'crop')); ?>"/>
+                                </div>
+                                <span class="product_category">                                                
+                                <?php
+                                echo '<a href="/browse/cat/' . $this->product->project_category_id . '/order/latest">' . $this->product->cat_title . ' </a>';
+                                ?>                        
+                                </span>
+                                <span class="light small">
+                                <?php if (false === empty($this->product->github_code)):
+                                    echo '<a target="_blank" href="' . $this->product->github_code . '">' . $this->product->github_code
+                                        . ' <span class="fa fa-external-link"></span></a>';
+                                endif;
+                                ?>
+                                
+                                </span>
+                            </span>
+                        </div>
                         <div id="carouselContainer" class="carouselContainer">
                             <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="false">
 
@@ -139,45 +175,14 @@ $this->updates = $tableProjectUpdates->fetchProjectUpdates($this->product->proje
                             </div><!-- End Carousel -->
                         </div>
 
-                        <div id="product-title-div">
-                    <span id="product-title">
-                      
-                        <?php if (false === empty($this->product->link_1)): ?><a
-                            href="<?php echo $helpAddDefaultScheme->addDefaultScheme($this->product->link_1); ?>"
-                            target="_NEW"
-                            title="<?php echo $helpAddDefaultScheme->addDefaultScheme($this->product->link_1); ?>"
-                            > <?= $this->product->title; ?> <span class="fa fa-external-link"></span></a>
-                        <?php else : ?>
-                            <?= $this->product->title; ?>
-                        <?php endif; ?>
-
-
-                        <div class="product-logo-container">
-                          <img class="logo" src="<?= $helpImage->Image($this->product->image_small,
-                              array('width' => 85, 'height' => 85, 'crop' => 'crop')); ?>"/>
-                        </div>
-                        <span class="product_category">
-                        <?php
-                        echo '<a href="/browse/cat/' . $this->product->project_category_id . '/order/latest">' . $this->product->cat_title . ' </a>';
-                        ?>
-                        </span>
-                        <span class="light small">
-                        <?php if (false === empty($this->product->github_code)):
-                            echo '<a target="_blank" href="' . $this->product->github_code . '">' . $this->product->github_code
-                                . ' <span class="fa fa-external-link"></span></a>';
-                        endif;
-                        ?>
                         
-                        </span>
-                    </span>
-                        </div>
                     </div>
                 </div>
 
                 <div class="flex-item-24" id="product-tabs-container">
                     <!-- TABS -->
-                    <div id="product-tabs">
-                        <ul class="nav nav-tabs">
+                    <div id="product-tabs" class="pling-nav-tabs">
+                        <ul class="nav nav-tabs ">
                             <li class="active"><a href="#about-panel" data-toggle="tab">Product</a></li>
                             <?php if (null != ($this->product->embed_code)) { /*OR count($this->galleryPictures) > 0 */ ?>
                                 <li>
@@ -193,7 +198,6 @@ $this->updates = $tableProjectUpdates->fetchProjectUpdates($this->product->proje
                                         echo '(' . $productFileInfos['fileCount'] . ')';
                                     } ?></a></li>
                             <li><a href="#updates-panel" data-toggle="tab">Changelogs <?php if(count($this->updates)>0) { echo '('.count($this->updates).')';} ?></a></li>
-
                         </ul>
                     </div>
                     <!-- /TABS -->

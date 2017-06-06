@@ -633,6 +633,50 @@ ul.meta-nav-top
   }        
 
 /** /HEADER **/
+/** pling nav tabs**/
+
+.pling-nav-tabs{
+    ul.nav-tabs{
+      > li{
+          background-color:@contentbgcolor;       
+          margin-bottom: 0px ;    
+          > a{
+            border: 0 ;   
+            color: #777;         
+            font-size: 13px;
+            border-bottom: 3px solid #fff;
+            transition: color 0s;
+          }
+          > a:hover{
+            border: 0;   
+            color: #222;  
+            background-color:@contentbgcolor;       
+            border-bottom: 3px solid #fff;
+          }      
+        } 
+      > li.active{
+        > a {
+          background-color: @contentbgcolor;
+          border: 0 ;
+          border-bottom: 3px solid #2673b0 ;
+          color: #2673b0 ;
+          font-weight: bold;
+                
+        }   
+        > a:hover{
+          background-color: @contentbgcolor;
+          border: 0px;
+          border-bottom: 3px solid #2673b0;
+          color: #2673b0;
+          font-weight: bold;
+
+        }
+      }      
+    } 
+}
+
+
+/** pling nav tabs end**/
 
 /** FOOTER **/
 
@@ -1138,16 +1182,16 @@ ul.meta-nav-top
     }
   }
 */
-@contentbgcolor: #fff;
+  @contentbgcolor: #fff;
 /* .explore-products css cleanup*/
   .explore-products {
     padding-left: 30px;
     padding-right: 30px;
     margin-top: -10px;
+    /*
     .nav-tabs{
       > li{
-          background-color:@contentbgcolor; 
-          
+          background-color:@contentbgcolor;           
           > a{
             border: 0;   
             color: #777;         
@@ -1170,14 +1214,9 @@ ul.meta-nav-top
           color: #2673b0;
           font-weight: bold;          
         }   
-      }
-
-      >li.totoalcnt{
-        padding: 10px 15px;
-        color: #777; 
-      }
+      }      
     } 
-
+*/
     
 
     .product-list {
@@ -1528,12 +1567,13 @@ ul.meta-nav-top
 
   #product-main {
     padding: 0;
+    padding-top: 20px;
 
     #product-main-img {
 
       #product-title-div {
         padding-left: 30px;
-
+       
         .product-logo-container {
           float: left; 
           width: 85px; 
@@ -1549,8 +1589,8 @@ ul.meta-nav-top
     }
 
     #product-tabs-container {
-      padding-top: 10px;
-
+      padding-top: 30px;
+      
       #product-actions {
         margin-top:25px; 
         margin-right: 10px;
@@ -1559,8 +1599,10 @@ ul.meta-nav-top
 
     #product-tabs {
       font-size: 10pt;
+      padding-left: 25px;
     }
 
+/*
     ul.nav-tabs {
       padding: 0 15px;
       border-bottom: 0;
@@ -1589,12 +1631,12 @@ ul.meta-nav-top
       }
 
     }
-
+*/
     #product-panels {
         background: none repeat scroll 0 0 #fff;
         height: auto;
         overflow: hidden;
-        border-top: 2px solid #21659b;
+       /* border-top: 2px solid #21659b;*/
         border-radius: 0px; 
         padding: 15px;
         float: left;
@@ -5296,29 +5338,11 @@ main#plings-page{
 
 /* new look test */
 
-
-main#explore-content {
-  background-color: @contentbgcolor;
-  .sidebar-right-info{
-    background-color: #F1F1F1;
+#product-page-content {
+  .sidebar-left{
+    padding-right: 15px;
+    padding-left: 15px;
+    min-width: 200px; 
+    padding-top: 20px;
   }
-  .downloadDiv{
-   background-color: @contentbgcolor; 
-  }
-  .product-list{
-    border: 0px;
-    border-top: 0px solid #ccc;
-    background-color: transparent;
-    border: 0px;    
-    
-  }
-}
-
-
-#rss-feeds{
-  ul{
-      margin: 0px;
-      padding: 0px;  
-  }
-  
 }

@@ -47,7 +47,9 @@ $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
       </div>
       <div class="GridFlex-cell content">
         <section class="explore-products" id="explore-products">
-              <ul class="nav nav-tabs" id="sort">               
+
+            <div class="pling-nav-tabs">
+              <ul class="nav nav-tabs pling-nav-tabs" id="sort">               
                   <li  <?=$this->filters['order'] == 'latest' ? 'class="active"' :'' ?>>
                       <a href="<?= $helperBuildExploreUrl->buildExploreUrl($this->filters['category'], null,
                           'latest') ?>"><span><?= $this->translate('Latest') ?></span></a>
@@ -62,7 +64,7 @@ $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
                   </li>
                   */?>
               </ul>
-
+            </div>
 
               <div class="product-list">
                   <?php                
