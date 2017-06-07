@@ -145,8 +145,8 @@
                     list: false,
                     type: 'checkbox',
                     values: { '0': 'No', '1': 'Yes' },
-                    defaultValue: '',
-                    inputTitle: 'is client <small style="font-weight:normal; font-size: 0.7em">(If \'yes\' then don\'t forget to set the config id to right store which config is used)</small>'
+                    defaultValue: '0',
+                    inputTitle: 'is client <small style="font-weight:normal; font-size: 0.7em">(If \'yes\' then don\'t forget to set the <b>config id</b> to right store which config is used)</small>'
                 },
                 google_id: {
                     title: 'google id',
@@ -157,7 +157,14 @@
                     width: '10%',
                     options: { '':'', '1': 'AppImage', '7': 'Flatpak', '6': 'Snappy', '5': 'Debian', '2': 'Android (apk)', '3': 'OS X compatible','4': 'Windows executable','8':'Electron-Webapp'},
                     defaultValue: '',
-		    optionsSorting: 'text'
+		            optionsSorting: 'text'
+                },
+                cross_domain_login: {
+                    title: 'cross domain login',
+                    list: true,
+                    type: 'checkbox',
+                    values: { '0': 'No', '1': 'Yes' },
+                    defaultValue: '0'
                 },
                 initSearchIndex: {
                     title: '',

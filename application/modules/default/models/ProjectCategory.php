@@ -81,9 +81,11 @@ class Default_Model_ProjectCategory
                 $modelCategories = new Default_Model_DbTable_ProjectCategory();
                 $root = $modelCategories->fetchRoot();
                 $rows = $modelCategories->fetchImmediateChildrenIds($root['project_category_id'], $modelCategories::ORDERED_TITLE);
+                $tree = $this->buildTree($rows, null, null);
+            } else {
+                $tree = $this->buildTree($rows, null, (int)$store_id);
             }
 
-            $tree = $this->buildTree($rows, null, (int)$store_id);
             $cache->save($tree, $cache_id, array(), 28800);
         }
 

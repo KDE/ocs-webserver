@@ -57,10 +57,9 @@ class Backend_StoreController extends Local_Controller_Action_Backend
             if (false === $resultWalk) {
                 throw new Exception('array_walk through input parameters failed.');
             }
-            $newRow = $this->_model->createRow($allParams);
-            $result = $newRow->save();
-
-            $this->initCache($result);
+            //$newRow = $this->_model->createRow($allParams);
+            //$result = $newRow->save();
+            $newRow = $this->_model->save($allParams);
 
             $jTableResult['Result'] = self::RESULT_OK;
             $jTableResult['Record'] = $newRow->toArray();

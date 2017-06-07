@@ -158,8 +158,7 @@ class Backend_StorecategoriesController extends Local_Controller_Action_Backend
         $startIndex = (int)$this->getParam('jtStartIndex');
         $pageSize = (int)$this->getParam('jtPageSize');
         $sorting = $this->getParam('jtSorting');
-        $filter['hostname'] = $this->getParam('filter_hostname');
-        $filter['category_id'] = $this->getParam('filter_category_id');
+        $filter['store_id'] = $this->getParam('filter_hostname');
 
         $select = $this->_model->select()->limit($pageSize, $startIndex);
         if ($sorting) {
