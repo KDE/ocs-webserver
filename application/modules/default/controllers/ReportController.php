@@ -59,17 +59,19 @@ class ReportController extends Zend_Controller_Action
                 $reported_by = (int) Zend_Auth::getInstance()->getStorage()->read()->member_id;
             }
 
-            $tableReportComments = new Default_Model_DbTable_ReportProducts();
+            $modelProduct = new Default_Model_Project();
+            $productData = $modelProduct->fetchRow(array('project_id = ?' => $project_id));
 
-            $tableReportComments->save(array('project_id' => $project_id, 'reported_by' => $reported_by));
-
+            if ($productData->spam_checked == 0) {
+                $tableReportComments = new Default_Model_DbTable_ReportProducts();
+                $tableReportComments->save(array('project_id' => $project_id, 'reported_by' => $reported_by));
+            }
             $session->reportedProducts[] = $project_id;
         }
 
         $this->_helper->json(array('status' => 'ok', 'message' => '<p>Thank you, we received your message.</p><div class="modal-footer">
                                             <button type="button" style="border:none;background: transparent;color: #2673b0;" class="small close" data-dismiss="modal" > Close</button>
                                         </div>', 'data' => array()));
-
     }
 
     public function memberAction()
