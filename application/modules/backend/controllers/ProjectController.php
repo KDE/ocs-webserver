@@ -46,164 +46,6 @@ class Backend_ProjectController extends Local_Controller_Action_Backend
 
     public function indexAction()
     {
-
-    }
-
-    public function createAction()
-    {
-        $jTableResult = array();
-        try {
-            $newRow = $this->_model->createRow($this->getAllParams());
-            $result = $newRow->save();
-
-            $jTableResult['Result'] = self::RESULT_OK;
-            $jTableResult['Record'] = $newRow->toArray();
-        } catch (Exception $e) {
-            Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . print_r($e, true));
-            $translate = Zend_Registry::get('Zend_Translate');
-            $jTableResult['Result'] = self::RESULT_ERROR;
-            $jTableResult['Message'] = $translate->_('Error while processing data.');
-        }
-
-        $this->_helper->json($jTableResult);
-    }
-
-    public function updateAction()
-    {
-        $jTableResult = array();
-        try {
-            $filterInput = new Zend_Filter_Input(
-                array(
-                    '*' => 'StringTrim',
-                    'project_id' => 'digits',
-                    'member_id' => 'digits',
-                    'project_category_id' => 'digits',
-                    'status' => 'digits',
-                    'pid' => 'digits',
-                    'type_id' => 'digits',
-                    'creator_id' => 'digits',
-                    'validated' => 'digits',
-                    'featured' => 'digits',
-                    'amount' => 'digits',
-                    'claimable' => 'digits',
-                    'claimed_by_member' => 'digits',
-                ),
-                array('*' => array()),
-                $this->getAllParams()
-            );
-
-            $record = $this->_model->save($filterInput->getEscaped());
-
-            $jTableResult = array();
-            $jTableResult['Result'] = self::RESULT_OK;
-            $jTableResult['Record'] = $record->toArray();
-        } catch (Exception $e) {
-            Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . print_r($e, true));
-            $translate = Zend_Registry::get('Zend_Translate');
-            $jTableResult['Result'] = self::RESULT_ERROR;
-            $jTableResult['Message'] = $translate->_('Error while processing data.');
-        }
-
-        $this->_helper->json($jTableResult);
-    }
-
-    public function deleteAction()
-    {
-        $dataId = (int)$this->getParam(self::DATA_ID_NAME, null);
-
-        $this->_model->setDeleted($dataId);
-
-        $product = $this->_model->find($dataId)->current();
-
-        $identity = Zend_Auth::getInstance()->getIdentity();
-        Default_Model_ActivityLog::logActivity($dataId, $dataId, $identity->member_id, Default_Model_ActivityLog::BACKEND_PROJECT_DELETE, $product);
-
-        // this will delete the product and request the ppload for deleting associated files
-        $command = new Backend_Commands_DeleteProductExtended($product);
-        $command->doCommand();
-
-        $jTableResult = array();
-        $jTableResult['Result'] = self::RESULT_OK;
-
-        $this->_helper->json($jTableResult);
-    }
-
-
-    public function dofeatureAction()
-    {
-        $auth = Zend_Auth::getInstance();
-        if ($auth->hasIdentity()) {
-            $identity = $auth->getIdentity();
-            $roleName = $identity->roleName;
-
-
-            if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $roleName) {
-                $projectId = (int)$this->getParam(self::DATA_ID_NAME, null);
-                $product = $this->_model->find($projectId)->current();
-
-                $featured = (int)$this->getParam(self::PARAM_FEATURED, null);
-                $product->featured = $featured;
-                $product->save();
-
-                Default_Model_ActivityLog::logActivity($projectId, $projectId, $identity->member_id, Default_Model_ActivityLog::BACKEND_PROJECT_FEATURE, $product);
-
-                $jTableResult = array();
-                $jTableResult['Result'] = self::RESULT_OK;
-
-                $this->_helper->json($jTableResult);
-            }
-        }
-
-        $jTableResult = array();
-        $jTableResult['Result'] = self::RESULT_ERROR;
-        $this->_helper->json($jTableResult);
-    }
-
-    public function doapproveAction()
-    {
-        $auth = Zend_Auth::getInstance();
-        if ($auth->hasIdentity()) {
-            $identity = $auth->getIdentity();
-            $roleName = $identity->roleName;
-
-            if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $roleName) {
-                $projectId = (int)$this->getParam(self::DATA_ID_NAME, null);
-                $product = $this->_model->find($projectId)->current();
-                $approved = (int)$this->getParam(self::PARAM_APPROVED, null);
-
-                $product->approved = $approved;
-                $product->save();
-
-                Default_Model_ActivityLog::logActivity($projectId, $projectId, $identity->member_id, Default_Model_ActivityLog::BACKEND_PROJECT_APPROVED, $product);
-
-                $jTableResult = array();
-                $jTableResult['Result'] = self::RESULT_OK;
-
-                $this->_helper->json($jTableResult);
-            }
-        }
-        $jTableResult = array();
-        $jTableResult['Result'] = self::RESULT_ERROR;
-        $this->_helper->json($jTableResult);
-    }
-
-
-    public function changecatAction()
-    {
-        $projectId = (int)$this->getParam(self::DATA_ID_NAME, null);
-        $catId = (int)$this->getParam('project_category_id', null);
-
-        $product = $this->_model->find($projectId)->current();
-        $product->project_category_id = $catId;
-        $product->save();
-
-        $identity = Zend_Auth::getInstance()->getIdentity();
-        Default_Model_ActivityLog::logActivity($projectId, $projectId, $identity->member_id, Default_Model_ActivityLog::BACKEND_PROJECT_CAT_CHANGE, $product);
-
-        $jTableResult = array();
-        $jTableResult['Result'] = self::RESULT_OK;
-
-        $this->_helper->json($jTableResult);
     }
 
     public function listAction()
@@ -249,7 +91,6 @@ class Backend_ProjectController extends Local_Controller_Action_Backend
                 } else {
                     $select->where("{$key} = ?", $value);
                 }
-
             }
         }
 
@@ -267,13 +108,90 @@ class Backend_ProjectController extends Local_Controller_Action_Backend
 
         $reports = $this->_model->fetchAll($select);
 
-        $reportsAll = $this->_model->fetchAll($select->limit(null,
-            null)->reset('columns')->columns(array('countAll' => new Zend_Db_Expr('count(*)'))));
+        $reportsAll = $this->_model->fetchAll($select->limit(null, null)->reset('columns')
+                                                     ->columns(array('countAll' => new Zend_Db_Expr('count(*)'))));
 
         $jTableResult = array();
         $jTableResult['Result'] = self::RESULT_OK;
         $jTableResult['Records'] = $reports->toArray();
         $jTableResult['TotalRecordCount'] = $reportsAll->current()->countAll;
+
+        $this->_helper->json($jTableResult);
+    }
+
+    public function createAction()
+    {
+        $jTableResult = array();
+        try {
+            $newRow = $this->_model->createRow($this->getAllParams());
+            $result = $newRow->save();
+
+            $jTableResult['Result'] = self::RESULT_OK;
+            $jTableResult['Record'] = $newRow->toArray();
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . print_r($e, true));
+            $translate = Zend_Registry::get('Zend_Translate');
+            $jTableResult['Result'] = self::RESULT_ERROR;
+            $jTableResult['Message'] = $translate->_('Error while processing data.');
+        }
+
+        $this->_helper->json($jTableResult);
+    }
+
+    public function updateAction()
+    {
+        $jTableResult = array();
+        try {
+            $filterInput = new Zend_Filter_Input(array(
+                '*'                   => 'StringTrim',
+                'project_id'          => 'digits',
+                'member_id'           => 'digits',
+                'project_category_id' => 'digits',
+                'status'              => 'digits',
+                'pid'                 => 'digits',
+                'type_id'             => 'digits',
+                'creator_id'          => 'digits',
+                'validated'           => 'digits',
+                'featured'            => 'digits',
+                'amount'              => 'digits',
+                'spam_checked'        => 'digits',
+                'claimable'           => 'digits',
+                'claimed_by_member'   => 'digits',
+            ), array('*' => array()), $this->getAllParams());
+
+            $record = $this->_model->save($filterInput->getEscaped());
+
+            $jTableResult = array();
+            $jTableResult['Result'] = self::RESULT_OK;
+            $jTableResult['Record'] = $record->toArray();
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . print_r($e, true));
+            $translate = Zend_Registry::get('Zend_Translate');
+            $jTableResult['Result'] = self::RESULT_ERROR;
+            $jTableResult['Message'] = $translate->_('Error while processing data.');
+        }
+
+        $this->_helper->json($jTableResult);
+    }
+
+    public function deleteAction()
+    {
+        $dataId = (int)$this->getParam(self::DATA_ID_NAME, null);
+
+        $this->_model->setDeleted($dataId);
+
+        $product = $this->_model->find($dataId)->current();
+
+        $identity = Zend_Auth::getInstance()->getIdentity();
+        Default_Model_ActivityLog::logActivity($dataId, $dataId, $identity->member_id,
+            Default_Model_ActivityLog::BACKEND_PROJECT_DELETE, $product);
+
+        // this will delete the product and request the ppload for deleting associated files
+        $command = new Backend_Commands_DeleteProductExtended($product);
+        $command->doCommand();
+
+        $jTableResult = array();
+        $jTableResult['Result'] = self::RESULT_OK;
 
         $this->_helper->json($jTableResult);
     }
@@ -301,5 +219,86 @@ class Backend_ProjectController extends Local_Controller_Action_Backend
         $this->_helper->json($jTableResult);
     }
 
+    public function dospamcheckedAction()
+    {
+        $id = (int) $this->getParam(self::DATA_ID_NAME);
+        $product = $this->_model->fetchRow(array('project_id = ?' => $id));
+        if (empty($product)) {
+            $jsonResult = array();
+            $jsonResult['Result'] = self::RESULT_ERROR;
+
+            $this->_helper->json($jsonResult);
+        }
+
+        $checked = (int) $this->getParam('checked');
+        $product->spam_checked = $checked;
+        $product->save();
+
+        $jsonResult = array();
+        $jsonResult['Result'] = self::RESULT_OK;
+        $jsonResult['spam_checked'] = $product->spam_checked;
+
+        $this->_helper->json($jsonResult);
+    }
+
+    public function dofeatureAction()
+    {
+        $projectId = (int)$this->getParam(self::DATA_ID_NAME, null);
+        $product = $this->_model->find($projectId)->current();
+
+        $featured = (int)$this->getParam(self::PARAM_FEATURED, null);
+        $product->featured = $featured;
+        $product->save();
+
+        $auth = Zend_Auth::getInstance();
+        $identity = $auth->getIdentity();
+        Default_Model_ActivityLog::logActivity($projectId, $projectId, $identity->member_id,
+            Default_Model_ActivityLog::BACKEND_PROJECT_FEATURE, $product);
+
+        $jTableResult = array();
+        $jTableResult['Result'] = self::RESULT_OK;
+
+        $this->_helper->json($jTableResult);
+    }
+
+    public function doapproveAction()
+    {
+        $projectId = (int)$this->getParam(self::DATA_ID_NAME, null);
+        $product = $this->_model->find($projectId)->current();
+        $approved = (int)$this->getParam(self::PARAM_APPROVED, null);
+
+        $product->approved = $approved;
+        $product->save();
+
+        $auth = Zend_Auth::getInstance();
+        $identity = $auth->getIdentity();
+        Default_Model_ActivityLog::logActivity($projectId, $projectId, $identity->member_id,
+            Default_Model_ActivityLog::BACKEND_PROJECT_APPROVED, $product);
+
+        $jTableResult = array();
+        $jTableResult['Result'] = self::RESULT_OK;
+
+        $this->_helper->json($jTableResult);
+    }
+
+
+    public function changecatAction()
+    {
+        $projectId = (int)$this->getParam(self::DATA_ID_NAME, null);
+        $catId = (int)$this->getParam('project_category_id', null);
+
+        $product = $this->_model->find($projectId)->current();
+        $product->project_category_id = $catId;
+        $product->save();
+
+        $identity = Zend_Auth::getInstance()->getIdentity();
+        Default_Model_ActivityLog::logActivity($projectId, $projectId, $identity->member_id,
+            Default_Model_ActivityLog::BACKEND_PROJECT_CAT_CHANGE, $product);
+
+        $jTableResult = array();
+        $jTableResult['Result'] = self::RESULT_OK;
+
+        $this->_helper->json($jTableResult);
+    }
 
 } 
