@@ -683,7 +683,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $form->addElement($mail);
 
         $bitcoinAddress = $form->createElement('text', 'wallet_address')
-            ->setLabel('Bitcoin: Public Wallet Address')
+            ->setLabel('Bitcoin: Your Public Wallet Address')
             ->setRequired(false)
             ->setDecorators(
                 array(
@@ -697,7 +697,12 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                             'placement' => false
                         )
                     )
-                ));
+                ))
+            ->addValidators(array(
+                  array('regex', false, array(
+                  'pattern'   => '/^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$/',
+                  'messages'  =>  'The Bitcoin Address is not valid.'))
+              ));
         $bitcoinAddress->setValue($valWalletAddress);
         $form->addElement($bitcoinAddress);
 
