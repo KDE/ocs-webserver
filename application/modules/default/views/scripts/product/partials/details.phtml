@@ -145,10 +145,7 @@ $userRoleName = $helperUserRole->userRole();
                 $.ajax({
                     url: target,
                     success: function (results) {
-                        if (results.spam_checked) {
-                            alert(results.spam_checked);
-                        }
-                        if (feature == 0) {
+                        if (0 == results.spam_checked) {
                             $('#spam-checked-checkbox').prop("checked", false);
                         } else {
                             $('#spam-checked-checkbox').prop("checked", true);
