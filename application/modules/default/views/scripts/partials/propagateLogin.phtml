@@ -8,6 +8,9 @@ if (isset($token) AND $modelSso->isValid($token)) :
 
     $urls = '';
     foreach ($store_config_list as $key => $item) {
+        if (empty($item['cross_domain_login'])) {
+            continue;
+        }
         $urls .= "'//{$key}/login/propagate/',";
     }
     $urls = substr($urls, 0, -1); ?>

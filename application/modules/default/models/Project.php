@@ -1147,7 +1147,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         $store_config = null;
         if (isset($store_id)) {
             $configurations = Zend_Registry::get('application_store_config_id_list');
-            $store_config = $configurations[$store_id];
+            $store_config = isset($configurations[$store_id]) ? $configurations[$store_id] : null;
         } else {
             $store_config = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
         }

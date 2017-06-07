@@ -634,7 +634,7 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
                                  count(project.project_category_id) AS product_counter
                                FROM
                                  project
-                               WHERE project.is_active = 1 AND project.is_deleted = 0 and project.type_id = 1
+                               WHERE project.status = 100 and project.type_id = 1
                                GROUP BY project.project_category_id) AS pc ON pc.project_category_id = o.project_category_id
                     WHERE o.lft BETWEEN p.lft AND p.rgt
                           AND o.lft BETWEEN n.lft AND n.rgt

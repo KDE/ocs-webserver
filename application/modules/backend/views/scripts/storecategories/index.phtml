@@ -19,12 +19,46 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
+$modelStores = new Default_Model_DbTable_ConfigStore();
+$hostnames = $modelStores->fetchHostnamesForJTable();
+$selectOptions = '';
+foreach ($hostnames as $element) {
+    $selectOptions .= '<option value='.$element['Value'].'>'.$element['DisplayText'].'</option>';
+}
 ?>
 <div class="messages">
     <?php foreach (Zend_Controller_Action_HelperBroker::getStaticHelper('flashMessenger')
                        ->getCurrentMessages() as $message) : ?>
         <p><?php echo $this->escape($message); ?></p>
     <?php endforeach; ?>
+</div>
+<div class="filtering well" style="width: 95%;">
+    <form>
+        <span style="margin-right: 0.9em;">filter hostname: <select name="filter_hostname" id="filter_hostname" required="required">
+                <?php echo $selectOptions ?>
+            </select></span>
+        <div style="display:inline-block; text-align: right;width: 100%;">
+            <button type="submit" id="LoadRecordsButton"><?= $this->translate('Load records'); ?></button>
+            <button type="reset" id="RemoveFilterButton"><?= $this->translate('Remove filter'); ?></button>
+        </div>
+    </form>
+    <script type="text/javascript">
+        //Re-load records when user click 'load records' button.
+        $('#LoadRecordsButton').click(function (e) {
+            e.preventDefault();
+            $('#TableContainer').jtable('load', {
+                filter_hostname: $('#filter_hostname').val()
+            });
+        });
+
+        //Re-load records when user click 'remove filter' button.
+        $('#RemoveFilterButton').click(function (e) {
+            e.preventDefault();
+            $('#TableContainer').jtable('load', {
+                filter_hostname: null,
+            });
+        });
+    </script>
 </div>
 <div id="TableContainer"></div>
 <script type="text/javascript">
