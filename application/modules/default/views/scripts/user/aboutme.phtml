@@ -57,8 +57,13 @@ $textCountryCity .= $this->member->country ? ', ' . $this->member->country : '';
     .about-me-page .head-wrap{    
        background: linear-gradient(to top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.85) 100%),  url('<?php echo  $this->member->profile_image_url_bg==null ?"/images/system/1-opendesktop-bg.png": $helperImage->Image($this->member->profile_image_url_bg,array('width' => 1900, 'height' => 450, 'crop' => 2)); ?>')  no-repeat ;
        background-size:cover;
-  
+       /*background-position: center;  */
+       height: 450px;
     }
+
+    
+
+
     .about-me-page .header .summary article{
         background: transparent;
     }
