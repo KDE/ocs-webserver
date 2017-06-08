@@ -115,7 +115,7 @@
                             <hr/>
                             <a href="/backend/user/delete?member_id=<?=$this->product['member_id']?>" class="delete-this" data-title="Delete this member and all his products and comments?">delete user</a>
                             <hr/>
-                            <a href="/backend/reportproducts/deletereports?p=<?=$this->product['project_id']?>" class="delete-this" data-title="Reset reports and make product visible again?">delete reports (<?=$this->product['amount_reports']?>)</a>
+                            <a href="/backend/reportproducts/nospam?p=<?=$this->product['project_id']?>" class="delete-this" data-title="Reset reports and set product spam checked?">delete reports (<?=$this->product['amount_reports']?>)</a>
                         </div>
                         <?php
                             $this->rownum++;

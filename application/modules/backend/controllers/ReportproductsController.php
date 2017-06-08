@@ -111,6 +111,23 @@ class Backend_ReportProductsController extends Local_Controller_Action_Backend
         $this->_helper->json($jTableResult);
     }
 
+    public function nospamAction()
+    {
+        $projectId = (int)$this->getParam('p', null);
+
+        $dataModel = new Backend_Model_Reports();
+
+        $result = $dataModel->setDelete($projectId);
+
+        $modelProducts = new Default_Model_DbTable_Project();
+        $modelProducts->setSpamChecked($projectId, Default_Model_DbTable_Project::PROJECT_SPAM_CHECKED);
+
+        $jTableResult = array();
+        $jTableResult['Result'] = self::RESULT_OK;
+
+        $this->_helper->json($jTableResult);
+    }
+
     public function listAction()
     {
         $startIndex = (int)$this->getParam('jtStartIndex');
