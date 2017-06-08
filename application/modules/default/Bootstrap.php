@@ -946,6 +946,18 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 )
             )
         );
+        $router->addRoute(
+            'ocs_v1_content_previewpic_contentid',
+            new Zend_Controller_Router_Route(
+                '/ocs/v1/content/previewpic/:contentid',
+                array(
+                    'module'     => 'default',
+                    'controller' => 'ocsv1',
+                    'action'     => 'contentpreviewpic'
+                )
+            )
+        );
+
         $cache->save($router, 'ProjectRouter', array('router'), 14400);
     }
 

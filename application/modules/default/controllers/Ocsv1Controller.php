@@ -79,6 +79,16 @@
  * download_package_type
  * download_package_arch
  * download_ghns
+ *
+ * ----
+ *
+ * Additional API method for preview picture
+ *
+ * /content/previewpic/{contentid}
+ *
+ * Example:
+ * /content/previewpic/123456789
+ * /content/previewpic/123456789?size=medium
  */
 class Ocsv1Controller extends Zend_Controller_Action
 {
@@ -1694,6 +1704,53 @@ class Ocsv1Controller extends Zend_Controller_Action
             );
         }
         $this->_sendResponse($response, $this->_format);
+    }
+
+    public function contentpreviewpicAction()
+    {
+        if (!$this->_authenticateUser()) {
+            //$this->_sendErrorResponse(999, '');
+        }
+
+        $project = null;
+
+        if ($this->getParam('contentid')) {
+            $tableProject = new Default_Model_Project();
+            $project = $tableProject->fetchRow(
+                $tableProject->select()
+                    ->where('project_id = ?', $this->getParam('contentid'))
+                    ->where('status = ?', Default_Model_Project::PROJECT_ACTIVE)
+            );
+        }
+
+        if (!$project) {
+            //$this->_sendErrorResponse(101, 'content not found');
+            header('Location: ' . $this->_config['icon']);
+            exit;
+        }
+
+        $viewHelperImage = new Default_View_Helper_Image();
+        $previewPicSize = array(
+            'width'  => 100,
+            'height' => 100
+        );
+
+        if (!empty($this->_params['size'])
+            && strtolower($this->_params['size']) == 'medium'
+        ) {
+            $previewPicSize = array(
+                'width'  => 770,
+                'height' => 540
+            );
+        }
+
+        $previewPicUri = $viewHelperImage->Image(
+            $project->image_small,
+            $previewPicSize
+        );
+
+        header('Location: ' . $previewPicUri);
+        exit;
     }
 
 }
