@@ -28,14 +28,16 @@ $helperPrintDate = new Default_View_Helper_PrintDate();
 ?>
 <div class="tab-content" id="my-comments-tabs">
     <div id="my-comments-tabs-content">
+    
     <small class="pull-right">
-        <div class="row rownomargin rownopadding pull-right"><?=$this->comments->getTotalItemCount()?> comments</div>
+        <?php /*<div class="row rownomargin rownopadding pull-right"><?=$this->comments->getTotalItemCount()?> comments</div>*/?>       
         <?php
         if ($pageCount > 1) {
             echo $this->paginationControl($this->comments, 'Sliding', '/partials/paginationControlBootstrap.phtml', array('params' => array(), 'dom_target' => 'div#my-comments-tabs-content'));
         }
         ?>
-    </small>        
+    </small> 
+    
     <?php foreach ($this->comments as $elementComment): ?>
         <div class="row rownomargin" >
             <?= $elementComment['title'] ?>

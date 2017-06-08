@@ -348,32 +348,32 @@ $this->updates = $tableProjectUpdates->fetchProjectUpdates($this->product->proje
                         </script>
                         <script src="https://apis.google.com/js/platform.js" async defer></script>
 
-                        <?php if (empty($this->product->claimable)) { ?>
-                            <div class="prod-widget-box prod-user right ">
-                                <div class="sidebar-content">
-                                    <div class="product-maker-sidebar">
-                                        <div class="product-maker-thumbnail relative">
-                                            <a href="<?php echo $helpMemberUrl->buildMemberUrl($this->product->member_id); ?>"
-                                               title="<?= $this->product->username ?>">
-                                                <div class="profile-image-overlay-4 absolute"></div>
-                                                <img src="<?= $helpImage->Image($this->product->profile_image_url,
-                                                    array('width' => 80, 'height' => 80)) ?>"
-                                                     alt="product-maker" width="15" height="15"
-                                                     class="sidebar-profile-image">
+                        
+                        <div class="prod-widget-box prod-user right ">
+                            <div class="sidebar-content">
+                                <div class="product-maker-sidebar">
+                                    <div class="product-maker-thumbnail relative">
+                                        <a href="<?php echo $helpMemberUrl->buildMemberUrl($this->product->member_id); ?>"
+                                           title="<?= $this->product->username ?>">
+                                            <div class="profile-image-overlay-4 absolute"></div>
+                                            <img src="<?= $helpImage->Image($this->product->profile_image_url,
+                                                array('width' => 80, 'height' => 80)) ?>"
+                                                 alt="product-maker" width="15" height="15"
+                                                 class="sidebar-profile-image">
+                                        </a>
+                                    </div>
+                                    <div class="product-maker-summary">
+                                        <h5>
+                                            <a href="<?php echo $helpMemberUrl->buildMemberUrl($this->product->member_id); ?>">
+                                                <?= $this->product->username; ?>
                                             </a>
-                                        </div>
-                                        <div class="product-maker-summary">
-                                            <h5>
-                                                <a href="<?php echo $helpMemberUrl->buildMemberUrl($this->product->member_id); ?>">
-                                                    <?= $this->product->username; ?>
-                                                </a>
-                                            </h5>
+                                        </h5>
 
-                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        <?php } ?>
+                        </div>
+                        
 
                         <?php echo $this->render('partials/sidebarRating.phtml'); ?>
 
