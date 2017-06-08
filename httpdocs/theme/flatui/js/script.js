@@ -59,7 +59,6 @@ var ImagePreview =  {
             this.initProductPicture();
             this.initTitlePicture();
             this.initProfilePicture();
-            this.initProfilePictureBackground();
         },
         previewImage: function (input, img_id) {
             if (input.files && input.files[0]) {
@@ -116,41 +115,6 @@ var ImagePreview =  {
                     } else if (img_id == 'profile-picture-preview') {
                         $('button#add-profile-picture').text('CHANGE PICTURE');
                         $('input#profile_img_src').val('local');
-                    }else if (img_id == 'profile-picture-bg-preview') {
-                        $('button#add-profile-picture-background').text('CHANGE PICTURE');                       
-                    }
-                };
-            }
-        },
-        previewImageMember: function (input, img_id) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-                var image = new Image();
-                var file = input.files[0];
-
-                reader.readAsDataURL(input.files[0]);
-                reader.onload = function (_image) {
-
-                    var image_element = $('#' + img_id);
-
-                    image.src = _image.target.result;              // url.createObjectURL(file);
-                    image.onload = function () {                       
-                        ImagePreview.hasError = false;
-                        
-                        image_element.parent().find('.image-error').remove();
-                        
-                        if (false == ImagePreview.hasError) {                            
-                            image_element.attr('src', _image.target.result);
-                            image_element.show();
-                        }
-                    };
-
-                    image.onerror = function () {
-                        image_element.parent().append('<div class="image-error">Invalid file type</div>');
-                    };
-                  
-                    if (img_id == 'profile-picture-background-preview') {
-                        $('button#add-profile-picture-background').text('CHANGE PICTURE');                       
                     }
                 };
             }
@@ -213,19 +177,6 @@ var ImagePreview =  {
             $('#profile-picture').attr('src', $('#profile_image_url').attr('value'));
             $(imageTarget).show();
             $('button#add-profile-picture').text('CHANGE PICTURE');
-        },
-        initProfilePictureBackground: function () {
-            if ($('#profile_image_url_bg').length == 0) {
-                return;
-            }
-            if ($('#profile_image_url_bg').attr('value').length == 0) {
-                return;
-            }            
-            var imageTarget = $('#profile_image_url_bg').data('target');
-            $(imageTarget).attr('src', $('#profile_image_url_bg').attr('value'));           
-            $('#profile-picture-background-preview').attr('src', $('#profile_image_url_bg').attr('value'));
-            $(imageTarget).show();
-            $('button#add-profile-picture-background').text('CHANGE PICTURE');
         }
     };
 
@@ -758,27 +709,6 @@ var PartialFormsAjax = (function () {
     }
 })();
 
-
-var PartialFormsAjaxMemberBg = (function () {
-    return {
-        setup: function () {
-            var form = $('form.partialajaxbg');
-            var target = form.attr("data-target");
-            var trigger = form.attr("data-trigger");
-
-            form.ajaxForm({
-                error: function () {
-                    $(target).empty().html("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
-                },
-                success: function (results) {
-                    $(target).empty().html(results);
-                    $(target).find(trigger).trigger('click');
-                }
-            });
-        }
-    }
-})();
-
 var AjaxForm = (function () {
     return {
         setup: function (idElement, idTargetElement) {
@@ -902,9 +832,20 @@ var RssNews = (function () {
                               +'<br/><span class="date">'+m.format('MMM DD YYYY LT')+'</span></div>';                           
                             }); 
                    $("#rss-feeds").html(crss);
-             });                                                                      
+             });     
+
+             
+              /*
+             let rssurl = 'https://blog.opendesktop.org/feed/';
+              $("#rss-feeds").rss(rssurl,{
+                 limit: 3,                
+                 entryTemplate:'<div class="commentstore"><a href="{url}"><span class="title">{title}</span></a><br/>{bodyPlain} <br/><span class="date">{date}</span></div>',                               
+                 dateFormat: 'MMM DD YYYY LT'
+                 
+             });
+             */
+             
         }
-        
     }
 })();
 
@@ -949,25 +890,6 @@ var ProductDetailCarousel = (function () {
                   $("#product-main-img-container").toggleClass("imgsmall");
                 });
             });
-        }
-    }
-})();
-
-var Metaheader = (function () {
-    return {
-        setup: function () {                                             
-            $('body').on('click', '#toggleStoreBtn', function (event) {
-                event.stopPropagation();
-                //$( "#toggleStoreContainer" ).slideToggle( "slow" );
-                $( "#toggleStoreContainer" ).toggle();
-            }).click(function () {
-                let t = $('#toggleStoreContainer');
-                if(t.css('display') == 'block'){
-                 //t.slideToggle( "slow" );
-                 t.toggle();
-               }  
-            });
-
         }
     }
 })();

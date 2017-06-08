@@ -34,69 +34,6 @@ $textCountryCity = $this->member->city;
 $textCountryCity .= $this->member->country ? ', ' . $this->member->country : '';
 
 ?>
-<style type="text/css">
-    .about-me-page .header .summary article .about-title{
-        height: 100%;
-        padding:0px;
-        text-align:center;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        background: transparent;
-        color:#fff;
-    }
-    .about-me-page .header .summary article .about-title figure{
-        position: relative;
-        display: block;
-        top: 0;
-        left: 0;
-        margin: 0 auto;
-    }
-    .about-me-page .header .summary article .about-title h1{
-        margin:0px;
-    }
-    .about-me-page .head-wrap{    
-       background: linear-gradient(to top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.85) 100%),  url('<?php echo  $this->member->profile_image_url_bg==null ?"/images/system/1-opendesktop-bg.png": $helperImage->Image($this->member->profile_image_url_bg,array('width' => 1900, 'height' => 450, 'crop' => 2)); ?>')  no-repeat ;
-       background-size:cover;
-       /*background-position: center;  */
-       height: 450px;
-    }
-
-    
-
-
-    .about-me-page .header .summary article{
-        background: transparent;
-    }
-    .about-me-page .header .summary article .about-title{
-        border: 0px;
-    }
-    .about-me-page div.timeinfo{
-        font-size: 12px;
-        padding-top: 30px;
-
-    }
-    .about-me-page div.timeinfo span.label-timeinfo{
-        font-weight: 700;      
-        padding-left: 10px;  
-    }
-
-    .about-me-page aside .well{
-        background-color: #fff;
-        border-radius: 0;
-    }
-    .about-me-page aside .col-container{
-        padding: 20px;
-    }
-    .about-me-page .tab-content{
-        margin-top: 20px;
-    }
-
-    .about-me-page .header article.membercontainer{
-        width: 100%;
-        height:375px;
-    }
-
-</style>
     <main class="about-me-page">
 
         <section class="head-wrap">
@@ -104,14 +41,21 @@ $textCountryCity .= $this->member->country ? ', ' . $this->member->country : '';
             <!-- HEADER -->
 
             <section class="wrapper">
-                
+
+                <div class="page-title">
+                    <div class="center">
+                        <div><h1>Member</h1></div>
+                    </div>
+                    <hr/>
+                </div>
+ 
                 <!-- banner -->
 
                 <section class="header">
 
                     <!-- about me summary -->
                     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 summary" >
-                        <article class="membercontainer" >
+                        <article class="well" style="width: 100%">
                             <div class="about-title">
                                 <figure class="relative inline profile-image-container">
                                     <img src="<?php echo $helperImage->Image($this->member->profile_image_url,array('width' => 110, 'height' => 110, 'crop' => 2)); ?>"
@@ -129,13 +73,42 @@ $textCountryCity .= $this->member->country ? ', ' . $this->member->country : '';
                                 <span class="glyphicon glyphicon-map-marker"></span>
                                 <span class="text"><?php echo $textCountryCity ?></span>
                                <?php endif; ?>
-                               <div class="row timeinfo">                                     
-                                       <span class="label-timeinfo">Joined : </span><?=$helperPrintDate->printDate($this->member->created_at);?>
-                                       <span class="label-timeinfo">Last time active :</span> <?=$helperPrintDate->printDate($this->stat['userLastActiveTime'])?>                                        
+                            </div>
+                            <div class="about-footer">                                                            
+                             
+                               
+
+                            <div class="col-container" >
+                            <div class="details stat" >
+                                <h3>Statistics</h3>
+                                <div  class="statContent" >
+                                    <div class="row ">
+                                       <span class="cnt"><?=$this->stat['cntProducts']?> </span> Products
+                                    </div>
+                                    <div class="row">
+                                       <span class="cnt"><?=$this->stat['cntComments']?> </span> Comments
+                                    </div>
+                                     <div class="row">
+                                       <span class="cnt"><?=$this->stat['cntPageviews']?> </span> Pageviews
+                                    </div>
+                                     <div class="row">
+                                       <span class="cnt"><?=$this->stat['cntSupporters']?> </span> Supporters
+                                    </div>
+                                     <div class="row">
+                                     
+                                       <span class="">Last time active : <?=$helperPrintDate->printDate($this->stat['userLastActiveTime'])?> </span> 
+                                    </div>
+                                     <div class="row">                                                                            
+                                        <span class="text">Joined : <?=$helperPrintDate->printDate($this->member->created_at);?></span>                                       
+                                    </div>
+                                    
+                                   
                                 </div>
                             </div>
-                          
+                        </div>
 
+                             
+                            </div>
                             <?php
                             $helperUserRole = new Backend_View_Helper_UserRole();
                             $userRoleName = $helperUserRole->userRole();
@@ -182,7 +155,7 @@ $textCountryCity .= $this->member->country ? ', ' . $this->member->country : '';
 
         </section>
 
-        <section class="body-wrap" style="padding-top: 20px">
+        <section class="body-wrap">
 
             <section class="wrapper">
                
@@ -193,19 +166,16 @@ $textCountryCity .= $this->member->country ? ', ' . $this->member->country : '';
 
                     <!-- page content -->
 
-                    <div class="col-md-9 col-lg-9 col-sm-9 col-xs-12 about-me-details">
+                    <div class="col-md-8 col-lg-8 col-sm-8 col-xs-12 about-me-details">
 
                         <!-- tabs nav -->
-                        <div class="pling-nav-tabs">
                         <ul class="nav nav-tabs" role="tablist">
                             <li role="presentation" class="active">
                                 <a href="#user-aboutme" data-toggle="tab" role="tab"  aria-controls="user-aboutme" >
                                     Products<?=($this->stat['cntProducts']>0?' ('.$this->stat['cntProducts'].') ':'')?>
                                 </a>
                             </li>
-                             
-                            <?php /*
-                             <li>
+                              <li>
                                 <a href="#user-donations" data-toggle="tab" role="tab"  aria-controls="user-donations">
                                     Supported by<?=($this->stat['cntSupporters']>0?' ('.$this->stat['cntSupporters'].') ':'')?>
                                 </a>
@@ -215,6 +185,7 @@ $textCountryCity .= $this->member->country ? ', ' . $this->member->country : '';
                                     Supporter of<?=(count($this->supportingTeaser)>0?' ('.count($this->supportingTeaser).') ':'')?>
                                 </a>
                             </li>
+                            <?php /*
                             <li>
                                 <a href="#user-fans" data-toggle="tab" role="tab"  aria-controls="user-fans">
                                     Fan of<?=(count($this->followedProducts)>0?' ('.count($this->followedProducts).') ':'')?>
@@ -230,12 +201,11 @@ $textCountryCity .= $this->member->country ? ', ' . $this->member->country : '';
                             
                           
                         </ul>
-                        </div>
                         <!-- /tabs nav -->
 
                         <!-- tab panels -->
 
-                        <div class="tab-content" >
+                        <div class="tab-content">
 
                             <div role="tabpanel" class="tab-pane active" id="user-aboutme">
 
@@ -333,7 +303,7 @@ $textCountryCity .= $this->member->country ? ', ' . $this->member->country : '';
                     <!-- side bar -->
 
 
-                    <aside class="col-md-3 col-lg-3 col-sm-3 col-xs-12">
+                    <aside class="col-md-4 col-lg-4 col-sm-4 col-xs-12">
                         <div class="col-container">
                             <div class="well details about">
                                 <h3>About me</h3>
