@@ -32,7 +32,7 @@
 
 <div class="panel-collapse collapse" id="picture-bg-collapse">
     <div class="panel-body">
-        <form class="standard-form partialajax well" action="<?= $this->pictureformbg->getAction(); ?>"
+        <form class="standard-form partialajaxbg well" action="<?= $this->pictureformbg->getAction(); ?>"
               method="<?= $this->pictureformbg->getMethod(); ?>" data-target="#form-picture-background"
               data-trigger="#picture-background-trigger" enctype="multipart/form-data">
             <div class="row">
@@ -46,11 +46,7 @@
                         <p>
                             <em class="icon info-icon"></em>
                         </p>
-
-                        <p class="italic">
-                            <?= $this->translate('Maximum picture size<br> is 1024 x 1024 px') ?>
-                        </p>
-
+                      
                         <p class="italic">
                             <?= $this->translate('You can use <br><span class="purple">JPG, PNG, GIF</span> formats') ?>
                         </p>
@@ -74,6 +70,6 @@
 <script type="text/javascript">
     $(document).ready(function () {
         ImagePreview.initProfilePictureBackground();
-        PartialFormsAjax.setup();
+        PartialFormsAjaxMemberBg.setup();
     });
 </script>

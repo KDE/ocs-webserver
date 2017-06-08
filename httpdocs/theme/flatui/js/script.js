@@ -59,7 +59,7 @@ var ImagePreview =  {
             this.initProductPicture();
             this.initTitlePicture();
             this.initProfilePicture();
-            //this.initProfilePictureBackground();
+            this.initProfilePictureBackground();
         },
         previewImage: function (input, img_id) {
             if (input.files && input.files[0]) {
@@ -134,21 +134,11 @@ var ImagePreview =  {
                     var image_element = $('#' + img_id);
 
                     image.src = _image.target.result;              // url.createObjectURL(file);
-                    image.onload = function () {
-                        var w = this.width,
-                            h = this.height,
-                            t = file.type,                           // ext only: // file.type.split('/')[1],
-                            n = file.name,
-                            s = ~~(file.size / 1024); // + 'KB'
+                    image.onload = function () {                       
                         ImagePreview.hasError = false;
                         
                         image_element.parent().find('.image-error').remove();
-                        if (s > 2000) {
-                            image_element.parent().append('<div class="image-error">File too large</div>');                           
-                            ImagePreview.hasError = true;
-
-                            $('button#add-profile-picture-background').text('CHANGE PICTURE');   
-                        }
+                        
                         if (false == ImagePreview.hasError) {                            
                             image_element.attr('src', _image.target.result);
                             image_element.show();
@@ -230,10 +220,10 @@ var ImagePreview =  {
             }
             if ($('#profile_image_url_bg').attr('value').length == 0) {
                 return;
-            }
+            }            
             var imageTarget = $('#profile_image_url_bg').data('target');
-            $(imageTarget).attr('src', $('#profile_image_url_bg').attr('value'));
-            $('#profile-background-picture').attr('src', $('#profile_image_url_bg').attr('value'));
+            $(imageTarget).attr('src', $('#profile_image_url_bg').attr('value'));           
+            $('#profile-picture-background-preview').attr('src', $('#profile_image_url_bg').attr('value'));
             $(imageTarget).show();
             $('button#add-profile-picture-background').text('CHANGE PICTURE');
         }
@@ -752,6 +742,27 @@ var PartialFormsAjax = (function () {
     return {
         setup: function () {
             var form = $('form.partialajax');
+            var target = form.attr("data-target");
+            var trigger = form.attr("data-trigger");
+
+            form.ajaxForm({
+                error: function () {
+                    $(target).empty().html("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+                },
+                success: function (results) {
+                    $(target).empty().html(results);
+                    $(target).find(trigger).trigger('click');
+                }
+            });
+        }
+    }
+})();
+
+
+var PartialFormsAjaxMemberBg = (function () {
+    return {
+        setup: function () {
+            var form = $('form.partialajaxbg');
             var target = form.attr("data-target");
             var trigger = form.attr("data-trigger");
 

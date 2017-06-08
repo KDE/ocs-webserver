@@ -413,17 +413,17 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
             ->setAttrib('class', 'product-picture')
             ->setAttrib('onchange', 'ImagePreview.previewImageMember(this, \'profile-picture-background-preview\');')
             ->setTransferAdapter(new Local_File_Transfer_Adapter_Http())
-            ->setMaxFileSize(2097152)
+            //->setMaxFileSize(2097152)
             ->addValidator('Count', false, 1)
-            ->addValidator('Size', false, array('min' => '5kB', 'max' => '2MB'))
+            //->addValidator('Size', false, array('min' => '5kB', 'max' => '2MB'))
             ->addValidator('Extension', false, $imageTable->getAllowedFileExtension())
-            ->addValidator('ImageSize', false,
-                array(
-                    'minwidth' => 20,
-                    'maxwidth' => 1024,
-                    'minheight' => 20,
-                    'maxheight' => 1024
-                ))
+            // ->addValidator('ImageSize', false,
+            //     array(
+            //         'minwidth' => 20,
+            //         'maxwidth' => 1024,
+            //         'minheight' => 20,
+            //         'maxheight' => 1024
+            //     ))
             ->addValidator('MimeType', false, $imageTable->getAllowedMimeTypes());
 
         $form->addElement($productPicture);        
