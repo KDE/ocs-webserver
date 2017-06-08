@@ -56,7 +56,7 @@ class FileController extends Zend_Controller_Action
     private function getFilenameFromUrl($getParam)
     {
         $url = parse_url($getParam);
-        return basename($url['path']);
+        return isset($url['path']) ? basename($url['path']) : 'link';
     }
 
     private function validateGithubLink($getParam)
