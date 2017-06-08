@@ -1041,7 +1041,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                 }
                 
                 if (isset($newImageName)) {                    
-                    $this->_memberSettings->profile_image_url_bg = IMAGES_MEDIA_SERVER . '/cache/200x200-2/img/' . $newImageName;
+                    $this->_memberSettings->profile_image_url_bg = IMAGES_MEDIA_SERVER . '/cache/300x1900-2/img/' . $newImageName;
                 }
                
                 $this->_memberSettings->save();
