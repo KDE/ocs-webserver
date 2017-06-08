@@ -1194,6 +1194,13 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
 
             if ($form->isValid($_POST)) {
                 $values = $form->getValues();
+                //If the user changes the paypal address, we set the valid staus back to null
+                if($this->_memberSettings->paypal_mail != $values['paypal_mail']) {
+                	$showMember = $this->_memberTable->find($this->_memberId)->current();
+                	$showMember->paypla_valid_status = null;
+                	$this->_memberTable->save($showMember);
+                	$this->view->member = $showMember;
+                }
 
                 $this->_memberSettings->paypal_mail = $values['paypal_mail'];
                 $this->_memberSettings->wallet_address = $values['wallet_address'];

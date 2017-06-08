@@ -187,7 +187,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         );
 
         $this->allow(self::ROLENAME_COOKIEUSER, 'default_file', array(
-            'gitlink',
+            'gitlink','link',
         ), new Default_Plugin_Acl_IsProjectOwnerAssertion());
 
         // resource default_user
