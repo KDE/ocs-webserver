@@ -1197,7 +1197,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                 //If the user changes the paypal address, we set the valid staus back to null
                 if($this->_memberSettings->paypal_mail != $values['paypal_mail']) {
                 	$showMember = $this->_memberTable->find($this->_memberId)->current();
-                	$showMember->paypla_valid_status = null;
+                	$showMember->paypal_valid_status = null;
                 	$this->_memberTable->save($showMember);
                 	$this->view->member = $showMember;
                 }
