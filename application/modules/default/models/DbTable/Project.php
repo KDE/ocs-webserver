@@ -36,6 +36,8 @@ class Default_Model_DbTable_Project extends Local_Model_Table
     const PROJECT_CLAIMABLE = 1;
     const PROJECT_DEFAULT = null;
     const MYSQL_DATE_FORMAT = "Y-m-d H:i:s";
+    const PROJECT_SPAM_CHECKED = 1;
+    const PROJECT_SPAM_UNCHECKED = 0;
 
     protected $_keyColumnsForRow = array('project_id');
     protected $_key = 'project_id';
@@ -120,6 +122,12 @@ class Default_Model_DbTable_Project extends Local_Model_Table
         } else {
             return false;
         }
+    }
+
+    public function setSpamChecked($projectId, $spamChecked = 1)
+    {
+        $sql = "update {$this->_name} set spam_checked = :spam_checked where project_id = :project_id";
+        $this->_db->query($sql, array('spam_checked' => $spamChecked, 'project_id' => $projectId))->execute();
     }
 
 }

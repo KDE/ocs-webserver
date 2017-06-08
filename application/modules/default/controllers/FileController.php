@@ -25,6 +25,20 @@
 class FileController extends Zend_Controller_Action
 {
 
+    public function linkAction()
+    {
+        if(false == $this->validateLink($this->getParam('u'))) {
+            $this->_helper->json(false);
+        }
+        $modelPpLoad = new Default_Model_PpLoad();
+        $project_id = (int) $this->getParam('project_id');
+        $url = $this->getParam('u');
+        $filename = $this->getParam('fn') ? $this->getParam('fn') : $this->getFilenameFromUrl($this->getParam('u'));
+        $fileDescription = $this->getParam('fd');
+        $result = $modelPpLoad->uploadEmptyFileWithLink($project_id, $url, $filename, $fileDescription);
+        $this->_helper->json($result);
+    }
+
     public function gitlinkAction()
     {
         if(false == $this->validateGithubLink($this->getParam('u'))) {
@@ -42,7 +56,7 @@ class FileController extends Zend_Controller_Action
     private function getFilenameFromUrl($getParam)
     {
         $url = parse_url($getParam);
-        return basename($url['path']);
+        return isset($url['path']) ? basename($url['path']) : 'link';
     }
 
     private function validateGithubLink($getParam)
@@ -50,6 +64,14 @@ class FileController extends Zend_Controller_Action
         /** regex tested in https://regex101.com/r/VFsvSd/1 */
         $validate = new Zend_Validate_Regex('/^https:\/\/(?:(?:(?:www\.)?github)?|(?:raw\.githubusercontent)?)\.com\/.+$/');
         return $validate->isValid($getParam);
+    }
+
+    private function validateLink($getParam)
+    {
+        // However, you can allow "unwise" characters
+        Zend_Uri::setConfig(array('allow_unwise' => true));
+
+        return Zend_Uri::check($getParam);
     }
 
 }
