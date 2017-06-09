@@ -1371,7 +1371,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         } else {
             $this->view->widgetConfig = $widgetDefault;
             $productModel = new Default_Model_Project();
-            $this->view->product = $productModel->fetchProductInfo($widgetProjectId);
+            $this->view->product = $productModel->fetchProductDataFromMV($widgetProjectId);
             $this->view->supporting = $productModel->fetchProjectSupporterWithPlings($widgetProjectId);
             $plingModel = new Default_Model_DbTable_Plings();
             $this->view->comments = $plingModel->getCommentsForProject($widgetProjectId, 10);
