@@ -1761,4 +1761,15 @@ class Default_Model_Project extends Default_Model_DbTable_Project
 
     }
 
+    public function fetchProductDataFromMV($project_id)
+    {
+        $sql = "SELECT * FROM stat_projects WHERE project_id = :project_id";
+        $resultSet = $this->_db->query($sql, array('project_id'=>$project_id))->fetch();
+        if (false === $resultSet) {
+            return $this->generateRowClass(array());
+        }
+
+        return $this->generateRowClass($resultSet);
+    }
+
 }

@@ -45,7 +45,7 @@ class WidgetController extends Zend_Controller_Action
 
         $this->view->widgetConfig = $widgetConfig;
         $productModel = new Default_Model_Project();
-        $this->view->project = $productModel->fetchProductInfo($widgetProjectId);
+        $this->view->project = $productModel->fetchProductDataFromMV($widgetProjectId);
         if (is_null($this->view->project)) {
             throw new Zend_Controller_Action_Exception('This page does not exist', 404);
         }
