@@ -1075,6 +1075,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                 	//$showMember->paypal_valid_status = null;
                 	//$this->_memberTable->save($showMember);
                 	//$this->view->member = $showMember;
+                    $this->_memberTable->update(array('paypal_valid_status' => NULL), 'member_id = '. $this->_memberId);
                 }
 
                 $this->_memberSettings->paypal_mail = $values['paypal_mail'];
