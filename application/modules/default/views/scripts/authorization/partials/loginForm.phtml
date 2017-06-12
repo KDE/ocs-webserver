@@ -44,9 +44,9 @@
             $this->formLogin->mail->class = $this->formLogin->mail->class . ' has-error';
         }
         ?>
-        <?= $this->formLogin->mail ?>
-        <?= $this->formLogin->password ?>
-        <?= $this->formLogin->remember_me ?>
+        <?= $this->formLogin->mail->setAttrib('placeholder', 'Email or Username')->setAttrib('class', 'inputbox email')->setAttrib('required','required') ?>
+        <?= $this->formLogin->password->setAttrib('placeholder', 'Password')->setAttrib('class', 'inputbox password')->setAttrib('required', 'required') ?>
+        <?= $this->formLogin->remember_me->setAttrib('class', 'btn btn-min-width btn-native')->setAttrib('type', 'submit'); ?>
         <?php /*$this->formLogin->login */ ?>
         <button name="<?= $this->formLogin->login->getName() ?>" id="<?= $this->formLogin->login->getId() ?>" type="submit" class="btn btn-min-width btn-native"><?= $this->formLogin->login->getLabel() ?> <i id="load-state" class="fa fa-spinner fa-pulse hidden" aria-hidden="true"></i></button>
     </form>
