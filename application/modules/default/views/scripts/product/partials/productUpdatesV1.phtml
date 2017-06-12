@@ -21,7 +21,7 @@
  **/
 
 $helperHumanTiming = new Default_View_Helper_HumanTiming();
-$date = $helperHumanTiming->humanTiming($this->productUpdate['changed_at']);
+$date = $helperHumanTiming->humanTiming($this->productUpdate['created_at']);
 $helpBBCode = new Default_View_Helper_Bbcode2html();
 ?>
 <a name="anker_<?= $this->productUpdate['project_update_id'] ?>"></a>
