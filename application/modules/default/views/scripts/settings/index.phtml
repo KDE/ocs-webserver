@@ -196,6 +196,16 @@ $this->tab = 'settings';
 </main>
 
 
+<script>
+    $(document).ready(function(){
+        if(document.location.hash) {            
+            let hash = $(document.location.hash);
+            $('a[href="'+document.location.hash+'"]').trigger( "click" );           
+        }
+    });
+
+</script>
+
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
             ImagePreview.setup();
