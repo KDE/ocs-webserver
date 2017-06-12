@@ -20,18 +20,24 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 ?>
+<style type="text/css">
+    
+    .settings-main #form-picture-background .image-preview > img {
+      width: 200px !important;
+        height: 46px !important;  
+    }
+</style>
 
-
-<div class="panel-collapse " id="picture-collapse">
+<!--partialajaxbg-->
+<div class="panel-collapse " id="picture-bg-collapse">
     <div class="panel-body">
-        <form class="standard-form partialajax " action="<?= $this->pictureform->getAction(); ?>"
-              method="<?= $this->pictureform->getMethod(); ?>" data-target="#form-picture"
-              data-trigger="#picture-trigger" enctype="multipart/form-data">
+        <form class="standard-form partialajaxbg well" action="<?= $this->pictureformbg->getAction(); ?>"
+              method="<?= $this->pictureformbg->getMethod(); ?>" data-target="#form-picture-background"
+              data-trigger="#picture-background-trigger" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-md-4 col-lg-4 col-sm-4 col-xs-4 center">
-                    <?= $this->pictureform->profile_picture_upload ?>
-                    <?= $this->pictureform->profile_image_url ?>
-                    <?= $this->pictureform->profile_img_src ?>
+                    <?= $this->pictureformbg->profile_picture_background_upload ?>
+                    <?= $this->pictureformbg->profile_image_url_bg ?>                                      
                 </div>
                 <!-- /.span4 -->
                 <div class="col-md-4 col-lg-4 col-sm-4 col-xs-4">
@@ -39,11 +45,7 @@
                         <p>
                             <em class="icon info-icon"></em>
                         </p>
-
-                        <p class="italic">
-                            <?= $this->translate('Maximum picture size<br> is 1024 x 1024 px') ?>
-                        </p>
-
+                      
                         <p class="italic">
                             <?= $this->translate('You can use <br><span class="purple">JPG, PNG, GIF</span> formats') ?>
                         </p>
@@ -55,7 +57,7 @@
             <hr>
             <div class="row">
                 <div class="box pull-left margin-left-15"  style="padding-left: 15px;">
-                    <?php echo $this->formResult($this->pictureform, $this->save, true, 'Changes saved. Some picture elements will be updated at next login.'); ?>
+                    <?php echo $this->formResult($this->pictureformbg, $this->save, true, 'Changes saved. Some picture elements will be updated at next login.'); ?>
                 </div>
                 <button type="submit" class="btn btn-native pull-right"
                         tabindex="14"><?= $this->translate('Save &amp; Update') ?></button>
@@ -64,10 +66,9 @@
         <!-- /.standard-form -->
     </div>
 </div>
-
 <script type="text/javascript">
     $(document).ready(function () {
-        ImagePreview.initProfilePicture();
-        PartialFormsAjax.setup();
+        ImagePreview.initProfilePictureBackground();
+        PartialFormsAjaxMemberBg.setup();
     });
 </script>
