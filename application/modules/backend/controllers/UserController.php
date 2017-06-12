@@ -113,6 +113,7 @@ class Backend_UserController extends Local_Controller_Action_Backend
         $startIndex = (int)$this->getParam('jtStartIndex');
         $pageSize = (int)$this->getParam('jtPageSize');
         $sorting = $this->getParam('jtSorting');
+        $filter['member_id'] = $this->getParam('filter_member_id');
         $filter['lastname'] = $this->getParam('filter_lastname');
         $filter['firstname'] = $this->getParam('filter_firstname');
         $filter['username'] = $this->getParam('filter_username');
