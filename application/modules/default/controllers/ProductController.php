@@ -270,6 +270,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $valid = true;
         $modelProject = new Default_Model_Project();
 
+        $newProject = null;
         try {
             if (isset($values['project_id'])) {
                 $newProject = $modelProject->updateProject($values['project_id'], $values);
@@ -279,7 +280,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             }
 
         } catch (Exception $exc) {
-            echo $exc->getTraceAsString();
+            Zend_Registry::get('logger')->warn(__METHOD__ . ' - traceString: ' . $exc->getTraceAsString());
         }
 
         if (!$newProject) {
