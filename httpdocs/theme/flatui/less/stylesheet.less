@@ -592,7 +592,6 @@ ul.meta-nav-top
 
   }
 
-/*
   header section.container {
       background-color: transparent;
   }
@@ -632,80 +631,55 @@ ul.meta-nav-top
       position: absolute;
       z-index: 999;
   }        
-*/
+
 /** /HEADER **/
 /** pling nav tabs**/
-
-
-// rewrite bootrap nav a
-@pling-nav-tabs-active-color: #2673b0;
-@pling-nav-tabs-onhover-color: #222;
-@pling-nav-tabs-color: #777;
-.pling-nav-tabs-a{
-  border: 0 ;   
-  position: relative;
-  color: @pling-nav-tabs-color;         
-  font-size: 13px;            
-  transition: color 0s;  
-  bottom: -1px;
-  border-bottom-width: 3px;
-  border-bottom-style: solid;
-  border-bottom-color: transparent;
-  background-color:transparent;   
-}
-
 
 .pling-nav-tabs{
     ul.nav-tabs{
       > li{
-          background-color:transparent;       
+          background-color:@contentbgcolor;       
           margin-bottom: 0px ;    
           > a{
-            .pling-nav-tabs-a;
+            border: 0 ;   
+            color: #777;         
+            font-size: 13px;
+            border-bottom: 3px solid #fff;
+            transition: color 0s;
           }
-          > a:hover{            
-            .pling-nav-tabs-a;
-            color: @pling-nav-tabs-active-color;  
-            svg{
-              fill:@pling-nav-tabs-active-color;
-            }                        
+          > a:hover{
+            border: 0;   
+            color: #222;  
+            background-color:@contentbgcolor;       
+            border-bottom: 3px solid #fff;
           } 
            > a:focus{
-            .pling-nav-tabs-a;          
-          }
-          svg{
-            fill:@pling-nav-tabs-color;
-          }
+            background-color:@contentbgcolor;                   
+          }     
+        } 
+      > li.active{
+        > a {
+          background-color: @contentbgcolor;
+          border: 0 ;
+          border-bottom: 3px solid #2673b0 ;
+          color: #2673b0 ;
+          font-weight: bold;
+                
+        }   
+        > a:hover{
+          background-color: @contentbgcolor;
+          border: 0px;
+          border-bottom: 3px solid #2673b0;
+          color: #2673b0;
+          font-weight: bold;
 
-          &.active{
-            > a {
-             .pling-nav-tabs-a;    
-              color: @pling-nav-tabs-active-color;
-              border-bottom-color: @pling-nav-tabs-active-color;
-              font-weight: bold;
-            }   
-            > a:hover{
-            .pling-nav-tabs-a;    
-              color: @pling-nav-tabs-active-color;
-              border-bottom-color: @pling-nav-tabs-active-color;
-              font-weight: bold;
-
-            }
-             > a:focus{         
-               .pling-nav-tabs-a;    
-              color: @pling-nav-tabs-active-color;
-              border-bottom-color: @pling-nav-tabs-active-color;            
-              font-weight: bold;
-              }  
-             svg {
-                  fill: @pling-nav-tabs-active-color;
-              }
-
-          }
-        }          
+        }
+         > a:focus{
+            background-color:@contentbgcolor;                   
+          }  
+      }      
     } 
 }
-
 
 
 /** pling nav tabs end**/
@@ -1214,7 +1188,7 @@ ul.meta-nav-top
     }
   }
 */
-  
+  @contentbgcolor: #fff;
 /* .explore-products css cleanup*/
   .explore-products {
     padding-left: 30px;
@@ -2265,7 +2239,7 @@ span.page-views {
         .product-page {
             padding-top: 1em;
         }
-        /*
+
         ul.nav-tabs {
 
           li {
@@ -2282,7 +2256,6 @@ span.page-views {
             }
           }
         }
-        */
     }
 
     .my-products-page, .my-payments-page {
@@ -2675,7 +2648,7 @@ span.page-views {
     .about-me-details {
       padding-left: 0;
       padding-right: .5em;
-    /*
+
       ul.nav-tabs {
         margin-bottom: 20px;
 
@@ -2726,7 +2699,6 @@ span.page-views {
           }
         }
       }
-      */
 
       h3.about-me-heading {
         font-size: 1.5em;
@@ -3592,7 +3564,7 @@ span.page-views {
         }
       }
 
-      #form-picture,#form-picture-background {
+      #form-picture {
 
         .image-preview {
           display: block;
@@ -5396,72 +5368,4 @@ main#plings-page{
   }
 }
 
-/*update member page*/
-#email-collapse{
-  .group-list {
-      list-style: outside none none;
-      > li:first-child {
-            border-top: 0 none;
-            border-top: 1px solid #ddd;
-        }
-      > li {
-            border-bottom: 1px solid #e5e5e5;
-            display: block;
-            line-height: 23px;
-            margin-left: -10px;
-            padding: 5px 10px;
-        }
 
-  }
-  
-  .css-truncate-target {
-        max-width: 300px;
-        display: inline-block;
-        max-width: 125px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        vertical-align: top;
-        white-space: nowrap;
-    }
-  .email-actions {
-      float: right;
-      form {
-            display: inline;
-        }
-  }
-
-  span.label.default {
-      background-color: #6cc644;
-      border-radius: 3px;
-      color: #fff;
-      margin-left: 4px;
-      padding: 4px 6px;
-  }
-  span.label.attention {
-      background-color: #c64f0d;
-      border-radius: 3px;
-      color: #fff;
-      margin-left: 4px;
-      padding: 4px 6px;
-  }
-  .btn {
-      line-height: 20px;
-      padding: 4px 12px;
-  }
- 
-}
-.user-admin-page
-{
-  .body-wrap{
-   .well{
-        min-height: 20px;
-        padding: 20px;
-        margin-bottom: 20px;
-        background-color: transparent;
-        border: 0px;
-        border-radius: 0px;
-        -webkit-box-shadow: inset 0 0px 0px rgba(0,0,0,.05);
-        box-shadow: inset 0 0px 0px rgba(0,0,0,.05);
-    }
-    }
-  }

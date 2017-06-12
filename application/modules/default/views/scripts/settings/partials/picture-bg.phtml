@@ -20,16 +20,17 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 ?>
-<style type="text/css">
-    
-    .settings-main #form-picture-background .image-preview > img {
-      width: 200px !important;
-        height: 46px !important;  
-    }
-</style>
+<div class="panel-heading">
+    <h4 class="panel-title">
+        <a data-toggle="collapse" href="#picture-bg-collapse" data-parent="#accordion" id="picture-background-trigger">
+            <span class="glyphicon glyphicon-camera"></span>
+            <?= $this->translate('Profile Picture Background') ?>
+            <span class="absolute glyphicon glyphicon-chevron-down"></span>
+        </a>
+    </h4>
+</div>
 
-<!--partialajaxbg-->
-<div class="panel-collapse " id="picture-bg-collapse">
+<div class="panel-collapse collapse" id="picture-bg-collapse">
     <div class="panel-body">
         <form class="standard-form partialajaxbg well" action="<?= $this->pictureformbg->getAction(); ?>"
               method="<?= $this->pictureformbg->getMethod(); ?>" data-target="#form-picture-background"

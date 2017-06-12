@@ -20,8 +20,17 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 ?>
+<div class="panel-heading">
+    <h4 class="panel-title">
+        <a data-toggle="collapse" href="#profile-connected" data-parent="#accordion" id="profile-trigger">
+            <span class="glyphicon glyphicon-user"></span>
+            <?= $this->translate('Profile') ?>
+            <span class="absolute glyphicon glyphicon-chevron-down"></span>
+        </a>
+    </h4>
+</div>
 
-<div class="panel-collapse " id="profile-connected">
+<div class="panel-collapse collapse" id="profile-connected">
     <div class="panel-body">
         <form class="standard-form partial well" action="<?= $this->profileform->getAction(); ?>"
               method="<?= $this->profileform->getMethod(); ?>" data-target="#form-profile"
@@ -67,7 +76,7 @@
                     <?php echo $this->formResult($this->profileform, $this->save, null, 'Changes saved. Some changes will be activated at next login.'); ?>
                 </div>
                 <button type="submit" class="btn btn-native pull-right"
-                        tabindex="7" ><?= $this->translate('Save &amp; Update') ?></button>
+                        tabindex="7"><?= $this->translate('Save &amp; Update') ?></button>
             </div>
         </form>
     </div>
