@@ -794,6 +794,19 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 )
             )
         );
+        
+        $router->addRoute(
+            'static_terms_dmca',
+            new Zend_Controller_Router_Route_Static(
+                '/terms/dmca',
+                array(
+                    'module'     => 'default',
+                    'controller' => 'content',
+                    'action'     => 'index',
+                    'page'       => 'terms-dmca'
+                )
+            )
+        );
 
         $router->addRoute(
             'static_privacy',
