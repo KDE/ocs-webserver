@@ -24,116 +24,162 @@ $helperImage = new Default_View_Helper_Image();
 $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $this->tab = 'settings';
 ?>
+
 <main class="user-admin-page">
+ 
+    
+    <?php echo $this->render('user/partials/userHeader_top.phtml'); ?>
 
-    <section class="head-wrap">
-
-        <!-- HEADER -->
-
-        <section class="wrapper about-me-header">
-
-            <figure>
-                <img src="<?php echo $helperImage->Image($this->member->profile_image_url,array('width' => 110, 'height' => 110, 'crop' => 2)); ?>" alt="profile-image" width="110" height="110">
-            </figure>
-
-            <div class="user-menu well">
-
-                <div class="pull-left">
-                    <div class="intro">
-                        <div class="large">Hi
-                            <span class="lightblue"><?php echo $this->member->username; ?></span><?= $this->translate(', welcome to your personal start page!') ?>
-                        </div>
-                        <div class="small lightgrey">
-                            <a href="<?php echo $helpMemberUrl->buildMemberUrl($this->member->member_id); ?>"><?= $this->translate('Click here to go to your About Me page.') ?></a>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-        </section>
-
-        <!-- /HEADER -->
-
-    </section>
 
     <section class="body-wrap">
-
         <section class="wrapper product-page">
-
             <!-- PAGE BODY -->
-
             <section class="my-products-page">
-
                 <!-- NAVIGATION -->
-
+        
                 <?php echo $this->render('user/partials/userHeader.phtml'); ?>
-
+               
                 <!-- /NAVIGATION -->
 
                 <!-- PAGE BODY -->
                 <section class="settings-page">
-
                     <h1 class="page-title"><?= $this->translate('Settings') ?></h1>
-                    <hr/>
-                    <div class="row settings-options">
-                        <!-- main setting panel -->
-                        <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12 settings-main panel-group" id="accordion">
-                            <!-- edit profile -->
-                            <section class="panel panel-default" id="form-profile">
-                                <?php echo $this->render('settings/partials/profile.phtml'); ?>
-                            </section>
-                            <!-- /edit profile -->
-                            <!-- edit emails -->
-                            <section class="panel panel-default" id="form-email">
-                                <?php echo $this->render('settings/partials/email.phtml'); ?>
-                            </section>
-                            <!-- /edit emails -->
-                            <!-- edit payments -->
-                            <section class="panel panel-default" id="form-payment">
-                                <?php echo $this->render('settings/partials/payment.phtml'); ?>
-                            </section>
-                            <!-- /edit payments -->
-                            <!-- edit github -->
-                            <section class="panel panel-default" id="form-github">
-                                <?php echo $this->render('settings/partials/github.phtml'); ?>
-                            </section>
-                            <!-- /edit github -->
-                            <!-- edit connceted accounts -->
-                            <section class="panel panel-default" id="form-connected-accounts">
-                                <?php echo $this->render('settings/partials/accounts.phtml'); ?>
-                            </section>
-                            <!-- /edit connected accounts -->
-                            <!-- edit avatar -->
-                            <section class="panel panel-default" id="form-picture">
-                                <?php echo $this->render('settings/partials/picture.phtml'); ?>
-                            </section>
-                            <!-- /edit avatar -->
-                            <!-- edit password -->
-                            <section class="panel panel-default" id="form-password">
-                                <?php echo $this->render('settings/partials/password.phtml'); ?>
-                            </section>
-                            <!-- /edit password -->
-                            <!-- edit website -->
-                            <section class="panel panel-default" id="form-website">
-                                <?php echo $this->render('settings/partials/website.phtml'); ?>
-                            </section>
-                            <!-- /edit website -->
-                            <!-- edit newsletter -->
-                            <section class="panel panel-default" id="form-newsletter">
-                                <?php echo $this->render('settings/partials/newsletter.phtml'); ?>
-                            </section>
-                            <!-- /edit newsletter -->
-                            <!-- delete account
-                            <section class="panel panel-default panel-danger" id="form-delete-account">
-                                <?php //echo $this->partial('settings/partials/delete.phtml'); ?>
-                            </section>
-                             /delete account -->
+                    <br/>
 
-                        </div>
-                        <!-- /settings main -->
+                    <div class="pling-nav-tabs">
+                        <ul class="nav nav-tabs ">
+                            <li class="active">
+                                    <a href="#form-profile-panel" data-toggle="tab">
+                                    <span class="glyphicon glyphicon-user"></span>
+                                     <?= $this->translate('Profile') ?>
+                                     </a>
+                            </li>     
+                            <li >
+                                    <a href="#form-email-panel" data-toggle="tab">
+                                   <span class="glyphicon glyphicon-envelope"></span>
+                                              <?= $this->translate('Emails') ?>
+                                    </a>
+                            </li>     
+                            <li >
+                                    <a href="#form-payment-panel" data-toggle="tab">
+                                   <span class="glyphicon glyphicon-usd"></span>
+                                               <?= $this->translate('Payment') ?>
+                                    </a>
+                            </li>     
+                            <li >
+                                    <a href="#form-github-panel" data-toggle="tab">
+                                  <svg aria-hidden="true" class="octicon octicon-mark-github" height="12" version="1.1" viewBox="0 0 16 16" width="15"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg>
+                                           <span class="githublabel">    <?= $this->translate('Github Developer Account') ?></span>
+                                    </a>
+                            </li>                                    
+                            <li >
+                                    <a href="#form-connected-accounts-panel" data-toggle="tab">
+                                   <span class="glyphicon  glyphicon-link"></span>
+                                               <?= $this->translate('Social Accounts') ?>
+                                    </a>
+                            </li>  
+
+                          
+                            <li >
+                                    <a href="#form-picture-panel" data-toggle="tab">
+                                 <span class="glyphicon glyphicon-camera"></span>
+                                            <?= $this->translate('Profile Picture') ?>
+                                    </a>
+                            </li>  
+
+
+                            <li >
+                                    <a href="#form-picture-background-panel" data-toggle="tab">
+                                 <span class="glyphicon  glyphicon-picture"></span>
+                                            <?= $this->translate('Profile Picture Background') ?>
+                                    </a>
+                            </li> 
+                              
+                              <li >
+                                      <a href="#form-password-panel" data-toggle="tab">
+                                   <span class="glyphicon glyphicon-lock"></span>
+                                              <?= $this->translate('Password') ?>
+                                      </a>
+                              </li> 
+
+                              <li >
+                                      <a href="#form-website-panel" data-toggle="tab">
+                                   <span class="glyphicon glyphicon-globe"></span>
+                                              <?= $this->translate('Your Website') ?>
+                                      </a>
+                              </li>
+
+                              <li >
+                                      <a href="#form-newsletter-panel" data-toggle="tab">
+                                   <span class="glyphicon glyphicon-inbox"></span>
+                                               <?= $this->translate('Newsletter') ?>
+                                      </a>
+                              </li>
+                        </ul>
                     </div>
+                     <div class="tab-content row settings-main ">
+                            <div class="tab-pane active " id="form-profile-panel">                               
+                                <section class="panel container"  id="form-profile">
+                                     <?php echo $this->render('settings/partials/profile.phtml'); ?>             
+                                     </section>                  
+                            </div>
 
+                            <div class="tab-pane " id="form-email-panel">
+                                <section class="panel container"  id="form-email">
+                                     <?php echo $this->render('settings/partials/email.phtml'); ?>
+                                </section>
+                            </div>
+
+                            <div class="tab-pane " id="form-payment-panel">
+                                <section class="panel container"  id="form-payment">
+                                    <?php echo $this->render('settings/partials/payment.phtml'); ?>
+                                </section>
+                            </div>
+
+                            <div class="tab-pane " id="form-github-panel">
+                                <section class="panel container"  id="form-github">
+                                    <?php echo $this->render('settings/partials/github.phtml'); ?>
+                                </section>
+                            </div>
+
+                            <div class="tab-pane " id="form-connected-accounts-panel">
+                                <section class="panel container"  id="form-accounts">
+                                    <?php echo $this->render('settings/partials/accounts.phtml'); ?>
+                                </section>
+                            </div>
+
+                              <div class="tab-pane " id="form-picture-panel">
+                                <section class="panel container"  id="form-picture">
+                                    <?php echo $this->render('settings/partials/picture.phtml'); ?>
+                                </section>
+                            </div>
+
+                              <div class="tab-pane " id="form-picture-background-panel">
+                                <section class="panel container"  id="form-picture-background">
+                                    <?php echo $this->render('settings/partials/picture-bg.phtml'); ?>
+                                </section>
+                            </div>
+
+                              <div class="tab-pane " id="form-password-panel">
+                                 <section class="panel container"  id="form-password">
+                                    <?php echo $this->render('settings/partials/password.phtml'); ?>
+                              </section>
+                            </div>
+
+                            <div class="tab-pane " id="form-website-panel">
+                               <section class="panel container"  id="form-website">
+                                    <?php echo $this->render('settings/partials/website.phtml'); ?>
+                              </section>
+                            </div>
+
+                            <div class="tab-pane " id="form-newsletter-panel">
+                                <section class="panel container"  id="form-newsletter">
+                                    <?php echo $this->render('settings/partials/newsletter.phtml'); ?>
+                               </section>
+                            </div>
+                     </div>
+
+                 
                 </section>
                 <!-- /PAGE BODY -->
 
@@ -146,76 +192,7 @@ $this->tab = 'settings';
     </section>
 
 </main>
-<script type="application/javascript">
-    var SettingsExpand = (function () {
-        return {
-            setup: function () {
-                $('.panel-heading').on('click', function () {
 
-                    var this_panel = $(this).parents('.panel');
-                    var this_panel_body = this_panel.find('.panel-collapse');
-
-                    if (this_panel_body.hasClass('in')) {
-                        $(this).removeClass('active');
-                    } else {
-                        $(this).addClass('active');
-                    }
-
-                });
-            }
-        };
-    })();
-
-    var InputAvatar = (function () {
-        return {
-            setup: function () {
-                $('body').on("change", 'input.avatar', function (event) {
-                    event.preventDefault();
-                    var username = this.value;
-                    var dataHref = $(this).attr("data-href");
-                    var target = $(this).attr("data-target");
-                    var dataFunc = $(this).attr("data-func");
-                    var dataSrc = $(this).data('src');
-
-                    if (dataFunc) {
-                        var funcCall = dataFunc + '(\'' + username + '\')';
-                        username = eval(funcCall);
-                    }
-
-                    var imageSrc = dataHref.replace('{username}', username);
-                    $(target).attr('src', imageSrc);
-                    $('#profile_img_src').val(dataSrc);
-
-                    return false;
-                });
-                $('body').on("change", 'input#profile_picture_upload', function (event) {
-                    event.preventDefault();
-                    $('#profile_img_src').val('local');
-                });
-            }
-        }
-    })();
-
-    SettingsExpand.setup();
-    InputAvatar.setup();
-    
-</script>
-
-
-<script>
-    $(document).ready(function(){
-        if(document.location.hash) {
-            $myform = $(document.location.hash);
-            var this_panel = $myform.parents('.panel');
-            this_panel.addClass('in');
-            var this_header = this_panel.find('.panel-heading');
-            this_header.addClass('active');
-            var this_body = this_panel.find(document.location.hash);
-            this_body.addClass('in');
-        }
-    });
-
-</script>
 
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){

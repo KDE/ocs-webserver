@@ -20,19 +20,11 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 ?>
-<div class="panel-heading">
-    <h4 class="panel-title">
-        <a data-toggle="collapse" href="#picture-collapse" data-parent="#accordion" id="picture-trigger">
-            <span class="glyphicon glyphicon-camera"></span>
-            <?= $this->translate('Profile Picture') ?>
-            <span class="absolute glyphicon glyphicon-chevron-down"></span>
-        </a>
-    </h4>
-</div>
 
-<div class="panel-collapse collapse" id="picture-collapse">
+
+<div class="panel-collapse " id="picture-collapse">
     <div class="panel-body">
-        <form class="standard-form partialajax well" action="<?= $this->pictureform->getAction(); ?>"
+        <form class="standard-form partialajax " action="<?= $this->pictureform->getAction(); ?>"
               method="<?= $this->pictureform->getMethod(); ?>" data-target="#form-picture"
               data-trigger="#picture-trigger" enctype="multipart/form-data">
             <div class="row">

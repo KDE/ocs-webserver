@@ -23,71 +23,9 @@
 $modelMember = new Default_Model_MemberEmail();
 $listEmails = $modelMember->fetchAllMailAdresses($this->member->member_id);
 ?>
-<style>
-.group-list {
-    list-style: outside none none;
-}
-.group-list > li:first-child {
-    border-top: 0 none;
-}
-.group-list > li:first-child {
-    border-top: 1px solid #ddd;
-}
-.group-list > li {
-    border-bottom: 1px solid #e5e5e5;
-    display: block;
-    line-height: 23px;
-    margin-left: -10px;
-    padding: 5px 10px;
-}
-.group-list .css-truncate .css-truncate-target {
-    max-width: 300px;
-}
-.css-truncate.css-truncate-target, .css-truncate .css-truncate-target {
-    display: inline-block;
-    max-width: 125px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    vertical-align: top;
-    white-space: nowrap;
-}
-.email-actions {
-    float: right;
-}
-.email-actions form {
-    display: inline;
-}
 
-span.label.default {
-    background-color: #6cc644;
-    border-radius: 3px;
-    color: #fff;
-    margin-left: 4px;
-    padding: 4px 6px;
-}
-span.label.attention {
-    background-color: #c64f0d;
-    border-radius: 3px;
-    color: #fff;
-    margin-left: 4px;
-    padding: 4px 6px;
-}
-.btn {
-    line-height: 20px;
-    padding: 4px 12px;
-}
-</style>
-<div class="panel-heading">
-    <h4 class="panel-title">
-        <a data-toggle="collapse" href="#email-collapse" data-parent="#accordion" id="email-trigger">
-            <span class="glyphicon glyphicon-envelope"></span>
-            <?= $this->translate('Emails') ?>
-            <span class="absolute glyphicon glyphicon-chevron-down"></span>
-        </a>
-    </h4>
-</div>
 
-<div class="panel-collapse collapse" id="email-collapse">
+<div class="panel-collapse " id="email-collapse">
     <div class="panel-body">
         <div id="form-email-body" class="well">
         <p>Your <strong>primary email address</strong> will be used for account-related notifications
@@ -165,9 +103,3 @@ span.label.attention {
             }
 
     </script>
-
-<?php  /* $this->inlineScript()->appendScript(
-    '    $(document).ready(function(){
-
-        });
-    '); */

@@ -21,17 +21,9 @@
  **/
 ?>
 
-<div class="panel-heading">
-    <h4 class="panel-title">
-        <a data-toggle="collapse" href="#payments-collapse" data-parent="#accordion" id="payments-trigger">
-            <span class="glyphicon glyphicon-usd"></span>
-            <?= $this->translate('Payment') ?>
-            <span class="absolute glyphicon glyphicon-chevron-down"></span>
-        </a>
-    </h4>
-</div>
 
-<div class="panel-collapse collapse" id="payments-collapse">
+
+<div class="panel-collapse " id="payments-collapse">
     <div class="panel-body">
         <form class="standard-form well partial" action="<?= $this->paymentform->getAction(); ?>"
               method="<?= $this->paymentform->getMethod(); ?>" data-target="#form-payment"

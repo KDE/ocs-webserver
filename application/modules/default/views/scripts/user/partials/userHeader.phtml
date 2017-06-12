@@ -20,7 +20,9 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 $helperMember = new Default_View_Helper_BuildMemberUrl();
-?><ul class="nav nav-tabs">
+?>
+<div  class="pling-nav-tabs">
+<ul class="nav nav-tabs">
     
     <li class="<?php echo $this->tab == 'activities' ? 'active' : ''; ?>">
         <a href="<?php echo $helperMember->buildMemberUrl($this->member->member_id, 'activities'); ?>">
@@ -32,7 +34,7 @@ $helperMember = new Default_View_Helper_BuildMemberUrl();
     <li class="<?php echo $this->tab == 'products' ? 'active' : ''; ?>">
         <a href="<?php echo $helperMember->buildMemberUrl($this->member->member_id, 'products'); ?>">
             <span class="glyphicon glyphicon-th-list"></span>
-            <?= $this->translate('My Products') ?>
+            <?= $this->translate('Products') ?>
         </a>
     </li>
 
@@ -50,26 +52,26 @@ $helperMember = new Default_View_Helper_BuildMemberUrl();
         <?php endif ?>
     </li>
 
-    
-
+   <?php /*
     <li class="header-menu-left-item <?php echo $this->tab == 'earnings' ? 'active' : ''; ?>">
         <a href="<?php echo $helperMember->buildMemberUrl($this->member->member_id, 'income'); ?>">
             <span class="glyphicon glyphicon-usd"></span>
             <?= $this->translate('My Income') ?>
         </a>
     </li>
-
+ 
     <li class="header-menu-left-item <?php echo $this->tab == 'payment' ? 'active' : ''; ?>">
         <a href="<?php echo $helperMember->buildMemberUrl($this->member->member_id, 'payments'); ?>">
             <span class="glyphicon glyphicon-usd"></span>
             <?= $this->translate('My Payments') ?>
         </a>
     </li>
-
+    */ ?>
+    
     <li class="header-menu-left-item <?php echo $this->tab == 'settings' ? 'active' : ''; ?>">
         <a href="/settings/">
             <span class="glyphicon glyphicon-cog"></span>
-            <?= $this->translate('My Settings') ?>
+            <?= $this->translate('Settings') ?>
         </a>
     </li>
     
@@ -80,3 +82,4 @@ $helperMember = new Default_View_Helper_BuildMemberUrl();
         </a>
     </li>
 </ul>
+</div>
