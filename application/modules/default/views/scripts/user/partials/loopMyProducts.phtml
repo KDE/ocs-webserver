@@ -83,12 +83,15 @@ $helperImage = new Default_View_Helper_Image();
                 <?php } ?>
                 <!-- /verification -->
                 <!-- embeded -->
+                <?php /*
                 <a href="#modal-button-code-<?= $loopProductId ?>"
                    class="btn btn-native"
                    data-toggle="modal"><?= $this->translate('Button') ?></a>
+                   */ ?>
                 <a href="#modal-box-code-<?= $loopProductId ?>"
                    class="btn btn-native"
                    data-toggle="modal"><?= $this->translate('Box') ?></a>
+                   <?php /*
                 <a href="#modal-list-code-<?= $loopProductId ?>"
                    class="btn btn-native"
                    data-toggle="modal"><?= $this->translate('List') ?></a>
@@ -96,6 +99,7 @@ $helperImage = new Default_View_Helper_Image();
                    rel="<?= $loopProductId ?>"
                    class="btn btn-native widget-button"
                    data-toggle="modal"><?= $this->translate('Widget') ?></a>
+                   */ ?>
                 <!-- /embeded -->
             </div>
 
@@ -151,8 +155,9 @@ $helperImage = new Default_View_Helper_Image();
     <!-- CONTENT -->
     <!-- MODALS -->
 
-    <?/*
+    
     <!-- button code modal -->
+    <?php /*
     <div id="modal-button-code-<?= $loopProductId ?>" class="code-embed-modal modal fade">
         <div class="modal-dialog content-modal">
             <div class="modal-content">
@@ -175,9 +180,9 @@ $helperImage = new Default_View_Helper_Image();
                 </div>
             </div>
         </div>
-    </div>
+    </div>*/ ?>
     <!-- /button code modal -->
-    */ ?>
+    
 
     <!-- box code modal -->
     <div id="modal-box-code-<?= $loopProductId ?>" class="code-embed-modal modal fade">
@@ -205,8 +210,9 @@ $helperImage = new Default_View_Helper_Image();
     </div>
     <!-- /box code modal -->
 
-<?php /*
+
     <!-- list code modal -->
+    <?php /*
     <div id="modal-list-code-<?= $loopProductId ?>" class="code-embed-modal modal fade">
         <div class="modal-dialog content-modal">
             <div class="modal-content">
@@ -229,10 +235,12 @@ $helperImage = new Default_View_Helper_Image();
             </div>
         </div>
     </div>
+    */ ?>
     <!-- /list code modal -->
 
 
     <!-- widget code modal -->
+    <?php /*
     <div id="modal-widget-code-<?= $loopProductId ?>" class="code-embed-modal modal fade">
         <div class="modal-dialog content-modal" id="widget-code-modal">
             <div class="modal-content">
@@ -257,8 +265,10 @@ $helperImage = new Default_View_Helper_Image();
             </div>
         </div>
     </div>
+    */ 
+    ?>
     <!-- /widget code modal -->
-*/ ?>
+
     <!-- verification code -->
     <?php
     $verificationPopup = new Default_View_Helper_VerificationCodePopup();
