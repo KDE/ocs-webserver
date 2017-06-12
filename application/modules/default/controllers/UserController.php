@@ -161,7 +161,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
 
     public function productsAction()
     {
-        $pageLimit = 50;
+        $pageLimit = 25;
         $page = (int)$this->getParam('page', 1);
 
         $modelProject = new Default_Model_Project();
