@@ -28,7 +28,7 @@ class Default_Form_Login extends Zend_Form
         $this->setAction('/login/');
         $this->addElementPrefixPath('Local', 'Local/');
         $this->setAttrib('id', 'loginForm');
-        $this->setAttrib('class', 'standard-form row-fluid');
+        //$this->setAttrib('class', 'standard-form row-fluid');
 
         $this->addElement($this->getHiddenRedirect());
 
@@ -44,16 +44,16 @@ class Default_Form_Login extends Zend_Form
 //        $loginName->setValidators(array('EmailAddress'));
         $loginName->setRequired(true);
         $loginName->setDecorators(array('ViewHelper'));
-        $loginName->setAttrib('placeholder', 'Email or Username');
-        $loginName->setAttrib('class', 'inputbox email');
+        //$loginName->setAttrib('placeholder', 'Email or Username');
+        //$loginName->setAttrib('class', 'inputbox email');
 
         $loginPass = $this->createElement('password', 'password');
         $loginPass->setLabel('index.login.password');
         $loginPass->setFilters(array('StringTrim'));
         $loginPass->setRequired(true);
         $loginPass->setDecorators(array('ViewHelper'));
-        $loginPass->setAttrib('placeholder', 'Password');
-        $loginPass->setAttrib('class', 'inputbox password');
+        //$loginPass->setAttrib('placeholder', 'Password');
+        //$loginPass->setAttrib('class', 'inputbox password');
 
         $rememberMe = $this->createElement('checkbox', 'remember_me')
             ->setLabel('index.login.remember_me')
@@ -73,8 +73,8 @@ class Default_Form_Login extends Zend_Form
         $submit = $this->createElement('button', 'login');
         $submit->setLabel('Login');
         $submit->setDecorators(array('ViewHelper'));
-        $submit->setAttrib('class', 'btn btn-min-width btn-native');
-        $submit->setAttrib('type', 'submit');
+        //$submit->setAttrib('class', 'btn btn-min-width btn-native');
+        //$submit->setAttrib('type', 'submit');
 
 //        $hash = $this->createElement('hash', 'csrfLogin', array('salt' => 'PlattenSpalter'));
 //        $hash->setDecorators(array('ViewHelper', 'Errors'));

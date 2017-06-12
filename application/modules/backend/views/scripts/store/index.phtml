@@ -132,7 +132,14 @@
                     width: '10%',
                     list: true,
                     create: true,
-                    inputTitle: '(config id) store id name <small style="font-weight:normal; font-size: 0.7em">(used as id for config and search) (45 chars)</small>'
+                    inputTitle: '(config id) store id name <small style="font-weight:normal; font-size: 0.7em">(used as id for config and search) (45 chars)</small>',
+                    input: function (data) {
+                        if (data.record) {
+                            return '<input type="text" name="config_id_name" style="width:200px" value="' + data.record.config_id_name + '" pattern="[-a-zA-Z0-9_]+" />';
+                        } else {
+                            return '<input type="text" name="config_id_name" style="width:200px" pattern="[-a-zA-Z0-9_]+" />';
+                        }
+                    }
                 },
                 order: {
                     title: 'display order',
