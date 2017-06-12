@@ -54,7 +54,8 @@ function crawlerDetect($USER_AGENT)
         array('AltaVista', 'Altavista robot'),
         array('IDBot', 'ID-Search Bot'),
         array('eStyle', 'eStyle Bot'),
-        array('Scrubby', 'Scrubby robot')
+        array('Scrubby', 'Scrubby robot'),
+        array('MJ12bot','http://mj12bot.com/')
     );
 
     foreach ($crawlers as $c)
