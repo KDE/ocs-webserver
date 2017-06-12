@@ -173,12 +173,12 @@ if ($this->countDownloadsOverall > 0) {
                 $member = $this->view_member;
                 if(!isset($member['paypal_mail']) || $member['paypal_mail'] == '') {
                     $has_paypal = false;
-                    $paypalWarning = 'You have no PayPal account configured. Please go to your settings page <a href="/settings#payments-collapse">here</a>.';
+                    $paypalWarning = 'You have no PayPal account configured. Please go to your settings page <a href="/settings#form-payment-panel">here</a>.';
                 } else {
                     $has_paypal = true;
                 }
             } else {
-                $paypalWarning = 'We found no valid Paypal account for this month. That\'s why we could not pay you any money. In order to receive money for the current month, please make sure that a paypal account is registered. Go to your settings page <a href="/settings#payments-collapse">here</a>.';
+                $paypalWarning = 'We found no valid Paypal account for this month. That\'s why we could not pay you any money. In order to receive money for the current month, please make sure that a paypal account is registered. Go to your settings page <a href="/settings#form-payment-panel">here</a>.';
             }
             if (false == $has_paypal) {
                 echo '<div class="alert alert-warning" role="alert">'.$paypalWarning.'</div>';
