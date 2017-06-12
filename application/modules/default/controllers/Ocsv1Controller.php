@@ -54,6 +54,9 @@
  * 6 = Snappy
  * 7 = Flatpak
  * 8 = Electron-Webapp
+ * 9 = Arch
+ * 10 = open/Suse
+ * 11 = Redhat
  *
  * ----
  *
