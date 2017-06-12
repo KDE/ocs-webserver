@@ -20,19 +20,10 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 ?>
-<div class="panel-heading">
-    <h4 class="panel-title">
-        <a data-toggle="collapse" href="#accounts-collapse" data-parent="#accordion" id="accounts-trigger">
-            <span class="glyphicon glyphicon glyphicon-link"></span>
-            <?= $this->translate('Social Accounts') ?>
-            <span class="absolute glyphicon glyphicon-chevron-down"></span>
-        </a>
-    </h4>
-</div>
 
-<div class="panel-collapse collapse" id="accounts-collapse">
+<div class="panel-collapse " id="accounts-collapse">
     <div class="panel-body">
-        <form class="standard-form partial well" action="<?= $this->accounts->getAction(); ?>"
+        <form class="standard-form partial " action="<?= $this->accounts->getAction(); ?>"
               method="<?= $this->accounts->getMethod(); ?>" data-target="#form-connected-accounts"
               data-trigger="#accounts-trigger">
             <div class="row">

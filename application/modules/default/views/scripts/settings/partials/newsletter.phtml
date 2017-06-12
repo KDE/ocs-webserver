@@ -20,17 +20,8 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 ?>
-<div class="panel-heading">
-    <h4 class="panel-title">
-        <a data-toggle="collapse" href="#newsletter-collapse" data-parent="#accordion" id="newsletter-trigger">
-            <span class="glyphicon glyphicon-inbox"></span>
-            <?= $this->translate('Newsletter') ?>
-            <span class="absolute glyphicon glyphicon-chevron-down"></span>
-        </a>
-    </h4>
-</div>
 
-<div class="panel-collapse collapse" id="newsletter-collapse">
+<div class="panel-collapse " id="newsletter-collapse">
 
     <div class="panel-body">
         <form class="standard-form partial well" action="<?= $this->newsletterform->getAction(); ?>"
