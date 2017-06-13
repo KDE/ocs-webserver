@@ -78,6 +78,9 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $this->view->pictureform = $this->formProfilePicture();
         $this->view->pictureform->populate($memberSettings);
 
+        $this->view->pictureformbg = $this->formProfilePictureBackground();
+        $this->view->pictureformbg->populate($memberSettings);
+
         $this->view->passwordform = $this->formPassword();
 
         $websiteOwner = new Local_Verification_WebsiteOwner();
@@ -483,6 +486,68 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $form->addElement($hiddenProfilePictureSrc);
 
 
+        return $form;
+    }
+
+
+    private function formProfilePictureBackground(){
+        $form = new Default_Form_Settings();
+        $form->setMethod("POST")
+            ->setAttrib("id", "settingsPictureBackgroundForm")
+            ->setAction('/settings/picturebackground')
+            ->setAttrib('enctype', 'multipart/form-data');
+
+
+        $hiddenProfilePicture = $form->createElement('hidden', 'profile_image_url_bg')
+            ->setDecorators(
+                array(
+                    'ViewHelper',
+                    array(
+                        'ViewScript',
+                        array(
+                            'viewScript' => 'settings/viewscripts/flatui_hidden_image.phtml',
+                            'placement' => false
+                        )
+                    )
+                ))
+            ->setAttrib('data-target', '#profile-picture-bg-preview');
+
+        $form->addElement($hiddenProfilePicture);
+
+        $imageTable = new Default_Model_DbTable_Image();
+        $productPicture = $form->createElement('file', 'profile_picture_background_upload')
+            ->setDisableLoadDefaultDecorators(true)
+            ->setLabel('Profile Picture Background Preview')
+            ->setRequired(false)
+            ->setDecorators(
+                array(
+                    'File',
+                    array(
+                        'ViewScript',
+                        array(
+                            'viewScript' => 'settings/viewscripts/flatui_profile_image_background.phtml',
+                            'placement' => false
+                        )
+                    )
+
+                ))
+            ->setAttrib('class', 'product-picture')
+            ->setAttrib('onchange', 'ImagePreview.previewImageMember(this, \'profile-picture-background-preview\');')
+            ->setTransferAdapter(new Local_File_Transfer_Adapter_Http())
+            //->setMaxFileSize(2097152)
+            ->addValidator('Count', false, 1)
+            //->addValidator('Size', false, array('min' => '5kB', 'max' => '2MB'))
+            ->addValidator('Extension', false, $imageTable->getAllowedFileExtension())
+            // ->addValidator('ImageSize', false,
+            //     array(
+            //         'minwidth' => 20,
+            //         'maxwidth' => 1024,
+            //         'minheight' => 20,
+            //         'maxheight' => 1024
+            //     ))
+            ->addValidator('MimeType', false, $imageTable->getAllowedMimeTypes());
+
+        $form->addElement($productPicture);        
         return $form;
     }
 
@@ -942,6 +1007,64 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         }
     }
 
+    public function picturebackgroundAction()
+    {
+        ini_set('memory_limit', '128M');
+
+        $this->_helper->layout->disableLayout();
+
+        if ($this->_request->isPost()) {
+            $form = $this->formProfilePictureBackground();
+
+            $profilePictureTitleFilename = pathinfo($form->getElement('profile_picture_background_upload')->getFileName());
+
+            if (!isset($profilePictureTitleFilename)) {
+                $form->populate($this->_memberSettings->toArray());
+                $form->addErrorMessage('Please select a new picture');
+                $form->markAsError();
+
+                $this->view->pictureform = $form;
+                $this->view->error = 1;
+                $this->renderScript('settings/partials/picture-bg.phtml');
+                return;
+            }
+            if ($form->isValid($_POST)) {
+
+                $tmpProfilePictureTitle = IMAGES_UPLOAD_PATH . 'tmp/' . Local_Tools_UUID::generateUUID() . '_' . $profilePictureTitleFilename['basename'];
+                $form->getElement('profile_picture_background_upload')->addFilter('Rename',
+                    array('target' => $tmpProfilePictureTitle, 'overwrite' => true));
+
+                $values = $form->getValues();
+
+                if (array_key_exists('profile_picture_background_upload', $values) && $values['profile_picture_background_upload'] != "") {
+                    $imageService = new Default_Model_DbTable_Image();
+                    $newImageName = $imageService->saveImageOnMediaServer($tmpProfilePictureTitle);
+                }
+                
+                if (isset($newImageName)) {                    
+                    $this->_memberSettings->profile_image_url_bg = IMAGES_MEDIA_SERVER . '/cache/1920x450-2/img/' . $newImageName;
+                }
+               
+                $this->_memberSettings->save();
+                $this->view->member = $this->_memberSettings;
+                $form->populate($this->_memberSettings->toArray());
+
+                $this->view->save = 1;
+                $this->view->pictureformbg = $form;
+               
+                $this->renderScript('settings/partials/picture-bg.phtml');
+            } else {
+                $this->view->pictureformbg = $form;
+                $this->view->error = 1;
+                $this->renderScript('settings/partials/picture-bg.phtml');
+            }
+        } else {
+            $form = $this->formProfilePictureBackground();
+            $form->populate($this->_memberSettings->toArray());
+            $this->view->pictureformbg = $form;
+            $this->renderScript('settings/partials/picture-bg.phtml');
+        }
+    }
     public function passwordAction()
     {
         $this->_helper->layout->disableLayout();
