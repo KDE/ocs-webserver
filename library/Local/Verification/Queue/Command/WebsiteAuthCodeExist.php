@@ -20,6 +20,10 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+/**
+ * Class Local_Verification_Queue_Command_WebsiteAuthCodeExist
+ * @deprecated
+ */
 class Local_Verification_Queue_Command_WebsiteAuthCodeExist implements Local_Queue_CommandInterface
 {
 
@@ -48,7 +52,7 @@ class Local_Verification_Queue_Command_WebsiteAuthCodeExist implements Local_Que
 
     public function doCommand()
     {
-        $websiteValidation = new Local_Verification_WebsiteAuthCodeExist();
+        $websiteValidation = new Local_Verification_WebsiteProject();
         $verificationResult = $websiteValidation->testForAuthCodeExist($this->websiteUrl, $this->authCode);
         $this->productData->setVerifiedStatus($verificationResult);
     }

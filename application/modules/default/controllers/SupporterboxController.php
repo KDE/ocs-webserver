@@ -47,7 +47,7 @@ class SupporterboxController extends Zend_Controller_Action
             $this->view->product = $projectRow;
             $this->view->supporters = $plingModel->getProjectSupporters($projectRow->project_id, 8, true);
             $this->view->nrOfSupporters = $plingModel->getCountSupporters($projectRow->project_id);
-            $websiteOwner = new Local_Verification_WebsiteAuthCodeExist();
+            $websiteOwner = new Local_Verification_WebsiteProject();
             $this->view->authCode = '<meta name="ocs-site-verification" content="' . $websiteOwner->generateAuthCode(stripslashes($projectRow->link_1)) . '" />';
         }
     }

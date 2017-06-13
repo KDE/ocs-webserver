@@ -52,7 +52,7 @@ class WidgetController extends Zend_Controller_Action
         $this->view->supporting = $productModel->fetchProjectSupporterWithPlings($widgetProjectId);
         $plingModel = new Default_Model_DbTable_Plings();
         $this->view->comments = $plingModel->getCommentsForProject($widgetProjectId, 10);
-        $websiteOwner = new Local_Verification_WebsiteAuthCodeExist();
+        $websiteOwner = new Local_Verification_WebsiteProject();
         $this->view->authCode = '<meta name="ocs-site-verification" content="' . $websiteOwner->generateAuthCode(stripslashes($this->view->project->link_1)) . '" />';
         $this->view->paymentProvider = true;
         if (empty($this->view->project->paypal_mail) && empty($this->view->project->dwolla_id)) :
@@ -169,7 +169,7 @@ class WidgetController extends Zend_Controller_Action
         $this->view->supporting = $productModel->fetchProjectSupporterWithPlings($widgetProjectId);
         $plingModel = new Default_Model_DbTable_Plings();
         $this->view->comments = $plingModel->getCommentsForProject($widgetProjectId, 10);
-        $websiteOwner = new Local_Verification_WebsiteAuthCodeExist();
+        $websiteOwner = new Local_Verification_WebsiteProject();
         $this->view->authCode = '<meta name="ocs-site-verification" content="' . $websiteOwner->generateAuthCode(stripslashes($this->view->product->link_1)) . '" />';
 
         $supportersArray = array();

@@ -43,8 +43,11 @@ class Queue_CommandController extends Local_Controller_Action_CliAbstract
     ) {
         parent::__construct($request, $response, $invokeArgs);
         $this->config = Zend_Registry::get('config');
-        $this->timeout = isset($this->config->queue->general->timeout) ? $this->config->queue->general->timeout : self::DEFAULT_MSG_TIMEOUT;
-        $this->message_count = isset($this->config->queue->general->message_count) ? $this->config->queue->general->message_count : self::DEFAULT_MSG_COUNT;
+        $this->timeout = isset($this->config->queue->general->timeout) ? $this->config->queue->general->timeout
+            : self::DEFAULT_MSG_TIMEOUT;
+        $this->message_count =
+            isset($this->config->queue->general->message_count) ? $this->config->queue->general->message_count
+                : self::DEFAULT_MSG_COUNT;
     }
 
     public function runAction()
@@ -60,17 +63,21 @@ class Queue_CommandController extends Local_Controller_Action_CliAbstract
                 try {
                     $cmdObject->doCommand();
                 } catch (Exception $e) {
-                    Zend_Registry::get('logger')->err(__METHOD__ . " - " . print_r($e,true) . PHP_EOL . print_r($cmdObject, true) . PHP_EOL);
+                    Zend_Registry::get('logger')->err(__METHOD__ . " - " . PHP_EOL . 'MESSAGE::    ' . $e->getMessage()
+                        . PHP_EOL . 'ENVIRONMENT::' . APPLICATION_ENV . PHP_EOL . 'TRACE_STRING::' . PHP_EOL
+                        . $e->getTraceAsString() . print_r($cmdObject, true) . PHP_EOL)
+                    ;
                 }
                 $queue->deleteMessage($message);
             } else {
-                Zend_Registry::get('logger')->err(__METHOD__ . " - Unknown command - " . print_r($message->body,true) . PHP_EOL);
+                Zend_Registry::get('logger')->err(__METHOD__ . " - Unknown command - " . print_r($message->body, true)
+                    . PHP_EOL)
+                ;
 
                 $queue->deleteMessage($message);
                 trigger_error('Unknown command: ' . print_r($message->body, true), E_USER_ERROR);
             }
         }
-
     }
 
     /**

@@ -59,7 +59,7 @@ class DonationlistController extends Zend_Controller_Action
         $modelPlings = new Default_Model_Pling();
         $this->view->donations = $modelPlings->getDonationsForProject($projectId);
 
-        $websiteOwner = new Local_Verification_WebsiteAuthCodeExist();
+        $websiteOwner = new Local_Verification_WebsiteProject();
         $this->view->authCode = '<meta name="ocs-site-verification" content="' . $websiteOwner->generateAuthCode(stripslashes($projectInfo->link_1)) . '" />';
     }
 
