@@ -91,7 +91,7 @@ $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
 <?php
 $time_start = microtime(true);
      $comments = $modelInfo->getLatestComments(5, $this->cat_id);
-     $donations = $modelInfo->getLatestPlings(5, $this->cat_id);
+     //$donations = $modelInfo->getLatestPlings(5, $this->cat_id);
      $topprods = $modelInfo->getMostDownloaded(100, $this->cat_id);
      $asidehide = '';
      if(!$this->catabout && count($comments)==0 && count($donations)==0 && count($topprods)==0 )
