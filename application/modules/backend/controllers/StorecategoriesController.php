@@ -86,7 +86,9 @@ class Backend_StorecategoriesController extends Local_Controller_Action_Backend
         $modelPCat->fetchCategoryTreeForStore($store_id, true);
 
         $modelConfigStore = new Default_Model_DbTable_ConfigStore();
+        $modelConfigStore->fetchConfigForStore($store_id, true);
         $modelConfigStore->fetchAllStoresAndCategories(true);
+        $modelConfigStore->fetchAllStoresConfigArray(true);
     }
 
     protected function createJobInitCache($storeId) {

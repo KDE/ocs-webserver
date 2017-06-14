@@ -63,13 +63,13 @@ class RssController extends Local_Controller_Action_DomainSwitch
     {
         throw new Zend_Controller_Action_Exception('deprecated method call');
 
-        $this->_helper->layout()->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
-
-        $latestProducts = $this->getLatestProductsForHost();
-
-        $rssWriter = Zend_Feed::importArray($latestProducts);
-        $rssWriter->send();
+        //$this->_helper->layout()->disableLayout();
+        //$this->_helper->viewRenderer->setNoRender(true);
+        //
+        //$latestProducts = $this->getLatestProductsForHost();
+        //
+        //$rssWriter = Zend_Feed::importArray($latestProducts);
+        //$rssWriter->send();
     }
 
     private function getLatestProductsForHost()

@@ -69,6 +69,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $modelProduct = new Default_Model_Project();
         $this->view->product = $modelProduct->fetchProductInfo($this->_projectId);
+        if (empty($this->view->product)) {
+            throw new Zend_Controller_Action_Exception('This page does not exist', 404);
+        }
         $this->view->cat_id = $this->view->product->project_category_id;
 
         $helperUserIsOwner = new Default_View_Helper_UserIsOwner();
@@ -167,7 +170,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
      * @param string $txt
      * @param bool   $nl2br
      *
-     * @return html-string
+     * @return string
      */
     private function bbcode2html($txt, $nl2br = true, $forcecolor = '')
     {

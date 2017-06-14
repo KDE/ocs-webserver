@@ -19,6 +19,8 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
+$helpProductUrl = new Default_View_Helper_BuildProductUrl();
+$helpImage = new Default_View_Helper_Image();
 ?>
 <div class="explore-product col-lg-12 col-md-12 col-sm-12 col-xs-12 nopaddingleftright" >
     <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 nopaddingleftright" >
@@ -28,16 +30,16 @@
     </div>
     <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 explore-product-imgcolumn nopaddingleftright" >
         <figure>
-            <a href="<?= $this->buildProductUrl($this->product['project_id'], ''); ?>">
+            <a href="<?= $helpProductUrl->buildProductUrl($this->product['project_id'], ''); ?>">
                
-                <img src="<?php echo $this->Image($this->product['image_small'], array('width' => 40, 'height' => 40)); ?>" style="width: 30px; height: 30px; padding-top: 3px"/>
+                <img src="<?php echo $helpImage->Image($this->product['image_small'], array('width' => 40, 'height' => 40)); ?>" style="width: 30px; height: 30px; padding-top: 3px"/>
                
             </a>
         </figure>
     </div>
     <div class="explore-product-details col-lg-9 col-md-9 col-sm-9 col-xs-9 nopaddingleftright" >
          <div style="line-height: 16px">
-            <a href="<?= $this->buildProductUrl($this->product['project_id'], ''); ?>"><?php echo $this->product['title']; ?></a>           
+            <a href="<?= $helpProductUrl->buildProductUrl($this->product['project_id'], ''); ?>"><?php echo $this->product['title']; ?></a>
             <span style="font-size: smaller;display: block"><?php echo $this->product['category_title']; ?></span>
         </div>               
     </div>
