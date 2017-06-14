@@ -20,11 +20,11 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-class Backend_Commands_DeleteProductFromIndex implements Local_Queue_CommandInterface
+class Backend_Commands_InitCacheStoreCategories implements Local_Queue_CommandInterface
 {
 
-    protected $productId;
-    protected $catId;
+    protected $storeId;
+    protected $options;
 
     /**
      * PHP 5 allows developers to declare constructor methods for classes.
@@ -36,35 +36,44 @@ class Backend_Commands_DeleteProductFromIndex implements Local_Queue_CommandInte
      *
      * param [ mixed $args [, $... ]]
      *
-     * @param int $productId
+     * @param int    $storeId
+     * @param string $indexId
      *
      * @link http://php.net/manual/en/language.oop5.decon.php
      */
-    public function __construct($productId, $catId)
+    public function __construct($storeId)
     {
-        $this->productId = $productId;
-        $this->catId = $catId;
+        $this->storeId = $storeId;
+        $this->options = Zend_Registry::get('config')->settings->toArray();
     }
-
 
     public function doCommand()
     {
-        return $this->deleteProductFromIndex();
+
+        return $this->callInitCache($this->storeId);
     }
 
-    protected function deleteProductFromIndex()
+    protected function callInitCache($storeId)
     {
-        if (empty($this->productId) OR empty($this->catId)) {
-            Zend_Registry::get('logger')->warn(__METHOD__ . ' - no productId or catId was set.');
-            return;
-        }
+        $webCache = $this->initWebCacheAccess($this->options);
+        $modelPCat = new Default_Model_ProjectCategory();
+        $tree = $modelPCat->fetchCategoryTreeForStore($storeId, true);
+        $webCache->save($tree,Default_Model_ProjectCategory::CACHE_TREE_STORE. "_{$storeId}", array(), 28800);
 
-        $product = array();
-        $product['project_id'] = $this->productId;
-        $product['project_category_id'] = $this->catId;
+        $modelConfigStore = new Default_Model_DbTable_ConfigStore();
+        $storesCat = $modelConfigStore->fetchAllStoresAndCategories(true);
+        $webCache->save($storesCat,Default_Model_DbTable_ConfigStore::CACHE_STORES_CATEGORIES, array(), 28800);
+    }
 
-        $modelSearch = new Default_Model_Search_Lucene();
-        $modelSearch->deleteDocument($product);
+    protected function initWebCacheAccess($options)
+    {
+        $cache = Zend_Cache::factory(
+            $options['cache']['frontend']['type'],
+            $options['cache']['backend']['type'],
+            $options['cache']['frontend']['options'],
+            $options['cache']['backend']['options']
+        );
+        return $cache;
     }
 
 }

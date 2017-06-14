@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -19,14 +20,14 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-
 class Local_Queue_Factory
 {
 
     /**
      * @param $queueName
+     *
      * @return Zend_Queue
-     * @deprecated 
+     * @deprecated
      */
     public static function createQueue($queueName)
     {
@@ -37,6 +38,7 @@ class Local_Queue_Factory
 
     /**
      * @param $config
+     *
      * @return Zend_Queue
      * @deprecated
      */
@@ -52,15 +54,18 @@ class Local_Queue_Factory
 
     /**
      * @param string $identifier
+     *
      * @return Zend_Queue
      * @throws Zend_Exception
      */
-    public static function getQueue($identifier)
+    public static function getQueue($identifier = null)
     {
+        /** @var Zend_Config $configAll */
         $configAll = Zend_Registry::get('config');
-        $configDb = $configAll->resources->db->params;
-        $queueAdapter = new Local_Queue_Adapter_Db(array('driverOptions' => $configDb->toArray()));
-        return new Zend_Queue($queueAdapter, array('name' => $identifier, 'driverOptions' => $configDb->toArray()));
+        $configDb = $configAll->resources->db->params->toArray();
+        $nameQueue = isset($identifier) ? $identifier : Zend_Registry::get('config')->settings->queue->general->name;
+        $queueAdapter = new Local_Queue_Adapter_Db(array('driverOptions' => $configDb));
+        return new Zend_Queue($queueAdapter, array(Zend_Queue::NAME => $nameQueue, 'driverOptions' => $configDb));
     }
 
 }

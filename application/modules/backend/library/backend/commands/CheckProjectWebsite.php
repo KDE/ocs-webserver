@@ -19,29 +19,34 @@
  *
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
- **/
-abstract class Local_Queue_CommandAbstract implements Local_Queue_CommandInterface
+ *
+ * Created: 13.06.2017
+ */
+class Backend_Commands_CheckProjectWebsite implements Local_Queue_CommandInterface
 {
-
-    /** @var  int */
-    protected $_countCall;
-
-    abstract public function doCommand();
+    protected $project_id;
+    protected $websiteUrl;
+    protected $authCode;
 
     /**
-     * @return int
+     * Backend_Commands_CheckWebsiteAuthCode constructor.
+     *
+     * @param             $project_id
+     * @param             $link_1
+     * @param null|string $authCode
      */
-    public function getCountCall()
+    public function __construct($project_id, $link_1, $authCode)
     {
-        return $this->_countCall;
+        $this->project_id = (int)$project_id;
+        $this->websiteUrl = $link_1;
+        $this->authCode = $authCode;
     }
 
-    /**
-     * @param int $tries
-     */
-    public function setCountCall($tries)
+    public function doCommand()
     {
-        $this->_countCall = $tries;
+        $websiteProject = new Local_Verification_WebsiteProject();
+        $verificationResult = $websiteProject->testForAuthCodeExist($this->websiteUrl, $this->authCode);
+        $websiteProject->updateData($this->project_id, $verificationResult);
     }
 
 }

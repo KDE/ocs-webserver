@@ -30,7 +30,7 @@ $addedOnDate = $this->humanTiming($this->created_at);
 $addedOnText = $addedOnDate['age'] . ' ' . $addedOnDate['unit'];
 $updatedOnDate = $this->humanTiming($this->changed_at);
 $updatedOnText = $updatedOnDate['age'] . ' ' . $updatedOnDate['unit'];
-$websiteOwner = new Local_Verification_WebsiteAuthCodeExist();
+$websiteOwner = new Local_Verification_WebsiteProject();
 $websiteAuthCode = $websiteOwner->generateAuthCode(stripslashes($this->link_1));
 
 $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();

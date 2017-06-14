@@ -140,7 +140,7 @@ class Local_Controller_Action_DomainSwitch extends Zend_Controller_Action
             ->setHeader('Pragma', 'no-cache', true)
             ->setHeader('Cache-Control', 'private, no-store, no-cache, must-revalidate, post-check=0, pre-check=0',
                 true)
-        ; 
+        ;
    }
 
     private function _initAdminDbLogger()

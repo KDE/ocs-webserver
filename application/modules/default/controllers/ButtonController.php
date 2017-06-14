@@ -58,7 +58,7 @@ class ButtonController extends Zend_Controller_Action
 
         $this->view->authCode = '';
         if ($dataProject->link_1) {
-            $websiteOwner = new Local_Verification_WebsiteAuthCodeExist();
+            $websiteOwner = new Local_Verification_WebsiteProject();
             $this->view->authCode = '<meta name="ocs-site-verification" content="' . $websiteOwner->generateAuthCode(stripslashes($dataProject->link_1)) . '" />';
         }
     }

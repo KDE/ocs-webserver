@@ -279,10 +279,10 @@ class Local_Search_Provider_Lucene implements Local_Search_ProviderInterface
         $doc->addField(Zend_Search_Lucene_Field::unIndexed('count_downloads_hive',
             $element['count_downloads_hive']));
 
-        $doc->addField(Zend_Search_Lucene_Field::unIndexed('amount_received', $element['amount_received']));
-        $doc->addField(Zend_Search_Lucene_Field::unIndexed('count_plings', $element['count_plings']));
-        $doc->addField(Zend_Search_Lucene_Field::unIndexed('count_plingers', $element['count_plingers']));
-        $doc->addField(Zend_Search_Lucene_Field::unIndexed('latest_pling', $element['latest_pling']));
+        //$doc->addField(Zend_Search_Lucene_Field::unIndexed('amount_received', $element['amount_received']));
+        //$doc->addField(Zend_Search_Lucene_Field::unIndexed('count_plings', $element['count_plings']));
+        //$doc->addField(Zend_Search_Lucene_Field::unIndexed('count_plingers', $element['count_plingers']));
+        //$doc->addField(Zend_Search_Lucene_Field::unIndexed('latest_pling', $element['latest_pling']));
 
         $doc->addField(Zend_Search_Lucene_Field::unIndexed('laplace_score', $element['laplace_score']));
 

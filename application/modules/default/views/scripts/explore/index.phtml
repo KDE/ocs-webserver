@@ -71,13 +71,17 @@ $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
                   if (count($this->products) == 0) {
                       echo '<div class="empty">No products to show in this category.</div>';
                   } else {
-                       $time_start = microtime(true);echo $this->render('explore/partials/products.phtml');$time_elapsed = microtime(true) - $time_start;
+                       $time_start = microtime(true);
+                       echo $this->render('explore/partials/products.phtml');
+                       $time_elapsed = microtime(true) - $time_start;
                   }
                   ?>
+                  <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
+                      echo '<div class="explore-product col-lg-12 col-md-12 col-sm-12 col-xs-12">';
+                      echo '<div class="alert alert-warning" role="alert"><strong>Rendering Time: </strong>'.$time_elapsed.' s</div>';
+                      echo '</div>';
+                  }?>
               </div>
-            <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
-                echo '<div class="alert alert-warning" role="alert"><strong>Rendering Time: </strong>'.$time_elapsed.' s</div>';
-            }?>
 
 
               <section class="explore-footer">
@@ -94,7 +98,7 @@ $time_start = microtime(true);
      //$donations = $modelInfo->getLatestPlings(5, $this->cat_id);
      $topprods = $modelInfo->getMostDownloaded(100, $this->cat_id);
      $asidehide = '';
-     if(!$this->catabout && count($comments)==0 && count($donations)==0 && count($topprods)==0 )
+     if(!$this->catabout && count($comments)==0  && count($topprods)==0 )
      {
         $asidehide = 'hide';
      }
@@ -152,7 +156,7 @@ $time_start = microtime(true);
           <?php
           $time_elapsed = microtime(true) - $time_start;
           if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
-              echo '<section><div class="alert alert-warning" role="alert"><strong>Rendering Time: </strong>'.$time_elapsed.' s</div></section>\n';
+              echo '<div class="alert alert-warning" role="alert"><strong>Rendering Time: </strong>'.$time_elapsed.' s</div>';
           }?>
       </div>
     </div>

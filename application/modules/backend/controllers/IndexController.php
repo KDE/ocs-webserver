@@ -75,23 +75,6 @@ class Backend_IndexController extends Local_Controller_Action_Backend
         $this->_helper->json($responseData);
 
         return;
-
-        $projectApplyTable = new Default_Model_DbTable_ProjectApply();
-
-        $sel = $projectApplyTable->select()->setIntegrityCheck(false);
-
-        $sel->from($projectApplyTable, array('DATE(`created_at`)as projectdate', 'count(*) as daycount'))
-            ->group('projectdate')
-            ->order('projectdate DESC')
-            ->limit(14);
-
-        $projectApplyData = $projectApplyTable->fetchAll($sel);
-        $projectApplyData = $projectApplyData->toArray();
-
-        $projectApplyData = array_reverse($projectApplyData);
-
-        $responseData['results'] = $projectApplyData;
-        $this->_helper->json($responseData);
     }
 
 }

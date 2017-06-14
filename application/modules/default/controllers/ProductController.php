@@ -69,6 +69,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $modelProduct = new Default_Model_Project();
         $this->view->product = $modelProduct->fetchProductInfo($this->_projectId);
+        if (empty($this->view->product)) {
+            throw new Zend_Controller_Action_Exception('This page does not exist', 404);
+        }
         $this->view->cat_id = $this->view->product->project_category_id;
 
         $helperUserIsOwner = new Default_View_Helper_UserIsOwner();
@@ -130,7 +133,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $this->view->catParentTitle = $helperFetchCategory->catTitle($this->view->catParentId);
         }
 
-        $AuthCodeExist = new Local_Verification_WebsiteAuthCodeExist();
+        $AuthCodeExist = new Local_Verification_WebsiteProject();
         $this->view->websiteAuthCode = $AuthCodeExist->generateAuthCode(stripslashes($this->view->product->link_1));
 
         // switch off temporally 02.05.2017
@@ -167,7 +170,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
      * @param string $txt
      * @param bool   $nl2br
      *
-     * @return html-string
+     * @return string
      */
     private function bbcode2html($txt, $nl2br = true, $forcecolor = '')
     {
@@ -270,6 +273,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $valid = true;
         $modelProject = new Default_Model_Project();
 
+        $newProject = null;
         try {
             if (isset($values['project_id'])) {
                 $newProject = $modelProject->updateProject($values['project_id'], $values);
@@ -279,7 +283,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             }
 
         } catch (Exception $exc) {
-            echo $exc->getTraceAsString();
+            Zend_Registry::get('logger')->warn(__METHOD__ . ' - traceString: ' . $exc->getTraceAsString());
         }
 
         if (!$newProject) {
@@ -334,13 +338,14 @@ class ProductController extends Local_Controller_Action_DomainSwitch
      */
     protected function createTaskWebsiteOwnerVerification($projectData)
     {
-        if (false == empty($projectData->link_1)) {
-            $websiteOwner = new Local_Verification_WebsiteAuthCodeExist();
-            $queue = Local_Queue_Factory::createQueue('validate');
-            $command = new Local_Verification_Queue_Command_WebsiteAuthCodeExist($projectData, $projectData->link_1,
-                $websiteOwner->generateAuthCode(stripslashes($projectData->link_1)));
-            $queue->send(serialize($command));
+        if (empty($projectData->link_1)) {
+            return;
         }
+        $checkAuthCode = new Local_Verification_WebsiteProject();
+        $authCode = $checkAuthCode->generateAuthCode(stripslashes($projectData->link_1));
+        $queue = Local_Queue_Factory::getQueue();
+        $command = new Backend_Commands_CheckProjectWebsite($projectData->project_id, $projectData->link_1, $authCode);
+        $queue->send(serialize($command));
     }
 
     /**
@@ -1273,14 +1278,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         if ($this->_request->isXmlHttpRequest()) {
             $tabProject = new Default_Model_DbTable_Project();
             $dataProject = $tabProject->find($this->_projectId)->current();
-            $websiteOwner = new Local_Verification_WebsiteAuthCodeExist();
-            $this->view->html_verifier = $websiteOwner->generateAuthCode(stripslashes($dataProject->link_1));
-            if (false == empty($dataProject->link_1)) {
-                $queue = Local_Queue_Factory::createQueue('validate');
-                $command = new Local_Verification_Queue_Command_WebsiteAuthCodeExist($dataProject, $dataProject->link_1,
-                    $websiteOwner->generateAuthCode(stripslashes($dataProject->link_1)));
-                $queue->send(serialize($command));
-            }
+            $this->createTaskWebsiteOwnerVerification($dataProject);
             $this->view->message = 'Your product page is stored for validation.';
             return;
         }
@@ -1375,7 +1373,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $this->view->supporting = $productModel->fetchProjectSupporterWithPlings($widgetProjectId);
             $plingModel = new Default_Model_DbTable_Plings();
             $this->view->comments = $plingModel->getCommentsForProject($widgetProjectId, 10);
-            $websiteOwner = new Local_Verification_WebsiteAuthCodeExist();
+            $websiteOwner = new Local_Verification_WebsiteProject();
             $this->view->authCode = '<meta name="ocs-site-verification" content="'
                 . $websiteOwner->generateAuthCode(stripslashes($this->view->product->link_1)) . '" />';
         }

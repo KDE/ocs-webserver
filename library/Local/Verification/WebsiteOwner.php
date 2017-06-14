@@ -39,6 +39,37 @@ class Local_Verification_WebsiteOwner
 
     /**
      * @param string $url
+     * @param string $authCode
+     * @return bool
+     */
+    public function testForAuthCodeExist($url, $authCode)
+    {
+        if (true == empty($url)) {
+            return false;
+        }
+
+        $url = $this->addDefaultScheme($url);
+
+        $httpClient = $this->getHttpClient();
+
+        $uri = $this->getAuthFileUri($url);
+
+        $httpClient->setUri($uri);
+        $response = $this->retrieveBody($httpClient);
+
+        if (false === $response) {
+            $httpClient->setUri($url);
+            $response = $this->retrieveBody($httpClient);
+            if (false === $response) {
+                Zend_Registry::get('logger')->err(__METHOD__ . " - Error while validate AuthCode for Website: " . $url . ".\n Server replay was: " . $httpClient->getLastResponse()->getStatus() . ". " . $httpClient->getLastResponse()->getMessage() . PHP_EOL);
+                return false;
+            }
+        }
+        return (strpos($response, $authCode) !== false) ? true : false;
+    }
+
+    /**
+     * @param string $url
      * @param Zend_Db_Table_Row_Abstract $dataRow
      * @return bool
      */
@@ -188,9 +219,12 @@ class Local_Verification_WebsiteOwner
      */
     public function updateData($memberId, $verificationResult)
     {
-        $memberTable = new Default_Model_Member();
+        $modelMember = new Default_Model_Member();
         /** @var Zend_Db_Table_Row $rowMember */
-        $rowMember = $memberTable->find($memberId)->current();
+        $rowMember = $modelMember->find($memberId)->current();
+        if (count($rowMember->toArray()) == 0) {
+            return;
+        }
         $rowMember->validated_at = new Zend_Db_Expr('NOW()');
         $rowMember->validated = (int)$verificationResult;
         $rowMember->save();

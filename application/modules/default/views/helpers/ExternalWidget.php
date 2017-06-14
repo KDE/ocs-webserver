@@ -34,7 +34,7 @@ class Default_View_Helper_ExternalWidget extends Zend_View_Helper_Abstract
         $plingModel = new Default_Model_DbTable_Plings();
         $supporters = $plingModel->getProjectSupporters($productRow->project_id, 8, true);
         $nrOfSupporters = $plingModel->getCountSupporters($productRow->project_id);
-        $websiteOwner = new Local_Verification_WebsiteAuthCodeExist();
+        $websiteOwner = new Local_Verification_WebsiteProject();
         $authCode = '<meta name="ocs-site-verification" content="' . $websiteOwner->generateAuthCode(stripslashes($productRow->link_1)) . '" />';
 
         return $this->view->partial('supporterbox/partial/supporterbox.phtml', array('product' => $productRow, 'supporters' => $supporters, 'nrOfSupporters' => $nrOfSupporters, 'authCode' => $authCode));

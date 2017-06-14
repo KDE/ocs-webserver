@@ -20,7 +20,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-class Local_Verification_WebsiteAuthCodeExist
+class Local_Verification_WebsiteProject
 {
 
     const SALT_KEY = 'MakeItAndPlingIt';
@@ -146,6 +146,19 @@ class Local_Verification_WebsiteAuthCodeExist
     public function setConfig($config)
     {
         $this->_config = $config;
+    }
+
+    public function updateData($project_id, $verificationResult)
+    {
+        $modelProject = new Default_Model_Project();
+        /** @var Zend_Db_Table_Row $rowMember */
+        $rowMember = $modelProject->find($project_id)->current();
+        if (count($rowMember->toArray()) == 0) {
+            return;
+        }
+        $rowMember->validated_at = new Zend_Db_Expr('NOW()');
+        $rowMember->validated = (int)$verificationResult;
+        $rowMember->save();
     }
 
     /**

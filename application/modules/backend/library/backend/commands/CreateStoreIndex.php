@@ -35,8 +35,10 @@ class Backend_Commands_CreateStoreIndex implements Local_Queue_CommandInterface
      * In order to run a parent constructor, a call to parent::__construct() within the child constructor is required.
      *
      * param [ mixed $args [, $... ]]
-     * @param int $storeId
+     *
+     * @param int    $storeId
      * @param string $indexId
+     *
      * @link http://php.net/manual/en/language.oop5.decon.php
      */
     public function __construct($storeId, $indexId)

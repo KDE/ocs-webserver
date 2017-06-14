@@ -92,7 +92,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 $options['cache']['backend']['options']
             );
         } else {
-            // Fallback settings for some (maybe development) environments with where no cache management is installed.
+            // Fallback settings for some (maybe development) environments which have no cache management installed.
 
             if (false === is_writeable(APPLICATION_CACHE)) {
                 error_log('directory for cache files does not exists or not writable: ' . APPLICATION_CACHE);

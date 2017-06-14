@@ -33,7 +33,7 @@ class Default_View_Helper_VerificationCodePopup extends Zend_View_Helper_Abstrac
             $this->view = $view;
         }
 
-        $websiteOwner = new Local_Verification_WebsiteAuthCodeExist();
+        $websiteOwner = new Local_Verification_WebsiteProject();
         $html_verifier = $websiteOwner->generateAuthCode(stripslashes($link_1));
         $this->view->inlineScript()->appendScript(
             '$(document).ready(function(){

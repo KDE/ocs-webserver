@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -26,7 +27,7 @@ class Queue_Bootstrap extends Zend_Application_Module_Bootstrap
     {
         $autoloader = new Zend_Application_Module_Autoloader(array(
             'namespace' => 'Queue',
-            'basePath' => realpath(dirname(__FILE__)),
+            'basePath'  => realpath(dirname(__FILE__)),
         ));
         return $autoloader;
     }

@@ -20,6 +20,10 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+/**
+ * Class Local_Verification_Queue_Command
+ * @deprecated 
+ */
 class Local_Verification_Queue_Command implements Local_Queue_CommandInterface
 {
 

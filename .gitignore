@@ -71,3 +71,6 @@ _ReSharper*/
 [Tt]est[Rr]esult*
 
 httpdocs/src/status.jsx
+
+httpdocs/images_sys/flatpak-kde/*
+httpdocs/images_sys/superstore/*

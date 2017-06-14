@@ -47,7 +47,7 @@ class Local_Verification_WebsiteAuthCodeExistTest extends PHPUnit_Framework_Test
     public function testAuthCodeChecking()
     {
         $url = 'http://www.dschinnweb.de';
-        $websiteValidation = new Local_Verification_WebsiteAuthCodeExist();
+        $websiteValidation = new Local_Verification_WebsiteProject();
         $verificationResult = $websiteValidation->testForAuthCodeExist($url, $this->generateAuthCode($url));
         $this->assertEquals(false, $verificationResult, 'AuthCode was not found.');
     }

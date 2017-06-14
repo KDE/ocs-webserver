@@ -36,7 +36,7 @@ class Default_View_Helper_ExternalDonationList extends Zend_View_Helper_Abstract
 
         $authCode = '';
         if ($projectInfo->link_1) {
-            $websiteOwner = new Local_Verification_WebsiteAuthCodeExist();
+            $websiteOwner = new Local_Verification_WebsiteProject();
             $authCode = '<meta name="ocs-site-verification" content="' . $websiteOwner->generateAuthCode(stripslashes($projectInfo->link_1)) . '" />';
         }
 

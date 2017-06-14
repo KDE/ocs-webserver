@@ -37,7 +37,7 @@ class Default_View_Helper_ExternalSupporterBox extends Zend_View_Helper_Abstract
 
         $this->view->authCode = '';
         if ($productRow->link_1) {
-            $websiteOwner = new Local_Verification_WebsiteAuthCodeExist();
+            $websiteOwner = new Local_Verification_WebsiteProject();
             $this->view->authCode = '<meta name="ocs-site-verification" content="' . $websiteOwner->generateAuthCode(stripslashes($productRow->link_1)) . '" />';
         }
 
