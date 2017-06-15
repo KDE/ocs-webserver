@@ -197,30 +197,30 @@ class UserController extends Local_Controller_Action_DomainSwitch
         //TODO: Refactoring. Wird das noch benutzt?
         throw new Zend_Controller_Action_Exception('This method does not exist.', 404);
 
-        $this->_helper->layout->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
-
-        $filterInput = new Zend_Filter_Input(
-            array('*' => 'StringTrim', 'value' => 'StripTags', 'member_id' => 'Digits', 'id' => 'Alnum'),
-            array(
-                'value' => array('presence' => 'required'),
-                'member_id' => array('presence' => 'required'),
-                'id' => array('presence' => 'required')
-            ),
-            $this->_getAllParams()
-        );
-
-        $tableMember = new Default_Model_Member();
-        $tableProject = new Default_Model_Project();
-
-        $dataMember = $tableMember->find($this->_memberId)->current();
-        $dataProject = $dataMember->findDependentRowset($tableProject, 'MainProject')->current();
-        $fieldName = $filterInput->getEscaped('id');
-        $newValue = nl2br($filterInput->getEscaped('value'));
-        $dataProject->$fieldName = $newValue;
-        $dataProject->save();
-
-        echo $newValue;
+        //$this->_helper->layout->disableLayout();
+        //$this->_helper->viewRenderer->setNoRender(true);
+        //
+        //$filterInput = new Zend_Filter_Input(
+        //    array('*' => 'StringTrim', 'value' => 'StripTags', 'member_id' => 'Digits', 'id' => 'Alnum'),
+        //    array(
+        //        'value' => array('presence' => 'required'),
+        //        'member_id' => array('presence' => 'required'),
+        //        'id' => array('presence' => 'required')
+        //    ),
+        //    $this->_getAllParams()
+        //);
+        //
+        //$tableMember = new Default_Model_Member();
+        //$tableProject = new Default_Model_Project();
+        //
+        //$dataMember = $tableMember->find($this->_memberId)->current();
+        //$dataProject = $dataMember->findDependentRowset($tableProject, 'MainProject')->current();
+        //$fieldName = $filterInput->getEscaped('id');
+        //$newValue = nl2br($filterInput->getEscaped('value'));
+        //$dataProject->$fieldName = $newValue;
+        //$dataProject->save();
+        //
+        //echo $newValue;
     }
 
     public function reportAction()

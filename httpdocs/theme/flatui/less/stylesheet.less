@@ -649,7 +649,7 @@ ul.meta-nav-top
   font-size: 13px;            
   transition: color 0s;  
   bottom: -1px;
-  border-bottom-width: 3px;
+  border-bottom-width: 2px;
   border-bottom-style: solid;
   border-bottom-color: transparent;
   background-color:transparent;   
@@ -1728,7 +1728,14 @@ ul.meta-nav-top
             }
 
         }
-
+        #files-panel{
+          padding-top: 30px;
+        }
+        #updates-panel{
+          span.product-update-date{
+            padding-left: 10px;
+          }
+        }
     }
 
     
@@ -5408,7 +5415,7 @@ main#plings-page{
       > li {
             border-bottom: 1px solid #e5e5e5;
             display: block;
-            line-height: 23px;
+            line-height: 30px;
             margin-left: -10px;
             padding: 5px 10px;
         }
@@ -5418,8 +5425,6 @@ main#plings-page{
   .css-truncate-target {
         max-width: 300px;
         display: inline-block;
-        max-width: 125px;
-        overflow: hidden;
         text-overflow: ellipsis;
         vertical-align: top;
         white-space: nowrap;
