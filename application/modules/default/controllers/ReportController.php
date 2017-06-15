@@ -28,7 +28,7 @@ class ReportController extends Zend_Controller_Action
         if(APPLICATION_ENV != 'searchbotenv') {
             $comment_id = (int) $this->getParam('i');
             $project_id = (int) $this->getParam('p');
-            $reported_by = (int) Zend_Auth::getInstance()->getStorage()->read()->member_id;
+            $reported_by = Zend_Auth::getInstance()->hasIdentity() ? (int) Zend_Auth::getInstance()->getStorage()->read()->member_id : 0;
 
             $tableReportComments = new Default_Model_DbTable_ReportComments();
 
