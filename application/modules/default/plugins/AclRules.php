@@ -138,9 +138,6 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->allow(self::ROLENAME_GUEST, 'default_product',
             array('index', 'show', 'getupdatesajax', 'updates', 'follows', 'fetch'));
 
-
-
-
         $this->allow(self::ROLENAME_COOKIEUSER, 'default_product',
             array(
                 'add',
