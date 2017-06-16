@@ -61,8 +61,14 @@ class Default_Plugin_InitGlobalStoreVars extends Zend_Controller_Plugin_Abstract
             if (isset($result['config_id_name'])) {
                 return $result['config_id_name'];
             } else {
+                $userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : 'undefined';
                 Zend_Registry::get('logger')->warn(__METHOD__ . '(' . __LINE__ . ') - $requestStoreIdName = '
-                    . $requestStoreConfigName . ' :: no config id name configured' . PHP_EOL . 'store_config_list:' . print_r($store_config_list, true))
+                    . $requestStoreConfigName . ' :: no config id name configured' . PHP_EOL
+                    . 'HOST::        ' . $_SERVER['HTTP_HOST'] . PHP_EOL
+                    . 'USER_AGENT::  ' . $userAgent . PHP_EOL
+                    . 'REQUEST_URI:: ' . $_SERVER['REQUEST_URI'] . PHP_EOL
+                    . 'ENVIRONMENT:: ' . APPLICATION_ENV . PHP_EOL
+                    . 'store_config_list:' . print_r(array_column($store_config_list, 'name', 'host'), true))
                 ;
             }
         }
@@ -159,8 +165,14 @@ class Default_Plugin_InitGlobalStoreVars extends Zend_Controller_Plugin_Abstract
 
                 return $storeHost;
             } else {
-                Zend_Registry::get('logger')->warn(__METHOD__ . '(' . __LINE__ . ') - $requestStoreIdName = '
-                    . $requestStoreConfigName . ' :: no config id name configured'. PHP_EOL . 'storeConfigArray:' . print_r($storeConfigArray, true))
+                $userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : 'undefined';
+                Zend_Registry::get('logger')->warn(__METHOD__ . '(' . __LINE__ . ') - $requestStoreConfigIdName = '
+                    . $requestStoreConfigName . ' :: no config id name configured' . PHP_EOL
+                    . 'HOST::        ' . $_SERVER['HTTP_HOST'] . PHP_EOL
+                    . 'USER_AGENT::  ' . $userAgent . PHP_EOL
+                    . 'REQUEST_URI:: ' . $_SERVER['REQUEST_URI'] . PHP_EOL
+                    . 'ENVIRONMENT:: ' . APPLICATION_ENV . PHP_EOL
+                    . 'storeConfigArray:' . print_r(array_column($storeConfigArray, 'name', 'host'), true))
                 ;
             }
         }
