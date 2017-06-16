@@ -62,7 +62,7 @@ class Default_Plugin_InitGlobalStoreVars extends Zend_Controller_Plugin_Abstract
                 return $result['config_id_name'];
             } else {
                 Zend_Registry::get('logger')->warn(__METHOD__ . '(' . __LINE__ . ') - $requestStoreIdName = '
-                    . $requestStoreConfigName . ' :: no config id name configured')
+                    . $requestStoreConfigName . ' :: no config id name configured' . PHP_EOL . 'store_config_list:' . print_r($store_config_list, true))
                 ;
             }
         }
@@ -160,7 +160,7 @@ class Default_Plugin_InitGlobalStoreVars extends Zend_Controller_Plugin_Abstract
                 return $storeHost;
             } else {
                 Zend_Registry::get('logger')->warn(__METHOD__ . '(' . __LINE__ . ') - $requestStoreIdName = '
-                    . $requestStoreConfigName . ' :: no config id name configured')
+                    . $requestStoreConfigName . ' :: no config id name configured'. PHP_EOL . 'storeConfigArray:' . print_r($storeConfigArray, true))
                 ;
             }
         }
@@ -258,7 +258,7 @@ class Default_Plugin_InitGlobalStoreVars extends Zend_Controller_Plugin_Abstract
             return array();
         }
         $key = array_search($value, array_column($haystack, $key, 'host'));
-        if (isset($key)) {
+        if ($key) {
             return $haystack[$key];
         }
 
