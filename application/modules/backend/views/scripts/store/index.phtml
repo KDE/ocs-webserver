@@ -125,7 +125,14 @@
                     width: '10%',
                     list: true,
                     create: true,
-                    inputTitle: 'store displayname <small style="font-weight:normal; font-size: 0.7em">(45 chars)</small>'
+                    inputTitle: 'store displayname <small style="font-weight:normal; font-size: 0.7em">(45 chars)</small>',
+                    input: function (data) {
+                        if (data.record) {
+                            return '<input type="text" name="name" style="width:200px" value="' + data.record.name + '" pattern="[-a-zA-Z0-9_]+" /> <span class="small light">[-a-zA-Z0-9_]</span>';
+                        } else {
+                            return '<input type="text" name="name" style="width:200px" pattern="[-a-zA-Z0-9_]+" /> <span class="small">[-a-zA-Z0-9_]</span> ';
+                        }
+                    }
                 },
                 config_id_name: {
                     title: 'config id',
@@ -135,9 +142,9 @@
                     inputTitle: '(config id) store id name <small style="font-weight:normal; font-size: 0.7em">(used as id for config and search) (45 chars)</small>',
                     input: function (data) {
                         if (data.record) {
-                            return '<input type="text" name="config_id_name" style="width:200px" value="' + data.record.config_id_name + '" pattern="[-a-zA-Z0-9_]+" />';
+                            return '<input type="text" name="config_id_name" style="width:200px" value="' + data.record.config_id_name + '" pattern="[-a-zA-Z0-9_]+" /> <span class="small">[-a-zA-Z0-9_]</span>';
                         } else {
-                            return '<input type="text" name="config_id_name" style="width:200px" pattern="[-a-zA-Z0-9_]+" />';
+                            return '<input type="text" name="config_id_name" style="width:200px" pattern="[-a-zA-Z0-9_]+" /> <span class="small">[-a-zA-Z0-9_]</span>';
                         }
                     }
                 },
