@@ -21,20 +21,9 @@
  **/
 
 $helperBuildExploreUrl = new Default_View_Helper_BuildExploreUrl();
-$helperProductCount = new Default_View_Helper_CategoryProductCount();
-$helperFetchCategory = new Default_View_Helper_CatTitle();
 $modelInfo = new Default_Model_Info();
-
-$catTitle = $helperFetchCategory->catTitle($this->filters['category']);
-if('all' == strtolower($catTitle) OR (false === isset($catTitle))) {
-    $labelTotalCounter = $this->totalcount == 1 ? ' Item' : ' Items';
-} else {
-    $labelTotalCounter = $catTitle;
-}
 $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
 ?>
-
-
 <main id="explore-content">
     <section class="wrapper" id="products-wrapper">
     <span class="glyphicon  togglesidebar" id="btnTogglesidebar" ></span>
@@ -57,12 +46,7 @@ $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
                   <li <?=$this->filters['order'] == 'top' ? 'class="active"' :'' ?>>
                       <a href="<?= $helperBuildExploreUrl->buildExploreUrl($this->filters['category'], null,
                           'top') ?>"><span><?= $this->translate('Greatest') ?></span></a>
-                  </li>
-                  <?php /*
-                  <li class="right totoalcnt">
-                      <small><?= $this->totalcount ?> <?= $labelTotalCounter ?></small>
-                  </li>
-                  */?>
+                  </li>                
               </ul>
             </div>
 
@@ -165,7 +149,6 @@ $time_start = microtime(true);
 
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
-            RssNews.setup();    
-            //ToggleSidebar.setup();        
+            RssNews.setup();                
         });
     ');
