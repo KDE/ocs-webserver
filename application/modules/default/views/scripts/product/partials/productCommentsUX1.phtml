@@ -107,8 +107,16 @@ $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountP
                                     <?php } ?>
                                 </p>
                         </h4>
+                        
+                        <?php 
+			              	require_once APPLICATION_PATH.'/../httpdocs/theme/flatui/js/lib/htmlpurifier-4.9.3-lite/library/HTMLPurifier.auto.php';
+				                	
+			              	$config = HTMLPurifier_Config::createDefault();
+			               	$purifier = new HTMLPurifier($config);
+			              	$comment_text = $purifier->purify($comment['comment_text']);
+			           	?>
 
-                        <div class="text"><?= nl2br($comment['comment_text'],true) ?></div>
+                        <div class="text"><?= nl2br($comment_text,true) ?></div>
                         <p>
                             <small class="small pull-right">
                             <?php if (Zend_Auth::getInstance()->hasIdentity()) { ?>

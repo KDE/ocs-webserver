@@ -44,7 +44,14 @@ $helperPrintDate = new Default_View_Helper_PrintDate();
         <div class="row rownomargin" >
             <div class="info">
                 <div class="small">
-                    <a href="<?=$helperBuildProductUrl->buildProductUrl($elementComment['project_id'], '', null, true)?>"><?= nl2br($elementComment['comment_text'],true) ?></a>
+                	<?php 
+		              	require_once APPLICATION_PATH.'/../httpdocs/theme/flatui/js/lib/htmlpurifier-4.9.3-lite/library/HTMLPurifier.auto.php';
+			                	
+		              	$config = HTMLPurifier_Config::createDefault();
+		               	$purifier = new HTMLPurifier($config);
+		              	$comment_text = $purifier->purify($elementComment['comment_text']);
+		           	?>
+                    <a href="<?=$helperBuildProductUrl->buildProductUrl($elementComment['project_id'], '', null, true)?>"><?= nl2br($comment_text,true) ?></a>
                 </div>
             </div>
         </div>
