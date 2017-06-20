@@ -31,7 +31,15 @@ $userRoleName = $helperUserRole->userRole();
     <div class="row">
         <span class="col-lg-5">version</span>
         <div class="col-lg-7">
-            <span class="value"><?php echo $this->product->project_version; ?> </span>
+            <span class="value">
+            <?php 
+              	require_once APPLICATION_PATH.'/../httpdocs/theme/flatui/js/lib/htmlpurifier-4.9.3-lite/library/HTMLPurifier.auto.php';
+	                	
+              	$config = HTMLPurifier_Config::createDefault();
+               	$purifier = new HTMLPurifier($config);
+              	$version = $purifier->purify($this->product->project_version);
+           	?>
+            <?php echo $version; ?> </span>
         </div>
     </div>
 
