@@ -623,6 +623,7 @@ $this->inlineScript()->appendScript(
                         var fileDescription = '';
                         if (this.description) {
                             fileDescription = this.description;
+                            fileDescription = fileDescription.replace(/<\/?[^>]+(>|$)/g, "");
                         }
 
                         var inputFileDescription = '<input data-ppload-file-description="" class="form-control input-sm"'
@@ -636,6 +637,7 @@ $this->inlineScript()->appendScript(
 
                         var versionText;
                         if(this.version==null) {versionText = '';} else{versionText = this.version;}
+                        versionText = versionText.replace(/<\/?[^>]+(>|$)/g, "");
 
                         var version = '<input data-ppload-file-version="" class="form-control input-sm"'
                             + ' type="text" maxlength="140" placeholder="File version"'
@@ -1160,6 +1162,7 @@ $this->inlineScript()->appendScript(
         }
 
         function updatePploadFileVersion(fileId, version) {
+        	version = version.replace(/<\/?[^>]+(>|$)/g, "");
             $.ajax({
                 url: $modalPpload.attr('data-updatepploadfile-uri'),
                 type: 'POST',
@@ -1495,6 +1498,7 @@ $this->inlineScript()->appendScript(
                 var fileTags = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-tags');
 
                 $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-tags', fileTags);
+                fileDescription = fileDescription.replace(/<\/?[^>]+(>|$)/g, "");
                 updatePploadFile(fileId, fileDescription, fileCategory, fileTags);
             }
         });
