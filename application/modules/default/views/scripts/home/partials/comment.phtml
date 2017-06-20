@@ -29,7 +29,7 @@ $helpImage = new Default_View_Helper_Image();
         <div style="line-height:1.5; max-height: 145px; overflow: hidden;">
             <a href="<?= $helpBuildUrl->buildProductUrl($this->comment['project_id']) ?>">
             	<?php 
-	              	require_once APPLICATION_PATH.'../httpdocs/theme/flatui/js/lib/htmlpurifier-4.9.3-lite/library/HTMLPurifier.auto.php';
+	              	require_once APPLICATION_PATH.'/../httpdocs/theme/flatui/js/lib/htmlpurifier-4.9.3-lite/library/HTMLPurifier.auto.php';
 		                	
 	              	$config = HTMLPurifier_Config::createDefault();
 	               	$purifier = new HTMLPurifier($config);

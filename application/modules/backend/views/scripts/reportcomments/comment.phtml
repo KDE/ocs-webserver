@@ -38,7 +38,7 @@ $helperImage = new Default_View_Helper_Image();
             <div class="media-body">
                 <h4 class="media-heading user_name"><?= $comment['username'] ?></h4>
                 <?php 
-	              	require_once APPLICATION_PATH.'../httpdocs/theme/flatui/js/lib/htmlpurifier-4.9.3-lite/library/HTMLPurifier.auto.php';
+	              	require_once APPLICATION_PATH.'/../httpdocs/theme/flatui/js/lib/htmlpurifier-4.9.3-lite/library/HTMLPurifier.auto.php';
 		                	
 	              	$config = HTMLPurifier_Config::createDefault();
 	               	$purifier = new HTMLPurifier($config);

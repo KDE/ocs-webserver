@@ -274,7 +274,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $modelProject = new Default_Model_Project();
         
         //cleanup input text
-        require_once APPLICATION_PATH.'../httpdocs/theme/flatui/js/lib/htmlpurifier-4.9.3-lite/library/HTMLPurifier.auto.php';
+        require_once APPLICATION_PATH.'/../httpdocs/theme/flatui/js/lib/htmlpurifier-4.9.3-lite/library/HTMLPurifier.auto.php';
         
         $config = HTMLPurifier_Config::createDefault();
         $purifier = new HTMLPurifier($config);
@@ -861,7 +861,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         //get parameter
         $amount = (float)$this->getParam('amount', 1);
         $comment = html_entity_decode(strip_tags($this->getParam('comment'), null), ENT_QUOTES, 'utf-8');
-        require_once APPLICATION_PATH.'../httpdocs/theme/flatui/js/lib/htmlpurifier-4.9.3-lite/library/HTMLPurifier.auto.php';
+        require_once APPLICATION_PATH.'/../httpdocs/theme/flatui/js/lib/htmlpurifier-4.9.3-lite/library/HTMLPurifier.auto.php';
         
         $config = HTMLPurifier_Config::createDefault();
         $purifier = new HTMLPurifier($config);
