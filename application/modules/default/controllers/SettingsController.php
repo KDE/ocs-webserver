@@ -547,7 +547,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
             //     ))
             ->addValidator('MimeType', false, $imageTable->getAllowedMimeTypes());
 
-        $form->addElement($productPicture);        
+        $form->addElement($productPicture);
         return $form;
     }
 
@@ -808,11 +808,24 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                 //remove email and username
                 unset($values['username']);
                 unset($values['mail']);
-
+                
+                require_once APPLICATION_PATH.'/../httpdocs/theme/flatui/js/lib/htmlpurifier-4.9.3-lite/library/HTMLPurifier.auto.php';
+                $config = HTMLPurifier_Config::createDefault();
+                $config->set('HTML.Allowed', ''); // Allow Nothing
+                $purifier = new HTMLPurifier($config);
+                
+                $values['firstname'] = $purifier->purify($values['firstname']);
+                $values['lastname'] = $purifier->purify($values['lastname']);
+                $values['city'] = $purifier->purify($values['city']);
+                $values['country'] = $purifier->purify($values['country']);
+                
+                
                 $this->_memberSettings->setFromArray($form->getValues());
                 $this->_memberSettings->save();
 
-                $this->_mainproject->description = $values['aboutme'];
+                $about = $purifier->purify($values['aboutme']);
+                $this->_mainproject->description = $about;
+                
                 $this->_mainproject->save();
 
                 $this->view->profileform = $form;
@@ -1040,18 +1053,18 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                     $imageService = new Default_Model_DbTable_Image();
                     $newImageName = $imageService->saveImageOnMediaServer($tmpProfilePictureTitle);
                 }
-                
-                if (isset($newImageName)) {                    
+
+                if (isset($newImageName)) {
                     $this->_memberSettings->profile_image_url_bg = IMAGES_MEDIA_SERVER . '/cache/1920x450-2/img/' . $newImageName;
                 }
-               
+
                 $this->_memberSettings->save();
                 $this->view->member = $this->_memberSettings;
                 $form->populate($this->_memberSettings->toArray());
 
                 $this->view->save = 1;
                 $this->view->pictureformbg = $form;
-               
+
                 $this->renderScript('settings/partials/picture-bg.phtml');
             } else {
                 $this->view->pictureformbg = $form;
