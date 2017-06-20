@@ -36,7 +36,7 @@ $userRoleName = $helperUserRole->userRole();
               	require_once APPLICATION_PATH.'/../httpdocs/theme/flatui/js/lib/htmlpurifier-4.9.3-lite/library/HTMLPurifier.auto.php';
 	                	
               	$config = HTMLPurifier_Config::createDefault();
-              	$config->set('HTML&', 'Allowed', ''); // Allow Nothing
+              	$config->set('HTML','Allowed', ''); // Allow Nothing
                	$purifier = new HTMLPurifier($config);
               	$version = $purifier->purify($this->product->project_version);
            	?>
