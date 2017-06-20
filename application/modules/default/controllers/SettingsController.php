@@ -820,7 +820,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                 $values['country'] = $purifier->purify($values['country']);
                 
                 
-                $this->_memberSettings->setFromArray($form->getValues());
+                $this->_memberSettings->setFromArray($values);
                 $this->_memberSettings->save();
 
                 $about = $purifier->purify($values['aboutme']);
