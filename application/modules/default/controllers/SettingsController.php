@@ -808,11 +808,24 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                 //remove email and username
                 unset($values['username']);
                 unset($values['mail']);
-
+                
+                require_once APPLICATION_PATH.'/../httpdocs/theme/flatui/js/lib/htmlpurifier-4.9.3-lite/library/HTMLPurifier.auto.php';
+                $config = HTMLPurifier_Config::createDefault();
+                $config->set('HTML.Allowed', ''); // Allow Nothing
+                $purifier = new HTMLPurifier($config);
+                
+                $values['firstname'] = $purifier->purify($values['firstname']);
+                $values['lastname'] = $purifier->purify($values['lastname']);
+                $values['city'] = $purifier->purify($values['city']);
+                $values['country'] = $purifier->purify($values['country']);
+                
+                
                 $this->_memberSettings->setFromArray($form->getValues());
                 $this->_memberSettings->save();
 
-                $this->_mainproject->description = $values['aboutme'];
+                $about = $purifier->purify($values['aboutme']);
+                $this->_mainproject->description = $about;
+                
                 $this->_mainproject->save();
 
                 $this->view->profileform = $form;
