@@ -69,7 +69,14 @@
                             </div>
                             <div class="explore-product-details col-lg-7 col-md-7 col-sm-7 col-xs-7">
                                 <h3>
-                                    <a href="<?= $helperBuildProductUrl->buildProductUrl($this->product['project_id'], ''); ?>"><?php echo $this->product['title']; ?> <span style="font-size: smaller; padding-left: 20px"><?php echo $this->product['version'] ?> </span></a>
+                                	<?php 
+						              	require_once '/theme/flatui/js/lib/htmlpurifier-4.9.3-lite/library/HTMLPurifier.auto.php';
+							                	
+						              	$config = HTMLPurifier_Config::createDefault();
+						               	$purifier = new HTMLPurifier($config);
+						              	$version = $purifier->purify($this->product['version']);
+						           	?>
+                                    <a href="<?= $helperBuildProductUrl->buildProductUrl($this->product['project_id'], ''); ?>"><?php echo $this->product['title']; ?> <span style="font-size: smaller; padding-left: 20px"><?php echo $version ?> </span></a>
                                 </h3>
 
                                 <b style="display: block; margin-bottom: 5px"><?php echo $this->product['cat_title']?></b>

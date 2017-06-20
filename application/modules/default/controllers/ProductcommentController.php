@@ -42,7 +42,13 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
         $data['comment_target_id'] = (int)$this->getParam('p');
         $data['comment_parent_id'] = (int)$this->getParam('i');
         $data['comment_member_id'] = (int)$this->_authMember->member_id;
-        $data['comment_text'] = $this->getParam('msg');
+        //$data['comment_text'] = $this->getParam('msg');
+        
+        require_once '/theme/flatui/js/lib/htmlpurifier-4.9.3-lite/library/HTMLPurifier.auto.php';
+        
+        $config = HTMLPurifier_Config::createDefault();
+        $purifier = new HTMLPurifier($config);
+        $data['comment_text'] = $purifier->purify($this->getParam('msg'));
 
         $tableReplies = new Default_Model_ProjectComments();
         $result = $tableReplies->save($data);

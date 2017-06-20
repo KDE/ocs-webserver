@@ -53,7 +53,14 @@ $helperImage = new Default_View_Helper_Image();
     <article class="col-lg-11 col-md-9 col-sm-9 col-xs-9">
         <!-- title -->
         <div class="title">
-            <h3><a href="<?= $helperBuildProductUrl->buildProductUrl($this->project_id) ?>"><?php echo $this->title; ?> <?php echo $this->version; ?></a><span  style="font-weight: normal; font-size: small; color: #4e4e4e"> added </span><span  style="font-weight: 700; font-size: small; color: #4e4e4e"><?= $addedOnText ?> ago</span><span style="font-weight: 700; font-size: small; float: right; color: #4e4e4e"> <?= $updatedOnText ?> ago</span><span style="font-weight: normal; font-size: small; float: right; color: #4e4e4e">updated&nbsp;</span></h3>
+        	<?php 
+              	require_once '/theme/flatui/js/lib/htmlpurifier-4.9.3-lite/library/HTMLPurifier.auto.php';
+	                	
+              	$config = HTMLPurifier_Config::createDefault();
+               	$purifier = new HTMLPurifier($config);
+              	$version = $purifier->purify($this->version);
+           	?>
+            <h3><a href="<?= $helperBuildProductUrl->buildProductUrl($this->project_id) ?>"><?php echo $this->title; ?> <?php echo $version; ?></a><span  style="font-weight: normal; font-size: small; color: #4e4e4e"> added </span><span  style="font-weight: 700; font-size: small; color: #4e4e4e"><?= $addedOnText ?> ago</span><span style="font-weight: 700; font-size: small; float: right; color: #4e4e4e"> <?= $updatedOnText ?> ago</span><span style="font-weight: normal; font-size: small; float: right; color: #4e4e4e">updated&nbsp;</span></h3>
             
         </div>
         <!-- /title -->
@@ -108,6 +115,8 @@ $helperImage = new Default_View_Helper_Image();
                 <a role="button" href="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, 'edit') ?>" class="btn btn-native">
                     <?= $this->translate('Edit') ?>
                 </a>
+                
+                
                    
                 <!-- ppload -->
                 <a role="button" class="btn btn-native" href="#modal-ppload"
@@ -115,7 +124,7 @@ $helperImage = new Default_View_Helper_Image();
                    data-ppload-collection-id="<?= $this->ppload_collection_id ?>"
                    data-product-id="<?= $this->project_id ?>"
                    data-product-title="<?= $this->title ?>"
-                   data-product-version="<?= $this->version ?>"
+                   data-product-version="<?= $version ?>"
                    data-addpploadfile-uri="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, 'addpploadfile') ?>"
                    data-updatepploadfile-uri="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, 'updatepploadfile') ?>"
                    data-updatepackagetype-uri="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, 'updatepackagetype') ?>"

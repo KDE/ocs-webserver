@@ -35,7 +35,15 @@ $helperFetchSubcategoriesForProduct = new Default_View_Helper_FetchCategoriesFor
         <div class="details">
             <h3>
                 <a href="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, ''); ?>">
-                    <?php echo $this->title; ?> <?php echo $this->version; ?>
+                	<?php 
+	                	require_once '/theme/flatui/js/lib/htmlpurifier-4.9.3-lite/library/HTMLPurifier.auto.php';
+	                	
+	                	$config = HTMLPurifier_Config::createDefault();
+	                	$purifier = new HTMLPurifier($config);
+	                	$version = $purifier->purify($this->version);
+                	?>
+                
+                    <?php echo $this->title; ?> <?php echo $version; ?>
                 </a>
             </h3>
             <?php if (empty($this->claimable)) { ?>

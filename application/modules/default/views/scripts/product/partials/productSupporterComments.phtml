@@ -61,7 +61,14 @@ $helperImage = new Default_View_Helper_Image();
                                     ago</span> </span>
                         </div>
                         <div class="popover-content">
-                            <p><?= $comment['comment_text'] ?></p>
+                        	<?php 
+				              	require_once '/theme/flatui/js/lib/htmlpurifier-4.9.3-lite/library/HTMLPurifier.auto.php';
+					                	
+				              	$config = HTMLPurifier_Config::createDefault();
+				               	$purifier = new HTMLPurifier($config);
+				              	$comment_text = $purifier->purify($comment['comment_text']);
+				           	?>
+                            <p><?= $comment_text ?></p>
                         </div>
                      </div>
                 </div>
