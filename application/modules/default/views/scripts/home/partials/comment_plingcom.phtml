@@ -35,7 +35,7 @@ $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
           <div class="small" style="line-height:1.3">
               <a href="<?= $helpProductUrl->buildProductUrl($this->comment['project_id']) ?>">
               	<?php 
-	              	require_once '/theme/flatui/js/lib/htmlpurifier-4.9.3-lite/library/HTMLPurifier.auto.php';
+	              	require_once APPLICATION_PATH.'../httpdocs/theme/flatui/js/lib/htmlpurifier-4.9.3-lite/library/HTMLPurifier.auto.php';
 		                	
 	              	$config = HTMLPurifier_Config::createDefault();
 	               	$purifier = new HTMLPurifier($config);

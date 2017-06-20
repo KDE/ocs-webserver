@@ -109,7 +109,7 @@ $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountP
                         </h4>
                         
                         <?php 
-			              	require_once '/theme/flatui/js/lib/htmlpurifier-4.9.3-lite/library/HTMLPurifier.auto.php';
+			              	require_once APPLICATION_PATH.'../httpdocs/theme/flatui/js/lib/htmlpurifier-4.9.3-lite/library/HTMLPurifier.auto.php';
 				                	
 			              	$config = HTMLPurifier_Config::createDefault();
 			               	$purifier = new HTMLPurifier($config);

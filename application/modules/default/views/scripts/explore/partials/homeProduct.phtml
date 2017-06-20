@@ -36,7 +36,7 @@ $helperFetchSubcategoriesForProduct = new Default_View_Helper_FetchCategoriesFor
             <h3>
                 <a href="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, ''); ?>">
                 	<?php 
-	                	require_once '/theme/flatui/js/lib/htmlpurifier-4.9.3-lite/library/HTMLPurifier.auto.php';
+	                	require_once APPLICATION_PATH.'../httpdocs/theme/flatui/js/lib/htmlpurifier-4.9.3-lite/library/HTMLPurifier.auto.php';
 	                	
 	                	$config = HTMLPurifier_Config::createDefault();
 	                	$purifier = new HTMLPurifier($config);

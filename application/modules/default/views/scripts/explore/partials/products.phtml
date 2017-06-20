@@ -47,7 +47,7 @@ foreach ($this->products as $this->product) {
     <div class="explore-product-details col-lg-7 col-md-7 col-sm-7 col-xs-7">
         <h3>
         	<?php 
-              	require_once '/theme/flatui/js/lib/htmlpurifier-4.9.3-lite/library/HTMLPurifier.auto.php';
+              	require_once APPLICATION_PATH.'../httpdocs/theme/flatui/js/lib/htmlpurifier-4.9.3-lite/library/HTMLPurifier.auto.php';
 	                	
               	$config = HTMLPurifier_Config::createDefault();
                	$purifier = new HTMLPurifier($config);
