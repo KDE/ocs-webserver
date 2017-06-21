@@ -809,21 +809,16 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                 unset($values['username']);
                 unset($values['mail']);
                 
-                require_once APPLICATION_PATH.'/../httpdocs/theme/flatui/js/lib/htmlpurifier-4.9.3-lite/library/HTMLPurifier.auto.php';
-                $config = HTMLPurifier_Config::createDefault();
-                $config->set('HTML.Allowed', ''); // Allow Nothing
-                $purifier = new HTMLPurifier($config);
-                
-                $values['firstname'] = $purifier->purify($values['firstname']);
-                $values['lastname'] = $purifier->purify($values['lastname']);
-                $values['city'] = $purifier->purify($values['city']);
-                $values['country'] = $purifier->purify($values['country']);
+                $values['firstname'] = Default_Model_HtmlPurify::purify($values['firstname']);
+                $values['lastname'] = Default_Model_HtmlPurify::purify($values['lastname']);
+                $values['city'] = Default_Model_HtmlPurify::purify($values['city']);
+                $values['country'] = Default_Model_HtmlPurify::purify($values['country']);
                 
                 
                 $this->_memberSettings->setFromArray($values);
                 $this->_memberSettings->save();
 
-                $about = $purifier->purify($values['aboutme']);
+                $about = Default_Model_HtmlPurify::purify($values['aboutme']);
                 $this->_mainproject->description = $about;
                 
                 $this->_mainproject->save();

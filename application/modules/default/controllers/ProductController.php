@@ -274,13 +274,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $modelProject = new Default_Model_Project();
         
         //cleanup input text
-        require_once APPLICATION_PATH.'/../httpdocs/theme/flatui/js/lib/htmlpurifier-4.9.3-lite/library/HTMLPurifier.auto.php';
-        
-        $config = HTMLPurifier_Config::createDefault();
-        $purifier = new HTMLPurifier($config);
-        $values['version'] = $purifier->purify($values['version']);
-        $values['description'] = $purifier->purify($values['description']);
-        $values['embed_code'] = $purifier->purify($values['embed_code']);
+        $values['version'] = Default_Model_HtmlPurify::purify($values['version']);
+        $values['description'] = Default_Model_HtmlPurify::purify($values['description']);
+        $values['embed_code'] = Default_Model_HtmlPurify::purify($values['embed_code']);
 
         $newProject = null;
         try {
@@ -860,13 +856,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         //get parameter
         $amount = (float)$this->getParam('amount', 1);
-        $comment = html_entity_decode(strip_tags($this->getParam('comment'), null), ENT_QUOTES, 'utf-8');
-        require_once APPLICATION_PATH.'/../httpdocs/theme/flatui/js/lib/htmlpurifier-4.9.3-lite/library/HTMLPurifier.auto.php';
-        
-        $config = HTMLPurifier_Config::createDefault();
-        $purifier = new HTMLPurifier($config);
-        $comment = $purifier->purify($comment);
-        
+        $comment = Default_Model_HtmlPurify::purify($this->getParam('comment'));
         $paymentProvider = mb_strtolower(html_entity_decode(strip_tags($this->getParam('provider'), null), ENT_QUOTES,
             'utf-8'), 'utf-8');
         $hideIdentity = (int)$this->getParam('hideId', 0);

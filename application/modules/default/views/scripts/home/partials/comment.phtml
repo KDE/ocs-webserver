@@ -28,19 +28,12 @@ $helpImage = new Default_View_Helper_Image();
     <div style="padding:5px; display: block; height: 160px; background-color: #fff;  position: relative;">
         <div style="line-height:1.5; max-height: 145px; overflow: hidden;">
             <a href="<?= $helpBuildUrl->buildProductUrl($this->comment['project_id']) ?>">
-            	<?php 
-	              	require_once APPLICATION_PATH.'/../httpdocs/theme/flatui/js/lib/htmlpurifier-4.9.3-lite/library/HTMLPurifier.auto.php';
-		                	
-	              	$config = HTMLPurifier_Config::createDefault();
-	               	$purifier = new HTMLPurifier($config);
-	              	$comment_text = $purifier->purify($this->comment['comment_text']);
-	           	?>
-                <?=$helpTruncate->truncate(strip_tags($comment_text,' '), 200, '...', false, true)?>
+                <?=$helpTruncate->truncate(Default_Model_HtmlPurify::purify($this->comment['comment_text']), 200, '...', false, true)?>
             </a>
         </div>
 			
 		<span class="small" style="position: absolute; bottom: 0px;">
-    	<?=$helpTruncate->truncate(strip_tags($this->comment['title'],' '), 30, '...', false, true)?>
+    	    <?=$helpTruncate->truncate(Default_Model_HtmlPurify::purify($this->comment['title']), 30, '...', false, true)?>
 		</span>
     </div>
      <div style="display: block; "  class="">        

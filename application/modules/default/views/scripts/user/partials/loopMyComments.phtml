@@ -38,18 +38,14 @@ $helperPrintDate = new Default_View_Helper_PrintDate();
     </small>        
     <?php foreach ($this->comments as $elementComment): ?>
         <div class="row rownomargin" >
-            <?= $elementComment['title'] ?>
+            <?= Default_Model_HtmlPurify::purify($elementComment['title']) ?>
             <span  class="category" ><?php echo $helperFetchSubcategoriesForProduct->fetchCategoriesForProductAsString($elementComment['project_id']) ?></span>
         </div>
         <div class="row rownomargin" >
             <div class="info">
                 <div class="small">
                 	<?php 
-		              	require_once APPLICATION_PATH.'/../httpdocs/theme/flatui/js/lib/htmlpurifier-4.9.3-lite/library/HTMLPurifier.auto.php';
-			                	
-		              	$config = HTMLPurifier_Config::createDefault();
-		               	$purifier = new HTMLPurifier($config);
-		              	$comment_text = $purifier->purify($elementComment['comment_text']);
+		              	$comment_text = Default_Model_HtmlPurify::purify($elementComment['comment_text']);
 		           	?>
                     <a href="<?=$helperBuildProductUrl->buildProductUrl($elementComment['project_id'], '', null, true)?>"><?= nl2br($comment_text,true) ?></a>
                 </div>
