@@ -41,13 +41,7 @@ $textCountryCity .= $this->member->country ? ', ' . $this->member->country : '';
             <!-- HEADER -->
 
             <section class="wrapper">
-
-                <div class="page-title">
-                    <div class="center">
-                        <div><h1>Member</h1></div>
-                    </div>
-                    <hr/>
-                </div>
+                
  
                 <!-- banner -->
 
@@ -169,12 +163,14 @@ $textCountryCity .= $this->member->country ? ', ' . $this->member->country : '';
                     <div class="col-md-8 col-lg-8 col-sm-8 col-xs-12 about-me-details">
 
                         <!-- tabs nav -->
+                        <div class="pling-nav-tabs">
                         <ul class="nav nav-tabs" role="tablist">
                             <li role="presentation" class="active">
                                 <a href="#user-aboutme" data-toggle="tab" role="tab"  aria-controls="user-aboutme" >
                                     Products<?=($this->stat['cntProducts']>0?' ('.$this->stat['cntProducts'].') ':'')?>
                                 </a>
                             </li>
+                              <?php /*
                               <li>
                                 <a href="#user-donations" data-toggle="tab" role="tab"  aria-controls="user-donations">
                                     Supported by<?=($this->stat['cntSupporters']>0?' ('.$this->stat['cntSupporters'].') ':'')?>
@@ -185,7 +181,7 @@ $textCountryCity .= $this->member->country ? ', ' . $this->member->country : '';
                                     Supporter of<?=(count($this->supportingTeaser)>0?' ('.count($this->supportingTeaser).') ':'')?>
                                 </a>
                             </li>
-                            <?php /*
+                          
                             <li>
                                 <a href="#user-fans" data-toggle="tab" role="tab"  aria-controls="user-fans">
                                     Fan of<?=(count($this->followedProducts)>0?' ('.count($this->followedProducts).') ':'')?>
@@ -201,6 +197,7 @@ $textCountryCity .= $this->member->country ? ', ' . $this->member->country : '';
                             
                           
                         </ul>
+                        </div>
                         <!-- /tabs nav -->
 
                         <!-- tab panels -->
@@ -246,7 +243,7 @@ $textCountryCity .= $this->member->country ? ', ' . $this->member->country : '';
                                 <?php } ?>
 
                             </div>
-
+    <?php /*
                             <div role="tabpanel" class="tab-pane " id="user-supports">
 
                                 <article>
@@ -266,7 +263,7 @@ $textCountryCity .= $this->member->country ? ', ' . $this->member->country : '';
 
                             </div>
 
-                            <?php /*
+                        
                             <div role="tabpanel" class="tab-pane " id="user-fans">                              
                                 <article>
 
@@ -281,13 +278,13 @@ $textCountryCity .= $this->member->country ? ', ' . $this->member->country : '';
                                 </article>
 
                             </div>
-                            */
-                            ?>
+                        
                             
                             <div  role="tabpanel" class="tab-pane " id="user-donations">                                    
                                   <?php echo $this->render('user/partials/loopMyDonations.phtml'); ?>
                             </div>
-                           
+                               */
+                            ?>
                             <div  role="tabpanel" class="tab-pane " id="user-comments">                                    
                                   <?php echo $this->render('user/partials/loopMyComments.phtml'); ?>
                             </div>
