@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -19,22 +20,21 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-
 class CommunityController extends Local_Controller_Action_DomainSwitch
 {
 
     public function indexAction()
     {
-    	$allDomainCatIds = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
-    	
-    	$modelCategories = new Default_Model_DbTable_ProjectCategory();
-    	if (isset($allDomainCatIds)) {
-    		$this->view->categories = $allDomainCatIds;
-    	} else {
-    		$this->view->categories = $modelCategories->fetchMainCatIdsOrdered();
-    	}
-    	
-//    	Zend_Registry::get('logger')->err(__METHOD__ . ' - categories - ' . print_r($this->view->categories, true));
+        $allDomainCatIds =
+            Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
+
+        $modelCategories = new Default_Model_DbTable_ProjectCategory();
+        if (isset($allDomainCatIds)) {
+            $this->view->categories = $allDomainCatIds;
+        } else {
+            $this->view->categories = $modelCategories->fetchMainCatIdsOrdered();
+        }
+        //    	Zend_Registry::get('logger')->err(__METHOD__ . ' - categories - ' . print_r($this->view->categories, true));
     }
 
 }

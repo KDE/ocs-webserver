@@ -27,37 +27,43 @@ class Default_Model_HtmlPurify
 
     /**
      * @param string $dirty_html
-     * @param null   $schema
+     * @param bool   $allow_min_html
      *
      * @return string
+     *
      */
-    public static function purify($dirty_html, $schema = null)
+    public static function purify($dirty_html, $allow_min_html = false)
     {
-        return self::getPurifier($schema)->purify($dirty_html);
+        return self::getPurifier($allow_min_html)->purify($dirty_html);
     }
 
     /**
-     * @param null $schema
+     * @param bool $allow_min_html
      *
      * @return false|HTMLPurifier
+     *
      */
-    public static function getPurifier($schema = null)
+    public static function getPurifier($allow_min_html = false)
     {
         include_once APPLICATION_LIB . '/HTMLPurifier.safe-includes.php';
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
         $cache_name = isset($schema) ? 'html_purifier' . md5($schema) : 'html_purifier';
-        if (false == ($purifier = $cache->load($cache_name))) {
+        //        if (false == ($purifier = $cache->load($cache_name))) {
+        $config = HTMLPurifier_Config::createDefault();
 
-            if (false == $schema) {
-                $config = HTMLPurifier_Config::createDefault();
-            } else {
-                $config = new HTMLPurifier_Config($schema);
-            }
-            $config->set('Cache.SerializerPath', APPLICATION_CACHE);
-            $purifier = new HTMLPurifier($config);
-            $cache->save($purifier, $cache_name);
+        $config->set('HTML.Allowed', ''); // Allow Nothing
+        if ($allow_min_html) {
+            $config->set('HTML.Allowed',
+                'em,strong,br,p,b,a[href],i,li,ol,ul,small,abbr[title],acronym,blockquote,caption,cite,code,del,dl, dt, sub, sup,tt,var');
         }
+        $config->set('Cache.SerializerPath', APPLICATION_CACHE);
+        $config->set('URI.MakeAbsolute', true);
+        //$config->set('AutoFormat.AutoParagraph', true);
+        $purifier = new HTMLPurifier($config);
+        $cache->save($purifier, $cache_name);
+
+        //        }
 
         return $purifier;
     }

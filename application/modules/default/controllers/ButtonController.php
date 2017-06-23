@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -36,53 +37,25 @@ class ButtonController extends Zend_Controller_Action
     {
         $this->_helper->layout->disableLayout();
 
-        $filterInput = new Zend_Filter_Input(
-            array('*' => 'StringTrim', 'project_id' => 'Alnum', 'size' => 'Alpha'),
-            array('project_id' => array('Alnum', 'presence' => 'required'), 'size' => 'Alpha'),
-            $this->getAllParams()
-        );
-
-        if (false == $filterInput->isValid('project_id')) {
-            throw new Zend_Controller_Action_Exception('This page does not exist', 404);
-        }
+        $project_id = (int)$this->getParam('project_id');
+        $size = $this->getParam('size') ? preg_replace('/[^-a-zA-Z0-9_]/', '', $this->getParam('size')) : null;
 
         $modelProject = new Default_Model_Project();
-        $dataProject = $modelProject->fetchRow(array('project_id = ?' => (int) $filterInput->getEscaped('project_id')));
+        $dataProject = $modelProject->fetchRow(array('project_id = ?' => $project_id));
 
         if (0 >= count($dataProject->toArray())) {
             throw new Zend_Controller_Action_Exception('This page does not exist', 404);
         }
 
         $this->view->projectId = $dataProject->project_id;
-        $this->view->config = array('size' => stripslashes($filterInput->getEscaped('size')), 'target' => '_blank');
+        $this->view->config = array('size' => $size, 'target' => '_blank');
 
         $this->view->authCode = '';
         if ($dataProject->link_1) {
             $websiteOwner = new Local_Verification_WebsiteProject();
-            $this->view->authCode = '<meta name="ocs-site-verification" content="' . $websiteOwner->generateAuthCode(stripslashes($dataProject->link_1)) . '" />';
+            $this->view->authCode = '<meta name="ocs-site-verification" content="'
+                . $websiteOwner->generateAuthCode(stripslashes($dataProject->link_1)) . '" />';
         }
-    }
-
-    /**
-     * @deprecated 
-     */
-    public function translateAction()
-    {
-        $this->_helper->layout->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
-
-        $filterInput = new Zend_Filter_Input(
-            array('*' => 'StringTrim', 'project_uuid' => 'Alnum'),
-            array('project_uuid' => array('Alnum', 'presence' => 'required')),
-            $this->getAllParams()
-        );
-
-        $projectTable = new Default_Model_Project();
-        $rowSet = $projectTable->fetchRow('uuid = "' . $filterInput->getEscaped('project_uuid') . '"');
-
-        $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
-        $url = $helperBuildProductUrl->buildProductUrl($rowSet->project_id);
-        $this->redirect($url);
     }
 
 }

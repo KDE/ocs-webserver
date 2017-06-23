@@ -22,6 +22,7 @@
  **/
 class ExploreController extends Local_Controller_Action_DomainSwitch
 {
+    const DEFAULT_ORDER = 'latest';
 
     /** @var  string */
     protected $_browserTitlePrepend;
@@ -31,26 +32,13 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         parent::init();
         $this->_auth = Zend_Auth::getInstance();
     }
-    
-    protected function _initResponseHeader()
-    {
-        $duration = 1800; // in seconds
-        $expires = gmdate("D, d M Y H:i:s", time() + $duration) . " GMT";
-
-        $this->getResponse()
-            ->setHeader('X-FRAME-OPTIONS', 'SAMEORIGIN', true)
-//            ->setHeader('Last-Modified', $modifiedTime, true)
-            ->setHeader('Expires', $expires, true)
-            ->setHeader('Pragma', 'no-cache', true)
-            ->setHeader('Cache-Control', 'private, no-cache, must-revalidate', true);
-    }
 
     public function categoriesAction()
     {
         // Filter-Parameter
         $inputFilterParams['category'] = (int)$this->getParam('cat', null);
         $inputFilterParams['filter'] = (int)$this->getParam('fil', null);
-        $inputFilterParams['order'] = $this->getParam('ord', 'latest');
+        $inputFilterParams['order'] = preg_replace('/[^-a-zA-Z0-9_]/', '', $this->getParam('ord', self::DEFAULT_ORDER));
         $inputFilterParams['selected'] = (int)$this->getParam('sel', $inputFilterParams['category']);
 
         $modelCategories = new Default_Model_DbTable_ProjectCategory();
@@ -74,16 +62,17 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
             $nodeSelectedState = ($inputParams['filter'] == $child['project_category_id']) ? true : false;
             if (1 == ($child['rgt'] - $child['lft'])) {
                 $result[] = array(
-                    'title' => $child['title'],
-                    'key' => $child['project_category_id'],
-                    'href' => $helperBuildExploreUrl->buildExploreUrl($inputParams['category'],
+                    'title'    => $child['title'],
+                    'key'      => $child['project_category_id'],
+                    'href'     => $helperBuildExploreUrl->buildExploreUrl($inputParams['category'],
                         $child['project_category_id'], $inputParams['order']),
-                    'target' => '_top',
+                    'target'   => '_top',
                     'selected' => $nodeSelectedState
                 );
             } else {
                 $nodeHasChildren = (1 == ($child['rgt'] - $child['lft'])) ? false : true;
-                $nodeIsSelectedSubCat = (($selChild['lft'] > $child['lft']) AND ($selChild['rgt'] < $child['rgt'])) ? true : false;
+                $nodeIsSelectedSubCat =
+                    (($selChild['lft'] > $child['lft']) AND ($selChild['rgt'] < $child['rgt'])) ? true : false;
                 $nodeExpandedState = false;
                 $nodeChildren = null;
                 if ($nodeHasChildren AND $nodeIsSelectedSubCat) {
@@ -93,30 +82,32 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
                     $nodeChildren = $this->generateResponseMsg($immChildren, $inputParams, $selChild);
                 }
                 $result[] = array(
-                    'title' => $child['title'],
-                    'key' => $child['project_category_id'],
-                    'folder' => true,
-                    'lazy' => true,
+                    'title'    => $child['title'],
+                    'key'      => $child['project_category_id'],
+                    'folder'   => true,
+                    'lazy'     => true,
                     'selected' => $nodeSelectedState,
                     'expanded' => $nodeExpandedState,
-                    'href' => $helperBuildExploreUrl->buildExploreUrl($inputParams['category'],
+                    'href'     => $helperBuildExploreUrl->buildExploreUrl($inputParams['category'],
                         $child['project_category_id'], $inputParams['order']),
-                    'target' => '_top',
+                    'target'   => '_top',
                     'children' => $nodeChildren
                 );
             }
         }
+
         return $result;
     }
 
     public function indexAction()
     {
-        $storeCatIds = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
+        $storeCatIds =
+            Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
         $this->view->categories = $storeCatIds;
-        
+
         $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
         $storePackageTypeIds = null;
-        if($storeConfig) {
+        if ($storeConfig) {
             $storePackageTypeIds = $storeConfig['package_type'];
             $this->view->package_type = $storePackageTypeIds;
         }
@@ -137,8 +128,8 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         $this->view->cat_id = $inputCatId;
 
         $filter['category'] = $inputCatId ? $inputCatId : $storeCatIds;
-        $filter['order'] = $this->getParam('ord', 'latest');
-        if($storePackageTypeIds) {
+        $filter['order'] = preg_replace('/[^-a-zA-Z0-9_]/', '', $this->getParam('ord', self::DEFAULT_ORDER));
+        if ($storePackageTypeIds) {
             $filter['package_type'] = $storePackageTypeIds;
         }
 
@@ -160,6 +151,7 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
 
     /**
      * @param $inputCatId
+     *
      * @return string|null
      */
     protected function getCategoryAbout($inputCatId)
@@ -177,17 +169,22 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
 
     /**
      * @param array $inputFilterParams
-     * @param int $limit
-     * @param int $offset
+     * @param int   $limit
+     * @param int   $offset
+     *
      * @return array
      */
     private function fetchRequestedElements($inputFilterParams, $limit = null, $offset = null)
     {
         $modelProject = new Default_Model_Project();
         $requestedElements = $modelProject->fetchProjectsByFilter($inputFilterParams, $limit, $offset);
+
         return $requestedElements;
     }
 
+    /**
+     * @deprecated
+     */
     public function carouselAction()
     {
         $tableProject = new Default_Model_Project();
@@ -197,18 +194,17 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         $categories = $tableCategories->fetchTree(25, 0, true, false, 1);
         $this->view->categories = array_merge(array(
             array(
-                'title' => 'Remove filter',
+                'title'               => 'Remove filter',
                 'project_category_id' => '',
-                'rgt' => '0',
-                'lft' => '0'
+                'rgt'                 => '0',
+                'lft'                 => '0'
             )
-        ),
-            $categories);
+        ), $categories);
 
         $requestedFilter['ranking'] = array_search($this->getParam('ranking', 'week'), $this->view->whatsHot);
-        $requestedFilter['category'] = $this->getParam('category',
-            null) ? $tableCategories->find($this->getParam('category',
-            null))->current()->title : 'Categories';
+        $requestedFilter['category'] =
+            $this->getParam('category', null) ? $tableCategories->find($this->getParam('category', null))
+                                                                ->current()->title : 'Categories';
         $this->view->requestedFilter = $requestedFilter;
 
         // Filter-Parameter
@@ -235,8 +231,8 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         $tableProject = new Default_Model_Project();
 
         // Filter-Parameter
-        $inputFilterParams['ranking'] = $this->getParam('ranking', 'week');
-        $inputFilterParams['category'] = $this->getParam('category', null);
+        $inputFilterParams['ranking'] = preg_replace('/[^-a-zA-Z0-9_]/', '', $this->getParam('ranking', 'week'));
+        $inputFilterParams['category'] = (int)$this->getParam('category', null);
 
         $page = (int)$this->getParam('page', 1);
 
@@ -255,7 +251,8 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
     {
         ini_set('memory_limit', '3072M');
 
-        $allDomainCatIds = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
+        $allDomainCatIds =
+            Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
         if (count($allDomainCatIds) == 0) {
             $allDomainCatIds = null;
         }
@@ -268,21 +265,20 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         }
 
         // Filter-Parameter
-        $filterInput = new Zend_Filter_Input(
-            array('*' => 'StringTrim', 'projectSearchText' => 'StripTags', 'page' => 'digits'),
-            array(
-                'projectSearchText' => array(
-                    new Zend_Validate_StringLength(array('min' => 3, 'max' => 100)),
-                    'presence' => 'required'
-                ),
-                'page' => 'digits'
-            ),
-            $this->getAllParams()
-        );
+        $filterInput =
+            new Zend_Filter_Input(array('*' => 'StringTrim', 'projectSearchText' => 'StripTags', 'page' => 'digits'),
+                array(
+                    'projectSearchText' => array(
+                        new Zend_Validate_StringLength(array('min' => 3, 'max' => 100)),
+                        'presence' => 'required'
+                    ),
+                    'page'              => 'digits'
+                ), $this->getAllParams());
 
         if ($filterInput->hasInvalid()) {
             $this->_helper->viewRenderer('searchError');
             $this->view->messages = $filterInput->getMessages();
+
             return;
         }
 
@@ -291,9 +287,7 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
 
         $config = Zend_Registry::get('config');
         Zend_Search_Lucene_Search_QueryParser::setDefaultEncoding('utf-8');
-        Zend_Search_Lucene_Analysis_Analyzer::setDefault(
-            new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8_CaseInsensitive()
-        );
+        Zend_Search_Lucene_Analysis_Analyzer::setDefault(new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8_CaseInsensitive());
 
         $dataPath = $config->settings->search->path;
         $dataPath .= $this->getNameForStoreClient() . DIRECTORY_SEPARATOR;
@@ -309,6 +303,7 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
             $this->_helper->viewRenderer('searchError');
             $this->view->inputFilter = $inputFilterParams;
             $this->view->searchText = $inputFilterParams['projectSearchText'];
+
             return;
         }
 
@@ -326,6 +321,7 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
 
     /**
      * @param array $hits
+     *
      * @return array
      */
     protected function copyToArray($hits)
@@ -335,7 +331,20 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         foreach ($hits as $hit) {
             $returnArray[] = $hit->getDocument();
         }
+
         return $returnArray;
+    }
+
+    protected function _initResponseHeader()
+    {
+        $duration = 1800; // in seconds
+        $expires = gmdate("D, d M Y H:i:s", time() + $duration) . " GMT";
+
+        $this->getResponse()->setHeader('X-FRAME-OPTIONS', 'SAMEORIGIN',
+                true)//            ->setHeader('Last-Modified', $modifiedTime, true)
+             ->setHeader('Expires', $expires, true)->setHeader('Pragma', 'no-cache', true)
+             ->setHeader('Cache-Control', 'private, no-cache, must-revalidate', true)
+        ;
     }
 
     /**
@@ -348,11 +357,13 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         if (file_exists($include_path)) {
             return $include_path;
         }
+
         return null;
     }
 
     /**
      * @param array $elements
+     *
      * @return array with additional info's
      */
     private function fetchAdditionalData($elements)
@@ -364,6 +375,7 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
             $info = $modelProject->fetchProductInfo($project['project_id']);
             $requestedElements[] = $info;
         }
+
         return $requestedElements;
     }
 

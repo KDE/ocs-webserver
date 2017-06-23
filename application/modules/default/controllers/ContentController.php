@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -27,7 +28,7 @@ class ContentController extends Local_Controller_Action_DomainSwitch
         $config = Zend_Registry::get('config');
         $static_config = $config->settings->static;
 
-        $pageName = $this->getParam('page');
+        $pageName = $this->getParam('page') ? preg_replace('/[^-a-zA-Z0-9_]/', '', $this->getParam('page')) : null;
 
         if (false === isset($static_config->include->$pageName)) {
             throw new Zend_Controller_Action_Exception('This page does not exist', 404);

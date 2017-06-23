@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -19,13 +20,11 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-
 class CategoriesController extends Local_Controller_Action_DomainSwitch
 {
 
     public function indexAction()
     {
-
     }
 
     public function aboutAction()
@@ -38,8 +37,9 @@ class CategoriesController extends Local_Controller_Action_DomainSwitch
         if (false === is_int($pageId)) {
             throw new Zend_Controller_Action_Exception('This page does not exist', 404);
         }
-        
-        if ((0 >= $pageId) and (false === file_exists($static_config->include_path . 'category_about/' . $pageId . '.phtml'))) {
+
+        if ((0 >= $pageId) and (false === file_exists($static_config->include_path . 'category_about/' . $pageId . '.phtml'))
+        ) {
             throw new Zend_Controller_Action_Exception('This page does not exist', 404);
         } else {
             $this->view->page = $static_config->include_path . 'category_about/' . $pageId . '.phtml';

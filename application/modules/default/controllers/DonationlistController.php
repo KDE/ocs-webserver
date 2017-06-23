@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -36,23 +37,13 @@ class DonationlistController extends Zend_Controller_Action
     {
         $this->_helper->layout->disableLayout();
 
-        $filterInput = new Zend_Filter_Input(
-            array('*' => array('StringTrim', 'StripTags')),
-            array('project_id' => array('Alnum', 'presence' => 'required')),
-            $this->getAllParams()
-        );
-
-        if (false == $filterInput->isValid('project_id')) {
-            throw new Zend_Controller_Action_Exception('This page does not exist', 404);
-        }
-
-        $projectId = $filterInput->getEscaped('project_id');
+        $projectId = (int)$this->getParam('project_id');
         $projectTable = new Default_Model_Project();
         $projectInfo = $projectTable->fetchProductInfo($projectId);
 
         if (false == isset($projectInfo)) {
             throw new Zend_Controller_Action_Exception('This page does not exist', 404);
-        } 
+        }
 
         $this->view->project = $projectInfo;
 
@@ -60,7 +51,8 @@ class DonationlistController extends Zend_Controller_Action
         $this->view->donations = $modelPlings->getDonationsForProject($projectId);
 
         $websiteOwner = new Local_Verification_WebsiteProject();
-        $this->view->authCode = '<meta name="ocs-site-verification" content="' . $websiteOwner->generateAuthCode(stripslashes($projectInfo->link_1)) . '" />';
+        $this->view->authCode = '<meta name="ocs-site-verification" content="'
+            . $websiteOwner->generateAuthCode(stripslashes($projectInfo->link_1)) . '" />';
     }
 
 } 
