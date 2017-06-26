@@ -33,7 +33,7 @@
                   rows="3"
                   cols="30"
                   id="<?= $this->escape($this->element->getName()) ?>"
-                  name="<?= $this->escape($this->element->getName()) ?>"></textarea>
+                  name="<?= $this->escape($this->element->getName()) ?>"><?= $this->escape($this->element->getValue()) ?></textarea>
         <?php if ($this->element->getMessages()) {
             $errorHtml = '';
             foreach ($this->element->getMessages() as $currentError) {

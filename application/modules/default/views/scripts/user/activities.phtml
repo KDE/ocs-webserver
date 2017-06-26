@@ -57,14 +57,11 @@ $helpDate = new Default_View_Helper_PrintDate();
                         <div class="col-lg-12"> 
                             <span>
                             <?php 
-				              	require_once APPLICATION_PATH.'/../httpdocs/theme/flatui/js/lib/htmlpurifier-4.9.3-lite/library/HTMLPurifier.auto.php';
-					                	
-				              	$config = HTMLPurifier_Config::createDefault();
-				               	$purifier = new HTMLPurifier($config);
-				              	$comment_text = $purifier->purify($comment['comment_text']);
+				              	$comment_text = Default_Model_HtmlPurify::purify($comment['comment_text']);
+				              	$comment_title = Default_Model_HtmlPurify::purify($comment['title']);
 				           	?>
                             <?php 
-                            echo $comment['username'].' comments on <span class="projecTitle"><a href="'.$helpProductUrl->buildProductUrl($comment['project_id']).'">'. $comment['title'] . '</a></span> : <span class="commentText"> '.$comment_text.' </span> <span class="commentTime"> '.$helpDate->printDate($comment['comment_created_at']).'</span>';
+                            echo $comment['username'].' comments on <span class="projecTitle"><a href="'.$helpProductUrl->buildProductUrl($comment['project_id']).'">'. $comment_title . '</a></span> : <span class="commentText"> '.$comment_text.' </span> <span class="commentTime"> '.$helpDate->printDate($comment['comment_created_at']).'</span>';
                             ?>
                             </span>
                         </div>

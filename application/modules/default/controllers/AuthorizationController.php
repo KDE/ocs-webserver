@@ -343,12 +343,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         unset($formRegisterValues['g-recaptcha-response']);
         $formRegisterValues['password'] = $formRegisterValues['password1'];
         
-        require_once APPLICATION_PATH.'/../httpdocs/theme/flatui/js/lib/htmlpurifier-4.9.3-lite/library/HTMLPurifier.auto.php';
-        $config = HTMLPurifier_Config::createDefault();
-        $config->set('HTML.Allowed', ''); // Allow Nothing
-        $purifier = new HTMLPurifier($config);
-        
-        $formRegisterValues['username'] = $purifier->purify($formRegisterValues['username']);
+        $formRegisterValues['username'] = Default_Model_HtmlPurify::purify($formRegisterValues['username']);
 
         $newUserData = $this->createNewUser($formRegisterValues);
 
