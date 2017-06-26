@@ -29,7 +29,7 @@ $helper = new Default_View_Helper_BuildProductUrl();
 $urlDislike = $helper->buildProductUrl($this->product->project_id, 'rating', array('rate' => 2));
 $urlLike = $helper->buildProductUrl($this->product->project_id, 'rating', array('rate' => 1));
 
-$likesAndDislikes = ($this->product->count_likes == 0 and $this->product->count_dislikes == 0) ? '' : '(' . $this->product->count_likes . '/' . $this->product->count_dislikes . ')';
+//$likesAndDislikes = ($this->product->count_likes == 0 and $this->product->count_dislikes == 0) ? '' : '(' . $this->product->count_likes . '/' . $this->product->count_dislikes . ')';
 $cssNoVotes = (($this->product->count_likes+$this->product->count_dislikes) == 0) ? ';opacity:0.5;' : '';
 
 // calculate colour
@@ -58,10 +58,9 @@ if(strlen($red)==1) $red='0'.$red;
         <tbody>
         <tr>
             <td width="10%" class="text-center">
-                <a class="btn btn-danger partial"
-                   href="<?= $urlDislike ?>"
+                <a class="btn btn-danger partial votedown"                
                    role="button"
-                   style="line-height:10px;"
+                   style="line-height:10px;"                   
                    data-target="#widget-rating"
                    data-fragment="#widget-rating > *">
                     <span class="fa fa-minus" aria-hidden="true"></span>
@@ -72,30 +71,28 @@ if(strlen($red)==1) $red='0'.$red;
                 <div class="rating">
                     <div class="rating-text">
                         <small class="center-block text-center">Score <?= floor($score) ?>%
-<?php /*                            <span class="hint"
-                                  hint="<?= $rating['count_likes'] ?> Likes / <?= $rating['count_dislikes'] ?> Dislikes"><?= $likesAndDislikes ?></span> */ ?>
+
                         </small>
                     </div>
                     <div class="progress" style="margin-bottom: 0;height:12px;background-color: transparent; box-shadow: none; padding:2px;">
                         <div class="progress-bar" style="background-color: #<?=$red.$green.$blue?>;width: <?= floor($score) ?>%;">
-                            <span class="sr-only"><?= $score ?> Likes</span>
+                            
                         </div>
                         <div class="progress-bar" style="background-color:#eeeeee;width: <?= floor(100 - $score) ?>%;<?=$cssNoVotes?>">
-                            <span class="sr-only"><?= (100 - $score) ?> Dislikes</span>
+                          
                         </div>
                     </div>
                 </div>
             </td>
             <td width="10%" class="text-center">
-                <a class="btn btn-success partial"
-                   href="<?= $urlLike ?>"
+                <a class="btn btn-success partial voteup "                 
                    role="button"
                    style="line-height:10px;"
                    data-target="#widget-rating"
                    data-fragment="#widget-rating > *">
                     <span class="fa fa-plus" aria-hidden="true"></span>
                 </a>
-                <?php /**<span><?= $rating['count_likes'] ?></span>**/?>
+               
             </td>
         </tr>
         </tbody>
@@ -104,6 +101,7 @@ if(strlen($red)==1) $red='0'.$red;
 <?php
 $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
-            Partials.setup();
+            //Partials.setup();
+            PartialsReview.setup();
         });
     ');

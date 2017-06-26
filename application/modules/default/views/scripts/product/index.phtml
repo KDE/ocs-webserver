@@ -28,6 +28,8 @@ $helpTruncate = new Default_View_Helper_Truncate();
 $helpProductUrl = new Default_View_Helper_BuildProductUrl();
 $helpBBCode = new Default_View_Helper_Bbcode2html();
 
+$identity = Zend_Auth::getInstance()->getStorage()->read();
+
 $loginUrl = '/login?redirect=' . $helpEncryptUrl->encryptUrl(Zend_Controller_Front::getInstance()->getRequest()
         ->getRequestUri(), true);
 $viewSidebar = 'product/partials/productAboutSidebar.phtml';
@@ -59,6 +61,9 @@ $tableProject = new Default_Model_Project();
 $tableProjectUpdates = new Default_Model_ProjectUpdates();
 $this->updates = $tableProjectUpdates->fetchProjectUpdates($this->product->project_id);
 
+$tableProjectRatings = new Default_Model_DbTable_ProjectRating();
+$this->ratings = $tableProjectRatings->fetchRating($this->product->project_id);
+
 ?>
     <!-- facebook -->
     <div id="fb-root"></div>
@@ -86,6 +91,39 @@ $this->updates = $tableProjectUpdates->fetchProjectUpdates($this->product->proje
         </div>
     </div>
 
+
+ <?php if (Zend_Auth::getInstance()->hasIdentity()) { ?>
+    <div id="review-product-modal" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content" style="padding-bottom: 20px">
+               <div class="modal-header">
+                    <label id="votelabel"> </label>
+                   <button type="button" class="close col-md-1" data-dismiss="modal" aria-label="Close"><span
+                               aria-hidden="true">&times;</span></button>
+               </div>
+               <div class="modal-body">
+                 <form class="full-width product-add-comment-review" action="/productcomment/addreplyreview/" method="post">
+                            <input type="hidden" name="p" value="<?= $this->product->project_id ?>">
+                            <input type="hidden" name="m" value="<?= $identity->member_id ?>">
+                            <input type="hidden" name="v" value="1" id="voteup">
+                            <textarea name="msg" class="full-width" id="commenttext"></textarea>
+                            <button type="submit" class="small"><span class="glyphicon glyphicon-send"></span> Vote!</button>
+                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <?php } else {?>
+        <div id="review-product-modal" class="modal fade noid" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-sm" role="document">
+           <div class="modal-content" style="min-height: 100px; ">
+                <span style="text-align: center; display: block; padding-top: 30px">Please login in.</span>
+           </div>
+         </div>          
+        </div>
+    <?php }?>
+
     <main id="product-page-content">
         <div class="flex-column">
             <div class="flex-item-4 sidebar-left" style="">
@@ -96,7 +134,7 @@ $this->updates = $tableProjectUpdates->fetchProjectUpdates($this->product->proje
                 <div class="flex-row imgsmall" id="product-main-img-container">
                     <div class="product-main-img flex-item-24" id="product-main-img">
                         <div id="product-title-div">
-                            <span id="product-title">
+                            <span id="product-title" style="max-width: 600px; float: left">
                               
                                 <?php if (false === empty($this->product->link_1)): ?><a
                                     href="<?php echo $helpAddDefaultScheme->addDefaultScheme($this->product->link_1); ?>"
@@ -112,7 +150,7 @@ $this->updates = $tableProjectUpdates->fetchProjectUpdates($this->product->proje
                                   <img class="logo" src="<?= $helpImage->Image($this->product->image_small,
                                       array('width' => 85, 'height' => 85, 'crop' => 'crop')); ?>"/>
                                 </div>
-                                <span class="product_category">                                                
+                                <span class="product_category" style="white-space: nowrap;">                                                
                                 <?php
                                 echo '<a href="/browse/cat/' . $this->product->project_category_id . '/order/latest">' . $this->product->cat_title . ' </a>';
                                 ?>                        
@@ -126,6 +164,9 @@ $this->updates = $tableProjectUpdates->fetchProjectUpdates($this->product->proje
                                 
                                 </span>
                             </span>
+                            <div style="float: right; width:150px; z-index: 100">
+                            <?php echo $this->render('partials/sidebarRating.phtml'); ?>
+                            </div>
                         </div>
                         <div id="carouselContainer" class="carouselContainer">
                             <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="false">
@@ -199,6 +240,9 @@ $this->updates = $tableProjectUpdates->fetchProjectUpdates($this->product->proje
                                     } ?></a></li>
                         <?php if(count($this->updates)>0){ ?>
                             <li><a href="#updates-panel" data-toggle="tab">Changelogs <?php echo '('.count($this->updates).')';  ?></a></li>
+                        <?php } ?>
+                        <?php if(count($this->ratings)>0){ ?>
+                            <li><a href="#ratings-panel" data-toggle="tab">Reviews <?php echo '('.count($this->ratings).')';  ?></a></li>
                         <?php } ?>
                         </ul>
                     </div>
@@ -274,7 +318,14 @@ $this->updates = $tableProjectUpdates->fetchProjectUpdates($this->product->proje
                         <!-- MEDIA -->
                         <div class="tab-pane" id="media-panel">
                             <?php if (null != ($this->product->embed_code)): ?>
-                                <?= $this->product->embed_code ?>
+                            <?php 
+				              	require_once APPLICATION_PATH.'/../httpdocs/theme/flatui/js/lib/htmlpurifier-4.9.3-lite/library/HTMLPurifier.auto.php';
+					                	
+				              	$config = HTMLPurifier_Config::createDefault();
+				               	$purifier = new HTMLPurifier($config);
+				              	$embed_code = $purifier->purify($this->product->embed_code);
+				           	?>
+                                <?= $embed_code ?>
                             <?php endif; ?>
                         </div>
                         <!-- /MEDIA -->
@@ -289,6 +340,21 @@ $this->updates = $tableProjectUpdates->fetchProjectUpdates($this->product->proje
                                        echo $this->render('product/partials/productUpdatesV1.phtml');
                                     }
                                   ?>
+                            </article>
+                            </div>
+                        </div>
+                        <?php } ?>
+
+                        <!-- ratings panel -->
+                        <?php  if (count($this->ratings) > 0) { ?>
+                        <div class="tab-pane" id="ratings-panel">
+                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                            <article>
+                                <div id="productRatingContainer">
+                                <?php                                    
+                                       echo $this->render('product/partials/productRating.phtml');                                   
+                                  ?>
+                                  </div>
                             </article>
                             </div>
                         </div>
@@ -381,7 +447,7 @@ $this->updates = $tableProjectUpdates->fetchProjectUpdates($this->product->proje
                             </div>
                         <?php } ?>
 
-                        <?php echo $this->render('partials/sidebarRating.phtml'); ?>
+                        <?php /* echo $this->render('partials/sidebarRating.phtml');  */ ?>
 
 
                         <!-- MORE PRODUCTS -->
@@ -430,9 +496,10 @@ $this->updates = $tableProjectUpdates->fetchProjectUpdates($this->product->proje
         }(document, 'script', 'facebook-jssdk'));</script>
 
 <?php $this->inlineScript()->appendScript(
-    '    $(document).ready(function(){
-            //newProductPage.setup();
+    '    $(document).ready(function(){       
             PartialJson.setup();
             ProductDetailCarousel.setup();
+          //  AjaxForm.setup("form.product-add-comment-review", "div#productRatingContainer");
+            PartialCommentReviewForm.setup();
         });
     ');

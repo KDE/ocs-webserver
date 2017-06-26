@@ -39,14 +39,50 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
         'percentage_dislikes' => 50
     );
 
+    public function fetchRating($project_id)
+    {     
+        $sql = "
+                SELECT
+                   p.* ,
+                   (select `profile_image_url` from member m where m.member_id = p.member_id)  as profile_image_url,
+                    (select `username` from member m where m.member_id = p.member_id)  as username,
+                   (select `comment_text` from comments c where c.comment_id = p.comment_id)  as comment_text
+                FROM
+                    project_rating p            
+                WHERE
+                    project_id = :project_id                    
+                    order by created_at desc
+                    limit 100
+                ;                  
+               ";
+        $result = $this->_db->query($sql, array('project_id' => $project_id))->fetchAll();
+        return $result;        
+    }
 
+     public function fetchRatingCntActive($project_id)
+    {     
+        $sql = "
+                SELECT
+                   count(*)
+                FROM
+                    project_rating p            
+                WHERE
+                    project_id = :project_id                    
+                    and rating_active = 1
+                ;                  
+               ";
+        $result = $this->_db->query($sql, array('project_id' => $project_id))->fetch();
+        return $result;        
+    }
+
+/* @deprecated
     public function fetchRating($project_id)
     {
         $sql = "
                 SELECT
                     project_id,
                     SUM(user_like) AS count_likes,
-                    SUM(user_dislike) AS count_dislikes,
+                    SUM(user_dislike) AS count_dislikes,                    
                     (SUM(user_like) + SUM(user_dislike)) AS votes_total,
                     round((SUM(user_like) + 6) / (SUM(user_like) + SUM(user_dislike) + 12),2) AS laplace_score,
                     round(((SUM(user_like) + 1.9208) / (SUM(user_like) + SUM(user_dislike)) -
@@ -57,7 +93,8 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
                 FROM
                     project_rating
                 WHERE
-                    project_id = :project_id;
+                    project_id = :project_id
+                    and rating_active = 1  ;                  
                ";
         $result = $this->_db->query($sql, array('project_id' => $project_id))->fetch();
         if (false === empty($result['project_id'])) {
@@ -71,16 +108,24 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
 
     public function rateForProject($projectId, $member_id, $userRating)
     {
-        $alreadyExists = $this->fetchRow(array('project_id = ?' => $projectId, 'member_id = ?' => $member_id));
+        $alreadyExists = $this->fetchRow(array('project_id = ?' => $projectId, 'member_id = ?' => $member_id,'rating_active = ?' => 1));
         if (false == is_null($alreadyExists)) {
-            return;
+            // if exist then if not same then deactive it and add new line otherwise return            
+            if($alreadyExists->user_like==1){
+                if($userRating==1) return;
+                // else userRating ==2 dislike then deactive current rating add new line
+                $this->update(array('rating_active' =>0),'rating_id='.$alreadyExists->rating_id);
+            }else if($alreadyExists->user_dislike ==1){
+                if($userRating==2) return;
+                $this->update(array('rating_active' =>0),'rating_id='.$alreadyExists->rating_id);
+            }            
         }
         if (2 < $userRating) {
             return;
         }
         $userLikeIt = $userRating == 1 ? 1 : 0;
         $userDislikeIt = $userRating == 2 ? 1 : 0;
-        $this->save(array('project_id' => $projectId, 'member_id' => $member_id, 'user_like' => $userLikeIt, 'user_dislike' => $userDislikeIt));
+        $this->save(array('project_id' => $projectId, 'member_id' => $member_id, 'user_like' => $userLikeIt, 'user_dislike' => $userDislikeIt,'rating_active'=>1));
         
         $projectTable = new Default_Model_Project();
         $project = $projectTable->fetchProductInfo($projectId);
@@ -101,4 +146,69 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
         
     }
 
+    */
+    public function rateForProject($projectId, $member_id, $userRating,$comment_id=null)
+    {
+        $alreadyExists = $this->fetchRow(array('project_id = ?' => $projectId, 'member_id = ?' => $member_id,'rating_active = ?' => 1));
+        $flagFromDislikeToLike = false;
+        $flagFromLikeToDislike = false;
+        if (false == is_null($alreadyExists)) {
+            // if exist then if not same then deactive it and add new line otherwise return            
+            if($alreadyExists->user_like==1){
+                if($userRating==1){
+                    // update comment_id
+                    $this->update(array('comment_id' =>$comment_id),'rating_id='.$alreadyExists->rating_id);    
+                    return;
+                }else{
+                // else userRating ==2 dislike then deactive current rating add new line
+                    $this->update(array('rating_active' =>0),'rating_id='.$alreadyExists->rating_id);
+                    $flagFromLikeToDislike = true;
+                }
+            }else if($alreadyExists->user_dislike ==1){
+                if($userRating==2) {
+                    // update comment_id
+                    $this->update(array('comment_id' =>$comment_id),'rating_id='.$alreadyExists->rating_id);                   
+                    return;     
+                }else{
+                    $this->update(array('rating_active' =>0),'rating_id='.$alreadyExists->rating_id);
+                    $flagFromDislikeToLike  = true;
+                }
+            }            
+        }
+        if (2 < $userRating) {
+            return;
+        }
+        $userLikeIt = $userRating == 1 ? 1 : 0;
+        $userDislikeIt = $userRating == 2 ? 1 : 0;
+        $this->save(array('project_id' => $projectId, 'member_id' => $member_id, 'user_like' => $userLikeIt, 'user_dislike' => $userDislikeIt,'rating_active'=>1, 'comment_id'=>$comment_id));
+        
+     
+        $projectTable = new Default_Model_Project();
+        $project = $projectTable->fetchProductInfo($projectId);
+        if($project) {
+
+            if(!$flagFromDislikeToLike and !$flagFromLikeToDislike){ // first time vote
+                $numLikes = $project->count_likes + $userLikeIt;
+                $numDisLikes = $project->count_dislikes + $userDislikeIt;            
+            }else if($flagFromDislikeToLike==true){
+                $numLikes = $project->count_likes + 1;
+                $numDisLikes = $project->count_dislikes -1;
+            }else if($flagFromLikeToDislike==true){
+                $numLikes = $project->count_likes - 1;
+                $numDisLikes = $project->count_dislikes +1;
+            }
+
+            $updatearray = array('count_likes' => $numLikes, 'count_dislikes' => $numDisLikes);
+            $projectTable->update($updatearray, 'project_id = '.$projectId);
+            
+            //update activity log
+            if ($userRating == 1) {
+                Default_Model_ActivityLog::logActivity($projectId, $projectId, $member_id,Default_Model_ActivityLog::PROJECT_RATED_HIGHER, $project->toArray());
+            }
+            if ($userRating == 2) {
+                Default_Model_ActivityLog::logActivity($projectId, $projectId, $member_id,Default_Model_ActivityLog::PROJECT_RATED_LOWER, $project->toArray());
+            }
+        }
+
+    }
 }
