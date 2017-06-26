@@ -45,7 +45,15 @@ $helperPrintDate = new Default_View_Helper_PrintDate();
             <div class="info">
                 <div class="small">
                 	<?php 
+<<<<<<< HEAD
 		              	$comment_text = Default_Model_HtmlPurify::purify($elementComment['comment_text']);
+=======
+		              	require_once APPLICATION_PATH.'/../httpdocs/theme/flatui/js/lib/htmlpurifier-4.9.3-lite/library/HTMLPurifier.auto.php';
+			                	
+		              	$config = HTMLPurifier_Config::createDefault();
+		               	$purifier = new HTMLPurifier($config);
+		              	$comment_text = $purifier->purify($elementComment['comment_text']);
+>>>>>>> afe8f9df... reviews update
 		           	?>
                     <a href="<?=$helperBuildProductUrl->buildProductUrl($elementComment['project_id'], '', null, true)?>"><?= nl2br($comment_text,true) ?></a>
                 </div>
