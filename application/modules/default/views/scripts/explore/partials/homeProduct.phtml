@@ -26,24 +26,17 @@ $updateTime = $helperPrintDate->printDate($this->changed_at);
 
 $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
 $helperFetchSubcategoriesForProduct = new Default_View_Helper_FetchCategoriesForProductAsString();
+$helpImage = new Default_View_Helper_Image();
 ?>
 <div class="product-item grid-item">
     <a href="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, ''); ?>">
         <figure>
-            <img src="<?php echo $this->Image($this->image_small, array('width' => 167, 'height' => 167)); ?>" class="explore-product-image"/>
+            <img src="<?php echo $helpImage->Image($this->image_small, array('width' => 167, 'height' => 167)); ?>" class="explore-product-image"/>
         </figure>
         <div class="details">
             <h3>
                 <a href="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, ''); ?>">
-                	<?php 
-	                	require_once APPLICATION_PATH.'/../httpdocs/theme/flatui/js/lib/htmlpurifier-4.9.3-lite/library/HTMLPurifier.auto.php';
-	                	
-	                	$config = HTMLPurifier_Config::createDefault();
-	                	$purifier = new HTMLPurifier($config);
-	                	$version = $purifier->purify($this->version);
-                	?>
-                
-                    <?php echo $this->title; ?> <?php echo $version; ?>
+                    <?= Default_Model_HtmlPurify::purify($this->title) ?> <?=Default_Model_HtmlPurify::purify($this->version) ?>
                 </a>
             </h3>
             <?php if (empty($this->claimable)) { ?>

@@ -19,22 +19,22 @@
  *
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
- **/
-class ContentController extends Local_Controller_Action_DomainSwitch
+ *
+ * Created: 22.06.2017
+ */
+class Default_Model_BBCode
 {
 
-    public function indexAction()
+    /**
+     * @param string $bbcode
+     *
+     * @return string
+     */
+    public static function renderHtml($bbcode)
     {
-        $config = Zend_Registry::get('config');
-        $static_config = $config->settings->static;
-
-        $pageName = $this->getParam('page') ? preg_replace('/[^-a-zA-Z0-9_]/', '', $this->getParam('page')) : null;
-
-        if (false === isset($static_config->include->$pageName)) {
-            throw new Zend_Controller_Action_Exception('This page does not exist', 404);
-        } else {
-            $this->view->page = $static_config->include_path . $static_config->include->$pageName;
-        }
+        Zend_Markup::addParserPath('Local_Markup_Parser', APPLICATION_LIB . '/Local/Markup/Parser');
+        $parser = Zend_Markup::factory('BbcodeCI');
+        return $parser->render($bbcode);
     }
 
 }

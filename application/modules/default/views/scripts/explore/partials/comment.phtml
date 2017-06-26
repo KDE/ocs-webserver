@@ -28,7 +28,7 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
 ?>
 <div class="commentstore">
 	<div class="row" style="margin-left: 0;margin-right: 0; ">
-		<?= $this->comment['title'] ?>
+		<?= Default_Model_HtmlPurify::purify($this->comment['title']) ?>
 		<span
 			style="display: block;" class="small"><?php echo $helpCategories->fetchCategoriesForProductAsString($this->comment['project_id']) ?></span>
 	</div>
@@ -42,14 +42,7 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
 		<div class="info">
 			<div class="small" style="line-height:1.3">
                 <a href="<?=$helpProductUrl->buildProductUrl($this->comment['project_id'])?>">
-                <?php 
-	              	require_once APPLICATION_PATH.'/../httpdocs/theme/flatui/js/lib/htmlpurifier-4.9.3-lite/library/HTMLPurifier.auto.php';
-		                	
-	              	$config = HTMLPurifier_Config::createDefault();
-	               	$purifier = new HTMLPurifier($config);
-	              	$comment_text = $purifier->purify($this->comment['comment_text']);
-	           	?>
-					<?=$helpTruncate->truncate(strip_tags($comment_text,' '), 200, '...', false, true)?>
+					<?=$helpTruncate->truncate(Default_Model_HtmlPurify::purify($this->comment['comment_text']), 200, '...', false, true)?>
 				</a>
 			</div>
 		</div>
