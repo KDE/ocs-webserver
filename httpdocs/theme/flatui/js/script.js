@@ -598,6 +598,39 @@ var Partials = (function () {
     }
 })();
 
+
+var PartialsReview = (function () {
+    return {
+        setup: function () {
+            $('body').on('click', 'a.partial', function (event) {
+                event.preventDefault();
+                var url = this.href;
+                var target = $(this).attr("data-target");
+                var toggle = $(this).data('toggle');
+                var pageFragment = $(this).attr("data-fragment");
+                              
+                $('#review-product-modal').find('#commenttext').val('');
+                if($( this ).hasClass( "voteup" )){
+                        $('#review-product-modal').find('input#voteup').val(1);      
+                        $('#review-product-modal').find('#votelabel').text('Vote Up Because: ')      
+                        
+                }else{
+                        $('#review-product-modal').find('input#voteup').val(2);      
+                        $('#review-product-modal').find('#votelabel').text('Vote Down Because: ')      
+                }
+               
+               $('#review-product-modal').modal('show');
+               if($('#review-product-modal').hasClass('noid')){
+                    setTimeout(function() {$('#review-product-modal').modal('hide');}, 2000);
+               }
+            
+              
+                return false;
+            });
+        }
+    }
+})();
+
 var PartialForms = (function () {
     return {
         setup: function () {
@@ -745,6 +778,47 @@ var PartialPayPal = (function () {
     }
 })();
 
+var PartialCommentReviewForm = (function () {
+    return {
+        setup: function () {
+            this.initForm();
+          
+        },
+        initForm: function () {
+            $('body').on("submit", 'form.product-add-comment-review', function (event) {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                
+                $(this).find(':submit').attr("disabled", "disabled");
+                $(this).find(':submit').css("white-space", "normal");
+                let spin = $('<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>');
+                $(this).find(':submit').append(spin);
+                
+                jQuery.ajax({
+                    data: $(this).serialize(),
+                    url: this.action,
+                    type: this.method,
+                    error: function (jqXHR, textStatus, errorThrown) {                        
+                        $('#review-product-modal').modal('hide');
+                        var msgBox = $('#generic-dialog');
+                        msgBox.modal('hide');
+                        msgBox.find('.modal-header-text').empty().append('Please try later.');                        
+                        msgBox.find('.modal-body').empty().append("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+                        setTimeout(function () {
+                            msgBox.modal('show');
+                        }, 900);                        
+                    },
+                    success: function (results) {                        
+                        $('#review-product-modal').modal('hide');                                        
+                        location.reload();              
+                    }
+                });
+                return false;
+            });
+        }
+    }
+})();
+
 var PartialFormsAjax = (function () {
     return {
         setup: function () {
@@ -813,7 +887,6 @@ var AjaxForm = (function () {
                 $(idElement).find('button').attr("disabled", "disabled");
                 $(idElement).find('.glyphicon.glyphicon-send').removeClass('glyphicon-send').addClass('glyphicon-refresh spinning');
 
-//                $(this).ajaxForm({
                 jQuery.ajax({
                     data: $(this).serialize(),
                     url: this.action,
@@ -845,20 +918,7 @@ var AjaxForm = (function () {
                 });
 
                 return false;
-            });
-            // form.ajaxForm({
-            //     error: function () {
-            //         alert('Service is temporarily unavailable.');
-            //     },
-            //     success: function (results) {
-            //         if (results.status == 'ok') {
-            //             $(target).empty().html(results.data);
-            //         }
-            //         if (results.status == 'error') {
-            //             alert('Service is temporarily unavailable.');
-            //         }
-            //     }
-            // });
+            });           
         }
     }
 })();
@@ -989,6 +1049,40 @@ var Metaheader = (function () {
                }  
             });
 
+        }
+    }
+})();
+
+var LayoutSwitch = (function () {
+    return {
+        setup: function () {            
+            
+            $('#btnSwitchLayout').on('click',function(){               
+               if($.cookie('layout')=='grid'){
+                    $.cookie('layout','list',{ path: '/' });
+                }else{
+                    $.cookie('layout','grid',{ path: '/' });
+                }    
+               
+                location.reload(); 
+               
+            })
+        }
+    }
+})();
+
+var productRatingToggle = (function () {
+    return {
+        setup: function () {                    
+            $('#showRatingInactive').on('click',function(){               
+               $('.productRating-rows-inactive').toggle();                               
+               if($('#showRatingInactive').text()=='Show all Reviews'){
+                        $('#showRatingInactive').text('Show only active Reviews');
+               }else{
+                        $('#showRatingInactive').text('Show all Reviews');
+               }
+
+            })
         }
     }
 })();

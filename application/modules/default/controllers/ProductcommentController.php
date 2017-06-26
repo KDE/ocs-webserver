@@ -33,6 +33,7 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
         $this->auth = Zend_Auth::getInstance();
     }
 
+
     public function addreplyAction()
     {
         $this->_helper->layout->disableLayout();
@@ -76,6 +77,66 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
             $url = $helperBuildProductUrl->buildProductUrl($data['comment_target_id']);
             $this->redirect($url);
         }
+    }
+
+
+    public function addreplyreviewAction()
+    {
+        $this->_helper->layout->disableLayout();        
+        $msg = trim($this->getParam('msg'));
+        $project_id = (int)$this->getParam('p');
+        $comment_id= null;
+        $status='ok';
+        $message = '';
+        if($msg!=''){
+            // only vote then return
+            $data = array();
+            $data['comment_target_id'] = (int)$this->getParam('p');
+            $data['comment_parent_id'] = (int)$this->getParam('i');        
+            $data['comment_member_id'] = (int)$this->_authMember->member_id;                        
+
+            require_once APPLICATION_PATH.'/../httpdocs/theme/flatui/js/lib/htmlpurifier-4.9.3-lite/library/HTMLPurifier.auto.php';
+            
+            $config = HTMLPurifier_Config::createDefault();
+            $purifier = new HTMLPurifier($config);
+            $data['comment_text'] = $purifier->purify($this->getParam('msg'));
+
+            $tableReplies = new Default_Model_ProjectComments();
+            $result = $tableReplies->save($data);
+
+
+            $voteup =  (int)$this->getParam('v');  
+            $modelRating = new Default_Model_DbTable_ProjectRating();
+            $modelRating->rateForProject($project_id, $this->_authMember->member_id, $voteup,$result->comment_id);
+
+            $status = count($result) > 0 ? 'ok' : 'error';
+            
+
+
+            //$this->view->comments = $this->loadComments((int)$this->getParam('page'), (int)$this->getParam('p'));
+            $this->view->product = $this->loadProductInfo((int)$this->getParam('p'));
+            $this->view->member_id = (int)$this->_authMember->member_id;            
+            
+            //$requestResult = $this->view->render('product/partials/productRating.phtml');
+
+            $this->updateActivityLog($result, $this->view->product->image_small);
+
+            //Send a notification to the owner
+            $this->sendNotificationToOwner($this->view->product, $data['comment_text']);
+
+            //Send a notification to the parent comment writer
+            $this->sendNotificationToParent($this->view->product, $data['comment_text'], $data['comment_parent_id']);
+
+            
+        }else
+        {
+            $voteup =  (int)$this->getParam('v');  
+            $modelRating = new Default_Model_DbTable_ProjectRating();
+            $modelRating->rateForProject($project_id, $this->_authMember->member_id, $voteup);
+                
+        }        
+
+        $this->_helper->json(array('status' => $status, 'message' => $message, 'data' => ''));
     }
 
     private function loadComments($page_offset, $project_id)

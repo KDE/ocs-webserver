@@ -1727,6 +1727,29 @@ ul.meta-nav-top
 
             }
 
+            &#ratings-panel{
+              .productRating-rows-inactive{
+                  color: #ddd ;
+                  display: none;
+                }
+              .userimg{
+                  border-radius: 50%; 
+                  border: 1px solid #ccc; 
+                  width: 40px; 
+                  height: 40px;
+              }
+              span.o-thumbs-up{
+                color:green; 
+                padding-left:10px; 
+                padding-top:10px
+              }
+              span.o-thumbs-down{
+                color:red; 
+                padding-left:10px; 
+                padding-top:10px
+              }
+            }
+
         }
         #files-panel{
           padding-top: 30px;
@@ -2683,59 +2706,11 @@ span.page-views {
     .about-me-details {
       padding-left: 0;
       padding-right: .5em;
-    /*
-      ul.nav-tabs {
-        margin-bottom: 20px;
-
-        > li {
-
-          > a {
-            padding: 0.7em 1em;
-            font-size: 0.9em;
-            height: 2.95em;
-            color: @newblue;
-
-            span.glyphicon {
-              :before {
-                vertical-align: middle;
-              }
-            }
-
-            span.label.label-default {
-              padding: 0;
-              font-size: 75%;
-              vertical-align: super;
-              color: inherit;
-              background: none;
-            }
-
-            &:hover {
-              height: 2.85em;
-              color: lighten(@newblue, 5%);
-            }
-          }
-        }
-
-        > li.active {
-
-          > a {
-            color: darken(@newblue,5%);
-
-            &:hover {
-              height: 2.95em;
-            }
-          }
-        }
-
-        > li.w-label {
-
-          > a {
-            padding-right: 0.5em;
-          }
-        }
+      
+      .tab-content{
+        padding-top: 20px;
       }
-      */
-
+      
       h3.about-me-heading {
         font-size: 1.5em;
         margin: 0;
@@ -5477,5 +5452,147 @@ main#plings-page{
       a{
         width: 100%;
       }
+    }
+  }
+
+
+  // grid layout 19.06
+  .grid-container{
+      padding-top: 10px;
+    .flex-container{
+       font-size: 10pt !important;
+      .explore-product-grid{
+        width: 200px;
+        padding: 0px;
+        margin: 20px;
+        border: 1px solid #dedede;
+        border-radius: 2px;
+        margin: 10px 10px 10px 10px;                  
+        position: relative;
+        
+        /*background: url(../img/app-container-bg.png) repeat-x;*/
+        
+        figure{
+          /*height: 167px;*/
+          
+          opacity: 1;
+          display: block;
+          transition: .5s ease;
+          backface-visibility: hidden;  
+             
+        }
+      
+        .packagetypeos
+        {
+          width: 100px;
+          float: left;
+        }
+        .explore-product-image{
+           
+           /*
+           max-width: 95%;
+           height: 167px;
+           */
+           width: 170px;
+          height: 120px;
+           
+        }
+        .explore-product-desc{
+          background: linear-gradient(#fff, #EDEDED);          
+          padding:0px 10px 5px 10px;
+          border-bottom-left-radius: 2px;    
+          border-bottom-right-radius: 2px;    
+        }
+        .explore-product-plings {
+          padding: 0;       
+          padding-top: 5px;
+          width: 100px;
+          margin:0 auto;            
+          font-size: 10px;
+          .rating {
+             width: 100%;
+
+          }
+
+          .progress {
+            margin-bottom: 10px;
+            padding: 3px;
+            opacity:0;
+            margin-bottom: 0;
+            height:12px;
+            opacity:1.0;
+            background-color: transparent; 
+            box-shadow: none; 
+            padding:2px;
+            
+            .bar {
+                width: 4px;
+                max-width: 100%;
+                height: 14px;
+                background-color: #2673b0;
+                .border_radius(5px);
+                .box_shadow(inset 0 6px 0 rgba(255,255,255,0.2));
+
+                &.no-goal {
+                  width: 50%;
+                  opacity: 0;
+                }
+
+            }
+          }
+
+          .collected {
+            span {
+              display: block;
+              width: 100%;
+              float: left;
+              font-size: 12px;
+            }
+          }
+        }
+
+        .explore-product-details {
+          
+          
+            span.version
+            {
+              font-size: smaller; 
+              padding-left: 20px;
+            }
+           span.title{
+            display: block;
+            font-size: smaller;
+            line-height: 1.5;
+           }
+        
+       
+        }
+      }
+    }
+  }
+
+
+  /* mobile settings */
+  @media (max-width: 400px) { 
+    #explore-content{
+        .GridFlex{
+          .sidebar-left{
+                  flex: 0 0 100%;
+                }
+        } 
+    }
+    .metamenu{
+        height: 100%;
+        .sitelogo{
+              display:block; 
+              width:100%; 
+              height:30px; 
+              font-size:20px;
+              img.logo{
+                width: 30px;
+                height: 30px;
+              }
+        }          
+        
     }
   }
