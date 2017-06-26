@@ -636,6 +636,7 @@ $categoryPath[] = $valueCatId;
                                 var fileDescription = '';
                                 if (this.description) {
                                     fileDescription = this.description;
+                                    fileDescription = fileDescription.replace(/<\/?[^>]+(>|$)/g, "");
                                 }
 
                                 var inputFileDescription = '<input data-ppload-file-description="" class="form-control input-sm"'
@@ -649,6 +650,7 @@ $categoryPath[] = $valueCatId;
 
                                 var versionText;
                                 if(this.version==null) {versionText = '';} else{versionText = this.version;}
+                                versionText = versionText.replace(/<\/?[^>]+(>|$)/g, "");
 
                                 var version = '<input data-ppload-file-version="" class="form-control input-sm"'
                                     + ' type="text" maxlength="140" placeholder="File version"'
@@ -1073,6 +1075,8 @@ $categoryPath[] = $valueCatId;
                     if (typeof ProductForm.project_id == 'undefined' || ProductForm.project_id == '' || ProductForm.project_id == '0') {
                         $url = ($modalPpload.attr('data-updatepploadfile-uri')).replace(/@@project_id@@/i, <?= (isset($this->project_id))?$this->project_id:0  ?>);
                     }
+                    fileDescription = fileDescription.replace(/<\/?[^>]+(>|$)/g, "");
+                    
 
                     $.ajax({
                         url: $url,
@@ -1128,6 +1132,7 @@ $categoryPath[] = $valueCatId;
                     if (typeof ProductForm.project_id == 'undefined' || ProductForm.project_id == '' || ProductForm.project_id == '0') {
                         $url = ($modalPpload.attr('data-updatepploadfile-uri')).replace(/@@project_id@@/i, <?= (isset($this->project_id))?$this->project_id:0  ?>);
                     }
+                    version = version.replace(/<\/?[^>]+(>|$)/g, "");
 
                     $.ajax({
                         url: $url,

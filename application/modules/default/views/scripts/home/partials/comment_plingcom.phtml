@@ -34,7 +34,14 @@ $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
           </span>
           <div class="small" style="line-height:1.3">
               <a href="<?= $helpProductUrl->buildProductUrl($this->comment['project_id']) ?>">
-                  <?=$helpTruncate->truncate(strip_tags($this->comment['comment_text'],' '), 200, '...', false, true)?>
+              	<?php 
+	              	require_once APPLICATION_PATH.'/../httpdocs/theme/flatui/js/lib/htmlpurifier-4.9.3-lite/library/HTMLPurifier.auto.php';
+		                	
+	              	$config = HTMLPurifier_Config::createDefault();
+	               	$purifier = new HTMLPurifier($config);
+	              	$comment_text = $purifier->purify($this->comment['comment_text']);
+	           	?>
+                  <?=$helpTruncate->truncate(strip_tags($comment_text,' '), 200, '...', false, true)?>
               </a>
           </div>
          <span class="time"><?= $helpPrintDate->printDate($this->comment['comment_created_at'])?></span>

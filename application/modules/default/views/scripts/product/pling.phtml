@@ -256,7 +256,14 @@ if ($this->product->claimable == 1) {
                         <!-- MEDIA -->
                         <div class="tab-pane" id="media-panel">
                             <?php if (null != ($this->product->embed_code)): ?>
-                                <?= $this->product->embed_code ?>
+                            <?php 
+				              	require_once APPLICATION_PATH.'/../httpdocs/theme/flatui/js/lib/htmlpurifier-4.9.3-lite/library/HTMLPurifier.auto.php';
+					                	
+				              	$config = HTMLPurifier_Config::createDefault();
+				               	$purifier = new HTMLPurifier($config);
+				              	$embed_code = $purifier->purify($this->product->embed_code);
+				           	?>
+                                <?= $embed_code ?>
                             <?php endif; ?>
                             <?php if (count($this->galleryPictures) > 0) {
                                 echo $this->render('product/partials/gallery.phtml', array('galleryPictures' => $this->galleryPictures)); ?>

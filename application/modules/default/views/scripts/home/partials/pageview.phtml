@@ -29,7 +29,14 @@
  </div>
  <div class="col-lg-6">
         <a href="<?=$this->buildProductUrl($this->product['project_id'],'')?>"><?=$this->product['title']?>
-            <span class="version"><?=$this->product['version']?>
+        	<?php 
+              	require_once APPLICATION_PATH.'/../httpdocs/theme/flatui/js/lib/htmlpurifier-4.9.3-lite/library/HTMLPurifier.auto.php';
+	                	
+              	$config = HTMLPurifier_Config::createDefault();
+               	$purifier = new HTMLPurifier($config);
+              	$versionl = $purifier->purify($this->product['version']);
+           	?>
+            <span class="version"><?=$version?>
             </span>
         </a><br>
         <?=$this->fetchCategoriesForProductAsString($this->product['project_id'])?> 
