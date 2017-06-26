@@ -197,7 +197,7 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
         }
 
         $parentCommentOwner = $this->loadMemberInfo($parentComment['comment_member_id']);
-        if (count($parentCommentOwner) == 0 || $parentCommentOwner->member_id == $this->_authMember->member_id) {
+        if (count($parentCommentOwner->toArray()) == 0 || $parentCommentOwner->member_id == $this->_authMember->member_id) {
             return;
         }
 

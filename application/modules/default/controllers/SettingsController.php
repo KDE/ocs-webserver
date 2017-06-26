@@ -813,6 +813,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                 $values['lastname'] = Default_Model_HtmlPurify::purify($values['lastname']);
                 $values['city'] = Default_Model_HtmlPurify::purify($values['city']);
                 $values['country'] = Default_Model_HtmlPurify::purify($values['country']);
+                $values['aboutme'] = Default_Model_HtmlPurify::purify($values['aboutme']);
                 
                 
                 $this->_memberSettings->setFromArray($values);

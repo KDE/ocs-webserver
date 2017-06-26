@@ -40,7 +40,8 @@ if ($this->product->claimable == 1) {
 $helpProjectFiles = new Default_View_Helper_ProjectFiles();
 $productFileInfos = $helpProjectFiles->projectFiles($this->product->ppload_collection_id);
 
-$bbcodeFreeDescription = $helpBBCode->Bbcode2html($this->product->description);
+//$bbcodeFreeDescription = $helpBBCode->Bbcode2html($this->product->description);
+$bbcodeFreeDescription = Default_Model_BBCode::renderHtml($this->product->description);
 
 $this->headTitle($this->product->title . ' - ' . $_SERVER['HTTP_HOST'], 'SET');
 $this->doctype(Zend_View_Helper_Doctype::XHTML1_RDFA);
@@ -287,13 +288,7 @@ $this->ratings = $tableProjectRatings->fetchRating($this->product->project_id);
                                         $testComments->setCurrentPageNumber($offset);
                                         $this->comments = $testComments;
                                         echo $this->render('product/partials/productCommentsUX1.phtml');
-
-                                        //$paginationComments = $modelComments->getAllCommentsForProject($this->product->project_id);
-                                        //$paginationComments->setItemCountPerPage(25);
-                                        //$paginationComments->setCurrentPageNumber($offset);
-                                        //$this->comments = $paginationComments;
-                                        //
-                                        //echo $this->render('product/partials/productCommentsUX1.phtml'); ?>
+                                        ?>
                                     </div>
                                     <!-- /comments -->
                                 </div>
@@ -318,7 +313,7 @@ $this->ratings = $tableProjectRatings->fetchRating($this->product->project_id);
                         <!-- MEDIA -->
                         <div class="tab-pane" id="media-panel">
                             <?php if (null != ($this->product->embed_code)): ?>
-                                <?= Default_Model_HtmlPurify::purify($this->product->embed_code) ?>
+                                <?= Default_Model_HtmlPurify::purify($this->product->embed_code, Default_Model_HtmlPurify::ALLOW_VIDEO) ?>
                             <?php endif; ?>
                         </div>
                         <!-- /MEDIA -->

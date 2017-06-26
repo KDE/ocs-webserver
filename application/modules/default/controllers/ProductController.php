@@ -261,7 +261,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $imageModel = new Default_Model_DbTable_Image();
         try {
             $values['image_small'] = $imageModel->saveImage($form->getElement(self::IMAGE_SMALL_UPLOAD));
-//            $values['image_big'] = $imageModel->saveImage($form->getElement(self::IMAGE_BIG_UPLOAD));
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err(__METHOD__ . ' - ERROR upload productPicture - ' . print_r($e, true));
         }
@@ -270,13 +269,10 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $values['status'] = Default_Model_DbTable_Project::PROJECT_ACTIVE;
 
         // save new project
-        $valid = true;
         $modelProject = new Default_Model_Project();
         
         //cleanup input text
-        $values['version'] = Default_Model_HtmlPurify::purify($values['version']);
-        $values['description'] = Default_Model_HtmlPurify::purify($values['description']);
-        $values['embed_code'] = Default_Model_HtmlPurify::purify($values['embed_code']);
+        $values = $this->purifiyInput($values);
 
         $newProject = null;
         try {
@@ -305,11 +301,13 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         if (!isset($values['image_small']) || $values['image_small'] == '') {
             $values['image_small'] = $mediaServerUrls[0];
             $newProject = $modelProject->updateProject($newProject->project_id, $values);
-            Zend_Registry::get('logger')->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . ' - set image_small: '
-                . $values['image_small'] . '\n');
+            Zend_Registry::get('logger')->debug(__METHOD__ . '(' . __LINE__ . ') - set image_small: '
+                . $values['image_small'] . '\n')
+            ;
         } else {
-            Zend_Registry::get('logger')->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . ' - set image_small: Not need. '
-                . $values['image_small'] . '\n');
+            Zend_Registry::get('logger')->debug(__METHOD__ . '(' . __LINE__ . ') - set image_small: Not need. '
+                . $values['image_small'] . '\n')
+            ;
         }
 
         //New Project in Session, for AuthValidation (owner)
@@ -324,10 +322,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         // ppload
         $this->processPploadId($newProject);
-
-        //$helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
-        //$urlProjectShow = $helperBuildProductUrl->buildProductUrl($newProject->project_id, 'preview');
-        //$this->redirect($urlProjectShow);
 
         $this->redirect('/member/' . $newProject->member_id . '/products/');
     }
@@ -515,6 +509,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         }
 
         // save changes
+        $values = $this->purifiyInput($values);
         $projectData->setFromArray($values);
         $projectData->changed_at = new Zend_Db_Expr('NOW()');
 
@@ -584,22 +579,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
     {
         $this->view->authMember = $this->_authMember;
         $tableProjectUpdates = new Default_Model_ProjectUpdates();
-        $tableProject = new Default_Model_Project();
 
         $params = $this->getAllParams();
         $update_id = $params['update_id'];
-
-        /**
-         * //Save version number
-         * $version = "";
-         * if (isset($params['product_version'])) {
-         * $version = $params['product_version'];
-         * }
-         *
-         * $updateArray = array();
-         * $updateArray['version'] = $version;
-         * $tableProject->update($updateArray, 'project_id = ' . $this->_projectId);
-         **/
 
         //Save title and Text
         $title = null;
@@ -611,22 +593,20 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $text = $params['text'];
         }
 
-
         if (!empty($title) && !empty($text)) {
             //Save update
             if (!empty($update_id)) {
                 //Update old update
                 $updateArray = array();
-                $updateArray['title'] = $title;
-                $updateArray['text'] = $text;
+                $updateArray['title'] = Default_Model_HtmlPurify::purify($title);
+                $updateArray['text'] = Default_Model_HtmlPurify::purify($text);
                 $updateArray['changed_at'] = new Zend_Db_Expr('Now()');
                 $project_update_id = $tableProjectUpdates->update($updateArray, 'project_update_id = ' . $update_id);
-
             } else {
                 //Add new update
                 $updateArray = array();
-                $updateArray['title'] = $title;
-                $updateArray['text'] = $text;
+                $updateArray['title'] = Default_Model_HtmlPurify::purify($title);
+                $updateArray['text'] = Default_Model_HtmlPurify::purify($text);
                 $updateArray['public'] = 1;
                 $updateArray['project_id'] = $this->_projectId;
                 $updateArray['member_id'] = $this->_authMember->member_id;
@@ -640,7 +620,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $result['update_id'] = $project_update_id;
 
         $this->_helper->json($result);
-
     }
 
     public function deleteupdateajaxAction()
@@ -1879,6 +1858,20 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             }
         }
         return $viewArray;
+    }
+
+    private function purifiyInput($values)
+    {
+        $values['version'] = Default_Model_HtmlPurify::purify($values['version']);
+        $values['embed_code'] = Default_Model_HtmlPurify::purify($values['embed_code'], Default_Model_HtmlPurify::ALLOW_VIDEO);
+        $values['title'] = Default_Model_HtmlPurify::purify($values['title']);
+        $values['description'] = Default_Model_HtmlPurify::purify($values['description']);
+        //$values['link_1'] = Default_Model_HtmlPurify::purify($values['link_1'],Default_Model_HtmlPurify::ALLOW_URL);
+        //$values['github_code'] = Default_Model_HtmlPurify::purify($values['github_code'],Default_Model_HtmlPurify::ALLOW_URL);
+        //$values['facebook_code'] = Default_Model_HtmlPurify::purify($values['facebook_code'],Default_Model_HtmlPurify::ALLOW_URL);
+        //$values['twitter_code'] = Default_Model_HtmlPurify::purify($values['twitter_code'],Default_Model_HtmlPurify::ALLOW_URL);
+        //$values['google_code'] = Default_Model_HtmlPurify::purify($values['google_code'],Default_Model_HtmlPurify::ALLOW_URL);
+        return $values;
     }
 
 }

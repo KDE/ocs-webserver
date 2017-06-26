@@ -340,8 +340,8 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         $duration = 1800; // in seconds
         $expires = gmdate("D, d M Y H:i:s", time() + $duration) . " GMT";
 
-        $this->getResponse()->setHeader('X-FRAME-OPTIONS', 'SAMEORIGIN',
-                true)//            ->setHeader('Last-Modified', $modifiedTime, true)
+        $this->getResponse()->setHeader('X-FRAME-OPTIONS', 'SAMEORIGIN',true)
+//            ->setHeader('Last-Modified', $modifiedTime, true)
              ->setHeader('Expires', $expires, true)->setHeader('Pragma', 'no-cache', true)
              ->setHeader('Cache-Control', 'private, no-cache, must-revalidate', true)
         ;
@@ -365,6 +365,7 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
      * @param array $elements
      *
      * @return array with additional info's
+     * @deprecated 
      */
     private function fetchAdditionalData($elements)
     {
