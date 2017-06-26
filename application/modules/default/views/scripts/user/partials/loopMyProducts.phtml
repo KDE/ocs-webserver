@@ -53,20 +53,9 @@ $helperImage = new Default_View_Helper_Image();
     <article class="col-lg-11 col-md-9 col-sm-9 col-xs-9">
         <!-- title -->
         <div class="title">
-<<<<<<< HEAD
         	<?php
                 $versionTextOnly = $version = Default_Model_HtmlPurify::purify($this->version);
               	$description = Default_Model_HtmlPurify::purify($object_text);
-=======
-        	<?php 
-              	require_once APPLICATION_PATH.'/../httpdocs/theme/flatui/js/lib/htmlpurifier-4.9.3-lite/library/HTMLPurifier.auto.php';
-	                	
-              	$config = HTMLPurifier_Config::createDefault();
-               	$purifier = new HTMLPurifier($config);
-              	$version = $purifier->purify($this->version);
-              	$versionTextOnly = strip_tags($version);
-              	$description = $purifier->purify($object_text);
->>>>>>> afe8f9df... reviews update
            	?>
             <h3><a href="<?= $helperBuildProductUrl->buildProductUrl($this->project_id) ?>"><?php echo $this->title; ?> <?php echo $version; ?></a><span  style="font-weight: normal; font-size: small; color: #4e4e4e"> added </span><span  style="font-weight: 700; font-size: small; color: #4e4e4e"><?= $addedOnText ?> ago</span><span style="font-weight: 700; font-size: small; float: right; color: #4e4e4e"> <?= $updatedOnText ?> ago</span><span style="font-weight: normal; font-size: small; float: right; color: #4e4e4e">updated&nbsp;</span></h3>
             
@@ -84,11 +73,7 @@ $helperImage = new Default_View_Helper_Image();
         <!-- /info -->
         <!-- text -->
         <div class="text">
-<<<<<<< HEAD
             <p><?= nl2br($description) ?></p>
-=======
-            <p><?= nl2br(strip_tags($description)) ?></p>
->>>>>>> afe8f9df... reviews update
         </div>
         <!-- /text -->
         <!-- buttons -->
