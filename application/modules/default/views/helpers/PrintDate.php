@@ -29,6 +29,9 @@ class Default_View_Helper_PrintDate extends Zend_View_Helper_Abstract
         if (empty($strTime)) {
             return null;
         }
+        if(strtotime($strTime) == strtotime('0000-00-00 00:00:00')){
+          return '';
+        }
 
         $date = DateTime::createFromFormat('Y-m-d H:i:s', $strTime);
         $now = new DateTime();
