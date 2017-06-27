@@ -43,8 +43,9 @@
 	  	
 	  	if($this->productRating['member_id']==0 ){
 	  	     // import from Hive sum vote
+	  	     if($this->productRating['user_dislike']>0) echo '<span class="glyphicon glyphicon-thumbs-down o-thumbs-down"> </span>'.$this->productRating['user_dislike'];
 	  	     if($this->productRating['user_like']>0) echo '<span class="glyphicon glyphicon-thumbs-up o-thumbs-up"> </span>'.$this->productRating['user_like'];
-	  	     if($this->productRating['user_dislike']>0) echo '<span class="glyphicon glyphicon-thumbs-up o-thumbs-down"> </span>'.$this->productRating['user_dislike'];
+	  	     
 	  	}else{
 	  		if($this->productRating['user_like']==1 ){
 	  		     echo '<span class="glyphicon glyphicon-thumbs-up o-thumbs-up"> </span>';
