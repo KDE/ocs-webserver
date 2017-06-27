@@ -190,17 +190,28 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
 
             if(!$flagFromDislikeToLike and !$flagFromLikeToDislike){ // first time vote
                 $numLikes = $project->count_likes + $userLikeIt;
-                $numDisLikes = $project->count_dislikes + $userDislikeIt;            
+                $numDisLikes = $project->count_dislikes + $userDislikeIt;        
+
+                 $updatearray = array('count_likes' => $numLikes, 'count_dislikes' => $numDisLikes);
+                 $projectTable->update($updatearray, 'project_id = '.$projectId);    
+
             }else if($flagFromDislikeToLike==true){
                 $numLikes = $project->count_likes + 1;
                 $numDisLikes = $project->count_dislikes -1;
+
+                $updatearray = array('count_likes' => $numLikes, 'count_dislikes' => $numDisLikes);
+                $projectTable->update($updatearray, 'project_id = '.$projectId);
             }else if($flagFromLikeToDislike==true){
                 $numLikes = $project->count_likes - 1;
                 $numDisLikes = $project->count_dislikes +1;
+                
+                $updatearray = array('count_likes' => $numLikes, 'count_dislikes' => $numDisLikes);
+                $projectTable->update($updatearray, 'project_id = '.$projectId);
+            }else{
+                // like again or dislike again count not changed...                
             }
 
-            $updatearray = array('count_likes' => $numLikes, 'count_dislikes' => $numDisLikes);
-            $projectTable->update($updatearray, 'project_id = '.$projectId);
+          
             
             //update activity log
             if ($userRating == 1) {
