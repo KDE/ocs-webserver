@@ -612,11 +612,11 @@ var PartialsReview = (function () {
                 $('#review-product-modal').find('#commenttext').val('');
                 if($( this ).hasClass( "voteup" )){
                         $('#review-product-modal').find('input#voteup').val(1);      
-                        $('#review-product-modal').find('#votelabel').text('Vote Up Because: ')      
+                        $('#review-product-modal').find('#votelabel').text('Add Comment (optional): ')      
                         
                 }else{
                         $('#review-product-modal').find('input#voteup').val(2);      
-                        $('#review-product-modal').find('#votelabel').text('Vote Down Because: ')      
+                        $('#review-product-modal').find('#votelabel').text('Add Comment (optional): ')      
                 }
                
                $('#review-product-modal').modal('show');
