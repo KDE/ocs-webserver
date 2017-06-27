@@ -159,7 +159,7 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
                     //$this->update(array('comment_id' =>$comment_id),'rating_id='.$alreadyExists->rating_id);    
                     //return;
                    $this->update(array('rating_active' =>0),'rating_id='.$alreadyExists->rating_id); 
-                   $flagFromDislikeToLike  = true;
+                   
                 }else{
                 // else userRating ==2 dislike then deactive current rating add new line
                     $this->update(array('rating_active' =>0),'rating_id='.$alreadyExists->rating_id);
@@ -171,7 +171,7 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
                     //$this->update(array('comment_id' =>$comment_id),'rating_id='.$alreadyExists->rating_id);                   
                     //return;     
                     $this->update(array('rating_active' =>0),'rating_id='.$alreadyExists->rating_id);
-                    $flagFromLikeToDislike = true;
+                    
                 }else{
                     $this->update(array('rating_active' =>0),'rating_id='.$alreadyExists->rating_id);
                     $flagFromDislikeToLike  = true;
@@ -190,7 +190,7 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
         $project = $projectTable->fetchProductInfo($projectId);
         if($project) {
 
-            if(!$flagFromDislikeToLike and !$flagFromLikeToDislike){ // first time vote
+            if(is_null($alreadyExists) and !$flagFromDislikeToLike and !$flagFromLikeToDislike){ // first time vote
                 $numLikes = $project->count_likes + $userLikeIt;
                 $numDisLikes = $project->count_dislikes + $userDislikeIt;        
 
