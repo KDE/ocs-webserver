@@ -32,6 +32,10 @@ class Default_Model_BBCode
      */
     public static function renderHtml($bbcode)
     {
+        if (empty($bbcode)) {
+            return '';
+        }
+        
         Zend_Markup::addParserPath('Local_Markup_Parser', APPLICATION_LIB . '/Local/Markup/Parser');
         $parser = Zend_Markup::factory('BbcodeCI');
         return $parser->render($bbcode);
