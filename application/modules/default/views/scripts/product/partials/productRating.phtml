@@ -23,8 +23,8 @@
 
 <button id="showRatingAll" class="pull-right bbtn btn-default">Show all Reviews</button>
 <button id="showRatingActive" class="pull-right bbtn btn-default">Show Active Reviews</button>
-<button id="showRatingUpvotes" class="pull-right bbtn btn-default">Show only Upvotes</button>
-<button id="showRatingDownvotes" class="pull-right bbtn btn-default">Show only Downvotes</button>
+<button id="showRatingUpvotes" class="pull-right bbtn btn-default">Show <span class="glyphicon glyphicon-thumbs-up " style="color:green"> </span></button>
+<button id="showRatingDownvotes" class="pull-right bbtn btn-default">Show <span class="glyphicon glyphicon-thumbs-down " style="color:red"> </span></button>
 <?php  foreach ($this->ratings as $this->productRating) {
 	?>
 <div class="productRating-rows <?=$this->productRating['rating_active']==0?'productRating-rows-inactive':'productRating-rows-active'?>  <?=$this->productRating['user_like']==1?'clsUpvotes':'clsDownvotes' ?> "  >
