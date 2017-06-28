@@ -1874,4 +1874,10 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         return $values;
     }
 
+    public function searchAction()
+    {
+        $this->view->searchText = $this->getParam('projectSearchText', '');
+        $this->view->page = $this->getParam('page', 1);
+    }
+
 }
