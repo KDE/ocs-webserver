@@ -79,9 +79,10 @@ class Local_Application extends Zend_Application
 
     public function getApplicationConfig()
     {
-        if (false === ($config = $this->_configCache->load(self::CACHE_APP_INI))) {
+        $cacheName = APPLICATION_ENV . '_' . self::CACHE_APP_INI;
+        if (false === ($config = $this->_configCache->load($cacheName))) {
             $config = new Zend_Config($this->getOptions(), true);
-            $this->_configCache->save($config, self::CACHE_APP_INI, array(), 300);
+            $this->_configCache->save($config, $cacheName, array(), 300);
         }
         return $config;
     }
