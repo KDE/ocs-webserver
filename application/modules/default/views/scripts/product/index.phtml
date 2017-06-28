@@ -64,6 +64,10 @@ $this->updates = $tableProjectUpdates->fetchProjectUpdates($this->product->proje
 
 $tableProjectRatings = new Default_Model_DbTable_ProjectRating();
 $this->ratings = $tableProjectRatings->fetchRating($this->product->project_id);
+if (Zend_Auth::getInstance()->hasIdentity()){
+    // login user  ini rating for current product
+    $this->ratingOfUser = $tableProjectRatings->getProjectRateForUser($this->product->project_id,$identity->member_id);  
+} 
 
 ?>
     <!-- facebook -->
@@ -104,11 +108,13 @@ $this->ratings = $tableProjectRatings->fetchRating($this->product->project_id);
                </div>
                <div class="modal-body">
                  <form class="full-width product-add-comment-review" action="/productcomment/addreplyreview/" method="post">
-                            <input type="hidden" name="p" value="<?= $this->product->project_id ?>">
-                            <input type="hidden" name="m" value="<?= $identity->member_id ?>">
-                            <input type="hidden" name="v" value="1" id="voteup">
-                            <textarea name="msg" class="full-width" id="commenttext"></textarea>
-                            <button type="submit" class="small"><span class="glyphicon glyphicon-send"></span> Vote!</button>
+                            <input type="hidden" name="p" value="<?= $this->product->project_id ?>"/>
+                            <input type="hidden" name="m" value="<?= $identity->member_id ?>" id="loginuser"/>
+                            <input type="hidden" name="v" value="1" id="voteup"/>
+                            <input type="hidden" name="pm" value="<?=$this->product->member_id?>" id="productcreator"/>
+                            <input type="hidden" name="userrate" value="<?=$this->ratingOfUser==null?-1:$this->ratingOfUser['user_like']?>" id="userrate"/>
+                            <textarea name="msg" class="full-width" id="commenttext"><?=$this->ratingOfUser!=null?$this->ratingOfUser['comment_text']:''?></textarea>
+                            <button type="submit" class="small pull-right">Rate Now</button>
                 </form>
                 </div>
             </div>
