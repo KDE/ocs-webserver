@@ -50,6 +50,7 @@ if($score>50) {
 if(strlen($green)==1) $green='0'.$green;
 if(strlen($red)==1) $red='0'.$red;
 
+
 ?>
 <div id="widget-rating" class="prod-widget-box right" style="border:0px !important">
     <!--<h4 id="extra-products-heading" class="small upcase sidebar-heading">Vote for this product</h4>-->
@@ -58,7 +59,7 @@ if(strlen($red)==1) $red='0'.$red;
         <tbody>
         <tr>
             <td width="10%" class="text-center">
-                <a class="btn btn-danger partial votedown"                
+                <a class="btn btn-danger partial votedown <?=$this->ratingOfUser!=null && $this->ratingOfUser['user_dislike']>0 ? 'active' :''?>"                
                    role="button"
                    style="line-height:10px;"                   
                    data-target="#widget-rating"
@@ -85,7 +86,7 @@ if(strlen($red)==1) $red='0'.$red;
                 </div>
             </td>
             <td width="10%" class="text-center">
-                <a class="btn btn-success partial voteup "                 
+                <a class="btn btn-success partial voteup <?=$this->ratingOfUser!=null && $this->ratingOfUser['user_like']>0 ? 'active' :''?> "                 
                    role="button"
                    style="line-height:10px;"
                    data-target="#widget-rating"
@@ -100,8 +101,7 @@ if(strlen($red)==1) $red='0'.$red;
 </div>
 <?php
 $this->inlineScript()->appendScript(
-    '    $(document).ready(function(){
-            //Partials.setup();
+    '    $(document).ready(function(){            
             PartialsReview.setup();
         });
     ');
