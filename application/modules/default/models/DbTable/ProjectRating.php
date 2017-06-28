@@ -29,20 +29,12 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
 
     protected $_key = 'rating_id';
 
-/*
-    protected $_defaultResult = array(
-        'project_id'          => 0,
-        'count_likes'         => 0,
-        'count_dislikes'      => 0,
-        'votes_total'         => 0,
-        'laplace_score'       => 0.5,
-        'wilson_score'        => 0,
-        'percentage_likes'    => 50,
-        'percentage_dislikes' => 50
-    );
-*/
-   
 
+    /**
+     * @param int $project_id
+     *
+     * @return array
+     */
     public function fetchRating($project_id)
     {
         $sql = "
@@ -63,28 +55,39 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
         return $result;
     }
 
-    public function getProjectRateForUser($project_id, $member_id){
+    /**
+     * @param int $project_id
+     * @param int $member_id
+     *
+     * @return null
+     */
+    public function getProjectRateForUser($project_id, $member_id)
+    {
         $sql = "
                 SELECT
                    p.* ,
-                   (select `comment_text` from comments c where c.comment_id = p.comment_id)  as comment_text
+                   (SELECT `comment_text` FROM comments c WHERE c.comment_id = p.comment_id)  AS comment_text
                 FROM
                     project_rating p            
                 WHERE
                     project_id = :project_id                                
-                    and member_id = :member_id
-                    and rating_active = 1
+                    AND member_id = :member_id
+                    AND rating_active = 1
                 ;                  
                ";
-        $result = $this->_db->query($sql, array('project_id' => $project_id,'member_id' => $member_id))->fetchAll();
-        if(count($result)>0){
+        $result = $this->_db->query($sql, array('project_id' => $project_id, 'member_id' => $member_id))->fetchAll();
+        if (count($result) > 0) {
             return $result[0];
-        }else
-        {
+        } else {
             return null;
-        }        
+        }
     }
 
+    /**
+     * @param int $project_id
+     *
+     * @return mixed
+     */
     public function fetchRatingCntActive($project_id)
     {
         $sql = "
@@ -103,14 +106,11 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
     }
 
     /**
-     * @param          $projectId
-     * @param          $member_id
-     * @param          $userRating
+     * @param int      $projectId
+     * @param int      $member_id
+     * @param int      $userRating
      * @param int|null $comment_id
      */
-
-
-
     public function rateForProject($projectId, $member_id, $userRating, $comment_id = null)
     {
         $alreadyExists = $this->fetchRow(array(
