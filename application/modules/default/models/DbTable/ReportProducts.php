@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -24,18 +25,17 @@ class Default_Model_DbTable_ReportProducts extends Local_Model_Table
 
     protected $_name = "reports_project";
 
-    //protected $_keyColumnsForRow = array('project_id');
     protected $_keyColumnsForRow = array('report_id');
 
     protected $_key = 'report_id';
 
     protected $_defaultValues = array(
-        'report_id' => null,
-        'project_id' => null,
+        'report_id'   => null,
+        'project_id'  => null,
         'reported_by' => null,
-        'is_deleted' => null,
-        'is_active' => null,
-        'created_at' => null
+        'is_deleted'  => null,
+        'is_active'   => null,
+        'created_at'  => null
     );
 
     public function setDelete($reportId)
@@ -45,6 +45,15 @@ class Default_Model_DbTable_ReportProducts extends Local_Model_Table
         );
 
         $this->update($updateValues, 'report_id=' . $reportId);
+    }
+
+    public function setDeleteByMember($member_id)
+    {
+        $updateValues = array(
+            'is_deleted' => 1,
+        );
+
+        $this->update($updateValues, 'reported_by=' . $member_id);
     }
 
 }

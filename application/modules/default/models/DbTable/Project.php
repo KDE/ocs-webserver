@@ -44,41 +44,38 @@ class Default_Model_DbTable_Project extends Local_Model_Table
     protected $_name = "project";
     protected $_rowClass = 'Default_Model_DbRow_Project';
 
-    protected $_referenceMap
-        = array(
-            'Owner'       => array(
-                'columns'       => 'member_id',
-                'refTableClass' => 'Default_Model_DbTable_Member',
-                'refColumns'    => 'member_id'
-            ),
-            'Category'    => array(
-                'columns'       => 'project_category_id',
-                'refTableClass' => 'Default_Model_DbTable_ProjectCategory',
-                'refColumns'    => 'project_category_id'
-            ),
-            'MainProject' => array(
-                'columns'       => 'project_id',
-                'refTableClass' => 'Default_Model_Member',
-                'refColumns'    => 'main_project_id'
-            )
-        );
+    protected $_referenceMap = array(
+        'Owner'       => array(
+            'columns'       => 'member_id',
+            'refTableClass' => 'Default_Model_DbTable_Member',
+            'refColumns'    => 'member_id'
+        ),
+        'Category'    => array(
+            'columns'       => 'project_category_id',
+            'refTableClass' => 'Default_Model_DbTable_ProjectCategory',
+            'refColumns'    => 'project_category_id'
+        ),
+        'MainProject' => array(
+            'columns'       => 'project_id',
+            'refTableClass' => 'Default_Model_Member',
+            'refColumns'    => 'main_project_id'
+        )
+    );
 
-    protected $_types
-        = array(
-            'person'     => self::PROJECT_TYPE_PERSONAL,
-            'collection' => self::PROJECT_TYPE_STANDARD,
-            'item'       => self::PROJECT_TYPE_UPDATE
-        );
+    protected $_types = array(
+        'person'     => self::PROJECT_TYPE_PERSONAL,
+        'collection' => self::PROJECT_TYPE_STANDARD,
+        'item'       => self::PROJECT_TYPE_UPDATE
+    );
 
-    protected $_allowedStatusTypes
-        = array(
-            self::PROJECT_FAULTY,
-            self::PROJECT_INCOMPLETE,
-            self::PROJECT_ILLEGAL,
-            self::PROJECT_INACTIVE,
-            self::PROJECT_ACTIVE,
-            self::PROJECT_DELETED
-        );
+    protected $_allowedStatusTypes = array(
+        self::PROJECT_FAULTY,
+        self::PROJECT_INCOMPLETE,
+        self::PROJECT_ILLEGAL,
+        self::PROJECT_INACTIVE,
+        self::PROJECT_ACTIVE,
+        self::PROJECT_DELETED
+    );
 
     /**
      * Override the insert method.
@@ -111,6 +108,7 @@ class Default_Model_DbTable_Project extends Local_Model_Table
                 $data['project_category_id'] = $parent['project_category_id'];
             }
         }
+
         return parent::insert($data);
     }
 
@@ -128,6 +126,31 @@ class Default_Model_DbTable_Project extends Local_Model_Table
     {
         $sql = "update {$this->_name} set spam_checked = :spam_checked where project_id = :project_id";
         $this->_db->query($sql, array('spam_checked' => $spamChecked, 'project_id' => $projectId))->execute();
+    }
+
+    /**
+     * @param array $affectedRows
+     *
+     * @return bool
+     */
+    public function deleteLikes($affectedRows)
+    {
+        if (false === is_array($affectedRows) OR (count($affectedRows) == 0)) {
+            return false;
+        }
+
+        foreach ($affectedRows as $affected_row) {
+            $projectData = $this->fetchRow(array('project_id = ?' => $affected_row['project_id']));
+            if ($affected_row['user_like']) {
+                $projectData->count_likes -= 1;
+            }
+            if ($affected_row['user_dislike']) {
+                $projectData->count_dislikes -= 1;
+            }
+            $projectData->save();
+        }
+
+        return true;
     }
 
 }

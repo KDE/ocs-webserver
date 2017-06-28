@@ -24,9 +24,10 @@ class Default_Model_Member extends Default_Model_DbTable_Member
 {
 
     /**
-     * @param int $count
+     * @param int    $count
      * @param string $orderBy
      * @param string $dir
+     *
      * @return Zend_Db_Table_Rowset
      * @throws Zend_Exception
      */
@@ -59,17 +60,14 @@ class Default_Model_Member extends Default_Model_DbTable_Member
                AND `profile_image_url` LIKE :likeImgUrl
           ';
 
-
             $resultCnt = $this->_db->fetchRow($sql, array(
-                'activeVal' => Default_Model_Member::MEMBER_ACTIVE,
-                'typeVal' => Default_Model_Member::MEMBER_TYPE_PERSON,
+                'activeVal'     => Default_Model_Member::MEMBER_ACTIVE,
+                'typeVal'       => Default_Model_Member::MEMBER_TYPE_PERSON,
                 'defaultImgUrl' => 'hive/user-pics/nopic.png',
-                'likeImgUrl' => 'hive/user-bigpics/0/%'
+                'likeImgUrl'    => 'hive/user-bigpics/0/%'
             ));
 
-
             $totalcnt = $resultCnt['total_count'];
-
 
             if ($totalcnt > $count) {
                 $offset = ' offset ' . rand(0, $totalcnt - $count);
@@ -91,12 +89,12 @@ class Default_Model_Member extends Default_Model_DbTable_Member
             $sql .= $offset;
 
             $resultMembers = $this->getAdapter()->query($sql, array(
-                'activeVal' => Default_Model_Member::MEMBER_ACTIVE,
-                'typeVal' => Default_Model_Member::MEMBER_TYPE_PERSON,
+                'activeVal'     => Default_Model_Member::MEMBER_ACTIVE,
+                'typeVal'       => Default_Model_Member::MEMBER_TYPE_PERSON,
                 'defaultImgUrl' => 'hive/user-pics/nopic.png',
-                'likeImgUrl' => 'hive/user-bigpics/0/%'
-            ))->fetchAll();
-
+                'likeImgUrl'    => 'hive/user-bigpics/0/%'
+            ))->fetchAll()
+            ;
 
             $resultSet = $this->generateRowSet($resultMembers);
 
@@ -108,6 +106,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
 
     /**
      * @param $data
+     *
      * @return Zend_Db_Table_Rowset
      */
     protected function generateRowSet($data)
@@ -115,11 +114,12 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         $classRowSet = $this->getRowsetClass();
 
         $returnRowSet = new $classRowSet(array(
-            'table' => $this,
+            'table'    => $this,
             'rowClass' => $this->getRowClass(),
-            'stored' => true,
-            'data' => $data
+            'stored'   => true,
+            'data'     => $data
         ));
+
         return $returnRowSet;
     }
 
@@ -129,7 +129,8 @@ class Default_Model_Member extends Default_Model_DbTable_Member
      */
     public function getMembersForSelectList()
     {
-        $selectArr = $this->_db->fetchAll("SELECT member_id,username,firstname, lastname FROM {$this->_name} WHERE is_active=1 AND is_deleted=0 ORDER BY username");
+        $selectArr =
+            $this->_db->fetchAll("SELECT member_id,username,firstname, lastname FROM {$this->_name} WHERE is_active=1 AND is_deleted=0 ORDER BY username");
 
         $arrayModified = array();
 
@@ -147,6 +148,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
 
     /**
      * @param int $member_id
+     *
      * @return boolean returns true if successful
      */
     public function activateMemberFromVerification($member_id, $verification_value)
@@ -168,7 +170,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
     public function setDeleted($member_id)
     {
         $updateValues = array(
-            'is_active' => 0,
+            'is_active'  => 0,
             'is_deleted' => 1,
             'deleted_at' => new Zend_Db_Expr('Now()'),
         );
@@ -177,6 +179,8 @@ class Default_Model_Member extends Default_Model_DbTable_Member
 
         $this->setMemberProjectsDeleted($member_id);
         $this->setMemberCommentsDeleted($member_id);
+        $this->setMemberRatingsDeleted($member_id);
+        $this->setMemberReportingsDeleted($member_id);
         // $this->setMemberPlingsDeleted($member_id);
         $this->removeMemberProjectsFromSearch($member_id);
         $this->setDeletedInMaterializedView($member_id);
@@ -194,6 +198,24 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         $modelComments->setAllCommentsForUserDeleted($member_id);
     }
 
+    private function setMemberRatingsDeleted($member_id)
+    {
+        $modelRatings = new Default_Model_DbTable_ProjectRating();
+        $affectedRows = $modelRatings->setDeletedByMemberId($member_id);
+        if (false === empty($affectedRows)) {
+            $modelProject = new Default_Model_DbTable_Project();
+            $modelProject->deleteLikes($affectedRows);
+        }
+    }
+
+    private function setMemberReportingsDeleted($member_id)
+    {
+        $modelReportsProject = new Default_Model_DbTable_ReportProducts();
+        $modelReportsProject->setDeleteByMember($member_id);
+        $modelReportsComments = new Default_Model_DbTable_ReportComments();
+        $modelReportsComments->setDeleteByMember($member_id);
+    }
+
     private function removeMemberProjectsFromSearch($member_id)
     {
         $modelProject = new Default_Model_Project();
@@ -207,13 +229,22 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         }
     }
 
+    private function setDeletedInMaterializedView($member_id)
+    {
+        $sql = "UPDATE stat_projects SET status = :new_status WHERE member_id = :member_id";
+
+        $this->_db->query($sql,
+            array('new_status' => Default_Model_DbTable_Project::PROJECT_DELETED, 'member_id' => $member_id))->execute()
+        ;
+    }
+
     /**
      * @param int $member_id
      */
     public function setActivated($member_id)
     {
         $updateValues = array(
-            'is_active' => 1,
+            'is_active'  => 1,
             'is_deleted' => 0,
             'changed_at' => new Zend_Db_Expr('Now()'),
         );
@@ -239,6 +270,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
 
     /**
      * @param int $member_id
+     *
      * @return Zend_Db_Table_Row
      */
     public function fetchMemberData($member_id)
@@ -256,8 +288,10 @@ class Default_Model_Member extends Default_Model_DbTable_Member
                     (member_id = :memberId) AND (is_deleted = :deletedVal)
         ';
 
-        $result = $this->getAdapter()->query($sql,
-            array('memberId' => $member_id, 'deletedVal' => self::MEMBER_NOT_DELETED))->fetch();
+        $result =
+            $this->getAdapter()->query($sql, array('memberId' => $member_id, 'deletedVal' => self::MEMBER_NOT_DELETED))
+                 ->fetch()
+        ;
 
         $classRow = $this->getRowClass();
 
@@ -265,9 +299,10 @@ class Default_Model_Member extends Default_Model_DbTable_Member
     }
 
     /**
-     * @param $member_id
+     * @param      $member_id
      * @param bool $active
      * @param bool $deleted
+     *
      * @return null|Zend_Db_Table_Row_Abstract
      */
     public function fetchMember($member_id, $active = true, $deleted = false)
@@ -276,8 +311,9 @@ class Default_Model_Member extends Default_Model_DbTable_Member
             return null;
         }
 
-        $sql = 'SELECT * FROM member WHERE is_deleted = :deleted AND is_active = :active AND member.member_id = :memberId';
-        $stmnt = $this->_db->query($sql, array('deleted'=>$deleted, 'active'=>$active, 'memberId'=>$member_id));
+        $sql =
+            'SELECT * FROM member WHERE is_deleted = :deleted AND is_active = :active AND member.member_id = :memberId';
+        $stmnt = $this->_db->query($sql, array('deleted' => $deleted, 'active' => $active, 'memberId' => $member_id));
 
         if ($stmnt->rowCount() == 0) {
             return null;
@@ -288,6 +324,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
 
     /**
      * @param string $user_name
+     *
      * @return Zend_Db_Table_Row
      */
     public function fetchMemberFromHiveUserName($user_name)
@@ -306,6 +343,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
     /**
      * @param int $member_id
      * @param int $limit
+     *
      * @return Zend_Db_Table_Rowset
      */
     public function fetchFollowedMembers($member_id, $limit = null)
@@ -332,42 +370,9 @@ class Default_Model_Member extends Default_Model_DbTable_Member
     }
 
     /**
-     * @param int $member_id
+     * @param int  $member_id
      * @param null $limit
-     * @return Zend_Db_Table_Rowset_Abstract
-     */
-    public function fetchSupportedProjects($member_id, $limit = null)
-    {
-        $sql = "
-                SELECT plings.project_id,                       
-                       project.title,
-                       project.image_small,                       
-                       project_category.title AS catTitle,                       
-                       (SELECT SUM(amount) FROM plings WHERE plings.project_id=project.project_id AND plings.status_id=2) AS sumAmount
-                FROM plings
-                 JOIN project ON plings.project_id = project.project_id
-                 JOIN project_category ON project.project_category_id = project_category.project_category_id                 
-                WHERE plings.status_id IN (2,3,4)
-                  AND plings.member_id = :member_id
-                  AND project.status = :project_status
-                  AND project.type_id = 1
-                GROUP BY plings.project_id
-                ORDER BY sumAmount DESC
-                ";
-
-        if (null != $limit) {
-            $sql .= $this->_db->quoteInto(" limit ?", $limit, 'INTEGER');
-        }
-
-        $result = $this->_db->fetchAll($sql,
-            array('member_id' => $member_id, 'project_status' => Default_Model_Project::PROJECT_ACTIVE));
-
-        return $this->generateRowSet($result);
-    }
-
-    /**
-     * @param int $member_id
-     * @param null $limit
+     *
      * @return Zend_Db_Table_Rowset_Abstract
      */
     public function fetchFollowedProjects($member_id, $limit = null)
@@ -450,7 +455,6 @@ class Default_Model_Member extends Default_Model_DbTable_Member
             $sql .= $this->_db->quoteInto(" limit ?", $limit, 'INTEGER');
         }
 
-
         $result = $this->_db->fetchAll($sql,
             array('member_id' => $member_id, 'project_status' => Default_Model_Project::PROJECT_ACTIVE));
 
@@ -464,7 +468,8 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         if (false == isset($userData['password'])) {
             throw new Exception(__METHOD__ . ' - user password is not set.');
         }
-        $userData['password'] = Local_Auth_Adapter_Ocs::getEncryptedPassword($userData['password'], Default_Model_DbTable_Member::SOURCE_LOCAL);
+        $userData['password'] = Local_Auth_Adapter_Ocs::getEncryptedPassword($userData['password'],
+            Default_Model_DbTable_Member::SOURCE_LOCAL);
         if (false == isset($userData['roleId'])) {
             $userData['roleId'] = self::ROLE_ID_DEFAULT;
         }
@@ -483,6 +488,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
     /**
      * @param $userData
      * @param $uuidMember
+     *
      * @return string
      */
     protected function generateIdentIcon($userData, $uuidMember)
@@ -493,11 +499,13 @@ class Default_Model_Member extends Default_Model_DbTable_Member
 
         $imageService = new Default_Model_DbTable_Image();
         $imageFilename = $imageService->saveImageOnMediaServer($tmpImagePath);
+
         return $imageFilename;
     }
 
     /**
      * @param array $userData
+     *
      * @return Zend_Db_Table_Row_Abstract
      */
     public function storeNewUser($userData)
@@ -517,6 +525,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
 
     /**
      * @param array $userData
+     *
      * @return mixed $projectId
      */
     protected function storePersonalProject($userData)
@@ -532,6 +541,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         $newPersonalProject->creator_id = $userData['member_id'];
         $newPersonalProject->title = $newPersonalProject::PERSONAL_PROJECT_TITLE;
         $projectId = $newPersonalProject->save();
+
         return $projectId;
     }
 
@@ -565,16 +575,17 @@ class Default_Model_Member extends Default_Model_DbTable_Member
 
     /**
      * @param string $email
+     *
      * @return null|Zend_Db_Table_Row_Abstract
      */
     public function fetchCheckedActiveLocalMemberByEmail($email)
     {
-        $sel = $this->select()
-            ->where('mail=?', $email)
-            ->where('is_deleted = ?', Default_Model_DbTable_Member::MEMBER_NOT_DELETED)
-            ->where('is_active = ?', Default_Model_DbTable_Member::MEMBER_ACTIVE)
-            ->where('mail_checked = ?', Default_Model_DbTable_Member::MEMBER_MAIL_CHECKED)
-            ->where('login_method = ?', Default_Model_DbTable_Member::MEMBER_LOGIN_LOCAL);
+        $sel = $this->select()->where('mail=?', $email)
+                    ->where('is_deleted = ?', Default_Model_DbTable_Member::MEMBER_NOT_DELETED)
+                    ->where('is_active = ?', Default_Model_DbTable_Member::MEMBER_ACTIVE)
+                    ->where('mail_checked = ?', Default_Model_DbTable_Member::MEMBER_MAIL_CHECKED)
+                    ->where('login_method = ?', Default_Model_DbTable_Member::MEMBER_LOGIN_LOCAL)
+        ;
 
         return $this->fetchRow($sel);
     }
@@ -603,6 +614,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
 
         $result = $this->_db->fetchAll($sql,
             array('memberId' => $member_id, 'status' => Default_Model_Project::PROJECT_ACTIVE));
+
         return $this->generateRowSet($result);
     }
 
@@ -610,7 +622,8 @@ class Default_Model_Member extends Default_Model_DbTable_Member
      * Finds an active user by given username or email ($identity)
      *
      * @param string $identity could be the username or users mail address
-     * @param bool $withLoginLocal
+     * @param bool   $withLoginLocal
+     *
      * @return Zend_Db_Table_Row_Abstract
      */
     public function findActiveMemberByIdentity($identity, $withLoginLocal = false)
@@ -622,9 +635,11 @@ class Default_Model_Member extends Default_Model_DbTable_Member
             $sqlMail .= " AND login_method = '" . self::MEMBER_LOGIN_LOCAL . "'";
         }
         $resultName = $this->getAdapter()->fetchRow($sqlName,
-            array('active' => self::MEMBER_ACTIVE, 'deleted' => self::MEMBER_NOT_DELETED, 'identity' => $identity));
+            array('active' => self::MEMBER_ACTIVE, 'deleted' => self::MEMBER_NOT_DELETED, 'identity' => $identity))
+        ;
         $resultMail = $this->getAdapter()->fetchRow($sqlMail,
-            array('active' => self::MEMBER_ACTIVE, 'deleted' => self::MEMBER_NOT_DELETED, 'identity' => $identity));
+            array('active' => self::MEMBER_ACTIVE, 'deleted' => self::MEMBER_NOT_DELETED, 'identity' => $identity))
+        ;
 
         if ((false !== $resultName) AND (count($resultName) > 0)) {
             return $this->generateRowClass($resultName);
@@ -632,11 +647,13 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         if ((false !== $resultMail) AND (count($resultMail) > 0)) {
             return $this->generateRowClass($resultMail);
         }
+
         return $this->createRow();
     }
 
     /**
      * @param Zend_Db_Table_Row_Abstract $memberData
+     *
      * @return bool
      */
     public function isHiveUser($memberData)
@@ -647,12 +664,14 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         if ($memberData->source_id == self::SOURCE_HIVE) {
             return true;
         }
+
         return false;
     }
 
     public function fetchActiveHiveUserByUsername($username)
     {
-        $sql = 'SELECT * FROM member WHERE username = :username AND is_active = 1 AND member.source_id = 1 AND member.is_deleted = 0';
+        $sql =
+            'SELECT * FROM member WHERE username = :username AND is_active = 1 AND member.source_id = 1 AND member.is_deleted = 0';
 
         $result = $this->getAdapter()->query($sql, array('username' => $username))->fetch();
 
@@ -660,8 +679,9 @@ class Default_Model_Member extends Default_Model_DbTable_Member
     }
 
     /**
-     * @param $member_id
+     * @param      $member_id
      * @param null $limit
+     *
      * @return Zend_Paginator
      */
     public function fetchComments($member_id, $limit = null)
@@ -690,7 +710,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
             $sql .= ' limit ' . (int)$limit;
         }
         $result = $this->_db->fetchAll($sql, array(
-            'member_id' => $member_id,
+            'member_id'      => $member_id,
             'project_status' => Default_Model_DbTable_Project::PROJECT_ACTIVE,
             'comment_status' => Default_Model_DbTable_Comments::COMMENT_ACTIVE
         ));
@@ -713,20 +733,25 @@ class Default_Model_Member extends Default_Model_DbTable_Member
                   AND project.type_id = 1
                   AND project.member_id = :member_id
             ';
-        $result = $this->_db->fetchAll($sql, array('member_id' => $member_id, 'project_status' => Default_Model_Project::PROJECT_ACTIVE));
+        $result = $this->_db->fetchAll($sql,
+            array('member_id' => $member_id, 'project_status' => Default_Model_Project::PROJECT_ACTIVE));
+
         return count($result);
     }
 
     public function fetchLastActiveTime($member_id)
     {
-        $sql_page_views = "SELECT created_at AS lastactive FROM stat_page_views WHERE member_id = :member_id ORDER BY created_at DESC LIMIT 1";
-        $sql_activities = "SELECT `time` AS lastactive FROM activity_log WHERE member_id = :member_id ORDER BY `time` DESC LIMIT 1";
+        $sql_page_views =
+            "SELECT created_at AS lastactive FROM stat_page_views WHERE member_id = :member_id ORDER BY created_at DESC LIMIT 1";
+        $sql_activities =
+            "SELECT `time` AS lastactive FROM activity_log WHERE member_id = :member_id ORDER BY `time` DESC LIMIT 1";
 
         $result_page_views = $this->getAdapter()->fetchRow($sql_page_views, array('member_id' => $member_id));
         $result_activities = $this->getAdapter()->fetchRow($sql_activities, array('member_id' => $member_id));
 
         if (count($result_page_views) > 0 AND count($result_activities) > 0) {
-            return $result_page_views['lastactive'] > $result_activities['lastactive'] ? $result_page_views['lastactive'] : $result_activities['lastactive'];
+            return $result_page_views['lastactive'] > $result_activities['lastactive']
+                ? $result_page_views['lastactive'] : $result_activities['lastactive'];
         }
         if (count($result_page_views) > count($result_activities)) {
             return $result_page_views['lastactive'];
@@ -734,11 +759,13 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         if (count($result_activities) > count($result_page_views)) {
             return $result_activities['lastactive'];
         }
+
         return null;
     }
 
     /**
      * @param int $member_id
+     *
      * @return array
      */
     public function fetchContributedProjectsByCat($member_id)
@@ -763,7 +790,43 @@ class Default_Model_Member extends Default_Model_DbTable_Member
             $projArr['sumAmount'] = $pro->sumAmount;
             array_push($catArray[$pro->catTitle], $projArr);
         }
+
         return $catArray;
+    }
+
+    /**
+     * @param int  $member_id
+     * @param null $limit
+     *
+     * @return Zend_Db_Table_Rowset_Abstract
+     */
+    public function fetchSupportedProjects($member_id, $limit = null)
+    {
+        $sql = "
+                SELECT plings.project_id,                       
+                       project.title,
+                       project.image_small,                       
+                       project_category.title AS catTitle,                       
+                       (SELECT SUM(amount) FROM plings WHERE plings.project_id=project.project_id AND plings.status_id=2) AS sumAmount
+                FROM plings
+                 JOIN project ON plings.project_id = project.project_id
+                 JOIN project_category ON project.project_category_id = project_category.project_category_id                 
+                WHERE plings.status_id IN (2,3,4)
+                  AND plings.member_id = :member_id
+                  AND project.status = :project_status
+                  AND project.type_id = 1
+                GROUP BY plings.project_id
+                ORDER BY sumAmount DESC
+                ";
+
+        if (null != $limit) {
+            $sql .= $this->_db->quoteInto(" limit ?", $limit, 'INTEGER');
+        }
+
+        $result = $this->_db->fetchAll($sql,
+            array('member_id' => $member_id, 'project_status' => Default_Model_Project::PROJECT_ACTIVE));
+
+        return $this->generateRowSet($result);
     }
 
     private function setMemberPlingsDeleted($member_id)
@@ -776,13 +839,6 @@ class Default_Model_Member extends Default_Model_DbTable_Member
     {
         $modelPling = new Default_Model_Pling();
         $modelPling->setAllPlingsForUserActivated($member_id);
-    }
-
-    private function setDeletedInMaterializedView($member_id)
-    {
-        $sql = "update stat_projects set status = :new_status where member_id = :member_id";
-
-        $this->_db->query($sql, array('new_status' => Default_Model_DbTable_Project::PROJECT_DELETED, 'member_id' => $member_id))->execute();
     }
 
 }
