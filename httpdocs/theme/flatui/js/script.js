@@ -1103,17 +1103,32 @@ var LayoutSwitch = (function () {
     }
 })();
 
+
+
 var productRatingToggle = (function () {
     return {
         setup: function () {                    
-            $('#showRatingInactive').on('click',function(){               
-               $('.productRating-rows-inactive').toggle();                               
-               if($('#showRatingInactive').text()=='Show all Reviews'){
-                        $('#showRatingInactive').text('Show only active Reviews');
-               }else{
-                        $('#showRatingInactive').text('Show all Reviews');
-               }
+            $('#showRatingAll').on('click',function(){     
+                $('.productRating-rows').show();               
+               $('.productRating-rows-inactive').show();                                            
+            })
 
+            $('#showRatingActive').on('click',function(){                
+                $('.productRating-rows').show();         
+               $('.productRating-rows-inactive').hide();                                            
+            })
+
+             $('#showRatingUpvotes').on('click',function(){       
+               $('.productRating-rows').show();        
+               $('.clsDownvotes').hide();                                                     
+               $('.productRating-rows-inactive').hide();                  
+            })
+
+
+             $('#showRatingDownvotes').on('click',function(){               
+                $('.productRating-rows').show();                                                                                
+                $('.productRating-rows-inactive').hide();                                         
+                $('.clsUpvotes').hide();         
             })
         }
     }
