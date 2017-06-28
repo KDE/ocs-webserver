@@ -627,12 +627,14 @@ var PartialsReview = (function () {
                         if(userrate==1){
                             $('#review-product-modal').find('#votelabel').empty()                                
                                 .append('<a class="btn btn-success active" style="line-height: 10px;"><span class="fa fa-plus"></span></a> is given already with comment:');                                
-                            $('#review-product-modal').find(':submit').attr("disabled", "disabled").css("display", "none");                                                         
+                            $('#review-product-modal').find(':submit').attr("disabled", "disabled").css("display", "none");        
+                            $('#review-product-modal').find('#commenttext').attr("disabled", "disabled");                                             
                         }else{
                             $('#review-product-modal').find('input#voteup').val(1);      
                             $('#review-product-modal').find('#votelabel').empty()                                
                                 .append('<a class="btn btn-success active" style="line-height: 10px;"><span class="fa fa-plus"></span></a> Add Comment (optional):');                                                                                      
                             $('#review-product-modal').find('#commenttext').val('');
+                            $('#review-product-modal').find('#commenttext').removeAttr("disabled");
                              $('#review-product-modal').find(':submit').css("display", "block").removeAttr("disabled"); 
                             
                         }                        
@@ -640,7 +642,7 @@ var PartialsReview = (function () {
                         if(userrate==0){
                              $('#review-product-modal').find('#votelabel').empty()                                
                                  .append('<a class="btn btn-danger active" style="line-height: 10px;"><span class="fa fa-minus"></span></a> is given already with comment: ');                                                                                      
-                             
+                              $('#review-product-modal').find('#commenttext').attr("disabled", "disabled"); 
                             $('#review-product-modal').find(':submit').attr("disabled", "disabled").css("display", "none");     
 
                         }else{
@@ -648,6 +650,7 @@ var PartialsReview = (function () {
                             $('#review-product-modal').find('#votelabel').empty()                                
                                 .append('<a class="btn btn-danger active" style="line-height: 10px;"><span class="fa fa-minus"></span></a> Add Comment (optional): ');                                                                                                                  
                             $('#review-product-modal').find('#commenttext').val('');
+                            $('#review-product-modal').find('#commenttext').removeAttr("disabled");
                             $('#review-product-modal').find(':submit').removeAttr("disabled").css("display", "block");             
                              
                         }
