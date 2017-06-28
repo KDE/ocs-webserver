@@ -65,7 +65,6 @@ set_include_path(implode(PATH_SEPARATOR, array(
     get_include_path(),
 )));
 
-
 // Initialising Autoloader
 require APPLICATION_LIB . '/Zend/Loader/SplAutoloader.php';
 require APPLICATION_LIB . '/Zend/Loader/StandardAutoloader.php';
@@ -100,8 +99,5 @@ if (file_exists(APPLICATION_PATH . '/configs/application.local.ini')) {
 // Init and start Zend_Application
 require_once APPLICATION_LIB . '/Local/Application.php';
 // Create application, bootstrap, and run
-$application = new Local_Application(
-    APPLICATION_ENV,
-    $configuration
-);
+$application = new Local_Application(APPLICATION_ENV, $configuration);
 $application->bootstrap()->run();
