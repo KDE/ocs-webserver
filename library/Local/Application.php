@@ -69,12 +69,7 @@ class Local_Application extends Zend_Application
             'cache_file_perm'        => 0700
         );
 
-        return Zend_Cache::factory(
-            'Core',
-            'File',
-            $frontendOptions,
-            $backendOptions
-        );
+        return Zend_Cache::factory('Core', 'File', $frontendOptions, $backendOptions);
     }
 
     public function getApplicationConfig()
@@ -84,6 +79,7 @@ class Local_Application extends Zend_Application
             $config = new Zend_Config($this->getOptions(), true);
             $this->_configCache->save($config, $cacheName, array(), 300);
         }
+
         return $config;
     }
 
@@ -109,6 +105,7 @@ class Local_Application extends Zend_Application
             $config = parent::_loadConfig($file);
             $this->_configCache->save($config, $cacheId, array(), null);
         }
+
         return $config;
     }
 
