@@ -1108,24 +1108,33 @@ var LayoutSwitch = (function () {
 var productRatingToggle = (function () {
     return {
         setup: function () {                    
-            $('#showRatingAll').on('click',function(){     
+            $('#showRatingAll').on('click',function(){   
+               
+                $('.btnRateFilter').removeClass('active');
+                $(this).addClass('active');  
                 $('.productRating-rows').show();               
-               $('.productRating-rows-inactive').show();                                            
+               $('.productRating-rows-inactive').show();                                                                
             })
 
-            $('#showRatingActive').on('click',function(){                
+            $('#showRatingActive').on('click',function(){   
+                $('.btnRateFilter').removeClass('active');
+                $(this).addClass('active');            
                 $('.productRating-rows').show();         
                $('.productRating-rows-inactive').hide();                                            
             })
 
              $('#showRatingUpvotes').on('click',function(){       
+                $('.btnRateFilter').removeClass('active');
+                $(this).addClass('active');
                $('.productRating-rows').show();        
                $('.clsDownvotes').hide();                                                     
                $('.productRating-rows-inactive').hide();                  
             })
 
 
-             $('#showRatingDownvotes').on('click',function(){               
+             $('#showRatingDownvotes').on('click',function(){     
+                $('.btnRateFilter').removeClass('active');
+                $(this).addClass('active');          
                 $('.productRating-rows').show();                                                                                
                 $('.productRating-rows-inactive').hide();                                         
                 $('.clsUpvotes').hide();         
