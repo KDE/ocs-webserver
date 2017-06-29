@@ -1150,4 +1150,3 @@ var productRatingToggle = (function () {
     }
 })();
 
-
