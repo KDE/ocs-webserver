@@ -26,11 +26,11 @@ $helperImage = new Default_View_Helper_Image();
 <div class="supporter-box-container">
     <div class="supporter-box-top">
         <div class="title">
-            <a target="_blank" href="<?php echo $helperBuildProductUrl->buildProductUrl($this->product->project_id); ?>"
+            <a target="_blank" href="<?php echo $helperBuildProductUrl->buildProductUrl($this->product->project_id,'', null, true); ?>"
                title="<?php echo $this->product->title; ?>"><?php echo $this->product->title; ?></a>
         </div>
         <figure>
-            <a target="_blank" href="<?php echo $helperBuildProductUrl->buildProductUrl($this->product->project_id); ?>"
+            <a target="_blank" href="<?php echo $helperBuildProductUrl->buildProductUrl($this->product->project_id,'', null, true); ?>"
                title="<?php echo $this->product->title; ?>">
                 <img
                     src="<?php echo $helperImage->Image($this->product->image_small, array('width' => 80, 'height' => 80)); ?>"
