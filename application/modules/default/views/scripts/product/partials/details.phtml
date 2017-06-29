@@ -29,8 +29,8 @@ $userRoleName = $helperUserRole->userRole();
     <span class="title"> Details </span>
 
     <div class="row">
-        <span class="col-lg-5">version</span>
-        <div class="col-lg-7">
+        <span class="col-lg-6">version</span>
+        <div class="col-lg-6">
             <span class="value">
             <?= Default_Model_HtmlPurify::purify($this->product->project_version); ?> </span>
         </div>
@@ -38,39 +38,39 @@ $userRoleName = $helperUserRole->userRole();
 
     <?php if ($this->product->project_changed_at) { ?>
         <div class="row">
-            <span class="col-lg-5">updated</span>
-            <span class="col-lg-7 value"> <?= $this->printDate($this->product->project_changed_at) ?></span>
+            <span class="col-lg-6">updated</span>
+            <span class="col-lg-6 value"> <?= $this->printDate($this->product->project_changed_at) ?></span>
         </div>
     <?php } ?>
 
     <div class="row">
-        <span class="col-lg-5">added</span>
-        <span class="col-lg-7 value"> <?= $this->printDate($this->product->project_created_at) ?></span>
+        <span class="col-lg-6">added</span>
+        <span class="col-lg-6 value"> <?= $this->printDate($this->product->project_created_at) ?></span>
     </div>
     <div class="row">
-        <span class=" col-lg-5">downloads</span>
-        <span class="col-lg-7 value"> <div id="downloadscnt"></div></span>
+        <span class=" col-lg-6">downloads today</span>
+        <span class="col-lg-6 value"> <div id="downloadscnt"><?= $this->projectFilesDownloadsToday($this->product->ppload_collection_id)?></div></span>
     </div>
 
     <div class="row">
-        <span class=" col-lg-5">page views today</span>
-        <span class="col-lg-7 value"> <?= $this->product_views ?></span>
+        <span class=" col-lg-6">page views today </span>
+        <span class="col-lg-6 value"> <?= $this->projectPageviewsToday($this->product->project_id) ?></span>
     </div>
     
     <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
      
     <div class="row">
-        <span class=" col-lg-5">spam reports</span>
-        <span class="col-lg-7 value"> <?= $this->product->amount_reports ?></span>
+        <span class=" col-lg-6">spam reports</span>
+        <span class="col-lg-6 value"> <?= $this->product->amount_reports ?></span>
     </div>
      <?php endif; ?>
 
     <?php /**
      * <div class="row">
-     * <span class=" col-lg-5" >
+     * <span class=" col-lg-6" >
      * package type
      * </span>
-     * <span class="col-lg-7 value ">
+     * <span class="col-lg-6 value ">
      * <?php
      * $type = $this->FetchProjectPackageTypes($this->product->project_id);
      * if(!empty($type)){
