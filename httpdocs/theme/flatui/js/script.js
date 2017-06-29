@@ -1112,32 +1112,39 @@ var productRatingToggle = (function () {
     return {
         setup: function () {                    
             $('#showRatingAll').on('click',function(){   
-               
-                $('.btnRateFilter').removeClass('active');
-                $(this).addClass('active');  
+                $('#ratings-panel').find('.spinning').show();
+                setTimeout(function() {$('#ratings-panel').find('.spinning').hide();}, 500);
+                $('.btnRateFilter').removeClass('activeRating');
+                $(this).addClass('activeRating');  
                 $('.productRating-rows').show();               
                $('.productRating-rows-inactive').show();                                                                
             })
 
-            $('#showRatingActive').on('click',function(){   
-                $('.btnRateFilter').removeClass('active');
-                $(this).addClass('active');            
+            $('#showRatingActive').on('click',function(){ 
+            $('#ratings-panel').find('.spinning').show();
+                setTimeout(function() {$('#ratings-panel').find('.spinning').hide();}, 500);  
+                $('.btnRateFilter').removeClass('activeRating');
+                $(this).addClass('activeRating');            
                 $('.productRating-rows').show();         
                $('.productRating-rows-inactive').hide();                                            
             })
 
-             $('#showRatingUpvotes').on('click',function(){       
-                $('.btnRateFilter').removeClass('active');
-                $(this).addClass('active');
+             $('#showRatingUpvotes').on('click',function(){      
+             $('#ratings-panel').find('.spinning').show();
+                setTimeout(function() {$('#ratings-panel').find('.spinning').hide();}, 500); 
+                $('.btnRateFilter').removeClass('activeRating');
+                $(this).addClass('activeRating');
                $('.productRating-rows').show();        
                $('.clsDownvotes').hide();                                                     
                $('.productRating-rows-inactive').hide();                  
             })
 
 
-             $('#showRatingDownvotes').on('click',function(){     
-                $('.btnRateFilter').removeClass('active');
-                $(this).addClass('active');          
+             $('#showRatingDownvotes').on('click',function(){    
+             $('#ratings-panel').find('.spinning').show();
+                setTimeout(function() {$('#ratings-panel').find('.spinning').hide();}, 500); 
+                $('.btnRateFilter').removeClass('activeRating');
+                $(this).addClass('activeRating');          
                 $('.productRating-rows').show();                                                                                
                 $('.productRating-rows-inactive').hide();                                         
                 $('.clsUpvotes').hide();         
@@ -1145,3 +1152,4 @@ var productRatingToggle = (function () {
         }
     }
 })();
+

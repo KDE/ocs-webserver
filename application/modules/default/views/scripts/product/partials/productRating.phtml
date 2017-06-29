@@ -27,9 +27,10 @@ $cntActive = 0;
 ?>
 
 <button id="showRatingAll" class="pull-right bbtn btn-default btnRateFilter">Show all Reviews (<?=count($this->ratings) ?>)</button>
-<button id="showRatingActive" class="pull-right bbtn btn-default btnRateFilter active">Show Active Reviews (<?=$cntActive ?>)</button>
+<button id="showRatingActive" class="pull-right bbtn btn-default btnRateFilter activeRating">Show Active Reviews (<?=$cntActive ?>)</button>
 <button id="showRatingUpvotes" class="pull-right bbtn btn-default btnRateFilter">Show (<?=$this->product->count_likes ?>) <span class="glyphicon glyphicon-thumbs-up " style="color:green"> </span></button>
 <button id="showRatingDownvotes" class="pull-right bbtn btn-default btnRateFilter">Show (<?=$this->product->count_dislikes ?>)  <span class="glyphicon glyphicon-thumbs-down " style="color:red"> </span></button>
+<span class="glyphicon glyphicon-refresh spinning" style="float: right; display: none"></span>
 <?php  foreach ($this->ratings as $this->productRating) {
 	?>
 <div class="productRating-rows <?=$this->productRating['rating_active']==0?'productRating-rows-inactive':'productRating-rows-active'?>  <?=$this->productRating['user_like']==1?'clsUpvotes':'clsDownvotes' ?> "  >
