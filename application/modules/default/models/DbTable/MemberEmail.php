@@ -82,4 +82,11 @@ class Default_Model_DbTable_MemberEmail extends Local_Model_Table
         return $stmnt->rowCount();
     }
 
+    public function setDeletedByMember($member_id)
+    {
+        $sql = "UPDATE `{$this->_name}` SET `email_deleted` = 1 WHERE `email_member_id` = :memberId";
+        $stmnt = $this->_db->query($sql, array('memberId' => $member_id));
+        return $stmnt->rowCount();
+    }
+
 }

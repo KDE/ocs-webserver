@@ -29,6 +29,7 @@ class Local_Model_Table extends Zend_Db_Table
 
     /**
      * @param $data
+     *
      * @throws Exception
      * @return Zend_Db_Table_Row_Abstract
      */
@@ -51,8 +52,9 @@ class Local_Model_Table extends Zend_Db_Table
     }
 
     /**
-     * @param array $data
+     * @param array        $data
      * @param string|array $keyColumns
+     *
      * @return null|Zend_Db_Table_Row_Abstract
      */
     public function findForKeyColumns($data, $keyColumns)
@@ -78,6 +80,7 @@ class Local_Model_Table extends Zend_Db_Table
 
     /**
      * @param $data
+     *
      * @throws Exception
      * @return mixed
      */
@@ -109,6 +112,7 @@ class Local_Model_Table extends Zend_Db_Table
 
     /**
      * @param $data
+     *
      * @return Zend_Db_Table_Row_Abstract
      * @throws Zend_Exception
      */
@@ -117,11 +121,13 @@ class Local_Model_Table extends Zend_Db_Table
         if (false == is_array($data)) {
             throw new Zend_Exception('given data must be an array');
         }
+
         return $this->generateRowClass($data);
     }
 
     /**
      * @param array $data
+     *
      * @return Zend_Db_Table_Row_Abstract
      */
     protected function generateRowClass($data)
@@ -136,4 +142,4 @@ class Local_Model_Table extends Zend_Db_Table
         return new $classRow(array('table' => $this, 'stored' => true, 'data' => $data));
     }
 
-} 
+}
