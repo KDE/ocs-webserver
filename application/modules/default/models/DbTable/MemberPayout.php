@@ -40,7 +40,7 @@ class Default_Model_DbTable_MemberPayout extends Local_Model_Table
      * @param int $status
      * @return all payouts with status = $status
      **/
-    public function fetchAllPayouts($status=0)
+    public function fetchAllPayouts($yearmonth = null, $status=0)
     {
     
     	$sql = "
@@ -50,6 +50,9 @@ class Default_Model_DbTable_MemberPayout extends Local_Model_Table
                     ".$this->_name."
                 WHERE
                     status = ".$status;
+       if($yearmonth) {
+           $sql .= " AND ";
+       }
     
     	$result = $this->_db->fetchAll($sql);
     
