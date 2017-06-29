@@ -1,3 +1,6 @@
+#need super privileges to turn on the event scheduler
+#SET GLOBAL event_scheduler = ON;
+
 USE `pling`;
 
 DROP EVENT IF EXISTS `e_generate_page_views_today`;

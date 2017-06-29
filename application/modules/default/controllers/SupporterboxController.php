@@ -31,14 +31,14 @@ class SupporterboxController extends Zend_Controller_Action
     public function renderAction()
     {
         $this->_helper->layout->disableLayout();
-        $productUuid = $this->getParam('project_uuid');
+        $productUuid = (int)$this->getParam('project_uuid');
 
         if (false == isset($productUuid)) {
             throw new Zend_Controller_Action_Exception('This page does not exist', 404);
         }
 
         $projectModel = new Default_Model_Project();
-        $projectRow = $projectModel->fetchRow(array('uuid = ?' => $productUuid));
+        $projectRow = $projectModel->fetchRow(array('project_id = ?' => $productUuid));
 
         if (!isset($projectRow)) {
             throw new Zend_Controller_Action_Exception('This page does not exist', 404);
