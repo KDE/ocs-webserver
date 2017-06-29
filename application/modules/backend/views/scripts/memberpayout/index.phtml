@@ -34,8 +34,11 @@ $lastMonth = date("Yn", strtotime("first day of previous month"));
     <form>
         Month: 
             <select name="filter_yearmonth" id="filter_yearmonth">
+                <option value="201704" <?php if($lastMonth == '201704') echo 'selected=1'; ?> >2017 April</option>
                 <option value="201705" <?php if($lastMonth == '201705') echo 'selected=1'; ?> >2017 Mai</option>
                 <option value="201706" <?php if($lastMonth == '201706') echo 'selected=1'; ?> >2017 June</option>
+                <option value="201707" <?php if($lastMonth == '201707') echo 'selected=1'; ?> >2017 July</option>
+                <option value="201708" <?php if($lastMonth == '201708') echo 'selected=1'; ?> >2017 August</option>
             </select> <input type="text" name="filter_member_id" id="filter_member_id"/>
         Member Id: <input type="text" name="filter_member_id" id="filter_member_id"/>
         PayPal-Mail: <input type="text" name="filter_paypal_mail" id="filter_paypal_mail"/>
@@ -111,8 +114,8 @@ $lastMonth = date("Yn", strtotime("first day of previous month"));
                 status: {
                     title: 'status',
                     width: '5%',
-                    options: {'0': 'Not done yet', '1': 'Pending', '100' : 'Paid okay', '500': 'Denied'},
-                    optionsSorting: 'text',
+                    options: {'': '', '0': 'Not done yet', '1': 'Pending', '100' : 'Paid okay', '500': 'Denied', '900' : 'Error'},
+                    optionsSorting: 'id',
                     list: true,
                     edit: true
                 },

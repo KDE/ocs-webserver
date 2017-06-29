@@ -49,7 +49,8 @@ var aItemData = [
         submenu: {
             id: "user",
             itemdata: [
-                {text: "Users", url: "/backend/user"}
+                {text: "Users", url: "/backend/user"},
+                {text: "Member Payouts", url: "/backend/memberpayout"}
             ]
         }
     },
