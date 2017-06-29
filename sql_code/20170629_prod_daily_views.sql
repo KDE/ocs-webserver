@@ -1,9 +1,9 @@
 USE `pling`;
-DROP procedure IF EXISTS `generate_stat_views_today`;
+DROP PROCEDURE IF EXISTS `generate_stat_views_today`;
 
 DELIMITER $$
 USE `pling`$$
-CREATE DEFINER=CURRENT_USER PROCEDURE `generate_stat_views_today`()
+CREATE DEFINER = CURRENT_USER PROCEDURE `generate_stat_views_today`()
   BEGIN
 
     DROP TABLE IF EXISTS `temp_stat_views_today`;
@@ -21,9 +21,9 @@ CREATE DEFINER=CURRENT_USER PROCEDURE `generate_stat_views_today`()
     AS
       SELECT
         project_id,
-        COUNT(*) AS count_views,
+        COUNT(*)                               AS count_views,
         COUNT(DISTINCT `stat_page_views`.`ip`) AS `count_visitor`,
-        MAX(`stat_page_views`.`created_at`) AS `last_view`
+        MAX(`stat_page_views`.`created_at`)    AS `last_view`
       FROM stat_page_views
       WHERE (stat_page_views.`created_at`
       BETWEEN DATE_FORMAT(NOW(), '%Y-%m-%d 00:00') AND DATE_FORMAT(NOW(), '%Y-%m-%d 23:59')
@@ -33,18 +33,17 @@ CREATE DEFINER=CURRENT_USER PROCEDURE `generate_stat_views_today`()
     IF EXISTS(SELECT table_name
               FROM INFORMATION_SCHEMA.TABLES
               WHERE table_schema = DATABASE()
-                    AND table_name = 'stat_page_views_today_mv'
-    )
+                    AND table_name = 'stat_page_views_today_mv')
 
     THEN
 
-    ALTER TABLE `stat_page_views_today_mv`
-      RENAME TO  `old_stat_views_today_mv` ;
+      ALTER TABLE `stat_page_views_today_mv`
+        RENAME TO `old_stat_views_today_mv`;
 
     END IF;
 
     ALTER TABLE `temp_stat_views_today`
-      RENAME TO  `stat_page_views_today_mv` ;
+      RENAME TO `stat_page_views_today_mv`;
 
     DROP TABLE IF EXISTS `old_stat_views_today_mv`;
 
