@@ -181,6 +181,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         $this->setMemberCommentsDeleted($member_id);
         $this->setMemberRatingsDeleted($member_id);
         $this->setMemberReportingsDeleted($member_id);
+        $this->setMemberEmailsDeleted($member_id);
         // $this->setMemberPlingsDeleted($member_id);
         $this->removeMemberProjectsFromSearch($member_id);
         $this->setDeletedInMaterializedView($member_id);
@@ -839,6 +840,12 @@ class Default_Model_Member extends Default_Model_DbTable_Member
     {
         $modelPling = new Default_Model_Pling();
         $modelPling->setAllPlingsForUserActivated($member_id);
+    }
+
+    private function setMemberEmailsDeleted($member_id)
+    {
+        $modelEmail = new Default_Model_DbTable_MemberEmail();
+        $modelEmail->setDeletedByMember($member_id);
     }
 
 }
