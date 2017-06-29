@@ -39,7 +39,7 @@ $lastMonth = date("Yn", strtotime("first day of previous month"));
                 <option value="201706" <?php if($lastMonth == '201706') echo 'selected=1'; ?> >2017 June</option>
                 <option value="201707" <?php if($lastMonth == '201707') echo 'selected=1'; ?> >2017 July</option>
                 <option value="201708" <?php if($lastMonth == '201708') echo 'selected=1'; ?> >2017 August</option>
-            </select> <input type="text" name="filter_member_id" id="filter_member_id"/>
+            </select>
         Member Id: <input type="text" name="filter_member_id" id="filter_member_id"/>
         PayPal-Mail: <input type="text" name="filter_paypal_mail" id="filter_paypal_mail"/>
         e-mail: <input type="text" name="filter_mail" id="filter_mail"/>
@@ -54,8 +54,8 @@ $lastMonth = date("Yn", strtotime("first day of previous month"));
             jqueryuiTheme: true,
             paging: true,
             sorting: true,
-            defaultSorting: 'mail asc',
-            title: 'Table of user',
+            defaultSorting: 'amount asc',
+            title: 'Table of member payouts',
             actions: {
                 listAction: '/backend/memberpayout/list',
                 //createAction: '/backend/memberpayout/create',
@@ -119,6 +119,19 @@ $lastMonth = date("Yn", strtotime("first day of previous month"));
                     list: true,
                     edit: true
                 },
+            },
+            recordsLoaded: function (event, data) {
+                for (var i in data.records) {
+                    if (data.records[i].status == 100) {
+                        $('#TableContainer').find(".jtable tbody tr:eq(" + i + ")").css("cssText", "background-color:green !important; color:white !important;");
+                    }
+                    if (data.records[i].status == 1) {
+                        $('#TableContainer').find(".jtable tbody tr:eq(" + i + ")").css("cssText", "background-color:yellow !important; color:black !important;");
+                    }
+                    if (data.records[i].status > 100) {
+                        $('#TableContainer').find(".jtable tbody tr:eq(" + i + ")").css("cssText", "background-color:red !important; color:white !important;");
+                    }
+                }
             }
         });
 
@@ -145,5 +158,7 @@ $lastMonth = date("Yn", strtotime("first day of previous month"));
         });
 
         $('#TableContainer').jtable('load');
+        
+        
     });
 </script>
