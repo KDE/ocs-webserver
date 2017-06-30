@@ -135,7 +135,12 @@ $lastMonth = date("Ym", strtotime("first day of previous month"));
             },
             recordUpdated: function (event, data) {
                 if (data.record) {
-                    $('#YourTableContainer').jtable('load');
+                    $('#TableContainer').jtable('load');
+                }
+            },
+            rowUpdated: function (event, data) {
+                if (data.record) {
+                    $('#TableContainer').jtable('load');
                 }
             }
         });
