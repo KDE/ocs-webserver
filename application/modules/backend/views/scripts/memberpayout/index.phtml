@@ -134,16 +134,8 @@ $lastMonth = date("Ym", strtotime("first day of previous month"));
                 }
             },
             recordUpdated: function (event, data) {
-                for (var i in data.records) {
-                    if (data.records[i].status == 100) {
-                        $('#TableContainer').find(".jtable tbody tr:eq(" + i + ")").css("cssText", "background-color:green !important; color:white !important;");
-                    }
-                    if (data.records[i].status == 1) {
-                        $('#TableContainer').find(".jtable tbody tr:eq(" + i + ")").css("cssText", "background-color:yellow !important; color:black !important;");
-                    }
-                    if (data.records[i].status > 100) {
-                        $('#TableContainer').find(".jtable tbody tr:eq(" + i + ")").css("cssText", "background-color:red !important; color:white !important;");
-                    }
+                if (data.record) {
+                    $('#YourTableContainer').jtable('load');
                 }
             }
         });
