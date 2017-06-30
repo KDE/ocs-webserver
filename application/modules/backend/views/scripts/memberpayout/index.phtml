@@ -135,12 +135,22 @@ $lastMonth = date("Ym", strtotime("first day of previous month"));
             },
             recordUpdated: function (event, data) {
                 if (data.record) {
-                    $('#TableContainer').jtable('load');
+                    $('#TableContainer').jtable('load', {
+                        filter_yearmonth: $('#filter_yearmonth').val(),
+                        filter_member_id: $('#filter_member_id').val(),
+                        filter_paypal_mail: $('#filter_paypal_mail').val(),
+                        filter_mail: $('#filter_mail').val()
+                    });
                 }
             },
             rowUpdated: function (event, data) {
                 if (data.record) {
-                    $('#TableContainer').jtable('load');
+                    $('#TableContainer').jtable('load', {
+                        filter_yearmonth: $('#filter_yearmonth').val(),
+                        filter_member_id: $('#filter_member_id').val(),
+                        filter_paypal_mail: $('#filter_paypal_mail').val(),
+                        filter_mail: $('#filter_mail').val()
+                    });
                 }
             }
         });
