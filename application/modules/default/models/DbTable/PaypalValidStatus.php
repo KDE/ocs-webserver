@@ -49,5 +49,24 @@ class Default_Model_DbTable_PaypalValidStatus extends Local_Model_Table
 
     }
     
+    /**
+     * @return array
+     * @deprecated
+     */
+    public function getStatiForSelectList()
+    {
+        $selectArr =
+            $this->_db->fetchAll("SELECT id,title FROM {$this->_name} WHERE is_active=1 ORDER BY id");
+
+        $arrayModified = array();
+
+        $arrayModified[0] = "";
+        foreach ($selectArr as $item) {
+            $arrayModified[$item['id']] = stripslashes($item['title'] . $item['title']);
+        }
+
+        return $arrayModified;
+    }
+    
     
 }

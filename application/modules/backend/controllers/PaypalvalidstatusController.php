@@ -44,7 +44,6 @@ class Backend_PaypalvalidstatusController extends Local_Controller_Action_Backen
 
     public function indexAction()
     {
-
     }
 
     public function createAction()
@@ -97,10 +96,7 @@ class Backend_PaypalvalidstatusController extends Local_Controller_Action_Backen
     {
         $dataId = (int)$this->getParam(self::DATA_ID_NAME, null);
 
-        $this->_model->setDeleted($dataId);
-
-        $identity = Zend_Auth::getInstance()->getIdentity();
-        Default_Model_ActivityLog::logActivity($dataId, null, $identity->member_id, Default_Model_ActivityLog::BACKEND_USER_DELETE, null);
+        $this->_model->delete($id);
 
         $jTableResult = array();
         $jTableResult['Result'] = self::RESULT_OK;
