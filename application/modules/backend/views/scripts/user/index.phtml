@@ -197,7 +197,7 @@
                         $paypalValidStatusModel = new Default_Model_DbTable_PaypalValidStatus();
                         $list = $paypalValidStatusModel->getStatiForSelectList();
                         foreach ($list as $key => $value) {
-                            $optionString.= "'".$key."':'".$value."',";
+                            $optionString.= "'".$key."':'".$key." - ".$value."',";
                         }
                         echo "options: {" . $optionString . "},";
                     ?>
