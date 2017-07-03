@@ -62,7 +62,7 @@ class Default_Model_DbTable_PaypalValidStatus extends Local_Model_Table
 
         $arrayModified[0] = "";
         foreach ($selectArr as $item) {
-            $arrayModified[$item['id']] = stripslashes($item['title'] . $item['title']);
+            $arrayModified[$item['id']] = stripslashes($item['title']);
         }
 
         return $arrayModified;
