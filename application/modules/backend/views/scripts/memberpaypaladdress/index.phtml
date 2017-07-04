@@ -105,7 +105,7 @@ $lastMonth = date("Ym", strtotime("first day of previous month"));
                 },
                 last_payment_status: {
                     title: 'Last Status',
-                    options: {'': '', 'Completed': 'Completed', 'Pending': 'Pending', 'Error' : 'Error'},
+                    options: {'': '', 'Completed': 'Completed', 'Pending': 'Pending', 'Error' : 'Error', 'Returned' : 'Returned', 'Unclaimed' : 'Unclaimed'},
                     optionsSorting: 'id',
                     list: true,
                     edit: true
@@ -125,13 +125,19 @@ $lastMonth = date("Ym", strtotime("first day of previous month"));
             },
             recordsLoaded: function (event, data) {
                 for (var i in data.records) {
-                    if (data.records[i].status == 'Completed') {
+                    if (data.records[i].last_payment_status == 'Completed') {
                         $('#TableContainer').find(".jtable tbody tr:eq(" + i + ")").css("cssText", "background-color:green !important; color:white !important;");
                     }
-                    if (data.records[i].status == 'Pending') {
+                    if (data.records[i].last_payment_status == 'Pending') {
                         $('#TableContainer').find(".jtable tbody tr:eq(" + i + ")").css("cssText", "background-color:yellow !important; color:black !important;");
                     }
-                    if (data.records[i].status == 'Error') {
+                    if (data.records[i].last_payment_status == 'Error') {
+                        $('#TableContainer').find(".jtable tbody tr:eq(" + i + ")").css("cssText", "background-color:red !important; color:white !important;");
+                    }
+                    if (data.records[i].last_payment_status == 'Unclaimed') {
+                        $('#TableContainer').find(".jtable tbody tr:eq(" + i + ")").css("cssText", "background-color:red !important; color:white !important;");
+                    }
+                    if (data.records[i].last_payment_status == 'Returned') {
                         $('#TableContainer').find(".jtable tbody tr:eq(" + i + ")").css("cssText", "background-color:red !important; color:white !important;");
                     }
                 }
