@@ -607,7 +607,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 '/search/*',
                 array(
                     'module'     => 'default',
-                    'controller' => 'product',
+                    'controller' => 'explore',
                     'action'     => 'search'
                 )
             )
@@ -999,6 +999,32 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                     'module'     => 'default',
                     'controller' => 'ocsv1',
                     'action'     => 'contentpreviewpic'
+                )
+            )
+        );
+
+      
+        // embed 
+        $router->addRoute(
+            'embed_v1_member_projects',
+            new Zend_Controller_Router_Route(
+                '/embed/v1/member/:memberid',
+                array(
+                    'module'     => 'default',
+                    'controller' => 'embedv1',
+                    'action'     => 'memberprojects'
+                )
+            )
+        );
+
+        $router->addRoute(
+            'embed_v1_member_projectdetail',
+            new Zend_Controller_Router_Route(
+                '/embed/v1/project/:projectid',
+                array(
+                    'module'     => 'default',
+                    'controller' => 'embedv1',
+                    'action'     => 'projectdetail'
                 )
             )
         );
