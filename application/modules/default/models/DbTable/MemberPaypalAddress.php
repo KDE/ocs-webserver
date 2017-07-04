@@ -19,25 +19,14 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-class Default_Model_DbTable_PaypalValidStatus extends Local_Model_Table
+class Default_Model_DbTable_MemberPaypalAddress extends Local_Model_Table
 {
     protected $_keyColumnsForRow = array('id');
     protected $_key = 'id';
-    protected $_name = "paypal_valid_status";
-    
-    public static $PAYOUT_STATUS_NEW = 0;
-    public static $PAYOUT_STATUS_REQUESTED = 1;
-    public static $PAYOUT_STATUS_PROCESSED = 10;
-    public static $PAYOUT_STATUS_PENDING = 50;
-    public static $PAYOUT_STATUS_COMPLETED = 100;
-    public static $PAYOUT_STATUS_DENIED = 999;
-    public static $PAYOUT_STATUS_REFUND = 900;
-    public static $PAYOUT_STATUS_ERROR = 99;
-    
-    
+    protected $_name = "member_paypal";
     
     /**
-     * @param int $id
+     * @param int $member_id
      */
     public function setDeleted($id)
     {
@@ -48,24 +37,5 @@ class Default_Model_DbTable_PaypalValidStatus extends Local_Model_Table
         $this->update($updateValues, $this->_db->quoteInto('id=?', $id, 'INTEGER'));
 
     }
-    
-    /**
-     * @return array
-     */
-    public function getStatiForSelectList()
-    {
-        $selectArr =
-            $this->_db->fetchAll("SELECT id,title FROM {$this->_name} WHERE is_active=1 ORDER BY id");
-
-        $arrayModified = array();
-
-        $arrayModified[0] = "";
-        foreach ($selectArr as $item) {
-            $arrayModified[$item['id']] = stripslashes($item['title']);
-        }
-
-        return $arrayModified;
-    }
-    
     
 }

@@ -20,7 +20,7 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-class Backend_PaypalvalidstatusController extends Local_Controller_Action_Backend
+class Backend_MemberpaypayladdressController extends Local_Controller_Action_Backend
 {
 
     const RESULT_OK = "OK";
@@ -30,8 +30,8 @@ class Backend_PaypalvalidstatusController extends Local_Controller_Action_Backen
     /** @var Default_Model_Member */
     protected $_model;
 
-    protected $_modelName = 'Default_Model_DbTable_PaypalValidStatus';
-    protected $_pageTitle = 'Manage Paypal-Valid-Stati';
+    protected $_modelName = 'Default_Model_DbTable_MemberPaypalAddress';
+    protected $_pageTitle = 'Manage Paypal Addresses';
 
     public function init()
     {
@@ -44,6 +44,7 @@ class Backend_PaypalvalidstatusController extends Local_Controller_Action_Backen
 
     public function indexAction()
     {
+
     }
 
     public function createAction()
@@ -96,7 +97,7 @@ class Backend_PaypalvalidstatusController extends Local_Controller_Action_Backen
     {
         $dataId = (int)$this->getParam(self::DATA_ID_NAME, null);
 
-        $this->_model->setDeleted($id);
+        $this->_model->setDeleted($dataId);
 
         $jTableResult = array();
         $jTableResult['Result'] = self::RESULT_OK;
@@ -109,8 +110,43 @@ class Backend_PaypalvalidstatusController extends Local_Controller_Action_Backen
         $startIndex = (int)$this->getParam('jtStartIndex');
         $pageSize = (int)$this->getParam('jtPageSize');
         $sorting = $this->getParam('jtSorting');
+        $filter['last_paypment_status'] = $this->getParam('filter_status');
+        $filter['member_id'] = $this->getParam('filter_member_id');
+        $filter['paypal_address'] = $this->getParam('filter_paypal_mail');
+        
 
         $select = $this->_model->select()->order($sorting)->limit($pageSize, $startIndex);
+        $metadata = $this->_model->info(Zend_Db_Table_Abstract::METADATA);
+
+        foreach ($filter as $key => $value) {
+            if (is_array($value)) {
+                $list = '';
+                foreach ($value as $element) {
+                    if (isset($element)) {
+                        $list = $list . ',' . $element;
+                    }
+                }
+
+                if (empty($list)) {
+                    continue;
+                }
+
+                $list = substr($list, 1);
+
+                $select->where("{$key} in ({$list})");
+
+                continue;
+            }
+            if (false === empty($value)) {
+                $data_type = $metadata[$key]['DATA_TYPE'];
+                if (($data_type == 'varchar') OR ($data_type == 'text')) {
+                    $select->where("{$key} like ?", '%' . $value . '%');
+                } else {
+                    $select->where("{$key} = ?", $value);
+                }
+
+            }
+        }
 
         $reports = $this->_model->fetchAll($select);
 
@@ -124,5 +160,7 @@ class Backend_PaypalvalidstatusController extends Local_Controller_Action_Backen
 
         $this->_helper->json($jTableResult);
     }
+
+    
 
 } 
