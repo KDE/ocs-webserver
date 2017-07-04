@@ -53,7 +53,7 @@ var aItemData = [
                 {text: "Config Paypal-Valid-Stati", url: "/backend/paypalvalidstatus"},
                 {text: "Member Payouts", url: "/backend/memberpayout"},
                 
-                {text: "Member Paypal-Addresses", url: "/backend/memberpaypayaddress"},
+                {text: "Member Paypal-Addresses", url: "/backend/memberpaypaladdress"},
                 
             ]
         }
