@@ -1,27 +1,142 @@
+<?php
+$param = array('q' => $this->searchText ,'page' => $this->page, 'count' => 10);
+$modelSearch = new Default_Model_Solr();
+$this->result = $modelSearch->search($param);
+$this->pagination = $pagination = $modelSearch->_pagination;
+$this->products = $this->result['hits'];
+
+$helperBuildExploreUrl = new Default_View_Helper_BuildExploreUrl();
+$modelInfo = new Default_Model_Info();
+$this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
+?>
 <main id="explore-content">
-
     <section class="wrapper" id="products-wrapper">
+        <span class="glyphicon  togglesidebar" id="btnTogglesidebar" ></span>
+        <div class="GridFlex">
+            <div class="GridFlex-cell sidebar-left" >
+                <?php  $time_start = microtime(true);echo $this->render('explore/partials/filter.phtml'); $time_elapsed = microtime(true) - $time_start; ?>
+                <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
+                    echo '<div class="alert alert-warning" role="alert"><strong>Rendering Time: </strong>'.$time_elapsed.' s</div>';
+                }?>
+            </div>
+            <div class="GridFlex-cell content">
+                <section class="explore-products" id="explore-products">
 
-        <aside class="col-lg-2 col-md-2 col-sm-2 col-xs-2" id="explore-sidebar">
-            <?php
-            echo $this->render('explore/partials/filter.phtml', array('categories' => $this->categories, 'filters' => $this->filters, 'requestedFilter' => $this->requestedFilter));
-            ?>
-        </aside>
+                    <h1 class="search-heading">Search results for "<?= $this->searchText; ?>"</h1>
 
-        <section class="explore-products col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                    <ul id="sort" class="nav nav-tabs">
+                        <li class="text-right" style="text-align: right; width: 50%; float: right;">
+                            <small><?=$this->result['response']['numFound']?> hit(s)</small>
+                        </li>
+                    </ul>
 
-            <h1 class="search-heading">Search results for "<?= $this->searchText; ?>"</h1>
+                    <div class="product-list">
+                        <?php
+                        if (count($this->products) == 0) { ?>
+                            <p>Your search - <?=$this->searchText?> - did not match any documents.</p>
 
-            <div class="product-list">
-                <?php echo $this->partialLoop('partials/searchResult.phtml', $this->hits); ?>
+                            <p>Suggestions:
+                            <ul>
+                            <li>Make sure all words are spelled correctly.</li>
+                            <li>Try keywords which are min 3 characters long.</li>
+                            <li>Try different keywords.</li>
+                            <li>Try more general keywords.</li>
+                            <li>Try fewer keywords.</li>
+                            <li>Use key words which start without wildcard symbols like "*" or "?".</li>
+                            </ul>
+                        <?php
+                        } else {
+                            $time_start = microtime(true);
+                            echo $this->render('explore/partials/products.phtml');
+                            $time_elapsed = microtime(true) - $time_start;
+                        }
+                        ?>
+                        <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
+                            echo '<div class="explore-product col-lg-12 col-md-12 col-sm-12 col-xs-12">';
+                            echo '<div class="alert alert-warning" role="alert"><strong>Rendering Time: </strong>'.$time_elapsed.' s</div>';
+                            echo '</div>';
+                        }?>
+                    </div>
+
+
+                    <section class="explore-footer">
+                        <?php echo $this->paginationControl($this->pagination, 'Sliding', 'partials/paginationControl.phtml', array('params' => array('projectSearchText' => $this->searchText), 'dom_target' => 'section.explore-products')); ?>
+                    </section>
+                </section>
             </div>
 
-            <section class="explore-footer">
-                <?php echo $this->paginationControl($this->pagination, 'Sliding', 'partials/paginationControl.phtml', array('params' => $this->inputFilter)); ?>
-            </section>
+            <?php
+            $time_start = microtime(true);
+            $comments = $modelInfo->getLatestComments(5, $this->cat_id);
+            $topprods = $modelInfo->getMostDownloaded(100, $this->cat_id);
+            $asidehide = '';
+            if(!$this->catabout && count($comments)==0  && count($topprods)==0 )
+            {
+                $asidehide = 'hide';
+            }
+            ?>
+            <div class="GridFlex-cell sidebar-right">
+                <aside  id="explore-sidebar <?=$asidehide?>" >
+                    <div class="downloadDiv" >
+                        <a href="https://www.linux-apps.com/p/1175480/" target="_blank"><img src="/images/system/download-app.png" /></a>
+                    </div>
 
-        </section>
+                    <div  class="row sidebar-right-info" >
+                        <span class="newsTitle"> News </span>
+                        <div class="prod-widget-box right bgwhite" id="rss-feeds"> </div>
+                        <?php
+                        if (count($comments) > 0) {
+                            ?>
+                            <span class="commentTitle"> Comments</span>
+                            <div class="prod-widget-box right bgwhite" id="lastcomments">
+                                <?php
 
+                                foreach ($comments as $this->comment) {
+                                    echo $this->render('explore/partials/comment.phtml');
+                                }
+                                ?>
+                            </div>
+                        <?php } ?>
+
+                        <?php
+                        if (count($topprods) > 0) {
+                            ?>
+                            <span class="commentTitle"> 3 Months Ranking <span class="small light"> (based on downloads)</span></span>
+
+                            <div class="prod-widget-box right bgwhite" id="mostdownloaded">
+                                <?php
+                                $this->rownum = 1;
+                                foreach ($topprods as $this->product) {
+                                    echo $this->render('explore/partials/productTop.phtml');
+                                    $this->rownum++;
+                                }
+                                ?>
+                            </div>
+                        <?php } ?>
+
+                        <?php
+                        if ($this->catabout) {
+                            ?>
+                            <div class="prod-widget-box right catabout" id="catcontent">
+                                <?php include $this->catabout; ?>
+                            </div>
+                            <?php
+                        }
+                        ?>
+                    </div>
+                </aside>
+                <?php
+                $time_elapsed = microtime(true) - $time_start;
+                if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
+                    echo '<div class="alert alert-warning" role="alert"><strong>Rendering Time: </strong>'.$time_elapsed.' s</div>';
+                }?>
+            </div>
+        </div>
     </section>
-
 </main>
+
+<?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){
+            RssNews.setup();                
+        });
+    ');
