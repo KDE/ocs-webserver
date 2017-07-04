@@ -607,7 +607,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 '/search/*',
                 array(
                     'module'     => 'default',
-                    'controller' => 'explore',
+                    'controller' => 'product',
                     'action'     => 'search'
                 )
             )
