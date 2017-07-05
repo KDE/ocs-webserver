@@ -41,7 +41,7 @@ $this->countDownloadsOverall = count($this->downloads);
                     <h1 class="page-title left"><?= $this->translate('Payout') ?></h1>
                 </div>
                 <?php
-                    $member = $this->member;
+                    $member = $this->view_member;
                     if($member->paypal_valid_status > 100) {
                         $status = $this->paypal_valid_status;
                         if($status->color == 'red') {
