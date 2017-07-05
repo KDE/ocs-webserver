@@ -34,8 +34,11 @@ $lastMonth = date("Ym", strtotime("first day of previous month"));
     <form>
         Status: 
             <select name="filter_status" id="filter_status">
+                <option value=""></option>
                 <option value="Completed">Completed</option>
                 <option value="Pending">Pending</option>
+                <option value="Returned">Returned</option>
+                <option value="Unclaimed">Unclaimed</option>
                 <option value="Error">Error</option>
             </select>
         Member Id: <input type="text" name="filter_member_id" id="filter_member_id"/>

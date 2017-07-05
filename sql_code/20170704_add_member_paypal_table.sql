@@ -94,3 +94,10 @@ INSERT INTO `member_paypal` (`name`,`last_payment_status`, `currency`,`last_paym
 INSERT INTO `member_paypal` (`name`,`last_payment_status`, `currency`,`last_payment_amount`, `paypal_address`,`last_transaction_id`,`address`,`last_transaction_event_code`, `country_code`, `created_at`) VALUES ('Stefan Siegl','Pending','USD','-4.58','sis@soulinsadness.de','1KM71136EH2876453','Stefan, Siegl','T0000','DE',NOW());
 INSERT INTO `member_paypal` (`name`,`last_payment_status`, `currency`,`last_payment_amount`, `paypal_address`,`last_transaction_id`,`address`,`last_transaction_event_code`, `country_code`, `created_at`) VALUES ('Leszek Lesner','Completed','USD','-5.04','leszek.lesner@web.de','23V003349H478045E','Leszek, Lesner','T0000','DE',NOW());
 INSERT INTO `member_paypal` (`name`,`last_payment_status`, `currency`,`last_payment_amount`, `paypal_address`,`last_transaction_id`,`address`,`last_transaction_event_code`, `country_code`, `created_at`) VALUES ('Tobias Kaiser','Completed','USD','-6.76','tobi012@gmx.de','7YT33817RJ175681T','Tobias, Kaiser','T0000','DE',NOW());
+
+
+#select * from member_paypal p
+update member_paypal p
+join member m on m.paypal_mail = p.paypal_address
+set p.member_id = m.member_id
+where p.member_id is null;
