@@ -23,6 +23,8 @@
 $helperImage = new Default_View_Helper_Image();
 $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $this->tab = 'settings';
+
+$member = $this->member;
 ?>
 
 <main class="user-admin-page">
@@ -44,6 +46,12 @@ $this->tab = 'settings';
                 <!-- PAGE BODY -->
                 <section class="settings-page">
                     <h1 class="page-title"><?= $this->translate('Settings') ?></h1>
+                <?php
+                    if($member->paypal_valid_status > 100) {
+                        $status = $this->paypal_valid_status;
+                        echo '<div class="alert alert-danger" role="alert">'.$status->description.'</div>';
+                    }
+                ?>
                     <br/>
 
                     <div class="pling-nav-tabs">

@@ -21,6 +21,9 @@ ENGINE=InnoDB
 AUTO_INCREMENT=74
 ;
 
+ALTER TABLE `member_paypal`
+	ADD UNIQUE INDEX `uk_paypal_address` (`paypal_address`);
+
 INSERT INTO `member_paypal` (`name`,`last_payment_status`, `currency`,`last_payment_amount`, `paypal_address`,`last_transaction_id`,`address`,`last_transaction_event_code`, `country_code`, `created_at`) VALUES ('Алексей Варфоломеев','Completed','RUB','-21870.12','varlesh@gmail.com','7KK96863AX5754344','Алексей, Варфоломеев','T0000','RU',NOW());
 INSERT INTO `member_paypal` (`name`,`last_payment_status`, `currency`,`last_payment_amount`, `paypal_address`,`last_transaction_id`,`address`,`last_transaction_event_code`, `country_code`, `created_at`) VALUES ('Paul Beyens','Completed','EUR','-245.42','paulbeyens@gmail.com','96661567PS4341036','Paul, Beyens','T0000','BE',NOW());
 INSERT INTO `member_paypal` (`name`,`last_payment_status`, `currency`,`last_payment_amount`, `paypal_address`,`last_transaction_id`,`address`,`last_transaction_event_code`, `country_code`, `created_at`) VALUES ('LE MAOUT GUILLAUME','Completed','EUR','-94.48','exebetche@hotmail.fr','7F337922WT999935X','LE MAOUT, GUILLAUME','T0000','FR',NOW());
@@ -101,3 +104,4 @@ update member_paypal p
 join member m on m.paypal_mail = p.paypal_address
 set p.member_id = m.member_id
 where p.member_id is null;
+
