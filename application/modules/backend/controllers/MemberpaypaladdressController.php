@@ -110,7 +110,7 @@ class Backend_MemberpaypaladdressController extends Local_Controller_Action_Back
         $startIndex = (int)$this->getParam('jtStartIndex');
         $pageSize = (int)$this->getParam('jtPageSize');
         $sorting = $this->getParam('jtSorting');
-        $filter['last_paypment_status'] = $this->getParam('filter_status');
+        $filter['last_payment_status'] = $this->getParam('filter_status');
         $filter['member_id'] = $this->getParam('filter_member_id');
         $filter['paypal_address'] = $this->getParam('filter_paypal_mail');
         
