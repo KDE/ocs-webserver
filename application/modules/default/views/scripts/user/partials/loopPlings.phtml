@@ -151,9 +151,11 @@ if ($this->countDownloadsOverall > 0) {
                 $sum_total_month += $product['num_downloads'] * $product['dl_pling_factor'];
                 $sum_total_text = 'Possible payout for this month (<span style="font-size: smaller;">*</span>):';
                 $sum_total_payout = $currency->toCurrency($sum_total_month/100);
+                $payout_success = false;
                 if ($product['status'] == Default_Model_DbTable_MemberPayout::$PAYOUT_STATUS_COMPLETED) {
-                    $sum_total_payout = $currency->toCurrency($product['amount']);
-                    $sum_total_text = 'Actually successfully paid amount:';
+                    $payout_success = true;
+                    $sum_total_payout_success = $currency->toCurrency($product['amount']);
+                    $sum_total_text_success = 'Actually successfully paid amount: ';
                 }
                 $has_paypal = $product['paypal_mail'] ? true : false;
             }
@@ -162,7 +164,15 @@ if ($this->countDownloadsOverall > 0) {
             ?>
             <div class='row row-total'>
                 <div class='col-md-11 text-right'><?=$sum_total_text?></div><div class='col-md-1 text-right'><strong><?=$sum_total_payout?></strong></div>
+                
             </div>
+            
+            <?php      
+                if($payout_success) {
+                    echo '<div class="alert alert-success" role="alert">'.$sum_total_text_success.$sum_total_payout_success.'</div>';
+                }
+            ?>
+            
             <?php 
 
 
@@ -181,7 +191,7 @@ if ($this->countDownloadsOverall > 0) {
                 $paypalWarning = 'We found no valid Paypal account for this month. That\'s why we could not pay you any money. In order to receive money for the current month, please make sure that a paypal account is registered. Go to your settings page <a href="/settings#form-payment-panel">here</a>.';
             }
             if (false == $has_paypal) {
-                echo '<div class="alert alert-warning" role="alert">'.$paypalWarning.'</div>';
+                echo '<div class="alert alert-danger" role="alert">'.$paypalWarning.'</div>';
             }
 
             if (($sum_total_month/100) < 1) {
