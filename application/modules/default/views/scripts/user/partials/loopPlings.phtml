@@ -169,7 +169,7 @@ if ($this->countDownloadsOverall > 0) {
             
             <?php      
                 if($payout_success) {
-                    echo '<div class="alert alert-success" role="alert">'.$sum_total_text_success.$sum_total_payout_success.'</div>';
+                    echo '<div class="alert alert-success" role="alert">'.$sum_total_text_success.$sum_total_payout_success.'. You can see the details if the payment transaction <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_view-a-trans&id='.$product['payment_transaction_id'].'">here</a>.</div>';
                 }
             ?>
             

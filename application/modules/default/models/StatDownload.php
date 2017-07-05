@@ -41,7 +41,8 @@ class Default_Model_StatDownload
                     project.image_small,
                     project_category.title as cat_title,
                     member_payout.amount,
-                    member_payout.`status`
+                    member_payout.`status`,
+                    member_payout.payment_transaction_id
                 FROM
                     member_dl_plings
                         STRAIGHT_JOIN
