@@ -34,33 +34,38 @@ class Default_Model_SingleSignOnToken
 
     /**
      * @param $data
+     *
      * @return string
      */
     public function createToken($data)
     {
-        $idToken = substr(Local_Tools_UUID::generateUUID(),0,45);
+        $idToken = substr(Local_Tools_UUID::generateUUID(), 0, 45);
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
         $cache->save($data, $idToken, array(), 120);
+
         return $idToken;
     }
 
     /**
      * @param $token_id
+     *
      * @return bool
      */
     public function isValid($token_id)
     {
-        $token_id = preg_replace('/[^-a-zA-Z0-9_]/', '',  $token_id);
+        $token_id = preg_replace('/[^-a-zA-Z0-9_]/', '', $token_id);
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
-        return (boolean) $cache->test($token_id);
+
+        return (boolean)$cache->test($token_id);
     }
 
     public function getData($token_id)
     {
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
+
         return $cache->load($token_id);
     }
 
@@ -69,6 +74,7 @@ class Default_Model_SingleSignOnToken
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
         $cached_data = $cache->load($token_id);
+
         return $cache->save(array_merge($cached_data, $data), $token_id, array(), 120);
     }
 

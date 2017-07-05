@@ -65,7 +65,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->view->paramPageId = (int)$this->getParam('page');
         $this->view->authMember = $this->_authMember;
 
-//        $this->fetchDataForIndexView();
+        //        $this->fetchDataForIndexView();
 
         $modelProduct = new Default_Model_Project();
         $this->view->product = $modelProduct->fetchProductInfo($this->_projectId);
@@ -76,9 +76,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $helperUserIsOwner = new Default_View_Helper_UserIsOwner();
         $helperIsProjectActive = new Default_View_Helper_IsProjectActive();
-        if ((false === $helperIsProjectActive->isProjectActive($this->view->product->project_status))
-            AND
-            (false === $helperUserIsOwner->UserIsOwner($this->view->product->member_id))
+        if ((false === $helperIsProjectActive->isProjectActive($this->view->product->project_status)) AND (false
+                === $helperUserIsOwner->UserIsOwner($this->view->product->member_id))
         ) {
             throw new Zend_Controller_Action_Exception('This page does not exist', 404);
         }
@@ -88,6 +87,591 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $tablePageViews->savePageView($this->_projectId, $this->getRequest()->getClientIp(),
                 $this->_authMember->member_id);
         }
+    }
+
+    public function showAction()
+    {
+        $this->view->authMember = $this->_authMember;
+        $this->_helper->viewRenderer('index');
+        $this->indexAction();
+    }
+
+    public function addAction()
+    {
+        $form = new Default_Form_Product();
+
+        $this->view->member = $this->_authMember;
+        $this->view->form = $form;
+        $this->view->mode = 'add';
+
+        if ($this->_request->isGet()) {
+            $modelProjectLicense = new Default_Model_DbTable_ProjectCcLicense();
+            $dataProjectLicense = $modelProjectLicense->getDefaultValues();
+            $form->populate($dataProjectLicense);
+
+            return;
+        }
+
+        if (isset($_POST['cancel'])) { // user cancel function
+            $this->redirect('/member/' . $this->_authMember->member_id . '/news/');
+        }
+
+        if (false === $form->isValid($_POST)) { // form not valid
+            $this->view->form = $form;
+            $this->view->error = 1;
+
+            return;
+        }
+
+        $values = $form->getValues();
+
+        $imageModel = new Default_Model_DbTable_Image();
+        try {
+            $values['image_small'] = $imageModel->saveImage($form->getElement(self::IMAGE_SMALL_UPLOAD));
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ERROR upload productPicture - ' . print_r($e, true));
+        }
+
+        // form was valid, so we can set status to active
+        $values['status'] = Default_Model_DbTable_Project::PROJECT_ACTIVE;
+
+        // save new project
+        $modelProject = new Default_Model_Project();
+
+        //cleanup input text
+        $values = $this->purifiyInput($values);
+
+        $newProject = null;
+        try {
+            if (isset($values['project_id'])) {
+                $newProject = $modelProject->updateProject($values['project_id'], $values);
+            } else {
+                $newProject =
+                    $modelProject->createProject($this->_authMember->member_id, $values, $this->_authMember->username);
+            }
+        } catch (Exception $exc) {
+            Zend_Registry::get('logger')->warn(__METHOD__ . ' - traceString: ' . $exc->getTraceAsString());
+        }
+
+        if (!$newProject) {
+            $this->_helper->flashMessenger->addMessage('<p class="text-error">You did not choose a Category in the last level.</p>');
+            $this->forward('add');
+
+            return;
+        }
+
+        //update the gallery pics
+        $mediaServerUrls = $this->saveGalleryPics($form->gallery->upload->upload_picture);
+        $modelProject->updateGalleryPictures($newProject->project_id, $mediaServerUrls);
+
+        //If there is no Logo, we take the 1. gallery pic
+        if (!isset($values['image_small']) || $values['image_small'] == '') {
+            $values['image_small'] = $mediaServerUrls[0];
+            $newProject = $modelProject->updateProject($newProject->project_id, $values);
+            Zend_Registry::get('logger')->debug(__METHOD__ . '(' . __LINE__ . ') - set image_small: '
+                . $values['image_small'] . '\n')
+            ;
+        } else {
+            Zend_Registry::get('logger')->debug(__METHOD__ . '(' . __LINE__ . ') - set image_small: Not need. '
+                . $values['image_small'] . '\n')
+            ;
+        }
+
+        //New Project in Session, for AuthValidation (owner)
+        $this->_auth->getIdentity()->projects[$newProject->project_id] = array('project_id' => $newProject->project_id);
+        //        $this->auth->getStorage()->write($this->auth->getIdentity());
+
+        $this->createTaskWebsiteOwnerVerification($newProject);
+
+        $activityLog = new Default_Model_ActivityLog();
+        $activityLog->writeActivityLog($newProject->project_id, $newProject->member_id,
+            Default_Model_ActivityLog::PROJECT_CREATED, $newProject->toArray());
+
+        // ppload
+        $this->processPploadId($newProject);
+
+        $this->redirect('/member/' . $newProject->member_id . '/products/');
+    }
+
+    private function purifiyInput($values)
+    {
+        $values['version'] = Default_Model_HtmlPurify::purify($values['version']);
+        $values['embed_code'] =
+            Default_Model_HtmlPurify::purify($values['embed_code'], Default_Model_HtmlPurify::ALLOW_VIDEO);
+        $values['title'] = Default_Model_HtmlPurify::purify($values['title']);
+        $values['description'] = Default_Model_HtmlPurify::purify($values['description']);
+        //$values['link_1'] = Default_Model_HtmlPurify::purify($values['link_1'],Default_Model_HtmlPurify::ALLOW_URL);
+        //$values['github_code'] = Default_Model_HtmlPurify::purify($values['github_code'],Default_Model_HtmlPurify::ALLOW_URL);
+        //$values['facebook_code'] = Default_Model_HtmlPurify::purify($values['facebook_code'],Default_Model_HtmlPurify::ALLOW_URL);
+        //$values['twitter_code'] = Default_Model_HtmlPurify::purify($values['twitter_code'],Default_Model_HtmlPurify::ALLOW_URL);
+        //$values['google_code'] = Default_Model_HtmlPurify::purify($values['google_code'],Default_Model_HtmlPurify::ALLOW_URL);
+        return $values;
+    }
+
+    private function saveGalleryPics($form_element)
+    {
+        $imageModel = new Default_Model_DbTable_Image();
+
+        return $imageModel->saveImages($form_element);
+    }
+
+    /**
+     * @param $projectData
+     */
+    protected function createTaskWebsiteOwnerVerification($projectData)
+    {
+        if (empty($projectData->link_1)) {
+            return;
+        }
+        $checkAuthCode = new Local_Verification_WebsiteProject();
+        $authCode = $checkAuthCode->generateAuthCode(stripslashes($projectData->link_1));
+        $queue = Local_Queue_Factory::getQueue();
+        $command = new Backend_Commands_CheckProjectWebsite($projectData->project_id, $projectData->link_1, $authCode);
+        $queue->send(serialize($command));
+    }
+
+    /**
+     * @param $projectData
+     */
+    protected function processPploadId($projectData)
+    {
+        if ($projectData->ppload_collection_id) {
+            // require_once 'Ppload/Api.php';
+            $pploadApi = new Ppload_Api(array(
+                'apiUri'   => PPLOAD_API_URI,
+                'clientId' => PPLOAD_CLIENT_ID,
+                'secret'   => PPLOAD_SECRET
+            ));
+            // Update collection information
+            $collectionCategory = $projectData->project_category_id;
+            if (Default_Model_Project::PROJECT_ACTIVE == $projectData->status) {
+                $collectionCategory .= '-published';
+            }
+            $collectionRequest = array(
+                'title'       => $projectData->title,
+                'description' => $projectData->description,
+                'category'    => $collectionCategory,
+                'content_id'  => $projectData->project_id
+            );
+            $collectionResponse =
+                $pploadApi->putCollection(ltrim($projectData->ppload_collection_id, '!'), $collectionRequest);
+            // Store product image as collection thumbnail
+            $this->_updatePploadMediaCollectionthumbnail($projectData);
+        }
+    }
+
+    /**
+     * ppload
+     */
+    protected function _updatePploadMediaCollectionthumbnail($projectData)
+    {
+        if (empty($projectData->ppload_collection_id)
+            || empty($projectData->image_small)
+        ) {
+            return false;
+        }
+
+        // require_once 'Ppload/Api.php';
+        $pploadApi = new Ppload_Api(array(
+            'apiUri'   => PPLOAD_API_URI,
+            'clientId' => PPLOAD_CLIENT_ID,
+            'secret'   => PPLOAD_SECRET
+        ));
+
+        $filename = sys_get_temp_dir() . '/' . $projectData->image_small;
+        if (false === file_exists(dirname($filename))) {
+            mkdir(dirname($filename), 0777, true);
+        }
+        $viewHelperImage = new Default_View_Helper_Image();
+        $uri = $viewHelperImage->Image($projectData->image_small, array(
+                'width'  => 600,
+                'height' => 600
+            ));
+
+        file_put_contents($filename, file_get_contents($uri));
+
+        $mediaCollectionthumbnailResponse =
+            $pploadApi->postMediaCollectionthumbnail($projectData->ppload_collection_id, array('file' => $filename));
+
+        unlink($filename);
+
+        if (isset($mediaCollectionthumbnailResponse->status)
+            && $mediaCollectionthumbnailResponse->status == 'success'
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function editAction()
+    {
+        if (empty($this->_projectId)) {
+            $this->redirect($this->_helper->url('add'));
+
+            return;
+        }
+
+        $this->_helper->viewRenderer('add'); // we use the same view as you can see at add a product
+        $this->view->mode = 'edit';
+
+        $projectTable = new Default_Model_DbTable_Project();
+        $projectModel = new Default_Model_Project();
+
+        //check if product with given id exists
+        $projectData = $projectTable->find($this->_projectId)->current();
+        if (empty($projectData)) {
+            $this->redirect($this->_helper->url('add'));
+
+            return;
+        }
+
+        // load license information
+        $modelProjectLicense = new Default_Model_ProjectLicense();
+        /** @var Default_Model_DbRow_ProjectCcLicense $dataProjectLicense */
+        $dataProjectLicense = $modelProjectLicense->findOneProject($this->_projectId);
+
+        //set ppload-collection-id in view
+        $this->view->ppload_collection_id = $projectData->ppload_collection_id;
+        $this->view->project_id = $projectData->project_id;
+
+        //read the already existing gallery pics and add them to the form
+        $sources = $projectModel->getGalleryPictureSources($this->_projectId);
+
+        //setup form
+        $form = new Default_Form_Product(array('pictures' => $sources));
+        if (false === empty($projectData->image_small)) {
+            $form->getElement('image_small_upload')->setRequired(false);
+        }
+        $form->getElement('preview')->setLabel('Save');
+
+        $form->removeElement('project_id'); // we don't need this field in edit mode
+
+        $this->view->member = $this->_authMember;
+
+        if ($this->_request->isGet()) {
+            $form->populate($projectData->toArray());
+            $form->populate($dataProjectLicense->toArray());
+            $form->getElement('cc_license')->setValue($dataProjectLicense->isStoredLicense());
+            $form->getElement('image_small')->setValue($projectData->image_small);
+            //            $form->getElement('image_big')->setValue($projectData->image_big);
+
+            //Bilder voreinstellen
+            $form->getElement(self::IMAGE_SMALL_UPLOAD)->setValue($projectData->image_small);
+            //            $form->getElement(self::IMAGE_BIG_UPLOAD)->setValue($projectData->image_big);
+
+            $this->view->form = $form;
+
+            return;
+        }
+
+        if (isset($_POST['cancel'])) { // user cancel function
+            $this->redirect('/member/' . $this->_authMember->member_id . '/news/');
+        }
+
+        if (false === $form->isValid($_POST, $this->_projectId)) { // form not valid
+            $this->view->form = $form;
+            $this->view->error = 1;
+
+            return;
+        }
+
+        $values = $form->getValues();
+
+        $imageModel = new Default_Model_DbTable_Image();
+        try {
+            $uploadedSmallImage = $imageModel->saveImage($form->getElement(self::IMAGE_SMALL_UPLOAD));
+            $values['image_small'] = $uploadedSmallImage ? $uploadedSmallImage : $values['image_small'];
+            //            $uploadedBigImage = $imageModel->saveImage($form->getElement(self::IMAGE_BIG_UPLOAD));
+            //            $values['image_big'] = $uploadedBigImage ? $uploadedBigImage : $values['image_big'];
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ERROR upload productPicture - ' . print_r($e, true));
+        }
+
+        // save changes
+        $values = $this->purifiyInput($values);
+        $projectData->setFromArray($values);
+        $projectData->changed_at = new Zend_Db_Expr('NOW()');
+
+        // store license data
+        if ($values['cc_license'] == true) {
+            $modelProjectLicense->saveLicenseData($this->_projectId, $values);
+        } else {
+            $modelProjectLicense->deleteLicenseData($this->_projectId);
+        }
+
+        //update the gallery pics
+        $pictureSources = array_merge($values['gallery']['online_picture'],
+            $this->saveGalleryPics($form->gallery->upload->upload_picture));
+        $projectModel->updateGalleryPictures($this->_projectId, $pictureSources);
+
+        //If there is no Logo, we take the 1. gallery pic
+        if (!isset($projectData->image_small) || $projectData->image_small == '') {
+            $projectData->image_small = $pictureSources[0];
+            Zend_Registry::get('logger')->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . ' - set image_small: '
+                . $projectData->image_small . '\n')
+            ;
+        } else {
+            Zend_Registry::get('logger')->debug('**********' . __CLASS__ . '::' . __FUNCTION__
+                . ' - set image_small: Not neeed. ' . $projectData->image_small . '\n')
+            ;
+        }
+        $projectData->save();
+
+        $this->createTaskWebsiteOwnerVerification($projectData);
+
+        $activityLog = new Default_Model_ActivityLog();
+        $activityLog->writeActivityLog($this->_projectId, $projectData->member_id,
+            Default_Model_ActivityLog::PROJECT_EDITED, $projectData->toArray());
+
+        //update search index
+        $productInfo = $projectModel->fetchProductInfo($projectData->project_id);
+        $modelSearch = new Default_Model_Search_Lucene();
+        $modelSearch->updateDocument($productInfo->toArray());
+
+        // ppload
+        $this->processPploadId($projectData);
+
+        $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
+        $this->redirect($helperBuildMemberUrl->buildMemberUrl($this->_authMember->member_id, 'products'));
+    }
+
+    public function getupdatesajaxAction()
+    {
+        $this->view->authMember = $this->_authMember;
+        $tableProject = new Default_Model_ProjectUpdates();
+
+        $updates = $tableProject->fetchProjectUpdates($this->_projectId);
+
+        $this->_helper->layout->disableLayout();
+        $params = $this->getAllParams();
+
+        $result['status'] = 'success';
+        $result['ResultSize'] = count($updates);
+        $result['updates'] = $updates;
+
+        $this->_helper->json($result);
+    }
+
+    public function saveupdateajaxAction()
+    {
+        $this->view->authMember = $this->_authMember;
+        $tableProjectUpdates = new Default_Model_ProjectUpdates();
+
+        $params = $this->getAllParams();
+        $update_id = $params['update_id'];
+
+        //Save title and Text
+        $title = null;
+        $text = null;
+        if (isset($params['title'])) {
+            $title = $params['title'];
+        }
+        if (isset($params['text'])) {
+            $text = $params['text'];
+        }
+
+        if (!empty($title) && !empty($text)) {
+            //Save update
+            if (!empty($update_id)) {
+                //Update old update
+                $updateArray = array();
+                $updateArray['title'] = Default_Model_HtmlPurify::purify($title);
+                $updateArray['text'] = Default_Model_HtmlPurify::purify($text);
+                $updateArray['changed_at'] = new Zend_Db_Expr('Now()');
+                $project_update_id = $tableProjectUpdates->update($updateArray, 'project_update_id = ' . $update_id);
+            } else {
+                //Add new update
+                $updateArray = array();
+                $updateArray['title'] = Default_Model_HtmlPurify::purify($title);
+                $updateArray['text'] = Default_Model_HtmlPurify::purify($text);
+                $updateArray['public'] = 1;
+                $updateArray['project_id'] = $this->_projectId;
+                $updateArray['member_id'] = $this->_authMember->member_id;
+                $updateArray['created_at'] = new Zend_Db_Expr('Now()');
+                $updateArray['changed_at'] = new Zend_Db_Expr('Now()');
+                $project_update_id = $tableProjectUpdates->save($updateArray);
+            }
+        }
+
+        $result['status'] = 'success';
+        $result['update_id'] = $project_update_id;
+
+        $this->_helper->json($result);
+    }
+
+    public function deleteupdateajaxAction()
+    {
+        $this->view->authMember = $this->_authMember;
+        $tableProject = new Default_Model_ProjectUpdates();
+
+        $params = $this->getAllParams();
+        $project_update_id = $params['update_id'];
+        $updateArray = array();
+        $updateArray['public'] = 0;
+        $updateArray['changed_at'] = new Zend_Db_Expr('Now()');
+        $tableProject->update($updateArray, 'project_update_id = ' . $project_update_id);
+
+        $result['status'] = 'success';
+        $result['update_id'] = $project_update_id;
+
+        $this->_helper->json($result);
+    }
+
+    public function updatesAction()
+    {
+        $this->view->authMember = $this->_authMember;
+        $tableProject = new Default_Model_Project();
+        $this->view->product = $tableProject->fetchProductInfo($this->_projectId);
+        if (false === isset($this->view->product)) {
+            throw new Zend_Controller_Action_Exception('This page does not exist', 404);
+        }
+        $this->view->relatedProducts = $tableProject->fetchSimilarProjects($this->view->product, 6);
+        $this->view->supporter = $tableProject->fetchProjectSupporter($this->_projectId);
+        $this->view->product_views = $tableProject->fetchProjectViews($this->_projectId);
+
+        $modelPlings = new Default_Model_DbTable_Plings();
+        $this->view->comments = $modelPlings->getCommentsForProject($this->_projectId, 10);
+
+        $tableMember = new Default_Model_Member();
+        $this->view->member = $tableMember->fetchMemberData($this->view->product->member_id);
+
+        $this->view->updates = $tableProject->fetchProjectUpdates($this->_projectId);
+
+        $tablePageViews = new Default_Model_DbTable_StatPageViews();
+        $tablePageViews->savePageView($this->_projectId, $this->getRequest()->getClientIp(),
+            $this->_authMember->member_id);
+    }
+
+    public function updateAction()
+    {
+
+        $this->_helper->layout()->setLayout('flat_ui');
+
+        $this->view->headScript()->setFile('');
+        $this->view->headLink()->setStylesheet('');
+
+        $this->_helper->viewRenderer('add');
+
+        $form = new Default_Form_ProjectUpdate();
+        $projectTable = new Default_Model_Project();
+        $projectData = null;
+        $projectUpdateId = (int)$this->getParam('upid');
+
+        $this->view->member = $this->_authMember;
+        $this->view->title = 'Add an update for your product';
+
+        $activityLogType = Default_Model_ActivityLog::PROJECT_ITEM_CREATED;
+
+        if (false === empty($projectUpdateId)) {
+            $this->view->title = 'Edit an product update';
+            $projectData = $projectTable->find($projectUpdateId)->current();
+            $form->populate($projectData->toArray());
+            $form->getElement('upid')->setValue($projectUpdateId);
+            $activityLogType = Default_Model_ActivityLog::PROJECT_ITEM_EDITED;
+        }
+
+        $this->view->form = $form;
+
+        if ($this->_request->isGet()) {
+            return;
+        }
+
+        if (isset($_POST['cancel'])) { // user cancel function
+            $this->_redirect('/member/' . $this->_authMember->member_id . '/news/');
+        }
+
+        if (false === $form->isValid($_POST)) { // form not valid
+            $this->view->form = $form;
+            $this->view->error = 1;
+
+            return;
+        }
+
+        $values = $form->getValues();
+
+        $projectUpdateRow = $projectTable->find($values['upid'])->current();
+
+        if (count($projectUpdateRow) == 0) {
+            $projectUpdateRow = $projectTable->createRow($values);
+            $projectUpdateRow->project_id = $values['upid'];
+            $projectUpdateRow->created_at = new Zend_Db_Expr('NOW()');
+            $projectUpdateRow->start_date = new Zend_Db_Expr('NOW()');
+            $projectUpdateRow->member_id = $this->_authMember->member_id;
+            $projectUpdateRow->creator_id = $this->_authMember->member_id;
+            $projectUpdateRow->status = Default_Model_Project::PROJECT_ACTIVE;
+            $projectUpdateRow->type_id = 2;
+            $projectUpdateRow->pid = $this->_projectId;
+        } else {
+            $projectUpdateRow->setFromArray($values);
+            $projectUpdateRow->changed_at = new Zend_Db_Expr('NOW()');
+        }
+
+        $lastId = $projectUpdateRow->save();
+
+        //New Project in Session, for AuthValidation (owner)
+        $this->_auth->getIdentity()->projects[$lastId] = array('project_id' => $lastId);
+
+        $tableProduct = new Default_Model_Project();
+        $product = $tableProduct->find($this->_projectId)->current();
+        $activityLogValues = $projectUpdateRow->toArray();
+        $activityLogValues['image_small'] = $product->image_small;
+        $activityLog = new Default_Model_ActivityLog();
+        $activityLog->writeActivityLog($lastId, $projectUpdateRow->member_id, $activityLogType, $activityLogValues);
+
+        $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
+        $urlProjectShow = $helperBuildProductUrl->buildProductUrl($this->_projectId);
+
+        $this->redirect($urlProjectShow);
+    }
+
+    public function previewAction()
+    {
+        $this->view->authMember = $this->_authMember;
+
+        $form = new Default_Form_ProjectConfirm();
+
+        if ($this->_request->isGet()) {
+            $form->populate(get_object_vars($this->_authMember));
+            $this->view->form = $form;
+            $this->fetchDataForIndexView();
+            $this->view->preview = $this->view->render('product/index.phtml');
+
+            return;
+        }
+
+        if (isset($_POST['save'])) {
+            $projectTable = new Default_Model_Project();
+            $projectTable->setStatus(Default_Model_Project::PROJECT_INACTIVE, $this->_projectId);
+
+            //todo: maybe we have to delete the project data from database otherwise we produce many zombies
+            $this->redirect('/member/' . $this->_authMember->member_id . '/products/');
+        }
+
+        if (isset($_POST['back'])) {
+            $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
+            $this->redirect($helperBuildProductUrl->buildProductUrl($this->_projectId, 'edit'));
+        }
+
+        if (false === $form->isValid($_POST)) { // form not valid
+            $this->view->form = $form;
+            $this->fetchDataForIndexView();
+            $this->view->preview = $this->view->render('product/index.phtml');
+            $this->view->error = 1;
+
+            return;
+        }
+
+        $projectTable = new Default_Model_Project();
+        $projectTable->setStatus(Default_Model_Project::PROJECT_ACTIVE, $this->_projectId);
+
+        // add to search index
+        $modelProject = new Default_Model_Project();
+        $productInfo = $modelProject->fetchProductInfo($this->_projectId);
+        $modelSearch = new Default_Model_Search_Lucene();
+        $modelSearch->addDocument($productInfo->toArray());
+
+        $this->redirect('/member/' . $this->_authMember->member_id . '/products/');
     }
 
     protected function fetchDataForIndexView()
@@ -127,8 +711,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $this->view->catId = $this->view->product->project_category_id;
         $this->view->catTitle = $helperFetchCategory->catTitle($this->view->product->project_category_id);
-        $this->view->catParentId
-            = $helperFetchCatParent->getCatParentId(array('project_category_id' => $this->view->product->project_category_id));
+        $this->view->catParentId =
+            $helperFetchCatParent->getCatParentId(array('project_category_id' => $this->view->product->project_category_id));
         if ($this->view->catParentId) {
             $this->view->catParentTitle = $helperFetchCategory->catTitle($this->view->catParentId);
         }
@@ -209,6 +793,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         );
 
         $newtxt = preg_replace($patterns, $replaces, $newtxt);
+
         return ($newtxt);
     }
 
@@ -222,578 +807,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         if (strpos($request->getHeader('referer'), $referrerExplore) !== false) {
             return $request->getHeader('referer');
         }
-    }
-
-    public function showAction()
-    {
-        $this->view->authMember = $this->_authMember;
-        $this->_helper->viewRenderer('index');
-        $this->indexAction();
-    }
-
-    public function addAction()
-    {
-        $form = new Default_Form_Product();
-
-        $this->view->member = $this->_authMember;
-        $this->view->form = $form;
-        $this->view->mode = 'add';
-
-        if ($this->_request->isGet()) {
-            $modelProjectLicense = new Default_Model_DbTable_ProjectCcLicense();
-            $dataProjectLicense = $modelProjectLicense->getDefaultValues();
-            $form->populate($dataProjectLicense);
-            return;
-        }
-
-        if (isset($_POST['cancel'])) { // user cancel function
-            $this->redirect('/member/' . $this->_authMember->member_id . '/news/');
-        }
-
-        if (false === $form->isValid($_POST)) { // form not valid
-            $this->view->form = $form;
-            $this->view->error = 1;
-            return;
-        }
-
-        $values = $form->getValues();
-
-        $imageModel = new Default_Model_DbTable_Image();
-        try {
-            $values['image_small'] = $imageModel->saveImage($form->getElement(self::IMAGE_SMALL_UPLOAD));
-        } catch (Exception $e) {
-            Zend_Registry::get('logger')->err(__METHOD__ . ' - ERROR upload productPicture - ' . print_r($e, true));
-        }
-
-        // form was valid, so we can set status to active
-        $values['status'] = Default_Model_DbTable_Project::PROJECT_ACTIVE;
-
-        // save new project
-        $modelProject = new Default_Model_Project();
-        
-        //cleanup input text
-        $values = $this->purifiyInput($values);
-
-        $newProject = null;
-        try {
-            if (isset($values['project_id'])) {
-                $newProject = $modelProject->updateProject($values['project_id'], $values);
-            } else {
-                $newProject = $modelProject->createProject($this->_authMember->member_id, $values,
-                    $this->_authMember->username);
-            }
-
-        } catch (Exception $exc) {
-            Zend_Registry::get('logger')->warn(__METHOD__ . ' - traceString: ' . $exc->getTraceAsString());
-        }
-
-        if (!$newProject) {
-            $this->_helper->flashMessenger->addMessage('<p class="text-error">You did not choose a Category in the last level.</p>');
-            $this->forward('add');
-            return;
-        }
-
-        //update the gallery pics
-        $mediaServerUrls = $this->saveGalleryPics($form->gallery->upload->upload_picture);
-        $modelProject->updateGalleryPictures($newProject->project_id, $mediaServerUrls);
-
-        //If there is no Logo, we take the 1. gallery pic
-        if (!isset($values['image_small']) || $values['image_small'] == '') {
-            $values['image_small'] = $mediaServerUrls[0];
-            $newProject = $modelProject->updateProject($newProject->project_id, $values);
-            Zend_Registry::get('logger')->debug(__METHOD__ . '(' . __LINE__ . ') - set image_small: '
-                . $values['image_small'] . '\n')
-            ;
-        } else {
-            Zend_Registry::get('logger')->debug(__METHOD__ . '(' . __LINE__ . ') - set image_small: Not need. '
-                . $values['image_small'] . '\n')
-            ;
-        }
-
-        //New Project in Session, for AuthValidation (owner)
-        $this->_auth->getIdentity()->projects[$newProject->project_id] = array('project_id' => $newProject->project_id);
-//        $this->auth->getStorage()->write($this->auth->getIdentity());
-
-        $this->createTaskWebsiteOwnerVerification($newProject);
-
-        $activityLog = new Default_Model_ActivityLog();
-        $activityLog->writeActivityLog($newProject->project_id, $newProject->member_id,
-            Default_Model_ActivityLog::PROJECT_CREATED, $newProject->toArray());
-
-        // ppload
-        $this->processPploadId($newProject);
-
-        $this->redirect('/member/' . $newProject->member_id . '/products/');
-    }
-
-    private function saveGalleryPics($form_element)
-    {
-        $imageModel = new Default_Model_DbTable_Image();
-        return $imageModel->saveImages($form_element);
-    }
-
-    /**
-     * @param $projectData
-     */
-    protected function createTaskWebsiteOwnerVerification($projectData)
-    {
-        if (empty($projectData->link_1)) {
-            return;
-        }
-        $checkAuthCode = new Local_Verification_WebsiteProject();
-        $authCode = $checkAuthCode->generateAuthCode(stripslashes($projectData->link_1));
-        $queue = Local_Queue_Factory::getQueue();
-        $command = new Backend_Commands_CheckProjectWebsite($projectData->project_id, $projectData->link_1, $authCode);
-        $queue->send(serialize($command));
-    }
-
-    /**
-     * @param $projectData
-     */
-    protected function processPploadId($projectData)
-    {
-        if ($projectData->ppload_collection_id) {
-            // require_once 'Ppload/Api.php';
-            $pploadApi = new Ppload_Api(array(
-                'apiUri'   => PPLOAD_API_URI,
-                'clientId' => PPLOAD_CLIENT_ID,
-                'secret'   => PPLOAD_SECRET
-            ));
-            // Update collection information
-            $collectionCategory = $projectData->project_category_id;
-            if (Default_Model_Project::PROJECT_ACTIVE == $projectData->status) {
-                $collectionCategory .= '-published';
-            }
-            $collectionRequest = array(
-                'title'       => $projectData->title,
-                'description' => $projectData->description,
-                'category'    => $collectionCategory,
-                'content_id'  => $projectData->project_id
-            );
-            $collectionResponse = $pploadApi->putCollection(
-                ltrim($projectData->ppload_collection_id, '!'),
-                $collectionRequest
-            );
-            // Store product image as collection thumbnail
-            $this->_updatePploadMediaCollectionthumbnail($projectData);
-        }
-    }
-
-    /**
-     * ppload
-     */
-    protected function _updatePploadMediaCollectionthumbnail($projectData)
-    {
-        if (empty($projectData->ppload_collection_id)
-            || empty($projectData->image_small)
-        ) {
-            return false;
-        }
-
-        // require_once 'Ppload/Api.php';
-        $pploadApi = new Ppload_Api(array(
-            'apiUri'   => PPLOAD_API_URI,
-            'clientId' => PPLOAD_CLIENT_ID,
-            'secret'   => PPLOAD_SECRET
-        ));
-
-        $filename = sys_get_temp_dir() . '/' . $projectData->image_small;
-        if (false === file_exists(dirname($filename))) {
-            mkdir(dirname($filename), 0777, true);
-        }
-        $viewHelperImage = new Default_View_Helper_Image();
-        $uri = $viewHelperImage->Image(
-            $projectData->image_small,
-            array(
-                'width'  => 600,
-                'height' => 600
-            )
-        );
-
-        file_put_contents($filename, file_get_contents($uri));
-
-        $mediaCollectionthumbnailResponse = $pploadApi->postMediaCollectionthumbnail(
-            $projectData->ppload_collection_id,
-            array('file' => $filename)
-        );
-
-        unlink($filename);
-
-        if (isset($mediaCollectionthumbnailResponse->status)
-            && $mediaCollectionthumbnailResponse->status == 'success'
-        ) {
-            return true;
-        }
-        return false;
-    }
-
-    public function editAction()
-    {
-        if (empty($this->_projectId)) {
-            $this->redirect($this->_helper->url('add'));
-            return;
-        }
-
-        $this->_helper->viewRenderer('add'); // we use the same view as you can see at add a product
-        $this->view->mode = 'edit';
-
-        $projectTable = new Default_Model_DbTable_Project();
-        $projectModel = new Default_Model_Project();
-
-        //check if product with given id exists
-        $projectData = $projectTable->find($this->_projectId)->current();
-        if (empty($projectData)) {
-            $this->redirect($this->_helper->url('add'));
-            return;
-        }
-
-        // load license information
-        $modelProjectLicense = new Default_Model_ProjectLicense();
-        /** @var Default_Model_DbRow_ProjectCcLicense $dataProjectLicense */
-        $dataProjectLicense = $modelProjectLicense->findOneProject($this->_projectId);
-
-        //set ppload-collection-id in view
-        $this->view->ppload_collection_id = $projectData->ppload_collection_id;
-        $this->view->project_id = $projectData->project_id;
-
-        //read the already existing gallery pics and add them to the form
-        $sources = $projectModel->getGalleryPictureSources($this->_projectId);
-
-        //setup form
-        $form = new Default_Form_Product(array('pictures' => $sources));
-        if (false === empty($projectData->image_small)) {
-            $form->getElement('image_small_upload')->setRequired(false);
-        }
-        $form->getElement('preview')->setLabel('Save');
-
-        $form->removeElement('project_id'); // we don't need this field in edit mode
-
-        $this->view->member = $this->_authMember;
-
-        if ($this->_request->isGet()) {
-            $form->populate($projectData->toArray());
-            $form->populate($dataProjectLicense->toArray());
-            $form->getElement('cc_license')->setValue($dataProjectLicense->isStoredLicense());
-            $form->getElement('image_small')->setValue($projectData->image_small);
-//            $form->getElement('image_big')->setValue($projectData->image_big);
-
-
-            //Bilder voreinstellen
-            $form->getElement(self::IMAGE_SMALL_UPLOAD)->setValue($projectData->image_small);
-//            $form->getElement(self::IMAGE_BIG_UPLOAD)->setValue($projectData->image_big);
-
-            $this->view->form = $form;
-            return;
-        }
-
-        if (isset($_POST['cancel'])) { // user cancel function
-            $this->redirect('/member/' . $this->_authMember->member_id . '/news/');
-        }
-
-        if (false === $form->isValid($_POST, $this->_projectId)) { // form not valid
-            $this->view->form = $form;
-            $this->view->error = 1;
-            return;
-        }
-
-        $values = $form->getValues();
-
-        $imageModel = new Default_Model_DbTable_Image();
-        try {
-            $uploadedSmallImage = $imageModel->saveImage($form->getElement(self::IMAGE_SMALL_UPLOAD));
-            $values['image_small'] = $uploadedSmallImage ? $uploadedSmallImage : $values['image_small'];
-//            $uploadedBigImage = $imageModel->saveImage($form->getElement(self::IMAGE_BIG_UPLOAD));
-//            $values['image_big'] = $uploadedBigImage ? $uploadedBigImage : $values['image_big'];
-        } catch (Exception $e) {
-            Zend_Registry::get('logger')->err(__METHOD__ . ' - ERROR upload productPicture - ' . print_r($e, true));
-        }
-
-        // save changes
-        $values = $this->purifiyInput($values);
-        $projectData->setFromArray($values);
-        $projectData->changed_at = new Zend_Db_Expr('NOW()');
-
-
-        // store license data
-        if ($values['cc_license'] == true) {
-            $modelProjectLicense->saveLicenseData($this->_projectId, $values);
-        } else {
-            $modelProjectLicense->deleteLicenseData($this->_projectId);
-        }
-
-        //update the gallery pics
-        $pictureSources = array_merge($values['gallery']['online_picture'],
-            $this->saveGalleryPics($form->gallery->upload->upload_picture));
-        $projectModel->updateGalleryPictures($this->_projectId, $pictureSources);
-
-        //If there is no Logo, we take the 1. gallery pic
-        if (!isset($projectData->image_small) || $projectData->image_small == '') {
-            $projectData->image_small = $pictureSources[0];
-            Zend_Registry::get('logger')->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . ' - set image_small: '
-                . $projectData->image_small . '\n');
-        } else {
-            Zend_Registry::get('logger')->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . ' - set image_small: Not neeed. '
-                . $projectData->image_small . '\n');
-
-        }
-        $projectData->save();
-
-        $this->createTaskWebsiteOwnerVerification($projectData);
-
-        $activityLog = new Default_Model_ActivityLog();
-        $activityLog->writeActivityLog($this->_projectId, $projectData->member_id,
-            Default_Model_ActivityLog::PROJECT_EDITED,
-            $projectData->toArray());
-
-        //update search index
-        $productInfo = $projectModel->fetchProductInfo($projectData->project_id);
-        $modelSearch = new Default_Model_Search_Lucene();
-        $modelSearch->updateDocument($productInfo->toArray());
-
-        // ppload
-        $this->processPploadId($projectData);
-
-        $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
-        $this->redirect($helperBuildMemberUrl->buildMemberUrl($this->_authMember->member_id, 'products'));
-    }
-
-    public function getupdatesajaxAction()
-    {
-        $this->view->authMember = $this->_authMember;
-        $tableProject = new Default_Model_ProjectUpdates();
-
-        $updates = $tableProject->fetchProjectUpdates($this->_projectId);
-
-        $this->_helper->layout->disableLayout();
-        $params = $this->getAllParams();
-
-        $result['status'] = 'success';
-        $result['ResultSize'] = count($updates);
-        $result['updates'] = $updates;
-
-        $this->_helper->json($result);
-
-    }
-
-    public function saveupdateajaxAction()
-    {
-        $this->view->authMember = $this->_authMember;
-        $tableProjectUpdates = new Default_Model_ProjectUpdates();
-
-        $params = $this->getAllParams();
-        $update_id = $params['update_id'];
-
-        //Save title and Text
-        $title = null;
-        $text = null;
-        if (isset($params['title'])) {
-            $title = $params['title'];
-        }
-        if (isset($params['text'])) {
-            $text = $params['text'];
-        }
-
-        if (!empty($title) && !empty($text)) {
-            //Save update
-            if (!empty($update_id)) {
-                //Update old update
-                $updateArray = array();
-                $updateArray['title'] = Default_Model_HtmlPurify::purify($title);
-                $updateArray['text'] = Default_Model_HtmlPurify::purify($text);
-                $updateArray['changed_at'] = new Zend_Db_Expr('Now()');
-                $project_update_id = $tableProjectUpdates->update($updateArray, 'project_update_id = ' . $update_id);
-            } else {
-                //Add new update
-                $updateArray = array();
-                $updateArray['title'] = Default_Model_HtmlPurify::purify($title);
-                $updateArray['text'] = Default_Model_HtmlPurify::purify($text);
-                $updateArray['public'] = 1;
-                $updateArray['project_id'] = $this->_projectId;
-                $updateArray['member_id'] = $this->_authMember->member_id;
-                $updateArray['created_at'] = new Zend_Db_Expr('Now()');
-                $updateArray['changed_at'] = new Zend_Db_Expr('Now()');
-                $project_update_id = $tableProjectUpdates->save($updateArray);
-            }
-        }
-
-        $result['status'] = 'success';
-        $result['update_id'] = $project_update_id;
-
-        $this->_helper->json($result);
-    }
-
-    public function deleteupdateajaxAction()
-    {
-        $this->view->authMember = $this->_authMember;
-        $tableProject = new Default_Model_ProjectUpdates();
-
-        $params = $this->getAllParams();
-        $project_update_id = $params['update_id'];
-        $updateArray = array();
-        $updateArray['public'] = 0;
-        $updateArray['changed_at'] = new Zend_Db_Expr('Now()');
-        $tableProject->update($updateArray, 'project_update_id = ' . $project_update_id);
-
-        $result['status'] = 'success';
-        $result['update_id'] = $project_update_id;
-
-        $this->_helper->json($result);
-
-    }
-
-    public function updatesAction()
-    {
-        $this->view->authMember = $this->_authMember;
-        $tableProject = new Default_Model_Project();
-        $this->view->product = $tableProject->fetchProductInfo($this->_projectId);
-        if (false === isset($this->view->product)) {
-            throw new Zend_Controller_Action_Exception('This page does not exist', 404);
-        }
-        $this->view->relatedProducts = $tableProject->fetchSimilarProjects($this->view->product, 6);
-        $this->view->supporter = $tableProject->fetchProjectSupporter($this->_projectId);
-        $this->view->product_views = $tableProject->fetchProjectViews($this->_projectId);
-
-        $modelPlings = new Default_Model_DbTable_Plings();
-        $this->view->comments = $modelPlings->getCommentsForProject($this->_projectId, 10);
-
-        $tableMember = new Default_Model_Member();
-        $this->view->member = $tableMember->fetchMemberData($this->view->product->member_id);
-
-
-        $this->view->updates = $tableProject->fetchProjectUpdates($this->_projectId);
-
-        $tablePageViews = new Default_Model_DbTable_StatPageViews();
-        $tablePageViews->savePageView($this->_projectId, $this->getRequest()->getClientIp(),
-            $this->_authMember->member_id);
-    }
-
-    public function updateAction()
-    {
-
-        $this->_helper->layout()->setLayout('flat_ui');
-
-        $this->view->headScript()->setFile('');
-        $this->view->headLink()->setStylesheet('');
-
-        $this->_helper->viewRenderer('add');
-
-        $form = new Default_Form_ProjectUpdate();
-        $projectTable = new Default_Model_Project();
-        $projectData = null;
-        $projectUpdateId = (int)$this->getParam('upid');
-
-        $this->view->member = $this->_authMember;
-        $this->view->title = 'Add an update for your product';
-
-        $activityLogType = Default_Model_ActivityLog::PROJECT_ITEM_CREATED;
-
-        if (false === empty($projectUpdateId)) {
-            $this->view->title = 'Edit an product update';
-            $projectData = $projectTable->find($projectUpdateId)->current();
-            $form->populate($projectData->toArray());
-            $form->getElement('upid')->setValue($projectUpdateId);
-            $activityLogType = Default_Model_ActivityLog::PROJECT_ITEM_EDITED;
-        }
-
-        $this->view->form = $form;
-
-        if ($this->_request->isGet()) {
-            return;
-        }
-
-        if (isset($_POST['cancel'])) { // user cancel function
-            $this->_redirect('/member/' . $this->_authMember->member_id . '/news/');
-        }
-
-        if (false === $form->isValid($_POST)) { // form not valid
-            $this->view->form = $form;
-            $this->view->error = 1;
-            return;
-        }
-
-        $values = $form->getValues();
-
-        $projectUpdateRow = $projectTable->find($values['upid'])->current();
-
-        if (count($projectUpdateRow) == 0) {
-            $projectUpdateRow = $projectTable->createRow($values);
-            $projectUpdateRow->project_id = $values['upid'];
-            $projectUpdateRow->created_at = new Zend_Db_Expr('NOW()');
-            $projectUpdateRow->start_date = new Zend_Db_Expr('NOW()');
-            $projectUpdateRow->member_id = $this->_authMember->member_id;
-            $projectUpdateRow->creator_id = $this->_authMember->member_id;
-            $projectUpdateRow->status = Default_Model_Project::PROJECT_ACTIVE;
-            $projectUpdateRow->type_id = 2;
-            $projectUpdateRow->pid = $this->_projectId;
-        } else {
-            $projectUpdateRow->setFromArray($values);
-            $projectUpdateRow->changed_at = new Zend_Db_Expr('NOW()');
-        }
-
-        $lastId = $projectUpdateRow->save();
-
-        //New Project in Session, for AuthValidation (owner)
-        $this->_auth->getIdentity()->projects[$lastId] = array('project_id' => $lastId);
-
-        $tableProduct = new Default_Model_Project();
-        $product = $tableProduct->find($this->_projectId)->current();
-        $activityLogValues = $projectUpdateRow->toArray();
-        $activityLogValues['image_small'] = $product->image_small;
-        $activityLog = new Default_Model_ActivityLog();
-        $activityLog->writeActivityLog($lastId, $projectUpdateRow->member_id, $activityLogType, $activityLogValues);
-
-        $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
-        $urlProjectShow = $helperBuildProductUrl->buildProductUrl($this->_projectId);
-
-        $this->redirect($urlProjectShow);
-
-    }
-
-    public function previewAction()
-    {
-        $this->view->authMember = $this->_authMember;
-
-        $form = new Default_Form_ProjectConfirm();
-
-        if ($this->_request->isGet()) {
-            $form->populate(get_object_vars($this->_authMember));
-            $this->view->form = $form;
-            $this->fetchDataForIndexView();
-            $this->view->preview = $this->view->render('product/index.phtml');
-            return;
-        }
-
-        if (isset($_POST['save'])) {
-            $projectTable = new Default_Model_Project();
-            $projectTable->setStatus(Default_Model_Project::PROJECT_INACTIVE, $this->_projectId);
-
-            //todo: maybe we have to delete the project data from database otherwise we produce many zombies
-            $this->redirect('/member/' . $this->_authMember->member_id . '/products/');
-        }
-
-        if (isset($_POST['back'])) {
-            $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
-            $this->redirect($helperBuildProductUrl->buildProductUrl($this->_projectId, 'edit'));
-        }
-
-        if (false === $form->isValid($_POST)) { // form not valid
-            $this->view->form = $form;
-            $this->fetchDataForIndexView();
-            $this->view->preview = $this->view->render('product/index.phtml');
-            $this->view->error = 1;
-            return;
-        }
-
-        $projectTable = new Default_Model_Project();
-        $projectTable->setStatus(Default_Model_Project::PROJECT_ACTIVE, $this->_projectId);
-
-        // add to search index
-        $modelProject = new Default_Model_Project();
-        $productInfo = $modelProject->fetchProductInfo($this->_projectId);
-        $modelSearch = new Default_Model_Search_Lucene();
-        $modelSearch->addDocument($productInfo->toArray());
-
-        $this->redirect('/member/' . $this->_authMember->member_id . '/products/');
     }
 
     public function plingAction()
@@ -810,8 +823,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->view->urlPay = $helperBuildProductUrl->buildProductUrl($this->_projectId, 'pay');
         $this->view->amount = (float)$this->getParam('amount', 1);
         $this->view->comment = html_entity_decode(strip_tags($this->getParam('comment'), null), ENT_QUOTES, 'utf-8');
-        $this->view->provider = mb_strtolower(html_entity_decode(strip_tags($this->getParam('provider'), null),
-            ENT_QUOTES, 'utf-8'), 'utf-8');
+        $this->view->provider =
+            mb_strtolower(html_entity_decode(strip_tags($this->getParam('provider'), null), ENT_QUOTES, 'utf-8'),
+                'utf-8');
 
         $this->view->headTitle($this->_browserTitlePrepend . $this->view->product->title, 'SET');
 
@@ -836,8 +850,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         //get parameter
         $amount = (float)$this->getParam('amount', 1);
         $comment = Default_Model_HtmlPurify::purify($this->getParam('comment'));
-        $paymentProvider = mb_strtolower(html_entity_decode(strip_tags($this->getParam('provider'), null), ENT_QUOTES,
-            'utf-8'), 'utf-8');
+        $paymentProvider =
+            mb_strtolower(html_entity_decode(strip_tags($this->getParam('provider'), null), ENT_QUOTES, 'utf-8'),
+                'utf-8');
         $hideIdentity = (int)$this->getParam('hideId', 0);
 
         $paymentGateway = $this->createPaymentGateway($paymentProvider);
@@ -902,7 +917,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             case 'paypal':
                 $paymentGateway = new Default_Model_PayPal_Gateway($config->third_party->paypal);
                 $paymentGateway->setIpnNotificationUrl('http://' . $httpHost . '/gateway/paypal');
-//                $paymentGateway->setIpnNotificationUrl('http://' . $httpHost . '/gateway/paypal?XDEBUG_SESSION_START=1');
+                //                $paymentGateway->setIpnNotificationUrl('http://' . $httpHost . '/gateway/paypal?XDEBUG_SESSION_START=1');
                 $paymentGateway->setCancelUrl($helperBuildProductUrl->buildProductUrl($this->_projectId,
                     'paymentcancel', null, true));
                 $paymentGateway->setReturnUrl($helperBuildProductUrl->buildProductUrl($this->_projectId, 'paymentok',
@@ -912,7 +927,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             case 'dwolla':
                 $paymentGateway = new Default_Model_Dwolla_Gateway($config->third_party->dwolla);
                 $paymentGateway->setIpnNotificationUrl('http://' . $httpHost . '/gateway/dwolla');
-//                $paymentGateway->setIpnNotificationUrl('http://' . $_SERVER ['HTTP_HOST'] . '/gateway/dwolla?XDEBUG_SESSION_START=1');
+                //                $paymentGateway->setIpnNotificationUrl('http://' . $_SERVER ['HTTP_HOST'] . '/gateway/dwolla?XDEBUG_SESSION_START=1');
                 $paymentGateway->setReturnUrl($helperBuildProductUrl->buildProductUrl($this->_projectId, 'dwolla', null,
                     true));
                 break;
@@ -920,7 +935,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             case 'amazon':
                 $paymentGateway = new Default_Model_Amazon_Gateway($config->third_party->amazon);
                 $paymentGateway->setIpnNotificationUrl('http://' . $httpHost . '/gateway/amazon');
-//                $paymentGateway->setIpnNotificationUrl('http://' . $httpHost . '/gateway/amazon?XDEBUG_SESSION_START=1');
+                //                $paymentGateway->setIpnNotificationUrl('http://' . $httpHost . '/gateway/amazon?XDEBUG_SESSION_START=1');
                 $paymentGateway->setCancelUrl($helperBuildProductUrl->buildProductUrl($this->_projectId,
                     'paymentcancel', null, true));
                 $paymentGateway->setReturnUrl($helperBuildProductUrl->buildProductUrl($this->_projectId, 'paymentok',
@@ -973,13 +988,11 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $memberId = (int)$this->getParam('m');
 
-        if ((empty($this->_authMember->member_id))
-            OR
-            (empty($memberId))
-            OR
-            ($this->_authMember->member_id != $memberId)
+        if ((empty($this->_authMember->member_id)) OR (empty($memberId)) OR ($this->_authMember->member_id
+                != $memberId)
         ) {
             $this->forward('products', 'user', 'default');
+
             return;
         }
 
@@ -991,11 +1004,11 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         // delete product from search index
         $modelSearch = new Default_Model_Search_Lucene();
         $modelSearch->deleteDocument($product->toArray());
-//        $command = new Backend_Commands_DeleteProductExtended($product);
-//        $command->doCommand();
-//        $queue = Local_Queue_Factory::getQueue('search');
-//        $command = new Backend_Commands_DeleteProductFromIndex($product->project_id, $product->project_category_id);
-//        $msg = $queue->send(serialize($command));
+        //        $command = new Backend_Commands_DeleteProductExtended($product);
+        //        $command->doCommand();
+        //        $queue = Local_Queue_Factory::getQueue('search');
+        //        $command = new Backend_Commands_DeleteProductFromIndex($product->project_id, $product->project_category_id);
+        //        $msg = $queue->send(serialize($command));
 
         // ppload
         // Delete collection
@@ -1022,9 +1035,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $memberId = (int)$this->getParam('m');
 
-        if ((empty($this->_authMember->member_id))
-            OR (empty($memberId))
-            OR ($this->_authMember->member_id != $memberId)
+        if ((empty($this->_authMember->member_id)) OR (empty($memberId)) OR ($this->_authMember->member_id
+                != $memberId)
         ) {
             return;
         }
@@ -1059,15 +1071,13 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $collectionRequest = array(
                 'category' => $product->project_category_id
             );
-            $collectionResponse = $pploadApi->putCollection(
-                ltrim($product->ppload_collection_id, '!'),
-                $collectionRequest
-            );
+            $collectionResponse =
+                $pploadApi->putCollection(ltrim($product->ppload_collection_id, '!'), $collectionRequest);
         }
 
-//        $this->setViewDataForMyProducts($memberId);
-//
-//        $this->renderScript('user/products.phtml');
+        //        $this->setViewDataForMyProducts($memberId);
+        //
+        //        $this->renderScript('user/products.phtml');
         $this->forward('products', 'user', 'default');
     }
 
@@ -1075,9 +1085,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
     {
         $memberId = (int)$this->getParam('m');
 
-        if ((empty($this->_authMember->member_id))
-            OR (empty($memberId))
-            OR ($this->_authMember->member_id != $memberId)
+        if ((empty($this->_authMember->member_id)) OR (empty($memberId)) OR ($this->_authMember->member_id
+                != $memberId)
         ) {
             return;
         }
@@ -1113,10 +1122,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $collectionRequest = array(
                 'category' => $product->project_category_id . '-published'
             );
-            $collectionResponse = $pploadApi->putCollection(
-                ltrim($product->ppload_collection_id, '!'),
-                $collectionRequest
-            );
+            $collectionResponse =
+                $pploadApi->putCollection(ltrim($product->ppload_collection_id, '!'), $collectionRequest);
         }
 
         $this->forward('products', 'user', 'default');
@@ -1125,7 +1132,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
     public function followAction()
     {
         $this->_helper->layout()->disableLayout();
-//        $this->_helper->viewRenderer->setNoRender(true);
+        //        $this->_helper->viewRenderer->setNoRender(true);
 
         $this->view->product_id = $this->_projectId;
         $this->view->authMember = $this->_authMember;
@@ -1137,9 +1144,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $projectFollowTable = new Default_Model_DbTable_ProjectFollower();
 
         $newVals = array('project_id' => $this->_projectId, 'member_id' => $this->_authMember->member_id);
-        $where = $projectFollowTable->select()
-            ->where('member_id = ?', $this->_authMember->member_id)
-            ->where('project_id = ?', $this->_projectId, 'INTEGER');
+        $where = $projectFollowTable->select()->where('member_id = ?', $this->_authMember->member_id)
+                                    ->where('project_id = ?', $this->_projectId, 'INTEGER')
+        ;
         $result = $projectFollowTable->fetchRow($where);
         if (null === $result) {
             $projectFollowTable->createRow($newVals)->save();
@@ -1150,7 +1157,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $activityLog = new Default_Model_ActivityLog();
             $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id,
                 Default_Model_ActivityLog::PROJECT_FOLLOWED, $product->toArray());
-
         }
 
         // ppload
@@ -1182,7 +1188,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $projectFollowTable = new Default_Model_DbTable_ProjectFollower();
 
-        $projectFollowTable->delete('member_id=' . $this->_authMember->member_id . ' AND project_id=' . $this->_projectId);
+        $projectFollowTable->delete('member_id=' . $this->_authMember->member_id . ' AND project_id='
+            . $this->_projectId);
 
         $tableProduct = new Default_Model_Project();
         $product = $tableProduct->find($this->_projectId)->current();
@@ -1206,7 +1213,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 'user_id'       => $this->_authMember->member_id,
                 'collection_id' => ltrim($projectData->ppload_collection_id, '!')
             );
-            $favoriteResponse = $pploadApi->postFavorite($favoriteRequest); // This post call will retrieve existing favorite info
+            $favoriteResponse =
+                $pploadApi->postFavorite($favoriteRequest); // This post call will retrieve existing favorite info
             if (!empty($favoriteResponse->favorite->id)) {
                 $favoriteResponse = $pploadApi->deleteFavorite($favoriteResponse->favorite->id);
             }
@@ -1223,7 +1231,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $projectArray = $this->generateFollowedProjectsViewData($this->view->productList);
 
         $this->view->productArray['followedProjects'] = $projectArray;
-
     }
 
     /**
@@ -1264,6 +1271,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $dataProject = $tabProject->find($this->_projectId)->current();
             $this->createTaskWebsiteOwnerVerification($dataProject);
             $this->view->message = 'Your product page is stored for validation.';
+
             return;
         }
 
@@ -1296,7 +1304,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $tablePageViews = new Default_Model_DbTable_StatPageViews();
             $tablePageViews->savePageView($this->_projectId, $this->getRequest()->getClientIp(),
                 $this->_authMember->member_id);
-
         }
 
         $this->_helper->json(get_object_vars($this->view));
@@ -1326,8 +1333,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $claimMailConfirm = new Default_Plugin_SendMail('tpl_mail_claim_confirm');
             $claimMailConfirm->setTemplateVar('sender', 'contact@opendesktop.org');
             $claimMailConfirm->setTemplateVar('producttitle', $productInfo->title);
-            $claimMailConfirm->setTemplateVar('productlink',
-                'http://' . $this->getRequest()->getHttpHost()
+            $claimMailConfirm->setTemplateVar('productlink', 'http://' . $this->getRequest()->getHttpHost()
                 . $helperBuildProductUrl->buildProductUrl($productInfo->project_id));
             $claimMailConfirm->setTemplateVar('username', $this->_authMember->username);
             $claimMailConfirm->setReceiverMail($this->_authMember->mail);
@@ -1361,7 +1367,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $this->view->authCode = '<meta name="ocs-site-verification" content="'
                 . $websiteOwner->generateAuthCode(stripslashes($this->view->product->link_1)) . '" />';
         }
-
     }
 
     /**
@@ -1418,12 +1423,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     $projectData->save();
 
                     $activityLog = new Default_Model_ActivityLog();
-                    $activityLog->writeActivityLog(
-                        $this->_projectId,
-                        $projectData->member_id,
-                        Default_Model_ActivityLog::PROJECT_EDITED,
-                        $projectData->toArray()
-                    );
+                    $activityLog->writeActivityLog($this->_projectId, $projectData->member_id,
+                        Default_Model_ActivityLog::PROJECT_EDITED, $projectData->toArray());
                     // Update profile information
                     $memberTable = new Default_Model_DbTable_Member();
                     $memberSettings = $memberTable->find($this->_authMember->member_id)->current();
@@ -1432,11 +1433,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     if ($memberSettings->firstname
                         || $memberSettings->lastname
                     ) {
-                        $profileName = trim(
-                            $memberSettings->firstname
-                            . ' '
-                            . $memberSettings->lastname
-                        );
+                        $profileName = trim($memberSettings->firstname . ' ' . $memberSettings->lastname);
                     } else {
                         if ($memberSettings->username) {
                             $profileName = $memberSettings->username;
@@ -1461,10 +1458,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                         'category'    => $collectionCategory,
                         'content_id'  => $projectData->project_id
                     );
-                    $collectionResponse = $pploadApi->putCollection(
-                        $projectData->ppload_collection_id,
-                        $collectionRequest
-                    );
+                    $collectionResponse =
+                        $pploadApi->putCollection($projectData->ppload_collection_id, $collectionRequest);
                     // Store product image as collection thumbnail
                     $this->_updatePploadMediaCollectionthumbnail($projectData);
                 }
@@ -1473,6 +1468,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     'status' => 'ok',
                     'file'   => $fileResponse->file
                 ));
+
                 return;
             }
         }
@@ -1529,19 +1525,20 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                         'status' => 'ok',
                         'file'   => $fileResponse->file
                     ));
+
                     return;
                 } else {
-                    $error_text .= 'Response: $pploadApi->putFile(): ' . json_encode($fileResponse) . '; $fileResponse->status: '
-                        . $fileResponse->status;
+                    $error_text .= 'Response: $pploadApi->putFile(): ' . json_encode($fileResponse)
+                        . '; $fileResponse->status: ' . $fileResponse->status;
                 }
             } else {
-                $error_text .= 'PPload Response: ' . json_encode($fileResponse) . '; fileResponse->file->collection_id: '
-                    . $fileResponse->file->collection_id . ' != $projectData->ppload_collection_id: '
-                    . $projectData->ppload_collection_id;
+                $error_text .= 'PPload Response: ' . json_encode($fileResponse)
+                    . '; fileResponse->file->collection_id: ' . $fileResponse->file->collection_id
+                    . ' != $projectData->ppload_collection_id: ' . $projectData->ppload_collection_id;
             }
         } else {
-            $error_text .= 'No CollectionId or no FileId. CollectionId: ' . $projectData->ppload_collection_id . ', FileId: '
-                . $_POST['file_id'];
+            $error_text .= 'No CollectionId or no FileId. CollectionId: ' . $projectData->ppload_collection_id
+                . ', FileId: ' . $_POST['file_id'];
         }
 
         $this->_helper->json(array('status' => 'error', 'error_text' => $error_text));
@@ -1563,6 +1560,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $packageTypeTable = new Default_Model_DbTable_ProjectPackageType();
             $packageTypeTable->addPackageTypeToProject($this->_projectId, $_POST['file_id'], $typeId);
             $this->_helper->json(array('status' => 'ok'));
+
             return;
         } else {
             $error_text .= 'No FileId. , FileId: ' . $_POST['file_id'];
@@ -1607,10 +1605,11 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     $packageTypeTable->deletePackageTypeOnProject($this->_projectId, $_POST['file_id']);
 
                     $this->_helper->json(array('status' => 'ok'));
+
                     return;
                 } else {
-                    $error_text .= 'Response: $pploadApi->putFile(): ' . json_encode($fileResponse) . '; $fileResponse->status: '
-                        . $fileResponse->status;
+                    $error_text .= 'Response: $pploadApi->putFile(): ' . json_encode($fileResponse)
+                        . '; $fileResponse->status: ' . $fileResponse->status;
                 }
             }
         }
@@ -1652,45 +1651,14 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                         || $fileResponse->status != 'success'
                     ) {
                         $this->_helper->json(array('status' => 'error'));
+
                         return;
                     }
                 }
             }
 
             $this->_helper->json(array('status' => 'ok'));
-            return;
-        }
 
-        $this->_helper->json(array('status' => 'error'));
-    }
-
-    /**
-     * ppload
-     */
-    public function finalizepploadcollectionAction()
-    {
-        $this->_helper->layout()->disableLayout();
-
-        $projectTable = new Default_Model_DbTable_Project();
-        $projectData = $projectTable->find($this->_projectId)->current();
-
-        // '!' mark as finalized collection, and does not append file.
-        if ($projectData->ppload_collection_id
-            && $projectData->ppload_collection_id[0] != '!'
-        ) {
-            $projectData->ppload_collection_id = '!' . $projectData->ppload_collection_id;
-            $projectData->changed_at = new Zend_Db_Expr('NOW()');
-            $projectData->save();
-
-            $activityLog = new Default_Model_ActivityLog();
-            $activityLog->writeActivityLog(
-                $this->_projectId,
-                $projectData->member_id,
-                Default_Model_ActivityLog::PROJECT_EDITED,
-                $projectData->toArray()
-            );
-
-            $this->_helper->json(array('status' => 'ok'));
             return;
         }
 
@@ -1740,6 +1708,37 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $this->_helper->json(array('status' => 'error'));
     }*/
+    /**
+     * ppload
+     */
+    public function finalizepploadcollectionAction()
+    {
+        $this->_helper->layout()->disableLayout();
+
+        $projectTable = new Default_Model_DbTable_Project();
+        $projectData = $projectTable->find($this->_projectId)->current();
+
+        // '!' mark as finalized collection, and does not append file.
+        if ($projectData->ppload_collection_id
+            && $projectData->ppload_collection_id[0] != '!'
+        ) {
+            $projectData->ppload_collection_id = '!' . $projectData->ppload_collection_id;
+            $projectData->changed_at = new Zend_Db_Expr('NOW()');
+            $projectData->save();
+
+            $activityLog = new Default_Model_ActivityLog();
+            $activityLog->writeActivityLog($this->_projectId, $projectData->member_id,
+                Default_Model_ActivityLog::PROJECT_EDITED, $projectData->toArray());
+
+            $this->_helper->json(array('status' => 'ok'));
+
+            return;
+        }
+
+        $this->_helper->json(array('status' => 'error'));
+    }
+
+
 
     public function saveproductAction()
     {
@@ -1748,7 +1747,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         // we don't need to test a file which doesn't exist in this case. The Framework stumbles if $_FILES is empty.
         if ($this->_request->isXmlHttpRequest() AND (count($_FILES) == 0)) {
             $form->removeElement('image_small_upload');
-//            $form->removeElement('image_big_upload');
+            //            $form->removeElement('image_big_upload');
             $form->removeSubForm('gallery');
             $form->removeElement('project_id'); //(workaround: Some Browsers send "0" in some cases.)
         }
@@ -1763,8 +1762,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $formValues['status'] = Default_Model_Project::PROJECT_INCOMPLETE;
 
         $modelProject = new Default_Model_Project();
-        $newProject = $modelProject->createProject($this->_authMember->member_id, $formValues,
-            $this->_authMember->username);
+        $newProject =
+            $modelProject->createProject($this->_authMember->member_id, $formValues, $this->_authMember->username);
 
         //New Project in Session, for AuthValidation (owner)
         $this->_auth->getIdentity()->projects[$newProject->project_id] = array('project_id' => $newProject->project_id);
@@ -1787,7 +1786,14 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 }
             }
         }
+
         return $messages;
+    }
+
+    public function searchAction()
+    {
+        $this->view->searchText = $this->getParam('projectSearchText', '');
+        $this->view->page = $this->getParam('page', 1);
     }
 
     /**
@@ -1807,12 +1813,11 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $duration = 1800; // in seconds
         $expires = gmdate("D, d M Y H:i:s", time() + $duration) . " GMT";
 
-        $this->getResponse()
-            ->setHeader('X-FRAME-OPTIONS', 'SAMEORIGIN', true)
-//            ->setHeader('Last-Modified', $modifiedTime, true)
-            ->setHeader('Expires', $expires, true)
-            ->setHeader('Pragma', 'no-cache', true)
-            ->setHeader('Cache-Control', 'private, no-cache, must-revalidate', true);
+        $this->getResponse()->setHeader('X-FRAME-OPTIONS', 'SAMEORIGIN',
+                true)//            ->setHeader('Last-Modified', $modifiedTime, true)
+             ->setHeader('Expires', $expires, true)->setHeader('Pragma', 'no-cache', true)
+             ->setHeader('Cache-Control', 'private, no-cache, must-revalidate', true)
+        ;
     }
 
     /**
@@ -1830,7 +1835,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             if (null != $project->username) {
                 $isUpdate = ($project->type_id == 2);
                 if ($isUpdate) {
-                    $showUrl = $helperBuildProductUrl->buildProductUrl($project->pid) . '#anker_' . $project->project_id;
+                    $showUrl =
+                        $helperBuildProductUrl->buildProductUrl($project->pid) . '#anker_' . $project->project_id;
                     $plingUrl = $helperBuildProductUrl->buildProductUrl($project->pid, 'pling');
                 } else {
                     $showUrl = $helperBuildProductUrl->buildProductUrl($project->project_id);
@@ -1857,27 +1863,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 $viewArray[] = $projectArr;
             }
         }
+
         return $viewArray;
-    }
-
-    private function purifiyInput($values)
-    {
-        $values['version'] = Default_Model_HtmlPurify::purify($values['version']);
-        $values['embed_code'] = Default_Model_HtmlPurify::purify($values['embed_code'], Default_Model_HtmlPurify::ALLOW_VIDEO);
-        $values['title'] = Default_Model_HtmlPurify::purify($values['title']);
-        $values['description'] = Default_Model_HtmlPurify::purify($values['description']);
-        //$values['link_1'] = Default_Model_HtmlPurify::purify($values['link_1'],Default_Model_HtmlPurify::ALLOW_URL);
-        //$values['github_code'] = Default_Model_HtmlPurify::purify($values['github_code'],Default_Model_HtmlPurify::ALLOW_URL);
-        //$values['facebook_code'] = Default_Model_HtmlPurify::purify($values['facebook_code'],Default_Model_HtmlPurify::ALLOW_URL);
-        //$values['twitter_code'] = Default_Model_HtmlPurify::purify($values['twitter_code'],Default_Model_HtmlPurify::ALLOW_URL);
-        //$values['google_code'] = Default_Model_HtmlPurify::purify($values['google_code'],Default_Model_HtmlPurify::ALLOW_URL);
-        return $values;
-    }
-
-    public function searchAction()
-    {
-        $this->view->searchText = $this->getParam('projectSearchText', '');
-        $this->view->page = $this->getParam('page', 1);
     }
 
 }

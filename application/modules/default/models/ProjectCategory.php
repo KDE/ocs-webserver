@@ -38,18 +38,15 @@ class Default_Model_ProjectCategory
      * In order to run a parent constructor, a call to parent::__construct() within the child constructor is required.
      *
      * param [ mixed $args [, $... ]]
+     *
      * @param string $_dataTableName
+     *
      * @link http://php.net/manual/en/language.oop5.decon.php
      */
     public function __construct($_dataTableName = 'Default_Model_DbTable_ProjectCategory')
     {
         $this->_dataTableName = $_dataTableName;
         $this->_dataTable = new $this->_dataTableName;
-    }
-
-    public static function fetchCatIdsForCurrentStore()
-    {
-        return Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
     }
 
     /**
@@ -80,7 +77,8 @@ class Default_Model_ProjectCategory
             if (count($rows) < 1) {
                 $modelCategories = new Default_Model_DbTable_ProjectCategory();
                 $root = $modelCategories->fetchRoot();
-                $rows = $modelCategories->fetchImmediateChildrenIds($root['project_category_id'], $modelCategories::ORDERED_TITLE);
+                $rows = $modelCategories->fetchImmediateChildrenIds($root['project_category_id'],
+                    $modelCategories::ORDERED_TITLE);
                 $tree = $this->buildTree($rows, null, null);
             } else {
                 $tree = $this->buildTree($rows, null, (int)$store_id);
@@ -90,6 +88,45 @@ class Default_Model_ProjectCategory
         }
 
         return $tree;
+    }
+
+    private function buildTree($list, $parent_id = null, $store_id = null)
+    {
+        if (false === is_array($list)) {
+            $list = array($list);
+        }
+        $modelCategories = new Default_Model_DbTable_ProjectCategory();
+        $modelProject = new Default_Model_Project();
+        $result = array();
+        foreach ($list as $cat_id) {
+            $currentCategory = $modelCategories->fetchElement($cat_id);
+            $countProduct = $modelProject->countProductsInCategory($cat_id, true, $store_id);
+
+            $result_element = array(
+                'id'            => $cat_id,
+                'title'         => $currentCategory['title'],
+                'product_count' => $countProduct,
+                'xdg_type'      => $currentCategory['xdg_type'],
+                'name_legacy'   => $currentCategory['name_legacy'],
+                'has_children'  => false
+            );
+
+            if (isset($parent_id)) {
+                $result_element['parent_id'] = $parent_id;
+            }
+
+            //has children?
+            if (($currentCategory['rgt'] - $currentCategory['lft']) > 1) {
+                $result_element['has_children'] = true;
+                $ids = $modelCategories->fetchImmediateChildrenIds($currentCategory['project_category_id'],
+                    $modelCategories::ORDERED_TITLE);
+                $result_element['children'] =
+                    $this->buildTree($ids, $currentCategory['project_category_id'], $store_id);
+            }
+            $result[] = $result_element;
+        }
+
+        return $result;
     }
 
     public function fetchCategoryTreeCurrentStore($clearCache = false)
@@ -114,40 +151,9 @@ class Default_Model_ProjectCategory
         return $tree;
     }
 
-    private function buildTree($list, $parent_id = null, $store_id = null)
+    public static function fetchCatIdsForCurrentStore()
     {
-        if (false === is_array($list)) {
-            $list = array($list);
-        }
-        $modelCategories = new Default_Model_DbTable_ProjectCategory();
-        $modelProject = new Default_Model_Project();
-        $result = array();
-        foreach ($list as $cat_id) {
-            $currentCategory = $modelCategories->fetchElement($cat_id);
-            $countProduct = $modelProject->countProductsInCategory($cat_id, true, $store_id);
-
-            $result_element = array(
-                'id'=> $cat_id,
-                'title' => $currentCategory['title'],
-                'product_count' => $countProduct,
-                'xdg_type' => $currentCategory['xdg_type'],
-                'name_legacy' => $currentCategory['name_legacy'],
-                'has_children' => false
-            );
-
-            if (isset($parent_id)) {
-                $result_element['parent_id'] = $parent_id;
-            }
-
-            //has children?
-            if (($currentCategory['rgt'] - $currentCategory['lft']) > 1) {
-                $result_element['has_children'] = true;
-                $ids = $modelCategories->fetchImmediateChildrenIds($currentCategory['project_category_id'], $modelCategories::ORDERED_TITLE);
-                $result_element['children'] = $this->buildTree($ids, $currentCategory['project_category_id'], $store_id);
-            }
-            $result[] = $result_element;
-        }
-        return $result;
+        return Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
     }
 
 }

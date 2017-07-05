@@ -65,7 +65,8 @@ class Default_Model_HtmlPurify
 
             case self::ALLOW_VIDEO:
                 $config->set('HTML.SafeIframe', true);
-                $config->set('URI.SafeIframeRegexp', '%^(https?:)?//(www\.youtube(?:-nocookie)?\.com/embed/|player\.vimeo\.com/video/)%'); //allow YouTube and Vimeo
+                $config->set('URI.SafeIframeRegexp',
+                    '%^(https?:)?//(www\.youtube(?:-nocookie)?\.com/embed/|player\.vimeo\.com/video/)%'); //allow YouTube and Vimeo
                 break;
 
             case self::ALLOW_URL:

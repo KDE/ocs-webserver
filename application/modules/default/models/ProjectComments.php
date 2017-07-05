@@ -54,8 +54,7 @@ class Default_Model_ProjectComments
 
     public function getComment($comment_id)
     {
-        $sql
-            = "    SELECT *
+        $sql = "    SELECT *
                     FROM comments
                     STRAIGHT_JOIN member ON comments.comment_member_id = member.member_id
                     WHERE comment_id = :comment_id
@@ -72,16 +71,15 @@ class Default_Model_ProjectComments
 
     public function getCommentFromSource($type = 0, $source_id, $source_pk)
     {
-        $sql
-            = "
+        $sql = "
                     SELECT *
                     FROM comments
                     WHERE comment_type = :type AND source_id = :source_id AND source_pk = :source_pk 
         ";
 
-        $rowset = $this->_dataTable->getAdapter()->fetchRow(
-            $sql, array('type' => $type, 'source_id' => $source_id, 'source_pk' => $source_pk)
-        );
+        $rowset = $this->_dataTable->getAdapter()->fetchRow($sql,
+            array('type' => $type, 'source_id' => $source_id, 'source_pk' => $source_pk))
+        ;
         if (!$rowset) {
             return false;
         }
@@ -96,32 +94,32 @@ class Default_Model_ProjectComments
      */
     public function getCommentTreeForProject($project_id)
     {
-        $sql
-            = "
+        $sql = "
                 SELECT comment_id, comment_target_id, comment_parent_id, comment_text, comment_created_at, comment_active, comment_type, member_id, username, profile_image_url  
                 FROM comments 
                 STRAIGHT_JOIN member ON comments.comment_member_id = member.member_id 
                 WHERE comment_active = :status_active AND comment_type = :type_id AND comment_target_id = :project_id AND comment_parent_id = 0 
                 ORDER BY comment_created_at DESC
                 ";
-        $rowset = $this->_dataTable->getAdapter()->fetchAll(
-            $sql, array('status_active' => 1,
-                        'type_id' => Default_Model_DbTable_Comments::COMMENT_TYPE_PRODUCT,
-                        'project_id'    => $project_id)
-        );
-        $sql
-            = "
+        $rowset = $this->_dataTable->getAdapter()->fetchAll($sql, array(
+                'status_active' => 1,
+                'type_id'       => Default_Model_DbTable_Comments::COMMENT_TYPE_PRODUCT,
+                'project_id'    => $project_id
+            ))
+        ;
+        $sql = "
                 SELECT comment_id, comment_target_id, comment_parent_id, comment_text, comment_created_at, comment_active, comment_type, member_id, username, profile_image_url  
                 FROM comments 
                 STRAIGHT_JOIN member ON comments.comment_member_id = member.member_id 
                 WHERE comment_active = :status_active AND comment_type = :type_id AND comment_target_id = :project_id AND comment_parent_id <> 0 
                 ORDER BY comment_created_at, comment_id
                 ";
-        $rowset2 = $this->_dataTable->getAdapter()->fetchAll(
-            $sql, array('status_active' => 1,
-                        'type_id' => Default_Model_DbTable_Comments::COMMENT_TYPE_PRODUCT,
-                        'project_id'    => $project_id)
-        );
+        $rowset2 = $this->_dataTable->getAdapter()->fetchAll($sql, array(
+                'status_active' => 1,
+                'type_id'       => Default_Model_DbTable_Comments::COMMENT_TYPE_PRODUCT,
+                'project_id'    => $project_id
+            ))
+        ;
         $rowset = array_merge($rowset, $rowset2);
         /* create array with comment_id as key */
         foreach ($rowset as $item) {
@@ -186,8 +184,7 @@ class Default_Model_ProjectComments
      */
     public function getRootCommentsForProject($_projectId)
     {
-        $sql
-            = '
+        $sql = '
                 SELECT *
                     FROM comments
                     STRAIGHT_JOIN member ON comments.comment_member_id = member.member_id
@@ -198,10 +195,12 @@ class Default_Model_ProjectComments
                     ORDER BY comments.comment_created_at DESC, comment_parent_id
         ';
 
-        $rowset = $this->_dataTable->getAdapter()->fetchAll(
-            $sql, array('project_id' => $_projectId, 'status' => Default_Model_DbTable_Comments::COMMENT_ACTIVE,
-                        'type_id'    => Default_Model_DbTable_Comments::COMMENT_TYPE_PRODUCT)
-        );
+        $rowset = $this->_dataTable->getAdapter()->fetchAll($sql, array(
+                'project_id' => $_projectId,
+                'status'     => Default_Model_DbTable_Comments::COMMENT_ACTIVE,
+                'type_id'    => Default_Model_DbTable_Comments::COMMENT_TYPE_PRODUCT
+            ))
+        ;
         if (0 == count($rowset)) {
             return array();
         }
@@ -242,17 +241,16 @@ class Default_Model_ProjectComments
      */
     public function getChildCommentsForId($parent_id)
     {
-        $sql
-            = "SELECT *
+        $sql = "SELECT *
                     FROM comments
                     STRAIGHT_JOIN member ON comments.comment_member_id = member.member_id
                     WHERE comment_parent_id = :parent_id
                     AND comment_active = :status
                     ORDER BY comments.comment_created_at, comments.comment_id
                ";
-        $rowset = $this->_dataTable->getAdapter()->fetchAll(
-            $sql, array('parent_id' => $parent_id, 'status' => Default_Model_DbTable_Comments::COMMENT_ACTIVE)
-        );
+        $rowset = $this->_dataTable->getAdapter()->fetchAll($sql,
+            array('parent_id' => $parent_id, 'status' => Default_Model_DbTable_Comments::COMMENT_ACTIVE))
+        ;
         if (0 == count($rowset)) {
             return array();
         }
@@ -273,8 +271,7 @@ class Default_Model_ProjectComments
 
     public function setAllCommentsForUserDeleted($member_id)
     {
-        $sql
-            = '
+        $sql = '
                 UPDATE comments
                 SET comment_active = 0
                 WHERE comment_member_id = :member_id';
@@ -283,8 +280,7 @@ class Default_Model_ProjectComments
 
     public function setAllCommentsForUserActivated($member_id)
     {
-        $sql
-            = '
+        $sql = '
                 UPDATE comments
                 SET comment_active = 1
                 WHERE comment_member_id = :member_id';
@@ -293,8 +289,7 @@ class Default_Model_ProjectComments
 
     public function setAllCommentsForProjectDeleted($project_id)
     {
-        $sql
-            = '
+        $sql = '
                 UPDATE comments
                 SET comment_active = 0
                 WHERE comment_target_id = :projectId';
@@ -303,8 +298,7 @@ class Default_Model_ProjectComments
 
     public function setAllCommentsForProjectActivated($project_id)
     {
-        $sql
-            = '
+        $sql = '
                 UPDATE comments
                 SET comment_active = 1
                 WHERE comment_target_id = :projectId';

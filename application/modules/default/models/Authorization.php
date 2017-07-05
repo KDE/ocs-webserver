@@ -52,41 +52,18 @@ class Default_Model_Authorization
         $session = new Zend_Session_Namespace();
         $session->unsetAll();
         Zend_Session::forgetMe();
-//        Zend_Session::destroy();
+        //        Zend_Session::destroy();
 
         $modelRememberMe = new Default_Model_RememberMe();
         $modelRememberMe->deleteSession();
     }
 
     /**
-     * @param string $identity
-     * @param string $socialNetwork
-     * @return null|object
-     * @deprecated
-     */
-    public function getAuthDataFromSocialUser($identity, $socialNetwork)
-    {
-        $dataTable = $this->_dataTable;
-        $where = $dataTable->select()
-            ->where('login_method = ?', $socialNetwork)
-            ->where('social_username = ?', $identity)
-            ->where('is_deleted = 0')
-            ->where('is_active = 1');
-
-        $resultRow = $dataTable->fetchRow($where);
-
-        if ($resultRow) {
-            return (object)$resultRow->toArray();
-        } else {
-            return null;
-        }
-    }
-
-    /**
      * @param string $userId
      * @param string $userSecret
-     * @param bool $setRememberMe
+     * @param bool   $setRememberMe
      * @param string $loginMethod
+     *
      * @return Zend_Auth_Result
      */
     public function authenticateUser($userId, $userSecret, $setRememberMe = false, $loginMethod = null)
@@ -116,6 +93,7 @@ class Default_Model_Authorization
         if ($authResult->isValid()) {
             $this->_authUserData = $authAdapter->getResultRowObject(null, 'password');
         }
+
         return $authResult;
     }
 
@@ -127,6 +105,7 @@ class Default_Model_Authorization
         $modelRememberMe = new Default_Model_RememberMe();
         if (false == $setRememberMe) {
             $modelRememberMe->deleteSession();
+
             return;
         }
         if ($modelRememberMe->hasValidCookie()) {
@@ -146,6 +125,7 @@ class Default_Model_Authorization
 
     /**
      * @param object $authUserData
+     *
      * @return object
      */
     protected function getExtendedAuthUserData($authUserData)
@@ -171,6 +151,7 @@ class Default_Model_Authorization
 
     /**
      * @param int $roleId
+     *
      * @return string
      * @throws exception
      */
@@ -194,6 +175,7 @@ class Default_Model_Authorization
 
     /**
      * @param int $identifier
+     *
      * @return array
      */
     protected function getProjectIdsForUser($identifier)
@@ -212,6 +194,7 @@ class Default_Model_Authorization
 
     /**
      * @param array $inputArray
+     *
      * @return array
      */
     protected function generateArrayWithKeyProjectId($inputArray)
@@ -220,12 +203,14 @@ class Default_Model_Authorization
         foreach ($inputArray as $element) {
             $arrayWithKeyProjectId[$element['project_id']] = $element;
         }
+
         return $arrayWithKeyProjectId;
     }
 
     /**
-     * @param string $identifier
+     * @param string     $identifier
      * @param string|int $identity
+     *
      * @return int
      */
     public function updateUserLastOnline($identifier, $identity)
@@ -257,34 +242,45 @@ class Default_Model_Authorization
     }
 
     /**
-     * @param string $identifier
+     * @param string     $identifier
      * @param string|int $identity
+     *
      * @return object
      */
     protected function getAllAuthUserData($identifier, $identity)
     {
         $this->_authUserData = $this->getAuthUserData($identifier, $identity);
+
         return $this->getExtendedAuthUserData($this->_authUserData);
     }
 
     /**
-     * @param string $identifier
+     * @param string     $identifier
      * @param string|int $identity
+     *
      * @return object
      */
     protected function getAuthUserData($identifier, $identity)
     {
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - $identifier: ' . print_r($identifier,true) . ' :: $identity: ' . print_r($identity, true));
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - $identifier: ' . print_r($identifier, true)
+            . ' :: $identity: ' . print_r($identity, true))
+        ;
         $dataTable = $this->_dataTable;
-        $where = $dataTable->select()->where($dataTable->getAdapter()->quoteIdentifier($identifier, true) . ' = ?', $identity);
+        $where = $dataTable->select()->where($dataTable->getAdapter()->quoteIdentifier($identifier, true) . ' = ?',
+            $identity)
+        ;
         $resultRow = $dataTable->fetchRow($where)->toArray();
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - user found. username: ' . print_r($resultRow['username'], true));
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - user found. username: ' . print_r($resultRow['username'],
+                true))
+        ;
         unset($resultRow['password']);
+
         return (object)$resultRow;
     }
 
     /**
      * @param string $identity
+     *
      * @return null|object
      */
     public function getAuthUserDataFromUnverified($identity)
@@ -298,11 +294,15 @@ class Default_Model_Authorization
         ";
         $resultRow = $this->_dataTable->getAdapter()->fetchRow($sql, array('verification' => $identity));
         if ($resultRow) {
-            Zend_Registry::get('logger')->info(__METHOD__ . " - found (member_id,mail,is_active,mail_checked): ({$resultRow['username']},{$resultRow['mail']},{$resultRow['is_active']},{$resultRow['mail_checked']})");
+            Zend_Registry::get('logger')->info(__METHOD__
+                . " - found (member_id,mail,is_active,mail_checked): ({$resultRow['username']},{$resultRow['mail']},{$resultRow['is_active']},{$resultRow['mail_checked']})")
+            ;
             unset($resultRow['password']);
+
             return (object)$resultRow;
         }
         Zend_Registry::get('logger')->warn(__METHOD__ . ' - unverified user not found');
+
         return null;
     }
 
@@ -312,6 +312,7 @@ class Default_Model_Authorization
      * @param string $identity
      * @param string $credential
      * @param string $loginMethod
+     *
      * @return mixed
      */
     public function getAuthDataFromApi($identity, $credential, $loginMethod = null)
@@ -321,42 +322,26 @@ class Default_Model_Authorization
         if ($authResult->isValid()) {
             return $this->_authUserData;
         }
+
         return false;
     }
 
     /**
-     * @param string $identifier
+     * @param string     $identifier
      * @param string|int $identity
+     *
      * @return int
      */
     public function removeAllCookieInformation($identifier, $identity)
     {
 
         $dataTable = new Default_Model_DbTable_Session();
-        $where = $dataTable->getAdapter()->quoteInto($dataTable->getAdapter()->quoteIdentifier($identifier,
-                true) . ' = ?', $identity);
+        $where =
+            $dataTable->getAdapter()->quoteInto($dataTable->getAdapter()->quoteIdentifier($identifier, true) . ' = ?',
+                $identity)
+        ;
 
         return $dataTable->delete($where);
-    }
-
-    /**
-     * @param int $identifier
-     * @return array
-     */
-    protected function getGroupProjectIdsForUser($identifier)
-    {
-        $database = Zend_Db_Table::getDefaultAdapter();
-        $sql = "
-                SELECT p.project_id
-                FROM member_group m, project AS p
-                WHERE m.group_id = p.member_id
-    				  AND m.is_active = 1
-    				  AND m.member_id = ?;
-        ";
-        $sql = $database->quoteInto($sql, $identifier, 'INTEGER', 1);
-        $resultSet = $database->query($sql)->fetchAll();
-
-        return $this->generateArrayWithKeyProjectId($resultSet);
     }
 
 }

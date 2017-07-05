@@ -492,7 +492,7 @@ class Default_Form_Product extends Zend_Form
 
     private function getBigImageUploadElement()
     {
-        $modelImage = new Default_Model_Image();
+        $modelImage = new Default_Model_DbTable_Image();
         return $this->createElement('file', 'image_big_upload')
             ->setDisableLoadDefaultDecorators(true)
             ->setTransferAdapter(new Local_File_Transfer_Adapter_Http())

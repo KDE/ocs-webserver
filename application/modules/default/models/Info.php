@@ -25,67 +25,6 @@ class Default_Model_Info
 
     const WALLPAPERCATEGORYID = '295';
 
-
-    public function getLatestProductsForAllStores($limit = 10)
-    {
-        $activeCategories = $this->getActiveCategoriesForAllStores();
-
-        $sql = '
-            SELECT 
-                *
-            FROM
-                project
-            WHERE
-                project.status = 100
-                    AND project.project_category_id IN (' . implode(',', $activeCategories) . ')
-            ORDER BY project.created_at DESC
-            ';
-
-        if (isset($limit)) {
-            $sql .= ' limit ' . (int)$limit;
-        }
-
-        $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
-
-        if (count($resultSet) > 0) {
-            return $resultSet;
-        } else {
-            return array();
-        }
-    }
-
-    public function getActiveCategoriesForAllStores($limit = null)
-    {
-        $sql = '
-        SELECT DISTINCT
-            config_store_category.project_category_id
-        FROM
-            config_store
-        JOIN
-            config_store_category ON config_store.store_id = config_store_category.store_id
-        JOIN
-            project_category ON config_store_category.project_category_id = project_category.project_category_id
-        WHERE project_category.is_active = 1
-        ORDER BY config_store_category.`order`;
-        ';
-
-        if (isset($limit)) {
-            $sql .= ' limit ' . (int)$limit;
-        }
-
-        $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
-
-        if (count($resultSet) > 0) {
-            $values = array_map(function($row) {
-                return $row['project_category_id'];
-            }, $resultSet);
-
-            return $values;
-        } else {
-            return array();
-        }
-    }
-
     public function getLast200ImgsProductsForAllStores($limit = 200)
     {
 
@@ -129,18 +68,19 @@ class Default_Model_Info
         }
     }
 
-    public function getLatestCommentsForAllStores($limit = 10)
+    public function getActiveCategoriesForAllStores($limit = null)
     {
-        $activeCategories = $this->getActiveCategoriesForAllStores();
-
         $sql = '
-            SELECT *
-            FROM comments
-            JOIN project ON comments.comment_target_id = project.project_id AND comments.comment_type = 0
-            WHERE comments.comment_active = 1
-            AND project.status = 100            
-            AND project.project_category_id IN (' . implode(',', $activeCategories) . ')
-            ORDER BY comments.comment_created_at DESC
+        SELECT DISTINCT
+            config_store_category.project_category_id
+        FROM
+            config_store
+        JOIN
+            config_store_category ON config_store.store_id = config_store_category.store_id
+        JOIN
+            project_category ON config_store_category.project_category_id = project_category.project_category_id
+        WHERE project_category.is_active = 1
+        ORDER BY config_store_category.`order`;
         ';
 
         if (isset($limit)) {
@@ -150,41 +90,15 @@ class Default_Model_Info
         $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
 
         if (count($resultSet) > 0) {
-            return $resultSet;
+            $values = array_map(function ($row) {
+                return $row['project_category_id'];
+            }, $resultSet);
+
+            return $values;
         } else {
             return array();
         }
     }
-
-    public function getLatestPlingsForAllStores($limit = 10)
-    {
-        $activeCategories = $this->getActiveCategoriesForAllStores();
-
-        $sql = '
-        SELECT *
-        FROM plings
-        JOIN project ON project.project_id = plings.project_id
-        JOIN comments ON comments.comment_target_id = plings.project_id
-        WHERE 
-        plings.status_id = 2
-         AND
-        plings.project_id IN (' . implode(',', $activeCategories) . ')
-        ORDER BY plings.create_time DESC
-        ';
-
-        if (isset($limit)) {
-            $sql .= ' limit ' . (int)$limit;
-        }
-
-        $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
-
-        if (count($resultSet) > 0) {
-            return $resultSet;
-        } else {
-            return array();
-        }
-    }
-
 
     /**
      * if category id not set the latest comments for all categories on the current host wil be returned.
@@ -590,98 +504,6 @@ class Default_Model_Info
         }
     }
 
-
-    public function getActiveUsersForHostStores($limit = 100, $project_category_id = null)
-    {
-        if (empty($project_category_id)) {
-            $activeCategories = $this->getActiveCategoriesForCurrentHost();
-        } else {
-            $activeCategories = $this->getActiveCategoriesForCatId($project_category_id);
-        }
-
-        if (count($activeCategories) == 0) {
-            return array();
-        }
-
-        $sql = '
-                SELECT member_id, count(1) cnt
-                ,(SELECT profile_image_url FROM member m WHERE m.member_id = p.member_id) AS profile_image_url
-                ,(SELECT username FROM member m WHERE m.member_id = p.member_id) AS username
-                 FROM project p
-                WHERE 
-                p.type_id = 1 
-                AND p.status = 100 
-                AND p.ppload_collection_id IS NOT NULL
-                AND p.project_category_id IN (' . implode(',', $activeCategories) . ')   
-                GROUP BY member_id
-                ORDER BY cnt DESC                
-                ';
-
-        if (isset($limit)) {
-            $sql .= ' limit ' . (int)$limit;
-        }
-
-        $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
-
-        if (count($resultSet) > 0) {
-            return new Zend_Paginator(new Zend_Paginator_Adapter_Array($resultSet));
-        } else {
-            return new Zend_Paginator(new Zend_Paginator_Adapter_Array(array()));
-        }
-    }
-
-    public function getMostPageviewsForHostStores($limit = 10, $project_category_id = null)
-    {
-        /** @var Zend_Cache_Core $cache */
-        $cache = Zend_Registry::get('cache');
-        $cacheName =
-            __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host') . (int)$limit . (int)$project_category_id);
-
-        if (false !== ($resultSet = $cache->load($cacheName))) {
-            return $resultSet;
-        }
-
-        if (empty($project_category_id)) {
-            $activeCategories = $this->getActiveCategoriesForCurrentHost();
-        } else {
-            $activeCategories = $this->getActiveCategoriesForCatId($project_category_id);
-        }
-
-        if (count($activeCategories) == 0) {
-            return array();
-        }
-        $sql = '
-                    SELECT t.cnt, pt.*                                        
-                    FROM
-                    (
-                    SELECT s.project_id, count(s.project_id) cnt,
-                    (SELECT p.project_category_id FROM project p WHERE p.project_id = s.project_id) gid
-                    FROM stat_page_views s
-                    GROUP BY s.project_id
-                    ) t
-                    JOIN project pt ON pt.project_id = t.project_id
-
-                    WHERE t.gid IN (' . implode(',', $activeCategories) . ')         
-                    ORDER BY t.cnt DESC                    
-        ';
-
-        if (isset($limit)) {
-            $sql .= ' limit ' . (int)$limit;
-        }
-
-        $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
-
-        if (count($resultSet) > 0) {
-            $cache->save($resultSet, $cacheName, array(), 300);
-
-            return $resultSet;
-        } else {
-            $cache->save(array(), $cacheName, array(), 300);
-
-            return array();
-        }
-    }
-
     public function getLastCommentsForUsersProjects($member_id, $limit = 10)
     {
         /** @var Zend_Cache_Core $cache */
@@ -772,7 +594,6 @@ class Default_Model_Info
         }
     }
 
-
     public function getLastDonationsForUsersProjects($member_id, $limit = 10)
     {
         /** @var Zend_Cache_Core $cache */
@@ -820,7 +641,6 @@ class Default_Model_Info
             return array();
         }
     }
-
 
     /**
      * @param int $limit

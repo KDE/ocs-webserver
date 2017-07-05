@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -22,80 +23,6 @@
 class Default_Model_Pling extends Default_Model_DbTable_Plings
 {
 
-    public function fetchTopSupporter($limit)
-    {
-        $sql = "
-                SELECT
-                    plings.member_id AS supporter_id,
-                    sum(amount) AS sumAmount,
-                    member . *
-                FROM
-                    plings
-                JOIN
-                    member ON plings.member_id = member.member_id
-                WHERE
-                    status_id = 2
-                GROUP BY member_id
-                ORDER BY sumAmount DESC
-                ";
-
-        if (null != $limit) {
-            $sql .= $this->_db->quoteInto(" limit ?", $limit, 'INTEGER');
-        }
-
-        $result = $this->_db->fetchAll($sql);
-
-        return $this->generateRowSet($result);
-    }
-
-    /**
-     * @param $data
-     * @return Zend_Db_Table_Rowset_Abstract
-     */
-    protected function generateRowSet($data)
-    {
-        $classRowSet = $this->getRowsetClass();
-
-        $returnRowSet = new $classRowSet(array(
-            'table' => $this,
-            'rowClass' => $this->getRowClass(),
-            'stored' => true,
-            'data' => $data
-        ));
-        return $returnRowSet;
-    }
-
-    /**
-     * @param $limit
-     * @return Zend_Db_Table_Rowset_Abstract
-     */
-    public function fetchTopMaker($limit)
-    {
-        $sql = "
-                SELECT
-                    project.member_id AS project_owner_id,
-                    sum(plings.amount) AS sumAmount,
-                    member . *
-                FROM
-                    project
-                        JOIN
-                    member ON project.member_id = member.member_id
-                        JOIN
-                    plings ON (project.project_id = plings.project_id
-                        AND plings.status_id = 2)
-                GROUP BY project.member_id
-                ORDER BY sumAmount DESC
-                ";
-
-        if (null != $limit) {
-            $sql .= $this->_db->quoteInto(" limit ?", $limit, 'INTEGER');
-        }
-
-        $result = $this->_db->fetchAll($sql);
-
-        return $this->generateRowSet($result);
-    }
-
     public function fetchTotalAmountSupported()
     {
         $sql = "
@@ -112,24 +39,9 @@ class Default_Model_Pling extends Default_Model_DbTable_Plings
         return $result['total_sum'];
     }
 
-    public function fetchTotalAmountPerCategory($cat_id)
-    {
-        $sql = "
-                SELECT
-                    sum(amount) AS total_sum
-                FROM
-                    plings
-                WHERE
-                    status_id = 2
-                ";
-
-        $result = $this->_db->fetchRow($sql);
-
-        return $result['total_sum'];
-    }
-
     /**
      * @param $limit
+     *
      * @return Zend_Db_Table_Rowset_Abstract
      */
     public function fetchRecentDonations($limit = null)
@@ -163,7 +75,27 @@ class Default_Model_Pling extends Default_Model_DbTable_Plings
     }
 
     /**
+     * @param $data
+     *
+     * @return Zend_Db_Table_Rowset_Abstract
+     */
+    protected function generateRowSet($data)
+    {
+        $classRowSet = $this->getRowsetClass();
+
+        $returnRowSet = new $classRowSet(array(
+            'table'    => $this,
+            'rowClass' => $this->getRowClass(),
+            'stored'   => true,
+            'data'     => $data
+        ));
+
+        return $returnRowSet;
+    }
+
+    /**
      * @param int $member_id
+     *
      * @return Zend_Db_Table_Rowset_Abstract
      */
     public function fetchRecentDonationsForUser($member_id)
@@ -193,40 +125,12 @@ class Default_Model_Pling extends Default_Model_DbTable_Plings
         return $this->generateRowSet($result);
     }
 
-    public function fetchRecentDonationsForProjects($member_id)
-    {
-        $sql = "
-                SELECT
-                    project.member_id AS owner_id,
-                    plings.project_id,
-                    sum(plings.amount) AS 'sum_amount',
-                    count(1) AS 'count',
-                    year(`pling_time`) AS 'year',
-                    month(`pling_time`) AS 'month'
-                FROM
-                    plings
-                JOIN
-                    project ON plings.project_id = project.project_id
-                WHERE
-                    project.member_id = ?
-                    AND plings.status_id = 2
-                GROUP BY plings.project_id , month(`pling_time`) , year(`pling_time`)
-                ORDER BY pling_time DESC
-               ";
-
-        $sql = $this->_db->quoteInto($sql, $member_id, 'INTEGER');
-
-        $result = $this->_db->fetchAll($sql);
-
-        return $this->generateRowSet($result);
-    }
-
     public function setAllPlingsForUserDeleted($member_id)
     {
         $sql = '
-                update plings
-                set status_id = 99
-                where member_id = :member_id
+                UPDATE plings
+                SET status_id = 99
+                WHERE member_id = :member_id
                 ;';
 
         $this->_db->query($sql, array('member_id' => $member_id))->execute();
@@ -235,9 +139,9 @@ class Default_Model_Pling extends Default_Model_DbTable_Plings
     public function setAllPlingsForUserActivated($member_id)
     {
         $sql = '
-                update plings
-                set status_id = 99
-                where member_id = :member_id
+                UPDATE plings
+                SET status_id = 99
+                WHERE member_id = :member_id
                 ;';
 
         $this->_db->query($sql, array('member_id' => $member_id))->execute();

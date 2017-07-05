@@ -217,6 +217,12 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         $modelReportsComments->setDeleteByMember($member_id);
     }
 
+    private function setMemberEmailsDeleted($member_id)
+    {
+        $modelEmail = new Default_Model_DbTable_MemberEmail();
+        $modelEmail->setDeletedByMember($member_id);
+    }
+
     private function removeMemberProjectsFromSearch($member_id)
     {
         $modelProject = new Default_Model_Project();
@@ -828,24 +834,6 @@ class Default_Model_Member extends Default_Model_DbTable_Member
             array('member_id' => $member_id, 'project_status' => Default_Model_Project::PROJECT_ACTIVE));
 
         return $this->generateRowSet($result);
-    }
-
-    private function setMemberPlingsDeleted($member_id)
-    {
-        $modelPling = new Default_Model_Pling();
-        $modelPling->setAllPlingsForUserDeleted($member_id);
-    }
-
-    private function setMemberPlingsActivated($member_id)
-    {
-        $modelPling = new Default_Model_Pling();
-        $modelPling->setAllPlingsForUserActivated($member_id);
-    }
-
-    private function setMemberEmailsDeleted($member_id)
-    {
-        $modelEmail = new Default_Model_DbTable_MemberEmail();
-        $modelEmail->setDeletedByMember($member_id);
     }
 
 }
