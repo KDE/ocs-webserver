@@ -39,7 +39,7 @@ $this->countDownloadsOverall = count($this->downloads);
                 <!-- /NAVIGATION -->
                 <div class="my-products-heading">
                     <h1 class="page-title left"><?= $this->translate('Payout') ?></h1>
-                </div>
+                
                 <?php
                     $member = $this->view_member;
                     if($member->paypal_valid_status > 100) {
@@ -58,6 +58,7 @@ $this->countDownloadsOverall = count($this->downloads);
                         }
                     }
                 ?>
+                </div>
                 <div class="my-products-list" id="my-payout-list">
                     <?php
                     //if ($this->countDownloadsOverall > 0) {
