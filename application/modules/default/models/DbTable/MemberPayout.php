@@ -36,6 +36,7 @@ class Default_Model_DbTable_MemberPayout extends Local_Model_Table
     
     
     
+    
     /**
      * @param int $status
      * @return all payouts with status = $status

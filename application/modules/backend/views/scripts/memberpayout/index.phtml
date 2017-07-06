@@ -118,7 +118,17 @@ $lastMonth = date("Ym", strtotime("first day of previous month"));
                 status: {
                     title: 'status',
                     width: '5%',
-                    options: {'': '', '0': 'Not done yet', '1': 'Pending', '100' : 'Paid okay', '500': 'Denied', '900' : 'Error'},
+                    options: {'': '', '0': 'New', '1': 'Requested', '10': 'Processed', '50': 'Pending', '100' : 'Completed', '999': 'Denied', '900': 'Refund', '99' : 'Error'},
+                    /**
+                     *  public static $PAYOUT_STATUS_NEW = 0;
+                        public static $PAYOUT_STATUS_REQUESTED = 1;
+                        public static $PAYOUT_STATUS_PROCESSED = 10;
+                        public static $PAYOUT_STATUS_PENDING = 50;
+                        public static $PAYOUT_STATUS_COMPLETED = 100;
+                        public static $PAYOUT_STATUS_DENIED = 999;
+                        public static $PAYOUT_STATUS_REFUND = 900;
+                        public static $PAYOUT_STATUS_ERROR = 99;
+                     */
                     optionsSorting: 'id',
                     list: true,
                     edit: true
