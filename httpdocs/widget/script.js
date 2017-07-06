@@ -1,13 +1,13 @@
-(function() {
-
+var opendesktop_widget = (function() {
 // Localize jQuery variable
 var jQuery;
-
+var opendesktopwigeturl = 'http://pling.local/';
 /******** Load jQuery if not present *********/
-if (window.jQuery === undefined || window.jQuery.fn.jquery !== '1.4.2') {
+if (window.jQuery === undefined || window.jQuery.fn.jquery !== '3.2.1') {
     var script_tag = document.createElement('script');
     script_tag.setAttribute("type","text/javascript");
-    script_tag.setAttribute("src", "http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js");
+   // script_tag.setAttribute("src", "http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js");
+   script_tag.setAttribute("src", "https://code.jquery.com/jquery-3.2.1.min.js");   
     if (script_tag.readyState) {
       script_tag.onreadystatechange = function () { // For old versions of IE
           if (this.readyState == 'complete' || this.readyState == 'loaded') {
@@ -34,25 +34,79 @@ function scriptLoadHandler() {
     main(); 
 }
 
-/******** Our main function ********/
+var showHelloWorld = function () {
+    alert("Hello world!");
+};
+
+
+
 function main() { 
     jQuery(document).ready(function($) { 
-        // We can use jQuery 1.4.2 here
-        /******* Load CSS *******/
-        var css_link = $("<link>", { 
-            rel: "stylesheet", 
-            type: "text/css", 
-            href: "style.css" 
-        });
-        css_link.appendTo('head');          
+        /******* Load CSS *******/        
+        let opendesktoploadingindicator = '<img src="'+opendesktopwigeturl+'theme/flatui/img/ajax-loader.gif"/>';
+        opendesktoptoggleRow = function(thisrow){
+                let prefix = 'opendesktopwidgetrow_';
+                let prefex_detail = 'opendesktopwidgetrowdetail_';                                                                                          
+                let detailcontainer = $('#'+$(thisrow).attr('id').replace(prefix,prefex_detail));    
+                if(detailcontainer.css("display")=='none'){                              
+                         let filecontainer = detailcontainer.find('div[data-ppload-collection-id]');
+                         let collectionid = filecontainer.attr('data-ppload-collection-id');
+                         // load pploadfiles if collection_id exist
+                         if(collectionid.trim()!=''){
+                               let jsonp_url_pploadfiles = opendesktopwigeturl+"embed/v1/ppload/"+collectionid+"?&callback=?"; 
+                               filecontainer.html(opendesktoploadingindicator);
+                               $.getJSON(jsonp_url_pploadfiles, function(data) {
+                                   filecontainer.html(data.html);
+                               });  
+                             }                                
+                };
+                detailcontainer.slideToggle();
+        }
 
-        /******* Load HTML *******/
-       // var jsonp_url = "http://al.smeuh.org/cgi-bin/webwidget_tutorial.py?callback=?";
-       var jsonp_url = "http://pling.local/embed/v1/member/24?callback=?";
+        let opendesktopwidgetcss_link = $("<link>", { rel: "stylesheet", type: "text/css", href: opendesktopwigeturl+"widget/style.css" });
+        opendesktopwidgetcss_link.appendTo('head');          
+
+       $('#opendesktopwiget').after('<div class="opendesktopwidgetloader">'+opendesktoploadingindicator+'</div> ');
+        /******* Load HTML *******/       
+      let this_js_script = $('#opendesktopwiget');
+      let memberid = this_js_script.attr('data-memberid');   
+       if (typeof memberid === "undefined" ) {
+          alert('Please set data-memberid in your script.');
+          return;
+       }
+       let jsonp_url = opendesktopwigeturl+"embed/v1/member/"+memberid+"?callback=?";       
         $.getJSON(jsonp_url, function(data) {
-          $('#opendesktop-widget-container').html("This data comes from another server: " + data.totalitems);
+              $('.opendesktopwidgetloader').remove();
+              $('#opendesktopwiget').after('<div id="opendesktop-widget-container">loading...</div>');
+              $('#opendesktop-widget-container').html(data.html);             
+              let spans = $('.opendesktopwidgetpager').find('span');
+              spans.each(function(index) {
+                  $(this).on("click", function(){                      
+                      $(this).parent().addClass('active').siblings().removeClass('active');                      
+                      $('#opendesktopwidget-main-container').html(opendesktoploadingindicator);                          
+                      let jsonp_url_nopage = opendesktopwigeturl+"embed/v1/member/"+memberid+"?nopage=1&page="+$(this).html()+"&callback=?";     
+                      $.getJSON(jsonp_url_nopage, function(data) {
+                          $('#opendesktopwidget-main-container').html(data.html);    
+                                    let rows =$('#opendesktop-widget-container').find('.opendesktopwidgetrow');
+                                         rows.each(function(index) {
+                                             $(this).on("click", function(){                                                       
+                                                  opendesktoptoggleRow(this);
+                                             });
+                                         });
+                      });
+
+                  });
+              });
+
+              let rows =$('#opendesktop-widget-container').find('.opendesktopwidgetrow');
+              rows.each(function(index) {
+                  $(this).on("click", function(){ 
+                        opendesktoptoggleRow(this);                    
+                  });
+              });
+              
         });
     });
 }
 
-})(); // We call our anonymous function immediately
+})(); 
