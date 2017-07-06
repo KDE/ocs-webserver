@@ -1,7 +1,8 @@
 var opendesktop_widget = (function() {
 // Localize jQuery variable
 var jQuery;
-var opendesktopwigeturl = 'http://pling.local/';
+//var opendesktopwigeturl = 'http://pling.local/';
+var opendesktopwigeturl = 'http://pling.cc/';
 /******** Load jQuery if not present *********/
 if (window.jQuery === undefined || window.jQuery.fn.jquery !== '3.2.1') {
     var script_tag = document.createElement('script');

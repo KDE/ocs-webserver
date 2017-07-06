@@ -607,7 +607,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 '/search/*',
                 array(
                     'module'     => 'default',
-                    'controller' => 'product',
+                    'controller' => 'explore',
                     'action'     => 'search'
                 )
             )
@@ -1013,6 +1013,18 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                     'module'     => 'default',
                     'controller' => 'embedv1',
                     'action'     => 'memberprojects'
+                )
+            )
+        );
+
+        $router->addRoute(
+            'embed_v1_member_projects_files',
+            new Zend_Controller_Router_Route(
+                '/embed/v1/ppload/:ppload_collection_id',
+                array(
+                    'module'     => 'default',
+                    'controller' => 'embedv1',
+                    'action'     => 'ppload'
                 )
             )
         );
