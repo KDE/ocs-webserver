@@ -76,7 +76,6 @@ $lastMonth = date("Ym", strtotime("first day of previous month"));
                 },
                 yearmonth: {
                     title: 'YearMonth',
-                    width: '10%',
                     list: true,
                     create: false,
                     edit: false
@@ -89,35 +88,42 @@ $lastMonth = date("Ym", strtotime("first day of previous month"));
                 },
                 mail: {
                     title: 'Mail',
-                    width: '5%',
                     list: true,
                     edit: false,
                     create: false
                 },
                 paypal_mail: {
                     title: 'PayPal Mail',
-                    width: '5%',
                     list: true,
                     edit: false,
                     create: false
                 },
                 num_downloads: {
                     title: '#DL',
-                    width: '5%',
                     list: true,
                     edit: false,
                     create: false
                 },
                 amount: {
                     title: 'Amount',
-                    width: '5%',
+                    list: true,
+                    edit: false,
+                    create: false
+                },
+                payment_transaction_id: {
+                    title: 'Paypal TransaktionId',
+                    list: true,
+                    edit: true,
+                    create: true
+                },
+                payment_status: {
+                    title: 'Paypal Status',
                     list: true,
                     edit: false,
                     create: false
                 },
                 status: {
-                    title: 'status',
-                    width: '5%',
+                    title: 'Our Payment Status',
                     options: {'': '', '0': 'New', '1': 'Requested', '10': 'Processed', '50': 'Pending', '100' : 'Completed', '999': 'Denied', '900': 'Refund', '99' : 'Error'},
                     /**
                      *  public static $PAYOUT_STATUS_NEW = 0;
