@@ -46,6 +46,7 @@
   width: 100%;
   height: 187px;
   border-top: 1px solid #ccc;
+  cursor: pointer;
 }
 #opendesktop-widget-container #opendesktopwidget-main-container .opendesktopwidgetrow img.image_small {
   float: left;
@@ -162,7 +163,7 @@
   padding-top: 20px;
   padding-bottom: 10px;
   width: 100%;
-  overflow-x: scroll;
+  overflow-x: auto;
 }
 #opendesktop-widget-container #opendesktopwidget-main-container .opendesktopwidgetrowdetail table.opendesktoppploadfilestable {
   border: 1px solid #ddd;
