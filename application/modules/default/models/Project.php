@@ -1070,12 +1070,12 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         }
 
         //check if the project categoriy is the last child in tree
-        $cat = $values['project_category_id'];
-        $tableCat = new Default_Model_DbTable_ProjectCategory();
-        $catChildIds = $tableCat->fetchChildIds($cat);
-        if (!$catChildIds || count($catChildIds) <> 1 || $catChildIds[0] != $cat) {
-            throw new Exception('Error in updateProject: category is no in the right level!');
-        }
+        //$cat = $values['project_category_id'];
+        //$tableCat = new Default_Model_DbTable_ProjectCategory();
+        //$catChildIds = $tableCat->fetchChildIds($cat);
+        //if (!$catChildIds || count($catChildIds) <> 1 || $catChildIds[0] != $cat) {
+        //    throw new Exception('Error in updateProject: category is no in the right level!');
+        //}
 
         $projectData->setFromArray($values)->save();
 
