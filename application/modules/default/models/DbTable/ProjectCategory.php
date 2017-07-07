@@ -1111,11 +1111,13 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
 
         if (false == empty($valueCatId)) {
             $categoryAncestors = $this->fetchAncestorsAsId($valueCatId);
-            $categoryPath = explode(',', $categoryAncestors['ancestors']);
-            foreach ($categoryPath as $element) {
-                $ancestors["catLevel-{$level}"] = $this->prepareDataForFormSelect($this->fetchImmediateChildren($element,
-                    Default_Model_DbTable_ProjectCategory::ORDERED_TITLE));
-                $level++;
+            if($categoryAncestors) {
+                $categoryPath = explode(',', $categoryAncestors['ancestors']);
+                foreach ($categoryPath as $element) {
+                    $ancestors["catLevel-{$level}"] = $this->prepareDataForFormSelect($this->fetchImmediateChildren($element,
+                        Default_Model_DbTable_ProjectCategory::ORDERED_TITLE));
+                    $level++;
+                }
             }
         }
 
