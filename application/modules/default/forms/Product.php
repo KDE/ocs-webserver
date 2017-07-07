@@ -182,9 +182,13 @@ class Default_Form_Product extends Zend_Form
 
     private function getCategoryIdElement()
     {
+
+        $validatorCategory = new Default_Form_Validator_Category();
+
         return $this->createElement('number', 'project_category_id', array())
             ->setRequired(true)
             ->addValidator('Digits')
+            ->addValidator($validatorCategory)
             ->addFilter('Digits')
             ->setDecorators(
                 array(

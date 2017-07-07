@@ -30,6 +30,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             'basePath'  => realpath(dirname(__FILE__)),
         ));
         $autoloader->addResourceType('formelements', 'forms/elements', 'Form_Element');
+        $autoloader->addResourceType('formvalidators', 'forms/validators', 'Form_Validator');
         return $autoloader;
     }
 
@@ -268,7 +269,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             ->addPrefixPath('Default_View_Helper', APPLICATION_PATH . '/modules/default/views/helpers')
             ->addPrefixPath('Default_Form_Helper', APPLICATION_PATH . '/modules/default/forms/helpers')
             ->addPrefixPath('Default_Form_Element', APPLICATION_PATH . '/modules/default/forms/elements')
-            ->addPrefixPath('Default_Form_Decorator', APPLICATION_PATH . '/modules/default/forms/decorators');
+            ->addPrefixPath('Default_Form_Decorator', APPLICATION_PATH . '/modules/default/forms/decorators')
+            ->addPrefixPath('Default_Form_Validator', APPLICATION_PATH . '/modules/default/forms/validators');
     }
 
     protected function _initAuthSessionNamespace()
