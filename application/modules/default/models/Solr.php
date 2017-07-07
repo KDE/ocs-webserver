@@ -45,6 +45,8 @@ class Default_Model_Solr
                 'fl'         => '*,score',
                 'df'         => 'description',
                 'qf'         => 'title description username',
+                'bq'         => 'changed_at:[NOW-1YEAR TO NOW/DAY]',
+                'bf'         => 'if(lt(laplace_score,50),-10,10)',
                 //'hl'          => 'on',
                 //'hl.fl'       => 'title, description, username',
                 //'facet'          => 'on',
