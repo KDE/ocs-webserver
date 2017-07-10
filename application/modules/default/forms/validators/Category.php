@@ -49,7 +49,7 @@ class Default_Form_Validator_Category extends Zend_Validate_Abstract
 
         $tableCat = new Default_Model_DbTable_ProjectCategory();
         $catChildIds = $tableCat->fetchChildIds($value);
-        if (count($catChildIds)) {
+        if (count($catChildIds) > 0 AND ($catChildIds[0] <> $value)) {
             $valid = false;
             $this->_error(self::ERROR_CAT_NOT_THE_LAST);
         }
