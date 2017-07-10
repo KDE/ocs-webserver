@@ -2,7 +2,7 @@ var opendesktop_widget = (function() {
 // Localize jQuery variable
 var jQuery;
 //var opendesktopwigeturl = 'http://pling.local/';
-var opendesktopwigeturl = 'http://pling.cc/';
+var opendesktopwigeturl = 'http://mylocal.com/';
 /******** Load jQuery if not present *********/
 if (window.jQuery === undefined || window.jQuery.fn.jquery !== '3.2.1') {
     var script_tag = document.createElement('script');
@@ -59,7 +59,16 @@ function main() {
                                $.getJSON(jsonp_url_pploadfiles, function(data) {
                                    filecontainer.html(data.html);
                                });  
-                             }                                
+                             }     
+
+                        let commentscontainer =  detailcontainer.find('.opendesktopwidgetcomments');
+                        let projectid = $(thisrow).attr('id').replace(prefix,'');
+                        let jsonp_url_comments = opendesktopwigeturl+"embed/v1/comments/"+projectid+"?&callback=?"; 
+                        commentscontainer.html(opendesktoploadingindicator);
+                        $.getJSON(jsonp_url_comments, function(data) {
+                            commentscontainer.html(data.html);
+                        });  
+
                 };
                 detailcontainer.slideToggle();
         }

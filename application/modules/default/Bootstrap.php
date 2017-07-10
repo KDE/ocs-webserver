@@ -1032,6 +1032,18 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         );
 
         $router->addRoute(
+            'embed_v1_member_projectscomments',
+            new Zend_Controller_Router_Route(
+                '/embed/v1/comments/:id',
+                array(
+                    'module'     => 'default',
+                    'controller' => 'embedv1',
+                    'action'     => 'comments'
+                )
+            )
+        );
+
+        $router->addRoute(
             'embed_v1_member_projectdetail',
             new Zend_Controller_Router_Route(
                 '/embed/v1/project/:projectid',

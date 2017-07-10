@@ -22,40 +22,14 @@
 
 class Embedv1Controller extends Zend_Controller_Action
 {
-
-    protected $_authData = null;
-
-    protected $_uriScheme = 'https';
-
+    
     protected $_format = 'json';
-
-    protected $_config
-        = array(
-            'id'         => 'opendesktop.org',
-            'location'   => 'https://www.opendesktop.org/embed/v1/',
-            'name'       => 'opendesktop.org',
-            'icon'       => '',
-            'termsofuse' => 'https://www.opendesktop.org/terms',
-            'register'   => 'https://www.opendesktop.org/register',
-            'version'    => '1.0',
-            'website'    => 'www.opendesktop.org',
-            'host'       => 'www.opendesktop.org',
-            'contact'    => 'contact@opendesktop.org',
-            'ssl'        => true,
-            'baseurllocal'   => 'http://pling.local/',
-            'baseurl'   => 'http://pling.cc/',
-            'user_host'  => 'pling.me'
-        );
-
     protected $_params = array();
 
     public function init()
     {
         parent::init();
         $this->initView();
-        $this->_initUriScheme();
-        $this->_initRequestParamsAndFormat();
-        $this->_initConfig();
         $this->_initResponseHeader();
     }
 
@@ -65,21 +39,10 @@ class Embedv1Controller extends Zend_Controller_Action
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
     }
-
-    protected function _initUriScheme()
-    {
-        if (isset($_SERVER['HTTPS'])
-            && ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] === '1')
-        ) {
-            $this->_uriScheme = 'https';
-        } else {
-            $this->_uriScheme = 'http';
-        }
-    }
-
+    
     /**
      * @throws Zend_Exception
-     */
+    
     protected function _initRequestParamsAndFormat()
     {
         // Set request parameters
@@ -109,64 +72,9 @@ class Embedv1Controller extends Zend_Controller_Action
             $this->_format = 'json';
         }
     }
-
-    protected function _initConfig()
-    {
-        $clientConfig = $this->_loadClientConfig();
-
-        $credentials = '';
-        if (!empty($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_PW'])) {
-            $credentials = $_SERVER['PHP_AUTH_USER'] . ':' . $_SERVER['PHP_AUTH_PW'] . '@';
-        }
-
-        $baseUri = $this->_uriScheme . '://' . $credentials . $_SERVER['SERVER_NAME'];
-
-        $webSite = $_SERVER['SERVER_NAME'];
-
-        //Mask api.kde-look.org to store.kde.org
-        if (strpos($_SERVER['SERVER_NAME'], 'api.kde-look.org') !== false) {
-            $webSite = 'store.kde.org';
-        }
-
-        $this->_config = array(
-                'id'         => $_SERVER['SERVER_NAME'],
-                'location'   => $baseUri . '/embed/v1/',
-                'name'       => $clientConfig['head']['browser_title'],
-                'icon'       => $baseUri . $clientConfig['logo'],
-                'termsofuse' => $baseUri . '/content/terms',
-                'register'   => $baseUri . '/register',
-                'website'    => $webSite,
-                'host'       => $_SERVER['SERVER_NAME']
-            ) + $this->_config;
-    }
-
-    /**
-     * @return array|null
      */
-    protected function _loadClientConfig()
-    {
-        $clientConfigReader = new Backend_Model_ClientFileConfig(
-            $this->_getNameForStoreClient()
-        );
-        $clientConfigReader->loadClientConfig();
-        return $clientConfigReader->getConfig();
-    }
 
-    /**
-     * Returns the name for the store client.
-     * If no name were found, the name for the standard store client will be returned.
-     *
-     * @return string
-     */
-    protected function _getNameForStoreClient()
-    {
-        $clientName = Zend_Registry::get('config')->settings->client->default->name; // default client
-        if (Zend_Registry::isRegistered('store_config_name')) {
-            $clientName = Zend_Registry::get('store_config_name');
-        }
-        return $clientName;
-    }
-
+    
     protected function _initResponseHeader()
     {
         $duration = 1800; // in seconds
@@ -193,15 +101,7 @@ class Embedv1Controller extends Zend_Controller_Action
                 'statuscode' => $statuscode,
                 'message'    => $message
             );
-        } else {
-            $response = array(
-                'meta' => array(
-                    'status'     => array('@text' => 'failed'),
-                    'statuscode' => array('@text' => $statuscode),
-                    'message'    => array('@text' => $message)
-                )
-            );
-        }
+        } 
         $this->_sendResponse($response, $this->_format);
     }
 
@@ -212,103 +112,38 @@ class Embedv1Controller extends Zend_Controller_Action
         $duration = 1800; // in seconds
         $expires = gmdate("D, d M Y H:i:s", time() + $duration) . " GMT";
         header('Expires: ' . $expires);
-        if ($format == 'json') {           
-           
-            $callback = $this->getParam('callback');
-            if ($callback != "")
-            {
-                header('Content-Type: text/javascript; charset=UTF-8');                
-                // strip all non alphanumeric elements from callback
-                $callback = preg_replace('/[^a-zA-Z0-9_]/', '', $callback);
-                echo $callback. '('. json_encode($response). ')';   
-            }else{
-                 header('Content-Type: application/json; charset=UTF-8');           
-                echo json_encode($response);    
-            }
-
-            
-        } else {
-            header('Content-Type: application/xml; charset=UTF-8');
-            echo $this->_convertXmlDom($response, $xmlRootTag)->saveXML();
+        $callback = $this->getParam('callback');
+        if ($callback != "")
+        {
+            header('Content-Type: text/javascript; charset=UTF-8');                
+            // strip all non alphanumeric elements from callback
+            $callback = preg_replace('/[^a-zA-Z0-9_]/', '', $callback);
+            echo $callback. '('. json_encode($response). ')';   
+        }else{
+             header('Content-Type: application/json; charset=UTF-8');           
+             echo json_encode($response);    
         }
         exit;
     }
 
-    protected function _convertXmlDom($values, $tagName = 'data', DOMNode &$dom = null, DOMElement &$element = null)
-    {
-        if (!$dom) {
-            $dom = new DomDocument('1.0', 'UTF-8');
-        }
-        if (!$element) {
-            $element = $dom->appendChild($dom->createElement($tagName));
-        }
-        if (is_array($values) || is_object($values)) {
-            foreach ($values as $key => $value) {
-                if (is_array($value) || is_object($value)) {
-                    $isHash = false;
-                    foreach ($value as $_key => $_value) {
-                        if (ctype_digit((string)$_key)) {
-                            $isHash = true;
-                        }
-                        break;
-                    }
-                    if ($isHash) {
-                        $this->_convertXmlDom($value, $key, $dom, $element);
-                        continue;
-                    }
-                    if (ctype_digit((string)$key)) {
-                        $key = $tagName;
-                    }
-                    $childElement = $element->appendChild($dom->createElement($key));
-                    $this->_convertXmlDom($value, $key, $dom, $childElement);
-                } else {
-                    if ($key == '@text') {
-                        if (is_bool($value)) {
-                            $value = var_export($value, true);
-                        }
-                        $element->appendChild($dom->createTextNode($value));
-                    } else {
-                        if (is_bool($value)) {
-                            $value = var_export($value, true);
-                        }
-                        $element->setAttribute($key, $value);
-                    }
-                }
-            }
-        }
-        return $dom;
-    }
 
     public function projectdetailAction(){
                  
-         $product = $this->_getProject($this->getParam('projectid'));
-            if ($this->_format == 'json') {
-                $response = array(
-                    'status'     => 'ok',
-                    'statuscode' => 100,
-                    'message'    => '',                   
-                    'data'       => array()
-                );
-                if (!empty($product)) {
-                    $response['data'] = $product;
-                }
-          
-            } else {
-                $response = array(
-                    'meta' => array(
-                        'status'     => array('@text' => 'ok'),
-                        'statuscode' => array('@text' => 100),
-                        'message'    => array('@text' => '')                       
-                    ),
-                    'data' => array()
-                );
-                if (!empty($product)) {
-                    $response['data'] = array('project' => $product);
-                }
-            }
+        $product = $this->_getProject($this->getParam('projectid'));
+            
+        $response = array(
+            'status'     => 'ok',
+            'statuscode' => 100,
+            'message'    => '',                   
+            'data'       => array()
+        );
+        if (!empty($product)) {
+            $response['data'] = $product;
+        }          
 
         $this->_sendResponse($response, $this->_format);
     }
+
     protected function _getProject($project_id){
         $modelProduct = new Default_Model_Project();
         $project = $modelProduct->fetchProductInfo($project_id);
@@ -317,35 +152,141 @@ class Embedv1Controller extends Zend_Controller_Action
         }
 
         $result = array();
-        if ($this->_format == 'json') {
-            $result = array(
-                'id'           => $project['project_id'],
-                'title'           => $project['title'],
-                'desc'           => $project['description'],
-                'version'           => $project['version'],                        
-                'cat_id'         =>$project['project_category_id'],               
-                'created'         =>$project['project_created_at'],
-                'changed' => $project['project_changed_at'],
-                'laplace_score' => $project['laplace_score'],
-                'image_small'    =>  $project['image_small']                        
-            );
-        } else {
-            $result= array(
-                'id'           => array('@text' => $project['project_id']),
-                'title'           => array('@text' => $project['title']), 
-                'desc'           => array('@text' => $project['description']),
-                'version'           =>array('@text' => $project['version']),                  
-                'cat_id'         =>array('@text' => $project['project_category_id']),             
-                'created'         =>array('@text' => $project['project_created_at']),
-                'changed' =>array('@text' => $project['project_changed_at']),
-                'laplace_score' =>array('@text' => $project['laplace_score']),
-                'image_small'    =>array('@text' => $project['image_small']),                       
-            );
-        }                       
+        
+        $result = array(
+            'id'           => $project['project_id'],
+            'title'           => $project['title'],
+            'desc'           => $project['description'],
+            'version'           => $project['version'],                        
+            'cat_id'         =>$project['project_category_id'],               
+            'created'         =>$project['project_created_at'],
+            'changed' => $project['project_changed_at'],
+            'laplace_score' => $project['laplace_score'],
+            'image_small'    =>  $project['image_small']                        
+        );
+                        
        return $result;
     }
 
+    public function commentsAction()
+    {
+       
+        $project_id = $this->getParam('id');
+        $page = $this->getParam('page');
+        $nopage = $this->getParam('nopage');   // with param nopage will only show prudusts list otherwise show 
+        $pageLimit = $this->getParam('pagelimit');
+
+        if(empty($project_id)){
+            $response = array(
+                'status'     => 'ok',
+                'statuscode' => 100,
+                'message'    => '',
+                'totalitems' =>0,
+                'html'      =>'',
+                'data'       => array()
+            );          
+        }else{
+
+            if(empty($page)) $page=0;
+            if(empty($pageLimit)) $pageLimit=10; 
+            $comments = $this->_getCommentsForProject($project_id,$page,$pageLimit);
+
+            $commentsResult = $comments['result'];
+
+            $response = array(
+                'status'     => 'ok',
+                'statuscode' => 100,
+                'message'    => '',
+                'totalitems' => count($commentsResult),
+                'data'       => array()
+            );
+
+            if (!empty($commentsResult)) {
+                $response['data'] = $commentsResult;
+                // create html     
+                if(empty($nopage)) {                 
+                    //  init with comments & pager        
+                    $html = $this->_getHTMLPagerComments($comments)
+                                .'<div id="opendesktopwidget-main-container-comments">'
+                                .$this->_getHTMLComments($comments)
+                                .'</div>';    
+                }else{
+                    // for only ajax paging content
+                    $html =$this->_getHTMLComments($comments);
+                }                                
+                $response['html'] =$html;
+            }          
+                    
+        }
+
+        $this->_sendResponse($response, $this->_format);
+
+
+    }
+
+    protected function _getHTMLComments($comments)
+    {
+        $commentslist = $comments['result'];
+        $helperImage = new Default_View_Helper_Image();
+        $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();       
+        $helperPrintDate = new Default_View_Helper_PrintDate();
+        $html = '';  
+        foreach ($commentslist as $p) {        
+                $html = $html.'<div class="opendesktopwidgetcommentrow level'.$p['level'].'"  id="opendesktopwidgetcommentrow_'.$p['comment_id'].'">';                                    
+                                        
+                $html = $html.'<img class="image_small" src="'.$helperImage->Image($p['profile_image_url'], array('width' => 60, 'height' => 60)).'" />'; 
+                $html = $html.'<span class="updatetime">'. $helperPrintDate->printDate($p['comment_created_at']).'</span>';               
+                
+                $html = $html.'<div class="username">'.$p['username'].'</div>'; 
+                $html = $html.'<div class="commenttext">'.$p['comment_text'].'</div>';      
+               
+                $html = $html.'</div><div style="clear:both"/> <!-- end of opendesktopwidgetcommentrow -->';                
+        }                              
+        return $html;
+
+    }
+
     
+    protected function _getCommentsForProject($project_id,$curPage=0,$pageItemsCount=10)
+    {
+        
+        $modelComments = new Default_Model_ProjectComments();        
+        $comments = $modelComments->getCommentTreeForProject($project_id);        
+        $comments->setItemCountPerPage($pageItemsCount);
+        $comments->setCurrentPageNumber($curPage);
+
+        $result = array();
+        
+        foreach ($comments as $comment) { 
+
+            $c = $comment['comment'];
+            
+            $result[] = array(                               
+                'comment_id'   => $c['comment_id'],
+                'member_id'    => $c['member_id'],
+                'comment_text' =>  nl2br(Default_Model_HtmlPurify::purify($c['comment_text']),true),
+                'level' => $comment['level'],
+                'comment_type' => $c['comment_type'],
+                'profile_image_url' => $c['profile_image_url'],
+                'username' => $c['username'],
+                'comment_target_id'=>$c['comment_target_id'],
+                'comment_created_at' => $c['comment_created_at']           
+            );                        
+        }
+
+        $rlt = array(
+                'totalItemCount' => $comments->getTotalItemCount(),
+                'count'         => $comments->count(),
+                'itemCountPerPage'=>$comments->getItemCountPerPage(),
+                'result'     => $result
+            );
+        
+
+        
+
+        return $rlt;
+    }
+
 
     public function memberprojectsAction()
     {                
@@ -367,49 +308,37 @@ class Embedv1Controller extends Zend_Controller_Action
                 'statuscode' => 100,
                 'message'    => '',
                 'totalitems' =>0,
+                'html'      =>'',
                 'data'       => array()
             );          
         }else{           
 
             $userProducts = $this->_getMemberProducts($user_id, $pageLimit, $page);
-            if ($this->_format == 'json') {
-                $response = array(
-                    'status'     => 'ok',
-                    'statuscode' => 100,
-                    'message'    => '',
-                    'totalitems' => count($userProducts),
-                    'data'       => array()
-                );
-                if (!empty($userProducts)) {
-                    //$response['data'] = $userProducts;
-                    // create html     
-                    if(empty($nopage)) {                 
-                        //  init with member & pager & products       
-                        $html = $this->_getHTMLMember($user_id)
-                                    .$this->_getHTMLPager($user_id)
-                                    .'<div id="opendesktopwidget-main-container">'
-                                    .$this->_getHTMLProducts($userProducts)
-                                    .'</div>';    
-                    }else{
-                        // for only ajax paging content
-                        $html =$this->_getHTMLProducts($userProducts);
-                    }                                
-                    $response['html'] =$html;
-                }          
-            } else {
-                $response = array(
-                    'meta' => array(
-                        'status'     => array('@text' => 'ok'),
-                        'statuscode' => array('@text' => 100),
-                        'message'    => array('@text' => ''),
-                        'totalitems' => array('@text' => count($userProducts))
-                    ),
-                    'data' => array()
-                );
-                if (!empty($userProducts)) {
-                    $response['data'] = array('projects' => $userProducts);
-                }
-            }
+            
+            $response = array(
+                'status'     => 'ok',
+                'statuscode' => 100,
+                'message'    => '',
+                'totalitems' => count($userProducts),
+                'data'       => array()
+            );
+            if (!empty($userProducts)) {
+                $response['data'] = $userProducts;
+                // create html     
+                if(empty($nopage)) {                 
+                    //  init with member & pager & products       
+                    $html = $this->_getHTMLMember($user_id)
+                                .$this->_getHTMLPager($user_id)
+                                .'<div id="opendesktopwidget-main-container">'
+                                .$this->_getHTMLProducts($userProducts)
+                                .'</div>';    
+                }else{
+                    // for only ajax paging content
+                    $html =$this->_getHTMLProducts($userProducts);
+                }                                
+                $response['html'] =$html;
+            }          
+            
         }
         $this->_sendResponse($response, $this->_format);
     }    
@@ -460,6 +389,9 @@ class Embedv1Controller extends Zend_Controller_Action
                 $html = $html.'<span class="title">Description</span>';
                 $html = $html.$p['desc'];
 
+                // comments
+                $html = $html.'<div class="opendesktopwidgetcomments"></div>';
+
                 // ppload files
                 $html = $html.'<div class="opendesktopwidgetpploadfiles" data-ppload-collection-id="'.$p['ppload_collection_id'].'"></div>';
                 
@@ -486,6 +418,21 @@ class Embedv1Controller extends Zend_Controller_Action
         return $html;   
     }
 
+    protected function _getHTMLPagerComments($comments)
+    {        
+        $html = '<div class="opendesktopwidgetpager"><ul class="opendesktopwidgetpager">';        
+        $total_pages = $comments['count'];
+        for ($i=1; $i<=$total_pages; $i++) { 
+            if($i==1){
+                $html = $html.'<li class="active"><span>'.$i.'</span></li>';                
+            }else{
+                $html = $html.'<li><span>'.$i.'</span></li>';                
+            }            
+        };   
+        $html = $html.'</ul></div>';         
+        return $html;   
+    }
+
 
 
     protected function _getMemberProducts($user_id,$pageLimit=5,$page=1)
@@ -495,45 +442,27 @@ class Embedv1Controller extends Zend_Controller_Action
         
         $result = array();
         foreach ($userProjects as $project) {                       
-
-                if ($this->_format == 'json') {
-                    $result[] = array(
-                        'id'           => $project['project_id'],
-                        'title'           => Default_Model_HtmlPurify::purify($project['title']),
-                        'desc'           => Default_Model_HtmlPurify::purify($project['description']),
-                        'version'           =>Default_Model_HtmlPurify::purify($project['version']),                        
-                        'cat_id'         =>$project['project_category_id'],
-                        'cat_name' => $project['catTitle'],
-                        'created'         =>$project['project_created_at'],
-                        'changed' => $project['project_changed_at'],
-                        'laplace_score' => $project['laplace_score'],
-                        'image_small'    =>  $project['image_small'] ,
-                        'count_dislikes' => $project['count_dislikes'],
-                        'count_likes' => $project['count_likes'],
-                        'count_comments'    =>  $project['count_comments'] ,
-                        'ppload_collection_id' =>  $project['ppload_collection_id']                 
-                    );
-                } else {
-                    $result[] = array(
-                        'id'           => array('@text' => $project['project_id']),
-                        'title'           => array('@text' => $project['title']), 
-                        'desc'           => array('@text' => $project['description']),
-                        'version'           =>array('@text' => $project['version']),                  
-                        'cat_id'         =>array('@text' => $project['project_category_id']),
-                        'cat_name' =>array('@text' => $project['catTitle']),
-                        'created'         =>array('@text' => $project['project_created_at']),
-                        'changed' =>array('@text' => $project['project_changed_at']),
-                        'laplace_score' =>array('@text' => $project['laplace_score']),
-                        'image_small'    =>array('@text' => $project['image_small']),       
-                        'count_dislikes' => array('@text' => $project['count_dislikes']),  
-                        'count_likes' => array('@text' => $project['count_likes']),           
-                        'count_comments'    =>array('@text' => $project['count_comments']) ,
-                        'ppload_collection_id'    =>array('@text' => $project['ppload_collection_id'])      
-                    );
-                }                        
+            $result[] = array(
+                'id'           => $project['project_id'],
+                'title'           => Default_Model_HtmlPurify::purify($project['title']),
+                'desc'           => Default_Model_HtmlPurify::purify($project['description']),
+                'version'           =>Default_Model_HtmlPurify::purify($project['version']),                        
+                'cat_id'         =>$project['project_category_id'],
+                'cat_name' => $project['catTitle'],
+                'created'         =>$project['project_created_at'],
+                'changed' => $project['project_changed_at'],
+                'laplace_score' => $project['laplace_score'],
+                'image_small'    =>  $project['image_small'] ,
+                'count_dislikes' => $project['count_dislikes'],
+                'count_likes' => $project['count_likes'],
+                'count_comments'    =>  $project['count_comments'] ,
+                'ppload_collection_id' =>  $project['ppload_collection_id']                 
+            );
+                            
         }
         return $result;
     }
+
 
     protected function _getPploadFiles($ppload_collection_id)
     {
@@ -634,9 +563,7 @@ class Embedv1Controller extends Zend_Controller_Action
             );
             
             $this->_sendResponse($response, $this->_format);              
-        } else {
-                // xml TODO
-        }
+        } 
     }
 
     protected function _getLicenceText($id)
