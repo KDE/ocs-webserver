@@ -183,6 +183,7 @@ class Default_Form_Product extends Zend_Form
     private function getCategoryIdElement()
     {
 
+        include_once APPLICATION_PATH . '/modules/default/forms/validators/Category.php';
         $validatorCategory = new Default_Form_Validator_Category();
 
         return $this->createElement('number', 'project_category_id', array())
