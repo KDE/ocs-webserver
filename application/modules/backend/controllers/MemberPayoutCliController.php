@@ -110,7 +110,7 @@ class Backend_MemberPayoutCliController extends Local_Controller_Action_CliAbstr
     
     private function prepareMasspaymentTable() {
         echo "prepareMasspaymentTable()\n";
-        $db = Zend_Db_Table::getDefaultAdapter();
+        $db = Zend_Db_Table::getDefaultAdapter(); 
 
         $sql = "SELECT * FROM stat_dl_payment_last_month s WHERE s.amount >= 1";
         

@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -21,72 +22,25 @@
  **/
 class Default_Model_ProjectUpdates extends Default_Model_DbTable_ProjectUpdates
 {
-	
-	/**
-	 * @param $project_id
-	 * @return Zend_Db_Table_Rowset_Abstract
-	 */
-	public function fetchProjectUpdates($project_id)
-	{
-	
-		$sql = '
+
+    /**
+     * @param $project_id
+     *
+     * @return array
+     */
+    public function fetchProjectUpdates($project_id)
+    {
+        $sql = '
                 SELECT *
                     FROM project_updates
                     WHERE project_id = :project_id
                       AND public = 1
                     ORDER BY created_at DESC
         ';
-		
-		$rowset = $this->_db->fetchAll($sql, array('project_id' => $project_id));
-		if (0 == count($rowset)) {
-			return array();
-		}
-		return $rowset;
-	}
-	
-	
-	
-	
-	/**
-	 * @param $project_id
-	 * @return Zend_Db_Table_Rowset_Abstract
-	 */
-	public function fetchAllProjectUpdates($project_id)
-	{
-	
-		$projectSel = $this->select()->setIntegrityCheck(false)
-		->from($this->_name)
-		->where('project_updates.project_update_id=?', $project_id, 'INTEGER')
-		->where('project_updates.public=?', 1)
-		->order('project_updates.created_at DESC');
-	
-		return $this->fetchAll($projectSel);
-	
-	}
-	
-	
-	/**
-	 * @param $project_id
-	 * @return Zend_Db_Table_Rowset_Abstract
-	 */
-	public function fetchLastProjectUpdate($project_id)
-	{
-	
-		$sql = '
-                SELECT *
-                    FROM project_updates
-                    WHERE project_id = :project_id
-                      AND public = 1
-                    ORDER BY created_at DESC
-				    LIMIT 1
-        ';
-		
-		$rowset = $this->getAdapter()->fetchAll($sql, array('project_id' => $project_id));
-		if (0 == count($rowset)) {
-			return array();
-		}
-		return $rowset;
-	}
-	
-	
+
+        $rowset = $this->_db->fetchAll($sql, array('project_id' => $project_id));
+
+        return $rowset;
+    }
+
 }

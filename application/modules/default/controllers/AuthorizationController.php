@@ -506,7 +506,6 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             $this->view->formRegister = new Default_Form_Register();
             $this->view->registerErrMsg = "<p>Your account has already been activated.</p><p class='small'><a href='/login'>Log in</a> or try to generate a <a href='/login/forgot'>new password</a> for your account. </p> ";
             $this->view->overlay = $this->view->render('authorization/registerError.phtml');
-            $this->fetchTopProducts();
             $this->_helper->viewRenderer('register');
             return;
         }
@@ -536,12 +535,6 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         $this->view->products = $tableProduct->fetchAllProjectsForMember($authUser->member_id);
 
         $this->forward('index', 'settings', 'default', array('member_id' => $authUser->member_id));
-    }
-
-    protected function fetchTopProducts()
-    {
-        $tableProjects = new Default_Model_Project();
-        $this->view->projects = $tableProjects->fetchTopProducts();
     }
 
     /**

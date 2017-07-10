@@ -45,7 +45,9 @@ class Default_Model_RememberMe
      * In order to run a parent constructor, a call to parent::__construct() within the child constructor is required.
      *
      * param [ mixed $args [, $... ]]
+     *
      * @param string $_dataTableName
+     *
      * @link http://php.net/manual/en/language.oop5.decon.php
      */
     public function __construct($_dataTableName = 'Default_Model_DbTable_Session')
@@ -62,6 +64,7 @@ class Default_Model_RememberMe
 
     /**
      * @param $identifier
+     *
      * @return array|null
      */
     public function updateSession($identifier)
@@ -101,11 +104,13 @@ class Default_Model_RememberMe
         $sessionData['member_id'] = (int)$cookieData['mi'];
         $sessionData['remember_me_id'] = $cookieData['u'];
         $sessionData['token'] = isset($cookieData['t']) ? $cookieData['t'] : null;
+
         return $sessionData;
     }
 
     /**
      * @param int $identifier
+     *
      * @return array return new session data
      */
     public function createSession($identifier)
@@ -113,11 +118,13 @@ class Default_Model_RememberMe
         $newSessionData = $this->createSessionData($identifier);
         $this->setCookie($newSessionData);
         $this->saveSessionData($newSessionData);
+
         return $newSessionData;
     }
 
     /**
      * @param int $identifier
+     *
      * @return array
      */
     protected function createSessionData($identifier)
@@ -126,23 +133,15 @@ class Default_Model_RememberMe
         $sessionData['member_id'] = (int)$identifier;
         $sessionData['remember_me_id'] = Local_Tools_UUID::generateUUID();
         $sessionData['expiry'] = time() + (int)$this->cookieTimeout;
-        $sessionData['token'] = base64_encode(hash('sha256', $sessionData['member_id'] . $sessionData['remember_me_id'] . $this->salt));
+        $sessionData['token'] =
+            base64_encode(hash('sha256', $sessionData['member_id'] . $sessionData['remember_me_id'] . $this->salt));
+
         return $sessionData;
     }
 
     /**
-     * @param $newSessionData
-     * @return mixed
-     */
-    protected function saveSessionData($newSessionData)
-    {
-        $newSessionData['expiry'] = date('Y-m-d H:i:s', $newSessionData['expiry']); // change to mysql datetime format
-        $this->dataTable->save($newSessionData);
-        return $newSessionData;
-    }
-
-    /**
      * @param array $newSessionData
+     *
      * @return bool
      */
     protected function setCookie($newSessionData)
@@ -161,13 +160,28 @@ class Default_Model_RememberMe
         // delete old cookie with wrong domain
         //setcookie($this->cookieName, null, time() - $this->cookieTimeout, '/', $this->request->getHttpHost(), null, true);
 
-        return setcookie($this->cookieName, serialize($sessionData), $newSessionData['expiry'], '/', $domain, null, true);
+        return setcookie($this->cookieName, serialize($sessionData), $newSessionData['expiry'], '/', $domain, null,
+            true);
+    }
+
+    /**
+     * @param $newSessionData
+     *
+     * @return mixed
+     */
+    protected function saveSessionData($newSessionData)
+    {
+        $newSessionData['expiry'] = date('Y-m-d H:i:s', $newSessionData['expiry']); // change to mysql datetime format
+        $this->dataTable->save($newSessionData);
+
+        return $newSessionData;
     }
 
     /**
      * @param array $currentSessionData
      * @param array $newSessionData
-     * @param int $identifier
+     * @param int   $identifier
+     *
      * @return int count of updated rows
      */
     private function updateSessionData($currentSessionData, $newSessionData, $identifier)
@@ -176,15 +190,16 @@ class Default_Model_RememberMe
             return null;
         }
 
-        $sql = "UPDATE `session` SET remember_me_id = :remember_new, expiry = FROM_UNIXTIME(:expiry_new), changed = NOW() WHERE member_id = :member_id AND remember_me_id = :remember_old";
+        $sql =
+            "UPDATE `session` SET remember_me_id = :remember_new, expiry = FROM_UNIXTIME(:expiry_new), changed = NOW() WHERE member_id = :member_id AND remember_me_id = :remember_old";
 
         $result = $this->dataTable->getAdapter()->query($sql, array(
                 'remember_new' => $newSessionData['remember_me_id'],
-                'expiry_new' => $newSessionData['expiry'],
-                'member_id' => $identifier,
+                'expiry_new'   => $newSessionData['expiry'],
+                'member_id'    => $identifier,
                 'remember_old' => $currentSessionData['remember_me_id']
-            )
-        );
+            ))
+        ;
 
         return $result->rowCount();
     }
@@ -192,6 +207,7 @@ class Default_Model_RememberMe
     public function hasValidCookie()
     {
         $sessionCookieData = $this->getCookieData();
+
         return $this->validateCookieData($sessionCookieData);
     }
 
@@ -214,6 +230,7 @@ class Default_Model_RememberMe
         if ($cookieToken != $validateToken) {
             return false;
         }
+
         return true;
     }
 
@@ -229,17 +246,18 @@ class Default_Model_RememberMe
 
     /**
      * @param array $currentSessionCookie
+     *
      * @return bool
      */
     protected function removeSessionData($currentSessionCookie)
     {
         $sql = "DELETE FROM `session` WHERE member_id = :member_id AND remember_me_id = :uuid";
 
-        $result = $this->dataTable->getAdapter()->query($sql,
-            array(
+        $result = $this->dataTable->getAdapter()->query($sql, array(
                 'member_id' => $currentSessionCookie['member_id'],
-                'uuid' => $currentSessionCookie['remember_me_id']
-            ));
+                'uuid'      => $currentSessionCookie['remember_me_id']
+            ))
+        ;
         if ($result->rowCount() > 0) {
             return true;
         } else {

@@ -182,9 +182,13 @@ class Default_Form_Product extends Zend_Form
 
     private function getCategoryIdElement()
     {
+
+        $validatorCategory = new Default_Form_Validator_Category();
+
         return $this->createElement('number', 'project_category_id', array())
             ->setRequired(true)
             ->addValidator('Digits')
+            ->addValidator($validatorCategory)
             ->addFilter('Digits')
             ->setDecorators(
                 array(
@@ -492,7 +496,7 @@ class Default_Form_Product extends Zend_Form
 
     private function getBigImageUploadElement()
     {
-        $modelImage = new Default_Model_Image();
+        $modelImage = new Default_Model_DbTable_Image();
         return $this->createElement('file', 'image_big_upload')
             ->setDisableLoadDefaultDecorators(true)
             ->setTransferAdapter(new Local_File_Transfer_Adapter_Http())

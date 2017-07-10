@@ -30,6 +30,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             'basePath'  => realpath(dirname(__FILE__)),
         ));
         $autoloader->addResourceType('formelements', 'forms/elements', 'Form_Element');
+        $autoloader->addResourceType('formvalidators', 'forms/validators', 'Form_Validator');
         return $autoloader;
     }
 
@@ -268,7 +269,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             ->addPrefixPath('Default_View_Helper', APPLICATION_PATH . '/modules/default/views/helpers')
             ->addPrefixPath('Default_Form_Helper', APPLICATION_PATH . '/modules/default/forms/helpers')
             ->addPrefixPath('Default_Form_Element', APPLICATION_PATH . '/modules/default/forms/elements')
-            ->addPrefixPath('Default_Form_Decorator', APPLICATION_PATH . '/modules/default/forms/decorators');
+            ->addPrefixPath('Default_Form_Decorator', APPLICATION_PATH . '/modules/default/forms/decorators')
+            ->addPrefixPath('Default_Form_Validator', APPLICATION_PATH . '/modules/default/forms/validators');
     }
 
     protected function _initAuthSessionNamespace()
@@ -999,6 +1001,44 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                     'module'     => 'default',
                     'controller' => 'ocsv1',
                     'action'     => 'contentpreviewpic'
+                )
+            )
+        );
+
+      
+        // embed 
+        $router->addRoute(
+            'embed_v1_member_projects',
+            new Zend_Controller_Router_Route(
+                '/embed/v1/member/:memberid',
+                array(
+                    'module'     => 'default',
+                    'controller' => 'embedv1',
+                    'action'     => 'memberprojects'
+                )
+            )
+        );
+
+        $router->addRoute(
+            'embed_v1_member_projects_files',
+            new Zend_Controller_Router_Route(
+                '/embed/v1/ppload/:ppload_collection_id',
+                array(
+                    'module'     => 'default',
+                    'controller' => 'embedv1',
+                    'action'     => 'ppload'
+                )
+            )
+        );
+
+        $router->addRoute(
+            'embed_v1_member_projectdetail',
+            new Zend_Controller_Router_Route(
+                '/embed/v1/project/:projectid',
+                array(
+                    'module'     => 'default',
+                    'controller' => 'embedv1',
+                    'action'     => 'projectdetail'
                 )
             )
         );

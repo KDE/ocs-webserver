@@ -38,7 +38,10 @@ class Default_Model_OAuth
     {
         switch ($providerId) {
             case self::LOGIN_GITUHB:
-                $authAdapter = new Default_Model_OAuth_Github(Zend_Registry::get('db'), 'member', Zend_Registry::get('config')->third_party->github);
+                $authAdapter = new Default_Model_OAuth_Github(
+                    Zend_Registry::get('db'),
+                    'member',
+                    Zend_Registry::get('config')->third_party->github);
                 break;
 
             default:

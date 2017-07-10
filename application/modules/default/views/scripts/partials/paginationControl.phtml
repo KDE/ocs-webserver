@@ -33,9 +33,10 @@ if (false === isset($this->next)) {
     <?php if ($this->pageCount): ?>
         <ul id="pagination-digg">
             <li class="previous <?= $cssClassPrevious ?>">
-                <a href="<?php echo isset($this->previous) ? $this->url(array_merge($this->params,
-                    array('page' => $this->previous))) : 'javascript:;'; ?>"><span
-                        class="glyphicon glyphicon-chevron-left"></span></a></li>
+                <a href="<?php echo isset($this->previous) ? $this->url(array_merge($this->params, array('page' => $this->previous))) : 'javascript:;'; ?>">
+                    <span class="glyphicon glyphicon-chevron-left"></span> Previous
+                </a>
+            </li>
             <?php foreach ($this->pagesInRange as $page): ?>
                 <?php if ($page != $this->current): ?>
                     <li>
@@ -46,8 +47,10 @@ if (false === isset($this->next)) {
                 <?php endif; ?>
             <?php endforeach; ?>
             <li class="next <?= $cssClassNext ?>">
-                <a href="<?php echo isset($this->next) ? $this->url(array_merge($this->params,
-                    array('page' => $this->next))) : 'javascript:;'; ?>"><span class="glyphicon glyphicon-chevron-right"></span></a></li>
+                <a href="<?php echo isset($this->next) ? $this->url(array_merge($this->params, array('page' => $this->next))) : 'javascript:;'; ?>">
+                    Next <span class="glyphicon glyphicon-chevron-right"></span>
+                </a>
+            </li>
         </ul>
     <?php endif; ?>
 </div>

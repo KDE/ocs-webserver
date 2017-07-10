@@ -70,9 +70,7 @@ if (Zend_Auth::getInstance()->hasIdentity()){
 } 
 
 ?>
-<style type="text/css">
-    
-</style>
+
     <!-- facebook -->
     <div id="fb-root"></div>
 
@@ -332,7 +330,7 @@ if (Zend_Auth::getInstance()->hasIdentity()){
                         <div class="tab-pane" id="updates-panel">
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                             <article>
-                                <?php
+                                <?php 
                                     foreach ($this->updates as $this->productUpdate) {
                                        echo $this->render('product/partials/productUpdatesV1.phtml');
                                     }

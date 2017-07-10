@@ -52,6 +52,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addResource(new Zend_Acl_Resource ('default_hive'));
         $this->addResource(new Zend_Acl_Resource ('default_home'));
         $this->addResource(new Zend_Acl_Resource ('default_ocsv1')); // OCS API
+        $this->addResource(new Zend_Acl_Resource ('default_embedv1')); // embed API
         $this->addResource(new Zend_Acl_Resource ('default_productcategory'));
         $this->addResource(new Zend_Acl_Resource ('default_productcomment'));
         $this->addResource(new Zend_Acl_Resource ('default_product'));
@@ -75,6 +76,9 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addResource(new Zend_Acl_Resource ('backend_index'));
         $this->addResource(new Zend_Acl_Resource ('backend_mail'));
         $this->addResource(new Zend_Acl_Resource ('backend_member'));
+        $this->addResource(new Zend_Acl_Resource ('backend_memberpayout'));
+        $this->addResource(new Zend_Acl_Resource ('backend_memberpaypaladdress'));
+        $this->addResource(new Zend_Acl_Resource ('backend_paypalvalidstatus'));
         $this->addResource(new Zend_Acl_Resource ('backend_operatingsystem'));
         $this->addResource(new Zend_Acl_Resource ('backend_project'));
         $this->addResource(new Zend_Acl_Resource ('backend_ranking'));
@@ -100,6 +104,7 @@ class Default_Plugin_AclRules extends Zend_Acl
             'default_hive',
             'default_home',
             'default_ocsv1', // OCS API
+            'default_embedv1', // embed API
             'default_productcategory',
             'default_report',
             'default_rss',
@@ -136,7 +141,10 @@ class Default_Plugin_AclRules extends Zend_Acl
 
         // resource default_product
         $this->allow(self::ROLENAME_GUEST, 'default_product',
-            array('index', 'show', 'getupdatesajax', 'updates', 'follows', 'fetch'));
+            array('index', 'show', 'getupdatesajax', 'updates', 'follows', 'fetch', 'search'));
+         
+       
+
 
         $this->allow(self::ROLENAME_COOKIEUSER, 'default_product',
             array(

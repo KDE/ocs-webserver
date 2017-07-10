@@ -31,13 +31,4 @@ class Default_View_Helper_CategoryProductCount extends Zend_View_Helper_Abstract
 
     }
     
-    public function subCategoryProductCount($idCategory)
-    {
-    	$tableProject = new Default_Model_Project();
-    	$counter = $tableProject->countProductsBySubCategory($idCategory);
-    
-    	return $counter;
-    
-    }
-
 }

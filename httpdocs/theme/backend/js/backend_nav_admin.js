@@ -49,7 +49,12 @@ var aItemData = [
         submenu: {
             id: "user",
             itemdata: [
-                {text: "Users", url: "/backend/user"}
+                {text: "Users", url: "/backend/user"},
+                {text: "Config Paypal-Valid-Stati", url: "/backend/paypalvalidstatus"},
+                {text: "Member Payouts", url: "/backend/memberpayout"},
+                
+                {text: "Member Paypal-Addresses", url: "/backend/memberpaypaladdress"},
+                
             ]
         }
     },

@@ -151,9 +151,11 @@ if ($this->countDownloadsOverall > 0) {
                 $sum_total_month += $product['num_downloads'] * $product['dl_pling_factor'];
                 $sum_total_text = 'Possible payout for this month (<span style="font-size: smaller;">*</span>):';
                 $sum_total_payout = $currency->toCurrency($sum_total_month/100);
+                $payout_success = false;
                 if ($product['status'] == Default_Model_DbTable_MemberPayout::$PAYOUT_STATUS_COMPLETED) {
-                    $sum_total_payout = $currency->toCurrency($product['amount']);
-                    $sum_total_text = 'Actually successfully paid amount:';
+                    $payout_success = true;
+                    $sum_total_payout_success = $currency->toCurrency($product['amount']);
+                    $sum_total_text_success = 'Actually successfully paid amount: ';
                 }
                 $has_paypal = $product['paypal_mail'] ? true : false;
             }
@@ -162,7 +164,48 @@ if ($this->countDownloadsOverall > 0) {
             ?>
             <div class='row row-total'>
                 <div class='col-md-11 text-right'><?=$sum_total_text?></div><div class='col-md-1 text-right'><strong><?=$sum_total_payout?></strong></div>
+                
             </div>
+            
+            <?php   
+                /**
+                *  public static $PAYOUT_STATUS_NEW = 0;
+                   public static $PAYOUT_STATUS_REQUESTED = 1;
+                   public static $PAYOUT_STATUS_PROCESSED = 10;
+                   public static $PAYOUT_STATUS_PENDING = 50;
+                   public static $PAYOUT_STATUS_COMPLETED = 100;
+                   public static $PAYOUT_STATUS_DENIED = 999;
+                   public static $PAYOUT_STATUS_REFUND = 900;
+                   public static $PAYOUT_STATUS_ERROR = 99;
+                */
+                if ($product['status'] == Default_Model_DbTable_MemberPayout::$PAYOUT_STATUS_REQUESTED) {
+                    echo '<div class="alert alert-info" role="alert">We send your payout. The actual status is: Requested.';
+                }
+                if ($product['status'] == Default_Model_DbTable_MemberPayout::$PAYOUT_STATUS_PROCESSED) {
+                    echo '<div class="alert alert-info" role="alert">We send your payout. The actual status is: Processed.';
+                }
+                if ($product['status'] == Default_Model_DbTable_MemberPayout::$PAYOUT_STATUS_PENDING) {
+                    echo '<div class="alert alert-info" role="alert">We send your payout. The actual status is: Pending.';
+                }
+                if ($product['status'] == Default_Model_DbTable_MemberPayout::$PAYOUT_STATUS_COMPLETED) {
+                    echo '<div class="alert alert-success" role="alert">For this month we has successfully paid you: '.$sum_total_payout_success.'.';
+                }
+                if ($product['status'] == Default_Model_DbTable_MemberPayout::$PAYOUT_STATUS_REFUND) {
+                    echo '<div class="alert alert-danger" role="alert">We tried to payout your plings, but your payment was refund.';
+                }
+                if ($product['status'] == Default_Model_DbTable_MemberPayout::$PAYOUT_STATUS_DENIED) {
+                    echo '<div class="alert alert-danger" role="alert">We tried to payout your plings, but your payment was denied.';
+                }
+                if ($product['status'] == Default_Model_DbTable_MemberPayout::$PAYOUT_STATUS_ERROR) {
+                    echo '<div class="alert alert-danger" role="alert">We tried to payout your plings, but there was an error.';
+                }
+                
+                if(isset($product['payment_transaction_id'])) {
+                    echo ' You can see the details of the transaction on <a target="_NEW" href="https://www.paypal.com/cgi-bin/webscr?cmd=_view-a-trans&id='.$product['payment_transaction_id'].'">PayPal</a>.';
+                }
+                echo '</div>';
+            ?>
+            
             <?php 
 
 
@@ -181,7 +224,7 @@ if ($this->countDownloadsOverall > 0) {
                 $paypalWarning = 'We found no valid Paypal account for this month. That\'s why we could not pay you any money. In order to receive money for the current month, please make sure that a paypal account is registered. Go to your settings page <a href="/settings#form-payment-panel">here</a>.';
             }
             if (false == $has_paypal) {
-                echo '<div class="alert alert-warning" role="alert">'.$paypalWarning.'</div>';
+                echo '<div class="alert alert-danger" role="alert">'.$paypalWarning.'</div>';
             }
 
             if (($sum_total_month/100) < 1) {

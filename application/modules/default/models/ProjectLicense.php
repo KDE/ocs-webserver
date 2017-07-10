@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -36,7 +37,9 @@ class Default_Model_ProjectLicense
      * In order to run a parent constructor, a call to parent::__construct() within the child constructor is required.
      *
      * param [ mixed $args [, $... ]]
+     *
      * @link http://php.net/manual/en/language.oop5.decon.php
+     *
      * @param string $_dataTableName
      */
     function __construct($_dataTableName = 'Default_Model_DbTable_ProjectCcLicense')
@@ -47,6 +50,7 @@ class Default_Model_ProjectLicense
 
     /**
      * @param int $project_id
+     *
      * @return bool
      */
     public function hasLicense($project_id)
@@ -55,11 +59,12 @@ class Default_Model_ProjectLicense
         if (empty($resultRow)) {
             return false;
         }
+
         return true;
     }
 
     /**
-     * @param int $_projectId
+     * @param int   $_projectId
      * @param array $values
      */
     public function saveLicenseData($_projectId, $values)
@@ -72,6 +77,7 @@ class Default_Model_ProjectLicense
 
     /**
      * @param $project_id
+     *
      * @return Default_Model_DbRow_ProjectCcLicense
      */
     public function findOneProject($project_id)
@@ -80,11 +86,13 @@ class Default_Model_ProjectLicense
         if (empty($resultRow)) {
             $resultRow = $this->_dataTable->createRow(array(), Default_Model_DbTable_ProjectCcLicense::DEFAULT_CLASS);
         }
+
         return $resultRow;
     }
 
     /**
      * @param int $_projectId
+     *
      * @throws Zend_Db_Table_Row_Exception
      */
     public function deleteLicenseData($_projectId)

@@ -19,21 +19,23 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-
-class Default_View_Helper_FetchRandomProducts extends Zend_View_Helper_Abstract
+class Default_Model_DbTable_MemberPaypalAddress extends Local_Model_Table
 {
-
-    public function fetchRandomProducts($count = 5)
+    protected $_keyColumnsForRow = array('id');
+    protected $_key = 'id';
+    protected $_name = "member_paypal";
+    
+    /**
+     * @param int $member_id
+     */
+    public function setDeleted($id)
     {
-        $tableProjects = new Default_Model_Project();
-        return $tableProjects->fetchRandomProjects($count);
+        $updateValues = array(
+            'is_active'  => 0
+        );
+
+        $this->update($updateValues, $this->_db->quoteInto('id=?', $id, 'INTEGER'));
+
     }
-
-    public function fetchRandomProductsForCategories($catId = null, $count = 5)
-    {
-        $tableProjects = new Default_Model_Project();
-        return $tableProjects->fetchProductsByCategory($catId, $count);
-    }
-
-
-} 
+    
+}

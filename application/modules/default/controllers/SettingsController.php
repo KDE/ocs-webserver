@@ -64,6 +64,10 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
     {
         $this->view->member = $this->_memberSettings;
         $memberSettings = $this->_memberSettings->toArray();
+        
+        $paypalValidStatusTable = new Default_Model_DbTable_PaypalValidStatus();
+        $paypalValidStatus = $paypalValidStatusTable->find($this->_memberSettings->paypal_valid_status)->current();
+        $this->view->paypal_valid_status = $paypalValidStatus;
 
         $this->view->profileform = $this->formProfile();
         $this->view->profileform->populate($memberSettings);

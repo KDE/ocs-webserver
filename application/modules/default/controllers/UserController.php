@@ -305,6 +305,10 @@ class UserController extends Local_Controller_Action_DomainSwitch
         $tableMember = new Default_Model_Member();
         $this->view->view_member = $tableMember->fetchMemberData($this->_memberId);
         
+        $paypalValidStatusTable = new Default_Model_DbTable_PaypalValidStatus();
+        $paypalValidStatus = $paypalValidStatusTable->find($this->view->view_member->paypal_valid_status)->current();
+        $this->view->paypal_valid_status = $paypalValidStatus;
+        
         //backdore for admins
         $helperUserRole = new Backend_View_Helper_UserRole();
         $userRoleName = $helperUserRole->userRole();
