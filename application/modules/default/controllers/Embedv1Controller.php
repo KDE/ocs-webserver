@@ -422,8 +422,10 @@ class Embedv1Controller extends Zend_Controller_Action
 
     protected function _getHTMLPagerComments($comments)
     {        
-        $html = '<div class="opendesktopwidgetpager"><ul class="opendesktopwidgetpager">';        
+        
         $total_pages = $comments['count'];
+        if($total_pages<=1) return '';
+        $html = '<div class="opendesktopwidgetpager"><ul class="opendesktopwidgetpager">';               
         for ($i=1; $i<=$total_pages; $i++) { 
             if($i==1){
                 $html = $html.'<li class="active"><span>'.$i.'</span></li>';                
