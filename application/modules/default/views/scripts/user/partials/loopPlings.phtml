@@ -178,32 +178,42 @@ if ($this->countDownloadsOverall > 0) {
                    public static $PAYOUT_STATUS_REFUND = 900;
                    public static $PAYOUT_STATUS_ERROR = 99;
                 */
+            	$showDiv = false;
                 if ($product['status'] == Default_Model_DbTable_MemberPayout::$PAYOUT_STATUS_REQUESTED) {
                     echo '<div class="alert alert-info" role="alert">We send your payout. The actual status is: Requested.';
+                    $showDiv = true;
                 }
                 if ($product['status'] == Default_Model_DbTable_MemberPayout::$PAYOUT_STATUS_PROCESSED) {
                     echo '<div class="alert alert-info" role="alert">We send your payout. The actual status is: Processed.';
+                    $showDiv = true;
                 }
                 if ($product['status'] == Default_Model_DbTable_MemberPayout::$PAYOUT_STATUS_PENDING) {
                     echo '<div class="alert alert-info" role="alert">We send your payout. The actual status is: Pending.';
+                    $showDiv = true;
                 }
                 if ($product['status'] == Default_Model_DbTable_MemberPayout::$PAYOUT_STATUS_COMPLETED) {
                     echo '<div class="alert alert-success" role="alert">For this month we has successfully paid you: '.$sum_total_payout_success.'.';
+                    $showDiv = true;
                 }
                 if ($product['status'] == Default_Model_DbTable_MemberPayout::$PAYOUT_STATUS_REFUND) {
                     echo '<div class="alert alert-danger" role="alert">We tried to payout your plings, but your payment was refund.';
+                    $showDiv = true;
                 }
                 if ($product['status'] == Default_Model_DbTable_MemberPayout::$PAYOUT_STATUS_DENIED) {
                     echo '<div class="alert alert-danger" role="alert">We tried to payout your plings, but your payment was denied.';
+                    $showDiv = true;
                 }
                 if ($product['status'] == Default_Model_DbTable_MemberPayout::$PAYOUT_STATUS_ERROR) {
                     echo '<div class="alert alert-danger" role="alert">We tried to payout your plings, but there was an error.';
+                    $showDiv = true;
                 }
                 
                 if(isset($product['payment_transaction_id'])) {
                     echo ' You can see the details of the transaction on <a target="_NEW" href="https://www.paypal.com/cgi-bin/webscr?cmd=_view-a-trans&id='.$product['payment_transaction_id'].'">PayPal</a>.';
                 }
-                echo '</div>';
+                if($showDiv) {
+                	echo '</div>';
+                }
             ?>
             
             <?php 
