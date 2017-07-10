@@ -64,9 +64,25 @@ function main() {
                         let commentscontainer =  detailcontainer.find('.opendesktopwidgetcomments');
                         let projectid = $(thisrow).attr('id').replace(prefix,'');
                         let jsonp_url_comments = opendesktopwigeturl+"embed/v1/comments/"+projectid+"?&callback=?"; 
-                        commentscontainer.html(opendesktoploadingindicator);
+                        //commentscontainer.html(opendesktoploadingindicator);
                         $.getJSON(jsonp_url_comments, function(data) {
                             commentscontainer.html(data.html);
+
+                            let spans = commentscontainer.find('ul.opendesktopwidgetpager').find('span');
+                            spans.each(function(index) {
+                                $(this).on("click", function(){                      
+                                    $(this).parent().addClass('active').siblings().removeClass('active');                      
+                                    commentscontainer.find('#opendesktopwidget-main-container-comments').html(opendesktoploadingindicator);    
+
+                                    let jsonp_url_nopage = opendesktopwigeturl+"embed/v1/comments/"+projectid+"?nopage=1&page="+$(this).html()+"&callback=?";     
+                                    $.getJSON(jsonp_url_nopage, function(data) {
+                                        commentscontainer.find('#opendesktopwidget-main-container-comments').html(data.html);                                                     
+                                    });
+
+                                });
+                            });
+
+
                         });  
 
                 };

@@ -235,12 +235,14 @@ class Embedv1Controller extends Zend_Controller_Action
                 $html = $html.'<div class="opendesktopwidgetcommentrow level'.$p['level'].'"  id="opendesktopwidgetcommentrow_'.$p['comment_id'].'">';                                    
                                         
                 $html = $html.'<img class="image_small" src="'.$helperImage->Image($p['profile_image_url'], array('width' => 60, 'height' => 60)).'" />'; 
-                $html = $html.'<span class="updatetime">'. $helperPrintDate->printDate($p['comment_created_at']).'</span>';               
-                
+                $html = $html.'<span class="updatetime">'. $helperPrintDate->printDate($p['comment_created_at']).'</span>';  
+                $html = $html.'<div class="opendesktopwidgetcomment_content">';
+                                           
                 $html = $html.'<div class="username">'.$p['username'].'</div>'; 
                 $html = $html.'<div class="commenttext">'.$p['comment_text'].'</div>';      
                
-                $html = $html.'</div><div style="clear:both"/> <!-- end of opendesktopwidgetcommentrow -->';                
+                $html = $html.'</div><div style="clear:both"/> ';
+                $html = $html.'</div><!-- end of opendesktopwidgetcommentrow -->';                
         }                              
         return $html;
 
