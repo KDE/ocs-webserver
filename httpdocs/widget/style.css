@@ -36,6 +36,7 @@
   border-radius: 4px;
   margin-right: 10px;
   background-color: #fff;
+  color: #4e4e4e;
 }
 #opendesktop-widget-container .pling-nav-tabs-a {
   border: 0 ;
@@ -344,6 +345,7 @@
   border-radius: 4px;
   margin-right: 10px;
   background-color: #fff;
+  color: #4e4e4e;
   cursor: pointer;
   margin-left: 50px;
 }

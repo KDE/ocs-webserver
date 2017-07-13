@@ -69,7 +69,7 @@ function main() {
                 $('#opendesktopwidget-reviews').find('.opendesktopwidget-reviews-rows-inactive').hide();                                   
           }
           $('html, body').animate({
-                 scrollTop: $('#opendesktopwidget-reviews').offset().top-50
+                 scrollTop: $('#opendesktopwidget-reviews').offset().top-150
              }, 1);  
       }
         opendesktoptoggleDetail = function(thisrow){
@@ -125,7 +125,7 @@ function main() {
                             let tabcontainerid = $(this).find('a').attr('data-wiget-target');                            
                             $(tabcontainerid).addClass('active').siblings().removeClass('active') ;                                              
                             $('html, body').animate({
-                                   scrollTop: $(tabcontainerid).offset().top-50
+                                   scrollTop: $(tabcontainerid).offset().top-150
                                }, 1);             
                         });
                     });
@@ -139,7 +139,11 @@ function main() {
 
                             let jsonp_url_nopage = opendesktopwigeturl+"embed/v1/comments/"+projectid+"?nopage=1&page="+$(this).html()+"&callback=?";     
                             $.getJSON(jsonp_url_nopage, function(data) {
-                                container.find('#opendesktopwidget-main-container-comments').html(data.html);                                                     
+                                let ct = container.find('#opendesktopwidget-main-container-comments');  
+                                ct.html(data.html);
+                                $('html, body').animate({
+                                       scrollTop: ct.offset().top-150
+                                   }, 1);                                                       
                             });
 
                         });
