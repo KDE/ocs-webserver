@@ -130,18 +130,208 @@ class Embedv1Controller extends Zend_Controller_Action
     public function projectdetailAction(){
                  
         $product = $this->_getProject($this->getParam('projectid'));
-            
+        
+        $html = '';
+        $html = $this->_getHTMLProjectDetail($product);
         $response = array(
             'status'     => 'ok',
             'statuscode' => 100,
             'message'    => '',                   
-            'data'       => array()
+            'data'       => array(),
+            'html'      =>''
         );
         if (!empty($product)) {
-            $response['data'] = $product;
-        }          
-
+            $response['data'] = $product;            
+        }                  
+        $response['html'] = $html;            
         $this->_sendResponse($response, $this->_format);
+    }
+
+    protected function _getHTMLProjectDetail($project)
+    {
+        $helperImage = new Default_View_Helper_Image();        
+        $helperPrintDate = new Default_View_Helper_PrintDate();        
+        $printRating= new Default_View_Helper_PrintRatingWidgetSimple();
+        $html = '';
+        $html = $html.'<div class="opendesktopwidget-main-detail-container-body-header">';        
+
+        $html = $html.'<div class="opendesktopwidget-img-member"><img src="'.$helperImage->Image($project['profile_image_url'], array('width' => 85, 'height' => 85)).'" /></div>'; 
+        $html = $html.'<div class="opendesktopwidget-description">'.$project['title'];        
+        $html = $html.'<span class="opendesktopwidget-category">'.$project['cat_title'];  
+        $html = $html.'</span>'; 
+        $html = $html.'</div>'; 
+
+        $html = $html.'<div class="opendesktopwidget-rating">';                  
+        $html = $html.$printRating->printRatingWidgetSimple($project['laplace_score'],$project['count_likes'],$project['count_dislikes']);        
+        $html = $html.'</div>';
+        
+        $html = $html.'</div> <!-- end of opendesktopwidget-main-detail-container-body-header -->';
+
+       
+       // carousels
+        if(count($project['pics'])>0){
+            $html = $html.'<div class="opendesktopwidget-imgs">';         
+            $html = $html.'<div id="opendesktopwidget-main-detail-carousel" data-simple-slider>'; 
+            //$html = $html.'<img src="'.$helperImage->Image($project['pics'][0], array('height' => '600')).'" />';     
+            foreach ($project['pics'] as  $pic) {
+                $html = $html.'<img src="'.$helperImage->Image($pic, array('width' => '621','height' => '621')).'" />';     
+            }
+
+            $html = $html.'</div>';     
+            if(count($project['pics'])>1){
+                $html = $html.'<button class="prev"><i class="fa fa-chevron-left opendesktop-navi" aria-hidden="true"></i></button>';
+                $html = $html.'<button class="next"><i class="fa fa-chevron-right opendesktop-navi" aria-hidden="true"></i></button>';                
+            }
+            $html = $html.'</div>'; 
+        }           
+        
+
+        // begin opendesktopwidget-content
+        $html = $html.'<div class="opendesktopwidget-content">'; 
+        $html = $html.'<div id="opendesktopwidget-content-tabs" class="pling-nav-tabs">';
+        $html = $html.'<ul>';
+        $html = $html.'<li class="active"><a data-wiget-target="#opendesktopwidget-content-description" data-toggle="tab">Product</a></li>';
+        if($project['files'] && count($project['files'])>0){
+            $html = $html.'<li><a data-wiget-target="#opendesktopwidget-content-files" data-toggle="tab">Files('.count($project['files']).')</a></li>';
+        }
+        if($project['changelogs'] && count($project['changelogs'])>0){            
+             $html = $html.'<li><a data-wiget-target="#opendesktopwidget-content-changelogs" data-toggle="tab">Changelogs('.count($project['changelogs']).')</a></li>';
+        }
+        if($project['reviews'] && count($project['reviews'])>0){                         
+             $html = $html.'<li><a data-wiget-target="#opendesktopwidget-content-reviews" data-toggle="tab">Reviews('.count($project['reviews']).')</a></li>';
+        }               
+        $html = $html.'</ul>';         
+        $html = $html.'</div>'; 
+
+        // begin opendesktopwidget-tab-pane-content
+        $html = $html.'<div class="opendesktopwidget-tab-pane-content">'; 
+
+        $html = $html.'<div id="opendesktopwidget-content-description" class="opendesktopwidget-tab-pane  active">'; 
+        $html = $html.'<span class="description"> Description</span>';
+        $html = $html.$project['description'];
+        if($project['lastchangelog']){
+            $html = $html.'<span class="description"> Last change log</span>';            
+            $html = $html.'<span class="title"> '.$project['lastchangelog']['title'].'</span>';
+            $html = $html.'<span class="updatetime">'. $helperPrintDate->printDate($project['lastchangelog']['created_at']).'</span>';  
+            $html = $html.'<span class="text"> '.$project['lastchangelog']['text'].'</span>';
+        }
+
+        // comments begin
+        $html = $html.'<div class="opendesktopwidgetcomments">';
+        $html_comment = $this->_getHTMLPagerComments($project['comments'])
+                    .'<div id="opendesktopwidget-main-container-comments">'
+                    .$this->_getHTMLComments($project['comments'])
+                    .'</div>';    
+        $html = $html.$html_comment;
+        $html = $html.'</div>';                 
+        // comments end
+
+        $html = $html.'</div>';         // end opendesktopwidget-content-description
+        
+        // begin opendesktopwidget-content-files
+        $html = $html.'<div id="opendesktopwidget-content-files" class="opendesktopwidget-tab-pane">'; 
+        $html = $html.$this->_getHTMLFiles($project['files']);
+        $html = $html.'</div>';        
+        // end opendesktopwidget-content-files
+
+        // begin opendesktopwidget-content-changelogs
+        $html = $html.'<div id="opendesktopwidget-content-changelogs" class="opendesktopwidget-tab-pane">'; 
+        $html = $html.$this->_getHTMLChangelogs($project['changelogs']);
+        $html = $html.'</div>';        
+        // end opendesktopwidget-content-changelogs
+
+         // begin opendesktopwidget-content-reviews
+        $html = $html.'<div id="opendesktopwidget-content-reviews" class="opendesktopwidget-tab-pane">'; 
+        $html = $html.$this->_getHTMLReviews($project['reviews']);
+        $html = $html.'</div>';        
+        // end opendesktopwidget-content-reviews
+
+
+        // end opendesktopwidget-tab-pane-content
+        $html = $html.'</div>';        
+        
+
+        $html = $html.'</div>';         
+        // end opendesktopwidget-content
+
+
+        return $html;
+    }
+
+    protected function _getHTMLChangelogs($logs)
+    {
+        $helperPrintDate = new Default_View_Helper_PrintDate();     
+        $html = '<div id="opendesktopwidget-changelogs">';
+        foreach ($logs as $log) {
+              $html = $html.'<div class="opendesktopwidget-changelogs-title"><span class="opendesktopwidget-changelogs-title-1">'.$log['title'].'</span>';
+              $html = $html.'<span class="opendesktopwidget-changelogs-title-2">'.$helperPrintDate->printDate($log['created_at']).'</span>';
+              $html = $html.'</div>';         
+              $html = $html.'<span class="opendesktopwidget-changelogs-text">'.$log['text'].'</span>';   
+        }
+        $html = $html.'</div>';         
+        return $html;
+    }
+
+    protected function _getHTMLReviews($reviews)
+    {
+     
+        $helperImage = new Default_View_Helper_Image();     
+        $helperPrintDate = new Default_View_Helper_PrintDate();     
+
+        $cntActive = 0;
+        $cntLikes = 0;
+        $cntDislike = 0;
+        $cntAll = count($reviews);
+         foreach ($reviews as $review) { 
+            if($review['rating_active']==1) {
+                    $cntActive =$cntActive+1;
+                    $cntLikes = $cntLikes + $review['user_like'];
+                    $cntDislike = $cntDislike + $review['user_dislike'];
+            }
+         }
+
+         $html = '<div id="opendesktopwidget-reviews">';
+
+         $html = $html.'<div class="opendesktopwidget-reviews-filters">';
+         $html = $html.'<button id="opendesktopwidget-reviews-filters-hates" class="opendesktop-widget-btn opendesktop-widget-reviews-filters-btn">Show '
+                        .'<i class="fa fa-thumbs-o-down" aria-hidden="true" style="color:red"></i> ('.$cntDislike.')</button>';
+         $html = $html.'<button id="opendesktopwidget-reviews-filters-likes" class="opendesktop-widget-btn opendesktop-widget-reviews-filters-btn">Show '
+                        .'<i class="fa fa-thumbs-o-up" aria-hidden="true" style="color:green"></i> ('.$cntLikes.')</button>';
+         $html = $html.'<button id="opendesktopwidget-reviews-filters-active" class="opendesktop-widget-btn opendesktop-widget-reviews-filters-btn opendesktopwidget-reviews-activeRating">Show Active Reviews ('.$cntActive.')</button>';
+         $html = $html.'<button id="opendesktopwidget-reviews-filters-all" class="opendesktop-widget-btn opendesktop-widget-reviews-filters-btn">Show all Reviews ('.$cntAll.')</button>';         
+         $html = $html.'</div>';         
+
+        
+        foreach ($reviews as $review) {
+             $clsActive = '';
+             $clsLike = '';
+             if($review['rating_active']==0){
+                $clsActive ='opendesktopwidget-reviews-rows-inactive ';
+             }else{
+                $clsActive ='opendesktopwidget-reviews-rows-active ';
+             }
+             if($review['user_like']==1){
+                $clsLike ='opendesktopwidget-reviews-rows-clsUpvotes ';
+             }else{
+                $clsLike ='opendesktopwidget-reviews-rows-clsDownvotes ';
+             }
+
+             $html = $html.'<div class="opendesktopwidget-reviews-rows '.$clsActive.$clsLike.'">';                                            
+              $html = $html.'<div class="opendesktopwidget-reviews-title">';
+              $html = $html.'<img class="opendesktopwidget-reviews-userimg" src="'.$helperImage->Image($review['profile_image_url'], array('width' => 40, 'height' => 40)).'" />'; 
+              $html = $html.'<span class="opendesktopwidget-reviews-title-1">'.$review['username'].'</span>';
+              $html = $html.'<span class="opendesktopwidget-reviews-title-2">'.$helperPrintDate->printDate($review['created_at']).'</span>';
+              if($review['user_like']==1){
+                    $html = $html.'<i class="fa fa-thumbs-o-up opendesktopwidget-like" aria-hidden="true" ></i>';
+              }else{
+                    $html = $html.'<i class="fa fa-thumbs-o-down opendesktopwidget-dislike" aria-hidden="true" ></i>';
+              }
+              $html = $html.'</div>';         
+              $html = $html.'<span class="opendesktopwidget-reviews-text">'.$review['comment_text'].'</span>';   
+              $html = $html.'</div>';
+        }
+        $html = $html.'</div>';         
+        return $html;
     }
 
     protected function _getProject($project_id){
@@ -151,20 +341,84 @@ class Embedv1Controller extends Zend_Controller_Action
             $this->_sendErrorResponse(101, 'content not found');
         }
 
-        $result = array();
-        
+        $result = array();        
         $result = array(
-            'id'           => $project['project_id'],
+            'project_id'           => $project['project_id'],
+            'member_id'           => $project['member_id'],
             'title'           => $project['title'],
-            'desc'           => $project['description'],
+            'description'           => $project['description'],
             'version'           => $project['version'],                        
-            'cat_id'         =>$project['project_category_id'],               
-            'created'         =>$project['project_created_at'],
-            'changed' => $project['project_changed_at'],
+            'project_category_id'         =>$project['project_category_id'],               
+            'project_created_at'         =>$project['project_created_at'],
+            'project_changed_at' => $project['project_changed_at'],
             'laplace_score' => $project['laplace_score'],
-            'image_small'    =>  $project['image_small']                        
+            'ppload_collection_id' => $project['ppload_collection_id'],
+            'image_small'    =>  $project['image_small'],                        
+            'count_likes'    =>  $project['count_likes'],
+            'count_dislikes'    =>  $project['count_dislikes'],
+            'count_comments'    =>  $project['count_comments'],
+            'cat_title'    =>  $project['cat_title'],
+            'username'    =>  $project['username'],
+            'profile_image_url'    =>  $project['profile_image_url'],            
+            'comments'  => array(),
+            'files' =>array(),
+            'lastchangelog'  => array(),
+            'pics'  => array(),
+            'changelogs'  => array(),            
+            'reviews'  => array()
         );
-                        
+
+        // gallerypics
+        $galleryPictureTable = new Default_Model_DbTable_ProjectGalleryPicture();
+        $stmt = $galleryPictureTable->select()->where('project_id = ?', $project_id)->order(array('sequence'));
+        $pics = array();
+        foreach ($galleryPictureTable->fetchAll($stmt) as $pictureRow) {
+            $pics[] = $pictureRow['picture_src'];
+        }
+        $result['pics'] = $pics;
+
+        // changelogs
+        $tableProjectUpdates = new Default_Model_ProjectUpdates();
+        $updates = $tableProjectUpdates->fetchProjectUpdates($project_id);
+        if (count($updates) > 0) {            
+             $logs = array();
+             foreach ($updates as $update) {
+                 $logs[] = array(
+                    'title' => $update['title'],
+                    'text' => $update['text'],
+                    'created_at' => $update['created_at'],
+                    );
+             }
+              $result['lastchangelog'] = $logs[0];
+             $result['changelogs'] = $logs;
+        }
+
+        //reviews
+        $tableProjectRatings = new Default_Model_DbTable_ProjectRating();
+        $reviews = $tableProjectRatings->fetchRating($project_id);
+        $r = array();
+        foreach ($reviews as $review) {
+            $r[] = array(
+               'member_id' => $review['member_id'],
+               'user_like' => $review['user_like'],
+               'user_dislike' => $review['user_dislike'],
+               'rating_active' => $review['rating_active'],
+               'created_at' => $review['created_at'],
+               'profile_image_url' => $review['profile_image_url'],
+               'username' => $review['username'],
+               'comment_text' => $review['comment_text']             
+               );
+        }
+        $result['reviews'] = $r;
+        
+        // comments
+        $comments = $this->_getCommentsForProject($project_id);
+        $result['comments'] = $comments;
+              
+        // pploadfiles
+        $files = $this->_getPploadFiles($project['ppload_collection_id']);
+        $result['files'] = $files;
+
        return $result;
     }
 
@@ -233,12 +487,17 @@ class Embedv1Controller extends Zend_Controller_Action
         $html = '';  
         foreach ($commentslist as $p) {        
                 $html = $html.'<div class="opendesktopwidgetcommentrow level'.$p['level'].'"  id="opendesktopwidgetcommentrow_'.$p['comment_id'].'">';                                    
-                                        
+                
                 $html = $html.'<img class="image_small" src="'.$helperImage->Image($p['profile_image_url'], array('width' => 60, 'height' => 60)).'" />'; 
+
+                $html = $html.'<div class="opendesktopwidgetcommentrow-header">';
+                $html = $html.'<span class="username">'.$p['username'].'</span>';  
                 $html = $html.'<span class="updatetime">'. $helperPrintDate->printDate($p['comment_created_at']).'</span>';  
+                $html = $html.'</div>';
+
                 $html = $html.'<div class="opendesktopwidgetcomment_content">';
                                            
-                $html = $html.'<div class="username">'.$p['username'].'</div>'; 
+                
                 $html = $html.'<div class="commenttext">'.$p['comment_text'].'</div>';      
                
                 $html = $html.'</div><div style="clear:both"/> ';
@@ -249,7 +508,7 @@ class Embedv1Controller extends Zend_Controller_Action
     }
 
     
-    protected function _getCommentsForProject($project_id,$curPage=0,$pageItemsCount=10)
+    protected function _getCommentsForProject($project_id,$curPage=1,$pageItemsCount=10)
     {
         
         $modelComments = new Default_Model_ProjectComments();        
@@ -298,7 +557,7 @@ class Embedv1Controller extends Zend_Controller_Action
         $pageLimit = $this->getParam('pagelimit');
         
         if(empty($pageLimit)){
-            $pageLimit = 5;
+            $pageLimit = 10;
         }        
 
         if(empty($page)){
@@ -330,10 +589,12 @@ class Embedv1Controller extends Zend_Controller_Action
                 if(empty($nopage)) {                 
                     //  init with member & pager & products       
                     $html = $this->_getHTMLMember($user_id)
+                                .'<div id="opendesktopwidget-main">'
                                 .$this->_getHTMLPager($user_id)
                                 .'<div id="opendesktopwidget-main-container">'
                                 .$this->_getHTMLProducts($userProducts)
-                                .'</div>';    
+                                .'</div>' 
+                                .'</div>';   
                 }else{
                     // for only ajax paging content
                     $html =$this->_getHTMLProducts($userProducts);
@@ -367,9 +628,13 @@ class Embedv1Controller extends Zend_Controller_Action
         $helperPrintDate = new Default_View_Helper_PrintDate();
         $html = '';  
         foreach ($userProducts as $p) {        
-                $html = $html.'<div class="opendesktopwidgetrow" id="opendesktopwidgetrow_'.$p['id'].'">';                                    
+                $html = $html.'<div class="opendesktopwidgetrow" id="opendesktopwidgetrow_'.$p['id']
+                                        .' " data-project-id="'.$p['id']                                    
+                                        .' " data-ppload-collection-id="'.$p['ppload_collection_id'].'">';                                    
                 //$html = $html.'<a href="'.$this->_config['baseurl'].'p/'.$p['id'].'" target="_blank">';                          
                 $html = $html.'<img class="image_small" src="'.$helperImage->Image($p['image_small'], array('width' => 167, 'height' => 167)).'" />'; 
+
+                $html = $html.'<div class="description-container">';      
                 $html = $html.'<div class="description">';      
                 $html = $html.'<span class="title">'.$p['title'].'</span>';      
                 $html = $html.'<span class="version">'.$p['version'].'</span>';      
@@ -378,31 +643,37 @@ class Embedv1Controller extends Zend_Controller_Action
                     $html = $html.'<span class="count_comments">'.$p['count_comments'].' comment' .($p['count_comments']>1?'s':'').'</span>';          
                 }                                                        
                 $html = $html.'</div><!--end of description-->';                           
+
                 $html = $html.'<div class="rating">';
                 $html = $html.$printRating->printRatingWidgetSimple($p['laplace_score'],$p['count_likes'],$p['count_dislikes']);
                 $html = $html.'<span class="updatetime">'. $helperPrintDate->printDate($p['changed']).'</span>';
                 $html = $html.'</div>';
 
+                $html = $html.'</div><!--end of description-container-->';  
                 //$html = $html.'</a><!--end of a-->';                  
                 $html = $html.'</div> <!-- end of opendesktopwidgetrow -->';
 
                 // hidden detail row
+                /*
                 $html = $html.'<div class="opendesktopwidgetrowdetail " id="opendesktopwidgetrowdetail_'.$p['id'].'">';  
                 $html = $html.'<span class="title">Description</span>';
                 $html = $html.$p['desc'];
+
 
                 // comments
                 $html = $html.'<div class="opendesktopwidgetcomments"></div>';
 
                 // ppload files
                 $html = $html.'<div class="opendesktopwidgetpploadfiles" data-ppload-collection-id="'.$p['ppload_collection_id'].'"></div>';
-                
-                $html = $html.'</div> <!-- end of opendesktopwidgetrowdetail -->';                
+               
+
+                $html = $html.'</div> <!-- end of opendesktopwidgetrowdetail -->';    
+                 */            
         }                              
         return $html;
     }
 
-    protected function _getHTMLPager($user_id,$pageLimit=5,$page=1)
+    protected function _getHTMLPager($user_id,$pageLimit=10,$page=1)
     {        
         $modelProject = new Default_Model_Project();
         $total_records = $modelProject->countAllProjectsForMember($user_id,true);

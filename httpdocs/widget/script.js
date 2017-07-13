@@ -1,8 +1,9 @@
 var opendesktop_widget = (function() {
 // Localize jQuery variable
 var jQuery;
+var opendesktopwigeturl = 'http://pling.cc/';
 //var opendesktopwigeturl = 'http://pling.local/';
-var opendesktopwigeturl = 'http://mylocal.com/';
+//var opendesktopwigeturl = 'http://mylocal.com/';
 /******** Load jQuery if not present *********/
 if (window.jQuery === undefined || window.jQuery.fn.jquery !== '3.2.1') {
     var script_tag = document.createElement('script');
@@ -26,6 +27,9 @@ if (window.jQuery === undefined || window.jQuery.fn.jquery !== '3.2.1') {
     main();
 }
 
+
+
+
 /******** Called once jQuery has loaded ******/
 function scriptLoadHandler() {
     // Restore $ and window.jQuery to their previous values and store the
@@ -35,9 +39,6 @@ function scriptLoadHandler() {
     main(); 
 }
 
-var showHelloWorld = function () {
-    alert("Hello world!");
-};
 
 
 
@@ -45,52 +46,125 @@ function main() {
     jQuery(document).ready(function($) { 
         /******* Load CSS *******/        
         let opendesktoploadingindicator = '<img src="'+opendesktopwigeturl+'theme/flatui/img/ajax-loader.gif"/>';
-        opendesktoptoggleRow = function(thisrow){
-                let prefix = 'opendesktopwidgetrow_';
-                let prefex_detail = 'opendesktopwidgetrowdetail_';                                                                                          
-                let detailcontainer = $('#'+$(thisrow).attr('id').replace(prefix,prefex_detail));    
-                if(detailcontainer.css("display")=='none'){                              
-                         let filecontainer = detailcontainer.find('div[data-ppload-collection-id]');
-                         let collectionid = filecontainer.attr('data-ppload-collection-id');
-                         // load pploadfiles if collection_id exist
-                         if(collectionid.trim()!=''){
-                               let jsonp_url_pploadfiles = opendesktopwigeturl+"embed/v1/ppload/"+collectionid+"?&callback=?"; 
-                               filecontainer.html(opendesktoploadingindicator);
-                               $.getJSON(jsonp_url_pploadfiles, function(data) {
-                                   filecontainer.html(data.html);
-                               });  
-                             }     
+        
+      opendesktopFilterReviews = function(filterBtn){
+          //init
+          $('#opendesktopwidget-reviews').find('.opendesktopwidget-reviews-rows').show();    
+          if($(filterBtn).attr('id')=='opendesktopwidget-reviews-filters-all'){
+                $('#opendesktopwidget-reviews').find('.opendesktopwidget-reviews-rows-inactive').show();
+                $('#opendesktopwidget-reviews').find('.opendesktopwidget-reviews-rows-active').show();                                       
+          } else  
+          if($(filterBtn).attr('id')=='opendesktopwidget-reviews-filters-active'){
+                $('#opendesktopwidget-reviews').find('.opendesktopwidget-reviews-rows-inactive').hide();
+                $('#opendesktopwidget-reviews').find('.opendesktopwidget-reviews-rows-active').show();                                       
+          } else                                                               
+          if($(filterBtn).attr('id')=='opendesktopwidget-reviews-filters-likes'){
+                $('#opendesktopwidget-reviews').find('.opendesktopwidget-reviews-rows-clsUpvotes').show();
+                $('#opendesktopwidget-reviews').find('.opendesktopwidget-reviews-rows-clsDownvotes').hide();
+                $('#opendesktopwidget-reviews').find('.opendesktopwidget-reviews-rows-inactive').hide();                                       
+          } else
+          if($(filterBtn).attr('id')=='opendesktopwidget-reviews-filters-hates'){
+                $('#opendesktopwidget-reviews').find('.opendesktopwidget-reviews-rows-clsUpvotes').hide();
+                $('#opendesktopwidget-reviews').find('.opendesktopwidget-reviews-rows-clsDownvotes').show();    
+                $('#opendesktopwidget-reviews').find('.opendesktopwidget-reviews-rows-inactive').hide();                                   
+          }
+          $('html, body').animate({
+                 scrollTop: $('#opendesktopwidget-reviews').offset().top-50
+             }, 1);  
+      }
+        opendesktoptoggleDetail = function(thisrow){
+                let listcontainer = $('#opendesktopwidget-main');
+                let detailcontainer = $('#opendesktopwidget-main-detail-container');
+                if(detailcontainer.length==0){
+                      detailcontainer = $('<div id="opendesktopwidget-main-detail-container"></div>');                      
+                      listcontainer.parent().append(detailcontainer);
+                      listcontainer.hide();                                          
+                }else{                      
+                      detailcontainer.show();
+                      detailcontainer.html('');
+                      listcontainer.hide();
+                }                
+                
+                let navi = $('<div class="opendesktopwidget-subnavi"><a class="backtolist"> << Back to List</a></div>');
+                navi.on('click',function(){
+                       detailcontainer.hide();
+                       listcontainer.show();
+                });
+                detailcontainer.append(navi);
 
-                        let commentscontainer =  detailcontainer.find('.opendesktopwidgetcomments');
-                        let projectid = $(thisrow).attr('id').replace(prefix,'');
-                        let jsonp_url_comments = opendesktopwigeturl+"embed/v1/comments/"+projectid+"?&callback=?"; 
-                        //commentscontainer.html(opendesktoploadingindicator);
-                        $.getJSON(jsonp_url_comments, function(data) {
-                            commentscontainer.html(data.html);
-
-                            let spans = commentscontainer.find('ul.opendesktopwidgetpager').find('span');
-                            spans.each(function(index) {
-                                $(this).on("click", function(){                      
-                                    $(this).parent().addClass('active').siblings().removeClass('active');                      
-                                    commentscontainer.find('#opendesktopwidget-main-container-comments').html(opendesktoploadingindicator);    
-
-                                    let jsonp_url_nopage = opendesktopwigeturl+"embed/v1/comments/"+projectid+"?nopage=1&page="+$(this).html()+"&callback=?";     
-                                    $.getJSON(jsonp_url_nopage, function(data) {
-                                        commentscontainer.find('#opendesktopwidget-main-container-comments').html(data.html);                                                     
+                let projectid = $(thisrow).attr('data-project-id');
+                let container  = $('<div class="opendesktopwidget-main-detail-container-body"></div>'); 
+                container.append(opendesktoploadingindicator);    
+                detailcontainer.append(container);      
+                let jsonp_url_projectdetail = opendesktopwigeturl+"embed/v1/project/"+projectid+"?&callback=?"; 
+                $.getJSON(jsonp_url_projectdetail, function(data) {
+                    container.html(data.html);
+                    
+                    // images carousel
+                    let imgs = $('#opendesktopwidget-main-detail-carousel').find('img');                    
+                    if(imgs.length>1){
+                            $.getScript('https://cdnjs.cloudflare.com/ajax/libs/simple-slider/1.0.0/simpleslider.min.js',function( data, textStatus, jqxhr ) {                            
+                                    let slider = simpleslider.getSlider({
+                                          container: document.getElementById('opendesktopwidget-main-detail-carousel'),
+                                          paused:true
+                                    });                                   
+                                    $('.opendesktopwidget-imgs').find('.prev').on('click',function(){
+                                          slider.prev();
                                     });
+                                    $('.opendesktopwidget-imgs').find('.next').on('click',function(){
+                                          slider.next();
+                                    });                                  
+                            });
+                    }
+                                                          
+                    // tabs onclick
+                    let lis = container.find('#opendesktopwidget-content-tabs').find('li');
+                    lis.each(function(index) {
+                        $(this).on("click", function(){                      
+                            $(this).addClass('active').siblings().removeClass('active');  
+                            let tabcontainerid = $(this).find('a').attr('data-wiget-target');                            
+                            $(tabcontainerid).addClass('active').siblings().removeClass('active') ;                                              
+                            $('html, body').animate({
+                                   scrollTop: $(tabcontainerid).offset().top-50
+                               }, 1);             
+                        });
+                    });
+                    
+                    // project comments paging
+                    let spans = container.find('.opendesktopwidgetcomments').find('ul.opendesktopwidgetpager').find('span');
+                    spans.each(function(index) {
+                        $(this).on("click", function(){                      
+                            $(this).parent().addClass('active').siblings().removeClass('active');                      
+                            container.find('#opendesktopwidget-main-container-comments').html(opendesktoploadingindicator);    
 
-                                });
+                            let jsonp_url_nopage = opendesktopwigeturl+"embed/v1/comments/"+projectid+"?nopage=1&page="+$(this).html()+"&callback=?";     
+                            $.getJSON(jsonp_url_nopage, function(data) {
+                                container.find('#opendesktopwidget-main-container-comments').html(data.html);                                                     
                             });
 
+                        });
+                    });
 
-                        });  
-
-                };
-                detailcontainer.slideToggle();
+                    // reviews filter
+                    let reviewsfilters = container.find('#opendesktopwidget-reviews').find('.opendesktop-widget-reviews-filters-btn');
+                    reviewsfilters.each(function(index){
+                          $(this).on("click", function(){ 
+                                $(this).addClass('opendesktopwidget-reviews-activeRating').siblings().removeClass('opendesktopwidget-reviews-activeRating'); 
+                                opendesktopFilterReviews(this);
+                          });
+                    });
+              
+           
+                });                 
         }
 
+      
+
         let opendesktopwidgetcss_link = $("<link>", { rel: "stylesheet", type: "text/css", href: opendesktopwigeturl+"widget/style.css" });
+        let fontawsomecss_link =$("<link>", { rel: "stylesheet", type: "text/css", href:"http://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" });
+
         opendesktopwidgetcss_link.appendTo('head');          
+        fontawsomecss_link.appendTo('head'); 
 
        $('#opendesktopwiget').after('<div class="opendesktopwidgetloader">'+opendesktoploadingindicator+'</div> ');
         /******* Load HTML *******/       
@@ -116,7 +190,7 @@ function main() {
                                     let rows =$('#opendesktop-widget-container').find('.opendesktopwidgetrow');
                                          rows.each(function(index) {
                                              $(this).on("click", function(){                                                       
-                                                  opendesktoptoggleRow(this);
+                                                  opendesktoptoggleDetail(this);
                                              });
                                          });
                       });
@@ -127,7 +201,7 @@ function main() {
               let rows =$('#opendesktop-widget-container').find('.opendesktopwidgetrow');
               rows.each(function(index) {
                   $(this).on("click", function(){ 
-                        opendesktoptoggleRow(this);                    
+                        opendesktoptoggleDetail(this);                    
                   });
               });
               
