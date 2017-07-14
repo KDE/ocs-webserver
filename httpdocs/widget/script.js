@@ -44,9 +44,8 @@ function scriptLoadHandler() {
 
 function main() { 
     jQuery(document).ready(function($) { 
-        /******* Load CSS *******/        
-        let opendesktoploadingindicator = '<img src="'+opendesktopwigeturl+'theme/flatui/img/ajax-loader.gif"/>';
-        
+        /******* Load CSS *******/                
+        let indicator = '<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>';            
       opendesktopFilterReviews = function(filterBtn){
           //init
           $('#opendesktopwidget-reviews').find('.opendesktopwidget-reviews-rows').show();    
@@ -85,7 +84,9 @@ function main() {
                       listcontainer.hide();
                 }                
                 
-                let navi = $('<div class="opendesktopwidget-subnavi"><a class="backtolist"> << Back to List</a></div>');
+                
+                let naviback = '<i class="fa fa-angle-double-left" aria-hidden="true"></i>';
+                let navi = $('<div class="opendesktopwidget-subnavi"><a class="backtolist">'+ naviback +'Back to List</a></div>');
                 navi.on('click',function(){
                        detailcontainer.hide();
                        listcontainer.show();
@@ -94,7 +95,7 @@ function main() {
 
                 let projectid = $(thisrow).attr('data-project-id');
                 let container  = $('<div class="opendesktopwidget-main-detail-container-body"></div>'); 
-                container.append(opendesktoploadingindicator);    
+                container.append(indicator);    
                 detailcontainer.append(container);      
                 let jsonp_url_projectdetail = opendesktopwigeturl+"embed/v1/project/"+projectid+"?&callback=?"; 
                 $.getJSON(jsonp_url_projectdetail, function(data) {
@@ -135,10 +136,11 @@ function main() {
                     spans.each(function(index) {
                         $(this).on("click", function(){                      
                             $(this).parent().addClass('active').siblings().removeClass('active');                      
-                            container.find('#opendesktopwidget-main-container-comments').html(opendesktoploadingindicator);    
-
+                          
+                           $(indicator).insertBefore(container.find('.opendesktopwidgetcomments').find('ul.opendesktopwidgetpager'));
                             let jsonp_url_nopage = opendesktopwigeturl+"embed/v1/comments/"+projectid+"?nopage=1&page="+$(this).html()+"&callback=?";     
                             $.getJSON(jsonp_url_nopage, function(data) {
+                                container.find('i.fa-spinner').remove();
                                 let ct = container.find('#opendesktopwidget-main-container-comments');  
                                 ct.html(data.html);
                                 $('html, body').animate({
@@ -169,8 +171,7 @@ function main() {
 
         opendesktopwidgetcss_link.appendTo('head');          
         fontawsomecss_link.appendTo('head'); 
-
-       $('#opendesktopwiget').after('<div class="opendesktopwidgetloader">'+opendesktoploadingindicator+'</div> ');
+       
         /******* Load HTML *******/       
       let this_js_script = $('#opendesktopwiget');
       let memberid = this_js_script.attr('data-memberid');   
@@ -178,25 +179,27 @@ function main() {
           alert('Please set data-memberid in your script.');
           return;
        }
+
+       $('#opendesktopwiget').after('<div id="opendesktop-widget-container">'+indicator+'</div>');
        let jsonp_url = opendesktopwigeturl+"embed/v1/member/"+memberid+"?callback=?";       
         $.getJSON(jsonp_url, function(data) {
-              $('.opendesktopwidgetloader').remove();
-              $('#opendesktopwiget').after('<div id="opendesktop-widget-container">loading...</div>');
               $('#opendesktop-widget-container').html(data.html);             
               let spans = $('.opendesktopwidgetpager').find('span');
               spans.each(function(index) {
                   $(this).on("click", function(){                      
                       $(this).parent().addClass('active').siblings().removeClass('active');                      
-                      $('#opendesktopwidget-main-container').html(opendesktoploadingindicator);                          
+                      //$('#opendesktopwidget-main-container').html(indicator);                          
+                      $(indicator).insertBefore($('#opendesktop-widget-container').find('ul.opendesktopwidgetpager'));                      
                       let jsonp_url_nopage = opendesktopwigeturl+"embed/v1/member/"+memberid+"?nopage=1&page="+$(this).html()+"&callback=?";     
                       $.getJSON(jsonp_url_nopage, function(data) {
+                          $('#opendesktop-widget-container').find('i.fa-spinner').remove();
                           $('#opendesktopwidget-main-container').html(data.html);    
-                                    let rows =$('#opendesktop-widget-container').find('.opendesktopwidgetrow');
-                                         rows.each(function(index) {
-                                             $(this).on("click", function(){                                                       
-                                                  opendesktoptoggleDetail(this);
-                                             });
-                                         });
+                          let rows =$('#opendesktop-widget-container').find('.opendesktopwidgetrow');
+                               rows.each(function(index) {
+                                   $(this).on("click", function(){                                                       
+                                        opendesktoptoggleDetail(this);
+                                   });
+                               });
                       });
 
                   });

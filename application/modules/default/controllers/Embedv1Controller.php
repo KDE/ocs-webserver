@@ -179,8 +179,8 @@ class Embedv1Controller extends Zend_Controller_Action
 
             $html = $html.'</div>';     
             if(count($project['pics'])>1){
-                $html = $html.'<button class="prev"><i class="fa fa-chevron-left opendesktop-navi" aria-hidden="true"></i></button>';
-                $html = $html.'<button class="next"><i class="fa fa-chevron-right opendesktop-navi" aria-hidden="true"></i></button>';                
+                $html = $html.'<button class="prev opendesktop-widget-btn"><i class="fa fa-chevron-left opendesktop-navi" aria-hidden="true"></i></button>';
+                $html = $html.'<button class="next opendesktop-widget-btn"><i class="fa fa-chevron-right opendesktop-navi" aria-hidden="true"></i></button>';                
             }
             $html = $html.'</div>'; 
         }           

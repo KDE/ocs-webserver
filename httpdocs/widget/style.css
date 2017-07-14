@@ -14,6 +14,13 @@
 #opendesktop-widget-container .hide {
   display: none !important;
 }
+#opendesktop-widget-container i.fa-spinner {
+  font-size: 30px;
+}
+#opendesktop-widget-container i.fa-angle-double-left {
+  font-size: 20px;
+  padding-right: 10px;
+}
 #opendesktop-widget-container .opendesktop-widget-btn {
   display: inline-block;
   padding: 6px 12px;
@@ -581,9 +588,13 @@
 #opendesktop-widget-container .opendesktopwidgetcomments {
   width: 75%;
 }
+#opendesktop-widget-container .opendesktopwidgetcomments .fa-spinner {
+  font-size: 30px;
+}
 #opendesktop-widget-container .opendesktopwidgetpager {
   display: flex;
   justify-content: right;
+  align-items: center;
 }
 #opendesktop-widget-container .opendesktopwidgetpager ul.opendesktopwidgetpager {
   display: inline-block;
