@@ -100,11 +100,16 @@ $lastMonth = date("Ym", strtotime("first day of previous month"));
                 for (var i in data.records) {
                     $('#TableContainer').find(".jtable tbody tr:eq(" + i + ")").css("cssText", "background-color:" + data.records[i].color + " !important; color:white !important;");
                 }
+            },
+            recordUpdated: function (event, data) {
+                $('#TableContainer').jtable('load');
+            },
+            rowUpdated: function (event, data) {
+                $('#TableContainer').jtable('load');
             }
         });
 
         $('#TableContainer').jtable('load');
-        
         
     });
 </script>
