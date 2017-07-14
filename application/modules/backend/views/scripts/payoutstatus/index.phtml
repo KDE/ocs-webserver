@@ -53,6 +53,13 @@ $lastMonth = date("Ym", strtotime("first day of previous month"));
                     edit: true,
                     list: true
                 },
+                type: {
+                    title: 'Type',
+                    list: true,
+                    create: true,
+                    edit: true,
+                    options: {'info': 'Info', 'warning': 'Warning', 'danger': 'Error', 'success': 'Success'}
+                },
                 title: {
                     title: 'Title',
                     list: true,
@@ -67,9 +74,17 @@ $lastMonth = date("Ym", strtotime("first day of previous month"));
                 },
                 color: {
                     title: 'Color',
-                    list: false,
-                    create: false,
-                    edit: false
+                    list: true,
+                    create: true,
+                    edit: true,
+                    defaultValue: '#31708f;'
+                },
+                icon: {
+                    title: 'Icon',
+                    list: true,
+                    create: true,
+                    edit: true,
+                    defaultValue: 'glyphicon-info-sign'
                 },
                 is_active: {
                     title: 'Active',
@@ -83,15 +98,7 @@ $lastMonth = date("Ym", strtotime("first day of previous month"));
             },
             recordsLoaded: function (event, data) {
                 for (var i in data.records) {
-                    if (data.records[i].status == 100) {
-                        $('#TableContainer').find(".jtable tbody tr:eq(" + i + ")").css("cssText", "background-color:green !important; color:white !important;");
-                    }
-                    if (data.records[i].status == 1) {
-                        $('#TableContainer').find(".jtable tbody tr:eq(" + i + ")").css("cssText", "background-color:yellow !important; color:black !important;");
-                    }
-                    if (data.records[i].status > 100) {
-                        $('#TableContainer').find(".jtable tbody tr:eq(" + i + ")").css("cssText", "background-color:red !important; color:white !important;");
-                    }
+                    $('#TableContainer').find(".jtable tbody tr:eq(" + i + ")").css("cssText", "background-color:" + data.records[i].color + " !important; color:white !important;");
                 }
             }
         });
