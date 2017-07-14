@@ -1005,7 +1005,22 @@ var LoginContainer = (function () {
 var RssNews = (function () {
     return {
         setup: function () {
-               
+              
+              let json_url="https://blog.opendesktop.org/?json=1&callback=?";
+              $.getJSON(json_url, function(res) {                
+                    var crss ='';                  
+                    $.each( res.posts, function( i, item ) {                           
+                               if ( i >= 3 ) {
+                                 return false;
+                               }
+                               var m = moment(item.date);
+                               crss+='<div class="commentstore"><a href="'+item.url+'"><span class="title">'+item.title +'</span></a><br/>' + item.excerpt
+                               +'<span class="date">'+m.format('MMM DD YYYY LT')+'</span></div>';                           
+                             }); 
+                    $("#rss-feeds").html(crss);
+                 
+              });      
+            /*             
             var yql = "https://query.yahooapis.com/v1/public/yql?q=select%20title%2Clink%2CpubDate%2Cdescription%20from%20rss%20where%20url%3D%22http%3A%2F%2Fblog.opendesktop.org%2Ffeed%22&format=json&diagnostics=true&callback=";          
              $.getJSON(yql, function(res) {                
                    var crss ='';
@@ -1018,7 +1033,8 @@ var RssNews = (function () {
                               +'<br/><span class="date">'+m.format('MMM DD YYYY LT')+'</span></div>';                           
                             }); 
                    $("#rss-feeds").html(crss);
-             });                                                                      
+             });    
+             */                  
         }
         
     }
