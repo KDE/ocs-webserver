@@ -50,11 +50,18 @@ var aItemData = [
             id: "user",
             itemdata: [
                 {text: "Users", url: "/backend/user"},
-                {text: "Config Paypal-Valid-Stati", url: "/backend/paypalvalidstatus"},
+                {text: "Config Paypal-Valid-Stati", url: "/backend/paypalvalidstatus"}
+            ]
+        }
+    },
+    {
+        text: "Payout",
+        submenu: {
+            id: "payout",
+            itemdata: [
                 {text: "Member Payouts", url: "/backend/memberpayout"},
-                
-                {text: "Member Paypal-Addresses", url: "/backend/memberpaypaladdress"},
-                
+                {text: "Config Payout-Stati", url: "/backend/payoutstatus"},
+                {text: "Member Paypal-Addresses", url: "/backend/memberpaypaladdress"}
             ]
         }
     },

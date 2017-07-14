@@ -79,6 +79,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addResource(new Zend_Acl_Resource ('backend_memberpayout'));
         $this->addResource(new Zend_Acl_Resource ('backend_memberpaypaladdress'));
         $this->addResource(new Zend_Acl_Resource ('backend_paypalvalidstatus'));
+        $this->addResource(new Zend_Acl_Resource ('backend_payoutstatus'));
         $this->addResource(new Zend_Acl_Resource ('backend_operatingsystem'));
         $this->addResource(new Zend_Acl_Resource ('backend_project'));
         $this->addResource(new Zend_Acl_Resource ('backend_ranking'));

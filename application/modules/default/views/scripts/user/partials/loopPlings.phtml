@@ -73,7 +73,34 @@ if ($this->countDownloadsOverall > 0) {
             $currentMonth = $printDate;
         
     ?>
-    <li class="<?=$css_active?>"><a href="#<?= $download['yearmonth'] ?>" data-toggle="tab"><?= $printDate ?></a></li>
+    
+    <?php   
+        $showDiv = false;
+        $infoTextLinkToPaypal = "";
+        
+        if(isset($download['payment_transaction_id'])) {
+            $infoTextLinkToPaypal = ' Your PayPal TransactionId:'.$download['payment_transaction_id'].'.';
+        }
+        $payoutStatusTable = new Default_Model_DbTable_PayoutStatus();
+        $payoutStatus = $payoutStatusTable->find($download['status'])->current();
+        
+        $infoTitle = $payoutStatus['title'];
+        $infoText = $payoutStatus['description'];
+        $infoIconStyle = "color: ".$payoutStatus['color']." ";
+        $infoClass = $payoutStatus['type'];
+        $infoIcon = $payoutStatus['icon'];
+        
+        $infoText .= $infoTextLinkToPaypal;
+        
+        $popover = "";
+        if(isset($download['status']) && isset($infoText)) {
+            $popover = '<div class="inline payout-popover-'.$infoClass.'" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="'.$infoTitle.'" data-trigger="hover" data-html="true" data-content="'.$infoText.'"><span style="'. $infoIconStyle .'" class="glyphicon '.$infoIcon.'" aria-hidden="true"></span></div>';
+        }
+    ?>
+    <li class="<?=$css_active?> ">
+        <a href="#<?= $download['yearmonth'] ?>" data-toggle="tab"><?= $printDate ?><?= $popover ?></a>
+    </li>
+    
     <?php
         }
         $css_active = '';
@@ -167,54 +194,7 @@ if ($this->countDownloadsOverall > 0) {
                 
             </div>
             
-            <?php   
-                /**
-                *  public static $PAYOUT_STATUS_NEW = 0;
-                   public static $PAYOUT_STATUS_REQUESTED = 1;
-                   public static $PAYOUT_STATUS_PROCESSED = 10;
-                   public static $PAYOUT_STATUS_PENDING = 50;
-                   public static $PAYOUT_STATUS_COMPLETED = 100;
-                   public static $PAYOUT_STATUS_DENIED = 999;
-                   public static $PAYOUT_STATUS_REFUND = 900;
-                   public static $PAYOUT_STATUS_ERROR = 99;
-                */
-            	$showDiv = false;
-                if ($product['status'] == Default_Model_DbTable_MemberPayout::$PAYOUT_STATUS_REQUESTED) {
-                    echo '<div class="alert alert-info" role="alert">We send your payout. The actual status is: Requested.';
-                    $showDiv = true;
-                }
-                if ($product['status'] == Default_Model_DbTable_MemberPayout::$PAYOUT_STATUS_PROCESSED) {
-                    echo '<div class="alert alert-info" role="alert">We send your payout. The actual status is: Processed.';
-                    $showDiv = true;
-                }
-                if ($product['status'] == Default_Model_DbTable_MemberPayout::$PAYOUT_STATUS_PENDING) {
-                    echo '<div class="alert alert-info" role="alert">We send your payout. The actual status is: Pending.';
-                    $showDiv = true;
-                }
-                if ($product['status'] == Default_Model_DbTable_MemberPayout::$PAYOUT_STATUS_COMPLETED) {
-                    echo '<div class="alert alert-success" role="alert">For this month we has successfully paid you: '.$sum_total_payout_success.'.';
-                    $showDiv = true;
-                }
-                if ($product['status'] == Default_Model_DbTable_MemberPayout::$PAYOUT_STATUS_REFUND) {
-                    echo '<div class="alert alert-danger" role="alert">We tried to payout your plings, but your payment was refund.';
-                    $showDiv = true;
-                }
-                if ($product['status'] == Default_Model_DbTable_MemberPayout::$PAYOUT_STATUS_DENIED) {
-                    echo '<div class="alert alert-danger" role="alert">We tried to payout your plings, but your payment was denied.';
-                    $showDiv = true;
-                }
-                if ($product['status'] == Default_Model_DbTable_MemberPayout::$PAYOUT_STATUS_ERROR) {
-                    echo '<div class="alert alert-danger" role="alert">We tried to payout your plings, but there was an error.';
-                    $showDiv = true;
-                }
-                
-                if(isset($product['payment_transaction_id'])) {
-                    echo ' You can see the details of the transaction on <a target="_NEW" href="https://www.paypal.com/cgi-bin/webscr?cmd=_view-a-trans&id='.$product['payment_transaction_id'].'">PayPal</a>.';
-                }
-                if($showDiv) {
-                	echo '</div>';
-                }
-            ?>
+            
             
             <?php 
 
@@ -288,8 +268,28 @@ if ($this->countDownloadsOverall > 0) {
     $('.close').click(function () {
         $(this).parent().removeClass('in'); // hides alert with Bootstrap CSS3 implem
     });
+    
+    $(function(){
+        // Enables popover
+        $(".payout-popover-info").popover({
+            html : true,
+            template : '<div class="popover alert alert-info alert-block" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+        });
+        $(".payout-popover-warning").popover({
+            html : true,
+            template : '<div class="popover alert alert-warning alert-block" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+        });
+        $(".payout-popover-success").popover({
+            html : true,
+            template : '<div class="popover alert alert-success alert-block" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+        });
+        $(".payout-popover-danger").popover({
+            html : true,
+            template : '<div class="popover alert alert-danger alert-block" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+        });
+    });
 
-</script>    
+</script> 
 
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){

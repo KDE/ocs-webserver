@@ -45,24 +45,6 @@ $this->tab = 'settings';
                 <!-- PAGE BODY -->
                 <section class="settings-page">
                     <h1 class="page-title"><?= $this->translate('Settings') ?></h1>
-                <?php
-                    $member = $this->member;
-                    if($member->paypal_valid_status > 100) {
-                        $status = $this->paypal_valid_status;
-                        if($status->color == 'red') {
-                            echo '<div class="alert alert-danger" role="alert">'.$status->description.'</div>';
-                        }
-                        if($status->color == 'yellow') {
-                            echo '<div class="alert alert-warning" role="alert">'.$status->description.'</div>';
-                        }
-                        if($status->color == 'blue') {
-                            echo '<div class="alert alert-info" role="alert">'.$status->description.'</div>';
-                        }
-                        if($status->color == 'green') {
-                            echo '<div class="alert alert-success" role="alert">'.$status->description.'</div>';
-                        }
-                    }
-                ?>
                     <br/>
 
                     <div class="pling-nav-tabs">
