@@ -1,8 +1,8 @@
 var opendesktop_widget = (function() {
 // Localize jQuery variable
 var jQuery;
-var opendesktopwigeturl = 'http://pling.cc/';
-//var opendesktopwigeturl = 'http://pling.local/';
+//var opendesktopwigeturl = 'http://pling.cc/';
+var opendesktopwigeturl = 'http://pling.local/';
 //var opendesktopwigeturl = 'http://mylocal.com/';
 /******** Load jQuery if not present *********/
 if (window.jQuery === undefined || window.jQuery.fn.jquery !== '3.2.1') {
@@ -175,13 +175,23 @@ function main() {
         /******* Load HTML *******/       
       let this_js_script = $('#opendesktopwiget');
       let memberid = this_js_script.attr('data-memberid');   
+      let countperpage = this_js_script.attr('data-countperpage'); 
+      let catids = this_js_script.attr('data-catids');       
+      let query = '';
+      if(countperpage){
+           query = 'pagelimit='+countperpage+'&';
+      }
+      if(catids){
+           query =query+'catids='+catids+'&';
+      }
+
        if (typeof memberid === "undefined" ) {
           alert('Please set data-memberid in your script.');
           return;
        }
 
        $('#opendesktopwiget').after('<div id="opendesktop-widget-container">'+indicator+'</div>');
-       let jsonp_url = opendesktopwigeturl+"embed/v1/member/"+memberid+"?callback=?";       
+       let jsonp_url = opendesktopwigeturl+"embed/v1/member/"+memberid+"?"+query+"callback=?";       
         $.getJSON(jsonp_url, function(data) {
               $('#opendesktop-widget-container').html(data.html);             
               let spans = $('.opendesktopwidgetpager').find('span');
@@ -190,7 +200,7 @@ function main() {
                       $(this).parent().addClass('active').siblings().removeClass('active');                      
                       //$('#opendesktopwidget-main-container').html(indicator);                          
                       $(indicator).insertBefore($('#opendesktop-widget-container').find('ul.opendesktopwidgetpager'));                      
-                      let jsonp_url_nopage = opendesktopwigeturl+"embed/v1/member/"+memberid+"?nopage=1&page="+$(this).html()+"&callback=?";     
+                      let jsonp_url_nopage = opendesktopwigeturl+"embed/v1/member/"+memberid+"?"+query+"nopage=1&page="+$(this).html()+"&callback=?";     
                       $.getJSON(jsonp_url_nopage, function(data) {
                           $('#opendesktop-widget-container').find('i.fa-spinner').remove();
                           $('#opendesktopwidget-main-container').html(data.html);    
@@ -213,6 +223,9 @@ function main() {
               });
               
         });
+
+
+
     });
 }
 

@@ -555,9 +555,14 @@ class Embedv1Controller extends Zend_Controller_Action
         $page = $this->getParam('page');
         $nopage = $this->getParam('nopage');   // with param nopage will only show prudusts list otherwise show member+pager+productlist
         $pageLimit = $this->getParam('pagelimit');
+        $catids = $this->getParam('catids');
         
         if(empty($pageLimit)){
             $pageLimit = 10;
+        }        
+
+         if(empty($catids)){
+            $catids = null;
         }        
 
         if(empty($page)){
@@ -574,7 +579,7 @@ class Embedv1Controller extends Zend_Controller_Action
             );          
         }else{           
 
-            $userProducts = $this->_getMemberProducts($user_id, $pageLimit, $page);
+            $userProducts = $this->_getMemberProducts($user_id, $pageLimit, $page,$catids);
             
             $response = array(
                 'status'     => 'ok',
@@ -590,7 +595,7 @@ class Embedv1Controller extends Zend_Controller_Action
                     //  init with member & pager & products       
                     $html = $this->_getHTMLMember($user_id)
                                 .'<div id="opendesktopwidget-main">'
-                                .$this->_getHTMLPager($user_id)
+                                .$this->_getHTMLPager($user_id,$pageLimit)
                                 .'<div id="opendesktopwidget-main-container">'
                                 .$this->_getHTMLProducts($userProducts)
                                 .'</div>' 
@@ -710,10 +715,10 @@ class Embedv1Controller extends Zend_Controller_Action
 
 
 
-    protected function _getMemberProducts($user_id,$pageLimit=5,$page=1)
+    protected function _getMemberProducts($user_id,$pageLimit=5,$page=1,$catids = null)
     {
         $modelProject = new Default_Model_Project();
-        $userProjects = $modelProject->fetchAllProjectsForMember($user_id, $pageLimit,($page - 1) * $pageLimit, true);
+        $userProjects = $modelProject->fetchAllProjectsForMemberCatFilter($user_id, $pageLimit,($page - 1) * $pageLimit, true,$catids);
         
         $result = array();
         foreach ($userProjects as $project) {                       

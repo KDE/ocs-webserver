@@ -231,7 +231,7 @@
 }
 #opendesktop-widget-container #opendesktopwidget-main-container .opendesktopwidgetrow img.image_small {
   width: 170px;
-  height: 167px;
+  height: 140px;
   vertical-align: middle;
   padding-top: 10px;
   padding-bottom: 10px;
@@ -442,7 +442,7 @@
 }
 #opendesktop-widget-container #opendesktopwidget-main-detail-container .opendesktopwidget-main-detail-container-body .opendesktopwidget-imgs img {
   max-width: 800px;
-  max-height: 500px;
+  max-height: 400px;
 }
 #opendesktop-widget-container #opendesktopwidget-main-detail-container .opendesktopwidget-main-detail-container-body .opendesktopwidget-imgs .opendesktop-navi {
   font-size: 18px;
