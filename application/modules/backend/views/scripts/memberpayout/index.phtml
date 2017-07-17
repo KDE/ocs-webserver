@@ -48,7 +48,7 @@ $lastMonth = date("Ym", strtotime("first day of previous month"));
         Status:
 
             <select name="filter_status" id="filter_status">
-        
+        		<option value=""></option>
 	        <?php 
 		        $optionString = "'':'',";
 	            $payoutStatusModel = new Default_Model_DbTable_PayoutStatus();
@@ -157,18 +157,19 @@ $lastMonth = date("Ym", strtotime("first day of previous month"));
             },
             recordsLoaded: function (event, data) {
                 for (var i in data.records) {
-                    if (data.records[i].status == 100) {
-                        $('#TableContainer').find(".jtable tbody tr:eq(" + i + ")").css("cssText", "background-color:#3c763d; !important; color:white !important;");
-                    }
+                    
                     if (data.records[i].status > 0 && data.records[i].status < 99) {
                         $('#TableContainer').find(".jtable tbody tr:eq(" + i + ")").css("cssText", "background-color:#31708f; !important; color:black !important;");
-                    }
+                    } else
+                    if (data.records[i].status == 100) {
+                        $('#TableContainer').find(".jtable tbody tr:eq(" + i + ")").css("cssText", "background-color:#3c763d; !important; color:white !important;");
+                    } else
                     if (data.records[i].status > 900 && data.records[i].status < 930) {
                         $('#TableContainer').find(".jtable tbody tr:eq(" + i + ")").css("cssText", "background-color:#bd8614; !important; color:black !important;");
-                    }
-                    if (data.records[i].status = 900) {
-                        $('#TableContainer').find(".jtable tbody tr:eq(" + i + ")").css("cssText", "background-color:#0f2573 !important; color:black !important;");
-                    }
+                    } else
+                    if (data.records[i].status == 900) {
+                        $('#TableContainer').find(".jtable tbody tr:eq(" + i + ")").css("cssText", "background-color:#0f2573; !important; color:black !important;");
+                    } else
                     if (data.records[i].status >= 930) {
                         $('#TableContainer').find(".jtable tbody tr:eq(" + i + ")").css("cssText", "background-color:#a94442; !important; color:white !important;");
                     }
@@ -177,6 +178,7 @@ $lastMonth = date("Ym", strtotime("first day of previous month"));
             recordUpdated: function (event, data) {
                 if (data.record) {
                     $('#TableContainer').jtable('load', {
+                    	filter_status: $('#filter_status').val(),
                         filter_yearmonth: $('#filter_yearmonth').val(),
                         filter_member_id: $('#filter_member_id').val(),
                         filter_paypal_mail: $('#filter_paypal_mail').val(),
@@ -187,6 +189,7 @@ $lastMonth = date("Ym", strtotime("first day of previous month"));
             rowUpdated: function (event, data) {
                 if (data.record) {
                     $('#TableContainer').jtable('load', {
+                    	filter_status: $('#filter_status').val(),
                         filter_yearmonth: $('#filter_yearmonth').val(),
                         filter_member_id: $('#filter_member_id').val(),
                         filter_paypal_mail: $('#filter_paypal_mail').val(),
@@ -200,6 +203,7 @@ $lastMonth = date("Ym", strtotime("first day of previous month"));
         $('#LoadRecordsButton').click(function (e) {
             e.preventDefault();
             $('#TableContainer').jtable('load', {
+            	filter_status: $('#filter_status').val(),
                 filter_yearmonth: $('#filter_yearmonth').val(),
                 filter_member_id: $('#filter_member_id').val(),
                 filter_paypal_mail: $('#filter_paypal_mail').val(),
@@ -211,6 +215,7 @@ $lastMonth = date("Ym", strtotime("first day of previous month"));
         $('#RemoveFilterButton').click(function (e) {
             e.preventDefault();
             $('#TableContainer').jtable('load', {
+            	filter_status: null,
                 filter_yearmonth: null,
                 filter_member_id: null,
                 filter_paypal_mail: null,
