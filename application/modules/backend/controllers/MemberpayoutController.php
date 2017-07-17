@@ -123,11 +123,18 @@ class Backend_MemberpayoutController extends Local_Controller_Action_Backend
         
 
         $select = $this->_model->select()->order($sorting)->limit($pageSize, $startIndex);
+        /*
+        $select->join('payout_status',
+        		'member_payout.status = payout_status.id',
+        		array('color')
+        );*/
 //        foreach ($filter as $key => $value) {
 //            if (false === empty($value)) {
 //                $select->where("{$key} like ?", $value);
 //            }
 //        }
+
+        
         $metadata = $this->_model->info(Zend_Db_Table_Abstract::METADATA);
 
         foreach ($filter as $key => $value) {
