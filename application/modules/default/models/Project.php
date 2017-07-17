@@ -268,6 +268,45 @@ class Default_Model_Project extends Default_Model_DbTable_Project
     }
 
     /**
+     * By default it will show all projects for a member included the unpublished elements.
+     *
+     * @param int      $member_id
+     * @param int|null $limit
+     * @param int|null $offset
+     * @param bool     $onlyActiveProjects
+     *
+     * @return Zend_Db_Table_Rowset_Abstract
+     */
+    public function fetchAllProjectsForMemberCatFilter($member_id, $limit = null, $offset = null, $onlyActiveProjects = false,$catids = null)
+    {
+        $q = $this->select()->from($this, array(
+            '*',
+            'project_validated'  => 'project.validated',
+            'project_uuid'       => 'project.uuid',
+            'project_status'     => 'project.status',
+            'project_created_at' => 'project.created_at',
+            'project_changed_at' => 'project.changed_at',
+            'member_type'        => 'member.type',
+            'project_member_id'  => 'member_id',
+            'laplace_score'      => new Zend_Db_Expr('(round(((count_likes + 6) / ((count_likes + count_dislikes) + 12)),2) * 100)'),
+            'catTitle'           => new Zend_Db_Expr('(SELECT title FROM project_category WHERE project_category_id = project.project_category_id)')
+        ))->setIntegrityCheck(false)->join('member', 'project.member_id = member.member_id', array('username'))
+                  ->where('project.status >= ?', ($onlyActiveProjects ? self::PROJECT_ACTIVE : self::PROJECT_INACTIVE))
+                  ->where('project.member_id = ?', $member_id, 'INTEGER')
+                  ->where('project.type_id = ?', self::PROJECT_TYPE_STANDARD)->order('project_changed_at DESC')
+        ;
+
+        if (isset($catids)) {
+            $q->where('project_category_id in ('.$catids.')');
+        }
+
+        if (isset($limit)) {
+            $q->limit($limit, $offset);
+        }
+
+        return $this->generateRowSet($q->query()->fetchAll());
+    }
+    /**
      * @param array $data
      *
      * @return Zend_Db_Table_Rowset_Abstract
