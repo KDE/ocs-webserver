@@ -117,6 +117,7 @@ class Backend_MemberpayoutController extends Local_Controller_Action_Backend
         if(!$this->getParam('filter_yearmonth')) {
             $filter['yearmonth'] = date("Ym", strtotime("first day of previous month"));
         }
+        $filter['status'] = $this->getParam('filter_status');
         $filter['member_id'] = $this->getParam('filter_member_id');
         $filter['paypal_mail'] = $this->getParam('filter_paypal_mail');
         $filter['mail'] = $this->getParam('filter_mail');

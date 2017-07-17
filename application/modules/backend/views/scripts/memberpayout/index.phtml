@@ -159,7 +159,7 @@ $lastMonth = date("Ym", strtotime("first day of previous month"));
                 for (var i in data.records) {
                     
                     if (data.records[i].status > 0 && data.records[i].status < 99) {
-                        $('#TableContainer').find(".jtable tbody tr:eq(" + i + ")").css("cssText", "background-color:#31708f; !important; color:black !important;");
+                        $('#TableContainer').find(".jtable tbody tr:eq(" + i + ")").css("cssText", "background-color:#31708f; !important; color:white !important;");
                     } else
                     if (data.records[i].status == 100) {
                         $('#TableContainer').find(".jtable tbody tr:eq(" + i + ")").css("cssText", "background-color:#3c763d; !important; color:white !important;");
@@ -168,7 +168,7 @@ $lastMonth = date("Ym", strtotime("first day of previous month"));
                         $('#TableContainer').find(".jtable tbody tr:eq(" + i + ")").css("cssText", "background-color:#bd8614; !important; color:black !important;");
                     } else
                     if (data.records[i].status == 900) {
-                        $('#TableContainer').find(".jtable tbody tr:eq(" + i + ")").css("cssText", "background-color:#0f2573; !important; color:black !important;");
+                        $('#TableContainer').find(".jtable tbody tr:eq(" + i + ")").css("cssText", "background-color:#0f2573; !important; color:white !important;");
                     } else
                     if (data.records[i].status >= 930) {
                         $('#TableContainer').find(".jtable tbody tr:eq(" + i + ")").css("cssText", "background-color:#a94442; !important; color:white !important;");
