@@ -287,6 +287,11 @@
 		
 	}
 
+	.opendesktopwidget-main-detail-container-body-content{
+		max-height: 600px;
+		padding-top:20px; 
+		overflow: auto;
+	}
 
 	#opendesktopwidget-main-detail-container{
 		.opendesktopwidget-subnavi{
@@ -307,6 +312,7 @@
 				height: 90px;
 				display: flex;
 				flex-direction: row;
+				 border-bottom: 1px solid #eee;
 				.opendesktopwidget-img-member{
 					float: left;
 					width: 85px;
@@ -719,4 +725,71 @@
 		}
 
 	}
+
+	div.modal-wrapper {
+		    position: fixed;
+		    height: 100%;
+		    width: 100%;
+		    top: 0px;
+		    left: 0px;
+		    -right: 0px;
+		    -bottom: 0px;		  
+		    overflow: auto;
+		    overflow-y: scroll;
+		    z-index: 100000;
+		    background-color: rgb(0,0,0); /* Fallback color */
+    		   background-color: rgba(0,0,0,0.6); /* Black w/ opacity */
+	}
+	div.modal {
+	    position: relative !important;
+	    top: auto !important;
+	    left: auto !important;
+	    z-index: 1050;
+	    height: 800px !important;
+	    max-height: 800px !important;
+	    overflow: hidden;
+	    width: 980px;
+	    margin: 2em auto !important;
+	    display: block !important;
+	    background-color: #ffffff;
+	    border: 1px solid #999;
+	    border: 1px solid rgba(0, 0, 0, 0.3);
+	    border: 1px solid #999;
+	    -webkit-border-radius: 6px;
+	    -moz-border-radius: 6px;
+	    border-radius: 6px;
+	    -webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+	    -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+	    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+	    -webkit-background-clip: padding-box;
+	    -moz-background-clip: padding-box;
+	    background-clip: padding-box;	    
+	}
+
+	div.modal-header {
+	    clear: both;	    
+	    height: 30px !important;
+	    overflow: hidden;
+	    padding: 0px;
+	    padding-left: 18px;
+	   
+	    a.close {
+			    position: absolute;
+			    top: 5px;
+			    right: 10px;
+			    margin-top: 2px;
+			    float: right;
+			font-size: 20px;
+			font-weight: bold;
+			line-height: 18px;
+			color: #000000;
+			text-shadow: 0 1px 0 #ffffff;
+			opacity: 0.2;
+		}
+	}
+
+	div.modal-body{
+		padding:20px;		
+	}
+	
 }

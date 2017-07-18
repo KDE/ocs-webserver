@@ -167,6 +167,8 @@ class Embedv1Controller extends Zend_Controller_Action
         
         $html = $html.'</div> <!-- end of opendesktopwidget-main-detail-container-body-header -->';
 
+
+        $html = $html.'<div class="opendesktopwidget-main-detail-container-body-content">';        
        
        // carousels
         if(count($project['pics'])>0){
@@ -251,7 +253,9 @@ class Embedv1Controller extends Zend_Controller_Action
         $html = $html.'</div>';        
         
 
-        $html = $html.'</div>';         
+        $html = $html.'</div>';    //opendesktopwidget-main-detail-container-body-content
+
+        $html = $html.'</div>'; // end opendesktopwidget-content
         // end opendesktopwidget-content
 
 

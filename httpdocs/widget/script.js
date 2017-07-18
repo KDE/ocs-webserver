@@ -1,8 +1,8 @@
 var opendesktop_widget = (function() {
 // Localize jQuery variable
 var jQuery;
-//var opendesktopwigeturl = 'http://pling.cc/';
-var opendesktopwigeturl = 'http://pling.local/';
+var opendesktopwigeturl = 'http://pling.cc/';
+//var opendesktopwigeturl = 'http://pling.local/';
 //var opendesktopwigeturl = 'http://mylocal.com/';
 /******** Load jQuery if not present *********/
 if (window.jQuery === undefined || window.jQuery.fn.jquery !== '3.2.1') {
@@ -74,17 +74,31 @@ function main() {
         opendesktoptoggleDetail = function(thisrow){
                 let listcontainer = $('#opendesktopwidget-main');
                 let detailcontainer = $('#opendesktopwidget-main-detail-container');
+
+                let detailpopup = '<div id="opendesktopwidget-main-detail-modal" class="modal-wrapper"><div class="modal"><div class="modal-header"><a id="close" class="close" data-dimiss="modal" href="#">×</a></div><div class="modal-body"><div id="opendesktopwidget-main-detail-container"></div></div></div></div>';
+
                 if(detailcontainer.length==0){
-                      detailcontainer = $('<div id="opendesktopwidget-main-detail-container"></div>');                      
-                      listcontainer.parent().append(detailcontainer);
-                      listcontainer.hide();                                          
+                      listcontainer.parent().append($(detailpopup));
+                      detailcontainer = $('#opendesktopwidget-main-detail-container');
+                      $('#opendesktopwidget-main-detail-modal').show();
+                      //detailcontainer = $('<div id="opendesktopwidget-main-detail-container"></div>');                      
+                      //listcontainer.parent().append(detailcontainer);
+                      //listcontainer.hide();                                          
                 }else{                      
-                      detailcontainer.show();
+                      
+                     $('#opendesktopwidget-main-detail-modal').show();
                       detailcontainer.html('');
-                      listcontainer.hide();
-                }                
+                      //detailcontainer.show();
+                      //detailcontainer.html('');
+                      //listcontainer.hide();
+                }         
+
+                $('a#close').on('click',function(){
+                      $('#opendesktopwidget-main-detail-modal').hide();
+                       
+                });
                 
-                
+                /*
                 let naviback = '<i class="fa fa-angle-double-left" aria-hidden="true"></i>';
                 let navi = $('<div class="opendesktopwidget-subnavi"><a class="backtolist">'+ naviback +'Back to List</a></div>');
                 navi.on('click',function(){
@@ -92,6 +106,9 @@ function main() {
                        listcontainer.show();
                 });
                 detailcontainer.append(navi);
+                */
+
+                
 
                 let projectid = $(thisrow).attr('data-project-id');
                 let container  = $('<div class="opendesktopwidget-main-detail-container-body"></div>'); 
