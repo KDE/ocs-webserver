@@ -194,13 +194,13 @@ class Embedv1Controller extends Zend_Controller_Action
         $html = $html.'<ul>';
         $html = $html.'<li class="active"><a data-wiget-target="#opendesktopwidget-content-description" data-toggle="tab">Product</a></li>';
         if($project['files'] && count($project['files'])>0){
-            $html = $html.'<li><a data-wiget-target="#opendesktopwidget-content-files" data-toggle="tab">Files('.count($project['files']).')</a></li>';
+            $html = $html.'<li><a data-wiget-target="#opendesktopwidget-content-files" data-toggle="tab">Files ('.count($project['files']).')</a></li>';
         }
         if($project['changelogs'] && count($project['changelogs'])>0){            
-             $html = $html.'<li><a data-wiget-target="#opendesktopwidget-content-changelogs" data-toggle="tab">Changelogs('.count($project['changelogs']).')</a></li>';
+             $html = $html.'<li><a data-wiget-target="#opendesktopwidget-content-changelogs" data-toggle="tab">Changelogs ('.count($project['changelogs']).')</a></li>';
         }
         if($project['reviews'] && count($project['reviews'])>0){                         
-             $html = $html.'<li><a data-wiget-target="#opendesktopwidget-content-reviews" data-toggle="tab">Reviews('.count($project['reviews']).')</a></li>';
+             $html = $html.'<li><a data-wiget-target="#opendesktopwidget-content-reviews" data-toggle="tab">Reviews ('.count($project['reviews']).')</a></li>';
         }               
         $html = $html.'</ul>';         
         $html = $html.'</div>'; 
@@ -599,7 +599,7 @@ class Embedv1Controller extends Zend_Controller_Action
                     //  init with member & pager & products       
                     $html = $this->_getHTMLMember($user_id)
                                 .'<div id="opendesktopwidget-main">'
-                                .$this->_getHTMLPager($user_id,$pageLimit)
+                                .$this->_getHTMLPager($user_id,$pageLimit,$page,$catids)
                                 .'<div id="opendesktopwidget-main-container">'
                                 .$this->_getHTMLProducts($userProducts)
                                 .'</div>' 
@@ -682,10 +682,10 @@ class Embedv1Controller extends Zend_Controller_Action
         return $html;
     }
 
-    protected function _getHTMLPager($user_id,$pageLimit=10,$page=1)
+    protected function _getHTMLPager($user_id,$pageLimit=10,$page=1,$catids=null)
     {        
         $modelProject = new Default_Model_Project();
-        $total_records = $modelProject->countAllProjectsForMember($user_id,true);
+        $total_records = $modelProject->countAllProjectsForMemberCatFilter($user_id,true,$catids);
         $total_pages = ceil($total_records / $pageLimit);         
         $html = '<div class="opendesktopwidgetpager"><ul class="opendesktopwidgetpager">';
         for ($i=1; $i<=$total_pages; $i++) { 
