@@ -325,6 +325,7 @@
   font-size: 11px;
 }
 #opendesktop-widget-container .opendesktopwidget-main-detail-container-body-content {
+  height: 600px;
   max-height: 600px;
   padding-top: 20px;
   overflow: auto;
