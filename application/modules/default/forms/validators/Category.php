@@ -31,7 +31,7 @@ class Default_Form_Validator_Category extends Zend_Validate_Abstract
      * @var array Message templates
      */
     protected $_messageTemplates = array(
-        self::ERROR_CAT_NOT_THE_LAST => "Please select a children for this category. ---",
+        self::ERROR_CAT_NOT_THE_LAST => "Please select a children for this category.",
     );
 
     /**
@@ -49,15 +49,11 @@ class Default_Form_Validator_Category extends Zend_Validate_Abstract
 
         $tableCat = new Default_Model_DbTable_ProjectCategory();
         $catChildIds = $tableCat->fetchChildIds($value);
-<<<<<<< HEAD
-        if (count($catChildIds) > 0 AND ($catChildIds[0] <> $value)) {
-=======
         if(!$catChildIds || (count($catChildIds) == 1 && $catChildIds[0] == $value) ) {
             //is the last child
             $valid = true;
         } else {
             //is not the last child
->>>>>>> 44a7dd1... bugfix: add/edit product
             $valid = false;
             $this->_error(self::ERROR_CAT_NOT_THE_LAST);
         }

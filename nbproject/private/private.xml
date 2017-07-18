@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/E:/develop/pling-dev/ocs-webserver/application/modules/default/models/DbTable/MemberPayout.php</file>
+            <file>file:/E:/develop/pling-dev/ocs-webserver/application/modules/backend/controllers/MemberpayoutController.php</file>
+            <file>file:/E:/develop/pling-dev/ocs-webserver/application/modules/default/models/Member.php</file>
+            <file>file:/E:/develop/pling-dev/ocs-webserver/application/modules/default/views/scripts/product/add.phtml</file>
+            <file>file:/E:/develop/pling-dev/ocs-webserver/application/modules/default/views/scripts/settings/index.phtml</file>
+            <file>file:/E:/develop/pling-dev/ocs-webserver/application/modules/default/controllers/PlingsController.php</file>
+            <file>file:/E:/develop/pling-dev/ocs-webserver/application/modules/default/controllers/UserController.php</file>
+            <file>file:/E:/develop/pling-dev/ocs-webserver/application/modules/default/controllers/Ocsv1Controller.php</file>
+            <file>file:/E:/develop/pling-dev/ocs-webserver/application/modules/default/controllers/SettingsController.php</file>
+            <file>file:/E:/develop/pling-dev/ocs-webserver/application/modules/backend/views/scripts/memberpayout/index.phtml</file>
+            <file>file:/E:/develop/pling-dev/ocs-webserver/application/modules/default/plugins/AclRules.php</file>
+            <file>file:/E:/develop/pling-dev/ocs-webserver/application/modules/default/controllers/ProductController.php</file>
+            <file>file:/E:/develop/pling-dev/ocs-webserver/application/modules/default/views/scripts/user/partials/loopPlings.phtml</file>
+            <file>file:/E:/develop/pling-dev/ocs-webserver/httpdocs/theme/backend/js/backend_nav_admin.js</file>
+            <file>file:/E:/develop/pling-dev/ocs-webserver/application/modules/default/controllers/GatewayController.php</file>
+            <file>file:/E:/develop/pling-dev/ocs-webserver/application/modules/backend/views/scripts/paypalvalidstatus/index.phtml</file>
+            <file>file:/E:/develop/pling-dev/ocs-webserver/application/modules/backend/controllers/MemberpaypaladdressController.php</file>
+            <file>file:/E:/develop/pling-dev/ocs-webserver/application/modules/default/views/scripts/user/plings.phtml</file>
+            <file>file:/E:/develop/pling-dev/ocs-webserver/application/modules/default/models/DbTable/ProjectCategory.php</file>
+            <file>file:/E:/develop/pling-dev/ocs-webserver/application/modules/default/models/DbTable/MemberPaypalAddress.php</file>
+            <file>file:/E:/develop/pling-dev/ocs-webserver/application/modules/default/models/Project.php</file>
+            <file>file:/E:/develop/pling-dev/ocs-webserver/application/modules/default/models/DbTable/PaypalValidStatus.php</file>
+            <file>file:/E:/develop/pling-dev/ocs-webserver/application/modules/backend/views/scripts/memberpaypaladdress/index.phtml</file>
+        </group>
+    </open-files>
+</project-private>
