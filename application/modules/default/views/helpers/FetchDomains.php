@@ -27,6 +27,8 @@ class Default_View_Helper_FetchDomains extends Zend_View_Helper_Abstract
     {
         $tbl = new Default_Model_DbTable_ConfigStore();
         $result = $tbl->fetchDomainObjects();
+
+        /*
         foreach ($result as &$obj) {
             $clientFileId = '_' . $obj['config_id_name'];;
             $clientConfigPath = Zend_Registry::get('config')->settings->client->config->path;
@@ -43,8 +45,25 @@ class Default_View_Helper_FetchDomains extends Zend_View_Helper_Abstract
             $obj['meta_keywords'] = $clientConfigData['footer_heading'];
 
         }
+    */
+            // sort Desktop in front
+        $arrayDesktop = array();
+        $arrayRest =  array();        
+        foreach ($result as $obj) {
+            $o =  $obj['order'];   
+            $curOrder = floor($obj['order']/1000);      
+             if($curOrder<10 or $curOrder>50) continue;
+             $obj['calcOrder'] = $curOrder;
+             if($curOrder==30) {
+                // Desktop set calcOrder = 9 manuelly put desktop in front
+                $obj['calcOrder'] = 9;
+                $arrayDesktop[] = $obj;    
+             }else{
+                $arrayRest[] = $obj;    
+             }                        
+        }
 
-        return $result;
+        return array_merge($arrayDesktop, $arrayRest);
     }
 
 }

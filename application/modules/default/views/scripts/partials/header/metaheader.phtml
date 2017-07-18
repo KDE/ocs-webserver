@@ -152,8 +152,9 @@ $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
             $curOrder = 0;
             foreach ($this->domainobjects as $obj) {
                 $o =  $obj['order'];   
-                $curOrder = floor($obj['order']/1000);      
-                if($curOrder<10 or $curOrder>50) continue;
+                //$curOrder = floor($obj['order']/1000);      
+                //if($curOrder<10 or $curOrder>50) continue;
+                $curOrder = $obj['calcOrder'];   
                 $host =$obj['host'];
                 $name =$obj['name'];
                 if($curOrder!= $preOrder) $i=0;
@@ -163,16 +164,20 @@ $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
                 }
                 if($i==0 && $preOrder !=0) echo '<li class="nav-divider-pling"> &#149; </li>'; 
 
-                if($curOrder==10 && $i==0){
+                if($curOrder ==9 && $i ==0){
+                    // Desktops
+                    echo '<li class="dropdown"><a href="#">Desktops</a><ul class="dropdown-menu">';                                                                  
+                }else if($curOrder==10 && $i==0){
                     // applications                    
                     echo '<li class="dropdown"><a href="#">Applications</a><ul class="dropdown-menu">';                                                                 
                 }else if($curOrder ==20 && $i ==0){
                     // artworks                    
                     echo '<li class="dropdown"><a href="#">Addons</a><ul class="dropdown-menu">';                                                                  
-                }else if($curOrder ==30 && $i ==0){
+                }/*else if($curOrder ==30 && $i ==0){
                     // artworks                    
                     echo '<li class="dropdown"><a href="#">Desktops</a><ul class="dropdown-menu">';                                                                  
-                }else if($curOrder ==40 && $i ==0){
+                }*/
+                else if($curOrder ==40 && $i ==0){
                     // multimedia                    
                     echo '<li class="dropdown"><a href="#">Artwork</a><ul class="dropdown-menu">';                                                                  
                 }   
@@ -187,19 +192,21 @@ $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
                 {
                     echo '<li>';
                 }
-
+                /*
                 $keyword = $obj['meta_keywords'];
 
                 if($keyword!='')
                 {
                     $keyword = ' - '.$keyword;
                 }
+                */
                  // z.b 150001 ende ==1 go real link otherwise /s/$name 
                 $last_char_check = substr($o, -1);                
 
-                echo '<a href="http://' . ($last_char_check=='1'?$host:$baseurl.'/s/'.$name) . '">'.  $name .' <span style="font-size:11px; ">'.$keyword.'</span></a> </li>';    
+                echo '<a href="http://' . ($last_char_check=='1'?$host:$baseurl.'/s/'.$name) . '">'.  $name .'</a> </li>';    
 
-                $preOrder = floor($obj['order']/1000);  
+                //$preOrder = floor($obj['order']/1000);  
+                $preOrder =$obj['calcOrder'];  
                  $i++;                                                  
             }
             echo '</ul></li>';   
