@@ -31,7 +31,7 @@ class Default_Form_Validator_Category extends Zend_Validate_Abstract
      * @var array Message templates
      */
     protected $_messageTemplates = array(
-        self::ERROR_CAT_NOT_THE_LAST => "Please select a children for this category.",
+        self::ERROR_CAT_NOT_THE_LAST => "Please select a children for this category. ---",
     );
 
     /**
@@ -49,10 +49,27 @@ class Default_Form_Validator_Category extends Zend_Validate_Abstract
 
         $tableCat = new Default_Model_DbTable_ProjectCategory();
         $catChildIds = $tableCat->fetchChildIds($value);
-        if (count($catChildIds)) {
+        if(!$catChildIds || (count($catChildIds) == 1 && $catChildIds[0] == $value) ) {
+            //is the last child
+            $valid = true;
+        } else {
+            //is not the last child
             $valid = false;
             $this->_error(self::ERROR_CAT_NOT_THE_LAST);
         }
+        
+        //if (!$catChildIds || count($catChildIds) <> 1 || $catChildIds[0] != $value) {
+        //    $valid = false;
+        //    $this->_error(self::ERROR_CAT_NOT_THE_LAST);
+        //}
+        
+        
+        //$tableCat = new Default_Model_DbTable_ProjectCategory();
+        //$catChildIds = $tableCat->fetchChildIds($value);
+        //if (count($catChildIds)) {
+        //    $valid = false;
+        //    $this->_error(self::ERROR_CAT_NOT_THE_LAST);
+        //}
 
         return $valid;
     }
