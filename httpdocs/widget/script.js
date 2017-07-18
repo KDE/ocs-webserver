@@ -142,9 +142,7 @@ function main() {
                             $(this).addClass('active').siblings().removeClass('active');  
                             let tabcontainerid = $(this).find('a').attr('data-wiget-target');                            
                             $(tabcontainerid).addClass('active').siblings().removeClass('active') ;                                              
-                            $('html, body').animate({
-                                   scrollTop: $(tabcontainerid).offset().top-150
-                               }, 1);             
+                             
                         });
                     });
                     
@@ -160,9 +158,7 @@ function main() {
                                 container.find('i.fa-spinner').remove();
                                 let ct = container.find('#opendesktopwidget-main-container-comments');  
                                 ct.html(data.html);
-                                $('html, body').animate({
-                                       scrollTop: ct.offset().top-150
-                                   }, 1);                                                       
+                                                                                 
                             });
 
                         });
