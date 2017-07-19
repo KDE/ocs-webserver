@@ -83,7 +83,10 @@
                                  <th style="text-align: right"><?= $this->translate('Filesize'); ?></th>
                                 <!-- <th style="text-align: right"><a href="#modal-installation-instructions" role="button" data-toggle="modal"><?= $this->translate('Install ?'); ?></a></th>
                                 -->
-                                 <th style="text-align: right"><?= $this->translate('OCS-Install'); ?></th>
+                                 <th style="text-align: right;white-space:nowrap"><?= $this->translate('OCS-Install'); ?>
+                                     <a href="#modal-installation-instructions" role="button" data-toggle="modal"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></a>
+                                 </th>
+                                 <th>DL</th>
                              </tr>
                              </thead>
                              <tbody></tbody>
@@ -277,21 +280,32 @@
                                      }
 
                                      var installButton = '';
-                                     if (this.active && ocsUrl) {
-                                         installButton = '<a href="' + ocsUrl + '" class="btn btn-native btn-min-width">Install</a> <a href="#modal-installation-instructions" role="button" data-toggle="modal"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></a> ';
-                                     }
-
+                                     
+                                     if ( ocsUrl) {
+                                            if(this.active){
+                                                    installButton = '<a href="' + ocsUrl + '" class="btn btn-native btn-min-width">OCS-Install</a>';                                               
+                                            }else{
+                                                installButton = '<a href="' + ocsUrl + '" class="btn btn-native btn-min-width disabled">OCS-Install</a>';                                               
+                                            }                                         
+                                     } 
+                                   
                                     //if(this.active == '1') {
                                     var greyText = ' class="activerows"';
                                     if(this.active == '0') {
                                            greyText = ' style="color: #ccc;"';
                                     }
 
+                                    var downloadButton = '';
                                     if(this.version==null) {version = '';} else{version = this.version;}
                                     var isExternLink = false;
                                     if ((typeof link != 'undefined') && (link != "")) {
                                        isExternLink = true;
+                                    }else{
+                                         downloadButton = '<a href="'+downloadUrl+'" class="btn btn-native btn-min-width"><img src="/images/system/download.svg" alt="download" style="width:20px; height:20px"></a>' ;
                                     }
+
+                                    var mnt = moment(this.created_timestamp);
+
                                         $pploadCollection.find('table[data-ppload-files] tbody').append(
                                             '<tr' + greyText + '>'
                                             + '<td>' + downloadLink + '</td>'
@@ -320,9 +334,10 @@
                                             + '</select><span id="file-tag-license'+this.id+'"><span id="file-tag-license-text'+this.id+'">'
                                             + '</td>'
                                             + '<td style="text-align: right"><span id="download_counter_' + this.id + '">' + count_downloads + '</td>'
-                                            + '<td>' + this.created_timestamp + '</td>'
+                                            + '<td>' +mnt.format('YYYY-MM-DD') + '</td>'
                                             + '<td style="text-align: right">' + humanFileSize(this.size,false) + '</td>'
-                                        + '<td style="text-align: right; white-space:nowrap">' + installButton + '</td>'
+                                        + '<td style="text-align: right; ">' + installButton + '</td>'
+                                         + '<td style="text-align: right; ">' + downloadButton+ '</td>'
                                             + '</tr>'
                                         );
 
@@ -466,6 +481,7 @@
                                             isExternLink = true;
                                             downloadLink = '<a href="' + decodeURIComponent(link) + '" id="data-link' + this.id + '" style="color: #ccc;">' + this.name + '</a>';
                                          }
+                                         var mnt = moment(this.created_timestamp);
 	                                     $pploadCollection.find('table[data-ppload-files] tbody').append(
 	                                        '<tr' + greyText + '>'
 	                                        + '<td>' + downloadLink + '</td>'
@@ -494,8 +510,9 @@
 	                                        + '</select><span id="file-tag-license'+this.id+'"><span id="file-tag-license-text'+this.id+'">'
 	                                        + '</td>'
 	                                        + '<td style="text-align: right"><span id="download_counter_' + this.id + '">' + cout_downloads + '</td>'
-	                                        + '<td>' + this.created_timestamp + '</td>'
+	                                        + '<td>' +mnt.format('YYYY-MM-DD')  + '</td>'
 	                                        + '<td style="text-align: right">' + humanFileSize(this.size,false) + '</td>'
+                                                + '<td></td>'
                                                 + '<td></td>'
 	                                        + '</tr>'
 	                                     );
@@ -581,6 +598,7 @@
                                     + '<th style="text-align: right">' + fileSizeSum.toFixed(2) + ' MB</th>'
                                      //+ '<th style="text-align: right">' + humanFileSize(fileSizeSum) + '</th>'
                                      + '<th></th>'
+                                       + '<th></th>'
                                      + '</tr>'
                                  );
 
