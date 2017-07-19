@@ -1047,6 +1047,7 @@ class Ocsv1Controller extends Zend_Controller_Action
             if ($project->ppload_collection_id) {
                 $filesRequest = array(
                     'collection_id' => ltrim($project->ppload_collection_id, '!'),
+                    'ocs_compatibility' => 'compatible',
                     'perpage'       => 100
                 );
                 $cacheName = __FUNCTION__ . '_project_filesResponse_' . md5((string)$project->ppload_collection_id);
@@ -1424,6 +1425,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                 if ($project->ppload_collection_id) {
                     $filesRequest = array(
                         'collection_id' => ltrim($project->ppload_collection_id, '!'),
+                        'ocs_compatibility' => 'compatible',
                         'perpage'       => 100
                     );
                     $cacheName = __FUNCTION__ . '_projects_filesResponse_' . md5((string)$project->ppload_collection_id);
@@ -1641,6 +1643,7 @@ class Ocsv1Controller extends Zend_Controller_Action
         ) {
             $filesRequest = array(
                 'collection_id' => ltrim($project->ppload_collection_id, '!'),
+                'ocs_compatibility' => 'compatible',
                 'perpage'       => 1,
                 'page'          => $this->getParam('itemid')
             );
