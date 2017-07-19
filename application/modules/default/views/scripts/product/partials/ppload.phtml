@@ -20,13 +20,13 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 ?>
+
   <!-- ppload -->
          <?php if ($this->product->ppload_collection_id): ?>
              <?php
              $helperCatXdgType = new Default_View_Helper_CatXdgType();
              $xdgType = $helperCatXdgType->catXdgType($this->product->project_category_id);
              ?>
-
                  <article>
                      <div id="modal-installation-instructions"
                           class="modal fade"
@@ -86,7 +86,7 @@
                                  <th style="text-align: right;white-space:nowrap"><?= $this->translate('OCS-Install'); ?>
                                      <a href="#modal-installation-instructions" role="button" data-toggle="modal"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></a>
                                  </th>
-                                 <th>DL</th>
+                                 <th style="text-align: right">DL</th>
                              </tr>
                              </thead>
                              <tbody></tbody>
@@ -296,13 +296,15 @@
                                     }
 
                                     var downloadButton = '';
+                                    downloadButton = '<a href="'+downloadUrl+'" class="btn btn-native btn-min-width" ><img src="/images/system/download.svg" alt="download" style="width:20px; height:20px"></a>' ;
+
                                     if(this.version==null) {version = '';} else{version = this.version;}
                                     var isExternLink = false;
                                     if ((typeof link != 'undefined') && (link != "")) {
                                        isExternLink = true;
-                                    }else{
-                                         downloadButton = '<a href="'+downloadUrl+'" class="btn btn-native btn-min-width"><img src="/images/system/download.svg" alt="download" style="width:20px; height:20px"></a>' ;
                                     }
+                                    
+                                    
 
                                     var mnt = moment(this.created_timestamp);
 
