@@ -20,6 +20,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 ?>
+
   <!-- ppload -->
          <?php if ($this->product->ppload_collection_id): ?>
              <?php
@@ -30,7 +31,6 @@
              $userRoleName = $helperUserRole->userRole();
              
              ?>
-
                  <article>
                      <div id="modal-installation-instructions"
                           class="modal fade"
@@ -61,7 +61,7 @@
                          -->
 
                          <!--table-bordered-->
-                         <table class="table" data-ppload-files="">
+                         <table class="table table-ocs-file" data-ppload-files="">
                              <thead>
                              <?php /**
                              <?php if ($this->product->ppload_collection_id[0] == '!'): ?>
@@ -90,7 +90,7 @@
                                  <th style="text-align: right;white-space:nowrap"><?= $this->translate('OCS-Install'); ?>
                                      <a href="#modal-installation-instructions" role="button" data-toggle="modal"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></a>
                                  </th>
-                                 <th>DL</th>
+                                 <th style="text-align: right">DL</th>
                                  <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
                                  <th>Compatible</th>
                                  <?php endif; ?>
@@ -303,13 +303,15 @@
                                     }
 
                                     var downloadButton = '';
+                                    downloadButton = '<a href="'+downloadUrl+'" class="btn btn-native btn-min-width" ><img src="/images/system/download.svg" alt="download" style="width:20px; height:20px"></a>' ;
+
                                     if(this.version==null) {version = '';} else{version = this.version;}
                                     var isExternLink = false;
                                     if ((typeof link != 'undefined') && (link != "")) {
                                        isExternLink = true;
-                                    }else{
-                                         downloadButton = '<a href="'+downloadUrl+'" class="btn btn-native btn-min-width"><img src="/images/system/download.svg" alt="download" style="width:20px; height:20px"></a>' ;
                                     }
+                                    
+                                    
 
                                     var mnt = moment(this.created_timestamp);
 
