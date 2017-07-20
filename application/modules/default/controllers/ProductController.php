@@ -1514,6 +1514,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 if (isset($_POST['file_tags'])) {
                     $fileRequest['tags'] = $_POST['file_tags'];
                 }
+                if (isset($_POST['ocs_compatible'])) {
+                    $fileRequest['ocs_compatible'] = $_POST['ocs_compatible'];
+                }
                 if (isset($_POST['file_version'])) {
                     $fileRequest['version'] = $_POST['file_version'];
                 }
@@ -1561,6 +1564,28 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $packageTypeTable->addPackageTypeToProject($this->_projectId, $_POST['file_id'], $typeId);
             $this->_helper->json(array('status' => 'ok'));
 
+            return;
+        } else {
+            $error_text .= 'No FileId. , FileId: ' . $_POST['file_id'];
+        }
+
+        $this->_helper->json(array('status' => 'error', 'error_text' => $error_text));
+    }
+    
+    public function updatecompatibleAction()
+    {
+        $this->_helper->layout()->disableLayout();
+
+        $error_text = "";
+
+        // Update a file information in ppload collection (does not update it if in finalized collection)
+        if (!empty($_POST['file_id'])) {
+            $typeId = null;
+            if (isset($_POST['is_compatible'])) {
+                $is_compatible = $_POST['is_compatible'];
+            }
+
+            
             return;
         } else {
             $error_text .= 'No FileId. , FileId: ' . $_POST['file_id'];
