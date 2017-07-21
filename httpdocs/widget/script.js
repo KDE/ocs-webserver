@@ -98,7 +98,15 @@ function opendesktoptoggleDetail(thisrow){
 
                             $('#opendesktopwidget-main-detail-carousel').slick({
                                     dots: true
-                                });                                   
+                                });       
+                            $('button.slick-next').on('click',function(){
+                                  $("#opendesktopwidget-main-detail-carousel").slick('slickNext');                                
+                            });
+                            $('button.slick-prev').on('click',function(){
+                                  $("#opendesktopwidget-main-detail-carousel").slick('slickPrev');                                
+                            });
+
+
                     }
                                                           
                     // tabs onclick
