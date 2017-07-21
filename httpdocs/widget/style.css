@@ -28,6 +28,30 @@
 #opendesktop-widget-container .slick-slide img {
   margin: 0 auto;
 }
+#opendesktop-widget-container button.gonext,
+#opendesktop-widget-container button.goprev {
+  position: absolute;
+  top: 50%;
+  display: block;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  -webkit-transform: translate(0, -50%);
+  -ms-transform: translate(0, -50%);
+  transform: translate(0, -50%);
+  cursor: pointer;
+  color: #ccc;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 4em;
+}
+#opendesktop-widget-container button.gonext {
+  right: -40px;
+}
+#opendesktop-widget-container button.goprev {
+  left: -40px;
+}
 #opendesktop-widget-container .opendesktop-widget-btn {
   display: inline-block;
   padding: 6px 12px;

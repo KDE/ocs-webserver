@@ -96,16 +96,32 @@ function opendesktoptoggleDetail(thisrow){
                     let imgs = $('#opendesktopwidget-main-detail-carousel').find('img');                    
                     if(imgs.length>1){
 
+                           let btnNext = $('<button class="gonext"><i class="fa fa-chevron-circle-right" aria-hidden="true"></i></button>');
+                           btnNext.on('click',function(){                           
+                                  $("#opendesktopwidget-main-detail-carousel").slick('slickNext');                                
+                            });
+
+                           let btnPrev = $('<button class="goprev"><i class="fa fa-chevron-circle-left" aria-hidden="true"></i></button>');
+                           btnPrev.on('click',function(){                           
+                                  $("#opendesktopwidget-main-detail-carousel").slick('slickPrev');                                
+                            });
+
                             $('#opendesktopwidget-main-detail-carousel').slick({
-                                    dots: true
+                                    dots: true,
+                                    arrows:false
                                 });       
+                            $('#opendesktopwidget-main-detail-carousel').append(btnPrev);
+                            $('#opendesktopwidget-main-detail-carousel').append(btnNext);
+                            /*
                             $('button.slick-next').on('click',function(){
+                              console.log('------------test----------------');
+
                                   $("#opendesktopwidget-main-detail-carousel").slick('slickNext');                                
                             });
                             $('button.slick-prev').on('click',function(){
                                   $("#opendesktopwidget-main-detail-carousel").slick('slickPrev');                                
                             });
-
+                            */
 
                     }
                                                           
