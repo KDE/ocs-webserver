@@ -215,7 +215,7 @@ function main() {
 /* Load jQuery */
 loadScript("https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js", function() {
 
-      loadScript("https://code.jquery.com/jquery-migrate-1.2.1.min.js", function() {
+      loadScript("https://cdnjs.cloudflare.com/ajax/libs/jquery-migrate/3.0.0/jquery-migrate.min.js", function() {
 
         
 
