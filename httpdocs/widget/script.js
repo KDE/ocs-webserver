@@ -214,21 +214,28 @@ function main() {
 
 /* Load jQuery */
 loadScript("https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js", function() {
-  /* Restore $ and window.jQuery to their previous values and store the
-     new jQuery in our local jQuery variables. */
-    //$ = jQuery = window.jQuery.noConflict(false);
-    $ = jQuery = window.jQuery.noConflict();
 
-  //$.noConflict();
-  //$.noConflict();
-  /* Load jQuery plugin and execute the main logic of our widget once the
-     plugin is loaded is loaded */
- 
-  loadScript("https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.min.js", function() {
+      loadScript("https://code.jquery.com/jquery-migrate-1.2.1.min.js", function() {
 
-    main();
-  });
+        
 
+
+                /* Restore $ and window.jQuery to their previous values and store the
+                   new jQuery in our local jQuery variables. */
+                  //$ = jQuery = window.jQuery.noConflict(false);
+                  $ = jQuery = window.jQuery.noConflict();
+
+                //$.noConflict();
+                //$.noConflict();
+                /* Load jQuery plugin and execute the main logic of our widget once the
+                   plugin is loaded is loaded */
+               
+                loadScript("https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.min.js", function() {
+
+                  main();
+                });
+
+      });        
 });
 
 }(window, document)); /* end IIFE */
