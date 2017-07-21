@@ -21,6 +21,14 @@
 			font-size: 20px;
 			padding-right: 10px;
 	}
+	.slick-prev:before, .slick-next:before { 
+	    color:#ccc !important;
+	}
+	.slick-slide{
+		img{
+			margin: 0 auto;
+		}
+		} 
 
 	.opendesktop-widget-btn {
 	    display: inline-block;
@@ -400,7 +408,7 @@
 				display: block;
 				text-align: center;
 				img{
-					max-width: 800px;
+					max-width: 600px;
 					max-height: 400px;
 				}
 
@@ -584,15 +592,16 @@
 		display: flex;				
 		justify-content: right;
 		align-items: center;
-		padding-right: 20px;
+		
 		ul.opendesktopwidgetpager{
 			display: inline-block;
 			padding-left: 0;
 			margin: 20px 0;
 			border-radius: 4px;
 			 > li {
-				display: inline;
+				display: inline;				
 			    	>span{
+			    		cursor: pointer;
 			    		position: relative;
 			    		float: left;		    		
 			    		margin-left: -1px;
@@ -602,8 +611,7 @@
 			    		background-color: #fff;
 			    		border: 1px solid #ddd;
 			    		padding: 5px 10px;
-			    		font-size: 12px;
-			    		cursor: default;
+			    		font-size: 12px;			    		
 			    	}
 			        }
 			>.active > span{
@@ -750,7 +758,7 @@
 	    height: 800px !important;
 	    max-height: 800px !important;
 	    overflow: hidden;
-	    width: 980px;
+	    width: 1200px;
 	    margin: 2em auto !important;
 	    display: block !important;
 	    background-color: #ffffff;

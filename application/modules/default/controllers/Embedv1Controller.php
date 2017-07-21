@@ -176,14 +176,16 @@ class Embedv1Controller extends Zend_Controller_Action
             $html = $html.'<div id="opendesktopwidget-main-detail-carousel" data-simple-slider>'; 
             //$html = $html.'<img src="'.$helperImage->Image($project['pics'][0], array('height' => '600')).'" />';     
             foreach ($project['pics'] as  $pic) {
-                $html = $html.'<img src="'.$helperImage->Image($pic, array('width' => '621','height' => '621')).'" />';     
+                $html = $html.'<div><img src="'.$helperImage->Image($pic, array('width' => '621','height' => '621')).'" /></div>';     
             }
 
-            $html = $html.'</div>';     
+            $html = $html.'</div>'; 
+            /*    
             if(count($project['pics'])>1){
                 $html = $html.'<button class="prev opendesktop-widget-btn"><i class="fa fa-chevron-left opendesktop-navi" aria-hidden="true"></i></button>';
                 $html = $html.'<button class="next opendesktop-widget-btn"><i class="fa fa-chevron-right opendesktop-navi" aria-hidden="true"></i></button>';                
             }
+            */
             $html = $html.'</div>'; 
         }           
         
@@ -660,24 +662,7 @@ class Embedv1Controller extends Zend_Controller_Action
 
                 $html = $html.'</div><!--end of description-container-->';  
                 //$html = $html.'</a><!--end of a-->';                  
-                $html = $html.'</div> <!-- end of opendesktopwidgetrow -->';
-
-                // hidden detail row
-                /*
-                $html = $html.'<div class="opendesktopwidgetrowdetail " id="opendesktopwidgetrowdetail_'.$p['id'].'">';  
-                $html = $html.'<span class="title">Description</span>';
-                $html = $html.$p['desc'];
-
-
-                // comments
-                $html = $html.'<div class="opendesktopwidgetcomments"></div>';
-
-                // ppload files
-                $html = $html.'<div class="opendesktopwidgetpploadfiles" data-ppload-collection-id="'.$p['ppload_collection_id'].'"></div>';
-               
-
-                $html = $html.'</div> <!-- end of opendesktopwidgetrowdetail -->';    
-                 */            
+                $html = $html.'</div> <!-- end of opendesktopwidgetrow -->';          
         }                              
         return $html;
     }
@@ -687,6 +672,7 @@ class Embedv1Controller extends Zend_Controller_Action
         $modelProject = new Default_Model_Project();
         $total_records = $modelProject->countAllProjectsForMemberCatFilter($user_id,true,$catids);
         $total_pages = ceil($total_records / $pageLimit);         
+        if($total_pages <=1) return '';
         $html = '<div class="opendesktopwidgetpager"><ul class="opendesktopwidgetpager">';
         for ($i=1; $i<=$total_pages; $i++) { 
             if($i==$page){
@@ -721,7 +707,8 @@ class Embedv1Controller extends Zend_Controller_Action
 
     protected function _getMemberProducts($user_id,$pageLimit=5,$page=1,$catids = null)
     {
-        $modelProject = new Default_Model_Project();
+
+       $modelProject = new Default_Model_Project();
         $userProjects = $modelProject->fetchAllProjectsForMemberCatFilter($user_id, $pageLimit,($page - 1) * $pageLimit, true,$catids);
         
         $result = array();
