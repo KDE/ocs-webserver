@@ -611,6 +611,7 @@
   display: flex;
   justify-content: right;
   align-items: center;
+  justify-content: flex-end;
 }
 #opendesktop-widget-container .opendesktopwidgetpager ul.opendesktopwidgetpager {
   display: inline-block;
