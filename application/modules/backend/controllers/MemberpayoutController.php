@@ -194,9 +194,10 @@ class Backend_MemberpayoutController extends Local_Controller_Action_Backend
     	$filter['member_id'] = $this->getParam('filter_member_id');
     	$filter['paypal_mail'] = $this->getParam('filter_paypal_mail');
     	$filter['mail'] = $this->getParam('filter_mail');
+    	$fields = $this->getParam('field_list');
     
     
-    	$select = $this->_model->select()->order($sorting)->limit($pageSize, $startIndex);
+    	$select = $this->_model->select($fields)->order($sorting)->limit($pageSize, $startIndex);
     	/*
     	 $select->join('payout_status',
     	 		'member_payout.status = payout_status.id',
