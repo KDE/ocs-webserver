@@ -254,9 +254,9 @@ class Backend_MemberpayoutController extends Local_Controller_Action_Backend
     	$filename = "member_payout.xls";
     	header("Content-Type: application/vnd.ms-excel");
     	header("Content-Disposition: attachment; filename=\"$filename\"");
-    	$this->exportFile($reports);
+    	$this->exportFile($reports->toArray());
     
-    	$this->_helper->json($jTableResult);
+    	//$this->_helper->json($jTableResult);
     }   
 
     function exportFile($records) {
