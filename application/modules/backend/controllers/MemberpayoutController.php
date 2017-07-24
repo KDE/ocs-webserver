@@ -181,6 +181,98 @@ class Backend_MemberpayoutController extends Local_Controller_Action_Backend
         $this->_helper->json($jTableResult);
     }
 
+    public function exportAction()
+    {
+    	$startIndex = (int)$this->getParam('jtStartIndex');
+    	$pageSize = (int)$this->getParam('jtPageSize');
+    	$sorting = $this->getParam('jtSorting');
+    	$filter['yearmonth'] = $this->getParam('filter_yearmonth');
+    	if(!$this->getParam('filter_yearmonth')) {
+    		$filter['yearmonth'] = date("Ym", strtotime("first day of previous month"));
+    	}
+    	$filter['status'] = $this->getParam('filter_status');
+    	$filter['member_id'] = $this->getParam('filter_member_id');
+    	$filter['paypal_mail'] = $this->getParam('filter_paypal_mail');
+    	$filter['mail'] = $this->getParam('filter_mail');
+    
+    
+    	$select = $this->_model->select()->order($sorting)->limit($pageSize, $startIndex);
+    	/*
+    	 $select->join('payout_status',
+    	 		'member_payout.status = payout_status.id',
+    	 		array('color')
+    	 );*/
+    	//        foreach ($filter as $key => $value) {
+    	//            if (false === empty($value)) {
+    	//                $select->where("{$key} like ?", $value);
+    	//            }
+    	//        }
+    
+    
+    	$metadata = $this->_model->info(Zend_Db_Table_Abstract::METADATA);
+    
+    	foreach ($filter as $key => $value) {
+    		if (is_array($value)) {
+    			$list = '';
+    			foreach ($value as $element) {
+    				if (isset($element)) {
+    					$list = $list . ',' . $element;
+    				}
+    			}
+    
+    			if (empty($list)) {
+    				continue;
+    			}
+    
+    			$list = substr($list, 1);
+    
+    			$select->where("{$key} in ({$list})");
+    
+    			continue;
+    		}
+    		if (false === empty($value)) {
+    			$data_type = $metadata[$key]['DATA_TYPE'];
+    			if (($data_type == 'varchar') OR ($data_type == 'text')) {
+    				$select->where("{$key} like ?", '%' . $value . '%');
+    			} else {
+    				$select->where("{$key} = ?", $value);
+    			}
+    
+    		}
+    	}
+    
+    	$reports = $this->_model->fetchAll($select);
+    
+    	$reportsAll = $this->_model->fetchAll($select->limit(null,
+    			null)->reset('columns')->columns(array('countAll' => new Zend_Db_Expr('count(*)'))));
+    
+    	$jTableResult = array();
+    	$jTableResult['Result'] = self::RESULT_OK;
+    	$jTableResult['Records'] = $reports->toArray();
+    	$jTableResult['TotalRecordCount'] = $reportsAll->current()->countAll;
+    	
+    	$filename = "member_payout.xls";
+    	header("Content-Type: application/vnd.ms-excel");
+    	header("Content-Disposition: attachment; filename=\"$filename\"");
+    	$this->exportFile($reports);
+    
+    	$this->_helper->json($jTableResult);
+    }   
+
+    function exportFile($records) {
+    	$heading = false;
+    	if(!empty($records))
+    		foreach($records as $row) {
+    		if(!$heading) {
+    			// display field/column names as a first row
+    			echo implode("\t", array_keys($row)) . "\n";
+    			$heading = true;
+    		}
+    		echo implode("\t", array_values($row)) . "\n";
+    	}
+    	exit;
+    }
+    
     public function memberinfoAction()
     {
         $jTableResult = array();
