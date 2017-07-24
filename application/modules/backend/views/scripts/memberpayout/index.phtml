@@ -83,7 +83,11 @@ $lastMonth = date("Ym", strtotime("first day of previous month"));
                     //icon: '/images/paginate.gif',
                     text: 'Export to Excel',
                     click: function () {
-                        window.location = '/backend/memberpayout/export';
+                    	window.location = '/backend/memberpayout/export?' + 'filter_status='+$('#filter_status').val()+'&'
+                        + 'filter_yearmonth='+$('#filter_yearmonth').val()+'&'
+                        + 'filter_member_id='+$('#filter_member_id').val()+'&'
+                        + 'filter_paypal_mail='+$('#filter_paypal_mail').val()+'&'
+                        + 'filter_mail='+$('#filter_mail').val();
                         e.preventDefault();
                     }
                 }]
