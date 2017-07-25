@@ -54,7 +54,7 @@ $lastMonth = date("Ym", strtotime("first day of previous month"));
 	            $payoutStatusModel = new Default_Model_DbTable_PayoutStatus();
 	            $list = $payoutStatusModel->getStatiForSelectList();
 	            foreach ($list as $key => $value) {
-	    	        $optionString= "<option value=".$key.">".$value."</option>";
+	    	        $optionString= "<option value=".$key.">".$key." - ".$value."</option>";
 	    	        echo $optionString;
 	            }
 	        ?>
@@ -77,6 +77,27 @@ $lastMonth = date("Ym", strtotime("first day of previous month"));
             sorting: true,
             defaultSorting: 'amount asc',
             title: 'Table of member payouts',
+            toolbar: {
+                items: [{
+                    Tooltip: 'Click here to export this table to excel',
+                    //icon: '/images/paginate.gif',
+                    text: 'Export to Excel',
+                    click: function () {
+                    	url = '/backend/memberpayout/export?filter_status=';
+                    	url += $('#filter_status').val();
+                    	url += '&filter_yearmonth=';
+                    	url += $('#filter_yearmonth').val();
+                    	url += '&filter_member_id=';
+                    	url += $('#filter_member_id').val();
+                    	url += '&filter_paypal_mail=';
+                    	url += $('#filter_paypal_mail').val();
+                    	url += '&filter_mail=';
+                    	url += $('#filter_mail').val();
+                    	window.location = url;
+                        e.preventDefault();
+                    }
+                }]
+            },
             actions: {
                 listAction: '/backend/memberpayout/list',
                 //createAction: '/backend/memberpayout/create',
