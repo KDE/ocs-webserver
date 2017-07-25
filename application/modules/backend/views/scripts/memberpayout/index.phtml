@@ -93,7 +93,6 @@ $lastMonth = date("Ym", strtotime("first day of previous month"));
                     	url += $('#filter_paypal_mail').val();
                     	url += '&filter_mail=';
                     	url += $('#filter_mail').val();
-                    	url += '&field_list=yearmonth,member_id as MemberId, paypal_mail, amount, status',
                     	window.location = url;
                         e.preventDefault();
                     }

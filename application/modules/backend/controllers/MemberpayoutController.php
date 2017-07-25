@@ -197,7 +197,13 @@ class Backend_MemberpayoutController extends Local_Controller_Action_Backend
     	$fields = $this->getParam('field_list');
     
     
-    	$select = $this->_model->select($fields)->order($sorting)->limit($pageSize, $startIndex);
+    	$select = $this->_model->select();
+        
+        $select
+                
+                ->from('member_payout', array('member_id','paypal_mail','amount', 'status' ))
+                ->order($sorting)
+                ->limit($pageSize, $startIndex);
     	/*
     	 $select->join('payout_status',
     	 		'member_payout.status = payout_status.id',
