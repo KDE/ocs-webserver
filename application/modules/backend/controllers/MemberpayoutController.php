@@ -201,7 +201,7 @@ class Backend_MemberpayoutController extends Local_Controller_Action_Backend
         
         $select
                 
-                ->from('member_payout', array('member_id','paypal_mail','amount', 'status' ))
+                ->from('member_payout', array('member_id as MemberId','paypal_mail as PayPalMail','amount as Amount', 'status as Status' ))
                 ->order($sorting)
                 ->limit($pageSize, $startIndex);
     	/*
@@ -258,7 +258,7 @@ class Backend_MemberpayoutController extends Local_Controller_Action_Backend
     	$jTableResult['Records'] = $reports->toArray();
     	$jTableResult['TotalRecordCount'] = $reportsAll->current()->countAll;
     	
-    	$filename = "member_payout.xls";
+    	$filename = "Payout_".$filter['yearmonth'].".xls";
     	header("Content-Type: application/vnd.ms-excel");
     	header("Content-Disposition: attachment; filename=\"$filename\"");
     	$this->exportFile($reports->toArray());
