@@ -23,7 +23,7 @@
 class Default_View_Helper_PrintDate extends Zend_View_Helper_Abstract
 {
 
-    public function printDate($strTime)
+    public function printDate($strTime, $fromFormat='Y-m-d H:i:s')
     {
         
         if (empty($strTime)) {
@@ -33,7 +33,7 @@ class Default_View_Helper_PrintDate extends Zend_View_Helper_Abstract
           return '';
         }
 
-        $date = DateTime::createFromFormat('Y-m-d H:i:s', $strTime);
+        $date = DateTime::createFromFormat($fromFormat, $strTime);
         $now = new DateTime();
         $interval = $date->diff($now);
         if($interval->days >2) return $date->format('M d Y');
