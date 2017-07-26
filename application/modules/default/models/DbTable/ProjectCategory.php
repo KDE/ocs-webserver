@@ -715,7 +715,7 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
         $cache = $this->cache;
         $cacheName = __FUNCTION__ . '_' . md5(serialize($nodeId) . (int)$isActive);
 
-        if (($children = $cache->load($cacheName))) {
+        if (false !== ($children = $cache->load($cacheName))) {
             return $children;
         }
 
@@ -740,6 +740,7 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
         $children = $this->_db->query($sql, $nodeId)->fetchAll();
         if (count($children)) {
             $result = $this->flattenArray($children);
+            $result = $this->removeUnnecessaryValues($nodeId, $result);
             $cache->save($result, $cacheName);
             return $result;
         } else {
@@ -1243,6 +1244,12 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
             $frontendOptions,
             $backendOptions
         );
+    }
+
+    private function removeUnnecessaryValues($nodeId, $children)
+    {
+        $nodeId = is_array($nodeId) ? $nodeId : array($nodeId);
+        return array_diff($children, $nodeId);
     }
 
 }
