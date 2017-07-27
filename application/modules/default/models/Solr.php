@@ -58,6 +58,8 @@ class Default_Model_Solr
                 'spellcheck' => 'true',
             );
 
+            $params = $this->setStoreFilter($params);
+
             $offset = ((int)$op['page'] - 1) * (int)$op['count'];
 
             $query = trim($op['q']);
@@ -139,6 +141,16 @@ class Default_Model_Solr
         }
 
         return $object;
+    }
+
+    private function setStoreFilter($params)
+    {
+        $currentStoreConfig = Zend_Registry::get('store_config');
+        if (substr($currentStoreConfig['order'], -1) <> 1) {
+            return $params;
+        }
+        $params['fq'] = 'stores:('.$currentStoreConfig['store_id'].')';
+        return $params;
     }
 
 }
