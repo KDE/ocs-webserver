@@ -1,8 +1,12 @@
 <?php
 $param = array('q' => $this->searchText ,'page' => $this->page, 'count' => 10);
 $modelSearch = new Default_Model_Solr();
-$this->result = $modelSearch->search($param);
-$this->pagination = $pagination = $modelSearch->_pagination;
+try {
+    $this->result = $modelSearch->search($param);
+} catch (Exception $e) {
+    $this->result = array('hits' => array(), 'response' => array('numFound' => 0));
+}
+$this->pagination = $pagination = $modelSearch->getPagination();
 $this->products = $this->result['hits'];
 
 $helperBuildExploreUrl = new Default_View_Helper_BuildExploreUrl();

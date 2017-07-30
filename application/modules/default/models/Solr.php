@@ -108,7 +108,10 @@ class Default_Model_Solr
 
     public function getPagination()
     {
-        return $this->_pagination;
+        if (isset($this->_pagination)) {
+            return $this->_pagination;
+        }
+        return Zend_Paginator::factory(array());
     }
 
     /**
