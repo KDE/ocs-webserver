@@ -91,6 +91,11 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addResource(new Zend_Acl_Resource ('backend_tag'));
         $this->addResource(new Zend_Acl_Resource ('backend_user'));
 
+        $this->addResource(new Zend_Acl_Resource ('statistics_data'));
+
+        $this->allow(self::ROLENAME_GUEST, array(
+            'statistics_data'
+        ));
 
         $this->allow(self::ROLENAME_GUEST, array(
             'default_authorization',
