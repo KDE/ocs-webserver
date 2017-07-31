@@ -22,7 +22,7 @@
 
 class Embedv1Controller extends Zend_Controller_Action
 {
-    
+
     protected $_format = 'json';
     protected $_params = array();
 
@@ -39,10 +39,10 @@ class Embedv1Controller extends Zend_Controller_Action
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
     }
-    
+
     /**
      * @throws Zend_Exception
-    
+
     protected function _initRequestParamsAndFormat()
     {
         // Set request parameters
@@ -74,7 +74,7 @@ class Embedv1Controller extends Zend_Controller_Action
     }
      */
 
-    
+
     protected function _initResponseHeader()
     {
         $duration = 1800; // in seconds
@@ -101,7 +101,7 @@ class Embedv1Controller extends Zend_Controller_Action
                 'statuscode' => $statuscode,
                 'message'    => $message
             );
-        } 
+        }
         $this->_sendResponse($response, $this->_format);
     }
 
@@ -115,108 +115,108 @@ class Embedv1Controller extends Zend_Controller_Action
         $callback = $this->getParam('callback');
         if ($callback != "")
         {
-            header('Content-Type: text/javascript; charset=UTF-8');                
+            header('Content-Type: text/javascript; charset=UTF-8');
             // strip all non alphanumeric elements from callback
             $callback = preg_replace('/[^a-zA-Z0-9_]/', '', $callback);
-            echo $callback. '('. json_encode($response). ')';   
+            echo $callback. '('. json_encode($response). ')';
         }else{
-             header('Content-Type: application/json; charset=UTF-8');           
-             echo json_encode($response);    
+             header('Content-Type: application/json; charset=UTF-8');
+             echo json_encode($response);
         }
         exit;
     }
 
 
     public function projectdetailAction(){
-                 
+
         $product = $this->_getProject($this->getParam('projectid'));
-        
+
         $html = '';
         $html = $this->_getHTMLProjectDetail($product);
         $response = array(
             'status'     => 'ok',
             'statuscode' => 100,
-            'message'    => '',                   
+            'message'    => '',
             'data'       => array(),
             'html'      =>''
         );
         if (!empty($product)) {
-            $response['data'] = $product;            
-        }                  
-        $response['html'] = $html;            
+            $response['data'] = $product;
+        }
+        $response['html'] = $html;
         $this->_sendResponse($response, $this->_format);
     }
 
     protected function _getHTMLProjectDetail($project)
     {
-        $helperImage = new Default_View_Helper_Image();        
-        $helperPrintDate = new Default_View_Helper_PrintDate();        
+        $helperImage = new Default_View_Helper_Image();
+        $helperPrintDate = new Default_View_Helper_PrintDate();
         $printRating= new Default_View_Helper_PrintRatingWidgetSimple();
         $html = '';
-        $html = $html.'<div class="opendesktopwidget-main-detail-container-body-header">';        
+        $html = $html.'<div class="opendesktopwidget-main-detail-container-body-header">';
 
-        $html = $html.'<div class="opendesktopwidget-img-member"><img src="'.$helperImage->Image($project['profile_image_url'], array('width' => 85, 'height' => 85)).'" /></div>'; 
-        $html = $html.'<div class="opendesktopwidget-description">'.$project['title'];        
-        $html = $html.'<span class="opendesktopwidget-category">'.$project['cat_title'];  
-        $html = $html.'</span>'; 
-        $html = $html.'</div>'; 
-
-        $html = $html.'<div class="opendesktopwidget-rating">';                  
-        $html = $html.$printRating->printRatingWidgetSimple($project['laplace_score'],$project['count_likes'],$project['count_dislikes']);        
+        $html = $html.'<div class="opendesktopwidget-img-member"><img src="'.$helperImage->Image($project['profile_image_url'], array('width' => 85, 'height' => 85)).'" /></div>';
+        $html = $html.'<div class="opendesktopwidget-description">'.$project['title'];
+        $html = $html.'<span class="opendesktopwidget-category">'.$project['cat_title'];
+        $html = $html.'</span>';
         $html = $html.'</div>';
-        
+
+        $html = $html.'<div class="opendesktopwidget-rating">';
+        $html = $html.$printRating->printRatingWidgetSimple($project['laplace_score'],$project['count_likes'],$project['count_dislikes']);
+        $html = $html.'</div>';
+
         $html = $html.'</div> <!-- end of opendesktopwidget-main-detail-container-body-header -->';
 
 
-        $html = $html.'<div class="opendesktopwidget-main-detail-container-body-content">';        
-       
+        $html = $html.'<div class="opendesktopwidget-main-detail-container-body-content">';
+
        // carousels
         if(count($project['pics'])>0){
-            $html = $html.'<div class="opendesktopwidget-imgs">';         
-            $html = $html.'<div id="opendesktopwidget-main-detail-carousel" data-simple-slider>'; 
-            //$html = $html.'<img src="'.$helperImage->Image($project['pics'][0], array('height' => '600')).'" />';     
+            $html = $html.'<div class="opendesktopwidget-imgs">';
+            $html = $html.'<div id="opendesktopwidget-main-detail-carousel" data-simple-slider>';
+            //$html = $html.'<img src="'.$helperImage->Image($project['pics'][0], array('height' => '600')).'" />';
             foreach ($project['pics'] as  $pic) {
-                $html = $html.'<div><img src="'.$helperImage->Image($pic, array('width' => '621','height' => '621')).'" /></div>';     
+                $html = $html.'<div><img src="'.$helperImage->Image($pic, array('width' => '621','height' => '621')).'" /></div>';
             }
 
-            $html = $html.'</div>'; 
-            /*    
+            $html = $html.'</div>';
+            /*
             if(count($project['pics'])>1){
                 $html = $html.'<button class="prev opendesktop-widget-btn"><i class="fa fa-chevron-left opendesktop-navi" aria-hidden="true"></i></button>';
-                $html = $html.'<button class="next opendesktop-widget-btn"><i class="fa fa-chevron-right opendesktop-navi" aria-hidden="true"></i></button>';                
+                $html = $html.'<button class="next opendesktop-widget-btn"><i class="fa fa-chevron-right opendesktop-navi" aria-hidden="true"></i></button>';
             }
             */
-            $html = $html.'</div>'; 
-        }           
-        
+            $html = $html.'</div>';
+        }
+
 
         // begin opendesktopwidget-content
-        $html = $html.'<div class="opendesktopwidget-content">'; 
+        $html = $html.'<div class="opendesktopwidget-content">';
         $html = $html.'<div id="opendesktopwidget-content-tabs" class="pling-nav-tabs">';
         $html = $html.'<ul>';
         $html = $html.'<li class="active"><a data-wiget-target="#opendesktopwidget-content-description" data-toggle="tab">Product</a></li>';
         if($project['files'] && count($project['files'])>0){
             $html = $html.'<li><a data-wiget-target="#opendesktopwidget-content-files" data-toggle="tab">Files ('.count($project['files']).')</a></li>';
         }
-        if($project['changelogs'] && count($project['changelogs'])>0){            
+        if($project['changelogs'] && count($project['changelogs'])>0){
              $html = $html.'<li><a data-wiget-target="#opendesktopwidget-content-changelogs" data-toggle="tab">Changelogs ('.count($project['changelogs']).')</a></li>';
         }
-        if($project['reviews'] && count($project['reviews'])>0){                         
+        if($project['reviews'] && count($project['reviews'])>0){
              $html = $html.'<li><a data-wiget-target="#opendesktopwidget-content-reviews" data-toggle="tab">Reviews ('.count($project['reviews']).')</a></li>';
-        }               
-        $html = $html.'</ul>';         
-        $html = $html.'</div>'; 
+        }
+        $html = $html.'</ul>';
+        $html = $html.'</div>';
 
         // begin opendesktopwidget-tab-pane-content
-        $html = $html.'<div class="opendesktopwidget-tab-pane-content">'; 
+        $html = $html.'<div class="opendesktopwidget-tab-pane-content">';
 
-        $html = $html.'<div id="opendesktopwidget-content-description" class="opendesktopwidget-tab-pane  active">'; 
+        $html = $html.'<div id="opendesktopwidget-content-description" class="opendesktopwidget-tab-pane  active">';
         $html = $html.'<span class="description"> Description</span>';
         $html = $html.$project['description'];
         if($project['lastchangelog']){
-            $html = $html.'<span class="description"> Last change log</span>';            
+            $html = $html.'<span class="description"> Last change log</span>';
             $html = $html.'<span class="title"> '.$project['lastchangelog']['title'].'</span>';
-            $html = $html.'<span class="updatetime">'. $helperPrintDate->printDate($project['lastchangelog']['created_at']).'</span>';  
+            $html = $html.'<span class="updatetime">'. $helperPrintDate->printDate($project['lastchangelog']['created_at']).'</span>';
             $html = $html.'<span class="text"> '.$project['lastchangelog']['text'].'</span>';
         }
 
@@ -225,35 +225,35 @@ class Embedv1Controller extends Zend_Controller_Action
         $html_comment = $this->_getHTMLPagerComments($project['comments'])
                     .'<div id="opendesktopwidget-main-container-comments">'
                     .$this->_getHTMLComments($project['comments'])
-                    .'</div>';    
+                    .'</div>';
         $html = $html.$html_comment;
-        $html = $html.'</div>';                 
+        $html = $html.'</div>';
         // comments end
 
         $html = $html.'</div>';         // end opendesktopwidget-content-description
-        
+
         // begin opendesktopwidget-content-files
-        $html = $html.'<div id="opendesktopwidget-content-files" class="opendesktopwidget-tab-pane">'; 
+        $html = $html.'<div id="opendesktopwidget-content-files" class="opendesktopwidget-tab-pane">';
         $html = $html.$this->_getHTMLFiles($project['files']);
-        $html = $html.'</div>';        
+        $html = $html.'</div>';
         // end opendesktopwidget-content-files
 
         // begin opendesktopwidget-content-changelogs
-        $html = $html.'<div id="opendesktopwidget-content-changelogs" class="opendesktopwidget-tab-pane">'; 
+        $html = $html.'<div id="opendesktopwidget-content-changelogs" class="opendesktopwidget-tab-pane">';
         $html = $html.$this->_getHTMLChangelogs($project['changelogs']);
-        $html = $html.'</div>';        
+        $html = $html.'</div>';
         // end opendesktopwidget-content-changelogs
 
          // begin opendesktopwidget-content-reviews
-        $html = $html.'<div id="opendesktopwidget-content-reviews" class="opendesktopwidget-tab-pane">'; 
+        $html = $html.'<div id="opendesktopwidget-content-reviews" class="opendesktopwidget-tab-pane">';
         $html = $html.$this->_getHTMLReviews($project['reviews']);
-        $html = $html.'</div>';        
+        $html = $html.'</div>';
         // end opendesktopwidget-content-reviews
 
 
         // end opendesktopwidget-tab-pane-content
-        $html = $html.'</div>';        
-        
+        $html = $html.'</div>';
+
 
         $html = $html.'</div>';    //opendesktopwidget-main-detail-container-body-content
 
@@ -266,29 +266,29 @@ class Embedv1Controller extends Zend_Controller_Action
 
     protected function _getHTMLChangelogs($logs)
     {
-        $helperPrintDate = new Default_View_Helper_PrintDate();     
+        $helperPrintDate = new Default_View_Helper_PrintDate();
         $html = '<div id="opendesktopwidget-changelogs">';
         foreach ($logs as $log) {
               $html = $html.'<div class="opendesktopwidget-changelogs-title"><span class="opendesktopwidget-changelogs-title-1">'.$log['title'].'</span>';
               $html = $html.'<span class="opendesktopwidget-changelogs-title-2">'.$helperPrintDate->printDate($log['created_at']).'</span>';
-              $html = $html.'</div>';         
-              $html = $html.'<span class="opendesktopwidget-changelogs-text">'.$log['text'].'</span>';   
+              $html = $html.'</div>';
+              $html = $html.'<span class="opendesktopwidget-changelogs-text">'.$log['text'].'</span>';
         }
-        $html = $html.'</div>';         
+        $html = $html.'</div>';
         return $html;
     }
 
     protected function _getHTMLReviews($reviews)
     {
-     
-        $helperImage = new Default_View_Helper_Image();     
-        $helperPrintDate = new Default_View_Helper_PrintDate();     
+
+        $helperImage = new Default_View_Helper_Image();
+        $helperPrintDate = new Default_View_Helper_PrintDate();
 
         $cntActive = 0;
         $cntLikes = 0;
         $cntDislike = 0;
         $cntAll = count($reviews);
-         foreach ($reviews as $review) { 
+         foreach ($reviews as $review) {
             if($review['rating_active']==1) {
                     $cntActive =$cntActive+1;
                     $cntLikes = $cntLikes + $review['user_like'];
@@ -304,10 +304,10 @@ class Embedv1Controller extends Zend_Controller_Action
          $html = $html.'<button id="opendesktopwidget-reviews-filters-likes" class="opendesktop-widget-btn opendesktop-widget-reviews-filters-btn">Show '
                         .'<i class="fa fa-thumbs-o-up" aria-hidden="true" style="color:green"></i> ('.$cntLikes.')</button>';
          $html = $html.'<button id="opendesktopwidget-reviews-filters-active" class="opendesktop-widget-btn opendesktop-widget-reviews-filters-btn opendesktopwidget-reviews-activeRating">Show Active Reviews ('.$cntActive.')</button>';
-         $html = $html.'<button id="opendesktopwidget-reviews-filters-all" class="opendesktop-widget-btn opendesktop-widget-reviews-filters-btn">Show all Reviews ('.$cntAll.')</button>';         
-         $html = $html.'</div>';         
+         $html = $html.'<button id="opendesktopwidget-reviews-filters-all" class="opendesktop-widget-btn opendesktop-widget-reviews-filters-btn">Show all Reviews ('.$cntAll.')</button>';
+         $html = $html.'</div>';
 
-        
+
         foreach ($reviews as $review) {
              $clsActive = '';
              $clsLike = '';
@@ -322,9 +322,9 @@ class Embedv1Controller extends Zend_Controller_Action
                 $clsLike ='opendesktopwidget-reviews-rows-clsDownvotes ';
              }
 
-             $html = $html.'<div class="opendesktopwidget-reviews-rows '.$clsActive.$clsLike.'">';                                            
+             $html = $html.'<div class="opendesktopwidget-reviews-rows '.$clsActive.$clsLike.'">';
               $html = $html.'<div class="opendesktopwidget-reviews-title">';
-              $html = $html.'<img class="opendesktopwidget-reviews-userimg" src="'.$helperImage->Image($review['profile_image_url'], array('width' => 40, 'height' => 40)).'" />'; 
+              $html = $html.'<img class="opendesktopwidget-reviews-userimg" src="'.$helperImage->Image($review['profile_image_url'], array('width' => 40, 'height' => 40)).'" />';
               $html = $html.'<span class="opendesktopwidget-reviews-title-1">'.$review['username'].'</span>';
               $html = $html.'<span class="opendesktopwidget-reviews-title-2">'.$helperPrintDate->printDate($review['created_at']).'</span>';
               if($review['user_like']==1){
@@ -332,11 +332,11 @@ class Embedv1Controller extends Zend_Controller_Action
               }else{
                     $html = $html.'<i class="fa fa-thumbs-o-down opendesktopwidget-dislike" aria-hidden="true" ></i>';
               }
-              $html = $html.'</div>';         
-              $html = $html.'<span class="opendesktopwidget-reviews-text">'.$review['comment_text'].'</span>';   
+              $html = $html.'</div>';
+              $html = $html.'<span class="opendesktopwidget-reviews-text">'.$review['comment_text'].'</span>';
               $html = $html.'</div>';
         }
-        $html = $html.'</div>';         
+        $html = $html.'</div>';
         return $html;
     }
 
@@ -347,30 +347,30 @@ class Embedv1Controller extends Zend_Controller_Action
             $this->_sendErrorResponse(101, 'content not found');
         }
 
-        $result = array();        
+        $result = array();
         $result = array(
             'project_id'           => $project['project_id'],
             'member_id'           => $project['member_id'],
             'title'           => $project['title'],
             'description'           => $project['description'],
-            'version'           => $project['version'],                        
-            'project_category_id'         =>$project['project_category_id'],               
+            'version'           => $project['version'],
+            'project_category_id'         =>$project['project_category_id'],
             'project_created_at'         =>$project['project_created_at'],
             'project_changed_at' => $project['project_changed_at'],
             'laplace_score' => $project['laplace_score'],
             'ppload_collection_id' => $project['ppload_collection_id'],
-            'image_small'    =>  $project['image_small'],                        
+            'image_small'    =>  $project['image_small'],
             'count_likes'    =>  $project['count_likes'],
             'count_dislikes'    =>  $project['count_dislikes'],
             'count_comments'    =>  $project['count_comments'],
             'cat_title'    =>  $project['cat_title'],
             'username'    =>  $project['username'],
-            'profile_image_url'    =>  $project['profile_image_url'],            
+            'profile_image_url'    =>  $project['profile_image_url'],
             'comments'  => array(),
             'files' =>array(),
             'lastchangelog'  => array(),
             'pics'  => array(),
-            'changelogs'  => array(),            
+            'changelogs'  => array(),
             'reviews'  => array()
         );
 
@@ -386,7 +386,7 @@ class Embedv1Controller extends Zend_Controller_Action
         // changelogs
         $tableProjectUpdates = new Default_Model_ProjectUpdates();
         $updates = $tableProjectUpdates->fetchProjectUpdates($project_id);
-        if (count($updates) > 0) {            
+        if (count($updates) > 0) {
              $logs = array();
              foreach ($updates as $update) {
                  $logs[] = array(
@@ -412,15 +412,15 @@ class Embedv1Controller extends Zend_Controller_Action
                'created_at' => $review['created_at'],
                'profile_image_url' => $review['profile_image_url'],
                'username' => $review['username'],
-               'comment_text' => $review['comment_text']             
+               'comment_text' => $review['comment_text']
                );
         }
         $result['reviews'] = $r;
-        
+
         // comments
         $comments = $this->_getCommentsForProject($project_id);
         $result['comments'] = $comments;
-              
+
         // pploadfiles
         $files = $this->_getPploadFiles($project['ppload_collection_id']);
         $result['files'] = $files;
@@ -430,10 +430,10 @@ class Embedv1Controller extends Zend_Controller_Action
 
     public function commentsAction()
     {
-       
+
         $project_id = $this->getParam('id');
         $page = $this->getParam('page');
-        $nopage = $this->getParam('nopage');   // with param nopage will only show prudusts list otherwise show 
+        $nopage = $this->getParam('nopage');   // with param nopage will only show prudusts list otherwise show
         $pageLimit = $this->getParam('pagelimit');
 
         if(empty($project_id)){
@@ -444,11 +444,11 @@ class Embedv1Controller extends Zend_Controller_Action
                 'totalitems' =>0,
                 'html'      =>'',
                 'data'       => array()
-            );          
+            );
         }else{
 
             if(empty($page)) $page=0;
-            if(empty($pageLimit)) $pageLimit=10; 
+            if(empty($pageLimit)) $pageLimit=10;
             $comments = $this->_getCommentsForProject($project_id,$page,$pageLimit);
 
             $commentsResult = $comments['result'];
@@ -463,20 +463,20 @@ class Embedv1Controller extends Zend_Controller_Action
 
             if (!empty($commentsResult)) {
                 $response['data'] = $commentsResult;
-                // create html     
-                if(empty($nopage)) {                 
-                    //  init with comments & pager        
+                // create html
+                if(empty($nopage)) {
+                    //  init with comments & pager
                     $html = $this->_getHTMLPagerComments($comments)
                                 .'<div id="opendesktopwidget-main-container-comments">'
                                 .$this->_getHTMLComments($comments)
-                                .'</div>';    
+                                .'</div>';
                 }else{
                     // for only ajax paging content
                     $html =$this->_getHTMLComments($comments);
-                }                                
+                }
                 $response['html'] =$html;
-            }          
-                    
+            }
+
         }
 
         $this->_sendResponse($response, $this->_format);
@@ -488,47 +488,47 @@ class Embedv1Controller extends Zend_Controller_Action
     {
         $commentslist = $comments['result'];
         $helperImage = new Default_View_Helper_Image();
-        $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();       
+        $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
         $helperPrintDate = new Default_View_Helper_PrintDate();
-        $html = '';  
-        foreach ($commentslist as $p) {        
-                $html = $html.'<div class="opendesktopwidgetcommentrow level'.$p['level'].'"  id="opendesktopwidgetcommentrow_'.$p['comment_id'].'">';                                    
-                
-                $html = $html.'<img class="image_small" src="'.$helperImage->Image($p['profile_image_url'], array('width' => 60, 'height' => 60)).'" />'; 
+        $html = '';
+        foreach ($commentslist as $p) {
+                $html = $html.'<div class="opendesktopwidgetcommentrow level'.$p['level'].'"  id="opendesktopwidgetcommentrow_'.$p['comment_id'].'">';
+
+                $html = $html.'<img class="image_small" src="'.$helperImage->Image($p['profile_image_url'], array('width' => 60, 'height' => 60)).'" />';
 
                 $html = $html.'<div class="opendesktopwidgetcommentrow-header">';
-                $html = $html.'<span class="username">'.$p['username'].'</span>';  
-                $html = $html.'<span class="updatetime">'. $helperPrintDate->printDate($p['comment_created_at']).'</span>';  
+                $html = $html.'<span class="username">'.$p['username'].'</span>';
+                $html = $html.'<span class="updatetime">'. $helperPrintDate->printDate($p['comment_created_at']).'</span>';
                 $html = $html.'</div>';
 
                 $html = $html.'<div class="opendesktopwidgetcomment_content">';
-                                           
-                
-                $html = $html.'<div class="commenttext">'.$p['comment_text'].'</div>';      
-               
+
+
+                $html = $html.'<div class="commenttext">'.$p['comment_text'].'</div>';
+
                 $html = $html.'</div><div style="clear:both"/> ';
-                $html = $html.'</div><!-- end of opendesktopwidgetcommentrow -->';                
-        }                              
+                $html = $html.'</div><!-- end of opendesktopwidgetcommentrow -->';
+        }
         return $html;
 
     }
 
-    
+
     protected function _getCommentsForProject($project_id,$curPage=1,$pageItemsCount=10)
     {
-        
-        $modelComments = new Default_Model_ProjectComments();        
-        $comments = $modelComments->getCommentTreeForProject($project_id);        
+
+        $modelComments = new Default_Model_ProjectComments();
+        $comments = $modelComments->getCommentTreeForProject($project_id);
         $comments->setItemCountPerPage($pageItemsCount);
         $comments->setCurrentPageNumber($curPage);
 
         $result = array();
-        
-        foreach ($comments as $comment) { 
+
+        foreach ($comments as $comment) {
 
             $c = $comment['comment'];
-            
-            $result[] = array(                               
+
+            $result[] = array(
                 'comment_id'   => $c['comment_id'],
                 'member_id'    => $c['member_id'],
                 'comment_text' =>  nl2br(Default_Model_HtmlPurify::purify($c['comment_text']),true),
@@ -537,8 +537,8 @@ class Embedv1Controller extends Zend_Controller_Action
                 'profile_image_url' => $c['profile_image_url'],
                 'username' => $c['username'],
                 'comment_target_id'=>$c['comment_target_id'],
-                'comment_created_at' => $c['comment_created_at']           
-            );                        
+                'comment_created_at' => $c['comment_created_at']
+            );
         }
 
         $rlt = array(
@@ -547,29 +547,29 @@ class Embedv1Controller extends Zend_Controller_Action
                 'itemCountPerPage'=>$comments->getItemCountPerPage(),
                 'result'     => $result
             );
-        
 
-        
+
+
 
         return $rlt;
     }
 
 
     public function memberprojectsAction()
-    {                
+    {
         $user_id = $this->getParam('memberid');
         $page = $this->getParam('page');
         $nopage = $this->getParam('nopage');   // with param nopage will only show prudusts list otherwise show member+pager+productlist
         $pageLimit = $this->getParam('pagelimit');
         $catids = $this->getParam('catids');
-        
+
         if(empty($pageLimit)){
             $pageLimit = 10;
-        }        
+        }
 
          if(empty($catids)){
             $catids = null;
-        }        
+        }
 
         if(empty($page)){
             $page = 1;
@@ -582,11 +582,11 @@ class Embedv1Controller extends Zend_Controller_Action
                 'totalitems' =>0,
                 'html'      =>'',
                 'data'       => array()
-            );          
-        }else{           
+            );
+        }else{
 
             $userProducts = $this->_getMemberProducts($user_id, $pageLimit, $page,$catids);
-            
+
             $response = array(
                 'status'     => 'ok',
                 'statuscode' => 100,
@@ -596,36 +596,36 @@ class Embedv1Controller extends Zend_Controller_Action
             );
             if (!empty($userProducts)) {
                 $response['data'] = $userProducts;
-                // create html     
-                if(empty($nopage)) {                 
-                    //  init with member & pager & products       
+                // create html
+                if(empty($nopage)) {
+                    //  init with member & pager & products
                     $html = $this->_getHTMLMember($user_id)
                                 .'<div id="opendesktopwidget-main">'
                                 .$this->_getHTMLPager($user_id,$pageLimit,$page,$catids)
                                 .'<div id="opendesktopwidget-main-container">'
                                 .$this->_getHTMLProducts($userProducts)
-                                .'</div>' 
-                                .'</div>';   
+                                .'</div>'
+                                .'</div>';
                 }else{
                     // for only ajax paging content
                     $html =$this->_getHTMLProducts($userProducts);
-                }                                
+                }
                 $response['html'] =$html;
-            }          
-            
+            }
+
         }
         $this->_sendResponse($response, $this->_format);
-    }    
+    }
 
-    protected function _getHTMLMember($user_id)    
+    protected function _getHTMLMember($user_id)
     {
         $html = '';
         $modelMember = new Default_Model_Member();
         $m = $modelMember->fetchMemberData($user_id);
-        $helperImage = new Default_View_Helper_Image();  
+        $helperImage = new Default_View_Helper_Image();
         $html = $html.'<div class="opendesktopwidgetheader">';
-        $html = $html.'<a href="https://www.opendesktop.org" target="_blank"><img class="opendesktoplogo" src="https://www.opendesktop.org/images_sys/store_opendesktop/logo.png" /></a>'; 
-        $html = $html.'<img class="profile_image" src="'.$helperImage->Image($m['profile_image_url'], array('width' => 110, 'height' => 110)).'" />';                 
+        $html = $html.'<a href="https://www.opendesktop.org" target="_blank"><img class="opendesktoplogo" src="https://www.opendesktop.org/images_sys/store_opendesktop/logo.png" /></a>';
+        $html = $html.'<img class="profile_image" src="'.$helperImage->Image($m['profile_image_url'], array('width' => 110, 'height' => 110)).'" />';
         $html = $html.'</div> <!--end of header-->';
         return $html;
 
@@ -637,70 +637,70 @@ class Embedv1Controller extends Zend_Controller_Action
         $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
         $printRating= new Default_View_Helper_PrintRatingWidgetSimple();
         $helperPrintDate = new Default_View_Helper_PrintDate();
-        $html = '';  
-        foreach ($userProducts as $p) {        
+        $html = '';
+        foreach ($userProducts as $p) {
                 $html = $html.'<div class="opendesktopwidgetrow" id="opendesktopwidgetrow_'.$p['id']
-                                        .' " data-project-id="'.$p['id']                                    
-                                        .' " data-ppload-collection-id="'.$p['ppload_collection_id'].'">';                                    
-                //$html = $html.'<a href="'.$this->_config['baseurl'].'p/'.$p['id'].'" target="_blank">';                          
-                $html = $html.'<img class="image_small" src="'.$helperImage->Image($p['image_small'], array('width' => 167, 'height' => 167)).'" />'; 
+                                        .' " data-project-id="'.$p['id']
+                                        .' " data-ppload-collection-id="'.$p['ppload_collection_id'].'">';
+                //$html = $html.'<a href="'.$this->_config['baseurl'].'p/'.$p['id'].'" target="_blank">';
+                $html = $html.'<img class="image_small" src="'.$helperImage->Image($p['image_small'], array('width' => 167, 'height' => 167)).'" />';
 
-                $html = $html.'<div class="description-container">';      
-                $html = $html.'<div class="description">';      
-                $html = $html.'<span class="title">'.$p['title'].'</span>';      
-                $html = $html.'<span class="version">'.$p['version'].'</span>';      
-                $html = $html.'<span class="cat_name">'.$p['cat_name'].'</span>';      
+                $html = $html.'<div class="description-container">';
+                $html = $html.'<div class="description">';
+                $html = $html.'<span class="title">'.$p['title'].'</span>';
+                $html = $html.'<span class="version">'.$p['version'].'</span>';
+                $html = $html.'<span class="cat_name">'.$p['cat_name'].'</span>';
                 if($p['count_comments']>0){
-                    $html = $html.'<span class="count_comments">'.$p['count_comments'].' comment' .($p['count_comments']>1?'s':'').'</span>';          
-                }                                                        
-                $html = $html.'</div><!--end of description-->';                           
+                    $html = $html.'<span class="count_comments">'.$p['count_comments'].' comment' .($p['count_comments']>1?'s':'').'</span>';
+                }
+                $html = $html.'</div><!--end of description-->';
 
                 $html = $html.'<div class="rating">';
                 $html = $html.$printRating->printRatingWidgetSimple($p['laplace_score'],$p['count_likes'],$p['count_dislikes']);
                 $html = $html.'<span class="updatetime">'. $helperPrintDate->printDate($p['changed']).'</span>';
                 $html = $html.'</div>';
 
-                $html = $html.'</div><!--end of description-container-->';  
-                //$html = $html.'</a><!--end of a-->';                  
-                $html = $html.'</div> <!-- end of opendesktopwidgetrow -->';          
-        }                              
+                $html = $html.'</div><!--end of description-container-->';
+                //$html = $html.'</a><!--end of a-->';
+                $html = $html.'</div> <!-- end of opendesktopwidgetrow -->';
+        }
         return $html;
     }
 
     protected function _getHTMLPager($user_id,$pageLimit=10,$page=1,$catids=null)
-    {        
+    {
         $modelProject = new Default_Model_Project();
         $total_records = $modelProject->countAllProjectsForMemberCatFilter($user_id,true,$catids);
-        $total_pages = ceil($total_records / $pageLimit);         
+        $total_pages = ceil($total_records / $pageLimit);
         if($total_pages <=1) return '';
         $html = '<div class="opendesktopwidgetpager"><ul class="opendesktopwidgetpager">';
-        for ($i=1; $i<=$total_pages; $i++) { 
+        for ($i=1; $i<=$total_pages; $i++) {
             if($i==$page){
-                $html = $html.'<li class="active"><span>'.$i.'</span></li>';                
+                $html = $html.'<li class="active"><span>'.$i.'</span></li>';
             }else{
-                $html = $html.'<li><span>'.$i.'</span></li>';                
+                $html = $html.'<li><span>'.$i.'</span></li>';
             }
-            
-        };   
-        $html = $html.'</ul></div>';         
-        return $html;   
+
+        };
+        $html = $html.'</ul></div>';
+        return $html;
     }
 
     protected function _getHTMLPagerComments($comments)
-    {        
-        
+    {
+
         $total_pages = $comments['count'];
         if($total_pages<=1) return '';
-        $html = '<div class="opendesktopwidgetpager"><ul class="opendesktopwidgetpager">';               
-        for ($i=1; $i<=$total_pages; $i++) { 
+        $html = '<div class="opendesktopwidgetpager"><ul class="opendesktopwidgetpager">';
+        for ($i=1; $i<=$total_pages; $i++) {
             if($i==1){
-                $html = $html.'<li class="active"><span>'.$i.'</span></li>';                
+                $html = $html.'<li class="active"><span>'.$i.'</span></li>';
             }else{
-                $html = $html.'<li><span>'.$i.'</span></li>';                
-            }            
-        };   
-        $html = $html.'</ul></div>';         
-        return $html;   
+                $html = $html.'<li><span>'.$i.'</span></li>';
+            }
+        };
+        $html = $html.'</ul></div>';
+        return $html;
     }
 
 
@@ -710,14 +710,14 @@ class Embedv1Controller extends Zend_Controller_Action
 
        $modelProject = new Default_Model_Project();
         $userProjects = $modelProject->fetchAllProjectsForMemberCatFilter($user_id, $pageLimit,($page - 1) * $pageLimit, true,$catids);
-        
+
         $result = array();
-        foreach ($userProjects as $project) {                       
+        foreach ($userProjects as $project) {
             $result[] = array(
                 'id'           => $project['project_id'],
                 'title'           => Default_Model_HtmlPurify::purify($project['title']),
                 'desc'           => Default_Model_HtmlPurify::purify($project['description']),
-                'version'           =>Default_Model_HtmlPurify::purify($project['version']),                        
+                'version'           =>Default_Model_HtmlPurify::purify($project['version']),
                 'cat_id'         =>$project['project_category_id'],
                 'cat_name' => $project['catTitle'],
                 'created'         =>$project['project_created_at'],
@@ -727,9 +727,9 @@ class Embedv1Controller extends Zend_Controller_Action
                 'count_dislikes' => $project['count_dislikes'],
                 'count_likes' => $project['count_likes'],
                 'count_comments'    =>  $project['count_comments'] ,
-                'ppload_collection_id' =>  $project['ppload_collection_id']                 
+                'ppload_collection_id' =>  $project['ppload_collection_id']
             );
-                            
+
         }
         return $result;
     }
@@ -747,49 +747,48 @@ class Embedv1Controller extends Zend_Controller_Action
         {
              $filesRequest = array(
                  'collection_id' => ltrim($ppload_collection_id, '!'),
-                  'perpage'       => 100            
+                  'perpage'       => 100
              );
              $filesResponse = $pploadApi->getFiles($filesRequest);
 
              if (isset($filesResponse->status)  && $filesResponse->status == 'success') {
                  $i=0;
-                 foreach ($filesResponse->files as $file) {                                         
+                 foreach ($filesResponse->files as $file) {
                      $downloadLink = PPLOAD_API_URI . 'files/download/'. 'id/' . $file->id . '/' . $file->name;
                      $tags = $this->_parseFileTags($file->tags);
                      $p_type = $this->_getPackagetypeText($tags['packagetypeid']);
                      $p_lice = $this->_getLicenceText($tags['licensetype']);
-                     $result[] = array( 
-                                                        'id' =>$file->id,                        
+                     $result[] = array(
+                                                        'id' =>$file->id,
                                                         'downloadlink'=>$downloadLink,
                                                         'name'=> $file->name,
                                                         'version'=> $file->version,
                                                         'description'=> $file->description,
-                                                        'type'=> $file->type,                                                        
+                                                        'type'=> $file->type,
                                                         'downloaded_count'  => $file->downloaded_count,
-                                                        'size'                         => round($file->size / (1024*1024),2),      
+                                                        'size'                         => round($file->size / (1024*1024),2),
                                                         'license'                    => $p_lice,
-                                                        'package_type'          => $p_type,                                                     
+                                                        'package_type'          => $p_type,
                                                         'package_arch'          => $tags['packagearch'],
-                                                        'ghns'                        =>$tags['ghns'],
                                                         'created'                    =>$file->created_timestamp ,
-                                                        'updated'                   =>$file->updated_timestamp 
+                                                        'updated'                   =>$file->updated_timestamp
                         );
                  }
              }
          }
         return $result;
     }
-    
+
     protected function _getHTMLFiles($files)
     {
         if(count($files)==0) return '';
         $helperPrintDate = new Default_View_Helper_PrintDate();
          $html = '<div class="opendesktoppploadfiles">';
-         $html = $html.'<table class="opendesktoppploadfilestable">';         
-         $html = $html.'<thead><tr><th>File</th><th>Version</th><th>Description</th><th>Filetype</th><th>Packagetype</th><th>License</th>';         
+         $html = $html.'<table class="opendesktoppploadfilestable">';
+         $html = $html.'<thead><tr><th>File</th><th>Version</th><th>Description</th><th>Filetype</th><th>Packagetype</th><th>License</th>';
          $html = $html.'<th>Downloads</th><th>Date</th><th>Filesize</th></tr></thead>';
          $html = $html.'<tbody>';
-         foreach ($files as $file) {                   
+         foreach ($files as $file) {
                $html = $html.'<tr>';
                $html = $html.'<td><a href="'.$file['downloadlink'].'" >'.$file['name'].'</a></td>';
                $html = $html.'<td>'.$file['version'].'</td>';
@@ -802,7 +801,7 @@ class Embedv1Controller extends Zend_Controller_Action
                $html = $html.'<td class="opendesktoppploadfilestabletdright">'.$file['size'].'MB</td>';
                $html = $html.'</tr>';
          }
-         $html = $html.'</tbody></table> </div>';         
+         $html = $html.'</tbody></table> </div>';
          return $html;
     }
 
@@ -810,20 +809,20 @@ class Embedv1Controller extends Zend_Controller_Action
     public function pploadAction()
     {
         $downloadItems = array();
-        
+
         $ppload_collection_id = $this->getParam('ppload_collection_id');
 
         $count_downloads_hive = $this->getParam('count_downloads_hive');
         if(empty($count_downloads_hive)){
             $downloads = 0;
         }else{
-            $downloads = $count_downloads_hive;    
+            $downloads = $count_downloads_hive;
         }
 
-        $files = $this->_getPploadFiles($ppload_collection_id);        
+        $files = $this->_getPploadFiles($ppload_collection_id);
         $html='';
         $html = $this->_getHTMLFiles($files);
-        
+
         if ($this->_format == 'json') {
             $response = array(
                 'status'     => 'ok',
@@ -832,9 +831,9 @@ class Embedv1Controller extends Zend_Controller_Action
                 'totalitems' => count($files),
                 'html'       => $html
             );
-            
-            $this->_sendResponse($response, $this->_format);              
-        } 
+
+            $this->_sendResponse($response, $this->_format);
+        }
     }
 
     protected function _getLicenceText($id)
@@ -853,28 +852,28 @@ class Embedv1Controller extends Zend_Controller_Action
                 break;
             case 3:
                 $typetext =  'Artistic 2.0';
-                break;   
+                break;
             case 4:
                 $typetext =  'X11';
-                break;   
+                break;
             case 5:
                 $typetext =  'QPL';
-                break;   
+                break;
             case 6:
                 $typetext =  'BSD';
-                break;   
+                break;
             case 7:
                 $typetext =  'Proprietary License';
-                break;   
+                break;
             case 8:
                 $typetext =  'GFDL';
-                break;     
+                break;
             case 9:
                 $typetext =  'CPL 1.0';
-                break;    
+                break;
             case 10:
                 $typetext =  'Creative Commons by';
-                break;     
+                break;
             case 11:
                 $typetext =  'Creative Commons by-sa';
             case 12:
@@ -885,19 +884,19 @@ class Embedv1Controller extends Zend_Controller_Action
                 break;
             case 14:
                 $typetext =  'Creative Commons by-nc-sa';
-                break;   
+                break;
             case 15:
                 $typetext =  'Creative Commons by-nc-nd';
-                break;   
+                break;
             case 16:
                 $typetext =  'AGPL';
-                break;   
+                break;
             case 18:
                 $typetext =  'GPLv2 only';
-                break;   
+                break;
             case 19:
                 $typetext =  'GPLv3';
-                break;               
+                break;
         }
         return $typetext;
 
@@ -915,31 +914,31 @@ class Embedv1Controller extends Zend_Controller_Action
                 break;
             case 3:
                 $typetext =  'OS X compatible';
-                break;   
+                break;
             case 4:
                 $typetext =  'Windows executable';
-                break;   
+                break;
             case 5:
                 $typetext =  'Debian';
-                break;   
+                break;
             case 6:
                 $typetext =  'Snappy';
-                break;   
+                break;
             case 7:
                 $typetext =  'Flatpak';
-                break;   
+                break;
             case 8:
                 $typetext =  'Electron-Webapp';
-                break;     
+                break;
             case 9:
                 $typetext =  'Arch';
-                break;    
+                break;
             case 10:
                 $typetext =  'open/Suse';
-                break;     
+                break;
             case 11:
                 $typetext =  'Redhat';
-                break;        
+                break;
         }
         return $typetext;
     }
@@ -955,8 +954,7 @@ class Embedv1Controller extends Zend_Controller_Action
             'link'          => '',
             'licensetype'   => '',
             'packagetypeid' => '',
-            'packagearch'   => '',
-            'ghns'          => ''
+            'packagearch'   => ''
         );
         foreach ($tags as $tag) {
             $tag = trim($tag);
@@ -971,10 +969,6 @@ class Embedv1Controller extends Zend_Controller_Action
                     } else {
                         if (strpos($tag, 'packagearch-') === 0) {
                             $parsedTags['packagearch'] = str_replace('packagearch-', '', $tag);
-                        } else {
-                            if (strpos($tag, 'ghns-') === 0) {
-                                $parsedTags['ghns'] = str_replace('ghns-', '', $tag);
-                            }
                         }
                     }
                 }
