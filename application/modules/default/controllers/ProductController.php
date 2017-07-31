@@ -1823,7 +1823,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                         new Zend_Validate_StringLength(array('min' => 3, 'max' => 100)),
                         'presence' => 'required'
                     ),
-                    'page'              => 'digits'
+                    'page'              => array('digits', 'default' => '1')
                 ), $this->getAllParams());
 
         $this->view->searchText = $filterInput->getEscaped('projectSearchText');
