@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -24,21 +25,20 @@ class HomeController extends Local_Controller_Action_DomainSwitch
 
     public function indexAction()
     {
-        Zend_Registry::get('logger')->debug('*** SHOW_HOME_PAGE: '. getenv('SHOW_HOME_PAGE'));
+        Zend_Registry::get('logger')->debug('*** SHOW_HOME_PAGE: ' . getenv('SHOW_HOME_PAGE'));
         /**
          *  The SHOW_HOME_PAGE environment var will be set in apache .htaccess for some specific host names
          *  e.g.
          *  SetEnvIfNoCase Host opendesktop\.org$ SHOW_HOME_PAGE
          */
         if (false == getenv('SHOW_HOME_PAGE')) {
-//            $paramStoreId = $this->getParam('domain_store_id') ? "s/".$this->getParam('domain_store_id'). '/' : '';
-//            $this->redirect($paramStoreId . 'browse/ord/latest/');
             // forward is the faster way, but you have no influence to the url. On redirect the url changes.
             $params = array('ord' => 'latest');
             if ($this->hasParam('domain_store_id')) {
                 $params['domain_store_id'] = $this->getParam('domain_store_id');
             }
             $this->forward('index', 'explore', 'default', $params);
+
             return;
         }
 
@@ -65,7 +65,6 @@ class HomeController extends Local_Controller_Action_DomainSwitch
     protected function setLayout()
     {
         $this->_helper->layout()->setLayout('home_template');
-//        $view = $this->_helper->layout()->getView();
     }
 
 }

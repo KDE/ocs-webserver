@@ -389,31 +389,14 @@ class Default_Model_Info
         $sql = '
             SELECT 
                 p.*
-                ,(round(((p.count_likes + 6) / ((p.count_likes + p.count_dislikes) + 12)),2) * 100) AS laplace_score
+                ,laplace_score(p.count_likes, p.count_dislikes) AS laplace_score
             FROM
                 project AS p
             WHERE
                 p.status = 100
-                    AND p.project_category_id IN (' . implode(',', $activeCategories) . ')
+                AND p.project_category_id IN (' . implode(',', $activeCategories) . ')
             ORDER BY IFNULL(p.changed_at,p.created_at)  DESC
             ';
-        /*
-                $sql = '
-                    SELECT
-                        p.*
-                        ,(round(((p.count_likes + 6) / ((p.count_likes + p.count_dislikes) + 12)),2) * 100) as laplace_score
-                        ,sp.count_plingers
-                    FROM
-                        project as p
-                        LEFT JOIN stat_plings as sp ON p.project_id = sp.project_id
-                    WHERE
-                        p.status = 100
-                            AND p.project_category_id IN (' .
-                    implode(',', $activeCategories)
-                    . ')
-                    ORDER BY IFNULL(p.changed_at,p.created_at)  DESC
-                    ';
-        */
         if (isset($limit)) {
             $sql .= ' limit ' . (int)$limit;
         }
@@ -446,6 +429,7 @@ class Default_Model_Info
 
         if (empty($project_category_id)) {
             $activeCategories = $this->getActiveCategoriesForCurrentHost();
+            $dummy = implode(',', $activeCategories);
         } else {
             $activeCategories = $this->getActiveCategoriesForCatId($project_category_id);
         }
@@ -457,39 +441,20 @@ class Default_Model_Info
         $sql = '
             SELECT 
                 p.*
-                ,(round(((p.count_likes + 6) / ((p.count_likes + p.count_dislikes) + 12)),2) * 100) AS laplace_score
-                ,(SELECT profile_image_url FROM member m WHERE m.member_id = p.member_id) AS profile_image_url
-                ,(SELECT username FROM member m WHERE m.member_id = p.member_id) AS username
+                ,laplace_score(p.count_likes, p.count_dislikes) AS laplace_score
+                ,m.profile_image_url
+                ,m.username
             FROM
                 project AS p
+            JOIN 
+                member AS m ON m.member_id = p.member_id
             WHERE
                 p.status = 100
                 AND p.type_id = 1
                 AND p.featured = 1
-                    AND p.project_category_id IN (' . implode(',', $activeCategories) . ')
+                AND p.project_category_id IN ('. implode(',', $activeCategories).')
             ORDER BY p.changed_at DESC
             ';
-        /*
-                $sql = '
-                    SELECT
-                        p.*
-                        ,(round(((p.count_likes + 6) / ((p.count_likes + p.count_dislikes) + 12)),2) * 100) as laplace_score
-                        ,sp.count_plingers
-                        ,(select profile_image_url from member m where m.member_id = p.member_id) as profile_image_url
-                        ,(select username from member m where m.member_id = p.member_id) as username
-                    FROM
-                        project as p
-                        LEFT JOIN stat_plings as sp ON p.project_id = sp.project_id
-                    WHERE
-                        p.status = 100
-                        and p.type_id = 1
-                        and p.featured = 1
-                            AND p.project_category_id IN (' .
-                    implode(',', $activeCategories)
-                    . ')
-                    ORDER BY p.changed_at DESC
-                    ';
-        */
         if (isset($limit)) {
             $sql .= ' limit ' . (int)$limit;
         }
