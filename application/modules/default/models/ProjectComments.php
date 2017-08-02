@@ -52,7 +52,7 @@ class Default_Model_ProjectComments
         $this->_dataTable = new $this->_dataTableName;
     }
 
-    public function getComment($comment_id)
+    public function getCommentWithMember($comment_id)
     {
         $sql = "    SELECT *
                     FROM comments

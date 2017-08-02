@@ -119,7 +119,8 @@ $application->bootstrap(array(
     'FrontController',
     'Modules',
     'Db',
-    'GlobalApplicationVars'
+    'GlobalApplicationVars',
+    'Mail'
 ));
 
 $consoleOptions = new Zend_Console_Getopt(array(
