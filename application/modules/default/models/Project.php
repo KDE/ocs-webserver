@@ -233,6 +233,57 @@ class Default_Model_Project extends Default_Model_DbTable_Project
     }
 
     /**
+     * @param int  $member_id
+     * @param bool $onlyActiveProjects
+     * @param      $catids
+     *
+     * @return mixed
+     */
+    public function countAllProjectsForMemberCatFilter($member_id, $onlyActiveProjects = false, $catids = null)
+    {
+        $q = $this->select()->from($this, array('countAll' => new Zend_Db_Expr('count(*)')))->setIntegrityCheck(false)
+                  ->where('project.status >= ?', ($onlyActiveProjects ? self::PROJECT_ACTIVE : self::PROJECT_INACTIVE))
+                  ->where('project.member_id = ?', $member_id, 'INTEGER')
+                  ->where('project.type_id = ?', self::PROJECT_TYPE_STANDARD)
+        ;
+        if (isset($catids)) {
+            $q->where('project_category_id in (' . $this->_getCatIds($catids) . ')');
+        }
+        $resultSet = $q->query()->fetchAll();
+
+        return $resultSet[0]['countAll'];
+    }
+
+    protected function _getCatIds($catids)
+    {
+
+        $sqlwhereCat = "";
+        $sqlwhereSubCat = "";
+
+        $idCategory = explode(',', $catids);
+        if (false === is_array($idCategory)) {
+            $idCategory = array($idCategory);
+        }
+
+        $sqlwhereCat .= implode(',', $idCategory);
+
+        $modelCategory = new Default_Model_DbTable_ProjectCategory();
+        $subCategories = $modelCategory->fetchChildElements($idCategory);
+
+        if (count($subCategories) > 0) {
+            foreach ($subCategories as $element) {
+                $sqlwhereSubCat .= "{$element['project_category_id']},";
+            }
+        }
+
+        return $sqlwhereSubCat . $sqlwhereCat;
+    }
+
+    /*
+    @ param string categoryids: 111,107 return id and child ids...
+    */
+
+    /**
      * By default it will show all projects for a member included the unpublished elements.
      *
      * @param int      $member_id
@@ -282,6 +333,51 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             'stored'   => true,
             'data'     => $data
         ));
+    }
+
+    /**
+     * By default it will show all projects for a member included the unpublished elements.
+     *
+     * @param int      $member_id
+     * @param int|null $limit
+     * @param int|null $offset
+     * @param bool     $onlyActiveProjects
+     *
+     * @return Zend_Db_Table_Rowset_Abstract
+     */
+    public function fetchAllProjectsForMemberCatFilter(
+        $member_id,
+        $limit = null,
+        $offset = null,
+        $onlyActiveProjects = false,
+        $catids = null
+    ) {
+        $q = $this->select()->from($this, array(
+            '*',
+            'project_validated'  => 'project.validated',
+            'project_uuid'       => 'project.uuid',
+            'project_status'     => 'project.status',
+            'project_created_at' => 'project.created_at',
+            'project_changed_at' => 'project.changed_at',
+            'member_type'        => 'member.type',
+            'project_member_id'  => 'member_id',
+            'laplace_score'      => new Zend_Db_Expr('(round(((count_likes + 6) / ((count_likes + count_dislikes) + 12)),2) * 100)'),
+            'catTitle'           => new Zend_Db_Expr('(SELECT title FROM project_category WHERE project_category_id = project.project_category_id)')
+        ))->setIntegrityCheck(false)->join('member', 'project.member_id = member.member_id', array('username'))
+                  ->where('project.status >= ?', ($onlyActiveProjects ? self::PROJECT_ACTIVE : self::PROJECT_INACTIVE))
+                  ->where('project.member_id = ?', $member_id, 'INTEGER')
+                  ->where('project.type_id = ?', self::PROJECT_TYPE_STANDARD)->order('project_changed_at DESC')
+        ;
+
+        if (isset($catids)) {
+            $q->where('project_category_id in (' . $this->_getCatIds($catids) . ')');
+        }
+
+        if (isset($limit)) {
+            $q->limit($limit, $offset);
+        }
+
+        return $this->generateRowSet($q->query()->fetchAll());
     }
 
     /**
@@ -822,12 +918,14 @@ class Default_Model_Project extends Default_Model_DbTable_Project
 
     public function setAllProjectsForMemberDeleted($member_id)
     {
-        $sql = '
-                UPDATE project
-                SET status = :statusValue, deleted_at = NOW()
-                WHERE member_id = :memberId;
-        ';
-        $this->_db->query($sql, array('statusValue' => self::PROJECT_DELETED, 'memberId' => $member_id))->execute();
+        $sql = "SELECT project_id FROM project WHERE member_id = :memberId AND type_id = :typeId";
+        $projectForDelete = $this->_db->fetchAll($sql, array('memberId' => $member_id, 'typeId' => self::PROJECT_TYPE_STANDARD));
+        foreach ($projectForDelete as $item) {
+            $this->setDeleted($item['project_id']);
+        }
+        // set personal page deleted
+        $sql = "UPDATE project SET `status` = :statusCode, deleted_at = NOW() WHERE member_id = :memberId AND type_id = :typeId";
+        $this->_db->query($sql, array('statusCode' => self::PROJECT_DELETED, 'memberId' => $member_id, 'typeId' => self::PROJECT_TYPE_PERSONAL))->execute();
     }
 
     public function setAllProjectsForMemberActivated($member_id)

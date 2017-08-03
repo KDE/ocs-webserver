@@ -33,6 +33,7 @@ class Local_Queue_Factory
     {
         $config = Zend_Registry::get('config');
         $queueConfig = $config->queue->$queueName;
+
         return self::_initQueue($queueConfig);
     }
 
@@ -49,6 +50,7 @@ class Local_Queue_Factory
         $configAll = Zend_Registry::get('config');
         $configDb = $configAll->resources->db->params;
         $queueAdapter = new $dbAdapter(array('driverOptions' => $configDb->toArray()));
+
         return new Zend_Queue($queueAdapter, array('name' => $queueName, 'driverOptions' => $configDb->toArray()));
     }
 
@@ -66,6 +68,7 @@ class Local_Queue_Factory
         Zend_Registry::get('logger')->info(__METHOD__ . ' - db config:' . print_r($configDb, true));
         $nameQueue = isset($identifier) ? $identifier : Zend_Registry::get('config')->settings->queue->general->name;
         $queueAdapter = new Local_Queue_Adapter_Db(array('driverOptions' => $configDb));
+
         return new Zend_Queue($queueAdapter, array(Zend_Queue::NAME => $nameQueue, 'driverOptions' => $configDb));
     }
 

@@ -22,25 +22,10 @@
 
 $modelInfo = new Default_Model_Info();
 
-
-
 $this->comments = $modelInfo->getLatestComments(10);
-$this->donations = $modelInfo->getLatestPlings(10);
 $this->users = $modelInfo->getNewActiveMembers(10);
 $this->products = $modelInfo->getLastProductsForHostStores(10);
-$this->mostdownloads = $modelInfo->getMostDownloaded(7);
 $featureProducts = $modelInfo->getFeaturedProductsForHostStores(100);
-
-
-/*
-$this->comments = $modelInfo->getLastCommentsForHostStores_local(5);
-$this->donations = $modelInfo->getLastPlingsForHostStores_local(10);
-$this->users = $modelInfo->getNewActiveMembers_local(10);
-$this->products = $modelInfo->getLastProductsForHostStores_local(10);
-$this->mostdownloads = $modelInfo->getLastProductsForHostStores_local(7);
-
-$featureProducts = $modelInfo->getFeaturedProductsForHostStores_local(100);
-*/
 
 
 if ($featureProducts->getTotalItemCount()) {
