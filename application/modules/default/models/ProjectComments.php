@@ -261,7 +261,7 @@ class Default_Model_ProjectComments
     /**
      * @param array $data
      *
-     * @return Zend_Db_Table_Row
+     * @return Zend_Db_Table_Row_Abstract
      * @throws Exception
      */
     public function save($data)
