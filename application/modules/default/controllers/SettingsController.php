@@ -1046,9 +1046,9 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $websiteVerifier = new Local_Verification_WebsiteOwner();
         $authCode = $websiteVerifier->generateAuthCode($values['link_website']);
 
-        $queue = Local_Queue_Factory::getQueue();
-        $command = new Backend_Commands_CheckMemberWebsite($this->_memberId, $values['link_website'], $authCode);
-        $queue->send(serialize($command));
+        //$queue = Local_Queue_Factory::getQueue();
+        //$command = new Backend_Commands_CheckMemberWebsite($this->_memberId, $values['link_website'], $authCode);
+        //$queue->send(serialize($command));
 
         $this->_memberSettings->link_website = $values['link_website'];
         $this->_memberSettings->validated = 0;

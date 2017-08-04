@@ -181,8 +181,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->_auth->getIdentity()->projects[$newProject->project_id] = array('project_id' => $newProject->project_id);
         //        $this->auth->getStorage()->write($this->auth->getIdentity());
 
-        $this->createTaskWebsiteOwnerVerification($newProject);
-
         $activityLog = new Default_Model_ActivityLog();
         $activityLog->writeActivityLog($newProject->project_id, $newProject->member_id,
             Default_Model_ActivityLog::PROJECT_CREATED, $newProject->toArray());
@@ -417,8 +415,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             ;
         }
         $projectData->save();
-
-        $this->createTaskWebsiteOwnerVerification($projectData);
 
         $activityLog = new Default_Model_ActivityLog();
         $activityLog->writeActivityLog($this->_projectId, $projectData->member_id,
