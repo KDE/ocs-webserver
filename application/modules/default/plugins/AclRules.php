@@ -66,6 +66,8 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addResource(new Zend_Acl_Resource ('default_plings'));
         $this->addResource(new Zend_Acl_Resource ('default_spam'));
 
+        $this->addResource(new Zend_Acl_Resource ('default_stati'));
+
         $this->addResource(new Zend_Acl_Resource ('backend_categories'));
         $this->addResource(new Zend_Acl_Resource ('backend_claim'));
         $this->addResource(new Zend_Acl_Resource ('backend_comments'));
@@ -93,6 +95,8 @@ class Default_Plugin_AclRules extends Zend_Acl
 
         $this->addResource(new Zend_Acl_Resource ('statistics_data'));
 
+      
+
         $this->allow(self::ROLENAME_GUEST, array(
             'statistics_data'
         ));
@@ -116,7 +120,8 @@ class Default_Plugin_AclRules extends Zend_Acl
             'default_rss',
             'default_supporterbox',
             'default_oauth',
-            'default_plings'
+            'default_plings',
+            'default_stati'
         ));
 
         $this->allow(self::ROLENAME_COOKIEUSER, array(

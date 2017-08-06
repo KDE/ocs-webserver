@@ -1,0 +1,333 @@
+<div class="pling-nav-tabs">
+<ul class="nav nav-tabs ">
+ <li class="active"><a href="#download-panel" data-toggle="tab">Downloads</a></li>
+ <li><a href="#pageviews-panel" data-toggle="tab">Pageviews</a></li>
+ <li><a href="#plings-panel" data-toggle="tab">Plings</a></li>
+ <li><a href="#others-panel" data-toggle="tab">Others</a></li>
+</ul>
+<div class="tab-content row"  >
+  <div id="download-panel" class="tab-pane active ">
+	  <div style="width: 75%">
+	<canvas id="canvas-download" ></canvas>
+	</div>
+  </div>
+
+  <div id="pageviews-panel" class="tab-pane">
+ <div style="width: 75%">
+	<canvas id="canvas-pageivews" ></canvas>
+	</div>
+  </div>
+
+  <div id="plings-panel" class="tab-pane">
+ <div style="width: 35%;">
+	<canvas id="canvas-plings" ></canvas>
+	</div>
+  </div>
+
+  <div id="others-panel" class="tab-pane">
+ <div style="width: 75%;">
+	<canvas id="canvas-others" ></canvas>
+	</div>
+  </div>
+
+</div>
+</div>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>  
+
+<script type="text/javascript">	
+window.randomScalingFactor = function() {
+	return (Math.random() > 0.5 ? 2.0 : 1.0) * Math.round(Math.random() * 100);
+};
+
+window.chartColors = {
+	red: 'rgb(255, 99, 132)',
+	orange: 'rgb(255, 159, 64)',
+	yellow: 'rgb(255, 205, 86)',
+	green: 'rgb(75, 192, 192)',
+	blue: 'rgb(54, 162, 235)',
+	purple: 'rgb(153, 102, 255)',
+	grey: 'rgb(201, 203, 207)'
+};
+
+	 $(document).ready(function () {
+
+	 	var MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+	 	 var configLinechart= {
+	 	           type: 'line',
+	 	           data: {
+	 	               labels: MONTHS,
+	 	               datasets: [{
+	 	                   label: "2016",
+	 	                   backgroundColor: window.chartColors.red,
+	 	                   borderColor: window.chartColors.red,
+	 	                   data: [
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor()
+	 	                   ],
+	 	                   fill: false,
+	 	               }, {
+	 	                   label: "2017",
+	 	                   fill: false,
+	 	                   backgroundColor: window.chartColors.blue,
+	 	                   borderColor: window.chartColors.blue,
+	 	                   data: [
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor()
+	 	                   ],
+	 	               }]
+	 	           },
+	 	           options: {
+	 	               responsive: true,
+	 	               title:{
+	 	                   display:true,
+	 	                   text:'Downloads 2 years'
+	 	               },
+	 	               tooltips: {
+	 	                   mode: 'index',
+	 	                   intersect: false,
+	 	               },
+	 	               hover: {
+	 	                   mode: 'nearest',
+	 	                   intersect: true
+	 	               },
+	 	               scales: {
+	 	                   xAxes: [{
+	 	                       display: true,
+	 	                       scaleLabel: {
+	 	                           display: true,
+	 	                           labelString: 'Month'
+	 	                       }
+	 	                   }],
+	 	                   yAxes: [{
+	 	                       display: true,
+	 	                       scaleLabel: {
+	 	                           display: true,
+	 	                           labelString: 'Value'
+	 	                       }
+	 	                   }]
+	 	               }
+	 	           }
+	 	       };
+
+
+	 	  var configBarchart= {
+	 	           type: 'bar',
+	 	           data: {
+	 	               labels: MONTHS,
+	 	               datasets: [{
+	 	                   label: "2016",
+	 	                   backgroundColor: window.chartColors.red,
+	 	                   borderColor: window.chartColors.red,
+	 	                   data: [
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor()
+	 	                   ],
+	 	                   fill: false,
+	 	               }, {
+	 	                   label: "2017",
+	 	                   fill: false,
+	 	                   backgroundColor: window.chartColors.blue,
+	 	                   borderColor: window.chartColors.blue,
+	 	                   data: [
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor()
+	 	                   ],
+	 	               }]
+	 	           },
+	 	           options: {
+	 	               responsive: true,
+	 	               title:{
+	 	                   display:true,
+	 	                   text:'Pageviews 2 years'
+	 	               },
+	 	               tooltips: {
+	 	                   mode: 'index',
+	 	                   intersect: false,
+	 	               },
+	 	               hover: {
+	 	                   mode: 'nearest',
+	 	                   intersect: true
+	 	               },
+	 	               scales: {
+	 	                   xAxes: [{
+	 	                       display: true,
+	 	                       scaleLabel: {
+	 	                           display: true,
+	 	                           labelString: 'Month'
+	 	                       }
+	 	                   }],
+	 	                   yAxes: [{
+	 	                       display: true,
+	 	                       scaleLabel: {
+	 	                           display: true,
+	 	                           labelString: 'Value'
+	 	                       }
+	 	                   }]
+	 	               }
+	 	           }
+	 	       };
+
+
+	 	var configPie = {
+	 	    type: 'pie',
+	 	    data: {
+	 	        datasets: [{
+	 	            data: [
+	 	                randomScalingFactor(),
+	 	                randomScalingFactor(),
+	 	                randomScalingFactor(),
+	 	                randomScalingFactor(),
+	 	                randomScalingFactor(),
+	 	            ],
+	 	            backgroundColor: [
+	 	                window.chartColors.red,
+	 	                window.chartColors.orange,
+	 	                window.chartColors.yellow,
+	 	                window.chartColors.green,
+	 	                window.chartColors.blue,
+	 	            ],
+	 	            label: 'Dataset 1'
+	 	        }],
+	 	        labels: [
+	 	            "Red",
+	 	            "Orange",
+	 	            "Yellow",
+	 	            "Green",
+	 	            "Blue"
+	 	        ]
+	 	    },
+	 	    options: {
+	 	        responsive: true
+	 	    }
+	 	};
+
+	 	var timeFormat = 'MM/DD/YYYY';
+	 	var color = Chart.helpers.color;
+		function newDateString(days) {
+			return moment().add(days, 'd').format(timeFormat);
+		}
+
+				var configCombo = {
+					type: 'bar',
+					data: {
+						labels: [
+							newDateString(0), 
+							newDateString(1), 
+							newDateString(2), 
+							newDateString(3), 
+							newDateString(4), 
+							newDateString(5), 
+							newDateString(6)
+						],
+						datasets: [{
+							type: 'bar',
+							label: 'Dataset 1',
+							backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
+							borderColor: window.chartColors.red,
+							data: [
+								randomScalingFactor(), 
+								randomScalingFactor(), 
+								randomScalingFactor(), 
+								randomScalingFactor(), 
+								randomScalingFactor(), 
+								randomScalingFactor(), 
+								randomScalingFactor()
+							],
+						}, {
+							type: 'bar',
+							label: 'Dataset 2',
+							backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
+							borderColor: window.chartColors.blue,
+							data: [
+								randomScalingFactor(), 
+								randomScalingFactor(), 
+								randomScalingFactor(), 
+								randomScalingFactor(), 
+								randomScalingFactor(), 
+								randomScalingFactor(), 
+								randomScalingFactor()
+							],
+						}, {
+							type: 'line',
+							label: 'Dataset 3',
+							backgroundColor: color(window.chartColors.green).alpha(0.5).rgbString(),
+							borderColor: window.chartColors.green,
+							fill: false,
+							data: [
+								randomScalingFactor(), 
+								randomScalingFactor(), 
+								randomScalingFactor(), 
+								randomScalingFactor(), 
+								randomScalingFactor(), 
+								randomScalingFactor(), 
+								randomScalingFactor()
+							],
+						}, ]
+					},
+					options: {
+		                title: {
+		                    text:"other Scale"
+		                },
+						scales: {
+							xAxes: [{
+								type: "time",
+								display: true,
+								time: {
+									format: timeFormat,
+									// round: 'day'
+								}
+							}],
+						},
+					}
+				};
+				
+
+	
+	 	var ctx = document.getElementById("canvas-download").getContext("2d");
+            		window.myDownLine = new Chart(ctx, configLinechart);
+
+
+        		var ctx = document.getElementById("canvas-pageivews").getContext("2d");
+        		window.myPageviewsBarchart = new Chart(ctx, configBarchart);
+
+        		var ctx = document.getElementById("canvas-plings").getContext("2d");
+    			window.myPie = new Chart(ctx, configPie);
+
+    		var ctx = document.getElementById("canvas-others").getContext("2d");
+    		window.myOthers = new Chart(ctx, configCombo);
+
+	 })
+</script>
