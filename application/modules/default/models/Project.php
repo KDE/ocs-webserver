@@ -535,7 +535,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
 
         $filter = $filterArrayValue[self::FILTER_NAME_PACKAGETYPE];
 
-        if (is_array($filter) OR $statement->getPart('from') != 'stat_projects') {
+        if (is_array($filter)) {
             $statement->join(array(
                 'package_type' => new Zend_Db_Expr('(SELECT DISTINCT project_id FROM project_package_type WHERE package_type_id in ('
                     . $filter . '))')
@@ -810,8 +810,8 @@ class Default_Model_Project extends Default_Model_DbTable_Project
 
         $select = $this->select()->setIntegrityCheck(false)
                                  ->from('stat_projects', array('count_active_projects' => 'COUNT(1)'))
-                                 ->where('project.status = ? ', self::PROJECT_ACTIVE)
-                                 ->where('project.type_id = ?', self::PROJECT_TYPE_STANDARD)
+                                 ->where('status = ? ', self::PROJECT_ACTIVE)
+                                 ->where('type_id = ?', self::PROJECT_TYPE_STANDARD)
         ;
 
         $select =
@@ -819,13 +819,14 @@ class Default_Model_Project extends Default_Model_DbTable_Project
 
         if ($withSubCat) {
             $modelCategory = new Default_Model_DbTable_ProjectCategory();
-            $subCategories = $modelCategory->fetchChildElements($idCategory);
+            $subCategories = $modelCategory->fetchChildIds($idCategory);
             $inCategories = implode(',',array_unique(array_merge($idCategory, $subCategories)));
         } else {
             $inCategories = implode(',', $idCategory);
         }
 
-        $select->where('project.project_category_id in (' . $inCategories . ')');
+        $select->where('project_category_id in (' . $inCategories . ')');
+        $resultSet = $this->fetchAll($select)->toArray();
 
         $cache->save($resultSet, $cacheName, array(), 60);
 
@@ -954,7 +955,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             $countElements = $this->fetchRow($statement);
             $returnValue = array('elements' => $fetchedElements, 'total_count' => $countElements->count);
 
-            $cache->save($returnValue, $cacheName, array(), 300);
+            $cache->save($returnValue, $cacheName, array(), 120);
         }
 
         return $returnValue;
