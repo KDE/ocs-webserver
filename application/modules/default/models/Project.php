@@ -535,7 +535,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
 
         $filter = $filterArrayValue[self::FILTER_NAME_PACKAGETYPE];
 
-        if (is_array($filter) OR $statement->getPart('from') != 'stat_projects') {
+        if (is_array($filter)) {
             $statement->join(array(
                 'package_type' => new Zend_Db_Expr('(SELECT DISTINCT project_id FROM project_package_type WHERE package_type_id in ('
                     . $filter . '))')
