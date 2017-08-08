@@ -101,6 +101,7 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
 
     public function indexAction()
     {
+        $filter = array();
         $storeCatIds =
             Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
         $this->view->categories = $storeCatIds;
@@ -108,8 +109,7 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
         $storePackageTypeIds = null;
         if ($storeConfig) {
-            $storePackageTypeIds = $storeConfig['package_type'];
-            $this->view->package_type = $storePackageTypeIds;
+            $this->view->package_type = $filter['package_type'] = $storeConfig['package_type'];
         }
         // Filter-Parameter
         $inputCatId = (int)$this->getParam('cat', null);
@@ -129,9 +129,9 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
 
         $filter['category'] = $inputCatId ? $inputCatId : $storeCatIds;
         $filter['order'] = preg_replace('/[^-a-zA-Z0-9_]/', '', $this->getParam('ord', self::DEFAULT_ORDER));
-        if ($storePackageTypeIds) {
-            $filter['package_type'] = $storePackageTypeIds;
-        }
+        //if ($storePackageTypeIds) {
+        //    $filter['package_type'] = $storePackageTypeIds;
+        //}
 
         $page = (int)$this->getParam('page', 1);
         $pageLimit = 10;
