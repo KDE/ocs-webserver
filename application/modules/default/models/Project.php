@@ -955,7 +955,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             $countElements = $this->fetchRow($statement);
             $returnValue = array('elements' => $fetchedElements, 'total_count' => $countElements->count);
 
-            $cache->save($returnValue, $cacheName, array(), 300);
+            $cache->save($returnValue, $cacheName, array(), 120);
         }
 
         return $returnValue;
