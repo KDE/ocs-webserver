@@ -810,8 +810,8 @@ class Default_Model_Project extends Default_Model_DbTable_Project
 
         $select = $this->select()->setIntegrityCheck(false)
                                  ->from('stat_projects', array('count_active_projects' => 'COUNT(1)'))
-                                 ->where('project.status = ? ', self::PROJECT_ACTIVE)
-                                 ->where('project.type_id = ?', self::PROJECT_TYPE_STANDARD)
+                                 ->where('status = ? ', self::PROJECT_ACTIVE)
+                                 ->where('type_id = ?', self::PROJECT_TYPE_STANDARD)
         ;
 
         $select =
@@ -819,13 +819,14 @@ class Default_Model_Project extends Default_Model_DbTable_Project
 
         if ($withSubCat) {
             $modelCategory = new Default_Model_DbTable_ProjectCategory();
-            $subCategories = $modelCategory->fetchChildElements($idCategory);
+            $subCategories = $modelCategory->fetchChildIds($idCategory);
             $inCategories = implode(',',array_unique(array_merge($idCategory, $subCategories)));
         } else {
             $inCategories = implode(',', $idCategory);
         }
 
-        $select->where('project.project_category_id in (' . $inCategories . ')');
+        $select->where('project_category_id in (' . $inCategories . ')');
+        $resultSet = $this->fetchAll($select)->toArray();
 
         $cache->save($resultSet, $cacheName, array(), 60);
 
