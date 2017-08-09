@@ -916,20 +916,22 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         if ($this->_request->isPost()) {
             $form = $this->formProfilePictureBackground();
 
-            $profilePictureTitleFilename =
-                pathinfo($form->getElement('profile_picture_background_upload')->getFileName());
-
-            if (!isset($profilePictureTitleFilename)) {
+            $profilePictureElement = $form->getElement('profile_picture_background_upload');
+            if (!isset($profilePictureElement)) {
                 $form->populate($this->_memberSettings->toArray());
                 $form->addErrorMessage('Please select a new picture');
                 $form->markAsError();
 
-                $this->view->pictureform = $form;
+                $this->view->pictureformbg = $form;
                 $this->view->error = 1;
                 $this->renderScript('settings/partials/picture-bg.phtml');
 
                 return;
             }
+
+            $profilePictureTitleFilename =
+                pathinfo($form->getElement('profile_picture_background_upload')->getFileName());
+
             if ($form->isValid($_POST)) {
 
                 $tmpProfilePictureTitle = IMAGES_UPLOAD_PATH . 'tmp/' . Local_Tools_UUID::generateUUID() . '_'
