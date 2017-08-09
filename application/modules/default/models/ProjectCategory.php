@@ -145,7 +145,7 @@ class Default_Model_ProjectCategory
         if (false === ($tree = $cache->load($cache_id))) {
             $rows = self::fetchCatIdsForCurrentStore();
             $tree = $this->buildTree($rows);
-            $cache->save($tree, $cache_id, array(), 28800);
+            $cache->save($tree, $cache_id, array(), 120);
         }
 
         return $tree;
