@@ -115,24 +115,23 @@ class Statistics_DataController extends Zend_Controller_Action
 
     public function memberAction()
     {
-
-        $result = array(
-                                    ["projectdate"=>"July 26th","daycount"=>"29"]
-                                    ,["projectdate"=>"July 27th","daycount"=>"34"]
-                                    ,["projectdate"=>"July 28th","daycount"=>"32"]
-                                    ,["projectdate"=>"July 29th","daycount"=>"26"]
-                                    ,["projectdate"=>"July 30th","daycount"=>"13"]
-                                    ,["projectdate"=>"July 31st","daycount"=>"33"]
-                                    ,["projectdate"=>"August 1st","daycount"=>"25"]
-                                    ,["projectdate"=>"August 2nd","daycount"=>"30"]
-                                    ,["projectdate"=>"August 3rd","daycount"=>"31"]
-                                    ,["projectdate"=>"August 4th","daycount"=>"31"]
-                                    ,["projectdate"=>"August 5th","daycount"=>"22"]
-                                    ,["projectdate"=>"August 6th","daycount"=>"12"]
-                                    ,["projectdate"=>"August 7th","daycount"=>"13"]
-                                    ,["projectdate"=>"August 8th","daycount"=>"35"]
-                                    ,["projectdate"=>"August 9th","daycount"=>"31"]
-                                );
+        $result = array();
+        $result[] = array("projectdate"=>"July 26th","daycount"=>"29");
+        $result[] = array("projectdate"=>"July 27th","daycount"=>"34");
+        $result[] = array("projectdate"=>"July 28th","daycount"=>"32");
+        $result[] = array("projectdate"=>"July 29th","daycount"=>"26");
+        $result[] = array("projectdate"=>"July 30th","daycount"=>"13");
+        $result[] = array("projectdate"=>"July 31st","daycount"=>"33");
+        $result[] = array("projectdate"=>"August 1st","daycount"=>"25");
+        $result[] = array("projectdate"=>"August 2nd","daycount"=>"30");
+        $result[] = array("projectdate"=>"August 3rd","daycount"=>"31");
+        $result[] = array("projectdate"=>"August 4th","daycount"=>"31");
+        $result[] = array("projectdate"=>"August 5th","daycount"=>"22");
+        $result[] = array("projectdate"=>"August 6th","daycount"=>"12");
+        $result[] = array("projectdate"=>"August 7th","daycount"=>"13");
+        $result[] = array("projectdate"=>"August 8th","daycount"=>"35");   
+        $result[] = array("projectdate"=>"August 9th","daycount"=>"31");      
+      
         return $this->_helper->json->sendJson($result);
 
         /*
