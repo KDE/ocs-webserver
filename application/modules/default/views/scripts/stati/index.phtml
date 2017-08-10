@@ -502,7 +502,7 @@ var svg = d3.select("#d3bar-member").append("svg")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 
-d3.json("/statistics/data/projects/", function(error, data) {
+d3.json("statistics/data/projects/", function(error, data) {
   x.domain(data.map(function(d) { return d.memberdate; }));
   y.domain([0, d3.max(data, function(d) { return d.daycount; })]);
 
@@ -575,7 +575,7 @@ var svgp = d3.select("#d3bar-project").append("svg")
     .attr("transform", "translate(" + marginp.left + "," + marginp.top + ")");
 
 
-d3.json("/statistics/data/member/", function(error, data) {
+d3.json("statistics/data/member/", function(error, data) {
   xp.domain(data.map(function(d) { return d.projectdate; }));
   yp.domain([0, d3.max(data, function(d) { return d.daycount; })]);
 
