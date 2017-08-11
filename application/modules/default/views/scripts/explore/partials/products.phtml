@@ -56,9 +56,18 @@ foreach ($this->products as $this->product) {
         <b style="display: block; margin-bottom: 5px"><?php echo $this->product->cat_title?></b>
         <b style="display: block; margin-bottom: 5px" class="small">by <a href="<?php echo $this->buildMemberUrl($this->product->member_id)?>"><?php echo $this->product->username?></a></b>
         <div style="display: block; float: left">
-         <?php           
-          $type = $this->FetchProjectPackageTypes($this->product->project_id);
-          if(!empty($type)){ echo $type;} ?>
+         <?php
+         if (false === empty($this->product->package_names)) {
+             $list_packages = explode(',', $this->product->package_names);
+             $resultString = '';
+             foreach ($list_packages as $item) {
+                 $resultString = $resultString . ' <span class="packagetypeos" > ' . stripslashes($item) . '</span>';
+             }
+             echo $resultString;
+         }
+
+         //$type = $this->FetchProjectPackageTypes($this->product->project_id);
+         // if(!empty($type)){ echo $type;} ?>
         </div>
 
         <div class="productInfo">
