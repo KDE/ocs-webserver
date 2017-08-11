@@ -19,7 +19,7 @@ CREATE DEFINER=CURRENT_USER PROCEDURE `generate_stat_cat_prod_count`()
         SELECT
           parent.project_category_id,
           ppt.package_type_id,
-          COUNT(project.project_id) AS count_product
+          COUNT(DISTINCT project.project_id) AS count_product
         FROM
           stat_cat_tree AS node,
           stat_cat_tree AS parent,

@@ -100,8 +100,8 @@ class Default_Model_ProjectCategory
         $result = array();
         foreach ($list as $cat_id) {
             $currentCategory = $modelCategories->fetchElement($cat_id);
-//            $countProduct = $this->fetchProductCount($cat_id, $store_id);
-            $countProduct = $modelProject->countProductsInCategory($cat_id, true, $store_id);
+            $countProduct = $this->fetchProductCount($cat_id, $store_id);
+//            $countProduct = $modelProject->countProductsInCategory($cat_id, true, $store_id);
 
             $result_element = array(
                 'id'            => $cat_id,
