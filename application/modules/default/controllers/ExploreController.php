@@ -129,9 +129,6 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
 
         $filter['category'] = $inputCatId ? $inputCatId : $storeCatIds;
         $filter['order'] = preg_replace('/[^-a-zA-Z0-9_]/', '', $this->getParam('ord', self::DEFAULT_ORDER));
-        //if ($storePackageTypeIds) {
-        //    $filter['package_type'] = $storePackageTypeIds;
-        //}
 
         $page = (int)$this->getParam('page', 1);
         $pageLimit = 10;

@@ -41,7 +41,7 @@ CREATE PROCEDURE `generate_stat_project` ()
 
     DROP TABLE IF EXISTS tmp_stat_projects;
     CREATE TABLE tmp_stat_projects
-    (PRIMARY KEY `primary` (`project_id`), INDEX `idx_count` (`project_category_id` ASC, `status` ASC, `type_id` ASC, `package_types`(10) ASC))
+    (PRIMARY KEY `primary` (`project_id`), INDEX `idx_cat` (`project_category_id`))
       ENGINE MyISAM
       AS
         SELECT
