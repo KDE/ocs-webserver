@@ -172,7 +172,7 @@ class Default_Model_ProjectCategory
                 "SELECT count_product FROM stat_cat_prod_count WHERE project_category_id = :cat_id AND package_type_id = :package_id";
             $bind = array('cat_id' => $cat_id, 'package_id' => $storePackageTypeIds);
         } else {
-            $sql = "SELECT count_product FROM stat_cat_prod_count WHERE project_category_id = :cat_id";
+            $sql = "SELECT count_product FROM stat_cat_prod_count WHERE project_category_id = :cat_id AND package_type_id IS NULL";
             $bind = array('cat_id' => $cat_id);
         }
 
