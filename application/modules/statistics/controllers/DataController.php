@@ -109,6 +109,10 @@ class Statistics_DataController extends Zend_Controller_Action
         $result[] = array('memberdate'=>'08-07', 'daycount'=>'64');
         $result[] = array('memberdate'=>'08-08', 'daycount'=>'84');   
         $result[] = array('memberdate'=>'08-09', 'daycount'=>'81');      
+        $result[] = array('memberdate'=>'08-10', 'daycount'=>'86');   
+        $result[] = array('memberdate'=>'08-11', 'daycount'=>'86');   
+        $result[] = array('memberdate'=>'08-12', 'daycount'=>'82');   
+        $result[] = array('memberdate'=>'08-13', 'daycount'=>'64');   
         
         return $this->_helper->json->sendJson($result);
     }
@@ -131,6 +135,10 @@ class Statistics_DataController extends Zend_Controller_Action
         $result[] = array("projectdate"=>"August 7th","daycount"=>"13");
         $result[] = array("projectdate"=>"August 8th","daycount"=>"35");   
         $result[] = array("projectdate"=>"August 9th","daycount"=>"31");      
+        $result[] = array("projectdate"=>"August 10th","daycount"=>"25");     
+        $result[] = array("projectdate"=>"August 11th","daycount"=>"43");     
+        $result[] = array("projectdate"=>"August 12th","daycount"=>"26");     
+        $result[] = array("projectdate"=>"August 13th","daycount"=>"15");     
       
         return $this->_helper->json->sendJson($result);
 
