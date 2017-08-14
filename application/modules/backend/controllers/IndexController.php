@@ -21,7 +21,7 @@
  **/
 class Backend_IndexController extends Local_Controller_Action_Backend
 {
-
+ 
     public function indexAction()
     {
 
@@ -45,36 +45,121 @@ class Backend_IndexController extends Local_Controller_Action_Backend
     public function getnewmemberstatsAction()
     {
 
-        $this->_helper->layout->disableLayout();
-
-        $memberTable = new Default_Model_DbTable_Member();
-
-        $sel = $memberTable->select()->setIntegrityCheck(false);
-
-        $sel->from($memberTable, array('DATE(`created_at`) as memberdate', 'count(*) as daycount'))
-            ->group('memberdate')
-            ->order('memberdate DESC')
-            ->limit(14);
-
-        $memberData = $memberTable->fetchAll($sel);
-        $memberData = $memberData->toArray();
-
-        $memberData = array_reverse($memberData);
-
-        $responseData['results'] = $memberData;
-        $this->_helper->json($responseData);
+        $this->_helper->layout->disableLayout();        
+        $modelData = new Statistics_Model_Data( Zend_Registry::get('config')->settings->dwh->toArray());
+        
+        try {
+            $result = $modelData->getNewmemberstats();
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->error($e->getMessage());
+            return $this->_helper->json->sendJson(array(
+                'status' => 'error',
+                'msg' => 'error while processing request',
+                'results' => ''
+            ));
+        }
+       
+        if ($result) {
+            $msg = array(
+                'status' => 'ok',
+                'msg' => '',
+                'results' =>array_reverse($result)
+            );
+         
+            return $this->_helper->json->sendJson($msg);
+        }
+        return $this->_helper->json->sendJson(array(
+            'status' => 'not found',
+            'msg' => 'data with given id could not be found.',
+            'results' => ''
+        ));
     }
 
     public function getnewprojectstatsAction()
     {
-        $this->_helper->layout->disableLayout();
+        $this->_helper->layout->disableLayout();        
+               $modelData = new Statistics_Model_Data( Zend_Registry::get('config')->settings->dwh->toArray());
+               
+               try {
+                   $result = $modelData->getNewprojectstats();
+               } catch (Exception $e) {
+                   Zend_Registry::get('logger')->error($e->getMessage());
+                   return $this->_helper->json->sendJson(array(
+                       'status' => 'error',
+                       'msg' => 'error while processing request',
+                       'results' => ''
+                   ));
+               }
+              
+               if ($result) {
+                   $msg = array(
+                       'status' => 'ok',
+                       'msg' => '',
+                       'results' =>array_reverse($result)
+                   );
+                
+                   return $this->_helper->json->sendJson($msg);
+               }
+               return $this->_helper->json->sendJson(array(
+                   'status' => 'not found',
+                   'msg' => 'data with given id could not be found.',
+                   'results' => ''
+               ));
+    }
 
-        $tableProject = new Default_Model_Project();
-        $projectApplyData = $tableProject->getStatsForNewProjects();
-        $responseData['results'] = array_reverse($projectApplyData);
-        $this->_helper->json($responseData);
 
-        return;
+    public function getnewmembersprojectsAction()
+    {
+
+        $this->_helper->layout->disableLayout();        
+        $modelData = new Statistics_Model_Data( Zend_Registry::get('config')->settings->dwh->toArray());
+        
+        try {
+            $result =array();
+
+            $m = $modelData->getNewmemberstats();
+            $p = $modelData->getNewprojectstats();
+            foreach ($m as $member) {
+                $date = $member['memberdate'];
+                $t=array(
+                        'date' =>$date,
+                        'members' =>$member['daycount'],
+                        'projects' =>0
+                   );
+                   foreach ($p as $project) {
+                        $d = $project['projectdate'];
+                        if($d==$date){
+                            $t['projects'] = $project['daycount'];
+                            break;
+                        }
+                   }
+                   $result []=$t; 
+            }
+
+
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->error($e->getMessage());
+            return $this->_helper->json->sendJson(array(
+                'status' => 'error',
+                'msg' => 'error while processing request',
+                'results' => ''
+            ));
+        }
+       
+        if ($result) {
+            $msg = array(
+                'status' => 'ok',
+                'msg' => '',
+                'results' =>array_reverse($result)
+            );
+         
+            return $this->_helper->json->sendJson($msg);
+        }
+        return $this->_helper->json->sendJson(array(
+            'status' => 'not found',
+            'msg' => 'data with given id could not be found.',
+            'results' => ''
+        ));
     }
 
 }

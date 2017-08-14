@@ -47,6 +47,19 @@ class Statistics_Model_Data
         $this->_db = $adapter;
     }
 
+    public function getNewmemberstats(){
+          $sql = "SELECT DATE(`created_at`) as memberdate , count(*) as daycount FROM dwh.ods_member_v  group by  memberdate    order by memberdate desc limit 30";
+          $result = $this->_db->fetchAll($sql);
+          return $result;  
+    }
+   
+    public function getNewprojectstats(){        
+          $sql = "SELECT DATE(`created_at`) as projectdate , count(*) as daycount  FROM dwh.ods_project_v  group by  projectdate    order by projectdate desc limit 30";
+          $result = $this->_db->fetchAll($sql);
+          return $result;  
+    }
+    
+
     public function getProject($project_id)
     {
         $sql = "SELECT * FROM ods_project_v WHERE project_id = :projectId";
@@ -68,6 +81,7 @@ class Statistics_Model_Data
         $result = $this->_db->fetchAll($sql, array('memberId' => (int)$member_id));
         return $result;
     }
+    
 
     public function getMembers($limit = 50)
     {
