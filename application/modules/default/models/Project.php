@@ -493,16 +493,19 @@ class Default_Model_Project extends Default_Model_DbTable_Project
      */
     public function fetchMoreProjects($project, $count = 6)
     {
-        $q = $this->select()->from($this, array(
+        $q = $this->select()->from('stat_projects', array(
             'project_id',
             'image_small',
             'title',
-            'catTitle' => new Zend_Db_Expr('(SELECT title FROM project_category WHERE project_category_id = project.project_category_id)')
-        ))->setIntegrityCheck(false)->where('project.status = ?', self::PROJECT_ACTIVE)
-                  ->where('project.member_id = ?', $project->member_id, 'INTEGER')
-                  ->where('project.project_id != ?', $project->project_id, 'INTEGER')->where('project.type_id = ?', 1)
-                  ->where('project.project_category_id = ?', $project->project_category_id, 'INTEGER')->limit($count)
-                  ->order('project.created_at DESC')
+            'catTitle' => 'cat_title'
+        ))->setIntegrityCheck(false)
+                  ->where('status = ?', self::PROJECT_ACTIVE)
+                  ->where('member_id = ?', $project->member_id, 'INTEGER')
+                  ->where('project_id != ?', $project->project_id, 'INTEGER')
+                  ->where('type_id = ?', self::PROJECT_TYPE_STANDARD)
+                  ->where('project_category_id = ?', $project->project_category_id, 'INTEGER')
+                  ->limit($count)
+                  ->order('project_created_at DESC')
         ;
 
         $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
@@ -515,7 +518,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             $q = $this->generatePackageTypeFilter($q, array(self::FILTER_NAME_PACKAGETYPE => $storePackageTypeIds));
         }
 
-        return $this->generateRowSet($q->query()->fetchAll());
+        return $this->fetchAll($q);
     }
 
     /**
@@ -532,10 +535,14 @@ class Default_Model_Project extends Default_Model_DbTable_Project
 
         $filter = $filterArrayValue[self::FILTER_NAME_PACKAGETYPE];
 
-        $statement->join(array(
-            'package_type' => new Zend_Db_Expr('(SELECT DISTINCT project_id FROM project_package_type WHERE package_type_id in ('
-                . $filter . '))')
-        ), 'project.project_id = package_type.project_id', array());
+        if (is_array($filter)) {
+            $statement->join(array(
+                'package_type' => new Zend_Db_Expr('(SELECT DISTINCT project_id FROM project_package_type WHERE package_type_id in ('
+                    . $filter . '))')
+            ), 'project.project_id = package_type.project_id', array());
+        } else {
+            $statement->where('find_in_set(?, package_types)', $filter);
+        }
 
         return $statement;
     }
@@ -551,11 +558,11 @@ class Default_Model_Project extends Default_Model_DbTable_Project
     {
         $sql = "
                 SELECT count(1) AS `count`
-                FROM project
-                WHERE project.status = :current_status
-                  AND project.member_id <> :current_member_id
-                  AND project.project_category_id = :category_id
-                  AND project.type_id = :project_type
+                FROM stat_projects
+                WHERE status = :current_status
+                  AND member_id <> :current_member_id
+                  AND project_category_id = :category_id
+                  AND type_id = :project_type
         ";
 
         $result = $this->_db->query($sql, array(
@@ -572,15 +579,18 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             $offset = 0;
         }
 
-        $q = $this->select()->from($this, array(
+        $q = $this->select()->from('stat_projects', array(
             'project_id',
             'image_small',
             'title',
-            'catTitle' => new Zend_Db_Expr('(SELECT title FROM project_category WHERE project_category_id = project.project_category_id)')
-        ))->setIntegrityCheck(false)->where('project.status = ?', self::PROJECT_ACTIVE)
-                  ->where('project.member_id != ?', $project->member_id, 'INTEGER')->where('project.type_id = ?', 1)
-                  ->where('project.project_category_id = ?', $project->project_category_id, 'INTEGER')
-                  ->limit($count, $offset)->order('project.created_at DESC')
+            'catTitle' => 'cat_title'
+        ))->setIntegrityCheck(false)
+                  ->where('status = ?', self::PROJECT_ACTIVE)
+                  ->where('member_id != ?', $project->member_id, 'INTEGER')
+                  ->where('type_id = ?', 1)
+                  ->where('project_category_id = ?', $project->project_category_id, 'INTEGER')
+                  ->limit($count, $offset)
+                  ->order('project_created_at DESC')
         ;
 
         $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
@@ -593,7 +603,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             $q = $this->generatePackageTypeFilter($q, array(self::FILTER_NAME_PACKAGETYPE => $storePackageTypeIds));
         }
 
-        return $this->generateRowSet($q->query()->fetchAll());
+        return $this->fetchAll($q);
     }
 
     /**
@@ -778,7 +788,10 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             throw new Zend_Exception('idCategory param was not set');
         }
 
-        $store_config = null;
+        if (false == is_array($idCategory)) {
+            $idCategory = array($idCategory);
+        }
+
         if (isset($store_id)) {
             $configurations = Zend_Registry::get('application_store_config_id_list');
             $store_config = isset($configurations[$store_id]) ? $configurations[$store_id] : null;
@@ -795,48 +808,27 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             return (int)$resultSet[0]['count_active_projects'];
         }
 
-        $select =
-            $this->select()->setIntegrityCheck(false)->from($this->_name, array('count_active_projects' => 'COUNT(1)'))
-                 ->joinInner('member',
-                     'member.member_id = project.member_id AND member.is_active = 1 AND member.is_deleted = 0')
-                 ->where('project.status = ? ', self::PROJECT_ACTIVE)
-                 ->where('project.type_id = ?', self::PROJECT_TYPE_STANDARD)
+        $select = $this->select()->setIntegrityCheck(false)
+                                 ->from('stat_projects', array('count_active_projects' => 'COUNT(1)'))
+                                 ->where('status = ? ', self::PROJECT_ACTIVE)
+                                 ->where('type_id = ?', self::PROJECT_TYPE_STANDARD)
         ;
 
-        if ($storePackageTypeIds) {
-            $select =
-                $this->generatePackageTypeFilter($select, array(self::FILTER_NAME_PACKAGETYPE => $storePackageTypeIds));
-        }
-
-        $sqlwhereCat = "";
-        $sqlwhereSubCat = "";
-
-        if (false === is_array($idCategory)) {
-            $idCategory = array($idCategory);
-        }
-        $sqlwhereCat .= implode(',', $idCategory);
+        $select =
+            $this->generatePackageTypeFilter($select, array(self::FILTER_NAME_PACKAGETYPE => $storePackageTypeIds));
 
         if ($withSubCat) {
             $modelCategory = new Default_Model_DbTable_ProjectCategory();
-            $subCategories = $modelCategory->fetchChildElements($idCategory);
-
-            if (count($subCategories) > 0) {
-                foreach ($subCategories as $element) {
-                    $sqlwhereSubCat .= "{$element['project_category_id']},";
-                }
-            }
+            $subCategories = $modelCategory->fetchChildIds($idCategory);
+            $inCategories = implode(',',array_unique(array_merge($idCategory, $subCategories)));
+        } else {
+            $inCategories = implode(',', $idCategory);
         }
 
-        $select->where('project.project_category_id in (' . $sqlwhereSubCat . $sqlwhereCat . ')');
+        $select->where('project_category_id in (' . $inCategories . ')');
+        $resultSet = $this->fetchAll($select)->toArray();
 
-        //Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . $select->__toString());
-        //$this->_db->getProfiler()->setEnabled(true);
-        $resultSet = $this->fetchAll($select);
-        //Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . $this->_db->getProfiler()->getLastQueryProfile()->getQuery());
-        //Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . print_r($resultSet->toArray(),true));
-        //$this->_db->getProfiler()->setEnabled(false);
-
-        $cache->save($resultSet, $cacheName, array(), 300);
+        $cache->save($resultSet, $cacheName, array(), 60);
 
         return (int)$resultSet[0]['count_active_projects'];
     }
@@ -963,7 +955,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             $countElements = $this->fetchRow($statement);
             $returnValue = array('elements' => $fetchedElements, 'total_count' => $countElements->count);
 
-            $cache->save($returnValue, $cacheName, array(), 300);
+            $cache->save($returnValue, $cacheName, array(), 120);
         }
 
         return $returnValue;
@@ -1027,17 +1019,8 @@ class Default_Model_Project extends Default_Model_DbTable_Project
 
         // fetch child elements for each category
         $modelProjectCategories = new Default_Model_DbTable_ProjectCategory();
-        $allCategories = array();
-        foreach ($filter as $catId) {
-            $allCategories[] = $catId;
-            $childElements = $modelProjectCategories->fetchChildElements($catId);
-            $childIds = array();
-            foreach ($childElements as $child) {
-                $childIds[] = $child['project_category_id'];
-            }
-            $allCategories = array_merge($allCategories, $childIds);
-        }
-
+        $childElements = $modelProjectCategories->fetchChildIds($filter);
+        $allCategories = array_unique(array_merge($filter, $childElements));
         $stringCategories = implode(',', $allCategories);
 
         $statement->where("(

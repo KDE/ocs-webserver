@@ -75,6 +75,16 @@ class ReportController extends Zend_Controller_Action
             $modelProduct = new Default_Model_Project();
             $productData = $modelProduct->fetchRow(array('project_id = ?' => $project_id));
 
+            if (empty($productData)) {
+                $this->_helper->json(array(
+                    'status'  => 'ok',
+                    'message' => '<p>Thank you, we received your message.</p><div class="modal-footer">
+                                            <button type="button" style="border:none;background: transparent;color: #2673b0;" class="small close" data-dismiss="modal" > Close</button>
+                                        </div>',
+                    'data'    => array()
+                ));
+            }
+
             if ($productData->spam_checked == 0) {
                 $tableReportComments = new Default_Model_DbTable_ReportProducts();
                 $tableReportComments->save(array('project_id' => $project_id, 'reported_by' => $reported_by));
