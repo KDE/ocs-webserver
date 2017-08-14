@@ -45,19 +45,19 @@ defined('APPLICATION_CACHE')
 defined('APPLICATION_LIB')
 || define('APPLICATION_LIB', realpath(dirname(__FILE__) . '/../library'));
 
-if (isset($_SERVER['HTTP_USER_AGENT'])) {
-    require APPLICATION_LIB . '/Local/CrawlerDetect.php';
-    $crawler = crawlerDetect($_SERVER['HTTP_USER_AGENT']);
-    if ($crawler) {
-        define('APPLICATION_ENV', 'searchbotenv');
-    } else {
-        defined('APPLICATION_ENV')
-        || define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'));
-    }
-} else {
-    defined('APPLICATION_ENV')
-    || define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'));
-}
+//if (isset($_SERVER['HTTP_USER_AGENT'])) {
+//    require APPLICATION_LIB . '/Local/CrawlerDetect.php';
+//    $crawler = crawlerDetect($_SERVER['HTTP_USER_AGENT']);
+//    if ($crawler) {
+//        define('APPLICATION_ENV', 'searchbotenv');
+//    } else {
+//        defined('APPLICATION_ENV')
+//        || define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'));
+//    }
+//} else {
+defined('APPLICATION_ENV')
+|| define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'));
+//}
 
 // Ensure library/ is on include_path
 set_include_path(implode(PATH_SEPARATOR, array(
