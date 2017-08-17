@@ -349,7 +349,9 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
 
         $this->sendConfirmationMail($formRegisterValues, $newUserData['verificationVal']);
 
-        $this->sendAdminNotificationMail($formRegisterValues);
+        //No mails for now
+        //rvs75 20170817
+        //$this->sendAdminNotificationMail($formRegisterValues);
 
         if ($this->_request->isXmlHttpRequest()) {
             $viewRegisterForm = $this->view->render('authorization/partials/registerSuccess.phtml');
