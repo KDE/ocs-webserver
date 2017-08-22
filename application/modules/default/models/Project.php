@@ -256,7 +256,6 @@ class Default_Model_Project extends Default_Model_DbTable_Project
 
     protected function _getCatIds($catids)
     {
-
         $sqlwhereCat = "";
         $sqlwhereSubCat = "";
 
@@ -343,6 +342,8 @@ class Default_Model_Project extends Default_Model_DbTable_Project
      * @param int|null $offset
      * @param bool     $onlyActiveProjects
      *
+     * @param null     $catids
+     *
      * @return Zend_Db_Table_Rowset_Abstract
      */
     public function fetchAllProjectsForMemberCatFilter(
@@ -406,7 +407,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                   m.mail,
                   m.paypal_mail,
                   m.dwolla_id,
-               	 (round(((p.count_likes + 6) / ((p.count_likes + p.count_dislikes) + 12)),2) * 100) AS laplace_score,
+               	 laplace_score(p.count_likes,p.count_dislikes) AS laplace_score,
                  `view_reported_projects`.`amount_reports` AS `amount_reports`
                 FROM project AS p
                   JOIN member AS m ON p.member_id = m.member_id AND m.is_active = 1 AND m.is_deleted = 0
@@ -644,7 +645,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
     /**
      * @param $projectId
      *
-     * @return Zend_Db_Table_Rowset_Abstract
+     * @return array
      */
     public function getGalleryPictureSources($projectId)
     {
@@ -781,6 +782,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
      *
      * @return int count of products in given category
      * @throws Zend_Exception
+     * @deprecated
      */
     public function countProductsInCategory($idCategory = null, $withSubCat = true, $store_id = null)
     {
@@ -1084,7 +1086,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
 
     protected function generateReportedSpamFilter(Zend_Db_Select $statement)
     {
-        return $statement->where('((amount_reports is null) or (amount_reports < 2))');
+        return $statement->where('(amount_reports is null)');
     }
 
     /**
@@ -1105,14 +1107,6 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         if (empty($username)) {
             throw new Zend_Db_Table_Exception('username is not set');
         }
-        ////check if the project categoriy is the last child in tree
-        //$cat = $values['project_category_id'];
-        //$tableCat = new Default_Model_DbTable_ProjectCategory();
-        //$catChildIds = $tableCat->fetchChildIds($cat);
-        //if (!$catChildIds || count($catChildIds) <> 1 || $catChildIds[0] != $cat) {
-        //    throw new Exception('Error in updateProject: category is no in the right level!');
-        //}
-        //
         // check important values for a new project
         $values['uuid'] = (!array_key_exists('uuid', $values)) ? Local_Tools_UUID::generateUUID() : $values['uuid'];
         $values['member_id'] = (!array_key_exists('member_id', $values)) ? $member_id : $values['member_id'];
@@ -1150,14 +1144,6 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             throw new Zend_Db_Table_Exception('project_id not found');
         }
 
-        //check if the project categoriy is the last child in tree
-        //$cat = $values['project_category_id'];
-        //$tableCat = new Default_Model_DbTable_ProjectCategory();
-        //$catChildIds = $tableCat->fetchChildIds($cat);
-        //if (!$catChildIds || count($catChildIds) <> 1 || $catChildIds[0] != $cat) {
-        //    throw new Exception('Error in updateProject: category is no in the right level!');
-        //}
-
         $projectData->setFromArray($values)->save();
 
         return $projectData;
@@ -1184,11 +1170,6 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             $storePackageTypeIds = $storeConfig['package_type'];
         }
 
-        //        $inQuery = '?';
-        //        if (is_array($storeCategories)) {
-        //            $inQuery = implode(',', array_fill(0, count($storeCategories), '?'));
-        //        }
-
         $sql = '
                 SELECT
                   p.*,
@@ -1201,33 +1182,10 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                   m.mail,
                   m.paypal_mail,
                   m.dwolla_id,
-               	 (round(((p.count_likes + 6) / ((p.count_likes + p.count_dislikes) + 12)),2) * 100) AS laplace_score
+               	 laplace_score(p.count_likes,p.count_dislikes) AS laplace_score
                 FROM project AS p
                   JOIN member AS m ON p.member_id = m.member_id AND m.is_active = 1 AND m.is_deleted = 0
                   JOIN project_category AS pc ON p.project_category_id = pc.project_category_id';
-        /*
-                $sql = '
-                        SELECT
-                          p.*,
-                          p.changed_at AS project_changed_at,
-                          pc.title AS cat_title,
-                          m.username,
-                          m.avatar,
-                          m.profile_image_url,
-                          m.roleId,
-                          m.mail,
-                          m.paypal_mail,
-                          m.dwolla_id,
-                            (round(((p.count_likes + 6) / ((p.count_likes + p.count_dislikes) + 12)),2) * 100) AS laplace_score,
-                            sp.amount_received,
-                            sp.count_plings,
-                            sp.count_plingers,
-                            sp.latest_pling
-                        FROM project AS p
-                          JOIN member AS m ON p.member_id = m.member_id AND m.is_active = 1 AND m.is_deleted = 0
-                          JOIN project_category AS pc ON p.project_category_id = pc.project_category_id
-                          LEFT JOIN stat_plings AS sp ON p.project_id = sp.project_id';
-        */
 
         if ($storePackageTypeIds) {
             $sql .= ' JOIN (SELECT DISTINCT project_id FROM project_package_type WHERE package_type_id in ('
