@@ -96,7 +96,7 @@ class Default_Model_ProjectCategory
             $list = array($list);
         }
         $modelCategories = new Default_Model_DbTable_ProjectCategory();
-        $modelProject = new Default_Model_Project();
+//        $modelProject = new Default_Model_Project();
         $result = array();
         foreach ($list as $cat_id) {
             $currentCategory = $modelCategories->fetchElement($cat_id);

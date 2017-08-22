@@ -41,6 +41,36 @@ CREATE DEFINER=CURRENT_USER PROCEDURE `generate_stat_cat_tree`()
         ORDER BY pc.lft, pc.orderPos
     ;
 
+    DROP TABLE IF EXISTS tmp_stat_cat;
+    CREATE TABLE tmp_stat_cat
+    (
+      `project_category_id` int(11) NOT NULL,
+      `lft` int(11) NOT NULL,
+      `rgt` int(11) NOT NULL,
+      `title` varchar(100) NOT NULL,
+      `name_legacy` varchar(50) NULL,
+      `is_active` int(1),
+      `orderPos` int(11) NULL,
+      `depth` int(11) NOT NULL,
+      `ancestor_id_path` varchar(100),
+      `ancestor_path` varchar(256),
+      `ancestor_path_legacy` varchar(256),
+      `stores` varchar(256),
+      PRIMARY KEY `primary` (project_category_id, lft, rgt)
+    )
+      ENGINE Memory
+      AS
+        SELECT
+          sct.*,
+          GROUP_CONCAT(csc.store_id ORDER BY csc.store_id) AS stores
+        FROM
+          tmp_stat_cat_tree AS sct
+          LEFT JOIN
+          config_store_category AS csc ON FIND_IN_SET(csc.project_category_id,sct.ancestor_id_path)
+        GROUP BY sct.project_category_id
+        ORDER BY sct.lft
+    ;
+
     IF EXISTS(SELECT table_name
               FROM INFORMATION_SCHEMA.TABLES
               WHERE table_schema = DATABASE()
@@ -48,18 +78,20 @@ CREATE DEFINER=CURRENT_USER PROCEDURE `generate_stat_cat_tree`()
 
     THEN
 
-      RENAME TABLE stat_cat_tree TO old_stat_cat_tree, tmp_stat_cat_tree TO stat_cat_tree;
+      RENAME TABLE stat_cat_tree TO old_stat_cat_tree, tmp_stat_cat TO stat_cat_tree;
 
     ELSE
 
-      RENAME TABLE tmp_stat_cat_tree TO stat_cat_tree;
+      RENAME TABLE tmp_stat_cat TO stat_cat_tree;
 
     END IF;
 
 
     DROP TABLE IF EXISTS old_stat_cat_tree;
+    DROP TABLE IF EXISTS tmp_stat_cat_tree;
 
   END$$
+
 DELIMITER ;
 
 DROP EVENT IF EXISTS `e_generate_stat_cat_tree`;
