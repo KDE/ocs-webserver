@@ -25,7 +25,7 @@
 class Default_Model_Spam
 {
 
-    const SPAM_THRESHOLD = 2;
+    const SPAM_THRESHOLD = 1;
 
     public function fetchSpamCandidate()
     {
