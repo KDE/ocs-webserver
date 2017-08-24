@@ -115,18 +115,16 @@ class Backend_CategoriesController extends Local_Controller_Action_Backend
         $sorting = $this->getParam('jtSorting');
         $filter_deleted = (int)$this->getParam('filter_deleted', 1);
 
-        $where = null;
-        if ($filter_deleted) {
-            $where = 'is_deleted = 0';
-        }
-        $reportsAll = $this->_model->fetchAll($where);
+        $records = $this->_model->fetchTree($filter_deleted, false, null);
 
-        $records = $this->_model->fetchTree($pageSize, $startIndex, $filter_deleted, false, null, true);
+        $pagination = Zend_Paginator::factory($records);
+        $pagination->setItemCountPerPage($pageSize);
+        $pagination->setCurrentPageNumber(($startIndex / $pageSize)+1);
 
         $jTableResult = array();
         $jTableResult['Result'] = self::RESULT_OK;
-        $jTableResult['Records'] = $records;
-        $jTableResult['TotalRecordCount'] = $reportsAll->count();
+        $jTableResult['Records'] = (array)$pagination->getCurrentItems();
+        $jTableResult['TotalRecordCount'] = count($records);
 
         $this->_helper->json($jTableResult);
     }

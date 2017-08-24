@@ -339,7 +339,7 @@ class Default_Model_Info
         $sql = '
             SELECT 
                 p.*
-                ,(round(((p.count_likes + 6) / ((p.count_likes + p.count_dislikes) + 12)),2) * 100) AS laplace_score
+                ,laplace_score(p.count_likes, p.count_dislikes) AS laplace_score
                 ,s.amount 
                 ,s.category_title       
                 FROM stat_downloads_quarter_year s

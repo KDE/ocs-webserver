@@ -26,7 +26,7 @@ class Default_View_Helper_ListCategories extends Zend_View_Helper_Abstract
     public function listCategories($depth = null)
     {
         $tableCategories = new Default_Model_DbTable_ProjectCategory();
-        $categories = $tableCategories->fetchTree(100, 0, true, false, $depth);
+        $categories = $tableCategories->fetchTree(true, false, $depth);
         return $categories;
     }
 

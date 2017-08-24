@@ -303,7 +303,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             'project_changed_at' => 'project.changed_at',
             'member_type'        => 'member.type',
             'project_member_id'  => 'member_id',
-            'laplace_score'      => new Zend_Db_Expr('(round(((count_likes + 6) / ((count_likes + count_dislikes) + 12)),2) * 100)'),
+            'laplace_score'      => new Zend_Db_Expr('laplace_score(count_likes,count_dislikes)'),
             'catTitle'           => new Zend_Db_Expr('(SELECT title FROM project_category WHERE project_category_id = project.project_category_id)')
         ))->setIntegrityCheck(false)->join('member', 'project.member_id = member.member_id', array('username'))
                   ->where('project.status >= ?', ($onlyActiveProjects ? self::PROJECT_ACTIVE : self::PROJECT_INACTIVE))
@@ -362,7 +362,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             'project_changed_at' => 'project.changed_at',
             'member_type'        => 'member.type',
             'project_member_id'  => 'member_id',
-            'laplace_score'      => new Zend_Db_Expr('(round(((count_likes + 6) / ((count_likes + count_dislikes) + 12)),2) * 100)'),
+            'laplace_score'      => new Zend_Db_Expr('laplace_score(count_likes,count_dislikes)'),
             'catTitle'           => new Zend_Db_Expr('(SELECT title FROM project_category WHERE project_category_id = project.project_category_id)')
         ))->setIntegrityCheck(false)->join('member', 'project.member_id = member.member_id', array('username'))
                   ->where('project.status >= ?', ($onlyActiveProjects ? self::PROJECT_ACTIVE : self::PROJECT_INACTIVE))
