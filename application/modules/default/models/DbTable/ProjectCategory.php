@@ -289,7 +289,7 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
      */
     public function fetchTreeForJTable($cat_id)
     {
-        $resultRows = $this->fetchTree(1000, 0, false, true, 5, true);
+        $resultRows = $this->fetchTree(false, true, 5);
 
         $resultForSelect = array();
         foreach ($resultRows as $row) {
@@ -303,25 +303,23 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
     }
 
     /**
-     * @param int $pageSize
-     * @param int $startIndex
      * @param bool $isActive
      * @param bool $withRoot
-     * @param int $depth
+     * @param int  $depth
+     *
      * @return array
+     * @internal param int $pageSize
+     * @internal param int $startIndex
+     * @internal param bool $clearCache
      */
     public function fetchTree(
-        $pageSize = 10,
-        $startIndex = 0,
         $isActive = false,
         $withRoot = true,
-        $depth = null,
-        $clearCache = false
+        $depth = null
     ) {
-        $sqlLimit = " LIMIT {$startIndex}, {$pageSize}";
         $sqlActive = $isActive == true ? " AND pc.is_active = 1 AND pc2.is_active = 1 " : '';
         $sqlRoot = $withRoot == true ? '' : " AND pc.lft > 0 ";
-        $sqlDepth = is_null($depth) == true ? "HAVING depth <= " . (int)$depth : '';
+        $sqlDepth = is_null($depth) == true ? '' : "HAVING depth <= " . (int)$depth;
         $sql = "
         	  SELECT
                 pc.project_category_id,
@@ -343,7 +341,6 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
               WHERE (pc.lft BETWEEN pc2.lft AND pc2.rgt) {$sqlActive} {$sqlRoot}
               GROUP BY pc.lft {$sqlDepth}
               ORDER BY pc.lft, pc.orderPos
-              {$sqlLimit}
         ";
 
         $tree = $this->_db->fetchAll($sql);
@@ -355,7 +352,7 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
      */
     public function fetchTreeForJTableStores($cat_id)
     {
-        $resultRows = $this->fetchTree(1000, 0, true, true, 5, true);
+        $resultRows = $this->fetchTree(true, true, 5);
 
         $resultForSelect = array();
         foreach ($resultRows as $row) {
@@ -800,7 +797,7 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
      */
     public function fetchMainCategories($returnAmount = 25, $fetchLimit = 25)
     {
-        $categories = $this->fetchTree($fetchLimit, 0, true, false, 1);
+        $categories = $this->fetchTree(true, false, 1);
         return array_slice($categories, 0, $returnAmount);
     }
 
@@ -914,7 +911,7 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
      */
     public function fetchRandomCategories($returnAmount = 5, $fetchLimit = 25)
     {
-        $categories = $this->fetchTree($fetchLimit, 0, true, false, 1);
+        $categories = $this->fetchTree(true, false, 1);
         return $this->_array_random($categories, $returnAmount);
     }
 
