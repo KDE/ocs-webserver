@@ -318,54 +318,35 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
         $depth = null,
         $clearCache = false
     ) {
-        /** @var Zend_Cache_Core $cache */
-        $cache = $this->cache;
-        $cacheName = __FUNCTION__ . '_' . md5((string)$pageSize . (string)$startIndex . (int)$isActive . (int)$withRoot . (string)$depth);
-        if ($clearCache) {
-            $cache->remove($cacheName);
-        }
-        if (!($tree = $cache->load($cacheName))) {
-            $whereWithRoot = $withRoot == true ? '' : ' AND node.lft > 0';
-            $whereActive = $isActive == true ? ' AND node.is_active = 1 AND node.is_deleted = 0' : '';
-            $sqlGetDepth = false === is_null($depth) ? $this->_db->quoteInto(' having depth <= ?', $depth) : '';
+        $sqlLimit = " LIMIT {$startIndex}, {$pageSize}";
+        $sqlActive = $isActive == true ? " AND pc.is_active = 1 AND pc2.is_active = 1 " : '';
+        $sqlRoot = $withRoot == true ? '' : " AND pc.lft > 0 ";
+        $sqlDepth = is_null($depth) == true ? "HAVING depth <= " . (int)$depth : '';
+        $sql = "
+        	  SELECT
+                pc.project_category_id,
+                pc.lft,
+                pc.rgt,
+                pc.title,
+                pc.name_legacy,
+                pc.is_active,
+                pc.orderPos,
+                pc.xdg_type,
+                pc.dl_pling_factor,
+                concat(repeat('&nbsp;&nbsp;',count(pc.lft) - 1), pc.title) AS title_show,
+                concat(repeat('&nbsp;&nbsp;',count(pc.lft) - 1), IF(LENGTH(TRIM(pc.name_legacy))>0,pc.name_legacy,pc.title)) AS title_legacy,
+                count(pc.lft) - 1                                        AS depth,
+                GROUP_CONCAT(pc2.project_category_id ORDER BY pc2.lft)   AS ancestor_id_path,
+                GROUP_CONCAT(pc2.title ORDER BY pc2.lft SEPARATOR ' | ') AS ancestor_path,
+                GROUP_CONCAT(IF(LENGTH(TRIM(pc2.name_legacy))>0,pc2.name_legacy,pc2.title) ORDER BY pc2.lft SEPARATOR ' | ') AS ancestor_path_legacy
+              FROM project_category AS pc, project_category AS pc2
+              WHERE (pc.lft BETWEEN pc2.lft AND pc2.rgt) {$sqlActive} {$sqlRoot}
+              GROUP BY pc.lft {$sqlDepth}
+              ORDER BY pc.lft, pc.orderPos
+              {$sqlLimit}
+        ";
 
-
-            $limit = " LIMIT {$startIndex},{$pageSize} ;";
-            //@TODO: rewrite sql code project.is_active and is_deleted is deprecated
-            $sql = "
-                SELECT node.*,CONCAT( REPEAT( '&nbsp;&nbsp;', (COUNT(parent.title) - 1) ), node.title) AS title_show, pc.product_counter, (COUNT(parent.title) - 1) as depth,
-                  (SELECT
-                      `project_category_id`
-                       FROM
-                         `project_category` AS `t2`
-                       WHERE
-                         `t2`.`lft`  < `node`.`lft` AND
-                         `t2`.`rgt` > `node`.`rgt`
-                         AND `t2`.`is_deleted` = 0
-                       ORDER BY
-                         `t2`.`rgt`-`node`.`rgt`ASC
-                       LIMIT
-                         1) AS `parent`
-                FROM {$this->_name} AS node
-                INNER JOIN {$this->_name} AS parent
-                LEFT JOIN
-                     (SELECT
-                        project.project_category_id,
-                        count(project.project_category_id) AS product_counter
-                        FROM
-                            project
-                        WHERE project.status = 100 AND project.type_id = 1
-                        GROUP BY project.project_category_id) AS pc ON pc.project_category_id = node.project_category_id
-                    WHERE node.lft BETWEEN parent.lft AND parent.rgt
-                " . $whereActive . $whereWithRoot . "
-                GROUP BY node.project_category_id
-                " . $sqlGetDepth . "
-                ORDER BY node.lft
-            ";
-
-            $tree = $this->_db->query($sql . $limit)->fetchAll();
-            $cache->save($tree, $cacheName);
-        }
+        $tree = $this->_db->fetchAll($sql);
         return $tree;
     }
 
