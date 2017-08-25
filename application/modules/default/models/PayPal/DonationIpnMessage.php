@@ -20,7 +20,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-class Default_Model_PayPal_DonationIpnMessage extends Local_Payment_PayPal_AdaptivePayment_Ipn
+class Default_Model_PayPal_DonationIpnMessage extends Local_Payment_PayPal_Donation_Ipn
 {
 
     /** @var \Default_Model_Pling */

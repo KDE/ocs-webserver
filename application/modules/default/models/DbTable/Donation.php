@@ -114,7 +114,7 @@ class Default_Model_DbTable_Donation extends Zend_Db_Table_Abstract
             'active_time' => new Zend_Db_Expr ('Now()')
         );
 
-        $this->update($updateValues, "payment_reference_key='" . $payment_response->getPaymentId() . "'");
+        $this->update($updateValues, "payment_reference_key='" . $payment_response->getCustom() . "'");
     }
 
     /**
