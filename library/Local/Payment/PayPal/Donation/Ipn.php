@@ -53,7 +53,7 @@ abstract class Local_Payment_PayPal_Donation_Ipn extends Local_Payment_PayPal_Ba
 
         $this->_dataRaw = $rawData;
         $this->_dataIpn = $this->_parseRawMessage($rawData);
-        $this->_ipnMessage = Local_Payment_PayPal_Donation_ResponseDonation::buildResponse($this->_dataIpn);
+        $this->_ipnMessage = Local_Payment_PayPal_Response::buildResponse($this->_dataIpn);
 
         if (false === $this->validateTransaction()) {
             $this->_logger->err('Donation '.__FUNCTION__ . '::Abort IPN processing. Transaction not valid:' . $rawData);
