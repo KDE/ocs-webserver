@@ -317,9 +317,10 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
         $withRoot = true,
         $depth = null
     ) {
-        $sqlActive = $isActive == true ? " AND pc.is_active = 1 AND pc2.is_active = 1 " : '';
-        $sqlRoot = $withRoot == true ? '' : " AND pc.lft > 0 ";
-        $sqlDepth = is_null($depth) == true ? '' : "HAVING depth <= " . (int)$depth;
+        $sqlActive = $isActive == true ? " parent_active = 1 AND pc.is_active = 1" : '';
+        $sqlRoot = $withRoot == true ? "(pc.lft BETWEEN pc2.lft AND pc2.rgt)" : "(pc.lft BETWEEN pc2.lft AND pc2.rgt) AND pc2.lft > 0";
+        $sqlDepth = is_null($depth) == true ? '' : " AND depth <= " . (int)$depth;
+        $sqlHaving = $sqlActive || $sqlDepth ? "HAVING {$sqlActive} {$sqlDepth}" : '';
         $sql = "
         	  SELECT
                 pc.project_category_id,
@@ -331,16 +332,21 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
                 pc.orderPos,
                 pc.xdg_type,
                 pc.dl_pling_factor,
+                MIN(pc2.is_active)                                       AS parent_active,
                 concat(repeat('&nbsp;&nbsp;',count(pc.lft) - 1), pc.title) AS title_show,
                 concat(repeat('&nbsp;&nbsp;',count(pc.lft) - 1), IF(LENGTH(TRIM(pc.name_legacy))>0,pc.name_legacy,pc.title)) AS title_legacy,
                 count(pc.lft) - 1                                        AS depth,
                 GROUP_CONCAT(pc2.project_category_id ORDER BY pc2.lft)   AS ancestor_id_path,
                 GROUP_CONCAT(pc2.title ORDER BY pc2.lft SEPARATOR ' | ') AS ancestor_path,
                 GROUP_CONCAT(IF(LENGTH(TRIM(pc2.name_legacy))>0,pc2.name_legacy,pc2.title) ORDER BY pc2.lft SEPARATOR ' | ') AS ancestor_path_legacy
-              FROM project_category AS pc, project_category AS pc2
-              WHERE (pc.lft BETWEEN pc2.lft AND pc2.rgt) {$sqlActive} {$sqlRoot}
-              GROUP BY pc.lft {$sqlDepth}
-              ORDER BY pc.lft, pc.orderPos
+              FROM
+                  project_category AS pc
+              JOIN
+                    project_category AS pc2 ON {$sqlRoot}
+              GROUP BY pc.lft
+              {$sqlHaving}
+              ORDER BY pc.lft
+
         ";
 
         $tree = $this->_db->fetchAll($sql);
