@@ -96,6 +96,7 @@ class Default_Model_DbTable_Donation extends Zend_Db_Table_Abstract
 
         return $new_row->save();
     }
+    
 
     /**
      * Mark donations as payed.
@@ -139,8 +140,8 @@ class Default_Model_DbTable_Donation extends Zend_Db_Table_Abstract
      */
     public function fetchDonationFromResponse($payment_response)
     {
-        if ($payment_response->getPaymentId() != null) {
-            $where = array('payment_reference_key = ?' => $payment_response->getPaymentId());
+        if ($payment_response->getCustom() != null) {
+            $where = array('payment_reference_key = ?' => $payment_response->getCustom());
         } elseif ($payment_response->getTransactionId() != null) {
             $where = array('payment_transaction_id = ?' => $payment_response->getTransactionId());
         } else {

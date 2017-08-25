@@ -23,8 +23,8 @@
 class Default_Model_PayPal_DonationIpnMessage extends Local_Payment_PayPal_Donation_Ipn
 {
 
-    /** @var \Default_Model_Pling */
-    protected $_tablePling;
+    /** @var \Default_Model_DbTable_Donation */
+    protected $_tableDonation;
 
     function __construct($config = null, $logger = null)
     {
@@ -38,37 +38,28 @@ class Default_Model_PayPal_DonationIpnMessage extends Local_Payment_PayPal_Donat
 
         parent::__construct($config->third_party->paypal, $logger);
 
-        $this->_tablePling = new Default_Model_Pling();
+        $this->_tableDonation = new Default_Model_DbTable_Donation;
     }
 
     protected function validateTransaction()
     {
-        $this->_dataIpn = $this->_tablePling->fetchPlingFromResponse($this->_ipnMessage)->toArray();
+        $this->_dataIpn = $this->_tableDonation->fetchDonationFromResponse($this->_ipnMessage)->toArray();
         if (empty($this->_dataIpn)) {
             $this->_logger->err(__METHOD__ . ' - ' . 'No transaction found for IPN message.' . PHP_EOL);
             return false;
         }
 
-        $tableProject = new Default_Model_Project();
-        $member = $tableProject->find($this->_dataIpn['project_id'])->current()->findDependentRowset('Default_Model_DbTable_Member', 'Owner')->current();
-
-        return $this->_checkAmount() AND $this->_checkEmail($member->paypal_mail);
+        return $this->_checkAmount() && $this->_checkEmail();
     }
 
     protected function _checkAmount()
     {
-        $amount = isset($this->_dataIpn['amount']) ? $this->_dataIpn['amount'] : 0;
-        $receiver_amount = (float)$amount - (float)$this->_config->facilitator_fee;
-        $currency = new Zend_Currency('en_US');
-        $this->_logger->debug(__METHOD__ . ' - ' . $this->_ipnMessage->getTransactionAmount() . ' == ' . $currency->getShortName() . ' ' . $receiver_amount);
-        return $this->_ipnMessage->getTransactionAmount() == $currency->getShortName() . ' ' . $amount;
+        return true;
     }
 
     protected function _checkEmail()
     {
-        $email = isset($this->_dataIpn['email']) ? $this->_dataIpn['email'] : '';
-        $this->_logger->debug(__METHOD__ . ' - ' . $this->_ipnMessage->getTransactionReceiver() . ' == ' . $email);
-        return $this->_ipnMessage->getTransactionReceiver() == $email;
+        return true;
     }
 
     protected function _statusCompleted()
@@ -78,27 +69,27 @@ class Default_Model_PayPal_DonationIpnMessage extends Local_Payment_PayPal_Donat
 
     protected function _statusError()
     {
-        $this->_tablePling->deactivatePlingsFromResponse($this->_ipnMessage);
+        $this->_tableDonation->deactivateDonationFromResponse($this->_ipnMessage);
     }
 
     protected function _processTransactionStatusCompleted()
     {
-        $this->_tablePling->activatePlingsFromResponse($this->_ipnMessage);
+        $this->_tableDonation->activateDonationFromResponse($this->_ipnMessage);
     }
 
     protected function _processTransactionStatusPending()
     {
-        $this->_tablePling->activatePlingsFromResponse($this->_ipnMessage);
+        $this->_tableDonation->activateDonationFromResponse($this->_ipnMessage);
     }
 
     protected function _processTransactionStatusRefunded()
     {
-        $this->_tablePling->deactivatePlingsFromResponse($this->_ipnMessage);
+        $this->_tableDonation->deactivateDonationFromResponse($this->_ipnMessage);
     }
 
     protected function _processTransactionStatusDenied()
     {
-        $this->_tablePling->deactivatePlingsFromResponse($this->_ipnMessage);
+        $this->_tableDonation->deactivateDonationFromResponse($this->_ipnMessage);
     }
 
 } 
