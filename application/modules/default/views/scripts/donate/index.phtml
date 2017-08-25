@@ -1,0 +1,127 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Created: 31.05.2017
+ */
+?>
+<style>
+form .checkboxset li, form .optionset li, form .selectiongroup li {
+    list-style-type: none;
+    line-height: 2;
+}
+
+form .SelectionGroup li li input {
+    display: inline-block;
+    margin: 0 0.2em 0 0;
+    
+}
+
+form .SelectionGroup li label {
+    margin: 0 0 0 0.2em;
+    font-weight: normal;
+}
+
+
+.SelectionGroup li {
+    list-style-type: none;
+    float: left;
+    width: 100%;
+    clear: both;
+}
+
+.Actions {
+    padding-top: 15px;
+    padding-bottom: 20px;
+}
+    
+</style>
+<main id="explore-content">
+    <section class="wrapper" id="products-wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="sidebar-left col-md-2"></div>
+                <div class="content col-md-8">
+                    <h2>Please help us</h2>
+                    Since May 2017 we support every month our contributors. 
+                    Contributors can earn <a href="/plings">plings</a> for every download. 
+                    With the pling factor, we calculate the amount and start the payout.
+                    
+                    
+                    <form id="Form_DonationProceed" action="/donate/pay" method="post" enctype="application/x-www-form-urlencoded">
+                        <p id="Form_DonationProceed_error" class="message " style="display: none"></p>
+                        <fieldset>
+                            <input type="hidden" name="provider" value="paypal" id="provider">
+                            <ul class="SelectionGroup selectiongroup nolabel">
+                                <li class="selected">
+                                    <input class="selector" type="radio" id="amount_custom_1" name="toggle_custom" value="predefined" checked=""><label for="Form_DonationProceed_toggle_custom_1">Choose one of this amounts</label>
+                                    <div class="CompositeField selectiongroup_item ">
+                                        <div id="Amount" class="field optionset nolabel">
+                                            <div class="middleColumn">
+                                                <ul id="Form_DonationProceed_Amount" class="optionset nolabel">
+                                                    <li class="odd val05">
+                                                        <input id="amount_05" class="radio" name="amount_predefined" type="radio" value="5"><label for="Form_DonationProceed_Amount_05">$5</label>
+                                                    </li>
+                                                    <li class="even val10">
+                                                            <input id="amount_10" class="radio" name="amount_predefined" type="radio" value="10" checked=""><label for="Form_DonationProceed_Amount_10">$10</label>
+                                                    </li>
+                                                    <li class="odd val20">
+                                                            <input id="amount_20" class="radio" name="amount_predefined" type="radio" value="20"><label for="Form_DonationProceed_Amount_20">$20</label>
+                                                    </li>
+                                                    <li class="even val50">
+                                                            <input id="amount_50" class="radio" name="amount_predefined" type="radio" value="50"><label for="Form_DonationProceed_Amount_50">$50</label>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <input class="selector" type="radio" id="amount_custom_2" name="toggle_custom" value="custom"><label for="Form_DonationProceed_toggle_custom_2">Or enter an amount</label>
+                                    <div class="CompositeField selectiongroup_item ">
+                                        <div class="field fieldgroup nolabel">
+                                            <div class="middleColumn fieldgroup">
+
+                                                <div class="fieldgroup-field first odd">
+                                                    <div class="fieldholder-small">
+                                                        $ <input type="text" name="amount_handish" value="25" class="numeric text nolabel" id="amount_handish" required="required" aria-required="true" maxlength="10" size="10">
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </fieldset>
+                        <div class="Actions">
+                            <input type="submit" name="action_paypal" value="Pay with PayPal" class="action" id="action_paypal">
+                        </div>
+                    </form>
+                </div>
+                <div class="sidebar-right col-md-2"></div>
+            </div>
+            <section class="explore-footer text-center">
+                
+            </section>
+        </div>
+    </section>
+</main>
+

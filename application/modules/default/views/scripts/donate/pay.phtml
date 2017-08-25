@@ -1,0 +1,58 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+if ($this->error) {
+    echo $this->error_text;
+} else {
+    ?>
+    <div style="text-align: center;">
+        <form action="<?= $this->form_endpoint ?>" method="post" target="_top">
+            <input type="hidden" name="cmd" value="_donations">
+            <!--<input type="hidden" name="business" value="paypal@opendesktop.org">-->
+            <input type="hidden" name="business" value="<?= $this->form_merchant ?>">
+
+            <input type="hidden" name="lc" value="US">
+            <input type="hidden" name="item_name" value="opendesktop.org">
+            <input type="hidden" name="item_number" value="1">
+            <input type="hidden" name="currency_code" value="USD">
+            <input type="hidden" name="no_note" value="1">
+            <input type="hidden" name="no_shipping" value="1">
+            <input type="hidden" name="rm" value="1">
+            <input type="hidden" name="return" value="http://<?= $this->form_return_url_ok ?>">
+            <input type="hidden" name="cancel_return" value="http://<?= $this->form_return_url_cancel ?>">
+            <input type="hidden" name="notify_url" value="http://<?= $this->form_ipn_endpoint ?>">
+            <input type="hidden" name="bn" value="PP-DonationsBF:btn_donate_LG.gif:NonHosted">
+            <input type="hidden" name="ocs-ts-id" value="<?= $this->transaction_id ?>">
+            <input type="hidden" name="amount" value="<?= $this->amount ?>">
+            
+            <div class="Actions">
+                <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+                <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+            </div>
+        </form>
+    </div>
+    <script>
+        //var dgFlow = new PAYPAL.apps.DGFlow({trigger: 'submitBtn'});
+        //$("#submitBtn").click();
+        //document.location.href = "<?= $this->checkoutEndpoint ?>?cmd=_ap-payment&paykey=<?= $this->paymentKey ?>";
+    </script>
+<?php } ?>

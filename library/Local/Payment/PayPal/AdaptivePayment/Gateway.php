@@ -116,7 +116,7 @@ abstract class Local_Payment_PayPal_AdaptivePayment_Gateway
         }
 
         $response = $this->_makeRequest($bodyParameter, self::API_ADAPTIVE_PAYMENTS, self::OPERATION_PAY);
-
+        $log->info('Result: '. print_r($response, true));
         $log->info('********** Finished PayPal Payment **********');
 
         $paypalResponse = new Local_Payment_PayPal_AdaptivePayment_ResponsePayRequest($response);
@@ -257,7 +257,9 @@ abstract class Local_Payment_PayPal_AdaptivePayment_Gateway
 
     public function getCheckoutEndpoint()
     {
-        return trim($this->_config->form->endpoint . '/webapps/adaptivepayment/flow/pay');
+        //return trim($this->_config->form->endpoint . '/webapps/adaptivepayment/flow/pay');
+        //Old Style redirect
+        return trim($this->_config->form->endpoint . '/cgi-bin/webscr');
     }
 
 }
