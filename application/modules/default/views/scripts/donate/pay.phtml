@@ -41,7 +41,7 @@ if ($this->error) {
             <input type="hidden" name="cancel_return" value="http://<?= $this->form_return_url_cancel ?>">
             <input type="hidden" name="notify_url" value="http://<?= $this->form_ipn_endpoint ?>">
             <input type="hidden" name="bn" value="PP-DonationsBF:btn_donate_LG.gif:NonHosted">
-            <input type="hidden" name="ocs-ts-id" value="<?= $this->transaction_id ?>">
+            <input type="hidden" name="custom" value="<?= $this->transaction_id ?>">
             <input type="hidden" name="amount" value="<?= $this->amount ?>">
             
             <div class="Actions">
