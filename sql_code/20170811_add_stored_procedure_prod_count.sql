@@ -17,21 +17,26 @@ CREATE DEFINER=CURRENT_USER PROCEDURE `generate_stat_cat_prod_count`()
       ENGINE Memory
       AS
         SELECT
-          parent.project_category_id,
+          sct2.project_category_id,
+          NULL as package_type_id,
+          count(p.project_id) as count_product
+        FROM stat_cat_tree as sct1
+          JOIN stat_cat_tree as sct2 ON sct1.lft between sct2.lft AND sct2.rgt
+          LEFT JOIN stat_projects as p ON p.project_category_id = sct1.project_category_id
+        GROUP BY sct2.project_category_id
+
+        UNION
+
+        SELECT
+          sct2.project_category_id,
           ppt.package_type_id,
-          COUNT(DISTINCT project.project_id) AS count_product
-        FROM
-          stat_cat_tree AS node,
-          stat_cat_tree AS parent,
-          stat_projects AS project
-          LEFT JOIN project_package_type AS ppt ON project.project_id = ppt.project_id
-        WHERE
-          node.lft BETWEEN parent.lft AND parent.rgt
-          AND node.project_category_id = project.project_category_id AND node.is_active = 1
-        --        AND ppt.package_type_id = 5
-        --        AND find_in_set(1, package_types)
-        GROUP BY parent.project_category_id, ppt.package_type_id
-        ORDER BY parent.lft;
+          count(p.project_id) as count_product
+        FROM stat_cat_tree as sct1
+          JOIN stat_cat_tree as sct2 ON sct1.lft between sct2.lft AND sct2.rgt
+          JOIN stat_projects as p ON p.project_category_id = sct1.project_category_id
+          JOIN project_package_type AS ppt ON ppt.project_id = p.project_id
+        GROUP BY sct2.lft, ppt.package_type_id
+    ;
 
     IF EXISTS(SELECT table_name
               FROM INFORMATION_SCHEMA.TABLES
