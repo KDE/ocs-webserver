@@ -43,10 +43,13 @@ class Default_Model_PayPal_DonationIpnMessage extends Local_Payment_PayPal_Donat
 
     protected function validateTransaction()
     {
-        $this->_dataIpn = $this->_tableDonation->fetchDonationFromResponse($this->_ipnMessage)->toArray();
-        if (empty($this->_dataIpn)) {
-            $this->_logger->err(__METHOD__ . ' - ' . 'No transaction found for IPN message.' . PHP_EOL);
+        $donation = $this->_tableDonation->fetchDonationFromResponse($this->_ipnMessage);
+        
+        if (empty($donation)) {
+            $this->_logger->err(__METHOD__ . ' - ' . 'No transaction found for IPN message.' . print_r($this->_ipnMessage, true));
             return false;
+        } else {
+            $this->_dataIpn = $donation->toArray();
         }
 
         return $this->_checkAmount() && $this->_checkEmail();

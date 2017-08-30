@@ -105,7 +105,7 @@ class Default_Model_DbTable_Donation extends Zend_Db_Table_Abstract
      * @param Local_Payment_ResponseInterface $payment_response
      *
      */
-    public function activateDonationsFromResponse($payment_response)
+    public function activateDonationFromResponse($payment_response)
     {
         $updateValues = array(
             'status_id' => self::STATUS_DONATED,
@@ -121,7 +121,7 @@ class Default_Model_DbTable_Donation extends Zend_Db_Table_Abstract
     /**
      * @param Local_Payment_ResponseInterface $payment_response
      */
-    public function deactivateDonationsFromResponse($payment_response)
+    public function deactivateDonationFromResponse($payment_response)
     {
         $updateValues = array(
             'status_id' => 0,
