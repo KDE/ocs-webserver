@@ -65,12 +65,12 @@ class Local_Payment_PayPal_Donation_ResponseDonation implements Local_Payment_Pa
      */
     public function getTransactionId()
     {
-        return $this->_rawResponse['ipn_track_id'];
+        return $this->_rawResponse['txn_id'];
     }
 
     public function getTransactionStatus()
     {
-        return null;
+        return ($this->_rawResponse['payment_status']);
     }
 
     /**
