@@ -52,7 +52,7 @@ if ($this->error) {
     </div>
     <script>
         //var dgFlow = new PAYPAL.apps.DGFlow({trigger: 'submitBtn'});
-        $("#submitBtn").click();
+        document.getElementById("submitBtn").submit();
         //document.location.href = "<?= $this->checkoutEndpoint ?>?cmd=_ap-payment&paykey=<?= $this->paymentKey ?>";
     </script>
 <?php } ?>
