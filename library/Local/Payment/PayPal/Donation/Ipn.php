@@ -55,8 +55,6 @@ abstract class Local_Payment_PayPal_Donation_Ipn extends Local_Payment_PayPal_Ba
         $this->_dataIpn = $this->_parseRawMessage($rawData);
         $this->_ipnMessage = Local_Payment_PayPal_Response::buildResponse($this->_dataIpn);
         
-        $this->_logger->info('Donation '.__FUNCTION__ . ':: RAW-Data: '. $rawData .'IPN.: ' . print_r($this->_dataIpn, true));
-
         if (false === $this->validateTransaction()) {
             $this->_logger->err('Donation '.__FUNCTION__ . '::Abort IPN processing. Transaction not valid:' . $rawData);
             return;
@@ -226,7 +224,7 @@ abstract class Local_Payment_PayPal_Donation_Ipn extends Local_Payment_PayPal_Ba
 
     protected function processPaymentStatus()
     {
-        $this->_logger->info('Donation ' . __FUNCTION__.' IPN: ' . print_r($this->_dataIpn, true) . ' - RAW-Data: ' . print_r($this->_dataRaw, true));
+        $this->_logger->info('Donation ' . __FUNCTION__.' Status: ' . print_r($this->_ipnMessage['payment_status']));
         switch ($this->_ipnMessage['payment_status']) {
             case 'Completed':
                 $this->_statusCompleted();
@@ -253,7 +251,8 @@ abstract class Local_Payment_PayPal_Donation_Ipn extends Local_Payment_PayPal_Ba
      */
     protected function _statusCompleted()
     {
-        $this->_logger->info('Donation _statusCompleted');
+        $this->_logger->info('Donation ' . __FUNCTION__.' set Status');
+        
         $donationTable = new Default_Model_DbTable_Donation();
         $donationTable->activateDonationsFromResponse($this->_ipnMessage);
     }
