@@ -225,7 +225,7 @@ abstract class Local_Payment_PayPal_Donation_Ipn extends Local_Payment_PayPal_Ba
     protected function processPaymentStatus()
     {
         $this->_logger->info('Donation ' . __FUNCTION__.' Status: ' . print_r($this->_ipnMessage, true));
-        switch ($this->_ipnMessage->getStatus()) {
+        switch ($this->_ipnMessage->toArray()['paypment_status']) {
             case 'Completed':
                 $this->_statusCompleted();
                 break;
@@ -236,7 +236,7 @@ abstract class Local_Payment_PayPal_Donation_Ipn extends Local_Payment_PayPal_Ba
                 $this->_statusProcessed();
                 break;*/
             default:
-                $this->_logger->info('Donation ' . __FUNCTION__.' Status not found: ' . print_r($this->_ipnMessage));
+                $this->_logger->info('Donation ' . __FUNCTION__.' Status not found: ' . $this->_ipnMessage->toArray()['paypment_status']);
                 throw new Local_Payment_Exception('Unknown status from PayPal: ' . print_r($this->_ipnMessage));
                 
         }
