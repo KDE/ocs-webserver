@@ -37,22 +37,22 @@ if ($this->error) {
             <input type="hidden" name="no_note" value="1">
             <input type="hidden" name="no_shipping" value="1">
             <input type="hidden" name="rm" value="1">
-            <input type="hidden" name="return" value="http://<?= $this->form_return_url_ok ?>">
-            <input type="hidden" name="cancel_return" value="http://<?= $this->form_return_url_cancel ?>">
-            <input type="hidden" name="notify_url" value="http://<?= $this->form_ipn_endpoint ?>">
+            <input type="hidden" name="return" value="<?= $this->form_return_url_ok ?>">
+            <input type="hidden" name="cancel_return" value="<?= $this->form_return_url_cancel ?>">
+            <input type="hidden" name="notify_url" value="<?= $this->form_ipn_endpoint ?>">
             <input type="hidden" name="bn" value="PP-DonationsBF:btn_donate_LG.gif:NonHosted">
-            <input type="hidden" name="custom" value="<?= $this->transaction_id ?>">
+            <input type="hidden" name="ocs-ts-id" value="<?= $this->transaction_id ?>">
             <input type="hidden" name="amount" value="<?= $this->amount ?>">
             
             <div class="Actions">
-                <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+                <input id="submitBtn" type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
                 <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
             </div>
         </form>
     </div>
     <script>
         //var dgFlow = new PAYPAL.apps.DGFlow({trigger: 'submitBtn'});
-        //$("#submitBtn").click();
+        $("#submitBtn").click();
         //document.location.href = "<?= $this->checkoutEndpoint ?>?cmd=_ap-payment&paykey=<?= $this->paymentKey ?>";
     </script>
 <?php } ?>
