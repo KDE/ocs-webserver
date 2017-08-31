@@ -171,6 +171,7 @@ abstract class Local_Payment_PayPal_Donation_Ipn extends Local_Payment_PayPal_Ba
 
         //return $this->_checkEmail() AND $this->_checkTxnId() AND $this->_checkAmount();
         return true;
+        
     }
 
     /**
@@ -226,7 +227,7 @@ abstract class Local_Payment_PayPal_Donation_Ipn extends Local_Payment_PayPal_Ba
     protected function processPaymentStatus()
     {
         $this->_logger->info('Donation ' . __FUNCTION__.' IPN: ' . print_r($this->_dataIpn, true) . ' - RAW-Data: ' . print_r($this->_dataRaw, true));
-        switch ($this->_dataIpn['payment_status']) {
+        switch ($this->_ipnMessage['payment_status']) {
             case 'Completed':
                 $this->_statusCompleted();
                 break;
@@ -237,11 +238,11 @@ abstract class Local_Payment_PayPal_Donation_Ipn extends Local_Payment_PayPal_Ba
                 $this->_statusProcessed();
                 break;*/
             default:
-                $this->_logger->info('Donation ' . __FUNCTION__.' Status not found: ' . print_r($this->_dataIpn));
-                throw new Local_Payment_Exception('Unknown status from PayPal: ' . print_r($this->_dataIpn));
+                $this->_logger->info('Donation ' . __FUNCTION__.' Status not found: ' . print_r($this->_ipnMessage));
+                throw new Local_Payment_Exception('Unknown status from PayPal: ' . print_r($this->_ipnMessage));
                 
         }
-        $this->_logger->info('Donation ' . __FUNCTION__.' Status = ' . $this->_dataIpn['payment_status'] . ' DONE');
+        $this->_logger->info('Donation ' . __FUNCTION__.' Status = ' . $this->_ipnMessage['payment_status'] . ' DONE');
     }
 
     /**
@@ -254,7 +255,7 @@ abstract class Local_Payment_PayPal_Donation_Ipn extends Local_Payment_PayPal_Ba
     {
         $this->_logger->info('Donation _statusCompleted');
         $donationTable = new Default_Model_DbTable_Donation();
-        $donationTable->activateDonationsFromResponse($this->_dataRaw);
+        $donationTable->activateDonationsFromResponse($this->_ipnMessage);
     }
 
     /**
