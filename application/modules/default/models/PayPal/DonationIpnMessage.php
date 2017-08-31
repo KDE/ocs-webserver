@@ -67,7 +67,7 @@ class Default_Model_PayPal_DonationIpnMessage extends Local_Payment_PayPal_Donat
 
     protected function _statusCompleted()
     {
-        $this->processTransactionStatus();
+        $this->_processTransactionStatusCompleted();
     }
 
     protected function _statusError()
