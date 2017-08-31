@@ -224,9 +224,9 @@ abstract class Local_Payment_PayPal_Donation_Ipn extends Local_Payment_PayPal_Ba
 
     protected function processPaymentStatus()
     {
-        $this->_logger->info('Donation ' . __FUNCTION__.' IPN: ' . print_r($this->_ipnMessage, true) . ' Status: ' . print_r($this->_ipnMessage->getStatus(), true));
+        $this->_logger->info('Donation ' . __FUNCTION__.' IPN: ' . print_r($this->_ipnMessage, true) . ' Status: ' . $this->_ipnMessage->getStatus());
         switch ($this->_ipnMessage->getStatus()) {
-            case 'Completed':
+            case 'COMPLETED':
                 $this->_statusCompleted();
                 break;
             /*case 'Denied':
