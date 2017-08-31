@@ -25,7 +25,7 @@ if ($this->error) {
 } else {
     ?>
     <div style="text-align: center;">
-        <form action="<?= $this->form_endpoint ?>" method="post" target="_top">
+        <form action="<?= $this->form_endpoint ?>" method="post" target="_top" id="payform">
             <input type="hidden" name="cmd" value="_donations">
             <!--<input type="hidden" name="business" value="paypal@opendesktop.org">-->
             <input type="hidden" name="business" value="<?= $this->form_merchant ?>">
@@ -41,7 +41,7 @@ if ($this->error) {
             <input type="hidden" name="cancel_return" value="<?= $this->form_return_url_cancel ?>">
             <input type="hidden" name="notify_url" value="<?= $this->form_ipn_endpoint ?>">
             <input type="hidden" name="bn" value="PP-DonationsBF:btn_donate_LG.gif:NonHosted">
-            <input type="hidden" name="ocs-ts-id" value="<?= $this->transaction_id ?>">
+            <input type="hidden" name="custom" value="<?= $this->transaction_id ?>">
             <input type="hidden" name="amount" value="<?= $this->amount ?>">
             
             <div class="Actions">
@@ -52,7 +52,7 @@ if ($this->error) {
     </div>
     <script>
         //var dgFlow = new PAYPAL.apps.DGFlow({trigger: 'submitBtn'});
-        document.getElementById("submitBtn").submit();
+        document.getElementById("payform").submit();
         //document.location.href = "<?= $this->checkoutEndpoint ?>?cmd=_ap-payment&paykey=<?= $this->paymentKey ?>";
     </script>
 <?php } ?>

@@ -27,9 +27,7 @@ if ($this->error) {
     <div style="text-align: center;">
         <form action="<?= $this->form_endpoint ?>" method="post" target="_top">
             <input type="hidden" name="cmd" value="_donations">
-            <!--<input type="hidden" name="business" value="paypal@opendesktop.org">-->
             <input type="hidden" name="business" value="<?= $this->form_merchant ?>">
-
             <input type="hidden" name="lc" value="US">
             <input type="hidden" name="item_name" value="opendesktop.org">
             <input type="hidden" name="item_number" value="1">
@@ -41,7 +39,7 @@ if ($this->error) {
             <input type="hidden" name="cancel_return" value="<?= $this->form_return_url_cancel ?>">
             <input type="hidden" name="notify_url" value="<?= $this->form_ipn_endpoint ?>">
             <input type="hidden" name="bn" value="PP-DonationsBF:btn_donate_LG.gif:NonHosted">
-            <input type="hidden" name="ocs-ts-id" value="<?= $this->transaction_id ?>">
+            <input type="hidden" name="custom" value="<?= $this->transaction_id ?>">
             <input type="hidden" name="amount" value="<?= $this->amount ?>">
             
             <div class="Actions">
