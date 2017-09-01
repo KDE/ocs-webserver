@@ -98,7 +98,7 @@ class DonateController extends Local_Controller_Action_DomainSwitch
         $form_url = $config->third_party->paypal->form->endpoint . '/cgi-bin/webscr';
         $ipn_endpoint =  'http://'.$httpHost.'/gateway/paypal';
         $return_url_success =  'http://'.$httpHost.'/donate/paymentok';
-        $return_url_cancel =   'http://'.$httpHost.'/donate/paymentcanel';
+        $return_url_cancel =   'http://'.$httpHost.'/donate/paymentcancel';
         $merchantid = $config->third_party->paypal->merchantid;
         
         $this->view->form_endpoint = $form_url;

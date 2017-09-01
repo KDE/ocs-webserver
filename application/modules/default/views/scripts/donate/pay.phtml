@@ -25,6 +25,8 @@ if ($this->error) {
 } else {
     ?>
     <div style="text-align: center;">
+        <h3>Please wait. We will redirect you to PayPal. </h3>
+        <p>Or press the Donate button:</p>
         <form action="<?= $this->form_endpoint ?>" method="post" target="_top" id="payform">
             <input type="hidden" name="cmd" value="_donations">
             <!--<input type="hidden" name="business" value="paypal@opendesktop.org">-->
