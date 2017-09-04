@@ -1299,18 +1299,35 @@ ul.meta-nav-top
         .explore-product-details {
           padding-left: 20px;
           
-          h3 {
-           
+          h3 {           
             font-size: 24px;            
             font-weight: bold;
             color: #2673b0;
             span.version
             {
               font-size: smaller; 
-              padding-left: 20px;
+              padding-left: 20px
             }
           }
-         
+          .title{
+            display: block;
+            margin-bottom: 8px;
+            .username{
+                padding-left: 20px;
+            }
+          }
+          .description{
+            display: block;
+            margin-bottom: 8px;
+          }
+          .packagetypes{
+            display: block;
+            float: left;
+            .packagetypeos{
+              width: 100px;
+              float: left;
+            }
+          }
           .productInfo
           {
             clear: left;
@@ -2607,6 +2624,7 @@ span.page-views {
               position: absolute;
               top: 1em;
               left: 1em;
+              display:inline-block;
               .border_radius(999px);
 
               img {
@@ -2614,6 +2632,18 @@ span.page-views {
                 height: 100%;
                 .border_radius(999px);
               }
+            }
+
+            .supporter-badge{
+                position: absolute;
+                right: 0px;
+                bottom: 0px;
+                background: blue;
+                text-align: center;
+                border-radius: 30px 30px 30px 30px;
+                color: #fff;
+                padding: 5px 10px;
+                font-size: 16px;
             }
 
             h1 {
@@ -5342,6 +5372,10 @@ main#plings-page{
         background-color: #eef; 
       }
       
+     .depth1 {
+           padding-left: 0px;
+      }
+
     .depth1 {
            padding-left: 20px;
       }
@@ -5494,11 +5528,7 @@ main#plings-page{
              
         }
       
-        .packagetypeos
-        {
-          width: 100px;
-          float: left;
-        }
+        
         .explore-product-image{
            
            /*

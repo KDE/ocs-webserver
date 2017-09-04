@@ -95,6 +95,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
             $this->view->comments = $paginationComments;
         }
 
+        $donationinfo = $tableMember->fetchSupporterDonationInfo($this->_memberId);       
 
         $stat = array();
         $stat['cntProducts'] = count($this->view->userProducts);
@@ -105,9 +106,16 @@ class UserController extends Local_Controller_Action_DomainSwitch
         }
         $stat['cntPageviews'] = $cntpv;
 
-        $cntmb = $tableMember->fetchCntSupporters($this->_memberId);
-        $stat['cntSupporters'] = $cntmb;
+      //  $cntmb = $tableMember->fetchCntSupporters($this->_memberId);
+       // $stat['cntSupporters'] = $cntmb;
         $stat['userLastActiveTime'] = $tableMember->fetchLastActiveTime($this->_memberId);
+
+        if($donationinfo){
+            $stat['donationIssupporter'] = $donationinfo['issupporter'];            
+            $stat['donationMax'] = $donationinfo['active_time_max'];
+            $stat['donationMin'] = $donationinfo['active_time_min'];
+            $stat['donationCnt'] = $donationinfo['cnt'];
+        }
 
         $this->view->stat = $stat;
     }

@@ -32,7 +32,7 @@ $helperImage = new Default_View_Helper_Image();
 $helperPrintDate = new Default_View_Helper_PrintDate();
 $textCountryCity = $this->member->city;
 $textCountryCity .= $this->member->country ? ', ' . $this->member->country : '';
-
+$isSupporter = $this->stat['donationIssupporter'];
 ?>
     <main class="about-me-page">
 
@@ -52,6 +52,8 @@ $textCountryCity .= $this->member->country ? ', ' . $this->member->country : '';
                         <article class="well" style="width: 100%;">
                             <div class="about-title">
                                 <figure class="relative inline profile-image-container">
+                                    <?php if( $isSupporter) { ?><span class="supporter-badge">S</span>                                                  
+                                    <?php }?>
                                     <img src="<?php echo $helperImage->Image($this->member->profile_image_url,array('width' => 110, 'height' => 110, 'crop' => 2)); ?>"
                                          alt="profile-image"
                                          width="110"
@@ -85,11 +87,25 @@ $textCountryCity .= $this->member->country ? ', ' . $this->member->country : '';
                                      <div class="row">
                                        <span class="cnt"><?=$this->stat['cntPageviews']?> </span> Pageviews
                                     </div>
-                                     <div class="row">
-                                       <span class="cnt"><?=$this->stat['cntSupporters']?> </span> Supporters
+                                  <?php 
+                                      if($this->stat['donationMax'] !=null && !$isSupporter){ // inactive supporter
+                                  ?>
+                                   <div class="row">
+                                     <span class="cnt">Inactive supporter since : <?=$helperPrintDate->printDate($this->stat['donationMin'])?> </span> 
+                                  </div>
+                                  <?php } ?>
+
+                                    <?php 
+                                        if($isSupporter){
+                                    ?>                                     
+                                     <div class="row">                                     
+                                       <span>First Donation : <?=$helperPrintDate->printDate($this->stat['donationMin'])?> </span> 
                                     </div>
-                                     <div class="row">
-                                     
+                                      <div class="row">                                     
+                                       <span>Last Donation : <?=$helperPrintDate->printDate($this->stat['donationMax'])?> </span> 
+                                    </div>                                     
+                                    <?php } ?>
+                                     <div class="row">                                     
                                        <span class="">Last time active : <?=$helperPrintDate->printDate($this->stat['userLastActiveTime'])?> </span> 
                                     </div>
                                      <div class="row">                                                                            
