@@ -73,110 +73,111 @@ form .SelectionGroup li label {
                     </p>
                     <p>Please help us to support the creators and keep the platform growing.</p>
                     
+                    <div class="tabs donation-widget ">
                     
-                    <form class="donation-form" novalidate="novalidate" id="new_donation" action="/donation" accept-charset="UTF-8" data-remote="true" method="post">
-                    
-					      <input type="hidden" id="currency-symbol" value="$">
-					
-					      <div class="tabs-header non-selectable basic-color-background">
-					        <div class="header-content">
-					          <span class="display-amount">
-					            <span class="step-1 active">Choose amount</span>
-					          </span>
-					        </div>
-					      </div>
-					
-					      <div class="tabs-content">
-					        <div class="content step-1 active" id="donor-form-step-1"> 
-					          <ul class="suggested-amounts less-margin">
-					              <li class="amount-item">
-					                <label class="mdl-radio mdl-js-radio is-upgraded" for="sam-0" data-upgraded=",MaterialRadio">
-					                    <input class="suggested-amount mdl-radio__button" id="sam-0" type="radio" value="50" name="donation[suggested_amount]">
-					                  <span class="mdl-radio__label">
-					                    <span class="item-text">
-					                      <span class="unit-wrapper">
-					                        <span class="unit">$</span>
-					                      </span>
-					                      <span class="amount">50</span>
-					                      <span class="desc">buys a protective visor for a deminer </span>
-					                    </span>
-					                  </span>
-					                <span class="mdl-radio__outer-circle"></span><span class="mdl-radio__inner-circle"></span></label>
-					              </li>
-					              <li class="amount-item">
-					                <label class="mdl-radio mdl-js-radio is-upgraded" for="sam-1" data-upgraded=",MaterialRadio">
-					                    <input class="suggested-amount mdl-radio__button" id="sam-1" type="radio" value="100" name="donation[suggested_amount]">
-					                  <span class="mdl-radio__label">
-					                    <span class="item-text">
-					                      <span class="unit-wrapper">
-					                        <span class="unit">$</span>
-					                      </span>
-					                      <span class="amount">100</span>
-					                      <span class="desc">buys the tools needed to safely dig up landmines</span>
-					                    </span>
-					                  </span>
-					                <span class="mdl-radio__outer-circle"></span><span class="mdl-radio__inner-circle"></span></label>
-					              </li>
-					              <li class="amount-item">
-					                <label class="mdl-radio mdl-js-radio is-upgraded" for="sam-2" data-upgraded=",MaterialRadio">
-					                    <input class="suggested-amount mdl-radio__button" id="sam-2" type="radio" value="500 " name="donation[suggested_amount]">
-					                  <span class="mdl-radio__label">
-					                    <span class="item-text">
-					                      <span class="unit-wrapper">
-					                        <span class="unit">$</span>
-					                      </span>
-					                      <span class="amount">500 </span>
-					                      <span class="desc">clears 5,000 square feet of minefield</span>
-					                    </span>
-					                  </span>
-					                <span class="mdl-radio__outer-circle"></span><span class="mdl-radio__inner-circle"></span></label>
-					              </li>
-					              <li class="amount-item">
-					                <label class="mdl-radio mdl-js-radio is-upgraded" for="custom_amount_item" data-upgraded=",MaterialRadio">
-					                  <input class="suggested-amount mdl-radio__button" id="custom_amount_item" type="radio" value="0" name="donation[suggested_amount]">
-					                  <span class="mdl-radio__label">
-					                    <span class="item-text">
-					                      <span class="unit-wrapper">
-					                        <span class="unit">$</span>
-					                      </span>
-					                      <span class="amount">
-					                        <input id="custom_amount" min="0" step="any" inputmode="numeric" type="number" name="donation[custom_amount]">
-					                      </span>
-					                      <span class="desc">Enter free amount</span>
-					                    </span>
-					                  </span>
-					                <span class="mdl-radio__outer-circle"></span><span class="mdl-radio__inner-circle"></span></label>
-					              </li>
-					          </ul>
-					
-					            <div class="mdl-grid "><div class="mdl-cell mdl-cell--12-col"><div class="mdl-select-field mdl-select-designation "><input type="hidden" name="donation[designation]" id="donation_designation" value="Area of greatest need"><div class="field-content mdl-js-button mdl-js-ripple-effect" data-upgraded=",MaterialButton,MaterialRipple"><input class="mdl-selected" type="text"><span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></div><span class="hint">Where would you like this donation spent?</span><div class="mdl-menu__container is-upgraded"><div class="mdl-menu__outline"></div><ul class="mdl-select-menu mdl-js-menu mdl-js-ripple-effect mdl-js-ripple-effect--ignore-events" data-upgraded=",MaterialMenu,MaterialRipple"><li value="Area of greatest need" class="mdl-menu__item mdl-js-ripple-effect" style="" data-selected="true" tabindex="-1" data-upgraded=",MaterialRipple">Bedürftigstes Gebiet<span class="mdl-menu__item-ripple-container"><span class="mdl-ripple"></span></span></li><li value="Nagorno Karabakh" class="mdl-menu__item mdl-js-ripple-effect" style="" tabindex="-1" data-upgraded=",MaterialRipple">Nagorno Karabakh<span class="mdl-menu__item-ripple-container"><span class="mdl-ripple"></span></span></li><li value="Baptism Site" class="mdl-menu__item mdl-js-ripple-effect" style="" tabindex="-1" data-upgraded=",MaterialRipple">Baptism Site<span class="mdl-menu__item-ripple-container"><span class="mdl-ripple"></span></span></li></ul></div></div></div></div>
-					
-					
-					          
-					          <div class="mdl-grid custom-dropdown"><div class="mdl-cell mdl-cell--12-col"><input type="hidden" value="32945" name="donation[donation_additional_questions_attributes][1][form_additional_question_id]" id="donation_donation_additional_questions_attributes_1_form_additional_question_id"><div class="mdl-select-field mdl-select-dropdown "><input type="hidden" name="donation[donation_additional_questions_attributes][1][question_value]" id="donation_donation_additional_questions_attributes_1_question_value" value="no"><div class="field-content mdl-js-button mdl-js-ripple-effect" data-upgraded=",MaterialButton,MaterialRipple"><input class="mdl-selected" type="text"><span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></div><span class="hint">Is this gift in honor or in memory of someone?</span><div class="mdl-menu__container is-upgraded"><div class="mdl-menu__outline"></div><ul class="mdl-select-menu mdl-js-menu mdl-js-ripple-effect mdl-js-ripple-effect--ignore-events" data-upgraded=",MaterialMenu,MaterialRipple"><li value="no" class="mdl-menu__item mdl-js-ripple-effect" style="" data-selected="true" tabindex="-1" data-upgraded=",MaterialRipple">no<span class="mdl-menu__item-ripple-container"><span class="mdl-ripple"></span></span></li><li value="yes, in honor of" class="mdl-menu__item mdl-js-ripple-effect" style="" tabindex="-1" data-upgraded=",MaterialRipple">yes, in honor of<span class="mdl-menu__item-ripple-container"><span class="mdl-ripple"></span></span></li><li value="yes, in memory of" class="mdl-menu__item mdl-js-ripple-effect" style="" tabindex="-1" data-upgraded=",MaterialRipple">yes, in memory of<span class="mdl-menu__item-ripple-container"><span class="mdl-ripple"></span></span></li></ul></div></div></div></div><div class="mdl-grid custom-text"><div class="mdl-cell mdl-cell--12-col"><input type="hidden" value="32946" name="donation[donation_additional_questions_attributes][2][form_additional_question_id]" id="donation_donation_additional_questions_attributes_2_form_additional_question_id"><div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-item is-upgraded" data-upgraded=",MaterialTextfield"><input class="mdl-textfield__input" type="text" name="donation[donation_additional_questions_attributes][2][question_value]" id="donation_donation_additional_questions_attributes_2_question_value"><label class="mdl-textfield__label" for="donation_donation_additional_questions_attributes_2_question_value">If yes, who is it in honor or memory of?</label></div></div></div><div class="mdl-grid custom-text"><div class="mdl-cell mdl-cell--12-col"><input type="hidden" value="32947" name="donation[donation_additional_questions_attributes][3][form_additional_question_id]" id="donation_donation_additional_questions_attributes_3_form_additional_question_id"><div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-item is-upgraded" data-upgraded=",MaterialTextfield"><input class="mdl-textfield__input" type="text" name="donation[donation_additional_questions_attributes][3][question_value]" id="donation_donation_additional_questions_attributes_3_question_value"><label class="mdl-textfield__label" for="donation_donation_additional_questions_attributes_3_question_value">Acknowledge gift to (name w/email or postal address)</label></div></div></div>
-					
-					            <div class="mdl-grid "><div class="mdl-cell mdl-cell--12-col">
-					              <div class="mdl-btn-group active-basic-color-background">
-					                  <div value="" style="" class="active">One time</div>
-					                  <div value="true" style="">Yearly</div>
-					              </div>
-					
-					              <input type="hidden" name="recurring" id="recurring" value="">
-									</div></div>            <div class="mdl-grid "><div class="mdl-cell mdl-cell--12-col"><div class="recurring msg" style="visibility: hidden;"> Sie können sich jederzeit anmelden und den Zahlungsmodus ändern</div></div></div>
-					
-					        </div> 
-					      <div class="tabs-footer">
-					        <button type="button" class="dw-btn mdl-button mdl-js-button mdl-js-ripple-effect step-3 basic-color-background" data-upgraded=",MaterialButton,MaterialRipple">
-					          <span class="donate" id="linkButton">
-					            <i class="material-icons"></i>
-					            <span class="amount">
-					              <span isolate="">Support</span> $<span id="donation-amt"></span>
-					              <span id="donation-recurring"></span>
-					            </span>
-					          </span>
-					      </div>
-					</form>
-                    
+	                    <form class="donation-form" novalidate="novalidate" id="new_donation" action="/donation" accept-charset="UTF-8" data-remote="true" method="post">
+	                    
+						      <input type="hidden" id="currency-symbol" value="$">
+						
+						      <div class="tabs-header non-selectable basic-color-background">
+						        <div class="header-content">
+						          <span class="display-amount">
+						            <span class="step-1 active">Choose amount</span>
+						          </span>
+						        </div>
+						      </div>
+						
+						      <div class="tabs-content">
+						        <div class="content step-1 active" id="donor-form-step-1"> 
+						          <ul class="suggested-amounts less-margin">
+						              <li class="amount-item">
+						                <label class="mdl-radio mdl-js-radio is-upgraded" for="sam-0" data-upgraded=",MaterialRadio">
+						                    <input class="suggested-amount mdl-radio__button" id="sam-0" type="radio" value="50" name="donation[suggested_amount]">
+						                  <span class="mdl-radio__label">
+						                    <span class="item-text">
+						                      <span class="unit-wrapper">
+						                        <span class="unit">$</span>
+						                      </span>
+						                      <span class="amount">50</span>
+						                      <span class="desc">buys a protective visor for a deminer </span>
+						                    </span>
+						                  </span>
+						                <span class="mdl-radio__outer-circle"></span><span class="mdl-radio__inner-circle"></span></label>
+						              </li>
+						              <li class="amount-item">
+						                <label class="mdl-radio mdl-js-radio is-upgraded" for="sam-1" data-upgraded=",MaterialRadio">
+						                    <input class="suggested-amount mdl-radio__button" id="sam-1" type="radio" value="100" name="donation[suggested_amount]">
+						                  <span class="mdl-radio__label">
+						                    <span class="item-text">
+						                      <span class="unit-wrapper">
+						                        <span class="unit">$</span>
+						                      </span>
+						                      <span class="amount">100</span>
+						                      <span class="desc">buys the tools needed to safely dig up landmines</span>
+						                    </span>
+						                  </span>
+						                <span class="mdl-radio__outer-circle"></span><span class="mdl-radio__inner-circle"></span></label>
+						              </li>
+						              <li class="amount-item">
+						                <label class="mdl-radio mdl-js-radio is-upgraded" for="sam-2" data-upgraded=",MaterialRadio">
+						                    <input class="suggested-amount mdl-radio__button" id="sam-2" type="radio" value="500 " name="donation[suggested_amount]">
+						                  <span class="mdl-radio__label">
+						                    <span class="item-text">
+						                      <span class="unit-wrapper">
+						                        <span class="unit">$</span>
+						                      </span>
+						                      <span class="amount">500 </span>
+						                      <span class="desc">clears 5,000 square feet of minefield</span>
+						                    </span>
+						                  </span>
+						                <span class="mdl-radio__outer-circle"></span><span class="mdl-radio__inner-circle"></span></label>
+						              </li>
+						              <li class="amount-item">
+						                <label class="mdl-radio mdl-js-radio is-upgraded" for="custom_amount_item" data-upgraded=",MaterialRadio">
+						                  <input class="suggested-amount mdl-radio__button" id="custom_amount_item" type="radio" value="0" name="donation[suggested_amount]">
+						                  <span class="mdl-radio__label">
+						                    <span class="item-text">
+						                      <span class="unit-wrapper">
+						                        <span class="unit">$</span>
+						                      </span>
+						                      <span class="amount">
+						                        <input id="custom_amount" min="0" step="any" inputmode="numeric" type="number" name="donation[custom_amount]">
+						                      </span>
+						                      <span class="desc">Enter free amount</span>
+						                    </span>
+						                  </span>
+						                <span class="mdl-radio__outer-circle"></span><span class="mdl-radio__inner-circle"></span></label>
+						              </li>
+						          </ul>
+						
+						            <div class="mdl-grid "><div class="mdl-cell mdl-cell--12-col"><div class="mdl-select-field mdl-select-designation "><input type="hidden" name="donation[designation]" id="donation_designation" value="Area of greatest need"><div class="field-content mdl-js-button mdl-js-ripple-effect" data-upgraded=",MaterialButton,MaterialRipple"><input class="mdl-selected" type="text"><span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></div><span class="hint">Where would you like this donation spent?</span><div class="mdl-menu__container is-upgraded"><div class="mdl-menu__outline"></div><ul class="mdl-select-menu mdl-js-menu mdl-js-ripple-effect mdl-js-ripple-effect--ignore-events" data-upgraded=",MaterialMenu,MaterialRipple"><li value="Area of greatest need" class="mdl-menu__item mdl-js-ripple-effect" style="" data-selected="true" tabindex="-1" data-upgraded=",MaterialRipple">Bedürftigstes Gebiet<span class="mdl-menu__item-ripple-container"><span class="mdl-ripple"></span></span></li><li value="Nagorno Karabakh" class="mdl-menu__item mdl-js-ripple-effect" style="" tabindex="-1" data-upgraded=",MaterialRipple">Nagorno Karabakh<span class="mdl-menu__item-ripple-container"><span class="mdl-ripple"></span></span></li><li value="Baptism Site" class="mdl-menu__item mdl-js-ripple-effect" style="" tabindex="-1" data-upgraded=",MaterialRipple">Baptism Site<span class="mdl-menu__item-ripple-container"><span class="mdl-ripple"></span></span></li></ul></div></div></div></div>
+						
+						
+						          
+						          <div class="mdl-grid custom-dropdown"><div class="mdl-cell mdl-cell--12-col"><input type="hidden" value="32945" name="donation[donation_additional_questions_attributes][1][form_additional_question_id]" id="donation_donation_additional_questions_attributes_1_form_additional_question_id"><div class="mdl-select-field mdl-select-dropdown "><input type="hidden" name="donation[donation_additional_questions_attributes][1][question_value]" id="donation_donation_additional_questions_attributes_1_question_value" value="no"><div class="field-content mdl-js-button mdl-js-ripple-effect" data-upgraded=",MaterialButton,MaterialRipple"><input class="mdl-selected" type="text"><span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></div><span class="hint">Is this gift in honor or in memory of someone?</span><div class="mdl-menu__container is-upgraded"><div class="mdl-menu__outline"></div><ul class="mdl-select-menu mdl-js-menu mdl-js-ripple-effect mdl-js-ripple-effect--ignore-events" data-upgraded=",MaterialMenu,MaterialRipple"><li value="no" class="mdl-menu__item mdl-js-ripple-effect" style="" data-selected="true" tabindex="-1" data-upgraded=",MaterialRipple">no<span class="mdl-menu__item-ripple-container"><span class="mdl-ripple"></span></span></li><li value="yes, in honor of" class="mdl-menu__item mdl-js-ripple-effect" style="" tabindex="-1" data-upgraded=",MaterialRipple">yes, in honor of<span class="mdl-menu__item-ripple-container"><span class="mdl-ripple"></span></span></li><li value="yes, in memory of" class="mdl-menu__item mdl-js-ripple-effect" style="" tabindex="-1" data-upgraded=",MaterialRipple">yes, in memory of<span class="mdl-menu__item-ripple-container"><span class="mdl-ripple"></span></span></li></ul></div></div></div></div><div class="mdl-grid custom-text"><div class="mdl-cell mdl-cell--12-col"><input type="hidden" value="32946" name="donation[donation_additional_questions_attributes][2][form_additional_question_id]" id="donation_donation_additional_questions_attributes_2_form_additional_question_id"><div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-item is-upgraded" data-upgraded=",MaterialTextfield"><input class="mdl-textfield__input" type="text" name="donation[donation_additional_questions_attributes][2][question_value]" id="donation_donation_additional_questions_attributes_2_question_value"><label class="mdl-textfield__label" for="donation_donation_additional_questions_attributes_2_question_value">If yes, who is it in honor or memory of?</label></div></div></div><div class="mdl-grid custom-text"><div class="mdl-cell mdl-cell--12-col"><input type="hidden" value="32947" name="donation[donation_additional_questions_attributes][3][form_additional_question_id]" id="donation_donation_additional_questions_attributes_3_form_additional_question_id"><div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-item is-upgraded" data-upgraded=",MaterialTextfield"><input class="mdl-textfield__input" type="text" name="donation[donation_additional_questions_attributes][3][question_value]" id="donation_donation_additional_questions_attributes_3_question_value"><label class="mdl-textfield__label" for="donation_donation_additional_questions_attributes_3_question_value">Acknowledge gift to (name w/email or postal address)</label></div></div></div>
+						
+						            <div class="mdl-grid "><div class="mdl-cell mdl-cell--12-col">
+						              <div class="mdl-btn-group active-basic-color-background">
+						                  <div value="" style="" class="active">One time</div>
+						                  <div value="true" style="">Yearly</div>
+						              </div>
+						
+						              <input type="hidden" name="recurring" id="recurring" value="">
+										</div></div>            <div class="mdl-grid "><div class="mdl-cell mdl-cell--12-col"><div class="recurring msg" style="visibility: hidden;"> Sie können sich jederzeit anmelden und den Zahlungsmodus ändern</div></div></div>
+						
+						        </div> 
+						      <div class="tabs-footer">
+						        <button type="button" class="dw-btn mdl-button mdl-js-button mdl-js-ripple-effect step-3 basic-color-background" data-upgraded=",MaterialButton,MaterialRipple">
+						          <span class="donate" id="linkButton">
+						            <i class="material-icons"></i>
+						            <span class="amount">
+						              <span isolate="">Support</span> $<span id="donation-amt"></span>
+						              <span id="donation-recurring"></span>
+						            </span>
+						          </span>
+						      </div>
+						</form>
+                    </div>
                     
                     <form id="Form_DonationProceed" action="/donate/pay" method="post" enctype="application/x-www-form-urlencoded">
                         <p id="Form_DonationProceed_error" class="message " style="display: none"></p>
