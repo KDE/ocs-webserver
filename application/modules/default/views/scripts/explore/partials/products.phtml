@@ -28,6 +28,7 @@ $this->rownum = (1 + (($this->page - 1) * 10));
 foreach ($this->products as $this->product) {
     $updateTime = $helperPrintDate->printDate($this->product->project_changed_at);
 
+
 ?>
 <div class="explore-product col-lg-12 col-md-12 col-sm-12 col-xs-12">
     <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
@@ -50,12 +51,20 @@ foreach ($this->products as $this->product) {
               	$version = Default_Model_HtmlPurify::purify($this->product->version);
               	$product_title = Default_Model_HtmlPurify::purify($this->product->title);
            	?>
-            <a href="<?= $helperBuildProductUrl->buildProductUrl($this->product->project_id, ''); ?>"><?= $product_title ?> <span style="font-size: smaller; padding-left: 20px"><?= $version ?> </span></a>
+            <a href="<?= $helperBuildProductUrl->buildProductUrl($this->product->project_id, ''); ?>"><?= $product_title ?> 
+            <span class="version"><?= $version ?> </span></a>
         </h3>
        
-        <b style="display: block; margin-bottom: 5px"><?php echo $this->product->cat_title?></b>
-        <b style="display: block; margin-bottom: 5px" class="small">by <a href="<?php echo $this->buildMemberUrl($this->product->member_id)?>"><?php echo $this->product->username?></a></b>
-        <div style="display: block; float: left">
+       <div class="title">
+        <b><?php echo $this->product->cat_title?></b>
+        <b class="username small">by <a href="<?php echo $this->buildMemberUrl($this->product->member_id)?>"><?php echo $this->   product->username?></a></b>
+        </div>
+
+        <?php if ($this->product->cat_show_description==1){ ?>
+        <div class="description" style=""><?php echo $this->truncate($this->product->description, 300)?></div>
+        <?php }?>
+
+        <div class="packagetypes" >
          <?php
          if (false === empty($this->product->package_names)) {
              $list_packages = explode(',', $this->product->package_names);
