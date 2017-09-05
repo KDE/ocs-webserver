@@ -102,8 +102,15 @@ $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountP
                        <?php                       
                         if($this->product->member_id == $comment['member_id']){
                        ?>
-                       <span class="creator-badge" >C</span> 
+                       <span class="creator-badge-<?=($elementComment['level']>1?2:1)?>" >C</span> 
                        <?php }?>
+
+                       <?php                       
+                        if($comment['issupporter']){
+                       ?>
+                       <span class="supporter-badge-<?=($elementComment['level']>1?2:1)?>" >S</span> 
+                       <?php }?>
+
                         <img src="<?= $helperImage->Image($comment['profile_image_url'], array('width' => 60, 'height' => 60)) ?>" class="img<?=$elementComment['level']?>">
                         </div>
                     </a>

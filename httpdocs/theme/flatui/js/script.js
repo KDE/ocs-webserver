@@ -534,6 +534,35 @@ var AboutContent = (function () {
 
 })();
 
+
+var PlinglistContent = (function () {
+    return {
+        setup: function () {
+             $('#plingList').on('click', function(){
+                    $.fancybox({
+                          'hideOnContentClick':           true,                                                           
+                          'autoScale'                     : true,                                                   
+                          'cyclic'                        : 'true',
+                          'transitionIn'                  : 'elastic',
+                          'transitionOut'                 : 'elastic',
+                          'type'        : 'iframe',
+                          'scrolling'   : 'no',
+                          helpers: { 
+                                overlay: { 
+                                    locked: false 
+                                } 
+                            },
+                        autoSize: true,
+                        href: '/plings',
+                        type: 'ajax'
+                    });
+                });
+        }
+    }
+
+})();
+
+
 /** PRODUCT PAGE **/
 
     // embed code expend collapse
