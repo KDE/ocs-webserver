@@ -21,113 +21,46 @@
  **/
 ?>
 <?= $this->partial('yui.phtml'); ?>
+<style type="text/css">
+  table.tablestati{
+    display: block;  
+    background-color: #ccc;  
+    clear: both;
+    margin-top:40px;
+  }
+
+  table.tablestati thead td{
+    font-weight: bold;
+    background-color: #fff;
+  }
+  table.tablestati td{
+        padding:1px;
+        margin: 1px;
+    }
+table.tablestati td.number{
+      text-align: right;
+      width: 80px;
+      padding-right: 10px;
+  }
+</style>
+
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
 <script src="https://d3js.org/d3.v4.min.js"></script>
-<script type="text/javascript">
-/*
-    $(document).ready(function () {
-
-        $("body").addClass("yui-skin-sam");
-
-        YAHOO.widget.Chart.SWFURL = "/tools/yui_2.9.0/build/charts/assets/charts.swf";
-
-        var dashboardTabView = new YAHOO.widget.TabView();
-
-        
-
-        dashboardTabView.addTab(new YAHOO.widget.Tab({
-            label: 'New Members',
-            content: '<div class="chart" id="newmemberchart"></div>',   
-             active: true         
-        }));
-
-        dashboardTabView.addTab(new YAHOO.widget.Tab({
-            label: 'New Products',
-            content: '<div class="chart" id="newprojects"></div>'
-        }));
-
-        dashboardTabView.appendTo('tabContainer');
-
-
-        // source for memberChart
-        var newmemberDataSource = new YAHOO.util.XHRDataSource("/backend/index/getnewmemberstats");
-        newmemberDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
-        newmemberDataSource.responseSchema = {
-            fields: ['memberdate', 'daycount'],
-            resultsList: 'results'
-            // metaFields: {totalRecords: "totalRecords" }
-        };
-
-        var memberSeriesDef = [
-            {displayName: "Members", yField: "daycount"}
-        ];
-
-        YAHOO.pling.getMemberDataTipText = function (item, index, series) {
-            var toolTipText = item[series.yField] + " new Members at";
-            toolTipText += "\n" + item.memberdate;
-            return toolTipText;
-        }
-
-        var amountYAxis = new YAHOO.widget.NumericAxis();
-        amountYAxis.majorUnit = 2;
-
-        var newMemberChart = new YAHOO.widget.LineChart('newmemberchart', newmemberDataSource, {
-            xField: 'memberdate',
-            series: memberSeriesDef,
-            dataTipFunction: YAHOO.pling.getMemberDataTipText,
-            yAxis: amountYAxis,
-            wmode: 'opaque'
-        });
-
-        //***************************************************************************************************
-
-        // source for projectCharts
-        var newprojectDataSource = new YAHOO.util.XHRDataSource("/backend/index/getnewprojectstats");
-        newprojectDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
-        newprojectDataSource.responseSchema = {
-            fields: ['projectdate', 'daycount'],
-            resultsList: 'results'
-            // metaFields: {totalRecords: "totalRecords" }
-        };
-
-        var projectSeriesDef = [
-            {displayName: "Products", yField: "daycount"}
-        ];
-
-        YAHOO.pling.getProjectDataTipText = function (item, index, series) {
-            var toolTipText = item[series.yField] + " new Products at";
-            toolTipText += "\n" + item.projectdate;
-            return toolTipText;
-        }
-
-
-        var newProjectChart = new YAHOO.widget.LineChart('newprojects', newprojectDataSource, {
-            xField: 'projectdate',
-            series: projectSeriesDef,
-            dataTipFunction: YAHOO.pling.getProjectDataTipText,
-            yAxis: amountYAxis,
-            wmode: 'opaque'
-        });
-
-
-    });*/
-</script>
-<div id="tabContainer">
-
-</div>
-
+<script src="/theme/flatui/js/lib/d3pie.min.js"></script>
 
 <div class="pling-nav-tabs">
 <ul class="nav nav-tabs ">
- <li class="active"><a href="#d3-line" data-toggle="tab">New Members & Projects Line</a></li>
- <li ><a href="#d3-bar" data-toggle="tab">New Members & Projects Chart</a></li> 
+ <li class="active"><a class="newuserprojectTab" href="#d3-line" data-toggle="tab">New Members & Projects </a></li>
+ <li ><a class="payoutTab" href="#payoutTab" data-toggle="tab">Payout</a></li> 
+ <li ><a class="payoutNewcomerTab" href="#payoutNewcomerTab" data-toggle="tab">Payout Newcomer</a></li> 
+ <li ><a class="payoutNewloserTab" href="#payoutNewloserTab" data-toggle="tab">Payout Newloser</a></li> 
+<li ><a class="payoutMonthDiffTab" href="#payoutMonthDiffTab" data-toggle="tab">Payout  Month Diff</a></li> 
+
+<li ><a class="payoutCategoryMonthlyTab" href="#payoutCategoryMonthlyTab" data-toggle="tab">Payout  Category monthly</a></li> 
+
+
 </ul>
 <div class="tab-content row"  >
-  
-   <div id="d3-bar" class="tab-pane ">
-    comming soon...
-  </div>
-
    <div id="d3-line" class="tab-pane active ">
     <div style="width: 100%; padding: 20px">
         
@@ -136,187 +69,141 @@
     </div>
   </div>
 
+   <div id="payoutTab" class="tab-pane ">
+        
+        <div id="payoutyear" style="display: block; float: left; padding-right: 20px"></div>        
+        <div id="pie" style="padding:50px; "></div>
+        <div style="display: block; float: right; width: 300px" id="detailContainer"></div>        
+
+  </div>
+
+  <div id="payoutNewcomerTab" class="tab-pane">       
+        <div id="payoutNewcomerTabContainer"></div>
+  </div>
+
+  <div id="payoutNewloserTab" class="tab-pane">        
+        <div id="payoutNewloserTabContainer"></div>
+  </div>
+
+  <div id="payoutMonthDiffTab" class="tab-pane">       
+        <div id="payoutMonthDiffTabContainer"></div>
+  </div>
+
+  <div id = "payoutCategoryMonthlyTab" class="tab-pane">
+        <div id="pieCategoryMonthly" style="padding:50px; "></div>        
+  </div>
+
 </div>
 </div> <!--end of tab-->
 
 
 
-<script>
+<script type="text/javascript">
+              
+              function createMonthFilter(selectid,triggerEvent){
+                  let html = '<select id="'+selectid+'" style="float: left;">';       
+                  for(i = 1; i<5; i++){
+                    let oneMonthsAgo = moment().subtract(i, 'months');
+                    if(i==1){
+                          html = html +'<option selected>'+oneMonthsAgo.format('YYYYMM')+'</option>';    
+                    }else{
+                          html = html +'<option>'+oneMonthsAgo.format('YYYYMM')+'</option>';
+                    }
+                  }                          
+                  html = html +'</select>';                                                    
+                  return html;
+              }
+             
 
-var parseTime = d3.timeParse("%Y-%m-%d");
-var svgLine = d3.select("#d3linelableinline")
-    .append("svg")
-    .attr("width", 1200)
-    .attr("height", 600);
-
-var marginLine = {top: 30, right: 50, bottom: 30, left: 30},
-    widthLine = +svgLine.attr("width") - marginLine.left - marginLine.right,
-    heightLine = +svgLine.attr("height") - marginLine.top - marginLine.bottom,
-    labelPadding = 3;
-
-var g = svgLine.append("g")
-    .attr("transform", "translate(" + marginLine.left + "," + marginLine.top + ")");
-
-
-    d3.json("/backend/index/getnewmembersprojects", function(error, data) {        
-      if (error) throw error;
-      data = data.results;
-      
-      // format the data
-      data.forEach(function(d) {
-          d.date = parseTime(d.date);
-          d.members = +d.members;
-          d.projects = +d.projects;
-      });
-
-      data.columns=['date','members','projects'];      
-      var series = data.columns.slice(1).map(function(key) {
-        return data.map(function(d) {
-          return {
-            key: key,
-            date: d.date,
-            value: d[key]
-          };
-        });
-      });
-
-
-      var xLine = d3.scaleTime()
-          .domain([data[0].date, data[data.length - 1].date])
-          .range([0, widthLine]);
-
-      var yLine = d3.scaleLinear()
-          .domain([0, d3.max(series, function(s) { return d3.max(s, function(d) { return d.value; }); })])
-          .range([heightLine, 0]);
-
-      var zLine = d3.scaleOrdinal(d3.schemeCategory10);
-
-      g.append("g")
-          .attr("class", "axis axis--x")
-          .attr("transform", "translate(0," + heightLine + ")")
-          .call(d3.axisBottom(xLine));
-
-      var serie = g.selectAll(".serie")
-          .data(series)
-        .enter().append("g")
-          .attr("class", "serie");
-
-      serie.append("path")
-          .attr("class", "line")
-          .style("stroke", function(d) { return zLine(d[0].key); })
-          .attr("d", d3.line()
-              .x(function(d) { return xLine(d.date); })
-              .y(function(d) { return yLine(d.value); }));
-
-      var label = serie.selectAll(".label")
-          .data(function(d) { return d; })
-        .enter().append("g")
-          .attr("class", "label")
-          .attr("transform", function(d, i) { return "translate(" + xLine(d.date) + "," + yLine(d.value) + ")"; });
-          
-          label.append("text")
-               .attr("dy", ".35em")
-               .text(function(d) { return d.value; })
-             .filter(function(d, i) { return i === data.length - 1; })
+             $.ajaxSetup ({
+                 // Disable caching of AJAX responses
+                 // Used when debugging
+                 cache: false
+             });
+         
+             $.getScript("/theme/flatui/js/stati/newUserProject.js");
+             $(".newuserprojectTab").click(function() {                
+                 $.getScript("/theme/flatui/js/stati/newUserProject.js");
+             });
+       
             
+            $('#payoutTab').prepend(createMonthFilter('selectmonth'));
+             $('#selectmonth').change(function() {                                     
+                   $.getScript("/theme/flatui/js/stati/memberPayout.js");               
+              });
+            $(".payoutTab").click(function() {
+                $('#detailContainer').empty();
+                $.getScript("/theme/flatui/js/stati/payoutyear.js");
+                $.getScript("/theme/flatui/js/stati/memberPayout.js");
+            });
 
-     const newText = label.selectAll('text');
-     const bbox = newText.node().getBBox();
+// payout Category Monthly tab begin 
+             $('#payoutCategoryMonthlyTab').prepend(createMonthFilter('selectmonthCategoryMonthly'));
+             $(".payoutCategoryMonthlyTab").click(function() {                                
+                 $.getScript("/theme/flatui/js/stati/payoutCategoryMonthly.js");
+             });
+             $('#selectmonthCategoryMonthly').change(function() {                                                       
+                   $('.payoutCategoryMonthlyTab').trigger('click');
+              });
+// payout Category Monthly tab end 
 
-     label.append('rect', 'text')
-         .datum(() => bbox)
-         .attr('x', d => (d.x - labelPadding))
-         .attr('y', d => (d.y - labelPadding))
-         .attr('width', d => (d.width + (2 * labelPadding)))
-         .attr('height', d => (d.height + (2 * labelPadding)));
+            
+            $('#payoutNewcomerTab').prepend(createMonthFilter('selectmonthNewcomer'));
+            $('#selectmonthNewcomer').change(function() {                                                                           
+                   $(".payoutNewcomerTab").trigger('click');
+              });
+             $(".payoutNewcomerTab").click(function() {
+                 $('#payoutNewcomerTabContainer').empty();      
+                  let yyyymm = $( "#selectmonthNewcomer option:selected" ).text();               
+                  $.getJSON( "/backend/index/newcomer?yyyymm="+yyyymm, function( response ) {
+                       let data = response.results;
+                        let table = "<table class='tablestati'>";
+                        $.each( data, function( index, value ){                          
+                              table = table+'<tr><td><a target="_blank" href="https://opendesktop.org/member/'+value.member_id+'">'+value.member_id+'</a></td><td>'+value.username+'</td><td>'+value.paypal_mail+'</td><td class="number">'+value.amount+'</td></tr>';
+                        });      
+                       table = table +"</table>";                                              
+                        $('#payoutNewcomerTabContainer').html(table);                        
+                  });  
+             });
+              
+             $('#payoutNewloserTab').prepend(createMonthFilter('selectmonthNewloser'));              
+             $('#selectmonthNewloser').change(function() {                                                                            
+                    $(".payoutNewloserTab").trigger('click');
+               });
+              $(".payoutNewloserTab").click(function() {
+                  $('#payoutNewloserTabContainer').empty();      
+                   let yyyymm = $( "#selectmonthNewloser option:selected" ).text();               
+                   $.getJSON( "/backend/index/newloser?yyyymm="+yyyymm, function( response ) {
+                        let data = response.results;
+                         let table = "<table class='tablestati'>";
+                         $.each( data, function( index, value ){
+                               table = table+'<tr><td><a target="_blank" href="https://opendesktop.org/member/'+value.member_id+'">'+value.member_id+'</a></td><td>'+value.username+'</td><td>'+value.paypal_mail+'</td><td class="number">'+value.amount+'</td></tr>';
+                         });      
+                        table = table +"</table>";                                              
+                         $('#payoutNewloserTabContainer').html(table);                        
+                   });  
+              });
 
-         label.append("text")
-              .attr("dy", ".35em")
-              .text(function(d) { return d.value; })
-            .filter(function(d, i) { return i === data.length - 1; })
-            .append("tspan")
-              .attr("class", "label-key")
-              .text(function(d) { return " " + d.key; });
 
-    });
-
-
-/*
-d3.tsv("/data/data.tsv", function(d) {
-  d.date = parseTime(d.date);
-  for (var k in d) if (k !== "date") d[k] = +d[k];
-  return d;
-}, function(error, data) {
-  if (error) throw error;
-
-  var series = data.columns.slice(1).map(function(key) {
-    return data.map(function(d) {
-      return {
-        key: key,
-        date: d.date,
-        value: d[key]
-      };
-    });
-  });
-
-  var xLine = d3.scaleTime()
-      .domain([data[0].date, data[data.length - 1].date])
-      .range([0, widthLine]);
-
-  var yLine = d3.scaleLinear()
-      .domain([0, d3.max(series, function(s) { return d3.max(s, function(d) { return d.value; }); })])
-      .range([heightLine, 0]);
-
-  var zLine = d3.scaleOrdinal(d3.schemeCategory10);
-
-  g.append("g")
-      .attr("class", "axis axis--x")
-      .attr("transform", "translate(0," + heightLine + ")")
-      .call(d3.axisBottom(xLine));
-
-  var serie = g.selectAll(".serie")
-      .data(series)
-    .enter().append("g")
-      .attr("class", "serie");
-
-  serie.append("path")
-      .attr("class", "line")
-      .style("stroke", function(d) { return zLine(d[0].key); })
-      .attr("d", d3.line()
-          .x(function(d) { return xLine(d.date); })
-          .y(function(d) { return yLine(d.value); }));
-
-  var label = serie.selectAll(".label")
-      .data(function(d) { return d; })
-    .enter().append("g")
-      .attr("class", "label")
-      .attr("transform", function(d, i) { return "translate(" + xLine(d.date) + "," + yLine(d.value) + ")"; });
-      
-      label.append("text")
-           .attr("dy", ".35em")
-           .text(function(d) { return d.value; })
-         .filter(function(d, i) { return i === data.length - 1; })
-        
-
- const newText = label.selectAll('text');
- const bbox = newText.node().getBBox();
-
- label.append('rect', 'text')
-     .datum(() => bbox)
-     .attr('x', d => (d.x - labelPadding))
-     .attr('y', d => (d.y - labelPadding))
-     .attr('width', d => (d.width + (2 * labelPadding)))
-     .attr('height', d => (d.height + (2 * labelPadding)));
-
-     label.append("text")
-          .attr("dy", ".35em")
-          .text(function(d) { return d.value; })
-        .filter(function(d, i) { return i === data.length - 1; })
-        .append("tspan")
-          .attr("class", "label-key")
-          .text(function(d) { return " " + d.key; });
-
-});
-*/
-
+              $('#payoutMonthDiffTab').prepend(createMonthFilter('selectmonthMonthDiff'));           
+              $('#selectmonthMonthDiff').change(function() {                                                                            
+                    $(".payoutMonthDiffTab").trigger('click');
+               });
+              $(".payoutMonthDiffTab").click(function() {
+                  $('#payoutMonthDiffTabContainer').empty();      
+                   let yyyymm = $( "#selectmonthMonthDiff option:selected" ).text();               
+                   $.getJSON( "/backend/index/monthdiff?yyyymm="+yyyymm, function( response ) {
+                        let data = response.results;
+                         let table = "<table class='tablestati'>";
+                         table = table+'<thead><tr><td>Member</td><td>Username</td><td class="number">Diff</td><td>month</td><td class="number">amount</td><td>last month</td><td  class="number">amount </td></tr></thead>';
+                         $.each( data, function( index, value ){
+                               table = table+'<tr><td><a target="_blank" href="https://opendesktop.org/member/'+value.member_id+'">'+value.member_id+'</a></td><td>'+value.username+'</td><td class="number">'+value.am_diff+'</td>'
+                                            +'<td>'+value.ym_akt+'</td><td class="number">'+value.am_akt+'</td>'
+                                            +'<td>'+value.ym_let+'</td><td class="number">'+value.am_let+'</td>'
+                                            ;
+                         });      
+                        table = table +"</table>";                                              
+                         $('#payoutMonthDiffTabContainer').html(table);                        
+                   });  
+              });
 </script>

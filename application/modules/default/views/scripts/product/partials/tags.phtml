@@ -1,0 +1,56 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$tableProject = new Default_Model_Tags();
+$tags = $tableProject->getTags($this->product->project_id, Default_Model_Tags::TAG_TYPE_PROJECT);
+?>
+<style>
+    .tag-element {
+        background-clip: padding-box;
+        background-color: #eeeeee;
+        background-image: linear-gradient(#f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eee 100%);
+        background-repeat: repeat-x;
+        background-size: 100% 19px;
+        border: 1px solid #aaa;
+        border-radius: 3px;
+        box-shadow: 0 0 2px #fff inset, 0 1px 0 rgba(0, 0, 0, 0.05);
+        color: #333;
+        line-height: 25px !important;
+        margin: 3px 3px 3px 0;
+        max-width: 100%;
+        padding: 0 10px;
+        position: relative;
+        display: inline-block;
+    }
+</style>
+<div class="prod-widget-box right details">
+
+    <span class="title"> View More </span>
+
+    <span class="row">
+        <?php foreach (explode(',',$tags) as $tag) { ?>
+            <a href="/search?projectSearchText=<?=$tag?>&f=tags" class="tag-element"><span class="glyphicon glyphicon-tag" aria-hidden="true"></span> <?=$tag?></a>
+        <?php }?>
+    </span>
+    </div>
+
+</div>

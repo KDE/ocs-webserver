@@ -250,7 +250,7 @@ if (Zend_Auth::getInstance()->hasIdentity()){
                             <li><a href="#updates-panel" data-toggle="tab">Changelogs <?php echo '('.count($this->updates).')';  ?></a></li>
                         <?php } ?>
                         <?php if(count($this->ratings)>0){ ?>
-                            <li><a href="#ratings-panel" data-toggle="tab">Reviews <?php echo '('.count($this->ratings).')';  ?></a></li>
+                            <li><a href="#ratings-panel" data-toggle="tab">Ratings & Reviews <?php echo '('.count($this->ratings).')';  ?></a></li>
                         <?php } ?>
                         </ul>
                     </div>
@@ -422,7 +422,11 @@ if (Zend_Auth::getInstance()->hasIdentity()){
                                         <div class="product-maker-thumbnail relative">
                                             <a href="<?php echo $helpMemberUrl->buildMemberUrl($this->product->member_id); ?>"
                                                title="<?= $this->product->username ?>">
-                                                <div class="profile-image-overlay-4 absolute"></div>
+                                               <?php 
+                                                    if($this->isSupporter($this->product->member_id)) {
+                                                ?>
+                                                    <span class="supporter-badge" >S</span> 
+                                                <?php } ?>                                               
                                                 <img src="<?= $helpImage->Image($this->product->profile_image_url,
                                                     array('width' => 80, 'height' => 80)) ?>"
                                                      alt="product-maker" width="15" height="15"
@@ -472,6 +476,8 @@ if (Zend_Auth::getInstance()->hasIdentity()){
                         <?php echo $this->render('partials/sidebarCcLicense.phtml'); ?>
 
                         <?php echo $this->render('product/partials/details.phtml'); ?>
+
+                        <?php echo $this->render('product/partials/tags.phtml');?>
 
                     </div>
                 </div>

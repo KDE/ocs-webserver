@@ -37,6 +37,8 @@ $tabs_left += $cat_title_length*10;
 $idCat = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
 $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
 
+$helperUserRole = new Backend_View_Helper_UserRole();
+$userRoleName = $helperUserRole->userRole();
 ?>
     <style>
 
@@ -215,7 +217,9 @@ $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
                 ?>
 
            <ul class="nav nav-pills meta-nav-top right" style="margin-right: 30px;">
-               <li><a href="http://opendesktop.org/plings" target="_blank"> Pling</a> </li>
+              <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+               <li><a  id="plingList" href="#plings" > Pling-List</a> </li>
+              <?php endif; ?>
                <li><a href="http://blog.opendesktop.org/" target="_blank"> Blog</a> </li>
                <li><a href="http://forum.opendesktop.org/" target="_blank"> Forum</a> </li>
                <li> <a id="aboutContent" href="#">About </a>   </li>              

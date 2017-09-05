@@ -534,6 +534,48 @@ var AboutContent = (function () {
 
 })();
 
+
+var PlinglistContent = (function () {
+    return {
+        setup: function () {
+             $('#plingList').on('click', function(){
+                    $.fancybox({
+                          'hideOnContentClick':           true,                                                           
+                          'autoScale'                     : true,                                                   
+                          'cyclic'                        : 'true',
+                          'transitionIn'                  : 'elastic',
+                          'transitionOut'                 : 'elastic',
+                          'type'        : 'iframe',
+                          'scrolling'   : 'no',
+                          helpers: { 
+                                overlay: { 
+                                    locked: false 
+                                } 
+                            },
+                        autoSize: true,
+                        href: '/plings',
+                        type: 'ajax'
+                    });
+                });
+        }
+    }
+
+})();
+
+var PlingsRedirect = (function () {
+    return {
+        setup: function () {
+             if(document.location.hash) {            
+                 let hash = $(document.location.hash);            
+                 $('a[href="'+document.location.hash+'"]').trigger( "click" );                           
+             }
+        }
+    }
+
+})();
+
+   
+
 /** PRODUCT PAGE **/
 
     // embed code expend collapse

@@ -35,9 +35,9 @@ $cntActive = 0;
 	?>
 <div class="productRating-rows <?=$this->productRating['rating_active']==0?'productRating-rows-inactive':'productRating-rows-active'?>  <?=$this->productRating['user_like']==1?'clsUpvotes':'clsDownvotes' ?> "  >
 	<h3 class="product-heading product-update-heading" >
-	<a href="<?php echo $this->buildMemberUrl($this->productRating['member_id']); ?>">
+	<a href="<?php echo $this->buildMemberUrl($this->productRating['member_id']); ?>">	
 	<img class="userimg"  
-					src="<?= $this->Image($this->productRating['profile_image_url'],
+					src="<?= $this->Image(($this->productRating['profile_image_url']==null)?'hive/user-pics/nopic.png':$this->productRating['profile_image_url'],
 	                                                array('width' => 40, 'height' => 40)) ?>"
 	                                                 alt="product-maker" 
 	                                                />

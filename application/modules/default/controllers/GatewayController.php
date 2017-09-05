@@ -37,6 +37,11 @@ class GatewayController extends Zend_Controller_Action
         // It is really important to receive the information in this way. In some cases Zend can destroy the information
         // when parsing the data
         $rawPostData = file_get_contents('php://input');
+        $ipnArray = $this->_parseRawMessage($rawPostData);
+        
+        //Save IPN in DB
+        $ipnTable = new Default_Model_DbTable_PaypalIpn();
+        $ipnTable->addFromIpnMessage($ipnArray, $rawPostData);
 
         Zend_Registry::get('logger')->info(__METHOD__ . ' - Start Process PayPal Payout IPN - ');
         
@@ -63,12 +68,20 @@ class GatewayController extends Zend_Controller_Action
         
         $ipnArray = $this->_parseRawMessage($rawPostData);
         
+        //Save IPN in DB
+        $ipnTable = new Default_Model_DbTable_PaypalIpn();
+        $ipnTable->addFromIpnMessage($ipnArray, $rawPostData);
+        
         //Switch betwee AdaptivePayment and Masspay
         if (isset($ipnArray['txn_type']) AND ($ipnArray['txn_type'] == 'masspay')) {
             Zend_Registry::get('logger')->info(__METHOD__ . ' - Start Process Masspay IPN - ');
             $modelPayPal = new Default_Model_PayPal_MasspayIpnMessage();
             $modelPayPal->processIpn($rawPostData);
-        } else {
+        } else if (isset($ipnArray['txn_type']) AND ($ipnArray['txn_type'] == 'web_accept')) {
+            Zend_Registry::get('logger')->info(__METHOD__ . ' - Start Process Support IPN - ');
+            $modelPayPal = new Default_Model_PayPal_SupportIpnMessage();
+            $modelPayPal->processIpn($rawPostData);
+        } else{
             Zend_Registry::get('logger')->info(__METHOD__ . ' - Start Process Normal IPN - ');
             $modelPayPal = new Default_Model_PayPal_IpnMessage();
             $modelPayPal->processIpn($rawPostData);

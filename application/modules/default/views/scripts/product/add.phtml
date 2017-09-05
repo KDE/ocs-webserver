@@ -43,6 +43,14 @@ $categoryPath[] = $valueCatId;
 ?>
     <style>
 
+        .wizard, .tabcontrol {
+            overflow: visible;
+        }
+
+        .wizard > .content {
+            overflow: visible;
+        }
+
         .wizard > .content > .body {
             position: relative;
         }
@@ -217,6 +225,7 @@ $categoryPath[] = $valueCatId;
                                 <?= $this->form->facebook_code ?>
                                 <?= $this->form->twitter_code ?>
                                 <?= $this->form->google_code ?>
+                                <?= $this->form->tags ?>
                             </section>
 
                             <h3>Files</h3>
@@ -295,29 +304,31 @@ $categoryPath[] = $valueCatId;
 
                                         <?php if(isset($this->project_id)) { ?>
 
-                                        <div class="modal-header">
-							                <h3 id="modal-ppload-label"><?= $this->translate('Changelog') ?></h3>
-							            </div>
-							            
-							            <div class="modal-body" style="font-size: small;">
-							            	<div role="form" class="">
-								            	<input type="hidden" data-update-id="" id="update-id" value="">
-											    <div class="form-group">
-											      <label for="tile">Changelog Title:</label>
-											      <input type="text" id="update-title" data-update-title="" class="form-control input-sm" placeholder="Enter Changelog Title">
-											    </div>
-											    <div class="form-group">
-											      <label for="text">Changelog Text:</label>
-											      <textarea id="update-text" data-update-text="" class="form-control input-sm" rows="3" placeholder="Enter Changelog Text"></textarea>
-											    </div>
-											    <button type="submit" class="btn btn-native" data-add-update-btn="">Save Changelog</button>
-											</div>
+                                        <div class="row">
+                                            <div class="modal-header">
+                                                <h3 id="modal-ppload-label"><?= $this->translate('Changelog') ?></h3>
+                                            </div>
 
-											<h4 style="padding-top: 15px;"> Your Entries:</h4>
-							            	<article id="update-list">
+                                            <div class="modal-body" style="font-size: small;">
+                                                <div role="form" class="">
+                                                    <input type="hidden" data-update-id="" id="update-id" value="">
+                                                    <div class="form-group">
+                                                      <label for="tile">Changelog Title:</label>
+                                                      <input type="text" id="update-title" data-update-title="" class="form-control input-sm" placeholder="Enter Changelog Title">
+                                                    </div>
+                                                    <div class="form-group">
+                                                      <label for="text">Changelog Text:</label>
+                                                      <textarea id="update-text" data-update-text="" class="form-control input-sm" rows="3" placeholder="Enter Changelog Text"></textarea>
+                                                    </div>
+                                                    <button type="submit" class="btn btn-native" data-add-update-btn="">Save Changelog</button>
+                                                </div>
 
-							            	</article>
-							            </div>
+                                                <h4 style="padding-top: 15px;"> Your Entries:</h4>
+                                                <article id="update-list">
+
+                                                </article>
+                                            </div>
+                                        </div>
 
 							            <?php } ?>
                                     </div>
@@ -342,6 +353,39 @@ $categoryPath[] = $valueCatId;
     </main>
 
     <script>
+        $(document).ready(function() {
+            $('.add-tag-btn').on('click', function(event) {
+                event.stopPropagation();
+                var data = jQuery(this).parents('.form-group').find('input.personal-tag-name').val();
+                $.post('/tag/add/', {'t' : data})
+                    .done(function(response) {
+                        alert(response.data.id);
+                        alert(response.data.label);
+                        console.debug(response);
+                        var template = '<div class="message-form-template">\n' +
+                            '\t<div class="new-tag">\n' +
+                            '\t\t<span class="tag"><a class="message-form-delete-tag" data-id="'+response.data.id+'" href="javascript:;">\n' +
+                            '<span class="tag-icon"></span>\n' +
+                            '</a> &nbsp;<span class="tag-label">'+response.data.label+'</span> </span>\n' +
+                            '\t</div>\n' +
+                            '</div>';
+                        $('#form-added-tags').empty().append(template);
+                    });
+            });
+
+            $('.message-form-delete-tag').on('click', function (event) {
+                event.stopPropagation();
+                var id =  parseInt(jQuery(this).attr('data-id'));
+                var jqxhr = $.post('/tag/del/',{'ti': id})
+                    .done(function(data) {
+                        alert('Response :' + data);
+                        jQuery(this).parents('.tag').remove();
+                    });
+
+                return false;
+            });
+        });
+
         $(document).ready(function () {
 
             var formElement = $('#add-product-form');
