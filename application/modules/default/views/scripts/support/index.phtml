@@ -1,0 +1,367 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Created: 31.05.2017
+ */
+?>
+<style>
+form .checkboxset li, form .optionset li, form .selectiongroup li {
+    list-style-type: none;
+    line-height: 2;
+}
+
+form .SelectionGroup li li input {
+    display: inline-block;
+    margin: 0 0.2em 0 0;
+    
+}
+
+form .SelectionGroup li label {
+    margin: 0 0 0 0.2em;
+    font-weight: normal;
+}
+
+
+.SelectionGroup li {
+    list-style-type: none;
+    float: left;
+    width: 100%;
+    clear: both;
+}
+
+.Actions {
+    padding-top: 15px;
+    padding-bottom: 20px;
+}
+
+.btn {
+    color: #fff;
+    background-color: #5bc0de;
+    border-color: #46b8da;
+}
+
+
+
+ul.suggested-amounts.less-margin {
+    margin-bottom: 28px !important;
+}
+ul.suggested-amounts {
+    position: relative;
+    margin: 27px 16px 48px 16px;
+    list-style-type: none;
+}
+ul.suggested-amounts.less-margin {
+    margin-bottom: 28px !important;
+}
+ul.suggested-amounts {
+    position: relative;
+    margin: 27px 16px 48px 16px;
+    list-style-type: none;
+}
+.donation-widget ul.suggested-amounts li.amount-item .mdl-radio {
+    width: 100%;
+}
+ul.suggested-amounts li.amount-item .mdl-radio {
+    line-height: 15px;
+}
+ul.suggested-amounts li.amount-item .item-text {
+    display: inline-block;
+    position: relative;
+    margin-left: 23px;
+}
+ul.suggested-amounts li.amount-item .item-text .unit-wrapper {
+    position: absolute;
+    display: inline-block;
+    left: 0;
+}
+ul.suggested-amounts li.amount-item .item-text .amount, ul.suggested-amounts li.amount-item .item-text #custom_amount {
+    font-family: SourceSansPro-Semibold;
+    color: #000;
+    font-size: 24px;
+    opacity: .65;
+}
+
+ul.suggested-amounts li.amount-item {
+    border-bottom: dotted thin #E7E7E7;
+    padding: 16px 0 7px;
+}
+
+ul.suggested-amounts li.amount-item .item-text .amount, ul.suggested-amounts li.amount-item .item-text #custom_amount {
+    font-family: SourceSansPro-Semibold;
+    color: #000;
+    font-size: 24px;
+    opacity: .65;
+}
+ul.suggested-amounts li.amount-item .item-text #custom_amount {
+    margin-top: -8px;
+}
+ul.suggested-amounts li.amount-item .item-text .amount input, ul.suggested-amounts li.amount-item .item-text #custom_amount input {
+    width: 50%;
+    margin: 0;
+    border: 0;
+    border-bottom: 1px solid #d0d0d0;
+    padding: 0;
+    box-shadow: none;
+    background-color: white;
+}
+
+.mdl-btn-group {
+    width: 180px;
+    margin: 0 auto;
+}
+
+.mdl-btn-group.active-basic-color-background div:last-child {
+    border-color: #092d63;
+}
+.mdl-btn-group.active-basic-color-background div {
+    border-color: #092d63;
+    color: #092d63;
+}
+.mdl-btn-group div:last-child {
+    border-radius: 0 3px 3px 0;
+    border-right: 1px solid #41a2d8;
+}
+
+.mdl-btn-group.active-basic-color-background div.active {
+    background-color: #092d63;
+    color: #ffffff;
+}
+.mdl-btn-group.active-basic-color-background div {
+    border-color: #092d63;
+    color: #092d63;
+}
+.mdl-btn-group div.active {
+    background-color: #41a2d8;
+    color: #fff;
+}
+.mdl-btn-group div:first-child {
+    border-radius: 3px 0 0 3px;
+}
+.mdl-btn-group div {
+    display: inline-block;
+    float: left;
+    line-height: 40px;
+    font-size: 12px;
+    width: 90px;
+    border: 1px solid #41a2d8;
+    border-right: 0;
+    vertical-align: middle;
+    text-align: center;
+    color: #41a2d8;
+    cursor: pointer;
+}
+
+.donation-widget.tabs .tabs-footer .dw-btn.basic-color-background {
+    background-color: #092d63;
+    box-shadow: 0 2px 0 0 #061f45;
+}
+.donation-widget.tabs .tabs-footer .dw-btn, .donation-widget.tabs .ty-content .dw-btn {
+    width: 75.8%;
+    height: 54px;
+    margin-bottom: 20px;
+    text-transform: none;
+    background-color: transparent;
+    border-radius: 4px;
+    box-shadow: 0 2px 0 0 transparent;
+    color: #fff;
+    line-height: 27px;
+}
+    
+</style>
+<main id="explore-content">
+    <section class="wrapper" id="products-wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="sidebar-left col-md-2"></div>
+                <div class="content col-md-8">
+                    <h2>Please help us</h2>
+                    <p>Since May 2017 we support the creatives on our platform. That's why we have introduced <a href="/plings">pling</a>.
+                    </p>
+                    <p>Please help us to support the creators and keep the platform growing.</p>
+                    
+                    
+                    <form class="donation-form" novalidate="novalidate" id="new_donation" action="/donation" accept-charset="UTF-8" data-remote="true" method="post">
+                    
+					      <input type="hidden" id="currency-symbol" value="$">
+					
+					      <div class="tabs-header non-selectable basic-color-background">
+					        <div class="header-content">
+					          <span class="display-amount">
+					            <span class="step-1 active">Choose amount</span>
+					          </span>
+					        </div>
+					      </div>
+					
+					      <div class="tabs-content">
+					        <div class="content step-1 active" id="donor-form-step-1"> 
+					          <ul class="suggested-amounts less-margin">
+					              <li class="amount-item">
+					                <label class="mdl-radio mdl-js-radio is-upgraded" for="sam-0" data-upgraded=",MaterialRadio">
+					                    <input class="suggested-amount mdl-radio__button" id="sam-0" type="radio" value="50" name="donation[suggested_amount]">
+					                  <span class="mdl-radio__label">
+					                    <span class="item-text">
+					                      <span class="unit-wrapper">
+					                        <span class="unit">$</span>
+					                      </span>
+					                      <span class="amount">50</span>
+					                      <span class="desc">buys a protective visor for a deminer </span>
+					                    </span>
+					                  </span>
+					                <span class="mdl-radio__outer-circle"></span><span class="mdl-radio__inner-circle"></span></label>
+					              </li>
+					              <li class="amount-item">
+					                <label class="mdl-radio mdl-js-radio is-upgraded" for="sam-1" data-upgraded=",MaterialRadio">
+					                    <input class="suggested-amount mdl-radio__button" id="sam-1" type="radio" value="100" name="donation[suggested_amount]">
+					                  <span class="mdl-radio__label">
+					                    <span class="item-text">
+					                      <span class="unit-wrapper">
+					                        <span class="unit">$</span>
+					                      </span>
+					                      <span class="amount">100</span>
+					                      <span class="desc">buys the tools needed to safely dig up landmines</span>
+					                    </span>
+					                  </span>
+					                <span class="mdl-radio__outer-circle"></span><span class="mdl-radio__inner-circle"></span></label>
+					              </li>
+					              <li class="amount-item">
+					                <label class="mdl-radio mdl-js-radio is-upgraded" for="sam-2" data-upgraded=",MaterialRadio">
+					                    <input class="suggested-amount mdl-radio__button" id="sam-2" type="radio" value="500 " name="donation[suggested_amount]">
+					                  <span class="mdl-radio__label">
+					                    <span class="item-text">
+					                      <span class="unit-wrapper">
+					                        <span class="unit">$</span>
+					                      </span>
+					                      <span class="amount">500 </span>
+					                      <span class="desc">clears 5,000 square feet of minefield</span>
+					                    </span>
+					                  </span>
+					                <span class="mdl-radio__outer-circle"></span><span class="mdl-radio__inner-circle"></span></label>
+					              </li>
+					              <li class="amount-item">
+					                <label class="mdl-radio mdl-js-radio is-upgraded" for="custom_amount_item" data-upgraded=",MaterialRadio">
+					                  <input class="suggested-amount mdl-radio__button" id="custom_amount_item" type="radio" value="0" name="donation[suggested_amount]">
+					                  <span class="mdl-radio__label">
+					                    <span class="item-text">
+					                      <span class="unit-wrapper">
+					                        <span class="unit">$</span>
+					                      </span>
+					                      <span class="amount">
+					                        <input id="custom_amount" min="0" step="any" inputmode="numeric" type="number" name="donation[custom_amount]">
+					                      </span>
+					                      <span class="desc">Enter free amount</span>
+					                    </span>
+					                  </span>
+					                <span class="mdl-radio__outer-circle"></span><span class="mdl-radio__inner-circle"></span></label>
+					              </li>
+					          </ul>
+					
+					            <div class="mdl-grid "><div class="mdl-cell mdl-cell--12-col"><div class="mdl-select-field mdl-select-designation "><input type="hidden" name="donation[designation]" id="donation_designation" value="Area of greatest need"><div class="field-content mdl-js-button mdl-js-ripple-effect" data-upgraded=",MaterialButton,MaterialRipple"><input class="mdl-selected" type="text"><span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></div><span class="hint">Where would you like this donation spent?</span><div class="mdl-menu__container is-upgraded"><div class="mdl-menu__outline"></div><ul class="mdl-select-menu mdl-js-menu mdl-js-ripple-effect mdl-js-ripple-effect--ignore-events" data-upgraded=",MaterialMenu,MaterialRipple"><li value="Area of greatest need" class="mdl-menu__item mdl-js-ripple-effect" style="" data-selected="true" tabindex="-1" data-upgraded=",MaterialRipple">Bedürftigstes Gebiet<span class="mdl-menu__item-ripple-container"><span class="mdl-ripple"></span></span></li><li value="Nagorno Karabakh" class="mdl-menu__item mdl-js-ripple-effect" style="" tabindex="-1" data-upgraded=",MaterialRipple">Nagorno Karabakh<span class="mdl-menu__item-ripple-container"><span class="mdl-ripple"></span></span></li><li value="Baptism Site" class="mdl-menu__item mdl-js-ripple-effect" style="" tabindex="-1" data-upgraded=",MaterialRipple">Baptism Site<span class="mdl-menu__item-ripple-container"><span class="mdl-ripple"></span></span></li></ul></div></div></div></div>
+					
+					
+					          
+					          <div class="mdl-grid custom-dropdown"><div class="mdl-cell mdl-cell--12-col"><input type="hidden" value="32945" name="donation[donation_additional_questions_attributes][1][form_additional_question_id]" id="donation_donation_additional_questions_attributes_1_form_additional_question_id"><div class="mdl-select-field mdl-select-dropdown "><input type="hidden" name="donation[donation_additional_questions_attributes][1][question_value]" id="donation_donation_additional_questions_attributes_1_question_value" value="no"><div class="field-content mdl-js-button mdl-js-ripple-effect" data-upgraded=",MaterialButton,MaterialRipple"><input class="mdl-selected" type="text"><span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></div><span class="hint">Is this gift in honor or in memory of someone?</span><div class="mdl-menu__container is-upgraded"><div class="mdl-menu__outline"></div><ul class="mdl-select-menu mdl-js-menu mdl-js-ripple-effect mdl-js-ripple-effect--ignore-events" data-upgraded=",MaterialMenu,MaterialRipple"><li value="no" class="mdl-menu__item mdl-js-ripple-effect" style="" data-selected="true" tabindex="-1" data-upgraded=",MaterialRipple">no<span class="mdl-menu__item-ripple-container"><span class="mdl-ripple"></span></span></li><li value="yes, in honor of" class="mdl-menu__item mdl-js-ripple-effect" style="" tabindex="-1" data-upgraded=",MaterialRipple">yes, in honor of<span class="mdl-menu__item-ripple-container"><span class="mdl-ripple"></span></span></li><li value="yes, in memory of" class="mdl-menu__item mdl-js-ripple-effect" style="" tabindex="-1" data-upgraded=",MaterialRipple">yes, in memory of<span class="mdl-menu__item-ripple-container"><span class="mdl-ripple"></span></span></li></ul></div></div></div></div><div class="mdl-grid custom-text"><div class="mdl-cell mdl-cell--12-col"><input type="hidden" value="32946" name="donation[donation_additional_questions_attributes][2][form_additional_question_id]" id="donation_donation_additional_questions_attributes_2_form_additional_question_id"><div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-item is-upgraded" data-upgraded=",MaterialTextfield"><input class="mdl-textfield__input" type="text" name="donation[donation_additional_questions_attributes][2][question_value]" id="donation_donation_additional_questions_attributes_2_question_value"><label class="mdl-textfield__label" for="donation_donation_additional_questions_attributes_2_question_value">If yes, who is it in honor or memory of?</label></div></div></div><div class="mdl-grid custom-text"><div class="mdl-cell mdl-cell--12-col"><input type="hidden" value="32947" name="donation[donation_additional_questions_attributes][3][form_additional_question_id]" id="donation_donation_additional_questions_attributes_3_form_additional_question_id"><div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-item is-upgraded" data-upgraded=",MaterialTextfield"><input class="mdl-textfield__input" type="text" name="donation[donation_additional_questions_attributes][3][question_value]" id="donation_donation_additional_questions_attributes_3_question_value"><label class="mdl-textfield__label" for="donation_donation_additional_questions_attributes_3_question_value">Acknowledge gift to (name w/email or postal address)</label></div></div></div>
+					
+					            <div class="mdl-grid "><div class="mdl-cell mdl-cell--12-col">
+					              <div class="mdl-btn-group active-basic-color-background">
+					                  <div value="" style="" class="active">One time</div>
+					                  <div value="true" style="">Yearly</div>
+					              </div>
+					
+					              <input type="hidden" name="recurring" id="recurring" value="">
+									</div></div>            <div class="mdl-grid "><div class="mdl-cell mdl-cell--12-col"><div class="recurring msg" style="visibility: hidden;"> Sie können sich jederzeit anmelden und den Zahlungsmodus ändern</div></div></div>
+					
+					        </div> 
+					      <div class="tabs-footer">
+					        <button type="button" class="dw-btn mdl-button mdl-js-button mdl-js-ripple-effect step-3 basic-color-background" data-upgraded=",MaterialButton,MaterialRipple">
+					          <span class="donate" id="linkButton">
+					            <i class="material-icons"></i>
+					            <span class="amount">
+					              <span isolate="">Support</span> $<span id="donation-amt"></span>
+					              <span id="donation-recurring"></span>
+					            </span>
+					          </span>
+					      </div>
+					</form>
+                    
+                    
+                    <form id="Form_DonationProceed" action="/donate/pay" method="post" enctype="application/x-www-form-urlencoded">
+                        <p id="Form_DonationProceed_error" class="message " style="display: none"></p>
+                        <fieldset>
+                            <input type="hidden" name="provider" value="paypal" id="provider">
+                            <ul class="SelectionGroup selectiongroup nolabel">
+                                <li class="selected">
+                                    <input class="selector" type="radio" id="amount_custom_1" name="toggle_custom" value="predefined" checked=""><label for="Form_DonationProceed_toggle_custom_1">Choose one of this amounts</label>
+                                    <div class="CompositeField selectiongroup_item ">
+                                        <div id="Amount" class="field optionset nolabel">
+                                            <div class="middleColumn">
+                                                <ul id="Form_DonationProceed_Amount" class="optionset nolabel">
+                                                    <li>
+                                                            <input id="amount_15" class="radio" name="amount_predefined" type="radio" value="15"><label for="Form_DonationProceed_Amount_10">$15</label>
+                                                    </li>
+                                                	<li>
+                                                            <input id="amount_25" class="radio" name="amount_predefined" type="radio" value="25" checked=""><label for="Form_DonationProceed_Amount_10">$25</label>
+                                                    </li>
+                                                    <li>
+                                                            <input id="amount_50" class="radio" name="amount_predefined" type="radio" value="50"><label for="Form_DonationProceed_Amount_20">$50</label>
+                                                    </li>
+                                                    <li>
+                                                            <input id="amount_75" class="radio" name="amount_predefined" type="radio" value="75"><label for="Form_DonationProceed_Amount_20">$75</label>
+                                                    </li>
+                                                    <li>
+                                                            <input id="amount_100" class="radio" name="amount_predefined" type="radio" value="100"><label for="Form_DonationProceed_Amount_50">$100</label>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <input class="selector" type="radio" id="amount_custom_2" name="toggle_custom" value="custom"><label for="Form_DonationProceed_toggle_custom_2">Or enter an free amount > $100</label>
+                                    <div class="CompositeField selectiongroup_item ">
+                                        <div class="field fieldgroup nolabel">
+                                            <div class="middleColumn fieldgroup">
+
+                                                <div class="fieldgroup-field first odd">
+                                                    <div class="fieldholder-small">
+                                                        $ <input type="text" name="amount_handish" value="25" class="numeric text nolabel" id="amount_handish" required="required" aria-required="true" maxlength="10" size="10">
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </fieldset>
+                        <div class="Actions">
+                            <input class="btn btn-primary active" type="submit" name="action_paypal" value="Support with PayPal" id="action_paypal">
+                        </div>
+                    </form>
+                </div>
+                <div class="sidebar-right col-md-2"></div>
+            </div>
+            <section class="explore-footer text-center">
+                
+            </section>
+        </div>
+    </section>
+</main>
+
