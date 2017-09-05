@@ -46,7 +46,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addResource(new Zend_Acl_Resource ('default_content'));
         $this->addResource(new Zend_Acl_Resource ('default_discovery'));
         $this->addResource(new Zend_Acl_Resource ('default_donationlist'));
-        $this->addResource(new Zend_Acl_Resource ('default_donate'));
+        $this->addResource(new Zend_Acl_Resource ('default_support'));
         $this->addResource(new Zend_Acl_Resource ('default_error'));
         $this->addResource(new Zend_Acl_Resource ('default_explore'));
         $this->addResource(new Zend_Acl_Resource ('default_gateway'));
@@ -129,7 +129,7 @@ class Default_Plugin_AclRules extends Zend_Acl
                 'default_logout',
                 'default_productcomment',
                 'default_settings',
-                'default_donate'
+                'default_support'
             )
         );
 
@@ -194,8 +194,8 @@ class Default_Plugin_AclRules extends Zend_Acl
 
         ), new Default_Plugin_Acl_IsProjectOwnerAssertion());
 
-        // resource default_donate
-        $this->allow(self::ROLENAME_COOKIEUSER, 'default_donate',
+        // resource default_support
+        $this->allow(self::ROLENAME_COOKIEUSER, 'default_support',
             array('index','pay', 'paymentok', 'paymentcancel'));
          
 
