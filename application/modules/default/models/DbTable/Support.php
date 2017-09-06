@@ -19,7 +19,7 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-class Default_Model_DbTable_Donation extends Zend_Db_Table_Abstract
+class Default_Model_DbTable_Support extends Zend_Db_Table_Abstract
 {
 
     const STATUS_NEW = 0;
@@ -43,7 +43,7 @@ class Default_Model_DbTable_Donation extends Zend_Db_Table_Abstract
     );
 
     /**
-     * Donation.
+     * Support.
      *
      * @param Local_Payment_ResponseInterface $payment_response
      * @param int $member_id Id of the Sender
@@ -52,7 +52,7 @@ class Default_Model_DbTable_Donation extends Zend_Db_Table_Abstract
      * @return mixed The primary key value(s), as an associative array if the
      *     key is compound, or a scalar if the key is single-column.
      */
-    public function createNewDonationFromResponse($payment_response, $member_id, $amount, $comment = null)
+    public function createNewSupportFromResponse($payment_response, $member_id, $amount, $comment = null)
     {
         $new_row = $this->createRow();
         $new_row->member_id = $member_id;
@@ -71,7 +71,7 @@ class Default_Model_DbTable_Donation extends Zend_Db_Table_Abstract
     
     
     /**
-     * Donation.
+     * Support.
      *
      * @param Local_Payment_ResponseInterface $payment_response
      * @param int $member_id Id of the Sender
@@ -80,7 +80,7 @@ class Default_Model_DbTable_Donation extends Zend_Db_Table_Abstract
      * @return mixed The primary key value(s), as an associative array if the
      *     key is compound, or a scalar if the key is single-column.
      */
-    public function createNewDonation($transaction_id, $member_id, $amount, $comment = null)
+    public function createNewSupport($transaction_id, $member_id, $amount, $comment = null)
     {
         $new_row = $this->createRow();
         $new_row->member_id = $member_id;
@@ -105,7 +105,7 @@ class Default_Model_DbTable_Donation extends Zend_Db_Table_Abstract
      * @param Local_Payment_ResponseInterface $payment_response
      *
      */
-    public function activateDonationFromResponse($payment_response)
+    public function activateSupportFromResponse($payment_response)
     {
         $updateValues = array(
             'status_id' => self::STATUS_DONATED,
@@ -121,7 +121,7 @@ class Default_Model_DbTable_Donation extends Zend_Db_Table_Abstract
     /**
      * @param Local_Payment_ResponseInterface $payment_response
      */
-    public function deactivateDonationFromResponse($payment_response)
+    public function deactivateSupportFromResponse($payment_response)
     {
         $updateValues = array(
             'status_id' => 0,
@@ -138,7 +138,7 @@ class Default_Model_DbTable_Donation extends Zend_Db_Table_Abstract
      * @param Local_Payment_ResponseInterface $payment_response
      * @return null|\Zend_Db_Table_Row_Abstract
      */
-    public function fetchDonationFromResponse($payment_response)
+    public function fetchSupportFromResponse($payment_response)
     {
         if ($payment_response->getCustom() != null) {
             $where = array('payment_reference_key = ?' => $payment_response->getCustom());
@@ -155,7 +155,7 @@ class Default_Model_DbTable_Donation extends Zend_Db_Table_Abstract
     /**
      * @param Local_Payment_ResponseInterface $payment_response
      */
-    public function updateDonationTransactionStatusFromResponse($payment_response)
+    public function updateSupportTransactionStatusFromResponse($payment_response)
     {
         $updateValues = array(
             'payment_status' => $payment_response->getTransactionStatus(),
@@ -171,7 +171,7 @@ class Default_Model_DbTable_Donation extends Zend_Db_Table_Abstract
      * donation.
      *
      * @param int $member_id
-     *            Donation-Geber
+     *            Support-Geber
      * @param int $amount
      * @return mixed
      */
@@ -243,7 +243,7 @@ class Default_Model_DbTable_Donation extends Zend_Db_Table_Abstract
      * @return int
      * @deprecated
      */
-    public function countDonationed()
+    public function countSupported()
     {
         $q = $this->select()->where('status_id >= ?', 2);
 
@@ -255,7 +255,7 @@ class Default_Model_DbTable_Donation extends Zend_Db_Table_Abstract
      * @return mixed
      * @deprecated
      */
-    public function getCountAvailableDonationsPerUser($memberId)
+    public function getCountAvailableSupportsPerUser($memberId)
     {
         // SELECT COUNT(1) FROM donations WHERE donations.member_id=2861 AND
         // donations.status_id=1
@@ -268,7 +268,7 @@ class Default_Model_DbTable_Donation extends Zend_Db_Table_Abstract
      * @return mixed
      * @deprecated
      */
-    public function getCountDonationsPerUser($memberId)
+    public function getCountSupportsPerUser($memberId)
     {
         return $selectArr ['count'];
     }
@@ -309,7 +309,7 @@ class Default_Model_DbTable_Donation extends Zend_Db_Table_Abstract
      * @param int|null $limit
      * @return null|array
      */
-    public function getDonations($limit = null)
+    public function getSupports($limit = null)
     {
         $sqlComments = "select *
             from donations
@@ -370,7 +370,7 @@ class Default_Model_DbTable_Donation extends Zend_Db_Table_Abstract
      * @return Zend_Db_Table_Row_Abstract
      * @deprecated
      */
-    public function getLatestDonation()
+    public function getLatestSupport()
     {
         $sel = $this->select()->from($this->_name)
             ->where('status_id >= ' . self::STATUS_DONATED)

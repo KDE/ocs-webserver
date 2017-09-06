@@ -107,8 +107,8 @@ class SupportController extends Local_Controller_Action_DomainSwitch
         $this->view->amount = $amount;
         
         //Add pling
-        $modelDonation = new Default_Model_DbTable_Donation();
-        $donationId = $modelDonation->createNewDonation($this->view->transaction_id, $this->_authMember->member_id, $amount);
+        $modelDonation = new Default_Model_DbTable_Support();
+        $donationId = $modelDonation->createNewSupport($this->view->transaction_id, $this->_authMember->member_id, $amount);
         
         
         /**

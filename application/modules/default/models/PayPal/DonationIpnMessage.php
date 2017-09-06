@@ -23,7 +23,7 @@
 class Default_Model_PayPal_DonationIpnMessage extends Local_Payment_PayPal_Donation_Ipn
 {
 
-    /** @var \Default_Model_DbTable_Donation */
+    /** @var \Default_Model_DbTable_Support */
     protected $_tableDonation;
 
     function __construct($config = null, $logger = null)
@@ -38,7 +38,7 @@ class Default_Model_PayPal_DonationIpnMessage extends Local_Payment_PayPal_Donat
 
         parent::__construct($config->third_party->paypal, $logger);
 
-        $this->_tableDonation = new Default_Model_DbTable_Donation;
+        $this->_tableDonation = new Default_Model_DbTable_Support;
     }
 
     protected function validateTransaction()

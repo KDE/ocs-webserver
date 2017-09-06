@@ -20,7 +20,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-abstract class Local_Payment_PayPal_Donation_Ipn extends Local_Payment_PayPal_Base
+abstract class Local_Payment_PayPal_Support_Ipn extends Local_Payment_PayPal_Base
 {
 
     const VERIFIED = 'VERIFIED';
@@ -46,8 +46,8 @@ abstract class Local_Payment_PayPal_Donation_Ipn extends Local_Payment_PayPal_Ba
         $this->_logger = Zend_Registry::get('logger');
         
         if (false === $this->verifyIpnOrigin($rawData)) {
-            $this->_logger->err('Donation '.__FUNCTION__ . '::Abort Donation IPN processing. IPN not verified: ' . $rawData);
-            $this->_logger->info('Donation '.__FUNCTION__ . '::Abort Donation IPN processing. IPN not verified: ' . $rawData);
+            $this->_logger->err(' '.__FUNCTION__ . '::Abort Support IPN processing. IPN not verified: ' . $rawData);
+            $this->_logger->info(' '.__FUNCTION__ . '::Abort Support IPN processing. IPN not verified: ' . $rawData);
             return;
         }
 
@@ -56,7 +56,7 @@ abstract class Local_Payment_PayPal_Donation_Ipn extends Local_Payment_PayPal_Ba
         $this->_ipnMessage = Local_Payment_PayPal_Response::buildResponse($this->_dataIpn);
         
         if (false === $this->validateTransaction()) {
-            $this->_logger->err('Donation '.__FUNCTION__ . '::Abort IPN processing. Transaction not valid:' . $rawData);
+            $this->_logger->err(' '.__FUNCTION__ . '::Abort Support IPN processing. Transaction not valid:' . $rawData);
             return;
         }
 
@@ -110,8 +110,8 @@ abstract class Local_Payment_PayPal_Donation_Ipn extends Local_Payment_PayPal_Ba
         // curl_setopt($ch, CURLOPT_CAINFO, dirname(__FILE__) . '/cacert.pem');
         if ( !($res = curl_exec($ch)) ) {
           // error_log("Got " . curl_error($ch) . " when processing IPN data");
-          $this->_logger->err("Donation ".__FUNCTION__ . "Got " . curl_error($ch) . " when processing IPN data");
-          $this->_logger->info("Donation ".__FUNCTION__ . "Got " . curl_error($ch) . " when processing IPN data");
+          $this->_logger->err(" ".__FUNCTION__ . "Got " . curl_error($ch) . " when processing IPN data");
+          $this->_logger->info(" ".__FUNCTION__ . "Got " . curl_error($ch) . " when processing IPN data");
           curl_close($ch);
           exit;
         }
@@ -224,7 +224,7 @@ abstract class Local_Payment_PayPal_Donation_Ipn extends Local_Payment_PayPal_Ba
 
     protected function processPaymentStatus()
     {
-        $this->_logger->info('Donation ' . __FUNCTION__.' IPN: ' . print_r($this->_ipnMessage, true) . ' Status: ' . $this->_ipnMessage->getStatus());
+        $this->_logger->info(' ' . __FUNCTION__.' IPN: ' . print_r($this->_ipnMessage, true) . ' Status: ' . $this->_ipnMessage->getStatus());
         switch ($this->_ipnMessage->getStatus()) {
             case 'COMPLETED':
                 $this->_statusCompleted();
@@ -236,11 +236,11 @@ abstract class Local_Payment_PayPal_Donation_Ipn extends Local_Payment_PayPal_Ba
                 $this->_statusProcessed();
                 break;*/
             default:
-                $this->_logger->info('Donation ' . __FUNCTION__.' Status not found: . IPN: ' . print_r($this->_ipnMessage, true) . ' Status: ' . print_r($this->_ipnMessage->getStatus(), true));
+                $this->_logger->info(' ' . __FUNCTION__.' Status not found: . IPN: ' . print_r($this->_ipnMessage, true) . ' Status: ' . print_r($this->_ipnMessage->getStatus(), true));
                 throw new Local_Payment_Exception('Unknown status from PayPal: ' . print_r($this->_ipnMessage));
                 
         }
-        $this->_logger->info('Donation ' . __FUNCTION__.' Status = ' . $this->_ipnMessage->getStatus() . ' DONE');
+        $this->_logger->info(' ' . __FUNCTION__.' Status = ' . $this->_ipnMessage->getStatus() . ' DONE');
     }
 
     /**
@@ -251,10 +251,10 @@ abstract class Local_Payment_PayPal_Donation_Ipn extends Local_Payment_PayPal_Ba
      */
     protected function _statusCompleted()
     {
-        $this->_logger->info('Donation ' . __FUNCTION__.' set Status');
+        $this->_logger->info(' ' . __FUNCTION__.' set Status');
         
-        $donationTable = new Default_Model_DbTable_Donation();
-        $donationTable->activateDonationsFromResponse($this->_ipnMessage);
+        $Table = new Default_Model_DbTable_Support();
+        $Table->activateSupportFromResponse($this->_ipnMessage);
     }
 
     /**
@@ -263,54 +263,10 @@ abstract class Local_Payment_PayPal_Donation_Ipn extends Local_Payment_PayPal_Ba
      */
     protected function _statusDenied()
     {
-        $this->_logger->info('Donation _statusDenied');
+        $this->_logger->info(' _statusDenied');
         
-        /*
-        $payer_id = $this->_dataIpn['payer_id'];
-        $payment_date = $this->_dataIpn['payment_date'];
-        $first_name = $this->_dataIpn['first_name'];
-        $last_name = $this->_dataIpn['last_name'];
-        $notify_version = $this->_dataIpn['notify_version'];
-        $payer_status = $this->_dataIpn['payer_status'];
-        $verify_sign = $this->_dataIpn['verify_sign'];
-        $payer_email = $this->_dataIpn['payer_email'];
-        $payer_business_name = $this->_dataIpn['payer_business_name'];
-        $residence_country = $this->_dataIpn['residence_country'];
-        $test_ipn = $this->_dataIpn['test_ipn'];
-        $ipn_track_id = $this->_dataIpn['ipn_track_id'];
-        */
-        $payment_gross_x;
-        $receiver_email_x;
-        $mc_currency_x;
-        $masspay_txn_id_x;
-        $unique_id_x;
-        $status_x;
-        $mc_gross_x;
-        $payment_fee_x;
-        $mc_fee_x;
-        
-        
-        for ($i = 1; i <= 250; $i++) {
-            if(isset($this->_dataIpn['payment_gross_'.$i])) {
-                //$payment_gross_x = $this->_dataIpn['payment_gross_'.$i];
-                //$receiver_email_x = $this->_dataIpn['receiver_email_'.$i];
-                //$mc_currency_x = $this->_dataIpn['mc_currency_'.$i];
-                //$masspay_txn_id_x = $this->_dataIpn['masspay_txn_id_'.$i];
-                $unique_id_x = $this->_dataIpn['unique_id_'.$i];
-                $status_x = $this->_dataIpn['status_'.$i];
-                //$mc_gross_x = $this->_dataIpn['mc_gross_'.$i];
-                //$payment_fee_x = $this->_dataIpn['payment_fee_'.$i];
-                //$mc_fee_x = $this->_dataIpn['mc_fee_'.$i];
-                //save in db
-                $payoutTable = new Default_Model_DbTable_MemberPayout();
-                $payout = $payoutTable->fetchRow("id = ".$unique_id_x);
-                $this->_logger->info('Donation _statusDenied old dataset: '. print_r($payout['status']));
-                $payoutTable->update(array("status" => $payoutTable::$PAYOUT_STATUS_DENIED, "timestamp_masspay_last_ipn" => new Zend_Db_Expr('Now()'), "last_paypal_ipn" => $this->_dataRaw, "last_paypal_status" => $status_x), "id = " . $unique_id_x);
-                
-            } else {
-                break;
-            }
-        }
+        $Table = new Default_Model_DbTable_Support();
+        $Table->deactivateSupportFromResponse($this->_ipnMessage);
     }
 
     /**
@@ -318,58 +274,7 @@ abstract class Local_Payment_PayPal_Donation_Ipn extends Local_Payment_PayPal_Ba
      */
     protected function _statusProcessed()
     {
-        $this->_logger->info('Donation _statusProcessed');
-        
-        /*
-        $payer_id = $this->_dataIpn['payer_id'];
-        $payment_date = $this->_dataIpn['payment_date'];
-        $first_name = $this->_dataIpn['first_name'];
-        $last_name = $this->_dataIpn['last_name'];
-        $notify_version = $this->_dataIpn['notify_version'];
-        $payer_status = $this->_dataIpn['payer_status'];
-        $verify_sign = $this->_dataIpn['verify_sign'];
-        $payer_email = $this->_dataIpn['payer_email'];
-        $payer_business_name = $this->_dataIpn['payer_business_name'];
-        $residence_country = $this->_dataIpn['residence_country'];
-        $test_ipn = $this->_dataIpn['test_ipn'];
-        $ipn_track_id = $this->_dataIpn['ipn_track_id'];
-        */
-        $payment_gross_x;
-        $receiver_email_x;
-        $mc_currency_x;
-        $masspay_txn_id_x;
-        $unique_id_x;
-        $status_x;
-        $mc_gross_x;
-        $payment_fee_x;
-        $mc_fee_x;
-        
-        
-        for ($i = 1; i <= 250; $i++) {
-            if(isset($this->_dataIpn['payment_gross_'.$i])) {
-                //$payment_gross_x = $this->_dataIpn['payment_gross_'.$i];
-                //$receiver_email_x = $this->_dataIpn['receiver_email_'.$i];
-                //$mc_currency_x = $this->_dataIpn['mc_currency_'.$i];
-                //$masspay_txn_id_x = $this->_dataIpn['masspay_txn_id_'.$i];
-                $unique_id_x = $this->_dataIpn['unique_id_'.$i];
-                $status_x = $this->_dataIpn['status_'.$i];
-                //$mc_gross_x = $this->_dataIpn['mc_gross_'.$i];
-                //$payment_fee_x = $this->_dataIpn['payment_fee_'.$i];
-                //$mc_fee_x = $this->_dataIpn['mc_fee_'.$i];
-                //save in db
-                $payoutTable = new Default_Model_DbTable_MemberPayout();
-                                //check if old status < 100
-                $payout = $payoutTable->fetchRow("id = ".$unique_id_x);
-                $this->_logger->info('Donation _statusProcessed dataset: id = '. print_r($payout['id']).' - old status = '. print_r($payout['status']));
-                
-                if($payout && $payout['status'] < $payoutTable::$PAYOUT_STATUS_PROCESSED) {
-                    $payoutTable->update(array("status" => $payoutTable::$PAYOUT_STATUS_PROCESSED, "timestamp_masspay_last_ipn" => new Zend_Db_Expr('Now()'), "last_paypal_ipn" => $this->_dataRaw, "last_paypal_status" => $status_x), "id = " . $unique_id_x);
-                }
-            } else {
-                break;
-            }
-        }
-        
+        $this->_logger->info(' _statusProcessed');
     }
 
     public function getCharset($rawDataIpn)
