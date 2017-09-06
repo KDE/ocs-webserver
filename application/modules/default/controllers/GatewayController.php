@@ -69,8 +69,8 @@ class GatewayController extends Zend_Controller_Action
             $modelPayPal = new Default_Model_PayPal_MasspayIpnMessage();
             $modelPayPal->processIpn($rawPostData);
         } else if (isset($ipnArray['txn_type']) AND ($ipnArray['txn_type'] == 'web_accept')) {
-            Zend_Registry::get('logger')->info(__METHOD__ . ' - Start Process Donation IPN - ');
-            $modelPayPal = new Default_Model_PayPal_DonationIpnMessage();
+            Zend_Registry::get('logger')->info(__METHOD__ . ' - Start Process Support IPN - ');
+            $modelPayPal = new Default_Model_PayPal_SupportIpnMessage();
             $modelPayPal->processIpn($rawPostData);
         } else{
             Zend_Registry::get('logger')->info(__METHOD__ . ' - Start Process Normal IPN - ');

@@ -168,29 +168,6 @@ class Default_Model_DbTable_Support extends Zend_Db_Table_Abstract
     }
 
     /**
-     * donation.
-     *
-     * @param int $member_id
-     *            Support-Geber
-     * @param int $amount
-     * @return mixed
-     */
-    public function donation($member_id, $amount = 0)
-    {
-        $rowset = $this->fetchAll($this->select()->where('member_id = ' . $member_id . ' and status_id=1')->order(' create_time desc'));
-        $row = $rowset->current();
-
-        $row->status_id = 2;
-        $row->donation_time = new Zend_Db_Expr ('Now()');
-        $row->amount = $amount;
-        $newID = $row->save();
-
-        return $newID;
-    }
-
-    
-
-    /**
      * Payout of the donations successful.
      *
      * @param string $donation_unique_id

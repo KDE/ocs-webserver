@@ -52,7 +52,7 @@ class SupportController extends Local_Controller_Action_DomainSwitch
     }
 
 
-    public function donateAction()
+    public function supportAction()
     {
 
         $this->view->authMember = $this->_authMember;
@@ -60,7 +60,7 @@ class SupportController extends Local_Controller_Action_DomainSwitch
         $request = Zend_Controller_Front::getInstance()->getRequest();
 
         $httpHost = $this->getRequest()->getHttpHost();
-        $this->view->urlPay =  'https://' . $httpHost . '/donation/pay';
+        $this->view->urlPay =  'https://' . $httpHost . '/support/pay';
         $this->view->amount = (float)$this->getParam('amount', 1);
         $this->view->comment = html_entity_decode(strip_tags($this->getParam('comment'), null), ENT_QUOTES, 'utf-8');
         $this->view->provider =
@@ -107,8 +107,8 @@ class SupportController extends Local_Controller_Action_DomainSwitch
         $this->view->amount = $amount;
         
         //Add pling
-        $modelDonation = new Default_Model_DbTable_Support();
-        $donationId = $modelDonation->createNewSupport($this->view->transaction_id, $this->_authMember->member_id, $amount);
+        $modelSupport = new Default_Model_DbTable_Support();
+        $supportId = $modelSupport->createNewSupport($this->view->transaction_id, $this->_authMember->member_id, $amount);
         
         
         /**

@@ -20,11 +20,11 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-class Default_Model_PayPal_DonationIpnMessage extends Local_Payment_PayPal_Donation_Ipn
+class Default_Model_PayPal_SupportIpnMessage extends Local_Payment_PayPal_Donation_Ipn
 {
 
     /** @var \Default_Model_DbTable_Support */
-    protected $_tableDonation;
+    protected $_tableSupport;
 
     function __construct($config = null, $logger = null)
     {
@@ -38,12 +38,12 @@ class Default_Model_PayPal_DonationIpnMessage extends Local_Payment_PayPal_Donat
 
         parent::__construct($config->third_party->paypal, $logger);
 
-        $this->_tableDonation = new Default_Model_DbTable_Support;
+        $this->_tableSupport = new Default_Model_DbTable_Support;
     }
 
     protected function validateTransaction()
     {
-        $donation = $this->_tableDonation->fetchDonationFromResponse($this->_ipnMessage);
+        $donation = $this->_tableSupport->fetchSupportFromResponse($this->_ipnMessage);
         
         if (empty($donation)) {
             $this->_logger->err(__METHOD__ . ' - ' . 'No transaction found for IPN message.' . print_r($this->_ipnMessage, true));
@@ -72,27 +72,27 @@ class Default_Model_PayPal_DonationIpnMessage extends Local_Payment_PayPal_Donat
 
     protected function _statusError()
     {
-        $this->_tableDonation->deactivateDonationFromResponse($this->_ipnMessage);
+        $this->_tableSupport->deactivateSupportFromResponse($this->_ipnMessage);
     }
 
     protected function _processTransactionStatusCompleted()
     {
-        $this->_tableDonation->activateDonationFromResponse($this->_ipnMessage);
+        $this->_tableSupport->activateSupportFromResponse($this->_ipnMessage);
     }
 
     protected function _processTransactionStatusPending()
     {
-        $this->_tableDonation->activateDonationFromResponse($this->_ipnMessage);
+        //$this->_tableDonation->activateDonationFromResponse($this->_ipnMessage);
     }
 
     protected function _processTransactionStatusRefunded()
     {
-        $this->_tableDonation->deactivateDonationFromResponse($this->_ipnMessage);
+        $this->_tableSupport->deactivateSupportFromResponse($this->_ipnMessage);
     }
 
     protected function _processTransactionStatusDenied()
     {
-        $this->_tableDonation->deactivateDonationFromResponse($this->_ipnMessage);
+        $this->_tableSupport->deactivateSupportFromResponse($this->_ipnMessage);
     }
 
 } 
