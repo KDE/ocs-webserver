@@ -20,7 +20,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-class Default_Model_PayPal_SupportIpnMessage extends Local_Payment_PayPal_Donation_Ipn
+class Default_Model_PayPal_SupportIpnMessage extends Local_Payment_PayPal_Support_Ipn
 {
 
     /** @var \Default_Model_DbTable_Support */
