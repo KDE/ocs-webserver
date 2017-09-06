@@ -73,16 +73,12 @@ class SupportController extends Local_Controller_Action_DomainSwitch
     {
         $this->_helper->layout()->disableLayout();
         
-        //amount predefined or custom?
-        $toggle_custom = $this->getParam('toggle_custom');
-        
-
         //get parameter
         $amount_predefined = (float)$this->getParam('amount_predefined', 1);
         $amount_handish  = (float)$this->getParam('amount_handish', 1);
         
         $amount = 0;
-        if($toggle_custom == 'predefined') {
+        if(null != ($this->getParam('amount_predefined') && $amount_predefined > 0)) {
             $amount = $amount_predefined;
         } else {
             $amount = $amount_handish;
