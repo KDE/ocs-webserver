@@ -93,10 +93,12 @@ $time_start = microtime(true);
                           <a href="https://www.linux-apps.com/p/1175480/" target="_blank"><img src="/images/system/download-app.png" /></a>
                       </div>
               
+                      <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
                       <div class="donateDiv" >
                           <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Become a Supporter</a>
                       </div>
-              
+                      <?php endif; ?>
+                      
 
                       <div  class="row sidebar-right-info" >                                
                           <span class="newsTitle"> News </span>
