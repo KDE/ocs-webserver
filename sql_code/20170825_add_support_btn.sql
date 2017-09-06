@@ -1,4 +1,4 @@
-CREATE TABLE `donation` (
+CREATE TABLE `support` (
 	`id` INT(11) NOT NULL AUTO_INCREMENT,
 	`member_id` INT(11) NOT NULL COMMENT 'Supporter',
 	`status_id` INT(11) NULL DEFAULT '0' COMMENT 'Stati der donation: 0 = inactive, 1 = active (donated), 2 = payed successfull, 99 = deleted',

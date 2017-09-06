@@ -33,7 +33,7 @@ class Default_Model_DbTable_Support extends Zend_Db_Table_Abstract
     /**
      * @var string
      */
-    protected $_name = "donation";
+    protected $_name = "support";
 
     /**
      * @var array
