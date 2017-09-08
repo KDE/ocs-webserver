@@ -234,7 +234,7 @@ class Default_Model_DbTable_Support extends Zend_Db_Table_Abstract
      */
     public function getCountAvailableSupportsPerUser($memberId)
     {
-        // SELECT COUNT(1) FROM donations WHERE donations.member_id=2861 AND
+        // SELECT COUNT(1) FROM support WHERE support.member_id=2861 AND
         // donations.status_id=1
         $selectArr = $this->_db->fetchRow('SELECT count(*) AS count FROM ' . $this->_name . ' WHERE member_id = ' . $memberId . ' AND status_id = 1');
         return $selectArr ['count'];
@@ -260,10 +260,10 @@ class Default_Model_DbTable_Support extends Zend_Db_Table_Abstract
     public function getComments($limit = null)
     {
         $sqlComments = "select *
-            from donations
-            straight_join member on member.member_id = donations.member_id
-            straight_join comments on comments.comment_donation_id = donations.id
-            where donations.status_id = :status_id
+            from ' . $this->_name . '
+            straight_join member on member.member_id = ' . $this->_name . '.member_id
+            straight_join comments on comments.comment_donation_id = ' . $this->_name . '.id
+            where ' . $this->_name . '.status_id = :status_id
             and comments.comment_text > ''
         ";
 
@@ -289,7 +289,7 @@ class Default_Model_DbTable_Support extends Zend_Db_Table_Abstract
     public function getSupports($limit = null)
     {
         $sqlComments = "select *
-            from donations
+            from ' . $this->_name . '
             straight_join member on member.member_id = donations.member_id
             left join comments on comments.comment_donation_id = donations.id
             where donations.status_id = :status_id
