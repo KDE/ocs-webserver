@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -115,11 +116,11 @@ class Backend_CategoriesController extends Local_Controller_Action_Backend
         $sorting = $this->getParam('jtSorting');
         $filter_deleted = (int)$this->getParam('filter_deleted', 1);
 
-        $records = $this->_model->fetchTree($filter_deleted, false, null);
+        $records = $this->_model->fetchTreeWithParentId($filter_deleted, null);
 
         $pagination = Zend_Paginator::factory($records);
         $pagination->setItemCountPerPage($pageSize);
-        $pagination->setCurrentPageNumber(($startIndex / $pageSize)+1);
+        $pagination->setCurrentPageNumber(($startIndex / $pageSize) + 1);
 
         $jTableResult = array();
         $jTableResult['Result'] = self::RESULT_OK;
@@ -185,7 +186,6 @@ class Backend_CategoriesController extends Local_Controller_Action_Backend
         $jTableResult['Result'] = ($result == true) ? self::RESULT_OK : self::RESULT_ERROR;
 
         $this->_helper->json($jTableResult);
-
     }
 
     public function treeAction()
