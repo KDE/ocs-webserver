@@ -63,6 +63,10 @@ class GatewayController extends Zend_Controller_Action
         
         $ipnArray = $this->_parseRawMessage($rawPostData);
         
+        //Save IPN in DB
+        $ipnTable = new Default_Model_DbTable_PaypalIpn();
+        $ipnTable->addFromIpnMessage($ipnArray, $rawPostData);
+        
         //Switch betwee AdaptivePayment and Masspay
         if (isset($ipnArray['txn_type']) AND ($ipnArray['txn_type'] == 'masspay')) {
             Zend_Registry::get('logger')->info(__METHOD__ . ' - Start Process Masspay IPN - ');
