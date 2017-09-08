@@ -47,66 +47,60 @@ class Backend_IndexController extends Local_Controller_Action_Backend
 
         $this->_helper->layout->disableLayout();        
         $modelData = new Statistics_Model_Data( Zend_Registry::get('config')->settings->dwh->toArray());
+         $this->sendJson($modelData->getNewmemberstats());   
         
-        try {
-            $result = $modelData->getNewmemberstats();
-        } catch (Exception $e) {
-            Zend_Registry::get('logger')->error($e->getMessage());
-            return $this->_helper->json->sendJson(array(
-                'status' => 'error',
-                'msg' => 'error while processing request',
-                'results' => ''
-            ));
-        }
-       
-        if ($result) {
-            $msg = array(
-                'status' => 'ok',
-                'msg' => '',
-                'results' =>array_reverse($result)
-            );
-         
-            return $this->_helper->json->sendJson($msg);
-        }
-        return $this->_helper->json->sendJson(array(
-            'status' => 'not found',
-            'msg' => 'data with given id could not be found.',
-            'results' => ''
-        ));
     }
 
     public function getnewprojectstatsAction()
     {
         $this->_helper->layout->disableLayout();        
                $modelData = new Statistics_Model_Data( Zend_Registry::get('config')->settings->dwh->toArray());
-               
-               try {
-                   $result = $modelData->getNewprojectstats();
-               } catch (Exception $e) {
-                   Zend_Registry::get('logger')->error($e->getMessage());
-                   return $this->_helper->json->sendJson(array(
-                       'status' => 'error',
-                       'msg' => 'error while processing request',
-                       'results' => ''
-                   ));
-               }
-              
-               if ($result) {
-                   $msg = array(
-                       'status' => 'ok',
-                       'msg' => '',
-                       'results' =>array_reverse($result)
-                   );
-                
-                   return $this->_helper->json->sendJson($msg);
-               }
-               return $this->_helper->json->sendJson(array(
-                   'status' => 'not found',
-                   'msg' => 'data with given id could not be found.',
-                   'results' => ''
-               ));
+               $this->sendJson($modelData->getNewprojectstats());   
+             
     }
 
+    public function getpayoutAction()
+    {
+
+        $this->_helper->layout->disableLayout();        
+        $yyyymm =$this->getParam('yyyymm', '201708');
+        $modelData = new Statistics_Model_Data( Zend_Registry::get('config')->settings->dwh->toArray());
+        $this->sendJson($modelData->getPayout($yyyymm));              
+        
+    }
+
+    public function getpayoutmemberAction()
+    {
+
+        $this->_helper->layout->disableLayout();        
+        $member =$this->getParam('member', '1');
+        $modelData = new Statistics_Model_Data( Zend_Registry::get('config')->settings->dwh->toArray());
+        $this->sendJson($modelData->getPayoutOfMember($member));              
+    }
+
+    public function getpayoutyearAction()
+    {
+        $this->_helper->layout->disableLayout();                
+        $modelData = new Statistics_Model_Data( Zend_Registry::get('config')->settings->dwh->toArray());
+        $this->sendJson($modelData->getPayoutyear());      
+    }
+
+    public function sendJson($result){
+      if ($result) {
+          $msg = array(
+              'status' => 'ok',
+              'msg' => '',
+              'results' =>$result
+          );       
+          return $this->_helper->json->sendJson($msg);
+      }else{
+        return $this->_helper->json->sendJson(array(
+            'status' => 'not found',
+            'msg' => 'data with given id could not be found.',
+            'results' => ''
+        ));
+      }
+    }
 
     public function getnewmembersprojectsAction()
     {

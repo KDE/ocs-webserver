@@ -59,7 +59,26 @@ class Statistics_Model_Data
           return $result;  
     }
     
+    public function getPayout($yyyymm){
+        
+        $sql = "SELECT * FROM dwh.member_payout where yearmonth = :yyyymm order by amount desc";
+        $result = $this->_db->fetchAll($sql, array("yyyymm"=>$yyyymm));
+        return $result;  
+    }
 
+    public function getPayoutyear(){    
+        $sql = "select round(sum(amount)) amount,yearmonth from dwh.member_payout group by yearmonth order by yearmonth";
+        $result = $this->_db->fetchAll($sql);
+        return $result;  
+    }
+
+
+    public function getPayoutOfMember($member_id){       
+        $sql = "select * from dwh.member_payout where member_id = :member_id order by yearmonth desc";
+        $result = $this->_db->fetchAll($sql, array("member_id"=>$member_id));
+        return $result;  
+    }
+    
     public function getProject($project_id)
     {
         $sql = "SELECT * FROM ods_project_v WHERE project_id = :projectId";
