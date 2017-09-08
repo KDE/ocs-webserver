@@ -37,6 +37,11 @@ class GatewayController extends Zend_Controller_Action
         // It is really important to receive the information in this way. In some cases Zend can destroy the information
         // when parsing the data
         $rawPostData = file_get_contents('php://input');
+        $ipnArray = $this->_parseRawMessage($rawPostData);
+        
+        //Save IPN in DB
+        $ipnTable = new Default_Model_DbTable_PaypalIpn();
+        $ipnTable->addFromIpnMessage($ipnArray, $rawPostData);
 
         Zend_Registry::get('logger')->info(__METHOD__ . ' - Start Process PayPal Payout IPN - ');
         
