@@ -438,7 +438,7 @@ ul.suggested-amounts li.amount-item .mdl-radio .mdl-radio__outer-circle {
                 <div class="sidebar-left col-md-2"></div>
                 <div class="content col-md-8">
                     <h2>Please help us</h2>
-                    <p>Since May 2017 we support the creatives on our platform. That's why we have introduced <a href="/plings">pling</a>.
+                    <p>Since May 2017 we support the creatives on our platform. That's why we have introduced <a id="plingListOpen" href="#">pling</a>.
                     </p>
                     <p>Please help us to support the creators and keep the platform growing.</p>
                     
@@ -568,7 +568,12 @@ ul.suggested-amounts li.amount-item .mdl-radio .mdl-radio__outer-circle {
     $(document).ready(function(){
         $("#custom_amount").click(function(){
             $('.mdl-radio__button').removeAttr('checked');
-            $('#custom_amount_item').prop("checked", true);
+            $('#custom_amount_item').prop("checked", true);            
         });
+
+        $('#plingListOpen').click(function(){
+            $('#plingList').trigger( "click" );       
+        });
+
     });
 </script>
