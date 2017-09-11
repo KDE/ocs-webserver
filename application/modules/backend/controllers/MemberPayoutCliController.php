@@ -164,9 +164,9 @@ class Backend_MemberPayoutCliController extends Local_Controller_Action_CliAbstr
             $amount = $payout['amount'];
             $mail = $payout['paypal_mail'];
             $id = $payout['id'];
-            if($this->_config->third_party->paypal->sandbox->active) {
+            /*if($this->_config->third_party->paypal->sandbox->active) {
                 $mail = "paypal-buyer@pling.com";
-            }
+            }*/
             
             $result = $this->sendPayout($mail, $amount, $id);
             
