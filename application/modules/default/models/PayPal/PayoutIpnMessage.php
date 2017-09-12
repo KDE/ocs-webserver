@@ -73,7 +73,7 @@ class Default_Model_PayPal_PayoutIpnMessage extends Local_Payment_PayPal_Adaptiv
     {
         Zend_Registry::get('logger')->info(__METHOD__ . ' - Status: ' .$this->_ipnMessage->getStatus());
         
-        switch ($this->_ipnMessage->getStatus()) {
+        switch ($this->_ipnMessage->getTransactionStatus()) {
             case 'COMPLETED':
                 $this->_statusCompleted();
                 break;
@@ -120,7 +120,7 @@ class Default_Model_PayPal_PayoutIpnMessage extends Local_Payment_PayPal_Adaptiv
         $receiver_amount = (float)$amount - (float)$this->_config->facilitator_fee;
         $currency = new Zend_Currency('en_US');
         $this->_logger->info(__METHOD__ . ' - ' . $this->_ipnMessage->getTransactionAmount() . ' == ' . $currency->getShortName() . ' ' . $receiver_amount);
-        return $this->_ipnMessage->getTransactionAmount() == $currency->getShortName() . ' ' . $amount;
+        return ($this->_ipnMessage->getTransactionAmount()) == $currency->getShortName() . ' ' . doubleval($amount);
     }
 
     protected function _checkEmail()
