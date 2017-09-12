@@ -66,6 +66,77 @@ class Statistics_Model_Data
         return $result;  
     }
 
+    public function getNewcomer($yyyymm){
+        $yyyymm_vor = $this->getLastYearMonth($yyyymm);
+        $sql = "SELECT member_id
+                    , (select username from member m where m.member_id = member_payout.member_id) as username
+                    , paypal_mail,round(amount,2) as amount FROM member_payout WHERE yearmonth =:yyyymm
+                    and member_id not in (select member_id from member_payout where yearmonth =:yyyymm_vor)
+                    order by amount desc
+                    ";        
+        $result = $this->_db->fetchAll($sql, array("yyyymm"=>$yyyymm, "yyyymm_vor"=>$yyyymm_vor));
+        return $result;  
+    }
+
+    public function getNewloser($yyyymm){
+        $yyyymm_vor = $this->getLastYearMonth($yyyymm);
+        $sql = "SELECT member_id
+                    , (select username from member m where m.member_id = member_payout.member_id) as username
+                    , paypal_mail,round(amount,2) as amount FROM member_payout WHERE yearmonth =:yyyymm_vor
+                    and member_id not in (select member_id from member_payout where yearmonth =:yyyymm)
+                    order by amount desc
+                    ";        
+        $result = $this->_db->fetchAll($sql, array("yyyymm"=>$yyyymm, "yyyymm_vor"=>$yyyymm_vor));
+        return $result;  
+    }
+
+    public function getMonthDiff($yyyymm){
+            $yyyymm_vor = $this->getLastYearMonth($yyyymm);
+            $sql = "
+                        select akt.member_id          
+                             , (select username from member m where m.member_id = akt.member_id) as username
+                             , akt.amount as am_akt
+                             , let.amount as am_let
+                             , round(akt.amount-let.amount) as am_diff
+                             , akt.yearmonth ym_akt
+                             , let.yearmonth ym_let
+                        from
+                        (select member_id, amount,yearmonth from  member_payout where yearmonth = :yyyymm) akt,
+                        (select member_id, amount,yearmonth from  member_payout where yearmonth = :yyyymm_vor) let
+                        where akt.member_id = let.member_id
+                        order by am_diff desc
+                    ";
+            $result = $this->_db->fetchAll($sql, array("yyyymm"=>$yyyymm, "yyyymm_vor"=>$yyyymm_vor));
+
+            return $result;  
+    }
+
+    public function getPayoutCategoryMonthly($yyyymm){
+            $sql = "
+                            select project_category_id
+                                ,(select title from category as c where c.project_category_id = v.project_category_id) as title
+                                ,round(sum(probably_payout_amount)) as amount
+                                ,count(*) anzahlproject
+                                ,sum(probably_payout_amount)/count(*) avgamount
+                                ,sum(v.num_downloads) as num_downloads
+                             from member_dl_plings_v as v
+                            where yearmonth =:yyyymm
+                            group by v.project_category_id
+                            order by amount desc
+                        ";
+            $result = $this->_db->fetchAll($sql, array("yyyymm"=>$yyyymm));
+            return $result;  
+    }
+
+
+    public function getLastYearMonth($yyyymm){
+        $aktdate = strval($yyyymm).'01';
+        $fmt = 'Ymd';
+        $d = DateTime::createFromFormat($fmt,  $aktdate);
+        $d->modify( 'last day of previous month' );     
+        return $d->format( 'Ym' );
+    }
+
     public function getPayoutyear(){    
         $sql = "select round(sum(amount)) amount,yearmonth from dwh.member_payout group by yearmonth order by yearmonth";
         $result = $this->_db->fetchAll($sql);
