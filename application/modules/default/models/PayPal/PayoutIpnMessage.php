@@ -71,7 +71,7 @@ class Default_Model_PayPal_PayoutIpnMessage extends Local_Payment_PayPal_Adaptiv
     
     protected function processPaymentStatus()
     {
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - Status: ' .$this->_ipnMessage->getStatus());
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - Status: ' .$this->_ipnMessage->getTransactionStatus());
         
         switch ($this->_ipnMessage->getTransactionStatus()) {
             case 'COMPLETED':
@@ -83,6 +83,21 @@ class Default_Model_PayPal_PayoutIpnMessage extends Local_Payment_PayPal_Adaptiv
             case 'CREATED':
                 $this->_statusCreated();
                 break;
+            case 'DENIED':
+               	$this->_statusDenied();
+               	break;
+            case 'REVERSED':
+               	$this->_statusReserved();
+               	break;
+            case 'REFUNDED':
+               	$this->_statusRefunded();
+               	break;
+            case 'FAILED':
+               	$this->_statusFailed();
+               	break;
+            case 'PARTIALLY_REFUNDED':
+               	$this->_statusPartiallyRefunded();
+               	break;
             case 'ERROR':
                 $this->_statusError();
                 break;
@@ -119,8 +134,8 @@ class Default_Model_PayPal_PayoutIpnMessage extends Local_Payment_PayPal_Adaptiv
         $amount = isset($this->_dataIpn['amount']) ? $this->_dataIpn['amount'] : 0;
         $receiver_amount = (float)$amount - (float)$this->_config->facilitator_fee;
         $currency = new Zend_Currency('en_US');
-        $this->_logger->info(__METHOD__ . ' - ' . $this->_ipnMessage->getTransactionAmount() . ' == ' . $currency->getShortName() . ' ' . $receiver_amount);
-        return ($this->_ipnMessage->getTransactionAmount()) == $currency->getShortName() . ' ' . doubleval($amount);
+        $this->_logger->info(__METHOD__ . ' - ' . $this->_ipnMessage->getTransactionAmount() . ' == ' . $currency->getShortName() . ' ' . number_format((float)$amount, 2, '.', ''));
+        return ($this->_ipnMessage->getTransactionAmount()) == $currency->getShortName() . ' ' . number_format((float)$amount, 2, '.', '');
     }
 
     protected function _checkEmail()
@@ -137,6 +152,31 @@ class Default_Model_PayPal_PayoutIpnMessage extends Local_Payment_PayPal_Adaptiv
         Zend_Registry::get('logger')->info(__METHOD__);
         $this->processTransactionStatus();
     }
+    protected function _statusDenied()
+    {
+    	Zend_Registry::get('logger')->info(__METHOD__);
+    	$this->processTransactionStatus();
+    }
+    protected function _statusReserved()
+    {
+    	Zend_Registry::get('logger')->info(__METHOD__);
+    	$this->processTransactionStatus();
+    }
+    protected function _statusRefunded()
+    {
+    	Zend_Registry::get('logger')->info(__METHOD__);
+    	$this->processTransactionStatus();
+    }
+    protected function _statusPending()
+    {
+    	Zend_Registry::get('logger')->info(__METHOD__);
+    	$this->processTransactionStatus();
+    }
+    protected function _statusFailed()
+    {
+    	Zend_Registry::get('logger')->info(__METHOD__);
+    	$this->processTransactionStatus();
+    }
     
     protected function processTransactionStatus()
     {
@@ -151,11 +191,17 @@ class Default_Model_PayPal_PayoutIpnMessage extends Local_Payment_PayPal_Adaptiv
             case 'PENDING':
                 $this->_processTransactionStatusPending();
                 break;
+            case 'DENIED':
+                $this->_processTransactionStatusDenied();
+                break;
+            case 'REVERSED':
+                $this->_processTransactionStatusReserved();
+                break;
             case 'REFUNDED':
                 $this->_processTransactionStatusRefunded();
                 break;
-            case 'DENIED':
-                $this->_processTransactionStatusDenied();
+            case 'FAILED':
+                $this->_processTransactionStatusFailed();
                 break;
             default:
                 throw new Local_Payment_Exception('Unknown transaction status from PayPal: ' . $this->_ipnMessage->getTransactionStatus());
@@ -188,4 +234,13 @@ class Default_Model_PayPal_PayoutIpnMessage extends Local_Payment_PayPal_Adaptiv
         $this->_tablePayout->setPayoutStatusDeniedFromResponse($this->_ipnMessage);
     }
 
+    protected function _processTransactionStatusReserved()
+    {
+        $this->_tablePayout->setPayoutStatusReservedFromResponse($this->_ipnMessage);
+    }
+    
+    protected function _processTransactionStatusFailed()
+    {
+        $this->_tablePayout->setPayoutStatusFailedFromResponse($this->_ipnMessage);
+    }
 } 
