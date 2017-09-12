@@ -231,12 +231,12 @@ class Backend_ProjectController extends Local_Controller_Action_Backend
         }
 
         $checked = (int) $this->getParam('checked');
-        $product->spam_checked = $checked;
-        $product->save();
+        $sql = "update project set spam_checked = :spam_checked, changed_at = :changed_at where project_id = :project_id";
+        $this->_model->getAdapter()->query($sql, array('spam_checked' => $checked, 'changed_at' => $product->changed_at, 'project_id' => $id));
 
         $jsonResult = array();
         $jsonResult['Result'] = self::RESULT_OK;
-        $jsonResult['spam_checked'] = $product->spam_checked;
+        $jsonResult['spam_checked'] = $checked;
 
         $this->_helper->json($jsonResult);
     }
@@ -245,10 +245,10 @@ class Backend_ProjectController extends Local_Controller_Action_Backend
     {
         $projectId = (int)$this->getParam(self::DATA_ID_NAME, null);
         $product = $this->_model->find($projectId)->current();
-
         $featured = (int)$this->getParam(self::PARAM_FEATURED, null);
-        $product->featured = $featured;
-        $product->save();
+
+        $sql = "update project set featured = :featured, changed_at = :changed_at where project_id = :project_id";
+        $this->_model->getAdapter()->query($sql, array('featured' => $featured, 'changed_at' => $product->changed_at, 'project_id' => $projectId));
 
         $auth = Zend_Auth::getInstance();
         $identity = $auth->getIdentity();
@@ -267,8 +267,8 @@ class Backend_ProjectController extends Local_Controller_Action_Backend
         $product = $this->_model->find($projectId)->current();
         $approved = (int)$this->getParam(self::PARAM_APPROVED, null);
 
-        $product->approved = $approved;
-        $product->save();
+        $sql = "update project set approved = :approved, changed_at = :changed_at where project_id = :project_id";
+        $this->_model->getAdapter()->query($sql, array('approved' => $approved, 'changed_at' => $product->changed_at, 'project_id' => $projectId));
 
         $auth = Zend_Auth::getInstance();
         $identity = $auth->getIdentity();
@@ -288,8 +288,8 @@ class Backend_ProjectController extends Local_Controller_Action_Backend
         $catId = (int)$this->getParam('project_category_id', null);
 
         $product = $this->_model->find($projectId)->current();
-        $product->project_category_id = $catId;
-        $product->save();
+        $sql = "update project set project_category_id = :cat_id, changed_at = :changed_at where project_id = :project_id";
+        $this->_model->getAdapter()->query($sql, array('cat_id' => $catId, 'changed_at' => $product->changed_at, 'project_id' => $projectId));
 
         $identity = Zend_Auth::getInstance()->getIdentity();
         Default_Model_ActivityLog::logActivity($projectId, $projectId, $identity->member_id,
