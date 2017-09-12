@@ -562,6 +562,19 @@ var PlinglistContent = (function () {
 
 })();
 
+var PlingsRedirect = (function () {
+    return {
+        setup: function () {
+             if(document.location.hash) {            
+                 let hash = $(document.location.hash);            
+                 $('a[href="'+document.location.hash+'"]').trigger( "click" );                           
+             }
+        }
+    }
+
+})();
+
+   
 
 /** PRODUCT PAGE **/
 
