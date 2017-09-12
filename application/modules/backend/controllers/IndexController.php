@@ -85,6 +85,39 @@ class Backend_IndexController extends Local_Controller_Action_Backend
         $this->sendJson($modelData->getPayoutyear());      
     }
 
+
+    public function getpayoutcategorymonthlyAction(){
+        $this->_helper->layout->disableLayout();               
+        $yyyymm =$this->getParam('yyyymm', '201708'); 
+        $modelData = new Statistics_Model_Data( Zend_Registry::get('config')->settings->dwh->toArray());
+        $this->sendJson($modelData->getPayoutCategoryMonthly($yyyymm));      
+    }
+
+
+
+      public function newcomerAction()
+    {
+        $this->_helper->layout->disableLayout();        
+        $yyyymm =$this->getParam('yyyymm', '1');        
+        $modelData = new Statistics_Model_Data( Zend_Registry::get('config')->settings->dwh->toArray());
+        $this->sendJson($modelData->getNewcomer($yyyymm));      
+    }
+      public function newloserAction()
+    {
+        $this->_helper->layout->disableLayout();        
+        $yyyymm =$this->getParam('yyyymm', '1');        
+        $modelData = new Statistics_Model_Data( Zend_Registry::get('config')->settings->dwh->toArray());
+        $this->sendJson($modelData->getNewloser($yyyymm));      
+    }
+
+    public function monthdiffAction()
+    {
+        $this->_helper->layout->disableLayout();        
+        $yyyymm =$this->getParam('yyyymm', '1');        
+        $modelData = new Statistics_Model_Data( Zend_Registry::get('config')->settings->dwh->toArray());
+        $this->sendJson($modelData->getMonthDiff($yyyymm));      
+    }
+
     public function sendJson($result){
       if ($result) {
           $msg = array(
