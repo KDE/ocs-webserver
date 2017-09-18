@@ -34,6 +34,8 @@ $textCountryCity = $this->member->city;
 $textCountryCity .= $this->member->country ? ', ' . $this->member->country : '';
 $isSupporter = $this->stat['donationIssupporter'];
 ?>
+
+
     <main class="about-me-page">
 
         <section class="head-wrap">
@@ -225,7 +227,20 @@ $isSupporter = $this->stat['donationIssupporter'];
                                 <?php if ($this->userProducts) { ?>
                                     <div class="my-products-list">
                                         
-                                        <?php foreach ($this->userProducts as $product): ?>
+                                        <?php 
+                                        $productPre = null;
+                                        foreach ($this->userProducts as $product): ?>
+                                        <?php 
+                                            if($productPre== null or $product['project_category_id'] !=$productPre['project_category_id']){
+                                        ?>
+
+                                            <h3 class="categorySeperator" >
+                                              <span><?php echo $product['catTitle']; ?></span>
+                                            </h3>
+                                        <?php
+                                                }
+                                        ?>
+
                                             <div class="product mini-card col-lg-2 col-md-2 col-sm-3 col-xs-2">
                                                 <div class="u-wrap">
                                                     <a href="<?= $helperBuildProductUrl->buildProductUrl($product['project_id']); ?>">
@@ -254,6 +269,7 @@ $isSupporter = $this->stat['donationIssupporter'];
                                                 </div>
 
                                             </div>
+                                            <?php $productPre=$product; ?>
                                         <?php endforeach; ?>
                                     </div>
                                 <?php } ?>

@@ -308,7 +308,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         ))->setIntegrityCheck(false)->join('member', 'project.member_id = member.member_id', array('username'))
                   ->where('project.status >= ?', ($onlyActiveProjects ? self::PROJECT_ACTIVE : self::PROJECT_INACTIVE))
                   ->where('project.member_id = ?', $member_id, 'INTEGER')
-                  ->where('project.type_id = ?', self::PROJECT_TYPE_STANDARD)->order('project_changed_at DESC')
+                  ->where('project.type_id = ?', self::PROJECT_TYPE_STANDARD)->order('project_category_id ASC')->order('project_changed_at DESC')
         ;
         if (isset($limit)) {
             $q->limit($limit, $offset);
