@@ -164,11 +164,12 @@ class Backend_MemberPayoutCliController extends Local_Controller_Action_CliAbstr
             $amount = $payout['amount'];
             $mail = $payout['paypal_mail'];
             $id = $payout['id'];
+            $yearmonth = $payout['yearmonth'];
             /*if($this->_config->third_party->paypal->sandbox->active) {
                 $mail = "paypal-buyer@pling.com";
             }*/
             
-            $result = $this->sendPayout($mail, $amount, $id);
+            $result = $this->sendPayout($mail, $amount, $id, $yearmonth);
             
             echo "Result: " . print_r($result->getRawMessage());
             $payKey = $result->getPaymentId();
@@ -188,12 +189,12 @@ class Backend_MemberPayoutCliController extends Local_Controller_Action_CliAbstr
         return (strpos($response, 'ACK=Success') != false);
     }
     
-    private function sendPayout($receiverMail, $amount, $trackingId)
+    private function sendPayout($receiverMail, $amount, $trackingId, $yearmonth)
     {
         $paymentGateway = $this->createPaymentGateway("paypal");
         $response = null;
         try {
-            $response = $paymentGateway->requestPaymentForPayout($this->_config->third_party->paypal->facilitator_fee_receiver, $receiverMail, $amount, $trackingId);
+            $response = $paymentGateway->requestPaymentForPayout($this->_config->third_party->paypal->facilitator_fee_receiver, $receiverMail, $amount, $trackingId, $yearmonth);
         } catch (Exception $e) {
             throw new Zend_Controller_Action_Exception('payment error', 500, $e);
         }
