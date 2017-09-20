@@ -44,9 +44,11 @@ class Default_Model_Solr
                 'wt'         => 'json',
                 'fl'         => '*,score',
                 'df'         => 'description',
-                'qf'         => 'title description username',
+                'qf'         => 'title^3 description^2 username^1 cat_title',
                 'bq'         => 'changed_at:[NOW-1YEAR TO NOW/DAY]',
-                'bf'         => 'if(lt(laplace_score,50),-10,10)',
+                //'bf'         => 'if(lt(laplace_score,50),-10,10)',
+                'bf'         => 'product(recip(ms(NOW/HOUR,changed_at),3.16e-11,0.2,0.2),1000)',
+                'sort'       => 'score desc,changed_at desc',
                 //'hl'          => 'on',
                 //'hl.fl'       => 'title, description, username',
                 //'facet'          => 'on',
@@ -55,6 +57,8 @@ class Default_Model_Solr
                 //'facet.mincount' => '1',
                 'spellcheck' => 'true',
             );
+
+            $params = $this->setStoreFilter($params);
 
             $offset = ((int)$op['page'] - 1) * (int)$op['count'];
 
@@ -104,7 +108,10 @@ class Default_Model_Solr
 
     public function getPagination()
     {
-        return $this->_pagination;
+        if (isset($this->_pagination)) {
+            return $this->_pagination;
+        }
+        return Zend_Paginator::factory(array());
     }
 
     /**
@@ -137,6 +144,16 @@ class Default_Model_Solr
         }
 
         return $object;
+    }
+
+    private function setStoreFilter($params)
+    {
+        $currentStoreConfig = Zend_Registry::get('store_config');
+        if (substr($currentStoreConfig['order'], -1) <> 1) {
+            return $params;
+        }
+        $params['fq'] = 'stores:('.$currentStoreConfig['store_id'].')';
+        return $params;
     }
 
 }

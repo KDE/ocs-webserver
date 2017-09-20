@@ -289,7 +289,7 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
      */
     public function fetchTreeForJTable($cat_id)
     {
-        $resultRows = $this->fetchTree(1000, 0, false, true, 5, true);
+        $resultRows = $this->fetchTree(false, true, 5);
 
         $resultForSelect = array();
         foreach ($resultRows as $row) {
@@ -303,69 +303,104 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
     }
 
     /**
-     * @param int $pageSize
-     * @param int $startIndex
      * @param bool $isActive
      * @param bool $withRoot
-     * @param int $depth
+     * @param int  $depth
+     *
      * @return array
+     * @internal param int $pageSize
+     * @internal param int $startIndex
+     * @internal param bool $clearCache
      */
     public function fetchTree(
-        $pageSize = 10,
-        $startIndex = 0,
         $isActive = false,
         $withRoot = true,
-        $depth = null,
-        $clearCache = false
+        $depth = null
     ) {
-        /** @var Zend_Cache_Core $cache */
-        $cache = $this->cache;
-        $cacheName = __FUNCTION__ . '_' . md5((string)$pageSize . (string)$startIndex . (int)$isActive . (int)$withRoot . (string)$depth);
-        if ($clearCache) {
-            $cache->remove($cacheName);
-        }
-        if (!($tree = $cache->load($cacheName))) {
-            $whereWithRoot = $withRoot == true ? '' : ' AND node.lft > 0';
-            $whereActive = $isActive == true ? ' AND node.is_active = 1 AND node.is_deleted = 0' : '';
-            $sqlGetDepth = false === is_null($depth) ? $this->_db->quoteInto(' having depth <= ?', $depth) : '';
+        $sqlActive = $isActive == true ? " parent_active = 1 AND pc.is_active = 1" : '';
+        $sqlRoot = $withRoot == true ? "(pc.lft BETWEEN pc2.lft AND pc2.rgt)" : "(pc.lft BETWEEN pc2.lft AND pc2.rgt) AND pc2.lft > 0";
+        $sqlDepth = is_null($depth) == true ? '' : " AND depth <= " . (int)$depth;
+        $sqlHaving = $sqlActive || $sqlDepth ? "HAVING {$sqlActive} {$sqlDepth}" : '';
+        $sql = "
+        	  SELECT
+                pc.project_category_id,
+                pc.lft,
+                pc.rgt,
+                pc.title,
+                pc.name_legacy,
+                pc.is_active,
+                pc.orderPos,
+                pc.xdg_type,
+                pc.dl_pling_factor,
+                MIN(pc2.is_active)                                       AS parent_active,
+                concat(repeat('&nbsp;&nbsp;',count(pc.lft) - 1), pc.title) AS title_show,
+                concat(repeat('&nbsp;&nbsp;',count(pc.lft) - 1), IF(LENGTH(TRIM(pc.name_legacy))>0,pc.name_legacy,pc.title)) AS title_legacy,
+                count(pc.lft) - 1                                        AS depth,
+                GROUP_CONCAT(pc2.project_category_id ORDER BY pc2.lft)   AS ancestor_id_path,
+                GROUP_CONCAT(pc2.title ORDER BY pc2.lft SEPARATOR ' | ') AS ancestor_path,
+                GROUP_CONCAT(IF(LENGTH(TRIM(pc2.name_legacy))>0,pc2.name_legacy,pc2.title) ORDER BY pc2.lft SEPARATOR ' | ') AS ancestor_path_legacy
+              FROM
+                  project_category AS pc
+              JOIN
+                    project_category AS pc2 ON {$sqlRoot}
+              GROUP BY pc.lft
+              {$sqlHaving}
+              ORDER BY pc.lft
 
+        ";
 
-            $limit = " LIMIT {$startIndex},{$pageSize} ;";
-            //@TODO: rewrite sql code project.is_active and is_deleted is deprecated
-            $sql = "
-                SELECT node.*,CONCAT( REPEAT( '&nbsp;&nbsp;', (COUNT(parent.title) - 1) ), node.title) AS title_show, pc.product_counter, (COUNT(parent.title) - 1) as depth,
-                  (SELECT
-                      `project_category_id`
-                       FROM
-                         `project_category` AS `t2`
-                       WHERE
-                         `t2`.`lft`  < `node`.`lft` AND
-                         `t2`.`rgt` > `node`.`rgt`
-                         AND `t2`.`is_deleted` = 0
-                       ORDER BY
-                         `t2`.`rgt`-`node`.`rgt`ASC
-                       LIMIT
-                         1) AS `parent`
-                FROM {$this->_name} AS node
-                INNER JOIN {$this->_name} AS parent
-                LEFT JOIN
-                     (SELECT
-                        project.project_category_id,
-                        count(project.project_category_id) AS product_counter
-                        FROM
-                            project
-                        WHERE project.status = 100 AND project.type_id = 1
-                        GROUP BY project.project_category_id) AS pc ON pc.project_category_id = node.project_category_id
-                    WHERE node.lft BETWEEN parent.lft AND parent.rgt
-                " . $whereActive . $whereWithRoot . "
-                GROUP BY node.project_category_id
-                " . $sqlGetDepth . "
-                ORDER BY node.lft
-            ";
+        $tree = $this->_db->fetchAll($sql);
+        return $tree;
+    }
 
-            $tree = $this->_db->query($sql . $limit)->fetchAll();
-            $cache->save($tree, $cacheName);
-        }
+    /**
+     * @param bool $isActive
+     * @param bool $withRoot
+     * @param int  $depth
+     *
+     * @return array
+     * @internal param int $pageSize
+     * @internal param int $startIndex
+     * @internal param bool $clearCache
+     */
+    public function fetchTreeWithParentId(
+        $isActive = true,
+        $depth = null
+    ) {
+        $sqlActive = $isActive == true ? " parent_active = 1 AND pc.is_active = 1" : '';
+        $sqlDepth = is_null($depth) == true ? '' : " AND depth <= " . (int)$depth;
+        $sqlHaving = $sqlActive || $sqlDepth ? "HAVING {$sqlActive} {$sqlDepth}" : '';
+        $sql = "
+        	  SELECT
+                pc.project_category_id,
+                pc.lft,
+                pc.rgt,
+                pc.title,
+                pc.name_legacy,
+                pc.is_active,
+                pc.orderPos,
+                pc.xdg_type,
+                pc.dl_pling_factor,
+                pc.show_description,
+                MIN(pc2.is_active)                                       AS parent_active,
+                concat(repeat('&nbsp;&nbsp;',count(pc.lft) - 1), pc.title) AS title_show,
+                concat(repeat('&nbsp;&nbsp;',count(pc.lft) - 1), IF(LENGTH(TRIM(pc.name_legacy))>0,pc.name_legacy,pc.title)) AS title_legacy,
+                count(pc.lft) - 1                                        AS depth,
+                GROUP_CONCAT(pc2.project_category_id ORDER BY pc2.lft)   AS ancestor_id_path,
+                GROUP_CONCAT(pc2.title ORDER BY pc2.lft SEPARATOR ' | ') AS ancestor_path,
+                GROUP_CONCAT(IF(LENGTH(TRIM(pc2.name_legacy))>0,pc2.name_legacy,pc2.title) ORDER BY pc2.lft SEPARATOR ' | ') AS ancestor_path_legacy,
+                SUBSTRING_INDEX( GROUP_CONCAT(pc2.project_category_id ORDER BY pc2.lft), ',', -1) AS parent
+              FROM
+                  project_category AS pc
+              JOIN
+                    project_category AS pc2 ON (pc.lft BETWEEN pc2.lft AND pc2.rgt) AND pc2.project_category_id <> pc.project_category_id
+              GROUP BY pc.lft
+              {$sqlHaving}
+              ORDER BY pc.lft
+
+        ";
+
+        $tree = $this->_db->fetchAll($sql);
         return $tree;
     }
 
@@ -374,7 +409,35 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
      */
     public function fetchTreeForJTableStores($cat_id)
     {
-        $resultRows = $this->fetchTree(1000, 0, true, true, 5, true);
+        $sql = "
+                SELECT
+                pc.project_category_id,
+                pc.lft,
+                pc.rgt,
+                pc.title,
+                pc.name_legacy,
+                pc.is_active,
+                pc.orderPos,
+                pc.xdg_type,
+                pc.dl_pling_factor,
+                pc.show_description,
+                MIN(pc2.is_active)                                       AS parent_active,
+                concat(repeat('&nbsp;&nbsp;',count(pc.lft) - 1), pc.title) AS title_show,
+                concat(repeat('&nbsp;&nbsp;',count(pc.lft) - 1), IF(LENGTH(TRIM(pc.name_legacy))>0,pc.name_legacy,pc.title)) AS title_legacy,
+                count(pc.lft) - 1                                        AS depth,
+                GROUP_CONCAT(pc2.project_category_id ORDER BY pc2.lft)   AS ancestor_id_path,
+                GROUP_CONCAT(pc2.title ORDER BY pc2.lft SEPARATOR ' | ') AS ancestor_path,
+                GROUP_CONCAT(IF(LENGTH(TRIM(pc2.name_legacy))>0,pc2.name_legacy,pc2.title) ORDER BY pc2.lft SEPARATOR ' | ') AS ancestor_path_legacy,
+                SUBSTRING_INDEX( GROUP_CONCAT(pc2.project_category_id ORDER BY pc2.lft), ',', -1) AS parent
+              FROM
+                  project_category AS pc
+              JOIN
+                    project_category AS pc2 ON (pc.lft BETWEEN pc2.lft AND pc2.rgt) AND (IF(pc.project_category_id <> 34,pc2.project_category_id <> pc.project_category_id,true))
+              GROUP BY pc.lft
+              HAVING parent_active = 1 AND pc.is_active = 1
+              ORDER BY pc.lft
+        ";
+        $resultRows = $this->_db->fetchAll($sql);
 
         $resultForSelect = array();
         foreach ($resultRows as $row) {
@@ -715,7 +778,7 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
         $cache = $this->cache;
         $cacheName = __FUNCTION__ . '_' . md5(serialize($nodeId) . (int)$isActive);
 
-        if (($children = $cache->load($cacheName))) {
+        if (false !== ($children = $cache->load($cacheName))) {
             return $children;
         }
 
@@ -740,6 +803,7 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
         $children = $this->_db->query($sql, $nodeId)->fetchAll();
         if (count($children)) {
             $result = $this->flattenArray($children);
+            $result = $this->removeUnnecessaryValues($nodeId, $result);
             $cache->save($result, $cacheName);
             return $result;
         } else {
@@ -818,7 +882,7 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
      */
     public function fetchMainCategories($returnAmount = 25, $fetchLimit = 25)
     {
-        $categories = $this->fetchTree($fetchLimit, 0, true, false, 1);
+        $categories = $this->fetchTree(true, false, 1);
         return array_slice($categories, 0, $returnAmount);
     }
 
@@ -932,7 +996,7 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
      */
     public function fetchRandomCategories($returnAmount = 5, $fetchLimit = 25)
     {
-        $categories = $this->fetchTree($fetchLimit, 0, true, false, 1);
+        $categories = $this->fetchTree(true, false, 1);
         return $this->_array_random($categories, $returnAmount);
     }
 
@@ -1243,6 +1307,12 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
             $frontendOptions,
             $backendOptions
         );
+    }
+
+    private function removeUnnecessaryValues($nodeId, $children)
+    {
+        $nodeId = is_array($nodeId) ? $nodeId : array($nodeId);
+        return array_diff($children, $nodeId);
     }
 
 }

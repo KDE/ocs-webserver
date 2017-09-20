@@ -182,8 +182,8 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         $this->setMemberRatingsDeleted($member_id);
         $this->setMemberReportingsDeleted($member_id);
         $this->setMemberEmailsDeleted($member_id);
-        // $this->setMemberPlingsDeleted($member_id);
-        $this->removeMemberProjectsFromSearch($member_id);
+        //$this->setMemberPlingsDeleted($member_id);
+        //$this->removeMemberProjectsFromSearch($member_id);
         $this->setDeletedInMaterializedView($member_id);
     }
 
@@ -223,6 +223,10 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         $modelEmail->setDeletedByMember($member_id);
     }
 
+    /**
+     * @param int $member_id
+     * @deprecated since we're using solr server for searching
+     */
     private function removeMemberProjectsFromSearch($member_id)
     {
         $modelProject = new Default_Model_Project();

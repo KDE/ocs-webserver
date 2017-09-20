@@ -287,7 +287,7 @@ class Default_Model_Authorization
     {
         Zend_Registry::get('logger')->info(__METHOD__ . ' - $identity: ' . print_r($identity, true));
         $sql = "
-            SELECT member_email.email_checked, member.*
+            SELECT member_email.email_checked, member_email.email_address, member.*
             FROM member_email
             JOIN member ON member.member_id = member_email.email_member_id
             WHERE email_deleted = 0 AND member_email.email_verification_value = :verification
@@ -295,7 +295,7 @@ class Default_Model_Authorization
         $resultRow = $this->_dataTable->getAdapter()->fetchRow($sql, array('verification' => $identity));
         if ($resultRow) {
             Zend_Registry::get('logger')->info(__METHOD__
-                . " - found (member_id,mail,is_active,mail_checked): ({$resultRow['username']},{$resultRow['mail']},{$resultRow['is_active']},{$resultRow['mail_checked']})")
+                . " - found (member_id,mail,is_active,email_address,email_checked): ({$resultRow['member_id']},{$resultRow['mail']},{$resultRow['is_active']},{$resultRow['email_address']},{$resultRow['email_checked']})")
             ;
             unset($resultRow['password']);
 

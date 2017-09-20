@@ -120,7 +120,7 @@ class Backend_ReportCommentsController extends Local_Controller_Action_Backend
             $commentId = (int)$this->getParam('c');
 
             $model = new Default_Model_ProjectComments();
-            $record = $model->getComment($commentId);
+            $record = $model->getCommentWithMember($commentId);
             $this->view->comment = $record;
             $view = $this->view->render('reportcomments/comment.phtml');
 

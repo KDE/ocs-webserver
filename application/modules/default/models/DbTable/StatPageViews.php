@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -26,8 +27,13 @@ class Default_Model_DbTable_StatPageViews extends Zend_Db_Table_Abstract
 
     public function savePageView($project_id, $clientIp, $member_id)
     {
+        if (SEARCHBOT_DETECTED) { // we don't save a page view when a search bot was detected
+            Zend_Registry::get('logger')->info(__METHOD__ . ' - search bot detected. Counting page view omitted.');
+            return;
+        }
+
         $this->_db->beginTransaction();
-        
+
         try {
             $this->_db->query("INSERT LOW_PRIORITY INTO {$this->_name} (`project_id`, `ip`, `member_id`) VALUES (:param1, :param2, :param3);",
                 array(
@@ -36,13 +42,10 @@ class Default_Model_DbTable_StatPageViews extends Zend_Db_Table_Abstract
                     'param3' => $member_id
                 ));
             $this->_db->commit();
-            
         } catch (Exception $ex) {
             $this->_db->rollBack();
             Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . print_r($ex, true));
         }
-
-
     }
 
 }

@@ -181,8 +181,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->_auth->getIdentity()->projects[$newProject->project_id] = array('project_id' => $newProject->project_id);
         //        $this->auth->getStorage()->write($this->auth->getIdentity());
 
-        $this->createTaskWebsiteOwnerVerification($newProject);
-
         $activityLog = new Default_Model_ActivityLog();
         $activityLog->writeActivityLog($newProject->project_id, $newProject->member_id,
             Default_Model_ActivityLog::PROJECT_CREATED, $newProject->toArray());
@@ -417,8 +415,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             ;
         }
         $projectData->save();
-
-        $this->createTaskWebsiteOwnerVerification($projectData);
 
         $activityLog = new Default_Model_ActivityLog();
         $activityLog->writeActivityLog($this->_projectId, $projectData->member_id,
@@ -1790,8 +1786,19 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
     public function searchAction()
     {
-        $this->view->searchText = $this->getParam('projectSearchText', '');
-        $this->view->page = $this->getParam('page', 1);
+        // Filter-Parameter
+        $filterInput =
+            new Zend_Filter_Input(array('*' => 'StringTrim', 'projectSearchText' => array(new Zend_Filter_Callback('stripslashes'),'StripTags'), 'page' => 'digits'),
+                array(
+                    'projectSearchText' => array(
+                        new Zend_Validate_StringLength(array('min' => 3, 'max' => 100)),
+                        'presence' => 'required'
+                    ),
+                    'page'              => array('digits', 'default' => '1')
+                ), $this->getAllParams());
+
+        $this->view->searchText = $filterInput->getEscaped('projectSearchText');
+        $this->view->page = $filterInput->getEscaped('page');
     }
 
     /**

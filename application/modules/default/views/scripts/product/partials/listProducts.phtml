@@ -26,8 +26,7 @@ $helperImage = new Default_View_Helper_Image();
 
 $this->rownum = (1 + (($this->page - 1) * 10));
 foreach ($this->products as $this->product) {
-    $updateTime = $helperPrintDate->printDate($this->product->project_changed_at);
-
+    $updateTime = $helperPrintDate->printDate($this->product->changed_at, 'Y-m-d\TH:i:s\Z');
 ?>
 <div class="explore-product col-lg-12 col-md-12 col-sm-12 col-xs-12">
     <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
@@ -56,18 +55,9 @@ foreach ($this->products as $this->product) {
         <b style="display: block; margin-bottom: 5px"><?php echo $this->product->cat_title?></b>
         <b style="display: block; margin-bottom: 5px" class="small">by <a href="<?php echo $this->buildMemberUrl($this->product->member_id)?>"><?php echo $this->product->username?></a></b>
         <div style="display: block; float: left">
-         <?php
-         if (false === empty($this->product->package_names)) {
-             $list_packages = explode(',', $this->product->package_names);
-             $resultString = '';
-             foreach ($list_packages as $item) {
-                 $resultString = $resultString . ' <span class="packagetypeos" > ' . stripslashes($item) . '</span>';
-             }
-             echo $resultString;
-         }
-
-         //$type = $this->FetchProjectPackageTypes($this->product->project_id);
-         // if(!empty($type)){ echo $type;} ?>
+         <?php           
+          $type = $this->FetchProjectPackageTypes($this->product->project_id);
+          if(!empty($type)){ echo $type;} ?>
         </div>
 
         <div class="productInfo">

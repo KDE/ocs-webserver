@@ -257,9 +257,9 @@ class Default_Model_Oauth_Github
         if ($response->getStatus() > 200) {
             throw new Zend_Exception('error while request users data');
         }
-        foreach ($data as $datum) {
-            if ($datum['primary']) {
-                return $datum['email'];
+        foreach ($data as $element) {
+            if ($element['primary']) {
+                return $element['email'];
             }
         }
         return '';

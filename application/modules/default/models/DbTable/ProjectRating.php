@@ -110,6 +110,7 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
      * @param int      $member_id
      * @param int      $userRating
      * @param int|null $comment_id
+     * @TODO: revise this, double check against specification. the source code seems to be too complicated.
      */
     public function rateForProject($projectId, $member_id, $userRating, $comment_id = null)
     {
@@ -121,7 +122,7 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
         $flagFromDislikeToLike = false;
         $flagFromLikeToDislike = false;
         if (false == is_null($alreadyExists)) {
-            // if exist then if not same then deactive it and add new line otherwise return            
+            // if exist then if not same then deactivate it and add new line otherwise return
             if ($alreadyExists->user_like == 1) {
                 if ($userRating == 1) {
                     // update comment_id
@@ -129,7 +130,7 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
                     //return;
                     $this->update(array('rating_active' => 0), 'rating_id=' . $alreadyExists->rating_id);
                 } else {
-                    // else userRating ==2 dislike then deactive current rating add new line
+                    // else userRating ==2 dislike then deactivate current rating add new line
                     $this->update(array('rating_active' => 0), 'rating_id=' . $alreadyExists->rating_id);
                     $flagFromLikeToDislike = true;
                 }

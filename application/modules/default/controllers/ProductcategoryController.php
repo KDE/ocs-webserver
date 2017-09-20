@@ -59,10 +59,13 @@ class ProductcategoryController extends Local_Controller_Action_DomainSwitch
         $this->_helper->viewRenderer->setNoRender(true);
 
         $tableCategories = new Default_Model_DbTable_ProjectCategory();
-        $categories = $tableCategories->fetchTree(5, 0, true, false, 1);
+        $categories = $tableCategories->fetchTree(true, false, 1);
 
+        $paginator = Zend_Paginator::factory($categories);
+        $paginator->setItemCountPerPage(5);
+        $paginator->setCurrentPageNumber(1);
 
-        $this->_helper->json($categories);
+        $this->_helper->json((array)$paginator->getCurrentItems());
     }
 
     public function fetchcategoryproductsAction()

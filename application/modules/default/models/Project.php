@@ -233,6 +233,56 @@ class Default_Model_Project extends Default_Model_DbTable_Project
     }
 
     /**
+     * @param int  $member_id
+     * @param bool $onlyActiveProjects
+     * @param      $catids
+     *
+     * @return mixed
+     */
+    public function countAllProjectsForMemberCatFilter($member_id, $onlyActiveProjects = false, $catids = null)
+    {
+        $q = $this->select()->from($this, array('countAll' => new Zend_Db_Expr('count(*)')))->setIntegrityCheck(false)
+                  ->where('project.status >= ?', ($onlyActiveProjects ? self::PROJECT_ACTIVE : self::PROJECT_INACTIVE))
+                  ->where('project.member_id = ?', $member_id, 'INTEGER')
+                  ->where('project.type_id = ?', self::PROJECT_TYPE_STANDARD)
+        ;
+        if (isset($catids)) {
+            $q->where('project_category_id in (' . $this->_getCatIds($catids) . ')');
+        }
+        $resultSet = $q->query()->fetchAll();
+
+        return $resultSet[0]['countAll'];
+    }
+
+    protected function _getCatIds($catids)
+    {
+        $sqlwhereCat = "";
+        $sqlwhereSubCat = "";
+
+        $idCategory = explode(',', $catids);
+        if (false === is_array($idCategory)) {
+            $idCategory = array($idCategory);
+        }
+
+        $sqlwhereCat .= implode(',', $idCategory);
+
+        $modelCategory = new Default_Model_DbTable_ProjectCategory();
+        $subCategories = $modelCategory->fetchChildElements($idCategory);
+
+        if (count($subCategories) > 0) {
+            foreach ($subCategories as $element) {
+                $sqlwhereSubCat .= "{$element['project_category_id']},";
+            }
+        }
+
+        return $sqlwhereSubCat . $sqlwhereCat;
+    }
+
+    /*
+    @ param string categoryids: 111,107 return id and child ids...
+    */
+
+    /**
      * By default it will show all projects for a member included the unpublished elements.
      *
      * @param int      $member_id
@@ -253,7 +303,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             'project_changed_at' => 'project.changed_at',
             'member_type'        => 'member.type',
             'project_member_id'  => 'member_id',
-            'laplace_score'      => new Zend_Db_Expr('(round(((count_likes + 6) / ((count_likes + count_dislikes) + 12)),2) * 100)'),
+            'laplace_score'      => new Zend_Db_Expr('laplace_score(count_likes,count_dislikes)'),
             'catTitle'           => new Zend_Db_Expr('(SELECT title FROM project_category WHERE project_category_id = project.project_category_id)')
         ))->setIntegrityCheck(false)->join('member', 'project.member_id = member.member_id', array('username'))
                   ->where('project.status >= ?', ($onlyActiveProjects ? self::PROJECT_ACTIVE : self::PROJECT_INACTIVE))
@@ -285,6 +335,53 @@ class Default_Model_Project extends Default_Model_DbTable_Project
     }
 
     /**
+     * By default it will show all projects for a member included the unpublished elements.
+     *
+     * @param int      $member_id
+     * @param int|null $limit
+     * @param int|null $offset
+     * @param bool     $onlyActiveProjects
+     *
+     * @param null     $catids
+     *
+     * @return Zend_Db_Table_Rowset_Abstract
+     */
+    public function fetchAllProjectsForMemberCatFilter(
+        $member_id,
+        $limit = null,
+        $offset = null,
+        $onlyActiveProjects = false,
+        $catids = null
+    ) {
+        $q = $this->select()->from($this, array(
+            '*',
+            'project_validated'  => 'project.validated',
+            'project_uuid'       => 'project.uuid',
+            'project_status'     => 'project.status',
+            'project_created_at' => 'project.created_at',
+            'project_changed_at' => 'project.changed_at',
+            'member_type'        => 'member.type',
+            'project_member_id'  => 'member_id',
+            'laplace_score'      => new Zend_Db_Expr('laplace_score(count_likes,count_dislikes)'),
+            'catTitle'           => new Zend_Db_Expr('(SELECT title FROM project_category WHERE project_category_id = project.project_category_id)')
+        ))->setIntegrityCheck(false)->join('member', 'project.member_id = member.member_id', array('username'))
+                  ->where('project.status >= ?', ($onlyActiveProjects ? self::PROJECT_ACTIVE : self::PROJECT_INACTIVE))
+                  ->where('project.member_id = ?', $member_id, 'INTEGER')
+                  ->where('project.type_id = ?', self::PROJECT_TYPE_STANDARD)->order('project_changed_at DESC')
+        ;
+
+        if (isset($catids)) {
+            $q->where('project_category_id in (' . $this->_getCatIds($catids) . ')');
+        }
+
+        if (isset($limit)) {
+            $q->limit($limit, $offset);
+        }
+
+        return $this->generateRowSet($q->query()->fetchAll());
+    }
+
+    /**
      * @param int $project_id
      *
      * @return null|Zend_Db_Table_Row_Abstract
@@ -310,7 +407,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                   m.mail,
                   m.paypal_mail,
                   m.dwolla_id,
-               	 (round(((p.count_likes + 6) / ((p.count_likes + p.count_dislikes) + 12)),2) * 100) AS laplace_score,
+               	 laplace_score(p.count_likes,p.count_dislikes) AS laplace_score,
                  `view_reported_projects`.`amount_reports` AS `amount_reports`
                 FROM project AS p
                   JOIN member AS m ON p.member_id = m.member_id AND m.is_active = 1 AND m.is_deleted = 0
@@ -397,16 +494,19 @@ class Default_Model_Project extends Default_Model_DbTable_Project
      */
     public function fetchMoreProjects($project, $count = 6)
     {
-        $q = $this->select()->from($this, array(
+        $q = $this->select()->from('stat_projects', array(
             'project_id',
             'image_small',
             'title',
-            'catTitle' => new Zend_Db_Expr('(SELECT title FROM project_category WHERE project_category_id = project.project_category_id)')
-        ))->setIntegrityCheck(false)->where('project.status = ?', self::PROJECT_ACTIVE)
-                  ->where('project.member_id = ?', $project->member_id, 'INTEGER')
-                  ->where('project.project_id != ?', $project->project_id, 'INTEGER')->where('project.type_id = ?', 1)
-                  ->where('project.project_category_id = ?', $project->project_category_id, 'INTEGER')->limit($count)
-                  ->order('project.created_at DESC')
+            'catTitle' => 'cat_title'
+        ))->setIntegrityCheck(false)
+                  ->where('status = ?', self::PROJECT_ACTIVE)
+                  ->where('member_id = ?', $project->member_id, 'INTEGER')
+                  ->where('project_id != ?', $project->project_id, 'INTEGER')
+                  ->where('type_id = ?', self::PROJECT_TYPE_STANDARD)
+                  ->where('project_category_id = ?', $project->project_category_id, 'INTEGER')
+                  ->limit($count)
+                  ->order('project_created_at DESC')
         ;
 
         $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
@@ -419,7 +519,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             $q = $this->generatePackageTypeFilter($q, array(self::FILTER_NAME_PACKAGETYPE => $storePackageTypeIds));
         }
 
-        return $this->generateRowSet($q->query()->fetchAll());
+        return $this->fetchAll($q);
     }
 
     /**
@@ -436,10 +536,14 @@ class Default_Model_Project extends Default_Model_DbTable_Project
 
         $filter = $filterArrayValue[self::FILTER_NAME_PACKAGETYPE];
 
-        $statement->join(array(
-            'package_type' => new Zend_Db_Expr('(SELECT DISTINCT project_id FROM project_package_type WHERE package_type_id in ('
-                . $filter . '))')
-        ), 'project.project_id = package_type.project_id', array());
+        if (is_array($filter)) {
+            $statement->join(array(
+                'package_type' => new Zend_Db_Expr('(SELECT DISTINCT project_id FROM project_package_type WHERE package_type_id in ('
+                    . $filter . '))')
+            ), 'project.project_id = package_type.project_id', array());
+        } else {
+            $statement->where('find_in_set(?, package_types)', $filter);
+        }
 
         return $statement;
     }
@@ -455,11 +559,11 @@ class Default_Model_Project extends Default_Model_DbTable_Project
     {
         $sql = "
                 SELECT count(1) AS `count`
-                FROM project
-                WHERE project.status = :current_status
-                  AND project.member_id <> :current_member_id
-                  AND project.project_category_id = :category_id
-                  AND project.type_id = :project_type
+                FROM stat_projects
+                WHERE status = :current_status
+                  AND member_id <> :current_member_id
+                  AND project_category_id = :category_id
+                  AND type_id = :project_type
         ";
 
         $result = $this->_db->query($sql, array(
@@ -476,15 +580,18 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             $offset = 0;
         }
 
-        $q = $this->select()->from($this, array(
+        $q = $this->select()->from('stat_projects', array(
             'project_id',
             'image_small',
             'title',
-            'catTitle' => new Zend_Db_Expr('(SELECT title FROM project_category WHERE project_category_id = project.project_category_id)')
-        ))->setIntegrityCheck(false)->where('project.status = ?', self::PROJECT_ACTIVE)
-                  ->where('project.member_id != ?', $project->member_id, 'INTEGER')->where('project.type_id = ?', 1)
-                  ->where('project.project_category_id = ?', $project->project_category_id, 'INTEGER')
-                  ->limit($count, $offset)->order('project.created_at DESC')
+            'catTitle' => 'cat_title'
+        ))->setIntegrityCheck(false)
+                  ->where('status = ?', self::PROJECT_ACTIVE)
+                  ->where('member_id != ?', $project->member_id, 'INTEGER')
+                  ->where('type_id = ?', 1)
+                  ->where('project_category_id = ?', $project->project_category_id, 'INTEGER')
+                  ->limit($count, $offset)
+                  ->order('project_created_at DESC')
         ;
 
         $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
@@ -497,7 +604,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             $q = $this->generatePackageTypeFilter($q, array(self::FILTER_NAME_PACKAGETYPE => $storePackageTypeIds));
         }
 
-        return $this->generateRowSet($q->query()->fetchAll());
+        return $this->fetchAll($q);
     }
 
     /**
@@ -538,7 +645,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
     /**
      * @param $projectId
      *
-     * @return Zend_Db_Table_Rowset_Abstract
+     * @return array
      */
     public function getGalleryPictureSources($projectId)
     {
@@ -675,6 +782,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
      *
      * @return int count of products in given category
      * @throws Zend_Exception
+     * @deprecated
      */
     public function countProductsInCategory($idCategory = null, $withSubCat = true, $store_id = null)
     {
@@ -682,7 +790,10 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             throw new Zend_Exception('idCategory param was not set');
         }
 
-        $store_config = null;
+        if (false == is_array($idCategory)) {
+            $idCategory = array($idCategory);
+        }
+
         if (isset($store_id)) {
             $configurations = Zend_Registry::get('application_store_config_id_list');
             $store_config = isset($configurations[$store_id]) ? $configurations[$store_id] : null;
@@ -699,48 +810,27 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             return (int)$resultSet[0]['count_active_projects'];
         }
 
-        $select =
-            $this->select()->setIntegrityCheck(false)->from($this->_name, array('count_active_projects' => 'COUNT(1)'))
-                 ->joinInner('member',
-                     'member.member_id = project.member_id AND member.is_active = 1 AND member.is_deleted = 0')
-                 ->where('project.status = ? ', self::PROJECT_ACTIVE)
-                 ->where('project.type_id = ?', self::PROJECT_TYPE_STANDARD)
+        $select = $this->select()->setIntegrityCheck(false)
+                                 ->from('stat_projects', array('count_active_projects' => 'COUNT(1)'))
+                                 ->where('status = ? ', self::PROJECT_ACTIVE)
+                                 ->where('type_id = ?', self::PROJECT_TYPE_STANDARD)
         ;
 
-        if ($storePackageTypeIds) {
-            $select =
-                $this->generatePackageTypeFilter($select, array(self::FILTER_NAME_PACKAGETYPE => $storePackageTypeIds));
-        }
-
-        $sqlwhereCat = "";
-        $sqlwhereSubCat = "";
-
-        if (false === is_array($idCategory)) {
-            $idCategory = array($idCategory);
-        }
-        $sqlwhereCat .= implode(',', $idCategory);
+        $select =
+            $this->generatePackageTypeFilter($select, array(self::FILTER_NAME_PACKAGETYPE => $storePackageTypeIds));
 
         if ($withSubCat) {
             $modelCategory = new Default_Model_DbTable_ProjectCategory();
-            $subCategories = $modelCategory->fetchChildElements($idCategory);
-
-            if (count($subCategories) > 0) {
-                foreach ($subCategories as $element) {
-                    $sqlwhereSubCat .= "{$element['project_category_id']},";
-                }
-            }
+            $subCategories = $modelCategory->fetchChildIds($idCategory);
+            $inCategories = implode(',',array_unique(array_merge($idCategory, $subCategories)));
+        } else {
+            $inCategories = implode(',', $idCategory);
         }
 
-        $select->where('project.project_category_id in (' . $sqlwhereSubCat . $sqlwhereCat . ')');
+        $select->where('project_category_id in (' . $inCategories . ')');
+        $resultSet = $this->fetchAll($select)->toArray();
 
-        //Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . $select->__toString());
-        //$this->_db->getProfiler()->setEnabled(true);
-        $resultSet = $this->fetchAll($select);
-        //Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . $this->_db->getProfiler()->getLastQueryProfile()->getQuery());
-        //Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . print_r($resultSet->toArray(),true));
-        //$this->_db->getProfiler()->setEnabled(false);
-
-        $cache->save($resultSet, $cacheName, array(), 300);
+        $cache->save($resultSet, $cacheName, array(), 60);
 
         return (int)$resultSet[0]['count_active_projects'];
     }
@@ -822,12 +912,14 @@ class Default_Model_Project extends Default_Model_DbTable_Project
 
     public function setAllProjectsForMemberDeleted($member_id)
     {
-        $sql = '
-                UPDATE project
-                SET status = :statusValue, deleted_at = NOW()
-                WHERE member_id = :memberId;
-        ';
-        $this->_db->query($sql, array('statusValue' => self::PROJECT_DELETED, 'memberId' => $member_id))->execute();
+        $sql = "SELECT project_id FROM project WHERE member_id = :memberId AND type_id = :typeId";
+        $projectForDelete = $this->_db->fetchAll($sql, array('memberId' => $member_id, 'typeId' => self::PROJECT_TYPE_STANDARD));
+        foreach ($projectForDelete as $item) {
+            $this->setDeleted($item['project_id']);
+        }
+        // set personal page deleted
+        $sql = "UPDATE project SET `status` = :statusCode, deleted_at = NOW() WHERE member_id = :memberId AND type_id = :typeId";
+        $this->_db->query($sql, array('statusCode' => self::PROJECT_DELETED, 'memberId' => $member_id, 'typeId' => self::PROJECT_TYPE_PERSONAL))->execute();
     }
 
     public function setAllProjectsForMemberActivated($member_id)
@@ -865,7 +957,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             $countElements = $this->fetchRow($statement);
             $returnValue = array('elements' => $fetchedElements, 'total_count' => $countElements->count);
 
-            $cache->save($returnValue, $cacheName, array(), 300);
+            $cache->save($returnValue, $cacheName, array(), 120);
         }
 
         return $returnValue;
@@ -929,17 +1021,8 @@ class Default_Model_Project extends Default_Model_DbTable_Project
 
         // fetch child elements for each category
         $modelProjectCategories = new Default_Model_DbTable_ProjectCategory();
-        $allCategories = array();
-        foreach ($filter as $catId) {
-            $allCategories[] = $catId;
-            $childElements = $modelProjectCategories->fetchChildElements($catId);
-            $childIds = array();
-            foreach ($childElements as $child) {
-                $childIds[] = $child['project_category_id'];
-            }
-            $allCategories = array_merge($allCategories, $childIds);
-        }
-
+        $childElements = $modelProjectCategories->fetchChildIds($filter);
+        $allCategories = array_unique(array_merge($filter, $childElements));
         $stringCategories = implode(',', $allCategories);
 
         $statement->where("(
@@ -1003,7 +1086,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
 
     protected function generateReportedSpamFilter(Zend_Db_Select $statement)
     {
-        return $statement->where('((amount_reports is null) or (amount_reports < 2))');
+        return $statement->where('(amount_reports is null)');
     }
 
     /**
@@ -1024,14 +1107,6 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         if (empty($username)) {
             throw new Zend_Db_Table_Exception('username is not set');
         }
-        ////check if the project categoriy is the last child in tree
-        //$cat = $values['project_category_id'];
-        //$tableCat = new Default_Model_DbTable_ProjectCategory();
-        //$catChildIds = $tableCat->fetchChildIds($cat);
-        //if (!$catChildIds || count($catChildIds) <> 1 || $catChildIds[0] != $cat) {
-        //    throw new Exception('Error in updateProject: category is no in the right level!');
-        //}
-        //
         // check important values for a new project
         $values['uuid'] = (!array_key_exists('uuid', $values)) ? Local_Tools_UUID::generateUUID() : $values['uuid'];
         $values['member_id'] = (!array_key_exists('member_id', $values)) ? $member_id : $values['member_id'];
@@ -1069,14 +1144,6 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             throw new Zend_Db_Table_Exception('project_id not found');
         }
 
-        //check if the project categoriy is the last child in tree
-        //$cat = $values['project_category_id'];
-        //$tableCat = new Default_Model_DbTable_ProjectCategory();
-        //$catChildIds = $tableCat->fetchChildIds($cat);
-        //if (!$catChildIds || count($catChildIds) <> 1 || $catChildIds[0] != $cat) {
-        //    throw new Exception('Error in updateProject: category is no in the right level!');
-        //}
-
         $projectData->setFromArray($values)->save();
 
         return $projectData;
@@ -1103,11 +1170,6 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             $storePackageTypeIds = $storeConfig['package_type'];
         }
 
-        //        $inQuery = '?';
-        //        if (is_array($storeCategories)) {
-        //            $inQuery = implode(',', array_fill(0, count($storeCategories), '?'));
-        //        }
-
         $sql = '
                 SELECT
                   p.*,
@@ -1120,33 +1182,10 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                   m.mail,
                   m.paypal_mail,
                   m.dwolla_id,
-               	 (round(((p.count_likes + 6) / ((p.count_likes + p.count_dislikes) + 12)),2) * 100) AS laplace_score
+               	 laplace_score(p.count_likes,p.count_dislikes) AS laplace_score
                 FROM project AS p
                   JOIN member AS m ON p.member_id = m.member_id AND m.is_active = 1 AND m.is_deleted = 0
                   JOIN project_category AS pc ON p.project_category_id = pc.project_category_id';
-        /*
-                $sql = '
-                        SELECT
-                          p.*,
-                          p.changed_at AS project_changed_at,
-                          pc.title AS cat_title,
-                          m.username,
-                          m.avatar,
-                          m.profile_image_url,
-                          m.roleId,
-                          m.mail,
-                          m.paypal_mail,
-                          m.dwolla_id,
-                            (round(((p.count_likes + 6) / ((p.count_likes + p.count_dislikes) + 12)),2) * 100) AS laplace_score,
-                            sp.amount_received,
-                            sp.count_plings,
-                            sp.count_plingers,
-                            sp.latest_pling
-                        FROM project AS p
-                          JOIN member AS m ON p.member_id = m.member_id AND m.is_active = 1 AND m.is_deleted = 0
-                          JOIN project_category AS pc ON p.project_category_id = pc.project_category_id
-                          LEFT JOIN stat_plings AS sp ON p.project_id = sp.project_id';
-        */
 
         if ($storePackageTypeIds) {
             $sql .= ' JOIN (SELECT DISTINCT project_id FROM project_package_type WHERE package_type_id in ('

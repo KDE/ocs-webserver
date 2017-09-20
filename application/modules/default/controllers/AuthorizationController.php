@@ -349,8 +349,6 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
 
         $this->sendConfirmationMail($formRegisterValues, $newUserData['verificationVal']);
 
-        $this->sendAdminNotificationMail($formRegisterValues);
-
         if ($this->_request->isXmlHttpRequest()) {
             $viewRegisterForm = $this->view->render('authorization/partials/registerSuccess.phtml');
             $this->_helper->json(array('status' => 'ok', 'message' => $viewRegisterForm));
@@ -510,8 +508,12 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             return;
         }
 
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - activate user from email link. member_id: ' . print_r($authUser->member_id,
-                true) . ' - username: ' . print_r($authUser->username, true));
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - activate user from email link. (member_id, username): ('
+            . print_r($authUser->member_id,true)
+            . ', '
+            . print_r($authUser->username, true)
+            . ')'
+        );
         $modelMember = new Default_Model_Member();
         $result = $modelMember->activateMemberFromVerification($authUser->member_id, $_vId);
 
