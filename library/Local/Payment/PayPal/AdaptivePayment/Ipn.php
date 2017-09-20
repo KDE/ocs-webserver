@@ -233,6 +233,42 @@ abstract class Local_Payment_PayPal_AdaptivePayment_Ipn extends Local_Payment_Pa
     {
         $this->_logger->info('Not doing anything in _statusCreated ' . $this->_ipnMessage->getPaymentId());
     }
+    /**
+     * The payment request was denied; 
+     */
+    protected function _statusDenied()
+    {
+    	$this->_logger->info('Not doing anything in _statusDenied ' . $this->_ipnMessage->getPaymentId());
+    }
+    /**
+     * The payment request was reserved; 
+     */
+    protected function _statusReserved()
+    {
+    	$this->_logger->info('Not doing anything in _statusReserved ' . $this->_ipnMessage->getPaymentId());
+    }
+    /**
+     * The payment request was refunded;
+     */
+    protected function _statusRefunded()
+    {
+    	$this->_logger->info('Not doing anything in _statusRefunded ' . $this->_ipnMessage->getPaymentId());
+    }
+    /**
+     * The payment request was failed;
+     */
+    protected function _statusFailed()
+    {
+    	$this->_logger->info('Not doing anything in _statusFailed ' . $this->_ipnMessage->getPaymentId());
+    }
+    /**
+     * The payment request was Partially Refunded;
+     */
+    protected function _statusPartiallyRefunded()
+    {
+    	$this->_logger->info('Not doing anything in _statusPartiallyRefunded ' . $this->_ipnMessage->getPaymentId());
+    }
+    
 
     /**
      * The payment failed and all attempted transfers failed or all completed transfers were successfully reversed

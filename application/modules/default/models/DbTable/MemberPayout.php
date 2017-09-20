@@ -29,10 +29,12 @@ class Default_Model_DbTable_MemberPayout extends Local_Model_Table
     public static $PAYOUT_STATUS_REQUESTED = 1;
     public static $PAYOUT_STATUS_PROCESSED = 10;
     public static $PAYOUT_STATUS_PENDING = 50;
-    public static $PAYOUT_STATUS_COMPLETED = 100;
-    public static $PAYOUT_STATUS_DENIED = 999;
-    public static $PAYOUT_STATUS_REFUND = 900;
     public static $PAYOUT_STATUS_ERROR = 99;
+    public static $PAYOUT_STATUS_COMPLETED = 100;
+    public static $PAYOUT_STATUS_REFUND = 900;
+    public static $PAYOUT_STATUS_RESERVED = 901;
+    public static $PAYOUT_STATUS_DENIED = 940;
+    public static $PAYOUT_STATUS_FAILED = 950;
     
     
     
@@ -119,7 +121,7 @@ class Default_Model_DbTable_MemberPayout extends Local_Model_Table
     }
     
     /**
-     * Mark payout as payed.
+     * Mark payout as denied.
      *
      * @param Local_Payment_ResponseInterface $payment_response
      *
@@ -135,6 +137,44 @@ class Default_Model_DbTable_MemberPayout extends Local_Model_Table
         );
 
         $this->update($updateValues, "payment_reference_key='" . $payment_response->getPaymentId() . "'");
+    }
+    
+    /**
+     * Mark payout as failed.
+     *
+     * @param Local_Payment_ResponseInterface $payment_response
+     *
+     */
+    public function setPayoutStatusFailedFromResponse($payment_response)
+    {
+    	$updateValues = array(
+    			'status' => self::$PAYOUT_STATUS_FAILED,
+    			'payment_transaction_id' => $payment_response->getTransactionId(),
+    			'payment_raw_Message' => serialize($payment_response->getRawMessage()),
+    			'payment_status' => $payment_response->getTransactionStatus(),
+    			'timestamp_masspay_last_ipn' => new Zend_Db_Expr ('Now()')
+    	);
+    
+    	$this->update($updateValues, "payment_reference_key='" . $payment_response->getPaymentId() . "'");
+    }
+    
+    /**
+     * Mark payout as reserved.
+     *
+     * @param Local_Payment_ResponseInterface $payment_response
+     *
+     */
+    public function setPayoutStatusReservedFromResponse($payment_response)
+    {
+    	$updateValues = array(
+    			'status' => self::$PAYOUT_STATUS_RESERVED,
+    			'payment_transaction_id' => $payment_response->getTransactionId(),
+    			'payment_raw_Message' => serialize($payment_response->getRawMessage()),
+    			'payment_status' => $payment_response->getTransactionStatus(),
+    			'timestamp_masspay_last_ipn' => new Zend_Db_Expr ('Now()')
+    	);
+    
+    	$this->update($updateValues, "payment_reference_key='" . $payment_response->getPaymentId() . "'");
     }
     
     /**
