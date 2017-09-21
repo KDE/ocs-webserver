@@ -182,7 +182,7 @@ abstract class Local_Payment_PayPal_AdaptivePayment_Gateway
 
         $paypalResponse = new Local_Payment_PayPal_AdaptivePayment_ResponsePayRequest($response);
         if (false === $paypalResponse->isSuccessful()) {
-            throw new Local_Payment_Exception('PayPal payment request failed. Request response:' . print_r($paypalResponse->getRawMessage(), true));
+            throw new Local_Payment_Exception('PayPal payment request failed. Request response:' . print_r($paypalResponse->getRawMessage() . ' ----- APP-ID: '. $this->_config->application->id, true));
         }
 
         return $paypalResponse;
