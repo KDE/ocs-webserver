@@ -68,7 +68,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         //        $this->fetchDataForIndexView();
 
         $modelProduct = new Default_Model_Project();
-        $this->view->product = $modelProduct->fetchProductInfo($this->_projectId);
+        $productInfo = $modelProduct->fetchProductInfo($this->_projectId);
+        $this->view->product = $productInfo;
         if (empty($this->view->product)) {
             throw new Zend_Controller_Action_Exception('This page does not exist', 404);
         }
@@ -105,10 +106,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->view->mode = 'add';
 
         if ($this->_request->isGet()) {
-            $modelProjectLicense = new Default_Model_DbTable_ProjectCcLicense();
-            $dataProjectLicense = $modelProjectLicense->getDefaultValues();
-            $form->populate($dataProjectLicense);
-
             return;
         }
 
@@ -138,9 +135,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         // save new project
         $modelProject = new Default_Model_Project();
 
-        //cleanup input text
-        $values = $this->purifiyInput($values);
-
         $newProject = null;
         try {
             if (isset($values['project_id'])) {
@@ -168,13 +162,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         if (!isset($values['image_small']) || $values['image_small'] == '') {
             $values['image_small'] = $mediaServerUrls[0];
             $newProject = $modelProject->updateProject($newProject->project_id, $values);
-            Zend_Registry::get('logger')->debug(__METHOD__ . '(' . __LINE__ . ') - set image_small: '
-                . $values['image_small'] . '\n')
-            ;
-        } else {
-            Zend_Registry::get('logger')->debug(__METHOD__ . '(' . __LINE__ . ') - set image_small: Not need. '
-                . $values['image_small'] . '\n')
-            ;
         }
 
         //New Project in Session, for AuthValidation (owner)
@@ -189,21 +176,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->processPploadId($newProject);
 
         $this->redirect('/member/' . $newProject->member_id . '/products/');
-    }
-
-    private function purifiyInput($values)
-    {
-        $values['version'] = Default_Model_HtmlPurify::purify($values['version']);
-        $values['embed_code'] =
-            Default_Model_HtmlPurify::purify($values['embed_code'], Default_Model_HtmlPurify::ALLOW_VIDEO);
-        $values['title'] = Default_Model_HtmlPurify::purify($values['title']);
-        $values['description'] = Default_Model_HtmlPurify::purify($values['description']);
-        //$values['link_1'] = Default_Model_HtmlPurify::purify($values['link_1'],Default_Model_HtmlPurify::ALLOW_URL);
-        //$values['github_code'] = Default_Model_HtmlPurify::purify($values['github_code'],Default_Model_HtmlPurify::ALLOW_URL);
-        //$values['facebook_code'] = Default_Model_HtmlPurify::purify($values['facebook_code'],Default_Model_HtmlPurify::ALLOW_URL);
-        //$values['twitter_code'] = Default_Model_HtmlPurify::purify($values['twitter_code'],Default_Model_HtmlPurify::ALLOW_URL);
-        //$values['google_code'] = Default_Model_HtmlPurify::purify($values['google_code'],Default_Model_HtmlPurify::ALLOW_URL);
-        return $values;
     }
 
     private function saveGalleryPics($form_element)
@@ -324,11 +296,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             return;
         }
 
-        // load license information
-        $modelProjectLicense = new Default_Model_ProjectLicense();
-        /** @var Default_Model_DbRow_ProjectCcLicense $dataProjectLicense */
-        $dataProjectLicense = $modelProjectLicense->findOneProject($this->_projectId);
-
         //set ppload-collection-id in view
         $this->view->ppload_collection_id = $projectData->ppload_collection_id;
         $this->view->project_id = $projectData->project_id;
@@ -349,14 +316,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         if ($this->_request->isGet()) {
             $form->populate($projectData->toArray());
-            $form->populate($dataProjectLicense->toArray());
-            $form->getElement('cc_license')->setValue($dataProjectLicense->isStoredLicense());
             $form->getElement('image_small')->setValue($projectData->image_small);
-            //            $form->getElement('image_big')->setValue($projectData->image_big);
-
             //Bilder voreinstellen
             $form->getElement(self::IMAGE_SMALL_UPLOAD)->setValue($projectData->image_small);
-            //            $form->getElement(self::IMAGE_BIG_UPLOAD)->setValue($projectData->image_big);
 
             $this->view->form = $form;
 
@@ -380,23 +342,13 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         try {
             $uploadedSmallImage = $imageModel->saveImage($form->getElement(self::IMAGE_SMALL_UPLOAD));
             $values['image_small'] = $uploadedSmallImage ? $uploadedSmallImage : $values['image_small'];
-            //            $uploadedBigImage = $imageModel->saveImage($form->getElement(self::IMAGE_BIG_UPLOAD));
-            //            $values['image_big'] = $uploadedBigImage ? $uploadedBigImage : $values['image_big'];
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err(__METHOD__ . ' - ERROR upload productPicture - ' . print_r($e, true));
         }
 
         // save changes
-        $values = $this->purifiyInput($values);
         $projectData->setFromArray($values);
         $projectData->changed_at = new Zend_Db_Expr('NOW()');
-
-        // store license data
-        if ($values['cc_license'] == true) {
-            $modelProjectLicense->saveLicenseData($this->_projectId, $values);
-        } else {
-            $modelProjectLicense->deleteLicenseData($this->_projectId);
-        }
 
         //update the gallery pics
         $pictureSources = array_merge($values['gallery']['online_picture'],
@@ -406,24 +358,12 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         //If there is no Logo, we take the 1. gallery pic
         if (!isset($projectData->image_small) || $projectData->image_small == '') {
             $projectData->image_small = $pictureSources[0];
-            Zend_Registry::get('logger')->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . ' - set image_small: '
-                . $projectData->image_small . '\n')
-            ;
-        } else {
-            Zend_Registry::get('logger')->debug('**********' . __CLASS__ . '::' . __FUNCTION__
-                . ' - set image_small: Not neeed. ' . $projectData->image_small . '\n')
-            ;
         }
         $projectData->save();
 
         $activityLog = new Default_Model_ActivityLog();
         $activityLog->writeActivityLog($this->_projectId, $projectData->member_id,
             Default_Model_ActivityLog::PROJECT_EDITED, $projectData->toArray());
-
-        //update search index
-        $productInfo = $projectModel->fetchProductInfo($projectData->project_id);
-        $modelSearch = new Default_Model_Search_Lucene();
-        $modelSearch->updateDocument($productInfo->toArray());
 
         // ppload
         $this->processPploadId($projectData);
@@ -439,8 +379,10 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $updates = $tableProject->fetchProjectUpdates($this->_projectId);
 
-        $this->_helper->layout->disableLayout();
-        $params = $this->getAllParams();
+        foreach ($updates as $key => $update) {
+            $updates[$key]['title'] = Default_Model_HtmlPurify::purify($update['title']);
+            $updates[$key]['text'] = Default_Model_BBCode::renderHtml(Default_Model_HtmlPurify::purify($update['text']));
+        }
 
         $result['status'] = 'success';
         $result['ResultSize'] = count($updates);
@@ -451,47 +393,60 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
     public function saveupdateajaxAction()
     {
-        $this->view->authMember = $this->_authMember;
+        $filter =
+        new Zend_Filter_Input(
+            array(
+                '*' => 'StringTrim'
+            ),
+            array(
+                '*'         => array(),
+                'title'     => array(
+                    new Zend_Validate_StringLength(array('min' => 3, 'max' => 200)),
+                    'presence' => 'required',
+                    'allowEmpty' => false
+                ),
+                'text'      => array(
+                    new Zend_Validate_StringLength(array('min' => 3, 'max' => 16383)),
+                    'presence' => 'required',
+                    'allowEmpty' => false
+                ),
+                'update_id' => array('digits', 'allowEmpty' => true)
+            ), $this->getAllParams(), array('allowEmpty' => true));
+
+        if ($filter->hasInvalid() OR $filter->hasMissing() OR $filter->hasUnknown()) {
+            $result['status'] = 'error';
+            $result['messages'] = $filter->getMessages();
+            $result['update_id'] = null;
+
+            $this->_helper->json($result);
+        }
+
         $tableProjectUpdates = new Default_Model_ProjectUpdates();
 
-        $params = $this->getAllParams();
-        $update_id = $params['update_id'];
-
-        //Save title and Text
-        $title = null;
-        $text = null;
-        if (isset($params['title'])) {
-            $title = $params['title'];
-        }
-        if (isset($params['text'])) {
-            $text = $params['text'];
-        }
-
-        if (!empty($title) && !empty($text)) {
-            //Save update
-            if (!empty($update_id)) {
-                //Update old update
-                $updateArray = array();
-                $updateArray['title'] = Default_Model_HtmlPurify::purify($title);
-                $updateArray['text'] = Default_Model_HtmlPurify::purify($text);
-                $updateArray['changed_at'] = new Zend_Db_Expr('Now()');
-                $project_update_id = $tableProjectUpdates->update($updateArray, 'project_update_id = ' . $update_id);
-            } else {
-                //Add new update
-                $updateArray = array();
-                $updateArray['title'] = Default_Model_HtmlPurify::purify($title);
-                $updateArray['text'] = Default_Model_HtmlPurify::purify($text);
-                $updateArray['public'] = 1;
-                $updateArray['project_id'] = $this->_projectId;
-                $updateArray['member_id'] = $this->_authMember->member_id;
-                $updateArray['created_at'] = new Zend_Db_Expr('Now()');
-                $updateArray['changed_at'] = new Zend_Db_Expr('Now()');
-                $project_update_id = $tableProjectUpdates->save($updateArray);
-            }
+        //Save update
+        if (!empty($update_id)) {
+            //Update old update
+            $updateArray = array();
+            $updateArray['title'] = $filter->getUnescaped('title');
+            $updateArray['text'] = $filter->getUnescaped('text');
+            $updateArray['changed_at'] = new Zend_Db_Expr('Now()');
+            $countUpdated = $tableProjectUpdates->update($updateArray, 'project_update_id = ' . $update_id);
+        } else {
+            //Add new update
+            $updateArray = array();
+            $updateArray['title'] = $filter->getUnescaped('title');
+            $updateArray['text'] = $filter->getUnescaped('text');
+            $updateArray['public'] = 1;
+            $updateArray['project_id'] = $this->_projectId;
+            $updateArray['member_id'] = $this->_authMember->member_id;
+            $updateArray['created_at'] = new Zend_Db_Expr('Now()');
+            $updateArray['changed_at'] = new Zend_Db_Expr('Now()');
+            $rowset = $tableProjectUpdates->save($updateArray);
+            $update_id = $rowset->project_update_id;
         }
 
         $result['status'] = 'success';
-        $result['update_id'] = $project_update_id;
+        $result['update_id'] = $update_id;
 
         $this->_helper->json($result);
     }
@@ -1274,6 +1229,10 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->view->message = 'This service is not available at the moment. Please try again later.';
     }
 
+    /**
+     * @throws Zend_Controller_Action_Exception
+     * @deprecated
+     */
     public function fetchAction()
     {
         $this->_helper->layout()->disableLayout();

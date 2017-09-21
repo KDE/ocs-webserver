@@ -20,36 +20,40 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Created: 22.06.2017
+ * Created: 21.09.2017
  */
-class Default_Model_BBCode
+class Local_Markup_Renderer_Html_Url extends Zend_Markup_Renderer_Html_HtmlAbstract
 {
 
     /**
-     * @param string $bbcode
+     * Convert the token
+     *
+     * @param Zend_Markup_Token $token
+     * @param string            $text
      *
      * @return string
      */
-    public static function renderHtml($bbcode)
+    public function convert(Zend_Markup_Token $token, $text)
     {
-        if (empty($bbcode)) {
-            return '';
+        if ($token->hasAttribute('url')) {
+            $uri = $token->getAttribute('url');
+        } else {
+            $uri = $text;
         }
 
-        Zend_Markup::addParserPath('Local_Markup_Parser', APPLICATION_LIB . '/Local/Markup/Parser');
-        $parser = Zend_Markup::factory('BbcodeCI');
-        $parser->setDefaultFilter( new Zend_Filter_Callback('nl2br'));
-        $parser->addMarkup(
-            'url',
-            Zend_Markup_Renderer_RendererAbstract::TYPE_CALLBACK,
-            array(
-                'callback' => new Local_Markup_Renderer_Html_Url(),
-                'group'    => 'inline',
-                'filter'   => true
-            )
-        );
+        if (!preg_match('/^([a-z][a-z+\-.]*):/i', $uri)) {
+            $uri = 'http://' . $uri;
+        }
 
-        return $parser->render($bbcode);
+        // check if the URL is valid
+        if (!Zend_Markup_Renderer_Html::isValidUri($uri)) {
+            return $text;
+        }
+
+        $attributes =
+            Zend_Markup_Renderer_Html::renderAttributes($token, array('target' => '_blank', 'rel' => 'nofollow'));
+
+        return "<a href=\"{$uri}\"{$attributes}>{$text}</a>";
     }
 
 }
