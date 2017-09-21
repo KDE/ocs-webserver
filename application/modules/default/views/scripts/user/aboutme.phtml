@@ -388,13 +388,16 @@ $isSupporter = $this->stat['donationIssupporter'];
                                             </div>
                                         </div>
                                     <?php endif; ?>
-                                    <?php if (isset($this->member->link_google) && $this->member->link_google != ''): ?>
+                                    <?php if (isset($this->member->link_google) && $this->member->link_google != ''): 
+                                    $helpTwitterLink = new Default_View_Helper_GoogleplusLink();
+                                    $googleplusLink = $helpTwitterLink->googleplusLink($this->member->link_google);
+                                    ?>
                                         <div class="google">
                                             <div class="label">
                                                 <em class="gp-link"></em>
                                             </div>
                                             <div class="text">
-                                                <a href="<?php echo $this->member->link_google; ?>"><?php echo $helperTruncate->truncate($this->member->link_google,
+                                                <a href="<?php echo $googleplusLink ?>"><?php echo $helperTruncate->truncate($this->member->link_google,
                                                         50); ?></a>
                                             </diV>
                                         </div>
