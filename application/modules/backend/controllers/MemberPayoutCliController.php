@@ -145,9 +145,9 @@ class Backend_MemberPayoutCliController extends Local_Controller_Action_CliAbstr
     }
 
     private function startMassPay($payoutsArray) {
-        echo "startMassPay";
+        echo "startMassPay\n\n";
         if(!$payoutsArray || count($payoutsArray) == 0) {
-            echo "Nothing to do...";
+            echo "Nothing to do...\n\n";
             die;
             //throw new Exception("Method startMassPay needs array of payouts.");
         }
