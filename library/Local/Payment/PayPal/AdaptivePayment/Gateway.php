@@ -139,6 +139,9 @@ abstract class Local_Payment_PayPal_AdaptivePayment_Gateway
 
         $log->info('********** Start PayPal Payment for Payout **********');
         $log->info(__FUNCTION__);
+        
+        $log->info('Config->ApplicationId: ' . $this->_config->application->id);
+        
         $log->debug(APPLICATION_ENV);
 
         if (empty($this->_returnUrl)) {
