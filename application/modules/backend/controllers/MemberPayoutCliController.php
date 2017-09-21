@@ -145,9 +145,11 @@ class Backend_MemberPayoutCliController extends Local_Controller_Action_CliAbstr
     }
 
     private function startMassPay($payoutsArray) {
-        echo "startMassPay";
+        echo "startMassPay\n\n";
         if(!$payoutsArray || count($payoutsArray) == 0) {
-            throw new Exception("Method startMassPay needs array of payouts.");
+            echo "Nothing to do...\n\n";
+            die;
+            //throw new Exception("Method startMassPay needs array of payouts.");
         }
         $payoutTable = new Default_Model_DbTable_MemberPayout();
         $log = $this->_logger;
@@ -196,6 +198,13 @@ class Backend_MemberPayoutCliController extends Local_Controller_Action_CliAbstr
         try {
             $response = $paymentGateway->requestPaymentForPayout($this->_config->third_party->paypal->facilitator_fee_receiver, $receiverMail, $amount, $trackingId, $yearmonth);
         } catch (Exception $e) {
+            $log = $this->_logger;
+            $log->info('Exception: payment error');
+            $log->info('Config->ApplicationId: ' . $this->_config->third_party->paypal->application->id);
+            
+            echo('Exception: payment error');
+            echo('Config->ApplicationId: ' . $this->_config->third_party->paypal->application->id);
+            
             throw new Zend_Controller_Action_Exception('payment error', 500, $e);
         }
 
