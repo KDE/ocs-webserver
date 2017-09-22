@@ -20,11 +20,6 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-$this->cc_attribution = $this->form->by->getValue();
-$this->cc_commercial = $this->form->nc->getValue();
-$this->cc_derivate_works = $this->form->nd->getValue();
-$this->cc_share = $this->form->sa->getValue();
-
 //$this->os = Zend_Registry::get('application_os');
 $this->tab = 'add';
 $helperImage = new Default_View_Helper_Image();
@@ -1578,8 +1573,6 @@ $categoryPath[] = $valueCatId;
         });
     </script>
   <script>
- //     $(document).ready(function(){
-
           $.fn.sortSelect = function() {
               var op = this.children("option");
               op.sort(function(a, b) {
@@ -1603,13 +1596,6 @@ $categoryPath[] = $valueCatId;
               mode: "<?=$this->mode?>",
               project_id: <?php echo ($this->mode == 'edit') ? $this->project_id : '$(\'#project_id\').val()'?>,
               errors: "",
-              cc_license_isStored: <?=$this->form->cc_license->getValue() == true ? 'true' : 'false'?>,
-              cc_license_data: {
-                  by:<?=$this->cc_attribution == true ? 'true' : 'false'?>,
-                  nc:<?=$this->cc_commercial == true ? 'true' : 'false'?>,
-                  nd:<?=$this->cc_derivate_works == true ? 'true' : 'false'?>,
-                  sa:<?=$this->cc_share == true ? 'true' : 'false'?>
-              },
               cat_id_data: <?=json_encode($categories)?>,
               cat_id_path: <?=json_encode($categoryPath)?>,
 
@@ -1617,10 +1603,6 @@ $categoryPath[] = $valueCatId;
               setup: function () {
                   this.setupCategorySelect();
                   this.setupCategoryAjax();
-    //              this.setupCcLicenseActions();
-    //              this.setLicenseCheckbox();
-    //              this.setCssLicenseSummary();
-    //              this.setCCLicenseVisibility();
               },
 
               setupCategorySelect: function() {
@@ -1694,23 +1676,6 @@ $categoryPath[] = $valueCatId;
                   });
               },
 
-              setupCcLicenseActions: function () {
-                  $('body').on('change', '#license-text input[type="checkbox"]', function () {
-                      if ($(this).attr('data-name') == 'sa') {
-                          $('#cc_non_derivative_works').prop('checked', false);
-                          ProductForm.cc_license_data.nd = false;
-                      }
-                      if ($(this).attr('data-name') == 'nd') {
-                          $('#cc_share_alike').prop('checked', false);
-                          ProductForm.cc_license_data.sa = false;
-                      }
-                      ProductForm.updateLicenseData($(this).attr('data-name'), $(this).is(':checked'));
-                  }).on('click', '#cc_attribution', function (event) {
-                      event.stopPropagation();
-                      return false;
-                  });
-              },
-
               saveSection: function (sectionId) {
                   var pid = <?php echo ($this->mode == 'edit') ? $this->project_id : '$(\'#project_id\').val()'?>;
                   if (pid != '') {
@@ -1752,41 +1717,6 @@ $categoryPath[] = $valueCatId;
                   $.each(this.errors, function (index, value) {
                       $('[name=' + index + ']').append('<label id="title-error" class="error" for="title">' + value + '</label>');
                   });
-              },
-
-              setLicenseCheckbox: function () {
-                  $('#cc_license').prop('checked', this.cc_license_isStored);
-                  $('#cc_attribution').prop('checked', this.cc_license_data.by);
-                  $('#cc_commercial').prop('checked', this.cc_license_data.nc);
-                  $('#cc_non_derivative_works').prop('checked', this.cc_license_data.nd);
-                  $('#cc_share_alike').prop('checked', this.cc_license_data.sa);
-              },
-
-              setCssLicenseSummary: function () {
-                  var css_license = this.buildCssLicense(this.cc_license_data);
-                  $('.cc-license-icon').attr('class', css_license);
-              },
-
-              buildCssLicense: function (obj) {
-                  var result = "cc-license-icon cc-license-icon";
-                  for (var i in obj) {
-                      if (obj.hasOwnProperty(i) && obj[i]) {
-                          result += "-" + i;
-                      }
-                  }
-                  return result;
-              },
-
-              updateLicenseData: function (attr, value) {
-                  this.cc_license_data[attr] = value;
-                  this.setCssLicenseSummary();
-              },
-
-              setCCLicenseVisibility: function () {
-                  if (this.cc_license_isStored == false) {
-                      $('#cc_summary').collapse();
-                      $('#license-text').collapse();
-                  }
               }
 
           };
@@ -1848,18 +1778,6 @@ $categoryPath[] = $valueCatId;
                                   t = file.type,                           // ext only: // file.type.split('/')[1],
                                   n = file.name,
                                   s = ~~(file.size / 5120)// +'KB';
-                              //if (w > 1024 || w < 100 || h > 768 || h < 75) {
-                              //    $('.product-image').last().prev()
-                              //        .find('div.icon-check')
-                              //        .after('<div class="image-error">Wrong image dimensions</div>')
-                              //        .removeClass('icon-check')
-                              //        .addClass('icon-report')
-                              //    ;
-                              //    $('.product-image').last().prev()
-                              //        .find('input.gallery-picture').remove()
-                              //        .append('<input type="file" name="upload_picture[]" class="gallery-picture" onchange="ProductGallery.previewImage(this);"></div>')
-                              //    ;
-                              //}
                               if (s > 5120) {
                                   $('.product-image').last().prev()
                                       .find('div.icon-check')
@@ -1901,8 +1819,6 @@ $categoryPath[] = $valueCatId;
 
               };
           })();
-
-//      });
 
   </script>
 <?php $this->inlineScript()->appendScript(

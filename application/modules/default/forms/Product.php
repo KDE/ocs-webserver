@@ -50,16 +50,16 @@ class Default_Form_Product extends Zend_Form
             Zend_Form::ELEMENT);
 
         $this->addElement($this->getTitleElement())
-            ->addElement($this->getSmallImageElement())
-            ->addElement($this->getImageUploadElement())
             ->addElement($this->getCategoryIdElement())
             ->addElement($this->getDescriptionElement())
             ->addElement($this->getVersionElement())
+            ->addElement($this->getSmallImageElement())
+            ->addElement($this->getImageUploadElement())
 //            ->addElement($this->getBigImageElement())
 //            ->addElement($this->getBigImageUploadElement())
             ->addSubForm($this->getGalleryElement(), 'gallery')
-            ->addElement($this->getAmountElement())
-            ->addElement($this->getAmountPeriodElement())
+//            ->addElement($this->getAmountElement())
+//            ->addElement($this->getAmountPeriodElement())
             ->addElement($this->getEmbedCodeElement())
             ->addElement($this->getProjectHomepageElement())
             ->addElement($this->getGithubElement())
@@ -70,33 +70,26 @@ class Default_Form_Product extends Zend_Form
             ->addElement($this->getHiddenProjectId())
             ->addElement($this->getSubmitElement())
             ->addElement($this->getCancelElement())
-            ->addElement($this->getCCAttribution())
-            ->addElement($this->getCCComercial())
-            ->addElement($this->getCCDerivateWorks())
-            ->addElement($this->getCCShareAlike())
-            ->addElement($this->getCCLicense());
+            //->addElement($this->getCCAttribution())
+            //->addElement($this->getCCComercial())
+            //->addElement($this->getCCDerivateWorks())
+            //->addElement($this->getCCShareAlike())
+            //->addElement($this->getCCLicense())
+        ;
     }
 
     private function getTitleElement()
     {
-//        $checkTitleExist = new Zend_Validate_Db_NoRecordExists(array(
-//            'table' => 'project',
-//            'field' => 'title',
-//            'exclude' => 'status > ' . Default_Model_DbTable_Project::PROJECT_DELETED
-//        ));
-//        $checkTitleExist->setMessage('This title already exists.', Zend_Validate_Db_NoRecordExists::ERROR_RECORD_FOUND);
-
         return $this->createElement('text', 'title')
             ->setRequired(true)
             ->addValidators(array(
-                //array('alnum', false, array('allowWhiteSpace' => true)),
                 array('StringLength', false, array(4, 60)),
             	array('Regex', false, array('pattern' => '/^[\w.-]*$/i')),
             	array('Regex', false, array('pattern' => '/[ .\-_A-z0-9]{1,}/i')),
 //            	array('Regex', false, array('pattern' => '/^[^\\\"\';\^\$\*!]*$/', 'messages' => array(Zend_Validate_Regex::NOT_MATCH => "'%value%' is not valid. Please try again without using any character like \\, !, ', \", $, *, ^")))
 //                $checkTitleExist
             ))
-            ->setFilters(array('StringTrim', new Zend_Filter_Callback('stripslashes')))
+            ->setFilters(array('StringTrim'))
             ->setDecorators(
                 array(
                     array(
@@ -115,9 +108,8 @@ class Default_Form_Product extends Zend_Form
     	->setRequired(false)
     	->addValidators(array(
     			array('StringLength', false, array(0, 50)),
-    			//                $checkTitleExist
     	))
-    	->setFilters(array('StringTrim', new Zend_Filter_Callback('stripslashes')))
+    	->setFilters(array('StringTrim'))
     	->setDecorators(
     			array(
     					array(
@@ -207,7 +199,7 @@ class Default_Form_Product extends Zend_Form
     {
         return $this->createElement('textarea', 'description', array('cols' => 30, 'rows' => 9))
             ->setRequired(true)
-            ->setFilters(array('StringTrim', new Zend_Filter_Callback('stripslashes')))
+            ->setFilters(array('StringTrim'))
             ->setDecorators(
                 array(
                     array(
@@ -268,7 +260,7 @@ class Default_Form_Product extends Zend_Form
     {
         return $this->createElement('textarea', 'embed_code', array('cols' => 30, 'rows' => 3))
             ->setRequired(false)
-            ->setFilters(array('StringTrim', new Zend_Filter_Callback('stripslashes')))
+            ->setFilters(array('StringTrim'))
             ->setDecorators(
                 array(
                     array(

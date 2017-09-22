@@ -133,12 +133,13 @@ abstract class Local_Payment_PayPal_AdaptivePayment_Gateway
      * @throws Local_Payment_Exception
      * @return Local_Payment_PayPal_AdaptivePayment_ResponsePay | mixed
      */
-    public function requestPaymentForPayout($senderMail, $receiverMail, $amount, $trackingId)
+    public function requestPaymentForPayout($senderMail, $receiverMail, $amount, $trackingId, $yearmonth)
     {
         $log = $this->_logger;
 
         $log->info('********** Start PayPal Payment for Payout **********');
         $log->info(__FUNCTION__);
+        
         $log->debug(APPLICATION_ENV);
 
         if (empty($this->_returnUrl)) {
@@ -172,7 +173,7 @@ abstract class Local_Payment_PayPal_AdaptivePayment_Gateway
             'cancelUrl' => $this->_cancelUrl,
             'returnUrl' => $this->_returnUrl,
             'ipnNotificationUrl' => $this->_ipnNotificationUrl,
-            'memo' => 'Your monthly pling payout.'
+            'memo' => 'OpenDesktop.org payout for month: '.$yearmonth
         );
         
         $response = $this->_makeRequest($bodyParameter, self::API_ADAPTIVE_PAYMENTS, self::OPERATION_PAY);

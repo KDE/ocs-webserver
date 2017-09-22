@@ -570,7 +570,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route(
                 '/p/:project_id/:action/*',
                 array(
-                    'projecttitle' => '',
                     'module'       => 'default',
                     'controller'   => 'product',
                     'action'       => 'show'
@@ -583,7 +582,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route(
                 '/p/:project_id/er/:er/*',
                 array(
-                    'projecttitle' => '',
                     'module'       => 'default',
                     'controller'   => 'product',
                     'action'       => 'show'
