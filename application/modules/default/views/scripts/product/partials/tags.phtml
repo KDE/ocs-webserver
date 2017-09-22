@@ -22,6 +22,7 @@
 
 $tableProject = new Default_Model_Tags();
 $tags = $tableProject->getTags($this->product->project_id, Default_Model_Tags::TAG_TYPE_PROJECT);
+if (false === empty($tags)) {
 ?>
 <style>
     .tag-element {
@@ -54,3 +55,4 @@ $tags = $tableProject->getTags($this->product->project_id, Default_Model_Tags::T
     </div>
 
 </div>
+<?php } 
