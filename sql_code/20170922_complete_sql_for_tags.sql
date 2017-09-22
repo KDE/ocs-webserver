@@ -59,6 +59,15 @@ CREATE TABLE `tag_type` (
   PRIMARY KEY (`tag_type_id`)
 ) ENGINE=InnoDB;
 
+INSERT INTO `tag_type` (`tag_type_id`, `tag_type_name`) VALUES ('1', 'project');
+INSERT INTO `tag_type` (`tag_type_id`, `tag_type_name`) VALUES ('2', 'member');
+INSERT INTO `tag_type` (`tag_type_id`, `tag_type_name`) VALUES ('3', 'file');
+INSERT INTO `tag_type` (`tag_type_id`, `tag_type_name`) VALUES ('4', 'download');
+INSERT INTO `tag_type` (`tag_type_id`, `tag_type_name`) VALUES ('5', 'image');
+INSERT INTO `tag_type` (`tag_type_id`, `tag_type_name`) VALUES ('6', 'video');
+INSERT INTO `tag_type` (`tag_type_id`, `tag_type_name`) VALUES ('7', 'comment');
+INSERT INTO `tag_type` (`tag_type_id`, `tag_type_name`) VALUES ('8', 'activity');
+
 DROP procedure IF EXISTS `solr_query_import`;
 DELIMITER $$
 CREATE PROCEDURE `solr_query_import` ()
