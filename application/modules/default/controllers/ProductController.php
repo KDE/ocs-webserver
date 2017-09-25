@@ -1783,7 +1783,11 @@ class ProductController extends Local_Controller_Action_DomainSwitch
     {
         // Filter-Parameter
         $filterInput =
-            new Zend_Filter_Input(array('*' => 'StringTrim', 'projectSearchText' => array(new Zend_Filter_Callback('stripslashes'),'StripTags'), 'page' => 'digits'),
+            new Zend_Filter_Input(
+                array(
+                    '*' => 'StringTrim',
+                    'projectSearchText' => array(new Zend_Filter_Callback('stripslashes'),'StripTags'),
+                    'page' => 'digits'),
                 array(
                     'projectSearchText' => array(
                         new Zend_Validate_StringLength(array('min' => 3, 'max' => 100)),
@@ -1791,8 +1795,16 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     ),
                     'page'              => array('digits', 'default' => '1'),
                     'f'                 => array(
-                        new Zend_Validate_StringLength(array('min' => 3, 'max' => 100)))
+                        new Zend_Validate_StringLength(array('min' => 3, 'max' => 100)),
+                        new Zend_Validate_InArray(array('f'=>'tags')),
+                        'allowEmpty' => true
+                    )
                 ), $this->getAllParams());
+
+        if ($filterInput->hasInvalid()) {
+            $this->_helper->flashMessenger->addMessage('<p class="text-error">There was an error. Please check your input and try again.</p>');
+            return;
+        }
 
         $this->view->searchText = $filterInput->getEscaped('projectSearchText');
         $this->view->page = $filterInput->getEscaped('page');
