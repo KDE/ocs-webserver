@@ -109,7 +109,9 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
 
         $userNameLength = new Zend_Validate_StringLength(array('min' => 4, 'max' => 35));
         $username = $form->createElement('text', 'username')->setLabel("Username:")->setRequired(false)
-                         ->setFilters(array('StringTrim'))->addValidator($userNameLength)->setAttrib('readonly', 'true')
+                         ->setFilters(array('StringTrim'))
+                         ->addValidator($userNameLength)
+                         ->setAttrib('readonly', 'true')
                          ->setDecorators(array(
                              'ViewHelper',
                              'Label',
@@ -141,8 +143,12 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         ;
         $form->addElement($firstname);
 
-        $lastname = $form->createElement('text', 'lastname')->setLabel("Last Name:")->setRequired(false)
-                         ->removeDecorator('HtmlTag')->setFilters(array('StringTrim'))->setDecorators(array(
+        $lastname = $form->createElement('text', 'lastname')
+                         ->setLabel("Last Name:")
+                         ->setRequired(false)
+                         ->removeDecorator('HtmlTag')
+                         ->setFilters(array('StringTrim'))
+                         ->setDecorators(array(
                 'ViewHelper',
                 'Label',
                 'Errors',
@@ -157,7 +163,11 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         ;
         $form->addElement($lastname);
 
-        $city = $form->createElement('text', 'city')->setLabel("City:")->setRequired(false)->removeDecorator('HtmlTag')
+        $city = $form->createElement('text', 'city')
+                     ->setLabel("City:")
+                     ->setRequired(false)
+                     ->setFilters(array('StringTrim'))
+                     ->removeDecorator('HtmlTag')
                      ->setDecorators(array(
                          'ViewHelper',
                          'Label',
@@ -173,8 +183,12 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         ;
         $form->addElement($city);
 
-        $country = $form->createElement('text', 'country')->setLabel("Country:")->setRequired(false)
-                        ->removeDecorator('HtmlTag')->setDecorators(array(
+        $country = $form->createElement('text', 'country')
+                        ->setLabel("Country:")
+                        ->setRequired(false)
+                        ->setFilters(array('StringTrim'))
+                        ->removeDecorator('HtmlTag')
+                        ->setDecorators(array(
                 'ViewHelper',
                 'Label',
                 'Errors',
@@ -189,8 +203,11 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         ;
         $form->addElement($country);
 
-        $about = $form->createElement('textarea', 'aboutme')->setLabel('About me:')->setRequired(false)
-                      ->setAttrib('class', 'about')->setDecorators(array(
+        $about = $form->createElement('textarea', 'aboutme')
+                      ->setLabel('About me:')
+                      ->setRequired(false)
+                      ->setAttrib('class', 'about')
+                      ->setDecorators(array(
                 'ViewHelper',
                 'Label',
                 'Errors',
@@ -213,8 +230,11 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $form = new Default_Form_Settings();
         $form->setMethod("POST")->setAttrib("id", "settingsConnectedAccounts")->setAction('/settings/accounts');
 
-        $facebook = $form->createElement('text', 'link_facebook')->setLabel("Facebook Profile:")->setRequired(false)
-                         ->removeDecorator('HtmlTag')->setDecorators(array(
+        $facebook = $form->createElement('text', 'link_facebook')
+                         ->setLabel("Facebook Profile:")
+                         ->setRequired(false)
+                         ->removeDecorator('HtmlTag')
+                         ->setDecorators(array(
                 'ViewHelper',
                 'Label',
                 'Errors',
@@ -230,8 +250,11 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $facebook->addValidator(new Local_Validate_PartialUrl());
         $form->addElement($facebook);
 
-        $twitter = $form->createElement('text', 'link_twitter')->setLabel("Twitter Profile:")->setRequired(false)
-                        ->removeDecorator('HtmlTag')->setDecorators(array(
+        $twitter = $form->createElement('text', 'link_twitter')
+                        ->setLabel("Twitter Profile:")
+                        ->setRequired(false)
+                        ->removeDecorator('HtmlTag')
+                        ->setDecorators(array(
                 'ViewHelper',
                 'Label',
                 'Errors',
@@ -247,8 +270,11 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $twitter->addValidator(new Local_Validate_PartialUrl);
         $form->addElement($twitter);
 
-        $google = $form->createElement('text', 'link_google')->setLabel("Google+ Profile:")->setRequired(false)
-                       ->removeDecorator('HtmlTag')->setDecorators(array(
+        $google = $form->createElement('text', 'link_google')
+                       ->setLabel("Google+ Profile:")
+                       ->setRequired(false)
+                       ->removeDecorator('HtmlTag')
+                       ->setDecorators(array(
                 'ViewHelper',
                 'Label',
                 'Errors',
@@ -264,8 +290,11 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $google->addValidator(new Local_Validate_PartialUrl);
         $form->addElement($google);
 
-        $github = $form->createElement('text', 'link_github')->setLabel("GitHub Profile:")->setRequired(false)
-                       ->removeDecorator('HtmlTag')->setDecorators(array(
+        $github = $form->createElement('text', 'link_github')
+                       ->setLabel("GitHub Profile:")
+                       ->setRequired(false)
+                       ->removeDecorator('HtmlTag')
+                       ->setDecorators(array(
                 'ViewHelper',
                 'Label',
                 'Errors',
@@ -290,7 +319,10 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $form->setMethod("POST")->setAttrib("id", "settingsGithub")->setAction('/settings/github');
 
         $github = new Default_Form_Element_UsernameGithub('link_github');
-        $github->setLabel("GitHub Profile:")->setRequired(false)->removeDecorator('HtmlTag')->setDecorators(array(
+        $github->setLabel("GitHub Profile:")
+               ->setRequired(false)
+               ->removeDecorator('HtmlTag')
+               ->setDecorators(array(
                 'ViewHelper',
                 'Label',
                 'Errors',
@@ -306,7 +338,10 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $form->addElement($github);
 
         $token = new Default_Form_Element_TokenGithub('token_github');
-        $token->setLabel("GitHub Access Token:")->setRequired(false)->removeDecorator('HtmlTag')->setDecorators(array(
+        $token->setLabel("GitHub Access Token:")
+              ->setRequired(false)
+              ->removeDecorator('HtmlTag')
+              ->setDecorators(array(
                 'ViewHelper',
                 'Label',
                 'Errors',
@@ -331,7 +366,8 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
              ->setAttrib('enctype', 'multipart/form-data')
         ;
 
-        $hiddenProfilePicture = $form->createElement('hidden', 'profile_image_url')->setDecorators(array(
+        $hiddenProfilePicture = $form->createElement('hidden', 'profile_image_url')
+                                     ->setDecorators(array(
                 'ViewHelper',
                 array(
                     'ViewScript',
@@ -346,8 +382,11 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $form->addElement($hiddenProfilePicture);
 
         $imageTable = new Default_Model_DbTable_Image();
-        $productPicture = $form->createElement('file', 'profile_picture_upload')->setDisableLoadDefaultDecorators(true)
-                               ->setLabel('Profile Picture Preview')->setRequired(false)->setDecorators(array(
+        $productPicture = $form->createElement('file', 'profile_picture_upload')
+                               ->setDisableLoadDefaultDecorators(true)
+                               ->setLabel('Profile Picture Preview')
+                               ->setRequired(false)
+                               ->setDecorators(array(
                 'File',
                 array(
                     'ViewScript',
@@ -357,7 +396,8 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                     )
                 )
 
-            ))->setAttrib('class', 'product-picture')
+            ))
+                               ->setAttrib('class', 'product-picture')
                                ->setAttrib('onchange', 'ImagePreview.previewImage(this, \'profile-picture-preview\');')
                                ->setTransferAdapter(new Local_File_Transfer_Adapter_Http())->setMaxFileSize(2097152)
                                ->addValidator('Count', false, 1)
@@ -368,17 +408,22 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                                        'maxwidth'  => 1024,
                                        'minheight' => 20,
                                        'maxheight' => 1024
-                                   ))->addValidator('MimeType', false, $imageTable->getAllowedMimeTypes())
+                                   ))
+                               ->addValidator('MimeType', false, $imageTable->getAllowedMimeTypes())
         ;
 
         $form->addElement($productPicture);
 
         $facebook_username =
-            $form->createElement('text', 'facebook_username')->setLabel("From Facebook Profile:")->setRequired(false)
+            $form->createElement('text', 'facebook_username')
+                 ->setLabel("From Facebook Profile:")
+                 ->setRequired(false)
                  ->removeDecorator('HtmlTag')
                  ->setAttrib('data-href', 'https://graph.facebook.com/{username}/picture?type=large')
-                 ->setAttrib('data-target', '#profile-picture-preview')->setAttrib('data-src', 'facebook')
-                 ->setAttrib('class', 'avatar')->setDecorators(array(
+                 ->setAttrib('data-target', '#profile-picture-preview')
+                 ->setAttrib('data-src', 'facebook')
+                 ->setAttrib('class', 'avatar')
+                 ->setDecorators(array(
                     'ViewHelper',
                     'Label',
                     'Errors'
@@ -387,11 +432,15 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $form->addElement($facebook_username);
 
         $twitter_username =
-            $form->createElement('text', 'twitter_username')->setLabel("From Twitter Profile:")->setRequired(false)
+            $form->createElement('text', 'twitter_username')
+                 ->setLabel("From Twitter Profile:")
+                 ->setRequired(false)
                  ->removeDecorator('HtmlTag')
                  ->setAttrib('data-href', 'http://twitter.com/api/users/profile_image/{username}')
-                 ->setAttrib('data-target', '#profile-picture-preview')->setAttrib('data-src', 'twitter')
-                 ->setAttrib('class', 'avatar')->setDecorators(array(
+                 ->setAttrib('data-target', '#profile-picture-preview')
+                 ->setAttrib('data-src', 'twitter')
+                 ->setAttrib('class', 'avatar')
+                 ->setDecorators(array(
                     'ViewHelper',
                     'Label',
                     'Errors'
@@ -400,10 +449,15 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $form->addElement($twitter_username);
 
         $gravatar_email =
-            $form->createElement('text', 'gravatar_email')->setLabel("From Gravatar Profile:")->setRequired(false)
+            $form->createElement('text', 'gravatar_email')
+                 ->setLabel("From Gravatar Profile:")
+                 ->setRequired(false)
                  ->setAttrib('data-href', 'http://www.gravatar.com/avatar/{username}.jpg')
-                 ->setAttrib('data-target', '#profile-picture-preview')->setAttrib('data-func', 'MD5')
-                 ->setAttrib('data-src', 'gravatar')->setAttrib('class', 'avatar')->setDecorators(array(
+                 ->setAttrib('data-target', '#profile-picture-preview')
+                 ->setAttrib('data-func', 'MD5')
+                 ->setAttrib('data-src', 'gravatar')
+                 ->setAttrib('class', 'avatar')
+                 ->setDecorators(array(
                     'ViewHelper',
                     'Label',
                     'Errors'
@@ -411,7 +465,8 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         ;
         $form->addElement($gravatar_email);
 
-        $hiddenProfilePictureSrc = $form->createElement('hidden', 'profile_img_src')->setDecorators(array(
+        $hiddenProfilePictureSrc = $form->createElement('hidden', 'profile_img_src')
+                                        ->setDecorators(array(
                 'ViewHelper'
             ))
         ;
@@ -429,7 +484,8 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
              ->setAction('/settings/picturebackground')->setAttrib('enctype', 'multipart/form-data')
         ;
 
-        $hiddenProfilePicture = $form->createElement('hidden', 'profile_image_url_bg')->setDecorators(array(
+        $hiddenProfilePicture = $form->createElement('hidden', 'profile_image_url_bg')
+                                     ->setDecorators(array(
                 'ViewHelper',
                 array(
                     'ViewScript',
@@ -445,8 +501,11 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
 
         $imageTable = new Default_Model_DbTable_Image();
         $productPicture =
-            $form->createElement('file', 'profile_picture_background_upload')->setDisableLoadDefaultDecorators(true)
-                 ->setLabel('Profile Picture Background Preview')->setRequired(false)->setDecorators(array(
+            $form->createElement('file', 'profile_picture_background_upload')
+                 ->setDisableLoadDefaultDecorators(true)
+                 ->setLabel('Profile Picture Background Preview')
+                 ->setRequired(false)
+                 ->setDecorators(array(
                     'File',
                     array(
                         'ViewScript',
@@ -456,18 +515,13 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                         )
                     )
 
-                ))->setAttrib('class', 'product-picture')->setAttrib('onchange',
+                ))
+                 ->setAttrib('class', 'product-picture')
+                 ->setAttrib('onchange',
                     'ImagePreview.previewImageMember(this, \'profile-picture-background-preview\');')
                  ->setTransferAdapter(new Local_File_Transfer_Adapter_Http())//->setMaxFileSize(2097152)
                  ->addValidator('Count', false, 1)//->addValidator('Size', false, array('min' => '5kB', 'max' => '2MB'))
-                 ->addValidator('Extension', false,
-                    $imageTable->getAllowedFileExtension())// ->addValidator('ImageSize', false,
-                //     array(
-                //         'minwidth' => 20,
-                //         'maxwidth' => 1024,
-                //         'minheight' => 20,
-                //         'maxheight' => 1024
-                //     ))
+                 ->addValidator('Extension', false, $imageTable->getAllowedFileExtension())
                  ->addValidator('MimeType', false, $imageTable->getAllowedMimeTypes())
         ;
 
@@ -714,8 +768,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                 $this->_memberSettings->setFromArray($values);
                 $this->_memberSettings->save();
 
-                $about = Default_Model_HtmlPurify::purify($values['aboutme']);
-                $this->_mainproject->description = $about;
+                $this->_mainproject->description = $values['aboutme'];
 
                 $this->_mainproject->save();
 
