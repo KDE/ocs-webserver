@@ -94,6 +94,15 @@ var aItemData = [
         }
     },
     {
+        text: "Tags",
+        submenu: {
+            id: "tags",
+            itemdata: [
+                {text: "Manage", url: "/backend/tags"}
+            ]
+        }
+    },
+    {
         text: "Store",
         submenu: {
             id: "stores",

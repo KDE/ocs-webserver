@@ -77,8 +77,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $helperUserIsOwner = new Default_View_Helper_UserIsOwner();
         $helperIsProjectActive = new Default_View_Helper_IsProjectActive();
-        if ((false === $helperIsProjectActive->isProjectActive($this->view->product->project_status)) AND (false
-                === $helperUserIsOwner->UserIsOwner($this->view->product->member_id))
+        if ((false === $helperIsProjectActive->isProjectActive($this->view->product->project_status))
+            AND (false === $helperUserIsOwner->UserIsOwner($this->view->product->member_id))
         ) {
             throw new Zend_Controller_Action_Exception('This page does not exist', 404);
         }
@@ -167,6 +167,11 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         //New Project in Session, for AuthValidation (owner)
         $this->_auth->getIdentity()->projects[$newProject->project_id] = array('project_id' => $newProject->project_id);
         //        $this->auth->getStorage()->write($this->auth->getIdentity());
+
+        if ($values['tags']) {
+            $modelTags = new Default_Model_Tags();
+            $modelTags->processTags($newProject->project_id, implode(',',$values['tags']), Default_Model_Tags::TAG_TYPE_PROJECT);
+        }
 
         $activityLog = new Default_Model_ActivityLog();
         $activityLog->writeActivityLog($newProject->project_id, $newProject->member_id,
@@ -287,6 +292,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $projectTable = new Default_Model_DbTable_Project();
         $projectModel = new Default_Model_Project();
+        $modelTags = new Default_Model_Tags();
 
         //check if product with given id exists
         $projectData = $projectTable->find($this->_projectId)->current();
@@ -316,6 +322,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         if ($this->_request->isGet()) {
             $form->populate($projectData->toArray());
+            $form->populate(array('tags' => $modelTags->getTags($projectData->project_id, Default_Model_Tags::TAG_TYPE_PROJECT)));
             $form->getElement('image_small')->setValue($projectData->image_small);
             //Bilder voreinstellen
             $form->getElement(self::IMAGE_SMALL_UPLOAD)->setValue($projectData->image_small);
@@ -348,7 +355,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         // save changes
         $projectData->setFromArray($values);
-        $projectData->changed_at = new Zend_Db_Expr('NOW()');
 
         //update the gallery pics
         $pictureSources = array_merge($values['gallery']['online_picture'],
@@ -359,7 +365,12 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         if (!isset($projectData->image_small) || $projectData->image_small == '') {
             $projectData->image_small = $pictureSources[0];
         }
+        $projectData->changed_at = new Zend_Db_Expr('NOW()');
         $projectData->save();
+
+        if ($values['tags']) {
+            $modelTags->processTags($this->_projectId, implode(',',$values['tags']), Default_Model_Tags::TAG_TYPE_PROJECT);
+        }
 
         $activityLog = new Default_Model_ActivityLog();
         $activityLog->writeActivityLog($this->_projectId, $projectData->member_id,
@@ -1469,6 +1480,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 if (isset($_POST['file_tags'])) {
                     $fileRequest['tags'] = $_POST['file_tags'];
                 }
+                if (isset($_POST['ocs_compatible'])) {
+                    $fileRequest['ocs_compatible'] = $_POST['ocs_compatible'];
+                }
                 if (isset($_POST['file_version'])) {
                     $fileRequest['version'] = $_POST['file_version'];
                 }
@@ -1516,6 +1530,28 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $packageTypeTable->addPackageTypeToProject($this->_projectId, $_POST['file_id'], $typeId);
             $this->_helper->json(array('status' => 'ok'));
 
+            return;
+        } else {
+            $error_text .= 'No FileId. , FileId: ' . $_POST['file_id'];
+        }
+
+        $this->_helper->json(array('status' => 'error', 'error_text' => $error_text));
+    }
+    
+    public function updatecompatibleAction()
+    {
+        $this->_helper->layout()->disableLayout();
+
+        $error_text = "";
+
+        // Update a file information in ppload collection (does not update it if in finalized collection)
+        if (!empty($_POST['file_id'])) {
+            $typeId = null;
+            if (isset($_POST['is_compatible'])) {
+                $is_compatible = $_POST['is_compatible'];
+            }
+
+            
             return;
         } else {
             $error_text .= 'No FileId. , FileId: ' . $_POST['file_id'];
@@ -1747,17 +1783,32 @@ class ProductController extends Local_Controller_Action_DomainSwitch
     {
         // Filter-Parameter
         $filterInput =
-            new Zend_Filter_Input(array('*' => 'StringTrim', 'projectSearchText' => array(new Zend_Filter_Callback('stripslashes'),'StripTags'), 'page' => 'digits'),
+            new Zend_Filter_Input(
+                array(
+                    '*' => 'StringTrim',
+                    'projectSearchText' => array(new Zend_Filter_Callback('stripslashes'),'StripTags'),
+                    'page' => 'digits'),
                 array(
                     'projectSearchText' => array(
                         new Zend_Validate_StringLength(array('min' => 3, 'max' => 100)),
                         'presence' => 'required'
                     ),
-                    'page'              => array('digits', 'default' => '1')
+                    'page'              => array('digits', 'default' => '1'),
+                    'f'                 => array(
+                        new Zend_Validate_StringLength(array('min' => 3, 'max' => 100)),
+                        new Zend_Validate_InArray(array('f'=>'tags')),
+                        'allowEmpty' => true
+                    )
                 ), $this->getAllParams());
+
+        if ($filterInput->hasInvalid()) {
+            $this->_helper->flashMessenger->addMessage('<p class="text-error">There was an error. Please check your input and try again.</p>');
+            return;
+        }
 
         $this->view->searchText = $filterInput->getEscaped('projectSearchText');
         $this->view->page = $filterInput->getEscaped('page');
+        $this->view->searchField = $filterInput->getEscaped('f');
     }
 
     /**

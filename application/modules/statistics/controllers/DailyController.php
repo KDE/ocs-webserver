@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -42,7 +43,8 @@ class Statistics_DailyController extends Zend_Controller_Action
 
         $this->tableStatistics = new Statistics_Model_GoalStatistics();
         $this->authorization = Zend_Auth::getInstance();
-        $this->loginMemberId = $this->authorization->hasIdentity() ? $this->authorization->getStorage()->read()->member_id : 0;
+        $this->loginMemberId =
+            $this->authorization->hasIdentity() ? $this->authorization->getStorage()->read()->member_id : 0;
         $this->request = $this->getRequest();
     }
 
@@ -72,6 +74,7 @@ class Statistics_DailyController extends Zend_Controller_Action
 
     /**
      * @param array $dataSet
+     *
      * @return array
      */
     protected function generateGoogleChartDataSet($dataSet)
@@ -83,6 +86,7 @@ class Statistics_DailyController extends Zend_Controller_Action
                 $rows[] = array($key, (int)$rowElement);
             }
         }
+
         return $rows;
     }
 

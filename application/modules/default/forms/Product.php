@@ -66,6 +66,7 @@ class Default_Form_Product extends Zend_Form
             ->addElement($this->getFacebookElement())
             ->addElement($this->getTwitterElement())
             ->addElement($this->getGoogleElement())
+            ->addElement($this->getTagElement())
             ->addElement($this->getHiddenProjectId())
             ->addElement($this->getSubmitElement())
             ->addElement($this->getCancelElement())
@@ -175,7 +176,6 @@ class Default_Form_Product extends Zend_Form
     private function getCategoryIdElement()
     {
 
-        include_once APPLICATION_PATH . '/modules/default/forms/validators/Category.php';
         $validatorCategory = new Default_Form_Validator_Category();
 
         return $this->createElement('number', 'project_category_id', array())
@@ -544,6 +544,23 @@ class Default_Form_Product extends Zend_Form
     private function getCCLicense()
     {
         return $this->createElement('checkbox', 'cc_license');
+    }
+
+    private function getTagElement()
+    {
+        $element = new Zend_Form_Element_Multiselect('tags', array('registerInArrayValidator' => false));
+        return $element
+                    ->setFilters(array('StringTrim'))
+                    ->setDecorators(
+                        array(
+                            array(
+                                'ViewScript',
+                                array(
+                                    'viewScript' => 'product/viewscripts/input_tags_multiselect.phtml',
+                                    'placement' => false
+                                )
+                            )
+                        ));
     }
 
 }
