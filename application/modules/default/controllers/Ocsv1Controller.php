@@ -137,8 +137,7 @@ class Ocsv1Controller extends Zend_Controller_Action
 
     protected function _initUriScheme()
     {
-        if (isset($_SERVER['HTTPS'])
-            && ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] === '1')
+        if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] === '1')
         ) {
             $this->_uriScheme = 'https';
         } else {
@@ -172,8 +171,7 @@ class Ocsv1Controller extends Zend_Controller_Action
         }
 
         // Set format option
-        if (isset($this->_params['format'])
-            && strtolower($this->_params['format']) == 'json'
+        if (isset($this->_params['format']) && strtolower($this->_params['format']) == 'json'
         ) {
             $this->_format = 'json';
         }
@@ -214,9 +212,7 @@ class Ocsv1Controller extends Zend_Controller_Action
      */
     protected function _loadClientConfig()
     {
-        $clientConfigReader = new Backend_Model_ClientFileConfig(
-            $this->_getNameForStoreClient()
-        );
+        $clientConfigReader = new Backend_Model_ClientFileConfig($this->_getNameForStoreClient());
         $clientConfigReader->loadClientConfig();
         return $clientConfigReader->getConfig();
     }
@@ -928,9 +924,9 @@ class Ocsv1Controller extends Zend_Controller_Action
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . print_r(func_get_args(), true));
         Zend_Registry::get('logger')->debug('URL: ' . $_SERVER["REQUEST_URI"]);
 
-        if (!$this->_authenticateUser()) {
-            //$this->_sendErrorResponse(999, '');
-        }
+        //if (!$this->_authenticateUser()) {
+        //    $this->_sendErrorResponse(999, '');
+        //}
 
         $pploadApi = new Ppload_Api(array(
             'apiUri'   => PPLOAD_API_URI,
@@ -1536,7 +1532,7 @@ class Ocsv1Controller extends Zend_Controller_Action
     /**
      * @param Zend_Db_Table $tableProject
      *
-     * @return mixed
+     * @return Zend_Db_Table_Select
      */
     protected function _buildProjectSelect($tableProject)
     {

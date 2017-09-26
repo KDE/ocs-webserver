@@ -33,7 +33,7 @@
         $('#TableContainer').jtable({
             jqueryuiTheme: true,
             paging: true,
-            title: 'Table of groups',
+            title: 'Table of namespace',
             sorting: true, //Enable sorting
             defaultSorting: 'counter DESC', //Set default sorting
             actions: {
@@ -50,7 +50,7 @@
                     list: false
                 },
                 group_name: {
-                    title: 'Group Name',
+                    title: 'Namespace',
                     width: '90%'
                 },
                 tags: {
@@ -67,7 +67,7 @@
                             $('#TableContainer').jtable('openChildTable',
                                 $img.closest('tr'),
                                 {
-                                    title: 'Tags in group',
+                                    title: 'Tags in namespace',
                                     actions: {
                                         listAction: '/backend/tags/childlist?GroupId=' + jTableData.record.group_id,
                                         createAction: '/backend/tags/childcreate',
