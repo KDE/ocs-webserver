@@ -61,10 +61,10 @@ foreach ($this->products as $this->product) {
         <b class="username small">by <a href="<?php echo $this->buildMemberUrl($this->product->member_id)?>"><?php echo $this->   product->username?></a></b>
         </div>
 
-        <?php if ($this->product->cat_show_description==1){ 
-                    $desc = Default_Model_HtmlPurify::purify($this->product->description);
+        <?php if ($this->dataCategory->show_description==1){
+                    $desc = $this->truncate(Default_Model_HtmlPurify::purify(Default_Model_BBCode::renderHtml($this->product->description)), 300);
             ?>
-        <div class="description" style=""><?php echo $this->truncate($desc, 300)?></div>
+        <div class="description" style=""><?php echo $desc?></div>
         <?php }?>
 
         <div class="packagetypes" >
