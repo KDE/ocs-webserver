@@ -50,6 +50,7 @@ foreach ($this->products as $this->product) {
         	<?php 
               	$version = Default_Model_HtmlPurify::purify($this->product->version);
               	$product_title = Default_Model_HtmlPurify::purify($this->product->title);
+
            	?>
             <a href="<?= $helperBuildProductUrl->buildProductUrl($this->product->project_id, ''); ?>"><?= $product_title ?> 
             <span class="version"><?= $version ?> </span></a>
@@ -60,8 +61,10 @@ foreach ($this->products as $this->product) {
         <b class="username small">by <a href="<?php echo $this->buildMemberUrl($this->product->member_id)?>"><?php echo $this->   product->username?></a></b>
         </div>
 
-        <?php if ($this->product->cat_show_description==1){ ?>
-        <div class="description" style=""><?php echo $this->truncate($this->product->description, 300)?></div>
+        <?php if ($this->product->cat_show_description==1){ 
+                    $desc = Default_Model_HtmlPurify::purify($this->product->description);
+            ?>
+        <div class="description" style=""><?php echo $this->truncate($desc, 300)?></div>
         <?php }?>
 
         <div class="packagetypes" >
