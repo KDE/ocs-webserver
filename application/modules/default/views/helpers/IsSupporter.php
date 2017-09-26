@@ -1,5 +1,4 @@
 <?php
-
 /**
  *  ocs-webserver
  *
@@ -20,13 +19,15 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-class PlingsController extends Local_Controller_Action_DomainSwitch
+
+class Default_View_Helper_IsSupporter extends Zend_View_Helper_Abstract
 {
-    
-    public function indexAction()
+
+    public function isSupporter($member_id)
     {
-        $this->_helper->layout->disableLayout();
+        $tableMembers = new Default_Model_Member();
+        $row = $tableMembers->fetchSupporterDonationInfo($member_id);
+        return $row['issupporter'];
     }
 
-   
-}
+} 

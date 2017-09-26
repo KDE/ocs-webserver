@@ -430,7 +430,11 @@ if (Zend_Auth::getInstance()->hasIdentity()){
                                         <div class="product-maker-thumbnail relative">
                                             <a href="<?php echo $helpMemberUrl->buildMemberUrl($this->product->member_id); ?>"
                                                title="<?= $this->product->username ?>">
-                                                <div class="profile-image-overlay-4 absolute"></div>
+                                               <?php 
+                                                    if($this->isSupporter($this->product->member_id)) {
+                                                ?>
+                                                    <span class="supporter-badge" >S</span> 
+                                                <?php } ?>                                               
                                                 <img src="<?= $helpImage->Image($this->product->profile_image_url,
                                                     array('width' => 80, 'height' => 80)) ?>"
                                                      alt="product-maker" width="15" height="15"

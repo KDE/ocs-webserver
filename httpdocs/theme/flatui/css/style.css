@@ -1022,6 +1022,54 @@ span.packagetypeos
     border-radius: 0;
     width: inherit;
 }
+
+.comments-list .creator-badge-1{
+  position: absolute;
+  left: 0px;
+  bottom: 0px;
+  background: orange;
+  text-align: center;
+  border-radius: 30px 30px 30px 30px;
+  color: #fff;
+  padding: 5px 10px;
+  font-size: 12px;
+}
+
+.comments-list .creator-badge-2{
+  position: absolute;
+  left: 0px;
+  bottom: 0px;
+  background: orange;
+  text-align: center;
+  border-radius: 15px 15px 15px 15px;
+  color: #fff;
+  padding: 2px 5px;
+  font-size: 9px;
+}
+
+.comments-list .supporter-badge-1{
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    background: blue;
+    text-align: center;
+    border-radius: 30px 30px 30px 30px;
+    color: #fff;
+    padding: 5px 10px;
+    font-size: 12px;
+}
+.comments-list .supporter-badge-2{
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    background: blue;
+    text-align: center;
+    border-radius: 15px 15px 15px 15px;
+    color: #fff;
+    padding: 2px 5px;
+    font-size: 9px;
+}
+
 .glyphicon.spinning {
     animation: spin 1s infinite linear;
     -webkit-animation: spin2 1s infinite linear;
