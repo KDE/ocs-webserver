@@ -942,355 +942,14 @@ class Ocsv1Controller extends Zend_Controller_Action
             'height' => 100
         );
 
-        $cache = Zend_Registry::get('cache');
-
-        $tableProject = new Default_Model_Project();
-        $tableProjectSelect = $this->_buildProjectSelect($tableProject);
-
         // Specific content data
-        $requestedId = (int) $this->_params['contentid'];
+        $requestedId = isset($this->_params['contentid']) ? (int) $this->_params['contentid'] : null;
         if ($requestedId) {
             $response = $this->fetchContent($requestedId, $previewPicSize, $smallPreviewPicSize, $pploadApi);
             $this->_sendResponse($response, $this->_format);
         } // Gets a list of a specific set of contents
         else {
-            $limit = 10; // 1 - 100
-            $offset = 0;
-
-            if (!empty($this->_params['categories'])) {
-                // categories parameter: values seperated by ","
-                // legacy OCS API compatible: values seperated by "x"
-                if (strpos($this->_params['categories'], ',') !== false) {
-                    $catList = explode(',', $this->_params['categories']);
-                } else {
-                    $catList = explode('x', $this->_params['categories']);
-                }
-
-                $modelProjectCategories = new Default_Model_DbTable_ProjectCategory();
-                $allCategories = array();
-                foreach ($catList as $catId) {
-                    $allCategories[] = $catId;
-                    $childElements = $modelProjectCategories->fetchChildElements($catId);
-                    $childIds = array();
-                    foreach ($childElements as $child) {
-                        $childIds[] = $child['project_category_id'];
-                    }
-                    $allCategories = array_merge($allCategories, $childIds);
-                }
-                $tableProjectSelect->where('project.project_category_id IN (?)', $allCategories);
-            }
-            if (!empty($this->_params['xdg_types'])) {
-                // xdg_types parameter: values seperated by ","
-                $xdgTypeList = explode(',', $this->_params['xdg_types']);
-                $tableProjectSelect->where('category.xdg_type IN (?)', $xdgTypeList);
-            }
-            if (!empty($this->_params['package_types'])) {
-                // package_types parameter: values seperated by ","
-                $packageTypeList = explode(',', $this->_params['package_types']);
-
-                $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
-                $storePackageTypeIds = null;
-                if ($storeConfig) {
-                    $storePackageTypeIds = $storeConfig['package_type'];
-                }
-
-                if ($storePackageTypeIds) {
-                    $tableProjectSelect->join(
-                        array(
-                            'package_type' => new Zend_Db_Expr(
-                                '(SELECT DISTINCT project_id FROM project_package_type WHERE '
-                                . $tableProject->getAdapter()->quoteInto('package_type_id IN (?)', $packageTypeList)
-                                . ')'
-                            )
-                        ),
-                        'project.project_id = package_type.project_id',
-                        array()
-                    );
-                }
-            }
-            if (!empty($this->_params['search'])) {
-                $isSearchable = false;
-                foreach (explode(' ', $this->_params['search']) as $keyword) {
-                    if ($keyword && strlen($keyword) > 2) {
-                        $tableProjectSelect->where(
-                            'project.title LIKE ?'
-                            . ' OR project.description LIKE ?',
-                            "%$keyword%"
-                        );
-                        $isSearchable = true;
-                    }
-                }
-                $keyword = $this->_params['search'];
-                if (!$isSearchable && $keyword && strlen($keyword) > 2) {
-                    $tableProjectSelect->where(
-                        'project.title LIKE ?'
-                        . ' OR project.description LIKE ?',
-                        "%$keyword%"
-                    );
-                }
-            }
-            if (!empty($this->_params['user'])) {
-                $tableProjectSelect->where('member.username = ?', $this->_params['user']);
-            }
-            if (!empty($this->_params['external'])) {
-            }
-            if (!empty($this->_params['distribution'])) {
-                // distribution parameter: comma seperated list of ids
-            }
-            if (!empty($this->_params['license'])) {
-                // license parameter: comma seperated list of ids
-            }
-            if (!empty($this->_params['sortmode'])) {
-                // sortmode parameter: new|alpha|high|down
-                switch (strtolower($this->_params['sortmode'])) {
-                    case 'new':
-                        $tableProjectSelect->order('project.created_at DESC');
-                        break;
-                    case 'alpha':
-                        $tableProjectSelect->order('project.title ASC');
-                        break;
-                    case 'high':
-                        $tableProjectSelect->order(new Zend_Db_Expr('(((project.count_likes + 6) / ((project.count_likes + project.count_dislikes) + 12)) * 100) DESC'));
-                        break;
-                    case 'down':
-                        $tableProjectSelect->joinLeft(
-                            array('stat_downloads_quarter_year' => 'stat_downloads_quarter_year'),
-                            'project.project_id = stat_downloads_quarter_year.project_id',
-                            array()
-                        );
-                        $tableProjectSelect->order('stat_downloads_quarter_year.amount DESC');
-                        break;
-                    default:
-                        break;
-                }
-            }
-            if (isset($this->_params['pagesize'])
-                && ctype_digit((string)$this->_params['pagesize'])
-                && $this->_params['pagesize'] > 0
-                && $this->_params['pagesize'] < 101
-            ) {
-                $limit = $this->_params['pagesize'];
-            }
-            if (isset($this->_params['page'])
-                && ctype_digit((string)$this->_params['page'])
-            ) {
-                // page parameter: the first page is 0
-                $offset = $limit * $this->_params['page'];
-            }
-
-            $projects = $tableProject->fetchAll(
-                $tableProjectSelect->limit($limit, $offset)
-            );
-
-            Zend_Registry::get('logger')->debug('OCS-Select: ' . $tableProjectSelect);
-
-            $tableProjectSelect
-                ->reset(Zend_Db_Select::COLUMNS)
-                ->columns(array('counter' => new Zend_Db_Expr('count(*)')), 'project')
-                ->reset(Zend_Db_Select::GROUP)
-                ->reset(Zend_Db_Select::ORDER);
-            $tableProjectSelect->limit(0, 0);
-
-            $count = $tableProject->fetchRow($tableProjectSelect);
-
-            if ($this->_format == 'json') {
-                $response = array(
-                    'status'       => 'ok',
-                    'statuscode'   => 100,
-                    'message'      => '',
-                    'totalitems'   => $count['counter'],
-                    'itemsperpage' => $limit,
-                    'data'         => array()
-                );
-            } else {
-                $response = array(
-                    'meta' => array(
-                        'status'       => array('@text' => 'ok'),
-                        'statuscode'   => array('@text' => 100),
-                        'message'      => array('@text' => ''),
-                        'totalitems'   => array('@text' => $count['counter']),
-                        'itemsperpage' => array('@text' => $limit)
-                    ),
-                    'data' => array()
-                );
-            }
-
-            if (!count($projects)) {
-                $this->_sendResponse($response, $this->_format);
-            }
-
-            $contentsList = array();
-            foreach ($projects as $project) {
-                $categoryId = $project->project_category_id;
-                $categoryTitle = $project->category_title;
-
-                $categoryXdgType = '';
-                if (!empty($project->xdg_type)) {
-                    $categoryXdgType = $project->xdg_type;
-                }
-
-                $created = date('c', strtotime($project->created_at));
-                $changed = date('c', strtotime($project->changed_at));
-
-                $previewPage = $this->_uriScheme . '://' . $this->_config['website']
-                    . '/p/' . $project->project_id;
-
-                $previewPics = array(
-                    'previewpic1' => $viewHelperImage->Image(
-                        $project->image_small,
-                        $previewPicSize
-                    )
-                );
-                $smallPreviewPics = array(
-                    'smallpreviewpic1' => $viewHelperImage->Image(
-                        $project->image_small,
-                        $smallPreviewPicSize
-                    )
-                );
-
-                $cacheName = __FUNCTION__ . '_projects_galleryPics_' . md5((string)$project->project_id);
-                if (!($galleryPics = $cache->load($cacheName))) {
-                    Zend_Registry::get('logger')->debug(
-                        __METHOD__ . ' - Start Caching ProjectgalleryPics - '
-                        . print_r($project->project_id, true)
-                    );
-                    $galleryPics = $tableProject->getGalleryPictureSources($project->project_id);
-
-                    $cache->save($galleryPics, $cacheName);
-                } else {
-                    Zend_Registry::get('logger')->debug(
-                        __METHOD__ . ' - Loading from Cache ProjectgalleryPics - '
-                        . print_r($cacheName, true)
-                    );
-                }
-
-                if ($galleryPics) {
-                    $i = 2;
-                    foreach ($galleryPics as $galleryPic) {
-                        $previewPics['previewpic' . $i] = $viewHelperImage->Image(
-                            $galleryPic,
-                            $previewPicSize
-                        );
-                        $smallPreviewPics['smallpreviewpic' . $i] = $viewHelperImage->Image(
-                            $galleryPic,
-                            $smallPreviewPicSize
-                        );
-                        $i++;
-                    }
-                }
-
-                $downloads = $project->count_downloads_hive;
-                $downloadItems = array();
-                if ($project->ppload_collection_id) {
-                    $filesRequest = array(
-                        'collection_id' => ltrim($project->ppload_collection_id, '!'),
-                        'ocs_compatibility' => 'compatible',
-                        'perpage'       => 100
-                    );
-                    $cacheName = __FUNCTION__ . '_projects_filesResponse_' . md5((string)$project->ppload_collection_id);
-                    if (!($filesResponse = $cache->load($cacheName))) {
-                        Zend_Registry::get('logger')->debug(
-                            __METHOD__ . ' - Start Caching ProjectfilesResponse - '
-                            . print_r($project->ppload_collection_id, true)
-                        );
-                        $filesResponse = $pploadApi->getFiles($filesRequest);
-
-                        $cache->save($filesResponse, $cacheName);
-                    } else {
-                        Zend_Registry::get('logger')->debug(
-                            __METHOD__ . ' - Loading from Cache ProjectfilesResponse - '
-                            . print_r($cacheName, true)
-                        );
-                    }
-                    if (isset($filesResponse->status)
-                        && $filesResponse->status == 'success'
-                    ) {
-                        $i = 1;
-                        foreach ($filesResponse->files as $file) {
-                            $downloads += (int)$file->downloaded_count;
-                            $tags = $this->_parseFileTags($file->tags);
-                            $downloadLink = PPLOAD_API_URI . 'files/download/'
-                                . 'id/' . $file->id . '/' . $file->name;
-                            $downloadItems['downloadway' . $i] = 1;
-                            $downloadItems['downloadtype' . $i] = '';
-                            $downloadItems['downloadprice' . $i] = '0';
-                            $downloadItems['downloadlink' . $i] = $downloadLink;
-                            $downloadItems['downloadname' . $i] = $file->name;
-                            $downloadItems['downloadsize' . $i] = round($file->size / 1024);
-                            $downloadItems['downloadgpgfingerprint' . $i] = '';
-                            $downloadItems['downloadgpgsignature' . $i] = '';
-                            $downloadItems['downloadpackagename' . $i] = '';
-                            $downloadItems['downloadrepository' . $i] = '';
-                            $downloadItems['download_package_type' . $i] = $tags['packagetypeid'];
-                            $downloadItems['download_package_arch' . $i] = $tags['packagearch'];
-                            $i++;
-                        }
-                    }
-                }
-
-                if ($this->_format == 'json') {
-                    $contentsList[] = array(
-                            'details'     => 'summary',
-                            'id'          => $project->project_id,
-                            'name'        => $project->title,
-                            'version'     => $project->version,
-                            'typeid'      => $categoryId,
-                            'typename'    => $categoryTitle,
-                            'xdg_type'    => $categoryXdgType,
-                            'language'    => '',
-                            'personid'    => $project->member_username,
-                            'created'     => $created,
-                            'changed'     => $changed,
-                            'downloads'   => $downloads,
-                            'score'       => round((((int)$project->count_likes + 6) / (((int)$project->count_likes + (int)$project->count_dislikes) + 12)) * 100),
-                            'summary'     => '',
-                            'description' => $project->description,
-                            'comments'    => $project->count_comments,
-                            'preview1'    => $previewPage,
-                            'detailpage'  => $previewPage
-                        ) + $previewPics + $smallPreviewPics + $downloadItems;
-                } else {
-                    foreach ($previewPics as $key => $value) {
-                        $previewPics[$key] = array('@text' => $value);
-                    }
-                    foreach ($smallPreviewPics as $key => $value) {
-                        $smallPreviewPics[$key] = array('@text' => $value);
-                    }
-                    if ($downloadItems) {
-                        foreach ($downloadItems as $key => $value) {
-                            $downloadItems[$key] = array('@text' => $value);
-                        }
-                    }
-                    $contentsList[] = array(
-                            'details'     => 'summary',
-                            'id'          => array('@text' => $project->project_id),
-                            'name'        => array('@text' => $project->title),
-                            'version'     => array('@text' => $project->version),
-                            'typeid'      => array('@text' => $categoryId),
-                            'typename'    => array('@text' => $categoryTitle),
-                            'xdg_type'    => array('@text' => $categoryXdgType),
-                            'language'    => array('@text' => ''),
-                            'personid'    => array('@text' => $project->member_username),
-                            'created'     => array('@text' => $created),
-                            'changed'     => array('@text' => $changed),
-                            'downloads'   => array('@text' => $downloads),
-                            'score'       => array(
-                                '@text' => round((((int)$project->count_likes + 6) / (((int)$project->count_likes + (int)$project->count_dislikes) + 12)) * 100)
-                            ),
-                            'summary'     => array('@text' => ''),
-                            'description' => array('@text' => $project->description),
-                            'comments'    => array('@text' => $project->count_comments),
-                            'preview1'    => array('@text' => $previewPage),
-                            'detailpage'  => array('@text' => $previewPage)
-                        ) + $previewPics + $smallPreviewPics + $downloadItems;
-                }
-            }
-
-            if ($this->_format == 'json') {
-                $response['data'] = $contentsList;
-            } else {
-                $response['data'] = array('content' => $contentsList);
-            }
+            $response = $this->fetchCategoryContent($previewPicSize, $smallPreviewPicSize, $pploadApi);
             $this->_sendResponse($response, $this->_format);
         }
     }
@@ -1514,23 +1173,23 @@ class Ocsv1Controller extends Zend_Controller_Action
         $smallPreviewPicSize,
         $pploadApi
     ) {
+        /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
+        $cacheName = 'api_fetch_content_by_id_'.$contentId;
+
+        if (($response = $cache->load($cacheName))) {
+            return $response;
+        }
 
         $tableProject = new Default_Model_Project();
         $tableProjectSelect = $this->_buildProjectSelect($tableProject);
 
-        $cacheName = __FUNCTION__ . '_project_' . md5((string)$contentId);
-        if (!($project = $cache->load($cacheName))) {
-            Zend_Registry::get('logger')->debug(__METHOD__ . ' - Start Caching Project with ContentId - '
-                . print_r($contentId, true))
-            ;
+        $project = $tableProject->fetchRow($tableProjectSelect->where('project.project_id = ?', $contentId));
 
-            $project = $tableProject->fetchRow($tableProjectSelect->where('project.project_id = ?', $contentId));
-            Zend_Registry::get('logger')->debug(__METHOD__ . ' - OCS-Select Product: ' . $tableProjectSelect->__toString());
-            $cache->save($project, $cacheName);
-        } else {
-            Zend_Registry::get('logger')->debug(__METHOD__ . ' - Loading from Cache - ' . print_r($cacheName, true));
-        }
+        $project->title = Default_Model_HtmlPurify::purify($project->title);
+        $project->description = Default_Model_BBCode::renderHtml(Default_Model_HtmlPurify::purify($project->description));
+        $project->version = Default_Model_HtmlPurify::purify($project->version);
+
 
         if (!$project) {
             $this->_sendErrorResponse(101, 'content not found');
@@ -1551,56 +1210,19 @@ class Ocsv1Controller extends Zend_Controller_Action
             $donationPage = '';
         }
 
-        $viewHelperImage = new Default_View_Helper_Image();
-        $previewPics = array(
-            'previewpic1' => $viewHelperImage->Image($project->image_small, $previewPicSize)
-        );
-        $smallPreviewPics = array(
-            'smallpreviewpic1' => $viewHelperImage->Image($project->image_small, $smallPreviewPicSize)
-        );
-
-        $cacheName = __FUNCTION__ . '_project_galleryPics_' . md5((string)$project->project_id);
-        if (!(list($previewPics, $smallPreviewPics) = $cache->load($cacheName))) {
-            Zend_Registry::get('logger')->debug(__METHOD__ . ' - Start Caching ProjectgalleryPics - '
-                . print_r($project->project_id, true))
-            ;
-            $galleryPics = $tableProject->getGalleryPictureSources($project->project_id);
-            if ($galleryPics) {
-                $i = 2;
-                foreach ($galleryPics as $galleryPic) {
-                    $previewPics['previewpic' . $i] = $viewHelperImage->Image($galleryPic, $previewPicSize);
-                    $smallPreviewPics['smallpreviewpic' . $i] = $viewHelperImage->Image($galleryPic, $smallPreviewPicSize);
-                    $i++;
-                }
-            }
-            $cache->save(array($previewPics, $smallPreviewPics), $cacheName);
-        } else {
-            Zend_Registry::get('logger')->debug(__METHOD__ . ' - Loading from Cache ProjectgalleryPics - '
-                . print_r($cacheName, true))
-            ;
-        }
+        list($previewPics, $smallPreviewPics) = $this->getGalleryPictures($project, $previewPicSize, $smallPreviewPicSize);
 
         $downloads = $project->count_downloads_hive;
         $downloadItems = array();
+
         if ($project->ppload_collection_id) {
             $filesRequest = array(
                 'collection_id'     => ltrim($project->ppload_collection_id, '!'),
                 'ocs_compatibility' => 'compatible',
                 'perpage'           => 100
             );
-            $cacheName = __FUNCTION__ . '_project_filesResponse_' . md5((string)$project->ppload_collection_id);
-            if (!($filesResponse = $cache->load($cacheName))) {
-                Zend_Registry::get('logger')->debug(__METHOD__ . ' - Start Caching ProjectfilesResponse - '
-                    . print_r($filesRequest, true))
-                ;
-                $filesResponse = $pploadApi->getFiles($filesRequest);
+            $filesResponse = $pploadApi->getFiles($filesRequest);
 
-                $cache->save($filesResponse, $cacheName);
-            } else {
-                Zend_Registry::get('logger')->debug(__METHOD__ . ' - Loading from Cache ProjectfilesResponse - '
-                    . print_r($cacheName, true))
-                ;
-            }
             if (isset($filesResponse->status) && $filesResponse->status == 'success') {
                 $i = 1;
                 foreach ($filesResponse->files as $file) {
@@ -1661,7 +1283,8 @@ class Ocsv1Controller extends Zend_Controller_Action
                         'preview1'             => $previewPage,
                         'icon'                 => '',
                         'video'                => '',
-                        'detailpage'           => $previewPage
+                        'detailpage'           => $previewPage,
+                        'tags'                 => $project->tags
                     ) + $previewPics + $smallPreviewPics + $downloadItems
                 )
             );
@@ -1715,13 +1338,370 @@ class Ocsv1Controller extends Zend_Controller_Action
                             'preview1'             => array('@text' => $previewPage),
                             'icon'                 => array('@text' => ''),
                             'video'                => array('@text' => ''),
-                            'detailpage'           => array('@text' => $previewPage)
+                            'detailpage'           => array('@text' => $previewPage),
+                            'tags'                 => array('@text' => $project->tags)
                         ) + $previewPics + $smallPreviewPics + $downloadItems
                 )
             );
         }
 
+        $cache->save($response, $cacheName, array(), 120);
         return $response;
+    }
+
+    /**
+     * @param array $previewPicSize
+     * @param array $smallPreviewPicSize
+     * @param Ppload_Api $pploadApi
+     *
+     * @return array
+     */
+    protected function fetchCategoryContent(
+        $previewPicSize,
+        $smallPreviewPicSize,
+        $pploadApi
+    ) {
+        $limit = 10; // 1 - 100
+        $offset = 0;
+
+        $cache = Zend_Registry::get('cache');
+
+        $tableProject = new Default_Model_Project();
+        $tableProjectSelect = $this->_buildProjectSelect($tableProject);
+
+        if (!empty($this->_params['categories'])) {
+            // categories parameter: values separated by ","
+            // legacy OCS API compatible: values separated by "x"
+            if (strpos($this->_params['categories'], ',') !== false) {
+                $catList = explode(',', $this->_params['categories']);
+            } else {
+                $catList = explode('x', $this->_params['categories']);
+            }
+
+            $modelProjectCategories = new Default_Model_DbTable_ProjectCategory();
+            $allCategories = array();
+            foreach ($catList as $catId) {
+                $allCategories[] = $catId;
+                $childElements = $modelProjectCategories->fetchChildElements($catId);
+                $childIds = array();
+                foreach ($childElements as $child) {
+                    $childIds[] = $child['project_category_id'];
+                }
+                $allCategories = array_merge($allCategories, $childIds);
+            }
+            $tableProjectSelect->where('project.project_category_id IN (?)', $allCategories);
+        }
+        
+        if (!empty($this->_params['xdg_types'])) {
+            // xdg_types parameter: values separated by ","
+            $xdgTypeList = explode(',', $this->_params['xdg_types']);
+            $tableProjectSelect->where('category.xdg_type IN (?)', $xdgTypeList);
+        }
+        
+        if (!empty($this->_params['package_types'])) {
+            // package_types parameter: values separated by ","
+            $packageTypeList = explode(',', $this->_params['package_types']);
+
+            $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
+            $storePackageTypeIds = null;
+            if ($storeConfig) {
+                $storePackageTypeIds = $storeConfig['package_type'];
+            }
+
+            if ($storePackageTypeIds) {
+                $tableProjectSelect->join(array(
+                    'package_type' => new Zend_Db_Expr('(SELECT DISTINCT project_id FROM project_package_type WHERE '
+                        . $tableProject->getAdapter()->quoteInto('package_type_id IN (?)', $packageTypeList) . ')')
+                ), 'project.project_id = package_type.project_id', array());
+            }
+        }
+        
+        if (!empty($this->_params['search'])) {
+            $isSearchable = false;
+            foreach (explode(' ', $this->_params['search']) as $keyword) {
+                if ($keyword && strlen($keyword) > 2) {
+                    $tableProjectSelect->where('project.title LIKE ?' . ' OR project.description LIKE ?', "%$keyword%");
+                    $isSearchable = true;
+                }
+            }
+            $keyword = $this->_params['search'];
+            if (!$isSearchable && $keyword && strlen($keyword) > 2) {
+                $tableProjectSelect->where('project.title LIKE ?' . ' OR project.description LIKE ?', "%$keyword%");
+            }
+        }
+
+        if (!empty($this->_params['user'])) {
+            $tableProjectSelect->where('member.username = ?', $this->_params['user']);
+        }
+
+        if (!empty($this->_params['external'])) {
+        }
+
+        if (!empty($this->_params['distribution'])) {
+            // distribution parameter: comma separated list of ids
+        }
+
+        if (!empty($this->_params['license'])) {
+            // license parameter: comma separated list of ids
+        }
+
+        if (!empty($this->_params['sortmode'])) {
+            // sortmode parameter: new|alpha|high|down
+            switch (strtolower($this->_params['sortmode'])) {
+                case 'new':
+                    $tableProjectSelect->order('project.created_at DESC');
+                    break;
+                case 'alpha':
+                    $tableProjectSelect->order('project.title ASC');
+                    break;
+                case 'high':
+                    $tableProjectSelect->order(new Zend_Db_Expr('(((project.count_likes + 6) / ((project.count_likes + project.count_dislikes) + 12)) * 100) DESC'));
+                    break;
+                case 'down':
+                    $tableProjectSelect->joinLeft(array('stat_downloads_quarter_year' => 'stat_downloads_quarter_year'),
+                        'project.project_id = stat_downloads_quarter_year.project_id', array());
+                    $tableProjectSelect->order('stat_downloads_quarter_year.amount DESC');
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        if (isset($this->_params['pagesize'])
+            && ctype_digit((string)$this->_params['pagesize'])
+            && $this->_params['pagesize'] > 0
+            && $this->_params['pagesize'] < 101) {
+            $limit = $this->_params['pagesize'];
+        }
+
+        if (isset($this->_params['page'])
+            && ctype_digit((string)$this->_params['page'])) {
+            // page parameter: the first page is 0
+            $offset = $limit * $this->_params['page'];
+        }
+
+        $projects = $tableProject->fetchAll($tableProjectSelect->limit($limit, $offset));
+
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - OCS-Select: ' . $tableProjectSelect->__toString());
+
+        $tableProjectSelect->reset(Zend_Db_Select::COLUMNS)
+                           ->columns(array('counter' => new Zend_Db_Expr('count(*)')), 'project')
+                           ->reset(Zend_Db_Select::GROUP)->reset(Zend_Db_Select::ORDER)
+        ;
+        $tableProjectSelect->limit(0, 0);
+
+        $count = $tableProject->fetchRow($tableProjectSelect);
+
+        if ($this->_format == 'json') {
+            $response = array(
+                'status'       => 'ok',
+                'statuscode'   => 100,
+                'message'      => '',
+                'totalitems'   => $count['counter'],
+                'itemsperpage' => $limit,
+                'data'         => array()
+            );
+        } else {
+            $response = array(
+                'meta' => array(
+                    'status'       => array('@text' => 'ok'),
+                    'statuscode'   => array('@text' => 100),
+                    'message'      => array('@text' => ''),
+                    'totalitems'   => array('@text' => $count['counter']),
+                    'itemsperpage' => array('@text' => $limit)
+                ),
+                'data' => array()
+            );
+        }
+
+        if (!count($projects)) {
+            return $response;
+        }
+
+        $contentsList = array();
+        $helperTruncate = new Default_View_Helper_Truncate();
+        foreach ($projects as $project) {
+            $project->title = Default_Model_HtmlPurify::purify($project->title);
+            $project->description = $helperTruncate->truncate(Default_Model_BBCode::renderHtml(Default_Model_HtmlPurify::purify($project->description)), 300);
+            $project->version = Default_Model_HtmlPurify::purify($project->version);
+
+            $categoryXdgType = '';
+            if (!empty($project->xdg_type)) {
+                $categoryXdgType = $project->xdg_type;
+            }
+
+            $created = date('c', strtotime($project->created_at));
+            $changed = date('c', strtotime($project->changed_at));
+
+            $previewPage = $this->_uriScheme . '://' . $this->_config['website'] . '/p/' . $project->project_id;
+
+            list($previewPics, $smallPreviewPics) = $this->getGalleryPictures($project, $previewPicSize, $smallPreviewPicSize);
+
+            $downloads = $project->count_downloads_hive;
+            list($downloadItems, $downloads) = $this->getPPLoadInfo($project, $pploadApi, $downloads);
+
+            if ($this->_format == 'json') {
+                $contentsList[] = array(
+                        'details'     => 'summary',
+                        'id'          => $project->project_id,
+                        'name'        => $project->title,
+                        'version'     => $project->version,
+                        'typeid'      => $project->project_category_id,
+                        'typename'    => $project->cat_title,
+                        'xdg_type'    => $categoryXdgType,
+                        'language'    => '',
+                        'personid'    => $project->member_username,
+                        'created'     => $created,
+                        'changed'     => $changed,
+                        'downloads'   => $downloads,
+                        'score'       => $project->laplace_score,
+                        'summary'     => '',
+                        'description' => $project->description,
+                        'comments'    => $project->count_comments,
+                        'preview1'    => $previewPage,
+                        'detailpage'  => $previewPage
+                    ) + $previewPics + $smallPreviewPics + $downloadItems;
+            } else {
+                foreach ($previewPics as $key => $value) {
+                    $previewPics[$key] = array('@text' => $value);
+                }
+                foreach ($smallPreviewPics as $key => $value) {
+                    $smallPreviewPics[$key] = array('@text' => $value);
+                }
+                if ($downloadItems) {
+                    foreach ($downloadItems as $key => $value) {
+                        $downloadItems[$key] = array('@text' => $value);
+                    }
+                }
+                $contentsList[] = array(
+                        'details'     => 'summary',
+                        'id'          => array('@text' => $project->project_id),
+                        'name'        => array('@text' => $project->title),
+                        'version'     => array('@text' => $project->version),
+                        'typeid'      => array('@text' => $project->project_category_id),
+                        'typename'    => array('@text' => $project->cat_title),
+                        'xdg_type'    => array('@text' => $categoryXdgType),
+                        'language'    => array('@text' => ''),
+                        'personid'    => array('@text' => $project->member_username),
+                        'created'     => array('@text' => $created),
+                        'changed'     => array('@text' => $changed),
+                        'downloads'   => array('@text' => $downloads),
+                        'score'       => array('@text' => $project->laplace_score),
+                        'summary'     => array('@text' => ''),
+                        'description' => array('@text' => $project->description),
+                        'comments'    => array('@text' => $project->count_comments),
+                        'preview1'    => array('@text' => $previewPage),
+                        'detailpage'  => array('@text' => $previewPage)
+                    ) + $previewPics + $smallPreviewPics + $downloadItems;
+            }
+        }
+
+        if ($this->_format == 'json') {
+            $response['data'] = $contentsList;
+        } else {
+            $response['data'] = array('content' => $contentsList);
+        }
+
+        return $response;
+    }
+
+    /**
+     * @param Zend_Db_Table_Row_Abstract $project
+     * @param array $previewPicSize
+     * @param array $smallPreviewPicSize
+     *
+     * @return array
+     */
+    protected function getGalleryPictures($project, $previewPicSize, $smallPreviewPicSize) {
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cacheName = 'api_fetch_gallery_pics_' . $project->project_id;
+
+        if (($previews = $cache->load($cacheName))) {
+            return $previews;
+        }
+
+        $viewHelperImage = new Default_View_Helper_Image();
+        $previewPics = array(
+            'previewpic1' => $viewHelperImage->Image($project->image_small, $previewPicSize)
+        );
+        $smallPreviewPics = array(
+            'smallpreviewpic1' => $viewHelperImage->Image($project->image_small, $smallPreviewPicSize)
+        );
+
+        $tableProject = new Default_Model_Project();
+        $galleryPics = $tableProject->getGalleryPictureSources($project->project_id);
+        if ($galleryPics) {
+            $i = 2;
+            foreach ($galleryPics as $galleryPic) {
+                $previewPics['previewpic' . $i] = $viewHelperImage->Image($galleryPic, $previewPicSize);
+                $smallPreviewPics['smallpreviewpic' . $i] = $viewHelperImage->Image($galleryPic, $smallPreviewPicSize);
+                $i++;
+            }
+        }
+
+        $cache->save(array($previewPics, $smallPreviewPics), $cacheName, array(), 120);
+
+        return array($previewPics, $smallPreviewPics);
+    }
+
+    /**
+     * @param Zend_Db_Table_Row_Abstract $project
+     * @param Ppload_Api $pploadApi
+     * @param int $downloads
+     *
+     * @return array
+     */
+    protected function getPPLoadInfo($project, $pploadApi, $downloads)
+    {
+        $downloadItems = array();
+
+        if ($project->ppload_collection_id) {
+            return array($downloadItems, $downloads);
+        }
+
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cacheName = 'api_ppload_collection_by_id_' . $project->ppload_collection_id;
+
+        if (($pploadInfo = $cache->load($cacheName))) {
+            return $pploadInfo;
+        }
+
+        $filesRequest = array(
+            'collection_id'     => ltrim($project->ppload_collection_id, '!'),
+            'ocs_compatibility' => 'compatible',
+            'perpage'           => 100
+        );
+
+        $filesResponse = $pploadApi->getFiles($filesRequest);
+        if (isset($filesResponse->status)
+            && $filesResponse->status == 'success')
+        {
+            $i = 1;
+            foreach ($filesResponse->files as $file) {
+                $downloads += (int)$file->downloaded_count;
+                $tags = $this->_parseFileTags($file->tags);
+                $downloadLink = PPLOAD_API_URI . 'files/download/' . 'id/' . $file->id . '/' . $file->name;
+                $downloadItems['downloadway' . $i] = 1;
+                $downloadItems['downloadtype' . $i] = '';
+                $downloadItems['downloadprice' . $i] = '0';
+                $downloadItems['downloadlink' . $i] = $downloadLink;
+                $downloadItems['downloadname' . $i] = $file->name;
+                $downloadItems['downloadsize' . $i] = round($file->size / 1024);
+                $downloadItems['downloadgpgfingerprint' . $i] = '';
+                $downloadItems['downloadgpgsignature' . $i] = '';
+                $downloadItems['downloadpackagename' . $i] = '';
+                $downloadItems['downloadrepository' . $i] = '';
+                $downloadItems['download_package_type' . $i] = $tags['packagetypeid'];
+                $downloadItems['download_package_arch' . $i] = $tags['packagearch'];
+                $i++;
+            }
+        }
+
+        $cache->save(array($downloadItems, $downloads), $cacheName, array(), 120);
+
+        return array($downloadItems, $downloads);
     }
 
 }
