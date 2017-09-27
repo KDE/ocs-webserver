@@ -100,21 +100,20 @@ class Ocsv1Controller extends Zend_Controller_Action
 
     protected $_format = 'xml';
 
-    protected $_config
-        = array(
-            'id'         => 'opendesktop.org',
-            'location'   => 'https://www.opendesktop.org/ocs/v1/',
-            'name'       => 'opendesktop.org',
-            'icon'       => '',
-            'termsofuse' => 'https://www.opendesktop.org/terms',
-            'register'   => 'https://www.opendesktop.org/register',
-            'version'    => '1.7',
-            'website'    => 'www.opendesktop.org',
-            'host'       => 'www.opendesktop.org',
-            'contact'    => 'contact@opendesktop.org',
-            'ssl'        => true,
-            'user_host'  => 'pling.me'
-        );
+    protected $_config = array(
+        'id'         => 'opendesktop.org',
+        'location'   => 'https://www.opendesktop.org/ocs/v1/',
+        'name'       => 'opendesktop.org',
+        'icon'       => '',
+        'termsofuse' => 'https://www.opendesktop.org/terms',
+        'register'   => 'https://www.opendesktop.org/register',
+        'version'    => '1.7',
+        'website'    => 'www.opendesktop.org',
+        'host'       => 'www.opendesktop.org',
+        'contact'    => 'contact@opendesktop.org',
+        'ssl'        => true,
+        'user_host'  => 'pling.me'
+    );
 
     protected $_params = array();
 
@@ -137,8 +136,7 @@ class Ocsv1Controller extends Zend_Controller_Action
 
     protected function _initUriScheme()
     {
-        if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] === '1')
-        ) {
+        if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] === '1')) {
             $this->_uriScheme = 'https';
         } else {
             $this->_uriScheme = 'http';
@@ -163,16 +161,12 @@ class Ocsv1Controller extends Zend_Controller_Action
                 $this->_params = $_POST;
                 break;
             default:
-                Zend_Registry::get('logger')->err(
-                    __METHOD__ . ' - request method not supported - '
-                    . $_SERVER['REQUEST_METHOD']
-                );
+                Zend_Registry::get('logger')->err(__METHOD__ . ' - request method not supported - ' . $_SERVER['REQUEST_METHOD']);
                 exit('request method not supported');
         }
 
         // Set format option
-        if (isset($this->_params['format']) && strtolower($this->_params['format']) == 'json'
-        ) {
+        if (isset($this->_params['format']) && strtolower($this->_params['format']) == 'json') {
             $this->_format = 'json';
         }
     }
@@ -214,6 +208,7 @@ class Ocsv1Controller extends Zend_Controller_Action
     {
         $clientConfigReader = new Backend_Model_ClientFileConfig($this->_getNameForStoreClient());
         $clientConfigReader->loadClientConfig();
+
         return $clientConfigReader->getConfig();
     }
 
@@ -229,6 +224,7 @@ class Ocsv1Controller extends Zend_Controller_Action
         if (Zend_Registry::isRegistered('store_config_name')) {
             $clientName = Zend_Registry::get('store_config_name');
         }
+
         return $clientName;
     }
 
@@ -238,11 +234,10 @@ class Ocsv1Controller extends Zend_Controller_Action
         $expires = gmdate("D, d M Y H:i:s", time() + $duration) . " GMT";
 
         $this->getResponse()
-            ->setHeader('X-FRAME-OPTIONS', 'SAMEORIGIN', true)
-//            ->setHeader('Last-Modified', $modifiedTime, true)
-            ->setHeader('Expires', $expires, true)
-            ->setHeader('Pragma', 'cache', true)
-            ->setHeader('Cache-Control', 'max-age=1800, public', true);
+             ->setHeader('X-FRAME-OPTIONS', 'SAMEORIGIN', true)//            ->setHeader('Last-Modified', $modifiedTime, true)
+             ->setHeader('Expires', $expires, true)->setHeader('Pragma', 'cache', true)
+             ->setHeader('Cache-Control', 'max-age=1800, public', true)
+        ;
     }
 
     public function indexAction()
@@ -320,6 +315,11 @@ class Ocsv1Controller extends Zend_Controller_Action
                             $value = var_export($value, true);
                         }
                         $element->appendChild($dom->createTextNode($value));
+                    } else if ($key == '@cdata') {
+                        if (is_bool($value)) {
+                            $value = var_export($value, true);
+                        }
+                        $element->appendChild($dom->createCDATASection($value));
                     } else {
                         if (is_bool($value)) {
                             $value = var_export($value, true);
@@ -329,6 +329,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                 }
             }
         }
+
         return $dom;
     }
 
@@ -442,11 +443,11 @@ class Ocsv1Controller extends Zend_Controller_Action
         if (strrpos($_SERVER['SERVER_NAME'], 'pling.ws') !== false
             || strrpos($_SERVER['SERVER_NAME'], 'pling.cc') !== false
             || strrpos($_SERVER['SERVER_NAME'], 'pling.to') !== false
-            || strrpos($_SERVER['SERVER_NAME'], 'ocs-store.com') !== false
-        ) {
+            || strrpos($_SERVER['SERVER_NAME'], 'ocs-store.com') !== false) {
             $authData = new stdClass;
             $authData->username = 'dummy';
             $this->_authData = $authData;
+
             return true;
         }
         ////////////////////////////////////////////////////////
@@ -469,6 +470,7 @@ class Ocsv1Controller extends Zend_Controller_Action
             $authData = $authModel->getAuthDataFromApi($identity, $credential, $loginMethod);
             if ($authData) {
                 $this->_authData = $authData;
+
                 return true;
             }
         }
@@ -512,8 +514,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                 $this->_sendErrorResponse(101, 'person not found');
             }
 
-            $profilePage = $this->_uriScheme . '://' . $this->_config['user_host']
-                . '/member/' . $member->member_id;
+            $profilePage = $this->_uriScheme . '://' . $this->_config['user_host'] . '/member/' . $member->member_id;
 
             if ($this->_format == 'json') {
                 $response = array(
@@ -616,30 +617,19 @@ class Ocsv1Controller extends Zend_Controller_Action
             $limit = 10; // 1 - 100
             $offset = 0;
 
-            $tableMemberSelect = $tableMember->select()
-                ->where('is_active = ?', 1)
-                ->where('is_deleted = ?', 0);
+            $tableMemberSelect = $tableMember->select()->where('is_active = ?', 1)->where('is_deleted = ?', 0);
 
             if (!empty($this->_params['name'])) {
                 $isSearchable = false;
                 foreach (explode(' ', $this->_params['name']) as $keyword) {
                     if ($keyword && strlen($keyword) > 2) {
-                        $tableMemberSelect->where(
-                            'username LIKE ?'
-                            . ' OR firstname LIKE ?'
-                            . ' OR lastname LIKE ?',
-                            "%$keyword%"
-                        );
+                        $tableMemberSelect->where('username LIKE ?' . ' OR firstname LIKE ?' . ' OR lastname LIKE ?', "%$keyword%");
                         $isSearchable = true;
                     }
                 }
                 if (!$isSearchable) {
-                    $tableMemberSelect->where(
-                        'username LIKE ?'
-                        . ' OR firstname LIKE ?'
-                        . ' OR lastname LIKE ?',
-                        "%{$this->_params['name']}%"
-                    );
+                    $tableMemberSelect->where('username LIKE ?' . ' OR firstname LIKE ?' . ' OR lastname LIKE ?',
+                        "%{$this->_params['name']}%");
                 }
             }
             if (!empty($this->_params['country'])) {
@@ -679,35 +669,26 @@ class Ocsv1Controller extends Zend_Controller_Action
             if (isset($this->_params['pagesize'])
                 && ctype_digit((string)$this->_params['pagesize'])
                 && $this->_params['pagesize'] > 0
-                && $this->_params['pagesize'] < 101
-            ) {
+                && $this->_params['pagesize'] < 101) {
                 $limit = $this->_params['pagesize'];
             }
             if (isset($this->_params['page'])
-                && ctype_digit((string)$this->_params['page'])
-            ) {
+                && ctype_digit((string)$this->_params['page'])) {
                 // page parameter: the first page is 0
                 $offset = $limit * $this->_params['page'];
             }
 
-            $members = $tableMember->fetchAll(
-                $tableMemberSelect->limit($limit, $offset)
-            );
+            $members = $tableMember->fetchAll($tableMemberSelect->limit($limit, $offset));
 
             $tableMemberSelect->reset('columns');
             $tableMemberSelect->reset('limitcount');
             $tableMemberSelect->reset('limitoffset');
 
-            $count = $tableMember->fetchRow(
-                $tableMemberSelect->columns(array('count' => 'COUNT(*)'))
-            );
+            $count = $tableMember->fetchRow($tableMemberSelect->columns(array('count' => 'COUNT(*)')));
 
             if ($count['count'] > 1000) {
-                $this->_sendErrorResponse(102,
-                    'more than 1000 people found.'
-                    . ' it is not allowed to fetch such a big resultset.'
-                    . ' please specify more search conditions'
-                );
+                $this->_sendErrorResponse(102, 'more than 1000 people found.' . ' it is not allowed to fetch such a big resultset.'
+                    . ' please specify more search conditions');
             }
 
             if ($this->_format == 'json') {
@@ -780,11 +761,10 @@ class Ocsv1Controller extends Zend_Controller_Action
 
     public function contentcategoriesAction()
     {
-        if (!$this->_authenticateUser()) {
-            //$this->_sendErrorResponse(999, '');
-        }
+        //if (!$this->_authenticateUser()) {
+        //    $this->_sendErrorResponse(999, '');
+        //}
 
-//        $categoriesList = $this->_buildCategoriesList();
         $categoriesList = $this->_buildCategories();
 
         if ($this->_format == 'json') {
@@ -815,76 +795,11 @@ class Ocsv1Controller extends Zend_Controller_Action
         $this->_sendResponse($response, $this->_format);
     }
 
-    protected function _buildCategoriesList($tableCategories = null, $parentCategoryId = null, $categoriesList = array())
-    {
-        $categories = null;
-
-        // Top-level categories
-        if (!$tableCategories) {
-            $tableCategories = new Default_Model_DbTable_ProjectCategory();
-            if (Zend_Registry::isRegistered('store_category_list')) {
-                $categories = $tableCategories->fetchActive(Zend_Registry::get('store_category_list'));
-            } else {
-                $categories = $tableCategories->fetchAllActive();
-            }
-        } // Sub-categories
-        else {
-            if ($parentCategoryId) {
-                $categories = $tableCategories->fetchImmediateChildren($parentCategoryId);
-            }
-        }
-
-        // Build categories list
-        if (!empty($categories)) {
-            foreach ($categories as $category) {
-                if (is_array($category)) {
-                    $category = (object)$category;
-                }
-
-                $categoryName = $category->title;
-                $categoryDisplayName = $category->title;
-                if (!empty($category->name_legacy)) {
-                    $categoryName = $category->name_legacy;
-                }
-                $categoryParentId = '';
-                if (!empty($parentCategoryId)) {
-                    $categoryParentId = $parentCategoryId;
-                }
-                $categoryXdgType = '';
-                if (!empty($category->xdg_type)) {
-                    $categoryXdgType = $category->xdg_type;
-                }
-
-                if ($this->_format == 'json') {
-                    $categoriesList[] = array(
-                        'id'           => $category->project_category_id,
-                        'name'         => $categoryName,
-                        'display_name' => $categoryDisplayName,
-                        'parent_id'    => $categoryParentId,
-                        'xdg_type'     => $categoryXdgType
-                    );
-                } else {
-                    $categoriesList[] = array(
-                        'id'           => array('@text' => $category->project_category_id),
-                        'name'         => array('@text' => $categoryName),
-                        'display_name' => array('@text' => $categoryDisplayName),
-                        'parent_id'    => array('@text' => $categoryParentId),
-                        'xdg_type'     => array('@text' => $categoryXdgType)
-                    );
-                }
-
-                // Update the list recursive
-                $categoriesList = $this->_buildCategoriesList($tableCategories, $category->project_category_id, $categoriesList);
-            }
-        }
-
-        return $categoriesList;
-    }
-
     protected function _buildCategories()
     {
         $modelCategoryTree = new Default_Model_ProjectCategory();
         $tree = $modelCategoryTree->fetchCategoryTreeCurrentStore();
+
         return $this->buildResponseTree($tree);
     }
 
@@ -916,6 +831,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                 $result = array_merge($result, $sub_tree);
             }
         }
+
         return $result;
     }
 
@@ -943,7 +859,7 @@ class Ocsv1Controller extends Zend_Controller_Action
         );
 
         // Specific content data
-        $requestedId = isset($this->_params['contentid']) ? (int) $this->_params['contentid'] : null;
+        $requestedId = isset($this->_params['contentid']) ? (int)$this->_params['contentid'] : null;
         if ($requestedId) {
             $response = $this->fetchContent($requestedId, $previewPicSize, $smallPreviewPicSize, $pploadApi);
             $this->_sendResponse($response, $this->_format);
@@ -955,214 +871,9 @@ class Ocsv1Controller extends Zend_Controller_Action
     }
 
     /**
-     * @param Zend_Db_Table $tableProject
-     *
-     * @return Zend_Db_Table_Select
-     */
-    protected function _buildProjectSelect($tableProject)
-    {
-        $tableProjectSelect = $tableProject->select();
-        $tableProjectSelect
-            ->setIntegrityCheck(false)
-            ->from(array('project' => 'stat_projects'))
-            ->columns(array(
-                'member_username' => 'username',
-                'category_title'  => 'cat_title',
-                'xdg_type'        => 'cat_xdg_type',
-                'name_legacy'     => 'cat_name_legacy'
-            ))
-            ->where('project.status = ?', Default_Model_Project::PROJECT_ACTIVE)
-            ->where('project.ppload_collection_id IS NOT NULL');
-        return $tableProjectSelect;
-    }
-
-    /**
-     * @param string $fileTags
-     *
-     * @return array
-     */
-    protected function _parseFileTags($fileTags)
-    {
-        $tags = explode(',', $fileTags);
-        $parsedTags = array(
-            'link'          => '',
-            'licensetype'   => '',
-            'packagetypeid' => '',
-            'packagearch'   => ''
-        );
-        foreach ($tags as $tag) {
-            $tag = trim($tag);
-            if (strpos($tag, 'link##') === 0) {
-                $parsedTags['link'] = urldecode(str_replace('link##', '', $tag));
-            } else {
-                if (strpos($tag, 'licensetype-') === 0) {
-                    $parsedTags['licensetype'] = str_replace('licensetype-', '', $tag);
-                } else {
-                    if (strpos($tag, 'packagetypeid-') === 0) {
-                        $parsedTags['packagetypeid'] = str_replace('packagetypeid-', '', $tag);
-                    } else {
-                        if (strpos($tag, 'packagearch-') === 0) {
-                            $parsedTags['packagearch'] = str_replace('packagearch-', '', $tag);
-                        }
-                    }
-                }
-            }
-        }
-        return $parsedTags;
-    }
-
-    public function contentdownloadAction()
-    {
-        if (!$this->_authenticateUser()) {
-            //$this->_sendErrorResponse(999, '');
-        }
-
-        $pploadApi = new Ppload_Api(array(
-            'apiUri'   => PPLOAD_API_URI,
-            'clientId' => PPLOAD_CLIENT_ID,
-            'secret'   => PPLOAD_SECRET
-        ));
-
-        $project = null;
-        $file = null;
-
-        if ($this->getParam('contentid')) {
-            $tableProject = new Default_Model_Project();
-            $project = $tableProject->fetchRow(
-                $tableProject->select()
-                    ->where('project_id = ?', $this->getParam('contentid'))
-                    ->where('status = ?', Default_Model_Project::PROJECT_ACTIVE)
-            );
-        }
-
-        if (!$project) {
-            $this->_sendErrorResponse(101, 'content not found');
-        }
-
-        if ($project->ppload_collection_id
-            && $this->getParam('itemid')
-            && ctype_digit((string)$this->getParam('itemid'))
-        ) {
-            $filesRequest = array(
-                'collection_id' => ltrim($project->ppload_collection_id, '!'),
-                'ocs_compatibility' => 'compatible',
-                'perpage'       => 1,
-                'page'          => $this->getParam('itemid')
-            );
-            $filesResponse = $pploadApi->getFiles($filesRequest);
-            if (isset($filesResponse->status)
-                && $filesResponse->status == 'success'
-            ) {
-                $i = 0;
-                $file = $filesResponse->files->$i;
-            }
-        }
-
-        if (!$file) {
-            $this->_sendErrorResponse(103, 'content item not found');
-        }
-
-        $tags = $this->_parseFileTags($file->tags);
-        $downloadLink = PPLOAD_API_URI . 'files/download/'
-            . 'id/' . $file->id . '/' . $file->name;
-
-        if ($this->_format == 'json') {
-            $response = array(
-                'status'     => 'ok',
-                'statuscode' => 100,
-                'message'    => '',
-                'data'       => array(
-                    array(
-                        'details'               => 'download',
-                        'downloadway'           => 1,
-                        'downloadlink'          => $downloadLink,
-                        'mimetype'              => $file->type,
-                        'gpgfingerprint'        => '',
-                        'gpgsignature'          => '',
-                        'packagename'           => '',
-                        'repository'            => '',
-                        'download_package_type' => $tags['packagetypeid'],
-                        'download_package_arch' => $tags['packagearch']
-                    )
-                )
-            );
-        } else {
-            $response = array(
-                'meta' => array(
-                    'status'     => array('@text' => 'ok'),
-                    'statuscode' => array('@text' => 100),
-                    'message'    => array('@text' => '')
-                ),
-                'data' => array(
-                    'content' => array(
-                        'details'               => 'download',
-                        'downloadway'           => array('@text' => 1),
-                        'downloadlink'          => array('@text' => $downloadLink),
-                        'mimetype'              => array('@text' => $file->type),
-                        'gpgfingerprint'        => array('@text' => ''),
-                        'gpgsignature'          => array('@text' => ''),
-                        'packagename'           => array('@text' => ''),
-                        'repository'            => array('@text' => ''),
-                        'download_package_type' => array('@text' => $tags['packagetypeid']),
-                        'download_package_arch' => array('@text' => $tags['packagearch'])
-                    )
-                )
-            );
-        }
-        $this->_sendResponse($response, $this->_format);
-    }
-
-    public function contentpreviewpicAction()
-    {
-        if (!$this->_authenticateUser()) {
-            //$this->_sendErrorResponse(999, '');
-        }
-
-        $project = null;
-
-        if ($this->getParam('contentid')) {
-            $tableProject = new Default_Model_Project();
-            $project = $tableProject->fetchRow(
-                $tableProject->select()
-                    ->where('project_id = ?', $this->getParam('contentid'))
-                    ->where('status = ?', Default_Model_Project::PROJECT_ACTIVE)
-            );
-        }
-
-        if (!$project) {
-            //$this->_sendErrorResponse(101, 'content not found');
-            header('Location: ' . $this->_config['icon']);
-            exit;
-        }
-
-        $viewHelperImage = new Default_View_Helper_Image();
-        $previewPicSize = array(
-            'width'  => 100,
-            'height' => 100
-        );
-
-        if (!empty($this->_params['size'])
-            && strtolower($this->_params['size']) == 'medium'
-        ) {
-            $previewPicSize = array(
-                'width'  => 770,
-                'height' => 540
-            );
-        }
-
-        $previewPicUri = $viewHelperImage->Image(
-            $project->image_small,
-            $previewPicSize
-        );
-
-        header('Location: ' . $previewPicUri);
-        exit;
-    }
-
-    /**
-     * @param int $contentId
-     * @param array $previewPicSize
-     * @param array $smallPreviewPicSize
+     * @param int        $contentId
+     * @param array      $previewPicSize
+     * @param array      $smallPreviewPicSize
      * @param Ppload_Api $pploadApi
      *
      * @return array
@@ -1175,7 +886,7 @@ class Ocsv1Controller extends Zend_Controller_Action
     ) {
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
-        $cacheName = 'api_fetch_content_by_id_'.$contentId;
+        $cacheName = 'api_fetch_content_by_id_' . $contentId;
 
         if (($response = $cache->load($cacheName))) {
             return $response;
@@ -1189,7 +900,6 @@ class Ocsv1Controller extends Zend_Controller_Action
         $project->title = Default_Model_HtmlPurify::purify($project->title);
         $project->description = Default_Model_BBCode::renderHtml(Default_Model_HtmlPurify::purify($project->description));
         $project->version = Default_Model_HtmlPurify::purify($project->version);
-
 
         if (!$project) {
             $this->_sendErrorResponse(101, 'content not found');
@@ -1213,38 +923,7 @@ class Ocsv1Controller extends Zend_Controller_Action
         list($previewPics, $smallPreviewPics) = $this->getGalleryPictures($project, $previewPicSize, $smallPreviewPicSize);
 
         $downloads = $project->count_downloads_hive;
-        $downloadItems = array();
-
-        if ($project->ppload_collection_id) {
-            $filesRequest = array(
-                'collection_id'     => ltrim($project->ppload_collection_id, '!'),
-                'ocs_compatibility' => 'compatible',
-                'perpage'           => 100
-            );
-            $filesResponse = $pploadApi->getFiles($filesRequest);
-
-            if (isset($filesResponse->status) && $filesResponse->status == 'success') {
-                $i = 1;
-                foreach ($filesResponse->files as $file) {
-                    $downloads += (int)$file->downloaded_count;
-                    $tags = $this->_parseFileTags($file->tags);
-                    $downloadLink = PPLOAD_API_URI . 'files/download/' . 'id/' . $file->id . '/' . $file->name;
-                    $downloadItems['downloadway' . $i] = 1;
-                    $downloadItems['downloadtype' . $i] = '';
-                    $downloadItems['downloadprice' . $i] = '0';
-                    $downloadItems['downloadlink' . $i] = $downloadLink;
-                    $downloadItems['downloadname' . $i] = $file->name;
-                    $downloadItems['downloadsize' . $i] = round($file->size / 1024);
-                    $downloadItems['downloadgpgfingerprint' . $i] = '';
-                    $downloadItems['downloadgpgsignature' . $i] = '';
-                    $downloadItems['downloadpackagename' . $i] = '';
-                    $downloadItems['downloadrepository' . $i] = '';
-                    $downloadItems['download_package_type' . $i] = $tags['packagetypeid'];
-                    $downloadItems['download_package_arch' . $i] = $tags['packagearch'];
-                    $i++;
-                }
-            }
-        }
+        list($downloadItems, $downloads) = $this->getPPLoadInfo($project, $pploadApi, $downloads);
 
         if ($this->_format == 'json') {
             $response = array(
@@ -1322,7 +1001,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                             'downloads'            => array('@text' => $downloads),
                             'score'                => array('@text' => $project->laplace_score),
                             'summary'              => array('@text' => ''),
-                            'description'          => array('@text' => $project->description),
+                            'description'          => array('@cdata' => $project->description),
                             'changelog'            => array('@text' => ''),
                             'feedbackurl'          => array('@text' => $previewPage),
                             'homepage'             => array('@text' => $previewPage),
@@ -1346,12 +1025,116 @@ class Ocsv1Controller extends Zend_Controller_Action
         }
 
         $cache->save($response, $cacheName, array(), 120);
+
         return $response;
     }
 
     /**
-     * @param array $previewPicSize
-     * @param array $smallPreviewPicSize
+     * @param Zend_Db_Table $tableProject
+     *
+     * @param bool          $withSqlCalcFoundRows
+     *
+     * @return Zend_Db_Table_Select
+     */
+    protected function _buildProjectSelect($tableProject, $withSqlCalcFoundRows = false)
+    {
+        $tableProjectSelect = $tableProject->select();
+        if ($withSqlCalcFoundRows) {
+            $tableProjectSelect->from(array('project' => 'stat_projects'), array(new Zend_Db_Expr('SQL_CALC_FOUND_ROWS *')));
+        } else {
+            $tableProjectSelect->from(array('project' => 'stat_projects'));
+        }
+        $tableProjectSelect->setIntegrityCheck(false)->columns(array(
+                'member_username' => 'username',
+                'category_title'  => 'cat_title',
+                'xdg_type'        => 'cat_xdg_type',
+                'name_legacy'     => 'cat_name_legacy'
+            ))->where('project.status = ?', Default_Model_Project::PROJECT_ACTIVE)->where('project.ppload_collection_id IS NOT NULL')
+        ;
+
+        return $tableProjectSelect;
+    }
+
+    /**
+     * @param Zend_Db_Table_Row_Abstract $project
+     * @param array                      $previewPicSize
+     * @param array                      $smallPreviewPicSize
+     *
+     * @return array
+     */
+    protected function getGalleryPictures($project, $previewPicSize, $smallPreviewPicSize)
+    {
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cacheName = 'api_fetch_gallery_pics_' . $project->project_id;
+
+        if (($previews = $cache->load($cacheName))) {
+            return $previews;
+        }
+
+        $viewHelperImage = new Default_View_Helper_Image();
+        $previewPics = array(
+            'previewpic1' => $viewHelperImage->Image($project->image_small, $previewPicSize)
+        );
+        $smallPreviewPics = array(
+            'smallpreviewpic1' => $viewHelperImage->Image($project->image_small, $smallPreviewPicSize)
+        );
+
+        $tableProject = new Default_Model_Project();
+        $galleryPics = $tableProject->getGalleryPictureSources($project->project_id);
+        if ($galleryPics) {
+            $i = 2;
+            foreach ($galleryPics as $galleryPic) {
+                $previewPics['previewpic' . $i] = $viewHelperImage->Image($galleryPic, $previewPicSize);
+                $smallPreviewPics['smallpreviewpic' . $i] = $viewHelperImage->Image($galleryPic, $smallPreviewPicSize);
+                $i++;
+            }
+        }
+
+        $cache->save(array($previewPics, $smallPreviewPics), $cacheName, array(), 120);
+
+        return array($previewPics, $smallPreviewPics);
+    }
+
+    /**
+     * @param string $fileTags
+     *
+     * @return array
+     */
+    protected function _parseFileTags($fileTags)
+    {
+        $tags = explode(',', $fileTags);
+        $parsedTags = array(
+            'link'          => '',
+            'licensetype'   => '',
+            'packagetypeid' => '',
+            'packagearch'   => ''
+        );
+        foreach ($tags as $tag) {
+            $tag = trim($tag);
+            if (strpos($tag, 'link##') === 0) {
+                $parsedTags['link'] = urldecode(str_replace('link##', '', $tag));
+            } else {
+                if (strpos($tag, 'licensetype-') === 0) {
+                    $parsedTags['licensetype'] = str_replace('licensetype-', '', $tag);
+                } else {
+                    if (strpos($tag, 'packagetypeid-') === 0) {
+                        $parsedTags['packagetypeid'] = str_replace('packagetypeid-', '', $tag);
+                    } else {
+                        if (strpos($tag, 'packagearch-') === 0) {
+                            $parsedTags['packagearch'] = str_replace('packagearch-', '', $tag);
+                        }
+                    }
+                }
+            }
+        }
+
+        return $parsedTags;
+    }
+
+    /**
+     * @param array      $previewPicSize
+     * @param array      $smallPreviewPicSize
      * @param Ppload_Api $pploadApi
      *
      * @return array
@@ -1364,10 +1147,8 @@ class Ocsv1Controller extends Zend_Controller_Action
         $limit = 10; // 1 - 100
         $offset = 0;
 
-        $cache = Zend_Registry::get('cache');
-
         $tableProject = new Default_Model_Project();
-        $tableProjectSelect = $this->_buildProjectSelect($tableProject);
+        $tableProjectSelect = $this->_buildProjectSelect($tableProject, true);
 
         if (!empty($this->_params['categories'])) {
             // categories parameter: values separated by ","
@@ -1379,25 +1160,26 @@ class Ocsv1Controller extends Zend_Controller_Action
             }
 
             $modelProjectCategories = new Default_Model_DbTable_ProjectCategory();
-            $allCategories = array();
-            foreach ($catList as $catId) {
-                $allCategories[] = $catId;
-                $childElements = $modelProjectCategories->fetchChildElements($catId);
-                $childIds = array();
-                foreach ($childElements as $child) {
-                    $childIds[] = $child['project_category_id'];
-                }
-                $allCategories = array_merge($allCategories, $childIds);
-            }
+            $allCategories = array_merge($catList, $modelProjectCategories->fetchChildIds($catList));
+            //$allCategories = array();
+            //foreach ($catList as $catId) {
+            //    $allCategories[] = $catId;
+            //    $childElements = $modelProjectCategories->fetchChildElements($catId);
+            //    $childIds = array();
+            //    foreach ($childElements as $child) {
+            //        $childIds[] = $child['project_category_id'];
+            //    }
+            //    $allCategories = array_merge($allCategories, $childIds);
+            //}
             $tableProjectSelect->where('project.project_category_id IN (?)', $allCategories);
         }
-        
+
         if (!empty($this->_params['xdg_types'])) {
             // xdg_types parameter: values separated by ","
             $xdgTypeList = explode(',', $this->_params['xdg_types']);
             $tableProjectSelect->where('category.xdg_type IN (?)', $xdgTypeList);
         }
-        
+
         if (!empty($this->_params['package_types'])) {
             // package_types parameter: values separated by ","
             $packageTypeList = explode(',', $this->_params['package_types']);
@@ -1415,19 +1197,19 @@ class Ocsv1Controller extends Zend_Controller_Action
                 ), 'project.project_id = package_type.project_id', array());
             }
         }
-        
+
         if (!empty($this->_params['search'])) {
-            $isSearchable = false;
+            //$isSearchable = false;
             foreach (explode(' ', $this->_params['search']) as $keyword) {
                 if ($keyword && strlen($keyword) > 2) {
-                    $tableProjectSelect->where('project.title LIKE ?' . ' OR project.description LIKE ?', "%$keyword%");
-                    $isSearchable = true;
+                    $tableProjectSelect->where('project.title LIKE ? OR project.description LIKE ?', "%$keyword%");
+                    //$isSearchable = true;
                 }
             }
-            $keyword = $this->_params['search'];
-            if (!$isSearchable && $keyword && strlen($keyword) > 2) {
-                $tableProjectSelect->where('project.title LIKE ?' . ' OR project.description LIKE ?', "%$keyword%");
-            }
+            //$keyword = $this->_params['search'];
+            //if (!$isSearchable && $keyword && strlen($keyword) > 2) {
+            //    $tableProjectSelect->where('project.title LIKE ?' . ' OR project.description LIKE ?', "%$keyword%");
+            //}
         }
 
         if (!empty($this->_params['user'])) {
@@ -1455,7 +1237,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                     $tableProjectSelect->order('project.title ASC');
                     break;
                 case 'high':
-                    $tableProjectSelect->order(new Zend_Db_Expr('(((project.count_likes + 6) / ((project.count_likes + project.count_dislikes) + 12)) * 100) DESC'));
+                    $tableProjectSelect->order(new Zend_Db_Expr('laplace_score(project.count_likes,project.count_dislikes) DESC'));
                     break;
                 case 'down':
                     $tableProjectSelect->joinLeft(array('stat_downloads_quarter_year' => 'stat_downloads_quarter_year'),
@@ -1481,16 +1263,16 @@ class Ocsv1Controller extends Zend_Controller_Action
         }
 
         $projects = $tableProject->fetchAll($tableProjectSelect->limit($limit, $offset));
+        $count = $tableProject->getAdapter()->fetchRow('select FOUND_ROWS() AS counter');
 
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - OCS-Select: ' . $tableProjectSelect->__toString());
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - OCS-Select: ' . $tableProjectSelect->__toString());
 
-        $tableProjectSelect->reset(Zend_Db_Select::COLUMNS)
-                           ->columns(array('counter' => new Zend_Db_Expr('count(*)')), 'project')
-                           ->reset(Zend_Db_Select::GROUP)->reset(Zend_Db_Select::ORDER)
-        ;
-        $tableProjectSelect->limit(0, 0);
-
-        $count = $tableProject->fetchRow($tableProjectSelect);
+        //$tableProjectSelect->reset(Zend_Db_Select::COLUMNS)->columns(array('counter' => new Zend_Db_Expr('count(*)')), 'project')
+        //                   ->reset(Zend_Db_Select::GROUP)->reset(Zend_Db_Select::ORDER)
+        //;
+        //$tableProjectSelect->limit(0, 0);
+        //
+        //$count = $tableProject->fetchRow($tableProjectSelect);
 
         if ($this->_format == 'json') {
             $response = array(
@@ -1522,7 +1304,9 @@ class Ocsv1Controller extends Zend_Controller_Action
         $helperTruncate = new Default_View_Helper_Truncate();
         foreach ($projects as $project) {
             $project->title = Default_Model_HtmlPurify::purify($project->title);
-            $project->description = $helperTruncate->truncate(Default_Model_BBCode::renderHtml(Default_Model_HtmlPurify::purify($project->description)), 300);
+            $project->description =
+                $helperTruncate->truncate(Default_Model_BBCode::renderHtml(Default_Model_HtmlPurify::purify($project->description)),
+                    300);
             $project->version = Default_Model_HtmlPurify::purify($project->version);
 
             $categoryXdgType = '';
@@ -1559,7 +1343,8 @@ class Ocsv1Controller extends Zend_Controller_Action
                         'description' => $project->description,
                         'comments'    => $project->count_comments,
                         'preview1'    => $previewPage,
-                        'detailpage'  => $previewPage
+                        'detailpage'  => $previewPage,
+                        'tags'        => $project->tags
                     ) + $previewPics + $smallPreviewPics + $downloadItems;
             } else {
                 foreach ($previewPics as $key => $value) {
@@ -1588,10 +1373,11 @@ class Ocsv1Controller extends Zend_Controller_Action
                         'downloads'   => array('@text' => $downloads),
                         'score'       => array('@text' => $project->laplace_score),
                         'summary'     => array('@text' => ''),
-                        'description' => array('@text' => $project->description),
+                        'description' => array('@cdata' => $project->description),
                         'comments'    => array('@text' => $project->count_comments),
                         'preview1'    => array('@text' => $previewPage),
-                        'detailpage'  => array('@text' => $previewPage)
+                        'detailpage'  => array('@text' => $previewPage),
+                        'tags'        => array('@text' => $project->tags)
                     ) + $previewPics + $smallPreviewPics + $downloadItems;
             }
         }
@@ -1607,48 +1393,8 @@ class Ocsv1Controller extends Zend_Controller_Action
 
     /**
      * @param Zend_Db_Table_Row_Abstract $project
-     * @param array $previewPicSize
-     * @param array $smallPreviewPicSize
-     *
-     * @return array
-     */
-    protected function getGalleryPictures($project, $previewPicSize, $smallPreviewPicSize) {
-        /** @var Zend_Cache_Core $cache */
-        $cache = Zend_Registry::get('cache');
-        $cacheName = 'api_fetch_gallery_pics_' . $project->project_id;
-
-        if (($previews = $cache->load($cacheName))) {
-            return $previews;
-        }
-
-        $viewHelperImage = new Default_View_Helper_Image();
-        $previewPics = array(
-            'previewpic1' => $viewHelperImage->Image($project->image_small, $previewPicSize)
-        );
-        $smallPreviewPics = array(
-            'smallpreviewpic1' => $viewHelperImage->Image($project->image_small, $smallPreviewPicSize)
-        );
-
-        $tableProject = new Default_Model_Project();
-        $galleryPics = $tableProject->getGalleryPictureSources($project->project_id);
-        if ($galleryPics) {
-            $i = 2;
-            foreach ($galleryPics as $galleryPic) {
-                $previewPics['previewpic' . $i] = $viewHelperImage->Image($galleryPic, $previewPicSize);
-                $smallPreviewPics['smallpreviewpic' . $i] = $viewHelperImage->Image($galleryPic, $smallPreviewPicSize);
-                $i++;
-            }
-        }
-
-        $cache->save(array($previewPics, $smallPreviewPics), $cacheName, array(), 120);
-
-        return array($previewPics, $smallPreviewPics);
-    }
-
-    /**
-     * @param Zend_Db_Table_Row_Abstract $project
-     * @param Ppload_Api $pploadApi
-     * @param int $downloads
+     * @param Ppload_Api                 $pploadApi
+     * @param int                        $downloads
      *
      * @return array
      */
@@ -1675,8 +1421,7 @@ class Ocsv1Controller extends Zend_Controller_Action
         );
 
         $filesResponse = $pploadApi->getFiles($filesRequest);
-        if (isset($filesResponse->status)
-            && $filesResponse->status == 'success')
+        if (isset($filesResponse->status) && $filesResponse->status == 'success')
         {
             $i = 1;
             foreach ($filesResponse->files as $file) {
@@ -1702,6 +1447,215 @@ class Ocsv1Controller extends Zend_Controller_Action
         $cache->save(array($downloadItems, $downloads), $cacheName, array(), 120);
 
         return array($downloadItems, $downloads);
+    }
+
+    public function contentdownloadAction()
+    {
+        if (!$this->_authenticateUser()) {
+            //$this->_sendErrorResponse(999, '');
+        }
+
+        $pploadApi = new Ppload_Api(array(
+            'apiUri'   => PPLOAD_API_URI,
+            'clientId' => PPLOAD_CLIENT_ID,
+            'secret'   => PPLOAD_SECRET
+        ));
+
+        $project = null;
+        $file = null;
+
+        if ($this->getParam('contentid')) {
+            $tableProject = new Default_Model_Project();
+            $project = $tableProject->fetchRow($tableProject->select()->where('project_id = ?', $this->getParam('contentid'))
+                                                            ->where('status = ?', Default_Model_Project::PROJECT_ACTIVE));
+        }
+
+        if (!$project) {
+            $this->_sendErrorResponse(101, 'content not found');
+        }
+
+        if ($project->ppload_collection_id
+            && $this->getParam('itemid')
+            && ctype_digit((string)$this->getParam('itemid'))) {
+            $filesRequest = array(
+                'collection_id'     => ltrim($project->ppload_collection_id, '!'),
+                'ocs_compatibility' => 'compatible',
+                'perpage'           => 1,
+                'page'              => $this->getParam('itemid')
+            );
+            $filesResponse = $pploadApi->getFiles($filesRequest);
+            if (isset($filesResponse->status)
+                && $filesResponse->status == 'success') {
+                $i = 0;
+                $file = $filesResponse->files->$i;
+            }
+        }
+
+        if (!$file) {
+            $this->_sendErrorResponse(103, 'content item not found');
+        }
+
+        $tags = $this->_parseFileTags($file->tags);
+        $downloadLink = PPLOAD_API_URI . 'files/download/' . 'id/' . $file->id . '/' . $file->name;
+
+        if ($this->_format == 'json') {
+            $response = array(
+                'status'     => 'ok',
+                'statuscode' => 100,
+                'message'    => '',
+                'data'       => array(
+                    array(
+                        'details'               => 'download',
+                        'downloadway'           => 1,
+                        'downloadlink'          => $downloadLink,
+                        'mimetype'              => $file->type,
+                        'gpgfingerprint'        => '',
+                        'gpgsignature'          => '',
+                        'packagename'           => '',
+                        'repository'            => '',
+                        'download_package_type' => $tags['packagetypeid'],
+                        'download_package_arch' => $tags['packagearch']
+                    )
+                )
+            );
+        } else {
+            $response = array(
+                'meta' => array(
+                    'status'     => array('@text' => 'ok'),
+                    'statuscode' => array('@text' => 100),
+                    'message'    => array('@text' => '')
+                ),
+                'data' => array(
+                    'content' => array(
+                        'details'               => 'download',
+                        'downloadway'           => array('@text' => 1),
+                        'downloadlink'          => array('@text' => $downloadLink),
+                        'mimetype'              => array('@text' => $file->type),
+                        'gpgfingerprint'        => array('@text' => ''),
+                        'gpgsignature'          => array('@text' => ''),
+                        'packagename'           => array('@text' => ''),
+                        'repository'            => array('@text' => ''),
+                        'download_package_type' => array('@text' => $tags['packagetypeid']),
+                        'download_package_arch' => array('@text' => $tags['packagearch'])
+                    )
+                )
+            );
+        }
+        $this->_sendResponse($response, $this->_format);
+    }
+
+    public function contentpreviewpicAction()
+    {
+        if (!$this->_authenticateUser()) {
+            //$this->_sendErrorResponse(999, '');
+        }
+
+        $project = null;
+
+        if ($this->getParam('contentid')) {
+            $tableProject = new Default_Model_Project();
+            $project = $tableProject->fetchRow($tableProject->select()->where('project_id = ?', $this->getParam('contentid'))
+                                                            ->where('status = ?', Default_Model_Project::PROJECT_ACTIVE));
+        }
+
+        if (!$project) {
+            //$this->_sendErrorResponse(101, 'content not found');
+            header('Location: ' . $this->_config['icon']);
+            exit;
+        }
+
+        $viewHelperImage = new Default_View_Helper_Image();
+        $previewPicSize = array(
+            'width'  => 100,
+            'height' => 100
+        );
+
+        if (!empty($this->_params['size'])
+            && strtolower($this->_params['size']) == 'medium') {
+            $previewPicSize = array(
+                'width'  => 770,
+                'height' => 540
+            );
+        }
+
+        $previewPicUri = $viewHelperImage->Image($project->image_small, $previewPicSize);
+
+        header('Location: ' . $previewPicUri);
+        exit;
+    }
+
+    /**
+     * @param null  $tableCategories
+     * @param null  $parentCategoryId
+     * @param array $categoriesList
+     *
+     * @return array
+     * @deprecated
+     */
+    protected function _buildCategoriesList($tableCategories = null, $parentCategoryId = null, $categoriesList = array())
+    {
+        $categories = null;
+
+        // Top-level categories
+        if (!$tableCategories) {
+            $tableCategories = new Default_Model_DbTable_ProjectCategory();
+            if (Zend_Registry::isRegistered('store_category_list')) {
+                $categories = $tableCategories->fetchActive(Zend_Registry::get('store_category_list'));
+            } else {
+                $categories = $tableCategories->fetchAllActive();
+            }
+        } // Sub-categories
+        else {
+            if ($parentCategoryId) {
+                $categories = $tableCategories->fetchImmediateChildren($parentCategoryId);
+            }
+        }
+
+        // Build categories list
+        if (!empty($categories)) {
+            foreach ($categories as $category) {
+                if (is_array($category)) {
+                    $category = (object)$category;
+                }
+
+                $categoryName = $category->title;
+                $categoryDisplayName = $category->title;
+                if (!empty($category->name_legacy)) {
+                    $categoryName = $category->name_legacy;
+                }
+                $categoryParentId = '';
+                if (!empty($parentCategoryId)) {
+                    $categoryParentId = $parentCategoryId;
+                }
+                $categoryXdgType = '';
+                if (!empty($category->xdg_type)) {
+                    $categoryXdgType = $category->xdg_type;
+                }
+
+                if ($this->_format == 'json') {
+                    $categoriesList[] = array(
+                        'id'           => $category->project_category_id,
+                        'name'         => $categoryName,
+                        'display_name' => $categoryDisplayName,
+                        'parent_id'    => $categoryParentId,
+                        'xdg_type'     => $categoryXdgType
+                    );
+                } else {
+                    $categoriesList[] = array(
+                        'id'           => array('@text' => $category->project_category_id),
+                        'name'         => array('@text' => $categoryName),
+                        'display_name' => array('@text' => $categoryDisplayName),
+                        'parent_id'    => array('@text' => $categoryParentId),
+                        'xdg_type'     => array('@text' => $categoryXdgType)
+                    );
+                }
+
+                // Update the list recursive
+                $categoriesList = $this->_buildCategoriesList($tableCategories, $category->project_category_id, $categoriesList);
+            }
+        }
+
+        return $categoriesList;
     }
 
 }
