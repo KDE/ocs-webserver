@@ -322,6 +322,7 @@ class Default_Model_DbTable_Image extends Zend_Db_Table_Abstract
     public function saveImage($formFileElement)
     {
         if (empty($formFileElement)) {
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - form file element empty');
             return null;
         }
 
@@ -341,6 +342,7 @@ class Default_Model_DbTable_Image extends Zend_Db_Table_Abstract
             }
             $generatedFilename = $this->_generateFilename($fileInfo['tmp_name']);
             $destinationFile = IMAGES_UPLOAD_PATH . $generatedFilename . $this->_allowed[$contentType];
+            Zend_Registry::get('logger')->info(__METHOD__ . ' - destination file path: ' . $destinationFile);
 
             if (copy($fileInfo['tmp_name'], $destinationFile)) {
                 if (file_exists($fileInfo['tmp_name'])) {

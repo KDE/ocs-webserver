@@ -51,7 +51,7 @@ $this->inlineScript()->appendScript('
             $modelTagGroup = new Default_Model_TagGroup();
             $groups = $modelTagGroup->fetchGroupHierarchy();
             //$value = array_map('strval', explode(',',$this->element->getValue()));
-            $value = explode(',',$this->element->getValue());
+            $value = empty($this->element->getValue()) ? array() : explode(',',$this->element->getValue());
             foreach($groups as $label => $opt): ?>
                 <optgroup label="<?php echo $label; ?>">
                     <?php foreach ($opt as $id => $name):

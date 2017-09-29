@@ -135,13 +135,16 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         // save new project
         $modelProject = new Default_Model_Project();
 
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - $post: ' . print_r($_POST, true));
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - $files: ' . print_r($_FILES, true));
+        Zend_Registry::get('logger')->info(__METHOD__ . ' _ input values: ' . print_r($values, true));
+
         $newProject = null;
         try {
             if (isset($values['project_id'])) {
                 $newProject = $modelProject->updateProject($values['project_id'], $values);
             } else {
-                $newProject =
-                    $modelProject->createProject($this->_authMember->member_id, $values, $this->_authMember->username);
+                $newProject = $modelProject->createProject($this->_authMember->member_id, $values, $this->_authMember->username);
             }
         } catch (Exception $exc) {
             Zend_Registry::get('logger')->warn(__METHOD__ . ' - traceString: ' . $exc->getTraceAsString());
