@@ -1284,6 +1284,9 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
         return $resultForSelect;
     }
 
+    /**
+     * @deprecated
+     */
     protected function initLocalCache()
     {
         $frontendOptions = array(
@@ -1310,6 +1313,12 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
         );
     }
 
+    /**
+     * @param array $nodeId
+     * @param array $children
+     *
+     * @return array
+     */
     private function removeUnnecessaryValues($nodeId, $children)
     {
         $nodeId = is_array($nodeId) ? $nodeId : array($nodeId);
