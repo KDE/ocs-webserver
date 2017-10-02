@@ -33,9 +33,6 @@ class UserController extends Local_Controller_Action_DomainSwitch
 
     public function indexAction()
     {
-//        $this->view->headScript()->setFile('');
-//        $this->view->headLink()->setStylesheet('');
-
         $this->_helper->viewRenderer('aboutme');
         $this->aboutmeAction();
     }
@@ -95,6 +92,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
             $this->view->comments = $paginationComments;
         }
 
+        $donationinfo = $tableMember->fetchSupporterDonationInfo($this->_memberId);       
 
         $stat = array();
         $stat['cntProducts'] = count($this->view->userProducts);
@@ -105,9 +103,16 @@ class UserController extends Local_Controller_Action_DomainSwitch
         }
         $stat['cntPageviews'] = $cntpv;
 
-        $cntmb = $tableMember->fetchCntSupporters($this->_memberId);
-        $stat['cntSupporters'] = $cntmb;
+      //  $cntmb = $tableMember->fetchCntSupporters($this->_memberId);
+       // $stat['cntSupporters'] = $cntmb;
         $stat['userLastActiveTime'] = $tableMember->fetchLastActiveTime($this->_memberId);
+
+        if($donationinfo){
+            $stat['donationIssupporter'] = $donationinfo['issupporter'];            
+            $stat['donationMax'] = $donationinfo['active_time_max'];
+            $stat['donationMin'] = $donationinfo['active_time_min'];
+            $stat['donationCnt'] = $donationinfo['cnt'];
+        }
 
         $this->view->stat = $stat;
     }
@@ -190,37 +195,6 @@ class UserController extends Local_Controller_Action_DomainSwitch
     public function settingsAction()
     {
         $this->_helper->layout()->setLayout('settings');
-    }
-
-    public function saveAction()
-    {
-        //TODO: Refactoring. Wird das noch benutzt?
-        throw new Zend_Controller_Action_Exception('This method does not exist.', 404);
-
-        //$this->_helper->layout->disableLayout();
-        //$this->_helper->viewRenderer->setNoRender(true);
-        //
-        //$filterInput = new Zend_Filter_Input(
-        //    array('*' => 'StringTrim', 'value' => 'StripTags', 'member_id' => 'Digits', 'id' => 'Alnum'),
-        //    array(
-        //        'value' => array('presence' => 'required'),
-        //        'member_id' => array('presence' => 'required'),
-        //        'id' => array('presence' => 'required')
-        //    ),
-        //    $this->_getAllParams()
-        //);
-        //
-        //$tableMember = new Default_Model_Member();
-        //$tableProject = new Default_Model_Project();
-        //
-        //$dataMember = $tableMember->find($this->_memberId)->current();
-        //$dataProject = $dataMember->findDependentRowset($tableProject, 'MainProject')->current();
-        //$fieldName = $filterInput->getEscaped('id');
-        //$newValue = nl2br($filterInput->getEscaped('value'));
-        //$dataProject->$fieldName = $newValue;
-        //$dataProject->save();
-        //
-        //echo $newValue;
     }
 
     public function reportAction()

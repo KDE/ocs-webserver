@@ -570,7 +570,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route(
                 '/p/:project_id/:action/*',
                 array(
-                    'projecttitle' => '',
                     'module'       => 'default',
                     'controller'   => 'product',
                     'action'       => 'show'
@@ -583,7 +582,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route(
                 '/p/:project_id/er/:er/*',
                 array(
-                    'projecttitle' => '',
                     'module'       => 'default',
                     'controller'   => 'product',
                     'action'       => 'show'
@@ -1027,6 +1025,18 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                     'module'     => 'default',
                     'controller' => 'embedv1',
                     'action'     => 'ppload'
+                )
+            )
+        );
+
+        $router->addRoute(
+            'embed_v1_member_projectscomments',
+            new Zend_Controller_Router_Route(
+                '/embed/v1/comments/:id',
+                array(
+                    'module'     => 'default',
+                    'controller' => 'embedv1',
+                    'action'     => 'comments'
                 )
             )
         );

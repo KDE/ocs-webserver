@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -19,11 +20,11 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-
 class Local_File_Transfer_Adapter_Http extends Zend_File_Transfer_Adapter_Http
 {
     /**
      * @param null $files
+     *
      * @return bool
      */
     public function isValid($files = null)
@@ -50,14 +51,14 @@ class Local_File_Transfer_Adapter_Http extends Zend_File_Transfer_Adapter_Http
 
             $temp = array(
                 $files => array(
-                    'name' => $files,
+                    'name'  => $files,
                     'error' => 1
                 )
             );
             $validator = $this->_validators['Zend_Validate_File_Upload'];
-            $validator->setFiles($temp)
-                ->isValid($files, null);
+            $validator->setFiles($temp)->isValid($files, null);
             $this->_messages += $validator->getMessages();
+
             return false;
         }
 
@@ -66,6 +67,7 @@ class Local_File_Transfer_Adapter_Http extends Zend_File_Transfer_Adapter_Http
 
     /**
      * @param string $size_str
+     *
      * @return int
      */
     private function return_bytes($size_str)

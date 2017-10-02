@@ -37,6 +37,8 @@ $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountP
 //));
 //$captcha->setFont(APPLICATION_PATH . '/../httpdocs/theme/flatui/fonts/OpenSans-Regular.ttf');
 //$captcha->generate();
+
+
 ?>
 <div>
     <div class="row">
@@ -96,7 +98,21 @@ $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountP
                         <p class="pull-right history" style="display:inline-block"><span class="glyphicon glyphicon-usd"></span></p>
                     <?php endif ?>
                     <a class="media-left" href="<?= $helperBuildMemberUrl->buildMemberUrl($comment['member_id']) ?>">
+                        <div class="profileimage" style="position:relative;display:inline-block;">
+                       <?php                       
+                        if($this->product->member_id == $comment['member_id']){
+                       ?>
+                       <span class="creator-badge-<?=($elementComment['level']>1?2:1)?>" >C</span> 
+                       <?php }?>
+
+                       <?php                       
+                        if($comment['issupporter']){
+                       ?>
+                       <span class="supporter-badge-<?=($elementComment['level']>1?2:1)?>" >S</span> 
+                       <?php }?>
+
                         <img src="<?= $helperImage->Image($comment['profile_image_url'], array('width' => 60, 'height' => 60)) ?>" class="img<?=$elementComment['level']?>">
+                        </div>
                     </a>
                     <div class="media-body">
                         <h4 class="media-heading user_name"><?= $comment['username'] ?>

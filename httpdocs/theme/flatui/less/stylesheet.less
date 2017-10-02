@@ -428,7 +428,17 @@ ul.meta-nav-top
               height: 30px;
               width: 30px;
               margin-top: -15px;
-          
+              .supporter-badge{
+                  position: absolute;
+                  right: 0px;
+                  bottom: 0px;
+                  background: blue;
+                  text-align: center;
+                  border-radius: 30px 30px 30px 30px;
+                  color: #fff;
+                  padding: 5px 10px;
+                  font-size: 12px;
+              }
               img {
                 height: 30px;
                 width: 30px;
@@ -1299,18 +1309,35 @@ ul.meta-nav-top
         .explore-product-details {
           padding-left: 20px;
           
-          h3 {
-           
+          h3 {           
             font-size: 24px;            
             font-weight: bold;
             color: #2673b0;
             span.version
             {
               font-size: smaller; 
-              padding-left: 20px;
+              padding-left: 20px
             }
           }
-         
+          .title{
+            display: block;
+            margin-bottom: 8px;
+            .username{
+                padding-left: 20px;
+            }
+          }
+          .description{
+            display: block;
+            margin-bottom: 8px;
+          }
+          .packagetypes{
+            display: block;
+            float: left;
+            .packagetypeos{
+              width: 100px;
+              float: left;
+            }
+          }
           .productInfo
           {
             clear: left;
@@ -1605,7 +1632,7 @@ ul.meta-nav-top
 
       #product-title-div {
         padding-left: 30px;
-        min-height:85px;
+        min-height:165px;
         padding-top: 20px;
         .product-logo-container {
           float: left; 
@@ -1753,6 +1780,15 @@ ul.meta-nav-top
         }
         #files-panel{
           padding-top: 30px;
+          table.table-ocs-file{
+            td{
+               padding: 3px;
+               vertical-align: middle;
+            }            
+          }
+          .btn{
+            padding: 3px 5px;
+          }
         }
         #updates-panel{
           span.product-update-date{
@@ -1788,6 +1824,17 @@ span.page-views {
 
         .product-maker-thumbnail {
           float: right;
+          .supporter-badge{
+              position: absolute;
+              right: 0px;
+              bottom: 0px;
+              background: blue;
+              text-align: center;
+             border-radius: 15px 15px 15px 15px;
+             color: #fff;
+             padding: 2px 5px;
+             font-size: 10px;
+          }
         }
 
         .product-maker-summary {
@@ -2598,6 +2645,7 @@ span.page-views {
               position: absolute;
               top: 1em;
               left: 1em;
+              display:inline-block;
               .border_radius(999px);
 
               img {
@@ -2605,6 +2653,18 @@ span.page-views {
                 height: 100%;
                 .border_radius(999px);
               }
+            }
+
+            .supporter-badge{
+                position: absolute;
+                right: 0px;
+                bottom: 0px;
+                background: blue;
+                text-align: center;
+                border-radius: 30px 30px 30px 30px;
+                color: #fff;
+                padding: 5px 10px;
+                font-size: 16px;
             }
 
             h1 {
@@ -3978,7 +4038,7 @@ span.page-views {
   }
 
   #files-panel {
-      font-size: 10pt;
+      font-size: 10pt;     
   }
 
   #comments-frame {
@@ -5317,10 +5377,12 @@ img.imgpopover
 
 /** plings **/
 
-main#plings-page{
+main#plings-page{  
   .wrapper{
        width:450px;        
        padding:20px;
+       max-height: 700px;
+       overflow: auto;
        .title{
           background-color:#ccc; 
           height: 30px;
@@ -5333,6 +5395,10 @@ main#plings-page{
         background-color: #eef; 
       }
       
+     .depth0 {
+           padding-left: 0px;
+      }
+
     .depth1 {
            padding-left: 20px;
       }
@@ -5485,11 +5551,7 @@ main#plings-page{
              
         }
       
-        .packagetypeos
-        {
-          width: 100px;
-          float: left;
-        }
+        
         .explore-product-image{
            
            /*

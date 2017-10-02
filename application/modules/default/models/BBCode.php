@@ -38,6 +38,16 @@ class Default_Model_BBCode
 
         Zend_Markup::addParserPath('Local_Markup_Parser', APPLICATION_LIB . '/Local/Markup/Parser');
         $parser = Zend_Markup::factory('BbcodeCI');
+        $parser->setDefaultFilter( new Zend_Filter_Callback('nl2br'));
+        $parser->addMarkup(
+            'url',
+            Zend_Markup_Renderer_RendererAbstract::TYPE_CALLBACK,
+            array(
+                'callback' => new Local_Markup_Renderer_Html_Url(),
+                'group'    => 'inline',
+                'filter'   => true
+            )
+        );
 
         return $parser->render($bbcode);
     }
