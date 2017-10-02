@@ -162,7 +162,7 @@ abstract class Local_Payment_PayPal_AdaptivePayment_Gateway
             'actionType' => self::ATTRIBUTE_ACTION_PAY,
             'currencyCode' => self::ATTRIBUTE_CURRENCY_USD,
             'feesPayer' => self::ATTRIBUTE_FEE_PAYER_EACH,
-            'trackingId' => $trackingId,
+            //'trackingId' => $trackingId,
             'receiverList.receiver(0).email' => $receiverMail,
             'receiverList.receiver(0).amount' => $receiver_amount,
             'receiverList.receiver(0).primary' => self::ATTRIBUTE_FALSE,
