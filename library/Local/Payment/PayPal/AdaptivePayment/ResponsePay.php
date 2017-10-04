@@ -64,6 +64,11 @@ class Local_Payment_PayPal_AdaptivePayment_ResponsePay implements Local_Payment_
     {
         return strtoupper($this->_rawResponse['transaction'][0]['status']);
     }
+    
+    public function getTransactionForSenderStatus()
+    {
+        return strtoupper($this->_rawResponse['transaction'][0]['status_for_sender_txn']);
+    }
 
     /**
      * @return mixed
