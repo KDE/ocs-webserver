@@ -41,6 +41,10 @@ class Local_Payment_PayPal_Response
         if (isset($rawResponse['transaction_type']) AND ($rawResponse['transaction_type'] == 'Adaptive Payment PAY')) {
             return new Local_Payment_PayPal_AdaptivePayment_ResponsePay($rawResponse);
         }
+        
+        if (isset($rawResponse['action_type']) AND ($rawResponse['action_type'] == 'PAY')) {
+            return new Local_Payment_PayPal_AdaptivePayment_ResponsePay($rawResponse);
+        }
 
         if (isset($rawResponse['transaction_type']) AND ($rawResponse['transaction_type'] == 'Adjustment')) {
             return new Local_Payment_PayPal_AdaptivePayment_ResponseAdjustment($rawResponse);
