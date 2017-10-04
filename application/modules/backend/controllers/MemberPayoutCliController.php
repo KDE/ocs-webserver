@@ -34,6 +34,7 @@ class Backend_MemberPayoutCliController extends Local_Controller_Action_CliAbstr
     public static $PAYOUT_STATUS_COMPLETED = 100;
     public static $PAYOUT_STATUS_DENIED = 30;
     public static $PAYOUT_STATUS_ERROR = 99;
+    public static $PAYOUT_STATUS_PAYPAL_API_ERROR = 999;
     
     
     /** @var Zend_Config */
@@ -132,7 +133,7 @@ class Backend_MemberPayoutCliController extends Local_Controller_Action_CliAbstr
     private function getPayouts() {
         echo "getPayouts";
         $db = Zend_Db_Table::getDefaultAdapter();
-        $sql = "SELECT * FROM member_payout p WHERE p.status = ".$this::$PAYOUT_STATUS_NEW;
+        $sql = "SELECT * FROM member_payout p WHERE p.status = ".$this::$PAYOUT_STATUS_NEW . " OR p.status = ".$this::$PAYOUT_STATUS_PAYPAL_API_ERROR;
         $stmt = $db->query($sql);
         $payouts = $stmt->fetchAll();
         
@@ -173,13 +174,20 @@ class Backend_MemberPayoutCliController extends Local_Controller_Action_CliAbstr
             
             $result = $this->sendPayout($mail, $amount, $id, $yearmonth);
             
-            echo "Result: " . print_r($result->getRawMessage());
-            $payKey = $result->getPaymentId();
+            if($result) {
             
+	            echo "Result: " . print_r($result->getRawMessage());
+	            $payKey = $result->getPaymentId();
+	            //mark payout as requested
+	            $payoutTable->update(array("payment_reference_key" => $payKey, "status" => $this::$PAYOUT_STATUS_REQUESTED, "timestamp_masspay_start" => new Zend_Db_Expr('Now()')), "id = " . $payout['id']);
             
-            //mark payout as requested
-            $payoutTable->update(array("payment_reference_key" => $payKey, "status" => $this::$PAYOUT_STATUS_REQUESTED, "timestamp_masspay_start" => new Zend_Db_Expr('Now()')), "id = " . $payout['id']);
-            
+            } else {
+            	
+            	echo "Result: PayPal-API-Error";
+            	//mark payout as 999 = API-Error
+            	$payoutTable->update(array("status" => $this::$PAYOUT_STATUS_PAYPAL_API_ERROR, "timestamp_masspay_start" => new Zend_Db_Expr('Now()')), "id = " . $payout['id']);
+            	 
+            }
         }
 
         return true;
@@ -205,11 +213,16 @@ class Backend_MemberPayoutCliController extends Local_Controller_Action_CliAbstr
             echo('Exception: payment error');
             echo('Config->ApplicationId: ' . $this->_config->third_party->paypal->application->id);
             
-            throw new Zend_Controller_Action_Exception('payment error', 500, $e);
+            //throw new Zend_Controller_Action_Exception('payment error', 500, $e);
+            
+            //Set status to 999 (or we set the original paypal error code)
+            //mark payout as requested
+            return null;
         }
 
         if (false === $response->isSuccessful()) {
-            throw new Zend_Controller_Action_Exception('payment failure', 500);
+            //throw new Zend_Controller_Action_Exception('payment failure', 500);
+            return null;
         }
         
         return $response;
