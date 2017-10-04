@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -28,5 +29,4 @@ class Default_Model_DbTable_ProjectUpdates extends Local_Model_Table
 
     protected $_key = 'project_update_id';
 
-    
 }

@@ -47,7 +47,7 @@ class Local_Payment_PayPal_Response
         }
 
         if (isset($rawResponse['txn_type']) AND ($rawResponse['txn_type'] == 'web_accept')) {
-            return new Local_Payment_PayPal_AdaptivePayment_ResponseWebAccept($rawResponse);
+            return new Local_Payment_PayPal_Support_ResponseSupport($rawResponse);
         }
 
         if ($rawResponse['transaction_subject'] == '' AND $rawResponse['payment_status'] == 'Refunded') {

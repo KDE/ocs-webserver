@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -27,7 +28,7 @@ class Statistics_CronController extends Local_Controller_Action_CliAbstract
     public function runAction()
     {
         $today = new DateTime();
-//        $yesterday = $today->sub(new DateInterval("P1D"));
+        //        $yesterday = $today->sub(new DateInterval("P1D"));
 
         $validator = new Zend_Validate_Date(array('format' => self::DATE_FORMAT));
 
@@ -39,7 +40,6 @@ class Statistics_CronController extends Local_Controller_Action_CliAbstract
             foreach (get_object_vars($result) as $name => $value) {
                 echo "$name: $value\n";
             }
-
         }
     }
 
@@ -49,7 +49,7 @@ class Statistics_CronController extends Local_Controller_Action_CliAbstract
         $statistics = new Statistics_Model_GoalStatistics();
         $statistics->dailyPageviews();
     }
-    
+
 
     public function migrateAction()
     {

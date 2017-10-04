@@ -332,6 +332,7 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
                 pc.orderPos,
                 pc.xdg_type,
                 pc.dl_pling_factor,
+                pc.show_description,
                 MIN(pc2.is_active)                                       AS parent_active,
                 concat(repeat('&nbsp;&nbsp;',count(pc.lft) - 1), pc.title) AS title_show,
                 concat(repeat('&nbsp;&nbsp;',count(pc.lft) - 1), IF(LENGTH(TRIM(pc.name_legacy))>0,pc.name_legacy,pc.title)) AS title_legacy,
@@ -1283,6 +1284,9 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
         return $resultForSelect;
     }
 
+    /**
+     * @deprecated
+     */
     protected function initLocalCache()
     {
         $frontendOptions = array(
@@ -1309,6 +1313,12 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
         );
     }
 
+    /**
+     * @param array $nodeId
+     * @param array $children
+     *
+     * @return array
+     */
     private function removeUnnecessaryValues($nodeId, $children)
     {
         $nodeId = is_array($nodeId) ? $nodeId : array($nodeId);

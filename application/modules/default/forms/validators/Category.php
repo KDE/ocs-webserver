@@ -31,7 +31,7 @@ class Default_Form_Validator_Category extends Zend_Validate_Abstract
      * @var array Message templates
      */
     protected $_messageTemplates = array(
-        self::ERROR_CAT_NOT_THE_LAST => "Please select a children for this category. ---",
+        self::ERROR_CAT_NOT_THE_LAST => "Please select a children for this category.",
     );
 
     /**

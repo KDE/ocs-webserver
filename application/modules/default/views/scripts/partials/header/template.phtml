@@ -76,9 +76,11 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
                                     <ul class="menu pull-right">
                                         <li class="link relative profile-menu-container">
                                             <a rel="profile-menu" class="menu-trigger">
-                                                <div class="absolute header-profile-image"><img
+                                                <div class="absolute header-profile-image">                                                        
+                                                            <img
                                                             src="<?= $helperImage->Image($member->profile_image_url,
                                                                 array('width' => 30, 'height' => 30)) ?>"/>
+                                                        
                                                 </div>
                                                 <span><?= $member->username ?></span>
                                             </a>
@@ -135,7 +137,10 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
                 MenuHover.setup();
-                AboutContent.setup();              
+                AboutContent.setup();      
+                PlinglistContent.setup();        
                 LoginContainer.update();
+                PlingsRedirect.setup();
             });
         ');
+

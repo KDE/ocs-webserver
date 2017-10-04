@@ -26,6 +26,10 @@
              <?php
              $helperCatXdgType = new Default_View_Helper_CatXdgType();
              $xdgType = $helperCatXdgType->catXdgType($this->product->project_category_id);
+             
+             $helperUserRole = new Backend_View_Helper_UserRole();
+             $userRoleName = $helperUserRole->userRole();
+             
              ?>
                  <article>
                      <div id="modal-installation-instructions"
@@ -57,7 +61,7 @@
                          -->
 
                          <!--table-bordered-->
-                         <table class="table" data-ppload-files="">
+                         <table class="table table-ocs-file" data-ppload-files="">
                              <thead>
                              <?php /**
                              <?php if ($this->product->ppload_collection_id[0] == '!'): ?>
@@ -87,6 +91,9 @@
                                      <a href="#modal-installation-instructions" role="button" data-toggle="modal"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></a>
                                  </th>
                                  <th style="text-align: right">DL</th>
+                                 <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                                 <th>Compatible</th>
+                                 <?php endif; ?>
                              </tr>
                              </thead>
                              <tbody></tbody>
@@ -282,10 +289,10 @@
                                      var installButton = '';
                                      
                                      if ( ocsUrl) {
-                                            if(this.active){
-                                                    installButton = '<a href="' + ocsUrl + '" class="btn btn-native btn-min-width">OCS-Install</a>';                                               
-                                            }else{
-                                                installButton = '<a href="' + ocsUrl + '" class="btn btn-native btn-min-width disabled">OCS-Install</a>';                                               
+                                            if(this.active && this.ocs_compatible == 1){
+                                                installButton = '<a href="' + ocsUrl + '" class="btn btn-native btn-min-width">OCS-Install</a>';                                               
+                                            } else {
+                                                installButton = '<a href="#" class="btn btn-min-width disabled">INCOMPATIBLE</a>';                                               
                                             }                                         
                                      } 
                                    
@@ -309,13 +316,13 @@
                                     var mnt = moment(this.created_timestamp);
 
                                         $pploadCollection.find('table[data-ppload-files] tbody').append(
-                                            '<tr' + greyText + '>'
+                                            '<tr data-ppload-file-id="' + this.id + '"' + greyText + '>'
                                             + '<td>' + downloadLink + '</td>'
                                             + '<td>' + version + '</td>'
                                             + '<td>' + fileDescription + '</td>'
                                             + '<td>' + this.type + '</td>'
                                             + '<td>'
-                                            + '<select id="data-select-packagetype' + this.id + '" data-packagetype-id=" name="packagetype" class="form-control input-sm" style="width: 200px;">'
+                                            + '<select id="data-select-packagetype' + this.id + '" data-packagetype-id="" name="packagetype" class="form-control input-sm" style="width: 200px;">'
                                             + '<option value=\"\"></option>'
                                             + '<option value=\"2\">Android (APK)</option>'
                                             + '<option value=\"1\">AppImage</option>'
@@ -331,15 +338,18 @@
                                             + '</select><span id="file-tag-packagetype'+this.id+'">'
                                             + '</td>'
                                             + '<td>'
-                                            + '<select id="data-select-license' + this.id + '" data-license-id=" name="license">'
+                                            + '<select id="data-select-license' + this.id + '" data-license-id="" name="license">'
                                             + '<option value=\"1000\"></option><option value=\"16\">AGPL</option><option value=\"3\">Artistic 2.0</option><option value=\"6\">BSD</option><option value=\"17\">CC0 1.0 Universal (Public Domain)</option><option value=\"9\">CPL 1.0</option><option value=\"10\">Creative Commons by</option><option value=\"13\">Creative Commons by-nc</option><option value=\"15\">Creative Commons by-nc-nd</option><option value=\"14\">Creative Commons by-nc-sa</option><option value=\"12\">Creative Commons by-nd</option><option value=\"11\">Creative Commons by-sa</option><option value=\"8\">GFDL</option><option value=\"1\">GPLv2 or later</option><option value=\"18\">GPLv2 only</option><option value=\"19\">GPLv3</option><option value=\"2\">LGPL</option><option value=\"0\">Other</option><option value=\"7\">Proprietary License</option><option value=\"5\">QPL</option><option value=\"4\">X11</option>'
                                             + '</select><span id="file-tag-license'+this.id+'"><span id="file-tag-license-text'+this.id+'">'
                                             + '</td>'
                                             + '<td style="text-align: right"><span id="download_counter_' + this.id + '">' + count_downloads + '</td>'
                                             + '<td>' +mnt.format('YYYY-MM-DD') + '</td>'
                                             + '<td style="text-align: right">' + humanFileSize(this.size,false) + '</td>'
-                                        + '<td style="text-align: right; ">' + installButton + '</td>'
-                                         + '<td style="text-align: right; ">' + downloadButton+ '</td>'
+                                            + '<td style="text-align: right; ">' + installButton + '</td>'
+                                            + '<td style="text-align: right; ">' + downloadButton+ '</td>'
+                                            <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                                            + '<td style="text-align: center; "><input type="checkbox" id="data-checkbox-compatible-'+this.id+'" data-is-compatible="" ></td>'
+                                            <?php endif; ?>
                                             + '</tr>'
                                         );
 
@@ -376,6 +386,10 @@
                                         }
 
                                         $("#data-select-packagetype" + this.id).hide();
+                                        
+                                        if ((typeof this.ocs_compatible != 'undefined') && (this.ocs_compatible != "") && this.ocs_compatible == 1) {
+                                            $("#data-checkbox-compatible-" + this.id).attr('checked', 'checked');
+                                        }
 
 
                                         if (isExternLink) {
@@ -392,6 +406,21 @@
                                                 window.open($fileserverLink, '_blank');
                                             });
                                         }
+                                        
+                                        
+                                        $compatibleCheckbox = $("#data-checkbox-compatible-" + this.id);
+
+                                        if(this.active == '0') {
+                                            $compatibleCheckbox.prop('disabled', 'disabled');
+                                        }
+
+                                        $compatibleCheckbox.click(function (event) {
+                                            event.preventDefault();
+                                            $fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
+                                            $isCompatible = this.checked;
+                                            updateOcsCompatible($fileId, $isCompatible);
+                                        });
+                                        
 
                                         //fileSizeSum += parseInt(this.size);
                                         if(parseInt(this.size)>0) {
@@ -410,11 +439,11 @@
 
                                     //}
 
-
-
                                  });
-
-								 //Inactive Fiels
+                                 
+                                 //
+                                 //Inactive Fiels
+                                 //
                                  $.each(myArrayInactive, function () {
                                     if(null == oldestFileId) {
                                             oldestFileId = this.id;
@@ -651,6 +680,37 @@
                             + '&type=' + encodeURIComponent(type)
                             + '&filename=' + encodeURIComponent(filename);
                      }
+                     
+                     
+                     function updateOcsCompatible(fileId, isCompatible) {
+                        var $url = "/p/<?= $this->product->project_id ?>/updatepploadfile";
+                        
+                        if(fileId != 'undefined' && fileId != null) {
+
+                            $.ajax({
+                                url: $url,
+                                type: 'POST',
+                                data: {
+                                    file_id: fileId,
+                                    ocs_compatible: (isCompatible==true?1:0)
+                                },
+                                dataType: 'json',
+                                success: function (data, textStatus, jqXHR) {
+                                    if (data.status == 'ok') {
+                                        $("#files-panel").find('table[data-ppload-files] tbody').html('');
+                                        $("#files-panel").find('table[data-ppload-files] tfoot').html('');
+                                        getPploadFiles();
+                                        return;
+                                    }
+
+                                },
+                                error: function (jqXHR, textStatus, errorThrown) {
+                                    alert("Error: " + textStatus + ", " + errorThrown);
+                                    return;
+                                }
+                            });
+                        }
+                    }
 
 
 

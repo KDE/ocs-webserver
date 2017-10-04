@@ -64,15 +64,14 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
                 $result[] = array(
                     'title'    => $child['title'],
                     'key'      => $child['project_category_id'],
-                    'href'     => $helperBuildExploreUrl->buildExploreUrl($inputParams['category'],
-                        $child['project_category_id'], $inputParams['order']),
+                    'href'     => $helperBuildExploreUrl->buildExploreUrl($inputParams['category'], $child['project_category_id'],
+                        $inputParams['order']),
                     'target'   => '_top',
                     'selected' => $nodeSelectedState
                 );
             } else {
                 $nodeHasChildren = (1 == ($child['rgt'] - $child['lft'])) ? false : true;
-                $nodeIsSelectedSubCat =
-                    (($selChild['lft'] > $child['lft']) AND ($selChild['rgt'] < $child['rgt'])) ? true : false;
+                $nodeIsSelectedSubCat = (($selChild['lft'] > $child['lft']) AND ($selChild['rgt'] < $child['rgt'])) ? true : false;
                 $nodeExpandedState = false;
                 $nodeChildren = null;
                 if ($nodeHasChildren AND $nodeIsSelectedSubCat) {
@@ -88,8 +87,8 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
                     'lazy'     => true,
                     'selected' => $nodeSelectedState,
                     'expanded' => $nodeExpandedState,
-                    'href'     => $helperBuildExploreUrl->buildExploreUrl($inputParams['category'],
-                        $child['project_category_id'], $inputParams['order']),
+                    'href'     => $helperBuildExploreUrl->buildExploreUrl($inputParams['category'], $child['project_category_id'],
+                        $inputParams['order']),
                     'target'   => '_top',
                     'children' => $nodeChildren
                 );
@@ -102,8 +101,7 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
     public function indexAction()
     {
         $filter = array();
-        $storeCatIds =
-            Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
+        $storeCatIds = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
         $this->view->categories = $storeCatIds;
 
         $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
@@ -183,8 +181,7 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
     {
         ini_set('memory_limit', '3072M');
 
-        $allDomainCatIds =
-            Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
+        $allDomainCatIds = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
         if (count($allDomainCatIds) == 0) {
             $allDomainCatIds = null;
         }
@@ -197,15 +194,13 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         }
 
         // Filter-Parameter
-        $filterInput =
-            new Zend_Filter_Input(array('*' => 'StringTrim', 'projectSearchText' => 'StripTags', 'page' => 'digits'),
-                array(
-                    'projectSearchText' => array(
-                        new Zend_Validate_StringLength(array('min' => 3, 'max' => 100)),
-                        'presence' => 'required'
-                    ),
-                    'page'              => 'digits'
-                ), $this->getAllParams());
+        $filterInput = new Zend_Filter_Input(array('*' => 'StringTrim', 'projectSearchText' => 'StripTags', 'page' => 'digits'), array(
+                'projectSearchText' => array(
+                    new Zend_Validate_StringLength(array('min' => 3, 'max' => 100)),
+                    'presence' => 'required'
+                ),
+                'page'              => 'digits'
+            ), $this->getAllParams());
 
         if ($filterInput->hasInvalid()) {
             $this->_helper->viewRenderer('searchError');
@@ -272,8 +267,9 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         $duration = 1800; // in seconds
         $expires = gmdate("D, d M Y H:i:s", time() + $duration) . " GMT";
 
-        $this->getResponse()->setHeader('X-FRAME-OPTIONS', 'SAMEORIGIN',true)
-//            ->setHeader('Last-Modified', $modifiedTime, true)
+        $this->getResponse()
+             ->setHeader('X-FRAME-OPTIONS', 'SAMEORIGIN', true)
+//           ->setHeader('Last-Modified', $modifiedTime, true)
              ->setHeader('Expires', $expires, true)->setHeader('Pragma', 'no-cache', true)
              ->setHeader('Cache-Control', 'private, no-cache, must-revalidate', true)
         ;
@@ -297,7 +293,7 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
      * @param array $elements
      *
      * @return array with additional info's
-     * @deprecated 
+     * @deprecated
      */
     private function fetchAdditionalData($elements)
     {

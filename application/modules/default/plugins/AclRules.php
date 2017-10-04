@@ -46,6 +46,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addResource(new Zend_Acl_Resource ('default_content'));
         $this->addResource(new Zend_Acl_Resource ('default_discovery'));
         $this->addResource(new Zend_Acl_Resource ('default_donationlist'));
+        $this->addResource(new Zend_Acl_Resource ('default_support'));
         $this->addResource(new Zend_Acl_Resource ('default_error'));
         $this->addResource(new Zend_Acl_Resource ('default_explore'));
         $this->addResource(new Zend_Acl_Resource ('default_gateway'));
@@ -65,6 +66,9 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addResource(new Zend_Acl_Resource ('default_file'));
         $this->addResource(new Zend_Acl_Resource ('default_plings'));
         $this->addResource(new Zend_Acl_Resource ('default_spam'));
+
+        $this->addResource(new Zend_Acl_Resource ('default_stati'));
+        $this->addResource(new Zend_Acl_Resource ('default_tag'));
 
         $this->addResource(new Zend_Acl_Resource ('backend_categories'));
         $this->addResource(new Zend_Acl_Resource ('backend_claim'));
@@ -90,7 +94,15 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addResource(new Zend_Acl_Resource ('backend_store'));
         $this->addResource(new Zend_Acl_Resource ('backend_tag'));
         $this->addResource(new Zend_Acl_Resource ('backend_user'));
+        $this->addResource(new Zend_Acl_Resource ('backend_tags'));
 
+        $this->addResource(new Zend_Acl_Resource ('statistics_data'));
+
+      
+
+        $this->allow(self::ROLENAME_GUEST, array(
+            'statistics_data'
+        ));
 
         $this->allow(self::ROLENAME_GUEST, array(
             'default_authorization',
@@ -111,13 +123,16 @@ class Default_Plugin_AclRules extends Zend_Acl
             'default_rss',
             'default_supporterbox',
             'default_oauth',
-            'default_plings'
+            'default_plings',
+            'default_stati'
         ));
 
         $this->allow(self::ROLENAME_COOKIEUSER, array(
                 'default_logout',
                 'default_productcomment',
-                'default_settings'
+                'default_settings',
+                'default_support',
+                'default_tag'
             )
         );
 
@@ -143,9 +158,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         // resource default_product
         $this->allow(self::ROLENAME_GUEST, 'default_product',
             array('index', 'show', 'getupdatesajax', 'updates', 'follows', 'fetch', 'search'));
-         
-       
-
+        
 
         $this->allow(self::ROLENAME_COOKIEUSER, 'default_product',
             array(
@@ -183,6 +196,11 @@ class Default_Plugin_AclRules extends Zend_Acl
             'updatepackagetype',
 
         ), new Default_Plugin_Acl_IsProjectOwnerAssertion());
+
+        // resource default_support
+        $this->allow(self::ROLENAME_COOKIEUSER, 'default_support',
+            array('index','pay', 'paymentok', 'paymentcancel'));
+         
 
 
         // resource default_widget

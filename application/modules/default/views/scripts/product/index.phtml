@@ -40,21 +40,28 @@ if ($this->product->claimable == 1) {
 $helpProjectFiles = new Default_View_Helper_ProjectFiles();
 $productFileInfos = $helpProjectFiles->projectFiles($this->product->ppload_collection_id);
 
-//$bbcodeFreeDescription = $helpBBCode->Bbcode2html($this->product->description);
-$bbcodeFreeDescription = Default_Model_BBCode::renderHtml($this->product->description);
+$this->product->title = Default_Model_HtmlPurify::purify($this->product->title);
+$this->product->description = Default_Model_BBCode::renderHtml(Default_Model_HtmlPurify::purify($this->product->description));
+$this->product->version = Default_Model_HtmlPurify::purify($this->product->version);
+$this->product->embed_code = Default_Model_HtmlPurify::purify($this->product->embed_code, Default_Model_HtmlPurify::ALLOW_VIDEO);
+$this->product->link_1 = Default_Model_HtmlPurify::purify($helpAddDefaultScheme->addDefaultScheme($this->product->link_1),Default_Model_HtmlPurify::ALLOW_URL);
+$this->product->github_code = Default_Model_HtmlPurify::purify($this->product->github_code,Default_Model_HtmlPurify::ALLOW_URL);
+$this->product->facebook_code = Default_Model_HtmlPurify::purify($this->product->facebook_code,Default_Model_HtmlPurify::ALLOW_URL);
+$this->product->twitter_code = Default_Model_HtmlPurify::purify($this->product->twitter_code,Default_Model_HtmlPurify::ALLOW_URL);
+$this->product->google_code = Default_Model_HtmlPurify::purify($this->product->google_code,Default_Model_HtmlPurify::ALLOW_URL);
 
 $this->headTitle($this->product->title . ' - ' . $_SERVER['HTTP_HOST'], 'SET');
 $this->doctype(Zend_View_Helper_Doctype::XHTML1_RDFA);
 
 $this->headMeta()->setName('description',
-    $helpTruncate->truncate($bbcodeFreeDescription, 200, '...', false, true));
+    $helpTruncate->truncate($this->product->description, 200, '...', false, true));
 $this->headMeta()->setName('title',
-    $helpTruncate->truncate($bbcodeFreeDescription, 200, '...', false, true));
+    $helpTruncate->truncate($this->product->title, 200, '...', false, true));
 $this->headMeta()->appendProperty('og:url', $helpProductUrl->buildProductUrl($this->product->project_id, '', null, true));
 $this->headMeta()->appendProperty('og:type', 'website');
 $this->headMeta()->appendProperty('og:title', $this->product->title);
 $this->headMeta()->appendProperty('og:description',
-    $helpTruncate->truncate($bbcodeFreeDescription, 200, '...', false, true));
+    $helpTruncate->truncate($this->product->description, 200, '...', false, true));
 $this->headMeta()->appendProperty('og:image',
     $helpImage->Image($this->product->image_small, array('width' => 400, 'height' => 400)));
 $tableProject = new Default_Model_Project();
@@ -145,9 +152,10 @@ if (Zend_Auth::getInstance()->hasIdentity()){
                             <span id="product-title" >
                               
                                 <?php if (false === empty($this->product->link_1)): ?><a
-                                    href="<?php echo $helpAddDefaultScheme->addDefaultScheme($this->product->link_1); ?>"
+                                    href="<?php echo $this->product->link_1; ?>"
                                     target="_NEW"
-                                    title="<?php echo $helpAddDefaultScheme->addDefaultScheme($this->product->link_1); ?>"
+                                    title="<?php echo $this->product->link_1; ?>"
+                                    rel="nofollow"
                                     > <?= $this->product->title; ?> <span class="fa fa-external-link"></span></a>
                                 <?php else : ?>
                                     <?= $this->product->title; ?>
@@ -165,7 +173,7 @@ if (Zend_Auth::getInstance()->hasIdentity()){
                                 </span>
                                 <span class="light small">
                                 <?php if (false === empty($this->product->github_code)):
-                                    echo '<a target="_blank" href="' . $this->product->github_code . '">' . $this->product->github_code
+                                    echo '<a target="_blank" href="' . $this->product->github_code . '" rel="nofollow">' . $this->product->github_code
                                         . ' <span class="fa fa-external-link"></span></a>';
                                 endif;
                                 ?>
@@ -269,7 +277,7 @@ if (Zend_Auth::getInstance()->hasIdentity()){
                                 <div>
                                     <article>
                                         <b>Description:</b> <br/><br/>
-                                        <?=$bbcodeFreeDescription ?>
+                                        <?=$this->product->description ?>
                                     </article>
 
 
@@ -320,7 +328,7 @@ if (Zend_Auth::getInstance()->hasIdentity()){
                         <!-- MEDIA -->
                         <div class="tab-pane" id="media-panel">
                             <?php if (null != ($this->product->embed_code)): ?>
-                                <?= Default_Model_HtmlPurify::purify($this->product->embed_code, Default_Model_HtmlPurify::ALLOW_VIDEO) ?>
+                                <?= $this->product->embed_code ?>
                             <?php endif; ?>
                         </div>
                         <!-- /MEDIA -->
@@ -422,7 +430,11 @@ if (Zend_Auth::getInstance()->hasIdentity()){
                                         <div class="product-maker-thumbnail relative">
                                             <a href="<?php echo $helpMemberUrl->buildMemberUrl($this->product->member_id); ?>"
                                                title="<?= $this->product->username ?>">
-                                                <div class="profile-image-overlay-4 absolute"></div>
+                                               <?php 
+                                                    if($this->isSupporter($this->product->member_id)) {
+                                                ?>
+                                                    <span class="supporter-badge" >S</span> 
+                                                <?php } ?>                                               
                                                 <img src="<?= $helpImage->Image($this->product->profile_image_url,
                                                     array('width' => 80, 'height' => 80)) ?>"
                                                      alt="product-maker" width="15" height="15"
@@ -472,6 +484,8 @@ if (Zend_Auth::getInstance()->hasIdentity()){
                         <?php echo $this->render('partials/sidebarCcLicense.phtml'); ?>
 
                         <?php echo $this->render('product/partials/details.phtml'); ?>
+
+                        <?php echo $this->render('product/partials/tags.phtml');?>
 
                     </div>
                 </div>

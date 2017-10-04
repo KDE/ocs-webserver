@@ -25,7 +25,7 @@ class PlingsController extends Local_Controller_Action_DomainSwitch
     
     public function indexAction()
     {
-       
+        $this->_helper->layout->disableLayout();
     }
 
    

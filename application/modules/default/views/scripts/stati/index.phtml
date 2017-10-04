@@ -1,0 +1,724 @@
+<style type="text/css">
+	path {  stroke: #fff; }
+	path:hover {  opacity:0.9; }
+	rect:hover {  fill:blue; }
+	.axis {  font: 10px sans-serif; }
+	.legend tr{    border-bottom:1px solid grey; }
+	.legend tr:first-child{    border-top:1px solid grey; }
+
+	.axis path,
+	.axis line {
+	  fill: none;
+	  stroke: #000;
+	  shape-rendering: crispEdges;
+	}
+
+	.x.axis path {  display: none; }
+	.legend{
+	    margin-bottom:76px;
+	    display:inline-block;
+	    border-collapse: collapse;
+	    border-spacing: 0px;
+	}
+	.legend td{
+	    padding:4px 5px;
+	    vertical-align:bottom;
+	}
+	.legendFreq, .legendPerc{
+	    align:right;
+	    width:50px;
+	}	
+
+	.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.bar {
+  fill: steelblue;
+}
+
+.bar:hover {
+  fill: blue ;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.d3-tip {
+  line-height: 1;
+  font-weight: bold;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 2px;
+}
+
+/* Creates a small triangle extender for the tooltip */
+.d3-tip:after {
+  box-sizing: border-box;
+  display: inline;
+  font-size: 10px;
+  width: 100%;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.8);
+  content: "\25BC";
+  position: absolute;
+  text-align: center;
+}
+
+/* Style northward tooltips differently */
+.d3-tip.n:after {
+  margin: -1px 0 0 0;
+  top: 100%;
+  left: 0;
+}
+
+#d3bar-member {
+	display: block;
+}
+
+#d3bar-project {
+	display: block;
+}
+
+
+
+text {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.line {
+  fill: none;
+  stroke-width: 1.5px;
+}
+
+.label {
+  text-anchor: middle;
+}
+
+.label rect {
+  fill: white;
+}
+
+.label-key {
+  font-weight: bold;
+}
+
+</style>
+
+
+<script src="https://d3js.org/d3.v4.min.js"></script>
+
+<div class="pling-nav-tabs">
+<ul class="nav nav-tabs ">
+ <li class="active"><a href="#d3-line" data-toggle="tab">SVG Line new member&projects</a></li>
+ <li ><a href="#d3-bar" data-toggle="tab">SVG Bar new member&projects</a></li>
+
+ <li ><a href="#download-panel" data-toggle="tab">Downloads</a></li>
+ <li><a href="#pageviews-panel" data-toggle="tab">Pageviews</a></li>
+ <li><a href="#plings-panel" data-toggle="tab">Plings</a></li>
+ <li><a href="#others-panel" data-toggle="tab">Others</a></li>
+ 
+ 
+</ul>
+<div class="tab-content row"  >
+  <div id="download-panel" class="tab-pane  ">
+	  <div style="width: 75%">
+	<canvas id="canvas-download" ></canvas>
+	</div>
+  </div>
+
+  <div id="pageviews-panel" class="tab-pane">
+ <div style="width: 75%;padding: 20px">
+	<canvas id="canvas-pageivews" ></canvas>
+	</div>
+  </div>
+
+  <div id="plings-panel" class="tab-pane">
+ <div style="width: 35%; padding: 20px">
+	<canvas id="canvas-plings" ></canvas>
+	</div>
+  </div>
+
+  <div id="others-panel" class="tab-pane">
+ <div style="width: 75%; padding: 20px">
+	<canvas id="canvas-others" ></canvas>
+	</div>
+  </div>
+
+  
+
+   <div id="d3-bar" class="tab-pane ">
+	<div style="width: 100%; padding: 20px">
+		<div style="padding-left: 200px"> New Members per day</div>
+		<div id='d3bar-member'></div>
+		<div style="padding-left: 200px"> New projects per day</div>
+		<div id='d3bar-project'></div>
+	</div>
+  </div>
+
+   <div id="d3-line" class="tab-pane active ">
+	<div style="width: 100%; padding: 20px">
+		
+		<div id='d3linelableinline'></div>
+		
+	</div>
+  </div>
+
+</div>
+</div>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>  
+
+<script type="text/javascript">	
+window.randomScalingFactor = function() {
+	return (Math.random() > 0.5 ? 2.0 : 1.0) * Math.round(Math.random() * 100);
+};
+
+window.chartColors = {
+	red: 'rgb(255, 99, 132)',
+	orange: 'rgb(255, 159, 64)',
+	yellow: 'rgb(255, 205, 86)',
+	green: 'rgb(75, 192, 192)',
+	blue: 'rgb(54, 162, 235)',
+	purple: 'rgb(153, 102, 255)',
+	grey: 'rgb(201, 203, 207)'
+};
+
+	 $(document).ready(function () {
+
+	 	var MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+	 	 var configLinechart= {
+	 	           type: 'line',
+	 	           data: {
+	 	               labels: MONTHS,
+	 	               datasets: [{
+	 	                   label: "2016",
+	 	                   backgroundColor: window.chartColors.red,
+	 	                   borderColor: window.chartColors.red,
+	 	                   data: [
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor()
+	 	                   ],
+	 	                   fill: false,
+	 	               }, {
+	 	                   label: "2017",
+	 	                   fill: false,
+	 	                   backgroundColor: window.chartColors.blue,
+	 	                   borderColor: window.chartColors.blue,
+	 	                   data: [
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor()
+	 	                   ],
+	 	               }]
+	 	           },
+	 	           options: {
+	 	               responsive: true,
+	 	               title:{
+	 	                   display:true,
+	 	                   text:'Downloads 2 years'
+	 	               },
+	 	               tooltips: {
+	 	                   mode: 'index',
+	 	                   intersect: false,
+	 	               },
+	 	               hover: {
+	 	                   mode: 'nearest',
+	 	                   intersect: true
+	 	               },
+	 	               scales: {
+	 	                   xAxes: [{
+	 	                       display: true,
+	 	                       scaleLabel: {
+	 	                           display: true,
+	 	                           labelString: 'Month'
+	 	                       }
+	 	                   }],
+	 	                   yAxes: [{
+	 	                       display: true,
+	 	                       scaleLabel: {
+	 	                           display: true,
+	 	                           labelString: 'Value'
+	 	                       }
+	 	                   }]
+	 	               }
+	 	           }
+	 	       };
+
+
+	 	  var configBarchart= {
+	 	           type: 'bar',
+	 	           data: {
+	 	               labels: MONTHS,
+	 	               datasets: [{
+	 	                   label: "2016",
+	 	                   backgroundColor: window.chartColors.red,
+	 	                   borderColor: window.chartColors.red,
+	 	                   data: [
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor()
+	 	                   ],
+	 	                   fill: false,
+	 	               }, {
+	 	                   label: "2017",
+	 	                   fill: false,
+	 	                   backgroundColor: window.chartColors.blue,
+	 	                   borderColor: window.chartColors.blue,
+	 	                   data: [
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor(),
+	 	                       randomScalingFactor()
+	 	                   ],
+	 	               }]
+	 	           },
+	 	           options: {
+	 	               responsive: true,
+	 	               title:{
+	 	                   display:true,
+	 	                   text:'Pageviews 2 years'
+	 	               },
+	 	               tooltips: {
+	 	                   mode: 'index',
+	 	                   intersect: false,
+	 	               },
+	 	               hover: {
+	 	                   mode: 'nearest',
+	 	                   intersect: true
+	 	               },
+	 	               scales: {
+	 	                   xAxes: [{
+	 	                       display: true,
+	 	                       scaleLabel: {
+	 	                           display: true,
+	 	                           labelString: 'Month'
+	 	                       }
+	 	                   }],
+	 	                   yAxes: [{
+	 	                       display: true,
+	 	                       scaleLabel: {
+	 	                           display: true,
+	 	                           labelString: 'Value'
+	 	                       }
+	 	                   }]
+	 	               }
+	 	           }
+	 	       };
+
+
+	 	var configPie = {
+	 	    type: 'pie',
+	 	    data: {
+	 	        datasets: [{
+	 	            data: [
+	 	                randomScalingFactor(),
+	 	                randomScalingFactor(),
+	 	                randomScalingFactor(),
+	 	                randomScalingFactor(),
+	 	                randomScalingFactor(),
+	 	            ],
+	 	            backgroundColor: [
+	 	                window.chartColors.red,
+	 	                window.chartColors.orange,
+	 	                window.chartColors.yellow,
+	 	                window.chartColors.green,
+	 	                window.chartColors.blue,
+	 	            ],
+	 	            label: 'Dataset 1'
+	 	        }],
+	 	        labels: [
+	 	            "Red",
+	 	            "Orange",
+	 	            "Yellow",
+	 	            "Green",
+	 	            "Blue"
+	 	        ]
+	 	    },
+	 	    options: {
+	 	        responsive: true
+	 	    }
+	 	};
+
+	 	var timeFormat = 'MM/DD/YYYY';
+	 	var color = Chart.helpers.color;
+		function newDateString(days) {
+			return moment().add(days, 'd').format(timeFormat);
+		}
+
+				var configCombo = {
+					type: 'bar',
+					data: {
+						labels: [
+							newDateString(0), 
+							newDateString(1), 
+							newDateString(2), 
+							newDateString(3), 
+							newDateString(4), 
+							newDateString(5), 
+							newDateString(6)
+						],
+						datasets: [{
+							type: 'bar',
+							label: 'Dataset 1',
+							backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
+							borderColor: window.chartColors.red,
+							data: [
+								randomScalingFactor(), 
+								randomScalingFactor(), 
+								randomScalingFactor(), 
+								randomScalingFactor(), 
+								randomScalingFactor(), 
+								randomScalingFactor(), 
+								randomScalingFactor()
+							],
+						}, {
+							type: 'bar',
+							label: 'Dataset 2',
+							backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
+							borderColor: window.chartColors.blue,
+							data: [
+								randomScalingFactor(), 
+								randomScalingFactor(), 
+								randomScalingFactor(), 
+								randomScalingFactor(), 
+								randomScalingFactor(), 
+								randomScalingFactor(), 
+								randomScalingFactor()
+							],
+						}, {
+							type: 'line',
+							label: 'Dataset 3',
+							backgroundColor: color(window.chartColors.green).alpha(0.5).rgbString(),
+							borderColor: window.chartColors.green,
+							fill: false,
+							data: [
+								randomScalingFactor(), 
+								randomScalingFactor(), 
+								randomScalingFactor(), 
+								randomScalingFactor(), 
+								randomScalingFactor(), 
+								randomScalingFactor(), 
+								randomScalingFactor()
+							],
+						}, ]
+					},
+					options: {
+		                title: {
+		                    text:"other Scale"
+		                },
+						scales: {
+							xAxes: [{
+								type: "time",
+								display: true,
+								time: {
+									format: timeFormat,
+									// round: 'day'
+								}
+							}],
+						},
+					}
+				};
+				
+
+	
+	 	var ctx = document.getElementById("canvas-download").getContext("2d");
+            		window.myDownLine = new Chart(ctx, configLinechart);
+
+
+        		var ctx = document.getElementById("canvas-pageivews").getContext("2d");
+        		window.myPageviewsBarchart = new Chart(ctx, configBarchart);
+
+        		var ctx = document.getElementById("canvas-plings").getContext("2d");
+    			window.myPie = new Chart(ctx, configPie);
+
+    		var ctx = document.getElementById("canvas-others").getContext("2d");
+    		window.myOthers = new Chart(ctx, configCombo);
+
+	 })
+</script>
+
+
+<script>
+
+var margin = {top: 40, right: 20, bottom: 30, left: 40},
+    width = 560 - margin.left - margin.right,
+    height = 300 - margin.top - margin.bottom;
+var barColor = 'steelblue';
+//var formatPercent = d3.format(".0%");
+
+
+var x = d3.scaleBand()
+          .range([0, width])
+          .padding(0.1);
+
+var y = d3.scaleLinear()
+          .range([height, 0]);
+
+var svg = d3.select("#d3bar-member").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom+100)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+d3.json("statistics/data/projects/", function(error, data) {
+  x.domain(data.map(function(d) { return d.memberdate; }));
+  y.domain([0, d3.max(data, function(d) { return d.daycount; })]);
+
+
+  svg.selectAll(".bar")
+      .data(data)
+    .enter().append("rect")
+      .attr("class", "bar")
+      .attr("x", function(d) { return x(d.memberdate); })
+      .attr("width", x.bandwidth())
+      .attr("y", function(d) { return y(d.daycount); })
+      .attr("height", function(d) { return height - y(d.daycount); })
+
+      .on('click',function(d){
+      		alert(d.daycount);
+      });
+
+      svg.selectAll("text")
+  	   .data(data)
+  	   .enter()
+  	   .append("text")
+  	   .text(function(d){ return d.daycount;})
+  	   .attr("text-anchor", "middle")
+  	   .attr("x", function(d, i) {
+  	   		return x(d.memberdate)+x.bandwidth()/2;
+  	   })
+  	   .attr("y", function(d) {
+  	   		return y(d.daycount)+ 14;
+  	   })
+  	   .attr("font-family", "sans-serif")
+  	   .attr("font-size", "11px")
+  	   .attr("fill", "white");
+
+  svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")      
+      .call(d3.axisBottom(x))
+        // Add the x Axis
+      
+});
+
+
+
+function type(d) {
+  d.daycount = +d.daycount;
+  return d;
+}
+
+</script>
+
+
+<script type="text/javascript">
+	
+// new projects
+var marginp = {top: 40, right: 20, bottom: 30, left: 40},
+    widthp = 560 - marginp.left - marginp.right,
+    heightp = 300 - marginp.top - marginp.bottom;
+
+    var xp = d3.scaleBand()
+              .range([0, width])
+              .padding(0.1);
+
+    var yp = d3.scaleLinear()
+              .range([height, 0]);
+
+var svgp = d3.select("#d3bar-project").append("svg")
+    .attr("width", widthp + marginp.left + marginp.right)
+    .attr("height", heightp + marginp.top + marginp.bottom+100)
+  .append("g")
+    .attr("transform", "translate(" + marginp.left + "," + marginp.top + ")");
+
+
+d3.json("statistics/data/member/", function(error, data) {
+  xp.domain(data.map(function(d) { return d.projectdate; }));
+  yp.domain([0, d3.max(data, function(d) { return d.daycount; })]);
+
+
+  svgp.selectAll(".bar")
+      .data(data)
+    .enter().append("rect")
+      .attr("class", "bar")
+      .attr("x", function(d) { return xp(d.projectdate); })
+      .attr("width", xp.bandwidth())
+      .attr("y", function(d) { return yp(d.daycount); })
+      .attr("height", function(d) { return heightp - yp(d.daycount); })
+
+      .on('click',function(d){
+      		alert(d.daycount);
+      });
+
+      svgp.selectAll("text")
+  	   .data(data)
+  	   .enter()
+  	   .append("text")
+  	   .text(function(d){ return d.daycount;})
+  	   .attr("text-anchor", "middle")
+  	   .attr("x", function(d, i) {
+  	   		return xp(d.projectdate)+xp.bandwidth()/2;
+  	   })
+  	   .attr("y", function(d) {
+  	   		return yp(d.daycount)+ 14;
+  	   })
+  	   .attr("font-family", "sans-serif")
+  	   .attr("font-size", "11px")
+  	   .attr("fill", "white");
+
+  svgp.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + heightp + ")")      
+     .call(d3.axisBottom(xp))
+      .selectAll("text")
+    .attr("y", 0)
+    .attr("x", 9)
+    .attr("dy", ".35em")
+    .attr("transform", "rotate(90)")
+    .style("text-anchor", "start");
+      ;
+      
+});
+
+</script>
+
+
+<script>
+
+var parseTime = d3.timeParse("%m-%d");
+
+var svgLine = d3.select("#d3linelableinline")
+    .append("svg")
+    .attr("width", 960)
+    .attr("height", 500);
+
+var marginLine = {top: 30, right: 50, bottom: 30, left: 30},
+    widthLine = +svgLine.attr("width") - marginLine.left - marginLine.right,
+    heightLine = +svgLine.attr("height") - marginLine.top - marginLine.bottom,
+    labelPadding = 3;
+
+var g = svgLine.append("g")
+    .attr("transform", "translate(" + marginLine.left + "," + marginLine.top + ")");
+
+d3.tsv("data/data.tsv", function(d) {
+  d.date = parseTime(d.date);
+  for (var k in d) if (k !== "date") d[k] = +d[k];
+  return d;
+}, function(error, data) {
+  if (error) throw error;
+
+  var series = data.columns.slice(1).map(function(key) {
+    return data.map(function(d) {
+      return {
+        key: key,
+        date: d.date,
+        value: d[key]
+      };
+    });
+  });
+
+  var xLine = d3.scaleTime()
+      .domain([data[0].date, data[data.length - 1].date])
+      .range([0, widthLine]);
+
+  var yLine = d3.scaleLinear()
+      .domain([0, d3.max(series, function(s) { return d3.max(s, function(d) { return d.value; }); })])
+      .range([heightLine, 0]);
+
+  var zLine = d3.scaleOrdinal(d3.schemeCategory10);
+
+  g.append("g")
+      .attr("class", "axis axis--x")
+      .attr("transform", "translate(0," + heightLine + ")")
+      .call(d3.axisBottom(xLine));
+
+  var serie = g.selectAll(".serie")
+      .data(series)
+    .enter().append("g")
+      .attr("class", "serie");
+
+  serie.append("path")
+      .attr("class", "line")
+      .style("stroke", function(d) { return zLine(d[0].key); })
+      .attr("d", d3.line()
+          .x(function(d) { return xLine(d.date); })
+          .y(function(d) { return yLine(d.value); }));
+
+  var label = serie.selectAll(".label")
+      .data(function(d) { return d; })
+    .enter().append("g")
+      .attr("class", "label")
+      .attr("transform", function(d, i) { return "translate(" + xLine(d.date) + "," + yLine(d.value) + ")"; });
+      
+      label.append("text")
+           .attr("dy", ".35em")
+           .text(function(d) { return d.value; })
+         .filter(function(d, i) { return i === data.length - 1; })
+        
+
+ const newText = label.selectAll('text');
+ const bbox = newText.node().getBBox();
+
+ label.append('rect', 'text')
+     .datum(() => bbox)
+     .attr('x', d => (d.x - labelPadding))
+     .attr('y', d => (d.y - labelPadding))
+     .attr('width', d => (d.width + (2 * labelPadding)))
+     .attr('height', d => (d.height + (2 * labelPadding)));
+
+     label.append("text")
+          .attr("dy", ".35em")
+          .text(function(d) { return d.value; })
+        .filter(function(d, i) { return i === data.length - 1; })
+        .append("tspan")
+          .attr("class", "label-key")
+          .text(function(d) { return " " + d.key; });
+
+});
+
+
+</script>
+

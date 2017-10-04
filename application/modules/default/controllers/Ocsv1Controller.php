@@ -73,7 +73,6 @@
  * xdg_type
  * download_package_type{n}
  * download_package_arch{n}
- * download_ghns{n}
  *
  * ----
  *
@@ -81,7 +80,6 @@
  *
  * download_package_type
  * download_package_arch
- * download_ghns
  *
  * ----
  *
@@ -139,8 +137,7 @@ class Ocsv1Controller extends Zend_Controller_Action
 
     protected function _initUriScheme()
     {
-        if (isset($_SERVER['HTTPS'])
-            && ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] === '1')
+        if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] === '1')
         ) {
             $this->_uriScheme = 'https';
         } else {
@@ -174,8 +171,7 @@ class Ocsv1Controller extends Zend_Controller_Action
         }
 
         // Set format option
-        if (isset($this->_params['format'])
-            && strtolower($this->_params['format']) == 'json'
+        if (isset($this->_params['format']) && strtolower($this->_params['format']) == 'json'
         ) {
             $this->_format = 'json';
         }
@@ -216,9 +212,7 @@ class Ocsv1Controller extends Zend_Controller_Action
      */
     protected function _loadClientConfig()
     {
-        $clientConfigReader = new Backend_Model_ClientFileConfig(
-            $this->_getNameForStoreClient()
-        );
+        $clientConfigReader = new Backend_Model_ClientFileConfig($this->_getNameForStoreClient());
         $clientConfigReader->loadClientConfig();
         return $clientConfigReader->getConfig();
     }
@@ -930,9 +924,9 @@ class Ocsv1Controller extends Zend_Controller_Action
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . print_r(func_get_args(), true));
         Zend_Registry::get('logger')->debug('URL: ' . $_SERVER["REQUEST_URI"]);
 
-        if (!$this->_authenticateUser()) {
-            //$this->_sendErrorResponse(999, '');
-        }
+        //if (!$this->_authenticateUser()) {
+        //    $this->_sendErrorResponse(999, '');
+        //}
 
         $pploadApi = new Ppload_Api(array(
             'apiUri'   => PPLOAD_API_URI,
@@ -1047,6 +1041,7 @@ class Ocsv1Controller extends Zend_Controller_Action
             if ($project->ppload_collection_id) {
                 $filesRequest = array(
                     'collection_id' => ltrim($project->ppload_collection_id, '!'),
+                    'ocs_compatibility' => 'compatible',
                     'perpage'       => 100
                 );
                 $cacheName = __FUNCTION__ . '_project_filesResponse_' . md5((string)$project->ppload_collection_id);
@@ -1085,7 +1080,6 @@ class Ocsv1Controller extends Zend_Controller_Action
                         $downloadItems['downloadrepository' . $i] = '';
                         $downloadItems['download_package_type' . $i] = $tags['packagetypeid'];
                         $downloadItems['download_package_arch' . $i] = $tags['packagearch'];
-                        $downloadItems['download_ghns' . $i] = $tags['ghns'];
                         $i++;
                     }
                 }
@@ -1424,6 +1418,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                 if ($project->ppload_collection_id) {
                     $filesRequest = array(
                         'collection_id' => ltrim($project->ppload_collection_id, '!'),
+                        'ocs_compatibility' => 'compatible',
                         'perpage'       => 100
                     );
                     $cacheName = __FUNCTION__ . '_projects_filesResponse_' . md5((string)$project->ppload_collection_id);
@@ -1462,7 +1457,6 @@ class Ocsv1Controller extends Zend_Controller_Action
                             $downloadItems['downloadrepository' . $i] = '';
                             $downloadItems['download_package_type' . $i] = $tags['packagetypeid'];
                             $downloadItems['download_package_arch' . $i] = $tags['packagearch'];
-                            $downloadItems['download_ghns' . $i] = $tags['ghns'];
                             $i++;
                         }
                     }
@@ -1538,7 +1532,7 @@ class Ocsv1Controller extends Zend_Controller_Action
     /**
      * @param Zend_Db_Table $tableProject
      *
-     * @return mixed
+     * @return Zend_Db_Table_Select
      */
     protected function _buildProjectSelect($tableProject)
     {
@@ -1579,8 +1573,7 @@ class Ocsv1Controller extends Zend_Controller_Action
             'link'          => '',
             'licensetype'   => '',
             'packagetypeid' => '',
-            'packagearch'   => '',
-            'ghns'          => ''
+            'packagearch'   => ''
         );
         foreach ($tags as $tag) {
             $tag = trim($tag);
@@ -1595,10 +1588,6 @@ class Ocsv1Controller extends Zend_Controller_Action
                     } else {
                         if (strpos($tag, 'packagearch-') === 0) {
                             $parsedTags['packagearch'] = str_replace('packagearch-', '', $tag);
-                        } else {
-                            if (strpos($tag, 'ghns-') === 0) {
-                                $parsedTags['ghns'] = str_replace('ghns-', '', $tag);
-                            }
                         }
                     }
                 }
@@ -1641,6 +1630,7 @@ class Ocsv1Controller extends Zend_Controller_Action
         ) {
             $filesRequest = array(
                 'collection_id' => ltrim($project->ppload_collection_id, '!'),
+                'ocs_compatibility' => 'compatible',
                 'perpage'       => 1,
                 'page'          => $this->getParam('itemid')
             );
@@ -1677,8 +1667,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                         'packagename'           => '',
                         'repository'            => '',
                         'download_package_type' => $tags['packagetypeid'],
-                        'download_package_arch' => $tags['packagearch'],
-                        'download_ghns'         => $tags['ghns']
+                        'download_package_arch' => $tags['packagearch']
                     )
                 )
             );
@@ -1700,8 +1689,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                         'packagename'           => array('@text' => ''),
                         'repository'            => array('@text' => ''),
                         'download_package_type' => array('@text' => $tags['packagetypeid']),
-                        'download_package_arch' => array('@text' => $tags['packagearch']),
-                        'download_ghns'         => array('@text' => $tags['ghns'])
+                        'download_package_arch' => array('@text' => $tags['packagearch'])
                     )
                 )
             );

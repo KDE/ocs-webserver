@@ -93,6 +93,15 @@
             </div>
         </div>
         <div class="jtable-input-field-container">
+            <div class="jtable-input-label">Show Description</div>
+            <div class="jtable-input jtable-dropdown-input">
+                <select id="show_description" name="show_description" class="validate[required]">
+                    <option value="1">Show</option>
+                    <option selected="selected" value="0">Don't show</option>
+                </select>
+            </div>
+        </div>
+        <div class="jtable-input-field-container">
             <div class="jtable-input-label">Status</div>
             <div class="jtable-input jtable-dropdown-input">
                 <select id="subcat-status" name="is_active" class="validate[required]">
@@ -405,7 +414,13 @@
                     type: 'input',
                     create: true,
                     edit: true,
-                    width: '30%'
+                    width: '5%'
+                },
+                show_description: {
+                	title: 'Show Description',
+                    options: {'1': 'Show', '0': 'Do not show'},
+                    defaultValue: '0',
+                    width: '5%'
                 },
                 is_active: {
                     title: 'Status',

@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -24,9 +25,14 @@ class Default_View_Helper_AddDefaultScheme extends Zend_View_Helper_Abstract
 
     function addDefaultScheme($url, $scheme = 'http://')
     {
+        if (empty($url)) {
+            return $url;
+        }
+
         if (!preg_match("~^(?:f|ht)tps?://~i", $url)) {
             $url = $scheme . $url;
         }
+
         return $url;
     }
 
