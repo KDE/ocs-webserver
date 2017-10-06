@@ -111,6 +111,37 @@ class Statistics_Model_Data
             return $result;  
     }
 
+    public function getDownloadsDaily($numofmonthback){
+        $sql = "
+                   select 
+                                      SUBSTR(d.date_yyyymmdd,1,6) as symbol
+                                      ,SUBSTR(d.date_yyyymmdd,7,8)*1 as date 
+                                      ,d.count as price
+                                      from dwh.files_downloads_daily as d
+                                      where STR_TO_DATE(date_yyyymmdd,'%Y%m%d' ) >= (DATE_FORMAT(CURDATE(), '%Y-%m-01')- INTERVAL :numofmonthback MONTH)
+                                      and STR_TO_DATE(date_yyyymmdd,'%Y%m%d' )< CURDATE()
+                                      order by date_yyyymmdd asc
+            ";
+        $result = $this->_db->fetchAll($sql,array("numofmonthback"=>$numofmonthback));
+        return $result;  
+    }
+
+    public function getTopDownloadsPerDate($date){
+            $date_start =$date.' 00:00:00';
+            $date_end =$date.' 23:59:59';           
+            $sql = "
+                        select project_id, count(1) as cnt from dwh.files_downloads 
+                        where downloaded_timestamp 
+                        between  :date_start and :date_end
+                        group by project_id
+                        order by cnt desc
+                        limit 50
+            ";
+            $result = $this->_db->fetchAll($sql,array("date_start"=>$date_start,"date_end"=>$date_end));
+            return $result;             
+    }
+
+
     public function getPayoutCategoryMonthly($yyyymm){
             $sql = "
                             select project_category_id
