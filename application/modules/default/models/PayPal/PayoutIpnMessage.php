@@ -219,9 +219,9 @@ class Default_Model_PayPal_PayoutIpnMessage extends Local_Payment_PayPal_Adaptiv
                         $this->_processTransactionStatusPending();
                         break;
                     default:
-                        throw new Local_Payment_Exception('Unknown transaction status from PayPal: ' . $this->_ipnMessage->getTransactionStatus());
+                        throw new Local_Payment_Exception('Unknown transaction status from PayPal: TransactionStatus = ' . $this->_ipnMessage->getTransactionStatus() . ' --- TransactionForSenderStatus = ' . $this->_ipnMessage->getTransactionForSenderStatus);
                 }
-                throw new Local_Payment_Exception('Unknown transaction status from PayPal: ' . $this->_ipnMessage->getTransactionStatus());
+                throw new Local_Payment_Exception('Unknown transaction status from PayPal: TransactionStatus = ' . $this->_ipnMessage->getTransactionStatus() . ' --- TransactionForSenderStatus = ' . $this->_ipnMessage->getTransactionForSenderStatus);
         }
     }
 
