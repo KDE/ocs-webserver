@@ -32,33 +32,27 @@ class Local_Payment_PayPal_Response
     {
         if (isset($rawResponse['txn_type']) AND ($rawResponse['txn_type'] == 'masspay')) {
             return new Local_Payment_PayPal_Masspay_ResponseMasspay($rawResponse);
-        }
-        
+        } else    
         if (isset($rawResponse['responseEnvelope_ack'])) {
             return new Local_Payment_PayPal_AdaptivePayment_ResponsePayRequest($rawResponse);
-        }
-
+        } else 
         if (isset($rawResponse['transaction_type']) AND ($rawResponse['transaction_type'] == 'Adaptive Payment PAY')) {
             return new Local_Payment_PayPal_AdaptivePayment_ResponsePay($rawResponse);
-        }
-        
+        } else         
         if (isset($rawResponse['action_type']) AND ($rawResponse['action_type'] == 'PAY')) {
             return new Local_Payment_PayPal_AdaptivePayment_ResponsePay($rawResponse);
-        }
-
+        } else 
         if (isset($rawResponse['transaction_type']) AND ($rawResponse['transaction_type'] == 'Adjustment')) {
             return new Local_Payment_PayPal_AdaptivePayment_ResponseAdjustment($rawResponse);
-        }
-
+        } else 
         if (isset($rawResponse['txn_type']) AND ($rawResponse['txn_type'] == 'web_accept')) {
             return new Local_Payment_PayPal_Support_ResponseSupport($rawResponse);
-        }
-
+        } else 
         if ($rawResponse['transaction_subject'] == '' AND $rawResponse['payment_status'] == 'Refunded') {
             return new Local_Payment_PayPal_AdaptivePayment_ResponseChargeback($rawResponse);
+        } else {
+            throw new Local_Payment_Exception('Unknown response from PayPal. Raw message:' . print_r($rawResponse, true) . "\n");
         }
-
-        throw new Local_Payment_Exception('Unknown response from PayPal. Raw message:' . print_r($rawResponse, true) . "\n");
     }
 
 }
