@@ -179,14 +179,14 @@ class Backend_MemberPayoutCliController extends Local_Controller_Action_CliAbstr
 	            echo "Result: " . print_r($result->getRawMessage());
 	            $payKey = $result->getPaymentId();
                     
-                    $successful = $this->isSuccessful($result);
+                    $successful = $this->isSuccessful($result->getRawMessage());
                     
                     if($successful) {
                         //mark payout as requested
                         $payoutTable->update(array("payment_reference_key" => $payKey, "status" => $this::$PAYOUT_STATUS_REQUESTED, "timestamp_masspay_start" => new Zend_Db_Expr('Now()')), "id = " . $payout['id']);
                     } else {
                         //mark payout as failed
-                        $payoutTable->update(array("payment_reference_key" => $payKey, "status" => $this::$PAYOUT_STATUS_PAYPAL_API_ERROR, "timestamp_masspay_start" => new Zend_Db_Expr('Now()'), "payment_raw_error" => print_r($result), "payment_status" => 'ERROR'), "id = " . $payout['id']);
+                        $payoutTable->update(array("payment_reference_key" => $payKey, "status" => $this::$PAYOUT_STATUS_PAYPAL_API_ERROR, "timestamp_masspay_start" => new Zend_Db_Expr('Now()'), "payment_raw_error" => print_r($result->getRawMessage()), "payment_status" => 'ERROR'), "id = " . $payout['id']);
                     }
             
             } else {
