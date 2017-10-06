@@ -225,11 +225,6 @@ class Backend_MemberPayoutCliController extends Local_Controller_Action_CliAbstr
             return null;
         }
 
-        if (false === $response->isSuccessful()) {
-            //throw new Zend_Controller_Action_Exception('payment failure', 500);
-            return null;
-        }
-        
         return $response;
     }
 
