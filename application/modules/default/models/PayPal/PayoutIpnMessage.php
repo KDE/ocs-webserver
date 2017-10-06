@@ -160,32 +160,32 @@ class Default_Model_PayPal_PayoutIpnMessage extends Local_Payment_PayPal_Adaptiv
     protected function _statusCompleted()
     {
         Zend_Registry::get('logger')->info(__METHOD__);
-        $this->processTransactionStatus();
+        $this->_processTransactionStatusCompleted();
     }
     protected function _statusDenied()
     {
     	Zend_Registry::get('logger')->info(__METHOD__);
-    	$this->processTransactionStatus();
+    	$this->_processTransactionStatusDenied();
     }
     protected function _statusReserved()
     {
     	Zend_Registry::get('logger')->info(__METHOD__);
-    	$this->processTransactionStatus();
+    	$this->_processTransactionStatusReserved();
     }
     protected function _statusRefunded()
     {
     	Zend_Registry::get('logger')->info(__METHOD__);
-    	$this->processTransactionStatus();
+    	$this->_processTransactionStatusRefunded();
     }
     protected function _statusPending()
     {
     	Zend_Registry::get('logger')->info(__METHOD__);
-    	$this->processTransactionStatus();
+    	$this->_processTransactionStatusPending();
     }
     protected function _statusFailed()
     {
     	Zend_Registry::get('logger')->info(__METHOD__);
-    	$this->processTransactionStatus();
+    	$this->_processTransactionStatusFailed();
     }
     
     protected function processTransactionStatus()
