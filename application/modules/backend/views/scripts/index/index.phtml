@@ -24,9 +24,10 @@
 <style type="text/css">
   table.tablestati{
     display: block;  
-    background-color: #ccc;  
-    clear: both;
+    background-color: #ccc;      
     margin-top:40px;
+    float: left;
+    margin-left: 20px;
   }
 
   table.tablestati thead td{
@@ -110,8 +111,11 @@ table.tablestati td.number{
   </div>
 
    <div id="topDownloadsPerDayTab" class="tab-pane ">        
-        <div style="float: left; display: block;clear: both">
-            <input  name="filterTopDownloadsDate" id="filterTopDownloadsDate" value="2017-09-30"></input><button class="filterTopDownloadsDate">go!</button>
+        <div>
+            <input  name="filterTopDownloadsDate" id="filterTopDownloadsDate" value="<?php echo date("Y-m-j") ?>"></input>
+            <button class="filterTopDownloadsDate">go!</button>
+            <button class="filterTopDownloadsDateClear">clear!</button>
+      
         </div>
         <div id="topDownloadsPerDayTabContainer"></div>                
   </div>
@@ -187,17 +191,21 @@ table.tablestati td.number{
             $('button.filterTopDownloadsDate').click(function() {                                                       
                     $('.topDownloadsPerDayTab').trigger('click');
                });
+            $('button.filterTopDownloadsDateClear').click(function() {                                                       
+                    $('#topDownloadsPerDayTabContainer').empty();
+               });
+
               $(".topDownloadsPerDayTab").click(function() {
-                  $('#topDownloadsPerDayTabContainer').empty();      
+                  
                    let date = $( "#filterTopDownloadsDate" ).val();               
                    $.getJSON( "/backend/index/gettopdownloadsperdate?date="+date, function( response ) {
                         let data = response.results;
-                         let table = "<table class='tablestati'>";
+                         let table = "<table class='tablestati'><thead><tr><td colspan='2'>"+date+"</td></tr><tr><td>ProjectID</td><td class='number'>CNT</td></thead>";
                          $.each( data, function( index, value ){
                                table = table+'<tr><td><a target="_blank" href="https://opendesktop.org/p/'+value.project_id+'">'+value.project_id+'</a></td><td class="number">'+value.cnt+'</td></tr>';
                          });      
                         table = table +"</table>";                                              
-                         $('#topDownloadsPerDayTabContainer').html(table);                        
+                         $('#topDownloadsPerDayTabContainer').append(table);                        
                    });  
               });
 
