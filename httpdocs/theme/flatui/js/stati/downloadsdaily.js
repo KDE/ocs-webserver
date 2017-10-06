@@ -47,7 +47,7 @@
       //x.domain(d3.extent(data, function(d) { return d.date; }));
      
      x.domain([d3.min(data, function(d) { return d.date; }), d3.max(data, function(d) { return d.date; })]);
-      y.domain([d3.min(data, function(d) { return d.price; }), d3.max(data, function(d) { return d.price; })]);
+      y.domain([0, d3.max(data, function(d) { return d.price; })]);
 
       // Nest the entries by symbol
       var dataNest = d3.nest()
