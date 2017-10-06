@@ -114,14 +114,47 @@ class Default_Model_PayPal_PayoutIpnMessage extends Local_Payment_PayPal_Adaptiv
                 
                 //No normal transaction status, so look into status_for_sender_txn
                 switch ($this->_ipnMessage->getTransactionForSenderStatus()) {
+                    case 'COMPLETED':
+                        $this->_statusCompleted();
+                        break;
+                    case 'INCOMPLETE':
+                        $this->_statusIncomplete();
+                        break;
+                    case 'CREATED':
+                        $this->_statusCreated();
+                        break;
+                    case 'DENIED':
+                        $this->_statusDenied();
+                        break;
+                    case 'REVERSED':
+                        $this->_statusReserved();
+                        break;
+                    case 'REFUNDED':
+                        $this->_statusRefunded();
+                        break;
+                    case 'FAILED':
+                        $this->_statusFailed();
+                        break;
+                    case 'PARTIALLY_REFUNDED':
+                        $this->_statusPartiallyRefunded();
+                        break;
+                    case 'ERROR':
+                        $this->_statusError();
+                        break;
+                    case 'REVERSALERROR':
+                        $this->_statusReversalError();
+                        break;
+                    case 'PROCESSING':
+                        $this->_statusProcessing();
+                        break;
                     case 'PENDING':
                         $this->_statusPending();
                         break;
                     default:
-                        throw new Local_Payment_Exception('Unknown status from PayPal: ' . $this->_ipnMessage->getStatus());
+                        throw new Local_Payment_Exception('Unknown transaction status from PayPal: TransactionStatus = ' . $this->_ipnMessage->getTransactionStatus() . ' --- TransactionForSenderStatus = ' . $this->_ipnMessage->getTransactionForSenderStatus);
                 }
                 
-                throw new Local_Payment_Exception('Unknown status from PayPal: ' . $this->_ipnMessage->getStatus());
+                throw new Local_Payment_Exception('Unknown transaction status from PayPal: TransactionStatus = ' . $this->_ipnMessage->getTransactionStatus() . ' --- TransactionForSenderStatus = ' . $this->_ipnMessage->getTransactionForSenderStatus);
         }
     }
 
