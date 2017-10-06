@@ -1402,7 +1402,7 @@ class Ocsv1Controller extends Zend_Controller_Action
     {
         $downloadItems = array();
 
-        if ($project->ppload_collection_id) {
+        if (empty($project->ppload_collection_id)) {
             return array($downloadItems, $downloads);
         }
 
