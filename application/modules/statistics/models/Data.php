@@ -54,7 +54,7 @@ class Statistics_Model_Data
     }
    
     public function getNewprojectstats(){        
-          $sql = "SELECT DATE(`created_at`) as projectdate , count(*) as daycount  FROM dwh.ods_project_v  group by  projectdate    order by projectdate desc limit 30";
+          $sql = "SELECT DATE(`created_at`) as projectdate , count(*) as daycount  FROM dwh.ods_project_v   where status>=40 group by  projectdate    order by projectdate desc limit 30";
           $result = $this->_db->fetchAll($sql);
           return $result;  
     }
@@ -111,6 +111,7 @@ class Statistics_Model_Data
             return $result;  
     }
 
+/*
     public function getDownloadsDaily($numofmonthback){
         $sql = "
                    select 
@@ -121,6 +122,30 @@ class Statistics_Model_Data
                                       where STR_TO_DATE(date_yyyymmdd,'%Y%m%d' ) >= (DATE_FORMAT(CURDATE(), '%Y-%m-01')- INTERVAL :numofmonthback MONTH)
                                       and STR_TO_DATE(date_yyyymmdd,'%Y%m%d' )< CURDATE()
                                       order by date_yyyymmdd asc
+            ";
+        $result = $this->_db->fetchAll($sql,array("numofmonthback"=>$numofmonthback));
+        return $result;  
+    }
+*/
+
+    public function getDownloadsDaily($numofmonthback){
+        $sql = "
+                   select 
+                                      SUBSTR(d.date_yyyymmdd,1,6) as symbol
+                                      ,SUBSTR(d.date_yyyymmdd,7,8)*1 as date 
+                                      ,d.count as price
+                                      from dwh.files_downloads_daily as d
+                                      where STR_TO_DATE(date_yyyymmdd,'%Y%m%d' ) >= (DATE_FORMAT(CURDATE(), '%Y-%m-01')- INTERVAL :numofmonthback MONTH)
+                                      and STR_TO_DATE(date_yyyymmdd,'%Y%m%d' )< CURDATE()
+                    union
+
+                    select 
+                     concat(SUBSTR(d.date_yyyymmdd,1,6),' payout') as symbol
+                     ,SUBSTR(d.date_yyyymmdd,7,8)*1 as date 
+                     ,d.count as price
+                     from dwh.payout_daily as d
+                     where STR_TO_DATE(date_yyyymmdd,'%Y%m%d' ) >= (DATE_FORMAT(CURDATE(), '%Y-%m-01')- INTERVAL :numofmonthback MONTH)
+
             ";
         $result = $this->_db->fetchAll($sql,array("numofmonthback"=>$numofmonthback));
         return $result;  

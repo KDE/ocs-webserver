@@ -72,8 +72,10 @@ table.tablestati td.number{
 <div class="pling-nav-tabs">
 <ul class="nav nav-tabs ">
  <li class="active"><a class="newuserprojectTab" href="#d3-line" data-toggle="tab">New Members & Projects </a></li>
- <li ><a class="downloadsdailyTab" href="#downloadsdailyTab" data-toggle="tab">Downloads daily</a></li> 
- <li ><a class="downloadsundpayoutsdailyTab" href="#downloadsundpayoutsdailyTab" data-toggle="tab">Downloads&Payouts daily</a></li> 
+ <li ><a class="downloadsdailyTab" href="#downloadsdailyTab" data-toggle="tab">Downloads&Payouts daily</a></li>
+ 
+ <li ><a class="downloadsundpayoutsdailyTab" href="#downloadsundpayoutsdailyTab" data-toggle="tab">Downloads vs Payouts daily</a></li> 
+ 
  <li ><a class="topDownloadsPerDayTab" href="#topDownloadsPerDayTab" data-toggle="tab">Top Download/Day</a></li>
  <li ><a class="payoutTab" href="#payoutTab" data-toggle="tab">Payout</a></li> 
  <li ><a class="payoutNewcomerTab" href="#payoutNewcomerTab" data-toggle="tab">Payout Newcomer</a></li> 
@@ -114,6 +116,7 @@ table.tablestati td.number{
    <div id="downloadsundpayoutsdailyTab" class="tab-pane ">               
         <div id="downloadsundpayoutsdailyTabContainer"></div>                
   </div>
+
    <div id="topDownloadsPerDayTab" class="tab-pane ">        
         <div>
             <input  name="filterTopDownloadsDate" id="filterTopDownloadsDate" value="<?php echo date("Y-m-j") ?>"></input>
@@ -157,7 +160,7 @@ table.tablestati td.number{
               
               function createMonthFilter(selectid,triggerEvent){
                   let html = '<select id="'+selectid+'" style="float: left;">';       
-                  for(i = 1; i<5; i++){
+                  for(i = 1; i<10; i++){
                     let oneMonthsAgo = moment().subtract(i, 'months');
                     if(i==1){
                           html = html +'<option selected>'+oneMonthsAgo.format('YYYYMM')+'</option>';    
@@ -200,7 +203,7 @@ table.tablestati td.number{
                $('#downloadsundpayoutsdailyTabContainer').empty();               
                $.getScript("/theme/flatui/js/stati/downloadsundpayoutsdaily.js");
            });
-
+          
 
 
         // topdownloadsperdate           
