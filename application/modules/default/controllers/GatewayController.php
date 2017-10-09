@@ -33,21 +33,27 @@ class GatewayController extends Zend_Controller_Action
     {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
-
-        // It is really important to receive the information in this way. In some cases Zend can destroy the information
-        // when parsing the data
-        $rawPostData = file_get_contents('php://input');
-        $ipnArray = $this->_parseRawMessage($rawPostData);
         
-        //Save IPN in DB
-        $ipnTable = new Default_Model_DbTable_PaypalIpn();
-        $ipnTable->addFromIpnMessage($ipnArray, $rawPostData);
+        try {
+            // It is really important to receive the information in this way. In some cases Zend can destroy the information
+            // when parsing the data
+            $rawPostData = file_get_contents('php://input');
+            $ipnArray = $this->_parseRawMessage($rawPostData);
 
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - Start Process PayPal Payout IPN - ');
-        
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - Start Process Payout IPN - ');
-        $modelPayPal = new Default_Model_PayPal_PayoutIpnMessage();
-        $modelPayPal->processIpn($rawPostData);
+            //Save IPN in DB
+            $ipnTable = new Default_Model_DbTable_PaypalIpn();
+            $ipnTable->addFromIpnMessage($ipnArray, $rawPostData);
+
+            Zend_Registry::get('logger')->info(__METHOD__ . ' - Start Process PayPal Payout IPN - ');
+
+            Zend_Registry::get('logger')->info(__METHOD__ . ' - Start Process Payout IPN - ');
+            $modelPayPal = new Default_Model_PayPal_PayoutIpnMessage();
+            $modelPayPal->processIpn($rawPostData);
+
+        } catch (Exception $exc) {
+            //Do nothing...
+            Zend_Registry::get('logger')->info(__METHOD__ . ' - Error by Processing PayPal Payout IPN - ExceptionTrace: '. $exc->getTraceAsString());
+        }
             
     }
     
