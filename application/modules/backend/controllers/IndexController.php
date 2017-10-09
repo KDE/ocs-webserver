@@ -78,6 +78,15 @@ class Backend_IndexController extends Local_Controller_Action_Backend
         $this->sendJson($modelData->getDownloadsDaily($numofmonthback));              
         
     }
+     public function getdownloadsundpayoutsdailyAction()
+    {
+
+        $this->_helper->layout->disableLayout();          
+        $yyyymm =$this->getParam('yyyymm');              
+        $modelData = new Statistics_Model_Data( Zend_Registry::get('config')->settings->dwh->toArray());
+        $this->sendJson($modelData->getDownloadsUndPayoutsDaily($yyyymm));              
+        
+    }
 
     public function gettopdownloadsperdateAction()
     {

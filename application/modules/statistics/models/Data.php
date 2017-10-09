@@ -126,6 +126,27 @@ class Statistics_Model_Data
         return $result;  
     }
 
+    public function getDownloadsUndPayoutsDaily($yyyymm){
+        $sql = "
+                   select 
+                   concat(SUBSTR(d.date_yyyymmdd,1,6),' downloads') as symbol
+                   ,SUBSTR(d.date_yyyymmdd,7,8)*1 as date 
+                   ,d.count as price
+                   from dwh.files_downloads_daily as d
+                   where SUBSTR(d.date_yyyymmdd,1,6)=:yyyymm
+                   union 
+                   select 
+                   concat(SUBSTR(d.date_yyyymmdd,1,6),' payouts') as symbol
+                   ,SUBSTR(d.date_yyyymmdd,7,8)*1 as date 
+                   ,d.count as price
+                   from dwh.payout_daily as d
+                   where SUBSTR(d.date_yyyymmdd,1,6)=:yyyymm
+
+            ";
+        $result = $this->_db->fetchAll($sql,array("yyyymm"=>$yyyymm));
+        return $result;  
+    }
+
     public function getTopDownloadsPerDate($date){
             $date_start =$date.' 00:00:00';
             $date_end =$date.' 23:59:59';           

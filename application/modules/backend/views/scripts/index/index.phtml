@@ -73,6 +73,7 @@ table.tablestati td.number{
 <ul class="nav nav-tabs ">
  <li class="active"><a class="newuserprojectTab" href="#d3-line" data-toggle="tab">New Members & Projects </a></li>
  <li ><a class="downloadsdailyTab" href="#downloadsdailyTab" data-toggle="tab">Downloads daily</a></li> 
+ <li ><a class="downloadsundpayoutsdailyTab" href="#downloadsundpayoutsdailyTab" data-toggle="tab">Downloads&Payouts daily</a></li> 
  <li ><a class="topDownloadsPerDayTab" href="#topDownloadsPerDayTab" data-toggle="tab">Top Download/Day</a></li>
  <li ><a class="payoutTab" href="#payoutTab" data-toggle="tab">Payout</a></li> 
  <li ><a class="payoutNewcomerTab" href="#payoutNewcomerTab" data-toggle="tab">Payout Newcomer</a></li> 
@@ -110,6 +111,9 @@ table.tablestati td.number{
      <div id="downloadsdailyTabContainer"></div>
   </div>
 
+   <div id="downloadsundpayoutsdailyTab" class="tab-pane ">               
+        <div id="downloadsundpayoutsdailyTabContainer"></div>                
+  </div>
    <div id="topDownloadsPerDayTab" class="tab-pane ">        
         <div>
             <input  name="filterTopDownloadsDate" id="filterTopDownloadsDate" value="<?php echo date("Y-m-j") ?>"></input>
@@ -186,27 +190,43 @@ table.tablestati td.number{
                  $.getScript("/theme/flatui/js/stati/downloadsdaily.js");               
             });
             
+           // downloads & payouts daily
+           
+           $('#downloadsundpayoutsdailyTab').prepend(createMonthFilter('selectmonthdownloadsundpayoutdaily'));
+            $('#selectmonthdownloadsundpayoutdaily').change(function() {                                     
+                  $.getScript("/theme/flatui/js/stati/downloadsundpayoutsdaily.js");               
+             });
+           $(".downloadsundpayoutsdailyTab").click(function() {
+               $('#downloadsundpayoutsdailyTabContainer').empty();               
+               $.getScript("/theme/flatui/js/stati/downloadsundpayoutsdaily.js");
+           });
+
+
+
         // topdownloadsperdate           
                
             $('button.filterTopDownloadsDate').click(function() {                                                       
-                    $('.topDownloadsPerDayTab').trigger('click');
+                    loadTopdownloadsperday();
                });
             $('button.filterTopDownloadsDateClear').click(function() {                                                       
                     $('#topDownloadsPerDayTabContainer').empty();
                });
 
-              $(".topDownloadsPerDayTab").click(function() {
-                  
-                   let date = $( "#filterTopDownloadsDate" ).val();               
-                   $.getJSON( "/backend/index/gettopdownloadsperdate?date="+date, function( response ) {
-                        let data = response.results;
-                         let table = "<table class='tablestati'><thead><tr><td colspan='2'>"+date+"</td></tr><tr><td>ProjectID</td><td class='number'>CNT</td></thead>";
-                         $.each( data, function( index, value ){
-                               table = table+'<tr><td><a target="_blank" href="https://opendesktop.org/p/'+value.project_id+'">'+value.project_id+'</a></td><td class="number">'+value.cnt+'</td></tr>';
-                         });      
-                        table = table +"</table>";                                              
-                         $('#topDownloadsPerDayTabContainer').append(table);                        
-                   });  
+            function loadTopdownloadsperday(){
+                let date = $( "#filterTopDownloadsDate" ).val();               
+                $.getJSON( "/backend/index/gettopdownloadsperdate?date="+date, function( response ) {
+                     let data = response.results;
+                      let table = "<table class='tablestati'><thead><tr><td colspan='2'>"+date+"</td></tr><tr><td>ProjectID</td><td class='number'>CNT</td></thead>";
+                      $.each( data, function( index, value ){
+                            table = table+'<tr><td><a target="_blank" href="https://opendesktop.org/p/'+value.project_id+'">'+value.project_id+'</a></td><td class="number">'+value.cnt+'</td></tr>';
+                      });      
+                     table = table +"</table>";                                              
+                      $('#topDownloadsPerDayTabContainer').append(table);                        
+                });  
+            }
+              $(".topDownloadsPerDayTab").click(function() {                  
+                   $('#topDownloadsPerDayTabContainer').empty();
+                  loadTopdownloadsperday();
               });
 
             $('#payoutTab').prepend(createMonthFilter('selectmonth'));
