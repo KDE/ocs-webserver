@@ -145,6 +145,7 @@ class Statistics_Model_Data
                      ,d.count as price
                      from dwh.payout_daily as d
                      where STR_TO_DATE(date_yyyymmdd,'%Y%m%d' ) >= (DATE_FORMAT(CURDATE(), '%Y-%m-01')- INTERVAL :numofmonthback MONTH)
+                      and STR_TO_DATE(date_yyyymmdd,'%Y%m%d' )< CURDATE()
 
             ";
         $result = $this->_db->fetchAll($sql,array("numofmonthback"=>$numofmonthback));
