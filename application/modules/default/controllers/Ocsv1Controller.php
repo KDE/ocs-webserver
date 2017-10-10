@@ -234,10 +234,11 @@ class Ocsv1Controller extends Zend_Controller_Action
         $expires = gmdate("D, d M Y H:i:s", time() + $duration) . " GMT";
 
         $this->getResponse()
-             ->setHeader('X-FRAME-OPTIONS', 'SAMEORIGIN', true)//            ->setHeader('Last-Modified', $modifiedTime, true)
-             ->setHeader('Expires', $expires, true)->setHeader('Pragma', 'cache', true)
-             ->setHeader('Cache-Control', 'max-age=1800, public', true)
-        ;
+            ->setHeader('X-FRAME-OPTIONS', 'SAMEORIGIN', true)
+//            ->setHeader('Last-Modified', $modifiedTime, true)
+            ->setHeader('Expires', $expires, true)
+            ->setHeader('Pragma', 'cache', true)
+            ->setHeader('Cache-Control', 'max-age=1800, public', true);
     }
 
     public function indexAction()
