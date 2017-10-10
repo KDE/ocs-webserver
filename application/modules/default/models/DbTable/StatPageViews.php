@@ -31,6 +31,10 @@ class Default_Model_DbTable_StatPageViews extends Zend_Db_Table_Abstract
             Zend_Registry::get('logger')->info(__METHOD__ . ' - search bot detected. Counting page view omitted.');
             return;
         }
+        if (false == Zend_Registry::get('config')->settings->savePageView) {
+            Zend_Registry::get('logger')->info(__METHOD__ . ' - config savePageView false. Counting page view omitted.');
+            return;
+        }
 
         $this->_db->beginTransaction();
 

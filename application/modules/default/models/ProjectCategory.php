@@ -77,8 +77,7 @@ class Default_Model_ProjectCategory
             if (count($rows) < 1) {
                 $modelCategories = new Default_Model_DbTable_ProjectCategory();
                 $root = $modelCategories->fetchRoot();
-                $rows = $modelCategories->fetchImmediateChildrenIds($root['project_category_id'],
-                    $modelCategories::ORDERED_TITLE);
+                $rows = $modelCategories->fetchImmediateChildrenIds($root['project_category_id'], $modelCategories::ORDERED_TITLE);
                 $tree = $this->buildTree($rows, null, null);
             } else {
                 $tree = $this->buildTree($rows, null, (int)$store_id);
@@ -96,12 +95,10 @@ class Default_Model_ProjectCategory
             $list = array($list);
         }
         $modelCategories = new Default_Model_DbTable_ProjectCategory();
-//        $modelProject = new Default_Model_Project();
         $result = array();
         foreach ($list as $cat_id) {
             $currentCategory = $modelCategories->fetchElement($cat_id);
             $countProduct = $this->fetchProductCount($cat_id, $store_id);
-//            $countProduct = $modelProject->countProductsInCategory($cat_id, true, $store_id);
 
             $result_element = array(
                 'id'            => $cat_id,
@@ -121,13 +118,36 @@ class Default_Model_ProjectCategory
                 $result_element['has_children'] = true;
                 $ids = $modelCategories->fetchImmediateChildrenIds($currentCategory['project_category_id'],
                     $modelCategories::ORDERED_TITLE);
-                $result_element['children'] =
-                    $this->buildTree($ids, $currentCategory['project_category_id'], $store_id);
+                $result_element['children'] = $this->buildTree($ids, $currentCategory['project_category_id'], $store_id);
             }
             $result[] = $result_element;
         }
 
         return $result;
+    }
+
+    private function fetchProductCount($cat_id, $store_id = null)
+    {
+        if (isset($store_id)) {
+            $configurations = Zend_Registry::get('application_store_config_id_list');
+            $store_config = isset($configurations[$store_id]) ? $configurations[$store_id] : null;
+        } else {
+            $store_config = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
+        }
+        $storePackageTypeIds = (false === empty($store_config['package_type'])) ? $store_config['package_type'] : null;
+
+        if ($storePackageTypeIds) {
+            $sql =
+                "SELECT count_product FROM stat_cat_prod_count WHERE project_category_id = :cat_id AND package_type_id = :package_id";
+            $bind = array('cat_id' => $cat_id, 'package_id' => $storePackageTypeIds);
+        } else {
+            $sql = "SELECT count_product FROM stat_cat_prod_count WHERE project_category_id = :cat_id AND package_type_id IS NULL";
+            $bind = array('cat_id' => $cat_id);
+        }
+
+        $result = $this->_dataTable->getAdapter()->fetchRow($sql, $bind);
+
+        return (int)$result['count_product'];
     }
 
     public function fetchCategoryTreeCurrentStore($clearCache = false)
@@ -155,30 +175,6 @@ class Default_Model_ProjectCategory
     public static function fetchCatIdsForCurrentStore()
     {
         return Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
-    }
-
-    private function fetchProductCount($cat_id, $store_id = null)
-    {
-        if (isset($store_id)) {
-            $configurations = Zend_Registry::get('application_store_config_id_list');
-            $store_config = isset($configurations[$store_id]) ? $configurations[$store_id] : null;
-        } else {
-            $store_config = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
-        }
-        $storePackageTypeIds = (false === empty($store_config['package_type'])) ? $store_config['package_type'] : null;
-
-        if ($storePackageTypeIds) {
-            $sql =
-                "SELECT count_product FROM stat_cat_prod_count WHERE project_category_id = :cat_id AND package_type_id = :package_id";
-            $bind = array('cat_id' => $cat_id, 'package_id' => $storePackageTypeIds);
-        } else {
-            $sql = "SELECT count_product FROM stat_cat_prod_count WHERE project_category_id = :cat_id AND package_type_id IS NULL";
-            $bind = array('cat_id' => $cat_id);
-        }
-
-        $result = $this->_dataTable->getAdapter()->fetchRow($sql, $bind);
-
-        return (int)$result['count_product'];
     }
 
 }
