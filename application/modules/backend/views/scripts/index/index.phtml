@@ -172,6 +172,19 @@ table.tablestati td.number{
                   return html;
               }
              
+              function createMonthFilterWithCurrent(selectid,triggerEvent){
+                  let html = '<select id="'+selectid+'" style="float: left;">';       
+                  for(i = 0; i<10; i++){
+                    let oneMonthsAgo = moment().subtract(i, 'months');
+                    if(i==0){
+                          html = html +'<option selected>'+oneMonthsAgo.format('YYYYMM')+'</option>';    
+                    }else{
+                          html = html +'<option>'+oneMonthsAgo.format('YYYYMM')+'</option>';
+                    }
+                  }                          
+                  html = html +'</select>';                                                    
+                  return html;
+              }
 
              $.ajaxSetup ({
                  // Disable caching of AJAX responses
@@ -195,7 +208,7 @@ table.tablestati td.number{
             
            // downloads & payouts daily
            
-           $('#downloadsundpayoutsdailyTab').prepend(createMonthFilter('selectmonthdownloadsundpayoutdaily'));
+           $('#downloadsundpayoutsdailyTab').prepend(createMonthFilterWithCurrent('selectmonthdownloadsundpayoutdaily'));
             $('#selectmonthdownloadsundpayoutdaily').change(function() {                                     
                   $.getScript("/theme/flatui/js/stati/downloadsundpayoutsdaily.js");               
              });
