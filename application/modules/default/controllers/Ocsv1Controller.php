@@ -1267,13 +1267,6 @@ class Ocsv1Controller extends Zend_Controller_Action
 
         Zend_Registry::get('logger')->info(__METHOD__ . ' - OCS-Select: ' . $tableProjectSelect->__toString());
 
-        //$tableProjectSelect->reset(Zend_Db_Select::COLUMNS)->columns(array('counter' => new Zend_Db_Expr('count(*)')), 'project')
-        //                   ->reset(Zend_Db_Select::GROUP)->reset(Zend_Db_Select::ORDER)
-        //;
-        //$tableProjectSelect->limit(0, 0);
-        //
-        //$count = $tableProject->fetchRow($tableProjectSelect);
-
         if ($this->_format == 'json') {
             $response = array(
                 'status'       => 'ok',
