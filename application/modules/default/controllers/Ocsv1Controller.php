@@ -1046,6 +1046,7 @@ class Ocsv1Controller extends Zend_Controller_Action
             $tableProjectSelect->from(array('project' => 'stat_projects'));
         }
         $tableProjectSelect->setIntegrityCheck(false)->columns(array(
+                '*',
                 'member_username' => 'username',
                 'category_title'  => 'cat_title',
                 'xdg_type'        => 'cat_xdg_type',
@@ -1266,7 +1267,7 @@ class Ocsv1Controller extends Zend_Controller_Action
         $projects = $tableProject->fetchAll($tableProjectSelect->limit($limit, $offset));
         $count = $tableProject->getAdapter()->fetchRow('select FOUND_ROWS() AS counter');
 
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - OCS-Select: ' . $tableProjectSelect->__toString());
+        //Zend_Registry::get('logger')->info(__METHOD__ . ' - OCS-Select: ' . $tableProjectSelect->__toString());
 
         if ($this->_format == 'json') {
             $response = array(
