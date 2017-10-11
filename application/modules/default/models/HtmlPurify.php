@@ -51,10 +51,6 @@ class Default_Model_HtmlPurify
     public static function getPurifier($schema = self::ALLOW_NOTHING)
     {
         include_once APPLICATION_LIB . '/HTMLPurifier.safe-includes.php';
-        /** @var Zend_Cache_Core $cache */
-        $cache = Zend_Registry::get('cache');
-        $cache_name = isset($schema) ? 'html_purifier_' . $schema : 'html_purifier';
-        //        if (false == ($purifier = $cache->load($cache_name))) {
         $config = HTMLPurifier_Config::createDefault();
 
         switch ($schema) {
@@ -82,9 +78,6 @@ class Default_Model_HtmlPurify
         $config->set('Cache.SerializerPath', APPLICATION_CACHE);
         //$config->set('AutoFormat.AutoParagraph', true);
         $purifier = new HTMLPurifier($config);
-        $cache->save($purifier, $cache_name);
-
-        //        }
 
         return $purifier;
     }
