@@ -958,17 +958,17 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 )
             )
         );
-        $router->addRoute(
-            'ocs_v1_content_data',
-            new Zend_Controller_Router_Route(
-                '/ocs/v1/content/data',
-                array(
-                    'module'     => 'default',
-                    'controller' => 'ocsv1',
-                    'action'     => 'contentdata'
-                )
-            )
-        );
+        //$router->addRoute(
+        //    'ocs_v1_content_data',
+        //    new Zend_Controller_Router_Route(
+        //        '/ocs/v1/content/data',
+        //        array(
+        //            'module'     => 'default',
+        //            'controller' => 'ocsv1',
+        //            'action'     => 'contentdata'
+        //        )
+        //    )
+        //);
         $router->addRoute(
             'ocs_v1_content_data_contentid',
             new Zend_Controller_Router_Route(
@@ -976,7 +976,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 array(
                     'module'     => 'default',
                     'controller' => 'ocsv1',
-                    'action'     => 'contentdata'
+                    'action'     => 'contentdata',
+                    'contentid'  => null
                 )
             )
         );

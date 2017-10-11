@@ -860,7 +860,7 @@ class Ocsv1Controller extends Zend_Controller_Action
         );
 
         // Specific content data
-        $requestedId = isset($this->_params['contentid']) ? (int)$this->_params['contentid'] : null;
+        $requestedId = (int)$this->getParam('contentid') ? (int)$this->getParam('contentid') : null;
         if ($requestedId) {
             $response = $this->fetchContent($requestedId, $previewPicSize, $smallPreviewPicSize, $pploadApi);
             $this->_sendResponse($response, $this->_format);
@@ -898,13 +898,13 @@ class Ocsv1Controller extends Zend_Controller_Action
 
         $project = $tableProject->fetchRow($tableProjectSelect->where('project.project_id = ?', $contentId));
 
-        $project->title = Default_Model_HtmlPurify::purify($project->title);
-        $project->description = Default_Model_BBCode::renderHtml(Default_Model_HtmlPurify::purify($project->description));
-        $project->version = Default_Model_HtmlPurify::purify($project->version);
-
         if (!$project) {
             $this->_sendErrorResponse(101, 'content not found');
         }
+
+        $project->title = Default_Model_HtmlPurify::purify($project->title);
+        $project->description = Default_Model_BBCode::renderHtml(Default_Model_HtmlPurify::purify($project->description));
+        $project->version = Default_Model_HtmlPurify::purify($project->version);
 
         $categoryXdgType = '';
         if (!empty($project->cat_xdg_type)) {
