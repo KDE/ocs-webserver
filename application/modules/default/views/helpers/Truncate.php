@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -21,17 +22,19 @@
  **/
 class Default_View_Helper_Truncate extends Zend_View_Helper_Abstract
 {
+
     /**
      * Truncates text.
      *
      * Cuts a string to the length of $length and replaces the last characters
      * with the ending if the text is longer than length.
      *
-     * @param string $text String to truncate.
-     * @param integer $length Length of returned string, including ellipsis.
-     * @param string $ending Ending to be appended to the trimmed string.
-     * @param boolean $exact If false, $text will not be cut mid-word
+     * @param string  $text         String to truncate.
+     * @param integer $length       Length of returned string, including ellipsis.
+     * @param string  $ending       Ending to be appended to the trimmed string.
+     * @param boolean $exact        If false, $text will not be cut mid-word
      * @param boolean $considerHtml If true, HTML tags would be handled correctly
+     *
      * @return string Trimmed string.
      */
     public function truncate($text, $length = 150, $ending = '...', $exact = false, $considerHtml = false)
@@ -51,7 +54,6 @@ class Default_View_Helper_Truncate extends Zend_View_Helper_Abstract
 
             preg_match_all('/(<.+?>)?([^<>]*)/s', $text, $lines, PREG_SET_ORDER);
 
-
             foreach ($lines as $line_matchings) {
                 if (!empty($line_matchings[1])) {
                     if (preg_match('/^<(s*.+?\/s*|s*(img|br|input|hr|area|base|basefont|col|frame|isindex|link|meta|param)(s.+?)?)>$/is', $line_matchings[1])) {
@@ -69,7 +71,7 @@ class Default_View_Helper_Truncate extends Zend_View_Helper_Abstract
                 if ($total_length + $content_length > $length) {
                     $left = $length - $total_length;
                     $entities_length = 0;
-                    if (preg_match_all('/&[0-9a-z]{2,8};|&#[0-9]{1,7};|&#x[0-9a-f]{1,6};/i', $line_matchings[2], $entities, PREG_OFFSET_CAPTURE)) {
+                    if (preg_match_all('/&[0-9a-z]{2,8};|&#[0-9]{1,7};|&#x[0-9a-f]{1,6};/i', $line_matchings[2], $entities,PREG_OFFSET_CAPTURE)) {
                         foreach ($entities[0] as $entity) {
                             if ($entity[1] + 1 - $entities_length <= $left) {
                                 $left--;

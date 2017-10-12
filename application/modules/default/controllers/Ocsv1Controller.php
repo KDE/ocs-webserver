@@ -234,11 +234,11 @@ class Ocsv1Controller extends Zend_Controller_Action
         $expires = gmdate("D, d M Y H:i:s", time() + $duration) . " GMT";
 
         $this->getResponse()
-            ->setHeader('X-FRAME-OPTIONS', 'SAMEORIGIN', true)
-//            ->setHeader('Last-Modified', $modifiedTime, true)
-            ->setHeader('Expires', $expires, true)
-            ->setHeader('Pragma', 'cache', true)
-            ->setHeader('Cache-Control', 'max-age=1800, public', true);
+             ->setHeader('X-FRAME-OPTIONS', 'SAMEORIGIN', true)
+//             ->setHeader('Last-Modified', $modifiedTime, true)
+             ->setHeader('Expires', $expires, true)->setHeader('Pragma', 'cache', true)
+             ->setHeader('Cache-Control', 'max-age=1800, public', true)
+        ;
     }
 
     public function indexAction()
@@ -263,6 +263,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                 )
             );
         }
+
         $this->_sendResponse($response, $this->_format);
     }
 
@@ -280,6 +281,7 @@ class Ocsv1Controller extends Zend_Controller_Action
             header('Content-Type: application/xml; charset=UTF-8');
             echo $this->_convertXmlDom($response, $xmlRootTag)->saveXML();
         }
+
         exit;
     }
 
@@ -351,6 +353,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                 )
             )
         );
+
         $this->_sendResponse($response, 'xml', 'providers');
     }
 
@@ -385,6 +388,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                 )
             );
         }
+
         $this->_sendResponse($response, $this->_format);
     }
 
@@ -434,6 +438,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                 )
             );
         }
+
         $this->_sendResponse($response, $this->_format);
     }
 
@@ -612,6 +617,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                     )
                 );
             }
+
             $this->_sendResponse($response, $this->_format);
         } // Find a specific list of persons
         else {
@@ -756,6 +762,7 @@ class Ocsv1Controller extends Zend_Controller_Action
             } else {
                 $response['data'] = array('person' => $personsList);
             }
+
             $this->_sendResponse($response, $this->_format);
         }
     }
@@ -763,10 +770,17 @@ class Ocsv1Controller extends Zend_Controller_Action
     public function contentcategoriesAction()
     {
         if (!$this->_authenticateUser()) {
-        //    $this->_sendErrorResponse(999, '');
+            //    $this->_sendErrorResponse(999, '');
         }
 
-        $categoriesList = $this->_buildCategories();
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cacheName = 'api_content_categories';
+
+        if (false == ($categoriesList = $cache->load($cacheName))) {
+            $categoriesList = $this->_buildCategories();
+            $cache->save($categoriesList, $cacheName, array(), 1800);
+        }
 
         if ($this->_format == 'json') {
             $response = array(
@@ -793,6 +807,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                 $response['data'] = array('category' => $categoriesList);
             }
         }
+
         $this->_sendResponse($response, $this->_format);
     }
 
@@ -819,9 +834,7 @@ class Ocsv1Controller extends Zend_Controller_Action
             } else {
                 $result[] = array(
                     'id'           => array('@text' => $element['id']),
-                    'name'         => array(
-                        '@text' => (false === empty($element['name_legacy'])) ? $element['name_legacy'] : $element['title']
-                    ),
+                    'name'         => array('@text' => (false === empty($element['name_legacy'])) ? $element['name_legacy'] : $element['title']),
                     'display_name' => array('@text' => $element['title']),
                     'parent_id'    => array('@text' => (false === empty($element['parent_id'])) ? $element['parent_id'] : ''),
                     'xdg_type'     => array('@text' => (false === empty($element['xdg_type'])) ? $element['xdg_type'] : '')
@@ -838,11 +851,8 @@ class Ocsv1Controller extends Zend_Controller_Action
 
     public function contentdataAction()
     {
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . print_r(func_get_args(), true));
-        Zend_Registry::get('logger')->debug('URL: ' . $_SERVER["REQUEST_URI"]);
-
         if (!$this->_authenticateUser()) {
-        //    $this->_sendErrorResponse(999, '');
+            //    $this->_sendErrorResponse(999, '');
         }
 
         $pploadApi = new Ppload_Api(array(
@@ -863,10 +873,12 @@ class Ocsv1Controller extends Zend_Controller_Action
         $requestedId = (int)$this->getParam('contentid') ? (int)$this->getParam('contentid') : null;
         if ($requestedId) {
             $response = $this->fetchContent($requestedId, $previewPicSize, $smallPreviewPicSize, $pploadApi);
+
             $this->_sendResponse($response, $this->_format);
         } // Gets a list of a specific set of contents
         else {
             $response = $this->fetchCategoryContent($previewPicSize, $smallPreviewPicSize, $pploadApi);
+
             $this->_sendResponse($response, $this->_format);
         }
     }
@@ -1025,7 +1037,7 @@ class Ocsv1Controller extends Zend_Controller_Action
             );
         }
 
-        $cache->save($response, $cacheName, array(), 120);
+        $cache->save($response, $cacheName);
 
         return $response;
     }
@@ -1046,12 +1058,12 @@ class Ocsv1Controller extends Zend_Controller_Action
             $tableProjectSelect->from(array('project' => 'stat_projects'));
         }
         $tableProjectSelect->setIntegrityCheck(false)->columns(array(
-                '*',
-                'member_username' => 'username',
-                'category_title'  => 'cat_title',
-                'xdg_type'        => 'cat_xdg_type',
-                'name_legacy'     => 'cat_name_legacy'
-            ))->where('project.status = ?', Default_Model_Project::PROJECT_ACTIVE)->where('project.ppload_collection_id IS NOT NULL')
+            '*',
+            'member_username' => 'username',
+            'category_title'  => 'cat_title',
+            'xdg_type'        => 'cat_xdg_type',
+            'name_legacy'     => 'cat_name_legacy'
+        ))->where('project.status = ?', Default_Model_Project::PROJECT_ACTIVE)->where('project.ppload_collection_id IS NOT NULL')
         ;
 
         return $tableProjectSelect;
@@ -1093,9 +1105,66 @@ class Ocsv1Controller extends Zend_Controller_Action
             }
         }
 
-        $cache->save(array($previewPics, $smallPreviewPics), $cacheName, array(), 120);
+        $cache->save(array($previewPics, $smallPreviewPics), $cacheName);
 
         return array($previewPics, $smallPreviewPics);
+    }
+
+    /**
+     * @param Zend_Db_Table_Row_Abstract $project
+     * @param Ppload_Api                 $pploadApi
+     * @param int                        $downloads
+     *
+     * @return array
+     */
+    protected function getPPLoadInfo($project, $pploadApi, $downloads)
+    {
+        $downloadItems = array();
+
+        if (empty($project->ppload_collection_id)) {
+            return array($downloadItems, $downloads);
+        }
+
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cacheName = 'api_ppload_collection_by_id_' . $project->ppload_collection_id;
+
+        if (($pploadInfo = $cache->load($cacheName))) {
+            return $pploadInfo;
+        }
+
+        $filesRequest = array(
+            'collection_id'     => ltrim($project->ppload_collection_id, '!'),
+            'ocs_compatibility' => 'compatible',
+            'perpage'           => 100
+        );
+
+        $filesResponse = $pploadApi->getFiles($filesRequest);
+        if (isset($filesResponse->status) && $filesResponse->status == 'success') {
+            $i = 1;
+            foreach ($filesResponse->files as $file) {
+                $downloads += (int)$file->downloaded_count;
+                $tags = $this->_parseFileTags($file->tags);
+                $downloadLink = PPLOAD_API_URI . 'files/download/' . 'id/' . $file->id . '/' . $file->name;
+                $downloadItems['downloadway' . $i] = 1;
+                $downloadItems['downloadtype' . $i] = '';
+                $downloadItems['downloadprice' . $i] = '0';
+                $downloadItems['downloadlink' . $i] = $downloadLink;
+                $downloadItems['downloadname' . $i] = $file->name;
+                $downloadItems['downloadsize' . $i] = round($file->size / 1024);
+                $downloadItems['downloadgpgfingerprint' . $i] = '';
+                $downloadItems['downloadgpgsignature' . $i] = '';
+                $downloadItems['downloadpackagename' . $i] = '';
+                $downloadItems['downloadrepository' . $i] = '';
+                $downloadItems['download_package_type' . $i] = $tags['packagetypeid'];
+                $downloadItems['download_package_arch' . $i] = $tags['packagearch'];
+                $i++;
+            }
+        }
+
+        $cache->save(array($downloadItems, $downloads), $cacheName);
+
+        return array($downloadItems, $downloads);
     }
 
     /**
@@ -1163,16 +1232,6 @@ class Ocsv1Controller extends Zend_Controller_Action
 
             $modelProjectCategories = new Default_Model_DbTable_ProjectCategory();
             $allCategories = array_merge($catList, $modelProjectCategories->fetchChildIds($catList));
-            //$allCategories = array();
-            //foreach ($catList as $catId) {
-            //    $allCategories[] = $catId;
-            //    $childElements = $modelProjectCategories->fetchChildElements($catId);
-            //    $childIds = array();
-            //    foreach ($childElements as $child) {
-            //        $childIds[] = $child['project_category_id'];
-            //    }
-            //    $allCategories = array_merge($allCategories, $childIds);
-            //}
             $tableProjectSelect->where('project.project_category_id IN (?)', $allCategories);
         }
 
@@ -1200,18 +1259,14 @@ class Ocsv1Controller extends Zend_Controller_Action
             }
         }
 
+        $hasSearchPart = false;
         if (!empty($this->_params['search'])) {
-            //$isSearchable = false;
             foreach (explode(' ', $this->_params['search']) as $keyword) {
                 if ($keyword && strlen($keyword) > 2) {
                     $tableProjectSelect->where('project.title LIKE ? OR project.description LIKE ?', "%$keyword%");
-                    //$isSearchable = true;
+                    $hasSearchPart = true;
                 }
             }
-            //$keyword = $this->_params['search'];
-            //if (!$isSearchable && $keyword && strlen($keyword) > 2) {
-            //    $tableProjectSelect->where('project.title LIKE ?' . ' OR project.description LIKE ?', "%$keyword%");
-            //}
         }
 
         if (!empty($this->_params['user'])) {
@@ -1264,10 +1319,10 @@ class Ocsv1Controller extends Zend_Controller_Action
             $offset = $limit * $this->_params['page'];
         }
 
-        $projects = $tableProject->fetchAll($tableProjectSelect->limit($limit, $offset));
-        $count = $tableProject->getAdapter()->fetchRow('select FOUND_ROWS() AS counter');
+        $tableProjectSelect->limit($limit, $offset);
 
-        //Zend_Registry::get('logger')->info(__METHOD__ . ' - OCS-Select: ' . $tableProjectSelect->__toString());
+        $projects = $tableProject->fetchAll($tableProjectSelect);
+        $count = $tableProject->getAdapter()->fetchRow('select FOUND_ROWS() AS counter');
 
         if ($this->_format == 'json') {
             $response = array(
@@ -1295,14 +1350,45 @@ class Ocsv1Controller extends Zend_Controller_Action
             return $response;
         }
 
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cacheName = 'api_fetch_category_' . md5($tableProjectSelect->__toString());
+        $contentsList = false;
+
+        if (false === $hasSearchPart) {
+            $contentsList = $cache->load($cacheName);
+        }
+
+        if (false == $contentsList) {
+            $contentsList = $this->_buildContentList($previewPicSize, $smallPreviewPicSize, $pploadApi, $projects);
+            if (false === $hasSearchPart) {
+                $cache->save($contentsList, $cacheName, array(), 1800);
+            }
+        }
+
+        if ($this->_format == 'json') {
+            $response['data'] = $contentsList;
+        } else {
+            $response['data'] = array('content' => $contentsList);
+        }
+
+        return $response;
+    }
+
+    /**
+     * @param $previewPicSize
+     * @param $smallPreviewPicSize
+     * @param $pploadApi
+     * @param $projects
+     *
+     * @return array
+     */
+    protected function _buildContentList($previewPicSize, $smallPreviewPicSize, $pploadApi, $projects)
+    {
         $contentsList = array();
         $helperTruncate = new Default_View_Helper_Truncate();
         foreach ($projects as $project) {
-            $project->title = Default_Model_HtmlPurify::purify($project->title);
-            $project->description =
-                $helperTruncate->truncate(Default_Model_BBCode::renderHtml(Default_Model_HtmlPurify::purify($project->description)),
-                    300);
-            $project->version = Default_Model_HtmlPurify::purify($project->version);
+            $project->description = $helperTruncate->truncate(Default_Model_BBCode::renderHtml(Default_Model_HtmlPurify::purify($project->description)),300);
 
             $categoryXdgType = '';
             if (!empty($project->xdg_type)) {
@@ -1377,71 +1463,7 @@ class Ocsv1Controller extends Zend_Controller_Action
             }
         }
 
-        if ($this->_format == 'json') {
-            $response['data'] = $contentsList;
-        } else {
-            $response['data'] = array('content' => $contentsList);
-        }
-
-        return $response;
-    }
-
-    /**
-     * @param Zend_Db_Table_Row_Abstract $project
-     * @param Ppload_Api                 $pploadApi
-     * @param int                        $downloads
-     *
-     * @return array
-     */
-    protected function getPPLoadInfo($project, $pploadApi, $downloads)
-    {
-        $downloadItems = array();
-
-        if (empty($project->ppload_collection_id)) {
-            return array($downloadItems, $downloads);
-        }
-
-        /** @var Zend_Cache_Core $cache */
-        $cache = Zend_Registry::get('cache');
-        $cacheName = 'api_ppload_collection_by_id_' . $project->ppload_collection_id;
-
-        if (($pploadInfo = $cache->load($cacheName))) {
-            return $pploadInfo;
-        }
-
-        $filesRequest = array(
-            'collection_id'     => ltrim($project->ppload_collection_id, '!'),
-            'ocs_compatibility' => 'compatible',
-            'perpage'           => 100
-        );
-
-        $filesResponse = $pploadApi->getFiles($filesRequest);
-        if (isset($filesResponse->status) && $filesResponse->status == 'success')
-        {
-            $i = 1;
-            foreach ($filesResponse->files as $file) {
-                $downloads += (int)$file->downloaded_count;
-                $tags = $this->_parseFileTags($file->tags);
-                $downloadLink = PPLOAD_API_URI . 'files/download/' . 'id/' . $file->id . '/' . $file->name;
-                $downloadItems['downloadway' . $i] = 1;
-                $downloadItems['downloadtype' . $i] = '';
-                $downloadItems['downloadprice' . $i] = '0';
-                $downloadItems['downloadlink' . $i] = $downloadLink;
-                $downloadItems['downloadname' . $i] = $file->name;
-                $downloadItems['downloadsize' . $i] = round($file->size / 1024);
-                $downloadItems['downloadgpgfingerprint' . $i] = '';
-                $downloadItems['downloadgpgsignature' . $i] = '';
-                $downloadItems['downloadpackagename' . $i] = '';
-                $downloadItems['downloadrepository' . $i] = '';
-                $downloadItems['download_package_type' . $i] = $tags['packagetypeid'];
-                $downloadItems['download_package_arch' . $i] = $tags['packagearch'];
-                $i++;
-            }
-        }
-
-        $cache->save(array($downloadItems, $downloads), $cacheName, array(), 120);
-
-        return array($downloadItems, $downloads);
+        return $contentsList;
     }
 
     public function contentdownloadAction()
@@ -1461,8 +1483,10 @@ class Ocsv1Controller extends Zend_Controller_Action
 
         if ($this->getParam('contentid')) {
             $tableProject = new Default_Model_Project();
-            $project = $tableProject->fetchRow($tableProject->select()->where('project_id = ?', $this->getParam('contentid'))
-                                                            ->where('status = ?', Default_Model_Project::PROJECT_ACTIVE));
+            $project = $tableProject->fetchRow(
+                $tableProject->select()
+                             ->where('project_id = ?', $this->getParam('contentid'))
+                             ->where('status = ?', Default_Model_Project::PROJECT_ACTIVE));
         }
 
         if (!$project) {
@@ -1536,6 +1560,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                 )
             );
         }
+
         $this->_sendResponse($response, $this->_format);
     }
 
@@ -1549,7 +1574,8 @@ class Ocsv1Controller extends Zend_Controller_Action
 
         if ($this->getParam('contentid')) {
             $tableProject = new Default_Model_Project();
-            $project = $tableProject->fetchRow($tableProject->select()->where('project_id = ?', $this->getParam('contentid'))
+            $project = $tableProject->fetchRow($tableProject->select()
+                                                            ->where('project_id = ?', $this->getParam('contentid'))
                                                             ->where('status = ?', Default_Model_Project::PROJECT_ACTIVE));
         }
 
