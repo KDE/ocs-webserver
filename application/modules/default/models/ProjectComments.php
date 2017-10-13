@@ -309,4 +309,43 @@ class Default_Model_ProjectComments
         $this->_dataTable->getAdapter()->query($sql, array('projectId' => $project_id))->execute();
     }
 
+    public function getCommentsHierarchic($project_id)
+    {
+        $rootElements = $this->getRootCommentsForProject($project_id);
+        $returnValue = array();
+        foreach ($rootElements as $parentComment) {
+            $childs = $this->getChildCommentsHierarchic($parentComment);
+            if (0 == count($childs)) {
+                $parentComment['childcount'] = 0;
+            } else {
+                $parentComment['childcount'] = count($childs);
+                $parentComment['children'] = $childs;
+            }
+            $returnValue[] = $parentComment;
+        }
+
+        return new Zend_Paginator(new Zend_Paginator_Adapter_Array($returnValue));
+    }
+
+    protected function getChildCommentsHierarchic($parentComment)
+    {
+        $childs = $this->getChildCommentsForId($parentComment['comment_id']);
+        if (0 == count($childs)) {
+            return array();
+        }
+        $returnValue = array();
+        foreach ($childs as $child) {
+            $subChilds = $this->getChildCommentsHierarchic($child);
+            if (0 == count($subChilds)) {
+                $child['childcount'] = 0;
+            } else {
+                $child['childcount'] = count($subChilds);
+                $child['children'] = $subChilds;
+            }
+            $returnValue[] = $child;
+        }
+
+        return $returnValue;
+    }
+
 }

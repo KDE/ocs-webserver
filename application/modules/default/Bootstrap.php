@@ -958,17 +958,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 )
             )
         );
-        //$router->addRoute(
-        //    'ocs_v1_content_data',
-        //    new Zend_Controller_Router_Route(
-        //        '/ocs/v1/content/data',
-        //        array(
-        //            'module'     => 'default',
-        //            'controller' => 'ocsv1',
-        //            'action'     => 'contentdata'
-        //        )
-        //    )
-        //);
         $router->addRoute(
             'ocs_v1_content_data_contentid',
             new Zend_Controller_Router_Route(
@@ -1003,6 +992,18 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 )
             )
         );
+        $router->addRoute('ocs_v1_comments',
+            new Zend_Controller_Router_Route(
+                '/ocs/v1/comments/data/:comment_type/:content_id/:second_id',
+                array(
+                    'module'       => 'default',
+                    'controller'   => 'ocsv1',
+                    'action'       => 'comments',
+                    'comment_type' => -1,
+                    'content_id'   => null,
+                    'second_id'    => null
+                ))
+            );
 
       
         // embed 
