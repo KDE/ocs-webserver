@@ -94,6 +94,11 @@
 class Ocsv1Controller extends Zend_Controller_Action
 {
 
+    const COMMENT_TYPE_CONTENT = 1;
+    const COMMENT_TYPE_FORUM = 4;
+    const COMMENT_TYPE_KNOWLEDGE = 7;
+    const COMMENT_TYPE_EVENT = 8;
+
     protected $_authData = null;
 
     protected $_uriScheme = 'https';
@@ -1064,7 +1069,8 @@ class Ocsv1Controller extends Zend_Controller_Action
             'category_title'  => 'cat_title',
             'xdg_type'        => 'cat_xdg_type',
             'name_legacy'     => 'cat_name_legacy'
-        ))->where('project.status = ?', Default_Model_Project::PROJECT_ACTIVE)->where('project.ppload_collection_id IS NOT NULL')
+        ))->where('project.status = ?', Default_Model_Project::PROJECT_ACTIVE)
+          ->where('project.ppload_collection_id IS NOT NULL')
         ;
 
         return $tableProjectSelect;
@@ -1678,6 +1684,105 @@ class Ocsv1Controller extends Zend_Controller_Action
         }
 
         return $categoriesList;
+    }
+
+    public function commentsAction()
+    {
+        if ($this->_format == 'json') {
+            $response = array(
+                'status'     => 'ok',
+                'statuscode' => 100,
+                'message'    => '',
+                'data'       => array()
+            );
+        } else {
+            $response = array(
+                'meta' => array(
+                    'status'     => array('@text' => 'ok'),
+                    'statuscode' => array('@text' => 100),
+                    'message'    => array('@text' => ''),
+                ),
+                'data' => array()
+            );
+        }
+
+        $commentType = (int)$this->getParam('comment_type', -1);
+        if ($commentType != self::COMMENT_TYPE_CONTENT) {
+            $this->_sendResponse($response, $this->_format);
+        }
+
+        $contentId = (int)$this->getParam('content_id', null);
+        if (empty($contentId)) {
+            $this->_sendResponse($response, $this->_format);
+        }
+
+        $page = (int)$this->getParam('page', 0) + 1;
+        $pagesize = (int)$this->getParam('pagesize', 10);
+
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cacheName = 'api_fetch_comments_' . md5("{$commentType}, {$contentId}, {$page}, {$pagesize}");
+
+        if (($cachedResponse = $cache->load($cacheName))) {
+            $this->_sendResponse($cachedResponse, $this->_format);
+        }
+
+        $modelComments = new Default_Model_ProjectComments();
+        $comments = $modelComments->getCommentsHierarchic($contentId);
+
+        if ($comments->count() == 0) {
+            $this->_sendResponse($response, $this->_format);
+        }
+
+        $comments->setCurrentPageNumber($page);
+        $comments->setItemCountPerPage($pagesize);
+
+        $response['data'] = array('comment' => $this->_buildCommentList($comments->getCurrentItems()));
+        $cache->save($response, $cacheName, array(), 1800);
+
+        $this->_sendResponse($response, $this->_format);
+    }
+
+    /**
+     * @param Traversable $currentItems
+     *
+     * @return array
+     */
+    protected function _buildCommentList($currentItems)
+    {
+        $commentList = array();
+        foreach ($currentItems as $current_item) {
+            if ($this->_format == 'json') {
+                $comment = array(
+                    'id'         => $current_item['comment_id'],
+                    'subject'    => '',
+                    'text'       => Default_Model_HtmlPurify::purify($current_item['comment_text']),
+                    'childcount' => $current_item['childcount'],
+                    'user'       => $current_item['username'],
+                    'date'       => date('c', strtotime($current_item['comment_created_at'])),
+                    'score'      => 0
+                );
+                if ($current_item['childcount'] > 0) {
+                    $comment['children'] = $this->_buildCommentList($current_item['children']);
+                }
+            } else {
+                $comment = array(
+                    'id'         => array('@text' => $current_item['comment_id']),
+                    'subject'    => array('@text' => ''),
+                    'text'       => array('@text' => Default_Model_HtmlPurify::purify($current_item['comment_text'])),
+                    'childcount' => array('@text' => $current_item['childcount']),
+                    'user'       => array('@text' => $current_item['username']),
+                    'date'       => array('@text' => date('c', strtotime($current_item['comment_created_at']))),
+                    'score'      => array('@text' => 0)
+                );
+                if ($current_item['childcount'] > 0) {
+                    $comment['children'] = $this->_buildCommentList($current_item['children']);
+                }
+            }
+            $commentList[] = $comment;
+        }
+
+        return $commentList;
     }
 
 }
