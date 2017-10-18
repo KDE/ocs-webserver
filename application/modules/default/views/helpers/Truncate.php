@@ -71,7 +71,7 @@ class Default_View_Helper_Truncate extends Zend_View_Helper_Abstract
                 if ($total_length + $content_length > $length) {
                     $left = $length - $total_length;
                     $entities_length = 0;
-                    if (preg_match_all('/&[0-9a-z]{2,8};|&#[0-9]{1,7};|&#x[0-9a-f]{1,6};/i', $line_matchings[2], $entities,PREG_OFFSET_CAPTURE)) {
+                    if (preg_match_all('/&[0-9a-z]{2,8};|&#[0-9]{1,7};|&#x[0-9a-f]{1,6};/i', $line_matchings[2], $entities, PREG_OFFSET_CAPTURE)) {
                         foreach ($entities[0] as $entity) {
                             if ($entity[1] + 1 - $entities_length <= $left) {
                                 $left--;

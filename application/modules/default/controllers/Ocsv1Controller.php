@@ -241,7 +241,8 @@ class Ocsv1Controller extends Zend_Controller_Action
         $this->getResponse()
              ->setHeader('X-FRAME-OPTIONS', 'SAMEORIGIN', true)
 //             ->setHeader('Last-Modified', $modifiedTime, true)
-             ->setHeader('Expires', $expires, true)->setHeader('Pragma', 'cache', true)
+             ->setHeader('Expires', $expires, true)
+             ->setHeader('Pragma', 'cache', true)
              ->setHeader('Cache-Control', 'max-age=1800, public', true)
         ;
     }
@@ -1762,7 +1763,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                     'score'      => 0
                 );
                 if ($current_item['childcount'] > 0) {
-                    $comment['children'] = $this->_buildCommentList($current_item['children']);
+                    $comment['children']['comment'] = $this->_buildCommentList($current_item['children']);
                 }
             } else {
                 $comment = array(
@@ -1775,7 +1776,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                     'score'      => array('@text' => 0)
                 );
                 if ($current_item['childcount'] > 0) {
-                    $comment['children'] = $this->_buildCommentList($current_item['children']);
+                    $comment['children']['comment'] = $this->_buildCommentList($current_item['children']);
                 }
             }
             $commentList[] = $comment;

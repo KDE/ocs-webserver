@@ -69,6 +69,36 @@ class Backend_IndexController extends Local_Controller_Action_Backend
         
     }
 
+    public function getdownloadsdailyAction()
+    {
+
+        $this->_helper->layout->disableLayout();          
+        $numofmonthback =$this->getParam('numofmonthback', '3');              
+        $modelData = new Statistics_Model_Data( Zend_Registry::get('config')->settings->dwh->toArray());
+        $this->sendJson($modelData->getDownloadsDaily($numofmonthback));              
+        
+    }
+     public function getdownloadsundpayoutsdailyAction()
+    {
+
+        $this->_helper->layout->disableLayout();          
+        $yyyymm =$this->getParam('yyyymm');              
+        $modelData = new Statistics_Model_Data( Zend_Registry::get('config')->settings->dwh->toArray());
+        $this->sendJson($modelData->getDownloadsUndPayoutsDaily($yyyymm));              
+        
+    }
+
+    public function gettopdownloadsperdateAction()
+    {
+
+        $this->_helper->layout->disableLayout();          
+        $date =$this->getParam('date');              
+        $modelData = new Statistics_Model_Data( Zend_Registry::get('config')->settings->dwh->toArray());
+        $this->sendJson($modelData->getTopDownloadsPerDate($date));              
+        
+    }
+    
+
     public function getpayoutmemberAction()
     {
 
