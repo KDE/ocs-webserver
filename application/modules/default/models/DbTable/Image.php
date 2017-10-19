@@ -264,6 +264,7 @@ class Default_Model_DbTable_Image extends Zend_Db_Table_Abstract
         $url = $config->images->media->upload;
 
         $client = new Zend_Http_Client($url);
+        $client->setParameterPost('privateKey', $config->images->media->privateKey);
         $client->setFileUpload($fullFilePath, basename($fullFilePath), null, $mimeType);
 
         $response = $client->request('POST');
