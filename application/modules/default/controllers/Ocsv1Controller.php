@@ -1165,6 +1165,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                 $downloadItems['downloadrepository' . $i] = '';
                 $downloadItems['download_package_type' . $i] = $tags['packagetypeid'];
                 $downloadItems['download_package_arch' . $i] = $tags['packagearch'];
+                $downloadItems['downloadtags' . $i] = implode(',',$tags['filetags']);
                 $i++;
             }
         }
@@ -1186,24 +1187,22 @@ class Ocsv1Controller extends Zend_Controller_Action
             'link'          => '',
             'licensetype'   => '',
             'packagetypeid' => '',
-            'packagearch'   => ''
+            'packagearch'   => '',
+            'filetags'      => ''
         );
         foreach ($tags as $tag) {
             $tag = trim($tag);
             if (strpos($tag, 'link##') === 0) {
                 $parsedTags['link'] = urldecode(str_replace('link##', '', $tag));
-            } else {
-                if (strpos($tag, 'licensetype-') === 0) {
+            } elseif (strpos($tag, 'licensetype-') === 0) {
                     $parsedTags['licensetype'] = str_replace('licensetype-', '', $tag);
-                } else {
-                    if (strpos($tag, 'packagetypeid-') === 0) {
-                        $parsedTags['packagetypeid'] = str_replace('packagetypeid-', '', $tag);
-                    } else {
-                        if (strpos($tag, 'packagearch-') === 0) {
-                            $parsedTags['packagearch'] = str_replace('packagearch-', '', $tag);
-                        }
-                    }
-                }
+            } elseif (strpos($tag, 'packagetypeid-') === 0) {
+                    $parsedTags['packagetypeid'] = str_replace('packagetypeid-', '', $tag);
+            } elseif (strpos($tag, 'packagearch-') === 0) {
+                    $parsedTags['packagearch'] = str_replace('packagearch-', '', $tag);
+            } elseif (strpos($tag, '@@@') === 0) {
+                $strTags = substr($tag, 3, strlen($tag) - 2);
+                $parsedTags['filetags'] = explode('@@', $strTags);
             }
         }
 
@@ -1540,7 +1539,8 @@ class Ocsv1Controller extends Zend_Controller_Action
                         'packagename'           => '',
                         'repository'            => '',
                         'download_package_type' => $tags['packagetypeid'],
-                        'download_package_arch' => $tags['packagearch']
+                        'download_package_arch' => $tags['packagearch'],
+                        'downloadtags'          => implode(',',$tags['filetags'])
                     )
                 )
             );
@@ -1562,7 +1562,8 @@ class Ocsv1Controller extends Zend_Controller_Action
                         'packagename'           => array('@text' => ''),
                         'repository'            => array('@text' => ''),
                         'download_package_type' => array('@text' => $tags['packagetypeid']),
-                        'download_package_arch' => array('@text' => $tags['packagearch'])
+                        'download_package_arch' => array('@text' => $tags['packagearch']),
+                        'downloadtags'          => array('@text' => implode(',', $tags['filetags']))
                     )
                 )
             );

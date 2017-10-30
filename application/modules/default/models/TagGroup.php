@@ -46,7 +46,16 @@ class Default_Model_TagGroup
         foreach ($resultSet as $item) {
             $optgroup[$item['group_name']][$item['tag_id']] = $item['tag_name'];
         }
+
         return $optgroup;
+    }
+
+    /**
+     * @return Zend_Db_Adapter_Abstract
+     */
+    private function getAdapter()
+    {
+        return Zend_Db_Table::getDefaultAdapter();
     }
 
     /**
@@ -56,39 +65,13 @@ class Default_Model_TagGroup
      */
     public function fetchGroupItems($group_id)
     {
-        $sql =
-            "SELECT tag_group_item.tag_group_item_id, tag_group_item.tag_group_id, tag.tag_id, tag.tag_name 
+        $sql = "SELECT tag_group_item.tag_group_item_id, tag_group_item.tag_group_id, tag.tag_id, tag.tag_name 
              FROM tag_group_item 
              JOIN tag ON tag.tag_id = tag_group_item.tag_id 
              WHERE tag_group_id = :group_id";
         $resultSet = $this->getAdapter()->fetchAll($sql, array('group_id' => $group_id));
 
         return $resultSet;
-    }
-
-    /**
-     * @param int $group_item_id
-     *
-     * @return array|false
-     */
-    public function fetchOneGroupItem($group_item_id)
-    {
-        $sql =
-            "SELECT tag_group_item.tag_group_item_id, tag_group_item.tag_group_id, tag.tag_id, tag.tag_name 
-             FROM tag_group_item 
-             JOIN tag ON tag.tag_id = tag_group_item.tag_id 
-             WHERE tag_group_item_id = :group_item_id";
-        $resultSet = $this->getAdapter()->fetchRow($sql, array('group_item_id' => $group_item_id));
-
-        return $resultSet;
-    }
-
-    /**
-     * @return Zend_Db_Adapter_Abstract
-     */
-    private function getAdapter()
-    {
-        return Zend_Db_Table::getDefaultAdapter();
     }
 
     /**
@@ -143,6 +126,22 @@ class Default_Model_TagGroup
         }
 
         return $resultId;
+    }
+
+    /**
+     * @param int $group_item_id
+     *
+     * @return array|false
+     */
+    public function fetchOneGroupItem($group_item_id)
+    {
+        $sql = "SELECT tag_group_item.tag_group_item_id, tag_group_item.tag_group_id, tag.tag_id, tag.tag_name 
+             FROM tag_group_item 
+             JOIN tag ON tag.tag_id = tag_group_item.tag_id 
+             WHERE tag_group_item_id = :group_item_id";
+        $resultSet = $this->getAdapter()->fetchRow($sql, array('group_item_id' => $group_item_id));
+
+        return $resultSet;
     }
 
     public function updateGroupTag($tag_id, $tag_name)
