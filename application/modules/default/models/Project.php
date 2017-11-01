@@ -100,7 +100,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
     {
         $updateValues = array(
             'status'     => self::PROJECT_ACTIVE,
-            'deleted_at' => new Zend_Db_Expr('Now()')
+            'deleted_at' => null
         );
 
         $this->update($updateValues, $this->_db->quoteInto('project_id=?', $id, 'INTEGER'));
@@ -116,7 +116,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
     {
         $updateValues = array(
             'status'     => self::PROJECT_ACTIVE,
-            'changed_at' => new Zend_Db_Expr('Now()')
+            'deleted_at' => null
         );
 
         $this->update($updateValues, $this->_db->quoteInto('pid=?', $id, 'INTEGER'));
@@ -912,24 +912,26 @@ class Default_Model_Project extends Default_Model_DbTable_Project
 
     public function setAllProjectsForMemberDeleted($member_id)
     {
-        $sql = "SELECT project_id FROM project WHERE member_id = :memberId AND type_id = :typeId";
-        $projectForDelete = $this->_db->fetchAll($sql, array('memberId' => $member_id, 'typeId' => self::PROJECT_TYPE_STANDARD));
+        $sql = "SELECT project_id FROM project WHERE member_id = :memberId AND type_id = :typeId AND status > :project_status";
+        $projectForDelete = $this->_db->fetchAll($sql, array('memberId' => $member_id, 'typeId' => self::PROJECT_TYPE_STANDARD, 'project_status' => self::PROJECT_DELETED));
         foreach ($projectForDelete as $item) {
             $this->setDeleted($item['project_id']);
         }
         // set personal page deleted
         $sql = "UPDATE project SET `status` = :statusCode, deleted_at = NOW() WHERE member_id = :memberId AND type_id = :typeId";
-        $this->_db->query($sql, array('statusCode' => self::PROJECT_DELETED, 'memberId' => $member_id, 'typeId' => self::PROJECT_TYPE_PERSONAL))->execute();
+        $this->_db->query($sql, array('statusCode' => self::PROJECT_ACTIVE, 'memberId' => $member_id, 'typeId' => self::PROJECT_TYPE_PERSONAL))->execute();
     }
 
     public function setAllProjectsForMemberActivated($member_id)
     {
-        $sql = '
-                UPDATE project
-                SET status = :statusValue, changed_at = NOW()
-                WHERE member_id = :memberId;
-        ';
-        $this->_db->query($sql, array('statusValue' => self::PROJECT_ACTIVE, 'memberId' => $member_id))->execute();
+        $sql = "SELECT project_id FROM project WHERE member_id = :memberId AND type_id = :typeId";
+        $projectForDelete = $this->_db->fetchAll($sql, array('memberId' => $member_id, 'typeId' => self::PROJECT_TYPE_STANDARD));
+        foreach ($projectForDelete as $item) {
+            $this->setActive($item['project_id']);
+        }
+        // set personal page active
+        $sql = "UPDATE project SET `status` = :statusCode, deleted_at = null WHERE member_id = :memberId AND type_id = :typeId";
+        $this->_db->query($sql, array('statusCode' => self::PROJECT_ACTIVE, 'memberId' => $member_id, 'typeId' => self::PROJECT_TYPE_PERSONAL))->execute();
     }
 
     /**
