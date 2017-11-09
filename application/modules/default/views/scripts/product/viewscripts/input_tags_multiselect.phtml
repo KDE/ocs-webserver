@@ -44,14 +44,15 @@ $this->inlineScript()->appendScript('
                 id="<?= $this->escape($this->element->getName()) ?>"
                 name="<?= $this->escape($this->element->getName()) ?>[]"
                 data-placeholder="Choose max 5 Tags..."
-                multiple="true"
+                multiple="multiple"
                 class="chosen">
             <option value=""></option>
             <?php
             $modelTagGroup = new Default_Model_TagGroup();
             $groups = $modelTagGroup->fetchGroupHierarchy();
             //$value = array_map('strval', explode(',',$this->element->getValue()));
-            $value = empty($this->element->getValue()) ? array() : explode(',',$this->element->getValue());
+            $element_value = $this->element->getValue();
+            $value = empty($element_value) ? array() : explode(',',$element_value);
             foreach($groups as $label => $opt): ?>
                 <optgroup label="<?php echo $label; ?>">
                     <?php foreach ($opt as $id => $name):

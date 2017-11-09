@@ -254,10 +254,13 @@ class Default_Model_Member extends Default_Model_DbTable_Member
      */
     public function setActivated($member_id)
     {
+        throw new Zend_Db_Exception('not implemented yet.');
+
         $updateValues = array(
             'is_active'  => 1,
             'is_deleted' => 0,
             'changed_at' => new Zend_Db_Expr('Now()'),
+            'deleted_at' => null
         );
 
         $this->update($updateValues, $this->_db->quoteInto('member_id=?', $member_id, 'INTEGER'));

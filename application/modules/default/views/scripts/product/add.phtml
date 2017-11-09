@@ -100,6 +100,9 @@ $categoryPath[] = $valueCatId;
             padding-top: 15px;
         }
 
+        section.body {
+            width: 100% !important;
+        }
     </style>
     <main class="user-admin-page">
 
@@ -254,6 +257,7 @@ $categoryPath[] = $valueCatId;
                                                             <th><?= $this->translate('Filename') ?></th>
                                                             <th><?= $this->translate('Version') ?></th>
                                                             <th><?= $this->translate('Description') ?></th>
+                                                            <th><?= $this->translate('Tags') ?></th>
                                                             <th><?= $this->translate('License') ?></th>
                                                             <th><?= $this->translate('Filetype') ?></th>
                                                             <th><?= $this->translate('Packagetype') ?></th>
@@ -484,58 +488,57 @@ $categoryPath[] = $valueCatId;
             });
 
 
+            $('body').on("click", "#github_picker", function (event) {
 
-                $('body').on("click", "#github_picker", function (event) {
+                html = '<form id="get-url-form">' +
+                    '<div class="form-group">' +
+                    '<input type="url" class="form-control" id="get-url" placeholder="Enter a URL where the files can be downloaded" required="required">' +
+                    '<span id="get-url-help" class="help-block small">e.g. https://github.com/mongodb/mongo/archive/r3.5.2.tar.gz</span></div>' +
+                    '<span id="get-url-error" class="help-block small"></span></div>' +
+                    '<button type="submit" class="btn btn-native btn-sm" id="get-url-submit">Submit</button>' +
+                    '</form>';
 
-                    html = '<form id="get-url-form">' +
-                        '<div class="form-group">' +
-                        '<input type="url" class="form-control" id="get-url" placeholder="Enter a URL where the files can be downloaded" required="required">' +
-                        '<span id="get-url-help" class="help-block small">e.g. https://github.com/mongodb/mongo/archive/r3.5.2.tar.gz</span></div>' +
-                        '<span id="get-url-error" class="help-block small"></span></div>' +
-                        '<button type="submit" class="btn btn-native btn-sm" id="get-url-submit">Submit</button>' +
-                        '</form>';
+                var msgBox = $('#generic-dialog');
+                msgBox.modal('hide');
+                msgBox.find('.modal-header-text').empty().append('Enter a download URL:');
+                msgBox.find('.modal-body').empty().append(html);
+                setTimeout(function () {
+                    msgBox.modal('show');
+                }, 900);
 
-                    var msgBox = $('#generic-dialog');
-                    msgBox.modal('hide');
-                    msgBox.find('.modal-header-text').empty().append('Enter a download URL:');
-                    msgBox.find('.modal-body').empty().append(html);
-                    setTimeout(function () {
-                        msgBox.modal('show');
-                    }, 900);
+            });
 
-                });
-
-                $('body').on('submit', '#get-url-form', function(event) {
-                    if (! $('#get-url-form').validate()) {
-                        return true;
-                    }
-                    event.preventDefault();
-                    $.ajax({
-                        url: '/file/link/',
-                        type: 'post',
-                        data: {
-                            project_id: ProductForm.project_id,
-                            u: $('#get-url').val()
-                        },
-                        success: function(returned_data) {
-                            if (!returned_data.file) {
-                                $('#get-url').addClass('hasError').focus();
-                                $('#get-url-error').html('An Error occurred. Please check your URL or try again later.');
-                                return;
-                            }
-                            data_file = returned_data.file;
-                            $modalPpload.attr('data-ppload-collection-id', data_file.collection_id);
-                            $('#get-url').val('').removeClass('hasError');
-                            $('#get-url-error').html('');
-                            $('#generic-dialog').modal('hide');
-                            getPploadFiles();
-                        },
-                        error: function() {
+            $('body').on('submit', '#get-url-form', function(event) {
+                if (! $('#get-url-form').validate()) {
+                    return true;
+                }
+                event.preventDefault();
+                $.ajax({
+                    url: '/file/link/',
+                    type: 'post',
+                    data: {
+                        project_id: ProductForm.project_id,
+                        u: $('#get-url').val()
+                    },
+                    success: function(returned_data) {
+                        if (!returned_data.file) {
                             $('#get-url').addClass('hasError').focus();
                             $('#get-url-error').html('An Error occurred. Please check your URL or try again later.');
+                            return;
                         }
-                    });
+                        data_file = returned_data.file;
+                        $modalPpload.attr('data-ppload-collection-id', data_file.collection_id);
+                        $('#get-url').val('').removeClass('hasError');
+                        $('#get-url-error').html('');
+                        $('#generic-dialog').modal('hide');
+                        getPploadFiles();
+                    },
+                    error: function() {
+                        $('#get-url').addClass('hasError').focus();
+                        $('#get-url-error').html('An Error occurred. Please check your URL or try again later.');
+                    }
                 });
+            });
 
             $('body').on('change', '#get-url', function(event) {
                 $('#get-url-error').empty();
@@ -568,7 +571,6 @@ $categoryPath[] = $valueCatId;
                         }
                     }
                 }
-
 
                 function getUpdates(page) {
                     $modalPpload.find('#update-list').html('');
@@ -665,7 +667,7 @@ $categoryPath[] = $valueCatId;
                             }
                             var deletePploadFileBtn = '';
                             if (!hasFinalized) {
-                                deletePploadFileBtn = deletePploadFileBtn = '<a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-deletepploadfile-btn=""><span class="glyphicon glyphicon-trash"></span></a>';;
+                                deletePploadFileBtn = '<a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-deletepploadfile-btn=""><span class="glyphicon glyphicon-trash"></span></a>';;
                             }
                             var deletePploadFileBtnPerFile = '';
 
@@ -673,6 +675,8 @@ $categoryPath[] = $valueCatId;
                                 return entry;
                             });
                             myArray.sort(keysrt('created_timestamp'), false);
+
+                            var tagOptions = UserTags.getTagOptions();
 
                             $.each(myArray, function () {
 
@@ -762,6 +766,7 @@ $categoryPath[] = $valueCatId;
                                     + '<td>' + downloadLink + '</td>'
                                     + '<td>' + version + '</td>'
                                     + '<td>' + inputFileDescription + '</td>'
+                                    + '<td>' + '<select id="data-select-tags' + this.id + '" data-license-id="" name="file_tags[]" class="form-control input-sm chosen" multiple="multiple" style="width: 150px;"><option value=""></option>' + tagOptions + '</select></td>'
                                     + '<td>'
                                     + '<select id="data-select-license' + this.id + '" data-license-id="" name="license" class="form-control input-sm" style="width: 200px;">'
                                     + '<option value=\"1000\"></option><option value=\"16\">AGPL</option><option value=\"3\">Artistic 2.0</option><option value=\"6\">BSD</option><option value=\"17\">CC0 1.0 Universal (Public Domain)</option><option value=\"9\">CPL 1.0</option><option value=\"10\">Creative Commons by</option><option value=\"13\">Creative Commons by-nc</option><option value=\"15\">Creative Commons by-nc-nd</option><option value=\"14\">Creative Commons by-nc-sa</option><option value=\"12\">Creative Commons by-nd</option><option value=\"11\">Creative Commons by-sa</option><option value=\"8\">GFDL</option><option value=\"1\">GPLv2 or later</option><option value=\"18\">GPLv2 only</option><option value=\"19\">GPLv3</option><option value=\"2\">LGPL</option><option value=\"0\">Other</option><option value=\"7\">Proprietary License</option><option value=\"5\">QPL</option><option value=\"4\">X11</option>'
@@ -769,7 +774,7 @@ $categoryPath[] = $valueCatId;
                                     + '</td>'
                                     + '<td>' + this.type + '</td>'
                                     + '<td>'
-                                    + '<select id="data-select-packagetype' + this.id + '" data-packagetype-id="" name="packagetype" class="form-control input-sm" style="width: 200px;">'
+                                    + '<select id="data-select-packagetype' + this.id + '" data-packagetype-id="" name="packagetype" class="form-control input-sm" style="width: 150px;">'
                                     + '<option value=\"\"></option>'
                                     + '<option value=\"2\">Android (APK)</option>'
                                     + '<option value=\"1\">AppImage</option>'
@@ -792,75 +797,17 @@ $categoryPath[] = $valueCatId;
 
                                 $("#data-select-license" + this.id + " option[value='"+licenseId+"']").attr('selected', 'selected');
                                 $("#data-select-packagetype" + this.id + " option[value='"+packagetypeId+"']").attr('selected', 'selected');
+                                UserTags.activateSelect(this.id, this.tags);
 
                                 $licenseSelect = $modalPpload.find('#data-select-license' + this.id);
-
                                 if(this.active == '0') {
                                     $licenseSelect.prop('disabled', 'disabled');
                                 }
 
-                                $licenseSelect.on('change', function (event) {
-                                    event.preventDefault();
-                                    $fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
-                                    $fileTags = $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags');
-                                    $licenseId = $modalPpload.find('#data-select-license' + $fileId).val();
-
-                                    newFileTags = '';
-
-                                    if ($fileTags) {
-                                        $.each($fileTags.split(','), function () {
-                                            if(this.indexOf("##")==-1) {
-                                                var tagStr = this.split('-');
-                                                if (tagStr.length == 2 && tagStr[0] != 'licensetype') {
-                                                    newFileTags += ',' + this;
-                                                }
-                                            } else {
-                                                var tagStr = this.split('##');
-                                                if (tagStr.length == 2 && tagStr[0] != 'license') {
-                                                    newFileTags += ',' + this;
-                                                }
-                                            }
-                                        });
-                                    }
-                                    newFileTags += ',licensetype-'+$licenseId;
-                                    updatePploadFileTags($fileId, newFileTags);
-                                    $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags',newFileTags);
-                                });
-
-
                                 $packagetypeSelect = $modalPpload.find('#data-select-packagetype' + this.id);
-
                                 if(this.active == '0') {
                                     $packagetypeSelect.prop('disabled', 'disabled');
                                 }
-
-                                $packagetypeSelect.on('change', function (event) {
-                                    event.preventDefault();
-                                    $fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
-                                    $fileTags = $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags');
-                                    $packagetypeId = $modalPpload.find('#data-select-packagetype' + $fileId).val();
-                                    updatePackageType($fileId, $packagetypeId);
-
-                                    newFileTags = '';
-                                    if ($fileTags) {
-                                        $.each($fileTags.split(','), function () {
-                                            if(this.indexOf("##")==-1) {
-                                                var tagStr = this.split('-');
-                                                if (tagStr.length == 2 && tagStr[0] != 'packagetypeid') {
-                                                    newFileTags += ',' + this;
-                                                }
-                                            } else {
-                                                var tagStr = this.split('##');
-                                                if (tagStr.length == 2 && tagStr[0] != 'packagetypeid') {
-                                                    newFileTags += ',' + this;
-                                                }
-                                            }
-                                        });
-                                    }
-                                    newFileTags += ',packagetypeid-'+$packagetypeId;
-                                    updatePploadFileTags($fileId, newFileTags);
-                                    $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags',newFileTags);
-                                });
 
                                 if ((typeof link != 'undefined') && (link != "")) {
                                     //$("#data-link" + this.id).attr('href', decodeURIComponent(link));
@@ -1010,6 +957,8 @@ $categoryPath[] = $valueCatId;
                                 fileTags = data.file.tags;
                             }
 
+                            var tagOptions = UserTags.getTagOptions();
+
                             $modalPpload.find('table[data-ppload-files] tbody').append(
                                 '<tr data-ppload-file-id="' + data.file.id + '" data-ppload-file-category="' + fileCategory + '" data-ppload-file-tags="' + fileTags + '">'
                                 + '<td><a href="' + pploadApiUri + 'files/download/'
@@ -1018,6 +967,7 @@ $categoryPath[] = $valueCatId;
                                 + '<td><input data-ppload-file-description="" class="form-control input-sm"'
                                 + ' type="text" maxlength="140" placeholder="File description"'
                                 + ' value="' + fileDescription + '"></td>'
+                                + '<td>' + '<select id="data-select-tags' + data.file.id + '" data-tag-id="" name="file_tags[]" class="form-control input-sm chosen" multiple="multiple" style="width: 150px;"><option value=""></option>' + tagOptions + '</select></td>'
                                 + '<td>'
                                 + '<select id="data-select-license' + data.file.id + '" data-license-id="" name="license" class="form-control input-sm">'
                                 + '<option value=\"1000\"></option><option value=\"16\">AGPL</option><option value=\"3\">Artistic 2.0</option><option value=\"6\">BSD</option><option value=\"17\">CC0 1.0 Universal (Public Domain)</option><option value=\"9\">CPL 1.0</option><option value=\"10\">Creative Commons by</option><option value=\"13\">Creative Commons by-nc</option><option value=\"15\">Creative Commons by-nc-nd</option><option value=\"14\">Creative Commons by-nc-sa</option><option value=\"12\">Creative Commons by-nd</option><option value=\"11\">Creative Commons by-sa</option><option value=\"8\">GFDL</option><option value=\"1\">GPLv2 or later</option><option value=\"18\">GPLv2 only</option><option value=\"19\">GPLv3</option><option value=\"2\">LGPL</option><option value=\"0\">Other</option><option value=\"7\">Proprietary License</option><option value=\"5\">QPL</option><option value=\"4\">X11</option>'
@@ -1046,62 +996,7 @@ $categoryPath[] = $valueCatId;
                                 + '</tr>'
                             );
 
-                            $licenseSelect = $modalPpload.find('#data-select-license' + data.file.id);
-                            $licenseSelect.on('change', function (event) {
-                                event.preventDefault();
-                                $fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
-                                $fileTags = $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags');
-                                $licenseId = $modalPpload.find('#data-select-license' + $fileId).val();
-
-                                newFileTags = '';
-                                if ($fileTags) {
-                                    $.each($fileTags.split(','), function () {
-                                        if(this.indexOf("##")==-1) {
-                                            var tagStr = this.split('-');
-                                            if (tagStr.length == 2 && tagStr[0] != 'licensetype') {
-                                                newFileTags += ',' + this;
-                                            }
-                                        } else {
-                                            var tagStr = this.split('##');
-                                            if (tagStr.length == 2 && tagStr[0] != 'license') {
-                                                newFileTags += ',' + this;
-                                            }
-                                        }
-                                    });
-                                }
-                                newFileTags += ',licensetype-'+$licenseId;
-                                updatePploadFileTags($fileId, newFileTags);
-                                $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags',newFileTags);
-                            });
-
-                            $packagetypeSelect = $modalPpload.find('#data-select-packagetype' + data.file.id);
-                            $packagetypeSelect.on('change', function (event) {
-                                event.preventDefault();
-                                $fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
-                                $packagetypeId = $modalPpload.find('#data-select-packagetype' + $fileId).val();
-                                $fileTags = $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags');
-                                updatePackageType($fileId, $packagetypeId);
-
-                                newFileTags = '';
-                                if ($fileTags) {
-                                    $.each($fileTags.split(','), function () {
-                                        if(this.indexOf("##")==-1) {
-                                            var tagStr = this.split('-');
-                                            if (tagStr.length == 2 && tagStr[0] != 'packagetypeid') {
-                                                newFileTags += ',' + this;
-                                            }
-                                        } else {
-                                            var tagStr = this.split('##');
-                                            if (tagStr.length == 2 && tagStr[0] != 'packagetypeid') {
-                                                newFileTags += ',' + this;
-                                            }
-                                        }
-                                    });
-                                }
-                                newFileTags += ',packagetypeid-'+$packagetypeId;
-                                updatePploadFileTags($fileId, newFileTags);
-                                $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags',newFileTags);
-                            });
+                            UserTags.activateSelect(data.file.id, '');
 
                             $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
                             postPploadFiles();
@@ -1363,7 +1258,7 @@ $categoryPath[] = $valueCatId;
                     'border-width': '5px',
                     'border-style': 'dashed',
                     'border-color': '#cccccc',
-                    'overflow': 'auto'
+                    'overflow': 'inherit'
                 });
                 $modalPpload.find('table[data-ppload-files] tbody').html('');
                 $modalPpload.find('table[data-file-upload] tbody').html('');
@@ -1501,7 +1396,6 @@ $categoryPath[] = $valueCatId;
                     }
                 });
 
-
                 $modalPpload.on('click', 'button[data-add-update-btn]', function (event) {
                     var update_id = $modalPpload.find('#update-id').val();
                     var title = $modalPpload.find('#update-title').val();
@@ -1568,9 +1462,147 @@ $categoryPath[] = $valueCatId;
                     event.preventDefault();
                 });
 
+                $modalPpload.on('change', 'select.chosen', function (event) {
+                    event.preventDefault();
+                    var fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
+                    var currentTags = $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags');
+                    var chosenTags = $(this).val();
 
+                    var newTags = UserTags.removeOldTags(currentTags);
+                    newTags = UserTags.setNewTags(newTags, chosenTags);
+
+                    updatePploadFileTags(fileId, newTags);
+                    $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags',newTags);
+                });
+
+                $modalPpload.on('change', 'select[id*=data-select-license]', function(event) {
+                    event.preventDefault();
+                    var fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
+                    var fileTags = $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags');
+                    var licenseId = $modalPpload.find('#data-select-license' + fileId).val();
+
+                    var newFileTags = '';
+
+                    if (fileTags) {
+
+                        $.each(fileTags.split(','), function () {
+                            // skip old entries
+                            if ((this.length == 0) || (this.indexOf('licensetype-') == 0) || (this.indexOf('license##') == 0)) {
+                                return true;
+                            }
+                            newFileTags += ',' + this;
+                        });
+
+                    }
+                    newFileTags += ',licensetype-'+licenseId;
+                    updatePploadFileTags(fileId, newFileTags);
+                    $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags',newFileTags);
+                });
+
+                $modalPpload.on('change', 'select[id*=data-select-packagetype]', function(event) {
+                    event.preventDefault();
+                    var fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
+                    var fileTags = $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags');
+                    var packagetypeId = $modalPpload.find('#data-select-packagetype' + fileId).val();
+
+                    var newFileTags = '';
+                    if (fileTags) {
+
+                        $.each(fileTags.split(','), function () {
+                            // skip old entries
+                            if ((this.length == 0) || (this.indexOf('packagetypeid-') == 0) || (this.indexOf('packagetypeid##') == 0)) {
+                                return true;
+                            }
+                            newFileTags += ',' + this;
+                        });
+
+                    }
+                    newFileTags += ',packagetypeid-'+packagetypeId;
+                    updatePploadFileTags(fileId, newFileTags);
+                    $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags',newFileTags);
+                    updatePackageType(fileId, packagetypeId);
+                });
 
         });
+
+        var UserTags = (function () {
+            return {
+                removeOldTags : function(stringOldTags) {
+                    if (!stringOldTags) {
+                        return '';
+                    }
+
+                    var stringNewTags = '';
+                    $.each(stringOldTags.split(','), function() {
+                        if (this.length == 0) {
+                            return true;
+                        }
+                        if (this.indexOf('@@@')==-1) {
+                            stringNewTags += ',' + this;
+                        }
+                    });
+
+                    return stringNewTags;
+                },
+                setNewTags : function(stringOldTags, arrayNewTags) {
+                    if (arrayNewTags.length == 0) {
+                        return stringOldTags;
+                    }
+                    var newTags = '@@@';
+                    $.each(arrayNewTags, function() {
+                        newTags += this + '@@';
+                    });
+
+                    return stringOldTags + ',' + newTags;
+                },
+                getTagArray : function(stringTags) {
+                    if (!stringTags) {
+                        return [];
+                    }
+                    var result;
+                    $.each(stringTags.split(','), function() {
+                        if (this.indexOf('@@@') == 0) {
+                            var strTags = this.substring(3);
+                            strTags = strTags.substring(0,strTags.length - 2);
+                            result = strTags.split('@@');
+                        }
+                    });
+
+                    return result;
+                },
+                getTagOptions: function() {
+                    <?php
+                    $modelTagGroup = new Default_Model_TagGroup();
+                    $groups = $modelTagGroup->fetchGroupHierarchy();
+                    $tagOptions = '';
+                    foreach($groups as $label => $opt):
+                        $tagOptions .= '<optgroup label="'.$label.'">';
+                        foreach ($opt as $id => $name):
+                            $tagOptions .= '<option value="'.$name.'">'.$name.'</option>';
+                        endforeach;
+                        $tagOptions .= '</optgroup>';
+                    endforeach;
+                    ?>
+                    return '<?=$tagOptions?>';
+
+                },
+                activateSelect: function(elementId, elementTags) {
+                    console.log(elementId);
+                    console.log(elementTags);
+                    var userTagArray = UserTags.getTagArray(elementTags);
+                    console.log(userTagArray);
+                    $.each(userTagArray, function() {
+                        $("#data-select-tags" + elementId + " option[value='"+this+"']").attr('selected', 'selected');
+                    });
+                    $("#data-select-tags" + elementId).chosen({
+                        width: "100%",
+                        max_selected_options: "5",
+                        disable_search: "false",
+                        disable_search_threshold: "5"
+                    });
+                },
+            }
+        })();
     </script>
   <script>
           $.fn.sortSelect = function() {

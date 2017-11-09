@@ -40,7 +40,9 @@ class Default_Model_ActivityLog extends Default_Model_DbTable_ActivityLog
     const PROJECT_ITEM_PUBLISHED = 18;
     const PROJECT_ITEM_UNPUBLISHED = 19;
     const PROJECT_PLINGED = 20;
+    const PROJECT_DISPLINGED = 21;
     const PROJECT_ITEM_PLINGED = 30;
+    const PROJECT_ITEM_DISPLINGED = 31;
     const PROJECT_COMMENT_CREATED = 40;
     const PROJECT_COMMENT_UPDATED = 41;
     const PROJECT_COMMENT_DELETED = 42;

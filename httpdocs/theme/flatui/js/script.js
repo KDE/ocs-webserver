@@ -230,7 +230,7 @@ var ImagePreview =  {
     };
 
 var MenuHover = (function () {
-    return {
+        return {
 
         setup: function () {
             $('body').on('click', 'a#login-dropdown', function (event) {
