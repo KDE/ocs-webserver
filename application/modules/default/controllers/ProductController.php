@@ -395,7 +395,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         foreach ($updates as $key => $update) {
             $updates[$key]['title'] = Default_Model_HtmlPurify::purify($update['title']);
-            $updates[$key]['text'] = Default_Model_BBCode::renderHtml(Default_Model_HtmlPurify::purify($update['text']));
+            $updates[$key]['text'] = Default_Model_BBCode::renderHtml(Default_Model_HtmlPurify::purify(htmlentities($update['text'], ENT_QUOTES | ENT_IGNORE)));
+            $updates[$key]['raw_title'] = $update['title'];
+            $updates[$key]['raw_text'] = $update['text'];
         }
 
         $result['status'] = 'success';
@@ -435,6 +437,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $this->_helper->json($result);
         }
 
+        $update_id = $filter->getEscaped('update_id');
         $tableProjectUpdates = new Default_Model_ProjectUpdates();
 
         //Save update

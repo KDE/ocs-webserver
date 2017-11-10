@@ -26,4 +26,4 @@ $date = $helperHumanTiming->humanTiming($this->productUpdate['created_at']);
 <h3 class="product-heading product-update-heading" >
     <?= $this->productUpdate['title'] ?><span class="small light lightgrey product-update-date"> <?= $date['age'] ?> <?= $date['unit'] ?> ago</span>
 </h3>
-<p><?= Default_Model_BBCode::renderHtml(Default_Model_HtmlPurify::purify($this->productUpdate['text'])) ?></p>
+<p><?= Default_Model_BBCode::renderHtml(Default_Model_HtmlPurify::purify(htmlentities($this->productUpdate['text'], ENT_QUOTES | ENT_IGNORE))) ?></p>

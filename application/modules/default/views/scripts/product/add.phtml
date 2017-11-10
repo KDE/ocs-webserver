@@ -360,7 +360,6 @@ $categoryPath[] = $valueCatId;
                     .done(function(response) {
                         alert(response.data.id);
                         alert(response.data.label);
-                        console.debug(response);
                         var template = '<div class="message-form-template">\n' +
                             '\t<div class="new-tag">\n' +
                             '\t\t<span class="tag"><a class="message-form-delete-tag" data-id="'+response.data.id+'" href="javascript:;">\n' +
@@ -606,8 +605,10 @@ $categoryPath[] = $valueCatId;
                                     date = this.created_at;
                                 }
 
+                                Changelog.setLogMsg(id, this.raw_title, this.raw_text);
+
                                 var divEl = $('<div />');
-                                divEl.attr('data-uptdate-id', id);
+                                divEl.attr('data-update-id', id);
                                 divEl.append(
                                     '<a name="anker_'+id+'"></a>'
                                     + '<h4>'+title+'</h4>'
@@ -1450,8 +1451,11 @@ $categoryPath[] = $valueCatId;
 
                 $modalPpload.on('click', 'button[data-change-update-btn]', function (event) {
                     var updateId = $(this).attr('data-change-update-btn');
-                    var title = $(this).attr('data-change-title');
-                    var text = $(this).attr('data-change-text');
+                    //var title = $(this).attr('data-change-title');
+                    //var text = $(this).attr('data-change-text');
+                    var changelog = Changelog.getLogMsg(updateId);
+                    var title = changelog.msg_title;
+                    var text = changelog.msg_text;
 
                     $modalPpload.find('#update-title').val(title);
                     $modalPpload.find('#update-text').val(text);
@@ -1587,10 +1591,7 @@ $categoryPath[] = $valueCatId;
 
                 },
                 activateSelect: function(elementId, elementTags) {
-                    console.log(elementId);
-                    console.log(elementTags);
                     var userTagArray = UserTags.getTagArray(elementTags);
-                    console.log(userTagArray);
                     $.each(userTagArray, function() {
                         $("#data-select-tags" + elementId + " option[value='"+this+"']").attr('selected', 'selected');
                     });
@@ -1603,6 +1604,23 @@ $categoryPath[] = $valueCatId;
                 },
             }
         })();
+
+        var LogCollection=function()
+        {
+            this.changelogs = {};
+
+            this.setLogMsg =
+                function(id, title, msg) {
+                    this.changelogs[id] = {msg_title:title, msg_text:msg};
+            };
+
+            this.getLogMsg =
+                function(id) {
+                    return this.changelogs[id];
+                }
+        };
+
+        var Changelog = new LogCollection();
     </script>
   <script>
           $.fn.sortSelect = function() {
