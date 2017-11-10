@@ -395,7 +395,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         foreach ($updates as $key => $update) {
             $updates[$key]['title'] = Default_Model_HtmlPurify::purify($update['title']);
-            $updates[$key]['text'] = Default_Model_BBCode::renderHtml(Default_Model_HtmlPurify::purify($update['text']));
+            $updates[$key]['text'] = Default_Model_BBCode::renderHtml(Default_Model_HtmlPurify::purify(htmlentities($update['text'], ENT_QUOTES | ENT_IGNORE)));
         }
 
         $result['status'] = 'success';
