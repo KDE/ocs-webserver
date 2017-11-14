@@ -1540,7 +1540,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                         'repository'            => '',
                         'download_package_type' => $tags['packagetypeid'],
                         'download_package_arch' => $tags['packagearch'],
-                        'downloadtags'          => implode(',',$tags['filetags'])
+                        'downloadtags'          => empty($tags['filetags'])?'':implode(',',$tags['filetags'])
                     )
                 )
             );
@@ -1563,7 +1563,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                         'repository'            => array('@text' => ''),
                         'download_package_type' => array('@text' => $tags['packagetypeid']),
                         'download_package_arch' => array('@text' => $tags['packagearch']),
-                        'downloadtags'          => array('@text' => implode(',', $tags['filetags']))
+                        'downloadtags'          => array('@text' => empty($tags['filetags'])?'':implode(',',$tags['filetags']))
                     )
                 )
             );
