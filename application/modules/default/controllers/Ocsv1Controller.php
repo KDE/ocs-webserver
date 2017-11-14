@@ -1165,7 +1165,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                 $downloadItems['downloadrepository' . $i] = '';
                 $downloadItems['download_package_type' . $i] = $tags['packagetypeid'];
                 $downloadItems['download_package_arch' . $i] = $tags['packagearch'];
-                $downloadItems['downloadtags' . $i] = implode(',',$tags['filetags']);
+                $downloadItems['downloadtags' . $i] = empty($tags['filetags'])?'':implode(',',$tags['filetags']);
                 $i++;
             }
         }
