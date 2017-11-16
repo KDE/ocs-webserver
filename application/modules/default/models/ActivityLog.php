@@ -69,6 +69,7 @@ class Default_Model_ActivityLog extends Default_Model_DbTable_ActivityLog
     const BACKEND_PROJECT_FEATURE = 312;
     const BACKEND_PROJECT_APPROVED = 314;
     const BACKEND_PROJECT_CAT_CHANGE = 316;
+    const BACKEND_PROJECT_PLING_EXCLUDED = 318;
     const BACKEND_USER_DELETE = 320;
 
     protected static $referenceType = array(
@@ -119,6 +120,7 @@ class Default_Model_ActivityLog extends Default_Model_DbTable_ActivityLog
         312 => 'backend',
         314 => 'backend',
         316 => 'backend',
+        318 => 'backend',
         320 => 'backend'
     );
 
