@@ -29,6 +29,7 @@ class Backend_ProjectController extends Local_Controller_Action_Backend
 
     const PARAM_FEATURED = 'featured';
     const PARAM_APPROVED = 'approved';
+    const PARAM_PLING_EXCLUDED = 'pling_excluded';
     /** @var Default_Model_Project */
     protected $_model;
 
@@ -274,6 +275,27 @@ class Backend_ProjectController extends Local_Controller_Action_Backend
         $identity = $auth->getIdentity();
         Default_Model_ActivityLog::logActivity($projectId, $projectId, $identity->member_id,
             Default_Model_ActivityLog::BACKEND_PROJECT_APPROVED, $product);
+
+        $jTableResult = array();
+        $jTableResult['Result'] = self::RESULT_OK;
+
+        $this->_helper->json($jTableResult);
+    }
+    
+    
+    public function doexcludeAction()
+    {
+        $projectId = (int)$this->getParam(self::DATA_ID_NAME, null);
+        $product = $this->_model->find($projectId)->current();
+        $exclude = (int)$this->getParam(self::PARAM_PLING_EXCLUDED, null);
+
+        $sql = "update project set pling_excluded = :exclude where project_id = :project_id";
+        $this->_model->getAdapter()->query($sql, array('exclude' => $exclude, 'project_id' => $projectId));
+
+        $auth = Zend_Auth::getInstance();
+        $identity = $auth->getIdentity();
+        Default_Model_ActivityLog::logActivity($projectId, $projectId, $identity->member_id,
+            Default_Model_ActivityLog::BACKEND_PROJECT_PLING_EXCLUDED, $product);
 
         $jTableResult = array();
         $jTableResult['Result'] = self::RESULT_OK;
