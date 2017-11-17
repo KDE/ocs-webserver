@@ -37,8 +37,10 @@ $viewClaimBox = false;
 if ($this->product->claimable == 1) {
     $viewClaimBox = 'product/partials/productClaimTopHeader.phtml';
 }
-$helpProjectFiles = new Default_View_Helper_ProjectFiles();
-$productFileInfos = $helpProjectFiles->projectFiles($this->product->ppload_collection_id);
+// HOTFIX caused by slow fileserver; issue should be solved asap
+//$helpProjectFiles = new Default_View_Helper_ProjectFiles();
+//$productFileInfos = $helpProjectFiles->projectFiles($this->product->ppload_collection_id);
+$productFileInfos = null;
 
 $this->product->title = Default_Model_HtmlPurify::purify($this->product->title);
 $this->product->description = Default_Model_BBCode::renderHtml(Default_Model_HtmlPurify::purify($this->product->description));
