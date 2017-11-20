@@ -46,12 +46,12 @@ class Default_View_Helper_ProjectFiles extends Zend_View_Helper_Abstract
             );
             $filesResponse = $pploadApi->getFiles($filesRequest);
             if (isset($filesResponse->status)
-                && $filesResponse->status == 'success'
-            ) {
+                && $filesResponse->status == 'success') {
                 $fileCount = $filesResponse->pagination->totalItems;
             }
         }
         $filesInfos['fileCount'] = $fileCount;
+
         return $filesInfos;
     }
 

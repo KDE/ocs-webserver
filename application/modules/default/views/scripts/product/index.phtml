@@ -251,9 +251,7 @@ if (Zend_Auth::getInstance()->hasIdentity()){
                                     </a>
                                 </li>
                             <?php } ?>
-                            <li><a href="#files-panel" data-toggle="tab">Files <?php if ($productFileInfos['fileCount'] > 0) {
-                                        echo '(' . $productFileInfos['fileCount'] . ')';
-                                    } ?></a></li>
+                            <li><a href="#files-panel" data-toggle="tab">Files <span id="files-counter"></span></a></li>
                         <?php if(count($this->updates)>0){ ?>
                             <li><a href="#updates-panel" data-toggle="tab">Changelogs <?php echo '('.count($this->updates).')';  ?></a></li>
                         <?php } ?>
@@ -503,6 +501,34 @@ if (Zend_Auth::getInstance()->hasIdentity()){
             js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.5";
             fjs.parentNode.insertBefore(js, fjs);
         }(document, 'script', 'facebook-jssdk'));</script>
+
+<script>
+    (function (collection_id) {
+        if (0 === parseInt(collection_id)) {
+            return;
+        }
+        $.ajax({
+            url: '<?= PPLOAD_API_URI ?>files/index',
+            type: 'GET',
+            data: {
+                format: 'json',
+                status: 'active',
+                collection_id: collection_id,
+                perpage: 100
+            },
+            dataType: 'json',
+            success: function (response_data, textStatus, jqXHR) {
+                var amount;
+                if (response_data.status === 'success') {
+                    amount = response_data.pagination.totalItems;
+                    if (0 < parseInt(amount)) {
+                        $('#files-counter').append('('+amount+')');
+                    }
+                }
+            }
+        });
+    }(<?=$this->product->ppload_collection_id?>));
+</script>
 
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){       
