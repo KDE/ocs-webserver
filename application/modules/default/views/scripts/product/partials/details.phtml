@@ -314,7 +314,7 @@ $userRoleName = $helperUserRole->userRole();
                     if (response_data.status === 'success') {
                         var files = response_data.files;
                         $.each(files, function(index, data_file) {
-                            amount += data_file.downloaded_timeperiod_count;
+                            amount += parseInt(data_file.downloaded_timeperiod_count);
                         });
                         $('#downloadscnt').empty().append(amount);
                     }
