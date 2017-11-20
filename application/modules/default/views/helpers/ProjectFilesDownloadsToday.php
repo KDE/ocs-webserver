@@ -30,7 +30,6 @@ class Default_View_Helper_ProjectFilesDownloadsToday extends Zend_View_Helper_Ab
      */
     public function projectFilesDownloadsToday($ppload_collection_id)
     {
-        $filesInfos = array();
         // require_once 'Ppload/Api.php';
         $pploadApi = new Ppload_Api(array(
             'apiUri'   => PPLOAD_API_URI,
@@ -38,24 +37,23 @@ class Default_View_Helper_ProjectFilesDownloadsToday extends Zend_View_Helper_Ab
             'secret'   => PPLOAD_SECRET
         ));
 
-        $today = new DateTime();            
+        $today = new DateTime();
         $cnt = 0;
         if ($ppload_collection_id) {
             $filesRequest = array(
-                'collection_id' => ltrim($ppload_collection_id, '!'),
-                'perpage'       => 100,
-                'status'  =>'active',
+                'collection_id'               => ltrim($ppload_collection_id, '!'),
+                'perpage'                     => 100,
+                'status'                      => 'active',
                 'downloaded_timeperiod_begin' => $today->format("Y-m-d")
             );
-            $filesResponse = $pploadApi->getFiles($filesRequest);            
+            $filesResponse = $pploadApi->getFiles($filesRequest);
             if (isset($filesResponse->status)
-                && $filesResponse->status == 'success'
-            ) {
-                 $files= $filesResponse->files;
+                && $filesResponse->status == 'success') {
+                $files = $filesResponse->files;
 
-                 foreach ($files as $f) {
-                      $cnt=$cnt+ $f->downloaded_timeperiod_count;                      
-                 }                
+                foreach ($files as $f) {
+                    $cnt = $cnt + $f->downloaded_timeperiod_count;
+                }
             }
         }
 

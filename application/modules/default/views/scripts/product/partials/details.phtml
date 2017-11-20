@@ -49,12 +49,12 @@ $userRoleName = $helperUserRole->userRole();
     </div>
     <div class="row">
         <span class=" col-lg-6">downloads today</span>
-        <span class="col-lg-6 value"> <div id="downloadscnt"><?php $this->projectFilesDownloadsToday($this->product->ppload_collection_id)?></div></span>
+        <span class="col-lg-6 value"> <div id="downloadscnt">0</div></span>
     </div>
 
     <div class="row">
         <span class=" col-lg-6">page views today </span>
-        <span class="col-lg-6 value"> <?php $this->projectPageviewsToday($this->product->project_id) ?></span>
+        <span class="col-lg-6 value"> <?= $this->projectPageviewsToday($this->product->project_id) ?></span>
     </div>
     
     <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
@@ -292,4 +292,34 @@ $userRoleName = $helperUserRole->userRole();
 
     <?php endif; ?>
 
+    <script>
+        (function (collection_id) {
+            if (!collection_id) {
+                return;
+            }
+            var current_date = new Date().toISOString().split('T')[0];
+            $.ajax({
+                url: '<?= PPLOAD_API_URI ?>files/index',
+                type: 'GET',
+                data: {
+                    format: 'json',
+                    status: 'active',
+                    collection_id: collection_id,
+                    downloaded_timeperiod_begin: current_date,
+                    perpage: 100
+                },
+                dataType: 'json',
+                success: function (response_data, textStatus, jqXHR) {
+                    var amount = 0;
+                    if (response_data.status === 'success') {
+                        var files = response_data.files;
+                        $.each(files, function(index, data_file) {
+                            amount += data_file.downloaded_timeperiod_count;
+                        });
+                        $('#downloadscnt').empty().append(amount);
+                    }
+                }
+            });
+        }(<?=$this->product->ppload_collection_id?>));
+    </script>
 </div>
