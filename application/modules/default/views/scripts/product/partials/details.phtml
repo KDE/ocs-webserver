@@ -49,12 +49,12 @@ $userRoleName = $helperUserRole->userRole();
     </div>
     <div class="row">
         <span class=" col-lg-6">downloads today</span>
-        <span class="col-lg-6 value"> <div id="downloadscnt"><?php // $this->projectFilesDownloadsToday($this->product->ppload_collection_id)?></div></span>
+        <span class="col-lg-6 value"> <div id="downloadscnt"><?php $this->projectFilesDownloadsToday($this->product->ppload_collection_id)?></div></span>
     </div>
 
     <div class="row">
         <span class=" col-lg-6">page views today </span>
-        <span class="col-lg-6 value"> <?php // $this->projectPageviewsToday($this->product->project_id) ?></span>
+        <span class="col-lg-6 value"> <?php $this->projectPageviewsToday($this->product->project_id) ?></span>
     </div>
     
     <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
