@@ -294,7 +294,7 @@ $userRoleName = $helperUserRole->userRole();
 
     <script>
         (function (collection_id) {
-            if (0 === parseInt(collection_id)) {
+            if (!collection_id) {
                 return;
             }
             var current_date = new Date().toISOString().split('T')[0];
