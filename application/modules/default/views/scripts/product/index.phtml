@@ -105,7 +105,7 @@ if (Zend_Auth::getInstance()->hasIdentity()){
     </div>
 
 
-    <?php if (Zend_Auth::getInstance()->hasIdentity() && $this->isSupporter($this->product->member_id)) { ?>
+    <?php if (Zend_Auth::getInstance()->hasIdentity() && $this->isSupporter($identity->member_id)) { ?>
     <div id="review-product-modal" class="modal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content" style="padding-bottom: 20px">
