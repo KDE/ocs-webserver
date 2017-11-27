@@ -83,7 +83,7 @@ var ImagePreview =  {
 
                         $('#product-picture-container div.image-error').remove();
 
-                        if (w > 1000 || w < 20 || h > 1000 || h < 20) {
+                        if (w > 1024 || w < 20 || h > 1024 || h < 20) {
                             $('#product-picture-preview').attr('src', '').hide().parent()
                                 .append('<div class="image-error">Wrong image dimensions</div>')
                             ;
