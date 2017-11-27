@@ -1,0 +1,782 @@
+/*** INDEX PAGE - BASIC LAYOUT - LEFT - MAIN - RIGHT ***/
+
+/*** HEADER ***/
+header .container.header ul.menu-nav-tabs {
+	display: inline-block;
+}
+/* Header category title link hover color */
+.header_cat_link a:hover,
+.header_cat_link a:active {
+	color: #ccc;
+}
+/* Set units to %, remove horizontal scrollbar*/
+header#page_header nav#nav-top {
+    margin-left: 14%;
+    width: 84%;
+}
+
+header .container > .container {
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+header .container.header nav #search input.content-search {
+	border-radius: 16px;
+}
+header .container.header nav #search {
+	margin: 2px 0;
+}
+
+#nav-top .pull-right {
+	position: absolute;
+	top: 8px;
+	right: 0;
+}
+/* Signed in profile */
+header ul li.profile-menu-container {
+    padding-top: 0;
+    padding-left: 40px;
+    top: 34px;
+    z-index: 999;
+    right: -0px;
+	background: rgba(255,255,255,.1);
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+header ul li:hover > a {
+	color: #fff;
+}
+header ul li.profile-menu-container:hover {
+	color: #fff;
+	background: #2673b0;
+}
+header ul li.profile-menu-container>a:active {
+	color: #eee;
+}
+header ul li.profile-menu-container>a:hover,
+header ul li.profile-menu-container>a:visited {
+	color: #fff;
+}
+/* Profile min width */
+.profile-menu-container {
+	min-width: 140px;
+}
+/* Profile, drop-down menu */
+ header ul li ul,
+header .dropdown-header {
+	width: 150px;
+}
+
+/*** BASIC LAYOUT - LEFT - MAIN - RIGHT ***/
+/* Same padding abound containers */
+
+/* Padding around wrapper container */
+#products-wrapper,
+#explore-content .GridFlex .content,
+#explore-content .GridFlex .sidebar-left,
+#explore-content .GridFlex .sidebar-right {
+	padding: 10px;
+}
+
+/* Main content reduced left and right padding */
+.explore-products {
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-top: -10px;
+}
+
+
+/*** LEFT SIDEBAR ***/
+
+#explore-content .GridFlex .sidebar-left {
+	flex: 0 0 286px;
+	width: 286px;
+	min-width: 240px;
+}
+
+.sidebar-left .panel-group .panel {
+	border-radius: 2px;
+}
+
+/* Navigation menu padding */
+.naviblock {
+	padding: 2px;
+}
+/* Navigation links with same padding on all sides */
+.navilink {
+	padding: 0 0 2px 0;
+}
+/* Remove bottom padding on last link */
+.navilink:last-of-type {
+	padding: 0;
+}
+/* Small bottom space for links, easier to hover over links */
+ul.naviblock a {
+	padding: 2px 0;
+	border-radius: 2px;
+}
+/* Active category link bold style */
+li.navilink.active.parent a.active.parent,
+ul.naviblock a.active.child {
+	font-weight: bold;
+}
+/* Current fix for child li right alignment inside a parent li */
+.navilink .collapse.in {
+    display: block;
+    margin: 0 -2px 0 -2px;
+}
+li.navilink.parent.active span .parent span:nth-of-type(1) {
+	font-weight: bold;
+}
+.navilink .child .cat-title::before {
+	content: "\2911";
+	padding-left: 0px;
+	padding-right: 6px;
+}
+
+
+/*** MAIN CONTAINER ***/
+/* 
+Add padding instead of margins on wrapper. 
+Margins of 2.5% are forcing horizontal scroll bar
+*/
+header section.wrapper, 
+footer section.wrapper, 
+main section.wrapper {
+	width: 100%;
+	margin: auto;
+	padding: 0 10px;
+}
+
+/* Break long links */
+a {
+	word-wrap: break-word;
+}
+
+/* Version number stand-alone */
+.explore-products .product-list .explore-product .explore-product-details h3 span.version {
+    display: block;
+    padding-left: 0px;
+    margin-top: 8px;
+    color: #656565;
+}
+/* Tags auto width */
+.explore-products .product-list .explore-product .explore-product-details .packagetypes .packagetypeos {
+     width: auto;
+    float: left;
+}
+
+
+/*** RIGHT SIDEBAR ***/
+
+#explore-content .GridFlex .sidebar-right {
+	flex: 0 0 286px;
+	width: 286px;
+	min-width: 240px;
+}
+
+/* Download button */
+#explore-content .downloadDiv img {
+	opacity: 0;
+}
+
+#explore-content .downloadDiv {
+	background: url(https://i.imgur.com/VXziQez.png);
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: 50% 0;
+	display: block;
+	width: 100%;
+	margin-bottom: 0px;
+	padding: 0;
+}
+
+/* Keep user names links in one line */
+.userinfo a {
+	word-wrap: normal;
+}
+
+
+/* Remove grey background and padding, which takes additional space */
+#explore-content .sidebar-right-info {
+	background: transparent;
+	padding: 0;
+	margin: 0 auto;
+}
+
+/* 
+Change font units to em, rem or px; avoid pt. 
+Set width to 100% and add space around content
+*/
+#explore-content .prod-widget-box {
+	font-size: 13px;
+	line-height: 1.6rem;
+	width: 100% !important; /* remove !important */
+	margin-bottom: 20px !important;
+	padding: 0 8px;
+	border-radius: 2px;
+	border-top-left-radius: 0px;
+	border-top-right-radius: 0px;
+}
+#explore-content .prod-widget-box:last-child {
+	margin-bottom: 0 !important;
+}
+
+/* Break sidebar title and subtitle in two lines, ex. 3 Months Ranking */
+.commentTitle .small {
+	display: block;
+	clear: both;
+}
+
+/* Combine/merge widget title with content box */
+#explore-content .sidebar-right-info .commentTitle, 
+#explore-content .sidebar-right-info .newsTitle {
+	display: block !important;
+	clear: both;
+	margin-top: 10px !important;
+	padding: 8px;
+	background: #fbfbfb;
+	border: 1px solid #ccd4d8;
+	border-bottom: 0;
+	border-top-left-radius: 2px;
+	border-top-right-radius: 2px;
+}
+
+/* Right sidebar with fixed height and scrollbar-x */
+#rss-feeds,
+#lastcomments,
+#mostdownloaded {
+	height: 300px;
+	overflow-x: auto;
+}
+
+.commentstore {
+	position: relative;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	border-bottom: 1px solid #dee4e6;
+}
+
+#explore-content .sidebar-right-info a {
+	text-decoration: none;
+}
+
+#explore-content .sidebar-right-info a:hover,
+#explore-content .sidebar-right-info span a:hover {
+	text-decoration: underline;
+}
+
+/* News and Comment product title */
+#explore-content .sidebar-right-info .commentstore span.title,
+.commentstore > div:nth-of-type(1) {
+	font-weight: 600;
+    font-size: 1.3rem;
+    line-height: 1.8rem;
+}
+#explore-content .sidebar-right-info .commentstore span.title {
+	display: inline-block;
+	margin-bottom: 8px;
+	text-decoration: initial;
+}
+.commentstore > div:nth-of-type(1) {
+	width: 70%;
+	min-height: 68px;
+	margin-bottom: 8px;
+}
+
+/* Category tag */
+.commentstore div:first-of-type span:first-child {
+	display: block;
+    width: max-content;
+    width: -moz-max-content;
+    margin: 4px 0;
+    padding: 0 4px;
+    clear: both;
+    font-size: .9rem;
+    color: #747474;
+    border: 1px solid #ddd;
+    border-radius: 2px;
+    background: #f5f5f5;
+}
+
+/* User info position */
+.commentstore .userinfo {
+	position: absolute;
+	top: 10px;
+	right: 8px;
+    text-align: center;
+}
+
+/* Username position */
+.commentstore .userinfo a span {
+	position: absolute;
+	top: 50px;
+	right: 0;
+	width: 54px;
+	max-width: 54px;
+	white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+	text-align: right;
+}
+
+.commentstore .userinfo a span:hover {
+	overflow: visible; 
+    white-space: nowrap;
+    height: auto;
+	width: auto;
+	max-width: initial;
+	text-align: right;
+	background: #fff;
+}
+
+/* Date style */
+#explore-content .sidebar-right-info .commentstore span.date,
+.commentstore > div:nth-of-type(3) span {
+    display: block;
+    font-size: 1.1rem;
+    clear: both;
+    color: #555;
+    margin-top: 8px;
+	text-align: left;
+}
+
+/* Most Downloaded style */
+.explore-product {
+	padding-bottom: 10px;
+}
+
+/* Products numbers small */
+.sidebar-right-info .explore-product .rownum {
+	font-size: 10px;
+    position: absolute;
+    top: 1px;
+    left: -4px;
+    z-index: 999;
+    background: #eee;
+    border-radius: 2px;
+    padding: 1px 2px;
+}
+
+/* Product title left margin */
+#mostdownloaded .explore-product-details div {
+	margin-left: 8px;
+}
+
+/*** FOOTER ***/
+footer {
+    width: 100%;
+    float: left;
+    padding: 36px;
+    border-bottom: 0;
+    border-top: 4px solid #f5f5f5;
+    background-color: #fff;
+}
+
+#footer-heading {
+    color: #858585;
+    font-weight: 200;
+}
+
+#footer-nav ul li:nth-of-type(1) a,
+#footer-nav ul li:nth-of-type(2) a,
+#footer-nav ul li:nth-of-type(3) a {
+	color: #2673b0;
+	font-weight: 600;
+    font-size: 14px;
+}
+
+#footer-nav ul li:nth-of-type(4) {
+	display: block;
+	margin: 16px 0 3px 0;
+}
+
+footer section.wrapper section {
+	position: relative;
+}
+
+footer section.wrapper .pull-right {
+	position: absolute;
+	width: 200px;
+	bottom: 0;
+	right: 0;
+}
+
+footer section.wrapper .pull-right > div:first-child {
+	position: absolute;
+	bottom: 0 !important;
+	right: 0;
+	text-align: right;
+	color: #959595 !important;
+	z-index: 999;
+}
+
+footer section.wrapper .pull-right > div:last-child {
+	position: relative;
+}
+
+#footer-social {
+	display: block;
+	position: relative;
+	float: right;
+	bottom: 30px;
+}
+
+footer section.wrapper .pull-right > h3 {
+	display: none;
+}
+/* Social icons */
+footer #footer-social a {
+    width: 40px;
+	height: 40px;
+    display: block;
+    float: left;
+}
+
+/* Social-mod Start */
+
+/* New Social icons */
+#facebook {
+	background: url(https://i.imgur.com/2HNedlh.png);
+	background-size: cover;
+}
+#twitter {
+	background: url(https://i.imgur.com/lOlyD3k.png);
+	background-size: cover;
+}
+#g-plus {
+	background: url(https://i.imgur.com/itIYGNQ.png);
+	background-size: cover;
+}
+/* Hide original icons, use new icons as background via css. Possibly better idea is to replace old images and remove everything from "Social-mod Start-End" */
+#facebook img,
+#twitter img,
+#g-plus img {
+	opacity: 0;
+}
+#facebook:hover,
+#twitter:hover,
+#g-plus:hover {
+	opacity: .8;
+}  
+
+/* Social-mod End */
+
+
+/* STATIC PAGE */
+.static-container {
+    margin-top: calc(5% + 90px);
+    margin-bottom: 30px;
+}
+.static-container .row-fluid {
+	padding: 0 30px;
+}
+
+/* PLINGS PAGE */
+.head-wrap,
+.body-wrap {
+	padding: 36px !important;
+}
+
+
+/* MEDIA QUERY */
+
+/* < 1279 */
+@media screen and (max-width: 1279px) {
+	#explore-content .GridFlex .sidebar-left {
+		flex: 0 0 240px;
+		width: 240px;
+		min-width: 240px;
+	}
+	#explore-content .GridFlex .sidebar-right {
+		flex: 0 0 240px;
+		width: 240px;
+		min-width: 240px;
+	}
+}
+
+
+/* < 1199 */
+@media screen and (max-width: 1199px) {
+	.explore-products {
+    	padding-left: 0px;
+    	padding-right: 0px;
+    	margin-top: -10px;
+	}
+	
+	/* Break 3 columns layout into 2 */
+	#explore-content .GridFlex {
+		display:flex;
+  		flex-flow: row wrap;
+  		justify-content: flex-end;
+	}
+	#explore-content .GridFlex .sidebar-left {
+		flex: 0 0 240px;
+		width: 240px;
+		min-width: 240px;
+		order: 1;
+	}
+	#explore-content .GridFlex .content {
+		flex-basis: calc(100% - 240px);
+		order: 2;
+	}
+	#explore-content .GridFlex .sidebar-right {
+		flex: 0 0 240px;
+		width: 240px;
+		min-width: 240px;
+		flex-basis: calc(100% - 240px);
+		order: 3;
+	}
+	#explore-content .downloadDiv img {
+    	width: 240px;
+	}
+}
+
+
+/* < 959 */
+@media screen and (max-width: 959px) {
+	#explore-content .GridFlex {
+			justify-content: flex-end; /* For right sidebar right side alignment on smaller screens */
+	}
+	#explore-content .GridFlex .sidebar-right {
+		flex: 1;
+		margin-left: 240px;
+	}
+	#explore-content .downloadDiv {
+		margin-bottom: 10px;
+	}
+	#explore-content .downloadDiv img {
+    width: 240px;
+	}
+}
+
+
+/* < 779 */
+@media screen and (max-width: 779px) {
+	#explore-content .GridFlex .sidebar-left {
+		flex-basis: 100% !important; /* override flex: 1 !important */
+		order: 1;
+	}
+	#explore-content .GridFlex .content {
+		flex-basis: 100%;
+		order: 2;
+	}
+	#explore-content .GridFlex .sidebar-right {
+		flex-basis: 100%;
+		order: 3;
+	}
+	.sidebar-left, .content  {
+		flex: 1 !important;
+	}
+   /* Responsive left sidebar menu */
+    #accordion {
+        min-height: 40px;
+    }
+	#accordion .accordion-group {
+		height: 43px;
+        overflow: hidden;
+    }
+	
+    #accordion .accordion-group::before {
+        content:" Browse ";
+		font-size: 14px; /* Same font size for Firefox, Chrome, Opera... */
+        display: block;
+        border: 1px solid #ccc;
+        border-radius: 2px;
+        padding: 9px;
+        margin: 2px;
+		background: #fff;
+    }
+	#accordion .accordion-group:hover::before {
+		color: #565656;
+		background: #f5f5f5;
+		border: 1px solid #bbb; 
+	}
+    #accordion .accordion-group:focus,
+    #accordion .accordion-group:hover,
+    #accordion .accordion-group:active {
+        height: auto;
+        overflow: visible;
+    }
+    
+	#explore-content .GridFlex .sidebar-right {
+		flex: 1 !important; /* Set right sidebar to full width */
+		margin-left: 0;
+		min-width: 100%;
+		width: 100%;
+	}
+}
+
+
+/* < 735 */
+@media screen and (max-width: 735px) {
+	/* Header top nav */
+	header #page_header nav #nav-top {
+		margin-left: 0;
+	}
+	.metamenu {
+    	height: 50px;
+	}
+	/* Logo */
+	.meta-nav-top.left > li:nth-of-type(1) {
+		position: absolute;
+    	top: -26px;
+    	left: 0;
+	}
+	/* Left nav */
+	.meta-nav-top.left {
+		position: absolute;
+    	top: 26px;
+	}
+	/* "Addons, Artwork and Other" menu fix for small devices */
+	.meta-nav-top.left > li:nth-of-type(6) .dropdown-menu,
+	.meta-nav-top.left > li:nth-of-type(8) .dropdown-menu,
+	.meta-nav-top.left > li:nth-of-type(10) .dropdown-menu {
+		min-width: 110px;
+		max-width: 120px;
+	}
+	/* Dividers margins */
+	.nav-pills > li + li {
+    margin-left: 5px;
+	}
+	/* Right nav */
+	.meta-nav-top.right {
+		float: left;
+		margin-left: 142px;
+	}
+	.header_cat_link {
+		left: 100px; /* Move category title left */
+		bottom: 2px;
+		font-size: 20px;
+	}
+	header .logo-header {
+		width: 86px; /* Hide category logo title, keep icon visible */
+		left: 0px; /* Align category logo left */
+		top: 8px;
+	}
+	li.navilink span.cat-title {
+		padding-left: 8px; /* Add left padding to match coutner right side space */
+	}
+	li.navilink span.product-counter {
+		width: 23%; /* Align categories counter to the right side */
+	}
+	#explore-content .GridFlex .content	{
+		padding: 0;
+		min-width: 100%;
+	}
+	.explore-products, 
+	.sidebar-right {
+		padding-left: 15px;
+		padding-right: 15px;
+	}
+	.explore-products .product-list {
+		padding: 0;
+	}
+	
+	/* Comment section username position */
+	.commentstore .userinfo a span {
+		position: absolute;
+		top: 50px;
+		right: 0;
+		width: auto;
+		max-width: initial;
+		white-space: nowrap;
+		overflow: visible;
+		text-overflow: initial;
+	}
+	
+	/* Footer  */
+	footer section.wrapper .pull-left {
+		width: 100%;
+		margin-bottom: 30px;
+	}
+	footer section.wrapper .pull-right {
+		position: relative;
+		width: 100%;
+		bottom: 0;
+		left: 0;
+		height: 80px;
+	}
+	footer section.wrapper .pull-right > div:first-child {
+		left: 0;
+		right: auto;
+	}
+	footer #footer-social {
+		float: left;
+		top: 8px;
+	}
+}
+
+
+/* < 560 */
+@media screen and (max-width: 560px) {
+	/* Static page padding */
+	.static-container .row-fluid {
+		padding: 0 10px;
+	}
+	/* Footer small changes*/
+	#footer-nav ul li:nth-of-type(1),
+	#footer-nav ul li:nth-of-type(2),
+	#footer-nav ul li:nth-of-type(3) {
+		display: block;
+		margin: 16px 0;
+	}
+	#footer-nav ul li:nth-of-type(4) {
+	margin: 30px 0 3px 0;
+	}
+}
+
+
+/* < 460 */
+@media screen and (max-width: 460px) {
+    /* Top menu height */
+    .metamenu {
+    	height: 70px;
+    }
+    /* Break top menu categories in two lines */
+    .meta-nav-top.left > li:nth-of-type(8) {
+    	clear: left;
+    }
+	.meta-nav-top.left > li:nth-of-type(8),
+    .meta-nav-top.left > li:nth-of-type(9),
+    .meta-nav-top.left > li:nth-of-type(10) {
+    	margin-top: 4px;
+    }
+    /* Remove right margin from nav-pills small top menu */
+    .small.metamenu > .meta-nav-top.right {
+    	margin-right: 0px !important;
+    }
+    /* Reduce search width */
+    header .container.header nav #search input.content-search {
+    	width: 10em;
+    }
+    /* Reduce right margin on Login and Register buttons */
+    header .container.header .absolute-right {
+    	right: 4px;
+    }
+    
+	/* Pagination on small devices - hide previous and next text, show left and right arrows  */
+    /* Easier way is to add next and previous text inisde <span> and target the span only */
+    .explore-products .explore-footer .projectPaginationControl ul#pagination-digg .previous {
+    	display: inline-block;
+        width: 20px;
+        height: 20px;
+        overflow: hidden;
+		visibility: hidden;
+    }
+    .explore-products .explore-footer .projectPaginationControl ul#pagination-digg .previous a>span {
+    	visibility: visible;
+    }
+	.explore-products .explore-footer .projectPaginationControl ul#pagination-digg .next {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+    	overflow: hidden;
+        visibility: hidden;
+        text-indent: -100px; /* Move "next" 100px left */
+    }
+    .explore-products .explore-footer .projectPaginationControl ul#pagination-digg .next a>span {
+    	visibility: visible;
+        text-indent: 60px; /* Move arrow back */
+    }
+}
