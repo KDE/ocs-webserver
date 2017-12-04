@@ -1152,7 +1152,7 @@ class Ocsv1Controller extends Zend_Controller_Action
             foreach ($filesResponse->files as $file) {
                 //create ppload download hash: secret + collection_id + expire-timestamp
                 $salt = PPLOAD_DOWNLOAD_SECRET;
-                $collectionID = $this->view->product->ppload_collection_id;
+                $collectionID = $project->ppload_collection_id;
                 $timestamp = time() + (3600 * 12); // 12 hours valid
                 $hash = md5($salt . $collectionID . $timestamp);
 
@@ -1528,7 +1528,7 @@ class Ocsv1Controller extends Zend_Controller_Action
         
         //create ppload download hash: secret + collection_id + expire-timestamp
         $salt = PPLOAD_DOWNLOAD_SECRET;
-        $collectionID = $this->view->product->ppload_collection_id;
+        $collectionID = $project->ppload_collection_id;
         $timestamp = time() + (3600 * 12); // 12 hours valid
         $hash = md5($salt . $collectionID . $timestamp);
 
