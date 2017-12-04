@@ -74,6 +74,15 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             throw new Zend_Controller_Action_Exception('This page does not exist', 404);
         }
         $this->view->cat_id = $this->view->product->project_category_id;
+        
+        //create ppload download hash: secret + collection_id + expire-timestamp
+        $salt = PPLOAD_DOWNLOAD_SECRET;
+        $collectionID = $this->view->product->ppload_collection_id;
+        $timestamp = time() + 3600; // one hour valid
+        $hash = md5($salt . $collectionID . $timestamp); // order isn't important at all... just do the same when verifying
+        
+        $this->view->download_hash = $hash;
+        $this->view->download_timestamp = $timestamp;
 
         $helperUserIsOwner = new Default_View_Helper_UserIsOwner();
         $helperIsProjectActive = new Default_View_Helper_IsProjectActive();
