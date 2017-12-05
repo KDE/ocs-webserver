@@ -175,15 +175,20 @@ class Statistics_Model_Data
 
     public function getTopDownloadsPerDate($date){
             $date_start =$date.' 00:00:00';
-            $date_end =$date.' 23:59:59';           
+            $date_end =$date.' 23:59:59';    
             $sql = "
-                        select project_id, count(1) as cnt from dwh.files_downloads 
-                        where downloaded_timestamp 
-                        between  :date_start and :date_end
-                        group by project_id
-                        order by cnt desc
-                        limit 50
-            ";
+                  select d.project_id
+                  , count(1) as cnt 
+                  ,(select p.title from project p where p.project_id = d.project_id) as ptitle
+                  ,(select p.created_at from project p where p.project_id = d.project_id) as pcreated_at
+                  ,(select c.title from category c, project p where p.project_id = d.project_id and p.project_category_id=c.project_category_id) as ctitle
+                  from dwh.files_downloads d
+                  where downloaded_timestamp :date_start and :date_end
+                  group by project_id
+                  order by cnt desc
+                  limit 50
+            ";       
+           
             $result = $this->_db->fetchAll($sql,array("date_start"=>$date_start,"date_end"=>$date_end));
             return $result;             
     }
