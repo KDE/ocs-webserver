@@ -182,6 +182,7 @@ class Statistics_Model_Data
                   ,(select p.title from project p where p.project_id = d.project_id) as ptitle
                   ,(select p.created_at from project p where p.project_id = d.project_id) as pcreated_at
                   ,(select c.title from category c, project p where p.project_id = d.project_id and p.project_category_id=c.project_category_id) as ctitle
+                  ,(select username from member m , project p where m.member_id = p.member_id and p.project_id = d.project_id) as username
                   from dwh.files_downloads d
                   where d.downloaded_timestamp between :date_start and :date_end
                   group by d.project_id
