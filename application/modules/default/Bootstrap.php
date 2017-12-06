@@ -589,6 +589,18 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 )
             )
         );
+        
+        $router->addRoute(
+            'product_collectionid_url',
+            new Zend_Controller_Router_Route(
+                '/c/:collection_id/*',
+                array(
+                    'module'       => 'default',
+                    'controller'   => 'product',
+                    'action'       => 'show'
+                )
+            )
+        );
 
         $router->addRoute(
             'product_add',

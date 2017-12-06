@@ -380,6 +380,34 @@ class Default_Model_Project extends Default_Model_DbTable_Project
 
         return $this->generateRowSet($q->query()->fetchAll());
     }
+    
+    /**
+     * @param int $project_id
+     *
+     * @return null|Zend_Db_Table_Row_Abstract
+     */
+    public function fetchProductForCollectionId($collection_id)
+    {
+        $sql = '
+                SELECT
+                  p.*
+                FROM project AS p
+                WHERE 
+                  p.ppload_collection_id = :collectionId
+                  AND p.status >= :projectStatus AND p.type_id = :typeId
+        ';
+        $result = $this->_db->fetchRow($sql, array(
+            'collectionId'     => $collection_id,
+            'projectStatus' => self::PROJECT_INACTIVE,
+            'typeId'        => self::PROJECT_TYPE_STANDARD
+        ));
+
+        if ($result) {
+            return $this->generateRowClass($result);
+        } else {
+            return null;
+        }
+    }
 
     /**
      * @param int $project_id

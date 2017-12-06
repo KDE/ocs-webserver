@@ -1158,7 +1158,7 @@ class Ocsv1Controller extends Zend_Controller_Action
 
                 $downloads += (int)$file->downloaded_count;
                 $tags = $this->_parseFileTags($file->tags);
-                $downloadLink = PPLOAD_API_URI . 'files/downloadfile/id/' . $file->id . '/s/' . $hash . '/t/' . $timestamp . '/' . $file->name;
+                $downloadLink = PPLOAD_API_URI . 'files/downloadfile/id/' . $file->id . '/s/' . $hash . '/t/' . $timestamp . '/o/1/' . $file->name;
                 $downloadItems['downloadway' . $i] = 1;
                 $downloadItems['downloadtype' . $i] = '';
                 $downloadItems['downloadprice' . $i] = '0';
@@ -1533,7 +1533,7 @@ class Ocsv1Controller extends Zend_Controller_Action
         $hash = md5($salt . $collectionID . $timestamp);
 
         $tags = $this->_parseFileTags($file->tags);
-        $downloadLink = PPLOAD_API_URI . 'files/downloadfile/id/' . $file->id . '/s/' . $hash . '/t/' . $timestamp . '/' . $file->name;
+        $downloadLink = PPLOAD_API_URI . 'files/downloadfile/id/' . $file->id . '/s/' . $hash . '/t/' . $timestamp . '/o/1/' . $file->name;
 
         if ($this->_format == 'json') {
             $response = array(

@@ -33,6 +33,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
     protected $_request = null;
     /** @var  int */
     protected $_projectId;
+    /** @var  int */
+    protected $_collectionId;
     /** @var  Zend_Auth */
     protected $_auth;
     /** @var  string */
@@ -42,6 +44,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
     {
         parent::init();
         $this->_projectId = (int)$this->getParam('project_id');
+        $this->_collectionId = (int)$this->getParam('collection_id');
         $this->_auth = Zend_Auth::getInstance();
         $this->_browserTitlePrepend = $this->templateConfigData['head']['browser_title_prepend'];
     }
@@ -58,6 +61,12 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
     public function indexAction()
     {
+        if (!empty($this->_collectionId)) {
+            $productInfo = $modelProduct->fetchProductForCollectionId($this->_collectionId);
+            $this->_projectId = $productInfo->project_id;
+        }
+
+        
         if (empty($this->_projectId)) {
             $this->redirect('/explore');
         }
