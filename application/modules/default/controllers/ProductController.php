@@ -62,6 +62,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
     public function indexAction()
     {
         if (!empty($this->_collectionId)) {
+            $modelProduct = new Default_Model_Project();
             $productInfo = $modelProduct->fetchProductForCollectionId($this->_collectionId);
             $this->_projectId = $productInfo->project_id;
         }
