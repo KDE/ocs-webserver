@@ -297,6 +297,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         defined('PPLOAD_API_URI') || define('PPLOAD_API_URI', $pploadConfig->api_uri);
         defined('PPLOAD_CLIENT_ID') || define('PPLOAD_CLIENT_ID', $pploadConfig->client_id);
         defined('PPLOAD_SECRET') || define('PPLOAD_SECRET', $pploadConfig->secret);
+        defined('PPLOAD_DOWNLOAD_SECRET') || define('PPLOAD_DOWNLOAD_SECRET', $pploadConfig->download_secret);
     }
 
     protected function _initRouter()
@@ -581,6 +582,18 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             'product_referrer_url',
             new Zend_Controller_Router_Route(
                 '/p/:project_id/er/:er/*',
+                array(
+                    'module'       => 'default',
+                    'controller'   => 'product',
+                    'action'       => 'show'
+                )
+            )
+        );
+        
+        $router->addRoute(
+            'product_collectionid_url',
+            new Zend_Controller_Router_Route(
+                '/c/:collection_id',
                 array(
                     'module'       => 'default',
                     'controller'   => 'product',

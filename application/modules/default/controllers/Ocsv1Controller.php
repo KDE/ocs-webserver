@@ -1150,9 +1150,15 @@ class Ocsv1Controller extends Zend_Controller_Action
         if (isset($filesResponse->status) && $filesResponse->status == 'success') {
             $i = 1;
             foreach ($filesResponse->files as $file) {
+                //create ppload download hash: secret + collection_id + expire-timestamp
+                $salt = PPLOAD_DOWNLOAD_SECRET;
+                $collectionID = $project->ppload_collection_id;
+                $timestamp = time() + (3600 * 12); // 12 hours valid
+                $hash = md5($salt . $collectionID . $timestamp);
+
                 $downloads += (int)$file->downloaded_count;
                 $tags = $this->_parseFileTags($file->tags);
-                $downloadLink = PPLOAD_API_URI . 'files/download/' . 'id/' . $file->id . '/' . $file->name;
+                $downloadLink = PPLOAD_API_URI . 'files/downloadfile/id/' . $file->id . '/s/' . $hash . '/t/' . $timestamp . '/o/1/' . $file->name;
                 $downloadItems['downloadway' . $i] = 1;
                 $downloadItems['downloadtype' . $i] = '';
                 $downloadItems['downloadprice' . $i] = '0';
@@ -1519,9 +1525,15 @@ class Ocsv1Controller extends Zend_Controller_Action
         if (!$file) {
             $this->_sendErrorResponse(103, 'content item not found');
         }
+        
+        //create ppload download hash: secret + collection_id + expire-timestamp
+        $salt = PPLOAD_DOWNLOAD_SECRET;
+        $collectionID = $project->ppload_collection_id;
+        $timestamp = time() + (3600 * 12); // 12 hours valid
+        $hash = md5($salt . $collectionID . $timestamp);
 
         $tags = $this->_parseFileTags($file->tags);
-        $downloadLink = PPLOAD_API_URI . 'files/download/' . 'id/' . $file->id . '/' . $file->name;
+        $downloadLink = PPLOAD_API_URI . 'files/downloadfile/id/' . $file->id . '/s/' . $hash . '/t/' . $timestamp . '/o/1/' . $file->name;
 
         if ($this->_format == 'json') {
             $response = array(
