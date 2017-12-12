@@ -239,7 +239,7 @@ table.tablestati td.number{
               let dateEnd = $( "#filterDownloadsDomainDateEnd" ).val();  
               $.getJSON( "/backend/index/getdownloadsdomain?dateBegin="+dateBegin+"&dateEnd="+dateEnd, function( response ) {
                    let data = response.results;
-                    let table = "<table class='tablestati'><thead><tr><td class='number'>#</td><td>Domain</td><td>IS_OWN?</td></tr></thead>";
+                    let table = "<table class='tablestati'><thead><tr><td class='number'>CNT</td><td>Domain</td><td class='number'>IS_OWN?</td></tr></thead>";
                     $.each( data, function( index, value ){
                           table = table+'<tr>'
                           +'<td class="number">'+value.cnt+'</td>'
