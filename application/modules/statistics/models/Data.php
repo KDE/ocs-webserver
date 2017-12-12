@@ -173,6 +173,13 @@ class Statistics_Model_Data
         return $result;  
     }
 
+
+/**
+                  ,(select count(1) from dwh.files_downloads dd where dd.project_id = d.project_id 
+              and dd.downloaded_timestamp between  :date_start and :date_end
+              and dd.referer like 'https://www.google%') as cntGoogle
+*/
+
     public function getTopDownloadsPerDate($date){
             $date_start =$date.' 00:00:00';
             $date_end =$date.' 23:59:59';    
@@ -182,10 +189,7 @@ class Statistics_Model_Data
                   ,(select p.title from project p where p.project_id = d.project_id) as ptitle
                   ,(select p.created_at from project p where p.project_id = d.project_id) as pcreated_at
                   ,(select c.title from category c, project p where p.project_id = d.project_id and p.project_category_id=c.project_category_id) as ctitle
-                  ,(select username from member m , project p where m.member_id = p.member_id and p.project_id = d.project_id) as username
-                  ,(select count(1) from dwh.files_downloads dd where dd.project_id = d.project_id 
-              and dd.downloaded_timestamp between  :date_start and :date_end
-              and dd.referer like 'https://www.google%') as cntGoogle
+                  ,(select username from member m , project p where m.member_id = p.member_id and p.project_id = d.project_id) as username                  
                   from dwh.files_downloads d
                   where d.downloaded_timestamp between :date_start and :date_end
                   group by d.project_id
@@ -193,6 +197,22 @@ class Statistics_Model_Data
                   limit 50
             ";       
            
+            $result = $this->_db->fetchAll($sql,array("date_start"=>$date_start,"date_end"=>$date_end));
+            return $result;             
+    }
+
+    public function getDownloadsDomainStati($begin, $end){
+            $date_start =$begin.' 00:00:00';
+            $date_end =$end.' 23:59:59';    
+            $sql = "
+                  select count(1) as cnt 
+                      ,d.referer_domain   
+                        ,is_from_own_domain
+                      from dwh.files_downloads d
+                      where d.downloaded_timestamp  between :date_start and :date_end  
+                       group by d.referer_domain,is_from_own_domain   
+                      order by is_from_own_domain desc, cnt desc
+            ";                  
             $result = $this->_db->fetchAll($sql,array("date_start"=>$date_start,"date_end"=>$date_end));
             return $result;             
     }
