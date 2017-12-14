@@ -159,6 +159,13 @@ echo $this->render('partials/propagateLogout.phtml');
     
     
     <!-- Piwik -->
+    <?php
+    $piwikid ='1';
+    if($domainconfig)
+    {
+        $piwikid = $domainconfig['piwik_id'];
+    }
+    ?>
     <script type="text/javascript">
       var _paq = _paq || [];
       /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
@@ -167,7 +174,7 @@ echo $this->render('partials/propagateLogout.phtml');
       (function() {
         var u="//188.166.165.172/";
         _paq.push(['setTrackerUrl', u+'piwik.php']);
-        _paq.push(['setSiteId', '1']);
+        _paq.push(['setSiteId', '<?= $piwikid ?>']);
         var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
         g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
       })();
