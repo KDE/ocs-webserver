@@ -1460,7 +1460,7 @@ $categoryPath[] = $valueCatId;
 
                 });
 
-                $modalPpload.on('click', 'button[data-change-update-btn]', function (event) {
+                $modalChanglog.on('click', 'button[data-change-update-btn]', function (event) {
                     var updateId = $(this).attr('data-change-update-btn');
                     //var title = $(this).attr('data-change-title');
                     //var text = $(this).attr('data-change-text');
@@ -1468,11 +1468,11 @@ $categoryPath[] = $valueCatId;
                     var title = changelog.msg_title;
                     var text = changelog.msg_text;
 
-                    $modalPpload.find('#update-title').val(title);
-                    $modalPpload.find('#update-text').val(text);
-                    $modalPpload.find('#update-id').val(updateId);
+                    $modalChanglog.find('#update-title').val(title);
+                    $modalChanglog.find('#update-text').val(text);
+                    $modalChanglog.find('#update-id').val(updateId);
 
-                    $modalPpload.find('#update-title').focus();
+                    $modalChanglog.find('#update-title').focus();
 
                     event.preventDefault();
                 });
