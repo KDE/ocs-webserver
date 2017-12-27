@@ -546,7 +546,7 @@ var PlinglistContent = (function () {
                           'transitionIn'                  : 'elastic',
                           'transitionOut'                 : 'elastic',
                           'type'        : 'iframe',
-                          'scrolling'   : 'no',
+                          'scrolling'   : 'auto',
                           helpers: { 
                                 overlay: { 
                                     locked: false 

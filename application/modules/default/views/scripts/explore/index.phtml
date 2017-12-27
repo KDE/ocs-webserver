@@ -47,7 +47,7 @@ $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
                   </li>
                   <li <?=$this->filters['order'] == 'top' ? 'class="active"' :'' ?>>
                       <a href="<?= $helperBuildExploreUrl->buildExploreUrl($this->filters['category'], null,
-                          'top') ?>"><span><?= $this->translate('Greatest') ?></span></a>
+                          'top') ?>"><span><?= $this->translate('Top') ?></span></a>
                   </li>                
               </ul>
             </div>
@@ -108,7 +108,7 @@ $time_start = microtime(true);
                       
 
                       <div  class="row sidebar-right-info" >                                
-                          <span class="newsTitle"> News </span>
+                          <span class="newsTitle"> Blog </span>
                           <div class="prod-widget-box right bgwhite" id="rss-feeds"> </div>                  
                       <?php
                       if (count($comments) > 0) {
