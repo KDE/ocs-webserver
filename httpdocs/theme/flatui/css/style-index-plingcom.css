@@ -186,3 +186,7 @@
   .latestcomments .productrow:last-child {
   border-bottom: none;
   }
+
+  .newproductsincategory .newestproducts{
+    padding:30px;
+  }
