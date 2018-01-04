@@ -162,7 +162,7 @@ $member = $getAuthUser->getAuthUser();
 <main id="mainpage-kde-store" class="mainpage-kde-store" >
         <section class="wrapper-kde-store" id="intro-kde-store" >
             <section class="container" style="height:100%; width: 100%;">
-                <div class="row" style="height: 400px; width: 100%" id="featureProductsContainer">
+              <?php /*  <div class="row" style="height: 400px; width: 100%" id="featureProductsContainer">
                     
                     <?php
                     if ($this->featureProducts) {        
@@ -171,59 +171,102 @@ $member = $getAuthUser->getAuthUser();
                     ?>
                    
                 </div>
-                <div class="row">   
-               
-                <aside class="col-lg-2 col-md-4 col-sm-6 col-xs-12" style="padding-top: 70px">
-                     <?php  echo $this->render('explore/partials/filter.phtml'); ?>
-                </aside>               
+                */ 
+                ?>
+
                 
-                <div class="col-lg-10 col-md-6 col-sm-6 col-xs-12">
-                        <div class="newestproducts" >
-                            <div class="row">
-                                <div >
-                                    <h3> Newest 10 Products
-                                    </h3>
+                <div class="row ">   
+                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                               
+                                   
+                                        <h3> Newest 5 Desktop (148)
+                                        </h3>
 
-                                    <div class="prod-widget-box new-products" >
-                                    <?php
-                                    $this->rownum = 1; 
-                                    foreach ($this->products as $this->product) {
-                                        echo $this->render('home/partials/product_plingcom.phtml');
-                                        $this->rownum++;
-                                    }           
-                                    ?>
+                                        <div class="prod-widget-box new-products" >
+                                        <?php
+                                        $this->rownum = 1; 
+                                        foreach ($this->productsDesktop as $this->product) {
+                                            echo $this->render('home/partials/product_plingcom.phtml');
+                                            $this->rownum++;
+                                        }           
+                                        ?>
 
+                                        </div>
+
+                                   
+                              
+                            </div>
+
+                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                                
+                                        <h3> Newest 5 Apps (233)
+                                        </h3>
+
+                                        <div class="prod-widget-box new-products" >
+                                        <?php
+                                        $this->rownum = 1; 
+                                        foreach ($this->productsApps as $this->product) {
+                                            echo $this->render('home/partials/product_plingcom.phtml');
+                                            $this->rownum++;
+                                        }           
+                                        ?>
+
+                                       
                                     </div>
+                            </div>
 
+                           <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                               
+                                        <h3> Newest 5 Add-Ons (152)
+                                        </h3>
+
+                                        <div class="prod-widget-box new-products" >
+                                        <?php
+                                        $this->rownum = 1; 
+                                        foreach ($this->productsAddons as $this->product) {
+                                            echo $this->render('home/partials/product_plingcom.phtml');
+                                            $this->rownum++;
+                                        }           
+                                        ?>
+
+                                       
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="latestcomments">
-                       
-                            <div class="row">
-                                <div >
-                                    <h3> Lastest 10 Comments
-                                    </h3>
-                                        
-                                    <div class="prod-widget-box ">
-                                        <?php                       
-                                        $this->rownum = 1;                                         
-                                             foreach ($this->comments as $this->comment) {
-                                                    echo $this->render('home/partials/comment_plingcom.phtml');   
-                                                    $this->rownum++;                     
-                                                }                                 
-                                         ?> 
-                                    </div>
+                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                              
+                                        <h3> Newest 5 Wallpapers (295)
+                                        </h3>
 
-                                </div>
+                                        <div class="prod-widget-box new-products" >
+                                        <?php
+                                        $this->rownum = 1; 
+                                        foreach ($this->productsWallpapers as $this->product) {
+                                            echo $this->render('home/partials/product_plingcom.phtml');
+                                            $this->rownum++;
+                                        }           
+                                        ?>
+
+                                        </div>
+
+                                 
                             </div>
+
+
+                    </div>
+               
+                
+                <div class="row">
+                <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                <div class="filtertop">
+                    <?php  echo $this->render('explore/partials/filter.phtml'); ?>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
                         
-                        </div>
 
-                        <div class="" style="width: 490px; float: left;margin-left: 50px;margin-top:30px">
-                            <div class="row">
-                                <div >
+                        
+                           
                                     <h3> Newest 10 Users
                                         </h3>
                                         
@@ -248,106 +291,37 @@ $member = $getAuthUser->getAuthUser();
 
                                     </div>
 
-                                </div>
-                            </div>
-                        </div>
+                </div>        
+                        
 
+                <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                        
+                           
+                                    <h3> Lastest 10 Comments
+                                    </h3>
+                                        
+                                    <div class="prod-widget-box ">
+                                        <?php                       
+                                        $this->rownum = 1;                                         
+                                             foreach ($this->comments as $this->comment) {
+                                                    echo $this->render('home/partials/comment_plingcom.phtml');   
+                                                    $this->rownum++;                     
+                                                }                                 
+                                         ?> 
+                                    </div>
+
+                             
+                        
+                        </div>
                         
                 
                 </div>
-              
+                 
 
-                </div> <!--row -->
-
-
-
-                <div class="row newproductsincategory">   
-                        <div class="newestproducts " >
-                            <div class="row ">
-                                <div >
-                                    <h3> Newest 5 Desktop (148)
-                                    </h3>
-
-                                    <div class="prod-widget-box new-products" >
-                                    <?php
-                                    $this->rownum = 1; 
-                                    foreach ($this->productsDesktop as $this->product) {
-                                        echo $this->render('home/partials/product_plingcom.phtml');
-                                        $this->rownum++;
-                                    }           
-                                    ?>
-
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="newestproducts " >
-                            <div class="row">
-                                <div >
-                                    <h3> Newest 5 Apps (233)
-                                    </h3>
-
-                                    <div class="prod-widget-box new-products" >
-                                    <?php
-                                    $this->rownum = 1; 
-                                    foreach ($this->productsApps as $this->product) {
-                                        echo $this->render('home/partials/product_plingcom.phtml');
-                                        $this->rownum++;
-                                    }           
-                                    ?>
-
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="newestproducts " >
-                            <div class="row">
-                                <div >
-                                    <h3> Newest 5 Add-Ons (152)
-                                    </h3>
-
-                                    <div class="prod-widget-box new-products" >
-                                    <?php
-                                    $this->rownum = 1; 
-                                    foreach ($this->productsAddons as $this->product) {
-                                        echo $this->render('home/partials/product_plingcom.phtml');
-                                        $this->rownum++;
-                                    }           
-                                    ?>
-
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="newestproducts " >
-                            <div class="row">
-                                <div >
-                                    <h3> Newest 5 Wallpapers (295)
-                                    </h3>
-
-                                    <div class="prod-widget-box new-products" >
-                                    <?php
-                                    $this->rownum = 1; 
-                                    foreach ($this->productsWallpapers as $this->product) {
-                                        echo $this->render('home/partials/product_plingcom.phtml');
-                                        $this->rownum++;
-                                    }           
-                                    ?>
-
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
+                
 
 
-                </div>
+               
             </section>
         </section>
         

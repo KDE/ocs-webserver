@@ -19,7 +19,7 @@
 
      .new-products .rating
     {
-        width: 180px;
+        width:80%;
     }
     .new-products .time
     {
@@ -113,10 +113,7 @@
     margin-top: 30px;
   }
 
-  div.mostdownloadedproducts
-  {
-    
-  }
+  
 
   div.mostdownloadedproducts span.title
   {
@@ -147,15 +144,7 @@
   {
     border:0px !important;
   }
-  .containerbox
-  {
-
-  }
-
-  .aside
-  {
-    padding-top:60px;
-  }
+  
 
    div.latestcomments
   {
@@ -163,14 +152,8 @@
       float: left; 
       margin-left: 50px;
   }
-  div.newestproducts
-  {
-      width: 600px; 
-      float: left ;
-  }
-  .new-products .rating {
-      width: 100px;
-  }
+  
+  
   .latestcomments .num {
   display: block;
   float: left;
@@ -189,4 +172,8 @@
 
   .newproductsincategory .newestproducts{
     padding:30px;
+  }
+
+  .mainpage-kde-store .filtertop{
+    padding-top:40px;
   }
