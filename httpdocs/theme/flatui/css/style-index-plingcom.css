@@ -191,7 +191,7 @@
   }
   .mainpage-kde-store .content{
     padding-top: 15px;    
-      
+      min-width: 900px !important;
   }
   .mainpage-kde-store .sidebar-right{
     padding-top: 15px;
