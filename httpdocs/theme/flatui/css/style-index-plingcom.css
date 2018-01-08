@@ -28,11 +28,12 @@
     .new-products .cntComments
     {
         font-size: smaller;
+        margin-right: 10px;
     }
     .new-products .packagetypeos
     {
-      margin: 0px;
-      margin-left: 10px;
+      margin: 0px;      
+      float: none;
     }
     .new-products .productimg
     {
@@ -185,10 +186,32 @@
 
   .mainpage-kde-store .sidebar-left{
     padding-top: 35px;
+    background-color: #f1f1f1;
   }
   .mainpage-kde-store .content{
-    padding-top: 15px;
+    padding-top: 15px;    
   }
   .mainpage-kde-store .sidebar-right{
     padding-top: 15px;
+    min-width: 300px;
+    border-left: 1px solid #ccd4d8;
+    padding-left: 10px;
   }
+   .mainpage-kde-store .sidebar-right .productrow{
+     padding-bottom: 5px;
+  padding-top: 5px;
+  border-bottom: 1px solid #ccd4d8;
+
+  }
+
+   .mainpage-kde-store  .prod-widget-box{
+    border: 0px !important;
+  }
+   .mainpage-kde-store .panel{
+    background-color: #f1f1f1;
+   }
+   .mainpage-kde-store .panel-default{
+    border: 0px;
+    border-color: none;
+   }
+
