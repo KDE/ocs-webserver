@@ -34,9 +34,9 @@ $featureProducts = $modelInfo->getFeaturedProductsForHostStores(100);
 // $this->productsWallpapers = $modelInfo->getLastProductsForHostStores(5,295);
 
 // CC TEST
-$this->productsDesktop = $modelInfo->getLastProductsForHostStores(5,98);
+$this->productsDesktop = $modelInfo->getLastProductsForHostStores(5,3);
 $this->productsApps = $modelInfo->getLastProductsForHostStores(5,33);
-$this->productsAddons = $modelInfo->getLastProductsForHostStores(5,81);
+$this->productsAddons = $modelInfo->getLastProductsForHostStores(5,7);
 $this->productsWallpapers = $modelInfo->getLastProductsForHostStores(5,5);
 
 
@@ -62,7 +62,7 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
 
 $auth = Zend_Auth::getInstance();
 $member = $getAuthUser->getAuthUser();
-
+$this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
 ?>
 <link href="/theme/flatui/css/style-index-plingcom.css" rel="stylesheet">
 
@@ -152,36 +152,20 @@ $member = $getAuthUser->getAuthUser();
                 </section>
 
             </section>
-        </section>
-            
+        </section>            
         </div>
-
-
     </header>
 
-<main id="mainpage-kde-store" class="mainpage-kde-store" >
-        <section class="wrapper-kde-store" id="intro-kde-store" >
-            <section class="container" style="height:100%; width: 100%;">
-              <?php /*  <div class="row" style="height: 400px; width: 100%" id="featureProductsContainer">
-                    
-                    <?php
-                    if ($this->featureProducts) {        
-                        echo $this->render('home/partials/featured-products.phtml');
-                    } 
-                    ?>
-                   
-                </div>
-                */ 
-                ?>
-
-                
-                <div class="row ">   
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
-                               
-                                   
-                                        <h3> Newest 5 Desktop (148)
-                                        </h3>
-
+<main id="explore-content" class="mainpage-kde-store" >
+<div class="GridFlex">
+<div class="GridFlex-cell sidebar-left">  
+        <?php  echo $this->render('explore/partials/filter.phtml'); ?> 
+</div>
+<div class="GridFlex-cell content">   
+        <div class="container">
+                        <div class="row ">   
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">                                                                  
+                                        <span>  Themes </span>
                                         <div class="prod-widget-box new-products" >
                                         <?php
                                         $this->rownum = 1; 
@@ -190,142 +174,67 @@ $member = $getAuthUser->getAuthUser();
                                             $this->rownum++;
                                         }           
                                         ?>
-
                                         </div>
-
-                                   
-                              
-                            </div>
-
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
-                                
-                                        <h3> Newest 5 Apps (233)
-                                        </h3>
-
-                                        <div class="prod-widget-box new-products" >
-                                        <?php
-                                        $this->rownum = 1; 
-                                        foreach ($this->productsApps as $this->product) {
-                                            echo $this->render('home/partials/product_plingcom.phtml');
-                                            $this->rownum++;
-                                        }           
-                                        ?>
-
-                                       
                                     </div>
-                            </div>
-
-                           <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
-                               
-                                        <h3> Newest 5 Add-Ons (152)
-                                        </h3>
-
-                                        <div class="prod-widget-box new-products" >
-                                        <?php
-                                        $this->rownum = 1; 
-                                        foreach ($this->productsAddons as $this->product) {
-                                            echo $this->render('home/partials/product_plingcom.phtml');
-                                            $this->rownum++;
-                                        }           
-                                        ?>
-
-                                       
-                                </div>
-                            </div>
-
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
-                              
-                                        <h3> Newest 5 Wallpapers (295)
-                                        </h3>
-
-                                        <div class="prod-widget-box new-products" >
-                                        <?php
-                                        $this->rownum = 1; 
-                                        foreach ($this->productsWallpapers as $this->product) {
-                                            echo $this->render('home/partials/product_plingcom.phtml');
-                                            $this->rownum++;
-                                        }           
-                                        ?>
-
-                                        </div>
-
-                                 
-                            </div>
-
-
-                    </div>
-               
-                
-                <div class="row">
-                <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                <div class="filtertop">
-                    <?php  echo $this->render('explore/partials/filter.phtml'); ?>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                        
-
-                        
-                           
-                                    <h3> Newest 10 Users
-                                        </h3>
-                                        
-                                    <div class="prod-widget-box newusers">
-                                         <?php 
-                                        foreach ($this->users as $user) {                                  
-                                            ?>
-                                                <div class="user " >
-                                                    <div class="u-wrap">
-                                                        <a href="<?php echo $helperBuildMemberUrl->buildMemberUrl($user['member_id']); ?>">
-                                                            <figure >
-                                                                <img src="<?php echo $helperImage->Image($user['profile_image_url'], array('width' => '200', 'height' => '200', 'crop' => 2)); ?>"/>
-                                                            </figure>
-                                                            <h3 class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><?php echo $user['username']; ?></h3>                                                   
-                                                        </a>
-                                                         <span class="small"><?= $helpPrintDate->printDate($user['created_at'])?></span>
-                                                    </div>
-                                                </div>
-                                        <?php } ?>
-
-                                        <div style="clear: both;"></div> 
-
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                         <span>Add-Ons</span>                                         
+                                         <div class="prod-widget-box new-products" >
+                                         <?php
+                                         $this->rownum = 1; 
+                                         foreach ($this->productsAddons as $this->product) {
+                                             echo $this->render('home/partials/product_plingcom.phtml');
+                                             $this->rownum++;
+                                         }           
+                                         ?>                                        
+                                        </div>                                       
                                     </div>
-
-                </div>        
-                        
-
-                <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                        
-                           
-                                    <h3> Lastest 10 Comments
-                                    </h3>
-                                        
-                                    <div class="prod-widget-box ">
-                                        <?php                       
-                                        $this->rownum = 1;                                         
-                                             foreach ($this->comments as $this->comment) {
-                                                    echo $this->render('home/partials/comment_plingcom.phtml');   
-                                                    $this->rownum++;                     
-                                                }                                 
-                                         ?> 
-                                    </div>
-
-                             
-                        
                         </div>
-                        
-                
-                </div>
-                 
+                        <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">                          
+                                                <span>Wallpapers</span>                                              
+                                                <div class="prod-widget-box new-products" >
+                                                <?php
+                                                $this->rownum = 1; 
+                                                foreach ($this->productsWallpapers as $this->product) {
+                                                    echo $this->render('home/partials/product_plingcom.phtml');
+                                                    $this->rownum++;
+                                                }           
+                                                ?>
+                                                </div>                             
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">                            
+                                               <span>  Apps  </span>                                               
+                                               <div class="prod-widget-box new-products" >
+                                               <?php
+                                               $this->rownum = 1; 
+                                               foreach ($this->productsApps as $this->product) {
+                                                   echo $this->render('home/partials/product_plingcom.phtml');
+                                                   $this->rownum++;
+                                               }           
+                                               ?>                                              
+                                                </div>
+                                    </div>                        
+                        </div>
+</div>
+</div>
+<div class="GridFlex-cell sidebar-right">   
 
-                
+        <span> Lastest 10 Comments </span>            
+        <div class="prod-widget-box ">
+            <?php                       
+            $this->rownum = 1;                                         
+                 foreach ($this->comments as $this->comment) {
+                        echo $this->render('home/partials/comment_plingcom.phtml');   
+                        $this->rownum++;                     
+                    }                                 
+             ?> 
+        </div>
+</div>
+</div>
 
-
-               
-            </section>
-        </section>
         
-    </main>
+        
+</main>
 
 
 <script type="application/javascript">

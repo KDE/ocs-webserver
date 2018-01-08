@@ -131,4 +131,17 @@ class Default_Model_DbTable_ProjectPackageType extends Local_Model_Table
         return '';
     }
 
+    public function getProjectPackageTypesPureStrings($projectId)
+    {
+        $sql = 'SELECT DISTINCT f.name FROM project_package_type p join package_types f on p.package_type_id = f.package_type_id WHERE p.project_id = :project_id';
+        $resultSet = $this->_db->fetchAll($sql, array('project_id' => $projectId));
+        $resultString = '';
+        if (count($resultSet) > 0) {
+            foreach ($resultSet as $item) {                
+                $resultString = $resultString .'  '. stripslashes($item['name']) ;
+            }
+            return $resultString;
+        }
+        return '';
+    }
 }
