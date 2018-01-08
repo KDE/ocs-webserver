@@ -185,7 +185,7 @@
   }
 
   .mainpage-kde-store .sidebar-left{
-    padding-top: 35px;
+    padding-top: 20px;
     background-color: #f1f1f1;
   }
   .mainpage-kde-store .content{
@@ -194,9 +194,10 @@
   }
   .mainpage-kde-store .sidebar-right{
     padding-top: 15px;
-    min-width: 300px;
+    min-width: 320px !important;
     border-left: 1px solid #ccd4d8;
     padding-left: 10px;
+    background-color: #f1f1f1;
   }
    .mainpage-kde-store .sidebar-right .productrow{
      padding-bottom: 5px;
@@ -207,7 +208,7 @@
 
    .mainpage-kde-store  .prod-widget-box{
     border: 0px !important;
-    background-color: #fff;
+   
   }
    .mainpage-kde-store .panel{
     background-color: #f1f1f1;
@@ -217,3 +218,19 @@
     border-color: none;
    }
 
+.mainpage-kde-store .contentcontainer{
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+   }
+
+.mainpage-kde-store .labelTitle{
+  display:block;
+  padding-top: 15px; 
+  padding-bottom: 15px;
+}
+
+.mainpage-kde-store  .downloadDiv{
+  background-color: transparent !important;
+}
