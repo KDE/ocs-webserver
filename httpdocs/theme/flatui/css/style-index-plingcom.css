@@ -190,6 +190,7 @@
   }
   .mainpage-kde-store .content{
     padding-top: 15px;    
+      background-color: #f1f1f1;
   }
   .mainpage-kde-store .sidebar-right{
     padding-top: 15px;
@@ -206,6 +207,7 @@
 
    .mainpage-kde-store  .prod-widget-box{
     border: 0px !important;
+    background-color: #fff;
   }
    .mainpage-kde-store .panel{
     background-color: #f1f1f1;
