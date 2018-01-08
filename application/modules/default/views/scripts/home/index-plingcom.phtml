@@ -23,7 +23,7 @@
 $modelInfo = new Default_Model_Info();
 
 $this->comments = $modelInfo->getLatestComments(10);
-$this->users = $modelInfo->getNewActiveMembers(10);
+$this->users = $modelInfo->getNewActiveMembers(18);
 $this->products = $modelInfo->getLastProductsForHostStores(10);
 $featureProducts = $modelInfo->getFeaturedProductsForHostStores(100);
 
@@ -214,6 +214,34 @@ $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
                                                ?>                                              
                                                 </div>
                                     </div>                        
+                        </div>
+
+                        <div class="row" style="padding-top: 20px;">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                                    Newest  Users                                    
+                                        
+                                    <div class="prod-widget-box newusers">
+                                         <?php 
+                                        foreach ($this->users as $user) {                                  
+                                            ?>
+                                                <div class="user " >
+                                                    <div class="u-wrap">
+                                                        <a href="<?php echo $helperBuildMemberUrl->buildMemberUrl($user['member_id']); ?>">
+                                                            <figure >
+                                                                <img src="<?php echo $helperImage->Image($user['profile_image_url'], array('width' => '200', 'height' => '200', 'crop' => 2)); ?>"/>
+                                                            </figure>
+                                                            <h3 class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><?php echo Default_Model_HtmlPurify::purify($user['username']); ?></h3>                                                   
+                                                        </a>
+                                                         <span class="small"><?= $helpPrintDate->printDate($user['created_at'])?></span>
+                                                    </div>
+                                                </div>
+                                        <?php } ?>
+
+                                        <div style="clear: both;"></div> 
+
+                                    </div>
+                        </div>
                         </div>
 </div>
 </div>
