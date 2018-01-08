@@ -213,6 +213,8 @@
   }
    .mainpage-kde-store .panel{
     background-color: #f1f1f1;
+    -webkit-box-shadow: 0 0px 0px rgba(0,0,0,.05);
+    box-shadow: 0 0px 0px rgba(0,0,0,.05);
    }
    .mainpage-kde-store .panel-default{
     border: 0px;
