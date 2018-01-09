@@ -99,16 +99,14 @@ $time_start = microtime(true);
                           <a href="https://www.linux-apps.com/p/1175480/" target="_blank"><img src="/images/system/download-app.png" /></a>
                       </div>
 
-                      <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin')  : ?>
-                      <div class="donateDiv" >
+                      <div class="supportDiv" >
                       <?php 
                                 $identity = Zend_Auth::getInstance()->getIdentity();
-                                if(!$this->isSupporter($identity->member_id)) {                                                  
+                                if(null == $identity || !$this->isSupporter($identity->member_id)) {                                                  
                        ?>
                           <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Become a Supporter</a>
-                          <?php }?>
+                      <?php }?>
                       </div>
-                      <?php endif; ?>
                       
 
                       <div  class="row sidebar-right-info" >                                
