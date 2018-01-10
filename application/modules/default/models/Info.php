@@ -376,10 +376,19 @@ class Default_Model_Info
 
     public function getLastProductsForHostStores($limit = 10, $project_category_id = null)
     {
+        $activeCategories =array();
         if (empty($project_category_id)) {
             $activeCategories = $this->getActiveCategoriesForCurrentHost();
         } else {
-            $activeCategories = $this->getActiveCategoriesForCatId($project_category_id);
+            $cats = explode(",", $project_category_id);
+            if(count($cats)==1){
+                $activeCategories = $this->getActiveCategoriesForCatId($project_category_id);    
+            }else{
+                foreach ($cats as $cat) {
+                    $tmp = $this->getActiveCategoriesForCatId($cat);    
+                    $activeCategories = array_merge($tmp, $activeCategories);
+                }                
+            }            
         }
 
         if (count($activeCategories) == 0) {
@@ -409,6 +418,42 @@ class Default_Model_Info
             return array();
         }
     }
+
+    // public function getLastProductsForHostStores($limit = 10, $project_category_id = null)
+    // {
+    //     if (empty($project_category_id)) {
+    //         $activeCategories = $this->getActiveCategoriesForCurrentHost();
+    //     } else {
+    //         $activeCategories = $this->getActiveCategoriesForCatId($project_category_id);
+    //     }
+
+    //     if (count($activeCategories) == 0) {
+    //         return array();
+    //     }
+
+    //     $sql = '
+    //         SELECT 
+    //             p.*
+    //             ,laplace_score(p.count_likes, p.count_dislikes) AS laplace_score
+    //         FROM
+    //             project AS p
+    //         WHERE
+    //             p.status = 100
+    //             AND p.project_category_id IN (' . implode(',', $activeCategories) . ')
+    //         ORDER BY IFNULL(p.changed_at,p.created_at)  DESC
+    //         ';
+    //     if (isset($limit)) {
+    //         $sql .= ' limit ' . (int)$limit;
+    //     }
+
+    //     $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
+
+    //     if (count($resultSet) > 0) {
+    //         return $resultSet;
+    //     } else {
+    //         return array();
+    //     }
+    // }
 
     /**
      * @param int  $limit
