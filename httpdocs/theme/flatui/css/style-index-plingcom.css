@@ -196,12 +196,10 @@
   .mainpage-kde-store .sidebar-right{
     padding-top: 20px;
     min-width: 320px !important;
-   
+  
     padding-left: 10px;
-    /*
-     border-left: 1px solid #ccd4d8;
+     border-left: 1px solid #ccd4d8;    
     background-color: #f1f1f1;
-    */
   }
    .mainpage-kde-store .sidebar-right .productrow{
      padding-bottom: 5px;
@@ -244,6 +242,10 @@
 .mainpage-kde-store  #rss-feeds{
   border: 1px solid #ccd4d8 !important;
 }
+.mainpage-kde-store  #lastcomments{
+  border: 1px solid #ccd4d8 !important;
+}
+
 .mainpage-kde-store  .sidebar-right-info{
   padding-left: 10px;
 }
