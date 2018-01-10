@@ -266,10 +266,10 @@ $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
 
         <div  class="row sidebar-right-info" >                                
             <span class="newsTitle"> News </span>
-            <div class="prod-widget-box right " id="rss-feeds"> </div>                  
+            <div class="prod-widget-box right bgwhite " id="rss-feeds"> </div>                  
       
-        <span> Lastest 10 Comments </span>
-         <div class="prod-widget-box right " id="lastcomments">
+        <span class="newsTitle"> Lastest 10 Comments </span>
+         <div class="prod-widget-box right bgwhite" id="lastcomments">
                 <?php
                 foreach ($this->comments as $this->comment) {
                     echo $this->render('explore/partials/comment.phtml');
