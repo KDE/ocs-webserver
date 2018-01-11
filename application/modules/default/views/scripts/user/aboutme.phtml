@@ -91,7 +91,7 @@ $isSupporter = $this->stat['donationIssupporter'];
                                       if($this->stat['donationMax'] !=null && !$isSupporter){ // inactive supporter
                                   ?>
                                    <div class="row">
-                                     <span class="cnt">Inactive supporter since : <?=$helperPrintDate->printDate($this->stat['donationMin'])?> </span> 
+                                     <span class="cnt">Inactive supporter since: <?=$helperPrintDate->printDate(date('Y-m-d H:i:s', strtotime($this->stat['donationMax'] . ' +1 year')))?></span> 
                                   </div>
                                   <?php } ?>
 
@@ -99,10 +99,10 @@ $isSupporter = $this->stat['donationIssupporter'];
                                         if($isSupporter){
                                     ?>                                     
                                      <div class="row">                                     
-                                       <span>First Donation : <?=$helperPrintDate->printDate($this->stat['donationMin'])?> </span> 
+                                       <span>Supporter since: <?=$helperPrintDate->printDate($this->stat['donationMin'])?> </span> 
                                     </div>
                                       <div class="row">                                     
-                                       <span>Last Donation : <?=$helperPrintDate->printDate($this->stat['donationMax'])?> </span> 
+                                       <span>Supporter until: <?=$helperPrintDate->printDate(date('Y-m-d H:i:s', strtotime($this->stat['donationMax'] . ' +1 year')))?> </span> 
                                     </div>                                     
                                     <?php } ?>
                                      <div class="row">                                     
