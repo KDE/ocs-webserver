@@ -72,16 +72,15 @@ table.tablestati td.number{
 <div class="pling-nav-tabs">
 <ul class="nav nav-tabs ">
  <li class="active"><a class="newuserprojectTab" href="#d3-line" data-toggle="tab">New Members & Projects </a></li>
+ <li ><a class="downloadsDomainTab" href="#downloadsDomainTab" data-toggle="tab">Downloads Domain</a></li>
  <li ><a class="downloadsdailyTab" href="#downloadsdailyTab" data-toggle="tab">Downloads&Payouts daily</a></li>
- 
- <li ><a class="downloadsundpayoutsdailyTab" href="#downloadsundpayoutsdailyTab" data-toggle="tab">Downloads vs Payouts daily</a></li> 
+<!-- <li ><a class="downloadsundpayoutsdailyTab" href="#downloadsundpayoutsdailyTab" data-toggle="tab">Downloads vs Payouts daily</a></li> -->
  
  <li ><a class="topDownloadsPerDayTab" href="#topDownloadsPerDayTab" data-toggle="tab">Top Download/Day</a></li>
  <li ><a class="payoutTab" href="#payoutTab" data-toggle="tab">Payout</a></li> 
  <li ><a class="payoutNewcomerTab" href="#payoutNewcomerTab" data-toggle="tab">Payout Newcomer</a></li> 
  <li ><a class="payoutNewloserTab" href="#payoutNewloserTab" data-toggle="tab">Payout Newloser</a></li> 
 <li ><a class="payoutMonthDiffTab" href="#payoutMonthDiffTab" data-toggle="tab">Payout  Month Diff</a></li> 
-
 <li ><a class="payoutCategoryMonthlyTab" href="#payoutCategoryMonthlyTab" data-toggle="tab">Payout  Category monthly</a></li> 
 
 
@@ -113,18 +112,29 @@ table.tablestati td.number{
      <div id="downloadsdailyTabContainer"></div>
   </div>
 
+<!--
    <div id="downloadsundpayoutsdailyTab" class="tab-pane ">               
         <div id="downloadsundpayoutsdailyTabContainer"></div>                
   </div>
+-->
+
+<div id="downloadsDomainTab" class="tab-pane ">   
+      <div style="display: block; clear: both">
+          Begin:<input  name="filterDownloadsDomainDateBegin" id="filterDownloadsDomainDateBegin" value="<?php echo date("Y-m-j") ?>"></input>
+          End:<input  name="filterDownloadsDomainDateEnd" id="filterDownloadsDomainDateEnd" value="<?php echo date("Y-m-j") ?>"></input>
+          <button class="filterDownloadsDomainDate">go!</button>          
+      </div>            
+        <div id="downloadsDomainTabContainer" style="display: block;clear: left"></div>                
+  </div>
 
    <div id="topDownloadsPerDayTab" class="tab-pane ">        
-        <div>
+        <div style="display: block; clear: both">
             <input  name="filterTopDownloadsDate" id="filterTopDownloadsDate" value="<?php echo date("Y-m-j") ?>"></input>
             <button class="filterTopDownloadsDate">go!</button>
             <button class="filterTopDownloadsDateClear">clear!</button>
       
         </div>
-        <div id="topDownloadsPerDayTabContainer"></div>                
+        <div id="topDownloadsPerDayTabContainer" style="display: block;clear: left"></div>                
   </div>
 
    <div id="payoutTab" class="tab-pane ">
@@ -207,7 +217,7 @@ table.tablestati td.number{
             });
             
            // downloads & payouts daily
-           
+           /*
            $('#downloadsundpayoutsdailyTab').prepend(createMonthFilterWithCurrent('selectmonthdownloadsundpayoutdaily'));
             $('#selectmonthdownloadsundpayoutdaily').change(function() {                                     
                   $.getScript("/theme/flatui/js/stati/downloadsundpayoutsdaily.js");               
@@ -216,7 +226,35 @@ table.tablestati td.number{
                $('#downloadsundpayoutsdailyTabContainer').empty();               
                $.getScript("/theme/flatui/js/stati/downloadsundpayoutsdaily.js");
            });
+          */
           
+
+
+          $('button.filterDownloadsDomainDate').click(function() {                                                       
+                  loadDownloadsDomain();
+             });
+          function loadDownloadsDomain(){
+            $('#downloadsDomainTabContainer').empty();
+              let dateBegin = $( "#filterDownloadsDomainDateBegin" ).val();               
+              let dateEnd = $( "#filterDownloadsDomainDateEnd" ).val();  
+              $.getJSON( "/backend/index/getdownloadsdomain?dateBegin="+dateBegin+"&dateEnd="+dateEnd, function( response ) {
+                   let data = response.results;
+                    let table = "<table class='tablestati'><thead><tr><td class='number'>CNT</td><td>Domain</td><td class='number'>IS_OWN?</td></tr></thead>";
+                    $.each( data, function( index, value ){
+                          table = table+'<tr>'
+                          +'<td class="number">'+value.cnt+'</td>'
+                          +'<td >'+value.referer_domain+'</td>'
+                          +'<td class="number">'+value.is_from_own_domain+'</td>'                                                     
+                          +'</tr>';
+                    });      
+                   table = table +"</table>";                                              
+                    $('#downloadsDomainTabContainer').append(table);                        
+              });  
+          }
+            $(".downloadsDomainTab").click(function() {                                  
+                loadDownloadsDomain();
+            });
+
 
 
         // topdownloadsperdate           
@@ -232,9 +270,17 @@ table.tablestati td.number{
                 let date = $( "#filterTopDownloadsDate" ).val();               
                 $.getJSON( "/backend/index/gettopdownloadsperdate?date="+date, function( response ) {
                      let data = response.results;
-                      let table = "<table class='tablestati'><thead><tr><td colspan='2'>"+date+"</td></tr><tr><td>ProjectID</td><td class='number'>CNT</td></thead>";
+                      let table = "<table class='tablestati'><thead><tr><td colspan='7'>"+date+"</td></tr><tr><td>ProjectID</td><td>Username</td><td class='number'>CNT</td><td>Title</td><td>Category</td><td>created_at</td></tr></thead>";
                       $.each( data, function( index, value ){
-                            table = table+'<tr><td><a target="_blank" href="https://opendesktop.org/p/'+value.project_id+'">'+value.project_id+'</a></td><td class="number">'+value.cnt+'</td></tr>';
+                            table = table+'<tr>'
+                            +'<td><a target="_blank" href="https://opendesktop.org/p/'+value.project_id+'">'
+                              +value.project_id+'</a></td>'
+                            +'<td>'+value.username+'</td>'
+                            +'<td class="number">'+value.cnt+'</td>'                            
+                            +'<td>'+value.ptitle+'</td>'
+                            +'<td>'+value.ctitle+'</td>'
+                            +'<td>'+value.pcreated_at+'</td>'
+                            +'</tr>';
                       });      
                      table = table +"</table>";                                              
                       $('#topDownloadsPerDayTabContainer').append(table);                        

@@ -21,34 +21,21 @@
  **/
 
 $modelInfo = new Default_Model_Info();
-
 $this->comments = $modelInfo->getLatestComments(10);
 $this->users = $modelInfo->getNewActiveMembers(18);
-$this->products = $modelInfo->getLastProductsForHostStores(10);
-$featureProducts = $modelInfo->getFeaturedProductsForHostStores(100);
 
 // LIVE
-// $this->productsThemes = $modelInfo->getLastProductsForHostStores(5,"381, 386, 107, 147, 146, 151");
-// $this->productsApps = $modelInfo->getLastProductsForHostStores(5,233);
-// $this->productsAddons = $modelInfo->getLastProductsForHostStores(5,"152, 277, 384");
-// $this->productsWallpapers = $modelInfo->getLastProductsForHostStores(5,295);
+$this->productsThemes = $modelInfo->getLastProductsForHostStores(5,"381,386,107,147,146,151");
+$this->productsApps = $modelInfo->getLastProductsForHostStores(5,233);
+$this->productsAddons = $modelInfo->getLastProductsForHostStores(5,"152,277,384");
+$this->productsWallpapers = $modelInfo->getLastProductsForHostStores(5,295);
 
 // CC TEST
-$this->productsThemes = $modelInfo->getLastProductsForHostStores(5,"3,33");
-$this->productsApps = $modelInfo->getLastProductsForHostStores(5,33);
-$this->productsAddons = $modelInfo->getLastProductsForHostStores(5,7);
-$this->productsWallpapers = $modelInfo->getLastProductsForHostStores(5,5);
+// $this->productsThemes = $modelInfo->getLastProductsForHostStores(5,"3,33");
+// $this->productsApps = $modelInfo->getLastProductsForHostStores(5,33);
+// $this->productsAddons = $modelInfo->getLastProductsForHostStores(5,7);
+// $this->productsWallpapers = $modelInfo->getLastProductsForHostStores(5,5);
 
-
-if ($featureProducts->getTotalItemCount()) {
-    /** @var Zend_Controller_Request_Http $request */
-    $request = Zend_Controller_Front::getInstance()->getRequest();
-
-    $offset = (int)$request->getParam('page');
-    $featureProducts->setItemCountPerPage(1);
-    $featureProducts->setCurrentPageNumber($offset);
-    $this->featureProducts = $featureProducts;
-}
 
 $storeCatIds = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
 $this->categories = $storeCatIds;
@@ -63,9 +50,9 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
 $auth = Zend_Auth::getInstance();
 $member = $getAuthUser->getAuthUser();
 $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
+$this->headLink()->appendStylesheet('/theme/flatui/css/startpage.css');
 ?>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
-<link href="/theme/flatui/css/style-index-plingcom.css" rel="stylesheet">
 
     <header id="page_header" xmlns="http://www.w3.org/1999/html">
         <div class="container header" style="position: relative;">                     
@@ -86,9 +73,7 @@ $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
             
         <section class="container">
             <section class="wrapper">
-
                 <section>
-
                     <figure class="logo-header" >
                         <a href="/">
                             <img width="<?=$this->template['header-logo']['width']?>" border="0" src="<?=$this->template['header-logo']['image-src']?>">
@@ -157,7 +142,7 @@ $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
         </div>
     </header>
 
-<main id="explore-content" class="mainpage-kde-store" >
+<main id="explore-content" class="startpage-store" >
 <div class="GridFlex">
 <div class="GridFlex-cell sidebar-left">  
         <?php  echo $this->render('explore/partials/filter.phtml'); ?> 
@@ -166,7 +151,7 @@ $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
         <div class="contentcontainer">
                         <div class="row ">   
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">                                                                  
-                                        <span> <a href="/browse/cat/3"> Themes </a></span>
+                                        <span>  Themes </span>
                                         <div class="prod-widget-box new-products" >
                                         <?php
                                         $this->rownum = 1; 
@@ -178,7 +163,7 @@ $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
                                         </div>
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                         <span><a href="/browse/cat/3">Add-Ons</a></span>                                         
+                                         <span>Add-Ons</span>                                         
                                          <div class="prod-widget-box new-products" >
                                          <?php
                                          $this->rownum = 1; 
@@ -190,9 +175,9 @@ $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
                                         </div>                                       
                                     </div>
                         </div>
-                        <div class="row" style="padding-top: 20px;">
+                        <div class="row blockpadding" >
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">                          
-                                                <span><a href="/browse/cat/3">Wallpapers</a></span>                                              
+                                                <span>Wallpapers</span>                                              
                                                 <div class="prod-widget-box new-products" >
                                                 <?php
                                                 $this->rownum = 1; 
@@ -204,7 +189,7 @@ $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
                                                 </div>                             
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">                            
-                                               <span> <a href="/browse/cat/3"> Apps </a> </span>                                               
+                                               <span> Apps </span>                                               
                                                <div class="prod-widget-box new-products" >
                                                <?php
                                                $this->rownum = 1; 
@@ -217,7 +202,7 @@ $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
                                     </div>                        
                         </div>
 
-                        <div class="row" style="padding-top: 20px;">
+                        <div class="row blockpadding">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
                                     <span class="labelTitle" >Newest  Community Members   </span>                                 
@@ -239,7 +224,7 @@ $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
                                                 </div>
                                         <?php } ?>
 
-                                        <div style="clear: both;"></div> 
+                                        <div class="clearboth"></div> 
 
                                     </div>
                         </div>
@@ -255,13 +240,13 @@ $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
 
         <div class="supportDiv" >
         <?php 
-                  $identity = Zend_Auth::getInstance()->getIdentity();
-                  if(null == $identity || (null != $identity && !$this->isSupporter($identity->member_id))) {                                                  
+                $identity = Zend_Auth::getInstance()->getIdentity();
+                if(null == $identity || (null != $identity && !$this->isSupporter($identity->member_id))) {                                                  
         ?>
             <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Become a Supporter<br>of Opendesktop.org</a>
-        <?php } else if((null != $identity && $this->isSupporter($identity->member_id))) { ?>
+        <?php   } else if((null != $identity && $this->isSupporter($identity->member_id))) { ?>
             <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Support<br>Opendesktop.org</a>
-        <?php }?>
+        <?php   }?>
         </div>
 
         <div  class="row sidebar-right-info" >                                
@@ -277,47 +262,15 @@ $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
                 ?>
             </div>
 
-            <?php /*
-        <div class="prod-widget-box ">
-            <?php                       
-            $this->rownum = 1;                                         
-                 foreach ($this->comments as $this->comment) {
-                        echo $this->render('home/partials/comment_plingcom.phtml');   
-                        $this->rownum++;                     
-                    }                                 
-             ?> 
-        </div>
-                */?>
+          
         </aside>
 </div>
 </div>
 
-        
-        
 </main>
 
 
-<script type="application/javascript">
-    $(document).ready(function () {
-        $('body').on('click', 'a.ajaxPartial', function (event) {
-            event.preventDefault();            
-            $(this).off();                  
-            var target = '#featureProductsContainer';  
-            if($(this).hasClass( "disabled" )) return false;
-            var url = $(this).attr("href");                        
-            $(target).load(url, function (response, status, xhr) {
-                if (status == "error") {
-                    $(target).empty().html('Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.');
-                }                
-            });
-            
-            return false;
-        });
-    });
-</script>
-
-
-  <?php $this->inlineScript()->appendScript(
+<?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
                 MenuHover.setup();                    
                 LoginContainer.update();

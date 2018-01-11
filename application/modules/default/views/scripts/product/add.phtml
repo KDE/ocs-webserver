@@ -161,10 +161,10 @@ $categoryPath[] = $valueCatId;
                             <?= $this->form->project_id ?>
                             <h3>Basics</h3>
                             <section id="required">
-                            	<div class="form-group"><p class="col-sm-10">(*) Mandatory fields.</p></div>
-                            	<div id="preview_img_msg">
-                            	
-                            	</div>
+                                <div class="form-group"><p class="col-sm-10">(*) Mandatory fields.</p></div>
+                                <div id="preview_img_msg">
+                                
+                                </div>
                                 <?php // $this->form->title ?>
                                 <div class="form-group">
                                     <div class="col-sm-12 margin-top-15">
@@ -277,7 +277,7 @@ $categoryPath[] = $valueCatId;
 
                                                 </div>
                                                 <div style="float: right; padding-top: 10px;" class="small light">
-                                                	Deleted files are no longer publicly accessible but number of downloads still kept. *
+                                                    Deleted files are no longer publicly accessible but number of downloads still kept. *
                                                 </div>
                                             </div>
 
@@ -298,16 +298,25 @@ $categoryPath[] = $valueCatId;
                                                     <?= $this->translate('Add URL') ?>
                                                 </a>
                                             </div>
-                                        </div>
+                                        </div>                                      
+                                      
+                                    </div>
+                                </div>
 
+                                <!-- /ppload -->
 
-                                        <?php if(isset($this->project_id)) { ?>
+                            </section>
 
+                              
+                        <?php if(isset($this->project_id)) { ?>
+                            <h3>Changlog</h3>                            
+                            <section id="changlog">                  
+                                        
+                                    <div id="modal-changlog" data-product-id="">                                                 
                                         <div class="row">
                                             <div class="modal-header">
                                                 <h3 id="modal-ppload-label"><?= $this->translate('Changelog') ?></h3>
                                             </div>
-
                                             <div class="modal-body" style="font-size: small;">
                                                 <div role="form" class="">
                                                     <input type="hidden" data-update-id="" id="update-id" value="">
@@ -327,15 +336,12 @@ $categoryPath[] = $valueCatId;
 
                                                 </article>
                                             </div>
-                                        </div>
-
-							            <?php } ?>
-                                    </div>
-                                </div>
-
-                                <!-- /ppload -->
-
+                                        </div>   
+                                    </div>                                                      
+                                <!-- changlog -->                                 
                             </section>
+                        <?php } ?>     
+            
 
                         </form>
 
@@ -439,6 +445,7 @@ $categoryPath[] = $valueCatId;
                                     return result;
                                 }
                                 formElement.find("#modal-ppload").attr('data-product-id', ProductForm.project_id);
+                                formElement.find("#modal-changlog").attr('data-product-id', ProductForm.project_id);
                             }
                             return true;
                         }
@@ -472,6 +479,7 @@ $categoryPath[] = $valueCatId;
                                 return result;
                             }
                             formElement.find("#modal-ppload").attr('data-product-id', ProductForm.project_id);
+                             formElement.find("#modal-changlog").attr('data-product-id', ProductForm.project_id);
                         }
                     }
 
@@ -548,6 +556,7 @@ $categoryPath[] = $valueCatId;
                 $('button[rel="tooltip"]').tooltip();
 
                 var $modalPpload = $('#modal-ppload');
+                var $modalChanglog = $('#modal-changlog');
                 var pploadApiUri = $modalPpload.attr('data-ppload-api-uri');
                 var ajaxUploads = {
                     queue: {},
@@ -572,8 +581,8 @@ $categoryPath[] = $valueCatId;
                 }
 
                 function getUpdates(page) {
-                    $modalPpload.find('#update-list').html('');
-
+                                        
+                    $modalChanglog.find('#update-list').html('');                                        
                     var productId = <?= isset($this->project_id)?$this->project_id:0 ?>;
                     $.ajax({
                         url: '<?=$helpProductUrl->buildProductUrl($this->project_id, 'getupdatesajax')?>',
@@ -629,7 +638,8 @@ $categoryPath[] = $valueCatId;
                                 divEl.append(btnDelete);
                                 divEl.append('<br/><br/><br/><br/>');
 
-                                $modalPpload.find('#update-list').append(divEl);
+                                // $modalPpload.find('#update-list').append(divEl);
+                                 $modalChanglog.find('#update-list').append(divEl);
                             });
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
@@ -1397,10 +1407,11 @@ $categoryPath[] = $valueCatId;
                     }
                 });
 
-                $modalPpload.on('click', 'button[data-add-update-btn]', function (event) {
-                    var update_id = $modalPpload.find('#update-id').val();
-                    var title = $modalPpload.find('#update-title').val();
-                    var text = $modalPpload.find('#update-text').val();
+
+                 $modalChanglog.on('click', 'button[data-add-update-btn]', function (event) {
+                    var update_id = $modalChanglog.find('#update-id').val();
+                    var title = $modalChanglog.find('#update-title').val();
+                    var text = $modalChanglog.find('#update-text').val();
                     var productId = <?= isset($this->project_id)?$this->project_id:0 ?>;
                     event.preventDefault();
 
@@ -1413,9 +1424,9 @@ $categoryPath[] = $valueCatId;
                             if (data.status != 'success') {
                                 return;
                             }
-                            $modalPpload.find('#update-title').val('');
-                            $modalPpload.find('#update-text').val('');
-                            $modalPpload.find('#update-id').val('');
+                            $modalChanglog.find('#update-title').val('');
+                            $modalChanglog.find('#update-text').val('');
+                            $modalChanglog.find('#update-id').val('');
                             getUpdates();
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
@@ -1425,7 +1436,7 @@ $categoryPath[] = $valueCatId;
 
                 });
 
-                $modalPpload.on('click', 'button[data-delete-update-btn]', function (event) {
+                $modalChanglog.on('click', 'button[data-delete-update-btn]', function (event) {
                     var updateId = $(this).attr('data-delete-update-btn');
                     var productId = <?= isset($this->project_id)?$this->project_id:0 ?>;
                     event.preventDefault();
@@ -1449,7 +1460,7 @@ $categoryPath[] = $valueCatId;
 
                 });
 
-                $modalPpload.on('click', 'button[data-change-update-btn]', function (event) {
+                $modalChanglog.on('click', 'button[data-change-update-btn]', function (event) {
                     var updateId = $(this).attr('data-change-update-btn');
                     //var title = $(this).attr('data-change-title');
                     //var text = $(this).attr('data-change-text');
@@ -1457,14 +1468,16 @@ $categoryPath[] = $valueCatId;
                     var title = changelog.msg_title;
                     var text = changelog.msg_text;
 
-                    $modalPpload.find('#update-title').val(title);
-                    $modalPpload.find('#update-text').val(text);
-                    $modalPpload.find('#update-id').val(updateId);
+                    $modalChanglog.find('#update-title').val(title);
+                    $modalChanglog.find('#update-text').val(text);
+                    $modalChanglog.find('#update-id').val(updateId);
 
-                    $modalPpload.find('#update-title').focus();
+                    $modalChanglog.find('#update-title').focus();
 
                     event.preventDefault();
                 });
+
+            
 
                 $modalPpload.on('change', 'select.chosen', function (event) {
                     event.preventDefault();

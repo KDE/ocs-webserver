@@ -20,7 +20,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-// ppload-API: https://github.com/pling-us/ppload-www/wiki/ppload-API
+// ppload-API: https://github.com/KDE/ocs-fileserver/blob/master/docs/ocs-fileserver-API.md
 
 class Ppload_Api
 {
