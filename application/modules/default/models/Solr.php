@@ -40,15 +40,15 @@ class Default_Model_Solr
         if ($solr->ping()) {
 
             $params = array(
-                'defType'    => 'dismax',
+                'defType'    => 'edismax',
                 'wt'         => 'json',
                 'fl'         => '*,score',
-                'df'         => 'description',
-                'qf'         => empty($op['qf']) ? 'title^3 description^2 username^1 cat_title' : $op['qf'],
-                'bq'         => 'changed_at:[NOW-1YEAR TO NOW/DAY]',
+                'df'         => 'title',
+                'qf'         => empty($op['qf']) ? 'title^ description^2 username^1 cat_title' : $op['qf'],
+//                'bq'         => 'changed_at:[NOW-1YEAR TO NOW/DAY]',
                 //'bf'         => 'if(lt(laplace_score,50),-10,10)',
-                'bf'         => 'product(recip(ms(NOW/HOUR,changed_at),3.16e-11,0.2,0.2),1000)',
-                'sort'       => 'score desc,changed_at desc',
+//                'bf'         => 'product(recip(ms(NOW/HOUR,changed_at),3.16e-11,0.2,0.2),1000)',
+//                'sort'       => 'score desc,changed_at desc',
                 //'hl'          => 'on',
                 //'hl.fl'       => 'title, description, username',
                 //'facet'          => 'on',

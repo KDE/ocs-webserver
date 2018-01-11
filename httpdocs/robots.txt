@@ -5,3 +5,4 @@ Disallow: /logout*
 Disallow: /register*
 Disallow: /*/rating
 Disallow: /search*
+Disallow: /ocs/*
