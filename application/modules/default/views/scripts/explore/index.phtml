@@ -95,65 +95,65 @@ $time_start = microtime(true);
 ?>
       <div class="GridFlex-cell sidebar-right">
           <aside  id="explore-sidebar <?=$asidehide?>" >                      
-                      <div class="downloadDiv" >
-                          <a href="https://www.linux-apps.com/p/1175480/" target="_blank"><img src="/images/system/download-app.png" /></a>
-                      </div>
+            <div class="downloadDiv" >
+                <a href="https://www.linux-apps.com/p/1175480/" target="_blank"><img src="/images/system/download-app.png" /></a>
+            </div>
 
-                      <div class="supportDiv" >
-                      <?php 
-                                $identity = Zend_Auth::getInstance()->getIdentity();
-                                if(null == $identity || (null != $identity && !$this->isSupporter($identity->member_id))) {                                                  
-                      ?>
-                          <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Become a Supporter</a>
-                      <?php } else if((null != $identity && $this->isSupporter($identity->member_id))) { ?>
-                          <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Support us</a>
-                      <?php }?>
-                      </div>
-                      
+            <div class="supportDiv" >
+            <?php 
+                    $identity = Zend_Auth::getInstance()->getIdentity();
+                    if(null == $identity || (null != $identity && !$this->isSupporter($identity->member_id))) {                                                  
+            ?>
+                <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Become a Supporter<br>of Opendesktop.org</a>
+            <?php   } else if((null != $identity && $this->isSupporter($identity->member_id))) { ?>
+                <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Support<br>Opendesktop.org</a>
+            <?php   }?>
+            </div>
 
-                      <div  class="row sidebar-right-info" >                                
-                          <span class="newsTitle"> News </span>
-                          <div class="prod-widget-box right bgwhite" id="rss-feeds"> </div>                  
-                      <?php
-                      if (count($comments) > 0) {
-                          ?>
-                          <span class="commentTitle"> Comments</span>
-                          <div class="prod-widget-box right bgwhite" id="lastcomments">
-                              <?php
 
-                              foreach ($comments as $this->comment) {
-                                  echo $this->render('explore/partials/comment.phtml');
-                              }
-                              ?>
-                          </div>
-                      <?php } ?>        
+            <div  class="row sidebar-right-info" >                                
+                <span class="newsTitle"> News </span>
+                <div class="prod-widget-box right bgwhite" id="rss-feeds"> </div>                  
+            <?php
+            if (count($comments) > 0) {
+                ?>
+                <span class="commentTitle"> Comments</span>
+                <div class="prod-widget-box right bgwhite" id="lastcomments">
+                    <?php
 
-                      <?php
-                      if (count($topprods) > 0) {
-                          ?>
-                          <span class="commentTitle"> 3 Months Ranking <span class="small light"> (based on downloads)</span></span>
-                          
-                          <div class="prod-widget-box right bgwhite" id="mostdownloaded">
-                              <?php
-                              $this->rownum = 1;
-                              foreach ($topprods as $this->product) {
-                                  echo $this->render('explore/partials/productTop.phtml');
-                                  $this->rownum++;
-                              }
-                              ?>
-                          </div>
-                      <?php } ?>
+                    foreach ($comments as $this->comment) {
+                        echo $this->render('explore/partials/comment.phtml');
+                    }
+                    ?>
+                </div>
+            <?php } ?>        
 
-                      <?php
-                      if ($this->catabout) {
-                      ?>
-                          <div class="prod-widget-box right catabout" id="catcontent">
-                              <?php include $this->catabout; ?>
-                          </div>
-                      <?php
-                      }
-                      ?>
-                    </div>
+            <?php
+            if (count($topprods) > 0) {
+                ?>
+                <span class="commentTitle"> 3 Months Ranking <span class="small light"> (based on downloads)</span></span>
+
+                <div class="prod-widget-box right bgwhite" id="mostdownloaded">
+                    <?php
+                    $this->rownum = 1;
+                    foreach ($topprods as $this->product) {
+                        echo $this->render('explore/partials/productTop.phtml');
+                        $this->rownum++;
+                    }
+                    ?>
+                </div>
+            <?php } ?>
+
+            <?php
+            if ($this->catabout) {
+            ?>
+                <div class="prod-widget-box right catabout" id="catcontent">
+                    <?php include $this->catabout; ?>
+                </div>
+            <?php
+            }
+            ?>
+            </div>
         </aside>
           <?php
           $time_elapsed = microtime(true) - $time_start;
