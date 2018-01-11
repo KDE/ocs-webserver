@@ -58,6 +58,7 @@ class Default_Model_ActivityLog extends Default_Model_DbTable_ActivityLog
     const MEMBER_JOINED = 100;
     const MEMBER_UPDATED = 101;
     const MEMBER_DELETED = 102;
+    const MEMBER_EMAIL_CONFIRMED = 103;
     const MEMBER_EDITED = 107;
     const MEMBER_FOLLOWED = 150;
     const MEMBER_UNFOLLOWED = 151;
@@ -103,7 +104,7 @@ class Default_Model_ActivityLog extends Default_Model_DbTable_ActivityLog
         100 => 'member',
         101 => 'member',
         102 => 'member',
-        103 => 'undefined',
+        103 => 'member',
         104 => 'undefined',
         107 => 'member',
         108 => 'undefined',

@@ -347,6 +347,8 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
 
         $newUserData = $this->createNewUser($formRegisterValues);
 
+        Default_Model_ActivityLog::logActivity($newUserData['main_project_id'], null, $newUserData['member_id'], Default_Model_ActivityLog::MEMBER_JOINED, array());
+
         $this->sendConfirmationMail($formRegisterValues, $newUserData['verificationVal']);
 
         if ($this->_request->isXmlHttpRequest()) {
@@ -368,8 +370,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         $userData = $userTable->createNewUser($userData)->toArray();
 
         if (false == isset($userData['verificationVal'])) {
-            $verificationVal = Default_Model_MemberEmail::getVerificationValue($userData['username'],
-                $userData['mail']);
+            $verificationVal = Default_Model_MemberEmail::getVerificationValue($userData['username'], $userData['mail']);
             $userData['verificationVal'] = $verificationVal;
         }
 
@@ -521,8 +522,8 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             throw new Zend_Controller_Action_Exception('Your member account could not activated.');
         }
 
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - user activated. member_id: ' . print_r($authUser->member_id,
-                true));
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - user activated. member_id: ' . print_r($authUser->member_id,true));
+        Default_Model_ActivityLog::logActivity($authUser->member_id, null, $authUser->member_id, Default_Model_ActivityLog::MEMBER_EMAIL_CONFIRMED, array());
         $this->view->member = $authUser;
         $this->view->username = $authUser->username;
 
