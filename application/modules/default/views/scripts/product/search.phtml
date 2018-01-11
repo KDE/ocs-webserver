@@ -84,6 +84,17 @@ $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
                     <div class="downloadDiv" >
                         <a href="https://www.linux-apps.com/p/1175480/" target="_blank"><img src="/images/system/download-app.png" /></a>
                     </div>
+                    
+                    <div class="supportDiv" >
+                    <?php 
+                              $identity = Zend_Auth::getInstance()->getIdentity();
+                              if(null == $identity || (null != $identity && !$this->isSupporter($identity->member_id))) {                                                  
+                    ?>
+                        <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Become a Supporter<br>of Opendesktop.org</a>
+                    <?php } else if((null != $identity && $this->isSupporter($identity->member_id))) { ?>
+                        <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Support<br>Opendesktop.org</a>
+                    <?php }?>
+                    </div>
 
                     <div  class="row sidebar-right-info" >
                         <span class="newsTitle"> News </span>
