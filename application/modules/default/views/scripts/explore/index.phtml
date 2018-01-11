@@ -49,10 +49,7 @@ $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
                       <a href="<?= $helperBuildExploreUrl->buildExploreUrl($this->filters['category'], null,
                           'top') ?>"><span><?= $this->translate('Top') ?></span></a>
                   </li>      
-                  <li <?=$this->filters['order'] == 'downloadQuarter' ? 'class="active"' :'' ?>>
-                      <a href="<?= $helperBuildExploreUrl->buildExploreUrl($this->filters['category'], null,
-                          'downloadQuarter') ?>"><span><?= $this->translate('Most Downloaded') ?></span></a>
-                  </li>             
+                  
               </ul>
             </div>
 
