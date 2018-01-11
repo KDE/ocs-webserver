@@ -19,7 +19,7 @@
 
      .new-products .rating
     {
-        width: 180px;
+        width:60%;
     }
     .new-products .time
     {
@@ -28,6 +28,12 @@
     .new-products .cntComments
     {
         font-size: smaller;
+        margin-right: 10px;
+    }
+    .new-products .packagetypeos
+    {
+      margin: 0px;      
+      float: none;
     }
     .new-products .productimg
     {
@@ -113,10 +119,7 @@
     margin-top: 30px;
   }
 
-  div.mostdownloadedproducts
-  {
-    
-  }
+  
 
   div.mostdownloadedproducts span.title
   {
@@ -147,15 +150,7 @@
   {
     border:0px !important;
   }
-  .containerbox
-  {
-
-  }
-
-  .aside
-  {
-    padding-top:60px;
-  }
+  
 
    div.latestcomments
   {
@@ -163,14 +158,8 @@
       float: left; 
       margin-left: 50px;
   }
-  div.newestproducts
-  {
-      width: 600px; 
-      float: left ;
-  }
-  .new-products .rating {
-      width: 100px;
-  }
+  
+  
   .latestcomments .num {
   display: block;
   float: left;
@@ -186,3 +175,77 @@
   .latestcomments .productrow:last-child {
   border-bottom: none;
   }
+
+  .newproductsincategory .newestproducts{
+    padding:30px;
+  }
+
+  .mainpage-kde-store {
+    padding-top:0px;
+  }
+
+  .mainpage-kde-store .sidebar-left{
+    padding-top: 20px;
+    background-color: #f1f1f1;
+    border-right: 1px solid #ccd4d8;
+  }
+  .mainpage-kde-store .content{
+    padding-top: 15px;    
+      min-width: 900px !important;
+  }
+  .mainpage-kde-store .sidebar-right{
+    padding-top: 15px;
+    min-width: 320px !important;
+  
+    padding-left: 10px;
+     border-left: 1px solid #ccd4d8;    
+    background-color: #f1f1f1;
+  }
+   .mainpage-kde-store .sidebar-right .productrow{
+     padding-bottom: 5px;
+  padding-top: 5px;
+  border-bottom: 1px solid #ccd4d8;
+
+  }
+
+   .mainpage-kde-store  .prod-widget-box{
+    border: 0px !important;
+   
+  }
+   .mainpage-kde-store .panel{
+    background-color: #f1f1f1;
+    -webkit-box-shadow: 0 0px 0px rgba(0,0,0,.05);
+    box-shadow: 0 0px 0px rgba(0,0,0,.05);
+   }
+   .mainpage-kde-store .panel-default{
+    border: 0px;
+    border-color: none;
+   }
+
+.mainpage-kde-store .contentcontainer{
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+   }
+
+.mainpage-kde-store .labelTitle{
+  display:block;
+  padding-top: 15px; 
+  padding-bottom: 15px;
+}
+
+.mainpage-kde-store  .downloadDiv{
+  background-color: transparent !important;
+}
+
+.mainpage-kde-store  #rss-feeds{
+  border: 1px solid #ccd4d8 !important;
+}
+.mainpage-kde-store  #lastcomments{
+  border: 1px solid #ccd4d8 !important;
+}
+
+.mainpage-kde-store  .sidebar-right-info{
+  padding-left: 10px;
+}

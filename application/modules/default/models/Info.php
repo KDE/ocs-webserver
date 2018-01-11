@@ -376,10 +376,36 @@ class Default_Model_Info
 
     public function getLastProductsForHostStores($limit = 10, $project_category_id = null)
     {
+        /** @var Zend_Cache_Core $cache */
+      
+        if($project_category_id) {
+            $catids = str_replace(',', '', (string)$project_category_id);
+        }else
+        {
+            $catids="";
+        }
+        $cache = Zend_Registry::get('cache');
+        $cacheName =
+            __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host') . (int)$limit .$catids);
+
+        if (($resultSet = $cache->load($cacheName))) {
+            return $resultSet;
+        }
+
+
+        $activeCategories =array();
         if (empty($project_category_id)) {
             $activeCategories = $this->getActiveCategoriesForCurrentHost();
         } else {
-            $activeCategories = $this->getActiveCategoriesForCatId($project_category_id);
+            $cats = explode(",", $project_category_id);
+            if(count($cats)==1){
+                $activeCategories = $this->getActiveCategoriesForCatId($project_category_id);    
+            }else{
+                foreach ($cats as $cat) {
+                    $tmp = $this->getActiveCategoriesForCatId($cat);    
+                    $activeCategories = array_merge($tmp, $activeCategories);
+                }                
+            }            
         }
 
         if (count($activeCategories) == 0) {
@@ -404,11 +430,14 @@ class Default_Model_Info
         $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
 
         if (count($resultSet) > 0) {
-            return $resultSet;
+                    $cache->save($resultSet, $cacheName, array(), 300);
+                    return $resultSet;
         } else {
-            return array();
-        }
+                    $cache->save($resultSet, $cacheName, array(), 300);
+                    return array();
+        }        
     }
+
 
     /**
      * @param int  $limit

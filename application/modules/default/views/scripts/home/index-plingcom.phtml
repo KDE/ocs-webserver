@@ -21,22 +21,21 @@
  **/
 
 $modelInfo = new Default_Model_Info();
-
 $this->comments = $modelInfo->getLatestComments(10);
-$this->users = $modelInfo->getNewActiveMembers(10);
-$this->products = $modelInfo->getLastProductsForHostStores(10);
-$featureProducts = $modelInfo->getFeaturedProductsForHostStores(100);
+$this->users = $modelInfo->getNewActiveMembers(18);
 
+// LIVE
+// $this->productsThemes = $modelInfo->getLastProductsForHostStores(5,"381,386,107,147,146,151");
+// $this->productsApps = $modelInfo->getLastProductsForHostStores(5,233);
+// $this->productsAddons = $modelInfo->getLastProductsForHostStores(5,"152,277,384");
+// $this->productsWallpapers = $modelInfo->getLastProductsForHostStores(5,295);
 
-if ($featureProducts->getTotalItemCount()) {
-    /** @var Zend_Controller_Request_Http $request */
-    $request = Zend_Controller_Front::getInstance()->getRequest();
+// CC TEST
+$this->productsThemes = $modelInfo->getLastProductsForHostStores(5,"3,33");
+$this->productsApps = $modelInfo->getLastProductsForHostStores(5,33);
+$this->productsAddons = $modelInfo->getLastProductsForHostStores(5,7);
+$this->productsWallpapers = $modelInfo->getLastProductsForHostStores(5,5);
 
-    $offset = (int)$request->getParam('page');
-    $featureProducts->setItemCountPerPage(1);
-    $featureProducts->setCurrentPageNumber($offset);
-    $this->featureProducts = $featureProducts;
-}
 
 $storeCatIds = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
 $this->categories = $storeCatIds;
@@ -50,9 +49,10 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
 
 $auth = Zend_Auth::getInstance();
 $member = $getAuthUser->getAuthUser();
-
+$this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
+$this->headLink()->appendStylesheet('/theme/flatui/css/startpage.css');
 ?>
-<link href="/theme/flatui/css/style-index-plingcom.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
 
     <header id="page_header" xmlns="http://www.w3.org/1999/html">
         <div class="container header" style="position: relative;">                     
@@ -73,9 +73,7 @@ $member = $getAuthUser->getAuthUser();
             
         <section class="container">
             <section class="wrapper">
-
                 <section>
-
                     <figure class="logo-header" >
                         <a href="/">
                             <img width="<?=$this->template['header-logo']['width']?>" border="0" src="<?=$this->template['header-logo']['image-src']?>">
@@ -140,82 +138,80 @@ $member = $getAuthUser->getAuthUser();
                 </section>
 
             </section>
-        </section>
-            
+        </section>            
         </div>
-
-
     </header>
 
-<main id="mainpage-kde-store" class="mainpage-kde-store" >
-        <section class="wrapper-kde-store" id="intro-kde-store" >
-            <section class="container" style="height:100%; width: 100%;">
-                <div class="row" style="height: 400px; width: 100%" id="featureProductsContainer">
-                    
-                    <?php
-                    if ($this->featureProducts) {        
-                        echo $this->render('home/partials/featured-products.phtml');
-                    } 
-                    ?>
-                   
-                </div>
-                <div class="row">   
-               
-                <aside class="col-lg-2 col-md-4 col-sm-6 col-xs-12" style="padding-top: 70px">
-                     <?php  echo $this->render('explore/partials/filter.phtml'); ?>
-                </aside>               
-                
-                <div class="col-lg-10 col-md-6 col-sm-6 col-xs-12">
-                        <div class="newestproducts" >
-                            <div class="row">
-                                <div >
-                                    <h3> Newest 10 Products
-                                    </h3>
-
-                                    <div class="prod-widget-box new-products" >
-                                    <?php
-                                    $this->rownum = 1; 
-                                    foreach ($this->products as $this->product) {
-                                        echo $this->render('home/partials/product_plingcom.phtml');
-                                        $this->rownum++;
-                                    }           
-                                    ?>
-
+<main id="explore-content" class="startpage-store" >
+<div class="GridFlex">
+<div class="GridFlex-cell sidebar-left">  
+        <?php  echo $this->render('explore/partials/filter.phtml'); ?> 
+</div>
+<div class="GridFlex-cell content">   
+        <div class="contentcontainer">
+                        <div class="row ">   
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">                                                                  
+                                        <span>  Themes </span>
+                                        <div class="prod-widget-box new-products" >
+                                        <?php
+                                        $this->rownum = 1; 
+                                        foreach ($this->productsThemes as $this->product) {
+                                            echo $this->render('home/partials/product_plingcom.phtml');
+                                            $this->rownum++;
+                                        }           
+                                        ?>
+                                        </div>
                                     </div>
-
-                                </div>
-                            </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                         <span>Add-Ons</span>                                         
+                                         <div class="prod-widget-box new-products" >
+                                         <?php
+                                         $this->rownum = 1; 
+                                         foreach ($this->productsAddons as $this->product) {
+                                             echo $this->render('home/partials/product_plingcom.phtml');
+                                             $this->rownum++;
+                                         }           
+                                         ?>                                        
+                                        </div>                                       
+                                    </div>
+                        </div>
+                        <div class="row blockpadding" >
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">                          
+                                                <span>Wallpapers</span>                                              
+                                                <div class="prod-widget-box new-products" >
+                                                <?php
+                                                $this->rownum = 1; 
+                                                foreach ($this->productsWallpapers as $this->product) {
+                                                    echo $this->render('home/partials/product_plingcom.phtml');
+                                                    $this->rownum++;
+                                                }           
+                                                ?>
+                                                </div>                             
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">                            
+<<<<<<< HEAD
+                                               <span>  Apps  </span>                                               
+=======
+                                               <span> Apps </span>                                               
+>>>>>>> af45b57... startpage
+                                               <div class="prod-widget-box new-products" >
+                                               <?php
+                                               $this->rownum = 1; 
+                                               foreach ($this->productsApps as $this->product) {
+                                                   echo $this->render('home/partials/product_plingcom.phtml');
+                                                   $this->rownum++;
+                                               }           
+                                               ?>                                              
+                                                </div>
+                                    </div>                        
                         </div>
 
-                        <div class="latestcomments">
-                       
-                            <div class="row">
-                                <div >
-                                    <h3> Lastest 10 Comments
-                                    </h3>
-                                        
-                                    <div class="prod-widget-box ">
-                                        <?php                       
-                                        $this->rownum = 1;                                         
-                                             foreach ($this->comments as $this->comment) {
-                                                    echo $this->render('home/partials/comment_plingcom.phtml');   
-                                                    $this->rownum++;                     
-                                                }                                 
-                                         ?> 
-                                    </div>
+                        <div class="row blockpadding">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
-                                </div>
-                            </div>
-                        
-                        </div>
-
-                        <div class="" style="width: 490px; float: left;margin-left: 50px;margin-top:30px">
-                            <div class="row">
-                                <div >
-                                    <h3> Newest 10 Users
-                                        </h3>
+                                    <span class="labelTitle" >Newest  Community Members   </span>                                 
                                         
-                                    <div class="prod-widget-box newusers">
+                                    <div class="newusers">
                                          <?php 
                                         foreach ($this->users as $user) {                                  
                                             ?>
@@ -225,54 +221,63 @@ $member = $getAuthUser->getAuthUser();
                                                             <figure >
                                                                 <img src="<?php echo $helperImage->Image($user['profile_image_url'], array('width' => '200', 'height' => '200', 'crop' => 2)); ?>"/>
                                                             </figure>
-                                                            <h3 class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><?php echo $user['username']; ?></h3>                                                   
+                                                            <h3 class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><?php echo Default_Model_HtmlPurify::purify($user['username']); ?></h3>                                                   
                                                         </a>
                                                          <span class="small"><?= $helpPrintDate->printDate($user['created_at'])?></span>
                                                     </div>
                                                 </div>
                                         <?php } ?>
 
-                                        <div style="clear: both;"></div> 
+                                        <div class="clearboth"></div> 
 
                                     </div>
-
-                                </div>
-                            </div>
                         </div>
-                
-                </div>
-              
+                        </div>
+</div>
+</div>
+<div class="GridFlex-cell sidebar-right">   
+        <aside  id="explore-sidebar" >     
 
-                </div> <!--row -->
-            </section>
-        </section>
-        
-    </main>
+        <div class="downloadDiv" >
+            <a href="https://www.linux-apps.com/p/1175480/" target="_blank"><img src="/images/system/download-app.png" /></a>
+        </div>
+
+        <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin')  : ?>
+        <div class="donateDiv" >
+        <?php 
+                  $identity = Zend_Auth::getInstance()->getIdentity();
+                  if(!$this->isSupporter($identity->member_id)) {                                                  
+         ?>
+            <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Become a Supporter</a>
+            <?php }?>
+        </div>
+        <?php endif; ?>
+
+        <div  class="row sidebar-right-info" >                                
+            <span class="newsTitle"> News </span>
+            <div class="prod-widget-box right bgwhite " id="rss-feeds"> </div>                  
+      
+        <span class="newsTitle"> Lastest 10 Comments </span>
+         <div class="prod-widget-box right bgwhite" id="lastcomments">
+                <?php
+                foreach ($this->comments as $this->comment) {
+                    echo $this->render('explore/partials/comment.phtml');
+                }
+                ?>
+            </div>
+
+          
+        </aside>
+</div>
+</div>
+
+</main>
 
 
-<script type="application/javascript">
-    $(document).ready(function () {
-        $('body').on('click', 'a.ajaxPartial', function (event) {
-            event.preventDefault();            
-            $(this).off();                  
-            var target = '#featureProductsContainer';  
-            if($(this).hasClass( "disabled" )) return false;
-            var url = $(this).attr("href");                        
-            $(target).load(url, function (response, status, xhr) {
-                if (status == "error") {
-                    $(target).empty().html('Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.');
-                }                
-            });
-            
-            return false;
-        });
-    });
-</script>
-
-
-  <?php $this->inlineScript()->appendScript(
+<?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
                 MenuHover.setup();                    
                 LoginContainer.update();
+                RssNews.setup();                
             });
         ');
