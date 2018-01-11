@@ -238,25 +238,16 @@ $this->headLink()->appendStylesheet('/theme/flatui/css/startpage.css');
             <a href="https://www.linux-apps.com/p/1175480/" target="_blank"><img src="/images/system/download-app.png" /></a>
         </div>
 
-        <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin')  : ?>
-        <div class="donateDiv" >
+        <div class="supportDiv" >
         <?php 
                   $identity = Zend_Auth::getInstance()->getIdentity();
-<<<<<<< HEAD
-                  if(!$this->isSupporter($identity->member_id)) {                                                  
-         ?>
-            <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Become a Supporter</a>
-            <?php }?>
-=======
                   if(null == $identity || (null != $identity && !$this->isSupporter($identity->member_id))) {                                                  
         ?>
             <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Become a Supporter</a>
         <?php } else if((null != $identity && $this->isSupporter($identity->member_id))) { ?>
             <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Support us</a>
         <?php }?>
->>>>>>> aca3c24... startpage
         </div>
-        <?php endif; ?>
 
         <div  class="row sidebar-right-info" >                                
             <span class="newsTitle"> News </span>
