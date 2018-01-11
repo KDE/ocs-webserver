@@ -40,11 +40,11 @@ class Default_Model_Solr
         if ($solr->ping()) {
 
             $params = array(
-                'defType'    => 'edismax',
+                'defType'    => 'dismax',
                 'wt'         => 'json',
                 'fl'         => '*,score',
                 'df'         => 'title',
-                'qf'         => empty($op['qf']) ? 'title^ description^2 username^1 cat_title' : $op['qf'],
+                'qf'         => empty($op['qf']) ? 'title^3 description^2 username^1 cat_title' : $op['qf'],
 //                'bq'         => 'changed_at:[NOW-1YEAR TO NOW/DAY]',
                 //'bf'         => 'if(lt(laplace_score,50),-10,10)',
 //                'bf'         => 'product(recip(ms(NOW/HOUR,changed_at),3.16e-11,0.2,0.2),1000)',
