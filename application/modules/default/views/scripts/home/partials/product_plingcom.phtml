@@ -34,14 +34,14 @@
         <span style="display: block; margin-bottom: 5px"><?=$this->fetchCategoriesForProductAsString($this->product['project_id'])?></span>
         
        
-        <div class="productInfo" style="float: left;">
+        <div class="productInfo">
         
         <span class="cntComments">
         <?php
             //$count_plingers = $this->product['count_plingers'];
             $count_comments = $this->product['count_comments'];            
             //echo ($count_plingers>0 ? '<span style="padding-top: 5px; padding-right: 6px; font-size: smaller;" class="cntSupporters">'.$count_plingers.' supporter':'').($count_plingers>1?'s':'').($count_plingers>0?'</span>':'') ;
-            echo ($count_comments>0 ? $count_comments.' comment':'').($count_comments>1?'s':'&nbsp;');            
+            echo ($count_comments>0 ? $count_comments.' comment':'').($count_comments>1?'s':'');            
         ?>
         </span>
 
