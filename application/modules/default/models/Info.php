@@ -415,12 +415,13 @@ class Default_Model_Info
         $sql = '
             SELECT 
                 p.*
-                ,laplace_score(p.count_likes, p.count_dislikes) AS laplace_score
+              
             FROM
-                project AS p
+                stat_projects  AS p
             WHERE
-                p.status = 100
+                p.status = 100                
                 AND p.project_category_id IN (' . implode(',', $activeCategories) . ')
+                AND p.amount_reports is null
             ORDER BY IFNULL(p.changed_at,p.created_at)  DESC
             ';
         if (isset($limit)) {
@@ -655,8 +656,8 @@ class Default_Model_Info
                 SELECT *
                 FROM member
                 WHERE `is_active` = :activeVal
-                   AND `type` = :typeVal     
-                  ORDER BY created_at DESC             
+                AND `type` = :typeVal     
+                ORDER BY created_at DESC             
             ';
 
         if (isset($limit)) {
@@ -674,4 +675,31 @@ class Default_Model_Info
         return $resultMembers;
     }
 
+
+    public function getNewActiveSupporters($limit = 20)
+    {
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cacheName = __FUNCTION__ . '_' . md5((int)$limit);
+
+        if (false !== ($newSupporters = $cache->load($cacheName))) {
+            return $newSupporters;
+        }
+        $sql = '
+                        SELECT 
+                        distinct s.member_id as supporter_id
+                        ,m.*
+                        from support s 
+                        left join member m on s.member_id = m.member_id
+                        where s.status_id = 2  
+                        and (DATE_ADD((s.active_time), INTERVAL 1 YEAR) > now())
+                        order by s.active_time desc                        
+        ';        
+        if (isset($limit)) {
+            $sql .= ' limit ' . (int)$limit;
+        }
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array())->fetchAll();
+        $cache->save($result, $cacheName, array(), 300);
+        return $result;
+    }
 }
