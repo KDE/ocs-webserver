@@ -766,7 +766,7 @@ $categoryPath[] = $valueCatId;
                                 var timetamp = '<?= $this->download_timestamp ?>';
                                 var userid = '<?= $this->member_id?>';
 
-                                var downloadUrl = pploadApiUri + 'files/downloadfile/id/' + this.id + '/s/' + hash + '/t/' + timetamp + '/u/' + userid + '/' + this.name;
+                                var downloadUrl = pploadApiUri + 'files/downloadfile/id/' + this.id + '/o/1/s/' + hash + '/t/' + timetamp + '/u/' + userid + '/' + this.name;
                                 var downloadLink = '<a href="' + downloadUrl + '" id="data-link' + this.id + '">' + this.name + '</a>';
 
                                 if(this.active == '0') {
