@@ -73,7 +73,10 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         }
 
         $this->view->paramPageId = (int)$this->getParam('page');
-        $this->view->authMember = $this->_authMember;
+        $this->view->member_id = null;
+        if(null != $this->_authMember && null != $this->_authMember->member_id) {
+            $this->view->member_id = $this->_authMember->member_id;
+        }
 
         //        $this->fetchDataForIndexView();
 
@@ -128,6 +131,10 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         
         $this->view->download_hash = $hash;
         $this->view->download_timestamp = $timestamp;
+        $this->view->member_id = null;
+        if(null != $this->_authMember && null != $this->_authMember->member_id) {
+            $this->view->member_id = $this->_authMember->member_id;
+        }
 
         $this->view->member = $this->_authMember;
         $this->view->form = $form;

@@ -177,6 +177,11 @@ class UserController extends Local_Controller_Action_DomainSwitch
         
         $this->view->download_hash = $hash;
         $this->view->download_timestamp = $timestamp;
+        
+        $this->view->member_id = null;
+        if(null != $this->_authMember && null != $this->_authMember->member_id) {
+            $this->view->member_id = $this->_authMember->member_id;
+        }
 
         $modelProject = new Default_Model_Project();
         $userProjects = $modelProject->fetchAllProjectsForMember($this->_authMember->member_id, $pageLimit,
