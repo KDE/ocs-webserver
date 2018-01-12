@@ -760,8 +760,15 @@ $categoryPath[] = $valueCatId;
                                         }
                                     });
                                 }
+                                
+                                //downloadlink is now: domain/api/files/download/id/ID/s/TOKEN/t/TIMESTAMP/FILE_NAME/u/USERID
+                                var hash = '<?= $this->download_hash ?>';
+                                var timetamp = '<?= $this->download_timestamp ?>';
+                                var userid = '<?= $this->member_id?>';
 
-                                var downloadLink = '<a href="' + pploadApiUri + 'files/download/id/' + this.id + '/' + this.name + '"  id="data-link' + this.id + '">' + this.name + '</a>';
+                                var downloadUrl = pploadApiUri + 'files/downloadfile/id/' + this.id + '/o/1/s/' + hash + '/t/' + timetamp + '/u/' + userid + '/' + this.name;
+                                var downloadLink = '<a href="' + downloadUrl + '" id="data-link' + this.id + '">' + this.name + '</a>';
+
                                 if(this.active == '0') {
                                     deletePploadFileBtnPerFile = '';
                                     downloadLink = this.name;

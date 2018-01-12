@@ -73,7 +73,10 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         }
 
         $this->view->paramPageId = (int)$this->getParam('page');
-        $this->view->authMember = $this->_authMember;
+        $this->view->member_id = null;
+        if(null != $this->_authMember && null != $this->_authMember->member_id) {
+            $this->view->member_id = $this->_authMember->member_id;
+        }
 
         //        $this->fetchDataForIndexView();
 
@@ -119,7 +122,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
     public function addAction()
     {
         $form = new Default_Form_Product();
-
+        
         $this->view->member = $this->_authMember;
         $this->view->form = $form;
         $this->view->mode = 'add';
@@ -308,6 +311,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
             return;
         }
+        
+        
 
         $this->_helper->viewRenderer('add'); // we use the same view as you can see at add a product
         $this->view->mode = 'edit';
@@ -327,6 +332,19 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         //set ppload-collection-id in view
         $this->view->ppload_collection_id = $projectData->ppload_collection_id;
         $this->view->project_id = $projectData->project_id;
+        
+        //create ppload download hash: secret + collection_id + expire-timestamp
+        $salt = PPLOAD_DOWNLOAD_SECRET;
+        $collectionID = $projectData->ppload_collection_id;
+        $timestamp = time() + 3600; // one hour valid
+        $hash = md5($salt . $collectionID . $timestamp); // order isn't important at all... just do the same when verifying
+        
+        $this->view->download_hash = $hash;
+        $this->view->download_timestamp = $timestamp;
+        $this->view->member_id = null;
+        if(null != $this->_authMember && null != $this->_authMember->member_id) {
+            $this->view->member_id = $this->_authMember->member_id;
+        }
 
         //read the already existing gallery pics and add them to the form
         $sources = $projectModel->getGalleryPictureSources($this->_projectId);
