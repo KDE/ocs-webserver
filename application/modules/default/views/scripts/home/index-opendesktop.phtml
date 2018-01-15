@@ -150,20 +150,7 @@ $this->headLink()->appendStylesheet('/theme/flatui/css/startpage.css');
         <div class="contentcontainer">
                         <div class="row ">   
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">      
-                                    <span>Wallpapers</span>                                              
-                                    <div class="prod-widget-box new-products" >
-                                    <?php
-                                    $this->rownum = 1; 
-                                    foreach ($this->productsWallpapers as $this->product) {
-                                        echo $this->render('home/partials/product_plingcom.phtml');
-                                        $this->rownum++;
-                                    }           
-                                    ?>
-                                    </div>                                                                     
-                                      
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                    <span>  Themes </span>
+                                    <span>  Theming </span>
                                     <div class="prod-widget-box new-products" >
                                     <?php
                                     $this->rownum = 1; 
@@ -173,6 +160,20 @@ $this->headLink()->appendStylesheet('/theme/flatui/css/startpage.css');
                                     }           
                                     ?>
                                     </div>
+                                                                                                        
+                                      
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                    <span>Wallpapers</span>                                              
+                                    <div class="prod-widget-box new-products" >
+                                    <?php
+                                    $this->rownum = 1; 
+                                    foreach ($this->productsWallpapers as $this->product) {
+                                        echo $this->render('home/partials/product_plingcom.phtml');
+                                        $this->rownum++;
+                                    }           
+                                    ?>
+                                    </div> 
                                                                       
                                     </div>
                         </div>
