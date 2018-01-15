@@ -307,6 +307,32 @@ class UserController extends Local_Controller_Action_DomainSwitch
         }
         
     }
+
+    public function downloadhistoryAction()
+    {
+
+        $tableMember = new Default_Model_Member();
+        $this->view->view_member = $tableMember->fetchMemberData($this->_memberId);
+        
+     
+        //backdore for admins
+        $helperUserRole = new Backend_View_Helper_UserRole();
+        $userRoleName = $helperUserRole->userRole();
+        if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+            $this->view->member = $this->view->view_member;
+        } else {
+            $this->view->member = $this->_authMember;
+        }
+        
+        if( $this->view->member ){
+            $dwhdata = new Default_Model_Dwhdata();
+           // $this->view->downloadhistory = $dwhdata->getDownloadhistory($this->view->member->member_id);
+             $this->view->downloadhistory = $dwhdata->getDownloadhistory(486654);
+        }else{
+            $this->view->downloadhistory= array();
+        }
+
+    }
     
     public function payoutAction()
     {

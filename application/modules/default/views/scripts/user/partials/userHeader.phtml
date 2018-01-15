@@ -24,6 +24,8 @@ $helperMember = new Default_View_Helper_BuildMemberUrl();
 <div  class="pling-nav-tabs">
 <ul class="nav nav-tabs">
     
+    
+
     <li class="<?php echo $this->tab == 'activities' ? 'active' : ''; ?>">
         <a href="<?php echo $helperMember->buildMemberUrl($this->member->member_id, 'activities'); ?>">
             <span class="glyphicon glyphicon-align-justify"></span>
@@ -79,6 +81,13 @@ $helperMember = new Default_View_Helper_BuildMemberUrl();
         <a href="<?php echo $helperMember->buildMemberUrl($this->member->member_id, 'plings'); ?>">
             <span class="glyphicon glyphicon-usd"></span>
             <?= $this->translate('Plings') ?>
+        </a>
+    </li>
+
+    <li class="<?php echo $this->tab == 'downloadhistory' ? 'active' : ''; ?>">
+        <a href="<?php echo $helperMember->buildMemberUrl($this->member->member_id, 'downloadhistory'); ?>">
+            <span class="glyphicon glyphicon-star"></span>
+            <?= $this->translate('Download History') ?>
         </a>
     </li>
 </ul>

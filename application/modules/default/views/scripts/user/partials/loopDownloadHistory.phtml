@@ -1,0 +1,40 @@
+<div class="row">
+	<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+	<figure>
+	    <img src="<?php echo $this->Image($this->image_small, array('width' => 80, 'height' => 80)); ?>"
+	         class="downloadhistory-image" />
+	</figure>	
+	<?=$this->title?>
+	</div>
+	<div class="col-lg-1">
+	<span style="font-size: smaller;"><?=$this->fetchCategoriesForProductAsString($this->project_id)?> </span>
+	</div>
+	<div class="col-lg-2">
+	<?=$this->file_name?>
+	</div>
+	<div class="col-lg-2">	
+	<?=$this->downloaded_timestamp?>
+	</div>
+
+	<div class="col-lg-2">	
+	<?=$this->max_downloaded_timestamp?>
+	</div>
+
+	    
+	    	
+	<div class="col-lg-1">	
+	<div class="rating text-center" >
+	    <?php                
+	            $this->widgetRating = new stdClass();
+	            $this->widgetRating->project_id = $this->project_id;
+	            $this->widgetRating->laplace_score = $this->laplace_score;
+	            $this->widgetRating->count_likes = $this->count_likes; 
+	            $this->widgetRating->count_dislikes =$this->count_dislikes;
+	            echo $this->render('partials/widgetRating.phtml'); 
+	    ?>
+	</div>
+	</div>
+	<div class="col-lg-1">
+	<span class="glyphicon glyphicon-heart"></span>
+	</div>
+</div>
