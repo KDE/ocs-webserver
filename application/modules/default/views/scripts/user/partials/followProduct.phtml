@@ -20,10 +20,21 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+//backdore for admins
+$helperUserRole = new Backend_View_Helper_UserRole();
+$userRoleName = $helperUserRole->userRole();
+$getAuthUser = new Default_View_Helper_GetAuthUser();
+$auth = Zend_Auth::getInstance();
+$member = $getAuthUser->getAuthUser();
+if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+    $this->member = $this->member_id;
+} else {
+    $this->member = $member;
+}
+
 $txtUserFollows = '';
 $urlUserFollows = $this->buildProductUrl($this->project_id, 'unfollow');
 $imgFile = '/theme/flatui/img/icon-like-color.png';
-var_dump($this->member);
 if (false == $this->userFollowsProject($this->member->member_id, $this->project_id)) {
     $txtUserFollows = '';
     $urlUserFollows = $this->buildProductUrl($this->project_id, 'follow');
