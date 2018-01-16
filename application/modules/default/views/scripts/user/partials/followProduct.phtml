@@ -23,7 +23,7 @@
 $txtUserFollows = '';
 $urlUserFollows = $this->buildProductUrl($this->project_id, 'unfollow');
 $imgFile = '/theme/flatui/img/icon-like-color.png';
-if (false == $this->userFollowsProject($this->authMember->member_id, $this->project_id)) {
+if (false == $this->userFollowsProject($this->member->member_id, $this->project_id)) {
     $txtUserFollows = '';
     $urlUserFollows = $this->buildProductUrl($this->project_id, 'follow');
     $imgFile = '/theme/flatui/img/icon-like.png';
