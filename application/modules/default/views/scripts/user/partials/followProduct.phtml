@@ -27,15 +27,15 @@ $getAuthUser = new Default_View_Helper_GetAuthUser();
 $auth = Zend_Auth::getInstance();
 $member = $getAuthUser->getAuthUser();
 if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
-    $this->member = $this->member_id;
+    $this->member_id = $this->member_id;
 } else {
-    $this->member = $member;
+    $this->member_id = $member->member_id;
 }
 
 $txtUserFollows = '';
 $urlUserFollows = $this->buildProductUrl($this->project_id, 'unfollow');
 $imgFile = '/theme/flatui/img/icon-like-color.png';
-if (false == $this->userFollowsProject($this->member->member_id, $this->project_id)) {
+if (false == $this->userFollowsProject($this->member_id, $this->project_id)) {
     $txtUserFollows = '';
     $urlUserFollows = $this->buildProductUrl($this->project_id, 'follow');
     $imgFile = '/theme/flatui/img/icon-like.png';
