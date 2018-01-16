@@ -54,8 +54,8 @@ class Default_Model_Dwhdata
                                 ,m.downloaded_timestamp
                                 ,m.downloaded_ip
                                 ,p.project_category_id
-                                ,p.title
-                                ,p.description
+                                ,(select c.title from category c where p.project_category_id = c.project_category_id) as catTitle
+                                ,p.title                               
                                 ,p.laplace_score
                                 ,p.image_small
                                 ,p.count_likes
@@ -71,7 +71,7 @@ class Default_Model_Dwhdata
                                 join dwh.project p on p.project_id = m.project_id
                                 join dwh.files f on m.file_id = f.id
                                 where m.user_id = :member_id
-                                order by m.downloaded_timestamp desc
+                                order by m.project_id, m.downloaded_timestamp desc
                         ";
            $result = $this->_db->fetchAll($sql, array("member_id"=>$member_id));
            return $result; 

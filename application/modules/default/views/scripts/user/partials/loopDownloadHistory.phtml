@@ -1,40 +1,106 @@
-<div class="row">
+
+<?php
+if($this->counter==0){
+?>
+<div class="row smaller header" style="">
 	<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
 	<figure>
-	    <img src="<?php echo $this->Image($this->image_small, array('width' => 80, 'height' => 80)); ?>"
+	    <img src="<?php echo $this->Image($this->file->image_small, array('width' => 80, 'height' => 80)); ?>"
 	         class="downloadhistory-image" />
 	</figure>	
-	<?=$this->title?>
+	<div>
+		<a href="/p/<?=$this->file->project_id?>"><?=$this->file->title?></a>
+		<p><?=$this->file->catTitle?> 
 	</div>
-	<div class="col-lg-1">
-	<span style="font-size: smaller;"><?=$this->fetchCategoriesForProductAsString($this->project_id)?> </span>
-	</div>
-	<div class="col-lg-2">
-	<?=$this->file_name?>
-	</div>
-	<div class="col-lg-2">	
-	<?=$this->downloaded_timestamp?>
-	</div>
-
-	<div class="col-lg-2">	
-	<?=$this->max_downloaded_timestamp?>
-	</div>
-
-	    
-	    	
+	</div>			    	
 	<div class="col-lg-1">	
 	<div class="rating text-center" >
 	    <?php                
 	            $this->widgetRating = new stdClass();
-	            $this->widgetRating->project_id = $this->project_id;
-	            $this->widgetRating->laplace_score = $this->laplace_score;
-	            $this->widgetRating->count_likes = $this->count_likes; 
-	            $this->widgetRating->count_dislikes =$this->count_dislikes;
+	            $this->widgetRating->project_id =$this->file->project_id;
+	            $this->widgetRating->laplace_score = $this->file->laplace_score;
+	            $this->widgetRating->count_likes =$this->file->count_likes; 
+	            $this->widgetRating->count_dislikes =$this->file->count_dislikes;
 	            echo $this->render('partials/widgetRating.phtml'); 
 	    ?>
 	</div>
 	</div>
-	<div class="col-lg-1">
-	<span class="glyphicon glyphicon-heart"></span>
+	<div class="col-lg-2" >
+	<button><span class="glyphicon glyphicon-heart"></span></button>	
+	<?php
+		$userRateData = $this->fetchRate($this->file->project_id, $this->member_id);
+		//if($this->issupport) // is Supporter
+		$userrate ="data-userrate='-1'";
+		$comment="data-comment=''";
+		if($userRateData){
+			$userrate ="data-userrate='".$userRateData['user_like']."'";	
+			$comment="data-comment='".$userRateData['comment_text']."'";		
+		}		
+		$formproject="data-project='".$this->file->project_id."'";
+		$attr = $userrate.' '.$comment.' '.$formproject;
+
+
+	?>
+	<?php if($userRateData){
+		if($userRateData['user_like']>0){
+			echo '<span class="glyphicon glyphicon-plus" style="color:green; padding:10px;"></span>'
+				.$userRateData['comment_text']
+				.'   '.$this->printDate($userRateData['created_at']);
+
+		}else{
+			echo '<span class="glyphicon glyphicon-minus" style="color:red;padding:10px;"></span>'
+				.$userRateData['comment_text']
+				.'   '.$this->printDate($userRateData['created_at']);
+		}
+	}else{
+	?>
+		<button <?=$attr ?>  class="partial voteup"  name="voteup"> <span class="glyphicon glyphicon-plus" style="color:green"></span></button>
+		<button <?=$attr ?>  class="partial votedown"  name="votedown"> <span class="glyphicon glyphicon-minus" style="color:red"></span></button>
+	<?php } ?>
 	</div>
 </div>
+
+
+<div class="row smaller " >
+	<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 marginLeft80 subheader" >
+	Filename
+	</div>
+	<div class="col-lg-1 subheader">
+	Downloaded at
+	</div>
+		    
+	<div class="col-lg-1 subheader">
+	Last Downloaded at
+	</div>				
+</div>
+<div class="row smaller">
+	<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 marginLeft80" >
+	<?=$this->file->file_name?> 		
+	</div>
+	<div class="col-lg-1">
+	<?=$this->file->downloaded_timestamp?> 
+	</div>
+		    
+	<div class="col-lg-1">
+	<?=$this->file->max_downloaded_timestamp?> 
+	</div>				
+</div>
+
+<?php
+}else{
+?>
+<div class="row smaller">
+	<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 marginLeft80">
+	<?=$this->file->file_name?> 		
+	</div>
+	<div class="col-lg-1">
+	<?=$this->file->downloaded_timestamp?> 
+	</div>
+		    
+	<div class="col-lg-1">
+	<?=$this->file->max_downloaded_timestamp?> 
+	</div>				
+</div>
+<?php
+}
+?>

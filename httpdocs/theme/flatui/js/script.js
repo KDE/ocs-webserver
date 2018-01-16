@@ -708,6 +708,72 @@ var PartialsReview = (function () {
     }
 })();
 
+
+
+var PartialsReviewDownloadHistory = (function () {
+    return {
+        setup: function () {
+            $('body').on('click', 'button.partial', function (event) {
+                event.preventDefault();
+                
+                /*
+                let url = this.href;
+                let target = $(this).attr("data-target");
+                let toggle = $(this).data('toggle');
+                let pageFragment = $(this).attr("data-fragment");
+                */
+
+                // product owner not allow to vote
+                let loginuser  = $('#review-product-modal').find('#loginuser').val();  
+                //let userrate = $('#review-product-modal').find('#userrate').val();
+                let userrate = $(this).attr("data-userrate");
+                // -1 = no rate yet. 0= dislike  1=like                                                                
+                $('#review-product-modal').find('#commenttext').val($(this).attr("data-comment"));
+                $('#review-product-modal').find('#form_p').val($(this).attr("data-project"));
+
+                if($( this ).hasClass( "voteup" )){
+                        if(userrate==1){
+                            $('#review-product-modal').find('#votelabel').empty()                                
+                                .append('<a class="btn btn-success active" style="line-height: 10px;"><span class="fa fa-plus"></span></a> is given already with comment:');                                
+                            $('#review-product-modal').find(':submit').attr("disabled", "disabled").css("display", "none");        
+                            $('#review-product-modal').find('#commenttext').attr("disabled", "disabled");                                             
+                        }else{
+                            $('#review-product-modal').find('input#voteup').val(1);      
+                            $('#review-product-modal').find('#votelabel').empty()                                
+                                .append('<a class="btn btn-success active" style="line-height: 10px;"><span class="fa fa-plus"></span></a> Add Comment (optional):');                                                                                      
+                            $('#review-product-modal').find('#commenttext').val('');
+                            $('#review-product-modal').find('#commenttext').removeAttr("disabled");
+                             $('#review-product-modal').find(':submit').css("display", "block").removeAttr("disabled"); 
+                            
+                        }                        
+                }else{ // vote down
+                        if(userrate==0){
+                             $('#review-product-modal').find('#votelabel').empty()                                
+                                 .append('<a class="btn btn-danger active" style="line-height: 10px;"><span class="fa fa-minus"></span></a> is given already with comment: ');                                                                                      
+                              $('#review-product-modal').find('#commenttext').attr("disabled", "disabled"); 
+                            $('#review-product-modal').find(':submit').attr("disabled", "disabled").css("display", "none");     
+
+                        }else{
+                            $('#review-product-modal').find('input#voteup').val(2);                               
+                            $('#review-product-modal').find('#votelabel').empty()                                
+                                .append('<a class="btn btn-danger active" style="line-height: 10px;"><span class="fa fa-minus"></span></a> Add Comment (optional): ');                                                                                                                  
+                            $('#review-product-modal').find('#commenttext').val('');
+                            $('#review-product-modal').find('#commenttext').removeAttr("disabled");
+                            $('#review-product-modal').find(':submit').removeAttr("disabled").css("display", "block");             
+                             
+                        }
+                }
+               
+               $('#review-product-modal').modal('show');
+               if($('#review-product-modal').hasClass('noid')){
+                    setTimeout(function() {$('#review-product-modal').modal('hide');}, 2000);
+               }                          
+                return false;
+            });
+        }
+    }
+})();
+
 var PartialForms = (function () {
     return {
         setup: function () {

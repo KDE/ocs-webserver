@@ -21,8 +21,10 @@
  **/
 
 $this->tab = 'downloadhistory';
-$helpProductUrl = new Default_View_Helper_BuildProductUrl();
-$helpDate = new Default_View_Helper_PrintDate();
+$identity = Zend_Auth::getInstance()->getStorage()->read();
+$this->issupport = $this->isSupporter($this->member->member_id);
+//Rating for ACTIVE SUPPORTERS only
+
 ?>
 <main class="user-admin-page">
     <?php echo $this->render('user/partials/userHeader_top.phtml'); ?>  
@@ -40,32 +42,30 @@ $helpDate = new Default_View_Helper_PrintDate();
 
 
                 <div class="my-downloadshistory-list">
-                    <div class="row header">
-                        <div class="col-lg-3">                        
-                        </div>
-                        
-                       <div class="col-lg-1">                        
-                           Category
+                   <div class="row">
+                       <div class="col-lg-4">
                        </div>
-                         <div class="col-lg-2">                        
-                           Filename
+                       <div class="col-lg-2">
+                           Action
                        </div>
-                       <div class="col-lg-2">                        
-                           Download timestamp
-                       </div>
-                       <div class="col-lg-2">                        
-                           Last download
-                       </div>
-                       <div class="col-lg-1">                        
-                           
-                       </div>
-                        <div class="col-lg-1">
-                            <span class="glyphicon glyphicon-heart" style="color:red"></span>
-                        </div>
-                    </div>
-                    
-                        <?php echo $this->partialLoop('user/partials/loopDownloadHistory.phtml', $this->downloadhistory); ?>
-                   
+                   </div>
+                    <?php  
+                        $this->result = array();
+                        foreach ($this->downloadhistory as $element) {
+                            $this->result[$element['project_id']][] = $element;
+                        }                       
+                        foreach($this->result as $this->projectfiles){                                                            
+                            $i = 0;
+                            foreach($this->projectfiles as $file){                                                                                            
+                                echo $this->partial('user/partials/loopDownloadHistory.phtml',  array(
+                                        "file"  => (object)$file,
+                                        "isSupporter" =>$this->isSupporter,
+                                        "member_id" =>$this->member->member_id,
+                                        "counter" => $i++
+                                    ));                                                                                                  
+                            }
+                        }
+                    ?>                                                               
                 </div>
             </section>
 
@@ -76,3 +76,35 @@ $helpDate = new Default_View_Helper_PrintDate();
     </section>
 
 </main>
+
+
+  <?php if (Zend_Auth::getInstance()->hasIdentity() /*&& $this->issupport */ ) { ?>
+    <div id="review-product-modal" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content" style="padding-bottom: 20px">
+               <div class="modal-header">
+                    <label id="votelabel"> </label>
+                   <button type="button" class="close col-md-1" data-dismiss="modal" aria-label="Close"><span
+                               aria-hidden="true">&times;</span></button>
+               </div>
+               <div class="modal-body">
+                 <form class="full-width product-add-comment-review" action="/productcomment/addreplyreview/" method="post">
+                            <input type="hidden" name="p" id="form_p"/>
+                            <input type="hidden" name="m" value="<?= $identity->member_id ?>" id="loginuser"/>
+                            <input type="hidden" name="v" value="1" id="voteup"/>                                                        
+                            <textarea name="msg" class="full-width" id="commenttext"></textarea>
+                            <button type="submit" class="small pull-right">Rate Now</button>
+                </form>
+                </div>
+            </div>
+        </div>
+    </div>    
+<?php }?>
+
+<?php
+$this->inlineScript()->appendScript(
+    '    $(document).ready(function(){            
+            PartialsReviewDownloadHistory.setup();
+             PartialCommentReviewForm.setup();
+        });
+    ');
