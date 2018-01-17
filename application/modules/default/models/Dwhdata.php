@@ -74,6 +74,7 @@ class Default_Model_Dwhdata
                                 order by m.project_id, m.downloaded_timestamp desc
                         ";
            $result = $this->_db->fetchAll($sql, array("member_id"=>$member_id));
-           return $result; 
+          return new Zend_Paginator(new Zend_Paginator_Adapter_Array($result ));
+          // return $result; 
       }
 }

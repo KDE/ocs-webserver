@@ -19,15 +19,20 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-
-$txtUserFollows = '';
-$urlUserFollows = $this->buildProductUrl($this->project_id, 'unfollow');
-$imgFile = '/theme/flatui/img/icon-like-color.png';
+							 			
 if (false == $this->userFollowsProject($this->authMember->member_id, $this->project_id)) {
-    $txtUserFollows = '';
-    $urlUserFollows = $this->buildProductUrl($this->project_id, 'follow');
-    $imgFile = '/theme/flatui/img/icon-like.png';
+    	$urlUserFollows = $this->buildProductUrl($this->project_id, 'follow');
+    	$heartatt = 'class="partialbutton"';			   
+}else{
+	$urlUserFollows = $this->buildProductUrl($this->project_id, 'unfollow');				
+	$heartatt = 'class="partialbutton purple"';
 }
-?><a href="<?= $urlUserFollows ?>" class="purple partial" data-target="#container-follow">
-    <?= $txtUserFollows ?><img src="<?= $imgFile ?>" alt="love it">
-</a>
+$heartatt = $heartatt. 'role="button" data-fragment=""  '
+	      .' data-target="#container-follow'.$this->project_id.'"'
+	      .' data-href="'.$urlUserFollows.'"';
+?>
+		
+<button <?=$heartatt?> >
+    <span class="glyphicon glyphicon-heart" alt="love it"></span>
+</button>
+

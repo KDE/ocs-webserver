@@ -25,6 +25,7 @@ $identity = Zend_Auth::getInstance()->getStorage()->read();
 $this->issupport = $this->isSupporter($this->member->member_id);
 //Rating for ACTIVE SUPPORTERS only
 
+$pageCount = $this->downloadhistory->getTotalItemCount()/$this->downloadhistory->getItemCountPerPage();
 ?>
 <main class="user-admin-page">
     <?php echo $this->render('user/partials/userHeader_top.phtml'); ?>  
@@ -41,7 +42,17 @@ $this->issupport = $this->isSupporter($this->member->member_id);
                </div>
 
 
-                <div class="my-downloadshistory-list">
+                <div class="my-downloadshistory-list" id="my-downloadshistory-list">
+
+                <div class="row">
+                    <div class="col-lg-7">
+                    <small class="pull-right">
+                        <div class="row" style="margin:0;padding: 0;text-align: right;"><?=$this->downloadhistory->getTotalItemCount()?> Downloads</div>
+                        <?php if ($pageCount > 1) echo $this->paginationControl($this->downloadhistory, 'Sliding', '/partials/paginationControlBootstrap.phtml',
+                            array('params' => array(), 'dom_target' => 'div#my-downloadshistory-list')); ?></small>                    
+                    </div>
+                </div>
+
                    <div class="row">
                        <div class="col-lg-4">
                        </div>
@@ -53,7 +64,7 @@ $this->issupport = $this->isSupporter($this->member->member_id);
                        </div>
                    </div>
                     <?php  
-                        $this->result = array();
+                        $this->result = array();                                                
                         foreach ($this->downloadhistory as $element) {
                             $this->result[$element['project_id']][] = $element;
                         }                       
@@ -109,5 +120,6 @@ $this->inlineScript()->appendScript(
     '    $(document).ready(function(){            
             PartialsReviewDownloadHistory.setup();
              PartialCommentReviewForm.setup();
+             PartialsButton.setup();
         });
     ');

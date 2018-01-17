@@ -611,9 +611,45 @@ var Partials = (function () {
                 var url = this.href;
                 var target = $(this).attr("data-target");
                 var toggle = $(this).data('toggle');
-                var pageFragment = $(this).attr("data-fragment");
+                var pageFragment = $(this).attr("data-fragment");               
+                $(target).load(url + ' ' + pageFragment, function (response, status, xhr) {
+                    if (status == "error") {
+                        if (xhr.status == 401) {
+                            if (response) {
+                                var data = jQuery.parseJSON(response);
+                                var redirect = data.login_url;
+                                if (redirect) {
+                                    window.location = redirect;
+                                } else {
+                                    window.location = "/login";
+                                }
+                            }
+                        } else {
+                            $(target).empty().html('Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.');
+                        }
+                    }
+                    if (toggle) {
+                        $(toggle).modal('show');
+                    }
+                });
+                return false;
+            });
+        }
+    }
+})();
 
-                //$(target).empty().html('<div class="loading">Loading ...<img src="/images/system/ajax-loader.gif" alt="Loading..." /></div>');
+
+var PartialsButton = (function () {
+    return {
+        setup: function () {
+            $('body').on('click', 'Button.partialbutton', function (event) {
+                event.preventDefault();
+                var url = $(this).attr("data-href");
+                var target = $(this).attr("data-target");
+                var toggle = $(this).data('toggle');
+                var pageFragment = $(this).attr("data-fragment");
+                let spin = $('<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>');
+                $(target).append(spin);
                 $(target).load(url + ' ' + pageFragment, function (response, status, xhr) {
                     if (status == "error") {
                         if (xhr.status == 401) {
@@ -713,16 +749,9 @@ var PartialsReview = (function () {
 var PartialsReviewDownloadHistory = (function () {
     return {
         setup: function () {
-            $('body').on('click', 'button.partial', function (event) {
+            $('body').on('click', 'button.partialReviewDownloadHistory', function (event) {
                 event.preventDefault();
-                
-                /*
-                let url = this.href;
-                let target = $(this).attr("data-target");
-                let toggle = $(this).data('toggle');
-                let pageFragment = $(this).attr("data-fragment");
-                */
-
+                              
                 // product owner not allow to vote
                 let loginuser  = $('#review-product-modal').find('#loginuser').val();  
                 //let userrate = $('#review-product-modal').find('#userrate').val();
@@ -1127,22 +1156,7 @@ var RssNews = (function () {
                              }); 
                     $("#rss-feeds").html(crss);
                  
-              });      
-            /*             
-            var yql = "https://query.yahooapis.com/v1/public/yql?q=select%20title%2Clink%2CpubDate%2Cdescription%20from%20rss%20where%20url%3D%22http%3A%2F%2Fblog.opendesktop.org%2Ffeed%22&format=json&diagnostics=true&callback=";          
-             $.getJSON(yql, function(res) {                
-                   var crss ='';
-                   $.each( res.query.results.item, function( i, item ) {                           
-                              if ( i >= 3 ) {
-                                return false;
-                              }
-                              var m = moment(item.pubDate);
-                              crss+='<div class="commentstore"><a href="'+item.link+'"><span class="title">'+item.title +'</span></a><br/>' + item.description
-                              +'<br/><span class="date">'+m.format('MMM DD YYYY LT')+'</span></div>';                           
-                            }); 
-                   $("#rss-feeds").html(crss);
-             });    
-             */                  
+              });               
         }
         
     }

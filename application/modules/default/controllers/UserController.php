@@ -311,6 +311,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
     public function downloadhistoryAction()
     {
 
+        
         $tableMember = new Default_Model_Member();
         $this->view->view_member = $tableMember->fetchMemberData($this->_memberId);
         
@@ -325,13 +326,21 @@ class UserController extends Local_Controller_Action_DomainSwitch
         }
         
         if( $this->view->member ){
+            $this->view->paramPageId = (int)$this->getParam('page');
+
             $dwhdata = new Default_Model_Dwhdata();
            // $this->view->downloadhistory = $dwhdata->getDownloadhistory($this->view->member->member_id);
-             $this->view->downloadhistory = $dwhdata->getDownloadhistory(486654);
+           // $this->view->downloadhistory = $dwhdata->getDownloadhistory(486654);             
+            $offset = $this->view->paramPageId;
+            $list  = $dwhdata->getDownloadhistory(486654);
+            $list->setItemCountPerPage(10);
+            $list->setCurrentPageNumber($offset);
+             $this->view->downloadhistory  = $list;
         }else{
-            $this->view->downloadhistory= array();
+            $this->view->downloadhistory= array();             
         }
 
+        
     }
     
     public function payoutAction()

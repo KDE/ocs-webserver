@@ -1,5 +1,17 @@
 
 <?php
+
+$userRateData = $this->fetchRate($this->file->project_id, $this->member_id);
+//if($this->issupport) // is Supporter
+$userrate ="data-userrate='-1'";
+$comment="data-comment=''";
+if($userRateData){
+	$userrate ="data-userrate='".$userRateData['user_like']."'";	
+	$comment="data-comment='".$userRateData['comment_text']."'";		
+}		
+$formproject="data-project='".$this->file->project_id."'";
+$attrhistory = $userrate.' '.$comment.' '.$formproject;
+
 if($this->counter==0){
 ?>
 <div class="row smaller header" style="">
@@ -13,8 +25,9 @@ if($this->counter==0){
 			<p><?=$this->file->catTitle?> 
 		</div>
 	</div>			    	
-	<div class="col-lg-1">	
-		<div class="rating text-center" >
+	<div class="col-lg-1" style="white-space: nowrap;">	
+		
+		<div class="rating text-center" >				
 		    <?php                
 		            $this->widgetRating = new stdClass();
 		            $this->widgetRating->project_id =$this->file->project_id;
@@ -22,44 +35,51 @@ if($this->counter==0){
 		            $this->widgetRating->count_likes =$this->file->count_likes; 
 		            $this->widgetRating->count_dislikes =$this->file->count_dislikes;
 		            echo $this->render('partials/widgetRating.phtml'); 
-		    ?>
+		    ?>		    
 		</div>
+		
 	</div>
 	<div class="col-lg-1">
 		<?=$this->file->max_downloaded_timestamp?> 
 	</div>		
 	<div class="col-lg-2" >
-		<button><span class="glyphicon glyphicon-heart"></span></button>	
-		<?php
-			$userRateData = $this->fetchRate($this->file->project_id, $this->member_id);
-			//if($this->issupport) // is Supporter
-			$userrate ="data-userrate='-1'";
-			$comment="data-comment=''";
-			if($userRateData){
-				$userrate ="data-userrate='".$userRateData['user_like']."'";	
-				$comment="data-comment='".$userRateData['comment_text']."'";		
-			}		
-			$formproject="data-project='".$this->file->project_id."'";
-			$attr = $userrate.' '.$comment.' '.$formproject;
-
-
-		?>
-		<?php if($userRateData){
-			if($userRateData['user_like']>0){
-				echo '<span class="glyphicon glyphicon-plus" style="color:green; padding:10px;"></span>'
-					.$userRateData['comment_text']
-					.'   '.$this->printDate($userRateData['created_at']);
-
+		
+		<?php 							 			
+			if (false == $this->userFollowsProject($this->member_id, $this->file->project_id)) {
+			    	$urlUserFollows = $this->buildProductUrl($this->file->project_id, 'follow');
+			    	$heartatt = 'class="partialbutton"';			   
 			}else{
-				echo '<span class="glyphicon glyphicon-minus" style="color:red;padding:10px;"></span>'
-					.$userRateData['comment_text']
-					.'   '.$this->printDate($userRateData['created_at']);
+				$urlUserFollows = $this->buildProductUrl($this->file->project_id, 'unfollow');				
+				$heartatt = 'class="partialbutton purple"';
 			}
-		}else{
+			$heartatt = $heartatt. 'role="button" data-fragment=""  '
+				      .' data-target="#container-follow'.$this->file->project_id.'"'
+				      .' data-href="'.$urlUserFollows.'"';
 		?>
-			<button <?=$attr ?>  class="partial voteup"  name="voteup"> <span class="glyphicon glyphicon-plus" style="color:green"></span></button>
-			<button <?=$attr ?>  class="partial votedown"  name="votedown"> <span class="glyphicon glyphicon-minus" style="color:red"></span></button>
+		<div id="container-follow<?=$this->file->project_id?>" style="display: block;float:left;margin-right: 3px">		
+		<button <?=$heartatt?> >
+		    <span class="glyphicon glyphicon-heart" alt="love it"></span>
+		</button>
+		</div>			
+
+		<?php						
+			if($userRateData){
+				if($userRateData['user_like']>0){
+					echo '<span class="glyphicon glyphicon-plus" style="color:green; padding:10px;"></span>'
+						.$userRateData['comment_text']
+						.'   '.$this->printDate($userRateData['created_at']);
+
+				}else{
+					echo '<span class="glyphicon glyphicon-minus" style="color:red;padding:10px;"></span>'
+						.$userRateData['comment_text']
+						.'   '.$this->printDate($userRateData['created_at']);
+				}
+			}else{
+		?>
+		<button <?=$attrhistory ?>  class="partialReviewDownloadHistory voteup"  name="voteup"> <span class="glyphicon glyphicon-plus" ></span></button>				    
+		<button <?=$attrhistory ?>  class="partialReviewDownloadHistory votedown"  name="votedown"> <span class="glyphicon glyphicon-minus" ></span></button>
 		<?php } ?>
+			
 	</div>
 </div>
 
