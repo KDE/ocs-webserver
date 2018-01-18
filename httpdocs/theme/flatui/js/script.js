@@ -1258,8 +1258,8 @@ var AboutMePage = (function () {
 var AboutMeMyProjectsPaging = (function () {
   return {
       setup: function () {
-        let indicator = '<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>';       
-
+        //let indicator = '<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>';       
+        let indicator = '<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>';       
         $('body').on('click', 'span.pagingmyprojects', function (event) {                        
                 $(this).parent().addClass('active').siblings().removeClass('active');                                                              
                 $(indicator).insertBefore($('#my-products-list').find('ul.opendesktopwidgetpager'));                                              
