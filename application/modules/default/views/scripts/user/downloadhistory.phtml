@@ -45,7 +45,7 @@ $pageCount = $this->downloadhistory->getTotalItemCount()/$this->downloadhistory-
                 <div class="my-downloadshistory-list" id="my-downloadshistory-list">
 
                 <div class="row">
-                    <div class="col-lg-7">
+                    <div class="col-lg-12">
                     <small class="pull-right">
                         <div class="row" style="margin:0;padding: 0;text-align: right;"><?=$this->downloadhistory->getTotalItemCount()?> Downloads</div>
                         <?php if ($pageCount > 1) echo $this->paginationControl($this->downloadhistory, 'Sliding', '/partials/paginationControlBootstrap.phtml',
@@ -54,9 +54,9 @@ $pageCount = $this->downloadhistory->getTotalItemCount()/$this->downloadhistory-
                 </div>
 
                    <div class="row">
-                       <div class="col-lg-4">
+                       <div class="col-lg-8">
                        </div>
-                       <div class="col-lg-1">
+                       <div class="col-lg-2">
                         Downloaded at
                        </div>
                        <div class="col-lg-2">
