@@ -298,7 +298,7 @@
                                      if ( ocsUrl) {
                                             if(this.active && this.ocs_compatible == 1){
                                                 installButton = '<a href="' + ocsUrl + '" class="btn btn-native btn-min-width">Install</a>';   
-                                                installLink = '<a href="' + ocsUrl + '>' + this.name + '</a>';
+                                                installLink = '<a href="' + ocsUrl + '">' + this.name + '</a>';
                                             } else {
                                                 installButton = '<a href="#" class="btn btn-min-width disabled">INCOMPATIBLE</a>';      
                                                 installLink = '';
@@ -371,15 +371,16 @@
                                         $('#project_btn_download').removeClass('disabled');
                                         $('#project_btn_download').addClass("active");
                                         
-                                        if(this.active && this.ocs_compatible == 1){
-                                            $('#dropdown_installs').append(
-                                                '<li>' + installLink + '</li>'
-                                            );
+                                        if(ocsUrl && this.active && this.ocs_compatible == 1){
                                             $('#dropdown_installs').addClass("active");
                                             $('#dropdown_installs').removeClass('hide');
                                             $('#project_btn_install').enable();
                                             $('#project_btn_install').removeClass('disabled');
                                             $('#project_btn_install').addClass("active");
+                                            
+                                            $('#dropdown_installs').append(
+                                                '<li>' + installLink + '</li>'
+                                            );
                                         }
 
                                         if ((typeof osId != 'undefined') && (osId != "")) {
