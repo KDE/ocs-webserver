@@ -464,6 +464,24 @@ if (Zend_Auth::getInstance()->hasIdentity()){
                         <?php } ?>
 
                         <?php /* echo $this->render('partials/sidebarRating.phtml');  */ ?>
+                        
+                        <div>
+                            <div class="prod-widget-box right downloads">
+                                <div class="dropdown">
+                                    <button style="width: 100%" id="project_btn_download" class="btn btn-primary dropdown-toggle active disabled" type="button" data-toggle="dropdown">Download
+                                    </button>
+                                    <ul class="dropdown-menu hide" id="dropdown_downloads">
+                                    </ul>
+                                </div> 
+                                <br>
+                                <div class="dropdown">
+                                    <button style="width: 100%" id="project_btn_install" class="btn btn-primary dropdown-toggle active disabled" type="button" data-toggle="dropdown">Install
+                                    </button>
+                                    <ul class="dropdown-menu hide" id="dropdown_installs">
+                                    </ul>
+                                </div> 
+                            </div>
+                        </div>
 
 
                         <!-- MORE PRODUCTS -->
