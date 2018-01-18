@@ -222,8 +222,14 @@ $isSupporter = $this->stat['donationIssupporter'];
 
                             <div role="tabpanel" class="tab-pane active" id="user-aboutme">
 
-                                <?php if ($this->userProducts) { ?>
-                                    <div class="my-products-list">
+                                <?php if ($this->userProducts) { ?>                               
+
+                                    <div class="my-products-list" id="my-products-list">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <?php echo $this->printPaging($this->total_records,$this->pageLimit,$this->page,"pagingmyprojects")?>                   
+                                            </div>
+                                        </div>
                                         
                                         <?php foreach ($this->userProducts as $product): ?>
                                             <div class="product mini-card col-lg-2 col-md-2 col-sm-3 col-xs-2">
@@ -421,26 +427,10 @@ $isSupporter = $this->stat['donationIssupporter'];
         </section>
 
     </main>
+<?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){
+             AboutMePage.setup("'.$this->member->username.'");
+            AboutMeMyProjectsPaging.setup();
+        });
+    ');
 
-<script type="text/javascript">
-      $(document).ready(function () {   
-
-        var AboutMePage = (function () {
-
-          return {
-
-              setup: function () {
-
-                  var t = $(document).prop('title');
-                  var tnew = '<?php echo $this->member->username; ?>'+"'s Profile "+t;
-                  $(document).prop('title', tnew);
-
-              }
-          }
-
-        })();
-
-        AboutMePage.setup();
-      })
-
-</script>

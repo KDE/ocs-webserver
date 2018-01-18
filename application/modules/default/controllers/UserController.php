@@ -49,6 +49,9 @@ class UserController extends Local_Controller_Action_DomainSwitch
         $tableMember = new Default_Model_Member();
         $tableProject = new Default_Model_Project();
 
+        $pageLimit = 21;
+        $page = (int)$this->getParam('page', 1);
+
         $this->view->authMember = $this->_authMember;
         $this->view->member = $tableMember->find($this->_memberId)->current();
         if (null == $this->view->member) {
@@ -77,9 +80,14 @@ class UserController extends Local_Controller_Action_DomainSwitch
         $this->view->supportingTeaser = $catArray;
 
         $this->view->followedProducts = $tableMember->fetchFollowedProjects($this->_memberId, null);
-
-        $tableProject = new Default_Model_Project();
-        $this->view->userProducts = $tableProject->fetchAllProjectsForMember($this->_memberId, null, null, true);
+        
+        
+        $total_records = $tableProject->countAllProjectsForMemberCatFilter($this->_memberId,true,null);
+        $this->view->pageLimit =$pageLimit;
+        $this->view->page =$page;
+        $this->view->total_records = $total_records ;
+        $this->view->userProducts = $tableProject->fetchAllProjectsForMember($this->_memberId, $pageLimit, ($page - 1) * $pageLimit,true);
+        //$this->view->userProducts = $tableProject->fetchAllProjectsForMember($this->_memberId, null, null, true);
 
         $this->view->hits = $tableMember->fetchProjectsSupported($this->_memberId);
 
@@ -95,7 +103,8 @@ class UserController extends Local_Controller_Action_DomainSwitch
         $donationinfo = $tableMember->fetchSupporterDonationInfo($this->_memberId);       
 
         $stat = array();
-        $stat['cntProducts'] = count($this->view->userProducts);
+        $stat['cntProducts'] = $total_records;
+        // $stat['cntProducts'] = count($this->view->userProducts);
         $stat['cntComments'] = $paginationComments->getTotalItemCount();
         $cntpv = 0;
         foreach ($this->view->userProducts as $pro) {
