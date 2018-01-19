@@ -24,7 +24,7 @@
 
     .metamenu
     {
-        position: fixed; background-color: #fff; width: 100%; z-index: 1000;height: 15px;overflow: hidden;
+        position: fixed; background-color: #fff; width: 100%; z-index: 1000;height: 15px;
     }
     header#page_header
     {
@@ -35,6 +35,7 @@
 
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
+                MenuHover.setup();                
                 AboutContent.setup();              
             });
         ');
