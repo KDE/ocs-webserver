@@ -1245,6 +1245,51 @@ var LayoutSwitch = (function () {
 })();
 
 
+var AboutMePage = (function () {
+  return {
+      setup: function (username) {
+          var t = $(document).prop('title');
+          var tnew = username+"'s Profile "+t;
+          $(document).prop('title', tnew);
+      }
+  }
+})();
+
+var AboutMeMyProjectsPaging = (function () {
+  return {
+      setup: function () {
+        //let indicator = '<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>';       
+        let indicator = '<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>';       
+        $('body').on('click', 'span.pagingmyprojects', function (event) {                        
+                $(this).parent().addClass('active').siblings().removeClass('active');                                                              
+                $(indicator).insertBefore($('#my-products-list').find('ul.opendesktopwidgetpager'));                                              
+                $url = window.location.href;
+                $('#my-products-list').load($url+' #my-products-list',{page:$(this).html()},function (response, status, xhr) {
+                        if (status == "error") {
+                            if (xhr.status == 401) {
+                                if (response) {
+                                    var data = jQuery.parseJSON(response);
+                                    var redirect = data.login_url;
+                                    if (redirect) {
+                                        window.location = redirect;
+                                    } else {
+                                        window.location = "/login";
+                                    }
+                                }
+                            } else {
+                                $(target).empty().html('Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.');
+                            }
+                        }
+                        if (toggle) {
+                            $(toggle).modal('show');
+                        }
+                    }) 
+
+        });
+      }
+  }
+})();
+
 
 var productRatingToggle = (function () {
     return {
