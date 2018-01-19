@@ -227,7 +227,11 @@
                                     var downloadUrl = pploadApiUri + 'files/downloadfile/id/' + this.id + '/s/' + hash + '/t/' + timetamp + '/u/' + userid + '/' + this.name;
                                     var downloadLink = '<a href="' + downloadUrl + '" id="data-link' + this.id + '">' + this.name + '</a>';
                                     
-                                    var downloadBtnLink = '<a href="' + downloadUrl + '" id="data-link-dl' + this.id + '">' + this.name + '</a>';
+                                    var fileNameBtnLink = this.name;
+                                    if(fileNameBtnLink.length > 25) {
+                                        fileNameBtnLink = fileNameBtnLink.substring(0,22) + '...';
+                                    }
+                                    var downloadBtnLink = '<a href="' + downloadUrl + '" id="data-link-dl' + this.id + '">' + fileNameBtnLink + '</a>';
 
                                     if(this.active == '0') {
                                         downloadLink = this.name;
@@ -363,23 +367,26 @@
                                         );
                                 
                                         $('#dropdown_downloads').append(
-                                            '<li>' + downloadBtnLink + '</li>'
+                                            '<li style="padding-bottom: 4px;padding-top: 4px;">&nbsp;<span>' + downloadBtnLink + '</span><span class="right">&nbsp;' + humanFileSize(this.size,false) + '&nbsp;</span></li>'
                                         );
                                         $('#dropdown_downloads').addClass("active");
                                         $('#dropdown_downloads').removeClass('hide');
                                         $('#project_btn_download').enable();
                                         $('#project_btn_download').removeClass('disabled');
                                         $('#project_btn_download').addClass("active");
+                                        $('#project_btn_download').addClass("btn-primary");
                                         
                                         if(ocsUrl && this.active && this.ocs_compatible == 1){
                                             $('#dropdown_installs').addClass("active");
                                             $('#dropdown_installs').removeClass('hide');
                                             $('#project_btn_install').enable();
                                             $('#project_btn_install').removeClass('disabled');
+                                            $('#project_btn_install').removeClass('hide');
                                             $('#project_btn_install').addClass("active");
+                                            $('#project_btn_grp_install').removeClass("hide");
                                             
                                             $('#dropdown_installs').append(
-                                                '<li>' + installLink + '</li>'
+                                                '<li style="padding-bottom: 4px;padding-top: 4px;">&nbsp;<span>' + installLink + '</span><span class="right">&nbsp;' + humanFileSize(this.size,false) + '&nbsp;</span></li>'
                                             );
                                         }
 
