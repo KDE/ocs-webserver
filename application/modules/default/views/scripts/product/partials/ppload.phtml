@@ -780,13 +780,15 @@
                     function shortFilename(filename) {
                         var returnString = filename;
                         if(filename.length > 25) {
-                            var name = filename.substring(0,22) + '...';
+                            var name = filename.substring(0,22);
                             var fileExt = filename.split('.').pop();
-                            returnString = name + fileExt;
+                            if(fileExt.length>3) {
+                                name = name.substring(0,(25-fileExt.length));
+                            }
+                            returnString = name + '...' + fileExt;
                         }
                         return returnString;
                     }
-
 
 
                      function roundFileSizeInMB(bytes)
