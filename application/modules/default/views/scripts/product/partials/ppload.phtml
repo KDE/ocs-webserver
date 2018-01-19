@@ -227,11 +227,13 @@
                                     var downloadUrl = pploadApiUri + 'files/downloadfile/id/' + this.id + '/s/' + hash + '/t/' + timetamp + '/u/' + userid + '/' + this.name;
                                     var downloadLink = '<a href="' + downloadUrl + '" id="data-link' + this.id + '">' + this.name + '</a>';
                                     
+                                    /*
                                     var fileNameBtnLink = this.name;
                                     if(fileNameBtnLink.length > 25) {
                                         fileNameBtnLink = fileNameBtnLink.substring(0,22) + '...';
-                                    }
-                                    var downloadBtnLink = '<a href="' + downloadUrl + '" id="data-link-dl' + this.id + '">' + fileNameBtnLink + '</a>';
+                                    }*/
+                                    var downloadBtnLink = downloadUrl;
+                                    var downloadLinkFilename = shortFilename(this.name);
 
                                     if(this.active == '0') {
                                         downloadLink = this.name;
@@ -298,14 +300,18 @@
 
                                      var installButton = '';
                                      var installLink = '';
+                                     var installLinkFilename = '';
                                      
                                      if ( ocsUrl) {
                                             if(this.active && this.ocs_compatible == 1){
                                                 installButton = '<a href="' + ocsUrl + '" class="btn btn-native btn-min-width">Install</a>';   
-                                                installLink = '<a href="' + ocsUrl + '">' + this.name + '</a>';
+                                                installLink = ocsUrl;
+                                                installLinkFilename = shortFilename(this.name);
+                                                
                                             } else {
                                                 installButton = '<a href="#" class="btn btn-min-width disabled">INCOMPATIBLE</a>';      
                                                 installLink = '';
+                                                installLinkFilename = '';
                                             }                                         
                                      } 
                                    
@@ -367,7 +373,8 @@
                                         );
                                 
                                         $('#dropdown_downloads').append(
-                                            '<li style="padding-bottom: 4px;padding-top: 4px;">&nbsp;<span>' + downloadBtnLink + '</span><span class="right">&nbsp;' + humanFileSize(this.size,false) + '&nbsp;</span></li>'
+                                            //'<li style="padding-bottom: 4px;padding-top: 4px;">&nbsp;<span>' + downloadBtnLink + '</span><span class="right">&nbsp;' + humanFileSize(this.size,false) + '&nbsp;</span></li>'
+                                            '<li><a href="' + downloadBtnLink + '" style="white-space: normal; color: #23527c;" id="data-link-dl' + this.id + '"><span id="download-link-filename' + this.id + '" style="white-space: normal; color: #23527c;">' + downloadLinkFilename + '</span><span class="right">&nbsp;' + humanFileSize(this.size,false) + '&nbsp;</span></a></li>'
                                         );
                                         $('#dropdown_downloads').addClass("active");
                                         $('#dropdown_downloads').removeClass('hide');
@@ -386,7 +393,8 @@
                                             $('#project_btn_grp_install').removeClass("hide");
                                             
                                             $('#dropdown_installs').append(
-                                                '<li style="padding-bottom: 4px;padding-top: 4px;">&nbsp;<span>' + installLink + '</span><span class="right">&nbsp;' + humanFileSize(this.size,false) + '&nbsp;</span></li>'
+                                                '<li><a href="' + installLink + '" style="white-space: normal; color: #23527c;"><span id="install-link-filename' + this.id + '" style="white-space: normal; color: #23527c;">' + installLinkFilename + '</span><span class="right">&nbsp;' + humanFileSize(this.size,false) + '&nbsp;</span></a></li>'
+                                                
                                             );
                                         }
 
@@ -449,7 +457,8 @@
                                             $("#data-link-dl" + this.id).attr('data-link-org', $fileserverLink);
 
                                             $("#data-link-dl" + this.id).attr('target','_blank');
-                                            $("#data-link-dl" + this.id).html($("#data-link-dl" + this.id).html() + " (External Link)");
+                                            
+                                            $("#download-link-filename" + this.id).html($("#download-link-filename" + this.id).html() + " (External Link)");
 
                                             $("#data-link-dl" + this.id).click(function (event) {
                                                 event.preventDefault();
@@ -457,6 +466,7 @@
                                                 window.open($fileserverLink, '_blank');
                                             });
                                             
+                                            $("#install-link-filename" + this.id).html($("#install-link-filename" + this.id).html() + " (External Link)");
                                         }
                                         
                                         
@@ -765,6 +775,16 @@
                                 }
                             });
                         }
+                    }
+                    
+                    function shortFilename(filename) {
+                        var returnString = filename;
+                        if(filename.length > 25) {
+                            var name = filename.substring(0,22) + '...';
+                            var fileExt = filename.split('.').pop();
+                            returnString = name + fileExt;
+                        }
+                        return returnString;
                     }
 
 
