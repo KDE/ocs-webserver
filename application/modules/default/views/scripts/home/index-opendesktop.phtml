@@ -188,21 +188,15 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                     echo $this->render('explore/partials/comment.phtml');
                 }
                 ?>
-            </div>
-
-          
+            </div>          
         </aside>
 </div>
 </div>
 
 </main>
 
-
 <?php $this->inlineScript()->appendScript(
-    '    $(document).ready(function(){
-                MenuHover.setup();                    
-                LoginContainer.update();
-                RssNews.setup();  
-                PlinglistContent.setup();                    
+    '    $(document).ready(function(){                               
+                RssNews.setup();                  
             });
         ');
