@@ -47,7 +47,7 @@ if($this->counter==0){
 		<?php 							 			
 			if (false == $this->userFollowsProject($this->member_id, $this->file->project_id)) {
 			    	$urlUserFollows = $this->buildProductUrl($this->file->project_id, 'follow');
-			    	$heartatt = 'class="partialbutton"';			   
+			    	$heartatt = 'class="partialbutton lightgrey"';			   
 			}else{
 				$urlUserFollows = $this->buildProductUrl($this->file->project_id, 'unfollow');				
 				$heartatt = 'class="partialbutton purple"';
@@ -58,7 +58,7 @@ if($this->counter==0){
 		?>
 		<div id="container-follow<?=$this->file->project_id?>" style="display: block;float:left;margin-right: 3px">		
 		<button <?=$heartatt?> >
-		    <span class="glyphicon glyphicon-heart" alt="love it"></span>
+		    <span class="glyphicon glyphicon-heart" alt="love it" ></span>
 		</button>
 		</div>			
 
