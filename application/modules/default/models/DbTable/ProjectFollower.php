@@ -25,13 +25,6 @@ class Default_Model_DbTable_ProjectFollower extends Zend_Db_Table_Abstract
     protected $_name = "project_follower";
 
 
-// 	public function countForMember($memberId)
-// 	{
-// 		$q = $this->select()
-// 		->where( 'member_id = ?', $memberId );				
-// 		return count( $q->query()->fetchAll() );
-// 	}
-
     public function countForMember($memberId)
     {
         $select = $this->_db->select()
@@ -40,6 +33,12 @@ class Default_Model_DbTable_ProjectFollower extends Zend_Db_Table_Abstract
             ->where('project.is_deleted = ?', 0)
             ->where('project_follower.member_id = ?', $memberId);
         return count($select->query()->fetchAll());
+    }
+
+     public function countForProject($project_id)
+    {
+        $selectArr = $this->_db->fetchRow('SELECT count(*) AS count FROM ' . $this->_name . ' WHERE project_id = ' . $project_id);
+        return $selectArr ['count'];      
     }
 
     /**
