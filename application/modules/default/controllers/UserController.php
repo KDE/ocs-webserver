@@ -370,11 +370,10 @@ class UserController extends Local_Controller_Action_DomainSwitch
         if( $this->view->member ){
             $this->view->paramPageId = (int)$this->getParam('page');
 
-            $dwhdata = new Default_Model_Dwhdata();
-           // $this->view->downloadhistory = $dwhdata->getDownloadhistory($this->view->member->member_id);
-           // $this->view->downloadhistory = $dwhdata->getDownloadhistory(486654);             
+            
+            $dhistory = new Default_Model_DbTable_MemberDownloadHistory();          
             $offset = $this->view->paramPageId;
-            $list  = $dwhdata->getDownloadhistory(486654);
+            $list  = $dhistory->getDownloadhistory($this->view->member->member_id);
             $list->setItemCountPerPage(10);
             $list->setCurrentPageNumber($offset);
              $this->view->downloadhistory  = $list;

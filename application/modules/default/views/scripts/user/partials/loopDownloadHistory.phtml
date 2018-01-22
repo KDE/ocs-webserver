@@ -2,7 +2,6 @@
 <?php
 
 $userRateData = $this->fetchRate($this->file->project_id, $this->member_id);
-//if($this->issupport) // is Supporter
 $userrate ="data-userrate='-1'";
 $comment="data-comment=''";
 if($userRateData){
@@ -17,8 +16,7 @@ if($this->counter==0){
 <div class="row smaller header" >
 	<div class="col-lg-5 col-md-5">
 		<figure>
-		    <img src="<?php echo $this->Image($this->file->image_small, array('width' => 80, 'height' => 80)); ?>"
-		         class="downloadhistory-image" />
+		    <img src="<?php echo $this->Image($this->file->image_small, array('width' => 80, 'height' => 80)); ?>" class="downloadhistory-image" />
 		</figure>	
 		<div>
 			<a href="/p/<?=$this->file->project_id?>"><?=$this->file->title?></a>
@@ -58,16 +56,17 @@ if($this->counter==0){
 			}
 		}else{
 				
-	?>
-	
+		if($this->file->project_member_id<> $this->authMember->member_id  && $this->issupport){
+			?>
 	<button <?=$attrhistory ?>  class="partialReviewDownloadHistory votedown"  name="votedown"> <span class="glyphicon glyphicon-minus" ></span></button>
 	<button <?=$attrhistory ?>  class="partialReviewDownloadHistory voteup"  name="voteup"> <span class="glyphicon glyphicon-plus" ></span></button>				    
-	<?php } ?>
+	<?php }} ?>
 
 	</div>
 	<div class="col-lg-1" >
 		<div id="container-follow<?=$this->file->project_id?>" style="display: block;float:left;margin-right: 3px">		
 		<?php 
+		if($this->file->project_member_id<> $this->authMember->member_id){
 			echo $this->partial(
 			    '/product/follow.phtml',
 			    array(
@@ -75,16 +74,18 @@ if($this->counter==0){
 			        "project_id" => $this->file->project_id
 			    )
 			);
+		}
 		?>
+
+		
 		</div>	
 
 			
 	</div>
 </div>
 
-?>
 <div class="row smaller">
-	<div class="col-lg-3 paddingLeft80" >
+	<div class="col-lg-3 paddingLeft80" style="overflow: hidden">
 	<?=$this->file->file_name?> 		
 	</div>
 	<div class="col-lg-2 " >
@@ -105,7 +106,7 @@ if($this->counter==0){
 }else{
 ?>
 <div class="row smaller">
-	<div class="col-lg-3 paddingLeft80" >
+	<div class="col-lg-3 paddingLeft80" style="overflow: hidden">
 	<?=$this->file->file_name?> 		
 	</div>
 	<div class="col-lg-2 " >

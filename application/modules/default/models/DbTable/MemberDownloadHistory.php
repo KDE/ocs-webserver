@@ -34,4 +34,32 @@ class Default_Model_DbTable_MemberDownloadHistory extends Zend_Db_Table_Abstract
         return count($select->query()->fetchAll());
     }
 
+    public function getDownloadhistory($member_id){                      
+            $sql = "
+                      select 
+                      m.member_id                              
+                      ,m.project_id
+                      ,m.file_id                               
+                      ,m.downloaded_timestamp                               
+                      ,p.project_category_id
+                      ,(select c.title from project_category c where p.project_category_id = c.project_category_id) as catTitle
+                      ,p.member_id as project_member_id
+                      ,p.title                               
+                      ,p.laplace_score
+                      ,p.image_small
+                      ,p.count_likes
+                      ,p.count_dislikes
+                      ,m.file_name as file_name
+                      ,m.file_type as file_type
+                      ,m.file_size as file_size                             
+                      ,(select max(d.downloaded_timestamp) from member_download_history d where m.project_id = d.project_id and d.member_id = m.member_id) as max_downloaded_timestamp
+                      from member_download_history m
+                      join stat_projects p on p.project_id = m.project_id
+                      where m.member_id = :member_id
+                      order by m.project_id, m.downloaded_timestamp desc
+            ";
+           $result = $this->_db->fetchAll($sql, array("member_id"=>$member_id));
+          return new Zend_Paginator(new Zend_Paginator_Adapter_Array($result ));
+          // return $result; 
+      }
 }

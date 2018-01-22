@@ -1155,35 +1155,33 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $result = $projectFollowTable->fetchRow($where);
        
         if (null === $result) {
-            $projectFollowTable->createRow($newVals)->save();
+            $projectFollowTable->createRow($newVals)->save();            
+            $tableProduct = new Default_Model_Project();
+            $product = $tableProduct->find($this->_projectId)->current();
 
-            // 17.01.2018  deactive temperately.
-            // $tableProduct = new Default_Model_Project();
-            // $product = $tableProduct->find($this->_projectId)->current();
-
-            // $activityLog = new Default_Model_ActivityLog();
-            // $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id,
-            //     Default_Model_ActivityLog::PROJECT_FOLLOWED, $product->toArray());
+            $activityLog = new Default_Model_ActivityLog();
+            $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id,
+                Default_Model_ActivityLog::PROJECT_FOLLOWED, $product->toArray());
         }
 
-        // 17.01.2018  deactive temperately.
+       
         // ppload
-        // Add collection to favorite
-        // $projectTable = new Default_Model_DbTable_Project();
-        // $projectData = $projectTable->find($this->_projectId)->current();
-        // if ($projectData->ppload_collection_id) {
-        //     // require_once 'Ppload/Api.php';
-        //     $pploadApi = new Ppload_Api(array(
-        //         'apiUri'   => PPLOAD_API_URI,
-        //         'clientId' => PPLOAD_CLIENT_ID,
-        //         'secret'   => PPLOAD_SECRET
-        //     ));
-        //     $favoriteRequest = array(
-        //         'user_id'       => $this->_authMember->member_id,
-        //         'collection_id' => ltrim($projectData->ppload_collection_id, '!')
-        //     );
-        //     $favoriteResponse = $pploadApi->postFavorite($favoriteRequest);
-        // }
+        //Add collection to favorite
+        $projectTable = new Default_Model_DbTable_Project();
+        $projectData = $projectTable->find($this->_projectId)->current();
+        if ($projectData->ppload_collection_id) {
+            // require_once 'Ppload/Api.php';
+            $pploadApi = new Ppload_Api(array(
+                'apiUri'   => PPLOAD_API_URI,
+                'clientId' => PPLOAD_CLIENT_ID,
+                'secret'   => PPLOAD_SECRET
+            ));
+            $favoriteRequest = array(
+                'user_id'       => $this->_authMember->member_id,
+                'collection_id' => ltrim($projectData->ppload_collection_id, '!')
+            );
+            $favoriteResponse = $pploadApi->postFavorite($favoriteRequest);
+        }
       
     }
 

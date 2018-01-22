@@ -191,8 +191,15 @@ if (Zend_Auth::getInstance()->hasIdentity()){
                                 
                                 </span>
                             </span>
-                            <div style="float: right; width:150px; z-index: 100">
+                            <div class="projectdetailRating">
                             <?php echo $this->render('partials/sidebarRating.phtml'); ?>
+                            </div>
+                            <div class="projectdtailHeart">
+                                <div>
+                                <span class="heartproject glyphicon glyphicon-heart"></span>
+                                <span class="heartnumber small"><?=$this->fetchHeartsForProject($this->product->member_id)?></span>
+                                </div>
+                            
                             </div>
                         </div>
                         <div id="carouselContainer" class="carouselContainer">
