@@ -1622,13 +1622,14 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $file_size = $this->getParam('file_size');
         $projectId = $this->_projectId;
         $memberId = $this->_authMember->member_id;
-        $memberDlHistory = new Default_Model_DbTable_MemberDownloadHistory();
         
-        $data = array('project_id' => $projectId, 'member_id' => $memberId, 'file_id' => $file_id, 'file_type' => $file_type, 'file_name' => $file_name, 'file_size' => $file_size);
-        $memberDlHistory->createRow($data)->save();
+        if(isset($file_id) && isset($projectId) && isset($memberId)) {
+            $memberDlHistory = new Default_Model_DbTable_MemberDownloadHistory();
+            $data = array('project_id' => $projectId, 'member_id' => $memberId, 'file_id' => $file_id, 'file_type' => $file_type, 'file_name' => $file_name, 'file_size' => $file_size);
+            $memberDlHistory->createRow($data)->save();
+        }
         
         $url = urldecode($urltring);
-        
         $this->redirect($url);
     }
 
