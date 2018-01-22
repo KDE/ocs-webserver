@@ -15,7 +15,7 @@ $attrhistory = $userrate.' '.$comment.' '.$formproject;
 if($this->counter==0){
 ?>
 <div class="row smaller header" >
-	<div class="col-lg-6 col-md-6">
+	<div class="col-lg-5 col-md-5">
 		<figure>
 		    <img src="<?php echo $this->Image($this->file->image_small, array('width' => 80, 'height' => 80)); ?>"
 		         class="downloadhistory-image" />
@@ -24,6 +24,9 @@ if($this->counter==0){
 			<a href="/p/<?=$this->file->project_id?>"><?=$this->file->title?></a>
 			<p><?=$this->file->catTitle?> 
 		</div>
+	</div>		
+	<div class="col-lg-2 nowrap">
+		<?=$this->file->max_downloaded_timestamp?> 
 	</div>			    	
 	<div class="col-lg-2 col-md-2">	
 		
@@ -39,79 +42,62 @@ if($this->counter==0){
 		</div>
 		
 	</div>
-	<div class="col-lg-2 nowrap">
-		<?=$this->file->max_downloaded_timestamp?> 
-	</div>		
+	
 	<div class="col-lg-2" >
-		
-		<?php 							 			
-			if (false == $this->userFollowsProject($this->member_id, $this->file->project_id)) {
-			    	$urlUserFollows = $this->buildProductUrl($this->file->project_id, 'follow');
-			    	$heartatt = 'class="partialbutton lightgrey"';			   
+	<?php						
+		if($userRateData){
+			if($userRateData['user_like']>0){
+				echo '<span class="glyphicon glyphicon-plus" style="color:green; padding:10px;"></span>'
+					.$userRateData['comment_text']
+					.'   '.$this->printDate($userRateData['created_at']);
+
 			}else{
-				$urlUserFollows = $this->buildProductUrl($this->file->project_id, 'unfollow');				
-				$heartatt = 'class="partialbutton purple"';
+				echo '<span class="glyphicon glyphicon-minus" style="color:red;padding:10px;"></span>'
+					.$userRateData['comment_text']
+					.'   '.$this->printDate($userRateData['created_at']);
 			}
-			$heartatt = $heartatt. 'role="button" data-fragment=""  '
-				      .' data-target="#container-follow'.$this->file->project_id.'"'
-				      .' data-href="'.$urlUserFollows.'"';
-		?>
+		}else{
+				
+	?>
+	
+	<button <?=$attrhistory ?>  class="partialReviewDownloadHistory votedown"  name="votedown"> <span class="glyphicon glyphicon-minus" ></span></button>
+	<button <?=$attrhistory ?>  class="partialReviewDownloadHistory voteup"  name="voteup"> <span class="glyphicon glyphicon-plus" ></span></button>				    
+	<?php } ?>
+
+	</div>
+	<div class="col-lg-1" >
 		<div id="container-follow<?=$this->file->project_id?>" style="display: block;float:left;margin-right: 3px">		
-		<button <?=$heartatt?> >
-		    <span class="glyphicon glyphicon-heart" alt="love it" ></span>
-		</button>
-		</div>			
-
-		<?php						
-			if($userRateData){
-				if($userRateData['user_like']>0){
-					echo '<span class="glyphicon glyphicon-plus" style="color:green; padding:10px;"></span>'
-						.$userRateData['comment_text']
-						.'   '.$this->printDate($userRateData['created_at']);
-
-				}else{
-					echo '<span class="glyphicon glyphicon-minus" style="color:red;padding:10px;"></span>'
-						.$userRateData['comment_text']
-						.'   '.$this->printDate($userRateData['created_at']);
-				}
-			}else{
-					
+		<?php 
+			echo $this->partial(
+			    '/product/follow.phtml',
+			    array(
+			        "authMember"  => $this->authMember,
+			        "project_id" => $this->file->project_id
+			    )
+			);
 		?>
-		
-		<button <?=$attrhistory ?>  class="partialReviewDownloadHistory votedown"  name="votedown"> <span class="glyphicon glyphicon-minus" ></span></button>
-		<button <?=$attrhistory ?>  class="partialReviewDownloadHistory voteup"  name="voteup"> <span class="glyphicon glyphicon-plus" ></span></button>				    
-		<?php } ?>
+		</div>	
+
 			
 	</div>
 </div>
 
-<?php /*
-<div class="row smaller " >
-	<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4  subheader" >
-	Filename
-	</div>
-	<div class="col-lg-1 subheader">
-	Downloaded at
-	</div>			    		
-</div>
-*/
 ?>
 <div class="row smaller">
-	<div class="col-lg-4 paddingLeft80" >
+	<div class="col-lg-3 paddingLeft80" >
 	<?=$this->file->file_name?> 		
 	</div>
 	<div class="col-lg-2 " >
 	<?=$this->humanFilesize($this->file->file_size)?> 		
-	</div>
-	<div class="col-lg-2 " >
-	<?=$this->file->file_type?> 		
-	</div>
+	</div>	
 	<div class="col-lg-2 nowrap">
 
 	<?=$this->file->downloaded_timestamp?> 
        
 	</div>
-		    
+	<div class="col-lg-3 " >
+	<?=$this->file->file_type?> 		
+	</div>    
 			
 </div>
 
@@ -119,19 +105,20 @@ if($this->counter==0){
 }else{
 ?>
 <div class="row smaller">
-	<div class="col-lg-4 paddingLeft80" >
+	<div class="col-lg-3 paddingLeft80" >
 	<?=$this->file->file_name?> 		
 	</div>
 	<div class="col-lg-2 " >
 	<?=$this->humanFilesize($this->file->file_size)?> 		
 	</div>
-	<div class="col-lg-2 " >
-	<?=$this->file->file_type?> 		
-	</div>
+	
 	<div class="col-lg-2 nowrap">
 
 	<?=$this->file->downloaded_timestamp?> 
        
+	</div>
+	<div class="col-lg-3 " >
+	<?=$this->file->file_type?> 		
 	</div>
 		    
 			
