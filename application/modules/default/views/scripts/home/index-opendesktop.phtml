@@ -174,7 +174,7 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
 
         <div  class="supportDiv" >    
         <span><b><?=$countSupporters?></b> people support </span>        
-        <span style="display: block"><?=$countMembers?> Members</span>
+        <span style="display: block"><?=number_format($countMembers, 0, '.', ',');?> Members</span>
         </div>
 
         <div  class="row sidebar-right-info" >                                
