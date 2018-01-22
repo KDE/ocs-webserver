@@ -22,7 +22,7 @@
 							 			
 if (false == $this->userFollowsProject($this->authMember->member_id, $this->project_id)) {
     	$urlUserFollows = $this->buildProductUrl($this->project_id, 'follow');
-    	$heartatt = 'class="partialbutton"';			   
+    	$heartatt = 'class="partialbutton lightgrey"';			   
 }else{
 	$urlUserFollows = $this->buildProductUrl($this->project_id, 'unfollow');				
 	$heartatt = 'class="partialbutton purple"';
