@@ -702,4 +702,53 @@ class Default_Model_Info
         $cache->save($result, $cacheName, array(), 300);
         return $result;
     }
+
+    public function getCountActiveSupporters()
+    {
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cacheName = __FUNCTION__;
+
+        if (false !== ($totalcnt = $cache->load($cacheName))) {
+            return $totalcnt;
+        }
+        $sql = '
+                        SELECT 
+                        count( distinct s.member_id) as total_count
+                        from support s                         
+                        where s.status_id = 2  
+                        and (DATE_ADD((s.active_time), INTERVAL 1 YEAR) > now())
+        ';        
+      
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array())->fetchAll();
+        $totalcnt = $result[0]['total_count'];
+        $cache->save($totalcnt, $cacheName,array() , 300);
+        return $totalcnt;
+    }
+
+     public function getCountMembers()
+    {
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cacheName = __FUNCTION__;
+
+        if (false !== ($totalcnt = $cache->load($cacheName))) {
+            return $totalcnt;
+        }
+        $sql = "
+                        SELECT
+                            count(1) AS total_count
+                        FROM
+                            member
+                        WHERE
+                            is_active=1 AND is_deleted=0
+                       ";
+      
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array())->fetchAll();
+        $totalcnt = $result[0]['total_count'];
+        $cache->save($totalcnt, $cacheName,array() , 300);
+        return $totalcnt;
+    }
+
+
 }

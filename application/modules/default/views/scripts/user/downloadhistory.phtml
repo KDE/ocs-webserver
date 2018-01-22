@@ -54,14 +54,20 @@ $pageCount = $this->downloadhistory->getTotalItemCount()/$this->downloadhistory-
                 </div>
 
                    <div class="row">
-                       <div class="col-lg-8">
+                       <div class="col-lg-5">
                        </div>
                        <div class="col-lg-2">
                         Downloaded at
                        </div>
-                       <div class="col-lg-2">
-                           Action
+                       <div class="col-lg-2">                        
                        </div>
+                       <div class="col-lg-2">
+                           Ratings&Reviews
+                       </div>
+                      <div class="col-lg-1">
+                       
+                       </div>
+                        
                    </div>
                     <?php  
                         $this->result = array();                                                
@@ -75,6 +81,7 @@ $pageCount = $this->downloadhistory->getTotalItemCount()/$this->downloadhistory-
                                         "file"  => (object)$file,
                                         "isSupporter" =>$this->isSupporter,
                                         "member_id" =>$this->member->member_id,
+                                        "authMember" =>$this->member,
                                         "counter" => $i++
                                     ));                                                                                                  
                             }
