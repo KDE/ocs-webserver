@@ -740,6 +740,8 @@ class Default_Model_Info
                             count(1) AS total_count
                         FROM
                             member
+                        WHERE
+                            is_active=1 AND is_deleted=0
                        ";
       
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array())->fetchAll();
