@@ -19,28 +19,19 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-
-class Default_View_Helper_PrintPaging extends Zend_View_Helper_Abstract
+class Default_Model_DbTable_MemberDownloadHistory extends Zend_Db_Table_Abstract
 {
-    public function printPaging($total_records,$pageLimit,$currentPageNr,$containerClassname)
+
+    protected $_name = "member_download_history";
+
+    public function countDownloads($memberId)
     {
-    
+        $select = $this->_db->select()
+            ->from('member_download_history')
+            ->joinUsing('member', 'member_id')
+            ->where('member.is_deleted = ?', 0)
+            ->where('member_download_history.member_id = ?', $memberId);
+        return count($select->query()->fetchAll());
+    }
 
-        $total_pages = ceil($total_records / $pageLimit);
-        if($total_pages <=1) return '';
-        $html = '<div class="opendesktopwidgetpager"><ul class="opendesktopwidgetpager">';
-                 
-        for ($i=1; $i<=$total_pages; $i++) {
-            if($i==$currentPageNr){
-                $html = $html.'<li class="active"><span class="'.$containerClassname.'">'.$i.'</span></li>';
-            }else{
-                $html = $html.'<li><span class="'.$containerClassname.'">'.$i.'</span></li>';
-            }
-
-        };
-
-        $html = $html.'</ul></div>';
-
-        return $html;        
-     }
-} 
+}

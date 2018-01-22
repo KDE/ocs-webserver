@@ -1608,6 +1608,29 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $this->_helper->json(array('status' => 'error', 'error_text' => $error_text));
     }
+    
+    public function startdownloadAction() {
+        $this->_helper->layout()->disableLayout();
+        
+        /**
+         * Save Download-Data in Member_Download_History
+         */
+        $urltring = $this->getParam('url');
+        $file_id = $this->getParam('file_id');
+        $file_type = $this->getParam('file_type');
+        $file_name = $this->getParam('file_name');
+        $file_size = $this->getParam('file_size');
+        $projectId = $this->_projectId;
+        $memberId = $this->_authMember->member_id;
+        $memberDlHistory = new Default_Model_DbTable_MemberDownloadHistory();
+        
+        $data = array('project_id' => $projectId, 'member_id' => $memberId, 'file_id' => $file_id, 'file_type' => $file_type, 'file_name' => $file_name, 'file_size' => $file_size);
+        $memberDlHistory->createRow($data)->save();
+        
+        $url = urldecode($urltring);
+        
+        $this->redirect($url);
+    }
 
     /**
      * ppload
