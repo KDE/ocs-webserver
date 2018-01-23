@@ -25,13 +25,6 @@ class Default_Model_DbTable_ProjectFollower extends Zend_Db_Table_Abstract
     protected $_name = "project_follower";
 
 
-// 	public function countForMember($memberId)
-// 	{
-// 		$q = $this->select()
-// 		->where( 'member_id = ?', $memberId );				
-// 		return count( $q->query()->fetchAll() );
-// 	}
-
     public function countForMember($memberId)
     {
         $select = $this->_db->select()
@@ -42,45 +35,57 @@ class Default_Model_DbTable_ProjectFollower extends Zend_Db_Table_Abstract
         return count($select->query()->fetchAll());
     }
 
+     public function countForProject($project_id)
+    {
+        $selectArr = $this->_db->fetchRow('SELECT count(*) AS count FROM ' . $this->_name . ' WHERE project_id = ' . $project_id);
+        return $selectArr ['count'];      
+    }
+
     /**
      * Override method to update member_ref table.
      *
      * @see Zend_Db_Table_Abstract::insert()
      */
-    public function insert(array $data)
+    /*public function insert(array $data)
     {
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . print_r(func_get_args(), true));
 
-        //if a user follows a project, then we add this project to his
-        //refference table. if there are childs (not project items),
-        //then we will add alos these child-projects
-        $projectTable = new Default_Model_DbTable_Project();
-        $projectRowset = $projectTable->find($data['project_id']);
-        $project = $projectRowset->current();
+        // //if a user follows a project, then we add this project to his
+        // //refference table. if there are childs (not project items),
+        // //then we will add alos these child-projects
+        // $projectTable = new Default_Model_DbTable_Project();
+        // $projectRowset = $projectTable->find($data['project_id']);
+        // $project = $projectRowset->current();
 
-        if ($project->type_id == 0) {
-            //follows a user
-            $memberRefTable = new Default_Model_DbTable_MemberRef();
-            $newRef = array(
-                'member_id' => $data['member_id'],
-                'project_id' => $data['project_id']
-            );
-            $memberRefTable->insert($newRef);
-        } elseif ($project->type_id == 1) {
-            //follows a project
-            $memberRefTable = new Default_Model_DbTable_MemberRef();
-            $newRef = array(
-                'member_id' => $data['member_id'],
-                'project_id' => $data['project_id']
-            );
-            $memberRefTable->insert($newRef);
-        }
+        // if ($project->type_id == 0) {
+        //     //follows a user
+        //     $memberRefTable = new Default_Model_DbTable_MemberRef();
+        //     $newRef = array(
+        //         'member_id' => $data['member_id'],
+        //         'project_id' => $data['project_id']
+        //     );
+        //     $memberRefTable->insert($newRef);
+        // } elseif ($project->type_id == 1) {
+        //     //follows a project
+        //     $memberRefTable = new Default_Model_DbTable_MemberRef();
+        //     $newRef = array(
+        //         'member_id' => $data['member_id'],
+        //         'project_id' => $data['project_id']
+        //     );
+        //     $memberRefTable->insert($newRef);
+        // }
 
+        $memberRefTable = new Default_Model_DbTable_MemberRef();
+        $newRef = array(
+            'member_id' => $data['member_id'],
+            'project_id' => $data['project_id']
+        );
+        $memberRefTable->insert($newRef);
 
         return parent::insert($data);
-    }
+    }*/
 
-    public function delete($where)
+    /*public function delete($where)
     {
 
         $memberRefTable = new Default_Model_DbTable_MemberRef();
@@ -88,7 +93,7 @@ class Default_Model_DbTable_ProjectFollower extends Zend_Db_Table_Abstract
         $memberRefTable->delete($where);
 
         return parent::delete($where);
-    }
+    }*/
 
 
 }

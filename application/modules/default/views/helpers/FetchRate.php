@@ -19,20 +19,16 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-							 			
-if (false == $this->userFollowsProject($this->authMember->member_id, $this->project_id)) {
-    	$urlUserFollows = $this->buildProductUrl($this->project_id, 'follow');
-    	$heartatt = 'class="partialbutton lightgrey"';			   
-}else{
-	$urlUserFollows = $this->buildProductUrl($this->project_id, 'unfollow');				
-	$heartatt = 'class="partialbutton purple"';
-}
-$heartatt = $heartatt. 'role="button" data-fragment=""  '
-	      .' data-target="#container-follow'.$this->project_id.'"'
-	      .' data-href="'.$urlUserFollows.'"';
-?>
-		
-<button <?=$heartatt?> >
-    <span class="glyphicon glyphicon-heart" alt="love it"></span>
-</button>
 
+class Default_View_Helper_FetchRate extends Zend_View_Helper_Abstract
+{
+
+    public function fetchRate($project_id,$member_id)
+    {
+        
+        $tableProjectRatings = new Default_Model_DbTable_ProjectRating();
+         $ratingOfUser = $tableProjectRatings->getProjectRateForUser($project_id,$member_id);         
+        return $ratingOfUser;
+    }
+
+} 

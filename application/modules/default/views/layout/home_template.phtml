@@ -19,8 +19,7 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-?>
-<!doctype html>
+?><!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -31,61 +30,45 @@
 
     <!-- Loading Bootstrap -->
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
-
     <link rel="stylesheet" href="/tools/fancybox2.1.4/jquery.fancybox.css?v=2.1.4" type="text/css" media="screen" />    
 
-    <!-- custom styles -->
+    <!-- custom styles -->   
     <link href="/theme/flatui/css/style.css" rel="stylesheet">
-    <link href="/theme/flatui/css/stylesheet.css?<?= APPLICATION_VERSION ?>" rel="stylesheet" type="text/css">
-
+    <link href="/theme/flatui/css/stylesheet.css?<?= APPLICATION_VERSION ?>" rel="stylesheet">
+    <link href="/theme/flatui/css/explore_index.css" rel="stylesheet">
+    <link href="/theme/flatui/css/startpage.css" rel="stylesheet">
     <!-- third party -->
-    <link href="/theme/flatui/css/colorbox.css" media="screen" rel="stylesheet" type="text/css"/>
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
-
-    <link rel="shortcut icon" type="image/x-icon" href="<?=$this->template['favicon']?>"/>
-
-    <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
-    <!--[if lt IE 9]>
-    <script src="/theme/flatui/js/lib/html5shiv.js"></script>
-    <![endif]-->
-
-    <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-    <!-- Add fancyBox -->
-
-    <script type="text/javascript" src="/tools/fancybox2.1.4/jquery.fancybox.pack.js?v=2.1.4"></script>
+    <link rel="SHORTCUT ICON" href="<?=$this->template['favicon']?>"/>
+    <script
+            src="//code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>    
 </head>
-<body class="home-page">
-
-<?php echo $this->render('partials/header/template_home.phtml'); ?>
+<body>
+<?php echo $this->render('partials/header/template.phtml'); ?>
+<?php echo $this->render('partials/flashMessage.phtml'); ?>
 <?php echo $this->layout()->content; ?>
 <?php echo $this->render('partials/footer/template.phtml'); ?>
 
-<div id="overlays"><?php if (isset($this->overlay)) {
-        echo $this->overlay;
-    } ?></div>
 <div id="modal-dialog" class="modal hide fade" tabindex="-1" role="dialog">
     <div class="modal-body"></div>
     <div id="error"></div>
 </div>
-
-
-<!-- Load JS here for greater good =============================-->
-<script src="//code.jquery.com/ui/1.10.3/jquery-ui.min.js"></script>
-<script src="/theme/flatui/js/lib/jquery.placeholder.min.js"></script>
-<script src="/theme/flatui/js/lib/jquery.mousewheel.min.js"></script>
-<script src="/theme/flatui/js/lib/jquery.jscrollpane.min.js"></script>
+ 
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
 <script src="/tools/md5.js"></script>
 <script src="/theme/flatui/js/script.js?<?= APPLICATION_VERSION ?>"></script>
-<!-- home page script -->
-<script src="/theme/flatui/js/home_page.js"></script>
+<script type="text/javascript" src="/tools/fancybox2.1.4/jquery.fancybox.pack.js?v=2.1.4"></script> 
 
 <?php
 echo $this->render('partials/propagateLogin.phtml');
 echo $this->render('partials/propagateLogout.phtml');
 ?>
 
-<?= $this->inlineScript() ?>
+<?=$this->inlineScript() ?>
+
 <?php if (APPLICATION_ENV != 'development') { ?>
     <?php
     $googleid ='UA-78422931-1';
@@ -108,11 +91,11 @@ echo $this->render('partials/propagateLogout.phtml');
             m.parentNode.insertBefore(a, m)
         })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
-        // prime domain 
         ga('create', '<?php echo $googleid ?>', 'auto', {'allowLinker': true});
         ga('require', 'linker');
-        ga('linker:autoLink', ['beryl-themes.org','box-look.org','cinnamon-look.org','compiz-themes.org','e17-stuff.org','mate-look.org','trinity-look.org'] );
+        ga('linker:autoLink', ['<?php echo $_SERVER["SERVER_NAME"] ?>'] );
         ga('send', 'pageview');
+
     </script>
     
     
@@ -139,5 +122,8 @@ echo $this->render('partials/propagateLogout.phtml');
     </script>
     <!-- End Piwik Code -->
 <?php } ?>
+<?php
+ echo $this->render('partials/profiler.phtml')
+?>
 </body>
 </html>

@@ -33,8 +33,10 @@ class UserController extends Local_Controller_Action_DomainSwitch
 
     public function indexAction()
     {
-        $this->_helper->viewRenderer('aboutme');
-        $this->aboutmeAction();
+       
+       $this->_helper->viewRenderer('aboutme');
+       $this->aboutmeAction();
+       
     }
 
     public function aboutAction()
@@ -49,6 +51,9 @@ class UserController extends Local_Controller_Action_DomainSwitch
         $tableMember = new Default_Model_Member();
         $tableProject = new Default_Model_Project();
 
+        $pageLimit = 21;
+        $projectpage = (int)$this->getParam('projectpage', 1);
+
         $this->view->authMember = $this->_authMember;
         $this->view->member = $tableMember->find($this->_memberId)->current();
         if (null == $this->view->member) {
@@ -57,9 +62,14 @@ class UserController extends Local_Controller_Action_DomainSwitch
         if ($this->view->member->is_deleted == 1 or $this->view->member->is_active == 0) {
             $this->redirect("/");
         }
-        $this->view->mainProject = $this->view->member->findDependentRowset($tableProject, 'MainProject')->current();
-        $this->view->supportedProjects = $tableMember->fetchSupportedProjects($this->_memberId);
+
+       
+        // TODOs
+        // $this->view->mainProject = $this->view->member->findDependentRowset($tableProject, 'MainProject')->current();
+        // $this->view->supportedProjects = $tableMember->fetchSupportedProjects($this->_memberId);
+
         //Categories
+        /*
         $catArray = array();
         foreach ($this->view->supportedProjects as $pro) {
             $catArray[$pro->catTitle] = array();
@@ -77,44 +87,76 @@ class UserController extends Local_Controller_Action_DomainSwitch
         $this->view->supportingTeaser = $catArray;
 
         $this->view->followedProducts = $tableMember->fetchFollowedProjects($this->_memberId, null);
-
-        $tableProject = new Default_Model_Project();
-        $this->view->userProducts = $tableProject->fetchAllProjectsForMember($this->_memberId, null, null, true);
-
         $this->view->hits = $tableMember->fetchProjectsSupported($this->_memberId);
 
-        $paginationComments = $tableMember->fetchComments($this->_memberId);
+        
+        
+        */
+         // ajax load more products  
+        if($this->getParam('projectpage', null)){        
+                    $total_records = $tableProject->countAllProjectsForMemberCatFilter($this->_memberId,true,null);
+                    $this->view->pageLimit =$pageLimit;
+                    $this->view->projectpage =$projectpage;
+                    $this->view->total_records = $total_records ;
+                    $this->view->userProducts = $tableProject->fetchAllProjectsForMember($this->_memberId, $pageLimit, ($projectpage - 1) * $pageLimit,true);
+                    $this->_helper->layout->disableLayout();                         
+                    $this->_helper->viewRenderer('partials/aboutmeProducts');       
+                    
+                    //$this->forward('showmoreproductsajax', 'user', null, $this->getAllParams());
+                    return;
+        }else{
 
-        if ($paginationComments) {
-            $offset = (int)$this->getParam('page');
-            $paginationComments->setItemCountPerPage(15);
-            $paginationComments->setCurrentPageNumber($offset);
-            $this->view->comments = $paginationComments;
-        }
+                    $total_records = $tableProject->countAllProjectsForMemberCatFilter($this->_memberId,true,null);
+                    $this->view->pageLimit =$pageLimit;
+                    $this->view->projectpage =$projectpage;
+                    $this->view->total_records = $total_records ;
+                    $this->view->userProducts = $tableProject->fetchAllProjectsForMember($this->_memberId, $pageLimit, ($projectpage - 1) * $pageLimit,true);
+                   
+                    $paginationComments = $tableMember->fetchComments($this->_memberId);
+                    if ($paginationComments) {
+                        $offset = (int)$this->getParam('page');
+                        $paginationComments->setItemCountPerPage(15);
+                        $paginationComments->setCurrentPageNumber($offset);
+                        $this->view->comments = $paginationComments;
+                    }
 
-        $donationinfo = $tableMember->fetchSupporterDonationInfo($this->_memberId);       
+                     
+                    $stat = array();
+                    $stat['cntProducts'] = $total_records;
+                    $stat['cntComments'] = $paginationComments->getTotalItemCount();
+                    $cntpv = 0;
+                    foreach ($this->view->userProducts as $pro) {
+                        $cntpv = $cntpv + $tableProject->fetchProjectViews($pro->project_id);
+                    }
+                    $stat['cntPageviews'] = $cntpv;
 
-        $stat = array();
-        $stat['cntProducts'] = count($this->view->userProducts);
-        $stat['cntComments'] = $paginationComments->getTotalItemCount();
-        $cntpv = 0;
-        foreach ($this->view->userProducts as $pro) {
-            $cntpv = $cntpv + $tableProject->fetchProjectViews($pro->project_id);
-        }
-        $stat['cntPageviews'] = $cntpv;
+                    $donationinfo = $tableMember->fetchSupporterDonationInfo($this->_memberId);      
+                    if($donationinfo){
+                        $stat['donationIssupporter'] = $donationinfo['issupporter'];            
+                        $stat['donationMax'] = $donationinfo['active_time_max'];
+                        $stat['donationMin'] = $donationinfo['active_time_min'];
+                        $stat['donationCnt'] = $donationinfo['cnt'];
+                    }
+                  //  $cntmb = $tableMember->fetchCntSupporters($this->_memberId);
+                   // $stat['cntSupporters'] = $cntmb;
+                    $stat['userLastActiveTime'] = $tableMember->fetchLastActiveTime($this->_memberId);
+                    $this->view->stat = $stat;
+            }
+    }
 
-      //  $cntmb = $tableMember->fetchCntSupporters($this->_memberId);
-       // $stat['cntSupporters'] = $cntmb;
-        $stat['userLastActiveTime'] = $tableMember->fetchLastActiveTime($this->_memberId);
 
-        if($donationinfo){
-            $stat['donationIssupporter'] = $donationinfo['issupporter'];            
-            $stat['donationMax'] = $donationinfo['active_time_max'];
-            $stat['donationMin'] = $donationinfo['active_time_min'];
-            $stat['donationCnt'] = $donationinfo['cnt'];
-        }
-
-        $this->view->stat = $stat;
+    public function showmoreproductsajaxAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $tableProject = new Default_Model_Project();
+        $pageLimit = 21;
+        $page = (int)$this->getParam('page', 1);
+        $total_records = $tableProject->countAllProjectsForMemberCatFilter($this->_memberId,true,null);
+        $this->view->pageLimit =$pageLimit;
+        $this->view->page =$page;
+        $this->view->total_records = $total_records ;
+        $this->view->userProducts = $tableProject->fetchAllProjectsForMember($this->_memberId, $pageLimit, ($page - 1) * $pageLimit,true);
+        $this->_helper->viewRenderer('/partials/aboutmeProducts');   
     }
 
     public function followsAction()
@@ -305,6 +347,40 @@ class UserController extends Local_Controller_Action_DomainSwitch
         } else {
             $this->view->member = $this->_authMember;
         }
+        
+    }
+
+    public function downloadhistoryAction()
+    {
+
+        
+        $tableMember = new Default_Model_Member();
+        $this->view->view_member = $tableMember->fetchMemberData($this->_memberId);
+        
+     
+        //backdore for admins
+        $helperUserRole = new Backend_View_Helper_UserRole();
+        $userRoleName = $helperUserRole->userRole();
+        if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+            $this->view->member = $this->view->view_member;
+        } else {
+            $this->view->member = $this->_authMember;
+        }
+        
+        if( $this->view->member ){
+            $this->view->paramPageId = (int)$this->getParam('page');
+
+            
+            $dhistory = new Default_Model_DbTable_MemberDownloadHistory();          
+            $offset = $this->view->paramPageId;
+            $list  = $dhistory->getDownloadhistory($this->view->member->member_id);
+            $list->setItemCountPerPage(10);
+            $list->setCurrentPageNumber($offset);
+             $this->view->downloadhistory  = $list;
+        }else{
+            $this->view->downloadhistory= array();             
+        }
+
         
     }
     

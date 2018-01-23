@@ -24,6 +24,8 @@ $helperBuildExploreUrl = new Default_View_Helper_BuildExploreUrl();
 $modelInfo = new Default_Model_Info();
 $modelCategory = new Default_Model_DbTable_ProjectCategory();
 $this->dataCategory = $modelCategory->findSingleRow($this->cat_id);
+$countSupporters = $modelInfo->getCountActiveSupporters();
+$countMembers = $modelInfo->getCountMembers();
 $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
 ?>
 <main id="explore-content">
@@ -93,7 +95,7 @@ $time_start = microtime(true);
       <div class="GridFlex-cell sidebar-right">
           <aside  id="explore-sidebar <?=$asidehide?>" >                      
             <div class="downloadDiv" >
-                <a href="https://www.linux-apps.com/p/1175480/" target="_blank"><img src="/images/system/download-app.png" /></a>
+                <a href="https://www.opendesktop.org/p/1175480/" target="_blank"><img src="/images/system/download-app.png" /></a>
             </div>
 
             <div class="supportDiv" >
@@ -107,6 +109,10 @@ $time_start = microtime(true);
             <?php   }?>
             </div>
 
+             <div  class="supportDiv withborder" >    
+            <span><b><?=$countSupporters?></b> people support </span>        
+            <span style="display: block"><?=number_format($countMembers, 0, '.', ',');?> Members</span>
+            </div>
 
             <div  class="row sidebar-right-info" >                                
                 <span class="newsTitle"> News </span>

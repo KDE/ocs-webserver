@@ -32,6 +32,8 @@ $helperImage = new Default_View_Helper_Image();
 $helperPrintDate = new Default_View_Helper_PrintDate();
 $textCountryCity = $this->member->city;
 $textCountryCity .= $this->member->country ? ', ' . $this->member->country : '';
+
+
 $isSupporter = $this->stat['donationIssupporter'];
 ?>
     <main class="about-me-page">
@@ -61,7 +63,7 @@ $isSupporter = $this->stat['donationIssupporter'];
                                 </figure>
                                 <h1><span class="lightblue"><?php echo $this->member->username; ?></span></h1>
                                 <?php if($this->member->firstname ) :?>
-                                <span class="glyphicon glyphicon-user"></span>
+                                <span class="glyphicon glyphicon-user"></spa
                                 <span class="text"><?php echo $this->member->firstname; ?>&nbsp;<?php echo $this->member->lastname; ?> </span>
                                 <?php endif; ?>
 
@@ -222,39 +224,11 @@ $isSupporter = $this->stat['donationIssupporter'];
 
                             <div role="tabpanel" class="tab-pane active" id="user-aboutme">
 
-                                <?php if ($this->userProducts) { ?>
-                                    <div class="my-products-list">
-                                        
-                                        <?php foreach ($this->userProducts as $product): ?>
-                                            <div class="product mini-card col-lg-2 col-md-2 col-sm-3 col-xs-2">
-                                                <div class="u-wrap">
-                                                    <a href="<?= $helperBuildProductUrl->buildProductUrl($product['project_id']); ?>">
-                                                        <figure>
-                                                            <img
-                                                                src="<?php echo $helperImage->Image($product['image_small'],
-                                                                    array('width' => 280, 'height' => 171)); ?>"
-                                                                class="explore-product-image" width="101" height="81"/>
-                                                        </figure>
-                                                        <div class="u-content">
-                                                            <h3><?php echo $product['title']; ?></h3>
-                                                            <span class="productCategory"> <?php echo $product['catTitle']; ?> </span>
-                                                        
-                                                         <span class="productCategory" style="width: 100%; float: left;"><?= $helperPrintDate->printDate($product['project_changed_at']) ?> </span>
-                                                        </div>
-                                                    </a>
-                                                   
-                                                    <?php
-                                                    $this->widgetRating = new stdClass();
-                                                    $this->widgetRating->project_id = $product['project_id'];
-                                                    $this->widgetRating->laplace_score = $product['laplace_score'];
-                                                    $this->widgetRating->count_likes = $product['count_likes'];
-                                                    $this->widgetRating->count_dislikes = $product['count_dislikes'];
-                                                    echo $this->render('partials/widgetRating.phtml'); ?>
-                                                                                                
-                                                </div>
-
-                                            </div>
-                                        <?php endforeach; ?>
+                                <?php if ($this->userProducts) { ?>                                
+                                     <div class="my-products-list" id="my-products-list">
+                                                                       
+                                        <?php echo $this->render('user/partials/aboutme-products.phtml'); ?>
+                                       
                                     </div>
                                 <?php } ?>
 
@@ -421,26 +395,10 @@ $isSupporter = $this->stat['donationIssupporter'];
         </section>
 
     </main>
+<?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){
+             AboutMePage.setup("'.$this->member->username.'");
+            AboutMeMyProjectsPaging.setup();
+        });
+    ');
 
-<script type="text/javascript">
-      $(document).ready(function () {   
-
-        var AboutMePage = (function () {
-
-          return {
-
-              setup: function () {
-
-                  var t = $(document).prop('title');
-                  var tnew = '<?php echo $this->member->username; ?>'+"'s Profile "+t;
-                  $(document).prop('title', tnew);
-
-              }
-          }
-
-        })();
-
-        AboutMePage.setup();
-      })
-
-</script>

@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  *  ocs-webserver
  *
@@ -19,23 +19,19 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-?>
-<style type="text/css">
 
-    .metamenu
-    {
-        position: fixed; background-color: #fff; width: 100%; z-index: 1000;height: 15px;
-    }
-    header#page_header
-    {
-        margin-top: 16px;
-    }
-</style>
-<?php echo $this->render('partials/header/metaheader.phtml'); ?>
+class Default_View_Helper_HumanFilesize extends Zend_View_Helper_Abstract
+{
 
-<?php $this->inlineScript()->appendScript(
-    '    $(document).ready(function(){
-                MenuHover.setup();                
-                AboutContent.setup();              
-            });
-        ');
+    public function humanFilesize($bytes)
+    {
+        if ($bytes == 0)
+                return "0.00 B";
+
+            $s = array('B', 'KB', 'MB', 'GB', 'TB', 'PB');
+            $e = floor(log($bytes, 1024));
+
+            return round($bytes/pow(1024, $e), 2).$s[$e];
+    }
+
+} 

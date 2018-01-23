@@ -19,20 +19,28 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-							 			
-if (false == $this->userFollowsProject($this->authMember->member_id, $this->project_id)) {
-    	$urlUserFollows = $this->buildProductUrl($this->project_id, 'follow');
-    	$heartatt = 'class="partialbutton lightgrey"';			   
-}else{
-	$urlUserFollows = $this->buildProductUrl($this->project_id, 'unfollow');				
-	$heartatt = 'class="partialbutton purple"';
-}
-$heartatt = $heartatt. 'role="button" data-fragment=""  '
-	      .' data-target="#container-follow'.$this->project_id.'"'
-	      .' data-href="'.$urlUserFollows.'"';
-?>
-		
-<button <?=$heartatt?> >
-    <span class="glyphicon glyphicon-heart" alt="love it"></span>
-</button>
 
+class Default_View_Helper_PrintPaging extends Zend_View_Helper_Abstract
+{
+    public function printPaging($total_records,$pageLimit,$currentPageNr,$containerClassname)
+    {
+    
+
+        $total_pages = ceil($total_records / $pageLimit);
+        if($total_pages <=1) return '';
+        $html = '<div class="opendesktopwidgetpager"><ul class="opendesktopwidgetpager">';
+                 
+        for ($i=1; $i<=$total_pages; $i++) {
+            if($i==$currentPageNr){
+                $html = $html.'<li class="active"><span class="'.$containerClassname.'">'.$i.'</span></li>';
+            }else{
+                $html = $html.'<li><span class="'.$containerClassname.'">'.$i.'</span></li>';
+            }
+
+        };
+
+        $html = $html.'</ul></div>';
+
+        return $html;        
+     }
+} 

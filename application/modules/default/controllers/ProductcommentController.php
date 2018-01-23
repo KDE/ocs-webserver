@@ -179,13 +179,15 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
             $this->view->product = $this->loadProductInfo((int)$this->getParam('p'));
             $this->view->member_id = (int)$this->_authMember->member_id;
 
-            $this->updateActivityLog($result, $this->view->product->image_small);
+            if($this->view->product){
+                $this->updateActivityLog($result, $this->view->product->image_small);
 
-            //Send a notification to the owner
-            $this->sendNotificationToOwner($this->view->product, $data['comment_text']);
+                //Send a notification to the owner
+                $this->sendNotificationToOwner($this->view->product, $data['comment_text']);
 
-            //Send a notification to the parent comment writer
-            $this->sendNotificationToParent($this->view->product, $data['comment_text'], $data['comment_parent_id']);
+                //Send a notification to the parent comment writer
+                $this->sendNotificationToParent($this->view->product, $data['comment_text'], $data['comment_parent_id']);
+            }
         } else {
             $voteup = (int)$this->getParam('v');
             $modelRating = new Default_Model_DbTable_ProjectRating();

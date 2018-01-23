@@ -109,15 +109,20 @@ $member = $getAuthUser->getAuthUser();
                                                     <?= $this->translate('My Products') ?>
                                                 </a>
                                             </li>
+                                            <li class="link">
+                                                <a href="<?= $helperBuildMemberUrl->buildMemberUrl($member->member_id, 'plings') ?>">
+                                                    <?= $this->translate('Plings') ?>
+                                                </a>
+                                            </li>
+                                            <li class="link">
+                                                <a href="<?= $helperBuildMemberUrl->buildMemberUrl($member->member_id, 'downloadhistory') ?>">
+                                                    <?= $this->translate('Download History') ?>
+                                                </a>
+                                            </li>
                                             
                                             <li class="link">
                                                 <a href="/settings/">
                                                     <?= $this->translate('My Settings') ?>
-                                                </a>
-                                            </li>
-                                            <li class="link">
-                                                <a href="<?= $helperBuildMemberUrl->buildMemberUrl($member->member_id, 'plings') ?>">
-                                                    <?= $this->translate('Plings') ?>
                                                 </a>
                                             </li>
                                             <li class="link">
