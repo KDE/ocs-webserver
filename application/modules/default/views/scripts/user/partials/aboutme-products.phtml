@@ -33,8 +33,8 @@
   <?php
         $total_pages = ceil($this->total_records / $this->pageLimit);                                                                                
         
-        if($this->page<$total_pages){
-            echo '<button id="btnshowmoreproducts" data-page='.($this->page+1).'>Show More</button>';
+        if($this->projectpage<$total_pages){
+            echo '<button id="btnshowmoreproducts" data-page='.($this->projectpage+1).'>Show More</button>';
         }else{
             echo '~ end ~';
         }

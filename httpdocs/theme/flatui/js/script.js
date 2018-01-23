@@ -1265,7 +1265,7 @@ var AboutMeMyProjectsPaging = (function () {
                 $(this).remove();
                 $url = window.location.href;
                 target = '#my-products-list';
-                let container = $('<div></div>').append(indicator).load($url,{page:nextpage},function (response, status, xhr) {
+                let container = $('<div></div>').append(indicator).load($url,{projectpage:nextpage},function (response, status, xhr) {
                         if (status == "error") {
                             if (xhr.status == 401) {
                                 if (response) {
