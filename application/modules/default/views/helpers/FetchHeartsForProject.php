@@ -1,5 +1,4 @@
 <?php
-
 /**
  *  ocs-webserver
  *
@@ -20,13 +19,13 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-class Default_View_Helper_FetchProjectPackageTypesPureStrings extends Zend_View_Helper_Abstract
+
+class Default_View_Helper_FetchHeartsForProject extends Zend_View_Helper_Abstract
 {
-
-    public function FetchProjectPackageTypesPureStrings($projectId)
-    {
-        $tbl = new Default_Model_DbTable_ProjectPackageType();
-        return $tbl->getProjectPackageTypesPureStrings($projectId);
+    public function fetchHeartsForProject($project_id)
+    {        
+        $tbl = new Default_Model_DbTable_ProjectFollower();
+         $cnt = $tbl->countForProject($project_id);         
+        return $cnt;
     }
-
-}
+} 

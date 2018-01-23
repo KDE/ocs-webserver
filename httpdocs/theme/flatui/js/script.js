@@ -611,9 +611,45 @@ var Partials = (function () {
                 var url = this.href;
                 var target = $(this).attr("data-target");
                 var toggle = $(this).data('toggle');
-                var pageFragment = $(this).attr("data-fragment");
+                var pageFragment = $(this).attr("data-fragment");               
+                $(target).load(url + ' ' + pageFragment, function (response, status, xhr) {
+                    if (status == "error") {
+                        if (xhr.status == 401) {
+                            if (response) {
+                                var data = jQuery.parseJSON(response);
+                                var redirect = data.login_url;
+                                if (redirect) {
+                                    window.location = redirect;
+                                } else {
+                                    window.location = "/login";
+                                }
+                            }
+                        } else {
+                            $(target).empty().html('Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.');
+                        }
+                    }
+                    if (toggle) {
+                        $(toggle).modal('show');
+                    }
+                });
+                return false;
+            });
+        }
+    }
+})();
 
-                //$(target).empty().html('<div class="loading">Loading ...<img src="/images/system/ajax-loader.gif" alt="Loading..." /></div>');
+
+var PartialsButton = (function () {
+    return {
+        setup: function () {
+            $('body').on('click', 'Button.partialbutton', function (event) {
+                event.preventDefault();
+                var url = $(this).attr("data-href");
+                var target = $(this).attr("data-target");
+                var toggle = $(this).data('toggle');
+                var pageFragment = $(this).attr("data-fragment");
+                let spin = $('<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>');
+                $(target).append(spin);
                 $(target).load(url + ' ' + pageFragment, function (response, status, xhr) {
                     if (status == "error") {
                         if (xhr.status == 401) {
@@ -665,6 +701,65 @@ var PartialsReview = (function () {
                 let userrate = $('#review-product-modal').find('#userrate').val();
                 // -1 = no rate yet. 0= dislike  1=like                                
                 
+                if($( this ).hasClass( "voteup" )){
+                        if(userrate==1){
+                            $('#review-product-modal').find('#votelabel').empty()                                
+                                .append('<a class="btn btn-success active" style="line-height: 10px;"><span class="fa fa-plus"></span></a> is given already with comment:');                                
+                            $('#review-product-modal').find(':submit').attr("disabled", "disabled").css("display", "none");        
+                            $('#review-product-modal').find('#commenttext').attr("disabled", "disabled");                                             
+                        }else{
+                            $('#review-product-modal').find('input#voteup').val(1);      
+                            $('#review-product-modal').find('#votelabel').empty()                                
+                                .append('<a class="btn btn-success active" style="line-height: 10px;"><span class="fa fa-plus"></span></a> Add Comment (optional):');                                                                                      
+                            $('#review-product-modal').find('#commenttext').val('');
+                            $('#review-product-modal').find('#commenttext').removeAttr("disabled");
+                             $('#review-product-modal').find(':submit').css("display", "block").removeAttr("disabled"); 
+                            
+                        }                        
+                }else{ // vote down
+                        if(userrate==0){
+                             $('#review-product-modal').find('#votelabel').empty()                                
+                                 .append('<a class="btn btn-danger active" style="line-height: 10px;"><span class="fa fa-minus"></span></a> is given already with comment: ');                                                                                      
+                              $('#review-product-modal').find('#commenttext').attr("disabled", "disabled"); 
+                            $('#review-product-modal').find(':submit').attr("disabled", "disabled").css("display", "none");     
+
+                        }else{
+                            $('#review-product-modal').find('input#voteup').val(2);                               
+                            $('#review-product-modal').find('#votelabel').empty()                                
+                                .append('<a class="btn btn-danger active" style="line-height: 10px;"><span class="fa fa-minus"></span></a> Add Comment (optional): ');                                                                                                                  
+                            $('#review-product-modal').find('#commenttext').val('');
+                            $('#review-product-modal').find('#commenttext').removeAttr("disabled");
+                            $('#review-product-modal').find(':submit').removeAttr("disabled").css("display", "block");             
+                             
+                        }
+                }
+               
+               $('#review-product-modal').modal('show');
+               if($('#review-product-modal').hasClass('noid')){
+                    setTimeout(function() {$('#review-product-modal').modal('hide');}, 2000);
+               }                          
+                return false;
+            });
+        }
+    }
+})();
+
+
+
+var PartialsReviewDownloadHistory = (function () {
+    return {
+        setup: function () {
+            $('body').on('click', 'button.partialReviewDownloadHistory', function (event) {
+                event.preventDefault();
+                              
+                // product owner not allow to vote
+                let loginuser  = $('#review-product-modal').find('#loginuser').val();  
+                //let userrate = $('#review-product-modal').find('#userrate').val();
+                let userrate = $(this).attr("data-userrate");
+                // -1 = no rate yet. 0= dislike  1=like                                                                
+                $('#review-product-modal').find('#commenttext').val($(this).attr("data-comment"));
+                $('#review-product-modal').find('#form_p').val($(this).attr("data-project"));
+
                 if($( this ).hasClass( "voteup" )){
                         if(userrate==1){
                             $('#review-product-modal').find('#votelabel').empty()                                
@@ -1061,22 +1156,7 @@ var RssNews = (function () {
                              }); 
                     $("#rss-feeds").html(crss);
                  
-              });      
-            /*             
-            var yql = "https://query.yahooapis.com/v1/public/yql?q=select%20title%2Clink%2CpubDate%2Cdescription%20from%20rss%20where%20url%3D%22http%3A%2F%2Fblog.opendesktop.org%2Ffeed%22&format=json&diagnostics=true&callback=";          
-             $.getJSON(yql, function(res) {                
-                   var crss ='';
-                   $.each( res.query.results.item, function( i, item ) {                           
-                              if ( i >= 3 ) {
-                                return false;
-                              }
-                              var m = moment(item.pubDate);
-                              crss+='<div class="commentstore"><a href="'+item.link+'"><span class="title">'+item.title +'</span></a><br/>' + item.description
-                              +'<br/><span class="date">'+m.format('MMM DD YYYY LT')+'</span></div>';                           
-                            }); 
-                   $("#rss-feeds").html(crss);
-             });    
-             */                  
+              });               
         }
         
     }
@@ -1165,6 +1245,50 @@ var LayoutSwitch = (function () {
 })();
 
 
+var AboutMePage = (function () {
+  return {
+      setup: function (username) {
+          var t = $(document).prop('title');
+          var tnew = username+"'s Profile "+t;
+          $(document).prop('title', tnew);
+      }
+  }
+})();
+
+
+var AboutMeMyProjectsPaging = (function () {
+  return {
+      setup: function () {        
+        let indicator = '<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>';               
+        $('body').on('click', 'button#btnshowmoreproducts', function (event) {                                                        
+                let nextpage = $(this).attr('data-page');                                            
+                $(this).remove();
+                $url = window.location.href;
+                target = '#my-products-list';
+                let container = $('<div></div>').append(indicator).load($url,{page:nextpage},function (response, status, xhr) {
+                        if (status == "error") {
+                            if (xhr.status == 401) {
+                                if (response) {
+                                    var data = jQuery.parseJSON(response);
+                                    var redirect = data.login_url;
+                                    if (redirect) {
+                                        window.location = redirect;
+                                    } else {
+                                        window.location = "/login";
+                                    }
+                                }
+                            } else {
+                                $(target).empty().html('Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.');
+                            }
+                        }                      
+                    });
+                $('#my-products-list').append(container);                
+        });
+
+
+      }
+  }
+})();
 
 var productRatingToggle = (function () {
     return {

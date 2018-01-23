@@ -246,6 +246,43 @@
     .border_radius(0);
     margin-bottom: 0;
   }
+
+/*paging style*/
+  .opendesktopwidgetpager{
+    display: flex;        
+    justify-content: right;
+    align-items: center;
+    justify-content: flex-end;
+    ul.opendesktopwidgetpager{
+      display: inline-block;
+      padding-left: 0;
+      margin: 20px 0;
+      border-radius: 4px;
+       > li {
+        display: inline;        
+            >span{
+              cursor: pointer;
+              position: relative;
+              float: left;            
+              margin-left: -1px;
+              line-height: 1.42857143;
+              color: #337ab7;
+              text-decoration: none;
+              background-color: #fff;
+              border: 1px solid #ddd;
+              padding: 5px 10px;
+              font-size: 12px;              
+            }
+              }
+      >.active > span{
+        z-index: 2;
+        color: #fff;
+        cursor: default;
+        background-color: #337ab7;
+        border-color: #337ab7;
+      }
+    }
+  }
 /** /COMMON **/
 
 /** TOP MENU **/
@@ -1644,6 +1681,35 @@ ul.meta-nav-top
           display: block; 
           font-weight: normal;
         }
+        div.projectdetailRating{
+          float: right; 
+          width:150px; 
+          z-index: 100
+        }
+        div.projectdtailHeart{
+          float: right; 
+          width:50px;
+          z-index: 100
+        }
+        span.heartproject{
+          position:relative;
+          color:#8e44ad; 
+          font-size: 45px
+        }
+
+        .heartgrey{
+          position:relative;
+          color:#C8C8C8; 
+          font-size: 45px
+        }
+
+        span.heartnumber{
+          z-index: 3;
+          position: absolute; 
+          margin-left:-25px;
+          margin-top:12px;
+          color:white;
+        }
       }
     }
 
@@ -1728,6 +1794,9 @@ ul.meta-nav-top
                 padding: 20px 10px 10px 10px;              
                 article {
                     padding-top: 15px;
+                }
+                article.lastchangelog{
+                    padding-top: 50px;
                 }
               }
             
@@ -2834,7 +2903,8 @@ span.page-views {
           }
         }
       }
-    
+      
+
 
 
     }
@@ -5349,6 +5419,44 @@ img.imgpopover
        color:#37628D;
        padding-top: 10px;       
        padding-bottom: 10px;     
+    }
+
+    .my-downloadshistory-list{
+      width: 1100px;
+      .totaldownloads{
+        margin:0;
+        padding: 20px;
+        text-align: right;
+      }
+      .smaller{
+        font-size: smaller;
+      }
+      .header{        
+        border-top:1px solid #ccc;
+        padding-top:15px;
+      }
+      .subheader{       
+       background-color: #ddd
+      }
+      .paddingLeft80{
+        padding-left: 80px;
+      }
+      .marginLeft80{
+        margin-left: 80px;
+      }
+      .rating{
+        width: 60px !important;
+        font-size: 10pt;
+      }
+      .downloadhistory-image{
+        width: 50px;
+        height: 50px;
+        float: left; 
+        margin-right: 15px;      
+      }
+      .nowrap{
+        white-space: nowrap;
+      }
     }
 }
     
