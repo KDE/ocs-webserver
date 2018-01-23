@@ -52,10 +52,10 @@ $helperMember = new Default_View_Helper_BuildMemberUrl();
         </a>
     </li>
 
-    <li class="header-menu-left-item <?php echo $this->tab == 'settings' ? 'active' : ''; ?>">
-        <a href="/settings/">
-            <span class="glyphicon glyphicon-cog"></span>
-            <?= $this->translate('Settings') ?>
+    <li class="<?php echo $this->tab == 'downloadhistory' ? 'active' : ''; ?>">
+        <a href="<?php echo $helperMember->buildMemberUrl($this->member->member_id, 'downloadhistory'); ?>">
+            <span class="glyphicon glyphicon-star"></span>
+            <?= $this->translate('Download History') ?>
         </a>
     </li>
     
@@ -66,10 +66,10 @@ $helperMember = new Default_View_Helper_BuildMemberUrl();
         </a>
     </li>
     
-    <li class="<?php echo $this->tab == 'downloadhistory' ? 'active' : ''; ?>">
-        <a href="<?php echo $helperMember->buildMemberUrl($this->member->member_id, 'downloadhistory'); ?>">
-            <span class="glyphicon glyphicon-star"></span>
-            <?= $this->translate('Download History') ?>
+    <li class="header-menu-left-item <?php echo $this->tab == 'settings' ? 'active' : ''; ?>">
+        <a href="/settings/">
+            <span class="glyphicon glyphicon-cog"></span>
+            <?= $this->translate('Settings') ?>
         </a>
     </li>
 
