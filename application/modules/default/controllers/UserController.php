@@ -51,7 +51,8 @@ class UserController extends Local_Controller_Action_DomainSwitch
         $tableMember = new Default_Model_Member();
         $tableProject = new Default_Model_Project();
 
-        $pageLimit = 21;
+        // $pageLimit = 21;
+        $pageLimit = 3000; // current no paging
         $projectpage = (int)$this->getParam('projectpage', 1);
 
         $this->view->authMember = $this->_authMember;
@@ -129,6 +130,10 @@ class UserController extends Local_Controller_Action_DomainSwitch
                         $cntpv = $cntpv + $tableProject->fetchProjectViews($pro->project_id);
                     }
                     $stat['cntPageviews'] = $cntpv;
+
+                    $tblFollower = new Default_Model_DbTable_ProjectFollower();
+                    $stat['cntLikesHeGave'] = $tblFollower->countLikesHeGave($this->_memberId);                    
+                    $stat['cntLikesHeGot'] = $tblFollower->countLikesHeGot($this->_memberId);                        
 
                     $donationinfo = $tableMember->fetchSupporterDonationInfo($this->_memberId);      
                     if($donationinfo){
@@ -370,11 +375,11 @@ class UserController extends Local_Controller_Action_DomainSwitch
         if( $this->view->member ){
             $this->view->paramPageId = (int)$this->getParam('page');
 
-            
+            //TODO do really sql paging instead of Zend_Paginator
             $dhistory = new Default_Model_DbTable_MemberDownloadHistory();          
             $offset = $this->view->paramPageId;
             $list  = $dhistory->getDownloadhistory($this->view->member->member_id);
-            $list->setItemCountPerPage(10);
+            $list->setItemCountPerPage(250);
             $list->setCurrentPageNumber($offset);
              $this->view->downloadhistory  = $list;
         }else{

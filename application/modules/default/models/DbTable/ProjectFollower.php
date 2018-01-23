@@ -24,7 +24,6 @@ class Default_Model_DbTable_ProjectFollower extends Zend_Db_Table_Abstract
 
     protected $_name = "project_follower";
 
-
     public function countForMember($memberId)
     {
         $select = $this->_db->select()
@@ -32,6 +31,26 @@ class Default_Model_DbTable_ProjectFollower extends Zend_Db_Table_Abstract
             ->joinUsing('project', 'project_id')
             ->where('project.is_deleted = ?', 0)
             ->where('project_follower.member_id = ?', $memberId);
+        return count($select->query()->fetchAll());
+    }
+
+    public function countLikesHeGave($memberId)
+    {
+        $select = $this->_db->select()
+            ->from('project_follower')
+            ->joinUsing('project', 'project_id')
+            ->where('project.is_deleted = ?', 0)
+            ->where('project_follower.member_id = ?', $memberId);
+        return count($select->query()->fetchAll());
+    }
+
+    public function countLikesHeGot($memberId)
+    {
+        $select = $this->_db->select()
+            ->from('project_follower')
+            ->joinUsing('project', 'project_id')
+            ->where('project.is_deleted = ?', 0)            
+            ->where('project.member_id = ?', $memberId);
         return count($select->query()->fetchAll());
     }
 
