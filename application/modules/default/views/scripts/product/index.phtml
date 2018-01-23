@@ -191,19 +191,21 @@ if (Zend_Auth::getInstance()->hasIdentity()){
                                 
                                 </span>
                             </span>
-                          <?php
-                           $cntheart = $this->fetchHeartsForProject($this->product->project_id);
-                           if($cntheart>0){
-                            ?>
+                          
                             <div class="projectdtailHeart">
-                                <div>
-                                <span class="heartproject glyphicon glyphicon-heart"></span>
-                                <span class="heartnumber small"><?=$this->fetchHeartsForProject($this->product->project_id)?></span>
+                                <div> 
+                                    <?php 
+                                        $cntheart = $this->fetchHeartsForProject($this->product->project_id);
+                                        if($cntheart>0){
+                                        ?>                                    
+                                                    <span class="heartproject glyphicon glyphicon-heart"></span>
+                                                    <span class="heartnumber small"><?=$cntheart?></span>
+                                    <?php }else{
+                                                    echo '<i class="fa fa-heart-o heartgrey" aria-hidden="true"></i>';        
+                                        } ?>
                                 </div>                            
                             </div>
-                            <?php 
-                            }
-                            ?>
+                            
                             <div class="projectdetailRating">
                             <?php echo $this->render('partials/sidebarRating.phtml'); ?>
                             </div>
@@ -304,17 +306,18 @@ if (Zend_Auth::getInstance()->hasIdentity()){
                                     </article>
 
 
-                                    <article>
+                                    
                                         <?php
                                         if (count($this->updates) > 0) {
                                             $this->productUpdate = $this->updates[0];
                                             ?>
+                                            <article class="lastchangelog">
                                             <b>Last changelog:</b>
 
                                             <?= $this->render('product/partials/productUpdatesV1.phtml'); ?>
-
+                                            </article>
                                         <?php } ?>
-                                    </article>
+                                    
 
                                     <!-- comments -->
                                     <div id="product-discussion">
