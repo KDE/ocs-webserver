@@ -52,7 +52,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
         $tableProject = new Default_Model_Project();
 
         $pageLimit = 21;
-        $page = (int)$this->getParam('page', 1);
+        $projectpage = (int)$this->getParam('projectpage', 1);
 
         $this->view->authMember = $this->_authMember;
         $this->view->member = $tableMember->find($this->_memberId)->current();
@@ -93,12 +93,12 @@ class UserController extends Local_Controller_Action_DomainSwitch
         
         */
          // ajax load more products  
-        if($this->getParam('page', null)){        
+        if($this->getParam('projectpage', null)){        
                     $total_records = $tableProject->countAllProjectsForMemberCatFilter($this->_memberId,true,null);
                     $this->view->pageLimit =$pageLimit;
-                    $this->view->page =$page;
+                    $this->view->projectpage =$projectpage;
                     $this->view->total_records = $total_records ;
-                    $this->view->userProducts = $tableProject->fetchAllProjectsForMember($this->_memberId, $pageLimit, ($page - 1) * $pageLimit,true);
+                    $this->view->userProducts = $tableProject->fetchAllProjectsForMember($this->_memberId, $pageLimit, ($projectpage - 1) * $pageLimit,true);
                     $this->_helper->layout->disableLayout();                         
                     $this->_helper->viewRenderer('partials/aboutmeProducts');       
                     
@@ -108,9 +108,9 @@ class UserController extends Local_Controller_Action_DomainSwitch
 
                     $total_records = $tableProject->countAllProjectsForMemberCatFilter($this->_memberId,true,null);
                     $this->view->pageLimit =$pageLimit;
-                    $this->view->page =$page;
+                    $this->view->projectpage =$projectpage;
                     $this->view->total_records = $total_records ;
-                    $this->view->userProducts = $tableProject->fetchAllProjectsForMember($this->_memberId, $pageLimit, ($page - 1) * $pageLimit,true);
+                    $this->view->userProducts = $tableProject->fetchAllProjectsForMember($this->_memberId, $pageLimit, ($projectpage - 1) * $pageLimit,true);
                    
                     $paginationComments = $tableMember->fetchComments($this->_memberId);
                     if ($paginationComments) {
