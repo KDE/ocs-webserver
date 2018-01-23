@@ -191,13 +191,19 @@ if (Zend_Auth::getInstance()->hasIdentity()){
                                 
                                 </span>
                             </span>
+                          <?php
+                           $cntheart = $this->fetchHeartsForProject($this->product->project_id);
+                           if($cntheart>0){
+                            ?>
                             <div class="projectdtailHeart">
                                 <div>
                                 <span class="heartproject glyphicon glyphicon-heart"></span>
                                 <span class="heartnumber small"><?=$this->fetchHeartsForProject($this->product->project_id)?></span>
                                 </div>                            
                             </div>
-
+                            <?php 
+                            }
+                            ?>
                             <div class="projectdetailRating">
                             <?php echo $this->render('partials/sidebarRating.phtml'); ?>
                             </div>
