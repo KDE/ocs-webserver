@@ -55,8 +55,8 @@ if($this->counter==0){
 					.'   '.$this->printDate($userRateData['created_at']);
 			}
 		}else{
-				
-		if(($this->file->project_member_id<> $this->authMember->member_id) && $this->issupport){
+				// && $this->issupport
+		if(($this->file->project_member_id<> $this->authMember->member_id)){
 			?>
 	<button <?=$attrhistory ?>  class="partialReviewDownloadHistory votedown"  name="votedown"> <span class="glyphicon glyphicon-minus" ></span></button>
 	<button <?=$attrhistory ?>  class="partialReviewDownloadHistory voteup"  name="voteup"> <span class="glyphicon glyphicon-plus" ></span></button>				    
