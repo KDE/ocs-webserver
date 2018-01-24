@@ -1258,6 +1258,43 @@ var AboutMePage = (function () {
 
 var AboutMeMyProjectsPaging = (function () {
   return {
+      setup: function () {                
+        $(window).scroll(function() {
+            if($(window).scrollTop() == $(document).height() - $(window).height()) {
+                    if(!$('button#btnshowmoreproducts').length) return;                        
+                    let indicator = '<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>';  
+                    let nextpage = $('button#btnshowmoreproducts').attr('data-page');     
+                    $('button#btnshowmoreproducts').remove();
+                    $url = window.location.href;
+                    target = '#my-products-list';
+                    let container = $('<div></div>').append(indicator).load($url,{projectpage:nextpage},function (response, status, xhr) {
+                            if (status == "error") {
+                                if (xhr.status == 401) {
+                                    if (response) {
+                                        var data = jQuery.parseJSON(response);
+                                        var redirect = data.login_url;
+                                        if (redirect) {
+                                            window.location = redirect;
+                                        } else {
+                                            window.location = "/login";
+                                        }
+                                    }
+                                } else {
+                                    $(target).empty().html('Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.');
+                                }
+                            }                      
+                        });
+                    $('#my-products-list').append(container);      
+            }
+        });
+
+
+      }
+  }
+})();
+
+var AboutMeMyProjectsPaging_ = (function () {
+  return {
       setup: function () {        
         let indicator = '<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>';               
         $('body').on('click', 'button#btnshowmoreproducts', function (event) {                                                        
