@@ -49,7 +49,7 @@ if($this->counter==0){
 				if($userRateData && $userRateData['user_like']>0){				
 					$voteupactive = "active";												
 				}else{						
-					$votedownactive = "active";						
+					if($userRateData) $votedownactive = "active";						
 				}
 								
 			?>
