@@ -229,7 +229,7 @@ class SupportController extends Local_Controller_Action_DomainSwitch
     {
         //$this->_helper->layout()->disableLayout();
         $this->view->paymentStatus = 'danger';
-        $this->view->paymentMessage = 'Payment canceled.';
+        $this->view->paymentMessage = 'Payment cancelled.';
     }
 
 
