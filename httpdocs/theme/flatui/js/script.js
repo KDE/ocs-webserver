@@ -751,10 +751,7 @@ var PartialsReviewDownloadHistory = (function () {
         setup: function () {
             $('body').on('click', 'button.partialReviewDownloadHistory', function (event) {
                 event.preventDefault();
-                              
-                // product owner not allow to vote
-                let loginuser  = $('#review-product-modal').find('#loginuser').val();  
-                //let userrate = $('#review-product-modal').find('#userrate').val();
+                                              
                 let userrate = $(this).attr("data-userrate");
                 // -1 = no rate yet. 0= dislike  1=like                                                                
                 $('#review-product-modal').find('#commenttext').val($(this).attr("data-comment"));
