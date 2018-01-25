@@ -32,7 +32,7 @@ $this->supporters = $modelInfo->getNewActiveSupporters(18);
 // $this->productsAddons = $modelInfo->getLastProductsForHostStores(5,"152,277,384");
 // $this->productsWallpapers = $modelInfo->getLastProductsForHostStores(5,295);
 
-
+//test
 $this->productsThemesGTK = $modelInfo->getLastProductsForHostStores(5,7);
 $this->productsThemesPlasma = $modelInfo->getLastProductsForHostStores(5,"3,33");
 $this->productsIconsCursors= $modelInfo->getLastProductsForHostStores(5,"5,7");
@@ -70,35 +70,7 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                                                                                                         
                                       
                                     </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                    <span>Wallpapers</span>                                              
-                                    <div class="prod-widget-box new-products" >
-                                    <?php
-                                    $this->rownum = 1; 
-                                    foreach ($this->productsWallpapers as $this->product) {
-                                        echo $this->render('home/partials/product_plingcom.phtml');
-                                        $this->rownum++;
-                                    }           
-                                    ?>
-                                    </div> 
-                                                                      
-                                    </div>
-                        </div>
-                        <div class="row ">   
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">      
-                                    <span>  Icons,Cursors </span>
-                                    <div class="prod-widget-box new-products" >
-                                    <?php
-                                    $this->rownum = 1; 
-                                    foreach ($this->productsIconsCursors as $this->product) {
-                                        echo $this->render('home/partials/product_plingcom.phtml');
-                                        $this->rownum++;
-                                    }           
-                                    ?>
-                                    </div>
-                                                                                                        
-                                      
-                                    </div>
+
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                     <span>Plasma-Theming</span>                                              
                                     <div class="prod-widget-box new-products" >
@@ -112,6 +84,37 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                                     </div> 
                                                                       
                                     </div>
+
+                                   
+                        </div>
+                        <div class="row ">   
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">      
+                                    <span>  Icons,Cursors </span>
+                                    <div class="prod-widget-box new-products" >
+                                    <?php
+                                    $this->rownum = 1; 
+                                    foreach ($this->productsIconsCursors as $this->product) {
+                                        echo $this->render('home/partials/product_plingcom.phtml');
+                                        $this->rownum++;
+                                    }           
+                                    ?>
+                                    </div>                                                                                                                                              
+                                    </div>
+
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                    <span>Wallpapers</span>                                              
+                                    <div class="prod-widget-box new-products" >
+                                    <?php
+                                    $this->rownum = 1; 
+                                    foreach ($this->productsWallpapers as $this->product) {
+                                        echo $this->render('home/partials/product_plingcom.phtml');
+                                        $this->rownum++;
+                                    }           
+                                    ?>
+                                    </div> 
+                                                                      
+                                    </div>
+                                    
                         </div>
                         <div class="row blockpadding" >
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">                          
