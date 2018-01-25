@@ -25,10 +25,21 @@ $this->comments = $modelInfo->getLatestComments(10);
 $this->users = $modelInfo->getNewActiveMembers(18);
 $this->supporters = $modelInfo->getNewActiveSupporters(18);
 
-$this->productsThemes = $modelInfo->getLastProductsForHostStores(5,"381,386,107,147,146,151");
+$this->productsThemesGTK = $modelInfo->getLastProductsForHostStores(5,"366,363,273,267,138,125,131,153");
+$this->productsThemesPlasma = $modelInfo->getLastProductsForHostStores(5,"365,119,123,266,114,118,349,140,417,101,100,111");
+$this->productsIconsCursors= $modelInfo->getLastProductsForHostStores(5,"386,107");
 $this->productsApps = $modelInfo->getLastProductsForHostStores(5,233);
 $this->productsAddons = $modelInfo->getLastProductsForHostStores(5,"152,277,384");
 $this->productsWallpapers = $modelInfo->getLastProductsForHostStores(5,295);
+
+//test
+// $this->productsThemesGTK = $modelInfo->getLastProductsForHostStores(5,7);
+// $this->productsThemesPlasma = $modelInfo->getLastProductsForHostStores(5,"3,33");
+// $this->productsIconsCursors= $modelInfo->getLastProductsForHostStores(5,"5,7");
+// $this->productsApps = $modelInfo->getLastProductsForHostStores(5,33);
+// $this->productsAddons = $modelInfo->getLastProductsForHostStores(5,7);
+// $this->productsWallpapers = $modelInfo->getLastProductsForHostStores(5,5);
+
 
 $countSupporters = $modelInfo->getCountActiveSupporters();
 $countMembers = $modelInfo->getCountMembers();
@@ -46,11 +57,11 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
         <div class="contentcontainer">
                         <div class="row ">   
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">      
-                                    <span>  Theming </span>
+                                    <span>  GTK-Theming </span>
                                     <div class="prod-widget-box new-products" >
                                     <?php
                                     $this->rownum = 1; 
-                                    foreach ($this->productsThemes as $this->product) {
+                                    foreach ($this->productsThemesGTK as $this->product) {
                                         echo $this->render('home/partials/product_plingcom.phtml');
                                         $this->rownum++;
                                     }           
@@ -59,6 +70,37 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                                                                                                         
                                       
                                     </div>
+
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                    <span>Plasma-Theming</span>                                              
+                                    <div class="prod-widget-box new-products" >
+                                    <?php
+                                    $this->rownum = 1; 
+                                    foreach ($this->productsThemesPlasma as $this->product) {
+                                        echo $this->render('home/partials/product_plingcom.phtml');
+                                        $this->rownum++;
+                                    }           
+                                    ?>
+                                    </div> 
+                                                                      
+                                    </div>
+
+                                   
+                        </div>
+                        <div class="row blockpadding">   
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">      
+                                    <span>  Icons,Cursors </span>
+                                    <div class="prod-widget-box new-products" >
+                                    <?php
+                                    $this->rownum = 1; 
+                                    foreach ($this->productsIconsCursors as $this->product) {
+                                        echo $this->render('home/partials/product_plingcom.phtml');
+                                        $this->rownum++;
+                                    }           
+                                    ?>
+                                    </div>                                                                                                                                              
+                                    </div>
+
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                     <span>Wallpapers</span>                                              
                                     <div class="prod-widget-box new-products" >
@@ -72,6 +114,7 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                                     </div> 
                                                                       
                                     </div>
+                                    
                         </div>
                         <div class="row blockpadding" >
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">                          
