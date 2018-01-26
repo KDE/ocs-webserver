@@ -51,12 +51,13 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
     public function ratingAction()
     {
+        $this->_helper->layout()->disableLayout();
+        if (array_key_exists($this->_projectId, $this->_authMember->projects)) {
+            return;
+        }        
         $userRating = (int)$this->getParam('rate', 0);
         $modelRating = new Default_Model_DbTable_ProjectRating();
-        $modelRating->rateForProject($this->_projectId, $this->_authMember->member_id, $userRating);
-
-        $this->_helper->viewRenderer('index');
-        $this->indexAction();
+        $modelRating->rateForProject($this->_projectId, $this->_authMember->member_id, $userRating);        
     }
 
     public function indexAction()
@@ -1167,23 +1168,26 @@ class ProductController extends Local_Controller_Action_DomainSwitch
        
         // ppload
         //Add collection to favorite
-        $projectTable = new Default_Model_DbTable_Project();
-        $projectData = $projectTable->find($this->_projectId)->current();
-        if ($projectData->ppload_collection_id) {
-            // require_once 'Ppload/Api.php';
-            $pploadApi = new Ppload_Api(array(
-                'apiUri'   => PPLOAD_API_URI,
-                'clientId' => PPLOAD_CLIENT_ID,
-                'secret'   => PPLOAD_SECRET
-            ));
-            $favoriteRequest = array(
-                'user_id'       => $this->_authMember->member_id,
-                'collection_id' => ltrim($projectData->ppload_collection_id, '!')
-            );
-            $favoriteResponse = $pploadApi->postFavorite($favoriteRequest);
-        }
+        // $projectTable = new Default_Model_DbTable_Project();
+        // $projectData = $projectTable->find($this->_projectId)->current();
+        // if ($projectData->ppload_collection_id) {
+        //     // require_once 'Ppload/Api.php';
+        //     $pploadApi = new Ppload_Api(array(
+        //         'apiUri'   => PPLOAD_API_URI,
+        //         'clientId' => PPLOAD_CLIENT_ID,
+        //         'secret'   => PPLOAD_SECRET
+        //     ));
+        //     $favoriteRequest = array(
+        //         'user_id'       => $this->_authMember->member_id,
+        //         'collection_id' => ltrim($projectData->ppload_collection_id, '!')
+        //     );
+        //     $favoriteResponse = $pploadApi->postFavorite($favoriteRequest);
+        // }
       
     }
+
+
+
 
     public function unfollowAction()
     {
@@ -1198,17 +1202,16 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $projectFollowTable->delete('member_id=' . $this->_authMember->member_id . ' AND project_id='
             . $this->_projectId);
 
-        // 17.01.2018  deactive temperately.
-        // $tableProduct = new Default_Model_Project();
-        // $product = $tableProduct->find($this->_projectId)->current();
+   
+        $tableProduct = new Default_Model_Project();
+        $product = $tableProduct->find($this->_projectId)->current();
 
-        // $activityLog = new Default_Model_ActivityLog();
-        // $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id,
-        //     Default_Model_ActivityLog::PROJECT_UNFOLLOWED, $product->toArray());
-
-        // 17.01.2018  deactive temperately.    
-        // // ppload
-        // // Delete collection from favorite
+        $activityLog = new Default_Model_ActivityLog();
+        $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id,
+            Default_Model_ActivityLog::PROJECT_UNFOLLOWED, $product->toArray());
+        
+        // ppload
+        // Delete collection from favorite
         // $projectTable = new Default_Model_DbTable_Project();
         // $projectData = $projectTable->find($this->_projectId)->current();
         // if ($projectData->ppload_collection_id) {
@@ -1228,6 +1231,60 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         //         $favoriteResponse = $pploadApi->deleteFavorite($favoriteResponse->favorite->id);
         //     }
         // }
+    }
+
+    public function followpAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        //        $this->_helper->viewRenderer->setNoRender(true);
+
+        $this->view->project_id = $this->_projectId;
+        $this->view->authMember = $this->_authMember;
+
+        if (array_key_exists($this->_projectId, $this->_authMember->projects)) {
+            return;
+        }
+
+        $projectFollowTable = new Default_Model_DbTable_ProjectFollower();
+
+        $newVals = array('project_id' => $this->_projectId, 'member_id' => $this->_authMember->member_id);
+        $where = $projectFollowTable->select()->where('member_id = ?', $this->_authMember->member_id)
+                                    ->where('project_id = ?', $this->_projectId, 'INTEGER')
+        ;
+        $result = $projectFollowTable->fetchRow($where);
+       
+        if (null === $result) {        
+             $projectFollowTable->createRow($newVals)->save();                           
+            $tableProduct = new Default_Model_Project();
+            $product = $tableProduct->find($this->_projectId)->current();
+            $activityLog = new Default_Model_ActivityLog();
+            $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id,
+                Default_Model_ActivityLog::PROJECT_FOLLOWED, $product->toArray());
+        }       
+    }
+
+
+    public function unfollowpAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        $this->_helper->viewRenderer('followp');
+
+        $this->view->project_id = $this->_projectId;
+        $this->view->authMember = $this->_authMember;
+
+        $projectFollowTable = new Default_Model_DbTable_ProjectFollower();
+
+        $projectFollowTable->delete('member_id=' . $this->_authMember->member_id . ' AND project_id='
+            . $this->_projectId);
+
+    
+        $tableProduct = new Default_Model_Project();
+        $product = $tableProduct->find($this->_projectId)->current();
+
+        $activityLog = new Default_Model_ActivityLog();
+        $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id,
+            Default_Model_ActivityLog::PROJECT_UNFOLLOWED, $product->toArray());
+                
     }
 
     public function followsAction()

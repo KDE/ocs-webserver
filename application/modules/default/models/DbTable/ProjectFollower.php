@@ -60,6 +60,19 @@ class Default_Model_DbTable_ProjectFollower extends Zend_Db_Table_Abstract
         return $selectArr ['count'];      
     }
 
+     public function fetchLikesForMember($memberId)
+    {
+        $select = $this->_db->select()
+            ->from('project_follower')
+            ->joinUsing('stat_projects', 'project_id')
+            ->where('stat_projects.status = ?',100)
+            ->where('project_follower.member_id = ?', $memberId);
+            
+         $result = $select->query()->fetchAll();
+        return new Zend_Paginator(new Zend_Paginator_Adapter_Array($result ));
+     
+    }
+
     /**
      * Override method to update member_ref table.
      *

@@ -645,9 +645,64 @@ var PartialsButton = (function () {
             $('body').on('click', 'Button.partialbutton', function (event) {
                 event.preventDefault();
                 var url = $(this).attr("data-href");
-                var target = $(this).attr("data-target");
+                var target = $(this).attr("data-target");            
                 var toggle = $(this).data('toggle');
-                var pageFragment = $(this).attr("data-fragment");
+                var pageFragment = $(this).attr("data-fragment");                
+                let spin = $('<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>');
+                $(target).append(spin);
+                $(target).load(url + ' ' + pageFragment, function (response, status, xhr) {
+                    if (status == "error") {
+                        if (xhr.status == 401) {
+                            if (response) {
+                                var data = jQuery.parseJSON(response);
+                                var redirect = data.login_url;
+                                if (redirect) {
+                                    window.location = redirect;
+                                } else {
+                                    window.location = "/login";
+                                }
+                            }
+                        } else {
+                            $(target).empty().html('Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.');
+                        }
+                    }
+                    if (toggle) {
+                        $(toggle).modal('show');
+                    }
+                });
+                return false;
+            });
+        }
+    }
+})();
+
+var PartialsButtonHeartDetail = (function () {
+    return {
+        setup: function () {
+            $('body').on('click', 'Button.partialbuttonheartdetail', function (event) {
+                event.preventDefault();
+                var url = $(this).attr("data-href");
+                var target = $(this).attr("data-target");            
+                var auth = $(this).attr("data-auth");  
+                var toggle = $(this).data('toggle');
+                var pageFragment = $(this).attr("data-fragment");   
+
+                if (!auth) {                   
+                     $('#review-product-modal').modal('show');
+                     return;
+                }
+
+                // product owner not allow to heart copy from voting....
+                let loginuser  = $('#review-product-modal').find('#loginuser').val();
+                let productcreator  = $('#review-product-modal').find('#productcreator').val();
+                if(loginuser == productcreator){
+                    // ignore
+                     $('#review-product-modal').find('#votelabel').text('Project owner not allowed');
+                     $('#review-product-modal').find('.modal-body').empty();
+                     $('#review-product-modal').modal('show');
+                     return;
+                }
+
                 let spin = $('<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>');
                 $(target).append(spin);
                 $(target).load(url + ' ' + pageFragment, function (response, status, xhr) {
@@ -950,8 +1005,7 @@ var PartialPayPal = (function () {
 var PartialCommentReviewForm = (function () {
     return {
         setup: function () {
-            this.initForm();
-          
+            this.initForm();          
         },
         initForm: function () {
             $('body').on("submit", 'form.product-add-comment-review', function (event) {

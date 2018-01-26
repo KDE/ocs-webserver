@@ -387,6 +387,36 @@ class UserController extends Local_Controller_Action_DomainSwitch
 
         
     }
+
+    public function likesAction()
+    {
+        
+        $tableMember = new Default_Model_Member();
+        $this->view->view_member = $tableMember->fetchMemberData($this->_memberId);
+             
+        //backdore for admins
+        $helperUserRole = new Backend_View_Helper_UserRole();
+        $userRoleName = $helperUserRole->userRole();
+        if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+            $this->view->member = $this->view->view_member;
+        } else {
+            $this->view->member = $this->_authMember;
+        }
+        
+        if( $this->view->member ){            
+            $this->view->paramPageId = (int)$this->getParam('page');
+            $model = new Default_Model_DbTable_ProjectFollower();          
+            $offset = $this->view->paramPageId;
+            $list  = $model->fetchLikesForMember($this->view->member->member_id);
+            $list->setItemCountPerPage(250);
+            $list->setCurrentPageNumber($offset);
+             $this->view->likes  = $list;
+        }else{
+            $this->view->likes= array();             
+        }
+
+        
+    }
     
     public function payoutAction()
     {
