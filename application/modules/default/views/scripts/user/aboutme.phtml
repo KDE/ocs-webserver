@@ -63,7 +63,7 @@ $isSupporter = $this->stat['donationIssupporter'];
                                 </figure>
                                 <h1><span class="lightblue"><?php echo $this->member->username; ?></span></h1>
                                 <?php if($this->member->firstname ) :?>
-                                <span class="glyphicon glyphicon-user"></spa
+                                <span class="glyphicon glyphicon-user"></span>
                                 <span class="text"><?php echo $this->member->firstname; ?>&nbsp;<?php echo $this->member->lastname; ?> </span>
                                 <?php endif; ?>
 
@@ -86,9 +86,19 @@ $isSupporter = $this->stat['donationIssupporter'];
                                     <div class="row">
                                        <span class="cnt"><?=$this->stat['cntComments']?> </span> Comments
                                     </div>
+                                    <div class="row">
+                                       Likes <span class="cnt"> <?=$this->stat['cntLikesHeGave']?> </span>Products
+                                    </div>
+                                    <div class="row">
+                                       Got <span class="cnt"> <?=$this->stat['cntLikesHeGot']?> </span>Likes <i class="fa fa-heart" style="color:#8e44ad" aria-hidden="true"></i>
+
+                                    </div>
+                                    <?php /*
                                      <div class="row">
                                        <span class="cnt"><?=$this->stat['cntPageviews']?> </span> Pageviews
                                     </div>
+                                    */
+                                    ?>
                                   <?php 
                                       if($this->stat['donationMax'] !=null && !$isSupporter){ // inactive supporter
                                   ?>
