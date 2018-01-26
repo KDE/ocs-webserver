@@ -1,0 +1,121 @@
+<?php
+    if (false === empty($this->result['facet_fields'])) :
+        $helperUrl = new Zend_View_Helper_Url();
+
+        $modelCategories = new Default_Model_ProjectCategory();
+        $mapCategories = $modelCategories->fetchCatNames();
+
+        $mapFields = array('project_category_id' => 'Category', 'tags' => 'Tags', 'laplace_score' => 'Score');
+        $mapUrlIdent = array('project_category_id' => 'pci', 'tags' => 't', 'laplace_score' => 'ls');
+        $mapCurrentParam = array('project_category_id' => $this->pci, 'tags' => $this->t, 'laplace_score' => $this->ls);
+
+        $currentCat = $this->pci;
+        $currentScore = $this->ls;
+        $urlCatPart = $this->pci ? array('pci'=>$this->pci) : array();
+        $urlScorePart = $this->ls ? array('ls'=>$this->ls) : array();
+
+        function printCatFilter($facet_field, $currentCat, $helperUrl, $mapCategories) {
+            foreach ($facet_field as $key =>$count) { ?>
+                <?php if ($key == $currentCat) : ?>
+                    <a href="<?=$helperUrl->url(array('projectSearchText'=>$this->searchText, 'page'=>$this->page, 'pci' => null))?>" class="list-group-item small active">
+                        <span class="glyphicon glyphicon-remove text-danger pull-left" aria-hidden="true" style="margin-right: 2px;top:2px;color:white;"></span><?= $mapCategories[intval($key)]?> <span class="badge pull-right small" style="font-weight: normal;"><?=$count?></span>
+                    </a>
+                <?php else : ?>
+                    <a href="<?=$helperUrl->url(array('projectSearchText'=>$this->searchText, 'page'=>$this->page, 'pci'=>$key))?>" class="list-group-item small">
+                        <?= $mapCategories[intval($key)]?> <span class="badge pull-right small" style="font-weight: normal;"><?=$count?></span>
+                    </a>
+                <?php endif; ?>
+                <?php
+            }
+        }
+
+        ?>
+<div class="panel-group">
+    <div class="panel panel-default">
+        <h4 style="font-weight: 600;padding:10px 15px;">Refine your search:</h4>
+    </div>
+</div>
+
+<div class="panel-group">
+    <div class="panel panel-default" id="accordionFilter">
+        <?php
+        foreach ($this->result['facet_fields'] as $field_name => $facet_field) {?>
+        <div class="panel-heading" role="tab" id="filterOne">
+            <h4><a role="button" data-toggle="collapse" data-parent="#accordionFilter" href="#collapse<?=$mapFields[$field_name]?>"> <?=$mapFields[$field_name]?>: </h4></a>
+        </div>
+
+        <div id="collapse<?=$mapFields[$field_name]?>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+            <div class="list-group">
+                <?php
+                if ('Category' == $mapFields[$field_name]) : ?>
+                    <?php foreach ($facet_field as $key =>$count) { ?>
+                        <?php if ($key == $currentCat) : ?>
+                        <a href="<?=$helperUrl->url(array('projectSearchText'=>$this->searchText, 'page'=>$this->page, 'pci' => null))?>" class="list-group-item small active">
+                            <span class="glyphicon glyphicon-remove text-danger pull-left" aria-hidden="true" style="margin-right: 2px;top:2px;color:white;"></span><?= $mapCategories[intval($key)]?> <span class="badge pull-right small" style="font-weight: normal;"><?=$count?></span>
+                        </a>
+                        <?php else : ?>
+                        <a href="<?=$helperUrl->url(array('projectSearchText'=>$this->searchText, 'page'=>$this->page, 'pci'=>$key))?>" class="list-group-item small">
+                            <?= $mapCategories[intval($key)]?> <span class="badge pull-right small" style="font-weight: normal;"><?=$count?></span>
+                        </a>
+                        <?php endif; ?>
+                    <?php
+                     }
+                     ?>
+                <?php else : ?>
+                    <?php foreach ($facet_field as $key =>$count) { ?>
+                        <?php if ($key == $mapCurrentParam[$field_name]) : ?>
+                            <a href="<?=$helperUrl->url(array('projectSearchText'=>$this->searchText, 'page'=>$this->page, $mapUrlIdent[$field_name] => null))?>" class="list-group-item small active">
+                                <span class="glyphicon glyphicon-remove text-danger pull-left" aria-hidden="true" style="margin-right: 2px;top:2px;color:white;"></span><?= $key?> <span class="badge pull-right small" style="font-weight: normal;"><?=$count?></span>
+                            </a>
+                        <?php else : ?>
+                            <a href="<?=$helperUrl->url(array('projectSearchText'=>$this->searchText, 'page'=>$this->page, $mapUrlIdent[$field_name] => $key))?>" class="list-group-item small">
+                                <?= $key?> <span class="badge pull-right small" style="font-weight: normal;"><?=$count?></span>
+                            </a>
+                        <?php endif; ?>
+                        <?php
+                    }
+                    ?>
+                <?php endif; ?>
+            </div>
+        </div>
+        <?php
+        }
+        ?>
+    </div>
+    <div class="panel panel-default" id="accordionRanges">
+        <?php
+        foreach ($this->result['facet_ranges'] as $field_name => $facet_field) {?>
+        <div class="panel-heading" role="tab" id="filterOne">
+            <h4><a role="button" data-toggle="collapse" data-parent="#accordionRanges" href="#collapse<?=$mapFields[$field_name]?>"> <?=$mapFields[$field_name]?>: </h4></a>
+        </div>
+
+        <div id="collapse<?=$mapFields[$field_name]?>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+            <div class="list-group">
+
+                <?php foreach ($facet_field->counts as $key =>$count) { ?>
+                <?php if ($key == $mapCurrentParam[$field_name]) : ?>
+                <a href="<?=$helperUrl->url(array('projectSearchText'=>$this->searchText, 'page'=>$this->page, 'ls' => null))?>" class="list-group-item small active">
+                    <span class="glyphicon glyphicon-remove text-danger pull-left" aria-hidden="true" style="margin-right: 2px;top:3px;color:white;"></span><?=intval($key)?><span class="badge pull-right small" style="font-weight: normal;"><?=$count?></span>
+                </a>
+                <?php else :?>
+                <a href="<?=$helperUrl->url(array('projectSearchText'=>$this->searchText, 'page'=>$this->page, 'ls' =>intval($key)))?>" class="list-group-item small">
+                    <?=intval($key)?><span class="badge pull-right small" style="font-weight: normal;"><?=$count?></span>
+                </a>
+                <?php endif; ?>
+                <?php
+                }
+                ?>
+            </div>
+        </div>
+            <?php
+        }
+        ?>
+    </div>
+</div>
+    <script type="application/javascript">
+        $(document).ready(function(){
+            $('a.active').parents('div.panel-collapse').addClass('in');
+        });
+    </script>
+<?php
+    endif;

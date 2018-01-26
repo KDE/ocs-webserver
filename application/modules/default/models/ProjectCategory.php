@@ -177,4 +177,24 @@ class Default_Model_ProjectCategory
         return Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
     }
 
+    public function fetchCatNamesForCurrentStore()
+    {
+        $list_cat_id = self::fetchCatIdsForCurrentStore();
+
+        $sql = "SELECT project_category_id, title FROM project_category WHERE project_category_id IN (".implode(',', $list_cat_id).")";
+
+        $result = $this->_dataTable->getAdapter()->fetchPairs($sql);
+
+        return $result;
+    }
+
+    public function fetchCatNames()
+    {
+        $sql = "SELECT project_category_id, title FROM project_category";
+
+        $result = $this->_dataTable->getAdapter()->fetchPairs($sql);
+
+        return $result;
+    }
+
 }

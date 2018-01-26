@@ -1,9 +1,13 @@
 <?php
-$param = array('q' => $this->searchText ,'page' => $this->page, 'count' => 10, 'qf' => $this->searchField);
+$filterScore = $this->ls ? 'laplace_score:['.$this->ls.' TO '.($this->ls+9).']':null;
+$filterCat = $this->pci ? 'project_category_id:('.$this->pci.')' : null;
+$filterTags = $this->t ? 'tags:('.$this->t.')' : null;
+$param = array('q' => $this->searchText ,'page' => $this->page, 'count' => 10, 'qf' => $this->searchField, 'fq' => array($filterCat, $filterScore, $filterTags));
 $modelSearch = new Default_Model_Solr();
 try {
     $this->result = $modelSearch->search($param);
 } catch (Exception $e) {
+    Zend_Registry::get('logger')->err(__FILE__.'('.__LINE__.')'.' -- message: '.$e->getTraceAsString());
     $this->result = array('hits' => array(), 'response' => array('numFound' => 0));
 }
 $this->pagination = $pagination = $modelSearch->getPagination();
@@ -18,7 +22,7 @@ $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
         <span class="glyphicon  togglesidebar" id="btnTogglesidebar" ></span>
         <div class="GridFlex">
             <div class="GridFlex-cell sidebar-left" >
-                <?php  $time_start = microtime(true);echo $this->render('explore/partials/filter.phtml'); $time_elapsed = microtime(true) - $time_start; ?>
+                <?php  $time_start = microtime(true);echo $this->render('product/partials/searchFilter.phtml'); $time_elapsed = microtime(true) - $time_start; ?>
                 <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
                     echo '<div class="alert alert-warning" role="alert"><strong>Rendering Time: </strong>'.$time_elapsed.' s</div>';
                 }?>
