@@ -222,7 +222,11 @@ $isSupporter = $this->stat['donationIssupporter'];
                                     Comments (<?=$this->comments->getTotalItemCount()?>)
                                 </a>
                             </li>
-                            
+                            <li>
+                                <a href="#user-favs" data-toggle="tab" role="tab"  aria-controls="user-favs">
+                                    Favs (<?=$this->likes->getTotalItemCount()?>)
+                                </a>
+                            </li>
                           
                         </ul>
                         </div>
@@ -288,6 +292,11 @@ $isSupporter = $this->stat['donationIssupporter'];
                             <div  role="tabpanel" class="tab-pane " id="user-comments">                                    
                                   <?php echo $this->render('user/partials/loopMyComments.phtml'); ?>
                             </div>
+                            <div  role="tabpanel" class="tab-pane " id="user-favs">       
+                                    <div class="my-fav-list">                                                                   
+                                  <?php echo $this->render('user/partials/aboutme-likes.phtml'); ?>
+                                  </div>
+                            </div>                            
 
                         </div>
 
@@ -409,6 +418,7 @@ $isSupporter = $this->stat['donationIssupporter'];
     '    $(document).ready(function(){
              AboutMePage.setup("'.$this->member->username.'");
             AboutMeMyProjectsPaging.setup();
+            AboutMeMyProjectsPagingButton.setup();
         });
     ');
 

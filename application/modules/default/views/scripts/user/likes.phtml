@@ -21,7 +21,6 @@
  **/
 
 $this->tab = 'likes';
-$identity = Zend_Auth::getInstance()->getStorage()->read();
 $pageCount = $this->likes->getTotalItemCount()/$this->likes->getItemCountPerPage();
 ?>
 <main class="user-admin-page">
@@ -35,7 +34,7 @@ $pageCount = $this->likes->getTotalItemCount()/$this->likes->getItemCountPerPage
                 <!-- /NAVIGATION -->
              
               <div class="my-products-heading">
-                   <h1 class="page-title left"><?= $this->translate('Likes') ?></h1>                   
+                   <h1 class="page-title left"><?= $this->translate('Favs') ?></h1>                   
                </div>
 
 
@@ -44,7 +43,7 @@ $pageCount = $this->likes->getTotalItemCount()/$this->likes->getItemCountPerPage
                 <div class="row">
                     <div class="col-lg-12">
                     <small class="pull-right">
-                        <div class="row totaldownloads"><?=$this->likes->getTotalItemCount()?> Likes</div>
+                        <div class="row totaldownloads"><?=$this->likes->getTotalItemCount()?> Favs</div>
                         <?php if ($pageCount > 1) echo $this->paginationControl($this->likes, 'Sliding', '/partials/paginationControlBootstrap.phtml',
                             array('params' => array(), 'dom_target' => 'div#my-downloadshistory-list')); ?>
                       </small>                    
@@ -73,7 +72,10 @@ $pageCount = $this->likes->getTotalItemCount()/$this->likes->getItemCountPerPage
 
 </main>
 
-<?php if (Zend_Auth::getInstance()->hasIdentity() /*&& $this->issupport */ ) { ?>
+<?php
+/*
+ if (Zend_Auth::getInstance()->hasIdentity()  ) { 
+ 	
     <div id="review-product-modal" class="modal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content" style="padding-bottom: 20px">
@@ -94,12 +96,11 @@ $pageCount = $this->likes->getTotalItemCount()/$this->likes->getItemCountPerPage
             </div>
         </div>
     </div>    
-<?php }?>
+}*/
+?>
 <?php
 $this->inlineScript()->appendScript(
-    '    $(document).ready(function(){            
-             PartialsReviewDownloadHistory.setup();
-             PartialCommentReviewForm.setup();
+    '    $(document).ready(function(){                        
              PartialsButton.setup();
         });
     ');

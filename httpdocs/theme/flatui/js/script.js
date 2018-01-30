@@ -1311,7 +1311,13 @@ var AboutMeMyProjectsPaging = (function () {
   return {
       setup: function () {                
         $(window).scroll(function() {
-            if($(window).scrollTop() == $(document).height() - $(window).height()) {
+            
+            var end = $("footer").offset().top;             
+            var viewEnd = $(window).scrollTop() + $(window).height(); 
+            var distance = end - viewEnd; 
+            if (distance < 300){
+            // }
+            // if($(window).scrollTop() == $(document).height() - $(window).height()) {
                     if(!$('button#btnshowmoreproducts').length) return;                        
                     let indicator = '<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>';  
                     let nextpage = $('button#btnshowmoreproducts').attr('data-page');     
@@ -1344,7 +1350,7 @@ var AboutMeMyProjectsPaging = (function () {
   }
 })();
 
-var AboutMeMyProjectsPaging_ = (function () {
+var AboutMeMyProjectsPagingButton = (function () {
   return {
       setup: function () {        
         let indicator = '<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>';               

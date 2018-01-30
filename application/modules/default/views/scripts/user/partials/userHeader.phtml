@@ -62,7 +62,7 @@ $helperMember = new Default_View_Helper_BuildMemberUrl();
     <li class="<?php echo $this->tab == 'likes' ? 'active' : ''; ?>">
         <a href="<?php echo $helperMember->buildMemberUrl($this->member->member_id, 'likes'); ?>">
             <i class="fa fa-heart" aria-hidden="true"></i>
-            <?= $this->translate('Likes') ?>
+            <?= $this->translate('Favs') ?>
         </a>
     </li>
     

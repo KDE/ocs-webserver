@@ -1,17 +1,5 @@
 
-<?php
 
-$userRateData = $this->fetchRate($this->file->project_id, $this->member_id);
-$userrate ="data-userrate='-1'";
-$comment="data-comment=''";
-if($userRateData){
-	$userrate ="data-userrate='".$userRateData['user_like']."'";	
-	$comment="data-comment='".$userRateData['comment_text']."'";		
-}		
-$formproject="data-project='".$this->file->project_id."'";
-$attrhistory = $userrate.' '.$comment.' '.$formproject;
-
-?>
 <div class="row smaller header" >
 	<div class="col-lg-5 col-md-5">
 		<figure>
@@ -38,32 +26,7 @@ $attrhistory = $userrate.' '.$comment.' '.$formproject;
 		
 	</div>
 	
-	<div class="col-lg-2" >
-		<?php if($this->file->project_member_id<> $this->authMember->member_id)
-			{
-				$votedownactive = "";
-				$voteupactive = "";
-				if($userRateData && $userRateData['user_like']>0){				
-					$voteupactive = "active";												
-				}else{						
-					if($userRateData) $votedownactive = "active";						
-				}
-								
-			?>
-			<button <?=$attrhistory ?>  class="btn btn-danger  partialReviewDownloadHistory voting votedown <?=$votedownactive?>"  name="votedown"> <span class="glyphicon glyphicon-minus" ></span></button>
-			<button <?=$attrhistory ?>  class="btn btn-success partialReviewDownloadHistory voting voteup <?=$voteupactive?> "  name="voteup"> <span class="glyphicon glyphicon-plus" ></span></button>				    
-		<?php 
-			} 
-		?>
-
-
-	<?php						
-		if($userRateData){
-			echo $userRateData['comment_text'].'   '.$this->printDate($userRateData['created_at']);
-		}
-		?>
-
-	</div>
+	
 	<div class="col-lg-1" >
 		<div id="container-follow<?=$this->file->project_id?>" style="display: block;float:left;margin-right: 3px">		
 		<?php 
@@ -79,9 +42,11 @@ $attrhistory = $userrate.' '.$comment.' '.$formproject;
 		?>
 
 		
-		</div>	
+		</div>			
+	</div>
 
-			
+	<div class="col-lg-2" >
+	<?=$this->printDate($this->file->created_at)?>
 	</div>
 </div>
 
