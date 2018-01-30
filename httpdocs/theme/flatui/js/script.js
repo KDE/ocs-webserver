@@ -679,7 +679,7 @@ var PartialsButton = (function () {
 var PartialsButtonHeartDetail = (function () {
     return {
         setup: function () {
-            $('body').on('click', 'Button.partialbuttonheartdetail', function (event) {
+            $('body').on('click', 'i.partialbuttonheartdetail', function (event) {
                 event.preventDefault();
                 var url = $(this).attr("data-href");
                 var target = $(this).attr("data-target");            
@@ -710,7 +710,7 @@ var PartialsButtonHeartDetail = (function () {
                         if (xhr.status == 401) {
                             if (response) {
                                 var data = jQuery.parseJSON(response);
-                                var redirect = data.login_url;
+                                var redirect = data.login_url;                                
                                 if (redirect) {
                                     window.location = redirect;
                                 } else {
