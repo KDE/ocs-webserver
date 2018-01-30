@@ -29,7 +29,8 @@ if($this->authMember){
 	$isFollower = $this->userFollowsProject($member_id, $this->project_id);
 }
 
-$heartatt = 'class="partialbuttonheartdetail"';    	
+//$heartatt = 'class="partialbuttonheartdetail"';    	
+$heartatt = '';    	
 if ($member_id && $isFollower) {
 	$urlUserFollows = $this->buildProductUrl($this->project_id, 'unfollowp');					
 }else{
@@ -40,21 +41,21 @@ $heartatt = $heartatt. 'role="button" data-fragment=""  '
 	      .' data-target="#container-follow'.$this->project_id.'"'
 	      .' data-href="'.$urlUserFollows.'"'
 	      .' data-auth="'.$member_id.'"';
-$out = '<button ' .$heartatt.'>';
-
+//$out = '<button ' .$heartatt.'>';
+$out = '';
 if($cntheart>0){
        if ($isFollower){
-            $out = $out. '<i class="fa fa-heart heartproject" aria-hidden="true"></i>';
+            $out = $out. '<i class="fa fa-heart heartproject partialbuttonheartdetail" aria-hidden="true" '.$heartatt.'></i>';
             $out = $out. '<span class="heartnumber small">'.$cntheart.'</span>';
        }else{
-            $out = $out. '<i class="fa fa-heart-o heartgrey" aria-hidden="true"></i>';
+            $out = $out. '<i class="fa fa-heart-o heartgrey partialbuttonheartdetail" aria-hidden="true" '.$heartatt.'></i>';
             $out = $out. '<span class="heartnumber heartnumberpurple small">'.$cntheart.'</span>';
        }
 }else{
-            $out = $out. '<i class="fa fa-heart-o heartgrey" aria-hidden="true"></i>';        
+            $out = $out. '<i class="fa fa-heart-o heartgrey partialbuttonheartdetail" aria-hidden="true" '.$heartatt.'></i>';        
 }
 
- $out = $out.'</button>';
+ //$out = $out.'</button>';
 
 echo $out;
 ?>
