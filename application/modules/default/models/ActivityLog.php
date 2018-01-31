@@ -108,6 +108,7 @@ class Default_Model_ActivityLog extends Default_Model_DbTable_ActivityLog
         103 => 'member',
         104 => 'undefined',
         107 => 'member',
+        110 => 'member',
         108 => 'undefined',
         109 => 'undefined',
         150 => 'member',
