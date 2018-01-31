@@ -39,93 +39,60 @@ class Default_Model_MemberEmail
     }
 
     /**
-     * @param int $user_name
-     * @param string $member_email
-     * @return string
-     */
-    public static function getVerificationValue($user_name, $member_email)
-    {
-        return md5($user_name . $member_email . time());
-    }
-
-    /**
-     * @param int $member_id
+     * @param int  $member_id
      * @param bool $email_deleted
+     *
      * @return array
+     * @throws Zend_Db_Statement_Exception
+     * @throws Zend_Db_Table_Exception
      */
-    public function fetchAllMailAdresses($member_id, $email_deleted = false)
+    public function fetchAllMailAddresses($member_id, $email_deleted = false)
     {
-        $deleted = $email_deleted === true ? Default_Model_DbTable_MemberEmail::EMAIL_DELETED : Default_Model_DbTable_MemberEmail::EMAIL_NOT_DELETED;
-        $sql = "SELECT * FROM {$this->_dataTable->info('name')} WHERE `email_member_id` = :memberId AND `email_deleted` = :emailDeleted";
+        $deleted = $email_deleted === true ? Default_Model_DbTable_MemberEmail::EMAIL_DELETED
+            : Default_Model_DbTable_MemberEmail::EMAIL_NOT_DELETED;
+        $sql =
+            "SELECT * FROM {$this->_dataTable->info('name')} WHERE `email_member_id` = :memberId AND `email_deleted` = :emailDeleted";
         $stmnt = $this->_dataTable->getAdapter()->query($sql, array('memberId' => $member_id, 'emailDeleted' => $deleted));
+
         return $stmnt->fetchAll();
     }
 
+    /**
+     * @param $emailId
+     * @param $member_id
+     *
+     * @return bool
+     * @throws Zend_Db_Statement_Exception
+     * @throws Zend_Db_Table_Exception
+     */
     public function setDefaultEmail($emailId, $member_id)
     {
         $result = $this->resetDefaultMailAddress($member_id);
         $this->_dataTable->setPrimary($emailId);
         $this->updateMemberPrimaryMail($member_id); /* if we change the mail in member table, we change the login. */
+        Default_Model_ActivityLog::logActivity($member_id, null, $member_id, Default_Model_ActivityLog::MEMBER_EMAIL_CHANGED);
+
         return true;
-    }
-
-    private function resetDefaultMailAddress($member_id)
-    {
-        $sql = "update member_email set email_primary = 0 where email_member_id = :member_id and email_primary = 1";
-        return $this->_dataTable->getAdapter()->query($sql, array('member_id' => $member_id))->execute();
-    }
-
-    /**
-     * @param string $verification
-     * @return int count of updated rows
-     */
-    public function verificationEmail($verification)
-    {
-        $sql = "update member_email set `email_checked` = NOW() where `email_verification_value` = :verification and `email_deleted` = 0 and `email_checked` is null";
-        $stmnt = $this->_dataTable->getAdapter()->query($sql, array('verification' => $verification));
-        return $stmnt->rowCount();
-    }
-
-    /**
-     * @param int $user_id
-     * @param string $user_mail
-     * @param null|string $user_verification
-     * @return Zend_Db_Table_Row_Abstract
-     */
-    public function saveEmail($user_id, $user_mail, $user_verification = null)
-    {
-        $data = array();
-        $data['email_member_id'] = $user_id;
-        $data['email_address'] = $user_mail;
-        $data['email_verification_value'] = empty($user_verification) ? Default_Model_MemberEmail::getVerificationValue($user_id, $user_mail) : $user_verification;
-
-        return $this->_dataTable->save($data);
-    }
-
-    /**
-     * @param int $user_id
-     * @param string $user_mail
-     * @param null|string $user_verification
-     * @return Zend_Db_Table_Row_Abstract
-     */
-    public function saveEmailAsPrimary($user_id, $user_mail, $user_verification = null)
-    {
-        $data = array();
-        $data['email_member_id'] = $user_id;
-        $data['email_address'] = $user_mail;
-        $data['email_verification_value'] = empty($user_verification) ? Default_Model_MemberEmail::getVerificationValue($user_id, $user_mail) : $user_verification;
-        $data['email_primary'] = Default_Model_DbTable_MemberEmail::EMAIL_PRIMARY;
-
-        $result = $this->_dataTable->save($data);
-
-        $this->updateMemberPrimaryMail($user_id);
-
-        return $result;
     }
 
     /**
      * @param $member_id
+     *
+     * @return bool
+     * @throws Zend_Db_Statement_Exception
+     */
+    private function resetDefaultMailAddress($member_id)
+    {
+        $sql = "UPDATE member_email SET email_primary = 0 WHERE email_member_id = :member_id AND email_primary = 1";
+
+        return $this->_dataTable->getAdapter()->query($sql, array('member_id' => $member_id))->execute();
+    }
+
+    /**
+     * @param $member_id
+     *
      * @return mixed
+     * @throws Zend_Db_Table_Exception
      */
     private function updateMemberPrimaryMail($member_id)
     {
@@ -136,18 +103,22 @@ class Default_Model_MemberEmail
 
     /**
      * @param $member_id
+     *
      * @return mixed
+     * @throws Zend_Db_Table_Exception
      */
     public function fetchMemberPrimaryMail($member_id)
     {
         $sql = "select * from {$this->_dataTable->info('name')} where email_member_id = :member_id and email_primary = 1";
         $dataEmail = $this->_dataTable->getAdapter()->fetchRow($sql, array('member_id' => $member_id));
+
         return $dataEmail;
     }
 
     /**
      * @param $member_id
      * @param $dataEmail
+     *
      * @return mixed
      */
     protected function saveMemberPrimaryMail($member_id, $dataEmail)
@@ -156,7 +127,81 @@ class Default_Model_MemberEmail
         $dataMember = $modelMember->fetchMemberData($member_id);
         $dataMember->mail = $dataEmail['email_address'];
         $dataMember->mail_checked = isset($dataEmail['email_checked']) ? 1 : 0;
+
         return $dataMember->save();
+    }
+
+    /**
+     * @param string $verification
+     *
+     * @return int count of updated rows
+     * @throws Zend_Db_Statement_Exception
+     */
+    public function verificationEmail($verification)
+    {
+        $sql =
+            "UPDATE member_email SET `email_checked` = NOW() WHERE `email_verification_value` = :verification AND `email_deleted` = 0 AND `email_checked` IS NULL";
+        $stmnt = $this->_dataTable->getAdapter()->query($sql, array('verification' => $verification));
+
+        return $stmnt->rowCount();
+    }
+
+    /**
+     * @param int         $user_id
+     * @param string      $user_mail
+     * @param null|string $user_verification
+     *
+     * @return Zend_Db_Table_Row_Abstract
+     * @throws Exception
+     */
+    public function saveEmail($user_id, $user_mail, $user_verification = null)
+    {
+        $data = array();
+        $data['email_member_id'] = $user_id;
+        $data['email_address'] = $user_mail;
+        $data['email_verification_value'] =
+            empty($user_verification) ? Default_Model_MemberEmail::getVerificationValue($user_id, $user_mail) : $user_verification;
+
+        Default_Model_ActivityLog::logActivity($user_id, null, $user_id, Default_Model_ActivityLog::MEMBER_EMAIL_CHANGED, array('description' => 'user saved new mail address: ' . $user_mail));
+
+        return $this->_dataTable->save($data);
+    }
+
+    /**
+     * @param int    $user_name
+     * @param string $member_email
+     *
+     * @return string
+     */
+    public static function getVerificationValue($user_name, $member_email)
+    {
+        return md5($user_name . $member_email . time());
+    }
+
+    /**
+     * @param int         $user_id
+     * @param string      $user_mail
+     * @param null|string $user_verification
+     *
+     * @return Zend_Db_Table_Row_Abstract
+     * @throws Exception
+     */
+    public function saveEmailAsPrimary($user_id, $user_mail, $user_verification = null)
+    {
+        $data = array();
+        $data['email_member_id'] = $user_id;
+        $data['email_address'] = $user_mail;
+        $data['email_verification_value'] =
+            empty($user_verification) ? Default_Model_MemberEmail::getVerificationValue($user_id, $user_mail) : $user_verification;
+        $data['email_primary'] = Default_Model_DbTable_MemberEmail::EMAIL_PRIMARY;
+
+        $result = $this->_dataTable->save($data);
+
+        $this->updateMemberPrimaryMail($user_id);
+
+        Default_Model_ActivityLog::logActivity($user_id, null, $user_id, Default_Model_ActivityLog::MEMBER_EMAIL_CHANGED, array('description' => 'user saved new primary mail address: ' . $user_mail));
+
+        return $result;
     }
 
 }
