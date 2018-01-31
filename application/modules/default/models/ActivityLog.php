@@ -60,6 +60,7 @@ class Default_Model_ActivityLog extends Default_Model_DbTable_ActivityLog
     const MEMBER_DELETED = 102;
     const MEMBER_EMAIL_CONFIRMED = 103;
     const MEMBER_EDITED = 107;
+    const MEMBER_PAYPAL_CHANGED = 110;
     const MEMBER_FOLLOWED = 150;
     const MEMBER_UNFOLLOWED = 151;
     const MEMBER_SHARED = 152;

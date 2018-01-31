@@ -1164,6 +1164,15 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                     //$this->view->member = $showMember;
                     $this->_memberTable->update(array('paypal_valid_status' => null),
                         'member_id = ' . $this->_memberId);
+                    
+                    //Log if paypal changes
+                    
+                    $desc = 'Paypal-Address changed from ';
+                    if(isset($this->_memberSettings->paypal_mail)) {
+                        $desc .= $this->_memberSettings->paypal_mail;
+                    }
+                    $desc .= ' to '.$values['paypal_mail'];
+                    Default_Model_ActivityLog::logActivity($this->_memberSettings->member_id, null, $this->_memberId, Default_Model_ActivityLog::MEMBER_PAYPAL_CHANGED, array('title' => '', 'description' => $desc));
                 }
 
                 $this->_memberSettings->paypal_mail = $values['paypal_mail'];
