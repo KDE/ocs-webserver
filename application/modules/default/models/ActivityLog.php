@@ -58,9 +58,7 @@ class Default_Model_ActivityLog extends Default_Model_DbTable_ActivityLog
     const MEMBER_JOINED = 100;
     const MEMBER_UPDATED = 101;
     const MEMBER_DELETED = 102;
-    const MEMBER_EMAIL_CONFIRMED = 103;
     const MEMBER_EDITED = 107;
-    const MEMBER_PAYPAL_CHANGED = 110;
     const MEMBER_FOLLOWED = 150;
     const MEMBER_UNFOLLOWED = 151;
     const MEMBER_SHARED = 152;
@@ -73,6 +71,12 @@ class Default_Model_ActivityLog extends Default_Model_DbTable_ActivityLog
     const BACKEND_PROJECT_CAT_CHANGE = 316;
     const BACKEND_PROJECT_PLING_EXCLUDED = 318;
     const BACKEND_USER_DELETE = 320;
+    //internal system logs
+    const MEMBER_EMAIL_CONFIRMED = 401;
+    const MEMBER_EMAIL_CHANGED = 402;
+    const MEMBER_PAYPAL_CHANGED = 410;
+    
+    
 
     protected static $referenceType = array(
         0   => 'project',
@@ -105,10 +109,8 @@ class Default_Model_ActivityLog extends Default_Model_DbTable_ActivityLog
         100 => 'member',
         101 => 'member',
         102 => 'member',
-        103 => 'member',
         104 => 'undefined',
         107 => 'member',
-        110 => 'member',
         108 => 'undefined',
         109 => 'undefined',
         150 => 'member',
@@ -124,7 +126,10 @@ class Default_Model_ActivityLog extends Default_Model_DbTable_ActivityLog
         314 => 'backend',
         316 => 'backend',
         318 => 'backend',
-        320 => 'backend'
+        320 => 'backend',
+        401 => 'member',
+        402 => 'member_email',
+        410 => 'member'
     );
 
     /**
