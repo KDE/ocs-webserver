@@ -54,7 +54,7 @@ class Default_Model_Solr
                 'facet'       => 'true',
                 'facet.field' => array('project_category_id','tags'),
                 'facet.mincount' => '1',
-                'facet.limit' => '10',
+//                'facet.limit' => '10',
                 'facet.sort'  => 'count',
                 'facet.range' => 'laplace_score',
                 'facet.range.start' => '0',

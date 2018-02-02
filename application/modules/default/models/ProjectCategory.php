@@ -54,6 +54,8 @@ class Default_Model_ProjectCategory
      * @param bool     $clearCache
      *
      * @return array
+     * @throws Zend_Cache_Exception
+     * @throws Zend_Exception
      */
     public function fetchCategoryTreeForStore($store_id = null, $clearCache = false)
     {
@@ -150,6 +152,13 @@ class Default_Model_ProjectCategory
         return (int)$result['count_product'];
     }
 
+    /**
+     * @param bool $clearCache
+     *
+     * @return array|false|mixed
+     * @throws Zend_Cache_Exception
+     * @throws Zend_Exception
+     */
     public function fetchCategoryTreeCurrentStore($clearCache = false)
     {
         $store_config = Zend_Registry::get('store_config');
@@ -172,11 +181,19 @@ class Default_Model_ProjectCategory
         return $tree;
     }
 
+    /**
+     * @return mixed|null
+     * @throws Zend_Exception
+     */
     public static function fetchCatIdsForCurrentStore()
     {
         return Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
     }
 
+    /**
+     * @return array
+     * @throws Zend_Exception
+     */
     public function fetchCatNamesForCurrentStore()
     {
         $list_cat_id = self::fetchCatIdsForCurrentStore();
@@ -188,6 +205,9 @@ class Default_Model_ProjectCategory
         return $result;
     }
 
+    /**
+     * @return array
+     */
     public function fetchCatNames()
     {
         $sql = "SELECT project_category_id, title FROM project_category";
