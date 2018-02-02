@@ -1858,7 +1858,11 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 array(
                     '*' => 'StringTrim',
                     'projectSearchText' => array(new Zend_Filter_Callback('stripslashes'),'StripTags'),
-                    'page' => 'digits'),
+                    'page' => 'digits',
+                    'pci' => 'digits',
+                    'ls'  => 'digits',
+                    't' => array(new Zend_Filter_Callback('stripslashes'),'StripTags')
+                ),
                 array(
                     'projectSearchText' => array(
                         new Zend_Validate_StringLength(array('min' => 3, 'max' => 100)),
@@ -1869,7 +1873,15 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                         new Zend_Validate_StringLength(array('min' => 3, 'max' => 100)),
                         new Zend_Validate_InArray(array('f'=>'tags')),
                         'allowEmpty' => true
-                    )
+                    ),
+                    'pci'               => array('digits',
+                        'allowEmpty' => true
+                    ),
+                    'ls'                => array('digits',
+                        'allowEmpty' => true
+                    ),
+                    't'                 => array(new Zend_Validate_StringLength(array('min' => 3, 'max' => 100)),
+                        'allowEmpty' => true)
                 ), $this->getAllParams());
 
         if ($filterInput->hasInvalid()) {
@@ -1880,10 +1892,15 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->view->searchText = $filterInput->getEscaped('projectSearchText');
         $this->view->page = $filterInput->getEscaped('page');
         $this->view->searchField = $filterInput->getEscaped('f');
+        $this->view->pci = $filterInput->getEscaped('pci');
+        $this->view->ls = $filterInput->getEscaped('ls');
+        $this->view->t = $filterInput->getEscaped('t');
     }
 
     /**
      * @param $memberId
+     *
+     * @throws Zend_Db_Table_Exception
      */
     protected function setViewDataForMyProducts($memberId)
     {

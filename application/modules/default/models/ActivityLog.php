@@ -71,6 +71,7 @@ class Default_Model_ActivityLog extends Default_Model_DbTable_ActivityLog
     const BACKEND_PROJECT_CAT_CHANGE = 316;
     const BACKEND_PROJECT_PLING_EXCLUDED = 318;
     const BACKEND_USER_DELETE = 320;
+
     //internal system logs
     const MEMBER_EMAIL_CONFIRMED = 401;
     const MEMBER_EMAIL_CHANGED = 402;

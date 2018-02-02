@@ -1,0 +1,157 @@
+<?php
+    if (false === empty($this->result['facet_fields'])) :
+        $helperUrl = new Zend_View_Helper_Url();
+
+        $modelCategories = new Default_Model_ProjectCategory();
+        $mapCategories = $modelCategories->fetchCatNames();
+
+        $mapFields = array('project_category_id' => 'Category', 'tags' => 'Tags', 'laplace_score' => 'Score');
+        $mapUrlIdent = array('project_category_id' => 'pci', 'tags' => 't', 'laplace_score' => 'ls');
+        $mapCurrentParam = array('project_category_id' => $this->pci, 'tags' => $this->t, 'laplace_score' => $this->ls);
+
+        $currentCat = $this->pci;
+        $currentScore = $this->ls;
+        $currentTag = $this->t;
+        $urlCatPart = $this->pci ? array('pci'=>$this->pci) : array();
+        $urlScorePart = $this->ls ? array('ls'=>$this->ls) : array();
+
+        ?>
+    <style>
+        .refine-search-group > ul.dropdown-menu {
+            min-width: 100%;
+        }
+        .refine-search-group > button {
+            text-align: left;
+            min-width: 100%;
+            background-color: #fff;
+            border-color: #ccc;
+            color: #333;
+        }
+        .refine-search-group button span.caret {
+            position: absolute;
+            top: 20px;
+            right: 15px;
+        }
+        .refine-search-group .dropdown-menu > li > a > span.badge {
+            font-weight: normal;
+            font-size: smaller;
+            position: absolute;
+            top: 3px;
+            right: 3px;
+        }
+        .refine-search-group .dropdown-menu > li > a {
+            position: relative;
+            padding: 3px 10px;
+        }
+        .refine-search-group .no-tags-msg {
+            padding-left: 10px;
+        }
+        .refine-search-header .btn-xs {
+            font-size: 12px;
+            line-height: 1.5;
+            padding: 1px 5px;
+        }
+        .refine-search-header .current-search {
+            padding-left: 2px;
+            padding-right: 2px;
+            padding-bottom: 1px;
+        }
+    </style>
+<div class="panel-group">
+    <div class="panel panel-default refine-search-header">
+        <h4 style="font-weight: 600;padding:10px 15px;">Refine your search:</h4>
+        <div class="current-search">
+        <?php if ($currentCat) : ?>
+        <a href="<?=$helperUrl->url(array('projectSearchText'=>$this->searchText, 'page'=>$this->page, 'pci' => null))?>" class="btn btn-default btn-xs" role="button">
+            <span class="glyphicon glyphicon-remove text-danger" aria-hidden="true" style="margin-right: 2px;top:2px;"></span><?= $mapCategories[intval($currentCat)]?> </span>
+        </a>
+        <?php endif; ?>
+        <?php if ($currentTag) : ?>
+            <a href="<?=$helperUrl->url(array('projectSearchText'=>$this->searchText, 'page'=>$this->page, 't' => null))?>" class="btn btn-default btn-xs" role="button">
+                <span class="glyphicon glyphicon-remove text-danger" aria-hidden="true" style="margin-right: 2px;top:2px;"></span><?= $currentTag?>
+            </a>
+        <?php endif; ?>
+        <?php if ($currentScore) : ?>
+            <a href="<?=$helperUrl->url(array('projectSearchText'=>$this->searchText, 'page'=>$this->page, 'ls' => null))?>" class="btn btn-default btn-xs" role="button">
+                <span class="glyphicon glyphicon-remove text-danger" aria-hidden="true" style="margin-right: 2px;top:2px;"></span><?= $currentScore?>
+            </a>
+        <?php endif; ?>
+        </div>
+    </div>
+</div>
+
+<div class="panel-group">
+    <div class="panel panel-default">
+        <?php
+        foreach ($this->result['facet_fields'] as $field_name => $facet_field) {?>
+        <div class="panel-body">
+         <div class="dropdown refine-search-group">
+            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"><?=$mapFields[$field_name]?> <span class="caret"></span></button>
+            <ul class="dropdown-menu">
+            <?php
+                if ('Category' == $mapFields[$field_name]) : ?>
+                    <?php foreach ($facet_field as $key =>$count) { ?>
+                        <?php if ($key == $currentCat) : ?>
+                        <li><a href="<?=$helperUrl->url(array('projectSearchText'=>$this->searchText, 'page'=>$this->page, 'pci' => null))?>" class="active">
+                            <span class="glyphicon glyphicon-remove text-danger" aria-hidden="true" style="margin-right: 2px;top:2px;"></span><?= $mapCategories[intval($key)]?> <span class="badge"><?=$count?></span>
+                        </a></li>
+                        <?php else : ?>
+                        <li><a href="<?=$helperUrl->url(array('projectSearchText'=>$this->searchText, 'page'=>$this->page, 'pci'=>$key))?>">
+                            <?= $mapCategories[intval($key)]?> <span class="badge"><?=$count?></span></a>
+                        </li>
+                        <?php endif; ?>
+                    <?php
+                     }
+                     ?>
+                <?php else : ?>
+                    <?php if (count((array)$facet_field) == 0) :?>
+                    <li><span class="no-tags-msg"> no tags found </span></li>
+                    <?php endif; ?>
+                    <?php foreach ($facet_field as $key =>$count) { ?>
+                        <?php if ($key == $mapCurrentParam[$field_name]) : ?>
+                            <li><a href="<?=$helperUrl->url(array('projectSearchText'=>$this->searchText, 'page'=>$this->page, $mapUrlIdent[$field_name] => null))?>" class="active">
+                                <span class="glyphicon glyphicon-remove text-danger" aria-hidden="true" style="margin-right: 2px;top:2px;"></span><?= $key?> <span class="badge"><?=$count?></span>
+                                </a></li>
+                        <?php else : ?>
+                            <li><a href="<?=$helperUrl->url(array('projectSearchText'=>$this->searchText, 'page'=>$this->page, $mapUrlIdent[$field_name] => $key))?>" >
+                                <?= $key?> <span class="badge"><?=$count?></span>
+                                </a></li>
+                        <?php endif; ?>
+                        <?php
+                    }
+                    ?>
+                <?php endif; ?>
+            </ul>
+         </div>
+        </div>
+        <?php
+        }
+        ?>
+    <?php
+    foreach ($this->result['facet_ranges'] as $field_name => $facet_field) {?>
+    <div class="panel-body">
+      <div class="dropdown refine-search-group">
+        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"><?=$mapFields[$field_name]?> <span class="caret"></span></button>
+        <ul class="dropdown-menu">
+        <?php foreach ($facet_field->counts as $key =>$count) { ?>
+                <?php if ($key == $mapCurrentParam[$field_name]) : ?>
+                <li><a href="<?=$helperUrl->url(array('projectSearchText'=>$this->searchText, 'page'=>$this->page, 'ls' => null))?>" class="active">
+                    <span class="glyphicon glyphicon-remove text-danger pull-left" aria-hidden="true" style="margin-right: 2px;top:3px;color:white;"></span><?=intval($key)?><span class="badge"><?=$count?></span>
+                </a></li>
+                <?php else :?>
+                <li><a href="<?=$helperUrl->url(array('projectSearchText'=>$this->searchText, 'page'=>$this->page, 'ls' =>intval($key)))?>" >
+                    <?=intval($key)?><span class="badge"><?=$count?></span>
+                </a></li>
+                <?php endif; ?>
+
+        <?php } ?>
+        </ul>
+      </div>
+    </div>
+    <?php
+     }
+    ?>
+    </div>
+</div>
+<?php
+    endif;
