@@ -168,7 +168,11 @@ class Default_Model_Solr
         if (empty($op['fq'])) {
             return $params;
         }
-        $params['fq'] = array_merge($params['fq'],$op['fq']);
+        if (false === is_array($params['fq'])) {
+            $params['fq'] = $op['fq'];
+        } else {
+            $params['fq'] = array_merge($params['fq'],$op['fq']);
+        }
         return $params;
     }
 
