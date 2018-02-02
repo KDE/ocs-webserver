@@ -163,12 +163,18 @@ class Default_Model_Solr
         return $params;
     }
 
+    /**
+     * @param array $params
+     * @param array $op
+     *
+     * @return array
+     */
     private function addAnyFilter($params, $op)
     {
         if (empty($op['fq'])) {
             return $params;
         }
-        if (false === is_array($params['fq'])) {
+        if (empty($params['fq'])) {
             $params['fq'] = $op['fq'];
         } else {
             $params['fq'] = array_merge($params['fq'],$op['fq']);
