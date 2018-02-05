@@ -133,12 +133,13 @@ class Default_Model_Project extends Default_Model_DbTable_Project
      */
     public function setInActive($id)
     {
+        $id = (int)$id;
         $updateValues = array(
             'status'     => self::PROJECT_INACTIVE,
             'deleted_at' => new Zend_Db_Expr('Now()')
         );
 
-        $this->update($updateValues, $this->_db->quoteInto('project_id=?', $id, 'INTEGER'));
+        $this->update($updateValues, 'status > 40 AND project_id='.$id);
 
         $this->setInActiveForUpdates($id);
         $this->setDeletedForComments($id);
@@ -149,12 +150,13 @@ class Default_Model_Project extends Default_Model_DbTable_Project
      */
     protected function setInActiveForUpdates($id)
     {
+        $id = (int)$id;
         $updateValues = array(
             'status'     => self::PROJECT_INACTIVE,
             'changed_at' => new Zend_Db_Expr('Now()')
         );
 
-        $this->update($updateValues, $this->_db->quoteInto('pid=?', $id, 'INTEGER'));
+        $this->update($updateValues, 'status > 40 AND pid='. $id);
     }
 
     private function setDeletedForComments($id)
@@ -168,12 +170,13 @@ class Default_Model_Project extends Default_Model_DbTable_Project
      */
     public function setDeleted($id)
     {
+        $id = (int)$id;
         $updateValues = array(
             'status'     => self::PROJECT_DELETED,
             'deleted_at' => new Zend_Db_Expr('Now()')
         );
 
-        $this->update($updateValues, $this->_db->quoteInto('project_id=?', $id, 'INTEGER'));
+        $this->update($updateValues, 'status > 30 AND project_id='. $id);
 
         $this->setDeletedForUpdates($id);
         $this->setDeletedForComments($id);
@@ -185,12 +188,13 @@ class Default_Model_Project extends Default_Model_DbTable_Project
      */
     protected function setDeletedForUpdates($id)
     {
+        $id = (int)$id;
         $updateValues = array(
             'status'     => self::PROJECT_DELETED,
             'deleted_at' => new Zend_Db_Expr('Now()')
         );
 
-        $this->update($updateValues, $this->_db->quoteInto('pid=?', $id, 'INTEGER'));
+        $this->update($updateValues,'status > 30 AND pid='. $id);
     }
 
     private function setDeletedInMaterializedView($id)
@@ -204,6 +208,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
      * @param int $id
      *
      * @return mixed
+     * @throws Zend_Db_Statement_Exception
      */
     public function fetchActiveBySourcePk($id)
     {

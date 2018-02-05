@@ -51,14 +51,20 @@ class Default_Model_Solr
 //                'sort'       => 'score desc,changed_at desc',
                 //'hl'          => 'on',
                 //'hl.fl'       => 'title, description, username',
-                //'facet'          => 'on',
-                //'facet.field[0]' => 'project_category_id',
-                //'facet.field[1]' => 'username',
-                //'facet.mincount' => '1',
-                'spellcheck' => 'true',
+                'facet'       => 'true',
+                'facet.field' => array('project_category_id','tags'),
+                'facet.mincount' => '1',
+//                'facet.limit' => '10',
+                'facet.sort'  => 'count',
+                'facet.range' => 'laplace_score',
+                'facet.range.start' => '0',
+                'facet.range.end' => '100',
+                'facet.range.gap' => '10',
+                'spellcheck'  => 'true',
             );
 
             $params = $this->setStoreFilter($params);
+            $params = $this->addAnyFilter($params, $op);
 
             $offset = ((int)$op['page'] - 1) * (int)$op['count'];
 
@@ -69,7 +75,8 @@ class Default_Model_Solr
             $output['response'] = (array)$results->response;
             $output['responseHeader'] = (array)$results->responseHeader;
             $output['facet_counts'] = (array)$results->facet_counts;
-            $output['highlighting'] = (array)$results->highlighting;
+            $output['facet_fields'] = (array)$results->facet_counts->facet_fields;
+            $output['facet_ranges'] = (array)$results->facet_counts->facet_ranges;
             $output['hits'] = (array)$results->response->docs;
 
             $pagination_array = array();
@@ -152,7 +159,26 @@ class Default_Model_Solr
         if (substr($currentStoreConfig['order'], -1) <> 1) {
             return $params;
         }
-        $params['fq'] = 'stores:('.$currentStoreConfig['store_id'].')';
+        $params['fq'] = array('stores:('.$currentStoreConfig['store_id'].')');
+        return $params;
+    }
+
+    /**
+     * @param array $params
+     * @param array $op
+     *
+     * @return array
+     */
+    private function addAnyFilter($params, $op)
+    {
+        if (empty($op['fq'])) {
+            return $params;
+        }
+        if (empty($params['fq'])) {
+            $params['fq'] = $op['fq'];
+        } else {
+            $params['fq'] = array_merge($params['fq'],$op['fq']);
+        }
         return $params;
     }
 
