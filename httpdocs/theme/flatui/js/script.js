@@ -679,7 +679,7 @@ var PartialsButton = (function () {
 var PartialsButtonHeartDetail = (function () {
     return {
         setup: function () {
-            $('body').on('click', 'i.partialbuttonheartdetail', function (event) {
+            $('body').on('click', '.partialbuttonheartdetail', function (event) {
                 event.preventDefault();
                 var url = $(this).attr("data-href");
                 var target = $(this).attr("data-target");            
@@ -703,8 +703,9 @@ var PartialsButtonHeartDetail = (function () {
                      return;
                 }
 
-                let spin = $('<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>');
-                $(target).append(spin);
+                let spin = $('<span class="glyphicon glyphicon-refresh spinning" style="opacity: 0.6; z-index:1000;position: relative; left: 0;top: 0px;"></span>');
+                $(target).prepend(spin);
+               
                 $(target).load(url + ' ' + pageFragment, function (response, status, xhr) {
                     if (status == "error") {
                         if (xhr.status == 401) {
@@ -725,6 +726,7 @@ var PartialsButtonHeartDetail = (function () {
                         $(toggle).modal('show');
                     }
                 });
+               
                 return false;
             });
         }
