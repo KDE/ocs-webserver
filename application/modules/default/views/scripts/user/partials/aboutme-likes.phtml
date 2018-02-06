@@ -46,13 +46,11 @@
             </div>            
         </div>
 
-        <div class="col-lg-1" >                                       
+        <div class="col-lg-3" >                                       
                     <i class="fa fa-heart" aria-hidden="true" style="color:#8e44ad;"></i>               
+                    at <?=$this->printDate($file->created_at)?>
         </div>
 
-         <div class="col-lg-2" >                                       
-                 <?=$this->printDate($file->created_at)?>
-        </div>
       </div>
 
  <?php endforeach; ?>
