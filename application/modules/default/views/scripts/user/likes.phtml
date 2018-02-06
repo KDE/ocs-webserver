@@ -72,35 +72,3 @@ $pageCount = $this->likes->getTotalItemCount()/$this->likes->getItemCountPerPage
 
 </main>
 
-<?php
-/*
- if (Zend_Auth::getInstance()->hasIdentity()  ) { 
- 	
-    <div id="review-product-modal" class="modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-sm" role="document">
-            <div class="modal-content" style="padding-bottom: 20px">
-               <div class="modal-header">
-                    <label id="votelabel"> </label>
-                   <button type="button" class="close col-md-1" data-dismiss="modal" aria-label="Close"><span
-                               aria-hidden="true">&times;</span></button>
-               </div>
-               <div class="modal-body">
-                 <form class="full-width product-add-comment-review" action="/productcomment/addreplyreview/" method="post">
-                            <input type="hidden" name="p" id="form_p"/>
-                            <input type="hidden" name="m" value="<?= $identity->member_id ?>" id="loginuser"/>
-                            <input type="hidden" name="v" value="1" id="voteup"/>                                                        
-                            <textarea name="msg" class="full-width" id="commenttext"></textarea>
-                            <button type="submit" class="small pull-right">Rate Now</button>
-                </form>
-                </div>
-            </div>
-        </div>
-    </div>    
-}*/
-?>
-<?php
-$this->inlineScript()->appendScript(
-    '    $(document).ready(function(){                        
-             PartialsButton.setup();
-        });
-    ');
