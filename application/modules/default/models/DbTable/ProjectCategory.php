@@ -850,7 +850,9 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
     /**
      * @param Zend_Db_Table_Row $first
      * @param Zend_Db_Table_Row $second
+     *
      * @return \Zend_Db_Table_Row
+     * @throws Zend_Exception
      * @deprecated
      */
     public function switchElements($first, $second)
