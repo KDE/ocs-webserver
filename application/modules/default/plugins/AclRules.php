@@ -166,6 +166,8 @@ class Default_Plugin_AclRules extends Zend_Acl
                 'rating',
                 'follow',
                 'unfollow',
+                'followp',
+                'unfollowp',
                 'add',
                 'pling',
                 'pay',
