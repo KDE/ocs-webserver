@@ -28,8 +28,8 @@ class Default_Model_DbTable_ProjectFollower extends Zend_Db_Table_Abstract
     {
         $select = $this->_db->select()
             ->from('project_follower')
-            ->joinUsing('project', 'project_id')
-            ->where('project.is_deleted = ?', 0)
+            ->joinUsing('stat_projects', 'project_id')
+            ->where('stat_projects.status = ?',100)
             ->where('project_follower.member_id = ?', $memberId);
         return count($select->query()->fetchAll());
     }
@@ -38,8 +38,8 @@ class Default_Model_DbTable_ProjectFollower extends Zend_Db_Table_Abstract
     {
         $select = $this->_db->select()
             ->from('project_follower')
-            ->joinUsing('project', 'project_id')
-            ->where('project.is_deleted = ?', 0)
+            ->joinUsing('stat_projects', 'project_id')
+            ->where('stat_projects.status = ?', 100)
             ->where('project_follower.member_id = ?', $memberId);
         return count($select->query()->fetchAll());
     }
@@ -48,16 +48,52 @@ class Default_Model_DbTable_ProjectFollower extends Zend_Db_Table_Abstract
     {
         $select = $this->_db->select()
             ->from('project_follower')
-            ->joinUsing('project', 'project_id')
-            ->where('project.is_deleted = ?', 0)            
-            ->where('project.member_id = ?', $memberId);
+            ->joinUsing('stat_projects', 'project_id')
+            ->where('stat_projects.status = ?', 100)            
+            ->where('stat_projects.member_id = ?', $memberId);
         return count($select->query()->fetchAll());
     }
 
      public function countForProject($project_id)
     {
-        $selectArr = $this->_db->fetchRow('SELECT count(*) AS count FROM ' . $this->_name . ' WHERE project_id = ' . $project_id);
-        return $selectArr ['count'];      
+            $selectArr = $this->_db->fetchRow('SELECT count(*) AS count FROM ' . $this->_name . ' WHERE project_id = ' . $project_id);
+            return $selectArr ['count'];      
+    }
+
+     public function fetchLikesForMember($memberId)
+    {
+            // $select = $this->_db->select()
+            //     ->from('project_follower')
+            //     ->joinUsing('stat_projects', 'project_id')
+            //     ->where('stat_projects.status = ?',100)
+            //     ->where('project_follower.member_id = ?', $memberId);                
+            //  $result = $select->query()->fetchAll();
+
+             $sql = "
+                        SELECT 
+                        f.project_id
+                        ,f.member_id
+                        ,f.created_at
+                        ,p.member_id as project_member_id
+                        ,p.project_category_id
+                        ,p.status
+                        ,p.title
+                        ,p.description
+                        ,p.image_small
+                        ,p.project_created_at
+                        ,p.project_changed_at
+                        ,p.laplace_score
+                        ,p.cat_title
+                        ,p.count_likes
+                        ,p.count_dislikes
+                        FROM project_follower f
+                        INNER JOIN stat_projects p ON p.project_id = f.project_id 
+                        WHERE (p.status = 100) AND (f.member_id = :member_id) 
+                        order by f.created_at desc
+             ";
+
+            $resultSet = $this->_db->fetchAll($sql, array('member_id' => $memberId));
+            return new Zend_Paginator(new Zend_Paginator_Adapter_Array($resultSet ));     
     }
 
     /**

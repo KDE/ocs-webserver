@@ -614,7 +614,7 @@ a.partial{
   padding:3px 6px;
 }
 
-.metamenu .dropdown:hover .dropdown-menu {
+.dropdown:hover .dropdown-menu {
     display: block;
     margin-top: 0; /*remove the gap so it doesn't close*/
  }
@@ -655,9 +655,7 @@ a.partial{
   width: 85%;
   float: left;
 }
-#myCarousel{  
-  padding-top: 25px;
-}
+
 
 #product-title img.logo{
  max-height: 85px ; 

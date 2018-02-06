@@ -193,17 +193,18 @@ if (Zend_Auth::getInstance()->hasIdentity()){
                             </span>
                           
                             <div class="projectdtailHeart">
-                                <div> 
-                                    <?php 
-                                        $cntheart = $this->fetchHeartsForProject($this->product->project_id);
-                                        if($cntheart>0){
-                                        ?>                                    
-                                                    <span class="heartproject glyphicon glyphicon-heart"></span>
-                                                    <span class="heartnumber small"><?=$cntheart?></span>
-                                    <?php }else{
-                                                    echo '<i class="fa fa-heart-o heartgrey" aria-hidden="true"></i>';        
-                                        } ?>
-                                </div>                            
+                                <div id="container-follow<?=$this->product->project_id?>">     
+                                <?php                                 
+                                    echo $this->partial(
+                                        '/product/followp.phtml',
+                                        array(
+                                            "authMember"  => $identity,
+                                            "project_id" => $this->product->project_id
+                                        )
+                                    );                                
+                                ?>                                
+                                </div>  
+                                              
                             </div>
                             
                             <div class="projectdetailRating">
@@ -579,9 +580,8 @@ if (Zend_Auth::getInstance()->hasIdentity()){
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){       
             PartialJson.setup();
-            ProductDetailCarousel.setup();
-          //  AjaxForm.setup("form.product-add-comment-review", "div#productRatingContainer");
+            ProductDetailCarousel.setup();          
             PartialCommentReviewForm.setup();
-            
+            PartialsButtonHeartDetail.setup(); 
         });
     ');

@@ -645,9 +645,9 @@ var PartialsButton = (function () {
             $('body').on('click', 'Button.partialbutton', function (event) {
                 event.preventDefault();
                 var url = $(this).attr("data-href");
-                var target = $(this).attr("data-target");
+                var target = $(this).attr("data-target");            
                 var toggle = $(this).data('toggle');
-                var pageFragment = $(this).attr("data-fragment");
+                var pageFragment = $(this).attr("data-fragment");                
                 let spin = $('<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>');
                 $(target).append(spin);
                 $(target).load(url + ' ' + pageFragment, function (response, status, xhr) {
@@ -670,6 +670,63 @@ var PartialsButton = (function () {
                         $(toggle).modal('show');
                     }
                 });
+                return false;
+            });
+        }
+    }
+})();
+
+var PartialsButtonHeartDetail = (function () {
+    return {
+        setup: function () {
+            $('body').on('click', '.partialbuttonheartdetail', function (event) {
+                event.preventDefault();
+                var url = $(this).attr("data-href");
+                var target = $(this).attr("data-target");            
+                var auth = $(this).attr("data-auth");  
+                var toggle = $(this).data('toggle');
+                var pageFragment = $(this).attr("data-fragment");   
+
+                if (!auth) {                   
+                     $('#review-product-modal').modal('show');
+                     return;
+                }
+
+                // product owner not allow to heart copy from voting....
+                let loginuser  = $('#review-product-modal').find('#loginuser').val();
+                let productcreator  = $('#review-product-modal').find('#productcreator').val();
+                if(loginuser == productcreator){
+                    // ignore
+                     $('#review-product-modal').find('#votelabel').text('Project owner not allowed');
+                     $('#review-product-modal').find('.modal-body').empty();
+                     $('#review-product-modal').modal('show');
+                     return;
+                }
+
+                let spin = $('<span class="glyphicon glyphicon-refresh spinning" style="opacity: 0.6; z-index:1000;position: relative; left: 0;top: 0px;"></span>');
+                $(target).prepend(spin);
+               
+                $(target).load(url + ' ' + pageFragment, function (response, status, xhr) {
+                    if (status == "error") {
+                        if (xhr.status == 401) {
+                            if (response) {
+                                var data = jQuery.parseJSON(response);
+                                var redirect = data.login_url;                                
+                                if (redirect) {
+                                    window.location = redirect;
+                                } else {
+                                    window.location = "/login";
+                                }
+                            }
+                        } else {
+                            $(target).empty().html('Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.');
+                        }
+                    }
+                    if (toggle) {
+                        $(toggle).modal('show');
+                    }
+                });
+               
                 return false;
             });
         }
@@ -751,10 +808,7 @@ var PartialsReviewDownloadHistory = (function () {
         setup: function () {
             $('body').on('click', 'button.partialReviewDownloadHistory', function (event) {
                 event.preventDefault();
-                              
-                // product owner not allow to vote
-                let loginuser  = $('#review-product-modal').find('#loginuser').val();  
-                //let userrate = $('#review-product-modal').find('#userrate').val();
+                                              
                 let userrate = $(this).attr("data-userrate");
                 // -1 = no rate yet. 0= dislike  1=like                                                                
                 $('#review-product-modal').find('#commenttext').val($(this).attr("data-comment"));
@@ -953,8 +1007,7 @@ var PartialPayPal = (function () {
 var PartialCommentReviewForm = (function () {
     return {
         setup: function () {
-            this.initForm();
-          
+            this.initForm();          
         },
         initForm: function () {
             $('body').on("submit", 'form.product-add-comment-review', function (event) {
@@ -1260,7 +1313,13 @@ var AboutMeMyProjectsPaging = (function () {
   return {
       setup: function () {                
         $(window).scroll(function() {
-            if($(window).scrollTop() == $(document).height() - $(window).height()) {
+            
+            var end = $("footer").offset().top;             
+            var viewEnd = $(window).scrollTop() + $(window).height(); 
+            var distance = end - viewEnd; 
+            if (distance < 300){
+            // }
+            // if($(window).scrollTop() == $(document).height() - $(window).height()) {
                     if(!$('button#btnshowmoreproducts').length) return;                        
                     let indicator = '<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>';  
                     let nextpage = $('button#btnshowmoreproducts').attr('data-page');     
@@ -1293,7 +1352,7 @@ var AboutMeMyProjectsPaging = (function () {
   }
 })();
 
-var AboutMeMyProjectsPaging_ = (function () {
+var AboutMeMyProjectsPagingButton = (function () {
   return {
       setup: function () {        
         let indicator = '<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>';               

@@ -42,25 +42,29 @@ if($this->counter==0){
 	</div>
 	
 	<div class="col-lg-2" >
+		<?php if($this->file->project_member_id<> $this->authMember->member_id)
+			{
+				$votedownactive = "";
+				$voteupactive = "";
+				if($userRateData && $userRateData['user_like']>0){				
+					$voteupactive = "active";												
+				}else{						
+					if($userRateData) $votedownactive = "active";						
+				}
+								
+			?>
+			<button <?=$attrhistory ?>  class="btn btn-danger  partialReviewDownloadHistory voting votedown <?=$votedownactive?>"  name="votedown"> <span class="glyphicon glyphicon-minus" ></span></button>
+			<button <?=$attrhistory ?>  class="btn btn-success partialReviewDownloadHistory voting voteup <?=$voteupactive?> "  name="voteup"> <span class="glyphicon glyphicon-plus" ></span></button>				    
+		<?php 
+			} 
+		?>
+
+
 	<?php						
 		if($userRateData){
-			if($userRateData['user_like']>0){
-				echo '<span class="glyphicon glyphicon-plus" style="color:green; padding:10px;"></span>'
-					.$userRateData['comment_text']
-					.'   '.$this->printDate($userRateData['created_at']);
-
-			}else{
-				echo '<span class="glyphicon glyphicon-minus" style="color:red;padding:10px;"></span>'
-					.$userRateData['comment_text']
-					.'   '.$this->printDate($userRateData['created_at']);
-			}
-		}else{
-				// && $this->issupport
-		if(($this->file->project_member_id<> $this->authMember->member_id)){
-			?>
-	<button <?=$attrhistory ?>  class="partialReviewDownloadHistory votedown"  name="votedown"> <span class="glyphicon glyphicon-minus" ></span></button>
-	<button <?=$attrhistory ?>  class="partialReviewDownloadHistory voteup"  name="voteup"> <span class="glyphicon glyphicon-plus" ></span></button>				    
-	<?php }} ?>
+			echo $userRateData['comment_text'].'   '.$this->printDate($userRateData['created_at']);
+		}
+		?>
 
 	</div>
 	<div class="col-lg-1" >

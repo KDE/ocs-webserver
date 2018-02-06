@@ -51,7 +51,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
         $tableMember = new Default_Model_Member();
         $tableProject = new Default_Model_Project();
 
-        $pageLimit = 140;        
+        $pageLimit = 3000;        
         $projectpage = (int)$this->getParam('projectpage', 1);
 
         $this->view->authMember = $this->_authMember;
@@ -105,7 +105,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
                     //$this->forward('showmoreproductsajax', 'user', null, $this->getAllParams());
                     return;
         }else{
-
+                        
                     $total_records = $tableProject->countAllProjectsForMemberCatFilter($this->_memberId,true,null);
                     $this->view->pageLimit =$pageLimit;
                     $this->view->projectpage =$projectpage;
@@ -120,6 +120,15 @@ class UserController extends Local_Controller_Action_DomainSwitch
                         $this->view->comments = $paginationComments;
                     }
 
+                    // favs    Currently no paging...
+                    $this->view->paramLikePageId = (int)$this->getParam('likepage');
+                    $model = new Default_Model_DbTable_ProjectFollower();          
+                    $offset = $this->view->paramLikePageId;
+                    $list  = $model->fetchLikesForMember($this->_memberId);
+                    $list->setItemCountPerPage(1000);
+                    $list->setCurrentPageNumber($offset);
+                    $this->view->likes  = $list;
+               
                      
                     $stat = array();
                     $stat['cntProducts'] = $total_records;
@@ -383,6 +392,36 @@ class UserController extends Local_Controller_Action_DomainSwitch
              $this->view->downloadhistory  = $list;
         }else{
             $this->view->downloadhistory= array();             
+        }
+
+        
+    }
+
+    public function likesAction()
+    {
+        
+        $tableMember = new Default_Model_Member();
+        $this->view->view_member = $tableMember->fetchMemberData($this->_memberId);
+             
+        //backdore for admins
+        $helperUserRole = new Backend_View_Helper_UserRole();
+        $userRoleName = $helperUserRole->userRole();
+        if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+            $this->view->member = $this->view->view_member;
+        } else {
+            $this->view->member = $this->_authMember;
+        }
+        
+        if( $this->view->member ){            
+            $this->view->paramPageId = (int)$this->getParam('page');
+            $model = new Default_Model_DbTable_ProjectFollower();          
+            $offset = $this->view->paramPageId;
+            $list  = $model->fetchLikesForMember($this->view->member->member_id);
+            $list->setItemCountPerPage(250);
+            $list->setCurrentPageNumber($offset);
+             $this->view->likes  = $list;
+        }else{
+            $this->view->likes= array();             
         }
 
         

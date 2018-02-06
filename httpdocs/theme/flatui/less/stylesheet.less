@@ -1669,11 +1669,11 @@ ul.meta-nav-top
 
       #product-title-div {
         padding-left: 30px;
-        min-height:85px;
+        min-height:105px;
         padding-top: 20px;
         .product-logo-container {
           float: left; 
-          width: 85px;           
+          width: 95px;           
         }
 
         .product_category {
@@ -1687,28 +1687,36 @@ ul.meta-nav-top
           z-index: 100
         }
         div.projectdtailHeart{
-          float: right; 
-          width:50px;
-          z-index: 100
+            float: right;           
+            z-index: 100;
+            margin-right: 10px;
+            width: 70px;
         }
-        span.heartproject{
+        .heartproject{
           position:relative;
           color:#8e44ad; 
-          font-size: 45px
+          font-size: 45px;
+          float: right;
         }
 
         .heartgrey{
           position:relative;
           color:#C8C8C8; 
-          font-size: 45px
+          font-size: 45px;
+           float: right;
         }
+       
 
         span.heartnumber{
           z-index: 3;
-          position: absolute; 
-          margin-left:-25px;
-          margin-top:12px;
+          position: relative; 
+          left: 45px;
+          top: 10px;
           color:white;
+        }
+
+        span.heartnumberpurple{
+           color: #8e44ad; 
         }
       }
     }
@@ -2591,6 +2599,37 @@ span.page-views {
 
   .about-me-page {
 
+    .my-fav-list{
+      width: 1100px;
+      .totaldownloads{
+        margin:0;
+        padding: 20px;
+        text-align: right;
+      }
+      .smaller{
+        font-size: smaller;
+      }
+      .row{        
+        border-bottom:1px solid #ccc;
+        padding-top:15px;
+        padding-bottom:15px;
+      }      
+
+      .rating{
+        width: 60px !important;
+        font-size: 10pt;
+      }
+      .downloadhistory-image{
+        width: 50px;
+        height: 50px;
+        float: left; 
+        margin-right: 15px;      
+      }
+      .nowrap{
+        white-space: nowrap;
+      }
+    }
+
     > .head-wrap {
       padding-top: 1em;
       height: auto;
@@ -2855,6 +2894,7 @@ span.page-views {
         width: 100%;
         float: left;
       }
+
 
       .my-products-list {
 
@@ -5434,6 +5474,7 @@ img.imgpopover
       .header{        
         border-top:1px solid #ccc;
         padding-top:15px;
+        padding-bottom:15px;
       }
       .subheader{       
        background-color: #ddd
@@ -5444,6 +5485,14 @@ img.imgpopover
       .marginLeft80{
         margin-left: 80px;
       }
+      
+      button.voting{
+         line-height: 10px;
+      }
+      button.voting span{
+         font-size: 10px;
+      }      
+
       .rating{
         width: 60px !important;
         font-size: 10pt;
