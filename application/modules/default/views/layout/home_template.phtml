@@ -25,11 +25,13 @@
     <meta charset="utf-8">
     <?php echo $this->render('partials/htmlheader.phtml'); ?>
 
+    <link rel="SHORTCUT ICON" href="<?=$this->template['favicon']?>"/>
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="alternate" type="application/rss+xml" title="Latest Products" href="/content.rdf"/>
 
     <!-- Loading Bootstrap -->
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" href="/tools/fancybox2.1.4/jquery.fancybox.css?v=2.1.4" type="text/css" media="screen" />    
 
     <!-- custom styles -->   
@@ -38,12 +40,9 @@
     <link href="/theme/flatui/css/explore_index.css" rel="stylesheet">
     <link href="/theme/flatui/css/startpage.css" rel="stylesheet">
     <!-- third party -->
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
-    <link rel="SHORTCUT ICON" href="<?=$this->template['favicon']?>"/>
-    <script
-            src="//code.jquery.com/jquery-3.2.1.min.js"
-            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-            crossorigin="anonymous"></script>    
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 </head>
 <body>
 <?php echo $this->render('partials/header/template.phtml'); ?>
@@ -55,9 +54,9 @@
     <div class="modal-body"></div>
     <div id="error"></div>
 </div>
- 
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="/theme/flatui/js/lib/moment.min.js"></script>
 <script src="/tools/md5.js"></script>
 <script src="/theme/flatui/js/script.js?<?= APPLICATION_VERSION ?>"></script>
 <script type="text/javascript" src="/tools/fancybox2.1.4/jquery.fancybox.pack.js?v=2.1.4"></script> 
