@@ -32,6 +32,7 @@ class Backend_Model_Reports
                     comments.comment_active,
                     comments.comment_text,
                     comments.comment_created_at,
+                    comments.comment_deleted_at,
                     count(reports_comment.comment_id) as counter
 
                 from reports_comment
