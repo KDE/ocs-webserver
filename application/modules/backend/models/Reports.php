@@ -22,14 +22,28 @@
 class Backend_Model_Reports
 {
 
-    public function getReportsForComments($startIndex = 0, $pageSize = 10, $orderBy = 'counter DESC, reports_comment.project_id')
+    public function getReportsForComments($startIndex = 0, $pageSize = 10, $orderBy = 'reports_comment.created_at DESC')
     {
-        $sql = "select reports_comment.*, comments.comment_active, count(reports_comment.comment_id) as counter
+        $sql = "select 
+                    reports_comment.report_id,
+                    reports_comment.project_id,
+                    reports_comment.comment_id,
+                    max(reports_comment.created_at) as last_reported_at,
+                    comments.comment_active,
+                    comments.comment_text,
+                    comments.comment_created_at,
+                    count(reports_comment.comment_id) as counter
+
                 from reports_comment
                 straight_join comments on comments.comment_id = reports_comment.comment_id
+                straight_join member on member.member_id = comments.comment_member_id and member.is_active = 1
+                straight_join project on project.project_id = comments.comment_target_id and project.`status` = 100
                 group by reports_comment.comment_id
               ";
         $limit = ' limit ' . (int)$startIndex . ',' . (int)$pageSize;
+        if(!isset($orderBy) || count($orderBy) == 0) {
+            $orderBy = 'reports_comment.created_at DESC';
+        }
         $orderBy = ' order by ' . $orderBy;
 
         $rowSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql.$orderBy.$limit);
