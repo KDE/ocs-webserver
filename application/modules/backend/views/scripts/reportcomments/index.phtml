@@ -38,14 +38,14 @@
         $('#TableContainer').jtable({
             jqueryuiTheme: true,
             paging: true,
-            title: 'Table of reports',
+            title: 'Table of Comment Reports',
             sorting: true, //Enable sorting
-            defaultSorting: 'counter DESC', //Set default sorting
+            defaultSorting: 'last_reported_at DESC', //Set default sorting
             actions: {
                 listAction: '/backend/reportcomments/list',
-                createAction: '/backend/reportcomments/create',
-                updateAction: '/backend/reportcomments/update',
-                deleteAction: '/backend/reportcomments/delete'
+                //createAction: '/backend/reportcomments/create',
+                //updateAction: '/backend/reportcomments/update',
+                //deleteAction: '/backend/reportcomments/delete'
             },
             fields: {
                 report_id: {
@@ -56,44 +56,43 @@
                 },
                 project_id: {
                     title: 'Project ID',
-                    width: '10%'
+                    width: '5%',
+                    edit: false
                 },
                 comment_id: {
                     title: 'Comment ID',
-                    width: '10%',
-                    display: function (data) {
-                        if (data.record.comment_id) {
-                            return data.record.comment_id
-                                + ' <a role="button" title="show member info" class="btn btn-info btn-xs comment-info pull-right" style="color:white;"  data-record="' + data.record.comment_id + '"><span>show</span></a>'
-                                ;
-                        }
-                    }
+                    width: '5%',
+                    edit: false
                 },
-                reported_by: {
-                    title: 'Reported by',
-                    width: '10%',
-                    display: function (data) {
-                        if (data.record.reported_by) {
-                            return data.record.reported_by
-                                + ' <a role="button" title="show member info" class="btn btn-info btn-xs member-info pull-right" style="color:white;"  data-record="' + data.record.reported_by + '"><span>info</span></a>'
-                                ;
-                        }
-                    }
+                comment_created_at: {
+                    title: 'Comment Created At',
+                    width: '5%',
+                    type: 'date',
+                    create: false,
+                    edit: false
                 },
-                is_deleted: {
-                    title: 'Deleted',
-                    width: '5%'
+                comment_text: {
+                    title: 'Comment Text',
+                    width: '20%',
+                    edit: false
                 },
-                created_at: {
-                    title: 'Created',
-                    width: '10%',
+                comment_deleted_at: {
+                    title: 'Comment Deleted At',
+                    width: '5%',
                     type: 'date',
                     create: false,
                     edit: false
                 },
                 counter: {
-                    title: 'total count reported',
-                    width: '10%',
+                    title: 'Total Reports',
+                    width: '5%',
+                    create: false,
+                    edit: false
+                },
+                last_reported_at: {
+                    title: 'Last Reported At',
+                    width: '5%',
+                    type: 'date',
                     create: false,
                     edit: false
                 },
@@ -107,9 +106,9 @@
                     display: function (data) {
                         if (data.record.comment_active) {
                             if (data.record.comment_active == 0) {
-                                btn_title = 'activate';
+                                btn_title = 'Show Comment';
                             } else {
-                                btn_title = 'deactivate';
+                                btn_title = 'Hide Comment';
                             }
                             return '<a role="button" title="' + btn_title + ' this comment" class="btn btn-warning btn-xs toggle-status pull-right" style="color:white;"  data-record="' + data.record.comment_id + '"><span>' + btn_title + '</span></a>'
                                 ;
@@ -133,53 +132,7 @@
                 }
             }
         });
-
-        $('body').on("click", 'a.member-info', function (event) {
-            event.preventDefault();
-            event.stopImmediatePropagation();
-
-            var elementRecord = $(this).data("record");
-
-            jQuery.ajax({
-                data: {'member_id': elementRecord},
-                url: '/backend/user/memberinfo/',
-                type: 'post',
-                error: function () {
-                    alert("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
-                    return false;
-                },
-                success: function (results) {
-                    $('#dialog-form').html(results.ViewRecord).dialog('open');
-                    return false;
-                }
-            });
-
-            return false;
-        });
-
-        $('body').on("click", 'a.comment-info', function (event) {
-            event.preventDefault();
-            event.stopImmediatePropagation();
-
-            var elementRecord = $(this).data("record");
-
-            jQuery.ajax({
-                data: {'c': elementRecord},
-                url: '/backend/reportcomments/fetch/',
-                type: 'post',
-                error: function () {
-                    alert("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
-                    return false;
-                },
-                success: function (results) {
-                    $('#dialog-form').html(results.ViewRecord).dialog('open');
-                    return false;
-                }
-            });
-
-            return false;
-        });
-
+        
         $('body').on("click", 'a.toggle-status', function (event) {
             event.preventDefault();
             event.stopImmediatePropagation();
@@ -202,6 +155,8 @@
 
             return false;
         });
+
+        
 
     });
 </script>
