@@ -72,9 +72,11 @@ $this->updates = $tableProjectUpdates->fetchProjectUpdates($this->product->proje
 $tableProjectRatings = new Default_Model_DbTable_ProjectRating();
 $this->ratings = $tableProjectRatings->fetchRating($this->product->project_id);
 if (Zend_Auth::getInstance()->hasIdentity()){
-    // login user  ini rating for current product
     $this->ratingOfUser = $tableProjectRatings->getProjectRateForUser($this->product->project_id,$identity->member_id);  
 } 
+
+$tableProjectFollower = new Default_Model_DbTable_ProjectFollower();
+$this->likes = $tableProjectFollower->fetchLikesForProject($this->product->project_id);
 
 ?>
 
@@ -286,6 +288,9 @@ if (Zend_Auth::getInstance()->hasIdentity()){
                         <?php if(count($this->ratings)>0){ ?>
                             <li><a href="#ratings-panel" data-toggle="tab">Ratings & Reviews <?php echo '('.count($this->ratings).')';  ?></a></li>
                         <?php } ?>
+                         <?php if(count($this->likes)>0){ ?>
+                            <li><a href="#likes-panel" data-toggle="tab">Favs<?php echo '('.count($this->likes).')';  ?></a></li>
+                        <?php } ?>
                         </ul>
                     </div>
                     <!-- /TABS -->
@@ -383,6 +388,21 @@ if (Zend_Auth::getInstance()->hasIdentity()){
                                 <div id="productRatingContainer">
                                 <?php                                    
                                        echo $this->render('product/partials/productRating.phtml');                                   
+                                  ?>
+                                  </div>
+                            </article>
+                            </div>
+                        </div>
+                        <?php } ?>
+
+                        <!-- ratings panel -->
+                        <?php  if (count($this->likes) > 0) { ?>
+                        <div class="tab-pane" id="likes-panel">
+                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                            <article>
+                                <div id="productLikesContainer">
+                                <?php                                    
+                                       echo $this->render('product/partials/productLikes.phtml');                                   
                                   ?>
                                   </div>
                             </article>
@@ -577,11 +597,13 @@ if (Zend_Auth::getInstance()->hasIdentity()){
     }(<?=$this->product->ppload_collection_id?>));
 </script>
 
+
+
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){       
             PartialJson.setup();
             ProductDetailCarousel.setup();          
             PartialCommentReviewForm.setup();
-            PartialsButtonHeartDetail.setup(); 
+            PartialsButtonHeartDetail.setup();             
         });
     ');

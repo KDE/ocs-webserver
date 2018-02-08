@@ -115,7 +115,7 @@ $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountP
                         </div>
                     </a>
                     <div class="media-body">
-                        <h4 class="media-heading user_name"><?= $comment['username'] ?>
+                        <h4 class="media-heading user_name"><span class="tooltipuser"  data-tooltip-content="#tooltip_content" role="button" data-user="<?=$comment['member_id'] ?>"><?= $comment['username'] ?></span>
 
                                 <p class="pull-right history" >
                                     <?php if ($age['age'] > 0) { ?>
@@ -183,8 +183,14 @@ $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountP
         </div>
     </div>
 </div>
+<div class="tooltip_templates" style="display: none">
+    <span id="tooltip_content">
+        <i class="fa fa-spinner"></i>
+    </span>
+</div>
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
             AjaxForm.setup("form.product-add-comment", "div#product-discussion");
+            ProductDetailCommentTooltip.setup();
         });
     ');
