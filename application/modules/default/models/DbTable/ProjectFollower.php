@@ -22,41 +22,37 @@
 class Default_Model_DbTable_ProjectFollower extends Zend_Db_Table_Abstract
 {
 
-    protected $_name = "project_follower";
-
-    public function countForMember($memberId)
-    {
-        $select = $this->_db->select()
-            ->from('project_follower')
-            ->joinUsing('stat_projects', 'project_id')
-            ->where('stat_projects.status = ?',100)
-            ->where('project_follower.member_id = ?', $memberId);
-        return count($select->query()->fetchAll());
-    }
+    protected $_name = "project_follower";    
 
     public function countLikesHeGave($memberId)
-    {
-        $select = $this->_db->select()
-            ->from('project_follower')
-            ->joinUsing('stat_projects', 'project_id')
-            ->where('stat_projects.status = ?', 100)
-            ->where('project_follower.member_id = ?', $memberId);
-        return count($select->query()->fetchAll());
+    {        
+        $sql ="
+                SELECT count(*) AS count 
+                FROM project_follower f  
+                inner join member m on f.member_id = m.member_id and m.is_active=1 AND m.is_deleted=0   
+                inner join stat_projects p on p.project_id = f.project_id and p.status = 100 
+                WHERE  f.member_id =:memberId
+        ";
+        $resultRow = $this->_db->fetchRow($sql, array('memberId' => $memberId));
+        return $resultRow['count'];
     }
 
     public function countLikesHeGot($memberId)
-    {
-        $select = $this->_db->select()
-            ->from('project_follower')
-            ->joinUsing('stat_projects', 'project_id')
-            ->where('stat_projects.status = ?', 100)            
-            ->where('stat_projects.member_id = ?', $memberId);
-        return count($select->query()->fetchAll());
+    {       
+        $sql ="
+                SELECT count(*) AS count 
+                FROM project_follower f  
+                inner join member m on f.member_id = m.member_id and m.is_active=1 AND m.is_deleted=0   
+                inner join stat_projects p on p.project_id = f.project_id and p.status = 100 
+                WHERE  p.member_id =:memberId
+        ";
+        $resultRow = $this->_db->fetchRow($sql, array('memberId' => $memberId));
+        return $resultRow['count'];
     }
 
      public function countForProject($project_id)
     {
-            $selectArr = $this->_db->fetchRow('SELECT count(*) AS count FROM ' . $this->_name . ' WHERE project_id = ' . $project_id);
+            $selectArr = $this->_db->fetchRow('SELECT count(*) AS count FROM project_follower f  inner join member m on f.member_id = m.member_id and m.is_active=1 AND m.is_deleted=0   WHERE  project_id = ' . $project_id);
             return $selectArr ['count'];      
     }
 
@@ -80,6 +76,7 @@ class Default_Model_DbTable_ProjectFollower extends Zend_Db_Table_Abstract
                         ,p.count_likes
                         ,p.count_dislikes
                         FROM project_follower f
+                        inner join member m on f.member_id = m.member_id and m.is_active=1 AND m.is_deleted=0 
                         INNER JOIN stat_projects p ON p.project_id = f.project_id 
                         WHERE (p.status = 100) AND (f.member_id = :member_id) 
                         order by f.created_at desc
@@ -100,7 +97,7 @@ class Default_Model_DbTable_ProjectFollower extends Zend_Db_Table_Abstract
                         ,m.created_at as member_created_at
                            ,m.username
                         FROM project_follower f
-                        inner join member m on f.member_id = m.member_id
+                        inner join member m on f.member_id = m.member_id and m.is_active=1 AND m.is_deleted=0 
                         WHERE  f.project_id = :project_id
                         order by f.created_at desc
              ";
