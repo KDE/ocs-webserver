@@ -138,9 +138,11 @@ class Default_Model_ActivityLog extends Default_Model_DbTable_ActivityLog
      * @param int         $projectId
      * @param int         $userId
      * @param int         $activity_type_id
-     * @param array|mixed $data array with ([type_id], [pid], description, title, image_small)
+     * @param array $data array with ([type_id], [pid], description, title, image_small)
+     *
+     * @throws Zend_Exception
      */
-    public static function logActivity($objectId, $projectId, $userId, $activity_type_id, $data)
+    public static function logActivity($objectId, $projectId, $userId, $activity_type_id, $data = array())
     {
         // cutting description text if necessary
         if (isset($data['description'])) {

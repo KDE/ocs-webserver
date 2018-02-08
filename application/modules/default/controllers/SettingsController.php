@@ -889,7 +889,15 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         if ($this->_request->isPost()) {
             $form = $this->formProfilePicture();
 
-            $profilePictureTitleFilename = pathinfo($form->getElement('profile_picture_upload')->getFileName());
+            $formFilename = $form->getElement('profile_picture_upload')->getFileName();
+            if (is_array($formFilename)) {
+                Zend_Registry::get('logger')->info(__METHOD__ . ' :: form input:' . print_r($formFilename, true));
+                $filename = $formFilename['profile_picture_upload'];
+            } else {
+                Zend_Registry::get('logger')->info(__METHOD__ . ' :: form input:' . print_r($formFilename, true));
+                $filename = $formFilename;
+            }
+            $profilePictureTitleFilename = pathinfo($filename);
 
             if (!isset($profilePictureTitleFilename)) {
                 $form->populate($this->_memberSettings->toArray());
