@@ -32,12 +32,24 @@ class ReportController extends Zend_Controller_Action
             $reported_by =
                 Zend_Auth::getInstance()->hasIdentity() ? (int)Zend_Auth::getInstance()->getStorage()->read()->member_id
                     : 0;
+            
+            $clientIp = null;
+            $clientIp2 = null;
+            if(isset($_SERVER['REMOTE_ADDR'])) {
+                $clientIp = $_SERVER['REMOTE_ADDR'];
+            }
+            if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+                $clientIp2 = $_SERVER['HTTP_X_FORWARDED_FOR'];
+            }
 
             $tableReportComments = new Default_Model_DbTable_ReportComments();
 
             $tableReportComments->save(array('project_id'  => $project_id,
                                              'comment_id'  => $comment_id,
-                                             'reported_by' => $reported_by
+                                             'reported_by' => $reported_by,
+                                             'user_ip' => $clientIp,
+                                             'user_ip2' => $clientIp2
+                
             ));
         }
         $this->_helper->json(array(
