@@ -61,14 +61,7 @@ class Default_Model_DbTable_ProjectFollower extends Zend_Db_Table_Abstract
     }
 
      public function fetchLikesForMember($memberId)
-    {
-            // $select = $this->_db->select()
-            //     ->from('project_follower')
-            //     ->joinUsing('stat_projects', 'project_id')
-            //     ->where('stat_projects.status = ?',100)
-            //     ->where('project_follower.member_id = ?', $memberId);                
-            //  $result = $select->query()->fetchAll();
-
+    {            
              $sql = "
                         SELECT 
                         f.project_id
@@ -96,59 +89,23 @@ class Default_Model_DbTable_ProjectFollower extends Zend_Db_Table_Abstract
             return new Zend_Paginator(new Zend_Paginator_Adapter_Array($resultSet ));     
     }
 
-    /**
-     * Override method to update member_ref table.
-     *
-     * @see Zend_Db_Table_Abstract::insert()
-     */
-    /*public function insert(array $data)
-    {
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . print_r(func_get_args(), true));
-
-        // //if a user follows a project, then we add this project to his
-        // //refference table. if there are childs (not project items),
-        // //then we will add alos these child-projects
-        // $projectTable = new Default_Model_DbTable_Project();
-        // $projectRowset = $projectTable->find($data['project_id']);
-        // $project = $projectRowset->current();
-
-        // if ($project->type_id == 0) {
-        //     //follows a user
-        //     $memberRefTable = new Default_Model_DbTable_MemberRef();
-        //     $newRef = array(
-        //         'member_id' => $data['member_id'],
-        //         'project_id' => $data['project_id']
-        //     );
-        //     $memberRefTable->insert($newRef);
-        // } elseif ($project->type_id == 1) {
-        //     //follows a project
-        //     $memberRefTable = new Default_Model_DbTable_MemberRef();
-        //     $newRef = array(
-        //         'member_id' => $data['member_id'],
-        //         'project_id' => $data['project_id']
-        //     );
-        //     $memberRefTable->insert($newRef);
-        // }
-
-        $memberRefTable = new Default_Model_DbTable_MemberRef();
-        $newRef = array(
-            'member_id' => $data['member_id'],
-            'project_id' => $data['project_id']
-        );
-        $memberRefTable->insert($newRef);
-
-        return parent::insert($data);
-    }*/
-
-    /*public function delete($where)
-    {
-
-        $memberRefTable = new Default_Model_DbTable_MemberRef();
-
-        $memberRefTable->delete($where);
-
-        return parent::delete($where);
-    }*/
-
+     public function fetchLikesForProject($project_id)
+    {            
+            $sql = "
+                         SELECT 
+                        f.project_id
+                        ,f.member_id
+                        ,f.created_at
+                        ,m.profile_image_url
+                        ,m.created_at as member_created_at
+                           ,m.username
+                        FROM project_follower f
+                        inner join member m on f.member_id = m.member_id
+                        WHERE  f.project_id = :project_id
+                        order by f.created_at desc
+             ";
+            $resultSet = $this->_db->fetchAll($sql, array('project_id' => $project_id));
+            return $resultSet;     
+    }
 
 }

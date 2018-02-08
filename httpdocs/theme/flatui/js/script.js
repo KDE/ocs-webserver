@@ -1260,6 +1260,52 @@ var ProductDetailCarousel = (function () {
     }
 })();
 
+var ProductDetailCommentTooltip = (function () {
+    return {
+        setup: function () {            
+                 $('.tooltipuser').tooltipster(
+                    {
+                       side:'right',                   
+                       theme: ['tooltipster-light','tooltipster-light-customized'],
+                       contentCloning: true,
+                       contentAsHTML: true,
+                       interactive: true,
+                       functionBefore: function(instance, helper) {                           
+                               var $origin = $(helper.origin);                          
+                               var userid = $origin.attr('data-user');                                                                           
+                               if ($origin.data('loaded') !== true) {
+                                   $.get('/member/'+userid+'/tooltip/', function(data) {     
+                                        let d = data.data;
+                                        let tmp = '<div class="mytooltip"><div class="header">'+d.username
+                                                    +' <span class="glyphicon glyphicon-map-marker"></span>'+d.countrycity
+                                                    +'</div>'
+                                                    +'<div class="statistic">'
+                                                    +'<div class="row"><span class="title">'+d.cntProjects+'</span> products </div>'
+                                                    +'<div class="row"><span class="title">'+d.totalComments+'</span> comments </div>'
+                                                    +'<div class="row">Likes <span class="title">'+d.cntLikesGave+'</span>  products </div>'
+                                                    +'<div class="row">Got <span class="title">'+d.cntLikesGot+'</span> Likes <i class="fa fa-heart myfav" aria-hidden="true"></i> </div>'
+                                                    +'<div class="row">Last time active : '+d.lastactive_at+' </div>'
+                                                    +'<div class="row">Joined : '+d.created_at+' </div>'
+                                                    +'</div>';
+
+
+                                        tmp = tmp +'</div>';
+                                       
+                                       
+                                
+
+                                       instance.content(tmp);                                   
+                                       $origin.data('loaded', true);
+                                   });
+                               }
+                           }
+
+                    }
+                );
+        }
+    }
+})();
+
 var Metaheader = (function () {
     return {
         setup: function () {                                             
