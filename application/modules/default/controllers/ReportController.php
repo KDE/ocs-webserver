@@ -43,22 +43,35 @@ class ReportController extends Zend_Controller_Action
             }
 
             $tableReportComments = new Default_Model_DbTable_ReportComments();
+            
+            $commentReportArray = $tableReportComments->fetchAll('comment_id = ' . $comment_id . ' AND user_ip = "' . $clientIp . '"');
+            
+            if(isset($commentReportArray) && count($commentReportArray) > 0) {
+                $this->_helper->json(array(
+                    'status'  => 'ok',
+                    'message' => '<p>You have already submitted a report for this comment.</p><div class="modal-footer">
+                                            <button type="button" style="border:none;background: transparent;color: #2673b0;" class="small close" data-dismiss="modal" > Close</button>
+                                        </div>',
+                    'data'    => array()
+                ));
+            } else {
+                $tableReportComments->save(array('project_id'  => $project_id,
+                                                 'comment_id'  => $comment_id,
+                                                 'reported_by' => $reported_by,
+                                                 'user_ip' => $clientIp,
+                                                 'user_ip2' => $clientIp2
+                ));
+                $this->_helper->json(array(
+                    'status'  => 'ok',
+                    'message' => '<p>Thank you for helping us to keep these sites SPAM-free.</p><div class="modal-footer">
+                                            <button type="button" style="border:none;background: transparent;color: #2673b0;" class="small close" data-dismiss="modal" > Close</button>
+                                        </div>',
+                    'data'    => array()
+                ));
+            }
 
-            $tableReportComments->save(array('project_id'  => $project_id,
-                                             'comment_id'  => $comment_id,
-                                             'reported_by' => $reported_by,
-                                             'user_ip' => $clientIp,
-                                             'user_ip2' => $clientIp2
-                
-            ));
         }
-        $this->_helper->json(array(
-            'status'  => 'ok',
-            'message' => '<p>Thank you for helping us to keep these sites SPAM-free.</p><div class="modal-footer">
-                                    <button type="button" style="border:none;background: transparent;color: #2673b0;" class="small close" data-dismiss="modal" > Close</button>
-                                </div>',
-            'data'    => array()
-        ));
+        
     }
 
     public function productAction()
