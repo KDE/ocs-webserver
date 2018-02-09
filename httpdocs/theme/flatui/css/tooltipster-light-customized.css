@@ -1,0 +1,24 @@
+.tooltipster-sidetip.tooltipster-light.tooltipster-light-customized .tooltipster-box {	
+
+}
+
+.tooltipster-sidetip.tooltipster-light.tooltipster-light-customized .tooltipster-content {
+	
+	font-size: 12px;
+	overflow-x: hidden;
+
+}
+
+.tooltipster-sidetip.tooltipster-light.tooltipster-light-customized .tooltipster-content  .header{
+                        display: block;                        
+                        border-bottom: 1px solid #ccc;
+                        margin: 0 auto;
+}
+
+
+.tooltipster-sidetip.tooltipster-light.tooltipster-light-customized .tooltipster-content  .statistic{
+                        display: block;                        
+                        padding-left: 15px;
+                        padding-right: 15px;
+                        padding-top: 10px;
+}

@@ -133,11 +133,12 @@ class UserController extends Local_Controller_Action_DomainSwitch
                     $stat = array();
                     $stat['cntProducts'] = $total_records;
                     $stat['cntComments'] = $paginationComments->getTotalItemCount();
-                    $cntpv = 0;
-                    foreach ($this->view->userProducts as $pro) {
-                        $cntpv = $cntpv + $tableProject->fetchProjectViews($pro->project_id);
-                    }
-                    $stat['cntPageviews'] = $cntpv;
+                   
+                    // $cntpv = 0;
+                    // foreach ($this->view->userProducts as $pro) {
+                    //     $cntpv = $cntpv + $tableProject->fetchProjectViews($pro->project_id);
+                    // }
+                    // $stat['cntPageviews'] = $cntpv;
 
                     $tblFollower = new Default_Model_DbTable_ProjectFollower();
                     $stat['cntLikesHeGave'] = $tblFollower->countLikesHeGave($this->_memberId);                    
@@ -293,6 +294,44 @@ class UserController extends Local_Controller_Action_DomainSwitch
         $tableMember = new Default_Model_Member();
         $modelPlings = new Default_Model_Pling();
         $this->view->donations = $modelPlings->fetchRecentDonationsForUser($this->_authMember->member_id);
+    }
+
+    public function tooltipAction()
+    {
+        $this->_helper->layout->disableLayout();  
+        $modelMember = new Default_Model_Member();
+        $tblFollower = new Default_Model_DbTable_ProjectFollower();
+        $modelProject = new Default_Model_Project();
+        $printDate = new Default_View_Helper_PrintDate();
+
+        $cnt = $modelMember->fetchCommentsCount($this->_memberId);
+        $member = $modelMember->find($this->_memberId)->current();
+
+        $cntLikesGave = $tblFollower->countLikesHeGave($this->_memberId);  
+        $cntLikesGot= $tblFollower->countLikesHeGot($this->_memberId);  
+
+        $donationinfo = $modelMember->fetchSupporterDonationInfo($this->_memberId);                       
+        $lastactive =  $modelMember->fetchLastActiveTime($this->_memberId);
+
+        $cntprojects = $modelProject->countAllProjectsForMember($this->_memberId,true);
+        $textCountryCity = $member->city;
+        $textCountryCity .= $member->country ? ', ' . $member->country : '';
+
+        $data = array(
+                'totalComments'       =>$cnt,
+                'created_at'              =>$printDate->printDate($member->created_at),
+                'username'               =>$member->username,
+                'countrycity'             => $textCountryCity,
+                'lastactive_at'           =>$printDate->printDate($lastactive),
+                'cntProjects'              =>$cntprojects,
+                'issupporter'             =>$donationinfo['issupporter'],
+                'supportMax'            =>$donationinfo['active_time_max'],
+                'supportMin'             =>$donationinfo['active_time_min'],
+                'supportCnt'             =>$donationinfo['cnt'],
+                'cntLikesGave'          =>$cntLikesGave,
+                'cntLikesGot'            =>$cntLikesGot
+        );
+        $this->_helper->json(array('status' => 'ok', 'data' =>$data));            
     }
 
     public function shareAction()

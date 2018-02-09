@@ -573,6 +573,8 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         return $result['total_member_count'];
     }
 
+    
+
     public function fetchTotalMembersInStoreCount()
     {
         $sql = "
@@ -690,6 +692,22 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         $result = $this->getAdapter()->query($sql, array('username' => $username))->fetch();
 
         return $result;
+    }
+
+    public function fetchCommentsCount($member_id)
+    {
+          $sql = "
+                  SELECT
+                      count(1) AS count
+                  FROM
+                      comments 
+                  where comment_member_id = :member_id and comment_active = :comment_status
+                 ";
+          $result = $this->_db->fetchRow($sql,array(
+            'member_id'      => $member_id,          
+            'comment_status' => Default_Model_DbTable_Comments::COMMENT_ACTIVE
+          ));
+          return $result['count'];
     }
 
     /**
