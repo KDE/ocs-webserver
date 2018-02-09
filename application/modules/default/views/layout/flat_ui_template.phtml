@@ -42,6 +42,10 @@
     <link href="/theme/flatui/css/style.css" rel="stylesheet">
     <link href="/theme/flatui/css/stylesheet.css?<?= APPLICATION_VERSION ?>" rel="stylesheet">
 
+
+    <link href="/theme/flatui/css/jquery.step.css" rel="stylesheet">
+    
+
     <link rel="SHORTCUT ICON" href="<?=$this->template['favicon']?>"/>
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
@@ -87,12 +91,12 @@
 <?php echo $this->render('partials/genericModalConfirmation.phtml'); ?>
 
 <!-- Load JS here for greater good =============================-->
-
-<script src="/theme/flatui/js/lib/jquery.crypt.js"></script>
+<?php /*
+<script src="/theme/flatui/js/lib/angular.min.js"></script>  
 <script src="/theme/flatui/js/lib/bootstrap-colorpicker-module.js"></script>
+<script src="/theme/flatui/js/lib/jquery.crypt.js"></script>
 <script src="/theme/flatui/js/lib/bootstrap-dialog.min.js"></script>
-<script src="/theme/flatui/js/lib/masonry.pkgd.min.js"></script>
-<script src="/theme/flatui/js/lib/angular.min.js"></script>    
+<script src="/theme/flatui/js/lib/masonry.pkgd.min.js"></script>  
 <script src="/theme/flatui/js/lib/jquery-ui.min.js"></script>
 <script src="/theme/flatui/js/lib/jquery.colorbox-min.js"></script>
 <script src="/theme/flatui/js/lib/jquery.placeholder.min.js"></script>
@@ -107,7 +111,10 @@
 <script src="/theme/flatui/js/lib/jquery.rss.js"></script>
 <script src="/theme/backend/js/jquery.cookie.js"></script>
 <script src="/tools/md5.js"></script>
+*/
+?>
 
+<script src="/theme/flatui/js/lib/jquery-ui.min.js"></script>
 <script src="/theme/flatui/js/lib/moment.min.js"></script>
 <script type="text/javascript" src="/tools/fancybox2.1.4/jquery.fancybox.pack.js?v=2.1.4"></script>
 <script src="/theme/flatui/js/script.js?<?= APPLICATION_VERSION ?>"></script>
