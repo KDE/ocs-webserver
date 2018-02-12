@@ -25,6 +25,7 @@ class Default_Plugin_AclRules extends Zend_Acl
     const ROLENAME_GUEST = 'guest';
     const ROLENAME_COOKIEUSER = 'cookieuser';
     const ROLENAME_FEUSER = 'feuser';
+    const ROLENAME_MODERATOR = 'moderator';
     const ROLENAME_STAFF = 'staff';
     const ROLENAME_ADMIN = 'admin';
 
@@ -158,7 +159,6 @@ class Default_Plugin_AclRules extends Zend_Acl
         // resource default_product
         $this->allow(self::ROLENAME_GUEST, 'default_product',
             array('index', 'show', 'getupdatesajax', 'updates', 'follows', 'fetch', 'search', 'startdownload'));
-        
 
         $this->allow(self::ROLENAME_COOKIEUSER, 'default_product',
             array(
@@ -176,6 +176,12 @@ class Default_Plugin_AclRules extends Zend_Acl
                 'paymentcancel',
                 'saveproduct',
                 'claim'
+            )
+        );
+        
+        $this->allow(self::ROLENAME_MODERATOR, 'backend_product',
+            array(
+                'doghnsexclude'
             )
         );
 

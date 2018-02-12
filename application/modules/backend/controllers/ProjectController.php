@@ -28,7 +28,7 @@ class Backend_ProjectController extends Local_Controller_Action_Backend
     const DATA_ID_NAME = 'project_id';
 
     const PARAM_FEATURED = 'featured';
-    const PARAM_APPROVED = 'approved';
+    const PARAM_APPROVED = 'ghns_excluded';
     const PARAM_PLING_EXCLUDED = 'pling_excluded';
     /** @var Default_Model_Project */
     protected $_model;
@@ -262,7 +262,7 @@ class Backend_ProjectController extends Local_Controller_Action_Backend
         $this->_helper->json($jTableResult);
     }
 
-    public function doapproveAction()
+    public function doghnsexcludeAction()
     {
         $projectId = (int)$this->getParam(self::DATA_ID_NAME, null);
         $product = $this->_model->find($projectId)->current();

@@ -104,15 +104,15 @@ $userRoleName = $helperUserRole->userRole();
 
         <div style="clear: both" class="small">(remember the cache) after you change some value below and refresh the page you may encounter some differences to your changes</div>
         <span class="page-views ">
-          <input type="checkbox" id="feature-this-checkbox" <?php echo $this->product->featured == 1 ? ' checked=\'checked\' ' : ''; ?> />  featured
-        </span>
-        <span class="page-views ">
-            <input type="checkbox" id="approve-this-checkbox" <?php echo $this->product->approved == 1 ? ' checked=\'checked\' ' : ''; ?> />  approved
-        </span>
-        <span class="page-views ">
             <input type="checkbox" id="spam-checked-checkbox" <?php echo $this->product->spam_checked == 1 ? ' checked=\'checked\' ' : ''; ?> />  spam checked
         </span>
+        <span class="page-views ">
+          <input type="checkbox" id="feature-this-checkbox" <?php echo $this->product->featured == 1 ? ' checked=\'checked\' ' : ''; ?> />  featured
+        </span>
         <span class="page-views " style="color: red;">
+            <input type="checkbox" id="ghns_excluded-this-checkbox" <?php echo $this->product->ghns_excluded == 1 ? ' checked=\'checked\' ' : ''; ?> />  ghns-excluded
+        </span>
+        <span class="page-views" style="color: red;">
             <input type="checkbox" id="pling-excluded-checkbox" <?php echo $this->product->pling_excluded == 1 ? ' checked=\'checked\' ' : ''; ?> />  pling-excluded
         </span>
 
@@ -199,7 +199,7 @@ $userRoleName = $helperUserRole->userRole();
 
             });
 
-            $('#approve-this-checkbox').on('click', function (event) {
+            $('#ghns_excluded-this-checkbox').on('click', function (event) {
                 event.stopPropagation();
                 var status = 1;
                 if (this.checked) {
@@ -208,17 +208,17 @@ $userRoleName = $helperUserRole->userRole();
                     status = 0;
                 }
 
-                var target = "/backend/project/doapprove?project_id=<?= $this->product->project_id ?>&approved=" + status;
+                var target = "/backend/project/doghnsexclude?project_id=<?= $this->product->project_id ?>&ghns_excluded=" + status;
                 $.ajax({
                     url: target,
                     success: function (results) {
                         if (status == 0) {
-                            alert('Project remove approved successfully');
-                            $('#approve-this-checkbox').prop("checked", false);
+                            alert('Project is ghns-included successfully');
+                            $('#ghns_excluded-this-checkbox').prop("checked", false);
 
                         } else {
-                            alert('Project set approved successfully');
-                            $('#approve-this-checkbox').prop("checked", true);
+                            alert('Project is ghns-excluded successfully');
+                            $('#ghns_excluded-this-checkbox').prop("checked", true);
 
                         }
 
@@ -290,7 +290,45 @@ $userRoleName = $helperUserRole->userRole();
             });
         </script>
 
+    <?php elseif (Default_Model_DbTable_MemberRole::ROLE_NAME_MODERATOR == $userRoleName) : ?>
+        <span class="page-views " style="color: red;">
+            <input type="checkbox" id="ghns_excluded-this-checkbox" <?php echo $this->product->ghns_excluded == 1 ? ' checked=\'checked\' ' : ''; ?> />  ghns-excluded
+        </span>
+        <script>
+            $('#ghns_excluded-this-checkbox').on('click', function (event) {
+                event.stopPropagation();
+                var status = 1;
+                if (this.checked) {
+                    status = 1;
+                } else {
+                    status = 0;
+                }
+
+                var target = "/backend/project/doghnsexclude?project_id=<?= $this->product->project_id ?>&ghns_excluded=" + status;
+                $.ajax({
+                    url: target,
+                    success: function (results) {
+                        if (status == 0) {
+                            alert('Project is ghns-included successfully');
+                            $('#ghns_excluded-this-checkbox').prop("checked", false);
+
+                        } else {
+                            alert('Project is ghns-excluded successfully');
+                            $('#ghns_excluded-this-checkbox').prop("checked", true);
+
+                        }
+
+                    },
+                    error: function () {
+                        alert('Service is temporarily unavailable.');
+                    }
+                });
+
+                return false;
+            });
+        </script>
     <?php endif; ?>
+        
 
     <script>
         (function (collection_id) {

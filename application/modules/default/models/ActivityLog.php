@@ -67,7 +67,7 @@ class Default_Model_ActivityLog extends Default_Model_DbTable_ActivityLog
     const BACKEND_LOGOUT = 304;
     const BACKEND_PROJECT_DELETE = 310;
     const BACKEND_PROJECT_FEATURE = 312;
-    const BACKEND_PROJECT_APPROVED = 314;
+    const BACKEND_PROJECT_GHNS_EXCLUDED = 314;
     const BACKEND_PROJECT_CAT_CHANGE = 316;
     const BACKEND_PROJECT_PLING_EXCLUDED = 318;
     const BACKEND_USER_DELETE = 320;
