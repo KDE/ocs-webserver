@@ -266,10 +266,10 @@ class Backend_ProjectController extends Local_Controller_Action_Backend
     {
         $projectId = (int)$this->getParam(self::DATA_ID_NAME, null);
         $product = $this->_model->find($projectId)->current();
-        $approved = (int)$this->getParam(self::PARAM_APPROVED, null);
+        $ghns_excluded = (int)$this->getParam(self::PARAM_APPROVED, null);
 
-        $sql = "update project set approved = :approved, changed_at = :changed_at where project_id = :project_id";
-        $this->_model->getAdapter()->query($sql, array('approved' => $approved, 'changed_at' => $product->changed_at, 'project_id' => $projectId));
+        $sql = "update project set ghns_excluded = :ghns_excluded where project_id = :project_id";
+        $this->_model->getAdapter()->query($sql, array('ghns_excluded' => $ghns_excluded, 'project_id' => $projectId));
 
         $auth = Zend_Auth::getInstance();
         $identity = $auth->getIdentity();

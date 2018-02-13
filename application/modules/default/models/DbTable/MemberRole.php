@@ -22,6 +22,7 @@
 class Default_Model_DbTable_MemberRole extends Zend_Db_Table_Abstract
 {
     const ROLE_DEFAULT = '';
+    const ROLE_NAME_MODERATOR = 'moderator';
     const ROLE_NAME_STAFF = 'staff';
     const ROLE_NAME_ADMIN = 'admin';
 

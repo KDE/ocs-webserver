@@ -35,6 +35,7 @@ class Default_Model_DbTable_Member extends Local_Model_Table
     const MEMBER_DEFAULT_PROFILE_IMAGE = '/images/system/default-profile.png';
     const MEMBER_TYPE_GROUP = 1;
     const MEMBER_TYPE_PERSON = 0;
+    const ROLE_ID_MODERATOR = 400;
     const ROLE_ID_DEFAULT = 300;
     const ROLE_ID_STAFF = 200;
     const ROLE_ID_ADMIN = 100;
