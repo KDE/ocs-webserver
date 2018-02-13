@@ -39,8 +39,18 @@ var aItemData = [
             id: "projects",
             itemdata: [
                 {text: "Products", url: "/backend/project"},
-                {text: "Categories", url: "/backend/categories"},
                 {text: "Claims", url: "/backend/claim"}
+            ]
+        }
+    },
+    {
+        text: "Category",
+        submenu: {
+            id: "category",
+            itemdata: [
+                {text: "Categories", url: "/backend/categories"},
+                {text: "Virtual Categories", url: "/backend/vcategories"},
+                
             ]
         }
     },
@@ -109,6 +119,7 @@ var aItemData = [
             itemdata: [
                 {text: "Config", url: "/backend/store"},
                 {text: "Categories", url: "/backend/storecategories"},
+                {text: "Virtual Categories", url: "/backend/storevcategories"},
                 {text: "Init Cache", url: "/backend/store/initcache"}
             ]
         }
