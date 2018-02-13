@@ -84,16 +84,17 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                         <div class="row blockpadding">
                         <?php                                 
                                     echo $this->partial('/home/partials/product_group.phtml', array(
+                                            "title"  => "Concepts, Screenshots",
+                                            "products" => $this->productsScreenshots
+                                        )
+                                    );                                 
+                                    
+                                    echo $this->partial('/home/partials/product_group.phtml', array(
                                             "title"  => "Wallpapers",
                                             "products" => $this->productsWallpapers
                                         )
                                     );       
 
-                                    echo $this->partial('/home/partials/product_group.phtml', array(
-                                            "title"  => "Concepts, Screenshots",
-                                            "products" => $this->productsScreenshots
-                                        )
-                                    );                                 
                         ?>                                                                                                          
                         </div>
                         <div class="row blockpadding" >
@@ -105,7 +106,7 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                                      );       
 
                                      echo $this->partial('/home/partials/product_group.phtml', array(
-                                             "title"  => "Apps",
+                                             "title"  => "Applications",
                                              "products" => $this->productsApps
                                          )
                                      );                                 
