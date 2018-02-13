@@ -982,7 +982,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                         'icon'                 => '',
                         'video'                => '',
                         'detailpage'           => $previewPage,
-                        'ghns_excluded'        => $project->ghns_ecluded,
+                        'ghns_excluded'        => $project->ghns_excluded,
                         'tags'                 => $project->tags
                     ) + $previewPics + $smallPreviewPics + $downloadItems
                 )
@@ -1038,7 +1038,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                             'icon'                 => array('@text' => ''),
                             'video'                => array('@text' => ''),
                             'detailpage'           => array('@text' => $previewPage),
-                            'ghns_excluded'        => array('@text' => $project->ghns_ecluded),
+                            'ghns_excluded'        => array('@text' => $project->ghns_excluded),
                             'tags'                 => array('@text' => $project->tags)
                         ) + $previewPics + $smallPreviewPics + $downloadItems
                 )
