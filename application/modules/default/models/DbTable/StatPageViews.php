@@ -29,15 +29,16 @@ class Default_Model_DbTable_StatPageViews extends Zend_Db_Table_Abstract
     {
         if (SEARCHBOT_DETECTED) { // we don't save a page view when a search bot was detected
             Zend_Registry::get('logger')->info(__METHOD__ . ' - search bot detected. Counting page view omitted.');
+
             return;
         }
         if (false == Zend_Registry::get('config')->settings->savePageView) {
             Zend_Registry::get('logger')->info(__METHOD__ . ' - config savePageView false. Counting page view omitted.');
+
             return;
         }
 
         $this->_db->beginTransaction();
-
         try {
             $this->_db->query("INSERT LOW_PRIORITY INTO {$this->_name} (`project_id`, `ip`, `member_id`) VALUES (:param1, :param2, :param3);",
                 array(
@@ -48,7 +49,7 @@ class Default_Model_DbTable_StatPageViews extends Zend_Db_Table_Abstract
             $this->_db->commit();
         } catch (Exception $ex) {
             $this->_db->rollBack();
-            Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . print_r($ex, true));
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . $ex->getMessage());
         }
     }
 
