@@ -95,6 +95,12 @@ var ImagePreview = {
                         input.val(null);
                         ImagePreview.hasError = true;
                     }
+                    var allowedExtensions = /(jpg|jpeg|png|gif)$/i;
+                    if(!allowedExtensions.exec(t)) {
+                        image_element.parent().parent().append('<div class="bg-danger">Invalid file type: ' + file.type + '</div>');
+                        input.val(null);
+                        ImagePreview.hasError = true;
+                    }
                     if (false == ImagePreview.hasError) {
                         ImagePreview.hasError = false;
                         image_element.attr('src', _image.target.result);
