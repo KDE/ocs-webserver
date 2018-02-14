@@ -81,20 +81,18 @@ var ImagePreview = {
                         s = ~~(file.size / 1024); // + 'KB'
                     ImagePreview.hasError = false;
 
-                    $('#product-picture-container div.image-error').remove();
+                    image_element.parent().parent().find('div.bg-danger').remove();
 
                     if (w > 1024 || w < 20 || h > 1024 || h < 20) {
-                        $('#product-picture-preview').attr('src', '').hide().parent()
-                            .append('<div class="image-error">Wrong image dimensions</div>')
-                        ;
-                        $('#image_small_upload').val(null);
+                        //image_element.attr('src', '').hide().parent().append('<div class="bg-danger">Wrong image dimensions</div>');
+                        image_element.parent().parent().append('<div class="bg-danger">Wrong image dimensions</div>');
+                        input.val(null);
                         ImagePreview.hasError = true;
                     }
                     if (s > 2000) {
-                        $('#product-picture-preview').attr('src', '').hide().parent()
-                            .append('<div class="image-error">File too large</div>')
-                        ;
-                        $('#image_small_upload').val(null);
+                        //image_element.attr('src', '').hide().parent().append('<div class="bg-danger">File too large</div>');
+                        image_element.parent().parent().append('<div class="bg-danger">File too large</div>');
+                        input.val(null);
                         ImagePreview.hasError = true;
                     }
                     if (false == ImagePreview.hasError) {
@@ -104,7 +102,7 @@ var ImagePreview = {
                     }
                 };
                 image.onerror = function () {
-                    $('#product-picture-preview').parent().append('Invalid file type: ' + file.type);
+                    image_element.parent().parent().append('<div class="bg-danger">Invalid file type: ' + file.type + '</div>');
                 };
 
                 //image_element.attr('src', _image.target.result);
