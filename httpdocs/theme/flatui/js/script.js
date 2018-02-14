@@ -53,184 +53,188 @@ var newProductPage = (function () {
 })();
 
 // only instantiate when needed to instantiate:
-var ImagePreview =  {
-        hasError: false,
-        setup: function () {
-            this.initProductPicture();
-            this.initTitlePicture();
-            this.initProfilePicture();
-            this.initProfilePictureBackground();
-        },
-        previewImage: function (input, img_id) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-                var image = new Image();
-                var file = input.files[0];
-
-                reader.readAsDataURL(input.files[0]);
-                reader.onload = function (_image) {
-
-                    var image_element = $('#' + img_id);
-
-                    image.src = _image.target.result;              // url.createObjectURL(file);
-                    image.onload = function () {
-                        var w = this.width,
-                            h = this.height,
-                            t = file.type,                           // ext only: // file.type.split('/')[1],
-                            n = file.name,
-                            s = ~~(file.size / 1024); // + 'KB'
-                        ImagePreview.hasError = false;
-
-                        $('#product-picture-container div.image-error').remove();
-
-                        if (w > 1024 || w < 20 || h > 1024 || h < 20) {
-                            $('#product-picture-preview').attr('src', '').hide().parent()
-                                .append('<div class="image-error">Wrong image dimensions</div>')
-                            ;
-                            $('#image_small_upload').val(null);
-                            ImagePreview.hasError = true;
-                        }
-                        if (s > 2000) {
-                            $('#product-picture-preview').attr('src', '').hide().parent()
-                                .append('<div class="image-error">File too large</div>')
-                            ;
-                            $('#image_small_upload').val(null);
-                            ImagePreview.hasError = true;
-                        }
-                        if (false == ImagePreview.hasError) {
-                            ImagePreview.hasError = false;
-                            image_element.attr('src', _image.target.result);
-                            image_element.show();
-                        }
-                    };
-                    image.onerror = function () {
-                        $('#product-picture-preview').parent().append('Invalid file type: ' + file.type);
-                    };
-
-                    //image_element.attr('src', _image.target.result);
-                    //image_element.show();
-                    if (img_id == 'product-picture-preview') {
-                        $('button#add-product-picture').text('CHANGE LOGO');
-                    } else if (img_id == 'title-picture-preview') {
-                        $('button#add-title-picture').text('CHANGE BANNER');
-                    } else if (img_id == 'profile-picture-preview') {
-                        $('button#add-profile-picture').text('CHANGE PICTURE');
-                        $('input#profile_img_src').val('local');
-                    }else if (img_id == 'profile-picture-bg-preview') {
-                        $('button#add-profile-picture-background').text('CHANGE PICTURE');                       
-                    }
-                };
-            }
-        },
-        previewImageMember: function (input, img_id) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-                var image = new Image();
-                var file = input.files[0];
-
-                reader.readAsDataURL(input.files[0]);
-                reader.onload = function (_image) {
-
-                    var image_element = $('#' + img_id);
-
-                    image.src = _image.target.result;              // url.createObjectURL(file);
-                    image.onload = function () {                       
-                        ImagePreview.hasError = false;
-                        
-                        image_element.parent().find('.image-error').remove();
-                        
-                        if (false == ImagePreview.hasError) {                            
-                            image_element.attr('src', _image.target.result);
-                            image_element.show();
-                        }
-                    };
-
-                    image.onerror = function () {
-                        image_element.parent().append('<div class="image-error">Invalid file type</div>');
-                    };
-                  
-                    if (img_id == 'profile-picture-background-preview') {
-                        $('button#add-profile-picture-background').text('CHANGE PICTURE');                       
-                    }
-                };
-            }
-        },
-        readImage: function (file) {
-
+var ImagePreview = {
+    hasError: false,
+    setup: function () {
+        this.initProductPicture();
+        this.initTitlePicture();
+        this.initProfilePicture();
+        this.initProfilePictureBackground();
+    },
+    previewImage: function (input, img_id) {
+        if (input.files && input.files[0]) {
             var reader = new FileReader();
             var image = new Image();
+            var file = input.files[0];
 
-            reader.readAsDataURL(file);
-            reader.onload = function (_file) {
-                image.src = _file.target.result;              // url.createObjectURL(file);
+            reader.readAsDataURL(input.files[0]);
+            reader.onload = function (_image) {
+
+                var image_element = $('#' + img_id);
+
+                image.src = _image.target.result;              // url.createObjectURL(file);
                 image.onload = function () {
                     var w = this.width,
                         h = this.height,
                         t = file.type,                           // ext only: // file.type.split('/')[1],
                         n = file.name,
-                        s = ~~(file.size / 1024) + 'KB';
-                    $('#uploadPreview').append('<img src="' + this.src + '"> ' + w + 'x' + h + ' ' + s + ' ' + t + ' ' + n + '<br>');
+                        s = ~~(file.size / 1024); // + 'KB'
+                    ImagePreview.hasError = false;
+
+                    image_element.parent().parent().find('div.bg-danger').remove();
+
+                    if (w > 1024 || w < 20 || h > 1024 || h < 20) {
+                        //image_element.attr('src', '').hide().parent().append('<div class="bg-danger">Wrong image dimensions</div>');
+                        image_element.parent().parent().append('<div class="bg-danger">Wrong image dimensions</div>');
+                        input.val(null);
+                        ImagePreview.hasError = true;
+                    }
+                    if (s > 2000) {
+                        //image_element.attr('src', '').hide().parent().append('<div class="bg-danger">File too large</div>');
+                        image_element.parent().parent().append('<div class="bg-danger">File too large</div>');
+                        input.val(null);
+                        ImagePreview.hasError = true;
+                    }
+                    var allowedExtensions = /(jpg|jpeg|png|gif)$/i;
+                    if(!allowedExtensions.exec(t)) {
+                        image_element.parent().parent().append('<div class="bg-danger">Invalid file type: ' + file.type + '</div>');
+                        input.val(null);
+                        ImagePreview.hasError = true;
+                    }
+                    if (false == ImagePreview.hasError) {
+                        ImagePreview.hasError = false;
+                        image_element.attr('src', _image.target.result);
+                        image_element.show();
+                    }
                 };
                 image.onerror = function () {
-                    alert('Invalid file type: ' + file.type);
+                    image_element.parent().parent().append('<div class="bg-danger">Invalid file type: ' + file.type + '</div>');
                 };
-            };
 
-        },
-        initProductPicture: function () {
-            if ($('#image_small').length == 0) {
-                return;
-            }
-            if ($('#image_small').attr('value').length == 0) {
-                return;
-            }
-            var imageTarget = $('#image_small').data('target');
-            $(imageTarget).attr('src', 'https://cn.pling.com/cache/200x200-2/img/' + $('#image_small').attr('value'));
-            $(imageTarget).show();
-            $('button#add-product-picture').text('CHANGE LOGO');
-        },
-        initTitlePicture: function () {
-            if ($('#image_big').length == 0) {
-                return;
-            }
-            if ($('#image_big').attr('value').length == 0) {
-                return;
-            }
-            var imageTarget = $('#image_big').data('target');
-            $(imageTarget).attr('src', 'https://cn.pling.com/cache/200x200-2/img/' + $('#image_big').attr('value'));
-            $(imageTarget).show();
-            $('button#add-title-picture').text('CHANGE BANNER');
-        },
-        initProfilePicture: function () {
-            if ($('#profile_image_url').length == 0) {
-                return;
-            }
-            if ($('#profile_image_url').attr('value').length == 0) {
-                return;
-            }
-            var imageTarget = $('#profile_image_url').data('target');
-            $(imageTarget).attr('src', $('#profile_image_url').attr('value'));
-            $('#profile-picture').attr('src', $('#profile_image_url').attr('value'));
-            $(imageTarget).show();
-            $('button#add-profile-picture').text('CHANGE PICTURE');
-        },
-        initProfilePictureBackground: function () {
-            if ($('#profile_image_url_bg').length == 0) {
-                return;
-            }
-            if ($('#profile_image_url_bg').attr('value').length == 0) {
-                return;
-            }            
-            var imageTarget = $('#profile_image_url_bg').data('target');
-            $(imageTarget).attr('src', $('#profile_image_url_bg').attr('value'));           
-            $('#profile-picture-background-preview').attr('src', $('#profile_image_url_bg').attr('value'));
-            $(imageTarget).show();
-            $('button#add-profile-picture-background').text('CHANGE PICTURE');
+                //image_element.attr('src', _image.target.result);
+                //image_element.show();
+                if (img_id == 'product-picture-preview') {
+                    $('button#add-product-picture').text('CHANGE LOGO');
+                } else if (img_id == 'title-picture-preview') {
+                    $('button#add-title-picture').text('CHANGE BANNER');
+                } else if (img_id == 'profile-picture-preview') {
+                    $('button#add-profile-picture').text('CHANGE PICTURE');
+                    $('input#profile_img_src').val('local');
+                } else if (img_id == 'profile-picture-bg-preview') {
+                    $('button#add-profile-picture-background').text('CHANGE PICTURE');
+                }
+            };
         }
-    };
+    },
+    previewImageMember: function (input, img_id) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            var image = new Image();
+            var file = input.files[0];
+
+            reader.readAsDataURL(input.files[0]);
+            reader.onload = function (_image) {
+
+                var image_element = $('#' + img_id);
+
+                image.src = _image.target.result;              // url.createObjectURL(file);
+                image.onload = function () {
+                    ImagePreview.hasError = false;
+
+                    image_element.parent().find('.image-error').remove();
+
+                    if (false == ImagePreview.hasError) {
+                        image_element.attr('src', _image.target.result);
+                        image_element.show();
+                    }
+                };
+
+                image.onerror = function () {
+                    image_element.parent().append('<div class="image-error">Invalid file type</div>');
+                };
+
+                if (img_id == 'profile-picture-background-preview') {
+                    $('button#add-profile-picture-background').text('CHANGE PICTURE');
+                }
+            };
+        }
+    },
+    readImage: function (file) {
+
+        var reader = new FileReader();
+        var image = new Image();
+
+        reader.readAsDataURL(file);
+        reader.onload = function (_file) {
+            image.src = _file.target.result;              // url.createObjectURL(file);
+            image.onload = function () {
+                var w = this.width,
+                    h = this.height,
+                    t = file.type,                           // ext only: // file.type.split('/')[1],
+                    n = file.name,
+                    s = ~~(file.size / 1024) + 'KB';
+                $('#uploadPreview').append('<img src="' + this.src + '"> ' + w + 'x' + h + ' ' + s + ' ' + t + ' ' + n + '<br>');
+            };
+            image.onerror = function () {
+                alert('Invalid file type: ' + file.type);
+            };
+        };
+
+    },
+    initProductPicture: function () {
+        if ($('#image_small').length == 0) {
+            return;
+        }
+        if ($('#image_small').attr('value').length == 0) {
+            return;
+        }
+        var imageTarget = $('#image_small').data('target');
+        $(imageTarget).attr('src', 'https://cn.pling.com/cache/200x200-2/img/' + $('#image_small').attr('value'));
+        $(imageTarget).show();
+        $('button#add-product-picture').text('CHANGE LOGO');
+    },
+    initTitlePicture: function () {
+        if ($('#image_big').length == 0) {
+            return;
+        }
+        if ($('#image_big').attr('value').length == 0) {
+            return;
+        }
+        var imageTarget = $('#image_big').data('target');
+        $(imageTarget).attr('src', 'https://cn.pling.com/cache/200x200-2/img/' + $('#image_big').attr('value'));
+        $(imageTarget).show();
+        $('button#add-title-picture').text('CHANGE BANNER');
+    },
+    initProfilePicture: function () {
+        if ($('#profile_image_url').length == 0) {
+            return;
+        }
+        if ($('#profile_image_url').attr('value').length == 0) {
+            return;
+        }
+        var imageTarget = $('#profile_image_url').data('target');
+        $(imageTarget).attr('src', $('#profile_image_url').attr('value'));
+        $('#profile-picture').attr('src', $('#profile_image_url').attr('value'));
+        $(imageTarget).show();
+        $('button#add-profile-picture').text('CHANGE PICTURE');
+    },
+    initProfilePictureBackground: function () {
+        if ($('#profile_image_url_bg').length == 0) {
+            return;
+        }
+        if ($('#profile_image_url_bg').attr('value').length == 0) {
+            return;
+        }
+        var imageTarget = $('#profile_image_url_bg').data('target');
+        $(imageTarget).attr('src', $('#profile_image_url_bg').attr('value'));
+        $('#profile-picture-background-preview').attr('src', $('#profile_image_url_bg').attr('value'));
+        $(imageTarget).show();
+        $('button#add-profile-picture-background').text('CHANGE PICTURE');
+    }
+};
 
 var MenuHover = (function () {
-        return {
+    return {
 
         setup: function () {
             $('body').on('click', 'a#login-dropdown', function (event) {
@@ -510,25 +514,25 @@ var SlideShow = (function () {
 var AboutContent = (function () {
     return {
         setup: function () {
-             $('#aboutContent').on('click', function(){
-                    $.fancybox({
-                          'hideOnContentClick':           true,                                                           
-                          'autoScale'                     : true,                                                   
-                          'cyclic'                        : 'true',
-                          'transitionIn'                  : 'elastic',
-                          'transitionOut'                 : 'elastic',
-                          'type'        : 'iframe',
-                          'scrolling'   : 'no',
-                          helpers: { 
-                                overlay: { 
-                                    locked: false 
-                                } 
-                            },
-                        autoSize: true,
-                        href: '/partials/about.phtml',
-                        type: 'ajax'
-                    });
+            $('#aboutContent').on('click', function () {
+                $.fancybox({
+                    'hideOnContentClick': true,
+                    'autoScale': true,
+                    'cyclic': 'true',
+                    'transitionIn': 'elastic',
+                    'transitionOut': 'elastic',
+                    'type': 'iframe',
+                    'scrolling': 'no',
+                    helpers: {
+                        overlay: {
+                            locked: false
+                        }
+                    },
+                    autoSize: true,
+                    href: '/partials/about.phtml',
+                    type: 'ajax'
                 });
+            });
         }
     }
 
@@ -538,25 +542,25 @@ var AboutContent = (function () {
 var PlinglistContent = (function () {
     return {
         setup: function () {
-             $('#plingList').on('click', function(){
-                    $.fancybox({
-                          'hideOnContentClick':           true,                                                           
-                          'autoScale'                     : true,                                                   
-                          'cyclic'                        : 'true',
-                          'transitionIn'                  : 'elastic',
-                          'transitionOut'                 : 'elastic',
-                          'type'        : 'iframe',
-                          'scrolling'   : 'auto',
-                          helpers: { 
-                                overlay: { 
-                                    locked: false 
-                                } 
-                            },
-                        autoSize: true,
-                        href: '/plings',
-                        type: 'ajax'
-                    });
+            $('#plingList').on('click', function () {
+                $.fancybox({
+                    'hideOnContentClick': true,
+                    'autoScale': true,
+                    'cyclic': 'true',
+                    'transitionIn': 'elastic',
+                    'transitionOut': 'elastic',
+                    'type': 'iframe',
+                    'scrolling': 'auto',
+                    helpers: {
+                        overlay: {
+                            locked: false
+                        }
+                    },
+                    autoSize: true,
+                    href: '/plings',
+                    type: 'ajax'
                 });
+            });
         }
     }
 
@@ -565,10 +569,9 @@ var PlinglistContent = (function () {
 var PlingsRedirect = (function () {
     return {
         setup: function () {
-             if(document.location.hash) {            
-                 let hash = $(document.location.hash);            
-                 $('a[href="'+document.location.hash+'"]').trigger( "click" );                           
-             }
+            if (document.location.hash) {
+                $('a[href="' + document.location.hash + '"]').trigger("click");
+            }
         }
     }
 
@@ -577,23 +580,6 @@ var PlingsRedirect = (function () {
    
 
 /** PRODUCT PAGE **/
-
-    // embed code expend collapse
-/**
- * @deprecated ?
- *
-$('body').on("click", '.embed-code .sidebar-header', function (event) {
-
-    var thisIsActive = $('.embed-code').find('.panel-collapse').hasClass('in');
-
-    if (thisIsActive == true) {
-        $(this).find('.expand').removeClass('active');
-    }
-    else {
-        $(this).find('.expand').addClass('active');
-    }
-});
-**/
 // tool tips
 $('body').on('mouseenter', '.supporter-thumbnail', function () {
     $(this).popover('show');
@@ -611,7 +597,7 @@ var Partials = (function () {
                 var url = this.href;
                 var target = $(this).attr("data-target");
                 var toggle = $(this).data('toggle');
-                var pageFragment = $(this).attr("data-fragment");               
+                var pageFragment = $(this).attr("data-fragment");
                 $(target).load(url + ' ' + pageFragment, function (response, status, xhr) {
                     if (status == "error") {
                         if (xhr.status == 401) {
@@ -645,10 +631,10 @@ var PartialsButton = (function () {
             $('body').on('click', 'Button.partialbutton', function (event) {
                 event.preventDefault();
                 var url = $(this).attr("data-href");
-                var target = $(this).attr("data-target");            
+                var target = $(this).attr("data-target");
                 var toggle = $(this).data('toggle');
-                var pageFragment = $(this).attr("data-fragment");                
-                let spin = $('<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>');
+                var pageFragment = $(this).attr("data-fragment");
+                var spin = $('<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>');
                 $(target).append(spin);
                 $(target).load(url + ' ' + pageFragment, function (response, status, xhr) {
                     if (status == "error") {
@@ -682,36 +668,36 @@ var PartialsButtonHeartDetail = (function () {
             $('body').on('click', '.partialbuttonheartdetail', function (event) {
                 event.preventDefault();
                 var url = $(this).attr("data-href");
-                var target = $(this).attr("data-target");            
-                var auth = $(this).attr("data-auth");  
+                var target = $(this).attr("data-target");
+                var auth = $(this).attr("data-auth");
                 var toggle = $(this).data('toggle');
-                var pageFragment = $(this).attr("data-fragment");   
+                var pageFragment = $(this).attr("data-fragment");
 
-                if (!auth) {                   
-                     $('#review-product-modal').modal('show');
-                     return;
+                if (!auth) {
+                    $('#review-product-modal').modal('show');
+                    return;
                 }
 
                 // product owner not allow to heart copy from voting....
-                let loginuser  = $('#review-product-modal').find('#loginuser').val();
-                let productcreator  = $('#review-product-modal').find('#productcreator').val();
-                if(loginuser == productcreator){
+                var loginuser = $('#review-product-modal').find('#loginuser').val();
+                var productcreator = $('#review-product-modal').find('#productcreator').val();
+                if (loginuser == productcreator) {
                     // ignore
-                     $('#review-product-modal').find('#votelabel').text('Project owner not allowed');
-                     $('#review-product-modal').find('.modal-body').empty();
-                     $('#review-product-modal').modal('show');
-                     return;
+                    $('#review-product-modal').find('#votelabel').text('Project owner not allowed');
+                    $('#review-product-modal').find('.modal-body').empty();
+                    $('#review-product-modal').modal('show');
+                    return;
                 }
 
-                let spin = $('<span class="glyphicon glyphicon-refresh spinning" style="opacity: 0.6; z-index:1000;position: relative; left: 0;top: 0px;"></span>');
+                var spin = $('<span class="glyphicon glyphicon-refresh spinning" style="opacity: 0.6; z-index:1000;position: relative; left: 0;top: 0px;"></span>');
                 $(target).prepend(spin);
-               
+
                 $(target).load(url + ' ' + pageFragment, function (response, status, xhr) {
                     if (status == "error") {
                         if (xhr.status == 401) {
                             if (response) {
                                 var data = jQuery.parseJSON(response);
-                                var redirect = data.login_url;                                
+                                var redirect = data.login_url;
                                 if (redirect) {
                                     window.location = redirect;
                                 } else {
@@ -726,7 +712,7 @@ var PartialsButtonHeartDetail = (function () {
                         $(toggle).modal('show');
                     }
                 });
-               
+
                 return false;
             });
         }
@@ -739,62 +725,64 @@ var PartialsReview = (function () {
         setup: function () {
             $('body').on('click', 'a.partial', function (event) {
                 event.preventDefault();
-                let url = this.href;
-                let target = $(this).attr("data-target");
-                let toggle = $(this).data('toggle');
-                let pageFragment = $(this).attr("data-fragment");
+                var url = this.href;
+                var target = $(this).attr("data-target");
+                var toggle = $(this).data('toggle');
+                var pageFragment = $(this).attr("data-fragment");
 
                 // product owner not allow to vote
-                let loginuser  = $('#review-product-modal').find('#loginuser').val();
-                let productcreator  = $('#review-product-modal').find('#productcreator').val();
-                if(loginuser == productcreator){
+                var loginuser = $('#review-product-modal').find('#loginuser').val();
+                var productcreator = $('#review-product-modal').find('#productcreator').val();
+                if (loginuser == productcreator) {
                     // ignore
-                     $('#review-product-modal').find('#votelabel').text('Project owner not allowed');
-                     $('#review-product-modal').find('.modal-body').empty();
-                     $('#review-product-modal').modal('show');
-                     return;
+                    $('#review-product-modal').find('#votelabel').text('Project owner not allowed');
+                    $('#review-product-modal').find('.modal-body').empty();
+                    $('#review-product-modal').modal('show');
+                    return;
                 }
-                
-                let userrate = $('#review-product-modal').find('#userrate').val();
-                // -1 = no rate yet. 0= dislike  1=like                                
-                
-                if($( this ).hasClass( "voteup" )){
-                        if(userrate==1){
-                            $('#review-product-modal').find('#votelabel').empty()                                
-                                .append('<a class="btn btn-success active" style="line-height: 10px;"><span class="fa fa-plus"></span></a> is given already with comment:');                                
-                            $('#review-product-modal').find(':submit').attr("disabled", "disabled").css("display", "none");        
-                            $('#review-product-modal').find('#commenttext').attr("disabled", "disabled");                                             
-                        }else{
-                            $('#review-product-modal').find('input#voteup').val(1);      
-                            $('#review-product-modal').find('#votelabel').empty()                                
-                                .append('<a class="btn btn-success active" style="line-height: 10px;"><span class="fa fa-plus"></span></a> Add Comment (optional):');                                                                                      
-                            $('#review-product-modal').find('#commenttext').val('');
-                            $('#review-product-modal').find('#commenttext').removeAttr("disabled");
-                             $('#review-product-modal').find(':submit').css("display", "block").removeAttr("disabled"); 
-                            
-                        }                        
-                }else{ // vote down
-                        if(userrate==0){
-                             $('#review-product-modal').find('#votelabel').empty()                                
-                                 .append('<a class="btn btn-danger active" style="line-height: 10px;"><span class="fa fa-minus"></span></a> is given already with comment: ');                                                                                      
-                              $('#review-product-modal').find('#commenttext').attr("disabled", "disabled"); 
-                            $('#review-product-modal').find(':submit').attr("disabled", "disabled").css("display", "none");     
 
-                        }else{
-                            $('#review-product-modal').find('input#voteup').val(2);                               
-                            $('#review-product-modal').find('#votelabel').empty()                                
-                                .append('<a class="btn btn-danger active" style="line-height: 10px;"><span class="fa fa-minus"></span></a> Add Comment (optional): ');                                                                                                                  
-                            $('#review-product-modal').find('#commenttext').val('');
-                            $('#review-product-modal').find('#commenttext').removeAttr("disabled");
-                            $('#review-product-modal').find(':submit').removeAttr("disabled").css("display", "block");             
-                             
-                        }
+                var userrate = $('#review-product-modal').find('#userrate').val();
+                // -1 = no rate yet. 0= dislike  1=like                                
+
+                if ($(this).hasClass("voteup")) {
+                    if (userrate == 1) {
+                        $('#review-product-modal').find('#votelabel').empty()
+                            .append('<a class="btn btn-success active" style="line-height: 10px;"><span class="fa fa-plus"></span></a> is given already with comment:');
+                        $('#review-product-modal').find(':submit').attr("disabled", "disabled").css("display", "none");
+                        $('#review-product-modal').find('#commenttext').attr("disabled", "disabled");
+                    } else {
+                        $('#review-product-modal').find('input#voteup').val(1);
+                        $('#review-product-modal').find('#votelabel').empty()
+                            .append('<a class="btn btn-success active" style="line-height: 10px;"><span class="fa fa-plus"></span></a> Add Comment (optional):');
+                        $('#review-product-modal').find('#commenttext').val('');
+                        $('#review-product-modal').find('#commenttext').removeAttr("disabled");
+                        $('#review-product-modal').find(':submit').css("display", "block").removeAttr("disabled");
+
+                    }
+                } else { // vote down
+                    if (userrate == 0) {
+                        $('#review-product-modal').find('#votelabel').empty()
+                            .append('<a class="btn btn-danger active" style="line-height: 10px;"><span class="fa fa-minus"></span></a> is given already with comment: ');
+                        $('#review-product-modal').find('#commenttext').attr("disabled", "disabled");
+                        $('#review-product-modal').find(':submit').attr("disabled", "disabled").css("display", "none");
+
+                    } else {
+                        $('#review-product-modal').find('input#voteup').val(2);
+                        $('#review-product-modal').find('#votelabel').empty()
+                            .append('<a class="btn btn-danger active" style="line-height: 10px;"><span class="fa fa-minus"></span></a> Add Comment (optional): ');
+                        $('#review-product-modal').find('#commenttext').val('');
+                        $('#review-product-modal').find('#commenttext').removeAttr("disabled");
+                        $('#review-product-modal').find(':submit').removeAttr("disabled").css("display", "block");
+
+                    }
                 }
-               
-               $('#review-product-modal').modal('show');
-               if($('#review-product-modal').hasClass('noid')){
-                    setTimeout(function() {$('#review-product-modal').modal('hide');}, 2000);
-               }                          
+
+                $('#review-product-modal').modal('show');
+                if ($('#review-product-modal').hasClass('noid')) {
+                    setTimeout(function () {
+                        $('#review-product-modal').modal('hide');
+                    }, 2000);
+                }
                 return false;
             });
         }
@@ -802,55 +790,56 @@ var PartialsReview = (function () {
 })();
 
 
-
 var PartialsReviewDownloadHistory = (function () {
     return {
         setup: function () {
             $('body').on('click', 'button.partialReviewDownloadHistory', function (event) {
                 event.preventDefault();
-                                              
-                let userrate = $(this).attr("data-userrate");
+
+                var userrate = $(this).attr("data-userrate");
                 // -1 = no rate yet. 0= dislike  1=like                                                                
                 $('#review-product-modal').find('#commenttext').val($(this).attr("data-comment"));
                 $('#review-product-modal').find('#form_p').val($(this).attr("data-project"));
 
-                if($( this ).hasClass( "voteup" )){
-                        if(userrate==1){
-                            $('#review-product-modal').find('#votelabel').empty()                                
-                                .append('<a class="btn btn-success active" style="line-height: 10px;"><span class="fa fa-plus"></span></a> is given already with comment:');                                
-                            $('#review-product-modal').find(':submit').attr("disabled", "disabled").css("display", "none");        
-                            $('#review-product-modal').find('#commenttext').attr("disabled", "disabled");                                             
-                        }else{
-                            $('#review-product-modal').find('input#voteup').val(1);      
-                            $('#review-product-modal').find('#votelabel').empty()                                
-                                .append('<a class="btn btn-success active" style="line-height: 10px;"><span class="fa fa-plus"></span></a> Add Comment (optional):');                                                                                      
-                            $('#review-product-modal').find('#commenttext').val('');
-                            $('#review-product-modal').find('#commenttext').removeAttr("disabled");
-                             $('#review-product-modal').find(':submit').css("display", "block").removeAttr("disabled"); 
-                            
-                        }                        
-                }else{ // vote down
-                        if(userrate==0){
-                             $('#review-product-modal').find('#votelabel').empty()                                
-                                 .append('<a class="btn btn-danger active" style="line-height: 10px;"><span class="fa fa-minus"></span></a> is given already with comment: ');                                                                                      
-                              $('#review-product-modal').find('#commenttext').attr("disabled", "disabled"); 
-                            $('#review-product-modal').find(':submit').attr("disabled", "disabled").css("display", "none");     
+                if ($(this).hasClass("voteup")) {
+                    if (userrate == 1) {
+                        $('#review-product-modal').find('#votelabel').empty()
+                            .append('<a class="btn btn-success active" style="line-height: 10px;"><span class="fa fa-plus"></span></a> is given already with comment:');
+                        $('#review-product-modal').find(':submit').attr("disabled", "disabled").css("display", "none");
+                        $('#review-product-modal').find('#commenttext').attr("disabled", "disabled");
+                    } else {
+                        $('#review-product-modal').find('input#voteup').val(1);
+                        $('#review-product-modal').find('#votelabel').empty()
+                            .append('<a class="btn btn-success active" style="line-height: 10px;"><span class="fa fa-plus"></span></a> Add Comment (optional):');
+                        $('#review-product-modal').find('#commenttext').val('');
+                        $('#review-product-modal').find('#commenttext').removeAttr("disabled");
+                        $('#review-product-modal').find(':submit').css("display", "block").removeAttr("disabled");
 
-                        }else{
-                            $('#review-product-modal').find('input#voteup').val(2);                               
-                            $('#review-product-modal').find('#votelabel').empty()                                
-                                .append('<a class="btn btn-danger active" style="line-height: 10px;"><span class="fa fa-minus"></span></a> Add Comment (optional): ');                                                                                                                  
-                            $('#review-product-modal').find('#commenttext').val('');
-                            $('#review-product-modal').find('#commenttext').removeAttr("disabled");
-                            $('#review-product-modal').find(':submit').removeAttr("disabled").css("display", "block");             
-                             
-                        }
+                    }
+                } else { // vote down
+                    if (userrate == 0) {
+                        $('#review-product-modal').find('#votelabel').empty()
+                            .append('<a class="btn btn-danger active" style="line-height: 10px;"><span class="fa fa-minus"></span></a> is given already with comment: ');
+                        $('#review-product-modal').find('#commenttext').attr("disabled", "disabled");
+                        $('#review-product-modal').find(':submit').attr("disabled", "disabled").css("display", "none");
+
+                    } else {
+                        $('#review-product-modal').find('input#voteup').val(2);
+                        $('#review-product-modal').find('#votelabel').empty()
+                            .append('<a class="btn btn-danger active" style="line-height: 10px;"><span class="fa fa-minus"></span></a> Add Comment (optional): ');
+                        $('#review-product-modal').find('#commenttext').val('');
+                        $('#review-product-modal').find('#commenttext').removeAttr("disabled");
+                        $('#review-product-modal').find(':submit').removeAttr("disabled").css("display", "block");
+
+                    }
                 }
-               
-               $('#review-product-modal').modal('show');
-               if($('#review-product-modal').hasClass('noid')){
-                    setTimeout(function() {$('#review-product-modal').modal('hide');}, 2000);
-               }                          
+
+                $('#review-product-modal').modal('show');
+                if ($('#review-product-modal').hasClass('noid')) {
+                    setTimeout(function () {
+                        $('#review-product-modal').modal('hide');
+                    }, 2000);
+                }
                 return false;
             });
         }
@@ -865,10 +854,10 @@ var PartialForms = (function () {
                 event.stopImmediatePropagation();
 
 
-               $(this).find(':submit').attr("disabled", "disabled");
-               $(this).find(':submit').css("white-space", "normal");
-               let spin = $('<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>');
-               $(this).find(':submit').append(spin);
+                $(this).find(':submit').attr("disabled", "disabled");
+                $(this).find(':submit').css("white-space", "normal");
+                var spin = $('<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>');
+                $(this).find(':submit').append(spin);
 
                 var target = $(this).attr("data-target");
                 var trigger = $(this).attr("data-trigger");
@@ -881,7 +870,7 @@ var PartialForms = (function () {
                         $(target).empty().html("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
                         return false;
                     },
-                    success: function (results) {                         
+                    success: function (results) {
                         $(target).empty().html(results);
                         $(target).find(trigger).trigger('click');
                         return false;
@@ -1007,35 +996,35 @@ var PartialPayPal = (function () {
 var PartialCommentReviewForm = (function () {
     return {
         setup: function () {
-            this.initForm();          
+            this.initForm();
         },
         initForm: function () {
             $('body').on("submit", 'form.product-add-comment-review', function (event) {
                 event.preventDefault();
                 event.stopImmediatePropagation();
-                
+
                 $(this).find(':submit').attr("disabled", "disabled");
                 $(this).find(':submit').css("white-space", "normal");
-                let spin = $('<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>');
+                var spin = $('<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>');
                 $(this).find(':submit').append(spin);
-                
+
                 jQuery.ajax({
                     data: $(this).serialize(),
                     url: this.action,
                     type: this.method,
-                    error: function (jqXHR, textStatus, errorThrown) {                        
+                    error: function (jqXHR, textStatus, errorThrown) {
                         $('#review-product-modal').modal('hide');
                         var msgBox = $('#generic-dialog');
                         msgBox.modal('hide');
-                        msgBox.find('.modal-header-text').empty().append('Please try later.');                        
+                        msgBox.find('.modal-header-text').empty().append('Please try later.');
                         msgBox.find('.modal-body').empty().append("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
                         setTimeout(function () {
                             msgBox.modal('show');
-                        }, 900);                        
+                        }, 900);
                     },
-                    success: function (results) {                        
-                        $('#review-product-modal').modal('hide');                                        
-                        location.reload();              
+                    success: function (results) {
+                        $('#review-product-modal').modal('hide');
+                        location.reload();
                     }
                 });
                 return false;
@@ -1050,13 +1039,13 @@ var PartialFormsAjax = (function () {
             var form = $('form.partialajax');
             var target = form.attr("data-target");
             var trigger = form.attr("data-trigger");
-            
-           $(form).find(':submit').on('click',function(){
-                             $(form).find(':submit').attr("disabled", "disabled");
-                             $(form).find(':submit').css("white-space", "normal");
-                             let spin = $('<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>');
-                             $(form).find(':submit').append(spin);
-                     });            
+
+            $(form).find(':submit').on('click', function () {
+                $(form).find(':submit').attr("disabled", "disabled");
+                $(form).find(':submit').css("white-space", "normal");
+                var spin = $('<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>');
+                $(form).find(':submit').append(spin);
+            });
 
             form.ajaxForm({
                 error: function () {
@@ -1079,12 +1068,12 @@ var PartialFormsAjaxMemberBg = (function () {
             var target = form.attr("data-target");
             var trigger = form.attr("data-trigger");
 
-            $(form).find(':submit').on('click',function(){
-                    $(form).find(':submit').attr("disabled", "disabled");
-                    $(form).find(':submit').css("white-space", "normal");
-                    let spin = $('<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>');
-                    $(form).find(':submit').append(spin);
-            });            
+            $(form).find(':submit').on('click', function () {
+                $(form).find(':submit').attr("disabled", "disabled");
+                $(form).find(':submit').css("white-space", "normal");
+                var spin = $('<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>');
+                $(form).find(':submit').append(spin);
+            });
 
             form.ajaxForm({
                 error: function () {
@@ -1108,7 +1097,7 @@ var AjaxForm = (function () {
             $('body').on("submit", idElement, function (event) {
                 //event.preventDefault();
                 //event.stopImmediatePropagation();
-                                
+
                 $(idElement).find('button').attr("disabled", "disabled");
                 $(idElement).find('.glyphicon.glyphicon-send').removeClass('glyphicon-send').addClass('glyphicon-refresh spinning');
 
@@ -1118,7 +1107,7 @@ var AjaxForm = (function () {
                     type: this.method,
                     dataType: "json",
 
-                    error: function ( jqXHR, textStatus, errorThrown ) {
+                    error: function (jqXHR, textStatus, errorThrown) {
                         var results = JSON && JSON.parse(jqXHR.responseText) || $.parseJSON(jqXHR.responseText);
                         var msgBox = $('#generic-dialog');
                         msgBox.modal('hide');
@@ -1129,7 +1118,7 @@ var AjaxForm = (function () {
                         }, 900);
                     },
                     success: function (results) {
-                        if (results.status == 'ok') {                           
+                        if (results.status == 'ok') {
                             $(target).empty().html(results.data);
                         }
                         if (results.status == 'error') {
@@ -1143,17 +1132,14 @@ var AjaxForm = (function () {
                 });
 
                 return false;
-            });           
+            });
         }
     }
 })();
 
 var WidgetModalAjax = (function () {
-
     return {
-
         setup: function () {
-
             $('.my-product-item').find('a.widget-button').on('click', function () {
 
                 var this_rel = $(this).attr('rel');
@@ -1169,17 +1155,17 @@ var WidgetModalAjax = (function () {
                     }
                 });
             });
-
         }
     }
-
 })();
 
 var LoginContainer = (function () {
     return {
         update: function () {
             if (!Date.now) {
-                Date.now = function() { return new Date().getTime(); }
+                Date.now = function () {
+                    return new Date().getTime();
+                }
             }
             var timestamp = Date.now() / 1000 | 0;
             var target = '#login_container';
@@ -1195,65 +1181,38 @@ var LoginContainer = (function () {
 var RssNews = (function () {
     return {
         setup: function () {
-              
-              let json_url="https://blog.opendesktop.org/?json=1&callback=?";
-              $.getJSON(json_url, function(res) {                
-                    var crss ='';                  
-                    $.each( res.posts, function( i, item ) {                           
-                               if ( i >= 3 ) {
-                                 return false;
-                               }
-                               var m = moment(item.date);
-                               crss+='<div class="commentstore"><a href="'+item.url+'"><span class="title">'+item.title +'</span></a><br/>' + item.excerpt
-                               +'<span class="date">'+m.format('MMM DD YYYY LT')+'</span></div>';                           
-                             }); 
-                    $("#rss-feeds").html(crss);
-                 
-              });               
-        }
-        
-    }
-})();
 
-var ToggleSidebar = (function () {
-    return {
-        setup: function () {            
-            if($.cookie('sidebar-right-ishidden')==1){
-                $('#btnTogglesidebar').addClass('glyphicon-arrow-left');
-                $('.sidebar-right').hide();
-            }else{
-                $('#btnTogglesidebar').addClass('glyphicon-arrow-right');
-                $('.sidebar-right').show();
-            }    
+            var json_url = "https://blog.opendesktop.org/?json=1&callback=?";
+            $.getJSON(json_url, function (res) {
+                var crss = '';
+                $.each(res.posts, function (i, item) {
+                    if (i >= 3) {
+                        return false;
+                    }
+                    var m = moment(item.date);
+                    crss += '<div class="commentstore"><a href="' + item.url + '"><span class="title">' + item.title + '</span></a><br/>' + item.excerpt
+                        + '<span class="date">' + m.format('MMM DD YYYY LT') + '</span></div>';
+                });
+                $("#rss-feeds").html(crss);
 
-            $('#btnTogglesidebar').on('click',function(){               
-               $('.sidebar-right').toggle();               
-               if($(this).hasClass( 'glyphicon-arrow-right')){
-                    $(this).removeClass('glyphicon-arrow-right').addClass('glyphicon-arrow-left');
-                    $.cookie('sidebar-right-ishidden',1);
-               }else if($(this).hasClass( 'glyphicon-arrow-left')){
-                    $(this).removeClass('glyphicon-arrow-left').addClass('glyphicon-arrow-right');
-                    $.cookie('sidebar-right-ishidden',0);
-               }
-               
-               
-            })
+            });
         }
+
     }
 })();
 
 var ProductDetailCarousel = (function () {
     return {
-        setup: function () {            
+        setup: function () {
             $('.carousel-inner img').each(function (index) {
                 $(this).on("click", function () {
-                  if($("#product-main-img-container").hasClass("imgfull")){
-                    $('#product-main-img-container').prependTo($('#product-main')); 
-                  }else{
-                    $('#product-main-img-container').prependTo($('#product-page-content')); 
-                  }                    
-                  $("#product-main-img-container").toggleClass("imgfull");
-                  $("#product-main-img-container").toggleClass("imgsmall");
+                    if ($("#product-main-img-container").hasClass("imgfull")) {
+                        $('#product-main-img-container').prependTo($('#product-main'));
+                    } else {
+                        $('#product-main-img-container').prependTo($('#product-page-content'));
+                    }
+                    $("#product-main-img-container").toggleClass("imgfull");
+                    $("#product-main-img-container").toggleClass("imgsmall");
                 });
             });
         }
@@ -1262,218 +1221,106 @@ var ProductDetailCarousel = (function () {
 
 var ProductDetailCommentTooltip = (function () {
     return {
-        setup: function () {            
-                 $('.tooltipuser').tooltipster(
-                    {
-                       side:'right',                   
-                       theme: ['tooltipster-light','tooltipster-light-customized'],
-                       contentCloning: true,
-                       contentAsHTML: true,
-                       interactive: true,
-                       functionBefore: function(instance, helper) {                           
-                               var $origin = $(helper.origin);                          
-                               var userid = $origin.attr('data-user');                                                                           
-                               if ($origin.data('loaded') !== true) {
-                                   $.get('/member/'+userid+'/tooltip/', function(data) {     
-                                        let d = data.data;
-                                        let tmp = '<div class="mytooltip"><div class="header">'+d.username
-                                                    +' <span class="glyphicon glyphicon-map-marker"></span>'+d.countrycity
-                                                    +'</div>'
-                                                    +'<div class="statistic">'
-                                                    +'<div class="row"><span class="title">'+d.cntProjects+'</span> products </div>'
-                                                    +'<div class="row"><span class="title">'+d.totalComments+'</span> comments </div>'
-                                                    +'<div class="row">Likes <span class="title">'+d.cntLikesGave+'</span>  products </div>'
-                                                    +'<div class="row">Got <span class="title">'+d.cntLikesGot+'</span> Likes <i class="fa fa-heart myfav" aria-hidden="true"></i> </div>'
-                                                    +'<div class="row">Last time active : '+d.lastactive_at+' </div>'
-                                                    +'<div class="row">Joined : '+d.created_at+' </div>'
-                                                    +'</div>';
+        setup: function () {
+            $('.tooltipuser').tooltipster(
+                {
+                    side: 'right',
+                    theme: ['tooltipster-light', 'tooltipster-light-customized'],
+                    contentCloning: true,
+                    contentAsHTML: true,
+                    interactive: true,
+                    functionBefore: function (instance, helper) {
+                        var origin = $(helper.origin);
+                        var userid = origin.attr('data-user');
+                        if (origin.data('loaded') !== true) {
+                            $.get('/member/' + userid + '/tooltip/', function (data) {
+                                var d = data.data;
+                                var tmp = '<div class="mytooltip"><div class="header">' + d.username
+                                    + ' <span class="glyphicon glyphicon-map-marker"></span>' + d.countrycity
+                                    + '</div>'
+                                    + '<div class="statistic">'
+                                    + '<div class="row"><span class="title">' + d.cntProjects + '</span> products </div>'
+                                    + '<div class="row"><span class="title">' + d.totalComments + '</span> comments </div>'
+                                    + '<div class="row">Likes <span class="title">' + d.cntLikesGave + '</span>  products </div>'
+                                    + '<div class="row">Got <span class="title">' + d.cntLikesGot + '</span> Likes <i class="fa fa-heart myfav" aria-hidden="true"></i> </div>'
+                                    + '<div class="row">Last time active : ' + d.lastactive_at + ' </div>'
+                                    + '<div class="row">Joined : ' + d.created_at + ' </div>'
+                                    + '</div>';
 
+                                tmp = tmp + '</div>';
 
-                                        tmp = tmp +'</div>';
-                                       
-                                       
-                                
-
-                                       instance.content(tmp);                                   
-                                       $origin.data('loaded', true);
-                                   });
-                               }
-                           }
-
+                                instance.content(tmp);
+                                origin.data('loaded', true);
+                            });
+                        }
                     }
-                );
+
+                }
+            );
         }
     }
 })();
-
-var Metaheader = (function () {
-    return {
-        setup: function () {                                             
-            $('body').on('click', '#toggleStoreBtn', function (event) {
-                event.stopPropagation();
-                //$( "#toggleStoreContainer" ).slideToggle( "slow" );
-                $( "#toggleStoreContainer" ).toggle();
-            }).click(function () {
-                let t = $('#toggleStoreContainer');
-                if(t.css('display') == 'block'){
-                 //t.slideToggle( "slow" );
-                 t.toggle();
-               }  
-            });
-
-        }
-    }
-})();
-
-var LayoutSwitch = (function () {
-    return {
-        setup: function () {            
-            
-            $('#btnSwitchLayout').on('click',function(){               
-               if($.cookie('layout')=='grid'){
-                    $.cookie('layout','list',{ path: '/' });
-                }else{
-                    $.cookie('layout','grid',{ path: '/' });
-                }    
-               
-                location.reload(); 
-               
-            })
-        }
-    }
-})();
-
 
 var AboutMePage = (function () {
-  return {
-      setup: function (username) {
-          var t = $(document).prop('title');
-          var tnew = username+"'s Profile "+t;
-          $(document).prop('title', tnew);
-      }
-  }
+    return {
+        setup: function (username) {
+            var t = $(document).prop('title');
+            var tnew = username + "'s Profile " + t;
+            $(document).prop('title', tnew);
+        }
+    }
 })();
 
-
-var AboutMeMyProjectsPaging = (function () {
-  return {
-      setup: function () {                
-        $(window).scroll(function() {
-            
-            var end = $("footer").offset().top;             
-            var viewEnd = $(window).scrollTop() + $(window).height(); 
-            var distance = end - viewEnd; 
-            if (distance < 300){
-            // }
-            // if($(window).scrollTop() == $(document).height() - $(window).height()) {
-                    if(!$('button#btnshowmoreproducts').length) return;                        
-                    let indicator = '<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>';  
-                    let nextpage = $('button#btnshowmoreproducts').attr('data-page');     
-                    $('button#btnshowmoreproducts').remove();
-                    $url = window.location.href;
-                    target = '#my-products-list';
-                    let container = $('<div></div>').append(indicator).load($url,{projectpage:nextpage},function (response, status, xhr) {
-                            if (status == "error") {
-                                if (xhr.status == 401) {
-                                    if (response) {
-                                        var data = jQuery.parseJSON(response);
-                                        var redirect = data.login_url;
-                                        if (redirect) {
-                                            window.location = redirect;
-                                        } else {
-                                            window.location = "/login";
-                                        }
-                                    }
-                                } else {
-                                    $(target).empty().html('Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.');
-                                }
-                            }                      
-                        });
-                    $('#my-products-list').append(container);      
-            }
-        });
-
-
-      }
-  }
-})();
-
-var AboutMeMyProjectsPagingButton = (function () {
-  return {
-      setup: function () {        
-        let indicator = '<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>';               
-        $('body').on('click', 'button#btnshowmoreproducts', function (event) {                                                        
-                let nextpage = $(this).attr('data-page');                                            
-                $(this).remove();
-                $url = window.location.href;
-                target = '#my-products-list';
-                let container = $('<div></div>').append(indicator).load($url,{projectpage:nextpage},function (response, status, xhr) {
-                        if (status == "error") {
-                            if (xhr.status == 401) {
-                                if (response) {
-                                    var data = jQuery.parseJSON(response);
-                                    var redirect = data.login_url;
-                                    if (redirect) {
-                                        window.location = redirect;
-                                    } else {
-                                        window.location = "/login";
-                                    }
-                                }
-                            } else {
-                                $(target).empty().html('Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.');
-                            }
-                        }                      
-                    });
-                $('#my-products-list').append(container);                
-        });
-
-
-      }
-  }
-})();
 
 var productRatingToggle = (function () {
     return {
-        setup: function () {                    
-            $('#showRatingAll').on('click',function(){   
+        setup: function () {
+            $('#showRatingAll').on('click', function () {
                 $('#ratings-panel').find('.spinning').show();
-                setTimeout(function() {$('#ratings-panel').find('.spinning').hide();}, 500);
-                $('.btnRateFilter').removeClass('activeRating');
-                $(this).addClass('activeRating');  
-                $('.productRating-rows').show();               
-               $('.productRating-rows-inactive').show();                                                                
-            })
-
-            $('#showRatingActive').on('click',function(){ 
-            $('#ratings-panel').find('.spinning').show();
-                setTimeout(function() {$('#ratings-panel').find('.spinning').hide();}, 500);  
-                $('.btnRateFilter').removeClass('activeRating');
-                $(this).addClass('activeRating');            
-                $('.productRating-rows').show();         
-               $('.productRating-rows-inactive').hide();                                            
-            })
-
-             $('#showRatingUpvotes').on('click',function(){      
-             $('#ratings-panel').find('.spinning').show();
-                setTimeout(function() {$('#ratings-panel').find('.spinning').hide();}, 500); 
+                setTimeout(function () {
+                    $('#ratings-panel').find('.spinning').hide();
+                }, 500);
                 $('.btnRateFilter').removeClass('activeRating');
                 $(this).addClass('activeRating');
-               $('.productRating-rows').show();        
-               $('.clsDownvotes').hide();                                                     
-               $('.productRating-rows-inactive').hide();                  
-            })
+                $('.productRating-rows').show();
+                $('.productRating-rows-inactive').show();
+            });
 
-
-             $('#showRatingDownvotes').on('click',function(){    
-             $('#ratings-panel').find('.spinning').show();
-                setTimeout(function() {$('#ratings-panel').find('.spinning').hide();}, 500); 
+            $('#showRatingActive').on('click', function () {
+                $('#ratings-panel').find('.spinning').show();
+                setTimeout(function () {
+                    $('#ratings-panel').find('.spinning').hide();
+                }, 500);
                 $('.btnRateFilter').removeClass('activeRating');
-                $(this).addClass('activeRating');          
-                $('.productRating-rows').show();                                                                                
-                $('.productRating-rows-inactive').hide();                                         
-                $('.clsUpvotes').hide();         
-            })
+                $(this).addClass('activeRating');
+                $('.productRating-rows').show();
+                $('.productRating-rows-inactive').hide();
+            });
+
+            $('#showRatingUpvotes').on('click', function () {
+                $('#ratings-panel').find('.spinning').show();
+                setTimeout(function () {
+                    $('#ratings-panel').find('.spinning').hide();
+                }, 500);
+                $('.btnRateFilter').removeClass('activeRating');
+                $(this).addClass('activeRating');
+                $('.productRating-rows').show();
+                $('.clsDownvotes').hide();
+                $('.productRating-rows-inactive').hide();
+            });
+
+
+            $('#showRatingDownvotes').on('click', function () {
+                $('#ratings-panel').find('.spinning').show();
+                setTimeout(function () {
+                    $('#ratings-panel').find('.spinning').hide();
+                }, 500);
+                $('.btnRateFilter').removeClass('activeRating');
+                $(this).addClass('activeRating');
+                $('.productRating-rows').show();
+                $('.productRating-rows-inactive').hide();
+                $('.clsUpvotes').hide();
+            });
         }
     }
 })();
-

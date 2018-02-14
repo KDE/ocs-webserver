@@ -7,7 +7,8 @@ $modelSearch = new Default_Model_Solr();
 try {
     $this->result = $modelSearch->search($param);
 } catch (Exception $e) {
-    Zend_Registry::get('logger')->err(__FILE__.'('.__LINE__.')'.' -- message: '.$e->getTraceAsString());
+    Zend_Registry::get('logger')->err(__FILE__.'('.__LINE__.') -- params: '.print_r($param, true)."\n".' message: '."\n".$e->getMessage());
+
     $this->result = array('hits' => array(), 'response' => array('numFound' => 0));
 }
 $this->pagination = $pagination = $modelSearch->getPagination();
