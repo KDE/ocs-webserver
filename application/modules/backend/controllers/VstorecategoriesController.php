@@ -20,7 +20,7 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-class Backend_StorevcategoriesController extends Local_Controller_Action_Backend
+class Backend_VstorecategoriesController extends Local_Controller_Action_Backend
 {
 
     const RESULT_OK = "OK";

@@ -119,7 +119,7 @@ var aItemData = [
             itemdata: [
                 {text: "Config", url: "/backend/store"},
                 {text: "Categories", url: "/backend/storecategories"},
-                {text: "Virtual Categories", url: "/backend/storevcategories"},
+                {text: "Virtual Categories", url: "/backend/vstorecategories"},
                 {text: "Init Cache", url: "/backend/store/initcache"}
             ]
         }

@@ -115,21 +115,10 @@
                         return;
                     }
 
-                    if ($(this).data('record').cat_id == 1) {
-                        sendPostId = $(this).data('record').rgt - 1;
-                    } else {
-                        if (($(this).data('record').rgt - $(this).data('record').lft) > 1) {
-                            sendPostId = $(this).data('record').rgt - 1;
-                        } else {
-                            sendPostId = $(this).data('record').lft;
-                        }
-                    }
+                    sendPostId = $(this).data('record').v_category_id;
 
-                    $('#TableContainer').jtable('addRecord', {
-                        record: {
-                            "title": $("#subcat-title").val(),
-                            "rgt": sendPostId
-                        }
+                    $('#TableContainer').jtable('load', {
+                        filter_deleted: $('#filter_deleted').is(':checked') ? $('#filter_deleted').val() : 0
                     });
                     $(this).dialog("close");
                 }
@@ -156,6 +145,7 @@
                 },
                 success: function (data, textStatus, jqXHR) {
                     return false;
+                    
                 }
             });
 
@@ -224,27 +214,21 @@
                     key: true,
                     create: false,
                     edit: false,
-                    width: '5%'
+                    width: '1%'
                 },
-                title: {
-                    title: 'Title',
+                project_category_id: {
+                    title: 'Real Cat ID',
+                    key: true,
                     create: false,
                     edit: false,
-                    list: true,
-                    width: '3%'
+                    width: '1%'
                 },
-                parent: {
-                    title: 'parent',
+                title_show: {
+                    title: 'Title',
                     create: true,
                     edit: true,
-                    list: false,
-                    options: function (data) {
-                        data.clearCache();
-                        if (data.source == 'edit') {
-                            return '/backend/categories/tree?c=' + data.record.project_category_id;
-                        }
-                        return '/backend/categories/tree?c=-1';
-                    }
+                    list: true,
+                    width: '10%'
                 },
                 created_at: {
                     title: 'Created',
@@ -271,50 +255,10 @@
                     list: true,
                     display: function (data) {
                         if (data.record) {
-                            return '<button title="Add Subcategory" class="jtable-command-button" style="  width: 15px;height: 15px;background: url(/theme/flatui/img/icon-plus.png);" onclick="$( \'#dialog-form\' ).data(\'record\',{project_category_id: ' + data.record.project_category_id + ', lft: ' + data.record.lft + ',rgt: ' + data.record.rgt + '}).dialog( \'open\' );"><span>add subcat</span></button>';
-                        }
-                    }
-                },
-                moveUp: {
-                    title: '',
-                    width: '1%',
-                    sorting: false,
-                    create: false,
-                    edit: false,
-                    list: true,
-                    display: function (data) {
-                        if (data.record) {
-                            return '<button title="Move category up" class="jtable-command-button move-category" style="  width: 16px;height: 16px;background: url(/theme/flatui/img/1uparrow.png);" data-direction="up" data-record=\'{"project_category_id":' + data.record.project_category_id + ', "lft": ' + data.record.lft + ', "rgt": ' + data.record.rgt + ' }\'><span>Move up</span></button>';
-                        }
-                    }
-                },
-                moveDown: {
-                    title: '',
-                    width: '1%',
-                    sorting: false,
-                    create: false,
-                    edit: false,
-                    list: true,
-                    display: function (data) {
-                        if (data.record) {
-                            return '<button title="move category down" class="jtable-command-button move-category" style="  width: 16px;height: 16px;background: url(/theme/flatui/img/1downarrow.png);" data-direction="down" data-record=\'{"project_category_id":' + data.record.project_category_id + ', "lft": ' + data.record.lft + ', "rgt": ' + data.record.rgt + ' }\'><span>Move down</span></button>';
-                        }
-                    }
-                },
-                about: {
-                    title: '',
-                    width: '1%',
-                    sorting: false,
-                    create: false,
-                    edit: false,
-                    list: true,
-                    display: function (data) {
-                        if (data.record) {
-                            return '<a title="create category about page (blank)" href="javascript:return false;" class="create-about" role="button" data-record=\'' + data.record.project_category_id + ' \'><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></a>';
+                            return '<button title="Add Subcategory" class="jtable-command-button" style="  width: 15px;height: 15px;background: url(/theme/flatui/img/icon-plus.png);" onclick="$( \'#dialog-form\' ).data(\'record\',{v_category_id: ' + data.record.v_category_id + '}).dialog( \'open\' );"><span>add subcat</span></button>';
                         }
                     }
                 }
-
             },
 
             //Initialize validation logic when a form is created
@@ -353,7 +297,7 @@
 
                         jQuery.ajax({
                             data: {'data': {'lft': ui.item.lft, 'rgt': ui.item.rgt}, 'newPosition': newPosition},
-                            url: '/backend/categories/dragdrop/',
+                            url: '/backend/vcategories/dragdrop/',
                             type: 'post',
                             error: function (jqXHR, textStatus, errorThrown) {
                                 $(".alert").alert().fadeIn('slow');

@@ -186,25 +186,6 @@ class Default_Model_DbTable_VCategory extends Local_Model_Table
     /* ------------------------ */
 
     /**
-     * @param $title
-     * @return null|Zend_Db_Table_Row_Abstract
-     */
-    public function appendNewElement($title)
-    {
-        $root = $this->fetchRoot();
-
-        $data['rgt'] = $root->rgt - 1;
-        $data['title'] = $title;
-
-        return $this->addNewElement($data);
-    }
-
-    public function fetchRoot()
-    {
-        return $this->fetchRow('`lft` = 0');
-    }
-
-    /**
      * @param array $data
      * @return null|Zend_Db_Table_Row_Abstract
      */
@@ -212,25 +193,19 @@ class Default_Model_DbTable_VCategory extends Local_Model_Table
     {
         $this->_db->beginTransaction();
         try {
-            $this->_db->query("UPDATE {$this->_name} SET rgt = rgt + 2 WHERE rgt > :param_right;",
-                array('param_right' => $data['rgt']));
-            $this->_db->query("UPDATE {$this->_name} SET lft = lft + 2 WHERE lft > :param_right;",
-                array('param_right' => $data['rgt']));
-            $this->_db->query("INSERT INTO {$this->_name} (`lft`, `rgt`, `title`, `is_active`, `name_legacy`, `xdg_type`) VALUES (:param_right + 1, :param_right + 2, :param_title, :param_status, :param_legacy, :param_xgd);",
+            $this->_db->query("INSERT INTO {$this->_name} (select max(c.v_category_id)+1 as v_category_id, :param_title as title, null as project_category_id, :param_parent as v_parent_id, NOW(), null from v_category c);",
                 array(
-                    'param_right' => $data['rgt'],
                     'param_title' => $data['title'],
-                    'param_status' => $data['is_active'],
-                    'param_legacy' => $data['name_legacy'],
-                    'param_xgd' => $data['xdg_type']
+                    'param_parent' => $data['v_parent_id']
                 ));
             $this->_db->commit();
+            
         } catch (Exception $e) {
             $this->_db->rollBack();
             Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . print_r($e, true));
         }
 
-        return $this->fetchRow('lft = ' . ($data['rgt'] + 1));
+        return $this->fetchRow('v_parent_id = ' . $data['v_parent_id'] . ' and title = ' . $data['title']);
     }
 
     /**
@@ -317,84 +292,95 @@ class Default_Model_DbTable_VCategory extends Local_Model_Table
         $isActive = true,
         $depth = null
     ) {
-        $sqlActive = $isActive == true ? " parent_active = 1 AND pc.is_active = 1" : '';
-        $sqlDepth = is_null($depth) == true ? '' : " AND depth <= " . (int)$depth;
-        $sqlHaving = $sqlActive || $sqlDepth ? "HAVING {$sqlActive} {$sqlDepth}" : '';
+        
+        /**
         $sql = "
-        	  SELECT
-                pc.project_category_id,
-                pc.lft,
-                pc.rgt,
-                pc.title,
-                pc.name_legacy,
-                pc.is_active,
-                pc.orderPos,
-                pc.xdg_type,
-                pc.dl_pling_factor,
-                pc.show_description,
-                MIN(pc2.is_active)                                       AS parent_active,
-                concat(repeat('&nbsp;&nbsp;',count(pc.lft) - 1), pc.title) AS title_show,
-                concat(repeat('&nbsp;&nbsp;',count(pc.lft) - 1), IF(LENGTH(TRIM(pc.name_legacy))>0,pc.name_legacy,pc.title)) AS title_legacy,
-                count(pc.lft) - 1                                        AS depth,
-                GROUP_CONCAT(pc2.project_category_id ORDER BY pc2.lft)   AS ancestor_id_path,
-                GROUP_CONCAT(pc2.title ORDER BY pc2.lft SEPARATOR ' | ') AS ancestor_path,
-                GROUP_CONCAT(IF(LENGTH(TRIM(pc2.name_legacy))>0,pc2.name_legacy,pc2.title) ORDER BY pc2.lft SEPARATOR ' | ') AS ancestor_path_legacy,
-                SUBSTRING_INDEX( GROUP_CONCAT(pc2.project_category_id ORDER BY pc2.lft), ',', -1) AS parent
-              FROM
-                  project_category AS pc
-              JOIN
-                    project_category AS pc2 ON (pc.lft BETWEEN pc2.lft AND pc2.rgt) AND pc2.project_category_id <> pc.project_category_id
-              GROUP BY pc.lft
-              {$sqlHaving}
-              ORDER BY pc.lft
+               SELECT
+                vc.*,
+                vc2.title AS v_parent_title
+               FROM
+                v_category AS vc
+               left outer JOIN
+                v_category AS vc2 ON (vc.v_parent_id = vc2.v_category_id AND vc2.v_parent_id IS NULL)
+               WHERE vc.v_parent_id IS NOT NULL
+        ";*/
+        $sql = "
+                select * from (
 
-        ";
+                    select      #p6.v_parent_id as parent6_id,
+                                #p5.v_parent_id as parent5_id,
+                                #p4.v_parent_id as parent4_id,
+                                #p3.v_parent_id as parent3_id,
+                                #p2.v_parent_id as parent2_id,
+                                #p1.v_parent_id as parent_id,
+                                p1.v_category_id,
+                                p1.project_category_id,
+                                p1.v_parent_id,
+                                CONCAT(	
+                                    CASE WHEN p6.v_parent_id is not null then CONCAT(p6.v_parent_id,'/') else '' END, 
+                                    CASE WHEN p5.v_parent_id is not null then CONCAT(p5.v_parent_id,'/') else '' END, 
+                                    CASE WHEN p4.v_parent_id is not null then CONCAT(p4.v_parent_id,'/') else '' END,
+                                    CASE WHEN p3.v_parent_id is not null then CONCAT(p3.v_parent_id,'/') else '' END,
+                                    CASE WHEN p2.v_parent_id is not null then CONCAT(p2.v_parent_id,'/') else '' END,
+                                    CASE WHEN p1.v_parent_id is not null then CONCAT(p1.v_parent_id,'/') else '' END,
+                                    p1.v_category_id,'/'
+                                                    ) as path,
+                                CONCAT(	
+                                    CASE WHEN p6.v_parent_id is not null then CONCAT('&nbsp;&nbsp;&nbsp;') else '' END, 
+                                    CASE WHEN p5.v_parent_id is not null then CONCAT('&nbsp;&nbsp;&nbsp;') else '' END, 
+                                    CASE WHEN p4.v_parent_id is not null then CONCAT('&nbsp;&nbsp;&nbsp;') else '' END,
+                                    CASE WHEN p3.v_parent_id is not null then CONCAT('&nbsp;&nbsp;&nbsp;') else '' END,
+                                    CASE WHEN p2.v_parent_id is not null then CONCAT('&nbsp;&nbsp;&nbsp;') else '' END,
+                                    CASE WHEN p1.v_parent_id is not null then CONCAT('&nbsp;&nbsp;&nbsp;') else '' END,
+                                    p1.title
+                                                    ) as title_show,
+                                p1.title
+                    from        v_category p1
+                    left join   v_category p2 on p2.v_category_id = p1.v_parent_id 
+                    left join   v_category p3 on p3.v_category_id = p2.v_parent_id 
+                    left join   v_category p4 on p4.v_category_id = p3.v_parent_id  
+                    left join   v_category p5 on p5.v_category_id = p4.v_parent_id  
+                    left join   v_category p6 on p6.v_category_id = p5.v_parent_id
+                    where       p1.v_parent_id is not null
+                                                    AND 0 in (p1.v_parent_id, 
+                                       p2.v_parent_id, 
+                                       p3.v_parent_id, 
+                                       p4.v_parent_id, 
+                                       p5.v_parent_id, 
+                                       p6.v_parent_id) 
+            ) A
+            order by path
+            ";
 
         $tree = $this->_db->fetchAll($sql);
         return $tree;
     }
 
-    /**
-     * @return array
-     */
     public function fetchTreeForJTableStores($cat_id)
     {
         $sql = "
+                select *, null as v_parent_title from v_category v
+                where v.v_category_id = 0
+
+                UNION ALL
+
                 SELECT
-                pc.project_category_id,
-                pc.lft,
-                pc.rgt,
-                pc.title,
-                pc.name_legacy,
-                pc.is_active,
-                pc.orderPos,
-                pc.xdg_type,
-                pc.dl_pling_factor,
-                pc.show_description,
-                MIN(pc2.is_active)                                       AS parent_active,
-                concat(repeat('&nbsp;&nbsp;',count(pc.lft) - 1), pc.title) AS title_show,
-                concat(repeat('&nbsp;&nbsp;',count(pc.lft) - 1), IF(LENGTH(TRIM(pc.name_legacy))>0,pc.name_legacy,pc.title)) AS title_legacy,
-                count(pc.lft) - 1                                        AS depth,
-                GROUP_CONCAT(pc2.project_category_id ORDER BY pc2.lft)   AS ancestor_id_path,
-                GROUP_CONCAT(pc2.title ORDER BY pc2.lft SEPARATOR ' | ') AS ancestor_path,
-                GROUP_CONCAT(IF(LENGTH(TRIM(pc2.name_legacy))>0,pc2.name_legacy,pc2.title) ORDER BY pc2.lft SEPARATOR ' | ') AS ancestor_path_legacy,
-                SUBSTRING_INDEX( GROUP_CONCAT(pc2.project_category_id ORDER BY pc2.lft), ',', -1) AS parent
-              FROM
-                  project_category AS pc
-              JOIN
-                    project_category AS pc2 ON (pc.lft BETWEEN pc2.lft AND pc2.rgt) AND (IF(pc.project_category_id <> 34,pc2.project_category_id <> pc.project_category_id,true))
-              GROUP BY pc.lft
-              HAVING parent_active = 1 AND pc.is_active = 1
-              ORDER BY pc.lft
+                    vc.*,
+                    vc2.title AS v_parent_title
+                   FROM
+                    v_category AS vc
+                   JOIN
+                    v_category AS vc2 ON (vc.v_parent_id = vc2.v_category_id AND vc2.v_parent_id IS NULL)
+                   WHERE vc.v_parent_id IS NOT NULL
         ";
         $resultRows = $this->_db->fetchAll($sql);
 
         $resultForSelect = array();
         foreach ($resultRows as $row) {
-            if (($row['project_category_id'] == $cat_id) OR ($row['parent'] == $cat_id)) {
+            if (($row['v_category_id'] == $cat_id) OR ($row['v_parent_id'] == $cat_id)) {
                 continue;
             }
-            $resultForSelect[] = array('DisplayText' => $row['title_show'], 'Value' => $row['project_category_id']);
+            $resultForSelect[] = array('DisplayText' => $row['title'], 'Value' => $row['v_category_id']);
         }
 
         return $resultForSelect;

@@ -52,16 +52,21 @@ class Backend_VcategoriesController extends Local_Controller_Action_Backend
         $jTableResult = array();
         try {
             $params = $this->getAllParams();
-            if (empty($params['rgt'])) {
-                $root = $this->_model->fetchRoot();
-                $params['rgt'] = $root->rgt - 1;
+            $parent = 0;
+            
+            if (empty($params['parent'])) {
+                $params['v_parent_id'] = 0;
+            } else {
+                $params['v_parent_id'] = $params['parent'];
             }
+            $params['parent'] = null;
             $resultRow = $this->_model->addNewElement($params)->toArray();
 
+            /**
             if (false === empty($params['parent'])) {
                 $this->_model->moveToParent($resultRow['project_category_id'], (int)$params['parent'], 'bottom');
                 $resultRow = $this->_model->fetchElement($resultRow['project_category_id']);
-            }
+            }**/
 
             $jTableResult['Result'] = self::RESULT_OK;
             $jTableResult['Record'] = $resultRow;
@@ -79,8 +84,6 @@ class Backend_VcategoriesController extends Local_Controller_Action_Backend
     {
         $jTableResult = array();
         try {
-            $this->_model->moveToParent((int)$this->getParam('project_category_id', null),
-                (int)$this->getParam('parent', null));
             $record = $this->_model->save($this->getAllParams());
 
             $jTableResult = array();
