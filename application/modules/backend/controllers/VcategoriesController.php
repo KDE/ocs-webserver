@@ -54,11 +54,17 @@ class Backend_VcategoriesController extends Local_Controller_Action_Backend
             $params = $this->getAllParams();
             $parent = 0;
             
-            if (empty($params['parent'])) {
+            if (empty($params['v_parent_id'])) {
                 $params['v_parent_id'] = 0;
             } else {
-                $params['v_parent_id'] = $params['parent'];
+                $params['v_parent_id'] = $params['v_parent_id'];
             }
+            if (!empty($params['v_category_id'])) {
+                $params['v_parent_id'] = $params['v_category_id'];
+            }
+            
+            
+            
             $params['parent'] = null;
             $resultRow = $this->_model->addNewElement($params)->toArray();
 
@@ -84,7 +90,14 @@ class Backend_VcategoriesController extends Local_Controller_Action_Backend
     {
         $jTableResult = array();
         try {
-            $record = $this->_model->save($this->getAllParams());
+            $params = $this->getAllParams();
+            $parent = 0;
+            
+            if (empty($params['project_category_id'])) {
+                $params['project_category_id'] = null;
+            }
+            
+            $record = $this->_model->save($params);
 
             $jTableResult = array();
             $jTableResult['Result'] = self::RESULT_OK;

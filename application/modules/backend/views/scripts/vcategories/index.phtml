@@ -117,8 +117,12 @@
 
                     sendPostId = $(this).data('record').v_category_id;
 
-                    $('#TableContainer').jtable('load', {
-                        filter_deleted: $('#filter_deleted').is(':checked') ? $('#filter_deleted').val() : 0
+                    $('#TableContainer').jtable('addRecord', {
+                        record: {
+                            "title": $("#subcat-title").val(),
+                            "v_category_id": sendPostId,
+                            "v_parent_id": $(this).data('record').v_parent_id
+                        }
                     });
                     $(this).dialog("close");
                 }
@@ -145,7 +149,6 @@
                 },
                 success: function (data, textStatus, jqXHR) {
                     return false;
-                    
                 }
             });
 
@@ -216,6 +219,13 @@
                     edit: false,
                     width: '1%'
                 },
+                v_parent_id: {
+                    title: 'V Parent Cat ID',
+                    key: true,
+                    create: false,
+                    edit: false,
+                    width: '1%'
+                },
                 project_category_id: {
                     title: 'Real Cat ID',
                     key: true,
@@ -225,10 +235,16 @@
                 },
                 title_show: {
                     title: 'Title',
-                    create: true,
-                    edit: true,
+                    create: false,
+                    edit: false,
                     list: true,
                     width: '10%'
+                },
+                title: {
+                    title: 'Title',
+                    create: true,
+                    edit: true,
+                    list: false
                 },
                 created_at: {
                     title: 'Created',
