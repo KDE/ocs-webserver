@@ -202,7 +202,7 @@ $this->tab = 'settings';
 <script>
     $(document).ready(function(){
         if(document.location.hash) {            
-            let hash = $(document.location.hash);
+            var hash = $(document.location.hash);
             $('a[href="'+document.location.hash+'"]').trigger( "click" );           
         }
     });
