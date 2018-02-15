@@ -86,19 +86,25 @@ var ImagePreview = {
                     if (w > 1024 || w < 20 || h > 1024 || h < 20) {
                         //image_element.attr('src', '').hide().parent().append('<div class="bg-danger">Wrong image dimensions</div>');
                         image_element.parent().parent().append('<div class="bg-danger">Wrong image dimensions</div>');
-                        input.val(null);
+                        //input.val(null);
+                        //$(input).replaceWith(input = $(input).clone(true));
+                        $($(input).closest('form')[0]).trigger('reset');
                         ImagePreview.hasError = true;
                     }
                     if (s > 2000) {
                         //image_element.attr('src', '').hide().parent().append('<div class="bg-danger">File too large</div>');
                         image_element.parent().parent().append('<div class="bg-danger">File too large</div>');
-                        input.val(null);
+                        //input.val(null);
+                        //$(input).replaceWith(input = $(input).clone(true));
+                        $($(input).closest('form')[0]).trigger('reset');
                         ImagePreview.hasError = true;
                     }
                     var allowedExtensions = /(jpg|jpeg|png|gif)$/i;
                     if(!allowedExtensions.exec(t)) {
                         image_element.parent().parent().append('<div class="bg-danger">Invalid file type: ' + file.type + '</div>');
-                        input.val(null);
+                        //input.val(null);
+                        //$(input).replaceWith(input = $(input).clone(true));
+                        $($(input).closest('form')[0]).trigger('reset');
                         ImagePreview.hasError = true;
                     }
                     if (false == ImagePreview.hasError) {
@@ -108,6 +114,7 @@ var ImagePreview = {
                     }
                 };
                 image.onerror = function () {
+                    image_element.parent().parent().find('div.bg-danger').remove();
                     image_element.parent().parent().append('<div class="bg-danger">Invalid file type: ' + file.type + '</div>');
                 };
 
@@ -1040,11 +1047,13 @@ var PartialFormsAjax = (function () {
             var target = form.attr("data-target");
             var trigger = form.attr("data-trigger");
 
-            $(form).find(':submit').on('click', function () {
+            $(form).find(':submit').on('click', function (e) {
+                e.preventDefault();
                 $(form).find(':submit').attr("disabled", "disabled");
                 $(form).find(':submit').css("white-space", "normal");
                 var spin = $('<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>');
                 $(form).find(':submit').append(spin);
+                $(form).submit();
             });
 
             form.ajaxForm({
@@ -1060,6 +1069,51 @@ var PartialFormsAjax = (function () {
     }
 })();
 
+var AjaxFormWithProgress = (function () {
+    return {
+        setup: function (idForm) {
+            var form = $(idForm);
+            var target = form.attr("data-target");
+            var trigger = form.attr("data-trigger");
+            var bar = form.find('.progress-bar');
+            var percent = form.find('.progress-percent');
+
+            $(form).find(':submit').on('click', function (e) {
+                e.preventDefault();
+                $(form).find(':submit').attr("disabled", "disabled");
+                $(form).find(':submit').css("white-space", "normal");
+                var spin = $('<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>');
+                $(form).find(':submit').append(spin);
+                $(form).submit();
+            });
+
+            form.ajaxForm({
+                beforeSend: function() {
+                    var percentVal = '0%';
+                    bar.parent().removeClass('hidden');
+                    bar.width(percentVal);
+                    percent.html(percentVal);
+                },
+                uploadProgress: function(event, position, total, percentComplete) {
+                    var percentVal = percentComplete + '%';
+                    bar.width(percentVal);
+                    percent.html(percentVal);
+                },
+                error: function () {
+                    $(target).empty().html("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+                },
+                success: function (results) {
+                    var percentVal = '100%';
+                    bar.width(percentVal);
+                    percent.html(percentVal);
+
+                    $(target).empty().html(results);
+                    $(target).find(trigger).trigger('click');
+                }
+            });
+        }
+    }
+})();
 
 var PartialFormsAjaxMemberBg = (function () {
     return {
@@ -1068,11 +1122,13 @@ var PartialFormsAjaxMemberBg = (function () {
             var target = form.attr("data-target");
             var trigger = form.attr("data-trigger");
 
-            $(form).find(':submit').on('click', function () {
+            $(form).find(':submit').on('click', function (e) {
+                e.preventDefault();
                 $(form).find(':submit').attr("disabled", "disabled");
                 $(form).find(':submit').css("white-space", "normal");
                 var spin = $('<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>');
                 $(form).find(':submit').append(spin);
+                $(form).submit();
             });
 
             form.ajaxForm({
