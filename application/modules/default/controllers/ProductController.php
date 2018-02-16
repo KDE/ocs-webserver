@@ -255,7 +255,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 'content_id'  => $projectData->project_id
             );
 
-            // FIXME: Remove the mark '!' from ppload_collection_id in DB. Because torrent download feature (finalize files) has already dropped.
+            // FIXME: https://github.com/pling-us/pling-tickets/issues/295
             $collectionResponse = $pploadApi->putCollection(ltrim($projectData->ppload_collection_id, '!'), $collectionRequest);
 
             // Store product image as collection thumbnail
@@ -1028,7 +1028,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 'secret'   => PPLOAD_SECRET
             ));
 
-            // FIXME: Remove the mark '!' from ppload_collection_id in DB. Because torrent download feature (finalize files) has already dropped.
+            // FIXME: https://github.com/pling-us/pling-tickets/issues/295
             $collectionResponse = $pploadApi->deleteCollection(ltrim($product->ppload_collection_id, '!'));
         }
 
@@ -1082,7 +1082,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 'category' => $product->project_category_id
             );
 
-            // FIXME: Remove the mark '!' from ppload_collection_id in DB. Because torrent download feature (finalize files) has already dropped.
+            // FIXME: https://github.com/pling-us/pling-tickets/issues/295
             $collectionResponse = $pploadApi->putCollection(ltrim($product->ppload_collection_id, '!'), $collectionRequest);
         }
 
@@ -1134,7 +1134,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 'category' => $product->project_category_id . '-published'
             );
 
-            // FIXME: Remove the mark '!' from ppload_collection_id in DB. Because torrent download feature (finalize files) has already dropped.
+            // FIXME: https://github.com/pling-us/pling-tickets/issues/295
             $collectionResponse = $pploadApi->putCollection(ltrim($product->ppload_collection_id, '!'), $collectionRequest);
         }
 
@@ -1184,7 +1184,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         //         'secret'   => PPLOAD_SECRET
         //     ));
         //
-        //     // FIXME: Remove the mark '!' from ppload_collection_id in DB. Because torrent download feature (finalize files) has already dropped.
+        //     // FIXME: https://github.com/pling-us/pling-tickets/issues/295
         //     $favoriteRequest = array(
         //         'user_id'       => $this->_authMember->member_id,
         //         'collection_id' => ltrim($projectData->ppload_collection_id, '!')
@@ -1231,7 +1231,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         //         'secret'   => PPLOAD_SECRET
         //     ));
         //
-        //     // FIXME: Remove the mark '!' from ppload_collection_id in DB. Because torrent download feature (finalize files) has already dropped.
+        //     // FIXME: https://github.com/pling-us/pling-tickets/issues/295
         //     $favoriteRequest = array(
         //         'user_id'       => $this->_authMember->member_id,
         //         'collection_id' => ltrim($projectData->ppload_collection_id, '!')
@@ -1762,7 +1762,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 'secret'   => PPLOAD_SECRET
             ));
 
-            // FIXME: Remove the mark '!' from ppload_collection_id in DB. Because torrent download feature (finalize files) has already dropped.
+            // FIXME: https://github.com/pling-us/pling-tickets/issues/295
             $filesRequest = array(
                 'collection_id' => ltrim($projectData->ppload_collection_id, '!'),
                 'perpage'       => 100
@@ -1811,7 +1811,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 'secret' => PPLOAD_SECRET
             ));
 
-            // FIXME: Remove the mark '!' from ppload_collection_id in DB. Because torrent download feature (finalize files) has already dropped.
+            // FIXME: https://github.com/pling-us/pling-tickets/issues/295
             $collectionResponse = $pploadApi->deleteCollection(ltrim($projectData->ppload_collection_id, '!'));
 
             if (isset($collectionResponse->status)

@@ -1142,7 +1142,7 @@ class Ocsv1Controller extends Zend_Controller_Action
             return $pploadInfo;
         }
 
-        // FIXME: Remove the mark '!' from ppload_collection_id in DB. Because torrent download feature (finalize files) has already dropped.
+        // FIXME: https://github.com/pling-us/pling-tickets/issues/295
         $filesRequest = array(
             'collection_id'     => ltrim($project->ppload_collection_id, '!'),
             'ocs_compatibility' => 'compatible',
@@ -1512,7 +1512,7 @@ class Ocsv1Controller extends Zend_Controller_Action
             && $this->getParam('itemid')
             && ctype_digit((string)$this->getParam('itemid'))
         ) {
-            // FIXME: Remove the mark '!' from ppload_collection_id in DB. Because torrent download feature (finalize files) has already dropped.
+            // FIXME: https://github.com/pling-us/pling-tickets/issues/295
             $filesRequest = array(
                 'collection_id'     => ltrim($project->ppload_collection_id, '!'),
                 'ocs_compatibility' => 'compatible',

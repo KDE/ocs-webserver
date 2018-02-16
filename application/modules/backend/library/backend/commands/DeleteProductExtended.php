@@ -74,7 +74,7 @@ class Backend_Commands_DeleteProductExtended implements Local_Queue_CommandInter
                 'secret'   => PPLOAD_SECRET
             ));
 
-            // FIXME: Remove the mark '!' from ppload_collection_id in DB. Because torrent download feature (finalize files) has already dropped.
+            // FIXME: https://github.com/pling-us/pling-tickets/issues/295
             $collectionResponse = $pploadApi->deleteCollection(ltrim($this->product->ppload_collection_id, '!'));
 
             Zend_Registry::get('logger')->info(__METHOD__ . ' - product delete request for ppload: ' . $this->product->project_id

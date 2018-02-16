@@ -270,7 +270,7 @@ if ($this->product->claimable == 1) {
                                 <article>
                                     <div data-ppload-api-uri="<?= PPLOAD_API_URI ?>"
                                          <? /*
-                                         // FIXME: Remove the mark '!' from ppload_collection_id in DB. Because torrent download feature (finalize files) has already dropped.
+                                         // FIXME: https://github.com/pling-us/pling-tickets/issues/295
                                          */ ?>
                                          data-ppload-collection-id="<?= ltrim($this->product->ppload_collection_id, '!') ?>">
                                         <iframe src="" width="0" height="0" frameborder="0"

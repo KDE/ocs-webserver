@@ -583,7 +583,7 @@ $this->inlineScript()->appendScript(
         function getPploadFiles(page) {
             var collectionId = $modalPpload.attr('data-ppload-collection-id');
 
-            // FIXME: Remove the mark '!' from ppload_collection_id in DB. Because torrent download feature (finalize files) has already dropped.
+            // FIXME: https://github.com/pling-us/pling-tickets/issues/295
             if (collectionId.charAt(0) == '!') {
                 collectionId = collectionId.slice(1);
             }
