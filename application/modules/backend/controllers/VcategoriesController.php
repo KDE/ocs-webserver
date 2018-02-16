@@ -137,6 +137,9 @@ class Backend_VcategoriesController extends Local_Controller_Action_Backend
         $pagination = Zend_Paginator::factory($records);
         $pagination->setItemCountPerPage($pageSize);
         $pagination->setCurrentPageNumber(($startIndex / $pageSize) + 1);
+        
+        $realCatList = $this->_model->fetchTreeRealForJTableStores(null);
+        $this->view->realCatList = $realCatList;
 
         $jTableResult = array();
         $jTableResult['Result'] = self::RESULT_OK;
@@ -211,6 +214,26 @@ class Backend_VcategoriesController extends Local_Controller_Action_Backend
 
         try {
             $records = $this->_model->fetchTreeForJTableStores($cat_id);
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . print_r($e, true));
+            $result = false;
+            $records = array();
+        }
+
+        $jTableResult = array();
+        $jTableResult['Result'] = ($result == true) ? self::RESULT_OK : self::RESULT_ERROR;
+        $jTableResult['Options'] = $records;
+
+        $this->_helper->json($jTableResult);
+    }
+    
+    public function treerealAction()
+    {
+        $result = true;
+        $cat_id = (int)$this->getParam('c');
+
+        try {
+            $records = $this->_model->fetchTreeRealForJTableStores($cat_id);
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . print_r($e, true));
             $result = false;

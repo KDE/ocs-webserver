@@ -315,27 +315,31 @@ class Default_Model_DbTable_VCategory extends Local_Model_Table
                                 #p1.v_parent_id as parent_id,
                                 p1.v_category_id,
                                 p1.project_category_id,
+                                p1.project_category_id as project_category_id_show,
+                                c.title as title_real,
+                                p1.v_parent_id as v_parent_id_show,
                                 p1.v_parent_id,
                                 CONCAT(	
-                                    CASE WHEN p6.v_parent_id is not null then CONCAT(p6.v_parent_id,'/') else '' END, 
-                                    CASE WHEN p5.v_parent_id is not null then CONCAT(p5.v_parent_id,'/') else '' END, 
-                                    CASE WHEN p4.v_parent_id is not null then CONCAT(p4.v_parent_id,'/') else '' END,
-                                    CASE WHEN p3.v_parent_id is not null then CONCAT(p3.v_parent_id,'/') else '' END,
-                                    CASE WHEN p2.v_parent_id is not null then CONCAT(p2.v_parent_id,'/') else '' END,
-                                    CASE WHEN p1.v_parent_id is not null then CONCAT(p1.v_parent_id,'/') else '' END,
+                                    CASE WHEN p6.v_parent_id >= 0 then CONCAT(p6.v_parent_id,'/') else '' END, 
+                                    CASE WHEN p5.v_parent_id >= 0 then CONCAT(p5.v_parent_id,'/') else '' END, 
+                                    CASE WHEN p4.v_parent_id >= 0 then CONCAT(p4.v_parent_id,'/') else '' END,
+                                    CASE WHEN p3.v_parent_id >= 0 then CONCAT(p3.v_parent_id,'/') else '' END,
+                                    CASE WHEN p2.v_parent_id >= 0 then CONCAT(p2.v_parent_id,'/') else '' END,
+                                    CASE WHEN p1.v_parent_id >= 0 then CONCAT(p1.v_parent_id,'/') else '' END,
                                     p1.v_category_id,'/'
                                                     ) as path,
                                 CONCAT(	
-                                    CASE WHEN p6.v_parent_id is not null then CONCAT('&nbsp;&nbsp;&nbsp;') else '' END, 
-                                    CASE WHEN p5.v_parent_id is not null then CONCAT('&nbsp;&nbsp;&nbsp;') else '' END, 
-                                    CASE WHEN p4.v_parent_id is not null then CONCAT('&nbsp;&nbsp;&nbsp;') else '' END,
-                                    CASE WHEN p3.v_parent_id is not null then CONCAT('&nbsp;&nbsp;&nbsp;') else '' END,
-                                    CASE WHEN p2.v_parent_id is not null then CONCAT('&nbsp;&nbsp;&nbsp;') else '' END,
-                                    CASE WHEN p1.v_parent_id is not null then CONCAT('&nbsp;&nbsp;&nbsp;') else '' END,
+                                    CASE WHEN p6.v_parent_id >= 0 then CONCAT('&nbsp;&nbsp;&nbsp;') else '' END, 
+                                    CASE WHEN p5.v_parent_id >= 0 then CONCAT('&nbsp;&nbsp;&nbsp;') else '' END, 
+                                    CASE WHEN p4.v_parent_id >= 0 then CONCAT('&nbsp;&nbsp;&nbsp;') else '' END,
+                                    CASE WHEN p3.v_parent_id >= 0 then CONCAT('&nbsp;&nbsp;&nbsp;') else '' END,
+                                    CASE WHEN p2.v_parent_id >= 0 then CONCAT('&nbsp;&nbsp;&nbsp;') else '' END,
+                                    CASE WHEN p1.v_parent_id >= 0 then CONCAT('&nbsp;&nbsp;&nbsp;') else '' END,
                                     p1.title
                                                     ) as title_show,
                                 p1.title
                     from        v_category p1
+                    left join  project_category c on c.project_category_id = p1.project_category_id
                     left join   v_category p2 on p2.v_category_id = p1.v_parent_id 
                     left join   v_category p3 on p3.v_category_id = p2.v_parent_id 
                     left join   v_category p4 on p4.v_category_id = p3.v_parent_id  
@@ -359,19 +363,55 @@ class Default_Model_DbTable_VCategory extends Local_Model_Table
     public function fetchTreeForJTableStores($cat_id)
     {
         $sql = "
-                select *, null as v_parent_title from v_category v
-                where v.v_category_id = 0
+                select v.v_category_id, v.project_category_id, v.v_parent_id, '0' as path, 'ROOT', 'ROOT' from v_category v
+							                where v.v_category_id = 0
+						UNION ALL	
 
-                UNION ALL
-
-                SELECT
-                    vc.*,
-                    vc2.title AS v_parent_title
-                   FROM
-                    v_category AS vc
-                   JOIN
-                    v_category AS vc2 ON (vc.v_parent_id = vc2.v_category_id AND vc2.v_parent_id IS NULL)
-                   WHERE vc.v_parent_id IS NOT NULL
+                select * from (
+							                
+                    select      #p6.v_parent_id as parent6_id,
+                                #p5.v_parent_id as parent5_id,
+                                #p4.v_parent_id as parent4_id,
+                                #p3.v_parent_id as parent3_id,
+                                #p2.v_parent_id as parent2_id,
+                                #p1.v_parent_id as parent_id,
+                                p1.v_category_id,
+                                p1.project_category_id,
+                                p1.v_parent_id,
+                                CONCAT(	
+                                    CASE WHEN p6.v_parent_id >= 0 then CONCAT(p6.v_parent_id,'/') else '' END, 
+                                    CASE WHEN p5.v_parent_id >= 0 then CONCAT(p5.v_parent_id,'/') else '' END, 
+                                    CASE WHEN p4.v_parent_id >= 0 then CONCAT(p4.v_parent_id,'/') else '' END,
+                                    CASE WHEN p3.v_parent_id >= 0 then CONCAT(p3.v_parent_id,'/') else '' END,
+                                    CASE WHEN p2.v_parent_id >= 0 then CONCAT(p2.v_parent_id,'/') else '' END,
+                                    CASE WHEN p1.v_parent_id >= 0 then CONCAT(p1.v_parent_id,'/') else '' END,
+                                    p1.v_category_id,'/'
+                                                    ) as path,
+                                CONCAT(	
+                                    CASE WHEN p6.v_parent_id >= 0 then CONCAT('&nbsp;&nbsp;&nbsp;') else '' END, 
+                                    CASE WHEN p5.v_parent_id >= 0 then CONCAT('&nbsp;&nbsp;&nbsp;') else '' END, 
+                                    CASE WHEN p4.v_parent_id >= 0 then CONCAT('&nbsp;&nbsp;&nbsp;') else '' END,
+                                    CASE WHEN p3.v_parent_id >= 0 then CONCAT('&nbsp;&nbsp;&nbsp;') else '' END,
+                                    CASE WHEN p2.v_parent_id >= 0 then CONCAT('&nbsp;&nbsp;&nbsp;') else '' END,
+                                    CASE WHEN p1.v_parent_id >= 0 then CONCAT('&nbsp;&nbsp;&nbsp;') else '' END,
+                                    p1.title
+                                                    ) as title_show,
+                                p1.title
+                    from        v_category p1
+                    left join   v_category p2 on p2.v_category_id = p1.v_parent_id 
+                    left join   v_category p3 on p3.v_category_id = p2.v_parent_id 
+                    left join   v_category p4 on p4.v_category_id = p3.v_parent_id  
+                    left join   v_category p5 on p5.v_category_id = p4.v_parent_id  
+                    left join   v_category p6 on p6.v_category_id = p5.v_parent_id
+                    where       p1.v_parent_id >= 0
+                                                    AND 0 in (p1.v_parent_id, 
+                                       p2.v_parent_id, 
+                                       p3.v_parent_id, 
+                                       p4.v_parent_id, 
+                                       p5.v_parent_id, 
+                                       p6.v_parent_id) 
+            ) A
+            order by path
         ";
         $resultRows = $this->_db->fetchAll($sql);
 
@@ -380,7 +420,80 @@ class Default_Model_DbTable_VCategory extends Local_Model_Table
             if (($row['v_category_id'] == $cat_id) OR ($row['v_parent_id'] == $cat_id)) {
                 continue;
             }
-            $resultForSelect[] = array('DisplayText' => $row['title'], 'Value' => $row['v_category_id']);
+            $resultForSelect[] = array('DisplayText' => $row['title_show'], 'Value' => $row['v_category_id']);
+        }
+
+        return $resultForSelect;
+    }
+    
+    /**
+     * @return array
+     */
+    public function fetchTreeRealForJTableStores($cat_id)
+    {
+        $sql = "
+                
+
+                SELECT 
+						  null as project_category_id,
+                    null as lft,
+                    null as rgt,
+                    null as title,
+                    null as name_legacy,
+                    null as is_active,
+                    null as orderPos,
+                    null as xdg_type,
+                    null as dl_pling_factor,
+                    null as show_description,
+                    null as parent_active,
+                    '' as title_show,
+                    null as title_legacy,
+                    null as depth,
+                    null as ancestor_id_path,
+                    null as ancestor_path,
+                    null as ancestor_path_legacy,
+                    null as parent
+                    
+						  UNION ALL
+
+                    SELECT * from (
+						  
+                    SELECT
+                    pc.project_category_id,
+                    pc.lft,
+                    pc.rgt,
+                    pc.title,
+                    pc.name_legacy,
+                    pc.is_active,
+                    pc.orderPos,
+                    pc.xdg_type,
+                    pc.dl_pling_factor,
+                    pc.show_description,
+                    MIN(pc2.is_active)                                       AS parent_active,
+                    concat(repeat('&nbsp;&nbsp;',count(pc.lft) - 1), pc.title) AS title_show,
+                    concat(repeat('&nbsp;&nbsp;',count(pc.lft) - 1), IF(LENGTH(TRIM(pc.name_legacy))>0,pc.name_legacy,pc.title)) AS title_legacy,
+                    count(pc.lft) - 1                                        AS depth,
+                    GROUP_CONCAT(pc2.project_category_id ORDER BY pc2.lft)   AS ancestor_id_path,
+                    GROUP_CONCAT(pc2.title ORDER BY pc2.lft SEPARATOR ' | ') AS ancestor_path,
+                    GROUP_CONCAT(IF(LENGTH(TRIM(pc2.name_legacy))>0,pc2.name_legacy,pc2.title) ORDER BY pc2.lft SEPARATOR ' | ') AS ancestor_path_legacy,
+                    SUBSTRING_INDEX( GROUP_CONCAT(pc2.project_category_id ORDER BY pc2.lft), ',', -1) AS parent
+                  FROM
+                      project_category AS pc
+                  JOIN
+                        project_category AS pc2 ON (pc.lft BETWEEN pc2.lft AND pc2.rgt) AND (IF(pc.project_category_id <> 34,pc2.project_category_id <> pc.project_category_id,true))
+                  GROUP BY pc.lft
+                  HAVING parent_active = 1 AND pc.is_active = 1
+                  ORDER BY pc.lft
+               ) A
+        ";
+        $resultRows = $this->_db->fetchAll($sql);
+
+        $resultForSelect = array();
+        foreach ($resultRows as $row) {
+            //if (($row['project_category_id'] == $cat_id) OR ($row['parent'] == $cat_id)) {
+            //    continue;
+            //}
+            $resultForSelect[] = array('DisplayText' => $row['title_show'], 'Value' => $row['project_category_id']);
         }
 
         return $resultForSelect;
