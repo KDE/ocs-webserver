@@ -95,7 +95,7 @@ $categoryPath[] = $valueCatId;
             top: -4px;
             width: 1em;
         }
-        
+
         .add-product-page {
             padding-top: 15px;
         }
@@ -163,7 +163,7 @@ $categoryPath[] = $valueCatId;
                             <section id="required">
                                 <div class="form-group"><p class="col-sm-10">(*) Mandatory fields.</p></div>
                                 <div id="preview_img_msg">
-                                
+
                                 </div>
                                 <?php // $this->form->title ?>
                                 <div class="form-group">
@@ -198,7 +198,7 @@ $categoryPath[] = $valueCatId;
                                         <?php } ?>
                                     </div>
                                 </div>
-                                
+
                                 <?= $this->form->project_category_id ?>
                                 <?= $this->form->project_subcategory_id ?>
                                 <?= $this->form->project_sub_subcategory_id ?>
@@ -238,8 +238,7 @@ $categoryPath[] = $valueCatId;
                                      data-updatepploadfile-uri="<?= $helpProductUrl->buildProductUrl('@@project_id@@', 'updatepploadfile') ?>"
                                      data-updatepackagetype-uri="<?= $helpProductUrl->buildProductUrl('@@project_id@@', 'updatepackagetype') ?>"
                                      data-deletepploadfile-uri="<?= $helpProductUrl->buildProductUrl('@@project_id@@', 'deletepploadfile') ?>"
-                                     data-deletepploadfiles-uri="<?= $helpProductUrl->buildProductUrl('@@project_id@@', 'deletepploadfiles') ?>"
-                                     data-finalizepploadcollection-uri="<?= $helpProductUrl->buildProductUrl('@@project_id@@', 'finalizepploadcollection') ?>">
+                                     data-deletepploadfiles-uri="<?= $helpProductUrl->buildProductUrl('@@project_id@@', 'deletepploadfiles') ?>">
                                     <div class="pling-modal" style="width: 100%;">
                                         <div class="">
                                             <div class="modal-header">
@@ -262,7 +261,7 @@ $categoryPath[] = $valueCatId;
                                                             <th><?= $this->translate('Filetype') ?></th>
                                                             <th><?= $this->translate('Packagetype') ?></th>
                                                             <th><?= $this->translate('Date added') ?></th>
-                                                            
+
                                                             <th style="text-align: right"><?= $this->translate('Filesize') ?></th>
                                                             <th></th>
                                                         </tr>
@@ -273,7 +272,6 @@ $categoryPath[] = $valueCatId;
                                                         <tbody></tbody>
                                                     </table>
                                                 </div>
-                                                <div info-finalized="">
 
                                                 </div>
                                                 <div style="float: right; padding-top: 10px;" class="small light">
@@ -298,8 +296,8 @@ $categoryPath[] = $valueCatId;
                                                     <?= $this->translate('Add URL') ?>
                                                 </a>
                                             </div>
-                                        </div>                                      
-                                      
+                                        </div>
+
                                     </div>
                                 </div>
 
@@ -307,12 +305,12 @@ $categoryPath[] = $valueCatId;
 
                             </section>
 
-                              
+
                         <?php if(isset($this->project_id)) { ?>
-                            <h3>Changlog</h3>                            
-                            <section id="changlog">                  
-                                        
-                                    <div id="modal-changlog" data-product-id="">                                                 
+                            <h3>Changlog</h3>
+                            <section id="changlog">
+
+                                    <div id="modal-changlog" data-product-id="">
                                         <div class="row">
                                             <div class="modal-header">
                                                 <h3 id="modal-ppload-label"><?= $this->translate('Changelog') ?></h3>
@@ -336,12 +334,12 @@ $categoryPath[] = $valueCatId;
 
                                                 </article>
                                             </div>
-                                        </div>   
-                                    </div>                                                      
-                                <!-- changlog -->                                 
+                                        </div>
+                                    </div>
+                                <!-- changlog -->
                             </section>
-                        <?php } ?>     
-            
+                        <?php } ?>
+
 
                         </form>
 
@@ -581,8 +579,8 @@ $categoryPath[] = $valueCatId;
                 }
 
                 function getUpdates(page) {
-                                        
-                    $modalChanglog.find('#update-list').html('');                                        
+
+                    $modalChanglog.find('#update-list').html('');
                     var productId = <?= isset($this->project_id)?$this->project_id:0 ?>;
                     $.ajax({
                         url: '<?=$helpProductUrl->buildProductUrl($this->project_id, 'getupdatesajax')?>',
@@ -651,11 +649,12 @@ $categoryPath[] = $valueCatId;
 
                 function getPploadFiles(page) {
                     var collectionId = $modalPpload.attr('data-ppload-collection-id');
-                    var hasFinalized = false;
+
+                    // FIXME: Remove the mark '!' from ppload_collection_id in DB. Because torrent download feature (finalize files) has already dropped.
                     if (collectionId.charAt(0) == '!') {
                         collectionId = collectionId.slice(1);
-                        hasFinalized = true;
                     }
+
                     if (!page) {
                         page = 1;
                         $modalPpload.find('table[data-ppload-files] tbody').empty();
@@ -676,10 +675,7 @@ $categoryPath[] = $valueCatId;
                             if (data.status != 'success') {
                                 return;
                             }
-                            var deletePploadFileBtn = '';
-                            if (!hasFinalized) {
-                                deletePploadFileBtn = '<a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-deletepploadfile-btn=""><span class="glyphicon glyphicon-trash"></span></a>';;
-                            }
+                            var deletePploadFileBtn = '<a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-deletepploadfile-btn=""><span class="glyphicon glyphicon-trash"></span></a>';;
                             var deletePploadFileBtnPerFile = '';
 
                             var myArray = $.map(data.files, function(entry) {
@@ -760,7 +756,7 @@ $categoryPath[] = $valueCatId;
                                         }
                                     });
                                 }
-                                
+
                                 //downloadlink is now: domain/api/files/download/id/ID/s/TOKEN/t/TIMESTAMP/FILE_NAME/u/USERID
                                 var hash = '<?= $this->download_hash ?>';
                                 var timetamp = '<?= $this->download_timestamp ?>';
@@ -832,15 +828,7 @@ $categoryPath[] = $valueCatId;
                                     $("#data-link" + this.id).attr('target','_blank');
                                     $("#data-link" + this.id).html($("#data-link" + this.id).html() + " (External Link)");
                                 }
-
-                                if (hasFinalized) {
-                                    $modalPpload.find('tr[data-ppload-file-id="' + this.id + '"] select[data-os-id]')
-                                        .attr('disabled', 'disabled');
-                                }
                             });
-                            if (hasFinalized) {
-                                $modalPpload.find('tr[data-ppload-file-id] select[data-os-id]').attr('disabled', 'disabled');
-                            }
 
                             $modalPpload.find('p[data-file-upload-msg]').show();
                             $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
@@ -1032,7 +1020,7 @@ $categoryPath[] = $valueCatId;
                         $url = ($modalPpload.attr('data-updatepploadfile-uri')).replace(/@@project_id@@/i, <?= (isset($this->project_id))?$this->project_id:0  ?>);
                     }
                     fileDescription = fileDescription.replace(/<\/?[^>]+(>|$)/g, "");
-                    
+
 
                     $.ajax({
                         url: $url,
@@ -1199,46 +1187,12 @@ $categoryPath[] = $valueCatId;
 
                             $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
 
-                            $modalPpload.find('div[info-finalized]').html('');
                             $modalPpload.find('input[data-accept-checkbox]').removeAttr('disabled');
                             $modalPpload.find('button[data-addpploadfile-btn]').attr('disabled', 'disabled');
                             $modalPpload.find('#github_picker').attr('disabled', 'disabled');
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
                             alert("Error: " + textStatus + ", " + errorThrown);
-                            return;
-                        }
-                    });
-                }
-
-                function finalizePploadCollection() {
-                    var $url = ($modalPpload.attr('data-finalizepploadcollection-uri')).replace(/@@project_id@@/i, ProductForm.project_id);
-                    if (typeof ProductForm.project_id == 'undefined' || ProductForm.project_id == '' || ProductForm.project_id == '0') {
-                        $url = ($modalPpload.attr('data-finalizepploadcollection-uri')).replace(/@@project_id@@/i, <?= (isset($this->project_id))?$this->project_id:0  ?>);
-                    }
-                    $.ajax({
-                        url: $url,
-                        type: 'POST',
-                        data: {},
-                        dataType: 'json',
-                        success: function (data, textStatus, jqXHR) {
-                            if (data.status != 'ok') {
-                                return;
-                            }
-                            $modalPpload.find('tr[data-ppload-file-id] a[data-deletepploadfile-btn]').remove();
-                            $('a[href="#modal-ppload"][data-product-id="' + $modalPpload.attr('data-product-id') + '"]')
-                                .attr('data-ppload-collection-id', '!' + $modalPpload.attr('data-ppload-collection-id'));
-                            $modalPpload.attr('data-ppload-collection-id', '!' + $modalPpload.attr('data-ppload-collection-id'));
-                            $modalPpload.find('p[data-file-upload-msg]').hide();
-                            $modalPpload.find('button[data-addpploadfile-btn]').attr('disabled', 'disabled');
-                            $modalPpload.find('#github_picker').attr('disabled', 'disabled');
-                            $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
-
-                            //$modalPpload.find('div[info-finalized]').append('<?= $this->translate('<br/><b>Your files are finalized (and via torrent downloadable). If you want to add new files, click on "Delete All" and upload all of your files again.</b>')?>');
-                            $modalPpload.find('input[data-accept-checkbox]').attr('disabled', 'disabled');
-
-                        },
-                        error: function (jqXHR, textStatus, errorThrown) {
                             return;
                         }
                     });
@@ -1282,9 +1236,7 @@ $categoryPath[] = $valueCatId;
                 $modalPpload.find('table[data-file-upload] tbody').html('');
                 $modalPpload.find('p[data-file-upload-msg]').show();
 
-                $modalPpload.find('div[info-finalized]').html('');
                 $modalPpload.find('input[data-accept-checkbox]').removeAttr('disabled');
-
 
                 $modalPpload.find('button[data-addpploadfile-btn]').attr('disabled', 'disabled');
                 $modalPpload.find('#github_picker').attr('disabled', 'disabled');
@@ -1304,47 +1256,27 @@ $categoryPath[] = $valueCatId;
 
                 $modalPpload.on('dragenter', 'div[data-file-upload]', function (event) {
                     event.preventDefault();
-                    if (!$modalPpload.attr('data-ppload-collection-id')
-                        || $modalPpload.attr('data-ppload-collection-id').charAt(0) != '!'
-                    ) {
-                        $(this).css('border-color', '#00ccff');
-                    }
+                    $(this).css('border-color', '#00ccff');
                 });
 
                 $modalPpload.on('dragleave', 'div[data-file-upload]', function (event) {
                     event.preventDefault();
-                    if (!$modalPpload.attr('data-ppload-collection-id')
-                        || $modalPpload.attr('data-ppload-collection-id').charAt(0) != '!'
-                    ) {
-                        $(this).css('border-color', '#cccccc');
-                    }
+                    $(this).css('border-color', '#cccccc');
                 });
 
                 $modalPpload.on('drop', 'div[data-file-upload]', function (event) {
                     event.preventDefault();
-                    if (!$modalPpload.attr('data-ppload-collection-id')
-                        || $modalPpload.attr('data-ppload-collection-id').charAt(0) != '!'
-                    ) {
-                        postPploadFiles(event.originalEvent.dataTransfer.files);
-                        $(this).css('border-color', '#cccccc');
-                    }
+                    postPploadFiles(event.originalEvent.dataTransfer.files);
+                    $(this).css('border-color', '#cccccc');
                 });
 
                 $modalPpload.on('change', 'input[data-file-upload]', function (event) {
-                    if (!$modalPpload.attr('data-ppload-collection-id')
-                        || $modalPpload.attr('data-ppload-collection-id').charAt(0) != '!'
-                    ) {
-                        postPploadFiles(this.files);
-                    }
+                    postPploadFiles(this.files);
                 });
 
                 $modalPpload.on('click', 'button[data-addpploadfile-btn]', function (event) {
                     event.preventDefault();
-                    if (!$modalPpload.attr('data-ppload-collection-id')
-                        || $modalPpload.attr('data-ppload-collection-id').charAt(0) != '!'
-                    ) {
-                        $modalPpload.find('input[data-file-upload]').click();
-                    }
+                    $modalPpload.find('input[data-file-upload]').click();
                 });
 
                 $modalPpload.on('click', 'input[data-accept-checkbox]', function (event) {
@@ -1362,11 +1294,7 @@ $categoryPath[] = $valueCatId;
 
                 $modalPpload.on('click', 'tr[data-ppload-file-id] a[data-deletepploadfile-btn]', function (event) {
                     event.preventDefault();
-                    if (!$modalPpload.attr('data-ppload-collection-id')
-                        || $modalPpload.attr('data-ppload-collection-id').charAt(0) != '!'
-                    ) {
-                        deletePploadFile($(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id'));
-                    }
+                    deletePploadFile($(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id'));
                 });
 
                 $modalPpload.on('click', 'button[data-file-upload-cancel-btn]', function (event) {
@@ -1390,30 +1318,21 @@ $categoryPath[] = $valueCatId;
 
                 $modalPpload.on('change', 'input[data-ppload-file-description]', function (event) {
                     event.preventDefault();
-                    if (!$modalPpload.attr('data-ppload-collection-id')
-                        || $modalPpload.attr('data-ppload-collection-id').charAt(0) != '!'
-                    ) {
-                        var fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
-                        var fileDescription = $(this).closest('input[data-ppload-file-description]').val();
-                        var fileCategory = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-category');
-                        var fileTags = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-tags');
+                    var fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
+                    var fileDescription = $(this).closest('input[data-ppload-file-description]').val();
+                    var fileCategory = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-category');
+                    var fileTags = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-tags');
 
-                        $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-tags', fileTags);
-                        updatePploadFile(fileId, fileDescription, fileCategory, fileTags);
-                    }
+                    $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-tags', fileTags);
+                    updatePploadFile(fileId, fileDescription, fileCategory, fileTags);
                 });
 
                 $modalPpload.on('change', 'input[data-ppload-file-version]', function (event) {
                     event.preventDefault();
-                    if (!$modalPpload.attr('data-ppload-collection-id')
-                        || $modalPpload.attr('data-ppload-collection-id').charAt(0) != '!'
-                    ) {
-                        var fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
-                        var fileVersion = $(this).closest('input[data-ppload-file-version]').val();
-                        updatePploadFileVersion(fileId, fileVersion);
-                    }
+                    var fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
+                    var fileVersion = $(this).closest('input[data-ppload-file-version]').val();
+                    updatePploadFileVersion(fileId, fileVersion);
                 });
-
 
                  $modalChanglog.on('click', 'button[data-add-update-btn]', function (event) {
                     var update_id = $modalChanglog.find('#update-id').val();
@@ -1484,7 +1403,7 @@ $categoryPath[] = $valueCatId;
                     event.preventDefault();
                 });
 
-            
+
 
                 $modalPpload.on('change', 'select.chosen', function (event) {
                     event.preventDefault();

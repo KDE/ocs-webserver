@@ -1142,6 +1142,7 @@ class Ocsv1Controller extends Zend_Controller_Action
             return $pploadInfo;
         }
 
+        // FIXME: Remove the mark '!' from ppload_collection_id in DB. Because torrent download feature (finalize files) has already dropped.
         $filesRequest = array(
             'collection_id'     => ltrim($project->ppload_collection_id, '!'),
             'ocs_compatibility' => 'compatible',
@@ -1509,7 +1510,9 @@ class Ocsv1Controller extends Zend_Controller_Action
 
         if ($project->ppload_collection_id
             && $this->getParam('itemid')
-            && ctype_digit((string)$this->getParam('itemid'))) {
+            && ctype_digit((string)$this->getParam('itemid'))
+        ) {
+            // FIXME: Remove the mark '!' from ppload_collection_id in DB. Because torrent download feature (finalize files) has already dropped.
             $filesRequest = array(
                 'collection_id'     => ltrim($project->ppload_collection_id, '!'),
                 'ocs_compatibility' => 'compatible',

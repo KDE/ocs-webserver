@@ -269,6 +269,9 @@ if ($this->product->claimable == 1) {
                             <div id="files-panel" class="tab-pane">
                                 <article>
                                     <div data-ppload-api-uri="<?= PPLOAD_API_URI ?>"
+                                         <? /*
+                                         // FIXME: Remove the mark '!' from ppload_collection_id in DB. Because torrent download feature (finalize files) has already dropped.
+                                         */ ?>
                                          data-ppload-collection-id="<?= ltrim($this->product->ppload_collection_id, '!') ?>">
                                         <iframe src="" width="0" height="0" frameborder="0"
                                                 data-pling-music-uri="/pling-music-html5/embed.html"
@@ -276,18 +279,6 @@ if ($this->product->claimable == 1) {
 
                                         <table class="table table-bordered" data-ppload-files="">
                                             <thead>
-                                            <?php /**
-                                            <?php if ($this->product->ppload_collection_id[0] == '!'): ?>
-                                                <tr>
-                                                    <th colspan="3">
-                                                        <a href=""
-                                                           class="btn btn-native btn-min-width"
-                                                           data-ppload-download-link="">
-                                                            <?= $this->translate('Download all files via Torrent') ?></a>
-                                                    </th>
-                                                </tr>
-                                            <?php endif; ?>
-                                            **/?>
                                             <tr>
                                                 <th><?= $this->translate('Filename'); ?></th>
                                                 <th><?= $this->translate('Filetype'); ?></th>

@@ -132,7 +132,7 @@ $this->inlineScript()->appendScript(
 				      <label for="tile">Product Version:</label>
 				      <input type="text" id="product-version" data-product-version="" class="form-control input-sm" placeholder="Product Version Number">
 				    </div>
-                         * 
+                         *
                          */?>
 	            	<div class="form-group">
 				      <label for="tile">Changelog Title:</label>
@@ -165,7 +165,7 @@ $this->inlineScript()->appendScript(
         $('button[rel="tooltip"]').tooltip();
 
         var $modalPpload = $('#modal-updates');
-        
+
         $('a[href="#modal-updates"]').on('click', function (event) {
             event.preventDefault();
             $modalPpload.attr('data-product-id', $(this).attr('data-product-id'));
@@ -180,7 +180,7 @@ $this->inlineScript()->appendScript(
             }
 
         });
-        
+
 
         function getUpdates(page) {
         	$modalPpload.find('#update-list').html('');
@@ -218,15 +218,15 @@ $this->inlineScript()->appendScript(
                             date = this.created_at;
                         }
 
-                     
+
                         var divEl = $('<div />');
                         divEl.attr('data-uptdate-id', id);
-                        divEl.append(                                
+                        divEl.append(
                                  '<a name="anker_'+id+'"></a>'
                                 + '<h4>'+title+'</h4>'
                                 + '<div class="small light lightgrey product-update-date">'+date+ '</div>'
-                                + text + '<br/><br/>'                                                                
-                            );                        
+                                + text + '<br/><br/>'
+                            );
 
                         var btnEdit = $('<button type="submit" class="btn btn-native btn-sm">Edit</button>');
                         btnEdit.attr('data-change-update-btn',id);
@@ -242,7 +242,7 @@ $this->inlineScript()->appendScript(
                         divEl.append(btnDelete);
                         divEl.append('<br/><br/><br/><br/>');
 
-                        $modalPpload.find('#update-list').append(divEl);                        
+                        $modalPpload.find('#update-list').append(divEl);
 
 					});
                 },
@@ -252,7 +252,7 @@ $this->inlineScript()->appendScript(
             });
 
         }
-        
+
         $modalPpload.on('click', 'button[data-add-update-btn]', function (event) {
             //var product_version = $modalPpload.find('#product-version').val();
             var update_id = $modalPpload.find('#update-id').val();
@@ -328,7 +328,7 @@ $this->inlineScript()->appendScript(
                 event.preventDefault();
 
         });
-        
+
         $modalPpload.on('click', 'button[data-updates-cancel-btn]', function (event) {
             event.preventDefault();
             $modalPpload.modal('hide');
@@ -353,8 +353,7 @@ $this->inlineScript()->appendScript(
      data-updatepploadfile-uri=""
      data-updatepackagetype-uri=""
      data-deletepploadfile-uri=""
-     data-deletepploadfiles-uri=""
-     data-finalizepploadcollection-uri="">
+     data-deletepploadfiles-uri="">
     <div class="modal-dialog content-modal" style="width: 95%">
         <div class="modal-content">
             <div class="modal-header">
@@ -390,7 +389,6 @@ $this->inlineScript()->appendScript(
                         <tbody></tbody>
                     </table>
                 </div>
-                <div info-finalized="">
 
                 </div>
                 <div style="float: right; padding-top: 10px;" class="small light">
@@ -404,7 +402,7 @@ $this->inlineScript()->appendScript(
                     <?= $this->translate('I accept the ') ?>
                     <a href="/content/terms"><?= $this->translate('Terms and Conditions') ?></a>
                 </span>
-                
+
             </div>
             <div class="modal-footer">
                 <button class="btn btn-native pull-left" data-addpploadfile-btn="">
@@ -548,15 +546,15 @@ $this->inlineScript()->appendScript(
                             date = this.created_at;
                         }
 
-                     
+
                         var divEl = $('<div />');
                         divEl.attr('data-uptdate-id', id);
-                        divEl.append(                                
+                        divEl.append(
                                  '<a name="anker_'+id+'"></a>'
                                 + '<h4>'+title+'</h4>'
                                 + '<div class="small light lightgrey product-update-date">'+date+ '</div>'
-                                + text + '<br/><br/>'                                                                
-                            );                        
+                                + text + '<br/><br/>'
+                            );
 
                         var btnEdit = $('<button type="submit" class="btn btn-native btn-sm">Edit</button>');
                         btnEdit.attr('data-change-update-btn',id);
@@ -571,7 +569,7 @@ $this->inlineScript()->appendScript(
                         divEl.append(btnDelete);
                         divEl.append('<br/><br/><br/><br/>');
 
-                        $modalPpload.find('#update-list').append(divEl);                        
+                        $modalPpload.find('#update-list').append(divEl);
 
 					});
                 },
@@ -584,11 +582,12 @@ $this->inlineScript()->appendScript(
 
         function getPploadFiles(page) {
             var collectionId = $modalPpload.attr('data-ppload-collection-id');
-            var hasFinalized = false;
+
+            // FIXME: Remove the mark '!' from ppload_collection_id in DB. Because torrent download feature (finalize files) has already dropped.
             if (collectionId.charAt(0) == '!') {
                 collectionId = collectionId.slice(1);
-                hasFinalized = true;
             }
+
             if (!page) {
                 page = 1;
                 $modalPpload.find('table[data-ppload-files] tbody').empty();
@@ -609,10 +608,7 @@ $this->inlineScript()->appendScript(
                     if (data.status != 'success') {
                         return;
                     }
-                    var deletePploadFileBtn = '';
-                    if (!hasFinalized) {
-                        deletePploadFileBtn = '<a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-deletepploadfile-btn=""><span class="glyphicon glyphicon-trash"></span></a>';
-                    }
+                    var deletePploadFileBtn = '<a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-deletepploadfile-btn=""><span class="glyphicon glyphicon-trash"></span></a>';
                     var deletePploadFileBtnPerFile = '';
 
                     var myArray = $.map(data.files, function(entry) {
@@ -621,9 +617,9 @@ $this->inlineScript()->appendScript(
 					myArray.sort(keysrt('created_timestamp'), false);
 
                     var tagOptions = UserTags.getTagOptions();
-                    
+
                     $.each(myArray, function () {
-                    	
+
                         var fileDescription = '';
                         if (this.description) {
                             fileDescription = this.description;
@@ -693,7 +689,7 @@ $this->inlineScript()->appendScript(
                                 }
                             });
                         }
-                        
+
                         //downloadlink is now: domain/api/files/download/id/ID/s/TOKEN/t/TIMESTAMP/FILE_NAME/u/USERID
                         var hash = '<?= $this->download_hash ?>';
                         var timetamp = '<?= $this->download_timestamp ?>';
@@ -769,38 +765,21 @@ $this->inlineScript()->appendScript(
                             $("#data-link" + this.id).html($("#data-link" + this.id).html() + " (External Link)");
                         }
                     });
-                    if (hasFinalized) {
-                        $modalPpload.find('tr[data-ppload-file-id] select[data-os-id]').attr('disabled', 'disabled');
 
-                        $modalPpload.find('div[info-finalized]').append('<br/><b>Your files are finalized (and via torrent downloadable). If you want to add new files, click on "Delete All" and upload all of your files again.</b>');
-                        $modalPpload.find('input[data-accept-checkbox]').attr('disabled', 'disabled');
+                    $modalPpload.find('p[data-file-upload-msg]').show();
+                    $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
+                    $modalPpload.find('button[data-file-upload-ok-btn]').removeAttr('disabled');
 
-                        $modalPpload.find('p[data-file-upload-msg]').hide();
+                    $modalPpload.find('button[data-deletepploadfiles-btn]').removeAttr('disabled');
+
+                    if ($modalPpload.find('input[data-accept-checkbox]').is(':checked')) {
+                        $modalPpload.find('button[data-addpploadfile-btn]').removeAttr('disabled');
+                        $modalPpload.find('#github_picker').removeAttr('disabled');
+                    } else {
                         $modalPpload.find('button[data-addpploadfile-btn]').attr('disabled', 'disabled');
                         $modalPpload.find('#github_picker').attr('disabled', 'disabled');
-                        //$modalPpload.find('button[data-finalizepploadcollection-btn]').attr('disabled', 'disabled');
-                        $modalPpload.find('button[data-file-upload-ok-btn]').removeAttr('disabled');
-                        $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
-
-                        $modalPpload.find('button[data-deletepploadfiles-btn]').removeAttr('disabled');
-
                     }
-                    else {
-                        $modalPpload.find('p[data-file-upload-msg]').show();
-                        $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
-                        $modalPpload.find('button[data-file-upload-ok-btn]').removeAttr('disabled');
 
-                        //$modalPpload.find('button[data-finalizepploadcollection-btn]').removeAttr('disabled');
-                        $modalPpload.find('button[data-deletepploadfiles-btn]').removeAttr('disabled');
-
-                        if ($modalPpload.find('input[data-accept-checkbox]').is(':checked')) {
-                            $modalPpload.find('button[data-addpploadfile-btn]').removeAttr('disabled');
-                            $modalPpload.find('#github_picker').removeAttr('disabled');
-                        } else {
-                            $modalPpload.find('button[data-addpploadfile-btn]').attr('disabled', 'disabled');
-                            $modalPpload.find('#github_picker').attr('disabled', 'disabled');
-                        }
-                    }
                     if (data.pagination.next) {
                         getPploadFiles(data.pagination.next);
                     }
@@ -850,7 +829,6 @@ $this->inlineScript()->appendScript(
             var $uploadProgress = $uploadContainer.find('span[data-file-upload-progress]');
             $uploadProgress.attr('data-file-upload-time', new Date().getTime());
 
-            //$modalPpload.find('button[data-finalizepploadcollection-btn]').attr('disabled', 'disabled');
             $modalPpload.find('button[data-deletepploadfiles-btn]').attr('disabled', 'disabled');
             $modalPpload.find('button[data-file-upload-ok-btn]').attr('disabled', 'disabled');
             $modalPpload.find('button[data-file-upload-cancel-btn]').removeAttr('disabled');
@@ -882,7 +860,6 @@ $this->inlineScript()->appendScript(
                         ajaxUploads.uploading = null;
                         $uploadContainer.remove();
                         if ($modalPpload.attr('data-ppload-collection-id')) {
-                            //$modalPpload.find('button[data-finalizepploadcollection-btn]').removeAttr('disabled');
                             $modalPpload.find('button[data-deletepploadfiles-btn]').removeAttr('disabled');
                         }
                         $modalPpload.find('button[data-file-upload-ok-btn]').removeAttr('disabled');
@@ -930,7 +907,7 @@ $this->inlineScript()->appendScript(
                     $modalPpload.find('table[data-ppload-files] tbody').append(
                         '<tr data-ppload-file-id="' + data.file.id + '" data-ppload-file-category="' + fileCategory + '" data-ppload-file-tags="' + fileTags + '">'
                         + '<td><a href="' + pploadApiUri + 'files/download/id/' + data.file.id + '/' + data.file.name + '">' + data.file.name + '</a></td>'
-                        + '<td>' + version + '</td>' 
+                        + '<td>' + version + '</td>'
                         + '<td><input data-ppload-file-description="" class="form-control input-sm"'
                         + ' type="text" maxlength="140" placeholder="File description"'
                         + ' value="' + fileDescription + '"></td>'
@@ -966,7 +943,6 @@ $this->inlineScript()->appendScript(
 
                     UserTags.activateSelect(data.file.id, '');
 
-                    //$modalPpload.find('button[data-finalizepploadcollection-btn]').removeAttr('disabled');
                     $modalPpload.find('button[data-deletepploadfiles-btn]').removeAttr('disabled');
                     $modalPpload.find('button[data-file-upload-ok-btn]').removeAttr('disabled');
                     $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
@@ -1089,7 +1065,6 @@ $this->inlineScript()->appendScript(
                         $modalPpload.find('table[data-ppload-files] tbody').html('');
                         $modalPpload.find('table[data-file-upload] tbody').html('');
                         $modalPpload.find('p[data-file-upload-msg]').show();
-                        //$modalPpload.find('button[data-finalizepploadcollection-btn]').attr('disabled', 'disabled');
                         $modalPpload.find('button[data-deletepploadfiles-btn]').attr('disabled', 'disabled');
                         $modalPpload.find('button[data-file-upload-ok-btn]').removeAttr('disabled');
                         $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
@@ -1125,45 +1100,12 @@ $this->inlineScript()->appendScript(
                     $modalPpload.find('p[data-file-upload-msg]').show();
 
                     //$modalPpload.find('button[data-addpploadfile-btn]').removeAttr('disabled');
-                    //$modalPpload.find('button[data-finalizepploadcollection-btn]').attr('disabled', 'disabled');
                     $modalPpload.find('button[data-deletepploadfiles-btn]').attr('disabled', 'disabled');
                     $modalPpload.find('button[data-file-upload-ok-btn]').removeAttr('disabled');
                     $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
 
-                    $modalPpload.find('div[info-finalized]').html('');
                     $modalPpload.find('input[data-accept-checkbox]').removeAttr('disabled');
                     $modalPpload.find('button[data-addpploadfile-btn]').attr('disabled', 'disabled');
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    return;
-                }
-            });
-        }
-
-        function finalizePploadCollection() {
-            $.ajax({
-                url: $modalPpload.attr('data-finalizepploadcollection-uri'),
-                type: 'POST',
-                data: {},
-                dataType: 'json',
-                success: function (data, textStatus, jqXHR) {
-                    if (data.status != 'ok') {
-                        return;
-                    }
-                    $modalPpload.find('tr[data-ppload-file-id] a[data-deletepploadfile-btn]').remove();
-                    $('a[href="#modal-ppload"][data-product-id="' + $modalPpload.attr('data-product-id') + '"]')
-                        .attr('data-ppload-collection-id', '!' + $modalPpload.attr('data-ppload-collection-id'));
-                    $modalPpload.attr('data-ppload-collection-id', '!' + $modalPpload.attr('data-ppload-collection-id'));
-                    $modalPpload.find('p[data-file-upload-msg]').hide();
-                    $modalPpload.find('button[data-addpploadfile-btn]').attr('disabled', 'disabled');
-                    //$modalPpload.find('button[data-finalizepploadcollection-btn]').attr('disabled', 'disabled');
-                    $modalPpload.find('button[data-deletepploadfiles-btn]').removeAttr('disabled');
-                    $modalPpload.find('button[data-file-upload-ok-btn]').removeAttr('disabled');
-                    $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
-
-                    $modalPpload.find('div[info-finalized]').append('<br/><b>Your files are finalized (and via torrent downloadable). If you want to add new files, click on "Delete All" and upload all of your files again.</b>');
-                    $modalPpload.find('input[data-accept-checkbox]').attr('disabled', 'disabled');
-
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     return;
@@ -1201,7 +1143,6 @@ $this->inlineScript()->appendScript(
             $modalPpload.attr('data-updatepackagetype-uri', $(this).attr('data-updatepackagetype-uri'));
             $modalPpload.attr('data-deletepploadfile-uri', $(this).attr('data-deletepploadfile-uri'));
             $modalPpload.attr('data-deletepploadfiles-uri', $(this).attr('data-deletepploadfiles-uri'));
-            $modalPpload.attr('data-finalizepploadcollection-uri', $(this).attr('data-finalizepploadcollection-uri'));
             $modalPpload.find('div[data-file-upload]').css({
                 'min-height': '200px',
                 'max-height': '400px',
@@ -1220,11 +1161,9 @@ $this->inlineScript()->appendScript(
 
             $modalPpload.find('#update-list').html('');
 
-            $modalPpload.find('div[info-finalized]').html('');
             $modalPpload.find('input[data-accept-checkbox]').removeAttr('disabled');
 
             $modalPpload.find('button[data-addpploadfile-btn]').attr('disabled', 'disabled');
-            //$modalPpload.find('button[data-finalizepploadcollection-btn]').attr('disabled', 'disabled');
             $modalPpload.find('button[data-deletepploadfiles-btn]').attr('disabled', 'disabled');
             $modalPpload.find('button[data-file-upload-ok-btn]').removeAttr('disabled');
             $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
@@ -1245,47 +1184,27 @@ $this->inlineScript()->appendScript(
 
         $modalPpload.on('dragenter', 'div[data-file-upload]', function (event) {
             event.preventDefault();
-            if (!$modalPpload.attr('data-ppload-collection-id')
-                || $modalPpload.attr('data-ppload-collection-id').charAt(0) != '!'
-            ) {
-                $(this).css('border-color', '#00ccff');
-            }
+            $(this).css('border-color', '#00ccff');
         });
 
         $modalPpload.on('dragleave', 'div[data-file-upload]', function (event) {
             event.preventDefault();
-            if (!$modalPpload.attr('data-ppload-collection-id')
-                || $modalPpload.attr('data-ppload-collection-id').charAt(0) != '!'
-            ) {
-                $(this).css('border-color', '#cccccc');
-            }
+            $(this).css('border-color', '#cccccc');
         });
 
         $modalPpload.on('drop', 'div[data-file-upload]', function (event) {
             event.preventDefault();
-            if (!$modalPpload.attr('data-ppload-collection-id')
-                || $modalPpload.attr('data-ppload-collection-id').charAt(0) != '!'
-            ) {
-                postPploadFiles(event.originalEvent.dataTransfer.files);
-                $(this).css('border-color', '#cccccc');
-            }
+            postPploadFiles(event.originalEvent.dataTransfer.files);
+            $(this).css('border-color', '#cccccc');
         });
 
         $modalPpload.on('change', 'input[data-file-upload]', function (event) {
-            if (!$modalPpload.attr('data-ppload-collection-id')
-                || $modalPpload.attr('data-ppload-collection-id').charAt(0) != '!'
-            ) {
-                postPploadFiles(this.files);
-            }
+            postPploadFiles(this.files);
         });
 
         $modalPpload.on('click', 'button[data-addpploadfile-btn]', function (event) {
             event.preventDefault();
-            if (!$modalPpload.attr('data-ppload-collection-id')
-                || $modalPpload.attr('data-ppload-collection-id').charAt(0) != '!'
-            ) {
-                $modalPpload.find('input[data-file-upload]').click();
-            }
+            $modalPpload.find('input[data-file-upload]').click();
         });
 
         $modalPpload.on('click', 'input[data-accept-checkbox]', function (event) {
@@ -1304,27 +1223,13 @@ $this->inlineScript()->appendScript(
 
         $modalPpload.on('click', 'tr[data-ppload-file-id] a[data-deletepploadfile-btn]', function (event) {
             event.preventDefault();
-            if (!$modalPpload.attr('data-ppload-collection-id')
-                || $modalPpload.attr('data-ppload-collection-id').charAt(0) != '!'
-            ) {
-                deletePploadFile($(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id'));
-            }
+            deletePploadFile($(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id'));
         });
 
         $modalPpload.on('click', 'button[data-deletepploadfiles-btn]', function (event) {
             event.preventDefault();
             deletePploadFiles();
         });
-		/**
-        $modalPpload.on('click', 'button[data-finalizepploadcollection-btn]', function (event) {
-            event.preventDefault();
-            if (!$modalPpload.attr('data-ppload-collection-id')
-                || $modalPpload.attr('data-ppload-collection-id').charAt(0) != '!'
-            ) {
-                finalizePploadCollection();
-            }
-            $(this).tooltip('hide'); // workaround to hide the tooltip
-        });**/
 
         $modalPpload.on('click', 'button[data-ppload-cancel-btn]', function (event) {
             event.preventDefault();
@@ -1352,30 +1257,21 @@ $this->inlineScript()->appendScript(
 
         $modalPpload.on('change', 'input[data-ppload-file-description]', function (event) {
             event.preventDefault();
-            if (!$modalPpload.attr('data-ppload-collection-id')
-                || $modalPpload.attr('data-ppload-collection-id').charAt(0) != '!'
-            ) {
-                var fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
-                var fileDescription = $(this).closest('input[data-ppload-file-description]').val();
-                var fileCategory = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-category');
-                var fileTags = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-tags');
+            var fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
+            var fileDescription = $(this).closest('input[data-ppload-file-description]').val();
+            var fileCategory = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-category');
+            var fileTags = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-tags');
 
-                $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-tags', fileTags);
-                fileDescription = fileDescription.replace(/<\/?[^>]+(>|$)/g, "");
-                updatePploadFile(fileId, fileDescription, fileCategory, fileTags);
-            }
+            $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-tags', fileTags);
+            fileDescription = fileDescription.replace(/<\/?[^>]+(>|$)/g, "");
+            updatePploadFile(fileId, fileDescription, fileCategory, fileTags);
         });
-
 
         $modalPpload.on('change', 'input[data-ppload-file-version]', function (event) {
             event.preventDefault();
-            if (!$modalPpload.attr('data-ppload-collection-id')
-                || $modalPpload.attr('data-ppload-collection-id').charAt(0) != '!'
-            ) {
-                var fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
-                var fileVersion = $(this).closest('input[data-ppload-file-version]').val();
-                updatePploadFileVersion(fileId, fileVersion);
-            }
+            var fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
+            var fileVersion = $(this).closest('input[data-ppload-file-version]').val();
+            updatePploadFileVersion(fileId, fileVersion);
         });
 
         $modalPpload.on('click', 'button[data-add-update-btn]', function (event) {

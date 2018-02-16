@@ -745,6 +745,7 @@ class Embedv1Controller extends Zend_Controller_Action
          ));
         if ($ppload_collection_id)
         {
+            // FIXME: Remove the mark '!' from ppload_collection_id in DB. Because torrent download feature (finalize files) has already dropped.
              $filesRequest = array(
                  'collection_id' => ltrim($ppload_collection_id, '!'),
                   'perpage'       => 100
