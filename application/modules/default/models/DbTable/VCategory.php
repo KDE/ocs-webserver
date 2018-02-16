@@ -193,10 +193,11 @@ class Default_Model_DbTable_VCategory extends Local_Model_Table
     {
         $this->_db->beginTransaction();
         try {
-            $this->_db->query("INSERT INTO {$this->_name} (select max(c.v_category_id)+1 as v_category_id, :param_title as title, null as project_category_id, :param_parent as v_parent_id, NOW(), null from v_category c);",
+            $this->_db->query("INSERT INTO {$this->_name} (select max(c.v_category_id)+1 as v_category_id, :param_title as title, :param_pro_cat_id as project_category_id, :param_parent as v_parent_id, NOW(), null from v_category c);",
                 array(
                     'param_title' => $data['title'],
-                    'param_parent' => $data['v_parent_id']
+                    'param_parent' => $data['v_parent_id'],
+                    'param_pro_cat_id' => $data['project_category_id']
                 ));
             $this->_db->commit();
             

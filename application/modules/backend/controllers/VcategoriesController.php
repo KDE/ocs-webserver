@@ -138,13 +138,11 @@ class Backend_VcategoriesController extends Local_Controller_Action_Backend
         $pagination->setItemCountPerPage($pageSize);
         $pagination->setCurrentPageNumber(($startIndex / $pageSize) + 1);
         
-        $realCatList = $this->_model->fetchTreeRealForJTableStores(null);
-        $this->view->realCatList = $realCatList;
-
         $jTableResult = array();
         $jTableResult['Result'] = self::RESULT_OK;
         $jTableResult['Records'] = (array)$pagination->getCurrentItems();
         $jTableResult['TotalRecordCount'] = count($records);
+        
 
         $this->_helper->json($jTableResult);
     }

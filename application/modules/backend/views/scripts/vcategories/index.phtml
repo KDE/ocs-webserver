@@ -19,6 +19,10 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
+
+$catListHelper = new Backend_View_Helper_RealCategory();
+$catList = $catListHelper->getList();
+
 ?>
 <style>
     .highlight {
@@ -68,32 +72,23 @@
     <p class="validateTips">All form fields are required.</p>
 
     <form id="add-subcat-form" class="jtable-dialog-form jtable-create-form">
+        <div class="jtable-input-field-container">
+            <div class="jtable-input-label">Title</div>
+            <div class="jtable-input jtable-textarea-input">
+                <input class="validate[required]" id="subcat-title" name="title"/>
+            </div>
+        </div>
         
-        <!--
         <div class="jtable-input-field-container">
             <div class="jtable-input-label">Real Cat Id</div>
             <div class="jtable-input jtable-textarea-input">
                 <select id="subcat-project_category_id" name="project_category_id">
                     <?php 
-                        $list = $this->realCatList;
-                        if(isset($list)) {
-                            foreach ($list as $key => $value) {
-                                print_r('<opton value="'. $value .'">' . $key. '</option>');
-                            }
-                        } else {
-                            print_r('<opton value="">Leer</option>');
+                        foreach ($catList as $value) {
+                            echo('<option value="' . $value['Value'] . '">'. $value['DisplayText'] . '</option>');
                         }
-                    
-                    
                     ?>
                 </select>
-            </div>
-        </div>
-        -->
-        <div class="jtable-input-field-container">
-            <div class="jtable-input-label">Title</div>
-            <div class="jtable-input jtable-textarea-input">
-                <input class="validate[required]" id="subcat-title" name="title"/>
             </div>
         </div>
     </form>
@@ -142,6 +137,7 @@
                     $('#TableContainer').jtable('addRecord', {
                         record: {
                             "title": $("#subcat-title").val(),
+                            "project_category_id": $("#subcat-project_category_id").val(),
                             "v_category_id": sendPostId,
                             "v_parent_id": $(this).data('record').v_parent_id
                         }
@@ -230,8 +226,8 @@
                             }
                         });
                     });
-                },
-                deleteAction: '/backend/vcategories/delete'
+                }
+                //,deleteAction: '/backend/vcategories/delete'
             },
             fields: {
                 v_parent_id_show: {
@@ -272,7 +268,7 @@
                     width: '10%'
                 },
                 title: {
-                    title: 'Title',
+                    title: 'Virtual Title',
                     create: true,
                     edit: true,
                     list: false
