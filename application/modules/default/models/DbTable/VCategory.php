@@ -205,7 +205,7 @@ class Default_Model_DbTable_VCategory extends Local_Model_Table
             Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . print_r($e, true));
         }
 
-        return $this->fetchRow('v_parent_id = ' . $data['v_parent_id'] . ' and title = ' . $data['title']);
+        return $this->fetchRow('v_parent_id = ' . $data['v_parent_id'] . ' and title = "' . $data['title'] . '"');
     }
 
     /**
