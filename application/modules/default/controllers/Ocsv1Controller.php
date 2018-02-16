@@ -905,7 +905,7 @@ class Ocsv1Controller extends Zend_Controller_Action
     ) {
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
-        $cacheName = 'api_fetch_content_by_id_' . $contentId;
+        $cacheName = 'api_fetch_content_by_id_' . $contentId . '_format_' . $this->_format;
 
         if (($response = $cache->load($cacheName))) {
             return $response;
@@ -1525,7 +1525,7 @@ class Ocsv1Controller extends Zend_Controller_Action
         if (!$file) {
             $this->_sendErrorResponse(103, 'content item not found');
         }
-        
+
         //create ppload download hash: secret + collection_id + expire-timestamp
         $salt = PPLOAD_DOWNLOAD_SECRET;
         $collectionID = $project->ppload_collection_id;
@@ -1734,7 +1734,7 @@ class Ocsv1Controller extends Zend_Controller_Action
 
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
-        $cacheName = 'api_fetch_comments_' . md5("{$commentType}, {$contentId}, {$page}, {$pagesize}");
+        $cacheName = 'api_fetch_comments_' . md5("{$commentType}, {$contentId}, {$page}, {$pagesize}" . '_format_' . $this->_format);
 
         if (($cachedResponse = $cache->load($cacheName))) {
             $this->_sendResponse($cachedResponse, $this->_format);
