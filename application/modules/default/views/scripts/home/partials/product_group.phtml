@@ -29,7 +29,7 @@ $titles = explode(",", $this->title);
 $i = 0;
 $t = '';
 foreach ($ids as $catid) {
-    if($i>0) $t=$t.' , ';
+    if($i>0) $t=$t.', ';
     $t =$t. '<a href="/browse/cat/'.$catid.'">'.$titles[$i++].'</a>';        
 }
 echo $t;
