@@ -28,7 +28,7 @@ $this->supporters = $modelInfo->getNewActiveSupporters(18);
 
 $this->productsThemesGTK = $modelInfo->getLastProductsForHostStores(5,"366,363,273,267,138,125,131,153");
 $this->productsThemesPlasma = $modelInfo->getLastProductsForHostStores(5,"365,119,123,266,114,118,349,417,101,100,111");
-$this->productsThemesBox = $modelInfo->getLastProductsForHostStores(5,"117,267,139,143,142,140,141,144");
+$this->productsWindowmanager = $modelInfo->getLastProductsForHostStores(5,"117,267,139,143,142,140,141,144");
 $this->productsIconsCursors= $modelInfo->getLastProductsForHostStores(5,"386,107");
 $this->productsScreenshots= $modelInfo->getLastProductsForHostStores(5,"225,445");
 $this->productsApps = $modelInfo->getLastProductsForHostStores(5,233);
@@ -53,15 +53,20 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                         <?php                                 
                                     echo $this->partial('/home/partials/product_group.phtml', array(
                                             "title"  => "GTK/Gnome",
-                                            "products" => $this->productsThemesGTK
+                                            "products" => $this->productsThemesGTK,
+                                            "catIDs" =>"366"
                                         )
                                     );       
+                                    //366
+
 
                                     echo $this->partial('/home/partials/product_group.phtml', array(
                                             "title"  => "KDE Plasma",
-                                            "products" => $this->productsThemesPlasma
+                                            "products" => $this->productsThemesPlasma,
+                                            "catIDs" =>"365"   
                                         )
-                                    );                                 
+                                    );       
+                                    // 365                          
                         ?>                                                      
                         </div>
 
@@ -69,15 +74,20 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                         <?php                                 
                                     echo $this->partial('/home/partials/product_group.phtml', array(
                                             "title"  => "Window Managers",
-                                            "products" => $this->productsThemesBox
+                                            "products" => $this->productsWindowmanager,
+                                            "catIDs" =>"147"   
                                         )
                                     );       
+                                    //147
 
                                     echo $this->partial('/home/partials/product_group.phtml', array(
                                             "title"  => "Icons, Cursors",
-                                            "products" => $this->productsIconsCursors
+                                            "products" => $this->productsIconsCursors,
+                                            "catIDs" =>"386,107"   
                                         )
-                                    );                                 
+                                    );           
+                                    // 386     107
+
                         ?>                                                                                                                        
                         </div>
 
@@ -85,31 +95,38 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                         <?php                                 
                                     echo $this->partial('/home/partials/product_group.phtml', array(
                                             "title"  => "Concepts, Screenshots",
-                                            "products" => $this->productsScreenshots
+                                            "products" => $this->productsScreenshots,
+                                            "catIDs" =>"445,225"   
                                         )
-                                    );                                 
-                                    
+                                    );                                                                     
+
                                     echo $this->partial('/home/partials/product_group.phtml', array(
                                             "title"  => "Wallpapers",
-                                            "products" => $this->productsWallpapers
+                                            "products" => $this->productsWallpapers,
+                                            "catIDs" =>"295"   
+
                                         )
                                     );       
-
+                                    //295
                         ?>                                                                                                          
                         </div>
                         <div class="row blockpadding" >
                          <?php                                 
                                      echo $this->partial('/home/partials/product_group.phtml', array(
                                              "title"  => "App Add-Ons",
-                                             "products" => $this->productsAddons
+                                             "products" => $this->productsAddons,
+                                             "catIDs" =>"152"   
                                          )
                                      );       
+                                     //152
 
                                      echo $this->partial('/home/partials/product_group.phtml', array(
                                              "title"  => "Applications",
-                                             "products" => $this->productsApps
+                                             "products" => $this->productsApps,
+                                             "catIDs" =>"233"   
                                          )
-                                     );                                 
+                                     );      
+                                     //233                           
                          ?>                                         
                         </div>
 
