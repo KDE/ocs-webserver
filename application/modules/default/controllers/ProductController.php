@@ -406,7 +406,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         if (!isset($projectData->image_small) || $projectData->image_small == '') {
             $projectData->image_small = $pictureSources[0];
         }
-        $projectData->changed_at = new Zend_Db_Expr('NOW()');
+        //20180219 ronald: we set the changed_at only by new files or new updates
+        //$projectData->changed_at = new Zend_Db_Expr('NOW()');
         $projectData->save();
 
         if ($values['tags']) {
@@ -498,6 +499,14 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $updateArray['changed_at'] = new Zend_Db_Expr('Now()');
             $rowset = $tableProjectUpdates->save($updateArray);
             $update_id = $rowset->project_update_id;
+            
+            //20180219 ronald: we set the changed_at only by new files or new updates
+            $projectTable = new Default_Model_Project();
+            $projectUpdateRow = $projectTable->find($this->_projectId)->current();
+            if (count($projectUpdateRow) == 1) {
+                $projectUpdateRow->changed_at = new Zend_Db_Expr('NOW()');
+                $projectUpdateRow->save();
+            }
         }
 
         $result['status'] = 'success';
@@ -610,7 +619,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $projectUpdateRow->pid = $this->_projectId;
         } else {
             $projectUpdateRow->setFromArray($values);
-            $projectUpdateRow->changed_at = new Zend_Db_Expr('NOW()');
+            //20180219 ronald: we set the changed_at only by new files or new updates
+            //$projectUpdateRow->changed_at = new Zend_Db_Expr('NOW()');
         }
 
         $lastId = $projectUpdateRow->save();
@@ -1489,6 +1499,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 if (!$projectData->ppload_collection_id) {
                     // Save collection ID
                     $projectData->ppload_collection_id = $fileResponse->file->collection_id;
+                    //20180219 ronald: we set the changed_at only by new files or new updates
                     $projectData->changed_at = new Zend_Db_Expr('NOW()');
                     $projectData->save();
 
@@ -1532,6 +1543,10 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                         $pploadApi->putCollection($projectData->ppload_collection_id, $collectionRequest);
                     // Store product image as collection thumbnail
                     $this->_updatePploadMediaCollectionthumbnail($projectData);
+                } else {
+                    //20180219 ronald: we set the changed_at only by new files or new updates
+                    $projectData->changed_at = new Zend_Db_Expr('NOW()');
+                    $projectData->save();
                 }
 
                 $this->_helper->json(array(
