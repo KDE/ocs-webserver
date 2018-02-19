@@ -40,6 +40,7 @@ class Default_View_Helper_ProjectFiles extends Zend_View_Helper_Abstract
 
         $fileCount = 0;
         if ($ppload_collection_id) {
+            // FIXME: Remove the mark '!' from ppload_collection_id in DB. Because torrent download feature (finalize files) has already dropped.
             $filesRequest = array(
                 'collection_id' => ltrim($ppload_collection_id, '!'),
                 'perpage'       => 100

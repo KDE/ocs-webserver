@@ -98,7 +98,7 @@ class Default_Plugin_AclRules extends Zend_Acl
 
         $this->addResource(new Zend_Acl_Resource ('statistics_data'));
 
-      
+
 
         $this->allow(self::ROLENAME_GUEST, array(
             'statistics_data'
@@ -194,7 +194,6 @@ class Default_Plugin_AclRules extends Zend_Acl
             'updatepploadfile',
             'deletepploadfile',
             'deletepploadfiles',
-            'finalizepploadcollection',
             'updatepackagetype',
 
         ), new Default_Plugin_Acl_IsProjectOwnerAssertion());
@@ -202,7 +201,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         // resource default_support
         $this->allow(self::ROLENAME_COOKIEUSER, 'default_support',
             array('index','pay', 'paymentok', 'paymentcancel'));
-         
+
 
 
         // resource default_widget

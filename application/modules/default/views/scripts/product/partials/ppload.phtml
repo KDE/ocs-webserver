@@ -26,10 +26,10 @@
              <?php
              $helperCatXdgType = new Default_View_Helper_CatXdgType();
              $xdgType = $helperCatXdgType->catXdgType($this->product->project_category_id);
-             
+
              $helperUserRole = new Backend_View_Helper_UserRole();
              $userRoleName = $helperUserRole->userRole();
-             
+
              ?>
                  <article>
                      <div id="modal-installation-instructions"
@@ -51,6 +51,9 @@
                      </div>
 
                      <div data-ppload-api-uri="<?= PPLOAD_API_URI ?>"
+                          <? /*
+                          // FIXME: Remove the mark '!' from ppload_collection_id in DB. Because torrent download feature (finalize files) has already dropped.
+                          */ ?>
                           data-ppload-collection-id="<?= ltrim($this->product->ppload_collection_id, '!') ?>"
                           data-xdg-type="<?= $xdgType ?>">
 
@@ -63,17 +66,6 @@
                          <!--table-bordered-->
                          <table class="table table-ocs-file" data-ppload-files="">
                              <thead>
-                             <?php /**
-                             <?php if ($this->product->ppload_collection_id[0] == '!'): ?>
-                                 <tr>
-                                     <th colspan="6">
-                                         <a href="" class="btn btn-native btn-min-width"
-                                            data-ppload-download-link="">
-                                             <?= $this->translate('Download all files via Torrent') ?></a>
-                                     </th>
-                                 </tr>
-                             <?php endif; ?>
-                             **/?>
                              <tr>
                                  <th><?= $this->translate('File (click to download)'); ?></th>
                                  <th><?= $this->translate('Version'); ?></th>
@@ -109,6 +101,9 @@
 
              <div class="item active" style="max-width: 800px; max-height: 550px; margin:0 auto; display: none" id="carouselPPlay">
                      <div data-ppload-api-uri="<?= PPLOAD_API_URI ?>"
+                          <? /*
+                          // FIXME: Remove the mark '!' from ppload_collection_id in DB. Because torrent download feature (finalize files) has already dropped.
+                          */ ?>
                           data-ppload-collection-id="<?= ltrim($this->product->ppload_collection_id, '!') ?>">
 
                           <iframe src="" width="0" height="0" frameborder="0" id="pplayiframe"
@@ -218,7 +213,7 @@
 
                                     count_downloads = this.downloaded_count || 0;
                                     downloaded_count_total = downloaded_count_total+parseInt(count_downloads);
-                                    
+
                                     //downloadlink is now: domain/api/files/download/id/ID/s/TOKEN/t/TIMESTAMP/FILE_NAME/u/USERID
                                     var hash = '<?= $this->download_hash ?>';
                                     var timetamp = '<?= $this->download_timestamp ?>';
@@ -226,7 +221,7 @@
 
                                     var downloadUrl = "https://<?= $_SERVER["SERVER_NAME"]?>/p/<?= $this->product->project_id ?>/startdownload?file_id=" + this.id + "&file_name=" + this.name + "&file_type=" + this.type + "&file_size=" + this.size + "&url=" + encodeURIComponent(pploadApiUri + 'files/downloadfile/id/' + this.id + '/s/' + hash + '/t/' + timetamp + '/u/' + userid + '/' + this.name);
                                     var downloadLink = '<a href="' + downloadUrl + '" id="data-link' + this.id + '">' + this.name + '</a>';
-                                    
+
                                     /*
                                     var fileNameBtnLink = this.name;
                                     if(fileNameBtnLink.length > 25) {
@@ -301,20 +296,20 @@
                                      var installButton = '';
                                      var installLink = '';
                                      var installLinkFilename = '';
-                                     
+
                                      if ( ocsUrl) {
                                             if(this.active && this.ocs_compatible == 1){
-                                                installButton = '<a href="' + ocsUrl + '" class="btn btn-native btn-min-width">Install</a>';   
+                                                installButton = '<a href="' + ocsUrl + '" class="btn btn-native btn-min-width">Install</a>';
                                                 installLink = ocsUrl;
                                                 installLinkFilename = shortFilename(this.name);
-                                                
+
                                             } else {
-                                                installButton = '<a href="#" class="btn btn-min-width disabled">INCOMPATIBLE</a>';      
+                                                installButton = '<a href="#" class="btn btn-min-width disabled">INCOMPATIBLE</a>';
                                                 installLink = '';
                                                 installLinkFilename = '';
-                                            }                                         
-                                     } 
-                                   
+                                            }
+                                     }
+
                                     //if(this.active == '1') {
                                     var greyText = ' class="activerows"';
                                     if(this.active == '0') {
@@ -329,8 +324,8 @@
                                     if ((typeof link != 'undefined') && (link != "")) {
                                        isExternLink = true;
                                     }
-                                    
-                                    
+
+
 
                                     var mnt = moment(this.created_timestamp);
 
@@ -353,7 +348,7 @@
                                             + '<option value=\"3\">OS X compatible</option>'
                                             + '<option value=\"11\">Redhat</option>'
                                             + '<option value=\"6\">Snappy</option>'
-                                            + '<option value=\"4\">Windows executable</option>'                                           
+                                            + '<option value=\"4\">Windows executable</option>'
                                             + '</select><span id="file-tag-packagetype'+this.id+'">'
                                             + '</td>'
                                             + '<td>'
@@ -371,7 +366,7 @@
                                             <?php endif; ?>
                                             + '</tr>'
                                         );
-                                
+
                                         $('#dropdown_downloads').append(
                                             //'<li style="padding-bottom: 4px;padding-top: 4px;">&nbsp;<span>' + downloadBtnLink + '</span><span class="right">&nbsp;' + humanFileSize(this.size,false) + '&nbsp;</span></li>'
                                             '<li><a href="' + downloadBtnLink + '" style="white-space: normal; color: #23527c;" id="data-link-dl' + this.id + '"><span id="download-link-filename' + this.id + '" style="white-space: normal; color: #23527c;">' + downloadLinkFilename + '</span><span class="right">&nbsp;' + humanFileSize(this.size,false) + '&nbsp;</span></a></li>'
@@ -382,7 +377,7 @@
                                         $('#project_btn_download').removeClass('disabled');
                                         $('#project_btn_download').addClass("active");
                                         $('#project_btn_download').addClass("btn-primary");
-                                        
+
                                         if(ocsUrl && this.active && this.ocs_compatible == 1){
                                             $('#dropdown_installs').addClass("active");
                                             $('#dropdown_installs').removeClass('hide');
@@ -391,10 +386,10 @@
                                             $('#project_btn_install').removeClass('hide');
                                             $('#project_btn_install').addClass("active");
                                             $('#project_btn_grp_install').removeClass("hide");
-                                            
+
                                             $('#dropdown_installs').append(
                                                 '<li><a href="' + installLink + '" style="white-space: normal; color: #23527c;"><span id="install-link-filename' + this.id + '" style="white-space: normal; color: #23527c;">' + installLinkFilename + '</span><span class="right">&nbsp;' + humanFileSize(this.size,false) + '&nbsp;</span></a></li>'
-                                                
+
                                             );
                                         }
 
@@ -431,7 +426,7 @@
                                         }
 
                                         $("#data-select-packagetype" + this.id).hide();
-                                        
+
                                         if ((typeof this.ocs_compatible != 'undefined') && (this.ocs_compatible != "") && this.ocs_compatible == 1) {
                                             $("#data-checkbox-compatible-" + this.id).attr('checked', 'checked');
                                         }
@@ -450,14 +445,14 @@
                                                 $fileserverLink = $(this).attr('data-link-org');
                                                 window.open($fileserverLink, '_blank');
                                             });
-                                            
-                                            
+
+
                                             $fileserverLink = $("#data-link-dl" + this.id).attr('href');
                                             $("#data-link-dl" + this.id).attr('href', decodeURIComponent(link));
                                             $("#data-link-dl" + this.id).attr('data-link-org', $fileserverLink);
 
                                             $("#data-link-dl" + this.id).attr('target','_blank');
-                                            
+
                                             $("#download-link-filename" + this.id).html($("#download-link-filename" + this.id).html() + " (External Link)");
 
                                             $("#data-link-dl" + this.id).click(function (event) {
@@ -465,11 +460,11 @@
                                                 $fileserverLink = $(this).attr('data-link-org');
                                                 window.open($fileserverLink, '_blank');
                                             });
-                                            
+
                                             $("#install-link-filename" + this.id).html($("#install-link-filename" + this.id).html() + " (External Link)");
                                         }
-                                        
-                                        
+
+
                                         $compatibleCheckbox = $("#data-checkbox-compatible-" + this.id);
 
                                         if(this.active == '0') {
@@ -482,7 +477,7 @@
                                             $isCompatible = this.checked;
                                             updateOcsCompatible($fileId, $isCompatible);
                                         });
-                                        
+
 
                                         //fileSizeSum += parseInt(this.size);
                                         if(parseInt(this.size)>0) {
@@ -502,7 +497,7 @@
                                     //}
 
                                  });
-                                 
+
                                  //
                                  //Inactive Fiels
                                  //
@@ -594,7 +589,7 @@
                                                 + '<option value=\"3\">OS X compatible</option>'
                                                 + '<option value=\"11\">Redhat</option>'
                                                 + '<option value=\"6\">Snappy</option>'
-                                                + '<option value=\"4\">Windows executable</option>'                                                
+                                                + '<option value=\"4\">Windows executable</option>'
                                                 + '</select><span id="file-tag-packagetype'+this.id+'">'
                                                 + '</td>'
 	                                        + '<td>'
@@ -644,15 +639,15 @@
 
 	                                     $("#data-select-packagetype" + this.id).hide();
 
-	                                     
-										
+
+
 	                                     if (isExternLink) {
 	                                        //$("#data-link" + this.id).attr('href', decodeURIComponent(link));
                                                 $("#data-link" + this.id).attr('target','_blank');
 	                                        $("#data-link" + this.id).html($("#data-link" + this.id).html() + " (External Link)");
 	                                     }
 
-	                                    
+
 
 	                                    //fileSizeSum += parseInt(this.size);
                                             if(parseInt(this.size)>0) {
@@ -680,8 +675,8 @@
                                  var fileCount = $('#download_counter_'+ oldestFileId).html();
                                  var oldNewCounter = parseInt(fileCount) + parseInt(<?= $this->product->count_downloads_hive?>)
                                  $('#download_counter_'+ oldestFileId).html(oldNewCounter);
-                                 
-                                 
+
+
 
                                 //$('#downloadscnt').html(downloaded_count_total);
 
@@ -722,7 +717,7 @@
                                  if (data.pagination.next) {
                                      getPploadFiles(data.pagination.next);
                                  }
-                                 
+
                              },
                              error: function (jqXHR, textStatus, errorThrown) {
 
@@ -745,11 +740,11 @@
                             + '&type=' + encodeURIComponent(type)
                             + '&filename=' + encodeURIComponent(filename);
                      }
-                     
-                     
+
+
                      function updateOcsCompatible(fileId, isCompatible) {
                         var $url = "/p/<?= $this->product->project_id ?>/updatepploadfile";
-                        
+
                         if(fileId != 'undefined' && fileId != null) {
 
                             $.ajax({
@@ -776,7 +771,7 @@
                             });
                         }
                     }
-                    
+
                     function shortFilename(filename) {
                         var returnString = filename;
                         if(filename.length > 25) {
@@ -872,8 +867,8 @@
                      if (!hasFilesPanelOpened) {
                          getPploadFiles();
                          hasFilesPanelOpened = true;
-                         
-                         
+
+
                      }
                      //});
 

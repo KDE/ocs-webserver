@@ -54,10 +54,10 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->_helper->layout()->disableLayout();
         if (array_key_exists($this->_projectId, $this->_authMember->projects)) {
             return;
-        }        
+        }
         $userRating = (int)$this->getParam('rate', 0);
         $modelRating = new Default_Model_DbTable_ProjectRating();
-        $modelRating->rateForProject($this->_projectId, $this->_authMember->member_id, $userRating);        
+        $modelRating->rateForProject($this->_projectId, $this->_authMember->member_id, $userRating);
     }
 
     public function indexAction()
@@ -68,7 +68,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $this->_projectId = $productInfo->project_id;
         }
 
-        
+
         if (empty($this->_projectId)) {
             $this->redirect('/explore');
         }
@@ -88,13 +88,13 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             throw new Zend_Controller_Action_Exception('This page does not exist', 404);
         }
         $this->view->cat_id = $this->view->product->project_category_id;
-        
+
         //create ppload download hash: secret + collection_id + expire-timestamp
         $salt = PPLOAD_DOWNLOAD_SECRET;
         $collectionID = $this->view->product->ppload_collection_id;
         $timestamp = time() + 3600; // one hour valid
         $hash = md5($salt . $collectionID . $timestamp); // order isn't important at all... just do the same when verifying
-        
+
         $this->view->download_hash = $hash;
         $this->view->download_timestamp = $timestamp;
 
@@ -123,7 +123,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
     public function addAction()
     {
         $form = new Default_Form_Product();
-        
+
         $this->view->member = $this->_authMember;
         $this->view->form = $form;
         $this->view->mode = 'add';
@@ -254,8 +254,10 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 'category'    => $collectionCategory,
                 'content_id'  => $projectData->project_id
             );
-            $collectionResponse =
-                $pploadApi->putCollection(ltrim($projectData->ppload_collection_id, '!'), $collectionRequest);
+
+            // FIXME: Remove the mark '!' from ppload_collection_id in DB. Because torrent download feature (finalize files) has already dropped.
+            $collectionResponse = $pploadApi->putCollection(ltrim($projectData->ppload_collection_id, '!'), $collectionRequest);
+
             // Store product image as collection thumbnail
             $this->_updatePploadMediaCollectionthumbnail($projectData);
         }
@@ -312,8 +314,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
             return;
         }
-        
-        
+
+
 
         $this->_helper->viewRenderer('add'); // we use the same view as you can see at add a product
         $this->view->mode = 'edit';
@@ -333,13 +335,13 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         //set ppload-collection-id in view
         $this->view->ppload_collection_id = $projectData->ppload_collection_id;
         $this->view->project_id = $projectData->project_id;
-        
+
         //create ppload download hash: secret + collection_id + expire-timestamp
         $salt = PPLOAD_DOWNLOAD_SECRET;
         $collectionID = $projectData->ppload_collection_id;
         $timestamp = time() + 3600; // one hour valid
         $hash = md5($salt . $collectionID . $timestamp); // order isn't important at all... just do the same when verifying
-        
+
         $this->view->download_hash = $hash;
         $this->view->download_timestamp = $timestamp;
         $this->view->member_id = null;
@@ -1035,6 +1037,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 'clientId' => PPLOAD_CLIENT_ID,
                 'secret'   => PPLOAD_SECRET
             ));
+
+            // FIXME: Remove the mark '!' from ppload_collection_id in DB. Because torrent download feature (finalize files) has already dropped.
             $collectionResponse = $pploadApi->deleteCollection(ltrim($product->ppload_collection_id, '!'));
         }
 
@@ -1087,8 +1091,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $collectionRequest = array(
                 'category' => $product->project_category_id
             );
-            $collectionResponse =
-                $pploadApi->putCollection(ltrim($product->ppload_collection_id, '!'), $collectionRequest);
+
+            // FIXME: Remove the mark '!' from ppload_collection_id in DB. Because torrent download feature (finalize files) has already dropped.
+            $collectionResponse = $pploadApi->putCollection(ltrim($product->ppload_collection_id, '!'), $collectionRequest);
         }
 
         //        $this->setViewDataForMyProducts($memberId);
@@ -1138,8 +1143,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $collectionRequest = array(
                 'category' => $product->project_category_id . '-published'
             );
-            $collectionResponse =
-                $pploadApi->putCollection(ltrim($product->ppload_collection_id, '!'), $collectionRequest);
+
+            // FIXME: Remove the mark '!' from ppload_collection_id in DB. Because torrent download feature (finalize files) has already dropped.
+            $collectionResponse = $pploadApi->putCollection(ltrim($product->ppload_collection_id, '!'), $collectionRequest);
         }
 
         $this->forward('products', 'user', 'default');
@@ -1164,9 +1170,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                                     ->where('project_id = ?', $this->_projectId, 'INTEGER')
         ;
         $result = $projectFollowTable->fetchRow($where);
-       
+
         if (null === $result) {
-            $projectFollowTable->createRow($newVals)->save();            
+            $projectFollowTable->createRow($newVals)->save();
             $tableProduct = new Default_Model_Project();
             $product = $tableProduct->find($this->_projectId)->current();
 
@@ -1175,7 +1181,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 Default_Model_ActivityLog::PROJECT_FOLLOWED, $product->toArray());
         }
 
-       
+
         // ppload
         //Add collection to favorite
         // $projectTable = new Default_Model_DbTable_Project();
@@ -1187,13 +1193,16 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         //         'clientId' => PPLOAD_CLIENT_ID,
         //         'secret'   => PPLOAD_SECRET
         //     ));
+        //
+        //     // FIXME: Remove the mark '!' from ppload_collection_id in DB. Because torrent download feature (finalize files) has already dropped.
         //     $favoriteRequest = array(
         //         'user_id'       => $this->_authMember->member_id,
         //         'collection_id' => ltrim($projectData->ppload_collection_id, '!')
         //     );
+        //
         //     $favoriteResponse = $pploadApi->postFavorite($favoriteRequest);
         // }
-      
+
     }
 
 
@@ -1212,14 +1221,14 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $projectFollowTable->delete('member_id=' . $this->_authMember->member_id . ' AND project_id='
             . $this->_projectId);
 
-   
+
         $tableProduct = new Default_Model_Project();
         $product = $tableProduct->find($this->_projectId)->current();
 
         $activityLog = new Default_Model_ActivityLog();
         $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id,
             Default_Model_ActivityLog::PROJECT_UNFOLLOWED, $product->toArray());
-        
+
         // ppload
         // Delete collection from favorite
         // $projectTable = new Default_Model_DbTable_Project();
@@ -1231,10 +1240,13 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         //         'clientId' => PPLOAD_CLIENT_ID,
         //         'secret'   => PPLOAD_SECRET
         //     ));
+        //
+        //     // FIXME: Remove the mark '!' from ppload_collection_id in DB. Because torrent download feature (finalize files) has already dropped.
         //     $favoriteRequest = array(
         //         'user_id'       => $this->_authMember->member_id,
         //         'collection_id' => ltrim($projectData->ppload_collection_id, '!')
         //     );
+        //
         //     $favoriteResponse =
         //         $pploadApi->postFavorite($favoriteRequest); // This post call will retrieve existing favorite info
         //     if (!empty($favoriteResponse->favorite->id)) {
@@ -1262,15 +1274,15 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                                     ->where('project_id = ?', $this->_projectId, 'INTEGER')
         ;
         $result = $projectFollowTable->fetchRow($where);
-       
-        if (null === $result) {        
-             $projectFollowTable->createRow($newVals)->save();                           
+
+        if (null === $result) {
+             $projectFollowTable->createRow($newVals)->save();
             $tableProduct = new Default_Model_Project();
             $product = $tableProduct->find($this->_projectId)->current();
             $activityLog = new Default_Model_ActivityLog();
             $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id,
                 Default_Model_ActivityLog::PROJECT_FOLLOWED, $product->toArray());
-        }       
+        }
     }
 
 
@@ -1287,14 +1299,14 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $projectFollowTable->delete('member_id=' . $this->_authMember->member_id . ' AND project_id='
             . $this->_projectId);
 
-    
+
         $tableProduct = new Default_Model_Project();
         $product = $tableProduct->find($this->_projectId)->current();
 
         $activityLog = new Default_Model_ActivityLog();
         $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id,
             Default_Model_ActivityLog::PROJECT_UNFOLLOWED, $product->toArray());
-                
+
     }
 
     public function followsAction()
@@ -1461,9 +1473,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $projectTable = new Default_Model_DbTable_Project();
         $projectData = $projectTable->find($this->_projectId)->current();
 
-        // Add file to ppload collection (does not append to finalized collection)
-        if ((!$projectData->ppload_collection_id || $projectData->ppload_collection_id[0] != '!')
-            && !empty($_FILES['file_upload']['tmp_name'])
+        // Add file to ppload collection
+        if (!empty($_FILES['file_upload']['tmp_name'])
             && $_FILES['file_upload']['error'] == UPLOAD_ERR_OK
         ) {
             $tmpFilename = dirname($_FILES['file_upload']['tmp_name']) . '/' . basename($_FILES['file_upload']['name']);
@@ -1574,10 +1585,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $error_text = "";
 
-        // Update a file information in ppload collection (does not update it if in finalized collection)
-        if ((!$projectData->ppload_collection_id || $projectData->ppload_collection_id[0] != '!')
-            && !empty($_POST['file_id'])
-        ) {
+        // Update a file information in ppload collection
+        if (!empty($_POST['file_id'])) {
             // require_once 'Ppload/Api.php';
             $pploadApi = new Ppload_Api(array(
                 'apiUri'   => PPLOAD_API_URI,
@@ -1638,7 +1647,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $error_text = "";
 
-        // Update a file information in ppload collection (does not update it if in finalized collection)
+        // Update a file information in ppload collection
         if (!empty($_POST['file_id'])) {
             $typeId = null;
             if (isset($_POST['package_type_id'])) {
@@ -1656,21 +1665,21 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $this->_helper->json(array('status' => 'error', 'error_text' => $error_text));
     }
-    
+
     public function updatecompatibleAction()
     {
         $this->_helper->layout()->disableLayout();
 
         $error_text = "";
 
-        // Update a file information in ppload collection (does not update it if in finalized collection)
+        // Update a file information in ppload collection
         if (!empty($_POST['file_id'])) {
             $typeId = null;
             if (isset($_POST['is_compatible'])) {
                 $is_compatible = $_POST['is_compatible'];
             }
 
-            
+
             return;
         } else {
             $error_text .= 'No FileId. , FileId: ' . $_POST['file_id'];
@@ -1678,10 +1687,10 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $this->_helper->json(array('status' => 'error', 'error_text' => $error_text));
     }
-    
+
     public function startdownloadAction() {
         $this->_helper->layout()->disableLayout();
-        
+
         /**
          * Save Download-Data in Member_Download_History
          */
@@ -1692,13 +1701,13 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $file_size = $this->getParam('file_size');
         $projectId = $this->_projectId;
         $memberId = $this->_authMember->member_id;
-        
+
         if(isset($file_id) && isset($projectId) && isset($memberId)) {
             $memberDlHistory = new Default_Model_DbTable_MemberDownloadHistory();
             $data = array('project_id' => $projectId, 'member_id' => $memberId, 'file_id' => $file_id, 'file_type' => $file_type, 'file_name' => $file_name, 'file_size' => $file_size);
             $memberDlHistory->createRow($data)->save();
         }
-        
+
         $url = urldecode($urltring);
         $this->redirect($url);
     }
@@ -1715,10 +1724,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $error_text = '';
 
-        // Delete file from ppload collection (does not delete it from finalized collection)
-        if ((!$projectData->ppload_collection_id || $projectData->ppload_collection_id[0] != '!')
-            && !empty($_POST['file_id'])
-        ) {
+        // Delete file from ppload collection
+        if (!empty($_POST['file_id'])) {
             // require_once 'Ppload/Api.php';
             $pploadApi = new Ppload_Api(array(
                 'apiUri'   => PPLOAD_API_URI,
@@ -1770,6 +1777,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 'secret'   => PPLOAD_SECRET
             ));
 
+            // FIXME: Remove the mark '!' from ppload_collection_id in DB. Because torrent download feature (finalize files) has already dropped.
             $filesRequest = array(
                 'collection_id' => ltrim($projectData->ppload_collection_id, '!'),
                 'perpage'       => 100
@@ -1818,6 +1826,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 'secret' => PPLOAD_SECRET
             ));
 
+            // FIXME: Remove the mark '!' from ppload_collection_id in DB. Because torrent download feature (finalize files) has already dropped.
             $collectionResponse = $pploadApi->deleteCollection(ltrim($projectData->ppload_collection_id, '!'));
 
             if (isset($collectionResponse->status)
@@ -1842,35 +1851,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $this->_helper->json(array('status' => 'error'));
     }*/
-    /**
-     * ppload
-     */
-    public function finalizepploadcollectionAction()
-    {
-        $this->_helper->layout()->disableLayout();
-
-        $projectTable = new Default_Model_DbTable_Project();
-        $projectData = $projectTable->find($this->_projectId)->current();
-
-        // '!' mark as finalized collection, and does not append file.
-        if ($projectData->ppload_collection_id
-            && $projectData->ppload_collection_id[0] != '!'
-        ) {
-            $projectData->ppload_collection_id = '!' . $projectData->ppload_collection_id;
-            $projectData->changed_at = new Zend_Db_Expr('NOW()');
-            $projectData->save();
-
-            $activityLog = new Default_Model_ActivityLog();
-            $activityLog->writeActivityLog($this->_projectId, $projectData->member_id,
-                Default_Model_ActivityLog::PROJECT_EDITED, $projectData->toArray());
-
-            $this->_helper->json(array('status' => 'ok'));
-
-            return;
-        }
-
-        $this->_helper->json(array('status' => 'error'));
-    }
 
     public function saveproductAction()
     {
