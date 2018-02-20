@@ -1780,7 +1780,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             // FIXME: https://github.com/pling-us/pling-tickets/issues/295
             $filesRequest = array(
                 'collection_id' => ltrim($projectData->ppload_collection_id, '!'),
-                'perpage'       => 100
+                'perpage'       => 1000
             );
             $filesResponse = $pploadApi->getFiles($filesRequest);
 
