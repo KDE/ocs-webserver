@@ -50,10 +50,9 @@
                         </div>
                      </div>
 
+                     <?php /*FIXME: https://github.com/pling-us/pling-tickets/issues/295 */ ?>
                      <div data-ppload-api-uri="<?= PPLOAD_API_URI ?>"
-                          <? /*
-                          // FIXME: https://github.com/pling-us/pling-tickets/issues/295
-                          */ ?>
+                          
                           data-ppload-collection-id="<?= ltrim($this->product->ppload_collection_id, '!') ?>"
                           data-xdg-type="<?= $xdgType ?>">
 
@@ -100,16 +99,14 @@
 
 
              <div class="item active" style="max-width: 800px; max-height: 550px; margin:0 auto; display: none" id="carouselPPlay">
-                     <div data-ppload-api-uri="<?= PPLOAD_API_URI ?>"
-                          <? /*
-                          // FIXME: https://github.com/pling-us/pling-tickets/issues/295
-                          */ ?>
+                    <?php /*FIXME: https://github.com/pling-us/pling-tickets/issues/295 */ ?>
+                    <div data-ppload-api-uri="<?= PPLOAD_API_URI ?>"
                           data-ppload-collection-id="<?= ltrim($this->product->ppload_collection_id, '!') ?>">
 
                           <iframe src="" width="0" height="0" frameborder="0" id="pplayiframe"
                                  data-pling-music-uri="/pling-music-html5/embed.html"
                                  seamless></iframe>
-                       </div>
+                    </div>
              </div>
 
 
