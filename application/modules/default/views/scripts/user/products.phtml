@@ -25,6 +25,11 @@ $this->headLink()->appendStylesheet('/theme/flatui/css/stylesheets/general.css')
 $this->tab = 'products';
 ?>
 <link href="/theme/flatui/css/chosen.css" media="screen" rel="stylesheet" type="text/css" />
+<style type="text/css">
+    div.datafiledroparea{
+        overflow: scroll !important;
+    }
+</style>
 <main class="user-admin-page">
 
     <?php echo $this->render('user/partials/userHeader_top.phtml'); ?>
@@ -105,8 +110,7 @@ $this->tab = 'products';
 <?php
 $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
-            myProducts.setup();
-            WidgetModalAjax.setup();
+            myProducts.setup();            
             Partials.setup();
         });
     ');
@@ -364,8 +368,8 @@ $this->inlineScript()->appendScript(
                 <input type="file" style="display: none;" data-file-upload="" multiple>
 
                 <p data-file-upload-msg=""><?= $this->translate('Drop file(s) here') ?>:</p>
-
-                <div data-file-upload="" dropzone style="font-size: small;">
+                
+                <div data-file-upload="" dropzone style="font-size: small; " class="datafiledroparea">
                     <table class="table" data-ppload-files="">
                         <thead>
                         <tr>
@@ -389,8 +393,8 @@ $this->inlineScript()->appendScript(
                         <tbody></tbody>
                     </table>
                 </div>
-
-                </div>
+               
+                
                 <div style="float: right; padding-top: 10px;" class="small light">
                 	Deleted files are no longer publicly accessible but number of downloads still kept. *
                 </div>
