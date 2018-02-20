@@ -43,7 +43,7 @@ class Default_View_Helper_ProjectFiles extends Zend_View_Helper_Abstract
             // FIXME: https://github.com/pling-us/pling-tickets/issues/295
             $filesRequest = array(
                 'collection_id' => ltrim($ppload_collection_id, '!'),
-                'perpage'       => 100
+                'perpage'       => 1000
             );
             $filesResponse = $pploadApi->getFiles($filesRequest);
             if (isset($filesResponse->status)

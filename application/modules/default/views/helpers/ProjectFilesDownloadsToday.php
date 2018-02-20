@@ -43,7 +43,7 @@ class Default_View_Helper_ProjectFilesDownloadsToday extends Zend_View_Helper_Ab
             // FIXME: https://github.com/pling-us/pling-tickets/issues/295
             $filesRequest = array(
                 'collection_id'               => ltrim($ppload_collection_id, '!'),
-                'perpage'                     => 100,
+                'perpage'                     => 1000,
                 'status'                      => 'active',
                 'downloaded_timeperiod_begin' => $today->format("Y-m-d")
             );

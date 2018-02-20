@@ -1146,7 +1146,7 @@ class Ocsv1Controller extends Zend_Controller_Action
         $filesRequest = array(
             'collection_id'     => ltrim($project->ppload_collection_id, '!'),
             'ocs_compatibility' => 'compatible',
-            'perpage'           => 100
+            'perpage'           => 1000
         );
 
         $filesResponse = $pploadApi->getFiles($filesRequest);

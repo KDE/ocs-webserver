@@ -581,7 +581,7 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
                 format: 'json',
                 status: 'active',
                 collection_id: collection_id,
-                perpage: 100
+                perpage: 1000
             },
             dataType: 'json',
             success: function (response_data, textStatus, jqXHR) {
