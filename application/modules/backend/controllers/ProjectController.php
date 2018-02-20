@@ -222,7 +222,7 @@ class Backend_ProjectController extends Local_Controller_Action_Backend
 
     public function dospamcheckedAction()
     {
-        $id = (int) $this->getParam(self::DATA_ID_NAME);
+        $id = (int)$this->getParam(self::DATA_ID_NAME);
         $product = $this->_model->fetchRow(array('project_id = ?' => $id));
         if (empty($product)) {
             $jsonResult = array();
@@ -231,9 +231,11 @@ class Backend_ProjectController extends Local_Controller_Action_Backend
             $this->_helper->json($jsonResult);
         }
 
-        $checked = (int) $this->getParam('checked');
-        $sql = "update project set spam_checked = :spam_checked, changed_at = :changed_at where project_id = :project_id";
-        $this->_model->getAdapter()->query($sql, array('spam_checked' => $checked, 'changed_at' => $product->changed_at, 'project_id' => $id));
+        $checked = (int)$this->getParam('checked');
+        $sql = "UPDATE project SET spam_checked = :spam_checked, changed_at = :changed_at WHERE project_id = :project_id";
+        $this->_model->getAdapter()
+                     ->query($sql, array('spam_checked' => $checked, 'changed_at' => $product->changed_at, 'project_id' => $id))
+        ;
 
         $jsonResult = array();
         $jsonResult['Result'] = self::RESULT_OK;
@@ -248,8 +250,10 @@ class Backend_ProjectController extends Local_Controller_Action_Backend
         $product = $this->_model->find($projectId)->current();
         $featured = (int)$this->getParam(self::PARAM_FEATURED, null);
 
-        $sql = "update project set featured = :featured, changed_at = :changed_at where project_id = :project_id";
-        $this->_model->getAdapter()->query($sql, array('featured' => $featured, 'changed_at' => $product->changed_at, 'project_id' => $projectId));
+        $sql = "UPDATE project SET featured = :featured, changed_at = :changed_at WHERE project_id = :project_id";
+        $this->_model->getAdapter()
+                     ->query($sql, array('featured' => $featured, 'changed_at' => $product->changed_at, 'project_id' => $projectId))
+        ;
 
         $auth = Zend_Auth::getInstance();
         $identity = $auth->getIdentity();
@@ -268,7 +272,7 @@ class Backend_ProjectController extends Local_Controller_Action_Backend
         $product = $this->_model->find($projectId)->current();
         $ghns_excluded = (int)$this->getParam(self::PARAM_APPROVED, null);
 
-        $sql = "update project set ghns_excluded = :ghns_excluded where project_id = :project_id";
+        $sql = "UPDATE project SET ghns_excluded = :ghns_excluded WHERE project_id = :project_id";
         $this->_model->getAdapter()->query($sql, array('ghns_excluded' => $ghns_excluded, 'project_id' => $projectId));
 
         $auth = Zend_Auth::getInstance();
@@ -281,15 +285,15 @@ class Backend_ProjectController extends Local_Controller_Action_Backend
 
         $this->_helper->json($jTableResult);
     }
-    
-    
+
+
     public function doexcludeAction()
     {
         $projectId = (int)$this->getParam(self::DATA_ID_NAME, null);
         $product = $this->_model->find($projectId)->current();
         $exclude = (int)$this->getParam(self::PARAM_PLING_EXCLUDED, null);
 
-        $sql = "update project set pling_excluded = :exclude where project_id = :project_id";
+        $sql = "UPDATE project SET pling_excluded = :exclude WHERE project_id = :project_id";
         $this->_model->getAdapter()->query($sql, array('exclude' => $exclude, 'project_id' => $projectId));
 
         $auth = Zend_Auth::getInstance();
@@ -310,8 +314,10 @@ class Backend_ProjectController extends Local_Controller_Action_Backend
         $catId = (int)$this->getParam('project_category_id', null);
 
         $product = $this->_model->find($projectId)->current();
-        $sql = "update project set project_category_id = :cat_id, changed_at = :changed_at where project_id = :project_id";
-        $this->_model->getAdapter()->query($sql, array('cat_id' => $catId, 'changed_at' => $product->changed_at, 'project_id' => $projectId));
+        $sql = "UPDATE project SET project_category_id = :cat_id, changed_at = :changed_at WHERE project_id = :project_id";
+        $this->_model->getAdapter()
+                     ->query($sql, array('cat_id' => $catId, 'changed_at' => $product->changed_at, 'project_id' => $projectId))
+        ;
 
         $identity = Zend_Auth::getInstance()->getIdentity();
         Default_Model_ActivityLog::logActivity($projectId, $projectId, $identity->member_id,

@@ -1,16 +1,12 @@
-INSERT INTO `pling`.`member_role` (`member_role_id`, `title`, `shortname`, `is_active`) VALUES ('400', 'Moderator', 'moderator', '1');
+INSERT INTO `member_role` (`member_role_id`, `title`, `shortname`, `is_active`) VALUES ('400', 'Moderator', 'moderator', '1');
 
 ALTER TABLE `project` CHANGE COLUMN `approved` `ghns_excluded` INT(1) NULL DEFAULT '0' AFTER `featured`;
 
+DROP procedure IF EXISTS `generate_stat_project`;
 
-DROP PROCEDURE IF EXISTS `generate_stat_project`;
-CREATE DEFINER=`chibamaster`@`%` PROCEDURE `generate_stat_project`()
-LANGUAGE SQL
-NOT DETERMINISTIC
-CONTAINS SQL
-SQL SECURITY DEFINER
-COMMENT ''
-BEGIN
+DELIMITER $$
+CREATE DEFINER=current_user PROCEDURE `generate_stat_project`()
+  BEGIN
     DROP TABLE IF EXISTS tmp_reported_projects;
     CREATE TEMPORARY TABLE tmp_reported_projects
     (PRIMARY KEY `primary` (project_id) )
@@ -55,7 +51,6 @@ BEGIN
         WHERE tag_type_id = 1
         GROUP BY tgo.tag_object_id
         ORDER BY tgo.tag_object_id;
-
 
     DROP TABLE IF EXISTS tmp_stat_projects;
     CREATE TABLE tmp_stat_projects
@@ -152,4 +147,6 @@ BEGIN
     RENAME TABLE stat_projects TO old_stat_projects, tmp_stat_projects TO stat_projects;
 
     DROP TABLE IF EXISTS old_stat_projects;
-  END
+  END$$
+
+DELIMITER ;

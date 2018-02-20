@@ -53,7 +53,7 @@ class Backend_VcategoriesController extends Local_Controller_Action_Backend
         try {
             $params = $this->getAllParams();
             $parent = 0;
-            
+
             if (empty($params['v_parent_id'])) {
                 $params['v_parent_id'] = 0;
             } else {
@@ -62,17 +62,15 @@ class Backend_VcategoriesController extends Local_Controller_Action_Backend
             if (!empty($params['v_category_id'])) {
                 $params['v_parent_id'] = $params['v_category_id'];
             }
-            
-            
-            
+
             $params['parent'] = null;
             $resultRow = $this->_model->addNewElement($params)->toArray();
 
             /**
-            if (false === empty($params['parent'])) {
-                $this->_model->moveToParent($resultRow['project_category_id'], (int)$params['parent'], 'bottom');
-                $resultRow = $this->_model->fetchElement($resultRow['project_category_id']);
-            }**/
+             * if (false === empty($params['parent'])) {
+             * $this->_model->moveToParent($resultRow['project_category_id'], (int)$params['parent'], 'bottom');
+             * $resultRow = $this->_model->fetchElement($resultRow['project_category_id']);
+             * }**/
 
             $jTableResult['Result'] = self::RESULT_OK;
             $jTableResult['Record'] = $resultRow;
@@ -92,11 +90,11 @@ class Backend_VcategoriesController extends Local_Controller_Action_Backend
         try {
             $params = $this->getAllParams();
             $parent = 0;
-            
+
             if (empty($params['project_category_id'])) {
                 $params['project_category_id'] = null;
             }
-            
+
             $record = $this->_model->save($params);
 
             $jTableResult = array();
@@ -137,12 +135,11 @@ class Backend_VcategoriesController extends Local_Controller_Action_Backend
         $pagination = Zend_Paginator::factory($records);
         $pagination->setItemCountPerPage($pageSize);
         $pagination->setCurrentPageNumber(($startIndex / $pageSize) + 1);
-        
+
         $jTableResult = array();
         $jTableResult['Result'] = self::RESULT_OK;
         $jTableResult['Records'] = (array)$pagination->getCurrentItems();
         $jTableResult['TotalRecordCount'] = count($records);
-        
 
         $this->_helper->json($jTableResult);
     }
@@ -224,7 +221,7 @@ class Backend_VcategoriesController extends Local_Controller_Action_Backend
 
         $this->_helper->json($jTableResult);
     }
-    
+
     public function treerealAction()
     {
         $result = true;

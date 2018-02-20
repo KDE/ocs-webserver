@@ -79,8 +79,7 @@ class Backend_CategoriesController extends Local_Controller_Action_Backend
     {
         $jTableResult = array();
         try {
-            $this->_model->moveToParent((int)$this->getParam('project_category_id', null),
-                (int)$this->getParam('parent', null));
+            $this->_model->moveToParent((int)$this->getParam('project_category_id', null), (int)$this->getParam('parent', null));
             $record = $this->_model->save($this->getAllParams());
 
             $jTableResult = array();

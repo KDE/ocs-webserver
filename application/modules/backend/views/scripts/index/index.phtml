@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  *  ocs-webserver
  *
@@ -22,47 +22,49 @@
 ?>
 <?= $this->partial('yui.phtml'); ?>
 <style type="text/css">
-  table.tablestati{
-    display: block;  
-    background-color: #ccc;      
-    margin-top:40px;
-    float: left;
-    margin-left: 20px;
-  }
+    table.tablestati {
+        display: block;
+        background-color: #ccc;
+        margin-top: 40px;
+        float: left;
+        margin-left: 20px;
+    }
 
-  table.tablestati thead td{
-    font-weight: bold;
-    background-color: #fff;
-  }
-  table.tablestati td{
-        padding:1px;
+    table.tablestati thead td {
+        font-weight: bold;
+        background-color: #fff;
+    }
+
+    table.tablestati td {
+        padding: 1px;
         margin: 1px;
     }
-table.tablestati td.number{
-      text-align: right;
-      width: 80px;
-      padding-right: 10px;
-  }
 
-  path { 
-    stroke: steelblue;
-    stroke-width: 2;
-    fill: none;
-}
+    table.tablestati td.number {
+        text-align: right;
+        width: 80px;
+        padding-right: 10px;
+    }
 
-.axis path,
-.axis line {
-    fill: none;
-    stroke: grey;
-    stroke-width: 1;
-    shape-rendering: crispEdges;
-}
+    path {
+        stroke: steelblue;
+        stroke-width: 2;
+        fill: none;
+    }
 
-.legend {
-    font-size: 16px;
-    font-weight: bold;
-    text-anchor: middle;
-}
+    .axis path,
+    .axis line {
+        fill: none;
+        stroke: grey;
+        stroke-width: 1;
+        shape-rendering: crispEdges;
+    }
+
+    .legend {
+        font-size: 16px;
+        font-weight: bold;
+        text-anchor: middle;
+    }
 </style>
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
@@ -70,304 +72,304 @@ table.tablestati td.number{
 <script src="/theme/flatui/js/lib/d3pie.min.js"></script>
 
 <div class="pling-nav-tabs">
-<ul class="nav nav-tabs ">
- <li class="active"><a class="newuserprojectTab" href="#d3-line" data-toggle="tab">New Members & Projects </a></li>
- <li ><a class="downloadsDomainTab" href="#downloadsDomainTab" data-toggle="tab">Downloads Domain</a></li>
- <li ><a class="downloadsdailyTab" href="#downloadsdailyTab" data-toggle="tab">Downloads&Payouts daily</a></li>
-<!-- <li ><a class="downloadsundpayoutsdailyTab" href="#downloadsundpayoutsdailyTab" data-toggle="tab">Downloads vs Payouts daily</a></li> -->
- 
- <li ><a class="topDownloadsPerDayTab" href="#topDownloadsPerDayTab" data-toggle="tab">Top Download/Day</a></li>
- <li ><a class="payoutTab" href="#payoutTab" data-toggle="tab">Payout</a></li> 
- <li ><a class="payoutNewcomerTab" href="#payoutNewcomerTab" data-toggle="tab">Payout Newcomer</a></li> 
- <li ><a class="payoutNewloserTab" href="#payoutNewloserTab" data-toggle="tab">Payout Newloser</a></li> 
-<li ><a class="payoutMonthDiffTab" href="#payoutMonthDiffTab" data-toggle="tab">Payout  Month Diff</a></li> 
-<li ><a class="payoutCategoryMonthlyTab" href="#payoutCategoryMonthlyTab" data-toggle="tab">Payout  Category monthly</a></li> 
+    <ul class="nav nav-tabs ">
+        <li class="active"><a class="newuserprojectTab" href="#d3-line" data-toggle="tab">New Members & Projects </a></li>
+        <li><a class="downloadsDomainTab" href="#downloadsDomainTab" data-toggle="tab">Downloads Domain</a></li>
+        <li><a class="downloadsdailyTab" href="#downloadsdailyTab" data-toggle="tab">Downloads&Payouts daily</a></li>
+        <!-- <li ><a class="downloadsundpayoutsdailyTab" href="#downloadsundpayoutsdailyTab" data-toggle="tab">Downloads vs Payouts daily</a></li> -->
+
+        <li><a class="topDownloadsPerDayTab" href="#topDownloadsPerDayTab" data-toggle="tab">Top Download/Day</a></li>
+        <li><a class="payoutTab" href="#payoutTab" data-toggle="tab">Payout</a></li>
+        <li><a class="payoutNewcomerTab" href="#payoutNewcomerTab" data-toggle="tab">Payout Newcomer</a></li>
+        <li><a class="payoutNewloserTab" href="#payoutNewloserTab" data-toggle="tab">Payout Newloser</a></li>
+        <li><a class="payoutMonthDiffTab" href="#payoutMonthDiffTab" data-toggle="tab">Payout Month Diff</a></li>
+        <li><a class="payoutCategoryMonthlyTab" href="#payoutCategoryMonthlyTab" data-toggle="tab">Payout Category monthly</a></li>
 
 
-</ul>
-<div class="tab-content row"  >
-   <div id="d3-line" class="tab-pane active ">
-    <div style="width: 100%; padding: 20px">
-        
-        <div id='d3linelableinline'></div>
-        
-    </div>
-  </div>
+    </ul>
+    <div class="tab-content row">
+        <div id="d3-line" class="tab-pane active ">
+            <div style="width: 100%; padding: 20px">
 
-  <div id="downloadsdailyTab" class="tab-pane">
-  <span style="float: left">#number of months back</span>
-     <select id="numofmonthback" style="float: left">
-       <option>2</option>
-       <option selected>3</option>
-       <option>4</option>
-       <option>5</option>
-       <option>6</option>
-       <option>7</option>
-       <option>8</option>
-       <option>9</option>
-       <option>10</option>
-       <option>11</option>
-       <option>12</option>
-     </select>
-     <div id="downloadsdailyTabContainer"></div>
-  </div>
+                <div id='d3linelableinline'></div>
 
-<!--
-   <div id="downloadsundpayoutsdailyTab" class="tab-pane ">               
-        <div id="downloadsundpayoutsdailyTabContainer"></div>                
-  </div>
--->
-
-<div id="downloadsDomainTab" class="tab-pane ">   
-      <div style="display: block; clear: both">
-          Begin:<input  name="filterDownloadsDomainDateBegin" id="filterDownloadsDomainDateBegin" value="<?php echo date("Y-m-j") ?>"></input>
-          End:<input  name="filterDownloadsDomainDateEnd" id="filterDownloadsDomainDateEnd" value="<?php echo date("Y-m-j") ?>"></input>
-          <button class="filterDownloadsDomainDate">go!</button>          
-      </div>            
-        <div id="downloadsDomainTabContainer" style="display: block;clear: left"></div>                
-  </div>
-
-   <div id="topDownloadsPerDayTab" class="tab-pane ">        
-        <div style="display: block; clear: both">
-            <input  name="filterTopDownloadsDate" id="filterTopDownloadsDate" value="<?php echo date("Y-m-j") ?>"></input>
-            <button class="filterTopDownloadsDate">go!</button>
-            <button class="filterTopDownloadsDateClear">clear!</button>
-      
+            </div>
         </div>
-        <div id="topDownloadsPerDayTabContainer" style="display: block;clear: left"></div>                
-  </div>
 
-   <div id="payoutTab" class="tab-pane ">
-        
-        <div id="payoutyear" style="display: block; float: left; padding-right: 20px"></div>        
-        <div id="pie" style="padding:50px; "></div>
-        <div style="display: block; float: right; width: 300px" id="detailContainer"></div>        
+        <div id="downloadsdailyTab" class="tab-pane">
+            <span style="float: left">#number of months back</span>
+            <select id="numofmonthback" style="float: left">
+                <option>2</option>
+                <option selected>3</option>
+                <option>4</option>
+                <option>5</option>
+                <option>6</option>
+                <option>7</option>
+                <option>8</option>
+                <option>9</option>
+                <option>10</option>
+                <option>11</option>
+                <option>12</option>
+            </select>
+            <div id="downloadsdailyTabContainer"></div>
+        </div>
 
-  </div>
+        <!--
+           <div id="downloadsundpayoutsdailyTab" class="tab-pane ">
+                <div id="downloadsundpayoutsdailyTabContainer"></div>
+          </div>
+        -->
 
-  <div id="payoutNewcomerTab" class="tab-pane">       
-        <div id="payoutNewcomerTabContainer"></div>
-  </div>
+        <div id="downloadsDomainTab" class="tab-pane ">
+            <div style="display: block; clear: both">
+                Begin:<input name="filterDownloadsDomainDateBegin" id="filterDownloadsDomainDateBegin" value="<?php echo date("Y-m-j") ?>" />
+                End:<input name="filterDownloadsDomainDateEnd" id="filterDownloadsDomainDateEnd" value="<?php echo date("Y-m-j") ?>" />
+                <button class="filterDownloadsDomainDate">go!</button>
+            </div>
+            <div id="downloadsDomainTabContainer" style="display: block;clear: left"></div>
+        </div>
 
-  <div id="payoutNewloserTab" class="tab-pane">        
-        <div id="payoutNewloserTabContainer"></div>
-  </div>
+        <div id="topDownloadsPerDayTab" class="tab-pane ">
+            <div style="display: block; clear: both">
+                <input name="filterTopDownloadsDate" id="filterTopDownloadsDate" value="<?php echo date("Y-m-j") ?>"/>
+                <button class="filterTopDownloadsDate">go!</button>
+                <button class="filterTopDownloadsDateClear">clear!</button>
 
-  <div id="payoutMonthDiffTab" class="tab-pane">       
-        <div id="payoutMonthDiffTabContainer"></div>
-  </div>
+            </div>
+            <div id="topDownloadsPerDayTabContainer" style="display: block;clear: left"></div>
+        </div>
 
-  <div id = "payoutCategoryMonthlyTab" class="tab-pane">
-        <div id="pieCategoryMonthly" style="padding:50px; "></div>        
-  </div>
+        <div id="payoutTab" class="tab-pane ">
 
-</div>
+            <div id="payoutyear" style="display: block; float: left; padding-right: 20px"></div>
+            <div id="pie" style="padding:50px; "></div>
+            <div style="display: block; float: right; width: 300px" id="detailContainer"></div>
+
+        </div>
+
+        <div id="payoutNewcomerTab" class="tab-pane">
+            <div id="payoutNewcomerTabContainer"></div>
+        </div>
+
+        <div id="payoutNewloserTab" class="tab-pane">
+            <div id="payoutNewloserTabContainer"></div>
+        </div>
+
+        <div id="payoutMonthDiffTab" class="tab-pane">
+            <div id="payoutMonthDiffTabContainer"></div>
+        </div>
+
+        <div id="payoutCategoryMonthlyTab" class="tab-pane">
+            <div id="pieCategoryMonthly" style="padding:50px; "></div>
+        </div>
+
+    </div>
 </div> <!--end of tab-->
 
 
-
 <script type="text/javascript">
-              
-              function createMonthFilter(selectid,triggerEvent){
-                  let html = '<select id="'+selectid+'" style="float: left;">';       
-                  for(i = 1; i<10; i++){
-                    let oneMonthsAgo = moment().subtract(i, 'months');
-                    if(i==1){
-                          html = html +'<option selected>'+oneMonthsAgo.format('YYYYMM')+'</option>';    
-                    }else{
-                          html = html +'<option>'+oneMonthsAgo.format('YYYYMM')+'</option>';
-                    }
-                  }                          
-                  html = html +'</select>';                                                    
-                  return html;
-              }
-             
-              function createMonthFilterWithCurrent(selectid,triggerEvent){
-                  let html = '<select id="'+selectid+'" style="float: left;">';       
-                  for(i = 0; i<10; i++){
-                    let oneMonthsAgo = moment().subtract(i, 'months');
-                    if(i==0){
-                          html = html +'<option selected>'+oneMonthsAgo.format('YYYYMM')+'</option>';    
-                    }else{
-                          html = html +'<option>'+oneMonthsAgo.format('YYYYMM')+'</option>';
-                    }
-                  }                          
-                  html = html +'</select>';                                                    
-                  return html;
-              }
 
-             $.ajaxSetup ({
-                 // Disable caching of AJAX responses
-                 // Used when debugging
-                 cache: false
-             });
-         
-             $.getScript("/theme/flatui/js/stati/newUserProject.js");
-             $(".newuserprojectTab").click(function() {                
-                 $.getScript("/theme/flatui/js/stati/newUserProject.js");
-             });
-       
-            
-            $(".downloadsdailyTab").click(function() {
-                $('#downloadsdailyTabContainer').empty();
-                $.getScript("/theme/flatui/js/stati/downloadsdaily.js");                
-            });
-           $('#numofmonthback').change(function() {                                     
-                 $.getScript("/theme/flatui/js/stati/downloadsdaily.js");               
-            });
-            
-           // downloads & payouts daily
-           /*
-           $('#downloadsundpayoutsdailyTab').prepend(createMonthFilterWithCurrent('selectmonthdownloadsundpayoutdaily'));
-            $('#selectmonthdownloadsundpayoutdaily').change(function() {                                     
-                  $.getScript("/theme/flatui/js/stati/downloadsundpayoutsdaily.js");               
-             });
-           $(".downloadsundpayoutsdailyTab").click(function() {
-               $('#downloadsundpayoutsdailyTabContainer').empty();               
-               $.getScript("/theme/flatui/js/stati/downloadsundpayoutsdaily.js");
-           });
-          */
-          
-
-
-          $('button.filterDownloadsDomainDate').click(function() {                                                       
-                  loadDownloadsDomain();
-             });
-          function loadDownloadsDomain(){
-            $('#downloadsDomainTabContainer').empty();
-              let dateBegin = $( "#filterDownloadsDomainDateBegin" ).val();               
-              let dateEnd = $( "#filterDownloadsDomainDateEnd" ).val();  
-              $.getJSON( "/backend/index/getdownloadsdomain?dateBegin="+dateBegin+"&dateEnd="+dateEnd, function( response ) {
-                   let data = response.results;
-                    let table = "<table class='tablestati'><thead><tr><td class='number'>CNT</td><td>Domain</td><td class='number'>IS_OWN?</td></tr></thead>";
-                    $.each( data, function( index, value ){
-                          table = table+'<tr>'
-                          +'<td class="number">'+value.cnt+'</td>'
-                          +'<td >'+value.referer_domain+'</td>'
-                          +'<td class="number">'+value.is_from_own_domain+'</td>'                                                     
-                          +'</tr>';
-                    });      
-                   table = table +"</table>";                                              
-                    $('#downloadsDomainTabContainer').append(table);                        
-              });  
-          }
-            $(".downloadsDomainTab").click(function() {                                  
-                loadDownloadsDomain();
-            });
-
-
-
-        // topdownloadsperdate           
-               
-            $('button.filterTopDownloadsDate').click(function() {                                                       
-                    loadTopdownloadsperday();
-               });
-            $('button.filterTopDownloadsDateClear').click(function() {                                                       
-                    $('#topDownloadsPerDayTabContainer').empty();
-               });
-
-            function loadTopdownloadsperday(){
-                let date = $( "#filterTopDownloadsDate" ).val();               
-                $.getJSON( "/backend/index/gettopdownloadsperdate?date="+date, function( response ) {
-                     let data = response.results;
-                      let table = "<table class='tablestati'><thead><tr><td colspan='7'>"+date+"</td></tr><tr><td>ProjectID</td><td>Username</td><td class='number'>CNT</td><td>Title</td><td>Category</td><td>created_at</td></tr></thead>";
-                      $.each( data, function( index, value ){
-                            table = table+'<tr>'
-                            +'<td><a target="_blank" href="https://opendesktop.org/p/'+value.project_id+'">'
-                              +value.project_id+'</a></td>'
-                            +'<td>'+value.username+'</td>'
-                            +'<td class="number">'+value.cnt+'</td>'                            
-                            +'<td>'+value.ptitle+'</td>'
-                            +'<td>'+value.ctitle+'</td>'
-                            +'<td>'+value.pcreated_at+'</td>'
-                            +'</tr>';
-                      });      
-                     table = table +"</table>";                                              
-                      $('#topDownloadsPerDayTabContainer').append(table);                        
-                });  
+    function createMonthFilter(selectid, triggerEvent) {
+        let html = '<select id="' + selectid + '" style="float: left;">';
+        for (i = 1; i < 10; i++) {
+            let oneMonthsAgo = moment().subtract(i, 'months');
+            if (i == 1) {
+                html = html + '<option selected>' + oneMonthsAgo.format('YYYYMM') + '</option>';
+            } else {
+                html = html + '<option>' + oneMonthsAgo.format('YYYYMM') + '</option>';
             }
-              $(".topDownloadsPerDayTab").click(function() {                  
-                   $('#topDownloadsPerDayTabContainer').empty();
-                  loadTopdownloadsperday();
-              });
+        }
+        html = html + '</select>';
+        return html;
+    }
 
-            $('#payoutTab').prepend(createMonthFilter('selectmonth'));
-             $('#selectmonth').change(function() {                                     
-                   $.getScript("/theme/flatui/js/stati/memberPayout.js");               
-              });
-            $(".payoutTab").click(function() {
-                $('#detailContainer').empty();
-                $.getScript("/theme/flatui/js/stati/payoutyear.js");
-                $.getScript("/theme/flatui/js/stati/memberPayout.js");
+    function createMonthFilterWithCurrent(selectid, triggerEvent) {
+        let html = '<select id="' + selectid + '" style="float: left;">';
+        for (i = 0; i < 10; i++) {
+            let oneMonthsAgo = moment().subtract(i, 'months');
+            if (i == 0) {
+                html = html + '<option selected>' + oneMonthsAgo.format('YYYYMM') + '</option>';
+            } else {
+                html = html + '<option>' + oneMonthsAgo.format('YYYYMM') + '</option>';
+            }
+        }
+        html = html + '</select>';
+        return html;
+    }
+
+    $.ajaxSetup({
+        // Disable caching of AJAX responses
+        // Used when debugging
+        cache: false
+    });
+
+    $.getScript("/theme/flatui/js/stati/newUserProject.js");
+    $(".newuserprojectTab").click(function () {
+        $.getScript("/theme/flatui/js/stati/newUserProject.js");
+    });
+
+
+    $(".downloadsdailyTab").click(function () {
+        $('#downloadsdailyTabContainer').empty();
+        $.getScript("/theme/flatui/js/stati/downloadsdaily.js");
+    });
+    $('#numofmonthback').change(function () {
+        $.getScript("/theme/flatui/js/stati/downloadsdaily.js");
+    });
+
+    // downloads & payouts daily
+    /*
+    $('#downloadsundpayoutsdailyTab').prepend(createMonthFilterWithCurrent('selectmonthdownloadsundpayoutdaily'));
+     $('#selectmonthdownloadsundpayoutdaily').change(function() {
+           $.getScript("/theme/flatui/js/stati/downloadsundpayoutsdaily.js");
+      });
+    $(".downloadsundpayoutsdailyTab").click(function() {
+        $('#downloadsundpayoutsdailyTabContainer').empty();
+        $.getScript("/theme/flatui/js/stati/downloadsundpayoutsdaily.js");
+    });
+   */
+
+
+    $('button.filterDownloadsDomainDate').click(function () {
+        loadDownloadsDomain();
+    });
+
+    function loadDownloadsDomain() {
+        $('#downloadsDomainTabContainer').empty();
+        let dateBegin = $("#filterDownloadsDomainDateBegin").val();
+        let dateEnd = $("#filterDownloadsDomainDateEnd").val();
+        $.getJSON("/backend/index/getdownloadsdomain?dateBegin=" + dateBegin + "&dateEnd=" + dateEnd, function (response) {
+            let data = response.results;
+            let table = "<table class='tablestati'><thead><tr><td class='number'>CNT</td><td>Domain</td><td class='number'>IS_OWN?</td></tr></thead>";
+            $.each(data, function (index, value) {
+                table = table + '<tr>'
+                    + '<td class="number">' + value.cnt + '</td>'
+                    + '<td >' + value.referer_domain + '</td>'
+                    + '<td class="number">' + value.is_from_own_domain + '</td>'
+                    + '</tr>';
             });
+            table = table + "</table>";
+            $('#downloadsDomainTabContainer').append(table);
+        });
+    }
 
-// payout Category Monthly tab begin 
-             $('#payoutCategoryMonthlyTab').prepend(createMonthFilter('selectmonthCategoryMonthly'));
-             $(".payoutCategoryMonthlyTab").click(function() {                                
-                 $.getScript("/theme/flatui/js/stati/payoutCategoryMonthly.js");
-             });
-             $('#selectmonthCategoryMonthly').change(function() {                                                       
-                   $('.payoutCategoryMonthlyTab').trigger('click');
-              });
-// payout Category Monthly tab end 
-
-            
-            $('#payoutNewcomerTab').prepend(createMonthFilter('selectmonthNewcomer'));
-            $('#selectmonthNewcomer').change(function() {                                                                           
-                   $(".payoutNewcomerTab").trigger('click');
-              });
-             $(".payoutNewcomerTab").click(function() {
-                 $('#payoutNewcomerTabContainer').empty();      
-                  let yyyymm = $( "#selectmonthNewcomer option:selected" ).text();               
-                  $.getJSON( "/backend/index/newcomer?yyyymm="+yyyymm, function( response ) {
-                       let data = response.results;
-                        let table = "<table class='tablestati'>";
-                        $.each( data, function( index, value ){                          
-                              table = table+'<tr><td><a target="_blank" href="https://opendesktop.org/member/'+value.member_id+'">'+value.member_id+'</a></td><td>'+value.username+'</td><td>'+value.paypal_mail+'</td><td class="number">'+value.amount+'</td></tr>';
-                        });      
-                       table = table +"</table>";                                              
-                        $('#payoutNewcomerTabContainer').html(table);                        
-                  });  
-             });
-              
-             $('#payoutNewloserTab').prepend(createMonthFilter('selectmonthNewloser'));              
-             $('#selectmonthNewloser').change(function() {                                                                            
-                    $(".payoutNewloserTab").trigger('click');
-               });
-              $(".payoutNewloserTab").click(function() {
-                  $('#payoutNewloserTabContainer').empty();      
-                   let yyyymm = $( "#selectmonthNewloser option:selected" ).text();               
-                   $.getJSON( "/backend/index/newloser?yyyymm="+yyyymm, function( response ) {
-                        let data = response.results;
-                         let table = "<table class='tablestati'>";
-                         $.each( data, function( index, value ){
-                               table = table+'<tr><td><a target="_blank" href="https://opendesktop.org/member/'+value.member_id+'">'+value.member_id+'</a></td><td>'+value.username+'</td><td>'+value.paypal_mail+'</td><td class="number">'+value.amount+'</td></tr>';
-                         });      
-                        table = table +"</table>";                                              
-                         $('#payoutNewloserTabContainer').html(table);                        
-                   });  
-              });
+    $(".downloadsDomainTab").click(function () {
+        loadDownloadsDomain();
+    });
 
 
-              $('#payoutMonthDiffTab').prepend(createMonthFilter('selectmonthMonthDiff'));           
-              $('#selectmonthMonthDiff').change(function() {                                                                            
-                    $(".payoutMonthDiffTab").trigger('click');
-               });
-              $(".payoutMonthDiffTab").click(function() {
-                  $('#payoutMonthDiffTabContainer').empty();      
-                   let yyyymm = $( "#selectmonthMonthDiff option:selected" ).text();               
-                   $.getJSON( "/backend/index/monthdiff?yyyymm="+yyyymm, function( response ) {
-                        let data = response.results;
-                         let table = "<table class='tablestati'>";
-                         table = table+'<thead><tr><td>Member</td><td>Username</td><td class="number">Diff</td><td>month</td><td class="number">amount</td><td>last month</td><td  class="number">amount </td></tr></thead>';
-                         $.each( data, function( index, value ){
-                               table = table+'<tr><td><a target="_blank" href="https://opendesktop.org/member/'+value.member_id+'">'+value.member_id+'</a></td><td>'+value.username+'</td><td class="number">'+value.am_diff+'</td>'
-                                            +'<td>'+value.ym_akt+'</td><td class="number">'+value.am_akt+'</td>'
-                                            +'<td>'+value.ym_let+'</td><td class="number">'+value.am_let+'</td>'
-                                            ;
-                         });      
-                        table = table +"</table>";                                              
-                         $('#payoutMonthDiffTabContainer').html(table);                        
-                   });  
-              });
+    // topdownloadsperdate
+
+    $('button.filterTopDownloadsDate').click(function () {
+        loadTopdownloadsperday();
+    });
+    $('button.filterTopDownloadsDateClear').click(function () {
+        $('#topDownloadsPerDayTabContainer').empty();
+    });
+
+    function loadTopdownloadsperday() {
+        let date = $("#filterTopDownloadsDate").val();
+        $.getJSON("/backend/index/gettopdownloadsperdate?date=" + date, function (response) {
+            let data = response.results;
+            let table = "<table class='tablestati'><thead><tr><td colspan='7'>" + date + "</td></tr><tr><td>ProjectID</td><td>Username</td><td class='number'>CNT</td><td>Title</td><td>Category</td><td>created_at</td></tr></thead>";
+            $.each(data, function (index, value) {
+                table = table + '<tr>'
+                    + '<td><a target="_blank" href="https://opendesktop.org/p/' + value.project_id + '">'
+                    + value.project_id + '</a></td>'
+                    + '<td>' + value.username + '</td>'
+                    + '<td class="number">' + value.cnt + '</td>'
+                    + '<td>' + value.ptitle + '</td>'
+                    + '<td>' + value.ctitle + '</td>'
+                    + '<td>' + value.pcreated_at + '</td>'
+                    + '</tr>';
+            });
+            table = table + "</table>";
+            $('#topDownloadsPerDayTabContainer').append(table);
+        });
+    }
+
+    $(".topDownloadsPerDayTab").click(function () {
+        $('#topDownloadsPerDayTabContainer').empty();
+        loadTopdownloadsperday();
+    });
+
+    $('#payoutTab').prepend(createMonthFilter('selectmonth'));
+    $('#selectmonth').change(function () {
+        $.getScript("/theme/flatui/js/stati/memberPayout.js");
+    });
+    $(".payoutTab").click(function () {
+        $('#detailContainer').empty();
+        $.getScript("/theme/flatui/js/stati/payoutyear.js");
+        $.getScript("/theme/flatui/js/stati/memberPayout.js");
+    });
+
+    // payout Category Monthly tab begin
+    $('#payoutCategoryMonthlyTab').prepend(createMonthFilter('selectmonthCategoryMonthly'));
+    $(".payoutCategoryMonthlyTab").click(function () {
+        $.getScript("/theme/flatui/js/stati/payoutCategoryMonthly.js");
+    });
+    $('#selectmonthCategoryMonthly').change(function () {
+        $('.payoutCategoryMonthlyTab').trigger('click');
+    });
+    // payout Category Monthly tab end
+
+
+    $('#payoutNewcomerTab').prepend(createMonthFilter('selectmonthNewcomer'));
+    $('#selectmonthNewcomer').change(function () {
+        $(".payoutNewcomerTab").trigger('click');
+    });
+    $(".payoutNewcomerTab").click(function () {
+        $('#payoutNewcomerTabContainer').empty();
+        let yyyymm = $("#selectmonthNewcomer option:selected").text();
+        $.getJSON("/backend/index/newcomer?yyyymm=" + yyyymm, function (response) {
+            let data = response.results;
+            let table = "<table class='tablestati'>";
+            $.each(data, function (index, value) {
+                table = table + '<tr><td><a target="_blank" href="https://opendesktop.org/member/' + value.member_id + '">' + value.member_id + '</a></td><td>' + value.username + '</td><td>' + value.paypal_mail + '</td><td class="number">' + value.amount + '</td></tr>';
+            });
+            table = table + "</table>";
+            $('#payoutNewcomerTabContainer').html(table);
+        });
+    });
+
+    $('#payoutNewloserTab').prepend(createMonthFilter('selectmonthNewloser'));
+    $('#selectmonthNewloser').change(function () {
+        $(".payoutNewloserTab").trigger('click');
+    });
+    $(".payoutNewloserTab").click(function () {
+        $('#payoutNewloserTabContainer').empty();
+        let yyyymm = $("#selectmonthNewloser option:selected").text();
+        $.getJSON("/backend/index/newloser?yyyymm=" + yyyymm, function (response) {
+            let data = response.results;
+            let table = "<table class='tablestati'>";
+            $.each(data, function (index, value) {
+                table = table + '<tr><td><a target="_blank" href="https://opendesktop.org/member/' + value.member_id + '">' + value.member_id + '</a></td><td>' + value.username + '</td><td>' + value.paypal_mail + '</td><td class="number">' + value.amount + '</td></tr>';
+            });
+            table = table + "</table>";
+            $('#payoutNewloserTabContainer').html(table);
+        });
+    });
+
+
+    $('#payoutMonthDiffTab').prepend(createMonthFilter('selectmonthMonthDiff'));
+    $('#selectmonthMonthDiff').change(function () {
+        $(".payoutMonthDiffTab").trigger('click');
+    });
+    $(".payoutMonthDiffTab").click(function () {
+        $('#payoutMonthDiffTabContainer').empty();
+        let yyyymm = $("#selectmonthMonthDiff option:selected").text();
+        $.getJSON("/backend/index/monthdiff?yyyymm=" + yyyymm, function (response) {
+            let data = response.results;
+            let table = "<table class='tablestati'>";
+            table = table + '<thead><tr><td>Member</td><td>Username</td><td class="number">Diff</td><td>month</td><td class="number">amount</td><td>last month</td><td  class="number">amount </td></tr></thead>';
+            $.each(data, function (index, value) {
+                table = table + '<tr><td><a target="_blank" href="https://opendesktop.org/member/' + value.member_id + '">' + value.member_id + '</a></td><td>' + value.username + '</td><td class="number">' + value.am_diff + '</td>'
+                    + '<td>' + value.ym_akt + '</td><td class="number">' + value.am_akt + '</td>'
+                    + '<td>' + value.ym_let + '</td><td class="number">' + value.am_let + '</td>'
+                ;
+            });
+            table = table + "</table>";
+            $('#payoutMonthDiffTabContainer').html(table);
+        });
+    });
 </script>

@@ -100,7 +100,6 @@ class Backend_HiveuserController extends Local_Controller_Action_Backend
             $count = $contentTable->fetchCountUsers();
             $this->view->info = "Erfolgreich geladen aus DB";
             $countProjects = $count;
-
         } catch (Exception $e) {
             Zend_Registry::get('logger')->info(__METHOD__ . ' - ' . "Fehler bei fetchCountProjects");
             Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . print_r($e, true));
@@ -110,7 +109,6 @@ class Backend_HiveuserController extends Local_Controller_Action_Backend
         }
 
         $this->view->coutAll = $countProjects;
-
     }
 
     private function step1()
@@ -189,7 +187,6 @@ class Backend_HiveuserController extends Local_Controller_Action_Backend
 
                 //Mark user as imported
                 $hiveUserTable->update(array("is_imported" => 1), "id = " . $user['id']);
-
             }
             $result['Message'] = $info;
             $_is_import_done = true;
@@ -226,6 +223,7 @@ class Backend_HiveuserController extends Local_Controller_Action_Backend
         } else {
             $member_id = $this->insertMember($user);
         }
+
         return $member_id;
     }
 
@@ -403,6 +401,7 @@ class Backend_HiveuserController extends Local_Controller_Action_Backend
             $member_id = $member['member_id'];
             $memberTable->setDeleted($member_id);
         }
+
         return true;
     }
 }

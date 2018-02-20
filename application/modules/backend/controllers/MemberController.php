@@ -22,6 +22,7 @@
 
 /**
  * Class Backend_MemberController
+ *
  * @deprecated
  */
 class Backend_MemberController extends Zend_Controller_Action
@@ -77,11 +78,8 @@ class Backend_MemberController extends Zend_Controller_Action
             'mail_checked',
             'agb',
             'newsletter'
-        ))
-            ->where('is_deleted=0')
-            ->where('is_active=1')
-            ->order($sort . ' ' . $dir)
-            ->limit($count, $start);
+        ))->where('is_deleted=0')->where('is_active=1')->order($sort . ' ' . $dir)->limit($count, $start)
+        ;
 
         if ($filter) {
             foreach ($filter as $field => $value) {
@@ -95,15 +93,11 @@ class Backend_MemberController extends Zend_Controller_Action
         $responsData['results'] = $memberData;
 
         $sel2 = $this->_model->select();
-        $sel2->where('is_deleted=0')
-            ->where('is_active=1');
-
+        $sel2->where('is_deleted=0')->where('is_active=1');
 
         $responsData['totalRecords'] = count($this->_model->fetchAll($sel2)->toArray());
 
         $this->_helper->json($responsData);
-
-
     }
 
 
@@ -132,7 +126,8 @@ class Backend_MemberController extends Zend_Controller_Action
         $this->_model->setDeleted($member_id);
 
         $identity = Zend_Auth::getInstance()->getIdentity();
-        Default_Model_ActivityLog::logActivity($member_id, null, $identity->member_id, Default_Model_ActivityLog::BACKEND_USER_DELETE, null);
+        Default_Model_ActivityLog::logActivity($member_id, null, $identity->member_id, Default_Model_ActivityLog::BACKEND_USER_DELETE,
+            null);
 
         $this->_helper->json(true);
     }
@@ -158,7 +153,5 @@ class Backend_MemberController extends Zend_Controller_Action
     {
 
         $form = new Zend_Form();
-
-
     }
 }

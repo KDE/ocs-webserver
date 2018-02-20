@@ -100,7 +100,8 @@ class Backend_UserController extends Local_Controller_Action_Backend
         $this->_model->setDeleted($dataId);
 
         $identity = Zend_Auth::getInstance()->getIdentity();
-        Default_Model_ActivityLog::logActivity($dataId, null, $identity->member_id, Default_Model_ActivityLog::BACKEND_USER_DELETE, null);
+        Default_Model_ActivityLog::logActivity($dataId, null, $identity->member_id, Default_Model_ActivityLog::BACKEND_USER_DELETE,
+            null);
 
         $jTableResult = array();
         $jTableResult['Result'] = self::RESULT_OK;
@@ -120,11 +121,11 @@ class Backend_UserController extends Local_Controller_Action_Backend
         $filter['mail'] = $this->getParam('filter_mail');
 
         $select = $this->_model->select()->order($sorting)->limit($pageSize, $startIndex);
-//        foreach ($filter as $key => $value) {
-//            if (false === empty($value)) {
-//                $select->where("{$key} like ?", $value);
-//            }
-//        }
+        //        foreach ($filter as $key => $value) {
+        //            if (false === empty($value)) {
+        //                $select->where("{$key} like ?", $value);
+        //            }
+        //        }
         $metadata = $this->_model->info(Zend_Db_Table_Abstract::METADATA);
 
         foreach ($filter as $key => $value) {
@@ -153,14 +154,13 @@ class Backend_UserController extends Local_Controller_Action_Backend
                 } else {
                     $select->where("{$key} = ?", $value);
                 }
-
             }
         }
 
         $reports = $this->_model->fetchAll($select);
 
-        $reportsAll = $this->_model->fetchAll($select->limit(null,
-            null)->reset('columns')->columns(array('countAll' => new Zend_Db_Expr('count(*)'))));
+        $reportsAll = $this->_model->fetchAll($select->limit(null, null)->reset('columns')
+                                                     ->columns(array('countAll' => new Zend_Db_Expr('count(*)'))));
 
         $jTableResult = array();
         $jTableResult['Result'] = self::RESULT_OK;

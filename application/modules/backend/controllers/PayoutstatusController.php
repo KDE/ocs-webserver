@@ -114,8 +114,8 @@ class Backend_PayoutstatusController extends Local_Controller_Action_Backend
 
         $reports = $this->_model->fetchAll($select);
 
-        $reportsAll = $this->_model->fetchAll($select->limit(null,
-            null)->reset('columns')->columns(array('countAll' => new Zend_Db_Expr('count(*)'))));
+        $reportsAll = $this->_model->fetchAll($select->limit(null, null)->reset('columns')
+                                                     ->columns(array('countAll' => new Zend_Db_Expr('count(*)'))));
 
         $jTableResult = array();
         $jTableResult['Result'] = self::RESULT_OK;

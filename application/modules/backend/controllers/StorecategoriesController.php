@@ -91,13 +91,6 @@ class Backend_StorecategoriesController extends Local_Controller_Action_Backend
         $modelConfigStore->fetchAllStoresConfigArray(true);
     }
 
-    protected function createJobInitCache($storeId) {
-        $queue = Local_Queue_Factory::getQueue();
-        $command = new Backend_Commands_InitCacheStoreCategories($storeId);
-        $msg = $queue->send(serialize($command));
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - ' . print_r($msg, true));
-    }
-
     public function initcacheAction()
     {
         $modelConfigStore = new Default_Model_DbTable_ConfigStore();
@@ -175,8 +168,8 @@ class Backend_StorecategoriesController extends Local_Controller_Action_Backend
 
         $reports = $this->_model->fetchAll($select);
 
-        $reportsAll = $this->_model->fetchAll($select->limit(null,
-            null)->reset('columns')->columns(array('countAll' => new Zend_Db_Expr('count(*)'))));
+        $reportsAll = $this->_model->fetchAll($select->limit(null, null)->reset('columns')
+                                                     ->columns(array('countAll' => new Zend_Db_Expr('count(*)'))));
 
         $jTableResult = array();
         $jTableResult['Result'] = self::RESULT_OK;
@@ -184,6 +177,14 @@ class Backend_StorecategoriesController extends Local_Controller_Action_Backend
         $jTableResult['TotalRecordCount'] = $reportsAll->current()->countAll;
 
         $this->_helper->json($jTableResult);
+    }
+
+    protected function createJobInitCache($storeId)
+    {
+        $queue = Local_Queue_Factory::getQueue();
+        $command = new Backend_Commands_InitCacheStoreCategories($storeId);
+        $msg = $queue->send(serialize($command));
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - ' . print_r($msg, true));
     }
 
     protected function cacheClear($store_id)

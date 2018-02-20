@@ -66,30 +66,31 @@ class Backend_RssController extends Local_Controller_Action_CliAbstract
     {
         $storeData = Zend_Registry::get('application_store_config_list')[$hostname];
         $storeConfig = $this->getStoreTemplate($storeData['config_id_name']);
+
         return $importArray = array(
-            'title' => $storeConfig['head']['browser_title_prepend'] . ' ' . $title,
+            'title'      => $storeConfig['head']['browser_title_prepend'] . ' ' . $title,
             // required
-            'link' => 'https://' . $hostname . '/content.rdf',
+            'link'       => 'https://' . $hostname . '/content.rdf',
             // required
             'lastUpdate' => time(),
             // optional
-//            'published'   => time(),                                                          // optional
-            'charset' => 'utf-8',
+            //            'published'   => time(),                                                          // optional
+            'charset'    => 'utf-8',
             // required
-//            'description' => 'short description of the feed',                                 // optional
-            'author' => $storeConfig['head']['meta_author'],
+            //            'description' => 'short description of the feed',                                 // optional
+            'author'     => $storeConfig['head']['meta_author'],
             // optional
-            'email' => 'contact@opendesktop.org',
+            'email'      => 'contact@opendesktop.org',
             // optional
-            'copyright' => 'All rights reserved. All trademarks are copyright by their respective owners. All contributors are responsible for their uploads.',
+            'copyright'  => 'All rights reserved. All trademarks are copyright by their respective owners. All contributors are responsible for their uploads.',
             // optional
-            'image' => 'https://' . $hostname . $storeConfig['logo'],
+            'image'      => 'https://' . $hostname . $storeConfig['logo'],
             // optional
-            'generator' => $hostname . ' atom feed generator',
+            'generator'  => $hostname . ' atom feed generator',
             // optional
-            'language' => 'en-us',
+            'language'   => 'en-us',
             // optional
-            'ttl' => '15'
+            'ttl'        => '15'
             // optional, ignored if atom is used
         );
     }
@@ -103,7 +104,9 @@ class Backend_RssController extends Local_Controller_Action_CliAbstract
         if (file_exists($fileNameConfig)) {
             $storeTemplate = require APPLICATION_PATH . '/configs/client_' . $storeConfigName . '.ini.php';
         } else {
-            Zend_Registry::get('logger')->warn(__METHOD__ . ' - ' . $storeConfigName . ' :: can not access config file for store context.');
+            Zend_Registry::get('logger')->warn(__METHOD__ . ' - ' . $storeConfigName
+                . ' :: can not access config file for store context.')
+            ;
         }
 
         return $storeTemplate;
@@ -114,36 +117,36 @@ class Backend_RssController extends Local_Controller_Action_CliAbstract
         $helperTruncate = new Default_View_Helper_Truncate();
         $returnValues = array();
         foreach ($requestedElements as $requestedElement) {
-            $returnValues[] =
-                array(
-                    'title' => $requestedElement->title . ' [' . $requestedElement->cat_title . ']',
-                    // required
-                    'link' => 'https://' . $hostname . '/p/' . $requestedElement->project_id,
-                    // required
-                    'description' => $helperTruncate->truncate(strip_tags($requestedElement->description)),
-                    // only text, no html, required
-//                'guid' => 'id of the article, if not given link value will used',             // optional
-                'content' => $this->createContent($requestedElement, $hostname),
+            $returnValues[] = array(
+                'title'       => $requestedElement->title . ' [' . $requestedElement->cat_title . ']',
+                // required
+                'link'        => 'https://' . $hostname . '/p/' . $requestedElement->project_id,
+                // required
+                'description' => $helperTruncate->truncate(strip_tags($requestedElement->description)),
+                // only text, no html, required
+                //                'guid' => 'id of the article, if not given link value will used',             // optional
+                'content'     => $this->createContent($requestedElement, $hostname),
                 // can contain html, optional
-                'lastUpdate' => strtotime($requestedElement->project_changed_at),
+                'lastUpdate'  => strtotime($requestedElement->project_changed_at),
                 // optional
-//                'comments' => 'comments page of the feed entry',                              // optional
-//                'commentRss' => 'the feed url of the associated comments',                    // optional
-                'category' => array(
+                //                'comments' => 'comments page of the feed entry',                              // optional
+                //                'commentRss' => 'the feed url of the associated comments',                    // optional
+                'category'    => array(
                     array(
                         'term' => $requestedElement->cat_title,                                 // required,
                     ),
                 ),
                 // list of the attached categories                                              // optional
-//                'enclosure'    => array(
-//                array(
-//                    'url' => 'url of the linked enclosure',                                   // required
-//                    'type' => 'mime type of the enclosure',                                   // optional
-//                    'length' => 'length of the linked content in octets',                     // optional
-//                ),
-//                ) // list of the enclosures of the feed entry                                 // optional
+                //                'enclosure'    => array(
+                //                array(
+                //                    'url' => 'url of the linked enclosure',                                   // required
+                //                    'type' => 'mime type of the enclosure',                                   // optional
+                //                    'length' => 'length of the linked content in octets',                     // optional
+                //                ),
+                //                ) // list of the enclosures of the feed entry                                 // optional
             );
         }
+
         return $returnValues;
     }
 
@@ -152,12 +155,17 @@ class Backend_RssController extends Local_Controller_Action_CliAbstract
         $link = 'https://' . $hostname . '/p/' . $requestedElement->project_id;
         $helperImage = new Default_View_Helper_Image();
         $image = $helperImage->Image($requestedElement->image_small, array('height' => 40, 'width' => 40));
-        return '<a href="' . $link . '"><img src="' . $image . '" alt="Thumbnail" class="thumbnail" align="left" hspace="10" vspace="10" border="0" /></a><b><big><a href="' . $link . '" style="font-weight:bold;color:#333333;text-decoration:none;">' . $requestedElement->title . '</a></big></b><br /> (' . $requestedElement->cat_title . ')<br />' . $requestedElement->description . '<br /><br /><a href="' . $link . '" style="font-weight:bold;color:#333333;text-decoration:none;">[read more]</a><br /><br />';
+
+        return '<a href="' . $link . '"><img src="' . $image
+            . '" alt="Thumbnail" class="thumbnail" align="left" hspace="10" vspace="10" border="0" /></a><b><big><a href="' . $link
+            . '" style="font-weight:bold;color:#333333;text-decoration:none;">' . $requestedElement->title . '</a></big></b><br /> ('
+            . $requestedElement->cat_title . ')<br />' . $requestedElement->description . '<br /><br /><a href="' . $link
+            . '" style="font-weight:bold;color:#333333;text-decoration:none;">[read more]</a><br /><br />';
     }
 
     private function saveXmlFile($resultXml, $hostname)
     {
-        $filename = str_replace('.','_',$hostname);
+        $filename = str_replace('.', '_', $hostname);
         $path = APPLICATION_PATH . '/../httpdocs/rss/' . $filename . '-content.rss';
         if (is_dir(dirname($path)) AND is_writable(dirname($path))) {
             file_put_contents($path, $resultXml);

@@ -24,6 +24,10 @@ $catListHelper = new Backend_View_Helper_RealCategory();
 $catList = $catListHelper->getList();
 
 ?>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/jquery.validationengine/2.6.4/css/template.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/jquery.validationengine/2.6.4/css/validationEngine.jquery.css">
+<script src="//cdn.jsdelivr.net/jquery.validationengine/2.6.4/js/jquery.validationEngine.min.js"></script>
+<script src="//cdn.jsdelivr.net/jquery.validationengine/2.6.4/languages/jquery.validationEngine-en.js"></script>
 <style>
     .highlight {
         background-color: #fefff3;
@@ -98,13 +102,29 @@ $catList = $catListHelper->getList();
 <script type="text/javascript">
     $(document).ready(function () {
 
+        // Prevent jQuery UI dialog from blocking focusin
+        $(document).on('focusin', function(e) {
+            if ($(e.target).closest(".mce-window, .moxman-window").length) {
+                e.stopImmediatePropagation();
+            }
+        });
+
         tinymce.init({
             selector: "#text-cat-about",
-            plugins : 'autoresize',
             width: '100%',
             height: 400,
             autoresize_min_height: 400,
-            autoresize_max_height: 600
+            autoresize_max_height: 600,
+            menubar: false,
+            plugins: [
+                'autoresize advlist autolink lists link image charmap print preview anchor textcolor',
+                'searchreplace visualblocks code fullscreen',
+                'insertdatetime media table contextmenu paste code help wordcount'
+            ],
+            toolbar: 'insert | undo redo |  formatselect | bold italic backcolor  | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+            content_css: [
+                '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
+                '//www.tinymce.com/css/codepen.min.css']
         });
 
         $('.alert .close').on('click', function (e) {

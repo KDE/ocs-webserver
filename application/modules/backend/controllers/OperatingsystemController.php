@@ -76,7 +76,6 @@ class Backend_OperatingsystemController extends Local_Controller_Action_Backend
         if ($cache->test('fetchOperatingSystems')) {
             $cache->remove('fetchOperatingSystems');
         }
-
     }
 
     public function updateAction()
@@ -129,7 +128,6 @@ class Backend_OperatingsystemController extends Local_Controller_Action_Backend
         $sorting = $this->getParam('jtSorting');
         $filter['name'] = $this->getParam('filter_name');
 
-
         $select = $this->_model->select()->order($sorting)->limit($pageSize, $startIndex);
         foreach ($filter as $key => $value) {
             if (false === empty($value)) {
@@ -137,9 +135,7 @@ class Backend_OperatingsystemController extends Local_Controller_Action_Backend
             }
         }
 
-
         $reports = $this->_model->fetchAll($select);
-
 
         $reportsAll = $this->_model->fetchAll($select->limit(null, null));
 
