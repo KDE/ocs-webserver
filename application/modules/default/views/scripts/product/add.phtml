@@ -53,7 +53,11 @@ $categoryPath[] = $valueCatId;
         input[type=checkbox] {
             display: none;
         }
-
+        
+        div.datafiledroparea{
+            overflow-y: scroll !important;
+        }
+        
         /*
         - Style each label that is directly after the input
         - position: relative; will ensure that any position: absolute children will position themselves in relation to it
@@ -249,7 +253,7 @@ $categoryPath[] = $valueCatId;
 
                                                 <p data-file-upload-msg=""><?= $this->translate('Drop file(s) here') ?>:</p>
 
-                                                <div data-file-upload="" dropzone>
+                                                <div data-file-upload="" dropzone class="datafiledroparea">
                                                     <table class="table" data-ppload-files="">
                                                         <thead>
                                                         <tr>
