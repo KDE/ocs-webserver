@@ -95,7 +95,7 @@ $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
                               $identity = Zend_Auth::getInstance()->getIdentity();
                               if(null == $identity || (null != $identity && !$this->isSupporter($identity->member_id))) {                                                  
                     ?>
-                        <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Help to support the artists and keep the content free</a>
+                        <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Help to support the artists<br/>and keep the content free</a>
                     <?php } else if((null != $identity && $this->isSupporter($identity->member_id))) { ?>
                         <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Support<br>Opendesktop.org</a>
                     <?php }?>
