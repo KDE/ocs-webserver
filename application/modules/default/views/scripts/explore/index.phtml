@@ -103,18 +103,18 @@ $time_start = microtime(true);
                     $identity = Zend_Auth::getInstance()->getIdentity();
                     if(null == $identity || (null != $identity && !$this->isSupporter($identity->member_id))) {                                                  
             ?>
-                <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Become a Supporter<br>of Opendesktop.org</a>
+                <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Help to support the artists and keep the content free</a>
             <?php   } else if((null != $identity && $this->isSupporter($identity->member_id))) { ?>
                 <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Support<br>Opendesktop.org</a>
             <?php   }?>
             </div>
 
-             <div  class="supportDiv  withborder" >    
-                  <span><b><?=$countSupporters?></b> people support </span>        
-                  <span style="display: block"><?php /*number_format($countMembers, 0, '.', ',');*/?>
-                  those who support freedom
-                   </span>
-                  </div>
+            <div  class="supportDiv  withborder" >    
+                <span><b><?=$countSupporters?></b> people support </span>        
+                <span style="display: block"><?php /*number_format($countMembers, 0, '.', ',');*/?>
+                    those who support freedom
+                </span>
+            </div>
 
             <div  class="row sidebar-right-info" >                                
                 <span class="newsTitle"> News </span>
