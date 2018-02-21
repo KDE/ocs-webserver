@@ -110,7 +110,7 @@ $this->tab = 'products';
 <?php
 $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
-            myProducts.setup();            
+            myProducts.setup();
             Partials.setup();
         });
     ');
@@ -368,7 +368,7 @@ $this->inlineScript()->appendScript(
                 <input type="file" style="display: none;" data-file-upload="" multiple>
 
                 <p data-file-upload-msg=""><?= $this->translate('Drop file(s) here') ?>:</p>
-                
+
                 <div data-file-upload="" dropzone style="font-size: small; " class="datafiledroparea">
                     <table class="table" data-ppload-files="">
                         <thead>
@@ -393,8 +393,8 @@ $this->inlineScript()->appendScript(
                         <tbody></tbody>
                     </table>
                 </div>
-               
-                
+
+
                 <div style="float: right; padding-top: 10px;" class="small light">
                 	Deleted files are no longer publicly accessible but number of downloads still kept. *
                 </div>
@@ -586,11 +586,6 @@ $this->inlineScript()->appendScript(
 
         function getPploadFiles(page) {
             var collectionId = $modalPpload.attr('data-ppload-collection-id');
-
-            // FIXME: https://github.com/pling-us/pling-tickets/issues/295
-            if (collectionId.charAt(0) == '!') {
-                collectionId = collectionId.slice(1);
-            }
 
             if (!page) {
                 page = 1;

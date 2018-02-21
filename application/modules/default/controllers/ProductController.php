@@ -255,8 +255,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 'content_id'  => $projectData->project_id
             );
 
-            // FIXME: https://github.com/pling-us/pling-tickets/issues/295
-            $collectionResponse = $pploadApi->putCollection(ltrim($projectData->ppload_collection_id, '!'), $collectionRequest);
+            $collectionResponse = $pploadApi->putCollection($projectData->ppload_collection_id, $collectionRequest);
 
             // Store product image as collection thumbnail
             $this->_updatePploadMediaCollectionthumbnail($projectData);
@@ -501,7 +500,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $updateArray['changed_at'] = new Zend_Db_Expr('Now()');
             $rowset = $tableProjectUpdates->save($updateArray);
             $update_id = $rowset->project_update_id;
-            
+
             //20180219 ronald: we set the changed_at only by new files or new updates
             $projectTable = new Default_Model_Project();
             $projectUpdateRow = $projectTable->find($this->_projectId)->current();
@@ -1038,8 +1037,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 'secret'   => PPLOAD_SECRET
             ));
 
-            // FIXME: https://github.com/pling-us/pling-tickets/issues/295
-            $collectionResponse = $pploadApi->deleteCollection(ltrim($product->ppload_collection_id, '!'));
+            $collectionResponse = $pploadApi->deleteCollection($product->ppload_collection_id);
         }
 
         $activityLog = new Default_Model_ActivityLog();
@@ -1092,8 +1090,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 'category' => $product->project_category_id
             );
 
-            // FIXME: https://github.com/pling-us/pling-tickets/issues/295
-            $collectionResponse = $pploadApi->putCollection(ltrim($product->ppload_collection_id, '!'), $collectionRequest);
+            $collectionResponse = $pploadApi->putCollection($product->ppload_collection_id, $collectionRequest);
         }
 
         //        $this->setViewDataForMyProducts($memberId);
@@ -1144,8 +1141,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 'category' => $product->project_category_id . '-published'
             );
 
-            // FIXME: https://github.com/pling-us/pling-tickets/issues/295
-            $collectionResponse = $pploadApi->putCollection(ltrim($product->ppload_collection_id, '!'), $collectionRequest);
+            $collectionResponse = $pploadApi->putCollection($product->ppload_collection_id, $collectionRequest);
         }
 
         $this->forward('products', 'user', 'default');
@@ -1194,10 +1190,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         //         'secret'   => PPLOAD_SECRET
         //     ));
         //
-        //     // FIXME: https://github.com/pling-us/pling-tickets/issues/295
         //     $favoriteRequest = array(
         //         'user_id'       => $this->_authMember->member_id,
-        //         'collection_id' => ltrim($projectData->ppload_collection_id, '!')
+        //         'collection_id' => $projectData->ppload_collection_id
         //     );
         //
         //     $favoriteResponse = $pploadApi->postFavorite($favoriteRequest);
@@ -1241,10 +1236,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         //         'secret'   => PPLOAD_SECRET
         //     ));
         //
-        //     // FIXME: https://github.com/pling-us/pling-tickets/issues/295
         //     $favoriteRequest = array(
         //         'user_id'       => $this->_authMember->member_id,
-        //         'collection_id' => ltrim($projectData->ppload_collection_id, '!')
+        //         'collection_id' => $projectData->ppload_collection_id
         //     );
         //
         //     $favoriteResponse =
@@ -1779,11 +1773,11 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 'secret'   => PPLOAD_SECRET
             ));
 
-            // FIXME: https://github.com/pling-us/pling-tickets/issues/295
             $filesRequest = array(
-                'collection_id' => ltrim($projectData->ppload_collection_id, '!'),
+                'collection_id' => $projectData->ppload_collection_id,
                 'perpage'       => 1000
             );
+
             $filesResponse = $pploadApi->getFiles($filesRequest);
 
             if (isset($filesResponse->status)
@@ -1828,8 +1822,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 'secret' => PPLOAD_SECRET
             ));
 
-            // FIXME: https://github.com/pling-us/pling-tickets/issues/295
-            $collectionResponse = $pploadApi->deleteCollection(ltrim($projectData->ppload_collection_id, '!'));
+            $collectionResponse = $pploadApi->deleteCollection($projectData->ppload_collection_id);
 
             if (isset($collectionResponse->status)
                 && $collectionResponse->status == 'success'
