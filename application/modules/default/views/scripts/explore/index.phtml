@@ -115,6 +115,7 @@ $time_start = microtime(true);
                   those who support freedom
                    </span>              
                    <div class="row">
+                       <?php /**
                       <?php 
                               $i=0;
                              foreach ($this->supporters as $user) {                                                      
@@ -124,6 +125,8 @@ $time_start = microtime(true);
                               <img src="<?php echo $this->Image($user['profile_image_url'], array('width' => '25', 'height' => '25', 'crop' => 2)); ?>" class="supporterx" />                   
                          </a>
                          <?php } ?>
+                        * 
+                        */ ?>
                    </div>
               </div>
 
