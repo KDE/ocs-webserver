@@ -745,11 +745,11 @@ class Embedv1Controller extends Zend_Controller_Action
          ));
         if ($ppload_collection_id)
         {
-            // FIXME: https://github.com/pling-us/pling-tickets/issues/295
              $filesRequest = array(
-                 'collection_id' => ltrim($ppload_collection_id, '!'),
+                 'collection_id' => $ppload_collection_id,
                   'perpage'       => 100
              );
+
              $filesResponse = $pploadApi->getFiles($filesRequest);
 
              if (isset($filesResponse->status)  && $filesResponse->status == 'success') {

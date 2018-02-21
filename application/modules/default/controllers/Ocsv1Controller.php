@@ -1142,14 +1142,14 @@ class Ocsv1Controller extends Zend_Controller_Action
             return $pploadInfo;
         }
 
-        // FIXME: https://github.com/pling-us/pling-tickets/issues/295
         $filesRequest = array(
-            'collection_id'     => ltrim($project->ppload_collection_id, '!'),
+            'collection_id'     => $project->ppload_collection_id,
             'ocs_compatibility' => 'compatible',
             'perpage'           => 1000
         );
 
         $filesResponse = $pploadApi->getFiles($filesRequest);
+
         if (isset($filesResponse->status) && $filesResponse->status == 'success') {
             $i = 1;
             foreach ($filesResponse->files as $file) {
@@ -1514,14 +1514,15 @@ class Ocsv1Controller extends Zend_Controller_Action
             && $this->getParam('itemid')
             && ctype_digit((string)$this->getParam('itemid'))
         ) {
-            // FIXME: https://github.com/pling-us/pling-tickets/issues/295
             $filesRequest = array(
-                'collection_id'     => ltrim($project->ppload_collection_id, '!'),
+                'collection_id'     => $project->ppload_collection_id,
                 'ocs_compatibility' => 'compatible',
                 'perpage'           => 1,
                 'page'              => $this->getParam('itemid')
             );
+
             $filesResponse = $pploadApi->getFiles($filesRequest);
+
             if (isset($filesResponse->status)
                 && $filesResponse->status == 'success') {
                 $i = 0;

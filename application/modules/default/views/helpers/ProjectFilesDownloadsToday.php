@@ -40,14 +40,15 @@ class Default_View_Helper_ProjectFilesDownloadsToday extends Zend_View_Helper_Ab
         $today = new DateTime();
         $cnt = 0;
         if ($ppload_collection_id) {
-            // FIXME: https://github.com/pling-us/pling-tickets/issues/295
             $filesRequest = array(
-                'collection_id'               => ltrim($ppload_collection_id, '!'),
+                'collection_id'               => $ppload_collection_id,
                 'perpage'                     => 1000,
                 'status'                      => 'active',
                 'downloaded_timeperiod_begin' => $today->format("Y-m-d")
             );
+
             $filesResponse = $pploadApi->getFiles($filesRequest);
+
             if (isset($filesResponse->status)
                 && $filesResponse->status == 'success') {
                 $files = $filesResponse->files;

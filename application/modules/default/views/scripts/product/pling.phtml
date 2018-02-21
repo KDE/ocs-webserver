@@ -269,10 +269,7 @@ if ($this->product->claimable == 1) {
                             <div id="files-panel" class="tab-pane">
                                 <article>
                                     <div data-ppload-api-uri="<?= PPLOAD_API_URI ?>"
-                                         <? /*
-                                         // FIXME: https://github.com/pling-us/pling-tickets/issues/295
-                                         */ ?>
-                                         data-ppload-collection-id="<?= ltrim($this->product->ppload_collection_id, '!') ?>">
+                                         data-ppload-collection-id="<?= $this->product->ppload_collection_id ?>">
                                         <iframe src="" width="0" height="0" frameborder="0"
                                                 data-pling-music-uri="/pling-music-html5/embed.html"
                                                 seamless></iframe>

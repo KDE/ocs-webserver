@@ -53,11 +53,11 @@ $categoryPath[] = $valueCatId;
         input[type=checkbox] {
             display: none;
         }
-        
+
         div.datafiledroparea{
             overflow-y: scroll !important;
         }
-        
+
         /*
         - Style each label that is directly after the input
         - position: relative; will ensure that any position: absolute children will position themselves in relation to it
@@ -653,11 +653,6 @@ $categoryPath[] = $valueCatId;
 
                 function getPploadFiles(page) {
                     var collectionId = $modalPpload.attr('data-ppload-collection-id');
-
-                    // FIXME: https://github.com/pling-us/pling-tickets/issues/295
-                    if (collectionId.charAt(0) == '!') {
-                        collectionId = collectionId.slice(1);
-                    }
 
                     if (!page) {
                         page = 1;

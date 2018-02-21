@@ -40,12 +40,13 @@ class Default_View_Helper_ProjectFiles extends Zend_View_Helper_Abstract
 
         $fileCount = 0;
         if ($ppload_collection_id) {
-            // FIXME: https://github.com/pling-us/pling-tickets/issues/295
             $filesRequest = array(
-                'collection_id' => ltrim($ppload_collection_id, '!'),
+                'collection_id' => $ppload_collection_id,
                 'perpage'       => 1000
             );
+
             $filesResponse = $pploadApi->getFiles($filesRequest);
+
             if (isset($filesResponse->status)
                 && $filesResponse->status == 'success') {
                 $fileCount = $filesResponse->pagination->totalItems;
