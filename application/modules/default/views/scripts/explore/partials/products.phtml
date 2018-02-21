@@ -58,7 +58,9 @@ foreach ($this->products as $this->product) {
        
        <div class="title">
         <b><?php echo $this->product->cat_title?></b>
-        <b class="username small">by <a href="<?php echo $this->buildMemberUrl($this->product->member_id)?>"><?php echo $this->   product->username?></a></b>
+        <b class="username small">by <a  href="<?php echo $this->buildMemberUrl($this->product->member_id)?>" 
+                    class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="<?=$this->product->member_id?>">
+          <?php echo $this->product->username?></a></b>
         </div>
 
         <?php if ($this->dataCategory->show_description==1){

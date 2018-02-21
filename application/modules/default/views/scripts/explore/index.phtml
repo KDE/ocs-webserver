@@ -25,7 +25,7 @@ $modelInfo = new Default_Model_Info();
 $modelCategory = new Default_Model_DbTable_ProjectCategory();
 $this->dataCategory = $modelCategory->findSingleRow($this->cat_id);
 $countSupporters = $modelInfo->getCountActiveSupporters();
-$countMembers = $modelInfo->getCountMembers();
+$this->supporters = $modelInfo->getNewActiveSupporters(7);
 $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
 ?>
 <main id="explore-content">
@@ -103,18 +103,29 @@ $time_start = microtime(true);
                     $identity = Zend_Auth::getInstance()->getIdentity();
                     if(null == $identity || (null != $identity && !$this->isSupporter($identity->member_id))) {                                                  
             ?>
-                <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Help to support the artists<br/>and keep the content free</a>
+                <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Become a Supporter<br>of Opendesktop.org</a>
             <?php   } else if((null != $identity && $this->isSupporter($identity->member_id))) { ?>
                 <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Support<br>Opendesktop.org</a>
             <?php   }?>
             </div>
 
-            <div  class="supportDiv  withborder" >    
-                <span><b><?=$countSupporters?></b> people support </span>        
-                <span style="display: block"><?php /*number_format($countMembers, 0, '.', ',');*/?>
-                    those who support freedom
-                </span>
-            </div>
+             <div  class="supportDiv  withborder" >    
+                  <span><b><?=$countSupporters?></b> people support </span>        
+                  <span style="display: block"><?php /*number_format($countMembers, 0, '.', ',');*/?>
+                  those who support freedom
+                   </span>              
+                   <div class="row">
+                      <?php 
+                              $i=0;
+                             foreach ($this->supporters as $user) {                                                      
+                              if($i++>6) break;
+                         ?>         
+                         <a href="<?php echo $this->buildMemberUrl($user['member_id']); ?>" class="tooltipuserleft" data-tooltip-content="#tooltip_content" data-user="<?=$user['member_id']?>">                   
+                              <img src="<?php echo $this->Image($user['profile_image_url'], array('width' => '25', 'height' => '25', 'crop' => 2)); ?>" class="supporterx" />                   
+                         </a>
+                         <?php } ?>
+                   </div>
+              </div>
 
             <div  class="row sidebar-right-info" >                                
                 <span class="newsTitle"> News </span>
@@ -168,10 +179,18 @@ $time_start = microtime(true);
       </div>
     </div>
     </section>
+
+    <div class="tooltip_templates" style="display: none">
+    <span id="tooltip_content">
+        <i class="fa fa-spinner"></i>
+    </span>
+</div>
 </main>
 
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
-            RssNews.setup();                
+            RssNews.setup(); 
+            TooltipUser.setup("tooltipuserleft","left");  
+            TooltipUser.setup("tooltipuser","right");              
         });
     ');
