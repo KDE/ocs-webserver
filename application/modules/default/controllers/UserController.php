@@ -115,7 +115,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
                     $paginationComments = $tableMember->fetchComments($this->_memberId);
                     if ($paginationComments) {
                         $offset = (int)$this->getParam('page');
-                        $paginationComments->setItemCountPerPage(15);
+                        $paginationComments->setItemCountPerPage(50);
                         $paginationComments->setCurrentPageNumber($offset);
                         $this->view->comments = $paginationComments;
                     }
