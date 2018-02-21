@@ -169,7 +169,10 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
         <span style="display: block"><?php /*number_format($countMembers, 0, '.', ',');*/?>
         those who support freedom
          </span>
+        
+        <?php /**
          <div class="row">
+             
             <?php 
                     $i=0;
                    foreach ($this->supporters as $user) {                                                      
@@ -180,6 +183,8 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                </a>
                <?php } ?>
          </div>
+         * 
+         */ ?>
         </div>
 
         <div  class="row sidebar-right-info" >                                
