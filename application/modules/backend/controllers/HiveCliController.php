@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -34,10 +35,10 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
     //var $hive_import_categories = array(637);
     var $hive_import_categories = array(635);
     protected $_allowed = array(
-        'image/jpeg' => '.jpg',
-        'image/jpg' => '.jpg',
-        'image/png' => '.png',
-        'image/gif' => '.gif',
+        'image/jpeg'          => '.jpg',
+        'image/jpg'           => '.jpg',
+        'image/png'           => '.png',
+        'image/gif'           => '.gif',
         'application/x-empty' => '.png'
     );
 
@@ -79,10 +80,8 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
                     //} else if(isset($action) && $action == 'sync' && isset($context) && $context == 'downloads') {
                     //	$this->syncDownloads();
                 }
-    	
             }
         }
-
     }
 
     public function initVars()
@@ -134,7 +133,8 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
                         $this->deleteVote($vote);
                     }
                 }
-                $sql = "DELETE FROM H01.changes WHERE `table` = 'votes' AND `action` = '" . $vote['action'] . "' AND `id` = " . $vote['id'];
+                $sql = "DELETE FROM H01.changes WHERE `table` = 'votes' AND `action` = '" . $vote['action'] . "' AND `id` = "
+                    . $vote['id'];
                 $stmt = $db->query($sql);
                 $stmt->execute();
             }
@@ -170,16 +170,14 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
         } else {
             return false;
         }
-
     }
 
     private function syncComments()
     {
         $db = Zend_Db_Table::getDefaultAdapter();
 
-
         //Parent-Comments
-        $sql = "select * from (";
+        $sql = "SELECT * FROM (";
         $sql .= " SELECT ch.`action`,c.parent,NULL AS comment_id,0 AS comment_type,0 AS comment_parent_id,p.project_id AS comment_target_id,m.member_id AS comment_member_id,convert(cast(convert(c.text using latin1) as binary) using utf8) AS comment_text, FROM_UNIXTIME(c.date) AS comment_created_at,1 AS source_id,c.id AS source_pk";
         $sql .= " FROM H01.changes ch";
         $sql .= " JOIN H01.comments c ON c.id = ch.id";
@@ -202,14 +200,14 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
             if ($comment['action'] <> 'D') {
                 $comment_id = $this->insertUpdateComment($comment);
             }
-            $sql = "DELETE FROM H01.changes WHERE `table` = 'comments' AND `action` = '" . $comment['action'] . "' AND `id` = " . $comment['source_pk'];
+            $sql = "DELETE FROM H01.changes WHERE `table` = 'comments' AND `action` = '" . $comment['action'] . "' AND `id` = "
+                . $comment['source_pk'];
             $stmt = $db->query($sql);
             $stmt->execute();
         }
 
-
         //Child-Comments
-        $sql = "select * from (";
+        $sql = "SELECT * FROM (";
         $sql .= " SELECT ch.action, c.parent, c3.comment_id,0 AS type,c2.comment_id AS comment_parent_id,p.project_id AS comment_target_id,m.member_id AS comment_member_id,convert(cast(convert(c.text using latin1) as binary) using utf8) AS comment_text, FROM_UNIXTIME(c.date) AS comment_created_at,1 AS source_id,c.id AS source_pk";
         $sql .= " FROM H01.changes ch";
         $sql .= " JOIN H01.comments c ON c.id = ch.id";
@@ -234,21 +232,22 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
             if ($comment['action'] <> 'D') {
                 $comment_id = $this->insertUpdateComment($comment);
             }
-            $sql = "DELETE FROM H01.changes WHERE `table` = 'comments' AND `action` = '" . $comment['action'] . "' AND `id` = " . $comment['source_pk'];
+            $sql = "DELETE FROM H01.changes WHERE `table` = 'comments' AND `action` = '" . $comment['action'] . "' AND `id` = "
+                . $comment['source_pk'];
             $stmt = $db->query($sql);
             $stmt->execute();
         }
 
-
         //Deleted-Comments
-        $sql = "select c.* from H01.changes c where c.`table` = 'comments' and c.`action` = 'D'";
+        $sql = "SELECT c.* FROM H01.changes c WHERE c.`table` = 'comments' AND c.`action` = 'D'";
         $stmt = $db->query($sql);
         $comments = $stmt->fetchAll();
         echo '###################### Start ComentSync Deleted Comments: ' . count($comments) . ' comments ';
         //Insert/Update users in table comments
         foreach ($comments as $comment) {
             $comment_id = $this->deleteComment($comment);
-            $sql = "DELETE FROM H01.changes WHERE `table` = 'comments' AND `action` = '" . $comment['action'] . "' AND `id` = " . $comment['id'];
+            $sql = "DELETE FROM H01.changes WHERE `table` = 'comments' AND `action` = '" . $comment['action'] . "' AND `id` = "
+                . $comment['id'];
             $stmt = $db->query($sql);
             $stmt->execute();
         }
@@ -256,8 +255,6 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
         if ($countChildComments > 1) {
             $this->syncComments();
         }
-
-
     }
 
     private function insertUpdateComment($comment)
@@ -280,7 +277,6 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
         } else {
             return false;
         }
-
     }
 
     private function deleteComment($comment)
@@ -293,6 +289,7 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
             $ocsComment = $ocsComment->toArray();
             $ocsComment['comment_active'] = 0;
             $result = $ocsCommentTable->save($ocsComment);
+
             return $result;
         }
 
@@ -308,12 +305,12 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
         $this->_HIVE_BASE_URL = $config->admin->email;
 
         $this->createCronJob($action, $context);
-
     }
 
     /**
      * @param string $action
      * @param string $context
+     *
      * @throws Zend_Exception
      */
     protected function createCronJob($action, $context)
@@ -321,8 +318,8 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
         try {
             $manager = new Crontab_Manager_CrontabManager();
             //           $manager->user = 'www-data';
-            $newJob = $manager->newJob('*/60 * * * * php /var/www/ocs-www/httpdocs/cron.php -a /backend/hive-cli/run/action/' . $action . '/context/' . $context . '/ >> /var/www/ocs-www/logs/hive_sync_' . $context . '.log 2>&1',
-                'www-data');
+            $newJob = $manager->newJob('*/60 * * * * php /var/www/ocs-www/httpdocs/cron.php -a /backend/hive-cli/run/action/' . $action
+                . '/context/' . $context . '/ >> /var/www/ocs-www/logs/hive_sync_' . $context . '.log 2>&1', 'www-data');
             if (false == $manager->jobExists($newJob)) {
                 $manager->add($newJob);
                 $manager->save();
@@ -336,7 +333,7 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
     private function syncUser()
     {
         $db = Zend_Db_Table::getDefaultAdapter();
-        $sql = "SELECT c.action,u.* from H01.changes c";
+        $sql = "SELECT c.action,u.* FROM H01.changes c";
         $sql .= " JOIN H01.users u ON c.id = u.id";
         $sql .= " WHERE c.table = 'users'";
         $sql .= " ORDER BY action,createtime";
@@ -361,7 +358,8 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
                 }
             }
             if ($newMember) {
-                $sql = "DELETE FROM H01.changes WHERE `table` = 'users' AND `action` = '" . $user['action'] . "' AND `id` = " . $user['id'];
+                $sql = "DELETE FROM H01.changes WHERE `table` = 'users' AND `action` = '" . $user['action'] . "' AND `id` = "
+                    . $user['id'];
                 $stmt = $db->query($sql);
                 $stmt->execute();
             }
@@ -369,7 +367,6 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
 
         //Import users into member
         $this->importOcsMembers();
-
     }
 
     private function insertUpdateUserIntoImportTable($user)
@@ -386,8 +383,8 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
         } else {
             //save new user
             $result = $userTable->insert($updatearray);
-
         }
+
         return $result;
     }
 
@@ -425,7 +422,6 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
 
             //Mark user as imported
             $hiveUserTable->update(array("is_imported" => 1), "id = " . $user['id']);
-
         }
         echo $info;
     }
@@ -445,6 +441,7 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
         } else {
             $member_id = $this->insertMember($user);
         }
+
         return $member_id;
     }
 
@@ -532,7 +529,6 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
                 }
             }
         }
-
 
         return $member;
     }
@@ -703,7 +699,6 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
         } else {
             return false;
         }
-
     }
 
     private function deleteMember($user)
@@ -715,13 +710,14 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
             $member_id = $member['member_id'];
             $memberTable->setDeleted($member_id);
         }
+
         return true;
     }
 
     private function syncContent()
     {
         $db = Zend_Db_Table::getDefaultAdapter();
-        $sql = "SELECT c.action,u.* from H01.changes c";
+        $sql = "SELECT c.action,u.* FROM H01.changes c";
         $sql .= " JOIN H01.content u ON c.id = u.id";
         $sql .= " WHERE c.table = 'content'";
         $sql .= " ORDER BY action,created";
@@ -747,7 +743,8 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
                 }
             }
             if ($newProject) {
-                $sql = "DELETE FROM H01.changes WHERE `table` = 'content' AND `action` = '" . $content['action'] . "' AND `id` = " . $content['id'];
+                $sql = "DELETE FROM H01.changes WHERE `table` = 'content' AND `action` = '" . $content['action'] . "' AND `id` = "
+                    . $content['id'];
                 $stmt = $db->query($sql);
                 $stmt->execute();
             }
@@ -774,6 +771,7 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
         } else {
             $newProject = $contentTable->insert($updatearray);
         }
+
         return $newProject;
     }
 
@@ -842,7 +840,6 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
                         $info .= " - Files Uploaded: " . $_import_file_counter . " -  ";
                         $time_elapsed_secs = microtime(true) - $start;
                         $info .= $time_elapsed_secs . " secs";
-
                     } else {
                         $_import_file_counter = 1;
                     }
@@ -886,7 +883,7 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
                     } else {
                         $info .= " - NO Files Uploaded";
                         $contentTable->update(array(
-                            "is_imported" => 1,
+                            "is_imported"  => 1,
                             "import_error" => "Error on fileupload to cc.ppload.com Exception: " . $pploadError
                         ), "id = " . $project['id']);
                     }
@@ -1093,6 +1090,7 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
         }
 
         var_dump($info);
+
         return $cnFileUrl;
     }
 
@@ -1126,7 +1124,6 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
                 $ratingSum = $votingTable->fetchRating($projectId);
                 $count_likes = $ratingSum['count_likes'];
                 $count_dislikes = $ratingSum['count_dislikes'];
-
             } else {
                 $votingTable = new Default_Model_DbTable_ProjectRating();
                 //New project
@@ -1134,7 +1131,6 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
                 $count_likes = $ratingSum['count_likes'];
                 $count_dislikes = $ratingSum['count_dislikes'];
             }
-
         } catch (Exception $e) {
             $info .= (__FUNCTION__ . '::ERROR load Project: ' . $e);
         }
@@ -1148,11 +1144,9 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
             } else {
                 throw new Exception(__FUNCTION__ . '::ERROR load member: Member not found: Username = ' . $project['user']);
             }
-
         } catch (Exception $e) {
             throw new Exception(__FUNCTION__ . '::ERROR load member: ' . $e);
         }
-
 
         $projectObj = array();
         $projectObj['member_id'] = $memberId;
@@ -1172,7 +1166,6 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
             $projectObj['is_active'] = 0;
             $projectObj['status'] = 30;
         }
-
 
         $projectObj['pid'] = null;
         $projectObj['type_id'] = 1;
@@ -1213,18 +1206,18 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
             $projectObj['uuid'] = $uuid;
         }
 
-
         if ($projectId) {
             try {
                 //update project
                 $updateCount = $projectTable->update($projectObj, "project_id = " . $projectId);
                 $info .= "Update Project successfull: Updated rows: " . $updateCount;
 
-
                 //update changelog?
                 if (isset($project['changelog']) && $project['changelog'] != '') {
                     $projectUpdatesTable = new Default_Model_ProjectUpdates();
-                    $projectUpdate = $projectUpdatesTable->fetchRow('project_id = ' . $projectId . ' AND source_id = 1 AND source_pk = ' . $project['id']);
+                    $projectUpdate =
+                        $projectUpdatesTable->fetchRow('project_id = ' . $projectId . ' AND source_id = 1 AND source_pk = '
+                            . $project['id']);
                     if ($projectUpdate) {
                         $projectUpdate = $projectUpdate->toArray();
                         if ($projectUpdate['text'] != $project['changelog']) {
@@ -1246,11 +1239,9 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
                         $projectUpdatesTable->save($data);
                     }
                 }
-
             } catch (Exception $e) {
                 throw new Exception(__FUNCTION__ . '::ERROR update project: ' . $e);
             }
-
         } else {
             try {
                 //Create new project
@@ -1282,16 +1273,14 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
                 $votearray['user_dislike'] = $count_dislikes;
                 $newVote = $votingTable->save($votearray);
 
-
                 if (null == $newProjectObj || null == $newProjectObj['project_id']) {
                     throw new Exception(__FUNCTION__ . '::ERROR save project: ' . implode(",", $newProjectObj));
                 }
-
             } catch (Exception $e) {
                 throw new Exception(__FUNCTION__ . '::ERROR save project: ' . $e);
             }
-
         }
+
         return $projectId;
     }
 
@@ -1305,9 +1294,9 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
         //Clean up old collection data
         // require_once 'Ppload/Api.php';
         $pploadApi = new Ppload_Api(array(
-            'apiUri' => PPLOAD_API_URI,
+            'apiUri'   => PPLOAD_API_URI,
             'clientId' => PPLOAD_CLIENT_ID,
-            'secret' => PPLOAD_SECRET
+            'secret'   => PPLOAD_SECRET
         ));
 
         $projectTable = new Default_Model_DbTable_Project();
@@ -1343,8 +1332,8 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
                     }
 
                     //$uploadFileResult = $this->uploadFileToPpload($projectId, 'http://cp1.hive01.com/CONTENT/content-files/'.$file1);
-                    $uploadFileResult = $this->saveFileInPpload($projectId, $project['downloadname1'],
-                        $project['licensetype'], base64_encode($project['license']), $downloadCounter,
+                    $uploadFileResult = $this->saveFileInPpload($projectId, $project['downloadname1'], $project['licensetype'],
+                        base64_encode($project['license']), $downloadCounter,
                         $this->_HIVE_BASE_URL . '/CONTENT/content-files/' . $file1);
                     $info .= "Upload file successfull: " . $uploadFileResult;
                     if ($uploadFileResult == true) {
@@ -1368,9 +1357,9 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
                     }
                     $downloadCounter = 0;
                     //$uploadFileResult = $this->uploadFileToPpload($projectId, 'http://hive01.cc/CONTENT/content-files/link',$link1,$linkName1);
-                    $uploadFileResult = $this->saveFileInPpload($projectId, $project['downloadname1'],
-                        $project['licensetype'], base64_encode($project['license']), 0,
-                        $this->_HIVE_BASE_URL . '/CONTENT/content-files/link', $link1, $linkName1);
+                    $uploadFileResult = $this->saveFileInPpload($projectId, $project['downloadname1'], $project['licensetype'],
+                        base64_encode($project['license']), 0, $this->_HIVE_BASE_URL . '/CONTENT/content-files/link', $link1,
+                        $linkName1);
                     $info .= "Upload file successfull: " . $uploadFileResult;
                     if ($uploadFileResult == true) {
                         $_import_file_counter++;
@@ -1393,9 +1382,9 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
                     }
                     $downloadCounter = 0;
                     //$uploadFileResult = $this->uploadFileToPpload($projectId, 'http://hive01.cc/CONTENT/content-files/link',$link1,$linkName1);
-                    $uploadFileResult = $this->saveFileInPpload($projectId, $project['downloadname' . $i],
-                        $project['licensetype'], base64_encode($project['license']), 0,
-                        $this->_HIVE_BASE_URL . '/CONTENT/content-files/link', $link1, $linkName1);
+                    $uploadFileResult = $this->saveFileInPpload($projectId, $project['downloadname' . $i], $project['licensetype'],
+                        base64_encode($project['license']), 0, $this->_HIVE_BASE_URL . '/CONTENT/content-files/link', $link1,
+                        $linkName1);
                     $info .= "Upload file successfull: " . $link1;
                     if ($uploadFileResult == true) {
                         $_import_file_counter++;
@@ -1409,6 +1398,7 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
         if ($_import_file_counter == 0) {
             return $info;
         }
+
         return $_import_file_counter;
     }
 
@@ -1440,6 +1430,7 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
         } else {
             $pploadInfo .= "ERROR::Project not found: " . $projectId;
             throw new Exception($pploadInfo);
+
             return false;
         }
 
@@ -1459,22 +1450,22 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
             } else {
                 $pploadInfo .= "ERROR::FileName not found: " . $filename;
                 throw new Exception($pploadInfo);
+
                 return false;
             }
         }
 
         // require_once 'Ppload/Api.php';
         $pploadApi = new Ppload_Api(array(
-            'apiUri' => PPLOAD_API_URI,
+            'apiUri'   => PPLOAD_API_URI,
             'clientId' => PPLOAD_CLIENT_ID,
-            'secret' => PPLOAD_SECRET
+            'secret'   => PPLOAD_SECRET
         ));
-
 
         $fileRequest = array(
             'local_file_path' => $tmpFilepath,
             'local_file_name' => $tmpFilename,
-            'owner_id' => $projectData->member_id
+            'owner_id'        => $projectData->member_id
         );
         if ($projectData->ppload_collection_id) {
             // Append to existing collection
@@ -1500,7 +1491,6 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
             $fileRequest['tags'] = $tags;
         }
 
-
         //upload to ppload
         $fileResponse = $pploadApi->postFile($fileRequest);
 
@@ -1509,6 +1499,7 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
         } else {
             $pploadInfo .= "ERROR::File NOT uploaded to ppload! Response: " . $fileResponse;
             throw new Exception($pploadInfo);
+
             return $pploadInfo;
         }
 
@@ -1531,23 +1522,18 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
                 $mainproject = $projectTable->find($memberSettings->main_project_id)->current();
                 $profileName = '';
                 if ($memberSettings->firstname
-                    || $memberSettings->lastname
-                ) {
-                    $profileName = trim(
-                        $memberSettings->firstname
-                        . ' '
-                        . $memberSettings->lastname
-                    );
+                    || $memberSettings->lastname) {
+                    $profileName = trim($memberSettings->firstname . ' ' . $memberSettings->lastname);
                 } else {
                     if ($memberSettings->username) {
                         $profileName = $memberSettings->username;
                     }
                 }
                 $profileRequest = array(
-                    'owner_id' => $projectData->member_id,
-                    'name' => $profileName,
-                    'email' => $memberSettings->mail,
-                    'homepage' => $memberSettings->link_website,
+                    'owner_id'    => $projectData->member_id,
+                    'name'        => $profileName,
+                    'email'       => $memberSettings->mail,
+                    'homepage'    => $memberSettings->link_website,
                     'description' => $mainproject->description
                 );
                 $profileResponse = $pploadApi->postProfile($profileRequest);
@@ -1557,41 +1543,40 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
                     $collectionCategory .= '-published';
                 }
                 $collectionRequest = array(
-                    'title' => $projectData->title,
+                    'title'       => $projectData->title,
                     'description' => $projectData->description,
-                    'category' => $collectionCategory
+                    'category'    => $collectionCategory
                 );
-                $collectionResponse = $pploadApi->putCollection(
-                    $projectData->ppload_collection_id,
-                    $collectionRequest
-                );
+                $collectionResponse = $pploadApi->putCollection($projectData->ppload_collection_id, $collectionRequest);
                 // Store product image as collection thumbnail
                 $this->_updatePploadMediaCollectionthumbnail($projectData);
             }
+
             //return $fileResponse->file;
             return true;
         } else {
             //return false;
             $pploadInfo .= "ERROR::No CollectionId in ppload-file! Response Status: " . json_encode($fileResponse);
             throw new Exception($pploadInfo);
+
             return $pploadInfo;
         }
+
         return $pploadInfo;
     }
 
     private function _updatePploadMediaCollectionthumbnail($projectData)
     {
         if (empty($projectData->ppload_collection_id)
-            || empty($projectData->image_small)
-        ) {
+            || empty($projectData->image_small)) {
             return false;
         }
 
         // require_once 'Ppload/Api.php';
         $pploadApi = new Ppload_Api(array(
-            'apiUri' => PPLOAD_API_URI,
+            'apiUri'   => PPLOAD_API_URI,
             'clientId' => PPLOAD_CLIENT_ID,
-            'secret' => PPLOAD_SECRET
+            'secret'   => PPLOAD_SECRET
         ));
 
         $filename = sys_get_temp_dir() . '/' . $projectData->image_small;
@@ -1611,18 +1596,16 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
 
         file_put_contents($filename, file_get_contents($uri));
 
-        $mediaCollectionthumbnailResponse = $pploadApi->postMediaCollectionthumbnail(
-            $projectData->ppload_collection_id,
-            array('file' => $filename)
-        );
+        $mediaCollectionthumbnailResponse =
+            $pploadApi->postMediaCollectionthumbnail($projectData->ppload_collection_id, array('file' => $filename));
 
         unlink($filename);
 
         if (isset($mediaCollectionthumbnailResponse->status)
-            && $mediaCollectionthumbnailResponse->status == 'success'
-        ) {
+            && $mediaCollectionthumbnailResponse->status == 'success') {
             return true;
         }
+
         return false;
     }
 

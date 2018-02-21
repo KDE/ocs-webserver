@@ -19,9 +19,22 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
+
+$ids = explode(",", $this->catIDs);
+$titles = explode(",", $this->title);
 ?>
 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">      
-<span>  <?=$this->title?> </span>
+<span>  
+<?php
+$i = 0;
+$t = '';
+foreach ($ids as $catid) {
+    if($i>0) $t=$t.', ';
+    $t =$t. '<a href="/browse/cat/'.$catid.'">'.$titles[$i++].'</a>';        
+}
+echo $t;
+?>	
+</span>
 <div class="prod-widget-box new-products" >
 <?php                                    
 foreach ($this->products as $this->product) {

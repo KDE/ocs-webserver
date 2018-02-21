@@ -113,7 +113,6 @@ class Backend_MemberpaypaladdressController extends Local_Controller_Action_Back
         $filter['last_payment_status'] = $this->getParam('filter_status');
         $filter['member_id'] = $this->getParam('filter_member_id');
         $filter['paypal_address'] = $this->getParam('filter_paypal_mail');
-        
 
         $select = $this->_model->select()->order($sorting)->limit($pageSize, $startIndex);
         $metadata = $this->_model->info(Zend_Db_Table_Abstract::METADATA);
@@ -144,14 +143,13 @@ class Backend_MemberpaypaladdressController extends Local_Controller_Action_Back
                 } else {
                     $select->where("{$key} = ?", $value);
                 }
-
             }
         }
 
         $reports = $this->_model->fetchAll($select);
 
-        $reportsAll = $this->_model->fetchAll($select->limit(null,
-            null)->reset('columns')->columns(array('countAll' => new Zend_Db_Expr('count(*)'))));
+        $reportsAll = $this->_model->fetchAll($select->limit(null, null)->reset('columns')
+                                                     ->columns(array('countAll' => new Zend_Db_Expr('count(*)'))));
 
         $jTableResult = array();
         $jTableResult['Result'] = self::RESULT_OK;
@@ -161,6 +159,5 @@ class Backend_MemberpaypaladdressController extends Local_Controller_Action_Back
         $this->_helper->json($jTableResult);
     }
 
-    
 
 } 

@@ -723,17 +723,26 @@ class Default_Model_Member extends Default_Model_DbTable_Member
                 comment_id
                 ,comment_text
                 ,member.member_id
-                ,profile_image_url
+                ,member.profile_image_url
                 ,comment_created_at
-                ,username
+                ,member.username
                 ,comment_target_id
-                ,title
-                ,project_id               
+                ,stat_projects.title
+                ,stat_projects.project_id      
+                ,stat_projects.laplace_score
+                ,stat_projects.count_likes
+                ,stat_projects.count_dislikes
+                ,stat_projects.image_small 
+                ,stat_projects.version
+                ,stat_projects.cat_title
+                ,stat_projects.count_comments
+                ,stat_projects.changed_at
+                ,stat_projects.created_at        
             FROM comments
-            STRAIGHT_JOIN member ON comments.comment_member_id = member.member_id
-            JOIN project ON comments.comment_target_id = project.project_id AND comments.comment_type = 0
+            inner join  member ON comments.comment_member_id = member.member_id
+            inner JOIN stat_projects ON comments.comment_target_id = stat_projects.project_id AND comments.comment_type = 0
             WHERE comments.comment_active = :comment_status
-            AND project.status = :project_status
+            AND stat_projects.status = :project_status
             AND comments.comment_member_id = :member_id
             ORDER BY comments.comment_created_at DESC
         ';

@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -35,8 +36,7 @@ class Backend_SliderController extends Local_Controller_Action_Backend
 
         $sel = $this->_table->select();
 
-        $sel->where('is_deleted=0')
-            ->order('order_pos');
+        $sel->where('is_deleted=0')->order('order_pos');
 
         $this->view->sliderImages = $this->_table->fetchAll($sel);
     }
@@ -54,8 +54,8 @@ class Backend_SliderController extends Local_Controller_Action_Backend
                 if ($values['picture']) {
 
                     $newVals = array(
-                        'image' => $values['picture'],
-                        'order_pos' => $values['order_pos'],
+                        'image'      => $values['picture'],
+                        'order_pos'  => $values['order_pos'],
                         'created_at' => new Zend_Db_Expr("NOW()"),
                         'changed_at' => new Zend_Db_Expr("NOW()")
 
@@ -67,8 +67,6 @@ class Backend_SliderController extends Local_Controller_Action_Backend
                 } else {
                     $this->view->saveText = "Da kein Bild hochgeladen wurde, wurde auch nichts gespeichert.";
                 }
-
-
             } else {
                 $this->view->form = $form;
             }
@@ -84,20 +82,18 @@ class Backend_SliderController extends Local_Controller_Action_Backend
         $form->setAttrib('enctype', 'multipart/form-data');
 
         $picture = $form->createElement('file', 'picture');
-        $picture->setLabel('Slider-Bild: ')
-            ->setDestination((string)Zend_Registry::get('sliderImages2'))
-            ->setMultiFile(1);
+        $picture->setLabel('Slider-Bild: ')->setDestination((string)Zend_Registry::get('sliderImages2'))->setMultiFile(1);
 
         if ($valPicture) {
-            $picture->setDescription('Vorhandenes Bild:<br/><img src="/images/slider2/' . $valPicture . '" border="0" height="80px" />');
+            $picture->setDescription('Vorhandenes Bild:<br/><img src="/images/slider2/' . $valPicture
+                . '" border="0" height="80px" />');
         }
 
         $picture->getDecorator('description')->setEscape(false);
 
-        $pos = $form->createElement('text', 'order_pos')
-            ->setLabel("Reihenfolgenposition:")
-            ->setDescription("Nur Zahlen (1,2,3...)")
-            ->setValue($valOrderPos);
+        $pos = $form->createElement('text', 'order_pos')->setLabel("Reihenfolgenposition:")->setDescription("Nur Zahlen (1,2,3...)")
+                    ->setValue($valOrderPos)
+        ;
 
         $form->addElement($picture);
         $form->addElement($pos);

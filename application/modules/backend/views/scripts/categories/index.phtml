@@ -20,6 +20,10 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 ?>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/jquery.validationengine/2.6.4/css/template.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/jquery.validationengine/2.6.4/css/validationEngine.jquery.css">
+<script src="//cdn.jsdelivr.net/jquery.validationengine/2.6.4/js/jquery.validationEngine.min.js"></script>
+<script src="//cdn.jsdelivr.net/jquery.validationengine/2.6.4/languages/jquery.validationEngine-en.js"></script>
 <style>
     .highlight {
         background-color: #fefff3;
@@ -114,27 +118,39 @@
 </div>
 
 <div id="dialog-cat-about" title="Create/Edit Category About Page">
-    <form id="edit-cat-about" class="jtable-dialog-form jtable-create-form" action="/backend/categories/saveabout" method="post">
+    <form id="edit-cat-about" class="" action="/backend/categories/saveabout" method="post">
         <input type="hidden" value="" id="text-cat-id" name="c"/>
-        <div class="jtable-input-field-container">
-            <div class="jtable-input jtable-textarea-input">
-                <textarea class="" id="text-cat-about" name="ca"></textarea>
-            </div>
-        </div>
+        <textarea class="" id="text-cat-about" name="ca"></textarea>
     </form>
 </div>
 
 <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
+<!-- <script src="//cdn.tinymce.com/4/jquery.tinymce.min.js"></script> -->
 <script type="text/javascript">
     $(document).ready(function () {
+        // Prevent jQuery UI dialog from blocking focusin
+        $(document).on('focusin', function(e) {
+            if ($(e.target).closest(".mce-window, .moxman-window").length) {
+                e.stopImmediatePropagation();
+            }
+        });
 
         tinymce.init({
             selector: "#text-cat-about",
-            plugins : 'autoresize',
             width: '100%',
             height: 400,
             autoresize_min_height: 400,
-            autoresize_max_height: 600
+            autoresize_max_height: 600,
+            menubar: false,
+            plugins: [
+                'autoresize advlist autolink lists link image charmap print preview anchor textcolor',
+                'searchreplace visualblocks code fullscreen',
+                'insertdatetime media table contextmenu paste code help wordcount'
+            ],
+            toolbar: 'insert | undo redo |  formatselect | bold italic backcolor  | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+            content_css: [
+                '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
+                '//www.tinymce.com/css/codepen.min.css']
         });
 
         $("#dialog-cat-about").dialog({
@@ -258,7 +274,7 @@
             return false;
         });
 
-        $('body').on("click", 'button.move-category', function (event) {
+        $('body').on("click", '.move-category', function (event) {
             event.preventDefault();
             event.stopImmediatePropagation();
 
@@ -467,7 +483,8 @@
                     list: true,
                     display: function (data) {
                         if (data.record) {
-                            return '<button title="Add Subcategory" class="jtable-command-button" style="  width: 15px;height: 15px;background: url(/theme/flatui/img/icon-plus.png);" onclick="$( \'#dialog-form\' ).data(\'record\',{project_category_id: ' + data.record.project_category_id + ', lft: ' + data.record.lft + ',rgt: ' + data.record.rgt + '}).dialog( \'open\' );"><span>add subcat</span></button>';
+                            //return '<button title="Add Subcategory" class="jtable-command-button" style="  width: 15px;height: 15px;background: url(/theme/flatui/img/icon-plus.png);" onclick="$( \'#dialog-form\' ).data(\'record\',{project_category_id: ' + data.record.project_category_id + ', lft: ' + data.record.lft + ',rgt: ' + data.record.rgt + '}).dialog( \'open\' );"><span>add subcat</span></button>';
+                            return '<a title="add sub category" href="javascript:return false;" role="button" onclick="$(\'#dialog-form\').data(\'record\',{project_category_id: ' + data.record.project_category_id + ', lft: ' + data.record.lft + ',rgt: ' + data.record.rgt + '}).dialog( \'open\' );"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>';
                         }
                     }
                 },
@@ -480,7 +497,7 @@
                     list: true,
                     display: function (data) {
                         if (data.record) {
-                            return '<button title="Move category up" class="jtable-command-button move-category" style="  width: 16px;height: 16px;background: url(/theme/flatui/img/1uparrow.png);" data-direction="up" data-record=\'{"project_category_id":' + data.record.project_category_id + ', "lft": ' + data.record.lft + ', "rgt": ' + data.record.rgt + ' }\'><span>Move up</span></button>';
+                            return '<a title="move category up" href="javascript:return false;" class="move-category" role="button" data-direction="up" data-record=\'{"project_category_id":' + data.record.project_category_id + ', "lft": ' + data.record.lft + ', "rgt": ' + data.record.rgt + ' }\'><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span></a>';
                         }
                     }
                 },
@@ -493,7 +510,7 @@
                     list: true,
                     display: function (data) {
                         if (data.record) {
-                            return '<button title="move category down" class="jtable-command-button move-category" style="  width: 16px;height: 16px;background: url(/theme/flatui/img/1downarrow.png);" data-direction="down" data-record=\'{"project_category_id":' + data.record.project_category_id + ', "lft": ' + data.record.lft + ', "rgt": ' + data.record.rgt + ' }\'><span>Move down</span></button>';
+                            return '<a title="move category down" href="javascript:return false;" class="move-category" role="button" data-direction="down" data-record=\'{"project_category_id":' + data.record.project_category_id + ', "lft": ' + data.record.lft + ', "rgt": ' + data.record.rgt + ' }\'><span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span></a>';
                         }
                     }
                 },
@@ -506,7 +523,7 @@
                     list: true,
                     display: function (data) {
                         if (data.record) {
-                            return '<a title="create category about page (blank)" href="javascript:return false;" class="create-about" role="button" data-record=\'' + data.record.project_category_id + ' \'><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></a>';
+                            return '<a title="create/edit about page" href="javascript:return false;" class="create-about" role="button" data-record=\'' + data.record.project_category_id + ' \'><span class="glyphicon glyphicon-open-file" aria-hidden="true"></span></a>';
                         }
                     }
                 }

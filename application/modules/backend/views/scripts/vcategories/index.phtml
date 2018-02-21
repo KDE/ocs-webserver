@@ -1,0 +1,435 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$catListHelper = new Backend_View_Helper_RealCategory();
+$catList = $catListHelper->getList();
+
+?>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/jquery.validationengine/2.6.4/css/template.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/jquery.validationengine/2.6.4/css/validationEngine.jquery.css">
+<script src="//cdn.jsdelivr.net/jquery.validationengine/2.6.4/js/jquery.validationEngine.min.js"></script>
+<script src="//cdn.jsdelivr.net/jquery.validationengine/2.6.4/languages/jquery.validationEngine-en.js"></script>
+<style>
+    .highlight {
+        background-color: #fefff3;
+    }
+</style>
+<div class="messages">
+    <?php foreach (Zend_Controller_Action_HelperBroker::getStaticHelper('flashMessenger')
+                       ->getCurrentMessages() as $message) : ?>
+        <p><?php echo $this->escape($message); ?></p>
+    <?php endforeach; ?>
+
+    <div class="alert alert-danger alert-dismissible fade in"
+         role="alert"
+         style="width: 95%; display: none;">
+        <button aria-label="Close" class="close" type="button"><span aria-hidden="true">×</span></button>
+        <div class="alert-body">
+            <span class='error'>Operation not possible.</span>
+        </div>
+    </div>
+
+    <div class="alert alert-success alert-dismissible fade in"
+         role="alert"
+         style="width: 95%; display: none;">
+        <button aria-label="Close" class="close" type="button"><span aria-hidden="true">×</span></button>
+        <div class="alert-body">
+            <span class='success'>Operation successfully completed.</span>
+        </div>
+    </div>
+
+</div>
+
+<div class="filtering">
+    <form>
+        <span style="margin-right: 0.9em;">hide deleted records: <input type="checkbox" name="filter_deleted"
+                                                                        id="filter_deleted" value="1" checked="checked"/></span>
+        <div style="display:inline-block; text-align: right;width: 95%;">
+            <button type="submit" id="LoadRecordsButton"><?= $this->translate('Load records'); ?></button>
+            <button type="reset" id="RemoveFilterButton"><?= $this->translate('Remove filter'); ?></button>
+        </div>
+    </form>
+</div>
+
+<div id="TableContainer"></div>
+
+<div id="dialog-form" title="Create new Subcategory">
+    <p class="validateTips">All form fields are required.</p>
+
+    <form id="add-subcat-form" class="jtable-dialog-form jtable-create-form">
+        <div class="jtable-input-field-container">
+            <div class="jtable-input-label">Title</div>
+            <div class="jtable-input jtable-textarea-input">
+                <input class="validate[required]" id="subcat-title" name="title"/>
+            </div>
+        </div>
+        
+        <div class="jtable-input-field-container">
+            <div class="jtable-input-label">Real Cat Id</div>
+            <div class="jtable-input jtable-textarea-input">
+                <select id="subcat-project_category_id" name="project_category_id">
+                    <?php 
+                        foreach ($catList as $value) {
+                            echo('<option value="' . $value['Value'] . '">'. $value['DisplayText'] . '</option>');
+                        }
+                    ?>
+                </select>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        // Prevent jQuery UI dialog from blocking focusin
+        $(document).on('focusin', function(e) {
+            if ($(e.target).closest(".mce-window, .moxman-window").length) {
+                e.stopImmediatePropagation();
+            }
+        });
+
+        tinymce.init({
+            selector: "#text-cat-about",
+            width: '100%',
+            height: 400,
+            autoresize_min_height: 400,
+            autoresize_max_height: 600,
+            menubar: false,
+            plugins: [
+                'autoresize advlist autolink lists link image charmap print preview anchor textcolor',
+                'searchreplace visualblocks code fullscreen',
+                'insertdatetime media table contextmenu paste code help wordcount'
+            ],
+            toolbar: 'insert | undo redo |  formatselect | bold italic backcolor  | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+            content_css: [
+                '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
+                '//www.tinymce.com/css/codepen.min.css']
+        });
+
+        $('.alert .close').on('click', function (e) {
+            $(this).parent().hide();
+        });
+
+        var title = $("#subcat-title"),
+            allFields = $([]).add(title),
+            tips = $(".validateTips");
+
+        $("#dialog-form").dialog({
+            autoOpen: false,
+            //height: 350,
+            width: 350,
+            modal: true,
+            open: function (event, ui) {
+                $("#add-subcat-form").validationEngine('attach');
+            },
+            buttons: {
+                Cancel: function () {
+                    $(this).dialog("close");
+                },
+                Save: function () {
+                    if (false == $("#add-subcat-form").validationEngine('validate')) {
+                        return;
+                    }
+
+                    sendPostId = $(this).data('record').v_category_id;
+
+                    $('#TableContainer').jtable('addRecord', {
+                        record: {
+                            "title": $("#subcat-title").val(),
+                            "project_category_id": $("#subcat-project_category_id").val(),
+                            "v_category_id": sendPostId,
+                            "v_parent_id": $(this).data('record').v_parent_id
+                        }
+                    });
+                    $(this).dialog("close");
+                }
+            },
+            close: function () {
+                allFields.val("").removeClass("ui-state-error");
+                $("#add-subcat-form").validationEngine('hide');
+                $("#add-subcat-form").validationEngine('detach');
+            }
+        });
+
+        $('body').on("submit", '#add-subcat-form', function (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            jQuery.ajax({
+                data: $(this).serialize(),
+                url: this.action,
+                type: this.method,
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $(".alert-danger .alert-body").empty().html('<span class="error">Operation not possible.</span>');
+                    $(".alert-danger").alert().fadeIn('slow');
+                    return false;
+                },
+                success: function (data, textStatus, jqXHR) {
+                    return false;
+                }
+            });
+
+            return false;
+        });
+
+        $('body').on("click", 'button.move-category', function (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            var direction = $(this).attr("data-direction");
+            var elementRecord = $(this).data("record");
+
+            jQuery.ajax({
+                data: {'direction': direction, 'record': elementRecord},
+                url: '/backend/vcategories/moveelement/',
+                type: 'post',
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $(".alert-danger .alert-body").empty().html('<span class="error">Operation not possible.</span>');
+                    $(".alert-danger").alert().fadeIn('slow');
+                    return false;
+                },
+                success: function (data, textStatus, jqXHR) {
+                    $('#TableContainer').jtable('reload');
+                    return false;
+                },
+                complete: function (data, textStatus, errorThrown) {
+                    return false;
+                }
+            });
+
+            return false;
+        });
+
+        $('#TableContainer').jtable({
+            jqueryuiTheme: true,
+            paging: true,
+            title: 'Table of Categories',
+            actions: {
+                listAction: '/backend/vcategories/list',
+                createAction: '/backend/vcategories/create',
+                updateAction: '/backend/vcategories/update',
+                updateAction: function (postData) {
+//                console.log("updating from custom function...");
+                    return $.Deferred(function ($dfd) {
+                        $.ajax({
+                            url: '/backend/vcategories/update',
+                            type: 'POST',
+                            dataType: 'json',
+                            data: postData,
+                            success: function (data) {
+                                $dfd.resolve(data);
+                                $('#TableContainer').jtable('reload');
+                            },
+                            error: function () {
+                                $dfd.reject();
+                            }
+                        });
+                    });
+                }
+                //,deleteAction: '/backend/vcategories/delete'
+            },
+            fields: {
+                v_parent_id_show: {
+                    title: 'V Parent Cat ID',
+                    key: true,
+                    create: false,
+                    edit: false,
+                    list: true,
+                    width: '2%'
+                },
+                v_parent_id: {
+                    title: 'V Parent Cat ID',
+                    key: true,
+                    create: false,
+                    edit: false,
+                    list: false,
+                    width: '1%',
+                    options: function (data) {
+                        data.clearCache();
+                        if (data.source == 'edit') {
+                            return '/backend/vcategories/tree?c=' + data.record.v_parent_id;
+                        }
+                        return '/backend/vcategories/tree?c=0';
+                    }
+                },
+                v_category_id: {
+                    title: 'V Cat ID',
+                    key: true,
+                    create: false,
+                    edit: false,
+                    width: '2%'
+                },
+                title_show: {
+                    title: 'Virtual Title',
+                    create: false,
+                    edit: false,
+                    list: true,
+                    width: '10%'
+                },
+                title: {
+                    title: 'Virtual Title',
+                    create: true,
+                    edit: true,
+                    list: false
+                },
+                title_real: {
+                    title: 'Real Title',
+                    create: false,
+                    edit: false,
+                    list: true
+                },
+                project_category_id_show: {
+                    title: 'Real Cat ID',
+                    create: false,
+                    edit: false,
+                    list: true,
+                    width: '2%'
+                },
+                project_category_id: {
+                    title: 'Real Cat ID',
+                    create: true,
+                    edit: true,
+                    list: false,
+                    width: '1%',
+                    options: function (data) {
+                        data.clearCache();
+                        if (data.source == 'edit') {
+                            return '/backend/vcategories/treereal?c=' + data.record.project_category_id;
+                        }
+                        return '/backend/vcategories/treereal?c=0';
+                    }
+                },
+                created_at: {
+                    title: 'Created',
+                    width: '10%',
+                    type: 'date',
+                    create: false,
+                    edit: false,
+                    list: false
+                },
+                changed_at: {
+                    title: 'Changed',
+                    width: '10%',
+                    type: 'date',
+                    create: false,
+                    edit: false,
+                    list: false
+                },
+                addSubCat: {
+                    title: '',
+                    width: '1%',
+                    sorting: false,
+                    create: false,
+                    edit: false,
+                    list: true,
+                    display: function (data) {
+                        if (data.record) {
+                            return '<button title="Add Subcategory" class="jtable-command-button" style="  width: 15px;height: 15px;background: url(/theme/flatui/img/icon-plus.png);" onclick="$( \'#dialog-form\' ).data(\'record\',{v_category_id: ' + data.record.v_category_id + '}).dialog( \'open\' );"><span>add subcat</span></button>';
+                        }
+                    }
+                }
+            },
+
+            //Initialize validation logic when a form is created
+            formCreated: function (event, data) {
+                data.form.validationEngine();
+                $('#jtable-create-form').attr('style', 'padding:5%');
+            },
+            //Validate form when it is being submitted
+            formSubmitting: function (event, data) {
+                return data.form.validationEngine('validate');
+            },
+            //Dispose validation logic when form is closed
+            formClosed: function (event, data) {
+                data.form.validationEngine('hide');
+                data.form.validationEngine('detach');
+            },
+            recordsLoaded: function () {
+                $(".jtable").attr('style', 'position:inherit;'); // corrects the position for dragged element.
+                $(".jtable tbody").sortable({
+                    cursor: 'move',
+                    opacity: 0.9,
+                    axis: 'y',
+                    containment: 'parent',
+                    start: function (event, ui) {
+                        ui.item.startPos = ui.item.index() + 1;
+                        ui.item.lft = $('.jtable tbody tr:nth-child(' + (ui.item.startPos) + ') td:nth-child(2)').text();
+                        ui.item.rgt = $('.jtable tbody tr:nth-child(' + (ui.item.startPos) + ') td:nth-child(3)').text();
+                    },
+                    stop: function (event, ui) {
+                        lft = $('.jtable tbody tr:nth-child(' + (ui.item.index() + 2) + ') td:nth-child(2)').text();
+                        rgt = $('.jtable tbody tr:nth-child(' + (ui.item.index() + 2) + ') td:nth-child(3)').text();
+                        newPosition = ui.item.lft;
+                        if (parseInt(lft) > 0) {
+                            newPosition = parseInt(lft);
+                        }
+
+                        jQuery.ajax({
+                            data: {'data': {'lft': ui.item.lft, 'rgt': ui.item.rgt}, 'newPosition': newPosition},
+                            url: '/backend/vcategories/dragdrop/',
+                            type: 'post',
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                $(".alert").alert().fadeIn('slow');
+                                return false;
+                            },
+                            success: function (data, textStatus, jqXHR) {
+                                $('#TableContainer').jtable('reload');
+                                return false;
+                            }
+                        });
+
+                    }
+
+                }).disableSelection();
+                $('tr.jtable-data-row').hover(function () {
+                    $(this).addClass('highlight');
+                }, function () {
+                    $(this).removeClass('highlight');
+                });
+
+            }
+        });
+
+        $('#TableContainer').jtable('load', {
+            filter_deleted: $('#filter_deleted').is(':checked') ? $('#filter_deleted').val() : 0
+        });
+
+        //Re-load records when user click 'load records' button.
+        $('#LoadRecordsButton').click(function (e) {
+            e.preventDefault();
+            $('#TableContainer').jtable('load', {
+                filter_deleted: $('#filter_deleted').is(':checked') ? $('#filter_deleted').val() : 0
+            });
+        });
+
+        //Re-load records when user click 'remove filter' button.
+        $('#RemoveFilterButton').click(function (e) {
+            e.preventDefault();
+            $('#TableContainer').jtable('load', {
+                filter_deleted: 0,
+            });
+        });
+
+    });
+</script>

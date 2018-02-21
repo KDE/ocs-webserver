@@ -20,14 +20,15 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * */
-class Backend_MemberPayoutCliController extends Local_Controller_Action_CliAbstract {
+class Backend_MemberPayoutCliController extends Local_Controller_Action_CliAbstract
+{
 
     public static $ACTION_PAYOUT = "payout";
     public static $CONTEXT_ALL = "all";
     public static $CONTEXT_PREPARE = "prepare";
     public static $NVP_MODULE_ADAPTIVE_PAYMENT = "/AdaptivePayments";
     public static $NVP_ACTION_PAY = "/Pay";
-    
+
     public static $PAYOUT_STATUS_NEW = 0;
     public static $PAYOUT_STATUS_REQUESTED = 1;
     public static $PAYOUT_STATUS_PROCESSED = 10;
@@ -35,29 +36,11 @@ class Backend_MemberPayoutCliController extends Local_Controller_Action_CliAbstr
     public static $PAYOUT_STATUS_DENIED = 30;
     public static $PAYOUT_STATUS_ERROR = 99;
     public static $PAYOUT_STATUS_PAYPAL_API_ERROR = 999;
-    
-    
+    public $headers;
     /** @var Zend_Config */
     protected $_config;
-    
     /** @var \Zend_Log */
     protected $_logger;
-    
-    public $headers;
-    
-    public function initHeaders(){
-        echo "Start initHeaders";
-        
-        $this->headers = array(
-            "X-PAYPAL-SECURITY-USERID: ".$this->_config->third_party->paypal->security->userid ,
-            "X-PAYPAL-SECURITY-PASSWORD: ".$this->_config->third_party->paypal->security->password ,
-            "X-PAYPAL-SECURITY-SIGNATURE: ".$this->_config->third_party->paypal->security->signature ,
-            "X-PAYPAL-REQUEST-DATA-FORMAT: NV",
-            "X-PAYPAL-RESPONSE-DATA-FORMAT: NV",
-            "X-PAYPAL-APPLICATION-ID: ".$this->_config->third_party->paypal->application->id,
-        );
-        
-    }
 
     /**
      * Run php code as cronjob.
@@ -66,11 +49,12 @@ class Backend_MemberPayoutCliController extends Local_Controller_Action_CliAbstr
      *
      * @see Local_Controller_Action_CliInterface::runAction()
      */
-    public function runAction() {
+    public function runAction()
+    {
         $this->initVars();
-        
+
         $this->initHeaders();
-        
+
         echo "Start runAction\n";
         echo "AppEnv: " . APPLICATION_ENV . "\n";
         echo "SandboxActive: " . $this->_config->third_party->paypal->sandbox->active . "\n";
@@ -89,65 +73,88 @@ class Backend_MemberPayoutCliController extends Local_Controller_Action_CliAbstr
         }
     }
 
-    public function initVars() {
+    public function initVars()
+    {
         //init
         $this->_config = Zend_Registry::get('config');
         $this->_logger = Zend_Registry::get('logger');
     }
 
-    private function payoutMembers() {
+    public function initHeaders()
+    {
+        echo "Start initHeaders";
+
+        $this->headers = array(
+            "X-PAYPAL-SECURITY-USERID: " . $this->_config->third_party->paypal->security->userid,
+            "X-PAYPAL-SECURITY-PASSWORD: " . $this->_config->third_party->paypal->security->password,
+            "X-PAYPAL-SECURITY-SIGNATURE: " . $this->_config->third_party->paypal->security->signature,
+            "X-PAYPAL-REQUEST-DATA-FORMAT: NV",
+            "X-PAYPAL-RESPONSE-DATA-FORMAT: NV",
+            "X-PAYPAL-APPLICATION-ID: " . $this->_config->third_party->paypal->application->id,
+        );
+    }
+
+    private function payoutMembers()
+    {
         echo "payoutMembers()\n";
-        
+
         //Select all members for payout and write them in the payout table, ignore allways inserted members
         $this->prepareMasspaymentTable();
-        
+
         //get payouts
         $allPayouts = $this->getPayouts();
-        
+
         //send request for < 250 payouts
         $this->startMassPay($allPayouts);
-        
     }
-    
-    private function prepareMasspaymentTable() {
+
+    private function prepareMasspaymentTable()
+    {
         echo "prepareMasspaymentTable()\n";
-        $db = Zend_Db_Table::getDefaultAdapter(); 
+        $db = Zend_Db_Table::getDefaultAdapter();
 
         $sql = "SELECT * FROM stat_dl_payment_last_month s WHERE s.amount >= 1";
-        
+
         $stmt = $db->query($sql);
         $payouts = $stmt->fetchAll();
-        
-        echo "Select ".count($payouts)." payouts. Sql: ".$sql."\n";
-        
+
+        echo "Select " . count($payouts) . " payouts. Sql: " . $sql . "\n";
+
         //Insert/Update users in table project_rating
         foreach ($payouts as $payout) {
             //Insert item in payment table
             //INSERT IGNORE INTO `pling`.`payout` (`yearmonth`, `member_id`, `amount`) VALUES ('201612', '223978', '181.0500');
-            $sql = "INSERT IGNORE INTO `member_payout` (`yearmonth`, `member_id`, `mail`, `paypal_mail`, `amount`, `num_downloads`, `created_at`) VALUES ('" . $payout['yearmonth'] . "','" . $payout['member_id'] . "','" . $payout['mail'] . "','" . $payout['paypal_mail'] . "'," . $payout['amount'] . "," . $payout['num_downloads'] . ", NOW()" . ")";
+            $sql =
+                "INSERT IGNORE INTO `member_payout` (`yearmonth`, `member_id`, `mail`, `paypal_mail`, `amount`, `num_downloads`, `created_at`) VALUES ('"
+                . $payout['yearmonth'] . "','" . $payout['member_id'] . "','" . $payout['mail'] . "','" . $payout['paypal_mail'] . "',"
+                . $payout['amount'] . "," . $payout['num_downloads'] . ", NOW()" . ")";
             $stmt = $db->query($sql);
             $stmt->execute();
         }
     }
-    
-    private function getPayouts() {
+
+    private function getPayouts()
+    {
         echo "getPayouts";
         $db = Zend_Db_Table::getDefaultAdapter();
-        $sql = "SELECT * FROM member_payout p WHERE p.status = ".$this::$PAYOUT_STATUS_NEW . " OR p.status = ".$this::$PAYOUT_STATUS_PAYPAL_API_ERROR;
+        $sql = "SELECT * FROM member_payout p WHERE p.status = " . $this::$PAYOUT_STATUS_NEW . " OR p.status = "
+            . $this::$PAYOUT_STATUS_PAYPAL_API_ERROR;
         $stmt = $db->query($sql);
         $payouts = $stmt->fetchAll();
-        
+
         $payoutsArray = array();
-        
+
         foreach ($payouts as $payout) {
             $payoutsArray[] = $payout;
         }
+
         return $payoutsArray;
     }
 
-    private function startMassPay($payoutsArray) {
+    private function startMassPay($payoutsArray)
+    {
         echo "startMassPay\n\n";
-        if(!$payoutsArray || count($payoutsArray) == 0) {
+        if (!$payoutsArray || count($payoutsArray) == 0) {
             echo "Nothing to do...\n\n";
             die;
             //throw new Exception("Method startMassPay needs array of payouts.");
@@ -158,11 +165,11 @@ class Backend_MemberPayoutCliController extends Local_Controller_Action_CliAbstr
         $log->info('********** Start PayPal Masspay **********\n');
         $log->info(__FUNCTION__);
         $log->debug(APPLICATION_ENV);
-        
+
         echo('********** Start PayPal Masspay **********');
         echo(__FUNCTION__);
         echo(APPLICATION_ENV);
-        
+
         foreach ($payoutsArray as $payout) {
             $amount = $payout['amount'];
             $mail = $payout['paypal_mail'];
@@ -171,57 +178,61 @@ class Backend_MemberPayoutCliController extends Local_Controller_Action_CliAbstr
             /*if($this->_config->third_party->paypal->sandbox->active) {
                 $mail = "paypal-buyer@pling.com";
             }*/
-            
+
             $result = $this->sendPayout($mail, $amount, $id, $yearmonth);
-            
-            if($result) {
-            
-	            echo "Result: " . print_r($result->getRawMessage());
-	            $payKey = $result->getPaymentId();
-                    
-                    if(is_array($result)) {
-                        $successful = ($result->getStatus() != 'ERROR');
-                    }
-                    
-                    if($successful) {
-                        //mark payout as requested
-                        $payoutTable->update(array("payment_reference_key" => $payKey, "status" => $this::$PAYOUT_STATUS_REQUESTED, "timestamp_masspay_start" => new Zend_Db_Expr('Now()')), "id = " . $payout['id']);
-                    } else {
-                        //mark payout as failed
-                        $payoutTable->update(array("payment_reference_key" => $payKey, "status" => $this::$PAYOUT_STATUS_PAYPAL_API_ERROR, "timestamp_masspay_start" => new Zend_Db_Expr('Now()'), "payment_raw_error" => print_r($result->getRawMessage(), true), "payment_status" => 'ERROR'), "id = " . $payout['id']);
-                    }
-            
+
+            if ($result) {
+
+                echo "Result: " . print_r($result->getRawMessage());
+                $payKey = $result->getPaymentId();
+
+                if (is_array($result)) {
+                    $successful = ($result->getStatus() != 'ERROR');
+                }
+
+                if ($successful) {
+                    //mark payout as requested
+                    $payoutTable->update(array("payment_reference_key"   => $payKey,
+                                               "status"                  => $this::$PAYOUT_STATUS_REQUESTED,
+                                               "timestamp_masspay_start" => new Zend_Db_Expr('Now()')
+                    ), "id = " . $payout['id']);
+                } else {
+                    //mark payout as failed
+                    $payoutTable->update(array("payment_reference_key"   => $payKey,
+                                               "status"                  => $this::$PAYOUT_STATUS_PAYPAL_API_ERROR,
+                                               "timestamp_masspay_start" => new Zend_Db_Expr('Now()'),
+                                               "payment_raw_error"       => print_r($result->getRawMessage(), true),
+                                               "payment_status"          => 'ERROR'
+                    ), "id = " . $payout['id']);
+                }
             } else {
-            	
-            	echo "Result: PayPal-API-Error";
-            	//mark payout as 999 = API-Error
-            	$payoutTable->update(array("status" => $this::$PAYOUT_STATUS_PAYPAL_API_ERROR, "timestamp_masspay_start" => new Zend_Db_Expr('Now()')), "id = " . $payout['id']);
-            	 
+
+                echo "Result: PayPal-API-Error";
+                //mark payout as 999 = API-Error
+                $payoutTable->update(array("status"                  => $this::$PAYOUT_STATUS_PAYPAL_API_ERROR,
+                                           "timestamp_masspay_start" => new Zend_Db_Expr('Now()')
+                ), "id = " . $payout['id']);
             }
         }
 
         return true;
     }
-    
-    public function isSuccessful($response)
-    {
-        //return $response['responseEnvelope']['ack'] == 'Success';
-        return (strpos($response, 'ACK=Success') != false);
-    }
-    
+
     private function sendPayout($receiverMail, $amount, $trackingId, $yearmonth)
     {
         $paymentGateway = $this->createPaymentGateway("paypal");
         $response = null;
         try {
-            $response = $paymentGateway->requestPaymentForPayout($this->_config->third_party->paypal->facilitator_fee_receiver, $receiverMail, $amount, $trackingId, $yearmonth);
+            $response =
+                $paymentGateway->requestPaymentForPayout($this->_config->third_party->paypal->facilitator_fee_receiver, $receiverMail,
+                    $amount, $trackingId, $yearmonth);
         } catch (Exception $e) {
             $log = $this->_logger;
             $log->info('Exception: payment error. Message: ' . print_r($e));
             echo('Exception: payment error. Message: ' . print_r($e));
-            
+
             //throw new Zend_Controller_Action_Exception('payment error', 500, $e);
-            
+
             //Set status to 999 (or we set the original paypal error code)
             //mark payout as requested
             return null;
@@ -239,7 +250,7 @@ class Backend_MemberPayoutCliController extends Local_Controller_Action_CliAbstr
     protected function createPaymentGateway($paymentProvider)
     {
         $httpHost = "www.opendesktop.org";
-        if($this->_config->third_party->paypal->sandbox->active) {
+        if ($this->_config->third_party->paypal->sandbox->active) {
             $httpHost = "www.pling.cc";
         }
         /** @var Zend_Config $config */
@@ -249,7 +260,7 @@ class Backend_MemberPayoutCliController extends Local_Controller_Action_CliAbstr
             case 'paypal':
                 $paymentGateway = new Default_Model_PayPal_Gateway($config->third_party->paypal);
                 $paymentGateway->setIpnNotificationUrl('http://' . $httpHost . '/gateway/paypalpayout');
-//                $paymentGateway->setIpnNotificationUrl('http://' . $httpHost . '/gateway/paypal?XDEBUG_SESSION_START=1');
+                //                $paymentGateway->setIpnNotificationUrl('http://' . $httpHost . '/gateway/paypal?XDEBUG_SESSION_START=1');
                 $paymentGateway->setCancelUrl('http://' . $httpHost);
                 $paymentGateway->setReturnUrl('http://' . $httpHost);
                 break;
@@ -257,19 +268,16 @@ class Backend_MemberPayoutCliController extends Local_Controller_Action_CliAbstr
             case 'dwolla':
                 $paymentGateway = new Default_Model_Dwolla_Gateway($config->third_party->dwolla);
                 $paymentGateway->setIpnNotificationUrl('http://' . $httpHost . '/gateway/dwolla');
-//                $paymentGateway->setIpnNotificationUrl('http://' . $_SERVER ['HTTP_HOST'] . '/gateway/dwolla?XDEBUG_SESSION_START=1');
-                $paymentGateway->setReturnUrl($helperBuildProductUrl->buildProductUrl($this->_projectId, 'dwolla', null,
-                    true));
+                //                $paymentGateway->setIpnNotificationUrl('http://' . $_SERVER ['HTTP_HOST'] . '/gateway/dwolla?XDEBUG_SESSION_START=1');
+                $paymentGateway->setReturnUrl($helperBuildProductUrl->buildProductUrl($this->_projectId, 'dwolla', null, true));
                 break;
 
             case 'amazon':
                 $paymentGateway = new Default_Model_Amazon_Gateway($config->third_party->amazon);
                 $paymentGateway->setIpnNotificationUrl('http://' . $httpHost . '/gateway/amazon');
-//                $paymentGateway->setIpnNotificationUrl('http://' . $httpHost . '/gateway/amazon?XDEBUG_SESSION_START=1');
-                $paymentGateway->setCancelUrl($helperBuildProductUrl->buildProductUrl($this->_projectId,
-                    'paymentcancel', null, true));
-                $paymentGateway->setReturnUrl($helperBuildProductUrl->buildProductUrl($this->_projectId, 'paymentok',
-                    null, true));
+                //                $paymentGateway->setIpnNotificationUrl('http://' . $httpHost . '/gateway/amazon?XDEBUG_SESSION_START=1');
+                $paymentGateway->setCancelUrl($helperBuildProductUrl->buildProductUrl($this->_projectId, 'paymentcancel', null, true));
+                $paymentGateway->setReturnUrl($helperBuildProductUrl->buildProductUrl($this->_projectId, 'paymentok', null, true));
                 break;
 
             default:
@@ -279,6 +287,12 @@ class Backend_MemberPayoutCliController extends Local_Controller_Action_CliAbstr
 
         return $paymentGateway;
     }
-    
+
+    public function isSuccessful($response)
+    {
+        //return $response['responseEnvelope']['ack'] == 'Success';
+        return (strpos($response, 'ACK=Success') != false);
+    }
+
 
 }

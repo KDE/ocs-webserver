@@ -1,17 +1,9 @@
 @CHARSET "UTF-8";
 
-@import url('/theme/backend/css/backend/mbContainer.css');
 @import url('/theme/backend/css/backend/start.css');
 @import url('/theme/backend/css/backend/navigation.css');
 @import url('/theme/backend/css/backend/datatable.css');
-@import url('/theme/backend/css/backend/overlay.css');
 @import url('/theme/backend/css/backend/formular.css');
-@import url('/theme/backend/css/backend/podcast.css');
-@import url('/theme/backend/css/backend/videothek.css');
-@import url('/theme/backend/css/backend/jquery.autocomplete.css');
-@import url('/theme/backend/css/backend/gallery.css');
-@import url('/theme/backend/css/backend/overview.css');
 @import url('/theme/backend/css/backend/search.css');
-@import url('/theme/backend/css/backend/DDListOrder.css');
 @import url('/theme/backend/css/backend/pling-nav-tabs.css');
 @import url('/theme/backend/css/backend/stati.css');

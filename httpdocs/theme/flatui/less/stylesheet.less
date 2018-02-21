@@ -1,5 +1,48 @@
 @import "stylesheets/mixins.less";
-@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700);
+/** @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700);**/
+/**
+Google fonts
+**/
+/* open-sans-300 - latin */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Open Sans Light'), local('OpenSans-Light'),
+       url('../css/fonts/open-sans-v15-latin-300.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../css/fonts/open-sans-v15-latin-300.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+/* open-sans-regular - latin */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans Regular'), local('OpenSans-Regular'),
+       url('../css/fonts/open-sans-v15-latin-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../css/fonts/open-sans-v15-latin-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+/* open-sans-600 - latin */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 600;
+  src: local('Open Sans SemiBold'), local('OpenSans-SemiBold'),
+       url('../css/fonts/open-sans-v15-latin-600.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../css/fonts/open-sans-v15-latin-600.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+/* open-sans-700 - latin */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Open Sans Bold'), local('OpenSans-Bold'),
+       url('../css/fonts/open-sans-v15-latin-700.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../css/fonts/open-sans-v15-latin-700.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
 
 /** GENERAL **/
 
@@ -5471,6 +5514,7 @@ img.imgpopover
 
 /*aboutme tab comments*/
 #my-comments-tabs-content {
+  font-size: 10pt;
   .rownomargin
   {
     margin:0;
@@ -5487,7 +5531,44 @@ img.imgpopover
   .createat
   {
     font-size: smaller;
+    padding-left: 20px;
   }
+  .productrow
+       {
+         padding-bottom: 5px;
+         padding-top: 5px;
+         border-bottom: 1px solid #ccd4d8;
+         width: 60%;
+     }
+   .productrow:last-child {
+               border-bottom: none;
+           }   
+      .row
+      {
+        margin-top: 10px;
+      }
+      .rating
+      {
+            width: 60px;
+      }
+      .time
+      {
+            font-size: smaller;
+      }
+    .cntComments
+       {
+          font-size: smaller;
+       
+      }
+      .productimg
+          {
+              width:50px;
+              height:50px;
+          }
+      .commenttext{
+        padding-left: 35px;
+        
+      }
 }
 
 .user-admin-page 

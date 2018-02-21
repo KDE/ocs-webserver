@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -93,7 +94,7 @@ class Backend_CommentsController extends Local_Controller_Action_Backend
         $select = $this->_model->select()->order($sorting)->limit($pageSize, $startIndex);
         $comments = $this->_model->fetchAll($select);
 
-        $reportsAll = $this->_model->getAdapter()->fetchRow('select count(*) from ' . $this->_model->info('name'));
+        $reportsAll = $this->_model->getAdapter()->fetchRow('SELECT count(*) FROM ' . $this->_model->info('name'));
 
         $jTableResult = array();
         $jTableResult['Result'] = self::RESULT_OK;
@@ -117,6 +118,7 @@ class Backend_CommentsController extends Local_Controller_Action_Backend
                 }
             }
         }
+
         return $result;
     }
 

@@ -19,6 +19,7 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -39,9 +40,7 @@ class Backend_ContentController extends Local_Controller_Action_Backend
     {
         $selCon = $this->_contentTable->select()->setIntegrityCheck(false);
 
-        $selCon->from($this->_contentTable)
-            ->where('is_deleted=0');
-
+        $selCon->from($this->_contentTable)->where('is_deleted=0');
 
         $paginator = Zend_Paginator::factory($selCon);
         $paginator->setCurrentPageNumber($this->getParam('page'));
@@ -59,18 +58,16 @@ class Backend_ContentController extends Local_Controller_Action_Backend
                 $values = $form->getValues();
 
                 $insertValues = array(
-                    'title' => $values['title_intern'],
-                    'url_name' => $values['url_name'],
-                    'content' => $values['content'],
+                    'title'      => $values['title_intern'],
+                    'url_name'   => $values['url_name'],
+                    'content'    => $values['content'],
                     'created_at' => new Zend_Db_Expr('Now()'),
                     'changed_at' => new Zend_Db_Expr('Now()')
                 );
 
-
                 $this->_contentTable->insert($insertValues);
 
                 $this->view->saveTitle = "Content gespeichert";
-
             } else {
                 //fehler
                 $this->view->form = $form;
@@ -102,10 +99,9 @@ class Backend_ContentController extends Local_Controller_Action_Backend
         $content->setValue($valContent);
         $content->setRequired(true);
 
-        $form->addElement($title)
-            ->addElement($urlName)
-            ->addElement($content)
-            ->addElement('submit', 'save', array('label' => 'Speichern'));
+        $form->addElement($title)->addElement($urlName)->addElement($content)
+             ->addElement('submit', 'save', array('label' => 'Speichern'))
+        ;
 
         return $form;
     }
@@ -120,9 +116,9 @@ class Backend_ContentController extends Local_Controller_Action_Backend
                 $values = $form->getValues();
 
                 $updateValues = array(
-                    'title' => $values['title_intern'],
-                    'url_name' => $values['url_name'],
-                    'content' => $values['content'],
+                    'title'      => $values['title_intern'],
+                    'url_name'   => $values['url_name'],
+                    'content'    => $values['content'],
                     'changed_at' => new Zend_Db_Expr('Now()')
                 );
 
@@ -131,7 +127,6 @@ class Backend_ContentController extends Local_Controller_Action_Backend
                 $this->_contentTable->update($updateValues, "content_id=" . $id);
 
                 $this->view->saveTitle = "Content gespeichert";
-
             } else {
                 //fehler
                 $this->view->form = $form;
@@ -140,11 +135,10 @@ class Backend_ContentController extends Local_Controller_Action_Backend
             // normaler Aufruf (GET) - kein Formular
             $id = $this->_request->getParam('id');
 
-
             $editItem = $this->_contentTable->find($id);
             $editItem = $editItem[0];
-            $this->view->form = $this->getForm(stripslashes($editItem->title), stripslashes($editItem->content),
-                stripslashes($editItem->url_name));
+            $this->view->form =
+                $this->getForm(stripslashes($editItem->title), stripslashes($editItem->content), stripslashes($editItem->url_name));
         }
     }
 

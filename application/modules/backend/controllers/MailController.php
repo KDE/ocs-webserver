@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -47,10 +48,9 @@ class Backend_MailController extends Local_Controller_Action_Backend
 
         $sel = $this->_mailTplTable->select()->setIntegrityCheck(false);
         $sel->from($this->_mailTplTable,
-            array('mail_template_id', 'name', 'subject', 'text', 'created_at', 'changed_at'))
-//                ->where('is_deleted=0')
-            ->order($sort, $dir)
-            ->limit($count, $start);
+            array('mail_template_id', 'name', 'subject', 'text', 'created_at', 'changed_at'))//                ->where('is_deleted=0')
+            ->order($sort, $dir)->limit($count, $start)
+        ;
 
         if ($filter) {
             foreach ($filter as $field => $value) {
@@ -83,18 +83,16 @@ class Backend_MailController extends Local_Controller_Action_Backend
                 $values = $form->getValues();
 
                 $insertValues = array(
-                    'name' => $values['title_intern'],
-                    'subject' => $values['subject'],
-                    'text' => $values['content'],
+                    'name'       => $values['title_intern'],
+                    'subject'    => $values['subject'],
+                    'text'       => $values['content'],
                     'created_at' => new Zend_Db_Expr('Now()'),
                     'changed_at' => new Zend_Db_Expr('Now()')
                 );
 
-
                 $this->_mailTplTable->insert($insertValues);
 
                 $this->view->saveText = "eMail-Template gespeichert";
-
             } else {
                 //fehler
                 $this->view->form = $form;
@@ -127,10 +125,9 @@ class Backend_MailController extends Local_Controller_Action_Backend
         $content->setValue($valContent);
         $content->setRequired(true);
 
-        $form->addElement($title)
-            ->addElement($subject)
-            ->addElement($content)
-            ->addElement('submit', 'save', array('label' => 'Speichern'));
+        $form->addElement($title)->addElement($subject)->addElement($content)
+             ->addElement('submit', 'save', array('label' => 'Speichern'))
+        ;
 
         return $form;
     }
@@ -145,9 +142,9 @@ class Backend_MailController extends Local_Controller_Action_Backend
                 $values = $form->getValues();
 
                 $updateValues = array(
-                    'name' => $values['title_intern'],
-                    'subject' => $values['subject'],
-                    'text' => $values['content'],
+                    'name'       => $values['title_intern'],
+                    'subject'    => $values['subject'],
+                    'text'       => $values['content'],
                     'changed_at' => new Zend_Db_Expr('Now()')
                 );
 
@@ -164,35 +161,34 @@ class Backend_MailController extends Local_Controller_Action_Backend
             // normaler Aufruf (GET) - kein Formular
             $id = $this->_request->getParam('id');
 
-
             $editItem = $this->_mailTplTable->find($id);
             $editItem = $editItem[0];
-            $this->view->form = $this->getForm(stripslashes($editItem->name), stripslashes($editItem->subject),
-                stripslashes($editItem->text));
+            $this->view->form =
+                $this->getForm(stripslashes($editItem->name), stripslashes($editItem->subject), stripslashes($editItem->text));
         }
     }
 
     public function setstatusAction()
     {
-//        $this->_helper->layout->disableLayout();
-//
-//        $id = $this->getParam('id');
-//        $status = $this->getParam("status");
-//
-//        $this->_contentTable->setStatus($status,$id);
-//
-//        $this->_helper->json(true);
+        //        $this->_helper->layout->disableLayout();
+        //
+        //        $id = $this->getParam('id');
+        //        $status = $this->getParam("status");
+        //
+        //        $this->_contentTable->setStatus($status,$id);
+        //
+        //        $this->_helper->json(true);
     }
 
     public function deleteAction()
     {
-//        $this->_helper->layout->disableLayout();
-//
-//        $id = $this->getParam('id');
-//
-//        $this->_contentTable->setDelete($id);
-//
-//        $this->_helper->json(true);
+        //        $this->_helper->layout->disableLayout();
+        //
+        //        $id = $this->getParam('id');
+        //
+        //        $this->_contentTable->setDelete($id);
+        //
+        //        $this->_helper->json(true);
     }
 
 }

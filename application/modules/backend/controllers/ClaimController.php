@@ -70,25 +70,21 @@ class Backend_ClaimController extends Local_Controller_Action_Backend
     {
         $jTableResult = array();
         try {
-            $filterInput = new Zend_Filter_Input(
-                array(
-                    '*' => 'StringTrim',
-                    'project_id' => 'digits',
-                    'member_id' => 'digits',
-                    'project_category_id' => 'digits',
-                    'status' => 'digits',
-                    'pid' => 'digits',
-                    'type_id' => 'digits',
-                    'creator_id' => 'digits',
-                    'validated' => 'digits',
-                    'featured' => 'digits',
-                    'amount' => 'digits',
-                    'claimable' => 'digits',
-                    'claimed_by_member' => 'digits',
-                ),
-                array('*' => array()),
-                $this->getAllParams()
-            );
+            $filterInput = new Zend_Filter_Input(array(
+                '*'                   => 'StringTrim',
+                'project_id'          => 'digits',
+                'member_id'           => 'digits',
+                'project_category_id' => 'digits',
+                'status'              => 'digits',
+                'pid'                 => 'digits',
+                'type_id'             => 'digits',
+                'creator_id'          => 'digits',
+                'validated'           => 'digits',
+                'featured'            => 'digits',
+                'amount'              => 'digits',
+                'claimable'           => 'digits',
+                'claimed_by_member'   => 'digits',
+            ), array('*' => array()), $this->getAllParams());
 
             $record = $this->_model->save($filterInput->getEscaped());
 
@@ -148,7 +144,6 @@ class Backend_ClaimController extends Local_Controller_Action_Backend
                     $select->where("{$key} like ?", '%' . $value . '%');
                 }
             }
-
         }
 
         $reports = $this->_model->fetchAll($select);

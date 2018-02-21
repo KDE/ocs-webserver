@@ -53,8 +53,9 @@ class Backend_SearchController extends Local_Controller_Action_CliAbstract
     }
 
     /**
-     * @param int $storeId
+     * @param int    $storeId
      * @param string $indexId
+     *
      * @throws Zend_Exception
      */
     protected function createCronJob($storeId, $indexId)
@@ -62,8 +63,8 @@ class Backend_SearchController extends Local_Controller_Action_CliAbstract
         try {
             $manager = new Crontab_Manager_CrontabManager();
             //           $manager->user = 'www-data';
-            $newJob = $manager->newJob('*/3 * * * * php /var/www/projects/pling/httpdocs/cron.php -a /backend/search/run/store_id/' . $storeId . '/index_id/' . $indexId . '/ >> /var/www/projects/logs/search.log 2>&1',
-                'www-data');
+            $newJob = $manager->newJob('*/3 * * * * php /var/www/projects/pling/httpdocs/cron.php -a /backend/search/run/store_id/'
+                . $storeId . '/index_id/' . $indexId . '/ >> /var/www/projects/logs/search.log 2>&1', 'www-data');
             if (false == $manager->jobExists($newJob)) {
                 $manager->add($newJob);
                 $manager->save();

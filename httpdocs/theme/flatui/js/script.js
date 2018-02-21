@@ -1278,9 +1278,18 @@ var ProductDetailCarousel = (function () {
 var ProductDetailCommentTooltip = (function () {
     return {
         setup: function () {
-            $('.tooltipuser').tooltipster(
+            TooltipUser.setup('tooltipuser','right');
+        }
+    }
+})();
+
+
+var TooltipUser = (function () {
+    return {
+        setup: function (tooltipCls, tooltipSide) {
+            $('.'+tooltipCls).tooltipster(
                 {
-                    side: 'right',
+                    side: tooltipSide,
                     theme: ['tooltipster-light', 'tooltipster-light-customized'],
                     contentCloning: true,
                     contentAsHTML: true,
@@ -1316,6 +1325,8 @@ var ProductDetailCommentTooltip = (function () {
         }
     }
 })();
+
+
 
 var AboutMePage = (function () {
     return {

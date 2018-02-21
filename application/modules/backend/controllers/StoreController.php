@@ -73,16 +73,6 @@ class Backend_StoreController extends Local_Controller_Action_Backend
         $this->_helper->json($jTableResult);
     }
 
-    protected function initCache($store_id)
-    {
-        $modelPCat = new Default_Model_ProjectCategory();
-        $modelPCat->fetchCategoryTreeForStore($store_id, true);
-
-        $this->_model->fetchConfigForStore($store_id, true);
-        $this->_model->fetchAllStoresAndCategories(true);
-        $this->_model->fetchAllStoresConfigArray(true);
-    }
-
     public function initcacheAction()
     {
         $allStoresCat = $this->_model->fetchAllStoresAndCategories(true);
@@ -122,6 +112,16 @@ class Backend_StoreController extends Local_Controller_Action_Backend
         }
 
         $this->_helper->json($jTableResult);
+    }
+
+    protected function initCache($store_id)
+    {
+        $modelPCat = new Default_Model_ProjectCategory();
+        $modelPCat->fetchCategoryTreeForStore($store_id, true);
+
+        $this->_model->fetchConfigForStore($store_id, true);
+        $this->_model->fetchAllStoresAndCategories(true);
+        $this->_model->fetchAllStoresConfigArray(true);
     }
 
     public function deleteAction()
@@ -165,8 +165,8 @@ class Backend_StoreController extends Local_Controller_Action_Backend
 
         $reports = $this->_model->fetchAll($select);
 
-        $reportsAll = $this->_model->fetchAll($select->limit(null,
-            null)->reset('columns')->columns(array('countAll' => new Zend_Db_Expr('count(*)'))));
+        $reportsAll = $this->_model->fetchAll($select->limit(null, null)->reset('columns')
+                                                     ->columns(array('countAll' => new Zend_Db_Expr('count(*)'))));
 
         $jTableResult = array();
         $jTableResult['Result'] = self::RESULT_OK;

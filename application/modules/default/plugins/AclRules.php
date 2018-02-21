@@ -25,6 +25,7 @@ class Default_Plugin_AclRules extends Zend_Acl
     const ROLENAME_GUEST = 'guest';
     const ROLENAME_COOKIEUSER = 'cookieuser';
     const ROLENAME_FEUSER = 'feuser';
+    const ROLENAME_MODERATOR = 'moderator';
     const ROLENAME_STAFF = 'staff';
     const ROLENAME_ADMIN = 'admin';
 
@@ -33,6 +34,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addRole(new Zend_Acl_Role (self::ROLENAME_GUEST));
         $this->addRole(new Zend_Acl_Role (self::ROLENAME_COOKIEUSER), self::ROLENAME_GUEST);
         $this->addRole(new Zend_Acl_Role (self::ROLENAME_FEUSER), self::ROLENAME_COOKIEUSER);
+        $this->addRole(new Zend_Acl_Role (self::ROLENAME_MODERATOR), self::ROLENAME_FEUSER);
         $this->addRole(new Zend_Acl_Role (self::ROLENAME_STAFF), self::ROLENAME_FEUSER);
         $this->addRole(new Zend_Acl_Role (self::ROLENAME_ADMIN));
 
@@ -71,6 +73,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addResource(new Zend_Acl_Resource ('default_tag'));
 
         $this->addResource(new Zend_Acl_Resource ('backend_categories'));
+        $this->addResource(new Zend_Acl_Resource ('backend_vcategories'));
         $this->addResource(new Zend_Acl_Resource ('backend_claim'));
         $this->addResource(new Zend_Acl_Resource ('backend_comments'));
         $this->addResource(new Zend_Acl_Resource ('backend_content'));
@@ -91,6 +94,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addResource(new Zend_Acl_Resource ('backend_reportproducts'));
         $this->addResource(new Zend_Acl_Resource ('backend_search'));
         $this->addResource(new Zend_Acl_Resource ('backend_storecategories'));
+        $this->addResource(new Zend_Acl_Resource ('backend_vstorecategories'));
         $this->addResource(new Zend_Acl_Resource ('backend_store'));
         $this->addResource(new Zend_Acl_Resource ('backend_tag'));
         $this->addResource(new Zend_Acl_Resource ('backend_user'));
@@ -158,7 +162,6 @@ class Default_Plugin_AclRules extends Zend_Acl
         // resource default_product
         $this->allow(self::ROLENAME_GUEST, 'default_product',
             array('index', 'show', 'getupdatesajax', 'updates', 'follows', 'fetch', 'search', 'startdownload'));
-        
 
         $this->allow(self::ROLENAME_COOKIEUSER, 'default_product',
             array(
@@ -176,6 +179,12 @@ class Default_Plugin_AclRules extends Zend_Acl
                 'paymentcancel',
                 'saveproduct',
                 'claim'
+            )
+        );
+
+        $this->allow(self::ROLENAME_MODERATOR, 'backend_project',
+            array(
+                'doghnsexclude'
             )
         );
 

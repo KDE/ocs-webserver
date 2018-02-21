@@ -44,10 +44,10 @@ class Backend_HiveController extends Local_Controller_Action_Backend
     protected $_modelName = 'Default_Model_DbTable_HiveContent';
     protected $_pageTitle = 'Import Hive01 Files';
     protected $_allowed = array(
-        'image/jpeg' => '.jpg',
-        'image/jpg' => '.jpg',
-        'image/png' => '.png',
-        'image/gif' => '.gif',
+        'image/jpeg'          => '.jpg',
+        'image/jpg'           => '.jpg',
+        'image/png'           => '.png',
+        'image/gif'           => '.gif',
         'application/x-empty' => '.png'
     );
 
@@ -113,8 +113,6 @@ class Backend_HiveController extends Local_Controller_Action_Backend
                 }
             }
         }
-
-
     }
 
     private function step0()
@@ -125,7 +123,6 @@ class Backend_HiveController extends Local_Controller_Action_Backend
             $count = $contentTable->fetchCountProjects();
             $this->view->info = "Erfolgreich geladen aus DB";
             $countProjects = $count;
-
         } catch (Exception $e) {
             Zend_Registry::get('logger')->info(__METHOD__ . ' - ' . "Fehler bei fetchCountProjects");
             Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . print_r($e, true));
@@ -135,7 +132,6 @@ class Backend_HiveController extends Local_Controller_Action_Backend
         }
 
         $this->view->coutAll = $countProjects;
-
     }
 
     private function step1()
@@ -151,7 +147,6 @@ class Backend_HiveController extends Local_Controller_Action_Backend
         }
 
         $this->view->categories = $catArray;
-
     }
 
     private function step2()
@@ -184,7 +179,6 @@ class Backend_HiveController extends Local_Controller_Action_Backend
         }
 
         $this->view->categories = $catArray;
-
     }
 
     private function step3()
@@ -206,7 +200,6 @@ class Backend_HiveController extends Local_Controller_Action_Backend
             $this->view->info .= "Erfolgreich geladen aus DB";
             $this->view->ocs_cat_id = $ocs_cat['id'];
             $this->view->ocs_cat_desc = $ocs_cat['desc'];
-
         } catch (Exception $e) {
             $this->view->info = "Fehler bei laden aus DB:" . $e->getMessage();
             $cat = null;
@@ -222,7 +215,6 @@ class Backend_HiveController extends Local_Controller_Action_Backend
         }
 
         $this->view->categories = $catArray;
-
     }
 
     private function step4()
@@ -256,8 +248,6 @@ class Backend_HiveController extends Local_Controller_Action_Backend
             } else {
                 $this->view->info = "Keine Kategorien anegeben!";
             }
-
-
         } catch (Exception $e) {
             $this->view->info = "Fehler bei laden aus DB:" . $e->getMessage();
             $catArray = null;
@@ -265,7 +255,6 @@ class Backend_HiveController extends Local_Controller_Action_Backend
 
         $this->view->categories = $catArray;
         $this->view->cat_ids = $cat_ids;
-
     }
 
     private function step30()
@@ -340,7 +329,6 @@ class Backend_HiveController extends Local_Controller_Action_Backend
             $limit = 5;
         }
 
-
         $result = array();
         $contentTable = new Default_Model_DbTable_HiveContent();
         $memberTable = new Default_Model_Member();
@@ -393,7 +381,6 @@ class Backend_HiveController extends Local_Controller_Action_Backend
                         $info .= " - Files Uploaded: " . $_import_file_counter . " -  ";
                         $time_elapsed_secs = microtime(true) - $start;
                         $info .= $time_elapsed_secs . " secs";
-
                     } else {
                         $_import_file_counter = 1;
                     }
@@ -448,7 +435,7 @@ class Backend_HiveController extends Local_Controller_Action_Backend
                     } else {
                         $info .= " - NO Files Uploaded";
                         $contentTable->update(array(
-                            "is_imported" => 1,
+                            "is_imported"  => 1,
                             "import_error" => "Error on fileupload to cc.ppload.com Exception: " . $pploadError
                         ), "id = " . $project['id']);
                     }
@@ -462,7 +449,6 @@ class Backend_HiveController extends Local_Controller_Action_Backend
             }
             $result['Message'] = $info;
             $_is_import_done = true;
-
         } catch (Exception $e) {
             $this->view->info = $e->getMessage();
             $_is_import_done = true;
@@ -671,6 +657,7 @@ class Backend_HiveController extends Local_Controller_Action_Backend
                 }
             }
         }
+
         //var_dump($info);
         return $cnFileUrl;
     }
@@ -715,7 +702,6 @@ class Backend_HiveController extends Local_Controller_Action_Backend
                 $projectId = $projectsResult[0]['project_id'];
                 $uuid = $projectsResult[0]['uuid'];
             }
-
         } catch (Exception $e) {
             $info .= (__FUNCTION__ . '::ERROR load Project: ' . $e);
         }
@@ -729,11 +715,9 @@ class Backend_HiveController extends Local_Controller_Action_Backend
             } else {
                 throw new Exception(__FUNCTION__ . '::ERROR load member: Member not found: Username = ' . $project['user']);
             }
-
         } catch (Exception $e) {
             throw new Exception(__FUNCTION__ . '::ERROR load member: ' . $e);
         }
-
 
         $projectObj = array();
         $projectObj['member_id'] = $memberId;
@@ -753,7 +737,6 @@ class Backend_HiveController extends Local_Controller_Action_Backend
             $projectObj['is_active'] = 0;
             $projectObj['status'] = 30;
         }
-
 
         $projectObj['pid'] = null;
         $projectObj['type_id'] = 1;
@@ -792,7 +775,6 @@ class Backend_HiveController extends Local_Controller_Action_Backend
             $projectObj['uuid'] = $uuid;
         }
 
-
         if ($projectId) {
             try {
                 $votingTable = new Default_Model_DbTable_ProjectRating();
@@ -816,11 +798,12 @@ class Backend_HiveController extends Local_Controller_Action_Backend
                 $updateCount = $projectTable->update($projectObj, "project_id = " . $projectId);
                 $info .= "Update Project successfull: Updated rows: " . $updateCount;
 
-
                 //update changelog?
                 if (isset($project['changelog']) && $project['changelog'] != '') {
                     $projectUpdatesTable = new Default_Model_ProjectUpdates();
-                    $projectUpdate = $projectUpdatesTable->fetchRow('project_id = ' . $projectId . ' AND source_id = 1 AND source_pk = ' . $project['id']);
+                    $projectUpdate =
+                        $projectUpdatesTable->fetchRow('project_id = ' . $projectId . ' AND source_id = 1 AND source_pk = '
+                            . $project['id']);
                     if ($projectUpdate) {
                         $projectUpdate = $projectUpdate->toArray();
                         if ($projectUpdate['text'] != $project['changelog']) {
@@ -842,18 +825,15 @@ class Backend_HiveController extends Local_Controller_Action_Backend
                         $projectUpdatesTable->save($data);
                     }
                 }
-
             } catch (Exception $e) {
                 throw new Exception(__FUNCTION__ . '::ERROR update project: ' . $e);
             }
-
         } else {
             try {
                 //Create new project
                 $newProjectObj = $projectTable->save($projectObj);
                 $info .= "Create Project successfull: " . $newProjectObj['project_id'];
                 $projectId = $newProjectObj['project_id'];
-
 
                 $votingTable = new Default_Model_DbTable_ProjectRating();
 
@@ -894,11 +874,9 @@ class Backend_HiveController extends Local_Controller_Action_Backend
                 if (null == $newProjectObj || null == $newProjectObj['project_id']) {
                     throw new Exception(__FUNCTION__ . '::ERROR save project: ' . implode(",", $newProjectObj));
                 }
-
             } catch (Exception $e) {
                 throw new Exception(__FUNCTION__ . '::ERROR save project: ' . $e);
             }
-
         }
 
         return $projectId;
@@ -914,9 +892,9 @@ class Backend_HiveController extends Local_Controller_Action_Backend
         //Clean up old collection data
         // require_once 'Ppload/Api.php';
         $pploadApi = new Ppload_Api(array(
-            'apiUri' => PPLOAD_API_URI,
+            'apiUri'   => PPLOAD_API_URI,
             'clientId' => PPLOAD_CLIENT_ID,
-            'secret' => PPLOAD_SECRET
+            'secret'   => PPLOAD_SECRET
         ));
 
         $projectTable = new Default_Model_DbTable_Project();
@@ -952,8 +930,8 @@ class Backend_HiveController extends Local_Controller_Action_Backend
                     }
 
                     //$uploadFileResult = $this->uploadFileToPpload($projectId, 'http://cp1.hive01.com/CONTENT/content-files/'.$file1);
-                    $uploadFileResult = $this->saveFileInPpload($projectId, $project['downloadname1'],
-                        $project['licensetype'], base64_encode($project['license']), $downloadCounter,
+                    $uploadFileResult = $this->saveFileInPpload($projectId, $project['downloadname1'], $project['licensetype'],
+                        base64_encode($project['license']), $downloadCounter,
                         $this->_HIVE_BASE_URL . '/CONTENT/content-files/' . $file1);
                     $info .= "Upload file successfull: " . $uploadFileResult;
                     if ($uploadFileResult == true) {
@@ -976,9 +954,9 @@ class Backend_HiveController extends Local_Controller_Action_Backend
                         $linkName1 = "link";
                     }
                     $downloadCounter = 0;
-                    $uploadFileResult = $this->saveFileInPpload($projectId, $project['downloadname1'],
-                        $project['licensetype'], base64_encode($project['license']), 0,
-                        $this->_HIVE_BASE_URL . '/CONTENT/content-files/link', $link1, $linkName1);
+                    $uploadFileResult = $this->saveFileInPpload($projectId, $project['downloadname1'], $project['licensetype'],
+                        base64_encode($project['license']), 0, $this->_HIVE_BASE_URL . '/CONTENT/content-files/link', $link1,
+                        $linkName1);
                     $info .= "Upload file successfull: " . $uploadFileResult;
                     if ($uploadFileResult == true) {
                         $_import_file_counter++;
@@ -1000,9 +978,9 @@ class Backend_HiveController extends Local_Controller_Action_Backend
                         $linkName1 = "link";
                     }
                     $downloadCounter = 0;
-                    $uploadFileResult = $this->saveFileInPpload($projectId, $project['downloadname' . $i],
-                        $project['licensetype'], base64_encode($project['license']), 0,
-                        $this->_HIVE_BASE_URL . '/CONTENT/content-files/link', $link1, $linkName1);
+                    $uploadFileResult = $this->saveFileInPpload($projectId, $project['downloadname' . $i], $project['licensetype'],
+                        base64_encode($project['license']), 0, $this->_HIVE_BASE_URL . '/CONTENT/content-files/link', $link1,
+                        $linkName1);
                     $info .= "Upload file successfull: " . $link1;
                     if ($uploadFileResult == true) {
                         $_import_file_counter++;
@@ -1016,6 +994,7 @@ class Backend_HiveController extends Local_Controller_Action_Backend
         if ($_import_file_counter == 0) {
             return $info;
         }
+
         return $_import_file_counter;
     }
 
@@ -1047,6 +1026,7 @@ class Backend_HiveController extends Local_Controller_Action_Backend
         } else {
             $pploadInfo .= "ERROR::Project not found: " . $projectId;
             throw new Exception($pploadInfo);
+
             return false;
         }
 
@@ -1066,22 +1046,22 @@ class Backend_HiveController extends Local_Controller_Action_Backend
             } else {
                 $pploadInfo .= "ERROR::FileName not found: " . $filename;
                 throw new Exception($pploadInfo);
+
                 return false;
             }
         }
 
         // require_once 'Ppload/Api.php';
         $pploadApi = new Ppload_Api(array(
-            'apiUri' => "https://dl.opendesktop.org/api/",
+            'apiUri'   => "https://dl.opendesktop.org/api/",
             'clientId' => "1387085484",
-            'secret' => "34gtd3w024deece710e1225d7bfe5e7337b1f45d"
+            'secret'   => "34gtd3w024deece710e1225d7bfe5e7337b1f45d"
         ));
-
 
         $fileRequest = array(
             'local_file_path' => $tmpFilepath,
             'local_file_name' => $tmpFilename,
-            'owner_id' => $projectData->member_id
+            'owner_id'        => $projectData->member_id
         );
         if ($projectData->ppload_collection_id) {
             // Append to existing collection
@@ -1107,7 +1087,6 @@ class Backend_HiveController extends Local_Controller_Action_Backend
             $fileRequest['tags'] = $tags;
         }
 
-
         //upload to ppload
         $fileResponse = $pploadApi->postFile($fileRequest);
 
@@ -1116,6 +1095,7 @@ class Backend_HiveController extends Local_Controller_Action_Backend
         } else {
             $pploadInfo .= "ERROR::File NOT uploaded to ppload! Response: " . $fileResponse;
             throw new Exception($pploadInfo);
+
             return $pploadInfo;
         }
 
@@ -1138,23 +1118,18 @@ class Backend_HiveController extends Local_Controller_Action_Backend
                 $mainproject = $projectTable->find($memberSettings->main_project_id)->current();
                 $profileName = '';
                 if ($memberSettings->firstname
-                    || $memberSettings->lastname
-                ) {
-                    $profileName = trim(
-                        $memberSettings->firstname
-                        . ' '
-                        . $memberSettings->lastname
-                    );
+                    || $memberSettings->lastname) {
+                    $profileName = trim($memberSettings->firstname . ' ' . $memberSettings->lastname);
                 } else {
                     if ($memberSettings->username) {
                         $profileName = $memberSettings->username;
                     }
                 }
                 $profileRequest = array(
-                    'owner_id' => $projectData->member_id,
-                    'name' => $profileName,
-                    'email' => $memberSettings->mail,
-                    'homepage' => $memberSettings->link_website,
+                    'owner_id'    => $projectData->member_id,
+                    'name'        => $profileName,
+                    'email'       => $memberSettings->mail,
+                    'homepage'    => $memberSettings->link_website,
                     'description' => $mainproject->description
                 );
                 $profileResponse = $pploadApi->postProfile($profileRequest);
@@ -1164,41 +1139,40 @@ class Backend_HiveController extends Local_Controller_Action_Backend
                     $collectionCategory .= '-published';
                 }
                 $collectionRequest = array(
-                    'title' => $projectData->title,
+                    'title'       => $projectData->title,
                     'description' => $projectData->description,
-                    'category' => $collectionCategory
+                    'category'    => $collectionCategory
                 );
-                $collectionResponse = $pploadApi->putCollection(
-                    $projectData->ppload_collection_id,
-                    $collectionRequest
-                );
+                $collectionResponse = $pploadApi->putCollection($projectData->ppload_collection_id, $collectionRequest);
                 // Store product image as collection thumbnail
                 $this->_updatePploadMediaCollectionthumbnail($projectData);
             }
+
             //return $fileResponse->file;
             return true;
         } else {
             //return false;
             $pploadInfo .= "ERROR::No CollectionId in ppload-file! Response Status: " . json_encode($fileResponse);
             throw new Exception($pploadInfo);
+
             return $pploadInfo;
         }
+
         return $pploadInfo;
     }
 
     private function _updatePploadMediaCollectionthumbnail($projectData)
     {
         if (empty($projectData->ppload_collection_id)
-            || empty($projectData->image_small)
-        ) {
+            || empty($projectData->image_small)) {
             return false;
         }
 
         // require_once 'Ppload/Api.php';
         $pploadApi = new Ppload_Api(array(
-            'apiUri' => "https://dl.opendesktop.org/api/",
+            'apiUri'   => "https://dl.opendesktop.org/api/",
             'clientId' => "1387085484",
-            'secret' => "34gtd3w024deece710e1225d7bfe5e7337b1f45d"
+            'secret'   => "34gtd3w024deece710e1225d7bfe5e7337b1f45d"
         ));
 
         $filename = sys_get_temp_dir() . '/' . $projectData->image_small;
@@ -1218,18 +1192,16 @@ class Backend_HiveController extends Local_Controller_Action_Backend
 
         file_put_contents($filename, file_get_contents($uri));
 
-        $mediaCollectionthumbnailResponse = $pploadApi->postMediaCollectionthumbnail(
-            $projectData->ppload_collection_id,
-            array('file' => $filename)
-        );
+        $mediaCollectionthumbnailResponse =
+            $pploadApi->postMediaCollectionthumbnail($projectData->ppload_collection_id, array('file' => $filename));
 
         unlink($filename);
 
         if (isset($mediaCollectionthumbnailResponse->status)
-            && $mediaCollectionthumbnailResponse->status == 'success'
-        ) {
+            && $mediaCollectionthumbnailResponse->status == 'success') {
             return true;
         }
+
         return false;
     }
 
@@ -1290,7 +1262,6 @@ class Backend_HiveController extends Local_Controller_Action_Backend
             $limit = 5;
         }
 
-
         $result = array();
         $contentTable = new Default_Model_DbTable_HiveContent();
         $memberTable = new Default_Model_Member();
@@ -1342,7 +1313,6 @@ class Backend_HiveController extends Local_Controller_Action_Backend
                         $info .= " - Files Uploaded: " . $_import_file_counter . " -  ";
                         $time_elapsed_secs = microtime(true) - $start;
                         $info .= $time_elapsed_secs . " secs";
-
                     } else {
                         $_import_file_counter = 1;
                     }
@@ -1396,7 +1366,7 @@ class Backend_HiveController extends Local_Controller_Action_Backend
                     } else {
                         $info .= " - NO Files Uploaded";
                         $contentTable->update(array(
-                            "is_imported" => 1,
+                            "is_imported"  => 1,
                             "import_error" => "Error on fileupload to cc.ppload.com Exception: " . $pploadError
                         ), "id = " . $project['id']);
                     }
@@ -1410,7 +1380,6 @@ class Backend_HiveController extends Local_Controller_Action_Backend
             }
             $result['Message'] = $info;
             $_is_import_done = true;
-
         } catch (Exception $e) {
             $this->view->info = $e->getMessage();
             $_is_import_done = true;
@@ -1458,6 +1427,7 @@ class Backend_HiveController extends Local_Controller_Action_Backend
         if (!$srcPathOnMediaServer) {
             throw new Exception("Error in upload to CDN-Server. \n Server message:\n" . $this->_errorMsg);
         }
+
         return $srcPathOnMediaServer;
     }
 
@@ -1472,6 +1442,7 @@ class Backend_HiveController extends Local_Controller_Action_Backend
 
         if ($response->getStatus() > 200) {
             $this->_errorMsg = $response->getBody();
+
             return null;
         }
 
@@ -1490,6 +1461,7 @@ class Backend_HiveController extends Local_Controller_Action_Backend
         } else {
             $pploadInfo .= "ERROR::Project not found: " . $projectId;
             throw new Exception($pploadInfo);
+
             return false;
         }
 
@@ -1500,13 +1472,13 @@ class Backend_HiveController extends Local_Controller_Action_Backend
         } else {
             $pploadInfo .= "ERROR::File not found: " . $fileUrl;
             throw new Exception($pploadInfo);
+
             return false;
         }
         $filename = null;
         if (!empty($link)) {
             //take emtpy dummy file
             $filename = $linkName;
-
         } else {
             //upload to ocs-www
             $filename = $this->getFilenameFromUrl($fileUrl);
@@ -1515,10 +1487,9 @@ class Backend_HiveController extends Local_Controller_Action_Backend
             } else {
                 $pploadInfo .= "ERROR::FileName not found: " . $filename;
                 throw new Exception($pploadInfo);
+
                 return false;
             }
-
-
         }
         file_put_contents(IMAGES_UPLOAD_PATH . 'tmp/' . $filename, $file);
 
@@ -1528,28 +1499,28 @@ class Backend_HiveController extends Local_Controller_Action_Backend
         if (empty($mime) || $mime == 'text/html') {
             $pploadInfo .= "ERROR::File NOT found!";
             throw new Exception($pploadInfo);
+
             return false;
         }
-
 
         if (file_exists($tmpFilename)) {
             $pploadInfo .= "File uploaded to ocs-www!";
         } else {
             $pploadInfo .= "ERROR::File NOT uploaded to ocs-www!";
             throw new Exception($pploadInfo);
+
             return false;
         }
 
         // require_once 'Ppload/Api.php';
         $pploadApi = new Ppload_Api(array(
-            'apiUri' => PPLOAD_API_URI,
+            'apiUri'   => PPLOAD_API_URI,
             'clientId' => PPLOAD_CLIENT_ID,
-            'secret' => PPLOAD_SECRET
+            'secret'   => PPLOAD_SECRET
         ));
 
-
         $fileRequest = array(
-            'file' => $tmpFilename,
+            'file'     => $tmpFilename,
             'owner_id' => $projectData->member_id
         );
         if ($projectData->ppload_collection_id) {
@@ -1571,6 +1542,7 @@ class Backend_HiveController extends Local_Controller_Action_Backend
         } else {
             $pploadInfo .= "ERROR::File NOT uploaded to ppload! Response: " . $fileResponse;
             throw new Exception($pploadInfo);
+
             return $pploadInfo;
         }
 
@@ -1593,23 +1565,18 @@ class Backend_HiveController extends Local_Controller_Action_Backend
                 $mainproject = $projectTable->find($memberSettings->main_project_id)->current();
                 $profileName = '';
                 if ($memberSettings->firstname
-                    || $memberSettings->lastname
-                ) {
-                    $profileName = trim(
-                        $memberSettings->firstname
-                        . ' '
-                        . $memberSettings->lastname
-                    );
+                    || $memberSettings->lastname) {
+                    $profileName = trim($memberSettings->firstname . ' ' . $memberSettings->lastname);
                 } else {
                     if ($memberSettings->username) {
                         $profileName = $memberSettings->username;
                     }
                 }
                 $profileRequest = array(
-                    'owner_id' => $projectData->member_id,
-                    'name' => $profileName,
-                    'email' => $memberSettings->mail,
-                    'homepage' => $memberSettings->link_website,
+                    'owner_id'    => $projectData->member_id,
+                    'name'        => $profileName,
+                    'email'       => $memberSettings->mail,
+                    'homepage'    => $memberSettings->link_website,
                     'description' => $mainproject->description
                 );
                 $profileResponse = $pploadApi->postProfile($profileRequest);
@@ -1619,25 +1586,25 @@ class Backend_HiveController extends Local_Controller_Action_Backend
                     $collectionCategory .= '-published';
                 }
                 $collectionRequest = array(
-                    'title' => $projectData->title,
+                    'title'       => $projectData->title,
                     'description' => $projectData->description,
-                    'category' => $collectionCategory
+                    'category'    => $collectionCategory
                 );
-                $collectionResponse = $pploadApi->putCollection(
-                    $projectData->ppload_collection_id,
-                    $collectionRequest
-                );
+                $collectionResponse = $pploadApi->putCollection($projectData->ppload_collection_id, $collectionRequest);
                 // Store product image as collection thumbnail
                 $this->_updatePploadMediaCollectionthumbnail($projectData);
             }
+
             //return $fileResponse->file;
             return true;
         } else {
             //return false;
             $pploadInfo .= "ERROR::No CollectionId in ppload-file! Response Status: " . json_encode($fileResponse);
             throw new Exception($pploadInfo);
+
             return $pploadInfo;
         }
+
         return $pploadInfo;
     }
 

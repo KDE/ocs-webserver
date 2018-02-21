@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -49,21 +50,21 @@ class Backend_ReportProductsController extends Local_Controller_Action_Backend
 
     public function createAction()
     {
-//        $jTableResult = array();
-//        try {
-//            $newRow = $this->_model->createRow($this->getAllParams());
-//            $result = $newRow->save();
-//
-//            $jTableResult['Result'] = self::RESULT_OK;
-//            $jTableResult['Record'] = $newRow->toArray();
-//        } catch (Exception $e) {
-//            Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . print_r($e, true));
-//            $translate = Zend_Registry::get('Zend_Translate');
-//            $jTableResult['Result'] = self::RESULT_ERROR;
-//            $jTableResult['Message'] = $translate->_('Error while processing data.');
-//        }
-//
-//        $this->_helper->json($jTableResult);
+        //        $jTableResult = array();
+        //        try {
+        //            $newRow = $this->_model->createRow($this->getAllParams());
+        //            $result = $newRow->save();
+        //
+        //            $jTableResult['Result'] = self::RESULT_OK;
+        //            $jTableResult['Record'] = $newRow->toArray();
+        //        } catch (Exception $e) {
+        //            Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . print_r($e, true));
+        //            $translate = Zend_Registry::get('Zend_Translate');
+        //            $jTableResult['Result'] = self::RESULT_ERROR;
+        //            $jTableResult['Message'] = $translate->_('Error while processing data.');
+        //        }
+        //
+        //        $this->_helper->json($jTableResult);
     }
 
     public function updateAction()
@@ -153,7 +154,8 @@ class Backend_ReportProductsController extends Local_Controller_Action_Backend
 
             $model = new Default_Model_DbTable_Project();
             $record = $model->find($projectId)->current();
-            $record->status = ($record->status > 40 ? Default_Model_DbTable_Project::PROJECT_FAULTY : Default_Model_DbTable_Project::PROJECT_ACTIVE);
+            $record->status =
+                ($record->status > 40 ? Default_Model_DbTable_Project::PROJECT_FAULTY : Default_Model_DbTable_Project::PROJECT_ACTIVE);
             $record->save();
 
             $jTableResult = array();

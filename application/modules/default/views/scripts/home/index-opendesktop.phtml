@@ -28,7 +28,7 @@ $this->supporters = $modelInfo->getNewActiveSupporters(18);
 
 $this->productsThemesGTK = $modelInfo->getLastProductsForHostStores(5,"366,363,273,267,138,125,131,153");
 $this->productsThemesPlasma = $modelInfo->getLastProductsForHostStores(5,"365,119,123,266,114,118,349,417,101,100,111");
-$this->productsThemesBox = $modelInfo->getLastProductsForHostStores(5,"117,267,139,143,142,140,141,144");
+$this->productsWindowmanager = $modelInfo->getLastProductsForHostStores(5,"117,267,139,143,142,140,141,144");
 $this->productsIconsCursors= $modelInfo->getLastProductsForHostStores(5,"386,107");
 $this->productsScreenshots= $modelInfo->getLastProductsForHostStores(5,"225,445");
 $this->productsApps = $modelInfo->getLastProductsForHostStores(5,233);
@@ -36,7 +36,7 @@ $this->productsAddons = $modelInfo->getLastProductsForHostStores(5,"152,277,384"
 $this->productsWallpapers = $modelInfo->getLastProductsForHostStores(5,295);
 
 $countSupporters = $modelInfo->getCountActiveSupporters();
-$countMembers = $modelInfo->getCountMembers();
+//$countMembers = $modelInfo->getCountMembers();
 
 $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $helperImage = new Default_View_Helper_Image();
@@ -53,15 +53,17 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                         <?php                                 
                                     echo $this->partial('/home/partials/product_group.phtml', array(
                                             "title"  => "GTK/Gnome",
-                                            "products" => $this->productsThemesGTK
+                                            "products" => $this->productsThemesGTK,
+                                            "catIDs" =>"366"
                                         )
                                     );       
-
+                                 
                                     echo $this->partial('/home/partials/product_group.phtml', array(
                                             "title"  => "KDE Plasma",
-                                            "products" => $this->productsThemesPlasma
+                                            "products" => $this->productsThemesPlasma,
+                                            "catIDs" =>"365"   
                                         )
-                                    );                                 
+                                    );                                       
                         ?>                                                      
                         </div>
 
@@ -69,15 +71,17 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                         <?php                                 
                                     echo $this->partial('/home/partials/product_group.phtml', array(
                                             "title"  => "Window Managers",
-                                            "products" => $this->productsThemesBox
+                                            "products" => $this->productsWindowmanager,
+                                            "catIDs" =>"147"   
                                         )
                                     );       
-
+                                    
                                     echo $this->partial('/home/partials/product_group.phtml', array(
                                             "title"  => "Icons, Cursors",
-                                            "products" => $this->productsIconsCursors
+                                            "products" => $this->productsIconsCursors,
+                                            "catIDs" =>"386,107"   
                                         )
-                                    );                                 
+                                    );                                           
                         ?>                                                                                                                        
                         </div>
 
@@ -85,31 +89,36 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                         <?php                                 
                                     echo $this->partial('/home/partials/product_group.phtml', array(
                                             "title"  => "Concepts, Screenshots",
-                                            "products" => $this->productsScreenshots
+                                            "products" => $this->productsScreenshots,
+                                            "catIDs" =>"445,225"   
                                         )
-                                    );                                 
-                                    
+                                    );                                                                     
+
                                     echo $this->partial('/home/partials/product_group.phtml', array(
                                             "title"  => "Wallpapers",
-                                            "products" => $this->productsWallpapers
-                                        )
-                                    );       
+                                            "products" => $this->productsWallpapers,
+                                            "catIDs" =>"295"   
 
+                                        )
+                                    );                                        
                         ?>                                                                                                          
                         </div>
                         <div class="row blockpadding" >
                          <?php                                 
                                      echo $this->partial('/home/partials/product_group.phtml', array(
                                              "title"  => "App Add-Ons",
-                                             "products" => $this->productsAddons
+                                             "products" => $this->productsAddons,
+                                             "catIDs" =>"152"   
                                          )
                                      );       
-
+                                
                                      echo $this->partial('/home/partials/product_group.phtml', array(
                                              "title"  => "Applications",
-                                             "products" => $this->productsApps
+                                             "products" => $this->productsApps,
+                                             "catIDs" =>"233"   
                                          )
-                                     );                                 
+                                     );      
+                                                        
                          ?>                                         
                         </div>
 
@@ -149,7 +158,7 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                 $identity = Zend_Auth::getInstance()->getIdentity();
                 if(null == $identity || (null != $identity && !$this->isSupporter($identity->member_id))) {                                                  
         ?>
-            <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Become a Supporter<br>of Opendesktop.org</a>
+            <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Help to support the artists<br/>and keep the content free</a>
         <?php   } else if((null != $identity && $this->isSupporter($identity->member_id))) { ?>
             <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Support<br>Opendesktop.org</a>
         <?php   }?>
@@ -160,6 +169,17 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
         <span style="display: block"><?php /*number_format($countMembers, 0, '.', ',');*/?>
         those who support freedom
          </span>
+         <div class="row">
+            <?php 
+                    $i=0;
+                   foreach ($this->supporters as $user) {                                                      
+                    if($i++>6) break;
+               ?>         
+               <a href="<?php echo $this->buildMemberUrl($user['member_id']); ?>" class="tooltipuserleft" data-tooltip-content="#tooltip_content" data-user="<?=$user['member_id']?>">                   
+                    <img src="<?php echo $this->Image($user['profile_image_url'], array('width' => '25', 'height' => '25', 'crop' => 2)); ?>" class="supporterx" />                   
+               </a>
+               <?php } ?>
+         </div>
         </div>
 
         <div  class="row sidebar-right-info" >                                
@@ -173,15 +193,23 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                     echo $this->render('explore/partials/comment.phtml');
                 }
                 ?>
+
             </div>          
         </aside>
 </div>
 </div>
 
+<div class="tooltip_templates" style="display: none">
+    <span id="tooltip_content">
+        <i class="fa fa-spinner"></i>
+    </span>
+</div>
 </main>
 
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){                               
-                RssNews.setup();                  
+                RssNews.setup();   
+                TooltipUser.setup("tooltipuser","right");
+                TooltipUser.setup("tooltipuserleft","left");             
             });
         ');
