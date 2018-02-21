@@ -1438,6 +1438,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                         'summary'     => '',
                         'description' => $project->description,
                         'comments'    => $project->count_comments,
+                        'ghns_excluded' => $project->ghns_excluded,
                         'preview1'    => $previewPage,
                         'detailpage'  => $previewPage,
                         'tags'        => $project->tags
@@ -1471,6 +1472,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                         'summary'     => array('@text' => ''),
                         'description' => array('@cdata' => $project->description),
                         'comments'    => array('@text' => $project->count_comments),
+                        'ghns_excluded' => array('@text' => $project->ghns_excluded),
                         'preview1'    => array('@text' => $previewPage),
                         'detailpage'  => array('@text' => $previewPage),
                         'tags'        => array('@text' => $project->tags)
