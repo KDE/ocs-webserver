@@ -270,7 +270,7 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
                                 </div><!-- End Carousel Inner -->
 
                                 <!-- Controls -->
-                                <?php if (count($this->galleryPictures) > 1 && ((null != $this->product->embed_code) && (trim($this->product->embed_code)!=''))) { ?>
+                                <?php if (count($this->galleryPictures) > 1 || ((null != $this->product->embed_code) && (trim($this->product->embed_code)!=''))) { ?>
                                     <a class="left carousel-control" href="#myCarousel" data-slide="prev">
                                         <span class="glyphicon glyphicon-chevron-left"></span>
                                     </a>
