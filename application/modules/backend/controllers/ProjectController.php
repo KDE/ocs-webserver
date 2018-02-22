@@ -278,7 +278,7 @@ class Backend_ProjectController extends Local_Controller_Action_Backend
         $auth = Zend_Auth::getInstance();
         $identity = $auth->getIdentity();
         Default_Model_ActivityLog::logActivity($projectId, $projectId, $identity->member_id,
-            Default_Model_ActivityLog::BACKEND_PROJECT_APPROVED, $product);
+            Default_Model_ActivityLog::BACKEND_PROJECT_GHNS_EXCLUDED, $product);
 
         $jTableResult = array();
         $jTableResult['Result'] = self::RESULT_OK;
