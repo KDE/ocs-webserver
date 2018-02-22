@@ -219,10 +219,18 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
 
                                 <!-- Indicators -->
                                 <ol class="carousel-indicators">
+                                    <?php // media embed code
+                                      $cnt = 1;
+                                    if ((null != $this->product->embed_code) && trim($this->product->embed_code)!=''): ?>
+                                         <li data-target="#myCarousel" data-slide-to="<?php echo $cnt ?>"
+                                                class="active"></li>
+                                    <?php 
+                                      $cnt = 2;
+                                    endif; ?>
+
                                     <?php
                                     $this->galleryPictures = $tableProject->getGalleryPictureSources($this->product->project_id);
-                                    if (count($this->galleryPictures) > 0) {
-                                        $cnt = 1;
+                                    if (count($this->galleryPictures) > 0) {                                        
                                         foreach ($this->galleryPictures as $picture): ?>
                                             <li data-target="#myCarousel" data-slide-to="<?php echo $cnt ?>"
                                                 class="<?php if (!$this->product->ppload_collection_id && $cnt == 1) {
@@ -237,8 +245,19 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
 
                                 <!-- Wrapper for slides -->
                                 <div class="carousel-inner">
+
+                                    <?php // media embed code
+                                      $cnt = 1;
+                                    if ((null != $this->product->embed_code) && (trim($this->product->embed_code)!='')): ?>
+                                        <div class="item active" style="text-align:center">                                        
+                                                <?= $this->product->embed_code ?>
+                                        </div>
+                                    <?php 
+                                      $cnt = 2;
+                                    endif; ?>
+
                                     <?php
-                                    $cnt = 1;
+                                  
                                     foreach ($this->galleryPictures as $picture): ?>
                                         <div class="item <?php if (!$this->product->ppload_collection_id && $cnt == 1) {
                                             echo 'active';
@@ -251,7 +270,7 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
                                 </div><!-- End Carousel Inner -->
 
                                 <!-- Controls -->
-                                <?php if (count($this->galleryPictures) > 1) { ?>
+                                <?php if (count($this->galleryPictures) > 1 && ((null != $this->product->embed_code) && (trim($this->product->embed_code)!=''))) { ?>
                                     <a class="left carousel-control" href="#myCarousel" data-slide="prev">
                                         <span class="glyphicon glyphicon-chevron-left"></span>
                                     </a>
@@ -271,7 +290,8 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
                     <div id="product-tabs" class="pling-nav-tabs">
                         <ul class="nav nav-tabs ">
                             <li class="active"><a href="#about-panel" data-toggle="tab">Product</a></li>
-                            <?php if (null != ($this->product->embed_code)) { /*OR count($this->galleryPictures) > 0 */ ?>
+                            <?php /*
+                            <?php if (null != ($this->product->embed_code)) { ?>
                                 <li>
                                     <a href="#media-panel" data-toggle="tab">
                                         <?php if (null != ($this->product->embed_code)) { ?>
@@ -281,6 +301,8 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
                                     </a>
                                 </li>
                             <?php } ?>
+                            */?>
+
                             <li><a href="#files-panel" data-toggle="tab">Files <span id="files-counter"></span></a></li>
                         <?php if(count($this->updates)>0){ ?>
                             <li><a href="#updates-panel" data-toggle="tab">Changelogs <?php echo '('.count($this->updates).')';  ?></a></li>
