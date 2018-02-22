@@ -161,8 +161,8 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
             <div class="flex-item-16 " id="product-main">
                 <div class="flex-row imgsmall" id="product-main-img-container">
                     <div class="product-main-img flex-item-24" id="product-main-img">
-                        <div id="product-title-div">
-                            <span id="product-title" >
+                        <div id="product-title-div" class="product-title-div">
+                            <div  class="product-title">
                               
                                 <?php if (false === empty($this->product->link_1)): ?><a
                                     href="<?php echo $this->product->link_1; ?>"
@@ -192,27 +192,28 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
                                 ?>
                                 
                                 </span>
-                            </span>
+                            </div>
                           
-                            <div class="projectdtailHeart">
-                                <div id="container-follow<?=$this->product->project_id?>">     
-                                <?php                                 
-                                    echo $this->partial(
-                                        '/product/followp.phtml',
-                                        array(
-                                            "authMember"  => $identity,
-                                            "project_id" => $this->product->project_id
-                                        )
-                                    );                                
-                                ?>                                
-                                </div>  
-                                              
+                            <div class="product-title-right" >
+                                    <div class="projectdtailHeart">
+                                        <div id="container-follow<?=$this->product->project_id?>">     
+                                        <?php                                 
+                                            echo $this->partial(
+                                                '/product/followp.phtml',
+                                                array(
+                                                    "authMember"  => $identity,
+                                                    "project_id" => $this->product->project_id
+                                                )
+                                            );                                
+                                        ?>                                
+                                        </div>  
+                                                      
+                                    </div>
+                                    
+                                    <div class="projectdetailRating" style="clear: right">
+                                    <?php echo $this->render('partials/sidebarRating.phtml'); ?>
+                                    </div>
                             </div>
-                            
-                            <div class="projectdetailRating">
-                            <?php echo $this->render('partials/sidebarRating.phtml'); ?>
-                            </div>
-                            
                         </div>
                         <div id="carouselContainer" class="carouselContainer">
                             <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="false">
