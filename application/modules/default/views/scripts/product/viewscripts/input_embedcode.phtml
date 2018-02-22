@@ -25,13 +25,14 @@
         <?php if ($this->element->isRequired()) { ?>
             <div class="small grey bold-font pull-left margin-right-5">*</div>
         <?php } ?>
-        <label class="form-label" for="<?= $this->escape($this->element->getName()) ?>">Embedded content (max. width
-                                                                                        700px)</label>
+        <label class="form-label" for="<?= $this->escape($this->element->getName()) ?>">Embed Media Code (Youtube, Vimeo, Soundcloud etc.)</label>
     </div>
     <div class="col-sm-12">
         <textarea class="form-control"
                   rows="3"
                   cols="30"
+                  style="padding: 0;"
+                  placeholder='<iframe src="https://www.youtube.com/embed/m1LtJg0SjnE?ecver=2" style="position:absolute;width:641px;height:360px;left:0" width="641" height="360" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>'
                   id="<?= $this->escape($this->element->getName()) ?>"
                   name="<?= $this->escape($this->element->getName()) ?>"><?= $this->escape($this->element->getValue()) ?></textarea>
         <?php if ($this->element->getMessages()) {
