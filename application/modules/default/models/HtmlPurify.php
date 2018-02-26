@@ -29,6 +29,7 @@ class Default_Model_HtmlPurify
     const ALLOW_HTML = 2;
     const ALLOW_VIDEO = 3;
     const ALLOW_URL = 4;
+    const ALLOW_EMBED = 5;
 
     /**
      * @param string $dirty_html
@@ -63,6 +64,12 @@ class Default_Model_HtmlPurify
                 $config->set('HTML.SafeIframe', true);
                 $config->set('URI.SafeIframeRegexp',
                     '%^(https?:)?//(www\.youtube(?:-nocookie)?\.com/embed/|player\.vimeo\.com/video/)%'); //allow YouTube and Vimeo
+                break;
+
+            case self::ALLOW_EMBED:
+                 $config->set('HTML.SafeIframe', true);
+                 $config->set('URI.SafeIframeRegexp',
+                    '%^(https?:)?//(www\.youtube(?:-nocookie)?\.com/embed/|player\.vimeo\.com/video/|w\.soundcloud\.com/player/)%'); 
                 break;
 
             case self::ALLOW_URL:
