@@ -107,8 +107,8 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
     </div>
 
 
-    <?php /** 20180111 ronald: vorerst entfernt: if (Zend_Auth::getInstance()->hasIdentity() && $this->isSupporter($identity->member_id)) {**/ ?>
-    <?php if (Zend_Auth::getInstance()->hasIdentity()) { ?>
+    <?php if (Zend_Auth::getInstance()->hasIdentity() && $this->isSupporter($identity->member_id)) { ?>
+    <?php /* if (Zend_Auth::getInstance()->hasIdentity()) { */?>
     <div id="review-product-modal" class="modal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content" style="padding-bottom: 20px">
@@ -132,7 +132,7 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
         </div>
     </div>
     
-    <?php } else {?>
+    <?php /**} else {?>
         <div id="review-product-modal" class="modal fade noid" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-sm" role="document">
            <div class="modal-content" style="min-height: 100px; ">
@@ -140,9 +140,9 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
            </div>
          </div>          
         </div>
-    <?php }?>
+    <?php } **/ ?>
 
-    <?php /**} else {?>
+    <?php } else {?>
         <div id="review-product-modal" class="modal fade noid" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-sm" role="document">
            <div class="modal-content" style="min-height: 100px; ">
@@ -150,7 +150,7 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
            </div>
          </div>          
         </div>
-    <?php } **/ ?>
+    <?php } ?>
 
     <main id="product-page-content">
         <div class="flex-column">

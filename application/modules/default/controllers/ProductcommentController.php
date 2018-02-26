@@ -158,43 +158,55 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
         $comment_id = null;
         $status = 'ok';
         $message = '';
-        if ($msg != '') {
-            // only vote then return
-            $data = array();
-            $data['comment_target_id'] = (int)$this->getParam('p');
-            $data['comment_parent_id'] = (int)$this->getParam('i');
-            $data['comment_member_id'] = (int)$this->_authMember->member_id;
+        
+        $tableMembers = new Default_Model_Member();
+        $row = $tableMembers->fetchSupporterDonationInfo((int)$this->_authMember->member_id);
+        $isSupporter = $row['issupporter'];
+        
+        //Only Supporter can make a review
+        if(Zend_Auth::getInstance()->hasIdentity() && $isSupporter) {
+            if ($msg != '') {
+                // only vote then return
+                $data = array();
+                $data['comment_target_id'] = (int)$this->getParam('p');
+                $data['comment_parent_id'] = (int)$this->getParam('i');
+                $data['comment_member_id'] = (int)$this->_authMember->member_id;
 
-            $data['comment_text'] = Default_Model_HtmlPurify::purify($this->getParam('msg'));
+                $data['comment_text'] = Default_Model_HtmlPurify::purify($this->getParam('msg'));
 
-            $tableReplies = new Default_Model_ProjectComments();
-            $result = $tableReplies->save($data);
+                $tableReplies = new Default_Model_ProjectComments();
+                $result = $tableReplies->save($data);
 
-            $voteup = (int)$this->getParam('v');
-            $modelRating = new Default_Model_DbTable_ProjectRating();
-            $modelRating->rateForProject($project_id, $this->_authMember->member_id, $voteup, $result->comment_id);
+                $voteup = (int)$this->getParam('v');
+                $modelRating = new Default_Model_DbTable_ProjectRating();
+                $modelRating->rateForProject($project_id, $this->_authMember->member_id, $voteup, $result->comment_id);
 
-            $status = count($result->toArray()) > 0 ? 'ok' : 'error';
+                $status = count($result->toArray()) > 0 ? 'ok' : 'error';
 
-            $this->view->product = $this->loadProductInfo((int)$this->getParam('p'));
-            $this->view->member_id = (int)$this->_authMember->member_id;
+                $this->view->product = $this->loadProductInfo((int)$this->getParam('p'));
+                $this->view->member_id = (int)$this->_authMember->member_id;
 
-            if($this->view->product){
-                $this->updateActivityLog($result, $this->view->product->image_small);
+                if($this->view->product){
+                    $this->updateActivityLog($result, $this->view->product->image_small);
 
-                //Send a notification to the owner
-                $this->sendNotificationToOwner($this->view->product, $data['comment_text']);
+                    //Send a notification to the owner
+                    $this->sendNotificationToOwner($this->view->product, $data['comment_text']);
 
-                //Send a notification to the parent comment writer
-                $this->sendNotificationToParent($this->view->product, $data['comment_text'], $data['comment_parent_id']);
+                    //Send a notification to the parent comment writer
+                    $this->sendNotificationToParent($this->view->product, $data['comment_text'], $data['comment_parent_id']);
+                }
+            } else {
+                $voteup = (int)$this->getParam('v');
+                $modelRating = new Default_Model_DbTable_ProjectRating();
+                $modelRating->rateForProject($project_id, $this->_authMember->member_id, $voteup);
             }
-        } else {
-            $voteup = (int)$this->getParam('v');
-            $modelRating = new Default_Model_DbTable_ProjectRating();
-            $modelRating->rateForProject($project_id, $this->_authMember->member_id, $voteup);
-        }
 
-        $this->_helper->json(array('status' => $status, 'message' => $message, 'data' => ''));
+            $this->_helper->json(array('status' => $status, 'message' => $message, 'data' => ''));
+        } else {
+            $this->_helper->json(array('status' => 'error', 'message' => 'Only registered members with an active supporting can vote!', 'data' => ''));
+        }
+        
+        
     }
 
 }
