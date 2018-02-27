@@ -57,6 +57,7 @@
  * 9 = Arch
  * 10 = open/Suse
  * 11 = Redhat
+ * 12 = Source Code
  *
  * ----
  *

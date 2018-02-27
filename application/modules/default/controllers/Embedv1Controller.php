@@ -940,6 +940,9 @@ class Embedv1Controller extends Zend_Controller_Action
             case 11:
                 $typetext =  'Redhat';
                 break;
+            case 12:
+                $typetext =  'Source Code';
+                break;
         }
         return $typetext;
     }
