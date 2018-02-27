@@ -686,8 +686,8 @@ var PartialsButtonHeartDetail = (function () {
                 }
                 
                 // product owner not allow to heart copy from voting....
-                var loginuser = $('#review-product-modal').find('#loginuser').val();
-                var productcreator = $('#review-product-modal').find('#productcreator').val();
+                var loginuser = $('#like-product-modal').find('#loginuser').val();
+                var productcreator = $('#like-product-modal').find('#productcreator').val();
                 if (loginuser == productcreator) {
                     // ignore
                     $('#like-product-modal').find('#votelabel').text('Project owner not allowed');
