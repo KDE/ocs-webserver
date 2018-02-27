@@ -104,10 +104,41 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
             </div>
         </div>
     </div>
-
-
+    
+    <?php if (Zend_Auth::getInstance()->hasIdentity()) {?>
+    
+    <div id="like-product-modal" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content" style="padding-bottom: 20px">
+               <div class="modal-header">
+                    <label id="votelabel"> </label>
+                   <button type="button" class="close col-md-1" data-dismiss="modal" aria-label="Close"><span
+                               aria-hidden="true">&times;</span></button>
+               </div>
+               <div class="modal-body">
+                 <form class="full-width product-add-comment-review" action="/" method="post">
+                            <input type="hidden" name="p" value="<?= $this->product->project_id ?>"/>
+                            <input type="hidden" name="m" value="<?= $identity->member_id ?>" id="loginuser"/>
+                            <input type="hidden" name="pm" value="<?=$this->product->member_id?>" id="productcreator"/>
+                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <?php } else { ?>
+    
+    <div id="like-product-modal" class="modal fade noid" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-sm" role="document">
+           <div class="modal-content" style="min-height: 100px; ">
+               <span style="text-align: center; display: block; padding-top: 30px">Please login.</span>
+           </div>
+         </div>          
+    </div>
+    
+    <?php } ?>
+    
     <?php if (Zend_Auth::getInstance()->hasIdentity() && $this->isSupporter($identity->member_id)) { ?>
-    <?php /* if (Zend_Auth::getInstance()->hasIdentity()) { */?>
     <div id="review-product-modal" class="modal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content" style="padding-bottom: 20px">
@@ -131,16 +162,6 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
         </div>
     </div>
     
-    <?php /**} else {?>
-        <div id="review-product-modal" class="modal fade noid" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-sm" role="document">
-           <div class="modal-content" style="min-height: 100px; ">
-                <span style="text-align: center; display: block; padding-top: 30px">Please login.</span>
-           </div>
-         </div>          
-        </div>
-    <?php } **/ ?>
-
     <?php } else {?>
         <div id="review-product-modal" class="modal fade noid" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-sm" role="document">
@@ -152,13 +173,7 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
         
     <?php } ?>
     
-    <div id="like-product-modal" class="modal fade noid" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-sm" role="document">
-           <div class="modal-content" style="min-height: 100px; ">
-               <span style="text-align: center; display: block; padding-top: 30px">Please login.</span>
-           </div>
-         </div>          
-    </div>
+    
 
     <main id="product-page-content">
         <div class="flex-column">

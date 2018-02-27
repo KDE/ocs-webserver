@@ -679,12 +679,12 @@ var PartialsButtonHeartDetail = (function () {
                 var auth = $(this).attr("data-auth");
                 var toggle = $(this).data('toggle');
                 var pageFragment = $(this).attr("data-fragment");
-
+                
                 if (!auth) {
                     $('#like-product-modal').modal('show');
                     return;
                 }
-
+                
                 // product owner not allow to heart copy from voting....
                 var loginuser = $('#like-product-modal').find('#loginuser').val();
                 var productcreator = $('#like-product-modal').find('#productcreator').val();
