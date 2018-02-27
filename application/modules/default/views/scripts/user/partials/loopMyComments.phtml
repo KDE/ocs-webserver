@@ -94,11 +94,13 @@ $helperPrintDate = new Default_View_Helper_PrintDate();
                 </div>
                 <div class="row">
                                 <div class="col-lg-12 commenttext">
+                                 
                                     <?php 
                                         $comment_text = Default_Model_HtmlPurify::purify($product['comment_text']);
                                     ?>
-                                    <?= nl2br($comment_text,true) ?>
-                                    <span class="createat"><?= $helperPrintDate->printDate($product['comment_created_at']); ?> </span>
+                                    <?= nl2br($comment_text,true) ?>                                    
+                                  
+                                    <span class="createat"> - <?= $helperPrintDate->printDate($product['comment_created_at']); ?> </span>
                                     </div>
                                     
                 </div>
@@ -108,11 +110,12 @@ $helperPrintDate = new Default_View_Helper_PrintDate();
             ?>
                     <div class="row">
                                 <div class="col-lg-12 commenttext">
+                                  
                                     <?php 
                                         $comment_text = Default_Model_HtmlPurify::purify($product['comment_text']);
                                     ?>
-                                    <?= nl2br($comment_text,true) ?>
-                                    <span class="createat"><?= $helperPrintDate->printDate($product['comment_created_at']); ?> </span>
+                                    <?= nl2br($comment_text,true) ?>   
+                                    <span class="createat"> - <?= $helperPrintDate->printDate($product['comment_created_at']); ?> </span>                                
                                     </div>
                                     
                 </div>

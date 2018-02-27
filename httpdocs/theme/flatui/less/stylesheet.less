@@ -1718,6 +1718,24 @@ ul.meta-nav-top
         padding-left: 30px;
         min-height:105px;
         padding-top: 20px;
+        display: flex;
+        .product-title{
+              flex:0 0 80%;
+              font-size: 25px;
+              color: #2673b0; 
+              font-weight: bold;
+              padding-bottom: 15px;
+        }
+        .product-title-right{
+            flex:1;
+        }
+        img.logo {
+            max-height: 85px;
+            max-width: 85px;
+            float: left;
+            padding-right: 15px;
+            border-radius: 0px;
+        }
         .product-logo-container {
           float: left; 
           width: 95px;           
@@ -1731,7 +1749,8 @@ ul.meta-nav-top
         div.projectdetailRating{
           float: right; 
           width:150px; 
-          z-index: 100
+          z-index: 100;
+          clear: right;
         }
         div.projectdtailHeart{
             float: right;           
@@ -5514,7 +5533,7 @@ img.imgpopover
 
 /*aboutme tab comments*/
 #my-comments-tabs-content {
-  font-size: 10pt;
+  font-size: 11pt;
   .rownomargin
   {
     margin:0;
@@ -5531,13 +5550,13 @@ img.imgpopover
   .createat
   {
     font-size: smaller;
-    padding-left: 20px;
+    color: #888;
   }
   .productrow
        {
          padding-bottom: 5px;
          padding-top: 5px;
-         border-bottom: 1px solid #ccd4d8;
+         border-top: 1px solid #ccd4d8;
          width: 60%;
      }
    .productrow:last-child {
@@ -5732,6 +5751,9 @@ main#plings-page{
     li{
       border: 1px solid #C4D7EF;
     }   
+  }
+  iframe{
+    border: 0px;
   }
 }
 

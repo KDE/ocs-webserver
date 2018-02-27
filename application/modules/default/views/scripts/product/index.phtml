@@ -43,7 +43,7 @@ $productFileInfos = $helpProjectFiles->projectFiles($this->product->ppload_colle
 $this->product->title = Default_Model_HtmlPurify::purify($this->product->title);
 $this->product->description = Default_Model_BBCode::renderHtml(Default_Model_HtmlPurify::purify($this->product->description));
 $this->product->version = Default_Model_HtmlPurify::purify($this->product->version);
-$this->product->embed_code = Default_Model_HtmlPurify::purify($this->product->embed_code, Default_Model_HtmlPurify::ALLOW_VIDEO);
+$this->product->embed_code =Default_Model_HtmlPurify::purify($this->product->embed_code,Default_Model_HtmlPurify::ALLOW_EMBED);
 $this->product->link_1 = Default_Model_HtmlPurify::purify($helpAddDefaultScheme->addDefaultScheme($this->product->link_1),Default_Model_HtmlPurify::ALLOW_URL);
 $this->product->github_code = Default_Model_HtmlPurify::purify($this->product->github_code,Default_Model_HtmlPurify::ALLOW_URL);
 $this->product->facebook_code = Default_Model_HtmlPurify::purify($this->product->facebook_code,Default_Model_HtmlPurify::ALLOW_URL);
@@ -79,7 +79,6 @@ $tableProjectFollower = new Default_Model_DbTable_ProjectFollower();
 $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->project_id);
 
 ?>
-
     <!-- facebook -->
     <div id="fb-root"></div>
 
@@ -107,8 +106,8 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
     </div>
 
 
-    <?php /** 20180111 ronald: vorerst entfernt: if (Zend_Auth::getInstance()->hasIdentity() && $this->isSupporter($identity->member_id)) {**/ ?>
-    <?php if (Zend_Auth::getInstance()->hasIdentity()) { ?>
+    <?php if (Zend_Auth::getInstance()->hasIdentity() && $this->isSupporter($identity->member_id)) { ?>
+    <?php /* if (Zend_Auth::getInstance()->hasIdentity()) { */?>
     <div id="review-product-modal" class="modal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content" style="padding-bottom: 20px">
@@ -132,7 +131,7 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
         </div>
     </div>
     
-    <?php } else {?>
+    <?php /**} else {?>
         <div id="review-product-modal" class="modal fade noid" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-sm" role="document">
            <div class="modal-content" style="min-height: 100px; ">
@@ -140,17 +139,17 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
            </div>
          </div>          
         </div>
-    <?php }?>
+    <?php } **/ ?>
 
-    <?php /**} else {?>
+    <?php } else {?>
         <div id="review-product-modal" class="modal fade noid" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-sm" role="document">
-           <div class="modal-content" style="min-height: 100px; ">
-               <span style="text-align: center; display: block; padding-top: 30px">Only registered members with an active supporting can vote. <a href="/support">Become a supporter</a> </span>
+           <div class="modal-content" style="min-height: 150px; ">
+               <span style="text-align: center; display: block; padding-top: 30px">Only registered members with an active supporting can vote<br/>to limit spam and fraud voting.<br/> <a href="/support">Become a supporter</a> <br/><br/>You can still 'Like' a product, but that doesn't affect its score. </span>
            </div>
          </div>          
         </div>
-    <?php } **/ ?>
+    <?php } ?>
 
     <main id="product-page-content">
         <div class="flex-column">
@@ -161,8 +160,8 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
             <div class="flex-item-16 " id="product-main">
                 <div class="flex-row imgsmall" id="product-main-img-container">
                     <div class="product-main-img flex-item-24" id="product-main-img">
-                        <div id="product-title-div">
-                            <span id="product-title" >
+                        <div id="product-title-div" class="product-title-div">
+                            <div  class="product-title">
                               
                                 <?php if (false === empty($this->product->link_1)): ?><a
                                     href="<?php echo $this->product->link_1; ?>"
@@ -192,27 +191,28 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
                                 ?>
                                 
                                 </span>
-                            </span>
+                            </div>
                           
-                            <div class="projectdtailHeart">
-                                <div id="container-follow<?=$this->product->project_id?>">     
-                                <?php                                 
-                                    echo $this->partial(
-                                        '/product/followp.phtml',
-                                        array(
-                                            "authMember"  => $identity,
-                                            "project_id" => $this->product->project_id
-                                        )
-                                    );                                
-                                ?>                                
-                                </div>  
-                                              
+                            <div class="product-title-right" >
+                                    <div class="projectdtailHeart">
+                                        <div id="container-follow<?=$this->product->project_id?>">     
+                                        <?php                                 
+                                            echo $this->partial(
+                                                '/product/followp.phtml',
+                                                array(
+                                                    "authMember"  => $identity,
+                                                    "project_id" => $this->product->project_id
+                                                )
+                                            );                                
+                                        ?>                                
+                                        </div>  
+                                                      
+                                    </div>
+                                    
+                                    <div class="projectdetailRating" style="clear: right">
+                                    <?php echo $this->render('partials/sidebarRating.phtml'); ?>
+                                    </div>
                             </div>
-                            
-                            <div class="projectdetailRating">
-                            <?php echo $this->render('partials/sidebarRating.phtml'); ?>
-                            </div>
-                            
                         </div>
                         <div id="carouselContainer" class="carouselContainer">
                             <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="false">
@@ -249,8 +249,8 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
                                     <?php // media embed code
                                       $cnt = 1;
                                     if ((null != $this->product->embed_code) && (trim($this->product->embed_code)!='')): ?>
-                                        <div class="item active" style="text-align:center">                                        
-                                                <?= $this->product->embed_code ?>
+                                        <div class="item active" style="text-align:center">                                                              
+                                                <?= $this->product->embed_code ?>                                               
                                         </div>
                                     <?php 
                                       $cnt = 2;
@@ -270,7 +270,7 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
                                 </div><!-- End Carousel Inner -->
 
                                 <!-- Controls -->
-                                <?php if (count($this->galleryPictures) > 1 || ((null != $this->product->embed_code) && (trim($this->product->embed_code)!=''))) { ?>
+                                <?php if (count($this->galleryPictures) > 1 || (count($this->galleryPictures) ==1&&(null != $this->product->embed_code) && (trim($this->product->embed_code)!=''))) { ?>
                                     <a class="left carousel-control" href="#myCarousel" data-slide="prev">
                                         <span class="glyphicon glyphicon-chevron-left"></span>
                                     </a>

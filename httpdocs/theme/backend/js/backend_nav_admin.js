@@ -44,6 +44,15 @@ var aItemData = [
         }
     },
     {
+        text: "GHNS",
+        submenu: {
+            id: "ghns",
+            itemdata: [
+                {text: "GHNS-Excluded", url: "/backend/ghnsexcluded"}
+            ]
+        }
+    },
+    {
         text: "Category",
         submenu: {
             id: "category",

@@ -648,22 +648,7 @@ a.partial{
 #product-main #product-header #product-maker {  
     padding-top: 12px;
   }
-#product-title{
-  font-size: 25px;
-  color: #2673b0; 
-  font-weight: bold;
-  width: 85%;
-  float: left;
-}
 
-
-#product-title img.logo{
- max-height: 85px ; 
- max-width: 85px; 
- float: left; 
- padding-right: 15px;
-  border-radius: 0px;
-}
 
 
 .carouselContainer img{

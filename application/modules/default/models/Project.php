@@ -1274,4 +1274,21 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         return $this->generateRowClass($resultSet);
     }
 
+    
+    /**
+     * @return array
+     */
+    public function fetchGhnsExcludedProjects() {
+        $sql = "
+        	select p.project_id, p.title, l.member_id as exclude_member_id, l.time as exclude_time, m.username as exclude_member_name from project p
+                join activity_log l on l.project_id = p.project_id and l.activity_type_id = 314
+                inner join member m on m.member_id = l.member_id
+                where p.ghns_excluded = 1
+
+        ";
+
+        $list = $this->_db->fetchAll($sql);
+        return $list;
+    }
+    
 }

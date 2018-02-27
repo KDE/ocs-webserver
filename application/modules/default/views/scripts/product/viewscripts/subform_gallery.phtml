@@ -22,11 +22,8 @@
 ?>
 <div class="form-group">
     <div class="col-sm-12 margin-top-15">
-        <?php if ($this->element->isRequired()) { ?>
-            <div class="small grey bold-font pull-left margin-right-5">*</div>
-        <?php } ?>
-        <label class="form-label" for="<?= $this->escape($this->element->getName()) ?>">Product Gallery (5MB, max. 5
-                                                                                        pictures)</label>
+        <div class="small grey bold-font pull-left margin-right-5">*</div>
+        <label class="form-label" for="<?= $this->escape($this->element->getName()) ?>">Gallery Pictures (5MB, max. 5 pictures)</label>
     </div>
     <div class="col-sm-12">
         <?php
