@@ -681,18 +681,18 @@ var PartialsButtonHeartDetail = (function () {
                 var pageFragment = $(this).attr("data-fragment");
 
                 if (!auth) {
-                    $('#review-product-modal').modal('show');
+                    $('#like-product-modal').modal('show');
                     return;
                 }
 
                 // product owner not allow to heart copy from voting....
-                var loginuser = $('#review-product-modal').find('#loginuser').val();
-                var productcreator = $('#review-product-modal').find('#productcreator').val();
+                var loginuser = $('#like-product-modal').find('#loginuser').val();
+                var productcreator = $('#like-product-modal').find('#productcreator').val();
                 if (loginuser == productcreator) {
                     // ignore
-                    $('#review-product-modal').find('#votelabel').text('Project owner not allowed');
-                    $('#review-product-modal').find('.modal-body').empty();
-                    $('#review-product-modal').modal('show');
+                    $('#like-product-modal').find('#votelabel').text('Project owner not allowed');
+                    $('#like-product-modal').find('.modal-body').empty();
+                    $('#like-product-modal').modal('show');
                     return;
                 }
 
