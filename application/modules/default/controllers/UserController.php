@@ -129,6 +129,10 @@ class UserController extends Local_Controller_Action_DomainSwitch
                     $list->setCurrentPageNumber($offset);
                     $this->view->likes  = $list;
                
+                    // rated
+                    $ratemodel = new Default_Model_DbTable_ProjectRating();
+                    $this->view->rated =  $ratemodel->getRatedForMember($this->_memberId);
+
                      
                     $stat = array();
                     $stat['cntProducts'] = $total_records;

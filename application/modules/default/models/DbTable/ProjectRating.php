@@ -223,4 +223,39 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
         return array();
     }
 
+    public function getRatedForMember($member_id)
+    {
+        $sql = "
+                     SELECT
+                       r.user_like
+                       ,r.user_dislike
+                       ,r.rating_active
+                       ,r.created_at rating_created_at           
+                       ,(select `comment_text` from comments c where c.comment_id = r.comment_id)  as comment_text
+                       ,r.project_id                        
+                        ,p.member_id as project_member_id
+                        ,p.username as project_username
+                        ,p.project_category_id
+                        ,p.status
+                        ,p.title
+                        ,p.description
+                        ,p.image_small
+                        ,p.project_created_at
+                        ,p.project_changed_at
+                        ,p.laplace_score
+                        ,p.cat_title
+                        ,p.count_likes
+                        ,p.count_dislikes
+                    FROM
+                        project_rating r            
+                    inner join stat_projects p on r.project_id = p.project_id and p.status = 100
+                    WHERE
+                        r.member_id = :member_id  
+                        and r.rating_active = 1
+                    order by r.created_at desc  
+        ";
+        $result = $this->_db->query($sql, array('member_id' => $member_id))->fetchAll();
+        return $result;
+    }
+
 }

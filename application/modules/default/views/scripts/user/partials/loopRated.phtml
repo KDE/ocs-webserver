@@ -19,7 +19,7 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-    foreach ($this->likes as $file): 
+    foreach ($this->rated as $file): 
                 $file=(object)$file;
         ?>
       <div class="row smaller " >
@@ -52,8 +52,21 @@
         </div>
 
         <div class="col-lg-3" >                                       
-                    <i class="fa fa-heart" aria-hidden="true" style="color:#8e44ad;"></i>               
-                    <?=$this->printDate($file->created_at)?>
+                             
+                    <?=$this->printDate($file->rating_created_at)?>
+                    <?php if($file->user_like==1) {
+                        ?>
+                    <button class="btn btn-success active" style="line-height: 10px">
+                       <span class="glyphicon glyphicon-plus" ></span>
+                    </button>
+                    <?php    
+                    }else{
+                    ?>
+                    <button class="btn btn-danger active" style="line-height: 10px">
+                       <span class="glyphicon glyphicon-minus" ></span>
+                    </button>
+                    <?php } ?>
+                    <?=$file->comment_text?>
         </div>
 
       </div>
