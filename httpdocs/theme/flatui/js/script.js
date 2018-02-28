@@ -1387,7 +1387,7 @@ var TooltipUser = (function () {
                                     + '<div class="row">Likes <span class="title">' + d.cntLikesGave + '</span>  products </div>'
                                     + '<div class="row">Got <span class="title">' + d.cntLikesGot + '</span> Likes <i class="fa fa-heart myfav" aria-hidden="true"></i> </div>'
                                     + '<div class="row">Last time active : ' + d.lastactive_at + ' </div>'
-                                    + '<div class="row">Joined : ' + d.created_at + ' </div>'
+                                    + '<div class="row">Member since : ' + d.created_at + ' </div>'
                                     + '</div>';
 
                                 tmp = tmp + '</div>';
