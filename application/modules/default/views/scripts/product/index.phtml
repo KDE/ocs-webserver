@@ -540,7 +540,7 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
                                         </div>
                                         <div class="product-maker-summary">
                                             <h5>
-                                                <a href="<?php echo $helpMemberUrl->buildMemberUrl($this->product->member_id); ?>">
+                                                <a href="<?php echo $helpMemberUrl->buildMemberUrl($this->product->member_id); ?>" class="tooltipuserleft" data-tooltip-content="#tooltip_content" data-user="<?=$this->product->member_id?>">
                                                     <?= $this->product->username; ?>
                                                 </a>
                                             </h5>
