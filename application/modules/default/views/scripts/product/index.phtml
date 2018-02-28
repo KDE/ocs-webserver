@@ -105,8 +105,7 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
         </div>
     </div>
     
-    <?php if (Zend_Auth::getInstance()->hasIdentity()) {
-        /*
+    <?php if (Zend_Auth::getInstance()->hasIdentity()) {       
         ?>
     
     <div id="like-product-modal" class="modal" tabindex="-1" role="dialog">
@@ -129,7 +128,6 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
     </div>
     
     <?php 
-    */
     } else { ?>
     
     <div id="like-product-modal" class="modal fade noid" tabindex="-1" role="dialog">
