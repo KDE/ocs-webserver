@@ -2738,6 +2738,18 @@ span.page-views {
       .nowrap{
         white-space: nowrap;
       }
+      i.voteup{
+          color: #409540;
+          font-size: 20px; 
+          padding-left:5px; 
+          padding-right:5px;
+      }
+      i.votedown{
+          color: #C9302C;
+          font-size: 20px; 
+          padding-left:5px; 
+          padding-right:5px;
+      }
     }
 
     > .head-wrap {
@@ -5534,6 +5546,7 @@ img.imgpopover
 /*aboutme tab comments*/
 #my-comments-tabs-content {
   font-size: 11pt;
+  width: 1100px;
   .rownomargin
   {
     margin:0;
@@ -5556,8 +5569,15 @@ img.imgpopover
        {
          padding-bottom: 5px;
          padding-top: 5px;
-         border-top: 1px solid #ccd4d8;
-         width: 70%;
+         border-bottom: 1px solid #ccd4d8;
+        
+         font-size: small;
+         .project-image{
+            width: 50px;
+            height: 50px;
+            float: left;
+            margin-right: 15px;
+         }
      }
    .productrow:last-child {
                border-bottom: none;
@@ -5577,6 +5597,8 @@ img.imgpopover
     .cntComments
        {
           font-size: smaller;
+          display: block;
+          padding-top: 5px;
        
       }
       .productimg
@@ -5585,7 +5607,7 @@ img.imgpopover
               height:50px;
           }
       .commenttext{
-        padding-left: 35px;
+        padding-left: 25px;
         
       }
 }

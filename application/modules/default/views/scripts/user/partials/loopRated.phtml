@@ -51,20 +51,15 @@
             </div>            
         </div>
 
-        <div class="col-lg-3" >                                       
-                             
+        <div class="col-lg-3" >                                                                    
                     <?=$this->printDate($file->rating_created_at)?>
                     <?php if($file->user_like==1) {
-                        ?>
-                    <button class="btn btn-success active" style="line-height: 10px">
-                       <span class="glyphicon glyphicon-plus" ></span>
-                    </button>
+                        ?>                    
+                        <i class="fa fa-plus voteup"></i>                    
                     <?php    
                     }else{
                     ?>
-                    <button class="btn btn-danger active" style="line-height: 10px">
-                       <span class="glyphicon glyphicon-minus" ></span>
-                    </button>
+                   <i class="fa fa-minus votedown" ></i>
                     <?php } ?>
                     <?=$file->comment_text?>
         </div>

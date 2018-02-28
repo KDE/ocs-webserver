@@ -48,62 +48,65 @@ $helperPrintDate = new Default_View_Helper_PrintDate();
 
         foreach($this->result as $this->projects){                                                            
             $i = 0;
-            foreach($this->projects as $product){   
+            foreach($this->projects as $file){  
+                $file=(object)$file; 
                 if($i==0){
         ?>
                 <div class="productrow">
-                <div class="row">            
-                         <div class="col-lg-2 col-md-2">    
-                                <div class="text-center">
-                                    <img class="productimg" src="<?=$this->Image($product['image_small'], array('width' => 80, 'height' => 80))?>" />
-                                </div>
-                         </div>
-                         <div class="col-lg-6 col-md-6">
-                                <a href="<?=$this->buildProductUrl($product['project_id'],'')?>"><?=$product['title']?>
-                                    <span class="version"><?=Default_Model_HtmlPurify::purify($product['version'])?>
-                                    </span>
-                                </a>
-                                <span style="display: block; margin-bottom: 5px"><?=$product['cat_title']?></span>
-                                
-                               
-                                <div class="productInfo">
-                                
-                                <span class="cntComments">
-                                <?php               
-                                    $count_comments = $product['count_comments'];                             
-                                    echo ($count_comments>0 ? $count_comments.' comment':'').($count_comments>1?'s':'');            
-                                ?>
-                                </span>
-                               
-                                </div>
-                         </div>
-                         <div class="col-lg-2 col-md-2 small" style="white-space: nowrap; padding-top: 20px">
-                         by <a  href="<?php echo $this->buildMemberUrl($product['member_id']); ?>" class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="<?=$product['member_id']?>"><?=$product['username']?></a>
-                         </div>
-                         <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                            
-                                <?php                
-                                        $this->widgetRating = new stdClass();
-                                        $this->widgetRating->project_id = $product['project_id'];
-                                        $this->widgetRating->laplace_score = $product['laplace_score'];
-                                        $this->widgetRating->count_likes = $product['count_likes']; 
-                                        $this->widgetRating->count_dislikes =$product['count_dislikes'];
-                                        echo $this->render('partials/widgetRating.phtml'); 
-                                ?>
-                            
-                            <span class="time"><?=$this->printDate($product['changed_at']==null?$product['created_at']:$product['changed_at'])?>
-                            </span>
-                        </div>
+
+                <div class="row smaller " >
+                  <div class="col-lg-5 col-md-5">
+                      <figure>
+                          <img src="<?php echo $this->Image($file->image_small, array('width' => 80, 'height' => 80)); ?>" class="project-image" />
+                      </figure>   
+                      <div>
+                          <a href="/p/<?=$file->project_id?>"><?=$file->title?></a>
+                          <p><?=$file->cat_title?> 
+                          
+                          <span class="cntComments">
+                          <?php               
+                              $count_comments = $file->count_comments;                             
+                              echo ($count_comments>0 ? $count_comments.' comment':'').($count_comments>1?'s':'');            
+                          ?>
+                          </span>
+                         
+                      </div>
+                  </div>      
+                              
+                  <div class="col-lg-2 col-md-2" style="white-space: nowrap; padding-top: 15px">         
+                       by <a  href="<?php echo $this->buildMemberUrl($file->member_id); ?>" class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="<?=$file->member_id?>">
+                       <?=$file->username?></a>
+                  </div>
+
+                  <div class="col-lg-2 col-md-2">             
+                      <div class="rating text-center" >               
+                          <?php                
+                                  $this->widgetRating = new stdClass();
+                                  $this->widgetRating->project_id =$file->project_id;
+                                  $this->widgetRating->laplace_score = $file->laplace_score;
+                                  $this->widgetRating->count_likes =$file->count_likes; 
+                                  $this->widgetRating->count_dislikes =$file->count_dislikes;
+                                  echo $this->render('partials/widgetRating.phtml'); 
+                          ?>          
+                         
+                      </div>          
+                       <span class="time"><?=$this->printDate($file->changed_at==null?$file->created_at:$file->changed_at)?>
+                          </span>  
+                  </div>
+
+                
                 </div>
+
+
+
                 <div class="row">
-                                <div class="col-lg-12 commenttext">
-                                 
+                                <div class="col-lg-9 commenttext">                                 
                                     <?php 
-                                        $comment_text = Default_Model_HtmlPurify::purify($product['comment_text']);
+                                        $comment_text = Default_Model_HtmlPurify::purify($file->comment_text);
                                     ?>
-                                    <?= nl2br($comment_text,true) ?>                                    
+                                    <?= nl2br($file->comment_text,true) ?>                                    
                                   
-                                    <span class="createat"> - <?= $helperPrintDate->printDate($product['comment_created_at']); ?> </span>
+                                    <span class="createat"> - <?= $helperPrintDate->printDate($file->comment_created_at); ?> </span>
                                     </div>
                                     
                 </div>
@@ -112,13 +115,13 @@ $helperPrintDate = new Default_View_Helper_PrintDate();
                         }else{
             ?>
                     <div class="row">
-                                <div class="col-lg-12 commenttext">
-                                  
+                                <div class="col-lg-9 commenttext">                                 
                                     <?php 
-                                        $comment_text = Default_Model_HtmlPurify::purify($product['comment_text']);
+                                        $comment_text = Default_Model_HtmlPurify::purify($file->comment_text);
                                     ?>
-                                    <?= nl2br($comment_text,true) ?>   
-                                    <span class="createat"> - <?= $helperPrintDate->printDate($product['comment_created_at']); ?> </span>                                
+                                    <?= nl2br($file->comment_text,true) ?>                                    
+                                  
+                                    <span class="createat"> - <?= $helperPrintDate->printDate($file->comment_created_at); ?> </span>
                                     </div>
                                     
                 </div>
