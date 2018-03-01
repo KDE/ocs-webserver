@@ -634,6 +634,7 @@ var Partials = (function () {
 var OpendownloadfileWerbung = (function () {
     return {
         setup: function () {
+            var timer;
             $('body').on('click', 'a.opendownloadfile', function (event) {
                 event.preventDefault();
                 var url = $(this).attr("href");                      
@@ -654,10 +655,19 @@ var OpendownloadfileWerbung = (function () {
                     autoSize: true,
                     href:'/ad.html',                    
                     afterLoad:function(){
-                       setTimeout(() => {
-                          $.fancybox.close(); 
-                          window.location.href = url;
+                        timer = window.setTimeout(function(){
+                            window.location.href = url;
+                            $.fancybox.close();        
+                        },10000);
+                        /*
+                       var mytimeout = setTimeout(() => {
+                            window.location.href = url;
+                            $.fancybox.close();                           
                           }, 10000);        // 10 sec                                
+                          */
+                    },
+                    afterClose:function(){                           
+                        window.clearTimeout(timer);
                     }
                     
                 });
