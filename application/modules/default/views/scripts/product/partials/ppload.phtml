@@ -754,6 +754,7 @@
                                 success: function (data, textStatus, jqXHR) {
                                     if (data.status == 'ok') {
                                         $("#files-panel").find('table[data-ppload-files] tbody').html('');
+                                        $('#dropdown_downloads').html('');
                                         $("#files-panel").find('table[data-ppload-files] tfoot').html('');
                                         getPploadFiles();
                                         return;
