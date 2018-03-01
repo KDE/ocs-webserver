@@ -639,25 +639,27 @@ var OpendownloadfileWerbung = (function () {
                 var url = $(this).attr("href");                      
                 $.fancybox({
                     'hideOnContentClick': true,
-                    'autoScale': true,
+                    'autoScale': true,                    
+                    'scrolling' : 'no',            
                     'cyclic': 'true',
                     'transitionIn': 'elastic',
                     'transitionOut': 'elastic',
                     'type': 'iframe',
-                    'scrolling': 'auto',
+                    'iframe': {'scrolling': 'auto'},                    
                     helpers: {
                         overlay: {
                             locked: false
                         }
                     },                    
                     autoSize: true,
-                    href:'/ad.html',
+                    href:'/ad.html',                    
                     afterLoad:function(){
                        setTimeout(() => {
                           $.fancybox.close(); 
                           window.location.href = url;
                           }, 10000);        // 10 sec                                
                     }
+                    
                 });
                 return false;
             });
