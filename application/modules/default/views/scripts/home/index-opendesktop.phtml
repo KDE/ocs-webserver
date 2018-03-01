@@ -148,7 +148,7 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
              </div>
 </div>
 <div class="GridFlex-cell sidebar-right">   
-        <aside  id="explore-sidebar" >     
+    <aside  id="explore-sidebar" >     
         <div class="downloadDiv" >
             <a href="https://www.opendesktop.org/p/1175480/" target="_blank"><img src="/images/system/download-app.png" /></a>
         </div>
@@ -187,15 +187,30 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
             <div class="prod-widget-box right bgwhite " id="rss-feeds"> </div>                  
       
         <span class="newsTitle"> Comments </span>
-         <div class="prod-widget-box right bgwhite" id="lastcomments">
+        <div class="prod-widget-box right bgwhite" id="lastcomments">
                 <?php
                 foreach ($this->comments as $this->comment) {
                     echo $this->render('explore/partials/comment.phtml');
                 }
                 ?>
 
-            </div>          
-        </aside>
+        </div>          
+        
+        <div>
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <!-- Responsive New Displayblock -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1150932386931372"
+                 data-ad-slot="1024407251"
+                 data-ad-format="auto"></ins>
+            <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+
+            </script>
+        </div>
+        
+    </aside>
 </div>
 </div>
 
