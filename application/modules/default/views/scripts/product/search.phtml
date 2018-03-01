@@ -17,6 +17,9 @@ $this->products = $this->result['hits'];
 $helperBuildExploreUrl = new Default_View_Helper_BuildExploreUrl();
 $modelInfo = new Default_Model_Info();
 $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
+$this->countSupporters = $modelInfo->getCountActiveSupporters();
+$this->supporters = $modelInfo->getNewActiveSupporters(18);
+
 ?>
 <main id="explore-content">
     <section class="wrapper" id="products-wrapper">
@@ -76,48 +79,22 @@ $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
 
             <?php
             $time_start = microtime(true);
-            $comments = $modelInfo->getLatestComments(5, $this->cat_id);
+            $this->comments = $modelInfo->getLatestComments(5, $this->cat_id);
             $topprods = $modelInfo->getMostDownloaded(100, $this->cat_id);
             $asidehide = '';
-            if(!$this->catabout && count($comments)==0  && count($topprods)==0 )
+            if(!$this->catabout && count($this->comments)==0  && count($topprods)==0 )
             {
                 $asidehide = 'hide';
             }
             ?>
             <div class="GridFlex-cell sidebar-right">
                 <aside  id="explore-sidebar <?=$asidehide?>" >
-                    <div class="downloadDiv" >
-                        <a href="https://www.opendesktop.org/p/1175480/" target="_blank"><img src="/images/system/download-app.png" /></a>
-                    </div>
                     
-                    <div class="supportDiv" >
-                    <?php 
-                              $identity = Zend_Auth::getInstance()->getIdentity();
-                              if(null == $identity || (null != $identity && !$this->isSupporter($identity->member_id))) {                                                  
-                    ?>
-                        <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Help to support the artists<br/>and keep the content free</a>
-                    <?php } else if((null != $identity && $this->isSupporter($identity->member_id))) { ?>
-                        <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Support<br>Opendesktop.org</a>
-                    <?php }?>
-                    </div>
+                      <?php
+                            echo $this->render('/home/partials/common_rightsidebar.phtml');
+                        ?>
 
-                    <div  class="row sidebar-right-info" >
-                        <span class="newsTitle"> News </span>
-                        <div class="prod-widget-box right bgwhite" id="rss-feeds"> </div>
-                        <?php
-                        if (count($comments) > 0) {
-                            ?>
-                            <span class="commentTitle"> Comments</span>
-                            <div class="prod-widget-box right bgwhite" id="lastcomments">
-                                <?php
-
-                                foreach ($comments as $this->comment) {
-                                    echo $this->render('explore/partials/comment.phtml');
-                                }
-                                ?>
-                            </div>
-                        <?php } ?>
-
+                    <div  class="row sidebar-right-info" >                        
                         <?php
                         if (count($topprods) > 0) {
                             ?>
@@ -153,10 +130,17 @@ $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
             </div>
         </div>
     </section>
+    <div class="tooltip_templates" style="display: none">
+    <span id="tooltip_content">
+        <i class="fa fa-spinner"></i>
+    </span>
+</div>
 </main>
 
 <?php $this->inlineScript()->appendScript(
-    '    $(document).ready(function(){
-            RssNews.setup();                
-        });
-    ');
+    '    $(document).ready(function(){                               
+                RssNews.setup();   
+                TooltipUser.setup("tooltipuser","right");
+                TooltipUser.setup("tooltipuserleft","left");             
+            });
+        ');

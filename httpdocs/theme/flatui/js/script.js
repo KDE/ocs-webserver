@@ -1276,6 +1276,83 @@ var ProductDetailCarousel = (function () {
     }
 })();
 
+var AboutMeMyProjectsPaging = (function () {
+  return {
+      setup: function () {                
+        $(window).scroll(function() {
+            
+            var end = $("footer").offset().top;             
+            var viewEnd = $(window).scrollTop() + $(window).height(); 
+            var distance = end - viewEnd; 
+            if (distance < 300){
+            // }
+            // if($(window).scrollTop() == $(document).height() - $(window).height()) {
+                    if(!$('button#btnshowmoreproducts').length) return;                        
+                    let indicator = '<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>';  
+                    let nextpage = $('button#btnshowmoreproducts').attr('data-page');     
+                    $('button#btnshowmoreproducts').remove();
+                    $url = window.location.href;
+                    target = '#my-products-list';
+                    let container = $('<div></div>').append(indicator).load($url,{projectpage:nextpage},function (response, status, xhr) {
+                            if (status == "error") {
+                                if (xhr.status == 401) {
+                                    if (response) {
+                                        var data = jQuery.parseJSON(response);
+                                        var redirect = data.login_url;
+                                        if (redirect) {
+                                            window.location = redirect;
+                                        } else {
+                                            window.location = "/login";
+                                        }
+                                    }
+                                } else {
+                                    $(target).empty().html('Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.');
+                                }
+                            }                      
+                        });
+                    $('#my-products-list').append(container);      
+            }
+        });
+
+
+      }
+  }
+})();
+
+var AboutMeMyProjectsPagingButton = (function () {
+  return {
+      setup: function () {        
+        let indicator = '<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>';               
+        $('body').on('click', 'button#btnshowmoreproducts', function (event) {                                                        
+                let nextpage = $(this).attr('data-page');                                            
+                $(this).remove();
+                $url = window.location.href;
+                target = '#my-products-list';
+                let container = $('<div></div>').append(indicator).load($url,{projectpage:nextpage},function (response, status, xhr) {
+                        if (status == "error") {
+                            if (xhr.status == 401) {
+                                if (response) {
+                                    var data = jQuery.parseJSON(response);
+                                    var redirect = data.login_url;
+                                    if (redirect) {
+                                        window.location = redirect;
+                                    } else {
+                                        window.location = "/login";
+                                    }
+                                }
+                            } else {
+                                $(target).empty().html('Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.');
+                            }
+                        }                      
+                    });
+                $('#my-products-list').append(container);                
+        });
+
+
+      }
+  }
+})();
+
 var ProductDetailCommentTooltip = (function () {
     return {
         setup: function () {
@@ -1310,7 +1387,7 @@ var TooltipUser = (function () {
                                     + '<div class="row">Likes <span class="title">' + d.cntLikesGave + '</span>  products </div>'
                                     + '<div class="row">Got <span class="title">' + d.cntLikesGot + '</span> Likes <i class="fa fa-heart myfav" aria-hidden="true"></i> </div>'
                                     + '<div class="row">Last time active : ' + d.lastactive_at + ' </div>'
-                                    + '<div class="row">Joined : ' + d.created_at + ' </div>'
+                                    + '<div class="row">Member since : ' + d.created_at + ' </div>'
                                     + '</div>';
 
                                 tmp = tmp + '</div>';

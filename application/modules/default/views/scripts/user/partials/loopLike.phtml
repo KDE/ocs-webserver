@@ -10,9 +10,13 @@
 			<p><?=$this->file->cat_title?> 
 		</div>
 	</div>		
+
+	<div class="col-lg-2 col-md-2" style="white-space: nowrap; padding-top: 20px">			
+		 by <a  href="<?php echo $this->buildMemberUrl($this->file->project_member_id); ?>" class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="<?=$this->file->project_member_id?>">
+		 <?=$this->file->project_username?></a>
+	</div>
 		    	
-	<div class="col-lg-2 col-md-2">	
-		
+	<div class="col-lg-2 col-md-2">			
 		<div class="rating text-center" >				
 		    <?php                
 		            $this->widgetRating = new stdClass();
@@ -22,8 +26,7 @@
 		            $this->widgetRating->count_dislikes =$this->file->count_dislikes;
 		            echo $this->render('partials/widgetRating.phtml'); 
 		    ?>		    
-		</div>
-		
+		</div>		
 	</div>
 	
 	

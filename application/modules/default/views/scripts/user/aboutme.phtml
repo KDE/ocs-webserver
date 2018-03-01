@@ -227,6 +227,13 @@ $isSupporter = $this->stat['donationIssupporter'];
                                     Favs (<?=$this->likes->getTotalItemCount()?>)
                                 </a>
                             </li>
+                            <?php if(count($this->rated)>0){ ?>
+                            <li>
+                                <a href="#user-rated" data-toggle="tab" role="tab"  aria-controls="user-rated">
+                                    Rated (<?=count($this->rated)?>)
+                                </a>
+                            </li>
+                            <?php } ?>
                           
                         </ul>
                         </div>
@@ -237,12 +244,9 @@ $isSupporter = $this->stat['donationIssupporter'];
                         <div class="tab-content">
 
                             <div role="tabpanel" class="tab-pane active" id="user-aboutme">
-
                                 <?php if ($this->userProducts) { ?>                                
-                                     <div class="my-products-list" id="my-products-list">
-                                                                       
-                                        <?php echo $this->render('user/partials/aboutme-products.phtml'); ?>
-                                       
+                                     <div class="my-products-list" id="my-products-list">                                                                       
+                                        <?php echo $this->render('user/partials/aboutme-products.phtml'); ?>                                       
                                     </div>
                                 <?php } ?>
 
@@ -296,7 +300,15 @@ $isSupporter = $this->stat['donationIssupporter'];
                                     <div class="my-fav-list">                                                                   
                                   <?php echo $this->render('user/partials/aboutme-likes.phtml'); ?>
                                   </div>
-                            </div>                            
+                            </div>   
+
+                             <?php if(count($this->rated)>0){ ?>
+                            <div  role="tabpanel" class="tab-pane " id="user-rated">    
+                                <div class="my-fav-list">                               
+                                  <?php echo $this->render('user/partials/loopRated.phtml'); ?>
+                                  </div>                               
+                            </div>                         
+                            <?php } ?>
 
                         </div>
 
@@ -413,12 +425,18 @@ $isSupporter = $this->stat['donationIssupporter'];
 
         </section>
 
+          <div class="tooltip_templates" style="display: none">
+            <span id="tooltip_content">
+                <i class="fa fa-spinner"></i>
+            </span>
+        </div>
     </main>
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
             AboutMePage.setup("'.$this->member->username.'");
             AboutMeMyProjectsPaging.setup();
-            AboutMeMyProjectsPagingButton.setup();
+            AboutMeMyProjectsPagingButton.setup();        
+             TooltipUser.setup("tooltipuser","right");        
         });
     ');
 

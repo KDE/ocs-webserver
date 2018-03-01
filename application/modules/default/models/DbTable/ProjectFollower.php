@@ -64,6 +64,7 @@ class Default_Model_DbTable_ProjectFollower extends Zend_Db_Table_Abstract
                         ,f.member_id
                         ,f.created_at
                         ,p.member_id as project_member_id
+                        ,p.username as project_username
                         ,p.project_category_id
                         ,p.status
                         ,p.title
@@ -95,7 +96,7 @@ class Default_Model_DbTable_ProjectFollower extends Zend_Db_Table_Abstract
                         ,f.created_at
                         ,m.profile_image_url
                         ,m.created_at as member_created_at
-                           ,m.username
+                        ,m.username
                         FROM project_follower f
                         inner join member m on f.member_id = m.member_id and m.is_active=1 AND m.is_deleted=0 
                         WHERE  f.project_id = :project_id

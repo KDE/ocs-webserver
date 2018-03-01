@@ -129,6 +129,10 @@ class UserController extends Local_Controller_Action_DomainSwitch
                     $list->setCurrentPageNumber($offset);
                     $this->view->likes  = $list;
                
+                    // rated
+                    $ratemodel = new Default_Model_DbTable_ProjectRating();
+                    $this->view->rated =  $ratemodel->getRatedForMember($this->_memberId);
+
                      
                     $stat = array();
                     $stat['cntProducts'] = $total_records;
@@ -302,6 +306,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
         $tblFollower = new Default_Model_DbTable_ProjectFollower();
         $modelProject = new Default_Model_Project();
         $printDate = new Default_View_Helper_PrintDate();
+        $printDateSince = new Default_View_Helper_PrintDateSince();
 
         $cnt = $modelMember->fetchCommentsCount($this->_memberId);
         $member = $modelMember->find($this->_memberId)->current();
@@ -318,7 +323,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
 
         $data = array(
                 'totalComments'       =>$cnt,
-                'created_at'              =>$printDate->printDate($member->created_at),
+                'created_at'              =>$printDateSince->printDateSince($member->created_at),
                 'username'               =>$member->username,
                 'countrycity'             => $textCountryCity,
                 'lastactive_at'           =>$printDate->printDate($lastactive),

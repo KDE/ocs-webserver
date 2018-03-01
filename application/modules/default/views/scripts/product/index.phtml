@@ -105,7 +105,8 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
         </div>
     </div>
     
-    <?php if (Zend_Auth::getInstance()->hasIdentity()) {?>
+    <?php if (Zend_Auth::getInstance()->hasIdentity()) {       
+        ?>
     
     <div id="like-product-modal" class="modal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-sm" role="document">
@@ -126,7 +127,8 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
         </div>
     </div>
     
-    <?php } else { ?>
+    <?php 
+    } else { ?>
     
     <div id="like-product-modal" class="modal fade noid" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-sm" role="document">
@@ -522,7 +524,7 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
                                     <div class="product-maker-sidebar">
                                         <div class="product-maker-thumbnail relative">
                                             <a href="<?php echo $helpMemberUrl->buildMemberUrl($this->product->member_id); ?>"
-                                               title="<?= $this->product->username ?>">
+                                               title="<?= $this->product->username ?>"  class="tooltipuserleft" data-tooltip-content="#tooltip_content" data-user="<?=$this->product->member_id?>">
                                                <?php 
                                                     if($this->isSupporter($this->product->member_id)) {
                                                 ?>
@@ -536,7 +538,7 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
                                         </div>
                                         <div class="product-maker-summary">
                                             <h5>
-                                                <a href="<?php echo $helpMemberUrl->buildMemberUrl($this->product->member_id); ?>">
+                                                <a href="<?php echo $helpMemberUrl->buildMemberUrl($this->product->member_id); ?>" class="tooltipuserleft" data-tooltip-content="#tooltip_content" data-user="<?=$this->product->member_id?>">
                                                     <?= $this->product->username; ?>
                                                 </a>
                                             </h5>
@@ -604,6 +606,12 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
             </div>
 
         </div>
+
+         <div class="tooltip_templates" style="display: none">
+            <span id="tooltip_content">
+                <i class="fa fa-spinner"></i>
+            </span>
+        </div>
     </main>
 
     <script>(function (d, s, id) {
@@ -650,6 +658,8 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
             PartialJson.setup();
             ProductDetailCarousel.setup();          
             PartialCommentReviewForm.setup();
-            PartialsButtonHeartDetail.setup();             
+            PartialsButtonHeartDetail.setup();           
+            TooltipUser.setup("tooltipuserleft","left");      
+            
         });
     ');

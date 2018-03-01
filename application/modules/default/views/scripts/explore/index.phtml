@@ -24,7 +24,7 @@ $helperBuildExploreUrl = new Default_View_Helper_BuildExploreUrl();
 $modelInfo = new Default_Model_Info();
 $modelCategory = new Default_Model_DbTable_ProjectCategory();
 $this->dataCategory = $modelCategory->findSingleRow($this->cat_id);
-$countSupporters = $modelInfo->getCountActiveSupporters();
+$this->countSupporters = $modelInfo->getCountActiveSupporters();
 $this->supporters = $modelInfo->getNewActiveSupporters(7);
 $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
 ?>
@@ -83,92 +83,47 @@ $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
 
 <?php
 $time_start = microtime(true);
-     $comments = $modelInfo->getLatestComments(5, $this->cat_id);
+     $this->comments = $modelInfo->getLatestComments(5, $this->cat_id);
      //$donations = $modelInfo->getLatestPlings(5, $this->cat_id);
      $topprods = $modelInfo->getMostDownloaded(100, $this->cat_id);
      $asidehide = '';
-     if(!$this->catabout && count($comments)==0  && count($topprods)==0 )
+     if(!$this->catabout && count($this->comments)==0  && count($topprods)==0 )
      {
         $asidehide = 'hide';
      }
 ?>
       <div class="GridFlex-cell sidebar-right">
           <aside  id="explore-sidebar <?=$asidehide?>" >                      
-            <div class="downloadDiv" >
-                <a href="https://www.opendesktop.org/p/1175480/" target="_blank"><img src="/images/system/download-app.png" /></a>
-            </div>
-
-            <div class="supportDiv" >
-            <?php 
-                    $identity = Zend_Auth::getInstance()->getIdentity();
-                    if(null == $identity || (null != $identity && !$this->isSupporter($identity->member_id))) {                                                  
+             <?php
+                echo $this->render('/home/partials/common_rightsidebar.phtml');
             ?>
-                <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Help to support the artists<br/>and keep the content free</a>
-            <?php   } else if((null != $identity && $this->isSupporter($identity->member_id))) { ?>
-                <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Support<br>Opendesktop.org</a>
-            <?php   }?>
-            </div>
 
-             <div  class="supportDiv  withborder" >    
-                  <span><b><?=$countSupporters?></b> people support </span>        
-                  <span style="display: block"><?php /*number_format($countMembers, 0, '.', ',');*/?>
-                  those who support freedom
-                   </span>              
-                   <div class="row">
-                      <?php 
-                              $i=0;
-                             foreach ($this->supporters as $user) {                                                      
-                              if($i++>6) break;
-                         ?>         
-                         <a href="<?php echo $this->buildMemberUrl($user['member_id']); ?>" class="tooltipuserleft" data-tooltip-content="#tooltip_content" data-user="<?=$user['member_id']?>">                   
-                              <img height="25" width="25" src="<?php echo $this->Image($user['profile_image_url'], array('width' => '25', 'height' => '25', 'crop' => 2)); ?>" class="supporterx" />                   
-                         </a>
-                         <?php } ?>
-                   </div>
-              </div>
+            <div  class="row sidebar-right-info" >                                           
+              <?php
+              if (count($topprods) > 0) {
+                  ?>
+                  <span class="commentTitle"> 3 Months Ranking <span class="small light"> (based on downloads)</span></span>
 
-            <div  class="row sidebar-right-info" >                                
-                <span class="newsTitle"> News </span>
-                <div class="prod-widget-box right bgwhite" id="rss-feeds"> </div>                  
-            <?php
-            if (count($comments) > 0) {
+                  <div class="prod-widget-box right bgwhite" id="mostdownloaded">
+                      <?php
+                      $this->rownum = 1;
+                      foreach ($topprods as $this->product) {
+                          echo $this->render('explore/partials/productTop.phtml');
+                          $this->rownum++;
+                      }
+                      ?>
+                  </div>
+              <?php } ?>
+
+                <?php
+                if ($this->catabout) {
                 ?>
-                <span class="commentTitle"> Comments</span>
-                <div class="prod-widget-box right bgwhite" id="lastcomments">
-                    <?php
-
-                    foreach ($comments as $this->comment) {
-                        echo $this->render('explore/partials/comment.phtml');
-                    }
-                    ?>
-                </div>
-            <?php } ?>        
-
-            <?php
-            if (count($topprods) > 0) {
+                    <div class="prod-widget-box right catabout" id="catcontent">
+                        <?php include $this->catabout; ?>
+                    </div>
+                <?php
+                }
                 ?>
-                <span class="commentTitle"> 3 Months Ranking <span class="small light"> (based on downloads)</span></span>
-
-                <div class="prod-widget-box right bgwhite" id="mostdownloaded">
-                    <?php
-                    $this->rownum = 1;
-                    foreach ($topprods as $this->product) {
-                        echo $this->render('explore/partials/productTop.phtml');
-                        $this->rownum++;
-                    }
-                    ?>
-                </div>
-            <?php } ?>
-
-            <?php
-            if ($this->catabout) {
-            ?>
-                <div class="prod-widget-box right catabout" id="catcontent">
-                    <?php include $this->catabout; ?>
-                </div>
-            <?php
-            }
-            ?>
             </div>
         </aside>
           <?php
