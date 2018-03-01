@@ -631,6 +631,40 @@ var Partials = (function () {
     }
 })();
 
+var OpendownloadfileWerbung = (function () {
+    return {
+        setup: function () {
+            $('body').on('click', 'a.opendownloadfile', function (event) {
+                event.preventDefault();
+                var url = $(this).attr("href");                      
+                $.fancybox({
+                    'hideOnContentClick': true,
+                    'autoScale': true,
+                    'cyclic': 'true',
+                    'transitionIn': 'elastic',
+                    'transitionOut': 'elastic',
+                    'type': 'iframe',
+                    'scrolling': 'auto',
+                    helpers: {
+                        overlay: {
+                            locked: false
+                        }
+                    },                    
+                    autoSize: true,
+                    href:'/ad.html',
+                    afterLoad:function(){
+                       setTimeout(() => {
+                          $.fancybox.close(); 
+                          window.location.href = url;
+                          }, 10000);        // 10 sec                                
+                    }
+                });
+                return false;
+            });
+        }
+    }
+})();
+
 
 var PartialsButton = (function () {
     return {
@@ -668,6 +702,7 @@ var PartialsButton = (function () {
         }
     }
 })();
+
 
 var PartialsButtonHeartDetail = (function () {
     return {
