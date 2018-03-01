@@ -646,7 +646,7 @@ var OpendownloadfileWerbung = (function () {
                     'transitionIn': 'elastic',
                     'transitionOut': 'elastic',
                     'type': 'iframe',
-                    'iframe': {'scrolling': 'auto'},                    
+                    'iframe': {'scrolling': 'no'},                    
                     helpers: {
                         overlay: {
                             locked: false
