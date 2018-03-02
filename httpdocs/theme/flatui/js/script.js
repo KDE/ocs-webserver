@@ -558,6 +558,8 @@ var PlinglistContent = (function () {
                     'transitionOut': 'elastic',
                     'type': 'iframe',
                     'scrolling': 'auto',
+                    'width':'1420px',
+                    'height':'800px',
                     helpers: {
                         overlay: {
                             locked: false
@@ -631,13 +633,14 @@ var Partials = (function () {
     }
 })();
 
-var OpendownloadfileWerbung = (function () {
+var OpendownloadfileWerbung= (function () {
     return {
         setup: function () {
             var timer;
             $('body').on('click', 'a.opendownloadfile', function (event) {
                 event.preventDefault();
                 var url = $(this).attr("href");                      
+                var username = $(this).attr("data-username");    
                 $.fancybox({
                     'hideOnContentClick': true,
                     'autoScale': true,                    
@@ -646,25 +649,21 @@ var OpendownloadfileWerbung = (function () {
                     'transitionIn': 'elastic',
                     'transitionOut': 'elastic',
                     'type': 'iframe',
-                    'iframe': {'scrolling': 'no'},                    
+                    'width':'1140',
+                    'iframe': {'scrolling': 'no'},            
+                    'autoSize':false,        
                     helpers: {
                         overlay: {
                             locked: false
                         }
                     },                    
                     autoSize: true,
-                    href:'/ad.html',                    
+                    href:'/ads?u='+username,                    
                     afterLoad:function(){
                         timer = window.setTimeout(function(){
-                            window.location.href = url;
-                            $.fancybox.close();        
-                        },10000);
-                        /*
-                       var mytimeout = setTimeout(() => {
-                            window.location.href = url;
-                            $.fancybox.close();                           
-                          }, 10000);        // 10 sec                                
-                          */
+                             window.location.href = url;
+                             $.fancybox.close();        
+                        },10000);                      
                     },
                     afterClose:function(){                           
                         window.clearTimeout(timer);

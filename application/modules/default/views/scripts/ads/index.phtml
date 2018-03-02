@@ -1,0 +1,62 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+
+?>
+
+<main id="ads-page">   
+    <center>
+        <div style="height: 900px; width: 1140px">            
+                    <div>
+                    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                    <!-- Responsive New Displayblock -->
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1150932386931372"
+                         data-ad-slot="1024407251"
+                         data-ad-format="auto"></ins>
+                    <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                    </div>
+                    
+                    <div style="padding-top:50px; font-size: 11px">       
+                        <p>This ad support <b><?=$this->username?></b>
+                        <p>This is the only place to show an ad, so please turn off your ad blocker. thanks!
+                        <p> after  <b><span id="timer"></span> </b> seconds start downloading...                                      
+                  </div>
+        </div>
+        </center>        
+</main>
+<script type="text/javascript">     
+                    var myVar = setInterval(myTimer, 1000);
+                    var i = 10;
+                    function myTimer() {
+                        var d = new Date();
+                         if(i==0) clearInterval(myVar);
+                        document.getElementById("timer").innerHTML = i--;
+
+                    } 
+    
+</script>
+
+
