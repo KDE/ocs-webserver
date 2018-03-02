@@ -61,7 +61,7 @@
                                 clearInterval(myVar);
                             }
                             else{
-                                document.getElementById("timer").innerHTML = i--;
+                                if(document.getElementById("timer")) document.getElementById("timer").innerHTML = i--;
                             }
                         }           
                         var myVar = setInterval(myTimer, 1000);                        
