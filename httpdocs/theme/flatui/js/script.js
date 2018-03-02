@@ -662,7 +662,7 @@ var OpendownloadfileWerbung= (function () {
                     afterLoad:function(){
                         timer = window.setTimeout(function(){
                              window.location.href = url;
-                             $.fancybox.close();        
+                             //$.fancybox.close();        
                         },10000);                      
                     },
                     afterClose:function(){                           
