@@ -363,9 +363,11 @@
                                             + '</tr>'
                                         );
 
+
+                                        var username = '<?= $this->product->username?>';
                                         $('#dropdown_downloads').append(
                                             //'<li style="padding-bottom: 4px;padding-top: 4px;">&nbsp;<span>' + downloadBtnLink + '</span><span class="right">&nbsp;' + humanFileSize(this.size,false) + '&nbsp;</span></li>'
-                                            '<li><a href="' + downloadBtnLink + '" style="white-space: normal; color: #23527c;" id="data-link-dl' + this.id + '"><span id="download-link-filename' + this.id + '" style="white-space: normal; color: #23527c;">' + downloadLinkFilename + '</span><span class="right">&nbsp;' + humanFileSize(this.size,false) + '&nbsp;</span></a></li>'
+                                            '<li><a data-username="' + username + '" href="' + downloadBtnLink + '" style="white-space: normal; color: #23527c;" class="opendownloadfile" id="data-link-dl' + this.id + '"><span id="download-link-filename' + this.id + '" style="white-space: normal; color: #23527c;">' + downloadLinkFilename + '</span><span class="right">&nbsp;' + humanFileSize(this.size,false) + '&nbsp;</span></a></li>'
                                         );
                                         $('#dropdown_downloads').addClass("active");
                                         $('#dropdown_downloads').removeClass('hide');
