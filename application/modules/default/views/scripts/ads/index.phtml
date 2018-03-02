@@ -23,6 +23,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<script src="/theme/flatui/js/lib/jquery-3.2.1.min.js" ></script>
     <title>Download</title>
 </head>
 <body>
@@ -30,7 +31,7 @@
         <center>
             <div style="height: 900px; width: 1140px">            
                         <div>
-                        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                        <script  src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
                         <!-- Responsive New Displayblock -->
                         <ins class="adsbygoogle"
                              style="display:block"
@@ -51,10 +52,10 @@
             </center>        
     </main>
 
-    <script type="text/javascript">     
-                        var myVar = setInterval(myTimer, 1000);
-                        var i = 10;
-                        function myTimer() {
+    <script type="text/javascript">   
+         $(document).ready(function(){     
+                            var i = 10;    
+                            function myTimer() {
                             var d = new Date();
                             if(i<=0)
                             { 
@@ -63,7 +64,9 @@
                             else{
                                 document.getElementById("timer").innerHTML = i--;
                             }
-                        }         
+                        }           
+                        var myVar = setInterval(myTimer, 1000);                        
+         })              
     </script>
 
 </body>
