@@ -119,19 +119,19 @@
 
                      function keysrt(key, asc) {
                          if(asc) {
-		                   	  return function(a,b){
-		                   	   if (a[key] > b[key]) return 1;
-		                   	   if (a[key] < b[key]) return -1;
-		                   	   return 0;
-		                   	  }
+                              return function(a,b){
+                               if (a[key] > b[key]) return 1;
+                               if (a[key] < b[key]) return -1;
+                               return 0;
+                              }
                          } else {
-                        	 return function(a,b){
-    		                   	   if (a[key] < b[key]) return 1;
-    		                   	   if (a[key] > b[key]) return -1;
-    		                   	   return 0;
-                        	 }
+                             return function(a,b){
+                                   if (a[key] < b[key]) return 1;
+                                   if (a[key] > b[key]) return -1;
+                                   return 0;
+                             }
                          }
-                   	}
+                    }
 
                     function activeCarouselFirstImg()
                     {
@@ -197,8 +197,8 @@
                                  $.each(myArrayActive, function () {
                                     if(firstRow) {
                                         //this.downloaded_count = parseInt(this.downloaded_count) + parseInt(<?= $this->product->count_downloads_hive?>);
-                                    	oldestFileId = this.id;
-                                     	firstRow = false;
+                                        oldestFileId = this.id;
+                                        firstRow = false;
                                     }
 
                                     if(this.id < oldestFileId) {
@@ -211,7 +211,7 @@
                                     //downloadlink is now: domain/api/files/download/id/ID/s/TOKEN/t/TIMESTAMP/FILE_NAME/u/USERID
                                     var hash = '<?= $this->download_hash ?>';
                                     var timetamp = '<?= $this->download_timestamp ?>';
-                                    var userid = '<?= $this->member_id?>';
+                                    var userid = '<?= $this->product->member_id?>';
 
                                     var downloadUrl = "https://<?= $_SERVER["SERVER_NAME"]?>/p/<?= $this->product->project_id ?>/startdownload?file_id=" + this.id + "&file_name=" + this.name + "&file_type=" + this.type + "&file_size=" + this.size + "&url=" + encodeURIComponent(pploadApiUri + 'files/downloadfile/id/' + this.id + '/s/' + hash + '/t/' + timetamp + '/u/' + userid + '/' + this.name);
                                     var downloadLink = '<a href="' + downloadUrl + '" id="data-link' + this.id + '">' + this.name + '</a>';
@@ -311,7 +311,8 @@
                                     }
 
                                     var downloadButton = '';
-                                    downloadButton = '<a href="'+downloadUrl+'" class="btn btn-native btn-min-width opendownloadfile" ><img src="/images/system/download.svg" alt="download" style="width:20px; height:20px"></a>' ;
+                                    var username = '<?= $this->product->username?>';
+                                    downloadButton = '<a href="'+downloadUrl+'" data-username="'+username+'" class="btn btn-native btn-min-width opendownloadfile" ><img src="/images/system/download.svg" alt="download" style="width:20px; height:20px"></a>' ;
 
                                     if(this.version==null) {version = '';} else{version = this.version;}
                                     var isExternLink = false;
@@ -565,12 +566,12 @@
                                             downloadLink = '<a href="' + decodeURIComponent(link) + '" id="data-link' + this.id + '" style="color: #ccc;">' + this.name + '</a>';
                                          }
                                          var mnt = moment(this.created_timestamp);
-	                                     $pploadCollection.find('table[data-ppload-files] tbody').append(
-	                                        '<tr' + greyText + '>'
-	                                        + '<td>' + downloadLink + '</td>'
+                                         $pploadCollection.find('table[data-ppload-files] tbody').append(
+                                            '<tr' + greyText + '>'
+                                            + '<td>' + downloadLink + '</td>'
                                                 + '<td>' + version + '</td>'
-	                                        + '<td>' + fileDescription + '</td>'
-	                                        + '<td>' + this.type + '</td>'
+                                            + '<td>' + fileDescription + '</td>'
+                                            + '<td>' + this.type + '</td>'
                                                 + '<td>'
                                                 + '<select id="data-select-packagetype' + this.id + '" data-packagetype-id=" name="packagetype" class="form-control input-sm" style="width: 200px;">'
                                                 + '<option value=\"\"></option>'
@@ -588,64 +589,64 @@
                                                 + '<option value=\"4\">Windows executable</option>'
                                                 + '</select><span id="file-tag-packagetype'+this.id+'">'
                                                 + '</td>'
-	                                        + '<td>'
-	                                        + '<select id="data-select-license' + this.id + '" data-license-id=" name="license">'
-	                                        + '<option value=\"1000\"></option><option value=\"16\">AGPL</option><option value=\"3\">Artistic 2.0</option><option value=\"6\">BSD</option><option value=\"17\">CC0 1.0 Universal (Public Domain)</option><option value=\"9\">CPL 1.0</option><option value=\"10\">Creative Commons by</option><option value=\"13\">Creative Commons by-nc</option><option value=\"15\">Creative Commons by-nc-nd</option><option value=\"14\">Creative Commons by-nc-sa</option><option value=\"12\">Creative Commons by-nd</option><option value=\"11\">Creative Commons by-sa</option><option value=\"8\">GFDL</option><option value=\"1\">GPLv2 or later</option><option value=\"18\">GPLv2 only</option><option value=\"19\">GPLv3</option><option value=\"2\">LGPL</option><option value=\"0\">Other</option><option value=\"7\">Proprietary License</option><option value=\"5\">QPL</option><option value=\"4\">X11</option>'
-	                                        + '</select><span id="file-tag-license'+this.id+'"><span id="file-tag-license-text'+this.id+'">'
-	                                        + '</td>'
-	                                        + '<td style="text-align: right"><span id="download_counter_' + this.id + '">' + cout_downloads + '</td>'
-	                                        + '<td>' +mnt.format('YYYY-MM-DD')  + '</td>'
-	                                        + '<td style="text-align: right">' + humanFileSize(this.size,false) + '</td>'
+                                            + '<td>'
+                                            + '<select id="data-select-license' + this.id + '" data-license-id=" name="license">'
+                                            + '<option value=\"1000\"></option><option value=\"16\">AGPL</option><option value=\"3\">Artistic 2.0</option><option value=\"6\">BSD</option><option value=\"17\">CC0 1.0 Universal (Public Domain)</option><option value=\"9\">CPL 1.0</option><option value=\"10\">Creative Commons by</option><option value=\"13\">Creative Commons by-nc</option><option value=\"15\">Creative Commons by-nc-nd</option><option value=\"14\">Creative Commons by-nc-sa</option><option value=\"12\">Creative Commons by-nd</option><option value=\"11\">Creative Commons by-sa</option><option value=\"8\">GFDL</option><option value=\"1\">GPLv2 or later</option><option value=\"18\">GPLv2 only</option><option value=\"19\">GPLv3</option><option value=\"2\">LGPL</option><option value=\"0\">Other</option><option value=\"7\">Proprietary License</option><option value=\"5\">QPL</option><option value=\"4\">X11</option>'
+                                            + '</select><span id="file-tag-license'+this.id+'"><span id="file-tag-license-text'+this.id+'">'
+                                            + '</td>'
+                                            + '<td style="text-align: right"><span id="download_counter_' + this.id + '">' + cout_downloads + '</td>'
+                                            + '<td>' +mnt.format('YYYY-MM-DD')  + '</td>'
+                                            + '<td style="text-align: right">' + humanFileSize(this.size,false) + '</td>'
                                                 + '<td></td>'
                                                 + '<td></td>'
-	                                        + '</tr>'
-	                                     );
+                                            + '</tr>'
+                                         );
 
-	                                     if ((typeof osId != 'undefined') && (osId != "")) {
-	                                         $("#data-updatepploadfile" + this.id + " option[value='" + osId + "']").attr('selected', 'selected');
-	                                         $os = $("#data-updatepploadfile" + this.id + " option[value='" + osId + "']").text();
-	                                         //alert("Text: " + $os);
-	                                         $("#data-updatepploadfile" + this.id).hide();
-	                                         $("#file-tag-os" + this.id).text($os);
-	                                     }
+                                         if ((typeof osId != 'undefined') && (osId != "")) {
+                                             $("#data-updatepploadfile" + this.id + " option[value='" + osId + "']").attr('selected', 'selected');
+                                             $os = $("#data-updatepploadfile" + this.id + " option[value='" + osId + "']").text();
+                                             //alert("Text: " + $os);
+                                             $("#data-updatepploadfile" + this.id).hide();
+                                             $("#file-tag-os" + this.id).text($os);
+                                         }
 
-	                                     if ((typeof licenseId != 'undefined') && (licenseId != "")) {
-	                                         $("#data-select-license" + this.id + " option[value='" + licenseId + "']").attr('selected', 'selected');
-	                                         $licenseIdText = $("#data-select-license" + this.id + " option[value='" + licenseId + "']").text();
-	                                         $("#data-select-license" + this.id).hide();
-	                                         $("#file-tag-license" + this.id).text($licenseIdText);
-	                                     } else {
-	                                      $("#data-select-license" + this.id).hide();
-	                                     }
+                                         if ((typeof licenseId != 'undefined') && (licenseId != "")) {
+                                             $("#data-select-license" + this.id + " option[value='" + licenseId + "']").attr('selected', 'selected');
+                                             $licenseIdText = $("#data-select-license" + this.id + " option[value='" + licenseId + "']").text();
+                                             $("#data-select-license" + this.id).hide();
+                                             $("#file-tag-license" + this.id).text($licenseIdText);
+                                         } else {
+                                          $("#data-select-license" + this.id).hide();
+                                         }
 
-	                                     $("#data-select-license" + this.id).hide();
+                                         $("#data-select-license" + this.id).hide();
 
-	                                     if ((typeof license != 'undefined') && (license != "")) {
-	                                         $("#file-tag-license-text" + this.id).text(license);
-	                                     }
+                                         if ((typeof license != 'undefined') && (license != "")) {
+                                             $("#file-tag-license-text" + this.id).text(license);
+                                         }
 
                                              if ((typeof packagetypeId != 'undefined') && (packagetypeId != "")) {
-	                                         $("#data-select-packagetype" + this.id + " option[value='" + packagetypeId + "']").attr('selected', 'selected');
-	                                         $packagetypeIdText = $("#data-select-packagetype" + this.id + " option[value='" + packagetypeId + "']").text();
-	                                         $("#data-select-packagetype" + this.id).hide();
-	                                         $("#file-tag-packagetype" + this.id).text($packagetypeIdText);
-	                                     } else {
-	                                      $("#data-select-packagetype" + this.id).hide();
-	                                     }
+                                             $("#data-select-packagetype" + this.id + " option[value='" + packagetypeId + "']").attr('selected', 'selected');
+                                             $packagetypeIdText = $("#data-select-packagetype" + this.id + " option[value='" + packagetypeId + "']").text();
+                                             $("#data-select-packagetype" + this.id).hide();
+                                             $("#file-tag-packagetype" + this.id).text($packagetypeIdText);
+                                         } else {
+                                          $("#data-select-packagetype" + this.id).hide();
+                                         }
 
-	                                     $("#data-select-packagetype" + this.id).hide();
+                                         $("#data-select-packagetype" + this.id).hide();
 
 
 
-	                                     if (isExternLink) {
-	                                        //$("#data-link" + this.id).attr('href', decodeURIComponent(link));
+                                         if (isExternLink) {
+                                            //$("#data-link" + this.id).attr('href', decodeURIComponent(link));
                                                 $("#data-link" + this.id).attr('target','_blank');
-	                                        $("#data-link" + this.id).html($("#data-link" + this.id).html() + " (External Link)");
-	                                     }
+                                            $("#data-link" + this.id).html($("#data-link" + this.id).html() + " (External Link)");
+                                         }
 
 
 
-	                                    //fileSizeSum += parseInt(this.size);
+                                        //fileSizeSum += parseInt(this.size);
                                             if(parseInt(this.size)>0) {
                                                 fileSizeSum += roundFileSizeInMB(parseInt(this.size));
                                             }
@@ -655,9 +656,9 @@
                                          //}
 
 
-	                                     if (this.type == 'audio/mpeg' || this.type == 'application/ogg') {
-	                                         isPlayable = true;
-	                                     }
+                                         if (this.type == 'audio/mpeg' || this.type == 'application/ogg') {
+                                             isPlayable = true;
+                                         }
 
                                      //}
 
