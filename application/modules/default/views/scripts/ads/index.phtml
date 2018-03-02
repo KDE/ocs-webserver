@@ -52,8 +52,10 @@
                     var i = 10;
                     function myTimer() {
                         var d = new Date();
-                         if(i==0) clearInterval(myVar);
-                        document.getElementById("timer").innerHTML = i--;
+                         if(i<=0){ clearInterval(myVar);}
+                         else{
+                            document.getElementById("timer").innerHTML = i--;
+                        }
 
                     } 
     
