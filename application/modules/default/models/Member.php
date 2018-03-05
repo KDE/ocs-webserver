@@ -725,7 +725,8 @@ class Default_Model_Member extends Default_Model_DbTable_Member
                 ,member.member_id
                 ,member.profile_image_url
                 ,comment_created_at
-                ,member.username
+                ,stat_projects.username
+                ,stat_projects.project_member_id
                 ,comment_target_id
                 ,stat_projects.title
                 ,stat_projects.project_id      
