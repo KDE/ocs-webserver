@@ -63,9 +63,9 @@ class UserController extends Local_Controller_Action_DomainSwitch
             $this->redirect("/");
         }
 
-       
+        $this->view->mainProject = $this->view->member->findDependentRowset($tableProject, 'MainProject')->current();
         // TODOs
-        // $this->view->mainProject = $this->view->member->findDependentRowset($tableProject, 'MainProject')->current();
+        
         // $this->view->supportedProjects = $tableMember->fetchSupportedProjects($this->_memberId);
 
         //Categories
