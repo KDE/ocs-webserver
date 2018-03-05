@@ -133,6 +133,7 @@ if ($this->countDownloadsOverall > 0) {
 </div>
 <div class="tab-content">
 <?php
+$helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
 $helpImage = new Default_View_Helper_Image();
 $css_active = ' in active';
 $has_paypal = false;
@@ -152,11 +153,14 @@ if ($this->countDownloadsOverall > 0) {
                 <div class="row margin-bottom-10">
 
                     <div class="col-md-1 cell-default">
-                        <img src="<?php echo $helpImage->Image($product['image_small'],
-                            array('width' => 80, 'height' => 65)); ?> " height="81" width="101"/>
+                        <a href="<?= $helperBuildProductUrl->buildProductUrl($product['project_id'], ''); ?>">
+                            <img src="<?php echo $helpImage->Image($product['image_small'], array('width' => 80, 'height' => 65)); ?> " height="81" width="101"/>
+                        </a>
                     </div>
                     <div class="col-md-5 text-left cell-default">
-                        <span style="line-height: 3em;"><?= $product['title']; ?></span>
+                        <a href="<?= $helperBuildProductUrl->buildProductUrl($product['project_id'], ''); ?>">
+                            <span style="line-height: 3em;"><?= $product['title']; ?></span>
+                        </a>
                         <b style="display: block; margin-bottom: 5px; font-size: 10pt; line-height: 0em;"><?=$product['cat_title']?></b>
                     </div>
                     <div class="col-md-2 text-right cell-default">

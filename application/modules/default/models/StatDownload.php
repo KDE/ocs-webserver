@@ -53,9 +53,9 @@ class Default_Model_StatDownload
                     member_payout ON member_payout.member_id = member_dl_plings.member_id
                         AND member_payout.yearmonth = member_dl_plings.yearmonth
                 WHERE
-                    member_dl_plings.member_id = :member_id
-                    AND project.status = 100
-                ORDER BY member_dl_plings.`yearmonth` DESC
+                    member_dl_plings.member_id = 488776
+                    
+                ORDER BY member_dl_plings.`yearmonth` DESC, project_category.title, project.title
             ";
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('member_id' => $member_id));
 
