@@ -1,0 +1,1 @@
+CREATE INDEX idx_member_id ON project_rating (member_id) USING BTREE;
