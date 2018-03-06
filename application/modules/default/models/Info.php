@@ -113,7 +113,7 @@ class Default_Model_Info
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
         $cacheName =
-            __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host') . (int)$limit . (int)$project_category_id);
+            __FUNCTION__ . '_new_' . md5(Zend_Registry::get('store_host') . (int)$limit . (int)$project_category_id);
 
         if (($latestComments = $cache->load($cacheName))) {
             return $latestComments;
@@ -129,36 +129,25 @@ class Default_Model_Info
             return array();
         }
 
-        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
-        $storePackageTypeIds = null;
-        if ($storeConfig) {
-            $storePackageTypeIds = $storeConfig['package_type'];
-        }
-
         $sql = '
-            SELECT
-                comment_id
-                ,comment_text
-                ,member.member_id
-                ,profile_image_url
-                ,comment_created_at
-                ,username
-                ,comment_target_id
-                ,title
-                ,project.project_id               
-            FROM comments
-            STRAIGHT_JOIN member ON comments.comment_member_id = member.member_id
-            JOIN project ON comments.comment_target_id = project.project_id AND comments.comment_type = 0';
-
-        if ($storePackageTypeIds) {
-            $sql .= ' JOIN (SELECT DISTINCT project_id FROM project_package_type WHERE package_type_id in ('
-                . $storePackageTypeIds . ')) package_type  ON project.project_id = package_type.project_id';
-        }
+                   SELECT
+                       comment_id
+                       ,comment_text
+                       ,member.member_id
+                       ,stat_projects.profile_image_url
+                       ,comment_created_at
+                       ,stat_projects.username
+                       ,comment_target_id
+                       ,title
+                       ,stat_projects.project_id               
+                   FROM comments
+                   STRAIGHT_JOIN member ON comments.comment_member_id = member.member_id
+                   inner JOIN stat_projects ON comments.comment_target_id = stat_projects.project_id AND comments.comment_type = 0';      
 
         $sql .= ' WHERE comments.comment_active = 1            
-            AND project.status = 100
-            AND project.type_id = 1
-            AND project.project_category_id IN (' . implode(',', $activeCategories) . ')              
+            AND stat_projects.status = 100
+            AND stat_projects.type_id = 1
+            AND stat_projects.project_category_id IN (' . implode(',', $activeCategories) . ')              
             ORDER BY comments.comment_created_at DESC
         ';
 
@@ -229,9 +218,9 @@ class Default_Model_Info
      *
      * @return array|false|mixed
      */
-    public function getLatestPlings($limit = 5, $project_category_id = null)
+   /*/* public function getLatestPlings($limit = 5, $project_category_id = null)
     {
-        /** @var Zend_Cache_Core $cache */
+        /** @var Zend_Cache_Core $cache 
         $cache = Zend_Registry::get('cache');
         $cacheName =
             __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host') . (int)$limit . (int)$project_category_id);
@@ -299,7 +288,7 @@ class Default_Model_Info
 
             return array();
         }
-    }
+    }*/
 
     /**
      * if category id not set the most downloaded products for all categories on the current host wil be returned.
@@ -314,7 +303,7 @@ class Default_Model_Info
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
         $cacheName =
-            __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host') . (int)$limit . (int)$project_category_id);
+            __FUNCTION__ . '_new_' . md5(Zend_Registry::get('store_host') . (int)$limit . (int)$project_category_id);
 
         if (($mostDownloaded = $cache->load($cacheName))) {
             return $mostDownloaded;
@@ -330,25 +319,13 @@ class Default_Model_Info
             return array();
         }
 
-        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
-        $storePackageTypeIds = null;
-        if ($storeConfig) {
-            $storePackageTypeIds = $storeConfig['package_type'];
-        }
-
         $sql = '
             SELECT 
-                p.*
-                ,laplace_score(p.count_likes, p.count_dislikes) AS laplace_score
+                p.*        
                 ,s.amount 
                 ,s.category_title       
                 FROM stat_downloads_quarter_year s
-                INNER JOIN project p ON s.project_id = p.project_id';
-
-        if ($storePackageTypeIds) {
-            $sql .= ' JOIN (SELECT DISTINCT project_id FROM project_package_type WHERE package_type_id in ('
-                . $storePackageTypeIds . ')) package_type  ON p.project_id = package_type.project_id';
-        }
+                INNER JOIN stat_projects p ON s.project_id = p.project_id';
 
         $sql .= ' WHERE
                     p.status=100
@@ -414,8 +391,7 @@ class Default_Model_Info
 
         $sql = '
             SELECT 
-                p.*
-              
+                p.*              
             FROM
                 stat_projects  AS p
             WHERE
