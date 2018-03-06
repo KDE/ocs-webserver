@@ -53,7 +53,7 @@ class Default_Model_StatDownload
                     member_payout ON member_payout.member_id = member_dl_plings.member_id
                         AND member_payout.yearmonth = member_dl_plings.yearmonth
                 WHERE
-                    member_dl_plings.member_id = 488776
+                    member_dl_plings.member_id = :member_id
                     
                 ORDER BY member_dl_plings.`yearmonth` DESC, project_category.title, project.title
             ";
