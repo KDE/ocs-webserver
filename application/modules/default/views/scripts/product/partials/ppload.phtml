@@ -74,12 +74,11 @@
                                  <th><?= $this->translate('Date'); ?></th>
 
                                  <th style="text-align: right"><?= $this->translate('Filesize'); ?></th>
-                                <!-- <th style="text-align: right"><a href="#modal-installation-instructions" role="button" data-toggle="modal"><?= $this->translate('Install ?'); ?></a></th>
-                                -->
-                                 <th style="text-align: right;white-space:nowrap"><?= $this->translate('OCS-Install'); ?>
+                                
+                                 <th style="text-align: right">DL</th>
+                                  <th style="text-align: right;white-space:nowrap"><?= $this->translate('OCS-Install'); ?>
                                      <a href="#modal-installation-instructions" role="button" data-toggle="modal"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></a>
                                  </th>
-                                 <th style="text-align: right">DL</th>
                                  <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
                                  <th>Compatible</th>
                                  <?php endif; ?>
@@ -355,8 +354,8 @@
                                             + '<td style="text-align: right"><span id="download_counter_' + this.id + '">' + count_downloads + '</td>'
                                             + '<td>' +mnt.format('YYYY-MM-DD') + '</td>'
                                             + '<td style="text-align: right">' + humanFileSize(this.size,false) + '</td>'
-                                            + '<td style="text-align: right; ">' + installButton + '</td>'
                                             + '<td style="text-align: right; ">' + downloadButton+ '</td>'
+                                            + '<td style="text-align: right; ">' + installButton + '</td>'                                            
                                             <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
                                             + '<td style="text-align: center; "><input type="checkbox" id="data-checkbox-compatible-'+this.id+'" data-is-compatible="" ></td>'
                                             <?php endif; ?>

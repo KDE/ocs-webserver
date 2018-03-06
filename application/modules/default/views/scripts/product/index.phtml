@@ -79,6 +79,7 @@ $tableProjectFollower = new Default_Model_DbTable_ProjectFollower();
 $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->project_id);
 
 ?>
+
     <!-- facebook -->
     <div id="fb-root"></div>
 
@@ -188,35 +189,38 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
                     <div class="product-main-img flex-item-24" id="product-main-img">
                         <div id="product-title-div" class="product-title-div">
                             <div  class="product-title">
-                              
-                                <?php if (false === empty($this->product->link_1)): ?><a
-                                    href="<?php echo $this->product->link_1; ?>"
-                                    target="_NEW"
-                                    title="<?php echo $this->product->link_1; ?>"
-                                    rel="nofollow"
-                                    > <?= $this->product->title; ?> <span class="fa fa-external-link"></span></a>
-                                <?php else : ?>
-                                    <?= $this->product->title; ?>
-                                <?php endif; ?>
-
-
-                                <div class="product-logo-container">
+                            <div class="product-logo-container">
                                   <img class="logo" src="<?= $helpImage->Image($this->product->image_small,
                                       array('width' => 85, 'height' => 85, 'crop' => 'crop')); ?>"/>
                                 </div>
-                                <span class="product_category" style="white-space: nowrap;">                                                
-                                <?php
-                                echo '<a href="/browse/cat/' . $this->product->project_category_id . '/order/latest">' . $this->product->cat_title . ' </a>';
-                                ?>                        
-                                </span>
-                                <span class="light small">
-                                <?php if (false === empty($this->product->github_code)):
-                                    echo '<a target="_blank" href="' . $this->product->github_code . '" rel="nofollow">' . $this->product->github_code
-                                        . ' <span class="fa fa-external-link"></span></a>';
-                                endif;
-                                ?>
-                                
-                                </span>
+                                <div style="margin-left: 95px">
+                                    <p style="margin-bottom: 0px">
+                                    <?php if (false === empty($this->product->link_1)): ?><a
+                                        href="<?php echo $this->product->link_1; ?>"
+                                        target="_NEW"
+                                        title="<?php echo $this->product->link_1; ?>"
+                                        rel="nofollow"
+                                        > <?= $this->product->title; ?> <span class="fa fa-external-link"></span></a>
+                                    <?php else : ?>
+                                        <?= $this->product->title; ?>
+                                    <?php endif; ?>
+                                    
+                                    
+                                    <p class="product_category" style="margin-bottom: 5px">                                                
+                                    <?php
+                                    echo '<a href="/browse/cat/' . $this->product->project_category_id . '/order/latest">' . $this->product->cat_title . ' </a>';
+                                    ?>                        
+                                    
+                                    <p class="light small">
+                                    Source : 
+                                    <?php if (false === empty($this->product->github_code)):
+                                        echo '<a target="_blank" href="' . $this->product->github_code . '" rel="nofollow">' . $this->product->github_code
+                                            . ' <span class="fa fa-external-link"></span></a>';
+                                    endif;
+                                    ?>
+                                    
+                                 
+                                </div>
                             </div>
                           
                             <div class="product-title-right" >
@@ -600,6 +604,9 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
 
                         <?php echo $this->render('product/partials/tags.phtml');?>
 
+
+
+
                     </div>
                 </div>
 
@@ -614,8 +621,7 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
         </div>
     </main>
 
-
- 
+                    
 
     <script>(function (d, s, id) {
             var js, fjs = d.getElementsByTagName(s)[0];

@@ -25,9 +25,20 @@ class Default_View_Helper_IsSupporter extends Zend_View_Helper_Abstract
 
     public function isSupporter($member_id)
     {
-        $tableMembers = new Default_Model_Member();
-        $row = $tableMembers->fetchSupporterDonationInfo($member_id);
-        return $row['issupporter'];
+
+    	$cache = Zend_Registry::get('cache');
+    	$cacheName = __FUNCTION__ . '_' . md5($member_id);
+
+	if (false !== ($issupporter = $cache->load($cacheName))) {
+	        return $issupporter;
+	}
+
+        	$tableMembers = new Default_Model_Member();
+        	$row = $tableMembers->fetchSupporterDonationInfo($member_id);
+
+        	$cache->save($row['issupporter'], $cacheName, array(), 3600);
+
+        	return $row['issupporter'];
     }
 
 } 
