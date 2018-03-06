@@ -1055,7 +1055,7 @@ class Backend_HiveController extends Local_Controller_Action_Backend
         $pploadApi = new Ppload_Api(array(
             'apiUri'   => "https://dl.opendesktop.org/api/",
             'clientId' => "1387085484",
-            'secret'   => "34gtd3w024deece710e1225d7bfe5e7337b1f45d"
+            'secret'   => "Hhbd69bkD65Smb/g&dhKaaQmvbh9bhD4801Nhdwl"
         ));
 
         $fileRequest = array(
