@@ -750,5 +750,50 @@ class Default_Model_Info
         return $totalcnt;
     }
 
+    public function getTooptipForMember($member_id)
+    {
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cacheName = __FUNCTION__. '_' . md5($member_id);
+
+        if (false !== ($tooptip = $cache->load($cacheName))) {
+            return $tooptip;
+        }
+
+        $modelMember = new Default_Model_Member();
+        $tblFollower = new Default_Model_DbTable_ProjectFollower();
+        $modelProject = new Default_Model_Project();
+        $printDate = new Default_View_Helper_PrintDate();
+        $printDateSince = new Default_View_Helper_PrintDateSince();
+
+        $cnt = $modelMember->fetchCommentsCount($member_id);        
+        $cntLikesGave = $tblFollower->countLikesHeGave($member_id);  
+        $cntLikesGot= $tblFollower->countLikesHeGot($member_id);          
+        $donationinfo = $modelMember->fetchSupporterDonationInfo($member_id);                       
+        $lastactive =  $modelMember->fetchLastActiveTime($member_id);
+        $cntprojects = $modelProject->countAllProjectsForMember($member_id,true);
+
+        $member = $modelMember->find($member_id)->current();
+        $textCountryCity = $member->city;        
+        $textCountryCity .= $member->country ? ', ' . $member->country : '';
+
+        $data = array(
+                        'totalComments'       =>$cnt,
+                        'created_at'              =>$printDateSince->printDateSince($member->created_at),
+                        'username'               =>$member->username,
+                        'countrycity'             => $textCountryCity,
+                        'lastactive_at'           =>$printDate->printDate($lastactive),
+                        'cntProjects'              =>$cntprojects,
+                        'issupporter'             =>$donationinfo['issupporter'],
+                        'supportMax'            =>$donationinfo['active_time_max'],
+                        'supportMin'             =>$donationinfo['active_time_min'],
+                        'supportCnt'             =>$donationinfo['cnt'],
+                        'cntLikesGave'          =>$cntLikesGave,
+                        'cntLikesGot'            =>$cntLikesGot
+                );        
+       
+        $cache->save($data, $cacheName,array() , 3600);
+        return $data;
+    }
 
 }

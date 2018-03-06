@@ -302,39 +302,8 @@ class UserController extends Local_Controller_Action_DomainSwitch
     public function tooltipAction()
     {
         $this->_helper->layout->disableLayout();  
-        $modelMember = new Default_Model_Member();
-        $tblFollower = new Default_Model_DbTable_ProjectFollower();
-        $modelProject = new Default_Model_Project();
-        $printDate = new Default_View_Helper_PrintDate();
-        $printDateSince = new Default_View_Helper_PrintDateSince();
-
-        $cnt = $modelMember->fetchCommentsCount($this->_memberId);
-        $member = $modelMember->find($this->_memberId)->current();
-
-        $cntLikesGave = $tblFollower->countLikesHeGave($this->_memberId);  
-        $cntLikesGot= $tblFollower->countLikesHeGot($this->_memberId);  
-
-        $donationinfo = $modelMember->fetchSupporterDonationInfo($this->_memberId);                       
-        $lastactive =  $modelMember->fetchLastActiveTime($this->_memberId);
-
-        $cntprojects = $modelProject->countAllProjectsForMember($this->_memberId,true);
-        $textCountryCity = $member->city;
-        $textCountryCity .= $member->country ? ', ' . $member->country : '';
-
-        $data = array(
-                'totalComments'       =>$cnt,
-                'created_at'              =>$printDateSince->printDateSince($member->created_at),
-                'username'               =>$member->username,
-                'countrycity'             => $textCountryCity,
-                'lastactive_at'           =>$printDate->printDate($lastactive),
-                'cntProjects'              =>$cntprojects,
-                'issupporter'             =>$donationinfo['issupporter'],
-                'supportMax'            =>$donationinfo['active_time_max'],
-                'supportMin'             =>$donationinfo['active_time_min'],
-                'supportCnt'             =>$donationinfo['cnt'],
-                'cntLikesGave'          =>$cntLikesGave,
-                'cntLikesGot'            =>$cntLikesGot
-        );
+        $info = new Default_Model_Info();
+        $data = $info->getTooptipForMember($this->_memberId);       
         $this->_helper->json(array('status' => 'ok', 'data' =>$data));            
     }
 
