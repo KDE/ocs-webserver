@@ -648,7 +648,7 @@ var OpendownloadfileWerbung= (function () {
                     'cyclic': 'true',
                     'transitionIn': 'elastic',
                     'transitionOut': 'elastic',
-                    'type': 'ajax',
+                    'type': 'iframe',
                     'width':'1140',
                     'iframe': {'scrolling': 'no'},            
                     'autoSize':false,        
