@@ -183,6 +183,7 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){                               
                 RssNews.setup();   
+                BlogJson.setup();
                 TooltipUser.setup("tooltipuser","right");
                 TooltipUser.setup("tooltipuserleft","left");             
             });

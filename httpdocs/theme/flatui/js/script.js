@@ -1305,6 +1305,38 @@ var RssNews = (function () {
     }
 })();
 
+
+var BlogJson = (function () {
+    return {
+        setup: function () {          
+            //var urlforum = 'https://forum.opendesktop.org/';
+            var urlforum = 'https://forum.pling.cc/';
+            var json_url =urlforum+'latest.json';
+            $.ajax(json_url).then(function (result) { 
+              var topics = result.topic_list.topics; 
+              var crss = '';            
+              var count =5;                                       
+             $.each(topics, function (i, item) {
+                 if(!item.pinned){
+                    console.log(item);
+                     var m = moment(item.created_at);
+                     crss += '<div class="commentstore"><a href="' + urlforum+'/t/'+item.id + '"><span class="title">' + item.title + '</span></a><div class="newsrow">'                        
+                         + '<span class="date">' + m.format('MMM DD YYYY LT') + '</span><span class="newscomments">'+ item.posts_count 
+                         +' Post'+( item.posts_count>1?'s':'')
+                         +'</span></div></div>';    
+                    count--;
+                 }
+                 if(count==0) return false;
+                 
+             });            
+             $("#blogJson").html(crss);
+            });
+        }
+
+    }
+})();
+
+
 var ProductDetailCarousel = (function () {
     return {
         setup: function () {
