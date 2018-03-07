@@ -212,7 +212,7 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
                                     ?>                        
                                     
                                     <p class="light small">
-                                    Source : 
+                                    <span class="source">Source: </span>
                                     <?php if (false === empty($this->product->github_code)):
                                         echo '<a target="_blank" href="' . $this->product->github_code . '" rel="nofollow">' . $this->product->github_code
                                             . ' <span class="fa fa-external-link"></span></a>';
