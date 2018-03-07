@@ -27,6 +27,7 @@ $this->navBackgroundColorActive = $this->template['header-nav-tabs']['background
 $this->navBackgroundColor = $this->template['header-nav-tabs']['background-color'];
 $this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
 ?><style type="text/css">
+   
     .naviblock {
         list-style-type: none;
         margin: 0;
@@ -36,12 +37,12 @@ $this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
         font-size: 12px;
         border: none;
         width: 100%;
-        color: #2673b0;
+        color: #2673b0;        
     }
     .navilink {
         color: #2673b0;
         margin: 0;
-        padding: 3px 0 0 5px;
+        padding: 3px 0 0 15px;
     }
     .navilink span.title:hover {
         font-weight: bold;
@@ -86,6 +87,7 @@ $this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
         text-align: end;
         width: 20%;
     }
+
     /*
     li.navilink.active.parent a.child{       
         color:  <?=$this->navBackgroundColorActive?>;
@@ -94,6 +96,7 @@ $this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
 </style> 
 <div class="panel-group" id="accordion">
     <div class="panel panel-default accordion-group">
+            <div style="margin-left: -10px">
             <?php
             function build_tree($rows, $selectedOrder, $addAllItem = false)
             {                
@@ -148,6 +151,7 @@ $this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
             $selectedOrder = isset($this->filters['order']) ? $this->filters['order'] : null;
             echo build_tree($this->categories, $selectedOrder, true);
             ?>
+            </div>
     </div>
 </div>
 <script type="application/javascript">
