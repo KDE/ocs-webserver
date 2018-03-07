@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -19,26 +20,16 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-
-class Default_View_Helper_IsSupporter extends Zend_View_Helper_Abstract
+class AdsController extends Local_Controller_Action_DomainSwitch
 {
-
-    public function isSupporter($member_id)
+    
+    public function indexAction()
     {
+        $this->_helper->layout->disableLayout();
 
-    	$cache = Zend_Registry::get('cache');
-    	$cacheName = __FUNCTION__ . '_' . md5($member_id);
+        $this->view->username =$this->getParam('u', 'Creators');
 
-	if (false !== ($issupporter = $cache->load($cacheName))) {
-	        return $issupporter;
-	}
-
-        	$tableMembers = new Default_Model_Member();
-        	$row = $tableMembers->fetchSupporterDonationInfo($member_id);
-
-        	$cache->save($row['issupporter'], $cacheName, array(), 3600);
-
-        	return $row['issupporter'];
     }
 
-} 
+   
+}

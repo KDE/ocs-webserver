@@ -558,6 +558,8 @@ var PlinglistContent = (function () {
                     'transitionOut': 'elastic',
                     'type': 'iframe',
                     'scrolling': 'auto',
+                    'width':'1420px',
+                    'height':'800px',
                     helpers: {
                         overlay: {
                             locked: false
@@ -631,6 +633,49 @@ var Partials = (function () {
     }
 })();
 
+var OpendownloadfileWerbung= (function () {
+    return {
+        setup: function () {
+            var timer;
+            $('body').on('click', 'a.opendownloadfile', function (event) {
+                event.preventDefault();
+                var url = $(this).attr("href");                      
+                var username = $(this).attr("data-username");    
+                $.fancybox({
+                    'hideOnContentClick': true,
+                    'autoScale': true,                    
+                    'scrolling' : 'no',            
+                    'cyclic': 'true',
+                    'transitionIn': 'elastic',
+                    'transitionOut': 'elastic',
+                    'type': 'iframe',
+                    'width':'1140',
+                    'iframe': {'scrolling': 'no'},            
+                    'autoSize':false,        
+                    helpers: {
+                        overlay: {
+                            locked: false
+                        }
+                    },                    
+                    autoSize: true,
+                    href:'/ads?u='+username,                    
+                    afterLoad:function(){
+                        timer = window.setTimeout(function(){
+                             window.location.href = url;
+                             //$.fancybox.close();        
+                        },10000);                      
+                    },
+                    afterClose:function(){                           
+                        window.clearTimeout(timer);
+                    }
+                    
+                });
+                return false;
+            });
+        }
+    }
+})();
+
 
 var PartialsButton = (function () {
     return {
@@ -668,6 +713,7 @@ var PartialsButton = (function () {
         }
     }
 })();
+
 
 var PartialsButtonHeartDetail = (function () {
     return {
@@ -1246,9 +1292,10 @@ var RssNews = (function () {
                         return false;
                     }
                     var m = moment(item.date);
-                    crss += '<div class="commentstore"><a href="' + item.url + '"><span class="title">' + item.title + '</span></a><br/>' 
-                        //+ item.excerpt
-                        + '<span class="date">' + m.format('MMM DD YYYY LT') + '</span></div>';
+                    crss += '<div class="commentstore"><a href="' + item.url + '"><span class="title">' + item.title + '</span></a><br/>'                        
+                        + '<span class="date">' + m.format('MMM DD YYYY LT') + '</span><span class="comments">'+ item.comments.length 
+                        +' Comment'+(item.comments.length>1?'s':'')
+                        +'</span></div>';
                 });
                 $("#rss-feeds").html(crss);
 
