@@ -74,3 +74,10 @@
             </div>          
             <?php } ?>
         </div>
+
+<?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){                               
+                RssNews.setup();   
+                BlogJson.setup();                    
+            });
+        ');

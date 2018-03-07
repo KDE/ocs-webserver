@@ -1317,8 +1317,7 @@ var BlogJson = (function () {
               var crss = '';            
               var count =5;                                       
              $.each(topics, function (i, item) {
-                 if(!item.pinned){
-                    console.log(item);
+                 if(!item.pinned){                   
                      var m = moment(item.created_at);
                      crss += '<div class="commentstore"><a href="' + urlforum+'/t/'+item.id + '"><span class="title">' + item.title + '</span></a><div class="newsrow">'                        
                          + '<span class="date">' + m.format('MMM DD YYYY LT') + '</span><span class="newscomments">'+ item.posts_count 

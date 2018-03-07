@@ -181,9 +181,7 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
 </main>
 
 <?php $this->inlineScript()->appendScript(
-    '    $(document).ready(function(){                               
-                RssNews.setup();   
-                BlogJson.setup();
+    '    $(document).ready(function(){                                             
                 TooltipUser.setup("tooltipuser","right");
                 TooltipUser.setup("tooltipuserleft","left");             
             });
