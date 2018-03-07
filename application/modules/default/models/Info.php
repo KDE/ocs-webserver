@@ -134,9 +134,9 @@ class Default_Model_Info
                        comment_id
                        ,comment_text
                        ,member.member_id
-                       ,stat_projects.profile_image_url
+                       ,member.profile_image_url
                        ,comment_created_at
-                       ,stat_projects.username
+                       ,member.username
                        ,comment_target_id
                        ,title
                        ,stat_projects.project_id               
