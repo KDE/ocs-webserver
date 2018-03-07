@@ -1292,10 +1292,10 @@ var RssNews = (function () {
                         return false;
                     }
                     var m = moment(item.date);
-                    crss += '<div class="commentstore"><a href="' + item.url + '"><span class="title">' + item.title + '</span></a><br/>'                        
-                        + '<span class="date">' + m.format('MMM DD YYYY LT') + '</span><span class="comments">'+ item.comments.length 
+                    crss += '<div class="commentstore"><a href="' + item.url + '"><span class="title">' + item.title + '</span></a><div class="newsrow">'                        
+                        + '<span class="date">' + m.format('MMM DD YYYY LT') + '</span><span class="newscomments">'+ item.comments.length 
                         +' Comment'+(item.comments.length>1?'s':'')
-                        +'</span></div>';
+                        +'</span></div></div>';
                 });
                 $("#rss-feeds").html(crss);
 
