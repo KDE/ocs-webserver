@@ -40,7 +40,7 @@ foreach ($this->products as $this->product) {
         <figure>
             <a href="<?= $helperBuildProductUrl->buildProductUrl($this->product->project_id, ''); ?>">
                 <div class="text-center">
-                <img src="<?php echo $helperImage->Image($this->product->image_small, array('width' => 167, 'height' => 167)); ?>" class="explore-product-image"/>
+                <img src="<?php echo $helperImage->Image($this->product->image_small, array('width' => 167, 'height' => 167,'crop' => 0)); ?>" class="explore-product-image"/>
                 </div>
             </a>
         </figure>
