@@ -1309,8 +1309,7 @@ var RssNews = (function () {
 var BlogJson = (function () {
     return {
         setup: function () {          
-            //var urlforum = 'https://forum.opendesktop.org/';
-            var urlforum = 'https://forum.pling.cc/';
+            var urlforum = 'https://forum.opendesktop.org/';            
             var json_url =urlforum+'latest.json';
             $.ajax(json_url).then(function (result) { 
               var topics = result.topic_list.topics; 
