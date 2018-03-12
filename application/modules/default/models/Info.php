@@ -758,7 +758,7 @@ class Default_Model_Info
                         'created_at'              =>$printDateSince->printDateSince($member->created_at),
                         'username'               =>$member->username,
                         'countrycity'             => $textCountryCity,
-                        'lastactive_at'           =>$printDate->printDateSince($lastactive),
+                        'lastactive_at'           =>$printDateSince->printDate($lastactive),
                         'cntProjects'              =>$cntprojects,
                         'issupporter'             =>$donationinfo['issupporter'],
                         'supportMax'            =>$donationinfo['active_time_max'],
