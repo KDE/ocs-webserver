@@ -94,7 +94,7 @@
                  </article>
 
 
-
+                 <?php /*
              <div class="item active" style="max-width: 800px; max-height: 550px; margin:0 auto; display: none" id="carouselPPlay">
                     <div data-ppload-api-uri="<?= PPLOAD_API_URI ?>"
                           data-ppload-collection-id="<?= $this->product->ppload_collection_id ?>">
@@ -104,6 +104,7 @@
                                  seamless></iframe>
                     </div>
              </div>
+             */?>
 
 
              <script type="text/javascript">
@@ -143,6 +144,8 @@
 
 
                      function getPploadFiles(page) {
+                          activeCarouselFirstImg();
+                          
                          var collectionId = $pploadCollection.attr('data-ppload-collection-id');
                          if (!page) {
                              page = 1;
@@ -694,6 +697,9 @@
                                      'href',
                                      pploadApiUri + 'collections/download/id/' + collectionId
                                  );
+
+                                 
+                                 /*
                                  var b= false;
                                  if (isPlayable && !$plingMusic.attr('src')) {
                                      $plingMusic.attr({
@@ -708,10 +714,13 @@
                                  $('.carousel-indicators > li').first().addClass('active');
                                     b = true;
                                  }
-
+                                 
                                  if(!b){
                                    activeCarouselFirstImg();
                                  }
+                                  */
+
+
                                  if (data.pagination.next) {
                                      getPploadFiles(data.pagination.next);
                                  }
