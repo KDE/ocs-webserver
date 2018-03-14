@@ -91,7 +91,7 @@ class Backend_Form_Project extends Zend_Form
 
 
         $video = $this->createElement('textarea', 'embed_code', array('cols' => 30, 'rows' => 3))
-            ->setLabel('Embed Media Code (Youtube, Vimeo, Soundcloud etc.)')
+            ->setLabel('HTML or Embed Media Code (Youtube, Vimeo, Soundcloud etc.)')
             ->setRequired(false)
             ->setAttrib('placeholder', '<iframe src="https://www.youtube.com/embed/XXXXXXXX" style="position:absolute;width:641px;height:360px;left:0" width="641" height="360" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>')
             ->setAttrib("stylestyle", "padding: 0;");
