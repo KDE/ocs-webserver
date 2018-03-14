@@ -79,4 +79,17 @@ class TagController extends Zend_Controller_Action
         ));
     }
 
+    public function filterAction()
+    {
+         $this->_helper->layout()->disableLayout();  
+         $model = new Default_Model_Tags();
+         $filter = $this->getParam('q');         
+         $tags  = $model->filterTagsUser($filter,10);
+         $this->_helper->json(array(
+             'status'  => 'ok',
+             'message' => '',
+             'filter'=>$filter,
+             'data'    => array('tags' => $tags)
+         ));
+    }
 }

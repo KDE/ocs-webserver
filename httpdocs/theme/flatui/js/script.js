@@ -1494,6 +1494,50 @@ var AboutMePage = (function () {
 })();
 
 
+var TagingProduct = (function () {
+    return {
+        setup: function () {
+            $('input[name=tagsuser]')
+                .tagify({
+                                whitelist: ['good', 'great'],
+                                autocomplete:true
+                        })
+                .on('remove', function(e, tagName){
+                    console.log('removed', tagName)
+                })
+                .on('add', function(e, tagName){
+                    console.log('added', tagName)
+                });
+
+        }
+    }
+})();
+
+var TagingProductSelect2 = (function () {
+    return {
+        setup: function () {
+                        $(".taggingSelect2").select2({
+                            placeholder: "Input topics please...", //placeholder
+                            tags: true,
+                            minimumInputLength: 3,
+                            ajax: {
+                                    url: '/tag/filter',
+                                    dataType: 'json',
+                                    type: "GET",
+                                    quietMillis: 50,    
+                                    processResults: function (data) {                                          
+                                          return {
+                                            results: data.data.tags
+                                          };
+                                        }                               
+                                    
+                                }
+                        });
+        }
+    }
+})();
+
+
 var productRatingToggle = (function () {
     return {
         setup: function () {

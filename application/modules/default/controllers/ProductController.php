@@ -199,6 +199,10 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $modelTags->processTags($newProject->project_id, implode(',',$values['tags']), Default_Model_Tags::TAG_TYPE_PROJECT);
         }
 
+        
+        $modelTags->processTagsUser($newProject->project_id, implode(',',$values['tagsuser']), Default_Model_Tags::TAG_TYPE_PROJECT);
+     
+
         $activityLog = new Default_Model_ActivityLog();
         $activityLog->writeActivityLog($newProject->project_id, $newProject->member_id,
             Default_Model_ActivityLog::PROJECT_CREATED, $newProject->toArray());
@@ -365,6 +369,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         if ($this->_request->isGet()) {
             $form->populate($projectData->toArray());
             $form->populate(array('tags' => $modelTags->getTags($projectData->project_id, Default_Model_Tags::TAG_TYPE_PROJECT)));
+            $form->populate(array('tagsuser' => $modelTags->getTagsUser($projectData->project_id, Default_Model_Tags::TAG_TYPE_PROJECT)));
             $form->getElement('image_small')->setValue($projectData->image_small);
             //Bilder voreinstellen
             $form->getElement(self::IMAGE_SMALL_UPLOAD)->setValue($projectData->image_small);
@@ -386,6 +391,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         }
 
         $values = $form->getValues();
+
 
         $imageModel = new Default_Model_DbTable_Image();
         try {
@@ -414,6 +420,10 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         if ($values['tags']) {
             $modelTags->processTags($this->_projectId, implode(',',$values['tags']), Default_Model_Tags::TAG_TYPE_PROJECT);
         }
+          
+        $modelTags->processTagsUser($this->_projectId,implode(',',$values['tagsuser']), Default_Model_Tags::TAG_TYPE_PROJECT);             
+        //$modelTags->processTagsUser($this->_projectId,$values['tagsuser'], Default_Model_Tags::TAG_TYPE_PROJECT);
+      
 
         $activityLog = new Default_Model_ActivityLog();
         $activityLog->writeActivityLog($this->_projectId, $projectData->member_id,
@@ -857,6 +867,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $tableProject = new Default_Model_Project();
         $this->view->supporting = $tableProject->fetchProjectSupporterWithPlings($this->_projectId);
     }
+    
+    
 
     public function payAction()
     {
@@ -1737,6 +1749,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 if (isset($fileResponse->status)
                     && $fileResponse->status == 'success'
                 ) {
+
                     $packageTypeTable = new Default_Model_DbTable_ProjectPackageType();
                     $packageTypeTable->deletePackageTypeOnProject($this->_projectId, $_POST['file_id']);
 
@@ -1744,7 +1757,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
                     return;
                 } else {
-                    $error_text .= 'Response: $pploadApi->deleteFile(): ' . json_encode($fileResponse)
+                    $error_text .= 'Response: $pploadApi->putFile(): ' . json_encode($fileResponse)
                         . '; $fileResponse->status: ' . $fileResponse->status;
                 }
             }

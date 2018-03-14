@@ -67,6 +67,7 @@ class Default_Form_Product extends Zend_Form
             ->addElement($this->getTwitterElement())
             ->addElement($this->getGoogleElement())
             ->addElement($this->getTagElement())
+            ->addElement($this->getTagUserElement())
             ->addElement($this->getHiddenProjectId())
             ->addElement($this->getSubmitElement())
             ->addElement($this->getCancelElement())
@@ -557,6 +558,23 @@ class Default_Form_Product extends Zend_Form
                                 'ViewScript',
                                 array(
                                     'viewScript' => 'product/viewscripts/input_tags_multiselect.phtml',
+                                    'placement' => false
+                                )
+                            )
+                        ));
+    }
+
+     private function getTagUserElement()
+    {
+        $element = new Zend_Form_Element_Multiselect('tagsuser', array('registerInArrayValidator' => false));
+        return $element
+                    ->setFilters(array('StringTrim'))
+                    ->setDecorators(
+                        array(
+                            array(
+                                'ViewScript',
+                                array(
+                                    'viewScript' => 'product/viewscripts/input_tags_user.phtml',
                                     'placement' => false
                                 )
                             )
