@@ -869,7 +869,8 @@ class Ocsv1Controller extends Zend_Controller_Action
         ));
         $previewPicSize = array(
             'width'  => 770,
-            'height' => 540
+            'height' => 540,
+            'crop'   => 0
         );
         $smallPreviewPicSize = array(
             'width'  => 100,
