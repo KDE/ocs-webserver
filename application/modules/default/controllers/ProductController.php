@@ -1737,7 +1737,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 if (isset($fileResponse->status)
                     && $fileResponse->status == 'success'
                 ) {
-
                     $packageTypeTable = new Default_Model_DbTable_ProjectPackageType();
                     $packageTypeTable->deletePackageTypeOnProject($this->_projectId, $_POST['file_id']);
 
@@ -1745,7 +1744,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
                     return;
                 } else {
-                    $error_text .= 'Response: $pploadApi->putFile(): ' . json_encode($fileResponse)
+                    $error_text .= 'Response: $pploadApi->deleteFile(): ' . json_encode($fileResponse)
                         . '; $fileResponse->status: ' . $fileResponse->status;
                 }
             }
