@@ -390,6 +390,10 @@ class Default_Model_Oauth_Github
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - new user data: '. print_r($newUserValues, true));
         $modelMember = new Default_Model_Member();
         $member = $modelMember->createNewUser($newUserValues);
+        
+        Default_Model_ActivityLog::logActivity($member['main_project_id'], null, $member['member_id'], Default_Model_ActivityLog::MEMBER_JOINED, array());
+
+        
         $modelEmail = new Default_Model_MemberEmail();
         $userEmail = $modelEmail->saveEmailAsPrimary($member['member_id'], $member['mail'], $newUserValues['verificationVal']);
         $userEmail->email_checked = new Zend_Db_Expr('Now()');
