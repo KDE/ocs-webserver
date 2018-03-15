@@ -177,9 +177,11 @@ class Backend_HiveuserController extends Local_Controller_Action_Backend
                 $member = $memberTable->fetchRow('source_id = 1 AND source_pk = ' . $user['id']);
 
                 if ($member) {
-                    $this->updateMember($user);
+                    $info .= " - Update Member; ";
+                    $info .= $this->updateMember($user);
                 } else {
-                    $this->insertMember($user);
+                    $info .= " - Insert Member; ";
+                    $info .= $this->insertMember($user);
                 }
                 $time_elapsed_secs = microtime(true) - $start;
                 $info .= $time_elapsed_secs . " secs";
