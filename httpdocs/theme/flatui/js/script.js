@@ -1524,7 +1524,7 @@ var TagingProductSelect2 = (function () {
                                     url: '/tag/filter',
                                     dataType: 'json',
                                     type: "GET",
-                                    quietMillis: 50,    
+                                    delay: 250, // wait 250 milliseconds before triggering the request  
                                     processResults: function (data) {                                          
                                           return {
                                             results: data.data.tags
