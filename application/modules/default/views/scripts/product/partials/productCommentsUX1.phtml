@@ -115,7 +115,9 @@ $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountP
                         </div>
                     </a>
                     <div class="media-body">
-                        <h4 class="media-heading user_name"><span class="tooltipuser"  data-tooltip-content="#tooltip_content" role="button" data-user="<?=$comment['member_id'] ?>"><?= $comment['username'] ?></span>
+                        <h4 class="media-heading user_name">
+                              
+                                  <a  class="tooltipuser"  data-tooltip-content="#tooltip_content" role="button" data-user="<?=$comment['member_id'] ?>" href="<?= $helperBuildMemberUrl->buildMemberUrl($comment['member_id']) ?>"> <?= $comment['username'] ?> </a>                              
 
                                 <p class="pull-right history" >
                                     <?php if ($age['age'] > 0) { ?>

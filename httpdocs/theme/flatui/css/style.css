@@ -971,6 +971,9 @@ span.packagetypeos
         border-bottom: 1px dashed #ccc;
         margin-left: 10px;
     }
+  .comments-list .user_name a{        
+        color: rgb(102, 189, 221) !important;        
+    }
 .comments-list .media-body{
     border-bottom: 1px solid #000;
 }
