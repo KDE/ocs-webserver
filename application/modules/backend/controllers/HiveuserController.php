@@ -267,7 +267,7 @@ class Backend_HiveuserController extends Local_Controller_Action_Backend
         $member['link_twitter'] = $user['link_twitter'];
         $member['validated'] = 0;
         $member['created_at'] = $user['created_at'];
-        $member['changed_at'] = $user['changed_at'];
+        $member['changed_at'] = $user['last_online'];
 
         return $member;
     }
