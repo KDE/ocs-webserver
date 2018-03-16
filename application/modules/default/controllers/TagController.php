@@ -94,7 +94,7 @@ class TagController extends Zend_Controller_Action
          $model = new Default_Model_Tags();
          $filter = $this->getParam('q');         
          $tags  = $model->filterTagsUser($filter,10);
-         $result = [];
+         $result = array();
          foreach ($tags as $tag) {
                 $result[] = ['id' => $tag['tag_name'],'text' =>$tag['tag_name'], 'tag_id'=>$tag['tag_id'],'tag_name'=>$tag['tag_name']];
          }
