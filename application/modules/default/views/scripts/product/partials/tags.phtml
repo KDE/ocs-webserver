@@ -49,13 +49,19 @@ if (false === empty($tags) || false === empty($tagsuser)) {
     <span class="title"> View More </span>
 
     <span class="row">
-        <?php foreach (explode(',',$tags) as $tag) { ?>
+        <?php if(false === empty($tags))
+        {
+        foreach (explode(',',$tags) as $tag) { ?>
             <a href="/search?projectSearchText=<?=$tag?>&f=tags" class="tag-element"><span class="glyphicon glyphicon-tag" aria-hidden="true"></span> <?=$tag?></a>
-        <?php }?>
+        <?php }}?>
 
-        <?php foreach (explode(',',$tagsuser) as $tag) { ?>
+
+        <?php 
+            if(false === empty($tagsuser))
+            {
+             foreach (explode(',',$tagsuser) as $tag) { ?>
             <a href="/search?projectSearchText=<?=$tag?>&f=tags" class="tag-element"><span class="glyphicon glyphicon-tag" aria-hidden="true"></span> <?=$tag?></a>
-        <?php }?>
+        <?php }}?>
     </span>
     </div>
 

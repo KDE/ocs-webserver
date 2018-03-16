@@ -27,12 +27,17 @@ class TagController extends Zend_Controller_Action
     {
         $this->_helper->layout()->disableLayout();
 
-        $label = Default_Model_HtmlPurify::purify($this->getParam('t'));
+        $tag = Default_Model_HtmlPurify::purify($this->getParam('t'));
+        $projectid = (int) $this->getParam('p');
+        
+        $model = new Default_Model_Tags();
+        $model->addTagUser($projectid,$tag,Default_Model_Tags::TAG_TYPE_PROJECT);
+
 
         $this->_helper->json(array(
             'status'  => 'ok',
             'message' => '',
-            'data'    => array('id' => 123456, 'label' => $label)
+            'data'    => array('pid' => $projectid, 'tag' => $tag)
         ));
     }
 
@@ -40,12 +45,16 @@ class TagController extends Zend_Controller_Action
     {
         $this->_helper->layout()->disableLayout();
 
-        $id = (int) $this->getParam('ti');
+        $projectid = (int) $this->getParam('p');
+        $tag = $this->getParam('t');
+
+        $model = new Default_Model_Tags();
+        $model->deleteTagUser($projectid,$tag,Default_Model_Tags::TAG_TYPE_PROJECT);
 
         $this->_helper->json(array(
             'status'  => 'ok',
-            'message' => '',
-            'data'    => array('id' => $id)
+            'message' => 'removed',
+            'data'    => array('pid' => $projectid, 'tag'=>$tag)
         ));
     }
 
@@ -85,11 +94,15 @@ class TagController extends Zend_Controller_Action
          $model = new Default_Model_Tags();
          $filter = $this->getParam('q');         
          $tags  = $model->filterTagsUser($filter,10);
+         $result = [];
+         foreach ($tags as $tag) {
+                $result[] = ['id' => $tag['tag_name'],'text' =>$tag['tag_name'], 'tag_id'=>$tag['tag_id'],'tag_name'=>$tag['tag_name']];
+         }
+
          $this->_helper->json(array(
-             'status'  => 'ok',
-             'message' => '',
-             'filter'=>$filter,
-             'data'    => array('tags' => $tags)
+             'status'  => 'ok',             
+             'filter'=>$filter,             
+             'data'    => array('tags' => $result)
          ));
     }
 }

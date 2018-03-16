@@ -129,8 +129,8 @@ class Default_Model_Tags
     {
         $sql = "
                          select 
-                         tag.tag_name as id
-                         ,tag.tag_name as text
+                         tag.tag_id 
+                         ,tag.tag_name
                          from tag
                          join tag_group_item on tag.tag_id = tag_group_item.tag_id and tag_group_item.tag_group_id = :tag_user_groupid
                          where tag.tag_name like '%".$filter."%'
@@ -168,8 +168,7 @@ class Default_Model_Tags
 
         $this->updateChanged($object_id, $tag_type);
     }
-
-
+    
     
 
  /**
@@ -204,6 +203,28 @@ class Default_Model_Tags
         $this->getAdapter()->query($sql);
     }
 
+
+    /**
+     * @param int    $object_id
+     * @param string $tags
+     * @param int    $tag_type
+     */
+    public function addTagUser($object_id, $tag, $tag_type)
+    {
+        
+        $tableTags = new Default_Model_DbTable_Tags();
+        $listIds = $tableTags->storeTagsUser($tag);
+
+        $prepared_insert =
+            array_map(function ($id) use ($object_id, $tag_type) { return "({$id}, {$tag_type}, {$object_id})"; },
+                $listIds);
+        $sql = "INSERT IGNORE INTO tag_object (tag_id, tag_type_id, tag_object_id) VALUES " . implode(',',
+                $prepared_insert);
+
+     
+        $this->getAdapter()->query($sql);
+    }
+
     public function deassignTagsUser($object_id, $tags, $tag_type)
     {
         $removable_tags = array_diff(explode(',', $this->getTagsUser($object_id, $tag_type)), explode(',', $tags));
@@ -223,6 +244,24 @@ class Default_Model_Tags
         $this->updateChanged($object_id, $tag_type);
     }
 
+
+    public function deleteTagUser($object_id, $tag, $tag_type)
+    {
+        $removable_tag =$tag;
+        $sql = "DELETE tag_object FROM tag_object JOIN tag ON tag.tag_id = tag_object.tag_id WHERE tag.tag_name = :name and tag_object.tag_object_id=:object_id";
+       
+        $this->getAdapter()->query($sql, array('name' => $removable_tag,'object_id' => $object_id));
+            // if Tag is the only one in Tag_object table then delete this tag for user_groupid = 5
+
+        $sql_object= "select count(1)  as cnt from tag_object JOIN tag ON tag.tag_id = tag_object.tag_id WHERE tag.tag_name = :name";
+        $r = $this->getAdapter()->fetchRow($sql_object, array('name' => $removable_tag));
+        if($r['cnt'] ==0){
+            // then remove tag if not existing in Tag_object
+            $sql_delete_tag = "delete from tag where tag_name=:name";
+            $this->getAdapter()->query($sql_delete_tag, array('name' => $removable_tag));
+        }       
+        $this->updateChanged($object_id, $tag_type);
+    }
 
     private function updateChanged($object_id, $tag_type)
     {

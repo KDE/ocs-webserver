@@ -1520,18 +1520,91 @@ var TagingProductSelect2 = (function () {
                             placeholder: "Input topics please...", //placeholder
                             tags: true,
                             minimumInputLength: 3,
+                            maximumSelectionLength: 5,
                             ajax: {
                                     url: '/tag/filter',
                                     dataType: 'json',
                                     type: "GET",
                                     delay: 250, // wait 250 milliseconds before triggering the request  
-                                    processResults: function (data) {                                          
+                                    processResults: function (data) {                                                                                    
                                           return {
-                                            results: data.data.tags
+                                            results: $.map(data.data.tags, function(obj) {
+                                                        return { id: obj.tag_name, text: obj.tag_name };
+                                                    })
                                           };
                                         }                               
                                     
                                 }
+                        });
+        }
+    }
+})();
+
+var TagingProductDetail = (function () {
+                        return {
+                            setup: function () {
+                                           TagingProductDetailSelect2.setup();
+                                           $('body').on('click', 'button.topic-tags-btn', function (event) {
+                                                $(this).toggleClass('Done');
+                                                $('.product_category').find('.usertagslabel').toggle();
+                                                $('.tagsuserselectpanel').toggle();
+                                                if($(this).text() == 'Done'){
+                                                        $(this).text('Manage topics');
+                                                        var newhtml = '';
+                                                        var lis = $('li.select2-selection__choice');                                                        
+                                                        $.each(lis, function( index, value ) {
+                                                            newhtml=newhtml+'<a href="/search?projectSearchText='+value.title+'&amp;f=tags" '
+                                                                                          +'class="topic-tag topic-tag-link usertagslabel">'+value.title+'</a>';
+                                                        });                                                       
+                                                        $('.product_category').find('.topicslink').html(newhtml);                                                        
+                                                }else{
+                                                    $(this).text('Done');                                                    
+                                                }                                               
+                                           });
+                            }
+                        }
+})();
+
+var TagingProductDetailSelect2 = (function () {
+    return {
+        setup: function () {
+                        var t = $("#tagsuserselect").select2({
+                            placeholder: "Input topics please...", //placeholder
+                            tags: true,
+                            minimumInputLength: 3,
+                            maximumSelectionLength: 5,
+                            ajax: {
+                                    url: '/tag/filter',
+                                    dataType: 'json',
+                                    type: "GET",
+                                    delay: 250, // wait 250 milliseconds before triggering the request                                      
+                                    processResults: function (data) {                                          
+                                          return {
+                                            results : data.data.tags                                          
+                                          };
+                                        }                                                                   
+                                    }
+                        });
+
+                        // Bind an event
+                        t.on('select2:select', function (e) { 
+                                        var data = e.params.data;     
+                                        var projectid = $("#tagsuserselect").attr('data-pid');
+                                        $.post( "/tag/add", { p: projectid, t: data.id })
+                                          .done(function( data ) {
+                                                    console.log(data);    
+                                          });
+                        });
+                       
+                        // Unbind the event
+                        t.on('select2:unselect', function(e){
+                                var data = e.params.data;     
+                                var projectid = $("#tagsuserselect").attr('data-pid');
+                                $.post( "/tag/del", { p: projectid, t: data.id })
+                                  .done(function( data ) {
+                                            console.log(data);    
+                                  });
+                                
                         });
         }
     }
