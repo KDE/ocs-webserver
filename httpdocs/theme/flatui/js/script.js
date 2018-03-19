@@ -1517,7 +1517,7 @@ var TagingProductSelect2 = (function () {
     return {
         setup: function () {
                         $(".taggingSelect2").select2({
-                            placeholder: "Input topics please...", //placeholder
+                            placeholder: "Input tags please...", //placeholder
                             tags: true,
                             tokenSeparators: [",", " "],
                             minimumInputLength: 3,
@@ -1574,6 +1574,7 @@ var TagingProductDetailSelect2 = (function () {
                             tags: true,
                             minimumInputLength: 3,
                             maximumSelectionLength: 5,
+                            tokenSeparators: [",", " "],
                             ajax: {
                                     url: '/tag/filter',
                                     dataType: 'json',
