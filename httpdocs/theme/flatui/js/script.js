@@ -1594,7 +1594,7 @@ var TagingProductDetailSelect2 = (function () {
                                         $.post( "/tag/add", { p: projectid, t: data.id })
                                           .done(function( data ) {
                                                     console.log(data);    
-                                                    $('span.topic-tags-saved').show().delay(5000).fadeOut();                                                    
+                                                    $('span.topic-tags-saved').show().delay(2000).fadeOut();                                                    
                                           });
                         });
                        
@@ -1605,7 +1605,7 @@ var TagingProductDetailSelect2 = (function () {
                                 $.post( "/tag/del", { p: projectid, t: data.id })
                                   .done(function( data ) {
                                             console.log(data);    
-                                            $('span.topic-tags-saved').show().delay(5000).fadeOut();
+                                            $('span.topic-tags-saved').show().delay(2000).fadeOut();
                                   });
                                 
                         });
