@@ -190,17 +190,20 @@ class Default_Model_Tags
      */
     public function assignTagsUser($object_id, $tags, $tag_type)
     {
+
         $new_tags = array_diff(explode(',', $tags), explode(',', $this->getTagsUser($object_id, $tag_type)));
+        if(sizeof($new_tags)>0)
+        {
+            $tableTags = new Default_Model_DbTable_Tags();
+            $listIds = $tableTags->storeTagsUser(implode(',', $new_tags));
 
-        $tableTags = new Default_Model_DbTable_Tags();
-        $listIds = $tableTags->storeTagsUser(implode(',', $new_tags));
-
-        $prepared_insert =
-            array_map(function ($id) use ($object_id, $tag_type) { return "({$id}, {$tag_type}, {$object_id})"; },
-                $listIds);
-        $sql = "INSERT IGNORE INTO tag_object (tag_id, tag_type_id, tag_object_id) VALUES " . implode(',',
-                $prepared_insert);
-        $this->getAdapter()->query($sql);
+            $prepared_insert =
+                array_map(function ($id) use ($object_id, $tag_type) { return "({$id}, {$tag_type}, {$object_id})"; },
+                    $listIds);
+            $sql = "INSERT IGNORE INTO tag_object (tag_id, tag_type_id, tag_object_id) VALUES " . implode(',',
+                    $prepared_insert);
+            $this->getAdapter()->query($sql);
+        }
     }
 
 
