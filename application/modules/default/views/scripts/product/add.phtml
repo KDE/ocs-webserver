@@ -35,6 +35,20 @@ if (count($categoryAncestors) > 0) {
     $categoryPath = explode(',',$categoryAncestors['ancestors']);
 }
 $categoryPath[] = $valueCatId;
+
+$this->headLink()->appendStylesheet('/theme/flatui/css/chosen.css');
+$this->inlineScript()->appendFile('/theme/flatui/js/lib/chosen.jquery.min.js');
+$this->inlineScript()->appendScript('
+                                    $(document).ready(function(){
+                                        $("select.chosen").chosen({
+                                        width: "100%", 
+                                        max_selected_options: "5",
+                                        disable_search: "false",
+                                        disable_search_threshold: "5"
+                                        });
+                                    });
+                                ');
+
 ?>
     <style>
 
@@ -219,7 +233,7 @@ $categoryPath[] = $valueCatId;
                                 <?= $this->form->facebook_code ?>
                                 <?= $this->form->twitter_code ?>
                                 <?= $this->form->google_code ?>
-                                <?= $this->form->tags  ?>
+                                
                                 <?= $this->form->tagsuser ?>
                             </section>
 

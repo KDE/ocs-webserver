@@ -1519,6 +1519,7 @@ var TagingProductSelect2 = (function () {
                         $(".taggingSelect2").select2({
                             placeholder: "Input topics please...", //placeholder
                             tags: true,
+                            tokenSeparators: [",", " "],
                             minimumInputLength: 3,
                             maximumSelectionLength: 5,
                             ajax: {

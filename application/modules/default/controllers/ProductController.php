@@ -194,12 +194,12 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->_auth->getIdentity()->projects[$newProject->project_id] = array('project_id' => $newProject->project_id);
         //        $this->auth->getStorage()->write($this->auth->getIdentity());
 
-        if ($values['tags']) {
-            $modelTags = new Default_Model_Tags();
-            $modelTags->processTags($newProject->project_id, implode(',',$values['tags']), Default_Model_Tags::TAG_TYPE_PROJECT);
-        }
+        // if ($values['tags']) {
+        //     $modelTags = new Default_Model_Tags();
+        //     $modelTags->processTags($newProject->project_id, implode(',',$values['tags']), Default_Model_Tags::TAG_TYPE_PROJECT);
+        // }
 
-        
+
         $modelTags->processTagsUser($newProject->project_id, implode(',',$values['tagsuser']), Default_Model_Tags::TAG_TYPE_PROJECT);
      
 
@@ -417,13 +417,12 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         //$projectData->changed_at = new Zend_Db_Expr('NOW()');
         $projectData->save();
 
-        if ($values['tags']) {
-            $modelTags->processTags($this->_projectId, implode(',',$values['tags']), Default_Model_Tags::TAG_TYPE_PROJECT);
-        }
+        // if ($values['tags']) {
+        //     $modelTags->processTags($this->_projectId, implode(',',$values['tags']), Default_Model_Tags::TAG_TYPE_PROJECT);
+        // }
           
         $modelTags->processTagsUser($this->_projectId,implode(',',$values['tagsuser']), Default_Model_Tags::TAG_TYPE_PROJECT);             
-        //$modelTags->processTagsUser($this->_projectId,$values['tagsuser'], Default_Model_Tags::TAG_TYPE_PROJECT);
-      
+   
 
         $activityLog = new Default_Model_ActivityLog();
         $activityLog->writeActivityLog($this->_projectId, $projectData->member_id,
