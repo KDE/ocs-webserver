@@ -1570,7 +1570,7 @@ var TagingProductDetailSelect2 = (function () {
     return {
         setup: function () {
                         var t = $("#tagsuserselect").select2({
-                            placeholder: "Input topics please...", //placeholder
+                            placeholder: "Input tags please...", //placeholder
                             tags: true,
                             minimumInputLength: 3,
                             maximumSelectionLength: 5,
@@ -1581,7 +1581,7 @@ var TagingProductDetailSelect2 = (function () {
                                     delay: 250, // wait 250 milliseconds before triggering the request                                      
                                     processResults: function (data) {                                          
                                           return {
-                                            results : data.data.tags                                          
+                                                results : data.data.tags                                          
                                           };
                                         }                                                                   
                                     }
@@ -1594,6 +1594,7 @@ var TagingProductDetailSelect2 = (function () {
                                         $.post( "/tag/add", { p: projectid, t: data.id })
                                           .done(function( data ) {
                                                     console.log(data);    
+                                                    $('span.topic-tags-saved').show().delay(5000).fadeOut();                                                    
                                           });
                         });
                        
@@ -1604,6 +1605,7 @@ var TagingProductDetailSelect2 = (function () {
                                 $.post( "/tag/del", { p: projectid, t: data.id })
                                   .done(function( data ) {
                                             console.log(data);    
+                                            $('span.topic-tags-saved').show().delay(5000).fadeOut();
                                   });
                                 
                         });

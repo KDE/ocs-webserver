@@ -250,7 +250,8 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
                                                 ?>         
                                             </select>
                                         </span>
-                                        <button class="btn-link topic-tags-btn"  type="button" >Manage topics</button>
+                                        <span class="topic-tags-saved" style="display: none"> Saved </span>
+                                        <button class="btn-link topic-tags-btn"  type="button" >Manage tags</button>
                                     <?php
                                             $this->inlineScript()->appendScript(
                                                 '    $(document).ready(function(){       
