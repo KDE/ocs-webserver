@@ -1550,7 +1550,7 @@ var TagingProductDetail = (function () {
                                                 $('.product_category').find('.usertagslabel').toggle();
                                                 $('.tagsuserselectpanel').toggle();
                                                 if($(this).text() == 'Done'){
-                                                        $(this).text('Manage topics');
+                                                        $(this).text('Manage tags');
                                                         var newhtml = '';
                                                         var lis = $('li.select2-selection__choice');                                                        
                                                         $.each(lis, function( index, value ) {
