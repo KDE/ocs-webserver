@@ -318,6 +318,8 @@ class Default_Model_OAuth_Ocs implements Default_Model_OAuth_Interface
             $resultSet = $this->fetchUserByUsername($userEmail);
         }
 
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - ResultSet: ' . print_r($resultSet, true));
+
         if (count($resultSet) == 0) {
             return $this->createAuthResult(Zend_Auth_Result::FAILURE_IDENTITY_NOT_FOUND, $userEmail,
                 array('A record with the supplied identity could not be found.'));
