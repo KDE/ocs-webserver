@@ -143,6 +143,7 @@ class OAuthController extends Zend_Controller_Action
             Zend_Registry::get('logger')->info(__METHOD__ . '('.__LINE__.')'.' - ip: ' . $this->_request->getClientIp() . ' - authentication failed.');
             $this->_helper->flashMessenger->addMessage(self::ERR_MSG_DEFAULT);
             $this->forward('index', 'explore', 'default');
+            return;
         }
 
         Zend_Registry::get('logger')->info(__METHOD__ . ' - authentication successful - member_id: ' . Zend_Auth::getInstance()->getIdentity()->member_id);
