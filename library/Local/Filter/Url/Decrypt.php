@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -19,7 +20,6 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-
 class Local_Filter_Url_Decrypt implements Zend_Filter_Interface
 {
 
@@ -27,7 +27,6 @@ class Local_Filter_Url_Decrypt implements Zend_Filter_Interface
      * Returns the result of filtering $value
      *
      * @param  mixed $value
-     * @throws Zend_Filter_Exception If filtering $value is impossible
      * @return mixed
      */
     public function filter($value)
@@ -63,7 +62,12 @@ class Local_Filter_Url_Decrypt implements Zend_Filter_Interface
         return rtrim($filter->filter($this->base64url_decode($url)));
     }
 
-    protected function base64url_decode($data) {
+    /**
+     * @param string $data
+     * @return bool|string
+     */
+    protected function base64url_decode($data)
+    {
         return base64_decode(str_pad(strtr($data, '-_', '+/'), strlen($data) % 4, '=', STR_PAD_RIGHT));
     }
 

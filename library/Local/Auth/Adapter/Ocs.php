@@ -37,8 +37,8 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
     /**
      * __construct() - Sets configuration options
      *
-     * @param  Zend_Db_Adapter_Abstract $dbAdapter If null, default database adapter assumed
-     * @param string $tableName
+     * @param Zend_Db_Adapter_Abstract $dbAdapter If null, default database adapter assumed
+     * @param string                   $tableName
      * @throws Zend_Auth_Adapter_Exception
      */
     public function __construct(Zend_Db_Adapter_Abstract $dbAdapter = null, $tableName = null)
@@ -62,8 +62,8 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
     /**
      * Performs an authentication attempt
      *
-     * @throws Zend_Auth_Adapter_Exception If authentication cannot be performed
      * @return Zend_Auth_Result
+     * @throws Zend_Exception
      */
     public function authenticate()
     {
@@ -89,6 +89,10 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
             array('Authentication successful.'));
     }
 
+    /**
+     * @return array
+     * @throws Zend_Exception
+     */
     private function fetchUserByEmail()
     {
         $sql = "
@@ -103,10 +107,10 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
 
         $this->_db->getProfiler()->setEnabled(true);
         $resultSet = $this->_db->fetchAll($sql, array(
-            'active' => Default_Model_DbTable_Member::MEMBER_ACTIVE,
-            'deleted' => Default_Model_DbTable_Member::MEMBER_NOT_DELETED,
-            'login' => Default_Model_DbTable_Member::MEMBER_LOGIN_LOCAL,
-            'mail' => $this->_identity,
+            'active'   => Default_Model_DbTable_Member::MEMBER_ACTIVE,
+            'deleted'  => Default_Model_DbTable_Member::MEMBER_NOT_DELETED,
+            'login'    => Default_Model_DbTable_Member::MEMBER_LOGIN_LOCAL,
+            'mail'     => $this->_identity,
             'password' => $this->_credential
         ));
         Zend_Registry::get('logger')->info(__METHOD__ . ' - sql take seconds: ' . $this->_db->getProfiler()->getLastQueryProfile()->getElapsedSecs());
@@ -115,6 +119,10 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
         return $resultSet;
     }
 
+    /**
+     * @return array
+     * @throws Zend_Exception
+     */
     private function fetchUserByUsername()
     {
         $sql = "
@@ -129,9 +137,9 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
 
         $this->_db->getProfiler()->setEnabled(true);
         $resultSet = $this->_db->fetchAll($sql, array(
-            'active' => Default_Model_DbTable_Member::MEMBER_ACTIVE,
-            'deleted' => Default_Model_DbTable_Member::MEMBER_NOT_DELETED,
-            'login' => Default_Model_DbTable_Member::MEMBER_LOGIN_LOCAL,
+            'active'   => Default_Model_DbTable_Member::MEMBER_ACTIVE,
+            'deleted'  => Default_Model_DbTable_Member::MEMBER_NOT_DELETED,
+            'login'    => Default_Model_DbTable_Member::MEMBER_LOGIN_LOCAL,
             'username' => $this->_identity,
             'password' => $this->_credential
         ));
@@ -153,6 +161,7 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
     /**
      * @param string $identity
      * @return Local_Auth_Adapter_Ocs
+     * @throws Zend_Exception
      */
     public function setIdentity($identity)
     {

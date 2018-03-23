@@ -39,6 +39,9 @@ class OAuthController extends Zend_Controller_Action
         $this->_helper->viewRenderer->setNoRender(true);
     }
 
+    /**
+     * @throws Zend_Exception
+     */
     public function loginAction()
     {
         $filterInput = new Zend_Filter_Input(
@@ -53,7 +56,11 @@ class OAuthController extends Zend_Controller_Action
             $this->forward('index', 'explore', 'default');
         }
 
-        $data = array('remember_me' => true, 'redirect' => $this->getParam('redirect'), 'action' => Default_Model_SingleSignOnToken::ACTION_LOGIN);
+        $data = array(
+            'remember_me' => true,
+            'redirect'    => $this->getParam('redirect'),
+            'action'      => Default_Model_SingleSignOnToken::ACTION_LOGIN
+        );
         $token_id = $this->createAToken($data);
 
         $authAdapter = Default_Model_OAuth::factory($this->getParam(self::PARAM_NAME_PROVIDER));
@@ -62,8 +69,26 @@ class OAuthController extends Zend_Controller_Action
         $this->redirect($requestUrl);
     }
 
+    /**
+     * @param $data
+     * @return string
+     */
+    protected function createAToken($data)
+    {
+        $modelToken = new Default_Model_SingleSignOnToken();
+        $token_id = $modelToken->createToken($data);
+        setcookie(Default_Model_SingleSignOnToken::ACTION_LOGIN, $token_id, time() + 120, '/',
+            Local_Tools_ParseDomain::get_domain($this->getRequest()->getHttpHost()), null, true);
+        return $token_id;
+    }
+
+    /**
+     * @throws Exception
+     * @throws Zend_Exception
+     */
     public function githubAction()
     {
+        /** @var Default_Model_Oauth_Github $authAdapter */
         $authAdapter = Default_Model_OAuth::factory('github');
         $access_token = $authAdapter->authFinish($this->getAllParams());
 
@@ -74,7 +99,7 @@ class OAuthController extends Zend_Controller_Action
 
         $authResult = $authAdapter->authenticate();
         if (false == $authResult->isValid()) {
-            Zend_Registry::get('logger')->info(__METHOD__ . ' - ip: '.$this->_request->getClientIp().' - authentication failed.');
+            Zend_Registry::get('logger')->info(__METHOD__ . ' - ip: ' . $this->_request->getClientIp() . ' - authentication failed.');
             $this->_helper->flashMessenger->addMessage(self::ERR_MSG_DEFAULT);
             $this->forward('index', 'explore', 'default');
         }
@@ -82,7 +107,10 @@ class OAuthController extends Zend_Controller_Action
         Zend_Registry::get('logger')->info(__METHOD__ . ' - authentication successful - member_id: ' . Zend_Auth::getInstance()->getIdentity()->member_id);
 
         $modelToken = new Default_Model_SingleSignOnToken();
-        $modelToken->addData($this->getParam('state'), array('member_id' => Zend_Auth::getInstance()->getIdentity()->member_id, 'auth_result' => $authResult->isValid()));
+        $modelToken->addData($this->getParam('state'), array(
+            'member_id'   => Zend_Auth::getInstance()->getIdentity()->member_id,
+            'auth_result' => $authResult->isValid()
+        ));
 
         $authAdapter->storeAccessToken($access_token);
         $redirect_url = $authAdapter->getRedirect();
@@ -93,6 +121,48 @@ class OAuthController extends Zend_Controller_Action
         $this->redirect($redirect_url);
     }
 
+    /**
+     * @throws Exception
+     * @throws Zend_Exception
+     */
+    public function ocsAction()
+    {
+        /** @var Default_Model_Oauth_Ocs $authAdapter */
+        $authAdapter = Default_Model_OAuth::factory('ocs');
+        $access_token = $authAdapter->authFinish($this->getAllParams());
+
+        if (false == $authAdapter->isConnected()) {
+            $this->_helper->flashMessenger->addMessage(self::ERR_MSG_DEFAULT);
+            $this->forward('index', 'explore', 'default');
+        }
+
+        $authResult = $authAdapter->authenticate();
+        if (false == $authResult->isValid()) {
+            Zend_Registry::get('logger')->info(__METHOD__ . ' - ip: ' . $this->_request->getClientIp() . ' - authentication failed.');
+            $this->_helper->flashMessenger->addMessage(self::ERR_MSG_DEFAULT);
+            $this->forward('index', 'explore', 'default');
+        }
+
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - authentication successful - member_id: ' . Zend_Auth::getInstance()->getIdentity()->member_id);
+
+        $modelToken = new Default_Model_SingleSignOnToken();
+        $modelToken->addData($this->getParam('state'), array(
+            'member_id'   => Zend_Auth::getInstance()->getIdentity()->member_id,
+            'auth_result' => $authResult->isValid()
+        ));
+
+        $authAdapter->storeAccessToken($access_token);
+        $redirect_url = $authAdapter->getRedirect();
+
+        if (false === $redirect_url) {
+            $this->forward('products', 'user');
+        }
+        $this->redirect($redirect_url);
+    }
+
+    /**
+     * @throws Zend_Exception
+     */
     public function registerAction()
     {
         $filterInput = new Zend_Filter_Input(
@@ -109,19 +179,6 @@ class OAuthController extends Zend_Controller_Action
 
         $authAdapter = Default_Model_OAuth::factory($filterInput->getEscaped(self::PARAM_NAME_PROVIDER));
         $authAdapter->authStart($this->getParam('redirect'));
-    }
-
-    /**
-     * @param $data
-     * @return string
-     */
-    protected function createAToken($data)
-    {
-        $modelToken = new Default_Model_SingleSignOnToken();
-        $token_id = $modelToken->createToken($data);
-        setcookie(Default_Model_SingleSignOnToken::ACTION_LOGIN, $token_id, time() + 120, '/',
-            Local_Tools_ParseDomain::get_domain($this->getRequest()->getHttpHost()), null, true);
-        return $token_id;
     }
 
 }

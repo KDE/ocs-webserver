@@ -23,6 +23,10 @@
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {
 
+    /**
+     * @return Zend_Application_Module_Autoloader
+     * @throws Zend_Loader_Exception
+     */
     protected function _initAutoload()
     {
         $autoloader = new Zend_Application_Module_Autoloader(array(
@@ -34,24 +38,28 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         return $autoloader;
     }
 
+    /**
+     * @throws Zend_Exception
+     * @throws Zend_Session_Exception
+     */
     protected function _initSessionManagement()
     {
         $config = $this->getOption('settings');
         if ($config['session']['saveHandler']['replace']['enabled'] == false) {
             return;
         }
-
-        if (APPLICATION_ENV != 'development') {
-            $domain = $this->get_domain($_SERVER['SERVER_NAME']);
-        } else {
-            $domain = $_SERVER['SERVER_NAME'];
-        }
+        $domain = ($_SERVER['HTTP_HOST'] != 'localhost') ? $_SERVER['HTTP_HOST'] : false;
+//        if (APPLICATION_ENV != 'development') {
+//            $domain = $this->get_domain($_SERVER['SERVER_NAME']);
+//        } else {
+//            $domain = $_SERVER['SERVER_NAME'];
+//        }
 
         $cacheClass = 'Zend_Cache_Backend_'.$config['session']['saveHandler']['cache']['type'];
         $_cache = new $cacheClass($config['session']['saveHandler']['options']);
         Zend_Loader::loadClass($config['session']['saveHandler']['class']);
         Zend_Session::setSaveHandler(new $config['session']['saveHandler']['class']($_cache));
-        Zend_Session::setOptions(array('cookie_domain' => $domain));
+        Zend_Session::setOptions(array('cookie_domain' => $domain, 'cookie_path' => '/', 'cookie_httponly' => true));
         Zend_Session::start();
     }
 
@@ -76,6 +84,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         return $config;
     }
 
+    /**
+     * @return mixed|null|Zend_Cache_Core|Zend_Cache_Frontend
+     * @throws Zend_Cache_Exception
+     * @throws Zend_Exception
+     */
     protected function _initCache()
     {
         if (Zend_Registry::isRegistered('cache')) {
@@ -139,6 +152,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         return $cache;
     }
 
+    /**
+     * @throws Zend_Application_Bootstrap_Exception
+     */
     protected function _initViewConfig()
     {
         $view = $this->bootstrap('view')->getResource('view');
@@ -152,6 +168,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view->doctype($docType);
     }
 
+    /**
+     * @throws Zend_Locale_Exception
+     */
     protected function _initLocale()
     {
         $configResources = $this->getOption('resources');
@@ -159,6 +178,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         Zend_Registry::set($configResources['locale']['registry_key'], $configResources['locale']['default']);
     }
 
+    /**
+     * @return Zend_Translate
+     * @throws Zend_Application_Resource_Exception
+     * @throws Zend_Form_Exception
+     * @throws Zend_Session_Exception
+     * @throws Zend_Translate_Exception
+     * @throws Zend_Validate_Exception
+     */
     protected function _initTranslate()
     {
         $options = $this->getOption('resources');
@@ -186,6 +213,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         return $translate;
     }
 
+    /**
+     * @throws Zend_Application_Bootstrap_Exception
+     */
     protected function _initDbAdapter()
     {
         $db = $this->bootstrap('db')->getResource('db');
@@ -203,13 +233,16 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         Zend_Db_Table_Abstract::setDefaultAdapter($db);
     }
 
+    /**
+     * @throws Zend_Log_Exception
+     */
     protected function _initLogger()
     {
         $settings = $this->getOption('settings');
         $log = new Zend_Log();
 
         $writer = new Zend_Log_Writer_Stream($settings['log']['path'] . 'all_' . date("Y-m-d"));
-        $writer->addFilter(new Local_Log_Filter_MinMax(Zend_Log::WARN, Zend_Log::INFO));
+        $writer->addFilter(new Local_Log_Filter_MinMax(Zend_Log::WARN, Zend_Log::DEBUG));
 
         $log->addWriter($writer);
 
@@ -238,6 +271,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         defined('APPLICATION_VERSION') || define('APPLICATION_VERSION', $version);
     }
 
+    /**
+     * @return Default_Plugin_AclRules|false|mixed
+     * @throws Zend_Cache_Exception
+     */
     protected function _initAclRules()
     {
         /** @var Zend_Cache_Core $appCache */
@@ -251,6 +288,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         return $aclRules;
     }
 
+    /**
+     * @throws Zend_Application_Bootstrap_Exception
+     * @throws Zend_Loader_PluginLoader_Exception
+     */
     protected function _initPlugins()
     {
         /** @var $front Zend_Controller_Front */
@@ -273,6 +314,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             ->addPrefixPath('Default_Form_Validator', APPLICATION_PATH . '/modules/default/forms/validators');
     }
 
+    /**
+     * @throws Zend_Session_Exception
+     */
     protected function _initAuthSessionNamespace()
     {
         $config = $this->getResource('config');
@@ -300,6 +344,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         defined('PPLOAD_DOWNLOAD_SECRET') || define('PPLOAD_DOWNLOAD_SECRET', $pploadConfig->download_secret);
     }
 
+    /**
+     * @return false|mixed|Zend_Controller_Router_Rewrite
+     * @throws Zend_Application_Bootstrap_Exception
+     * @throws Zend_Cache_Exception
+     * @throws Zend_Controller_Exception
+     * @throws Zend_Exception
+     */
     protected function _initRouter()
     {
         $this->bootstrap('frontController');
@@ -1069,8 +1120,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         );
 
         $cache->save($router, 'ProjectRouter', array('router'), 14400);
+        return $router;
     }
 
+    /**
+     * @throws Zend_Cache_Exception
+     * @throws Zend_Exception
+     * @throws exception
+     */
     protected function _initCss()
     {
         if (APPLICATION_ENV != "development" && APPLICATION_ENV != "staging") {
@@ -1106,17 +1163,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         Zend_Registry::set('application_store_config_id_list', $modelDomainConfig->fetchAllStoresConfigByIdArray());
     }
 
+    /**
+     * @throws Zend_Application_Bootstrap_Exception
+     */
     protected function _initStoreDependentVars()
     {
         /** @var $front Zend_Controller_Front */
         $front = $this->bootstrap('frontController')->getResource('frontController');
         $front->registerPlugin(new Default_Plugin_InitGlobalStoreVars());
     }
-
-//    protected function _initOsDependentVars()
-//    {
-//        $modelOsConfig = new Default_Model_DbTable_ConfigOperatingSystem();
-//        Zend_Registry::set('application_os', $modelOsConfig->fetchOperatingSystems());
-//    }
 
 }

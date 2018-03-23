@@ -26,14 +26,14 @@ class Default_Model_OAuth
 {
 
     const LOGIN_GITUHB = 'github';
+    const LOGIN_OCS = 'ocs';
+
 
     /**
-     * Default_Model_OAuth constructor.
+     * @param string $providerId
+     * @return Default_Model_OAuth_Interface
+     * @throws Zend_Exception
      */
-    public function __construct()
-    {
-    }
-
     public static function factory($providerId)
     {
         switch ($providerId) {
@@ -42,6 +42,13 @@ class Default_Model_OAuth
                     Zend_Registry::get('db'),
                     'member',
                     Zend_Registry::get('config')->third_party->github);
+                break;
+
+            case self::LOGIN_OCS:
+                $authAdapter = new Default_Model_Oauth_Ocs(
+                    Zend_Registry::get('db'),
+                    'member',
+                    Zend_Registry::get('config')->third_party->ocs);
                 break;
 
             default:
