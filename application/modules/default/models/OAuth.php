@@ -45,7 +45,7 @@ class Default_Model_OAuth
                 break;
 
             case self::LOGIN_OCS:
-                $authAdapter = new Default_Model_Oauth_Ocs(
+                $authAdapter = new Default_Model_OAuth_Ocs(
                     Zend_Registry::get('db'),
                     'member',
                     Zend_Registry::get('config')->third_party->ocs);
