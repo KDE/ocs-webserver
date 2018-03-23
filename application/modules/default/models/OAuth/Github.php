@@ -22,7 +22,7 @@
  *
  *    Created: 22.11.2016
  **/
-class Default_Model_Oauth_Github implements Default_Model_OAuth_Interface
+class Default_Model_OAuth_Github implements Default_Model_OAuth_Interface
 {
 
     const PREFIX_SEPARATOR = '_';

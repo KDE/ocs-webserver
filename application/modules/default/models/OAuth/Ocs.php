@@ -22,7 +22,7 @@
  *
  *    Created: 16.12.2016
  **/
-class Default_Model_Oauth_Ocs implements Default_Model_OAuth_Interface
+class Default_Model_OAuth_Ocs implements Default_Model_OAuth_Interface
 {
     const PREFIX_SEPARATOR = '_';
 
