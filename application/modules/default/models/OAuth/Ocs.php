@@ -356,6 +356,7 @@ class Default_Model_OAuth_Ocs implements Default_Model_OAuth_Interface
             'login' => Default_Model_DbTable_Member::MEMBER_LOGIN_LOCAL,
             'mail' => $userEmail
         ));
+        Zend_Registry::get('logger')->info(__METHOD__ . 'ResultSet: ' . print_r($resultSet,true));
         Zend_Registry::get('logger')->info(__METHOD__ . ' - sql take seconds: ' . $this->_db->getProfiler()->getLastQueryProfile()->getElapsedSecs());
         $this->_db->getProfiler()->setEnabled(false);
 

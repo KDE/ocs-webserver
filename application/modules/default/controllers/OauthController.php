@@ -137,7 +137,8 @@ class OAuthController extends Zend_Controller_Action
         }
 
         $authResult = $authAdapter->authenticate();
-        if (false == $authResult->isValid()) {
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - AuthResult: ' . print_r($authResult));
+        if (false === $authResult->isValid()) {
             Zend_Registry::get('logger')->info(__METHOD__ . ' - ip: ' . $this->_request->getClientIp() . ' - authentication failed.');
             $this->_helper->flashMessenger->addMessage(self::ERR_MSG_DEFAULT);
             $this->forward('index', 'explore', 'default');
