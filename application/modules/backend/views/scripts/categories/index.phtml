@@ -106,6 +106,15 @@
             </div>
         </div>
         <div class="jtable-input-field-container">
+            <div class="jtable-input-label">Source Required</div>
+            <div class="jtable-input jtable-dropdown-input">
+                <select id="show_description" name="show_description" class="validate[required]">
+                    <option value="1" value="0">Required</option>
+                    <option selected="selected">Not Required</option>
+                </select>
+            </div>
+        </div>
+        <div class="jtable-input-field-container">
             <div class="jtable-input-label">Status</div>
             <div class="jtable-input jtable-dropdown-input">
                 <select id="subcat-status" name="is_active" class="validate[required]">
@@ -416,27 +425,33 @@
                     type: 'input',
                     create: true,
                     edit: true,
-                    width: '30%'
+                    width: '10%'
                 },
                 name_legacy: {
                     title: 'Legacy Name',
                     type: 'input',
                     create: true,
                     edit: true,
-                    width: '30%'
+                    width: '10%'
                 },
                 dl_pling_factor: {
                     title: 'Pling Factor',
                     type: 'input',
                     create: true,
                     edit: true,
-                    width: '5%'
+                    width: '8%'
                 },
                 show_description: {
-                	title: 'Show Description',
+                    title: 'Show Description',
                     options: {'1': 'Show', '0': 'Do not show'},
                     defaultValue: '0',
-                    width: '5%'
+                    width: '8%'
+                },
+                source_required: {
+                    title: 'Source Required',
+                    options: {'1': 'Required', '0': 'Not Required'},
+                    defaultValue: '0',
+                    width: '8%'
                 },
                 is_active: {
                     title: 'Status',
