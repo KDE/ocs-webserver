@@ -124,6 +124,29 @@ class Default_Model_Tags
         return null;
     }
 
+     /**
+     * @param int $object_id
+     * @param int $tag_type
+     *
+     * @return string|null
+     */
+    public function getTagsUserCount($object_id, $tag_type)
+    {
+        $sql = "
+            SELECT count(*) as cnt
+            FROM tag_object
+            JOIN tag ON tag.tag_id = tag_object.tag_id
+            join tag_group_item on tag_object.tag_id = tag_group_item.tag_id
+            WHERE tag_type_id = :type AND tag_object_id = :object_id
+            and tag_group_item.tag_group_id = :tag_user_groupid           
+        ";
+
+        $result = $this->getAdapter()->fetchRow($sql, array('type' => $tag_type, 'object_id' => $object_id, 'tag_user_groupid' =>Default_Model_Tags::TAG_USER_GROUPID ));
+        if (isset($result['cnt'])) {
+            return $result['cnt'];
+        }
+        return 0;
+    }
 
     public function filterTagsUser($filter, $limit)
     {

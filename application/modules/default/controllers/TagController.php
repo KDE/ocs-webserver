@@ -31,14 +31,23 @@ class TagController extends Zend_Controller_Action
         $projectid = (int) $this->getParam('p');
         
         $model = new Default_Model_Tags();
-        $model->addTagUser($projectid,$tag,Default_Model_Tags::TAG_TYPE_PROJECT);
-
-
-        $this->_helper->json(array(
-            'status'  => 'ok',
-            'message' => '',
-            'data'    => array('pid' => $projectid, 'tag' => $tag)
-        ));
+        $cnt = $model->getTagsUserCount($projectid,Default_Model_Tags::TAG_TYPE_PROJECT);
+        if($cnt<5){
+            $model->addTagUser($projectid,$tag,Default_Model_Tags::TAG_TYPE_PROJECT);    
+              $this->_helper->json(array(
+                'status'  => 'ok',
+                'message' => '',
+                'data'    => array('pid' => $projectid, 'tag' => $tag)
+            ));
+        }
+        else
+        {
+            $this->_helper->json(array(
+                'status'  => 'error',
+                'message' => 'Max. 5 Tags',
+                'data'    => array('pid' => $projectid, 'tag' => $tag)
+            ));
+        }        
     }
 
     public function delAction()

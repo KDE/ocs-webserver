@@ -1528,7 +1528,7 @@ var TagingProductSelect2 = (function () {
                             };
                         }, null, true);
 
-                        $(".taggingSelect2").select2({
+                        var t = $(".taggingSelect2").select2({
                             placeholder: "Input tags please...", //placeholder
                             tags: true,
                             tokenSeparators: [",", " "],
@@ -1547,6 +1547,17 @@ var TagingProductSelect2 = (function () {
                                         }                               
                                     
                                 }
+                        });
+
+                        // Bind an event
+                        t.on('select2:select', function (e) { 
+                                      var data = e.params.data;     
+                                      var projectid = $("#tagsuserselect").attr('data-pid');                                        
+                                      var lis = t.parent().find('ul.select2-selection__rendered').find('li.select2-selection__choice').length;
+                                      if(lis>5){                                                
+                                           t.find("option[value="+data.id+"]").remove();                                             
+                                      }          
+                                       
                         });
         }
     }
@@ -1596,6 +1607,7 @@ var TagingProductDetailSelect2 = (function () {
                             placeholder: "Input tags please...", //placeholder
                             tags: true,
                             minimumInputLength: 3,
+                            closeOnSelect:true,
                             maximumSelectionLength: 5,
                             tokenSeparators: [",", " "],
                             ajax: {
@@ -1609,7 +1621,7 @@ var TagingProductDetailSelect2 = (function () {
                                           };
                                         }                                                                   
                                     }
-                        });
+                        });                      
 
                         // Bind an event
                         t.on('select2:select', function (e) { 
@@ -1618,7 +1630,15 @@ var TagingProductDetailSelect2 = (function () {
                                         $.post( "/tag/add", { p: projectid, t: data.id })
                                           .done(function( data ) {
                                                     console.log(data);    
-                                                    $('span.topic-tags-saved').show().delay(1000).fadeOut();                                                    
+                                                    if(data.status=='error'){
+                                                        $('span.topic-tags-saved').css({ color: "red" }).html(data.message).show().delay(1000).fadeOut();    
+                                                        t.find("option[value="+data.data.tag+"]").remove();  
+                                                    }
+                                                    else
+                                                    {
+                                                        $('span.topic-tags-saved').show().delay(1000).fadeOut();                                                        
+                                                    }
+                                                    
                                           });
                         });
                        
