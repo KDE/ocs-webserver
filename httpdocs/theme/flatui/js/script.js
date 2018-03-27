@@ -1516,6 +1516,18 @@ var TagingProduct = (function () {
 var TagingProductSelect2 = (function () {
     return {
         setup: function () {
+
+                        $.fn.select2.amd.require(['select2/selection/search'], function (Search) {
+                            Search.prototype.searchRemoveChoice = function (decorated, item) {
+                                this.trigger('unselect', {
+                                    data: item
+                                });
+
+                                this.$search.val('');
+                                this.handleSearch();
+                            };
+                        }, null, true);
+
                         $(".taggingSelect2").select2({
                             placeholder: "Input tags please...", //placeholder
                             tags: true,
@@ -1527,7 +1539,7 @@ var TagingProductSelect2 = (function () {
                                     url: '/tag/filter',
                                     dataType: 'json',
                                     type: "GET",
-                                    delay: 250, // wait 250 milliseconds before triggering the request  
+                                    delay: 500, // wait 250 milliseconds before triggering the request  
                                     processResults: function (data) {                                                                                    
                                           return {
                                              results : data.data.tags        
@@ -1568,6 +1580,18 @@ var TagingProductDetail = (function () {
 var TagingProductDetailSelect2 = (function () {
     return {
         setup: function () {
+
+                        $.fn.select2.amd.require(['select2/selection/search'], function (Search) {
+                            Search.prototype.searchRemoveChoice = function (decorated, item) {
+                                this.trigger('unselect', {
+                                    data: item
+                                });
+
+                                this.$search.val('');
+                                this.handleSearch();
+                            };
+                        }, null, true);
+
                         var t = $("#tagsuserselect").select2({
                             placeholder: "Input tags please...", //placeholder
                             tags: true,
@@ -1578,7 +1602,7 @@ var TagingProductDetailSelect2 = (function () {
                                     url: '/tag/filter',
                                     dataType: 'json',
                                     type: "GET",
-                                    delay: 250, // wait 250 milliseconds before triggering the request                                      
+                                    delay: 500, // wait 250 milliseconds before triggering the request                                      
                                     processResults: function (data) {                                          
                                           return {
                                                 results : data.data.tags                                          

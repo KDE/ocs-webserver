@@ -75,6 +75,8 @@ class Default_Model_DbTable_Tags extends Local_Model_Table
             {
                 continue;
             }
+
+            $tag = strtolower($tag);
             $resultRow = $this->_db->fetchRow($sqlFetchTag, array('name' => $tag));
             if (empty($resultRow)) {
                 $this->_db->insert($this->_name, array('tag_name' => $tag));

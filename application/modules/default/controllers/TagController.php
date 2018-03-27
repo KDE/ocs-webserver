@@ -92,7 +92,8 @@ class TagController extends Zend_Controller_Action
     {
          $this->_helper->layout()->disableLayout();  
          $model = new Default_Model_Tags();
-         $filter = $this->getParam('q');         
+         $filter = $this->getParam('q');    
+         $filter = strtolower($filter);     
          $tags  = $model->filterTagsUser($filter,10);
          $result = array();
          foreach ($tags as $tag) {
