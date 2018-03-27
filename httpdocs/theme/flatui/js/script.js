@@ -1521,7 +1521,8 @@ var TagingProductSelect2 = (function () {
                             tags: true,
                             tokenSeparators: [",", " "],
                             minimumInputLength: 3,
-                            maximumSelectionLength: 5,
+                            maximumSelectionLength: 5,        
+                            width: 'resolve',                
                             ajax: {
                                     url: '/tag/filter',
                                     dataType: 'json',
@@ -1529,9 +1530,7 @@ var TagingProductSelect2 = (function () {
                                     delay: 250, // wait 250 milliseconds before triggering the request  
                                     processResults: function (data) {                                                                                    
                                           return {
-                                            results: $.map(data.data.tags, function(obj) {
-                                                        return { id: obj.tag_name, text: obj.tag_name };
-                                                    })
+                                             results : data.data.tags        
                                           };
                                         }                               
                                     
