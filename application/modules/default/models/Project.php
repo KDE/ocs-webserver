@@ -364,11 +364,13 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                   m.paypal_mail,
                   m.dwolla_id,
                	 laplace_score(p.count_likes,p.count_dislikes) AS laplace_score,
-                 `view_reported_projects`.`amount_reports` AS `amount_reports`
+                 `view_reported_projects`.`amount_reports` AS `amount_reports`,
+                 `project_license`.title AS project_license_title
                 FROM project AS p
                   JOIN member AS m ON p.member_id = m.member_id AND m.is_active = 1 AND m.is_deleted = 0
                   JOIN project_category AS pc ON p.project_category_id = pc.project_category_id
                   LEFT JOIN `view_reported_projects` ON ((`view_reported_projects`.`project_id` = p.`project_id`))
+                  LEFT JOIN `project_license` ON ((`project_license`.`project_license_id` = p.`project_license_id`))
                 WHERE 
                   p.project_id = :projectId
                   AND p.status >= :projectStatus AND p.type_id = :typeId
