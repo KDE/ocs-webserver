@@ -213,7 +213,7 @@ class Default_Model_Tags
      */
     public function assignTagsUser($object_id, $tags, $tag_type)
     {
-
+        $tags =  strtolower($tags);
         $new_tags = array_diff(explode(',', $tags), explode(',', $this->getTagsUser($object_id, $tag_type)));
         if(sizeof($new_tags)>0)
         {
@@ -253,6 +253,7 @@ class Default_Model_Tags
 
     public function deassignTagsUser($object_id, $tags, $tag_type)
     {
+        $tags =  strtolower($tags);
         $removable_tags = array_diff(explode(',', $this->getTagsUser($object_id, $tag_type)), explode(',', $tags));
         $sql = "DELETE tag_object FROM tag_object JOIN tag ON tag.tag_id = tag_object.tag_id WHERE tag.tag_name = :name and tag_object.tag_object_id=:object_id";
         foreach ($removable_tags as $removable_tag) {

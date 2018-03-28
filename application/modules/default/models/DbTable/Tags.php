@@ -67,7 +67,7 @@ class Default_Model_DbTable_Tags extends Local_Model_Table
      */
     public function storeTagsUser($tags)
     {
-        $arrayTags = explode(',', $tags);
+        $arrayTags = explode(',', strtolower($tags));
         $sqlFetchTag = "SELECT `tag_id` FROM tag WHERE tag_name = :name";
         $resultIds = array();
         foreach ($arrayTags as $tag) {
@@ -75,8 +75,7 @@ class Default_Model_DbTable_Tags extends Local_Model_Table
             {
                 continue;
             }
-
-            $tag = strtolower($tag);
+        
             $resultRow = $this->_db->fetchRow($sqlFetchTag, array('name' => $tag));
             if (empty($resultRow)) {
                 $this->_db->insert($this->_name, array('tag_name' => $tag));
