@@ -1632,7 +1632,8 @@ var TagingProductDetailSelect2 = (function () {
                                                     console.log(data);    
                                                     if(data.status=='error'){
                                                         $('span.topic-tags-saved').css({ color: "red" }).html(data.message).show().delay(1000).fadeOut();    
-                                                        t.find("option[value="+data.data.tag+"]").remove();  
+                                                        t.find("option[value="+data.data.tag+"]").last().remove();  
+                                                        
                                                     }
                                                     else
                                                     {
