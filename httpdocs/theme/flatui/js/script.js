@@ -1305,6 +1305,36 @@ var RssNews = (function () {
     }
 })();
 
+
+var BlogJson = (function () {
+    return {
+        setup: function () {          
+            var urlforum = 'https://forum.opendesktop.org/';            
+            var json_url =urlforum+'latest.json';
+            $.ajax(json_url).then(function (result) { 
+              var topics = result.topic_list.topics; 
+              var crss = '';            
+              var count =5;                                       
+             $.each(topics, function (i, item) {
+                 if(!item.pinned){                   
+                     var m = moment(item.created_at);
+                     crss += '<div class="commentstore"><a href="' + urlforum+'/t/'+item.id + '"><span class="title">' + item.title + '</span></a><div class="newsrow">'                        
+                         + '<span class="date">' + m.format('MMM DD YYYY LT') + '</span><span class="newscomments">'+ item.posts_count 
+                         +' Post'+( item.posts_count>1?'s':'')
+                         +'</span></div></div>';    
+                    count--;
+                 }
+                 if(count==0) return false;
+                 
+             });            
+             $("#blogJson").html(crss);
+            });
+        }
+
+    }
+})();
+
+
 var ProductDetailCarousel = (function () {
     return {
         setup: function () {
@@ -1459,6 +1489,170 @@ var AboutMePage = (function () {
             var t = $(document).prop('title');
             var tnew = username + "'s Profile " + t;
             $(document).prop('title', tnew);
+        }
+    }
+})();
+
+
+var TagingProduct = (function () {
+    return {
+        setup: function () {
+            $('input[name=tagsuser]')
+                .tagify({
+                                whitelist: ['good', 'great'],
+                                autocomplete:true
+                        })
+                .on('remove', function(e, tagName){
+                    console.log('removed', tagName)
+                })
+                .on('add', function(e, tagName){
+                    console.log('added', tagName)
+                });
+
+        }
+    }
+})();
+
+var TagingProductSelect2 = (function () {
+    return {
+        setup: function () {
+
+                        $.fn.select2.amd.require(['select2/selection/search'], function (Search) {
+                            Search.prototype.searchRemoveChoice = function (decorated, item) {
+                                this.trigger('unselect', {
+                                    data: item
+                                });
+
+                                this.$search.val('');
+                                this.handleSearch();
+                            };
+                        }, null, true);
+
+                        var t = $(".taggingSelect2").select2({
+                            placeholder: "Input tags please...", //placeholder
+                            tags: true,
+                            tokenSeparators: [",", " "],
+                            minimumInputLength: 3,
+                            maximumSelectionLength: 5,        
+                            width: 'resolve',                
+                            ajax: {
+                                    url: '/tag/filter',
+                                    dataType: 'json',
+                                    type: "GET",
+                                    delay: 500, // wait 250 milliseconds before triggering the request  
+                                    processResults: function (data) {                                                                                    
+                                          return {
+                                             results : data.data.tags        
+                                          };
+                                        }                               
+                                    
+                                }
+                        });
+
+                        // Bind an event
+                        t.on('select2:select', function (e) { 
+                                      var data = e.params.data;     
+                                      var projectid = $("#tagsuserselect").attr('data-pid');                                        
+                                      var lis = t.parent().find('ul.select2-selection__rendered').find('li.select2-selection__choice').length;
+                                      if(lis>5){                                                
+                                           t.find("option[value="+data.id+"]").remove();                                             
+                                      }          
+                                       
+                        });
+        }
+    }
+})();
+
+var TagingProductDetail = (function () {
+                        return {
+                            setup: function () {
+                                           TagingProductDetailSelect2.setup();
+                                           $('body').on('click', 'button.topic-tags-btn', function (event) {
+                                                $(this).toggleClass('Done');
+                                                $('.product_category').find('.usertagslabel').toggle();
+                                                $('.tagsuserselectpanel').toggle();
+                                                if($(this).text() == 'Done'){
+                                                        $(this).text('Manage tags');
+                                                        var newhtml = '';
+                                                        var lis = $('li.select2-selection__choice');                                                        
+                                                        $.each(lis, function( index, value ) {
+                                                            newhtml=newhtml+'<a href="/search?projectSearchText='+value.title+'&amp;f=tags" '
+                                                                                          +'class="topic-tag topic-tag-link usertagslabel">'+value.title+'</a>';
+                                                        });                                                       
+                                                        $('.product_category').find('.topicslink').html(newhtml);                                                        
+                                                }else{
+                                                    $(this).text('Done');                                                    
+                                                }                                               
+                                           });
+                            }
+                        }
+})();
+
+var TagingProductDetailSelect2 = (function () {
+    return {
+        setup: function () {
+
+                        $.fn.select2.amd.require(['select2/selection/search'], function (Search) {
+                            Search.prototype.searchRemoveChoice = function (decorated, item) {
+                                this.trigger('unselect', {
+                                    data: item
+                                });
+
+                                this.$search.val('');
+                                this.handleSearch();
+                            };
+                        }, null, true);
+
+                        var t = $("#tagsuserselect").select2({
+                            placeholder: "Input tags please...", //placeholder
+                            tags: true,
+                            minimumInputLength: 3,
+                            closeOnSelect:true,
+                            maximumSelectionLength: 5,
+                            tokenSeparators: [",", " "],
+                            ajax: {
+                                    url: '/tag/filter',
+                                    dataType: 'json',
+                                    type: "GET",
+                                    delay: 500, // wait 250 milliseconds before triggering the request                                      
+                                    processResults: function (data) {                                          
+                                          return {
+                                                results : data.data.tags                                          
+                                          };
+                                        }                                                                   
+                                    }
+                        });                      
+
+                        // Bind an event
+                        t.on('select2:select', function (e) { 
+                                        var data = e.params.data;     
+                                        var projectid = $("#tagsuserselect").attr('data-pid');                                                    
+                                            $.post( "/tag/add", { p: projectid, t: data.id })
+                                                 .done(function( data ) {
+                                                           console.log(data);    
+                                                           if(data.status=='error'){
+                                                               $('span.topic-tags-saved').css({ color: "red" }).html(data.message).show().delay(1000).fadeOut();    
+                                                                t.find("option[value="+data.data.tag+"]").last().remove();                                                               
+                                                           }
+                                                           else
+                                                           {
+                                                               $('span.topic-tags-saved').show().delay(1000).fadeOut();                                                        
+                                                           }                                                           
+                                                 });                                                                          
+                                       
+                        });
+                       
+                        // Unbind the event
+                        t.on('select2:unselect', function(e){
+                                var data = e.params.data;     
+                                var projectid = $("#tagsuserselect").attr('data-pid');
+                                $.post( "/tag/del", { p: projectid, t: data.id })
+                                  .done(function( data ) {
+                                            console.log(data);    
+                                            $('span.topic-tags-saved').show().delay(1000).fadeOut();
+                                  });
+                                
+                        });
         }
     }
 })();

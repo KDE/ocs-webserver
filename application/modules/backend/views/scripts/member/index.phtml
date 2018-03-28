@@ -149,7 +149,7 @@
                     {value: 100, text: "100"}
                 ]
             })
-        }
+        };
 
         var memberDataTable = new YAHOO.widget.DataTable("memberTable", memberColumnDefs, memberDataSource, memberConfig);
 
@@ -163,7 +163,7 @@
 
             payload.totalRecords = response.meta.totalRecords;
             return payload;
-        }
+        };
 
         memberDataTable.set("selectionMode", "single");
         memberDataTable.subscribe("rowMouseoverEvent", memberDataTable.onEventHighlightRow);
@@ -246,7 +246,7 @@
                             }
                             break;
                         default:
-                            alert('error: nothing to do.')
+                            alert('error: nothing to do.');
                             break;
                     }
                 }

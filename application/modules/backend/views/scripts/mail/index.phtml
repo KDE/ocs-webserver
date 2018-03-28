@@ -117,7 +117,7 @@
                     {value: 100, text: "100"}
                 ]
             })
-        }
+        };
 
 
         var mailTplDataTable = new YAHOO.widget.DataTable("mailTplTable", mailTplColumnDefs, mailTplDataSource, mailTplConfig);
@@ -132,7 +132,7 @@
 
             payload.totalRecords = response.meta.totalRecords;
             return payload;
-        }
+        };
 
         mailTplDataTable.set("selectionMode", "single");
         mailTplDataTable.subscribe("rowMouseoverEvent", mailTplDataTable.onEventHighlightRow);
@@ -187,7 +187,7 @@
                             }
                             break;
                         default:
-                            alert('error: nothing to do.')
+                            alert('error: nothing to do.');
                             break;
                     }
                 }

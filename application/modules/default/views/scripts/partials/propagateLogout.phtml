@@ -23,7 +23,7 @@ if (isset($token) AND $modelSso->isValid($token)) :
                 return {
                     process: function (origin, urls) {
                         for (var i = 0; i < urls.length; i++) {
-                            var data = {'origin': origin}
+                            var data = {'origin': origin};
                             var request_config = {
                                 'type': 'POST',
                                 'dataType': 'text',
@@ -33,7 +33,7 @@ if (isset($token) AND $modelSso->isValid($token)) :
                                 'xhrFields': {
                                     'withCredentials': true
                                 }
-                            }
+                            };
                             $.ajax(request_config);
                         }
                     }

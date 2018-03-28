@@ -35,6 +35,20 @@ if (count($categoryAncestors) > 0) {
     $categoryPath = explode(',',$categoryAncestors['ancestors']);
 }
 $categoryPath[] = $valueCatId;
+
+$this->headLink()->appendStylesheet('/theme/flatui/css/chosen.css');
+$this->inlineScript()->appendFile('/theme/flatui/js/lib/chosen.jquery.min.js');
+$this->inlineScript()->appendScript('
+                                    $(document).ready(function(){
+                                        $("select.chosen").chosen({
+                                        width: "100%", 
+                                        max_selected_options: "5",
+                                        disable_search: "false",
+                                        disable_search_threshold: "5"
+                                        });
+                                    });
+                                ');
+
 ?>
     <style>
 
@@ -219,7 +233,8 @@ $categoryPath[] = $valueCatId;
                                 <?= $this->form->facebook_code ?>
                                 <?= $this->form->twitter_code ?>
                                 <?= $this->form->google_code ?>
-                                <?= $this->form->tags ?>
+                                
+                                <?= $this->form->tagsuser ?>
                             </section>
 
                             <h3>Files</h3>
@@ -251,8 +266,7 @@ $categoryPath[] = $valueCatId;
                                                         <tr>
                                                             <th><?= $this->translate('Filename') ?></th>
                                                             <th><?= $this->translate('Version') ?></th>
-                                                            <th><?= $this->translate('Description') ?></th>
-                                                            <th><?= $this->translate('Tags') ?></th>
+                                                            <th><?= $this->translate('Description') ?></th>                                                            
                                                             <th><?= $this->translate('License') ?></th>
                                                             <th><?= $this->translate('Filetype') ?></th>
                                                             <th><?= $this->translate('Packagetype') ?></th>
@@ -352,6 +366,8 @@ $categoryPath[] = $valueCatId;
     </main>
 
     <script>
+
+        /**
         $(document).ready(function() {
             $('.add-tag-btn').on('click', function(event) {
                 event.stopPropagation();
@@ -383,6 +399,7 @@ $categoryPath[] = $valueCatId;
                 return false;
             });
         });
+        **/
 
         $(document).ready(function () {
 
@@ -674,8 +691,7 @@ $categoryPath[] = $valueCatId;
                             });
                             myArray.sort(keysrt('created_timestamp'), false);
 
-                            var tagOptions = UserTags.getTagOptions();
-
+                     
                             $.each(myArray, function () {
 
                                 var fileDescription = '';
@@ -771,7 +787,6 @@ $categoryPath[] = $valueCatId;
                                     + '<td>' + downloadLink + '</td>'
                                     + '<td>' + version + '</td>'
                                     + '<td>' + inputFileDescription + '</td>'
-                                    + '<td>' + '<select id="data-select-tags' + this.id + '" data-license-id="" name="file_tags[]" class="form-control input-sm chosen" multiple="multiple" style="width: 150px;"><option value=""></option>' + tagOptions + '</select></td>'
                                     + '<td>'
                                     + '<select id="data-select-license' + this.id + '" data-license-id="" name="license" class="form-control input-sm" style="width: 200px;">'
                                     + '<option value=\"1000\"></option><option value=\"16\">AGPL</option><option value=\"3\">Artistic 2.0</option><option value=\"6\">BSD</option><option value=\"17\">CC0 1.0 Universal (Public Domain)</option><option value=\"9\">CPL 1.0</option><option value=\"10\">Creative Commons by</option><option value=\"13\">Creative Commons by-nc</option><option value=\"15\">Creative Commons by-nc-nd</option><option value=\"14\">Creative Commons by-nc-sa</option><option value=\"12\">Creative Commons by-nd</option><option value=\"11\">Creative Commons by-sa</option><option value=\"8\">GFDL</option><option value=\"1\">GPLv2 or later</option><option value=\"18\">GPLv2 only</option><option value=\"19\">GPLv3</option><option value=\"2\">LGPL</option><option value=\"0\">Other</option><option value=\"7\">Proprietary License</option><option value=\"5\">QPL</option><option value=\"4\">X11</option>'
@@ -803,7 +818,7 @@ $categoryPath[] = $valueCatId;
 
                                 $("#data-select-license" + this.id + " option[value='"+licenseId+"']").attr('selected', 'selected');
                                 $("#data-select-packagetype" + this.id + " option[value='"+packagetypeId+"']").attr('selected', 'selected');
-                                UserTags.activateSelect(this.id, this.tags);
+                                
 
                                 $licenseSelect = $modalPpload.find('#data-select-license' + this.id);
                                 if(this.active == '0') {
@@ -955,8 +970,7 @@ $categoryPath[] = $valueCatId;
                                 fileTags = data.file.tags;
                             }
 
-                            var tagOptions = UserTags.getTagOptions();
-
+                        
                             $modalPpload.find('table[data-ppload-files] tbody').append(
                                 '<tr data-ppload-file-id="' + data.file.id + '" data-ppload-file-category="' + fileCategory + '" data-ppload-file-tags="' + fileTags + '">'
                                 + '<td><a href="' + pploadApiUri + 'files/download/'
@@ -965,7 +979,7 @@ $categoryPath[] = $valueCatId;
                                 + '<td><input data-ppload-file-description="" class="form-control input-sm"'
                                 + ' type="text" maxlength="140" placeholder="File description"'
                                 + ' value="' + fileDescription + '"></td>'
-                                + '<td>' + '<select id="data-select-tags' + data.file.id + '" data-tag-id="" name="file_tags[]" class="form-control input-sm chosen" multiple="multiple" style="width: 150px;"><option value=""></option>' + tagOptions + '</select></td>'
+
                                 + '<td>'
                                 + '<select id="data-select-license' + data.file.id + '" data-license-id="" name="license" class="form-control input-sm">'
                                 + '<option value=\"1000\"></option><option value=\"16\">AGPL</option><option value=\"3\">Artistic 2.0</option><option value=\"6\">BSD</option><option value=\"17\">CC0 1.0 Universal (Public Domain)</option><option value=\"9\">CPL 1.0</option><option value=\"10\">Creative Commons by</option><option value=\"13\">Creative Commons by-nc</option><option value=\"15\">Creative Commons by-nc-nd</option><option value=\"14\">Creative Commons by-nc-sa</option><option value=\"12\">Creative Commons by-nd</option><option value=\"11\">Creative Commons by-sa</option><option value=\"8\">GFDL</option><option value=\"1\">GPLv2 or later</option><option value=\"18\">GPLv2 only</option><option value=\"19\">GPLv3</option><option value=\"2\">LGPL</option><option value=\"0\">Other</option><option value=\"7\">Proprietary License</option><option value=\"5\">QPL</option><option value=\"4\">X11</option>'
@@ -1461,81 +1475,7 @@ $categoryPath[] = $valueCatId;
 
         });
 
-        var UserTags = (function () {
-            return {
-                removeOldTags : function(stringOldTags) {
-                    if (!stringOldTags) {
-                        return '';
-                    }
-
-                    var stringNewTags = '';
-                    $.each(stringOldTags.split(','), function() {
-                        if (this.length == 0) {
-                            return true;
-                        }
-                        if (this.indexOf('@@@')==-1) {
-                            stringNewTags += ',' + this;
-                        }
-                    });
-
-                    return stringNewTags;
-                },
-                setNewTags : function(stringOldTags, arrayNewTags) {
-                    if (arrayNewTags.length == 0) {
-                        return stringOldTags;
-                    }
-                    var newTags = '@@@';
-                    $.each(arrayNewTags, function() {
-                        newTags += this + '@@';
-                    });
-
-                    return stringOldTags + ',' + newTags;
-                },
-                getTagArray : function(stringTags) {
-                    if (!stringTags) {
-                        return [];
-                    }
-                    var result;
-                    $.each(stringTags.split(','), function() {
-                        if (this.indexOf('@@@') == 0) {
-                            var strTags = this.substring(3);
-                            strTags = strTags.substring(0,strTags.length - 2);
-                            result = strTags.split('@@');
-                        }
-                    });
-
-                    return result;
-                },
-                getTagOptions: function() {
-                    <?php
-                    $modelTagGroup = new Default_Model_TagGroup();
-                    $groups = $modelTagGroup->fetchGroupHierarchy();
-                    $tagOptions = '';
-                    foreach($groups as $label => $opt):
-                        $tagOptions .= '<optgroup label="'.$label.'">';
-                        foreach ($opt as $id => $name):
-                            $tagOptions .= '<option value="'.$name.'">'.$name.'</option>';
-                        endforeach;
-                        $tagOptions .= '</optgroup>';
-                    endforeach;
-                    ?>
-                    return '<?=$tagOptions?>';
-
-                },
-                activateSelect: function(elementId, elementTags) {
-                    var userTagArray = UserTags.getTagArray(elementTags);
-                    $.each(userTagArray, function() {
-                        $("#data-select-tags" + elementId + " option[value='"+this+"']").attr('selected', 'selected');
-                    });
-                    $("#data-select-tags" + elementId).chosen({
-                        width: "100%",
-                        max_selected_options: "5",
-                        disable_search: "false",
-                        disable_search_threshold: "5"
-                    });
-                },
-            }
-        })();
+        
 
         var LogCollection=function()
         {

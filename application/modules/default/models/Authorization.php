@@ -44,6 +44,9 @@ class Default_Model_Authorization
         $this->_dataTable = new $this->_dataModelName;
     }
 
+    /**
+     * @throws Zend_Session_Exception
+     */
     public function logout()
     {
         $auth = Zend_Auth::getInstance();
@@ -65,6 +68,9 @@ class Default_Model_Authorization
      * @param string $loginMethod
      *
      * @return Zend_Auth_Result
+     * @throws Zend_Auth_Storage_Exception
+     * @throws Zend_Session_Exception
+     * @throws exception
      */
     public function authenticateUser($userId, $userSecret, $setRememberMe = false, $loginMethod = null)
     {
@@ -83,6 +89,13 @@ class Default_Model_Authorization
         return $authResult;
     }
 
+    /**
+     * @param      $identity
+     * @param      $credential
+     * @param null $loginMethod
+     * @return Zend_Auth_Result
+     * @throws Zend_Auth_Adapter_Exception
+     */
     protected function authenticateCredentials($identity, $credential, $loginMethod = null)
     {
         $authAdapter = Local_Auth_AdapterFactory::getAuthAdapter($identity, $loginMethod);
@@ -115,6 +128,10 @@ class Default_Model_Authorization
         }
     }
 
+    /**
+     * @throws Zend_Auth_Storage_Exception
+     * @throws exception
+     */
     protected function _storeAuthSessionData()
     {
         $extendedAuthData = $this->getExtendedAuthUserData($this->_authUserData);
@@ -127,6 +144,7 @@ class Default_Model_Authorization
      * @param object $authUserData
      *
      * @return object
+     * @throws exception
      */
     protected function getExtendedAuthUserData($authUserData)
     {
@@ -177,6 +195,7 @@ class Default_Model_Authorization
      * @param int $identifier
      *
      * @return array
+     * @throws Zend_Db_Statement_Exception
      */
     protected function getProjectIdsForUser($identifier)
     {
@@ -232,6 +251,8 @@ class Default_Model_Authorization
 
     /**
      * @param int $identity
+     * @throws Zend_Auth_Storage_Exception
+     * @throws exception
      */
     public function storeAuthSessionDataByIdentity($identity)
     {
@@ -246,6 +267,7 @@ class Default_Model_Authorization
      * @param string|int $identity
      *
      * @return object
+     * @throws exception
      */
     protected function getAllAuthUserData($identifier, $identity)
     {
@@ -259,20 +281,18 @@ class Default_Model_Authorization
      * @param string|int $identity
      *
      * @return object
+     * @throws Zend_Exception
      */
     protected function getAuthUserData($identifier, $identity)
     {
         Zend_Registry::get('logger')->info(__METHOD__ . ' - $identifier: ' . print_r($identifier, true)
-            . ' :: $identity: ' . print_r($identity, true))
-        ;
+                                           . ' :: $identity: ' . print_r($identity, true));
         $dataTable = $this->_dataTable;
         $where = $dataTable->select()->where($dataTable->getAdapter()->quoteIdentifier($identifier, true) . ' = ?',
-            $identity)
-        ;
+            $identity);
         $resultRow = $dataTable->fetchRow($where)->toArray();
         Zend_Registry::get('logger')->info(__METHOD__ . ' - user found. username: ' . print_r($resultRow['username'],
-                true))
-        ;
+                true));
         unset($resultRow['password']);
 
         return (object)$resultRow;
@@ -282,6 +302,7 @@ class Default_Model_Authorization
      * @param string $identity
      *
      * @return null|object
+     * @throws Zend_Exception
      */
     public function getAuthUserDataFromUnverified($identity)
     {
@@ -295,8 +316,7 @@ class Default_Model_Authorization
         $resultRow = $this->_dataTable->getAdapter()->fetchRow($sql, array('verification' => $identity));
         if ($resultRow) {
             Zend_Registry::get('logger')->info(__METHOD__
-                . " - found (member_id,mail,is_active,email_address,email_checked): ({$resultRow['member_id']},{$resultRow['mail']},{$resultRow['is_active']},{$resultRow['email_address']},{$resultRow['email_checked']})")
-            ;
+                                               . " - found (member_id,mail,is_active,email_address,email_checked): ({$resultRow['member_id']},{$resultRow['mail']},{$resultRow['is_active']},{$resultRow['email_address']},{$resultRow['email_checked']})");
             unset($resultRow['password']);
 
             return (object)$resultRow;
@@ -314,6 +334,7 @@ class Default_Model_Authorization
      * @param string $loginMethod
      *
      * @return mixed
+     * @throws Zend_Auth_Adapter_Exception
      */
     public function getAuthDataFromApi($identity, $credential, $loginMethod = null)
     {
@@ -338,8 +359,7 @@ class Default_Model_Authorization
         $dataTable = new Default_Model_DbTable_Session();
         $where =
             $dataTable->getAdapter()->quoteInto($dataTable->getAdapter()->quoteIdentifier($identifier, true) . ' = ?',
-                $identity)
-        ;
+                $identity);
 
         return $dataTable->delete($where);
     }

@@ -22,7 +22,8 @@
 
 $tableProject = new Default_Model_Tags();
 $tags = $tableProject->getTags($this->product->project_id, Default_Model_Tags::TAG_TYPE_PROJECT);
-if (false === empty($tags)) {
+$tagsuser = $tableProject->getTagsUser($this->product->project_id, Default_Model_Tags::TAG_TYPE_PROJECT);
+if (false === empty($tags) || false === empty($tagsuser)) {
 ?>
 <style>
     .tag-element {
@@ -48,9 +49,19 @@ if (false === empty($tags)) {
     <span class="title"> View More </span>
 
     <span class="row">
-        <?php foreach (explode(',',$tags) as $tag) { ?>
+        <?php if(false === empty($tags))
+        {
+        foreach (explode(',',$tags) as $tag) { ?>
             <a href="/search?projectSearchText=<?=$tag?>&f=tags" class="tag-element"><span class="glyphicon glyphicon-tag" aria-hidden="true"></span> <?=$tag?></a>
-        <?php }?>
+        <?php }}?>
+
+
+        <?php 
+            if(false === empty($tagsuser))
+            {
+             foreach (explode(',',$tagsuser) as $tag) { ?>
+            <a href="/search?projectSearchText=<?=$tag?>&f=tags" class="tag-element"><span class="glyphicon glyphicon-tag" aria-hidden="true"></span> <?=$tag?></a>
+        <?php }}?>
     </span>
     </div>
 

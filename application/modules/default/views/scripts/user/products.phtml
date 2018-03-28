@@ -129,29 +129,29 @@ $this->inlineScript()->appendScript(
                 <h3 id="modal-updates-label" data-updates-label=""><?= $this->translate('Changelog') ?></h3>
             </div>
             <div class="modal-body" style="font-size: small;">
-	            <div role="form" class="">
-	            	<input type="hidden" id="update-id" data-update-id="" value="">
+                <div role="form" class="">
+                    <input type="hidden" id="update-id" data-update-id="" value="">
                         <?php /**
-				    <div class="form-group">
-				      <label for="tile">Product Version:</label>
-				      <input type="text" id="product-version" data-product-version="" class="form-control input-sm" placeholder="Product Version Number">
-				    </div>
+                    <div class="form-group">
+                      <label for="tile">Product Version:</label>
+                      <input type="text" id="product-version" data-product-version="" class="form-control input-sm" placeholder="Product Version Number">
+                    </div>
                          *
                          */?>
-	            	<div class="form-group">
-				      <label for="tile">Changelog Title:</label>
-				      <input type="text" id="update-title" data-update-title="" class="form-control input-sm" placeholder="Enter a Changelog Title">
-				    </div>
-				    <div class="form-group">
-				      <label for="text">Changelog Text:</label>
-				      <textarea id="update-text" data-update-text="" class="form-control input-sm" rows="3" placeholder="Enter a Changelog Text"></textarea>
-				    </div>
-				    <button class="btn btn-native pull-right btn-xs btn-file-action" data-updates-cancel-btn=""><?= $this->translate('Cancel') ?></button>
-				    <button type="submit" class="btn btn-native pull-right btn-xs btn-file-action" data-add-update-btn="">Save</button>
-				</div>
+                    <div class="form-group">
+                      <label for="tile">Changelog Title:</label>
+                      <input type="text" id="update-title" data-update-title="" class="form-control input-sm" placeholder="Enter a Changelog Title">
+                    </div>
+                    <div class="form-group">
+                      <label for="text">Changelog Text:</label>
+                      <textarea id="update-text" data-update-text="" class="form-control input-sm" rows="3" placeholder="Enter a Changelog Text"></textarea>
+                    </div>
+                    <button class="btn btn-native pull-right btn-xs btn-file-action" data-updates-cancel-btn=""><?= $this->translate('Cancel') ?></button>
+                    <button type="submit" class="btn btn-native pull-right btn-xs btn-file-action" data-add-update-btn="">Save</button>
+                </div>
 
-            	<article id="update-list">
-            	</article>
+                <article id="update-list">
+                </article>
 
 
             </div>
@@ -164,7 +164,7 @@ $this->inlineScript()->appendScript(
 
 <script type="text/javascript">
     $(function () {
-    	var Base64={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",encode:function(e){var t="";var n,r,i,s,o,u,a;var f=0;e=Base64._utf8_encode(e);while(f<e.length){n=e.charCodeAt(f++);r=e.charCodeAt(f++);i=e.charCodeAt(f++);s=n>>2;o=(n&3)<<4|r>>4;u=(r&15)<<2|i>>6;a=i&63;if(isNaN(r)){u=a=64}else if(isNaN(i)){a=64}t=t+this._keyStr.charAt(s)+this._keyStr.charAt(o)+this._keyStr.charAt(u)+this._keyStr.charAt(a)}return t},decode:function(e){var t="";var n,r,i;var s,o,u,a;var f=0;e=e.replace(/[^A-Za-z0-9\+\/\=]/g,"");while(f<e.length){s=this._keyStr.indexOf(e.charAt(f++));o=this._keyStr.indexOf(e.charAt(f++));u=this._keyStr.indexOf(e.charAt(f++));a=this._keyStr.indexOf(e.charAt(f++));n=s<<2|o>>4;r=(o&15)<<4|u>>2;i=(u&3)<<6|a;t=t+String.fromCharCode(n);if(u!=64){t=t+String.fromCharCode(r)}if(a!=64){t=t+String.fromCharCode(i)}}t=Base64._utf8_decode(t);return t},_utf8_encode:function(e){e=e.replace(/\r\n/g,"\n");var t="";for(var n=0;n<e.length;n++){var r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r)}else if(r>127&&r<2048){t+=String.fromCharCode(r>>6|192);t+=String.fromCharCode(r&63|128)}else{t+=String.fromCharCode(r>>12|224);t+=String.fromCharCode(r>>6&63|128);t+=String.fromCharCode(r&63|128)}}return t},_utf8_decode:function(e){var t="";var n=0;var r=c1=c2=0;while(n<e.length){r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r);n++}else if(r>191&&r<224){c2=e.charCodeAt(n+1);t+=String.fromCharCode((r&31)<<6|c2&63);n+=2}else{c2=e.charCodeAt(n+1);c3=e.charCodeAt(n+2);t+=String.fromCharCode((r&15)<<12|(c2&63)<<6|c3&63);n+=3}}return t}}
+        var Base64={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",encode:function(e){var t="";var n,r,i,s,o,u,a;var f=0;e=Base64._utf8_encode(e);while(f<e.length){n=e.charCodeAt(f++);r=e.charCodeAt(f++);i=e.charCodeAt(f++);s=n>>2;o=(n&3)<<4|r>>4;u=(r&15)<<2|i>>6;a=i&63;if(isNaN(r)){u=a=64}else if(isNaN(i)){a=64}t=t+this._keyStr.charAt(s)+this._keyStr.charAt(o)+this._keyStr.charAt(u)+this._keyStr.charAt(a)}return t},decode:function(e){var t="";var n,r,i;var s,o,u,a;var f=0;e=e.replace(/[^A-Za-z0-9\+\/\=]/g,"");while(f<e.length){s=this._keyStr.indexOf(e.charAt(f++));o=this._keyStr.indexOf(e.charAt(f++));u=this._keyStr.indexOf(e.charAt(f++));a=this._keyStr.indexOf(e.charAt(f++));n=s<<2|o>>4;r=(o&15)<<4|u>>2;i=(u&3)<<6|a;t=t+String.fromCharCode(n);if(u!=64){t=t+String.fromCharCode(r)}if(a!=64){t=t+String.fromCharCode(i)}}t=Base64._utf8_decode(t);return t},_utf8_encode:function(e){e=e.replace(/\r\n/g,"\n");var t="";for(var n=0;n<e.length;n++){var r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r)}else if(r>127&&r<2048){t+=String.fromCharCode(r>>6|192);t+=String.fromCharCode(r&63|128)}else{t+=String.fromCharCode(r>>12|224);t+=String.fromCharCode(r>>6&63|128);t+=String.fromCharCode(r&63|128)}}return t},_utf8_decode:function(e){var t="";var n=0;var r=c1=c2=0;while(n<e.length){r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r);n++}else if(r>191&&r<224){c2=e.charCodeAt(n+1);t+=String.fromCharCode((r&31)<<6|c2&63);n+=2}else{c2=e.charCodeAt(n+1);c3=e.charCodeAt(n+2);t+=String.fromCharCode((r&15)<<12|(c2&63)<<6|c3&63);n+=3}}return t}}
 
         $('button[rel="tooltip"]').tooltip();
 
@@ -187,7 +187,7 @@ $this->inlineScript()->appendScript(
 
 
         function getUpdates(page) {
-        	$modalPpload.find('#update-list').html('');
+            $modalPpload.find('#update-list').html('');
 
             var productId = $modalPpload.attr('data-product-id');
             $.ajax({
@@ -205,9 +205,9 @@ $this->inlineScript()->appendScript(
                     $modalPpload.find('#update-list').append('<br/><br/><br/>');
 
                     $.each(data.updates, function () {
-                    	var id = '';
+                        var id = '';
                         if (this.project_update_id) {
-                        	id = this.project_update_id;
+                            id = this.project_update_id;
                         }
                         var title = '';
                         if (this.title) {
@@ -248,7 +248,7 @@ $this->inlineScript()->appendScript(
 
                         $modalPpload.find('#update-list').append(divEl);
 
-					});
+                    });
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     return;
@@ -280,10 +280,10 @@ $this->inlineScript()->appendScript(
                     $modalPpload.find('#update-id').val('');
 
                     //if(update_id) {
-                    	getUpdates();
+                        getUpdates();
                     //} else {
-                    //	$modalPpload.modal('hide');
-                    //	location.reload();
+                    //  $modalPpload.modal('hide');
+                    //  location.reload();
                     //}
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
@@ -295,11 +295,11 @@ $this->inlineScript()->appendScript(
 
 
         $modalPpload.on('click', 'button[data-delete-update-btn]', function (event) {
-        	var updateId = $(this).attr('data-delete-update-btn');
-        	var productId = $modalPpload.attr('data-product-id');
+            var updateId = $(this).attr('data-delete-update-btn');
+            var productId = $modalPpload.attr('data-product-id');
                 event.preventDefault();
 
-        	$.ajax({
+            $.ajax({
                 url: '/p/'+productId+'/deleteupdateajax',
                 type: 'POST',
                 data: {update_id: updateId},
@@ -319,15 +319,15 @@ $this->inlineScript()->appendScript(
         });
 
         $modalPpload.on('click', 'button[data-change-update-btn]', function (event) {
-        	var updateId = $(this).attr('data-change-update-btn');
-        	var title = $(this).attr('data-change-title');
-        	var text = $(this).attr('data-change-text');
+            var updateId = $(this).attr('data-change-update-btn');
+            var title = $(this).attr('data-change-title');
+            var text = $(this).attr('data-change-text');
 
                 $modalPpload.find('#update-title').val(title);
-        	$modalPpload.find('#update-text').val(text);
-        	$modalPpload.find('#update-id').val(updateId);
+            $modalPpload.find('#update-text').val(text);
+            $modalPpload.find('#update-id').val(updateId);
 
-        	$modalPpload.find('#update-title').focus();
+            $modalPpload.find('#update-title').focus();
 
                 event.preventDefault();
 
@@ -376,7 +376,7 @@ $this->inlineScript()->appendScript(
                             <th><?= $this->translate('Filename') ?></th>
                             <th><?= $this->translate('Version') ?></th>
                             <th><?= $this->translate('Description') ?></th>
-                            <th><?= $this->translate('Tags') ?></th>
+                          
                             <th><?= $this->translate('License') ?></th>
                             <th><?= $this->translate('Filetype') ?></th>
                             <th><?= $this->translate('Packagetype') ?></th>
@@ -396,7 +396,7 @@ $this->inlineScript()->appendScript(
 
 
                 <div style="float: right; padding-top: 10px;" class="small light">
-                	Deleted files are no longer publicly accessible but number of downloads still kept. *
+                    Deleted files are no longer publicly accessible but number of downloads still kept. *
                 </div>
             </div>
 
@@ -500,22 +500,22 @@ $this->inlineScript()->appendScript(
 
         function keysrt(key, asc) {
             if(asc) {
-              	  return function(a,b){
-              	   if (a[key] > b[key]) return 1;
-              	   if (a[key] < b[key]) return -1;
-              	   return 0;
-              	  }
+                  return function(a,b){
+                   if (a[key] > b[key]) return 1;
+                   if (a[key] < b[key]) return -1;
+                   return 0;
+                  }
             } else {
-           	 return function(a,b){
-                  	   if (a[key] < b[key]) return 1;
-                  	   if (a[key] > b[key]) return -1;
-                  	   return 0;
-           	 }
+             return function(a,b){
+                       if (a[key] < b[key]) return 1;
+                       if (a[key] > b[key]) return -1;
+                       return 0;
+             }
             }
-      	}
+        }
 
         function getUpdates(page) {
-        	$modalPpload.find('#update-list').html('');
+            $modalPpload.find('#update-list').html('');
 
             var productId = $modalPpload.attr('data-product-id');
             $.ajax({
@@ -533,9 +533,9 @@ $this->inlineScript()->appendScript(
                     $modalPpload.find('#update-list').append('<br/><br/><br/>');
 
                     $.each(data.updates, function () {
-                    	var id = '';
+                        var id = '';
                         if (this.project_update_id) {
-                        	id = this.project_update_id;
+                            id = this.project_update_id;
                         }
                         var title = '';
                         if (this.title) {
@@ -575,7 +575,7 @@ $this->inlineScript()->appendScript(
 
                         $modalPpload.find('#update-list').append(divEl);
 
-					});
+                    });
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     return;
@@ -611,11 +611,11 @@ $this->inlineScript()->appendScript(
                     var deletePploadFileBtnPerFile = '';
 
                     var myArray = $.map(data.files, function(entry) {
-					    return entry;
-					});
-					myArray.sort(keysrt('created_timestamp'), false);
+                        return entry;
+                    });
+                    myArray.sort(keysrt('created_timestamp'), false);
 
-                    var tagOptions = UserTags.getTagOptions();
+                    //var tagOptions = UserTags.getTagOptions();
 
                     $.each(myArray, function () {
 
@@ -629,7 +629,7 @@ $this->inlineScript()->appendScript(
                             + ' type="text" maxlength="140" placeholder="File description"'
                             + ' value="' + fileDescription + '">';
                         if(this.active == '0') {
-                        	inputFileDescription = '<input disabled="disabled" data-ppload-file-description="" class="form-control input-sm"'
+                            inputFileDescription = '<input disabled="disabled" data-ppload-file-description="" class="form-control input-sm"'
                                 + ' type="text" maxlength="140" placeholder="File description"'
                                 + ' value="' + fileDescription + '">';
                         }
@@ -642,7 +642,7 @@ $this->inlineScript()->appendScript(
                             + ' type="text" maxlength="140" placeholder="File version"'
                             + ' value="' + versionText + '">';
                         if(this.active == '0') {
-                        	version = '<input disabled="disabled" data-ppload-file-version="" class="form-control input-sm"'
+                            version = '<input disabled="disabled" data-ppload-file-version="" class="form-control input-sm"'
                                 + ' type="text" maxlength="140" placeholder="File version"'
                                 + ' value="' + versionText + '">';
                         }
@@ -666,24 +666,24 @@ $this->inlineScript()->appendScript(
                         if (this.tags) {
                             fileTags = this.tags;
                             $.each(fileTags.split(','), function() {
-                            	if(this.indexOf("##")==-1) {
-                                	var tagStr = this.split('-');
+                                if(this.indexOf("##")==-1) {
+                                    var tagStr = this.split('-');
                                     if (tagStr.length == 2 && tagStr[0] == 'os') {
                                         osId = tagStr[1];
                                     } else if (tagStr.length == 2 && tagStr[0] == 'licensetype') {
                                         licenseId = tagStr[1];
                                     } else if (tagStr.length == 2 && tagStr[0] == 'packagetypeid') {
-                                    	packagetypeId = tagStr[1];
+                                        packagetypeId = tagStr[1];
                                     }
                                 } else {
-                                	var tagStr = this.split('##');
+                                    var tagStr = this.split('##');
                                     if (tagStr.length == 2 && tagStr[0] == 'link') {
                                         link = tagStr[1];
                                     } else if (tagStr.length == 2 && tagStr[0] == 'license') {
                                         license = tagStr[1];
                                         license = Base64.decode(license);
                                     } else if (tagStr.length == 2 && tagStr[0] == 'packagetypeid') {
-                                    	packagetypeId = tagStr[1];
+                                        packagetypeId = tagStr[1];
                                     }
                                 }
                             });
@@ -698,13 +698,13 @@ $this->inlineScript()->appendScript(
                         var downloadLink = '<a href="' + downloadUrl + '" id="data-link' + this.id + '">' + this.name + '</a>';
 
                         if(this.active == '0') {
-                        	deletePploadFileBtnPerFile = '';
-                        	downloadLink = this.name;
-                        	if ((typeof link != 'undefined') && (link != "")) {
-                        		downloadLink = this.name + ' (External Link)';
-                        	}
+                            deletePploadFileBtnPerFile = '';
+                            downloadLink = this.name;
+                            if ((typeof link != 'undefined') && (link != "")) {
+                                downloadLink = this.name + ' (External Link)';
+                            }
                         } else {
-                        	deletePploadFileBtnPerFile = deletePploadFileBtn;
+                            deletePploadFileBtnPerFile = deletePploadFileBtn;
                         }
                         var numDownloads = this.downloaded_count;
                         numDownloads = numDownloads || 0;
@@ -714,7 +714,9 @@ $this->inlineScript()->appendScript(
                             + '<td>' + downloadLink + '</td>'
                             + '<td>' + version + '</td>'
                             + '<td>' + inputFileDescription + '</td>'
+                            /**
                             + '<td>' + '<select id="data-select-tags' + this.id + '" data-license-id="" name="file_tags[]" class="form-control input-sm chosen" multiple="multiple" style="width: 150px;"><option value=""></option>' + tagOptions + '</select></td>'
+                            **/
                             + '<td>'
                             + '<select id="data-select-license' + this.id + '" data-license-id="" name="license" class="form-control input-sm">'
                             + '<option value=\"1000\"></option><option value=\"16\">AGPL</option><option value=\"3\">Artistic 2.0</option><option value=\"6\">BSD</option><option value=\"17\">CC0 1.0 Universal (Public Domain)</option><option value=\"9\">CPL 1.0</option><option value=\"10\">Creative Commons by</option><option value=\"13\">Creative Commons by-nc</option><option value=\"15\">Creative Commons by-nc-nd</option><option value=\"14\">Creative Commons by-nc-sa</option><option value=\"12\">Creative Commons by-nd</option><option value=\"11\">Creative Commons by-sa</option><option value=\"8\">GFDL</option><option value=\"1\">GPLv2 or later</option><option value=\"18\">GPLv2 only</option><option value=\"19\">GPLv3</option><option value=\"2\">LGPL</option><option value=\"0\">Other</option><option value=\"7\">Proprietary License</option><option value=\"5\">QPL</option><option value=\"4\">X11</option>'
@@ -747,17 +749,17 @@ $this->inlineScript()->appendScript(
 
                         $("#data-select-license" + this.id + " option[value='"+licenseId+"']").attr('selected', 'selected');
                         $("#data-select-packagetype" + this.id + " option[value='"+packagetypeId+"']").attr('selected', 'selected');
-                        UserTags.activateSelect(this.id, this.tags);
+                        //UserTags.activateSelect(this.id, this.tags);
 
                         $licenseSelect = $modalPpload.find('#data-select-license' + this.id);
                         if(this.active == '0') {
-							$licenseSelect.prop('disabled', 'disabled');
-						}
+                            $licenseSelect.prop('disabled', 'disabled');
+                        }
 
                         $packagetypeSelect = $modalPpload.find('#data-select-packagetype' + this.id);
-						if(this.active == '0') {
-							$packagetypeSelect.prop('disabled', 'disabled');
-						}
+                        if(this.active == '0') {
+                            $packagetypeSelect.prop('disabled', 'disabled');
+                        }
 
                         if ((typeof link != 'undefined') && (link != "")) {
                             //$("#data-link" + this.id).attr('href', decodeURIComponent(link));
@@ -902,7 +904,7 @@ $this->inlineScript()->appendScript(
                         fileTags = data.file.tags;
                     }
 
-                    var tagOptions = UserTags.getTagOptions();
+                    //var tagOptions = UserTags.getTagOptions();
 
                     $modalPpload.find('table[data-ppload-files] tbody').append(
                         '<tr data-ppload-file-id="' + data.file.id + '" data-ppload-file-category="' + fileCategory + '" data-ppload-file-tags="' + fileTags + '">'
@@ -911,7 +913,9 @@ $this->inlineScript()->appendScript(
                         + '<td><input data-ppload-file-description="" class="form-control input-sm"'
                         + ' type="text" maxlength="140" placeholder="File description"'
                         + ' value="' + fileDescription + '"></td>'
+                        /**
                         + '<td>' + '<select id="data-select-tags' + data.file.id + '" data-tag-id="" name="file_tags[]" class="form-control input-sm chosen" multiple="multiple" style="width: 150px;"><option value=""></option>' + tagOptions + '</select></td>'
+                        **/
                         + '<td>'
                         + '<select id="data-select-license' + data.file.id + '" data-license-id="" name="license" class="form-control input-sm">'
                         + '<option value=\"1000\"></option><option value=\"16\">AGPL</option><option value=\"3\">Artistic 2.0</option><option value=\"6\">BSD</option><option value=\"17\">CC0 1.0 Universal (Public Domain)</option><option value=\"9\">CPL 1.0</option><option value=\"10\">Creative Commons by</option><option value=\"13\">Creative Commons by-nc</option><option value=\"15\">Creative Commons by-nc-nd</option><option value=\"14\">Creative Commons by-nc-sa</option><option value=\"12\">Creative Commons by-nd</option><option value=\"11\">Creative Commons by-sa</option><option value=\"8\">GFDL</option><option value=\"1\">GPLv2 or later</option><option value=\"18\">GPLv2 only</option><option value=\"19\">GPLv3</option><option value=\"2\">LGPL</option><option value=\"0\">Other</option><option value=\"7\">Proprietary License</option><option value=\"5\">QPL</option><option value=\"4\">X11</option>'
@@ -942,7 +946,7 @@ $this->inlineScript()->appendScript(
                         + '</tr>'
                     );
 
-                    UserTags.activateSelect(data.file.id, '');
+                    //UserTags.activateSelect(data.file.id, '');
 
                     $modalPpload.find('button[data-deletepploadfiles-btn]').removeAttr('disabled');
                     $modalPpload.find('button[data-file-upload-ok-btn]').removeAttr('disabled');
@@ -950,7 +954,7 @@ $this->inlineScript()->appendScript(
                     postPploadFiles();
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                	alert("Error: " + textStatus + ", " + errorThrown);
+                    alert("Error: " + textStatus + ", " + errorThrown);
                     return;
                 }
             });
@@ -1002,7 +1006,7 @@ $this->inlineScript()->appendScript(
         }
 
         function updatePploadFileVersion(fileId, version) {
-        	version = version.replace(/<\/?[^>]+(>|$)/g, "");
+            version = version.replace(/<\/?[^>]+(>|$)/g, "");
             $.ajax({
                 url: $modalPpload.attr('data-updatepploadfile-uri'),
                 type: 'POST',
@@ -1080,7 +1084,7 @@ $this->inlineScript()->appendScript(
                     **/
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                	alert("Error: " + textStatus + ", " + errorThrown);
+                    alert("Error: " + textStatus + ", " + errorThrown);
                     return;
                 }
             });
@@ -1276,14 +1280,14 @@ $this->inlineScript()->appendScript(
         });
 
         $modalPpload.on('click', 'button[data-add-update-btn]', function (event) {
-        	var product_version = $modalPpload.find('#product-version').val();
-        	var update_id = $modalPpload.find('#update-id').val();
-        	var title = $modalPpload.find('#update-title').val();
-        	var text = $modalPpload.find('#update-text').val();
-        	var productId = $modalPpload.attr('data-product-id');
+            var product_version = $modalPpload.find('#product-version').val();
+            var update_id = $modalPpload.find('#update-id').val();
+            var title = $modalPpload.find('#update-title').val();
+            var text = $modalPpload.find('#update-text').val();
+            var productId = $modalPpload.attr('data-product-id');
             event.preventDefault();
 
-        	$.ajax({
+            $.ajax({
                 url: '/p/'+productId+'/saveupdateajax',
                 type: 'POST',
                 data: {title: title, text: text, update_id: update_id, product_version: product_version},
@@ -1293,15 +1297,15 @@ $this->inlineScript()->appendScript(
                         return;
                     }
                     $modalPpload.find('#update-title').val('');
-                	$modalPpload.find('#update-text').val('');
-                	$modalPpload.find('#update-id').val('');
+                    $modalPpload.find('#update-text').val('');
+                    $modalPpload.find('#update-id').val('');
 
-                	if(update_id) {
-                    	getUpdates();
-                	} else {
-                		$modalPpload.modal('hide');
-                		location.reload();
-                	}
+                    if(update_id) {
+                        getUpdates();
+                    } else {
+                        $modalPpload.modal('hide');
+                        location.reload();
+                    }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     return;
@@ -1312,11 +1316,11 @@ $this->inlineScript()->appendScript(
 
 
         $modalPpload.on('click', 'button[data-delete-update-btn]', function (event) {
-        	var updateId = $(this).attr('data-delete-update-btn');
-        	var productId = $modalPpload.attr('data-product-id');
+            var updateId = $(this).attr('data-delete-update-btn');
+            var productId = $modalPpload.attr('data-product-id');
             event.preventDefault();
 
-        	$.ajax({
+            $.ajax({
                 url: '/p/'+productId+'/deleteupdateajax',
                 type: 'POST',
                 data: {update_id: updateId},
@@ -1336,22 +1340,23 @@ $this->inlineScript()->appendScript(
         });
 
         $modalPpload.on('click', 'button[data-change-update-btn]', function (event) {
-        	var updateId = $(this).attr('data-change-update-btn');
-        	var title = $(this).attr('data-change-title');
-        	var text = $(this).attr('data-change-text');
-        	var productId = $modalPpload.attr('data-product-id');
+            var updateId = $(this).attr('data-change-update-btn');
+            var title = $(this).attr('data-change-title');
+            var text = $(this).attr('data-change-text');
+            var productId = $modalPpload.attr('data-product-id');
 
             $modalPpload.find('#update-title').val(title);
-        	$modalPpload.find('#update-text').val(text);
-        	$modalPpload.find('#update-id').val(updateId);
+            $modalPpload.find('#update-text').val(text);
+            $modalPpload.find('#update-id').val(updateId);
 
-        	$modalPpload.find('#update-title').focus();
+            $modalPpload.find('#update-title').focus();
 
             event.preventDefault();
 
         });
 
 
+        /*
         $modalPpload.on('change', 'select.chosen', function (event) {
             event.preventDefault();
             var fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
@@ -1364,6 +1369,7 @@ $this->inlineScript()->appendScript(
             updatePploadFileTags(fileId, newTags);
             $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags',newTags);
         });
+        */
 
         $modalPpload.on('change', 'select[id*=data-select-license]', function(event) {
             event.preventDefault();
@@ -1413,7 +1419,7 @@ $this->inlineScript()->appendScript(
             updatePackageType(fileId, packagetypeId);
         });
 
-
+        <?php /*
         var UserTags = (function () {
             return {
                 removeOldTags : function(stringOldTags) {
@@ -1492,6 +1498,9 @@ $this->inlineScript()->appendScript(
                 },
             }
         })();
+    */
+        ?>
+
     });
 
 </script>

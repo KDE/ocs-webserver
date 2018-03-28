@@ -75,16 +75,30 @@ $helperImage = new Default_View_Helper_Image();
         <div class="text">
             <p><?= nl2br($description) ?></p>
         </div>
+
+        <span class="topics">
+        <span class="topicslink">
+        <?php        
+        $tagmodel = new Default_Model_Tags();
+        $tagsuser = $tagmodel->getTagsUser($this->project_id, Default_Model_Tags::TAG_TYPE_PROJECT);         
+        if(false === empty($tagsuser))
+        {                  
+            foreach (explode(',',$tagsuser) as $tag) { 
+        ?>
+        <a href="/search?projectSearchText=<?=$tag?>&f=tags" class="topic-tag topic-tag-link usertagslabel"><?=$tag?></a>
+         <?php 
+            }                                       
+         }
+         ?>        
+        </span>
+        </span>
+
         <!-- /text -->
         <!-- buttons -->
         <div class="buttons">
             <div class="embed-btns pull-left">
                 <!-- verification -->
-                <?php if ($this->link_1) { ?>
-                    <a href="#msg-box-code-<?= $loopProductId ?>"
-                       class="btn btn-native margin-right-10"
-                       data-toggle="modal"><?= $this->translate('Verification') ?></a>
-                <?php } ?>
+               
                 <!-- /verification -->
                 <!-- embeded -->
                 <?php /*
@@ -92,9 +106,7 @@ $helperImage = new Default_View_Helper_Image();
                    class="btn btn-native"
                    data-toggle="modal"><?= $this->translate('Button') ?></a>
                    */ ?>
-                <a href="#modal-box-code-<?= $loopProductId ?>"
-                   class="btn btn-native"
-                   data-toggle="modal"><?= $this->translate('Box') ?></a>
+
                    <?php /*
                 <a href="#modal-list-code-<?= $loopProductId ?>"
                    class="btn btn-native"
@@ -136,6 +148,18 @@ $helperImage = new Default_View_Helper_Image();
                    data-product-id="<?= $this->project_id ?>"
                    data-product-title="<?= $this->title ?>"
                 ><?= $this->translate('Changelog') ?></a>
+                
+                <?php if ($this->link_1) { ?>
+                    <a href="#msg-box-code-<?= $loopProductId ?>"
+                       class="btn btn-native margin-right-10"
+                       data-toggle="modal"><?= $this->translate('Verification') ?></a>
+                <?php } ?>
+
+
+                 <a href="#modal-box-code-<?= $loopProductId ?>"
+                   class="btn btn-native"
+                   data-toggle="modal"><?= $this->translate('Box') ?></a>
+
                 <!-- /updates -->
                 <span class="publish-product-wrapper">
                     <?php $p_action = $this->isProjectActive($this->project_status) ? 'unpublish' : 'publish' ?>

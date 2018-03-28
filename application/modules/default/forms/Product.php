@@ -67,9 +67,11 @@ class Default_Form_Product extends Zend_Form
             ->addElement($this->getTwitterElement())
             ->addElement($this->getGoogleElement())
             ->addElement($this->getTagElement())
+            ->addElement($this->getTagUserElement())
             ->addElement($this->getHiddenProjectId())
             ->addElement($this->getSubmitElement())
             ->addElement($this->getCancelElement())
+            ->addElement($this->getLicenseIdElement())
             //->addElement($this->getCCAttribution())
             //->addElement($this->getCCComercial())
             //->addElement($this->getCCDerivateWorks())
@@ -193,6 +195,52 @@ class Default_Form_Product extends Zend_Form
                         )
                     )
                 ));
+    }
+    
+    private function getLicenseIdElement()
+    {
+
+        //$element = new Zend_Form_Element_Multiselect('project_license_id', array('registerInArrayValidator' => false));
+        $element = new Zend_Form_Element_Select('project_license_id', array('multiple' => false ));
+        $element->setIsArray(true);
+        
+        $options = array(
+            "" => "",
+            "16" => "AGPL", 
+            "3"  => "Artistic 2.0", 
+            "6"  => "BSD", 
+            "17" => "CC0 1.0 Universal (Public Domain)",
+            "9"  => "CPL 1.0",
+            "10" => "Creative Commons by",
+            "13" => "Creative Commons by-nc",
+            "15" => "Creative Commons by-nc-nd",
+            "14" => "Creative Commons by-nc-sa",
+            "12" => "Creative Commons by-nd",
+            "11" => "Creative Commons by-sa",
+            "8"  => "GFDL",
+            "1"  => "GPLv2 or later",
+            "18" => "GPLv2 only",
+            "19" => "GPLv3",
+            "2"  => "LGPL",
+            "0"  => "Other",
+            "7"  => "Proprietary License",
+            "5"  => "QPL",
+            "4"  => "X11");
+        
+        
+        return $element
+                    ->setFilters(array('StringTrim'))
+                    ->setMultiOptions($options)
+                    ->setDecorators(
+                        array(
+                            array(
+                                'ViewScript',
+                                array(
+                                    'viewScript' => 'product/viewscripts/input_select_license.phtml',
+                                    'placement' => false
+                                )
+                            )
+                        ));
     }
 
     private function getDescriptionElement()
@@ -557,6 +605,23 @@ class Default_Form_Product extends Zend_Form
                                 'ViewScript',
                                 array(
                                     'viewScript' => 'product/viewscripts/input_tags_multiselect.phtml',
+                                    'placement' => false
+                                )
+                            )
+                        ));
+    }
+
+     private function getTagUserElement()
+    {
+        $element = new Zend_Form_Element_Multiselect('tagsuser', array('registerInArrayValidator' => false));
+        return $element
+                    ->setFilters(array('StringTrim'))
+                    ->setDecorators(
+                        array(
+                            array(
+                                'ViewScript',
+                                array(
+                                    'viewScript' => 'product/viewscripts/input_tags_user.phtml',
                                     'placement' => false
                                 )
                             )

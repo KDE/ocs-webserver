@@ -19,22 +19,34 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
+
+$this->headLink()->appendStylesheet('/theme/flatui/css/select2.min.css');
+$this->headLink()->appendStylesheet('/theme/flatui/css/select2.custmized.css');
+$this->inlineScript()->appendFile('/theme/flatui/js/lib/select2.min.js');
 ?>
+
 <div class="form-group">
     <div class="col-sm-12 margin-top-15">
         <?php if ($this->element->isRequired()) { ?>
             <div class="small grey bold-font pull-left margin-right-5">*</div>
         <?php } ?>
-        <label class="form-label" for="<?= $this->escape($this->element->getName()) ?>">HTML or Embed Media Code (Youtube, Vimeo, Soundcloud etc.)</label>
+        <label class="form-label" for="<?= $this->escape($this->element->getName()) ?>">Topics</label>
     </div>
     <div class="col-sm-12">
-        <textarea class="form-control"
-                  rows="3"
-                  cols="30"
-                  style="padding: 0;"
-                  placeholder='<iframe src="https://www.youtube.com/embed/XXXXXXXX" style="width:641px;height:360px;" width="641" height="360" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>'
-                  id="<?= $this->escape($this->element->getName()) ?>"
-                  name="<?= $this->escape($this->element->getName()) ?>"><?= $this->escape($this->element->getValue()) ?></textarea>
+        <select
+                id="<?= $this->escape($this->element->getName()) ?>"
+                name="<?= $this->escape($this->element->getName()) ?>[]"                
+                multiple="true"
+                class="taggingSelect2">
+            <option value=""></option>
+            <?php
+            $element_value = $this->element->getValue();
+            $value = empty($element_value) ? array() : explode(',',$element_value);
+            foreach ($value as $v) {
+                echo '<option value="'.$v.'" selected="selected">'.$v.'</option>';                
+            }
+            ?>         
+        </select>
         <?php if ($this->element->getMessages()) {
             $errorHtml = '';
             foreach ($this->element->getMessages() as $currentError) {
@@ -45,3 +57,10 @@
         <?php } ?>
     </div>
 </div>
+
+
+<?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){       
+            TagingProductSelect2.setup();            
+        });
+    ');

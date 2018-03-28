@@ -25,7 +25,16 @@
             <a href="https://www.opendesktop.org/p/1175480/" target="_blank"><img src="/images/system/download-app.png" /></a>
         </div>
 
-        
+        <div class="supportDiv" >
+        <?php 
+                $identity = Zend_Auth::getInstance()->getIdentity();
+                if(null == $identity || (null != $identity && !$this->isSupporter($identity->member_id))) {                                                  
+        ?>
+            <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Help to support the artists<br/>and keep the content free</a>
+        <?php   } else if((null != $identity && $this->isSupporter($identity->member_id))) { ?>
+            <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Support<br>Opendesktop.org</a>
+        <?php   }?>
+        </div>
 
         <div  class="supportDiv  withborder" >    
         <span><b><?=$this->countSupporters?></b> people support </span>        
@@ -44,20 +53,15 @@
                <?php } ?>
          </div>
         </div>
-        <div class="supportDiv" >
-        <?php 
-                $identity = Zend_Auth::getInstance()->getIdentity();
-                if(null == $identity || (null != $identity && !$this->isSupporter($identity->member_id))) {                                                  
-        ?>
-            <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Help to support the artists<br/>and keep the content free</a>
-        <?php   } else if((null != $identity && $this->isSupporter($identity->member_id))) { ?>
-            <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Support<br>Opendesktop.org</a>
-        <?php   }?>
-        </div>
 
-        <div  class="row sidebar-right-info" >                                
+        <div  class="row sidebar-right-info" >       
+            
             <span class="newsTitle"> News </span>
             <div class="prod-widget-box right bgwhite " id="rss-feeds"> </div>                  
+
+            <span class="newsTitle"> Forum </span>
+            <div class="prod-widget-box right bgwhite " id="blogJson"> </div>     
+
             <?php  if (count($this->comments) > 0) {
                 ?>
             <span class="newsTitle"> Comments </span>
@@ -70,3 +74,10 @@
             </div>          
             <?php } ?>
         </div>
+
+<?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){                               
+                RssNews.setup();   
+                BlogJson.setup();                    
+            });
+        ');

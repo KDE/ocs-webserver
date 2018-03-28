@@ -98,6 +98,13 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         return $result;
     }
 
+    /**
+     * @throws Zend_Cache_Exception
+     * @throws Zend_Db_Select_Exception
+     * @throws Zend_Exception
+     * @throws Zend_Loader_PluginLoader_Exception
+     * @throws Zend_Paginator_Exception
+     */
     public function indexAction()
     {
         $filter = array();
@@ -148,6 +155,7 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
      * @param $inputCatId
      *
      * @return string|null
+     * @throws Zend_Exception
      */
     protected function getCategoryAbout($inputCatId)
     {
@@ -164,10 +172,13 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
 
     /**
      * @param array $inputFilterParams
-     * @param int   $limit
-     * @param int   $offset
+     * @param int $limit
+     * @param int $offset
      *
      * @return array
+     * @throws Zend_Cache_Exception
+     * @throws Zend_Db_Select_Exception
+     * @throws Zend_Exception
      */
     private function fetchRequestedElements($inputFilterParams, $limit = null, $offset = null)
     {
@@ -177,6 +188,10 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         return $requestedElements;
     }
 
+    /**
+     * @throws Zend_Exception
+     * @throws Zend_Paginator_Exception
+     */
     public function searchAction()
     {
         ini_set('memory_limit', '3072M');
@@ -276,8 +291,8 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
     }
 
     /**
+     * @param Zend_Config $static_config
      * @return string|null
-     * @throws Zend_Exception
      */
     protected function getStoreAbout($static_config)
     {

@@ -210,6 +210,58 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
                                     <?php
                                     echo '<a href="/browse/cat/' . $this->product->project_category_id . '/order/latest">' . $this->product->cat_title . ' </a>';
                                     ?>                        
+
+                                    <?php
+                                    echo '<span class="topics">';
+                                    $tagmodel = new Default_Model_Tags();
+                                    $tagsuser = $tagmodel->getTagsUser($this->product->project_id, Default_Model_Tags::TAG_TYPE_PROJECT);  
+
+                                    echo '<span class="topicslink">';
+                                    if(false === empty($tagsuser))
+                                    {
+                                       
+                                        foreach (explode(',',$tagsuser) as $tag) { 
+                                    ?>
+                                    <a href="/search?projectSearchText=<?=$tag?>&f=tags" class="topic-tag topic-tag-link usertagslabel"><?=$tag?></a>
+                                     <?php 
+                                        }                                       
+                                     }
+                                     echo '</span><!--end of topicslink-->';
+                                     if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->product->member_id){
+                                            $this->headLink()->appendStylesheet('/theme/flatui/css/select2.min.css');
+                                            $this->headLink()->appendStylesheet('/theme/flatui/css/select2.custmized.css');
+                                            $this->inlineScript()->appendFile('/theme/flatui/js/lib/select2.min.js');
+                                        ?>
+                                        <span class="tagsuserselectpanel" style="display: none">
+                                            <select   
+                                                    id="tagsuserselect"                                           
+                                                    name="tagsuser"                
+                                                    multiple="true"                                                                                                                        
+                                                    class="taggingSelect2"
+                                                    data-pid="<?php echo $this->product->project_id?>"
+                                                    >
+                                                <option value=""></option>
+                                                <?php
+                                                $element_value =$tagsuser;
+                                                $value = empty($element_value) ? array() : explode(',',$element_value);
+                                                foreach ($value as $v) {
+                                                    echo '<option value="'.$v.'" selected="selected">'.$v.'</option>';                
+                                                }
+                                                ?>         
+                                            </select>
+                                        </span>
+
+                                        <button class="btn-link topic-tags-btn"  type="button" >Manage tags</button>
+                                        <span class="topic-tags-saved"><i class="fa fa-check"></i> Saved </span>
+                                    <?php
+                                            $this->inlineScript()->appendScript(
+                                                '    $(document).ready(function(){       
+                                                        TagingProductDetail.setup();            
+                                                    });
+                                                ');
+                                         }
+                                    echo '</span>';                                    
+                                     ?>
                                     
                                     <p class="light small">
                                     <span class="source">Source: </span>
@@ -602,8 +654,7 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
 
                         <?php echo $this->render('product/partials/details.phtml'); ?>
 
-                        <?php echo $this->render('product/partials/tags.phtml');?>
-
+                      
 
 
 
