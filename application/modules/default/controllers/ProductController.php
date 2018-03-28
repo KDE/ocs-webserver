@@ -199,7 +199,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         //     $modelTags->processTags($newProject->project_id, implode(',',$values['tags']), Default_Model_Tags::TAG_TYPE_PROJECT);
         // }
 
-
+        $modelTags = new Default_Model_Tags();
         $modelTags->processTagsUser($newProject->project_id, implode(',',$values['tagsuser']), Default_Model_Tags::TAG_TYPE_PROJECT);
      
 
@@ -368,7 +368,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         if ($this->_request->isGet()) {
             $form->populate($projectData->toArray());
-            $form->populate(array('tags' => $modelTags->getTags($projectData->project_id, Default_Model_Tags::TAG_TYPE_PROJECT)));
+           // $form->populate(array('tags' => $modelTags->getTags($projectData->project_id, Default_Model_Tags::TAG_TYPE_PROJECT)));
             $form->populate(array('tagsuser' => $modelTags->getTagsUser($projectData->project_id, Default_Model_Tags::TAG_TYPE_PROJECT)));
             $form->getElement('image_small')->setValue($projectData->image_small);
             //Bilder voreinstellen
@@ -421,6 +421,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         //     $modelTags->processTags($this->_projectId, implode(',',$values['tags']), Default_Model_Tags::TAG_TYPE_PROJECT);
         // }
           
+        
         $modelTags->processTagsUser($this->_projectId,implode(',',$values['tagsuser']), Default_Model_Tags::TAG_TYPE_PROJECT);             
    
 
