@@ -1626,21 +1626,20 @@ var TagingProductDetailSelect2 = (function () {
                         // Bind an event
                         t.on('select2:select', function (e) { 
                                         var data = e.params.data;     
-                                        var projectid = $("#tagsuserselect").attr('data-pid');
-                                        $.post( "/tag/add", { p: projectid, t: data.id })
-                                          .done(function( data ) {
-                                                    console.log(data);    
-                                                    if(data.status=='error'){
-                                                        $('span.topic-tags-saved').css({ color: "red" }).html(data.message).show().delay(1000).fadeOut();    
-                                                        t.find("option[value="+data.data.tag+"]").last().remove();  
-                                                        
-                                                    }
-                                                    else
-                                                    {
-                                                        $('span.topic-tags-saved').show().delay(1000).fadeOut();                                                        
-                                                    }
-                                                    
-                                          });
+                                        var projectid = $("#tagsuserselect").attr('data-pid');                                                    
+                                            $.post( "/tag/add", { p: projectid, t: data.id })
+                                                 .done(function( data ) {
+                                                           console.log(data);    
+                                                           if(data.status=='error'){
+                                                               $('span.topic-tags-saved').css({ color: "red" }).html(data.message).show().delay(1000).fadeOut();    
+                                                                t.find("option[value="+data.data.tag+"]").last().remove();                                                               
+                                                           }
+                                                           else
+                                                           {
+                                                               $('span.topic-tags-saved').show().delay(1000).fadeOut();                                                        
+                                                           }                                                           
+                                                 });                                                                          
+                                       
                         });
                        
                         // Unbind the event
