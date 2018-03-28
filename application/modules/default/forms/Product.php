@@ -62,7 +62,7 @@ class Default_Form_Product extends Zend_Form
 //            ->addElement($this->getAmountPeriodElement())
             ->addElement($this->getEmbedCodeElement())
             ->addElement($this->getProjectHomepageElement())
-            ->addElement($this->getGithubElement())
+            ->addElement($this->getSourceElement())
             ->addElement($this->getFacebookElement())
             ->addElement($this->getTwitterElement())
             ->addElement($this->getGoogleElement())
@@ -397,9 +397,9 @@ class Default_Form_Product extends Zend_Form
                 ));
     }
     
-    private function getGithubElement()
+    private function getSourceElement()
     {
-    	return $this->createElement('text', 'github_code', array())
+    	return $this->createElement('text', 'source_url', array())
     	->setRequired(false)
     	->setFilters(array('StringTrim'))
     	->addPrefixPath('Local_Validate', 'Local/Validate', Zend_Form_Element::VALIDATE)
@@ -409,7 +409,7 @@ class Default_Form_Product extends Zend_Form
     					array(
     							'ViewScript',
     							array(
-    									'viewScript' => 'product/viewscripts/input_github.phtml',
+    									'viewScript' => 'product/viewscripts/input_source_url.phtml',
     									'placement' => false
     							)
     					)

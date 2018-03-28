@@ -45,7 +45,7 @@ $this->product->description = Default_Model_BBCode::renderHtml(Default_Model_Htm
 $this->product->version = Default_Model_HtmlPurify::purify($this->product->version);
 //$this->product->embed_code =Default_Model_HtmlPurify::purify($this->product->embed_code,Default_Model_HtmlPurify::ALLOW_EMBED);
 $this->product->link_1 = Default_Model_HtmlPurify::purify($helpAddDefaultScheme->addDefaultScheme($this->product->link_1),Default_Model_HtmlPurify::ALLOW_URL);
-$this->product->github_code = Default_Model_HtmlPurify::purify($this->product->github_code,Default_Model_HtmlPurify::ALLOW_URL);
+$this->product->source_url = Default_Model_HtmlPurify::purify($this->product->source_url,Default_Model_HtmlPurify::ALLOW_URL);
 $this->product->facebook_code = Default_Model_HtmlPurify::purify($this->product->facebook_code,Default_Model_HtmlPurify::ALLOW_URL);
 $this->product->twitter_code = Default_Model_HtmlPurify::purify($this->product->twitter_code,Default_Model_HtmlPurify::ALLOW_URL);
 $this->product->google_code = Default_Model_HtmlPurify::purify($this->product->google_code,Default_Model_HtmlPurify::ALLOW_URL);
@@ -265,8 +265,8 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
                                     
                                     <p class="light small">
                                     <span class="source">Source: </span>
-                                    <?php if (false === empty($this->product->github_code)):
-                                        echo '<a target="_blank" href="' . $this->product->github_code . '" rel="nofollow">' . $this->product->github_code
+                                    <?php if (false === empty($this->product->source_url)):
+                                        echo '<a target="_blank" href="' . $this->product->source_url . '" rel="nofollow">' . $this->product->source_url
                                             . ' <span class="fa fa-external-link"></span></a>';
                                     endif;
                                     ?>
