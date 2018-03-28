@@ -50,12 +50,142 @@ class Default_Model_ProjectCategory
     }
 
     /**
+     * @param null $store_id
+     *
+     * @return array
+     * @throws Zend_Exception
+     */
+    public function fetchTreeForView($store_id = null)
+    {
+        $package_type = null;
+
+        if (empty($store_id)) {
+            $store_config = Zend_Registry::get('store_config');
+            $store_id = $store_config['store_id'];
+            $package_type = $store_config['package_type'];
+        }
+
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cache_id = __CLASS__ . '_' . __FUNCTION__ . "_{$store_id}";
+
+        if (false === ($tree = $cache->load($cache_id))) {
+            $rows = $this->fetchCategoryTreeWithPackageType($store_id, $package_type);
+
+            if (count($rows) == 0) {
+                throw new Zend_Exception('no Categories could be found for store id: ' . $store_id);
+            }
+
+            list($rows, $tree) = $this->buildTreeForView($rows);
+            $cache->save($tree, $cache_id, array(), 600);
+        }
+
+        return $tree;
+    }
+
+    /**
+     * @param int|null    $store_id
+     * @param string|null $package_type
+     *
+     * @return array
+     */
+    protected function fetchCategoryTreeWithPackageType($store_id = null, $package_type = null)
+    {
+        if (empty($store_id)) {
+            return array();
+        }
+
+        $wherePackageType = empty($package_type) ? "scpc.package_type_id is null" : $this->_dataTable->getAdapter()
+                                                                                                     ->quoteInto("scpc.package_type_id = ?",
+                                                                                                         $package_type)
+        ;
+
+        $sql = "
+            SET @store_id := {$store_id};
+            
+            DROP TABLE IF EXISTS tmp_store_cat;
+            CREATE TEMPORARY TABLE tmp_store_cat
+            (INDEX `idx_cat_id` (project_category_id) )
+            ENGINE MEMORY
+             AS
+                SELECT csc.store_id, csc.project_category_id, csc.`order`, pc.title, pc.lft, pc.rgt
+                FROM config_store_category as csc
+                JOIN project_category as pc ON pc.project_category_id = csc.project_category_id
+                WHERE csc.store_id = @store_id
+                GROUP BY csc.store_category_id
+                ORDER BY csc.`order`, pc.title
+            ;
+        
+            SELECT @NEW_ORDER := 0;
+        
+            UPDATE tmp_store_cat SET `order` = (@NEW_ORDER := @NEW_ORDER + 10);";
+
+        $result = $this->_dataTable->getAdapter()->prepare($sql)->execute();
+
+        $sql = "
+            SELECT sct.lft, sct.rgt, sct.project_category_id as id, sct.title, scpc.count_product as product_count, sct.xdg_type, sct.name_legacy, if(sct.rgt-sct.lft = 1, 0, 1) AS has_children, (SELECT project_category_id FROM stat_cat_tree as sct2 WHERE sct2.lft < sct.lft AND sct2.rgt > sct.rgt ORDER BY sct2.rgt - sct.rgt limit 1) as parent_id 
+            FROM tmp_store_cat as cfc
+            JOIN stat_cat_tree as sct ON find_in_set(cfc.project_category_id, sct.ancestor_id_path)
+            JOIN stat_cat_prod_count AS scpc ON sct.project_category_id = scpc.project_category_id AND {$wherePackageType}
+            WHERE cfc.store_id = @store_id
+            ORDER BY cfc.`order`, sct.lft
+        ;";
+
+        $result = $this->_dataTable->getAdapter()->fetchAll($sql);
+
+        return $result;
+    }
+
+    /**
+     * @param array    $rows
+     * @param int|null $parent_id
+     *
+     * @return array
+     */
+    protected function buildTreeForView($rows, $parent_id = null)
+    {
+        $result = array();
+        $rememberParent = null;
+
+        while (false === empty($rows)) {
+            $row = array_shift($rows);
+
+            $result_element = array(
+                'id'            => $row['id'],
+                'title'         => $row['title'],
+                'product_count' => $row['product_count'],
+                'xdg_type'      => $row['xdg_type'],
+                'name_legacy'   => $row['name_legacy'],
+                'has_children'  => $row['has_children'],
+                'parent_id'     => $row['parent_id']
+            );
+
+            //has children?
+            if ($row['has_children'] == 1) {
+                $result_element['has_children'] = true;
+                $rememberParent = $row['id'];
+                list($rows, $result_element['children']) = $this->buildTreeForView($rows, $rememberParent);
+                $rememberParent = null;
+            }
+
+            $result[] = $result_element;
+
+            if (isset($parent_id) AND isset($rows[0]['parent_id']) AND $parent_id != $rows[0]['parent_id']) {
+                break;
+            }
+        }
+
+        return array($rows, $result);
+    }
+
+    /**
      * @param int|null $store_id If not set, the tree for the current store will be returned
      * @param bool     $clearCache
      *
      * @return array
      * @throws Zend_Cache_Exception
      * @throws Zend_Exception
+     * @deprecated use fetchTreeForView
      */
     public function fetchCategoryTreeForStore($store_id = null, $clearCache = false)
     {
@@ -158,6 +288,8 @@ class Default_Model_ProjectCategory
      * @return array|false|mixed
      * @throws Zend_Cache_Exception
      * @throws Zend_Exception
+     *
+     * @deprecated use fetchTreeForView
      */
     public function fetchCategoryTreeCurrentStore($clearCache = false)
     {
@@ -198,7 +330,8 @@ class Default_Model_ProjectCategory
     {
         $list_cat_id = self::fetchCatIdsForCurrentStore();
 
-        $sql = "SELECT project_category_id, title FROM project_category WHERE project_category_id IN (".implode(',', $list_cat_id).")";
+        $sql = "SELECT project_category_id, title FROM project_category WHERE project_category_id IN (" . implode(',', $list_cat_id)
+            . ")";
 
         $result = $this->_dataTable->getAdapter()->fetchPairs($sql);
 

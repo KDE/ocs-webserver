@@ -769,8 +769,11 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
 
     /**
      * @param int|array $nodeId
-     * @param bool $isActive
+     * @param bool      $isActive
+     *
      * @return array Set of subnodes
+     * @throws Zend_Cache_Exception
+     * @throws Zend_Db_Statement_Exception
      */
     public function fetchChildIds($nodeId, $isActive = true)
     {
