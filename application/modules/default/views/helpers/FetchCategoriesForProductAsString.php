@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -26,10 +27,10 @@ class Default_View_Helper_FetchCategoriesForProductAsString extends Zend_View_He
     {
         $modelCategories = new Default_Model_DbTable_ProjectCategory();
         $result = $modelCategories->fetchMainCategoryForProduct($productId);
-        if(empty($result)) {
+        if (empty($result)) {
             return '';
         } else {
-            return  $result[0]['title'];
+            return $result[0]['title'];
         }
     }
 

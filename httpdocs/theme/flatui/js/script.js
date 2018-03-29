@@ -1576,7 +1576,7 @@ var TagingProductDetail = (function () {
                                                         var newhtml = '';
                                                         var lis = $('li.select2-selection__choice');                                                        
                                                         $.each(lis, function( index, value ) {
-                                                            newhtml=newhtml+'<a href="/search?projectSearchText='+value.title+'&amp;f=tags" '
+                                                            newhtml=newhtml+'<a rel="nofollow" href="/search/projectSearchText/'+value.title+'/t/'+value.title+'/f/tags" '
                                                                                           +'class="topic-tag topic-tag-link usertagslabel">'+value.title+'</a>';
                                                         });                                                       
                                                         $('.product_category').find('.topicslink').html(newhtml);                                                        

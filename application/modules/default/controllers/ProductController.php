@@ -199,8 +199,15 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         //     $modelTags->processTags($newProject->project_id, implode(',',$values['tags']), Default_Model_Tags::TAG_TYPE_PROJECT);
         // }
 
+
         $modelTags = new Default_Model_Tags();
-        $modelTags->processTagsUser($newProject->project_id, implode(',',$values['tagsuser']), Default_Model_Tags::TAG_TYPE_PROJECT);
+        if ($values['tags']){
+            $modelTags->processTagsUser($newProject->project_id, implode(',',$values['tagsuser']), Default_Model_Tags::TAG_TYPE_PROJECT);    
+        }else
+        {
+            $modelTags->processTagsUser($newProject->project_id, null, Default_Model_Tags::TAG_TYPE_PROJECT);    
+        }
+        
      
 
         $activityLog = new Default_Model_ActivityLog();
@@ -222,6 +229,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
     /**
      * @param $projectData
+     *
+     * @throws Zend_Exception
+     * @throws Zend_Queue_Exception
      */
     protected function createTaskWebsiteOwnerVerification($projectData)
     {
@@ -933,8 +943,11 @@ class ProductController extends Local_Controller_Action_DomainSwitch
     /**
      * @param string $paymentProvider
      *
-     * @throws Zend_Controller_Exception
      * @return Local_Payment_GatewayInterface
+     * @throws Exception
+     * @throws Local_Payment_Exception
+     * @throws Zend_Controller_Exception
+     * @throws Zend_Exception
      */
     protected function createPaymentGateway($paymentProvider)
     {
