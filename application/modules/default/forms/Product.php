@@ -205,7 +205,7 @@ class Default_Form_Product extends Zend_Form
         $element->setIsArray(true);
         
         $options = array(
-            "1000" => "",
+            "0" => "",
             "16" => "AGPL", 
             "3"  => "Artistic 2.0", 
             "6"  => "BSD", 
@@ -222,7 +222,7 @@ class Default_Form_Product extends Zend_Form
             "18" => "GPLv2 only",
             "19" => "GPLv3",
             "2"  => "LGPL",
-            "0"  => "Other",
+            "1"  => "Other",
             "7"  => "Proprietary License",
             "5"  => "QPL",
             "4"  => "X11");
