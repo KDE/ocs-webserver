@@ -222,7 +222,7 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
                                        
                                         foreach (explode(',',$tagsuser) as $tag) { 
                                     ?>
-                                    <a href="/search?projectSearchText=<?=$tag?>&f=tags" class="topic-tag topic-tag-link usertagslabel"><?=$tag?></a>
+                                    <a rel="nofollow" href="/search?projectSearchText=<?=$tag?>&t=<?=$tag?>&f=tags" class="topic-tag topic-tag-link usertagslabel"><?=$tag?></a>
                                      <?php 
                                         }                                       
                                      }

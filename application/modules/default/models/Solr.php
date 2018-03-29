@@ -27,9 +27,28 @@ class Default_Model_Solr
 
     public $_pagination = null;
 
-    /*
+    /**
+     * @param $input
+     *
+     * @return null|string|string[]
+     */
+    static public function escape($input)
+    {
+        $pattern = '/(\+|-|&&|\|\||!|\(|\)|\{|}|\[|]|\^|"|~|\*|\?|:|\\\)/';
+
+        return preg_replace($pattern, '\\\$1', $input);
+    }
+
+    /**
      * Pass in params like 'q', 'page', 'count'
      *
+     * @param array $op
+     *
+     * @return null
+     * @throws Zend_Exception
+     * @throws Zend_Paginator_Exception
+     * @throws Zend_Service_Solr_HttpTransportException
+     * @throws Zend_Service_Solr_InvalidArgumentException
      */
     public function search($op = array())
     {
@@ -40,27 +59,27 @@ class Default_Model_Solr
         if ($solr->ping()) {
 
             $params = array(
-                'defType'    => 'dismax',
-                'wt'         => 'json',
-                'fl'         => '*,score',
-                'df'         => 'title',
-                'qf'         => empty($op['qf']) ? 'title^3 title_prefix^2 description^1 username^1 cat_title' : $op['qf'],
-//                'bq'         => 'changed_at:[NOW-1YEAR TO NOW/DAY]',
-                //'bf'         => 'if(lt(laplace_score,50),-10,10)',
-                'bf'         => 'product(recip(ms(NOW/HOUR,changed_at),3.16e-11,0.2,0.2),1300)',
-//                'sort'       => 'changed_at desc',
-                //'hl'          => 'on',
-                //'hl.fl'       => 'title, description, username',
-                'facet'       => 'true',
-                'facet.field' => array('project_category_id','tags'),
-                'facet.mincount' => '1',
-//                'facet.limit' => '10',
-                'facet.sort'  => 'count',
-                'facet.range' => 'laplace_score',
+                'defType'           => 'dismax',
+                'wt'                => 'json',
+                'fl'                => '*,score',
+                'df'                => 'title',
+                'qf'                => empty($op['qf']) ? 'title^3 title_prefix^2 description^1 username^1 cat_title' : $op['qf'],
+                //'bq'                => 'changed_at:[NOW-1YEAR TO NOW/DAY]',
+                //'bf'                => 'if(lt(laplace_score,50),-10,10)',
+                'bf'                => 'product(recip(ms(NOW/HOUR,changed_at),3.16e-11,0.2,0.2),1300)',
+                //'sort'              => 'changed_at desc',
+                //'hl'                => 'on',
+                //'hl.fl'             => 'title, description, username',
+                'facet'             => 'true',
+                'facet.field'       => array('project_category_id', 'tags'),
+                'facet.mincount'    => '1',
+                //'facet.limit'       => '10',
+                'facet.sort'        => 'count',
+                'facet.range'       => 'laplace_score',
                 'facet.range.start' => '0',
-                'facet.range.end' => '100',
-                'facet.range.gap' => '10',
-                'spellcheck'  => 'true',
+                'facet.range.end'   => '100',
+                'facet.range.gap'   => '10',
+                'spellcheck'        => 'true',
             );
 
             $params = $this->setStoreFilter($params);
@@ -81,10 +100,8 @@ class Default_Model_Solr
 
             $pagination_array = array();
             if (isset($output['response']['numFound'])) {
-                $pagination_array = array_combine(
-                    range(0, $output['response']['numFound'] - 1),
-                    range(1, $output['response']['numFound'])
-                );
+                $pagination_array =
+                    array_combine(range(0, $output['response']['numFound'] - 1), range(1, $output['response']['numFound']));
             }
         }
         $pagination = Zend_Paginator::factory($pagination_array);
@@ -97,69 +114,32 @@ class Default_Model_Solr
         return $output;
     }
 
+    /**
+     * @return Zend_Service_Solr
+     * @throws Zend_Exception
+     */
     private function get_solr_connection()
     {
         $config = Zend_Registry::get('config');
         $config_search = $config->settings->search;
 
-        return new Zend_Service_Solr ($config_search->host, $config_search->port,
-            $config_search->http_path); // Configure
-    }
-
-    static public function escape($input)
-    {
-        $pattern = '/(\+|-|&&|\|\||!|\(|\)|\{|}|\[|]|\^|"|~|\*|\?|:|\\\)/';
-
-        return preg_replace($pattern, '\\\$1', $input);
-    }
-
-    public function getPagination()
-    {
-        if (isset($this->_pagination)) {
-            return $this->_pagination;
-        }
-        return Zend_Paginator::factory(array());
+        return new Zend_Service_Solr ($config_search->host, $config_search->port, $config_search->http_path); // Configure
     }
 
     /**
+     * @param $params
      *
-     * Get spell
-     *
-     * @param array $op
+     * @return mixed
+     * @throws Zend_Exception
      */
-    public function spell($op = array())
-    {
-        $solr = $this->get_solr_connection();
-        if ($solr->ping()) {
-
-            $results = $solr->spell($op['q']);
-            $results = json_decode($results, true);
-
-            return $results['spellcheck'];
-        }
-    }
-
-    private function object_to_array($object)
-    {
-        if (is_array($object) || is_object($object)) {
-            $result = array();
-            foreach ($object as $key => $value) {
-                $result[$key] = $this->object_to_array($value);
-            }
-
-            return $result;
-        }
-
-        return $object;
-    }
-
     private function setStoreFilter($params)
     {
         $currentStoreConfig = Zend_Registry::get('store_config');
         if (substr($currentStoreConfig['order'], -1) <> 1) {
             return $params;
         }
-        $params['fq'] = array('stores:('.$currentStoreConfig['store_id'].')');
+        $params['fq'] = array('stores:(' . $currentStoreConfig['store_id'] . ')');
+
         return $params;
     }
 
@@ -177,9 +157,67 @@ class Default_Model_Solr
         if (empty($params['fq'])) {
             $params['fq'] = $op['fq'];
         } else {
-            $params['fq'] = array_merge($params['fq'],$op['fq']);
+            $params['fq'] = array_merge($params['fq'], $op['fq']);
         }
+
         return $params;
+    }
+
+    /**
+     * @return null|Zend_Paginator
+     * @throws Zend_Paginator_Exception
+     */
+    public function getPagination()
+    {
+        if (isset($this->_pagination)) {
+            return $this->_pagination;
+        }
+
+        return Zend_Paginator::factory(array());
+    }
+
+    /**
+     *
+     * Get spell
+     *
+     * @param array $op
+     *
+     * @return mixed
+     * @throws Zend_Exception
+     * @throws Zend_Service_Solr_HttpTransportException
+     * @throws Zend_Service_Solr_InvalidArgumentException
+     */
+    public function spell($op = array())
+    {
+        $solr = $this->get_solr_connection();
+        if ($solr->ping()) {
+
+            $results = $solr->spell($op['q']);
+            $results = json_decode($results, true);
+
+            return $results['spellcheck'];
+        }
+
+        return false;
+    }
+
+    /**
+     * @param $object
+     *
+     * @return array
+     */
+    private function object_to_array($object)
+    {
+        if (is_array($object) || is_object($object)) {
+            $result = array();
+            foreach ($object as $key => $value) {
+                $result[$key] = $this->object_to_array($value);
+            }
+
+            return $result;
+        }
+
+        return $object;
     }
 
 }

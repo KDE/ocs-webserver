@@ -134,6 +134,7 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
 
     /**
      * @return Zend_Db_Table_Rowset_Abstract
+     * @throws Zend_Cache_Exception
      * @deprecated
      */
     public function fetchAllActive()
@@ -154,7 +155,10 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
 
     /**
      * @param int|array $nodeId
+     *
      * @return array
+     * @throws Zend_Cache_Exception
+     * @throws Zend_Db_Statement_Exception
      */
     public function fetchActive($nodeId)
     {
@@ -197,7 +201,9 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
 
     /**
      * @param int|array $nodeId
+     *
      * @return array
+     * @throws Zend_Db_Statement_Exception
      */
     public function fetchActiveOrder($nodeId)
     {
@@ -238,7 +244,9 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
 
     /**
      * @param $title
+     *
      * @return null|Zend_Db_Table_Row_Abstract
+     * @throws Zend_Exception
      */
     public function appendNewElement($title)
     {
@@ -250,6 +258,9 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
         return $this->addNewElement($data);
     }
 
+    /**
+     * @return null|Zend_Db_Table_Row_Abstract
+     */
     public function fetchRoot()
     {
         return $this->fetchRow('`lft` = 0');
@@ -257,7 +268,9 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
 
     /**
      * @param array $data
+     *
      * @return null|Zend_Db_Table_Row_Abstract
+     * @throws Zend_Exception
      */
     public function addNewElement($data)
     {
@@ -285,6 +298,8 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
     }
 
     /**
+     * @param $cat_id
+     *
      * @return array
      */
     public function fetchTreeForJTable($cat_id)
@@ -408,6 +423,8 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
     }
 
     /**
+     * @param $cat_id
+     *
      * @return array
      */
     public function fetchTreeForJTableStores($cat_id)
@@ -518,7 +535,10 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
 
     /**
      * @param $data
+     *
      * @return array|null
+     * @throws Zend_Db_Statement_Exception
+     * @throws Zend_Db_Table_Exception
      */
     public function findPreviousSibling($data)
     {
@@ -559,6 +579,13 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
         return $resultRow;
     }
 
+    /**
+     * @param $data
+     *
+     * @return Zend_Db_Table_Row_Abstract
+     * @throws Zend_Db_Statement_Exception
+     * @throws Zend_Db_Table_Exception
+     */
     public function fetchParentForId($data)
     {
         $sql = "
@@ -584,7 +611,10 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
 
     /**
      * @param $data
+     *
      * @return array|null
+     * @throws Zend_Db_Statement_Exception
+     * @throws Zend_Db_Table_Exception
      */
     public function findNextSibling($data)
     {
@@ -628,6 +658,11 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
         return $resultRow;
     }
 
+    /**
+     * @param $data
+     *
+     * @return null|Zend_Db_Table_Row_Abstract
+     */
     public function findPreviousElement($data)
     {
         $resultRow = $this->fetchRow("rgt = {$data['lft']} - 1");
@@ -639,6 +674,11 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
         return $resultRow;
     }
 
+    /**
+     * @param $data
+     *
+     * @return null|Zend_Db_Table_Row_Abstract
+     */
     public function findNextElement($data)
     {
         $resultRow = $this->fetchRow("lft = {$data['rgt']} + 1");
@@ -722,8 +762,11 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
 
     /**
      * @param int|array $nodeId
-     * @param bool $isActive
+     * @param bool      $isActive
+     *
      * @return array Set of subnodes
+     * @throws Zend_Cache_Exception
+     * @throws Zend_Db_Statement_Exception
      */
     public function fetchChildElements($nodeId, $isActive = true)
     {
@@ -836,6 +879,13 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
         return $ret_array;
     }
 
+    /**
+     * @param        $nodeId
+     * @param string $orderBy
+     *
+     * @return array
+     * @throws Zend_Db_Statement_Exception
+     */
     public function fetchImmediateChildrenIds($nodeId, $orderBy = self::ORDERED_HIERARCHIC)
     {
         $sql = "
@@ -897,6 +947,8 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
 
     /**
      * @return array
+     * @throws Zend_Cache_Exception
+     * @throws Zend_Db_Statement_Exception
      */
     public function fetchMainCatIdsOrdered()
     {
@@ -937,6 +989,7 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
 
     /**
      * @return array
+     * @throws Zend_Db_Statement_Exception
      */
     public function fetchMainCatsOrdered()
     {
@@ -965,9 +1018,11 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
     }
 
     /**
-     * @param int $cat_id
+     * @param int    $cat_id
      * @param string $orderBy
+     *
      * @return array
+     * @throws Zend_Db_Statement_Exception
      */
     public function fetchSubCatIds($cat_id, $orderBy = self::ORDERED_HIERARCHIC)
     {
@@ -1021,9 +1076,14 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
     }
 
     /**
-     * @param int $currentNodeId
-     * @param int $newParentNodeId
+     * @param int    $currentNodeId
+     * @param int    $newParentNodeId
+     * @param string $position
+     *
      * @return bool
+     * @throws Zend_Db_Statement_Exception
+     * @throws Zend_Db_Table_Exception
+     * @throws Zend_Exception
      */
     public function moveToParent($currentNodeId, $newParentNodeId, $position = 'top')
     {
@@ -1048,7 +1108,9 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
 
     /**
      * @param int $nodeId
+     *
      * @return array Returns Element as array or (if empty) an array with empty values
+     * @throws Zend_Db_Table_Exception
      */
     public function fetchElement($nodeId)
     {
@@ -1115,6 +1177,11 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
         return true;
     }
 
+    /**
+     * @param $productId
+     *
+     * @return array
+     */
     public function fetchMainCategoryForProduct($productId)
     {
         $sql = "SELECT pc.project_category_id, pc.title
@@ -1143,7 +1210,9 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
 
     /**
      * @param int $cat_id
+     *
      * @return int|string
+     * @throws Zend_Db_Table_Exception
      */
     public function countSubCategories($cat_id)
     {
@@ -1160,7 +1229,9 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
 
     /**
      * @param int $nodeId
+     *
      * @return Zend_Db_Table_Row_Abstract
+     * @throws Zend_Db_Table_Exception
      */
     public function findCategory($nodeId)
     {
@@ -1176,6 +1247,13 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
         }
     }
 
+    /**
+     * @param $valueCatId
+     *
+     * @return array
+     * @throws Zend_Cache_Exception
+     * @throws Zend_Db_Statement_Exception
+     */
     public function fetchCategoriesForForm($valueCatId)
     {
         $level = 0;
@@ -1197,6 +1275,13 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
         return $ancestors;
     }
 
+    /**
+     * @param string $orderBy
+     *
+     * @return array
+     * @throws Zend_Cache_Exception
+     * @throws Zend_Db_Statement_Exception
+     */
     public function fetchMainCatForSelect($orderBy = self::ORDERED_HIERARCHIC)
     {
         $root = $this->fetchRoot();
@@ -1209,8 +1294,11 @@ class Default_Model_DbTable_ProjectCategory extends Local_Model_Table
 
     /**
      * @param int|array $nodeId
-     * @param string $orderBy
+     * @param string    $orderBy
+     *
      * @return array
+     * @throws Zend_Cache_Exception
+     * @throws Zend_Db_Statement_Exception
      */
     public function fetchImmediateChildren($nodeId, $orderBy = 'lft')
     {

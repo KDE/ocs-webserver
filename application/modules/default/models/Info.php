@@ -107,6 +107,8 @@ class Default_Model_Info
      * @param int|null $project_category_id
      *
      * @return array
+     * @throws Zend_Cache_Exception
+     * @throws Zend_Exception
      */
     public function getLatestComments($limit = 5, $project_category_id = null)
     {
