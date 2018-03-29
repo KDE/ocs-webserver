@@ -205,7 +205,7 @@ class Default_Form_Product extends Zend_Form
         $element->setIsArray(true);
         
         $options = array(
-            "" => "",
+            "1000" => "",
             "16" => "AGPL", 
             "3"  => "Artistic 2.0", 
             "6"  => "BSD", 
