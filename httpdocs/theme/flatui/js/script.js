@@ -1529,7 +1529,7 @@ var TagingProductSelect2 = (function () {
                         }, null, true);
 
                         var t = $(".taggingSelect2").select2({
-                            placeholder: "Input tags please...", //placeholder
+                            placeholder: "Add Tags here...", //placeholder
                             tags: true,
                             tokenSeparators: [",", " "],
                             minimumInputLength: 3,
