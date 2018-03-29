@@ -90,6 +90,12 @@ class Default_Model_DbTable_Tags extends Local_Model_Table
 
             } else {
                 $resultIds[] = $resultRow['tag_id'];
+
+                $sql = "SELECT tag_group_item_id FROM tag_group_item WHERE tag_group_id = :group_id AND tag_id = :tag_id";
+                $resultSet = $this->_db->fetchRow($sql, array('group_id' => $this->_tagsuser_groupid, 'tag_id' =>$resultRow['tag_id']));
+                if (empty($resultSet)) {
+                    $this->_db->insert('tag_group_item', array('tag_group_id' => $this->_tagsuser_groupid, 'tag_id' => $resultRow['tag_id']));                    
+                }
             }
         }
 
