@@ -25,10 +25,11 @@
         <?php if ($this->element->isRequired()) { ?>
             <div class="small grey bold-font pull-left margin-right-5">*</div>
         <?php } ?>
-        <label class="form-label" for="<?= $this->escape($this->element->getName()) ?>">Your Product on Github</label>
+        <label class="form-label" for="<?= $this->escape($this->element->getName()) ?>">Your Product Source</label>
     </div>
     <div class="col-sm-12">
-        <input id="<?= $this->escape($this->element->getName()) ?>"
+        <input placeholder="https://github.com/github-tools/github" 
+               id="<?= $this->escape($this->element->getName()) ?>"
                class="form-control"
                type="text"
                value="<?= $this->escape($this->element->getValue()) ?>"
