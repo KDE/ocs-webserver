@@ -155,10 +155,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         // form was valid, so we can set status to active
         $values['status'] = Default_Model_DbTable_Project::PROJECT_ACTIVE;
         
-        if(!isset($values['project_license_id']) || $values['project_license_id'] = '1000') {
-            $values['project_license_id'] = null;
-        }
-
         // save new project
         $modelProject = new Default_Model_Project();
 
