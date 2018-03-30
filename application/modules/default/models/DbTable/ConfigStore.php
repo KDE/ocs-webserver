@@ -328,4 +328,18 @@ class Default_Model_DbTable_ConfigStore extends Local_Model_Table
 
     }
 
+    /**
+     * @return stdClass|bool
+     */
+    public function fetchDefaultStoreId()
+    {
+        $sql = "SELECT store_id, package_type FROM config_store WHERE `default` = 1;";
+        $resultSet = $this->_db->fetchRow($sql);
+        if (count($resultSet) > 0) {
+            return (object)$resultSet;
+        } else {
+            return false;
+        }
+    }
+
 }
