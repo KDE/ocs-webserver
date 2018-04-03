@@ -175,7 +175,9 @@ class Default_Model_ProjectCategory
             if ($row['has_children'] == 1) {
                 $result_element['has_children'] = true;
                 $rememberParent = $row['id'];
-                list($rows, $result_element['children']) = $this->buildTreeForView($rows, $rememberParent);
+                list($rows, $children) = $this->buildTreeForView($rows, $rememberParent);
+                uasort($children, function ($a, $b) {return strcasecmp($a['title'], $b['title']);});
+                $result_element['children'] = $children;
                 $rememberParent = null;
             }
 
