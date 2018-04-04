@@ -163,7 +163,7 @@ class Backend_CategorytagController extends Local_Controller_Action_Backend
     {
 
         $result = true;
-        $groupid = 5; // unsortied
+        $groupid = 6; // category-tags
         $tagmodel  = new Default_Model_Tags();
         try {
                 $resultRows = $tagmodel->getTagsPerGroup($groupid);
