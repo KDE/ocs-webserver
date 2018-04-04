@@ -319,14 +319,16 @@ class Default_Model_Tags
         $sql = "delete from category_tag  where category_id=:cat_id";
         $this->getAdapter()->query($sql, array('cat_id' => $cat_id));
 
-        $tags_id =explode(',', $tags);
-        $prepared_insert =
-            array_map(function ($id) use ($cat_id) { return "({$cat_id},{$id})"; },
-                $tags_id);
-        $sql = "INSERT IGNORE INTO category_tag (category_id, tag_id) VALUES " . implode(',',
-                $prepared_insert);
-      
-        $this->getAdapter()->query($sql);
+        if($tags){
+            $tags_id =explode(',', $tags);
+            $prepared_insert =
+                array_map(function ($id) use ($cat_id) { return "({$cat_id},{$id})"; },
+                    $tags_id);
+            $sql = "INSERT IGNORE INTO category_tag (category_id, tag_id) VALUES " . implode(',',
+                    $prepared_insert);
+          
+            $this->getAdapter()->query($sql);
+        }
     }
 
      public function getTagsPerGroup($groupid)

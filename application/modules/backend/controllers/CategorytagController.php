@@ -76,6 +76,16 @@ class Backend_CategorytagController extends Local_Controller_Action_Backend
         $this->_helper->json($jTableResult);
     }
 
+    private function startsWith($haystack, $needle) {
+        // search backwards starting from haystack length characters from the end
+        return $needle === "" || strrpos($haystack, $needle, -strlen($haystack)) !== false;
+    }
+
+    private function endsWith($haystack, $needle) {
+        // search forward starting from end minus needle length characters
+        return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== false);
+    }
+
     public function updateAction()
     {
 
@@ -84,8 +94,9 @@ class Backend_CategorytagController extends Local_Controller_Action_Backend
             
             //$this->_model->moveToParent((int)$this->getParam('project_category_id', null), (int)$this->getParam('parent', null));            
             //$record = $this->_model->save($this->getAllParams());
+            $tagsid = $this->getParam('tags_id', null);
             $tagmodel  = new Default_Model_Tags();
-            $tagmodel->updateTagsPerCategory((int)$this->getParam('project_category_id', null), $this->getParam('tags_id', null));
+            $tagmodel->updateTagsPerCategory((int)$this->getParam('project_category_id', null), $tagsid);
             $jTableResult = array();
             $jTableResult['Result'] = self::RESULT_OK;
            // $jTableResult['Record'] = $record->toArray();
