@@ -307,5 +307,42 @@ class Default_Model_Tags
         $this->getAdapter()->query($sql, array('tagObjectId' => $object_id, 'tagType' => $tag_type));
     }
 
+    public function getTagsPerCategory($cat_id)
+    {
+        $sql = "select t.*  from  category_tag as c ,tag as t where c.tag_id = t.tag_id and c.category_id = :cat_id";
+        $r = $this->getAdapter()->fetchAll($sql, array('cat_id' => $cat_id));
+        return $r;
+    }
+
+    public function updateTagsPerCategory($cat_id,$tags)
+    {
+        $sql = "delete from category_tag  where category_id=:cat_id";
+        $this->getAdapter()->query($sql, array('cat_id' => $cat_id));
+
+        if($tags){
+            $tags_id =explode(',', $tags);
+            $prepared_insert =
+                array_map(function ($id) use ($cat_id) { return "({$cat_id},{$id})"; },
+                    $tags_id);
+            $sql = "INSERT IGNORE INTO category_tag (category_id, tag_id) VALUES " . implode(',',
+                    $prepared_insert);
+          
+            $this->getAdapter()->query($sql);
+        }
+    }
+
+     public function getTagsPerGroup($groupid)
+    {
+          $sql = "
+                         select 
+                         tag.tag_id 
+                         ,tag.tag_name
+                         from tag
+                         join tag_group_item on tag.tag_id = tag_group_item.tag_id and tag_group_item.tag_group_id = :groupid                         
+                         order by tag_name
+                    ";
+        $result = $this->getAdapter()->fetchAll($sql, array('groupid' => $groupid));
+        return $result;
+    }
 
 }
