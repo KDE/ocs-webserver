@@ -431,8 +431,12 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         //     $modelTags->processTags($this->_projectId, implode(',',$values['tags']), Default_Model_Tags::TAG_TYPE_PROJECT);
         // }
           
-        
-        $modelTags->processTagsUser($this->_projectId,implode(',',$values['tagsuser']), Default_Model_Tags::TAG_TYPE_PROJECT);             
+        if($values['tagsuser']) {
+            $modelTags->processTagsUser($this->_projectId,implode(',',$values['tagsuser']), Default_Model_Tags::TAG_TYPE_PROJECT);             
+        }else
+        {
+            $modelTags->processTagsUser($this->_projectId,null, Default_Model_Tags::TAG_TYPE_PROJECT);             
+        }    
    
 
         $activityLog = new Default_Model_ActivityLog();
