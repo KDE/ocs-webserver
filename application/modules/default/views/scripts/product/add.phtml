@@ -231,6 +231,26 @@ $this->inlineScript()->appendScript('
                                 
                                 <?= $this->form->source_url ?>
                                 <?= $this->form->project_license_id ?>
+                                 <?php 
+                                    if($this->project_id)
+                                    {
+                                        ?>
+                                    <div class="form-group">
+                                        <div class="col-sm-12 margin-top-15">
+                                            <label class="form-label"> Category Tags</label>    
+                                        </div>
+                                        <div class="col-sm-12">
+                                          <?php 
+                                                $tagmodel = new Default_Model_Tags();            
+                                                $tagscat = $tagmodel->getTagsCategory($this->project_id, Default_Model_Tags::TAG_TYPE_PROJECT);  
+                                                echo $tagscat ;
+                                          ?>
+                                        </div>
+                                    </div>
+                                    <?php
+                                    }
+                                    ?>
+
                                 <?= $this->form->tagsuser ?>
                                 
                                 
