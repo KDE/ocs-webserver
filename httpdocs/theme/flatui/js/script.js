@@ -1568,8 +1568,7 @@ var TagingProductDetail = (function () {
                             setup: function () {
                                            TagingProductDetailSelect2.setup();
                                            $('body').on('click', 'button.topic-tags-btn', function (event) {
-                                                $(this).toggleClass('Done');
-                                                $('.product_category').find('.usertagslabelcat').toggle();                                                                                                
+                                                $(this).toggleClass('Done');                                                                                                                                            
                                                 $('.product_category').find('.usertagslabel').remove();
                                                 $('.tagsuserselectpanel').toggle();
                                                 if($(this).text() == 'Done'){
@@ -1580,7 +1579,7 @@ var TagingProductDetail = (function () {
                                                             newhtml=newhtml+'<a rel="nofollow" href="/search/projectSearchText/'+value.title+'/t/'+value.title+'/f/tags" '
                                                                                           +'class="topic-tag topic-tag-link usertagslabel">'+value.title+'</a>';
                                                         });                                                                                                                                                               
-                                                         $('.product_category').find('.topicslink').append(newhtml);                                                        
+                                                         $('.product_category').find('.topicslink').html(newhtml);                                                        
                                                 }else{
                                                     $(this).text('Done');                                                    
                                                 }                                               
