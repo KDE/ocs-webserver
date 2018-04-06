@@ -209,9 +209,10 @@ class Default_Model_Tags
             SELECT count(*) as cnt
             FROM tag_object
             JOIN tag ON tag.tag_id = tag_object.tag_id
-            join tag_group_item on tag_object.tag_id = tag_group_item.tag_id
-            WHERE tag_type_id = :type AND tag_object_id = :object_id
-            and tag_group_item.tag_group_id = :tag_user_groupid           
+            join tag_group_item on tag_object.tag_id = tag_group_item.tag_id and tag_object.tag_group_id = tag_group_item.tag_group_id
+            WHERE tag_type_id = :type AND tag_object_id = :object_id            
+            and tag_group_item.tag_group_id = :tag_user_groupid     
+
         ";
 
         $result = $this->getAdapter()->fetchRow($sql, array('type' => $tag_type, 'object_id' => $object_id, 'tag_user_groupid' =>Default_Model_Tags::TAG_USER_GROUPID ));
@@ -290,6 +291,7 @@ class Default_Model_Tags
     public function assignTagsUser($object_id, $tags, $tag_type)
     {
         $tags =  strtolower($tags);
+        $tag_group_id = 5;
         $new_tags = array_diff(explode(',', $tags), explode(',', $this->getTagsUser($object_id, $tag_type)));
         if(sizeof($new_tags)>0)
         {
@@ -297,9 +299,9 @@ class Default_Model_Tags
             $listIds = $tableTags->storeTagsUser(implode(',', $new_tags));
 
             $prepared_insert =
-                array_map(function ($id) use ($object_id, $tag_type) { return "({$id}, {$tag_type}, {$object_id})"; },
+                array_map(function ($id) use ($object_id, $tag_type,$tag_group_id) { return "({$id}, {$tag_type}, {$object_id},{$tag_group_id})"; },
                     $listIds);
-            $sql = "INSERT IGNORE INTO tag_object (tag_id, tag_type_id, tag_object_id) VALUES " . implode(',',
+            $sql = "INSERT IGNORE INTO tag_object (tag_id, tag_type_id, tag_object_id,tag_group_id) VALUES " . implode(',',
                     $prepared_insert);
             $this->getAdapter()->query($sql);
         }
@@ -316,11 +318,11 @@ class Default_Model_Tags
         
         $tableTags = new Default_Model_DbTable_Tags();
         $listIds = $tableTags->storeTagsUser($tag);
-
+        $tag_group_id = 5;
         $prepared_insert =
-            array_map(function ($id) use ($object_id, $tag_type) { return "({$id}, {$tag_type}, {$object_id})"; },
+            array_map(function ($id) use ($object_id, $tag_type,$tag_group_id) { return "({$id}, {$tag_type}, {$object_id},{$tag_group_id})"; },
                 $listIds);
-        $sql = "INSERT IGNORE INTO tag_object (tag_id, tag_type_id, tag_object_id) VALUES " . implode(',',
+        $sql = "INSERT IGNORE INTO tag_object (tag_id, tag_type_id, tag_object_id,tag_group_id) VALUES " . implode(',',
                 $prepared_insert);
 
      
@@ -339,7 +341,7 @@ class Default_Model_Tags
             $removable_tags = explode(',', $this->getTagsUser($object_id, $tag_type));
         }
 
-        $sql = "DELETE tag_object FROM tag_object JOIN tag ON tag.tag_id = tag_object.tag_id WHERE tag.tag_name = :name and tag_object.tag_object_id=:object_id";
+        $sql = "DELETE tag_object FROM tag_object JOIN tag ON tag.tag_id = tag_object.tag_id WHERE tag_group_id = ".Default_Model_Tags::TAG_USER_GROUPID." and tag.tag_name = :name and tag_object.tag_object_id=:object_id";
         foreach ($removable_tags as $removable_tag) {
             $this->getAdapter()->query($sql, array('name' => $removable_tag,'object_id' => $object_id));
             // if Tag is the only one in Tag_object table then delete this tag for user_groupid = 5
@@ -359,7 +361,7 @@ class Default_Model_Tags
     public function deleteTagUser($object_id, $tag, $tag_type)
     {
         $removable_tag =$tag;
-        $sql = "DELETE tag_object FROM tag_object JOIN tag ON tag.tag_id = tag_object.tag_id WHERE tag.tag_name = :name and tag_object.tag_object_id=:object_id
+        $sql = "DELETE tag_object FROM tag_object JOIN tag ON tag.tag_id = tag_object.tag_id WHERE tag_group_id = ".Default_Model_Tags::TAG_USER_GROUPID." and  tag.tag_name = :name and tag_object.tag_object_id=:object_id
                     and tag_group_id =".Default_Model_Tags::TAG_USER_GROUPID;
        
         $this->getAdapter()->query($sql, array('name' => $removable_tag,'object_id' => $object_id));
