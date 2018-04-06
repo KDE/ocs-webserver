@@ -218,11 +218,16 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
                                     $tagscat = $tagmodel->getTagsCategory($this->product->project_id, Default_Model_Tags::TAG_TYPE_PROJECT);  
                                     if($tagscat && $tagsuser){
                                         $tagscat = array_diff(explode(',', $tagscat), explode(',', $tagsuser));
+                                    }else{
+                                        if($tagscat){
+                                            $tagscat=explode(',',$tagscat);
+                                        }
                                     }                                    
                                     echo '<span class="topicslink">';
 
-                                    if(false === empty($tagscat))
-                                    {                                                                       
+                                    if(false === empty($tagscat) && is_array($tagscat))
+                                    {            
+
                                         foreach ($tagscat as $tag) { 
                                     ?>
                                     <a rel="nofollow" href="/search/projectSearchText/<?=$tag?>/t/<?=$tag?>/f/tags" class="topic-tag topic-tag-link usertagslabelcat"><?=$tag?></a>
