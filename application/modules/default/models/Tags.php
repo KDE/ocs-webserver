@@ -116,7 +116,7 @@ class Default_Model_Tags
                         join tag_group_item on tag_object.tag_id = tag_group_item.tag_id and tag_object.tag_group_id = tag_group_item.tag_group_id
                         WHERE tag_type_id = :type AND tag_object_id = :object_id
                         and tag_object.tag_group_id in  ({$tag_group_ids} )       
-                        order by tag_group_item.tag_group_id desc 
+                        order by tag_group_item.tag_group_id desc , tag.tag_name asc
             ";
        
             $result = $this->getAdapter()->fetchAll($sql, array('type' => $tag_type, 'object_id' => $object_id));
