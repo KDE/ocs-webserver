@@ -201,32 +201,11 @@ class Default_Form_Product extends Zend_Form
     {
 
         //$element = new Zend_Form_Element_Multiselect('project_license_id', array('registerInArrayValidator' => false));
-        $element = new Zend_Form_Element_Select('project_license_id', array('multiple' => false ));
+        $element = new Zend_Form_Element_Select('license_tag_id', array('multiple' => false ));
         $element->setIsArray(true);
         
-        $options = array(
-            "0" => "",
-            "16" => "AGPL", 
-            "3"  => "Artistic 2.0", 
-            "6"  => "BSD", 
-            "17" => "CC0 1.0 Universal (Public Domain)",
-            "9"  => "CPL 1.0",
-            "10" => "Creative Commons by",
-            "13" => "Creative Commons by-nc",
-            "15" => "Creative Commons by-nc-nd",
-            "14" => "Creative Commons by-nc-sa",
-            "12" => "Creative Commons by-nd",
-            "11" => "Creative Commons by-sa",
-            "8"  => "GFDL",
-            "1"  => "GPLv2 or later",
-            "18" => "GPLv2 only",
-            "19" => "GPLv3",
-            "2"  => "LGPL",
-            "1"  => "Other",
-            "7"  => "Proprietary License",
-            "5"  => "QPL",
-            "4"  => "X11");
-        
+        $tagTable = new Default_Model_DbTable_Tags();
+        $options = $tagTable->fetchLicenseTagsForSelect();
         
         return $element
                     ->setFilters(array('StringTrim'))
