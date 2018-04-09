@@ -139,8 +139,10 @@ class Backend_TagsController extends Local_Controller_Action_Backend
         try {
             $groupId = (int)$this->getParam('tag_group_id');
             $tagName = $this->getParam('tag_name');
+            $tagFullname = $this->getParam('tag_fullname');
+            $tagDescription = $this->getParam('tag_description');
             $modelTagGroup = new Default_Model_TagGroup();
-            $newRow = $modelTagGroup->assignGroupTag($groupId, $tagName);
+            $newRow = $modelTagGroup->assignGroupTag($groupId, $tagName,$tagFullname,$tagDescription);
 
             $jTableResult['Result'] = self::RESULT_OK;
             $jTableResult['Record'] = $newRow;
@@ -161,8 +163,11 @@ class Backend_TagsController extends Local_Controller_Action_Backend
             $groupItemId = (int)$this->getParam('tag_group_item_id');
             $tagId = (int)$this->getParam('tag_id');
             $tagName = $this->getParam('tag_name');
+
+            $tagFullname = $this->getParam('tag_fullname');            
+            $tagDescription = $this->getParam('tag_description');
             $modelTagGroup = new Default_Model_TagGroup();
-            $modelTagGroup->updateGroupTag($tagId, $tagName);
+            $modelTagGroup->updateGroupTag($tagId, $tagName,$tagFullname,$tagDescription);
             $record = $modelTagGroup->fetchOneGroupItem($groupItemId);
 
             $jTableResult = array();
