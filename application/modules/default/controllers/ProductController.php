@@ -336,6 +336,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $projectTable = new Default_Model_DbTable_Project();
         $projectModel = new Default_Model_Project();
         $modelTags = new Default_Model_Tags();
+        $tagTable = new Default_Model_DbTable_Tags();
 
         //check if product with given id exists
         $projectData = $projectTable->find($this->_projectId)->current();
@@ -383,6 +384,13 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $form->getElement('image_small')->setValue($projectData->image_small);
             //Bilder voreinstellen
             $form->getElement(self::IMAGE_SMALL_UPLOAD)->setValue($projectData->image_small);
+            
+            $licenseTags = $tagTable->fetchLicenseTagsForProject($this->_projectId);
+            $licenseTag = null;
+            if($licenseTags) {
+                $licenseTag = $licenseTags[0]['tag_id'];
+            }
+            $form->getElement('license_tag_id')->setValue($licenseTag);
 
             $this->view->form = $form;
 
@@ -401,7 +409,10 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         }
 
         $values = $form->getValues();
-
+        
+        
+        $licenseTag = $form->getElement('license_tag_id')->getValue();
+        $modelTags->saveLicenseTagForProject($this->_projectId, $licenseTag);
 
         $imageModel = new Default_Model_DbTable_Image();
         try {

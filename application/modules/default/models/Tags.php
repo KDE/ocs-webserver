@@ -26,6 +26,8 @@ class Default_Model_Tags
 {
     const TAG_TYPE_PROJECT = 1;
     const TAG_USER_GROUPID = 5;
+    const TAG_CATEGORY_GROUPID = 6;
+    const TAG_LICENSE_GROUPID = 7;
 
     /**
      * Default_Model_Tags constructor.
@@ -133,7 +135,7 @@ class Default_Model_Tags
      */
     public function getTagsUser($object_id, $tag_type)
     {
-        $tag_group_ids ='5';
+        $tag_group_ids =$this::TAG_USER_GROUPID;
         $tags = $this->getTagsArray($object_id, $tag_type,$tag_group_ids);
 
         $tag_names = '';
@@ -147,7 +149,7 @@ class Default_Model_Tags
         return null;
     }
 
-     /**
+    /**
      * @param int $object_id
      * @param int $tag_type
      *
@@ -155,7 +157,7 @@ class Default_Model_Tags
      */
     public function getTagsCategory($object_id, $tag_type)
     {
-        $tag_group_ids ='6';
+        $tag_group_ids = $this::TAG_CATEGORY_GROUPID;
         $tags = $this->getTagsArray($object_id, $tag_type,$tag_group_ids);
 
         $tag_names = '';
@@ -168,6 +170,7 @@ class Default_Model_Tags
         }
         return null;
     }
+    
 
 
      /**
@@ -318,7 +321,7 @@ class Default_Model_Tags
         
         $tableTags = new Default_Model_DbTable_Tags();
         $listIds = $tableTags->storeTagsUser($tag);
-        $tag_group_id = 5;
+        $tag_group_id = $this::TAG_USER_GROUPID;
         $prepared_insert =
             array_map(function ($id) use ($object_id, $tag_type,$tag_group_id) { return "({$id}, {$tag_type}, {$object_id},{$tag_group_id})"; },
                 $listIds);
@@ -419,6 +422,34 @@ class Default_Model_Tags
                     ";
         $result = $this->getAdapter()->fetchAll($sql, array('groupid' => $groupid));
         return $result;
+    }
+
+
+    public function saveLicenseTagForProject($object_id, $tag_id) {
+        
+        $tableTags = new Default_Model_DbTable_Tags();
+        
+        $tags = $tableTags->fetchLicenseTagsForProject($object_id);
+        if(count($tags) == 1) {
+            $tag = $tags[0];
+            
+            //remove tag license
+            if(!$tag_id) {
+                $sql = "DELETE FROM tag_object WHERE tag_item_id = :tagItemId";
+                $this->getAdapter()->query($sql, array('tagItemId' => $tag['tag_item_id']));
+            } else {
+                //Update old tag
+                if($tag_id <> $tag['tag_id']) {
+                    $sql = "UPDATE tag_object SET tag_changed = NOW(),tag_id = :tag_id WHERE tag_item_id = :tagItemId";
+                    $this->getAdapter()->query($sql, array('tagItemId' => $tag['tag_item_id'], 'tag_id' => $tag_id));
+                }
+            }
+        } else {
+            //insert new tag
+            $sql = "INSERT IGNORE INTO tag_object (tag_id, tag_type_id, tag_object_id, tag_group_id) VALUES (:tag_id, :tag_type_id, :tag_object_id, :tag_group_id)";
+            $this->getAdapter()->query($sql, array('tag_id' => $tag_id, 'tag_type_id' => $this::TAG_TYPE_PROJECT, 'tag_object_id' => $object_id, 'tag_group_id' => $this::TAG_LICENSE_GROUPID));
+        }
+        
     }
 
 }
