@@ -67,7 +67,7 @@
                                  <th><?= $this->translate('File (click to download)'); ?></th>
                                  <th><?= $this->translate('Version'); ?></th>
                                  <th><?= $this->translate('Description'); ?></th>
-                                 <th><?= $this->translate('Filetype'); ?></th>
+                            
                                  <th><?= $this->translate('Packagetype'); ?></th>
                                  <th><?= $this->translate('License'); ?></th>
                                  <th style="text-align: right"><?= $this->translate('Downloads'); ?></th>
@@ -330,8 +330,7 @@
                                             '<tr data-ppload-file-id="' + this.id + '"' + greyText + '>'
                                             + '<td>' + downloadLink + '</td>'
                                             + '<td>' + version + '</td>'
-                                            + '<td>' + fileDescription + '</td>'
-                                            + '<td>' + this.type + '</td>'
+                                            + '<td>' + fileDescription + '</td>'                                            
                                             + '<td>'
                                             + '<select id="data-select-packagetype' + this.id + '" data-packagetype-id="" name="packagetype" class="form-control input-sm" style="width: 200px;">'
                                             + '<option value=\"\"></option>'
