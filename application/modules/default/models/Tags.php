@@ -27,6 +27,7 @@ class Default_Model_Tags
     const TAG_TYPE_PROJECT = 1;
     const TAG_USER_GROUPID = 5;
     const TAG_CATEGORY_GROUPID = 6;
+
     const TAG_LICENSE_GROUPID = 7;
 
     /**
@@ -171,6 +172,28 @@ class Default_Model_Tags
         return null;
     }
     
+
+     /**
+     * @param int $object_id
+     * @param int $tag_type
+     *
+     * @return string|null
+     */
+    public function getTagsSystem($object_id, $tag_type)
+    {
+        $tag_group_ids ='6,7';
+        $tags = $this->getTagsArray($object_id, $tag_type,$tag_group_ids);
+
+        $tag_names = '';
+        foreach ($tags as $tag) {
+            $tag_names=$tag_names.$tag['tag_name'].',';
+        }
+         $len = strlen($tag_names);
+         if ($len>0) {
+            return substr($tag_names,0,($len-1));
+        }
+        return null;
+    }
 
 
      /**

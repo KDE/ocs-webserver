@@ -21,9 +21,7 @@
  **/
 
 $model = new Default_Model_Tags();
-//$tags = $tableProject->getTags($this->product->project_id, Default_Model_Tags::TAG_TYPE_PROJECT);
-//$tagsuser = $tableProject->getTagsUser($this->product->project_id, Default_Model_Tags::TAG_TYPE_PROJECT);
-$tags = $model->getTagsCategory($this->product->project_id, Default_Model_Tags::TAG_TYPE_PROJECT); 
+$tags = $model->getTagsSystem($this->product->project_id, Default_Model_Tags::TAG_TYPE_PROJECT); 
 if (false === empty($tags)) {
 ?>
 <style>
