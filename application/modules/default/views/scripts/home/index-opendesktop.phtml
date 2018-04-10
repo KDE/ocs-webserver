@@ -41,8 +41,9 @@ $featuredProducts = $modelInfo->getFeaturedProductsForHostStores(100);
 if ($featuredProducts->getTotalItemCount()) {  
     $request = Zend_Controller_Front::getInstance()->getRequest();
     $offset = (int)$request->getParam('page');
+    $irandom = rand(1,$featuredProducts->getTotalItemCount());    
     $featuredProducts->setItemCountPerPage(1);
-    $featuredProducts->setCurrentPageNumber($offset);
+    $featuredProducts->setCurrentPageNumber($irandom);
     $this->featureProducts = $featuredProducts;
 }
 
