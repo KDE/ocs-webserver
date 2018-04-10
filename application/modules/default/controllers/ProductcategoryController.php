@@ -52,6 +52,19 @@ class ProductcategoryController extends Local_Controller_Action_DomainSwitch
             $this->_helper->json($tabCategories->fetchImmediateChildren($identifier, $tabCategories::ORDERED_TITLE));
         }
     }
+    
+    public function fetchsourceneededAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        $identifier = $this->_request->getParam(self::CATEGORY_ID);
+
+        $tabCategories = new Default_Model_DbTable_ProjectCategory();
+
+        $this->_helper->json($tabCategories->findCategory($identifier));
+        
+    }
 
     public function fetchcategoriesAction()
     {

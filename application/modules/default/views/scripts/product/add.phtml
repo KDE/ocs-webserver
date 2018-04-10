@@ -30,6 +30,7 @@ $modelCategory = new Default_Model_DbTable_ProjectCategory();
 $valueCatId = $this->form->project_category_id->getValue();
 //$valueCatId = 55;
 $categories = $modelCategory->fetchCategoriesForForm($valueCatId);
+var_dump($categories);
 $categoryAncestors = $modelCategory->fetchAncestorsAsId($valueCatId);
 if (count($categoryAncestors) > 0) {
     $categoryPath = explode(',',$categoryAncestors['ancestors']);
@@ -1551,6 +1552,24 @@ $this->inlineScript()->appendScript('
               });
               $(this).empty().append(my_options);
           }
+          
+          function setSourceNeededForCategoryInfo(element_id, cat_id) {
+            $('.cat_source_info').remove();
+            jQuery.ajax({
+                data: {'cat_id': cat_id},
+                url: '/productcategory/fetchsourceneeded/',
+                type: 'get',
+                success: function (results) {
+                    var isSourceRequired = results.source_required;
+                    
+                    if(isSourceRequired == 1) {
+                        $('#wrapper_cat_id').append('<div class="cat_source_info" id="' + element_id + '_cat_source_info">*for this category a Source-Code Repository is needed for plings</div>');
+                    }
+                }
+            });
+          }
+          
+          
 
           ProductForm = {
 
@@ -1580,10 +1599,32 @@ $this->inlineScript()->appendScript('
                           new_html_element += '<option value="' + form_select_option + '" ' + attr_selected + '>' + this.cat_id_data[form_elem_name][form_select_option] + '</option>';
                       }
                       new_html_element += '</select>';
+                      
                       $('#wrapper_cat_id').append(new_html_element);
                       this.sortOptionByValue(form_elem_name);
+                      
+                      var size = <?=count($categories)?>;
+                      if((size-1) == level) {
+                            this.setSourceNeededForCategoryInfo(form_elem_name, this.cat_id_path[level]);
+                      }
+                      
                       level++;
                   }
+              },
+                  
+              setSourceNeededForCategoryInfo: function(element_id, cat_id) {
+                  
+                jQuery.ajax({
+                    data: {'cat_id': cat_id},
+                    url: '/productcategory/fetchsourceneeded/',
+                    type: 'get',
+                    success: function (results) {
+                        var isSourceRequired = results.source_required;
+                        if(isSourceRequired == 1) {
+                            $('#wrapper_cat_id').append('<div class="cat_source_info" id="' + element_id + '_cat_source_info">*for this category a Source-Code Repository is needed for plings</div>');
+                        }
+                    }
+                });
               },
 
               sortOptionByValue: function(element_id) {
@@ -1604,6 +1645,7 @@ $this->inlineScript()->appendScript('
                   $('body').on('change', 'div#wrapper_cat_id select.product_select_cat', function () {
 
                       var cat_id = $(this).val();
+                      var name_old_elem = $(this).attr('name');
                       var name_new_elem = $(this).data('target');
                       var level_elem = $(this).data('level') + 1;
                       var level_new_elem = level_elem + 1;
@@ -1612,6 +1654,7 @@ $this->inlineScript()->appendScript('
                       if (!cat_id) {
                           $('#wrapper_form_cat input:hidden:first').val($('#wrapper_cat_id').find("[data-level]:lt(" + (level_elem - 1) + ")").val());
                           $('#wrapper_cat_id').find("[data-level]:gt(" + (level_elem - 1) + ")").remove();
+                          $('.cat_source_info').remove();
                           return;
                       }
                       $('#wrapper_form_cat input:hidden:first').val(cat_id);
@@ -1622,6 +1665,8 @@ $this->inlineScript()->appendScript('
                           type: 'post',
                           success: function (results) {
                               $('#wrapper_cat_id').find("[data-level]:gt(" + (level_elem - 1) + ")").remove();
+                              $('#' + (level_elem - 1) + '_cat_source_info').remove();
+                              $('.cat_source_info').remove();
                               if (!$.isEmptyObject(results)) {
                                   var new_html_element = '<select name="' + name_new_elem + '" id="' + name_new_elem + '" class="required form-control product_select_cat" data-target="'+name_new_target+'" data-level="'+level_elem+'">';
                                   new_html_element += '<option value=""> </option>';
@@ -1631,7 +1676,10 @@ $this->inlineScript()->appendScript('
                                   new_html_element += '</select>';
 
                                   $('#wrapper_cat_id').append(new_html_element);
-                            }
+                             } else {
+                                var name_elem = name_old_elem; 
+                                setSourceNeededForCategoryInfo(name_elem, cat_id);
+                             }
                         }
                       });
                   });
