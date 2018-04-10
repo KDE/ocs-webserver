@@ -57,7 +57,7 @@ class HomeController extends Local_Controller_Action_DomainSwitch
         if ($featureProducts->getTotalItemCount() > 0) {
             $offset = (int)$this->getParam('page');
 
-            $irandom = rand(1,$featureProducts->pageCount);
+            $irandom = rand(1,$featureProducts->getTotalItemCount());
             $featureProducts->setItemCountPerPage(1);
             $featureProducts->setCurrentPageNumber($irandom);
             $this->view->featureProducts = $featureProducts;
