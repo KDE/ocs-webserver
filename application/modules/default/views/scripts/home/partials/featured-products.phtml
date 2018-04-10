@@ -79,7 +79,7 @@
                                         <?=$helpTruncate->truncate($this->product['description'], 300, '...', false, true)?>
                                 </span>
                                 
-                                <span class="time text-center" style="font-size: small;display: block"><?=$helpDate->printDate($this->product['changed_at']==null?$this->product['created_at']:$this->product['changed_at'])?>
+                                <span class="time" style="font-size: small;display: block"><?=$helpDate->printDate($this->product['changed_at']==null?$this->product['created_at']:$this->product['changed_at'])?>
                                 </span>
                                 </div>
                               <div style="clear: both"></div>
