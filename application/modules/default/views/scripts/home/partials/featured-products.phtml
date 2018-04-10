@@ -28,9 +28,14 @@
         $pageCount = $this->featureProducts->count();
 ?>
 <style type="text/css">
+
+ ol.carousel-indicators 
+  {
+        bottom: -10px;
+  }
  ol.carousel-indicators li
   {
-     background-color: #def;
+     background-color: #def;     
   }
   .carousel-indicators li.active
   {
@@ -46,7 +51,7 @@
                     <div>                      
                         <div style="width: 800px; display: block;margin:0 auto; border:1px solid #DFDCDA; border-radius: 3px; background-color: white;">
                             <a style="float: left; margin-right: 20px" title="<?=$helpTruncate->truncate($this->product['description'], 200, '...', false, true)?>" href="<?=$helpProductUrl->buildProductUrl($this->product['project_id'],'')?>">
-                               <img class="productimg " src="<?=$helpImage->Image($this->product['image_small'], array('width' => 500, 'height' => 300))?>"  style="width: 250px; max-height: 250px; "/>
+                               <img class="productimg " src="<?=$helpImage->Image($this->product['image_small'], array('width' => 250, 'height' => 250 ,'crop' => 1))?>"  style="width: 250px; height: 250px; "/>
                             </a>
                                <div class="" style="display:block; width:450px; float:right; margin-right:20px;padding-top: 10px">
                                <a href="<?=$helpProductUrl->buildProductUrl($this->product['project_id'],'')?>"><?=$this->product['title']?></a>
