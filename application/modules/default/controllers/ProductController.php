@@ -184,6 +184,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $mediaServerUrls = $this->saveGalleryPics($form->gallery->upload->upload_picture);
         $modelProject->updateGalleryPictures($newProject->project_id, $mediaServerUrls);
         
+        $modelTags = new Default_Model_Tags();
+        
         $licenseTag = $form->getElement('license_tag_id')->getValue();
         $modelTags->saveLicenseTagForProject($newProject->project_id, $licenseTag);
 
