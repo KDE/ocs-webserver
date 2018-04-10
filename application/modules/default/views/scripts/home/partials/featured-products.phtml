@@ -19,21 +19,27 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-
-  $pageCount = $this->featureProducts->count();
-?>
-    <div id="featureProducts" class="" style=" height:100%">
-        <div id="featureProducts-content" style="height:100%; width: 100%; padding-top: 30px;padding-bottom: 30px">
-        <?php
         $helpTruncate = new Default_View_Helper_Truncate();
         $helpImage = new Default_View_Helper_Image();
         $helpProductUrl = new Default_View_Helper_BuildProductUrl();
         $helpCategories = new Default_View_Helper_FetchCategoriesForProductAsString();
         $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
         $helpDate = new Default_View_Helper_PrintDate();
+        $pageCount = $this->featureProducts->count();
+?>
+<style type="text/css">
+ ol.carousel-indicators li
+  {
+     background-color: #def;
+  }
+
+</style>
+    <div id="featureProducts" style="height:100%" class="carousel slide" data-ride="carousel" data-interval="false">       
+
+        <div id="featureProducts-content" style="height:100%;  padding-top: 30px;padding-bottom: 30px" class="carousel-inner">
+        <?php        
         foreach ($this->featureProducts as $this->product): ?>            
-                    <div class="col-lg-12">
-                      
+                    <div>                      
                         <div style="width: 1000px; display: block;margin:0 auto; border:1px solid #DFDCDA; border-radius: 3px; background-color: white;">
                             <a style="float: left; margin-right: 20px" title="<?=$helpTruncate->truncate($this->product['description'], 200, '...', false, true)?>" href="<?=$helpProductUrl->buildProductUrl($this->product['project_id'],'')?>">
                                <img class="productimg " src="<?=$helpImage->Image($this->product['image_small'], array('width' => 500, 'height' => 300))?>"  style="width: 500px; max-height: 300px; "/>
@@ -54,13 +60,9 @@
                               
 
                                 <span style="display: block; font-size: small;margin-top:10px;">
-                                <?php
-                                    //$count_plingers = $this->product['count_plingers'];
-                                    $count_comments = $this->product['count_comments'];
-                                    
-                                    //echo ($count_plingers>0 ? '<span class="cntSupporters" style="padding-right:20px">'.$count_plingers.' supporter':'').($count_plingers>1?'s':'').($count_plingers>0?'</span>':'') ;
-                                    echo ($count_comments>0 ? '<span class="cntComments">'.$count_comments.' comment':'').($count_comments>1?'s':'').($count_comments>0?'</span>':'') ;
-                                    
+                                <?php                                    
+                                    $count_comments = $this->product['count_comments'];                                                                        
+                                    echo ($count_comments>0 ? '<span class="cntComments">'.$count_comments.' comment':'').($count_comments>1?'s':'').($count_comments>0?'</span>':'') ;                                    
                                 ?>
                                 </span>
                                 
@@ -79,24 +81,19 @@
                                 </div>
                                 <span class="time text-center" style="font-size: small;display: block"><?=$helpDate->printDate($this->product['changed_at']==null?$this->product['created_at']:$this->product['changed_at'])?>
                                 </span>
-
                                 </div>
-
                               <div style="clear: both"></div>
-                          </div>
-
-                         
-                           
+                          </div>                                                    
                     </div>                           
-        <?php endforeach;?>
-
-        
-         <div class="" style=" height: 30px; float: right ">        
-                <?php if ($pageCount > 1) echo $this->paginationControl($this->featureProducts, 'Sliding', 'home/partials/paginationControl.phtml',
-                    array('params' => array(), 'dom_target' => 'div#featureProductsContainer')); ?>
-        </div>  
+        <?php endforeach;?>        
         
       </div>
+
+           
+       <?php if ($pageCount > 1) echo $this->paginationControl($this->featureProducts, 'Sliding', 'home/partials/paginationControl.phtml',
+                    array('params' => array(), 'dom_target' => 'div#featureProductsContainer')); 
+                    ?>
+        
     </div>
 
     
