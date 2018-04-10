@@ -183,6 +183,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         //update the gallery pics
         $mediaServerUrls = $this->saveGalleryPics($form->gallery->upload->upload_picture);
         $modelProject->updateGalleryPictures($newProject->project_id, $mediaServerUrls);
+        
+        $licenseTag = $form->getElement('license_tag_id')->getValue();
+        $modelTags->saveLicenseTagForProject($newProject->project_id, $licenseTag);
 
         //If there is no Logo, we take the 1. gallery pic
         if (!isset($values['image_small']) || $values['image_small'] == '') {
