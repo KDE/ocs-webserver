@@ -201,7 +201,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
 
         $modelTags = new Default_Model_Tags();
-        if ($values['tags']){
+        if ($values['tagsuser']){           
             $modelTags->processTagsUser($newProject->project_id, implode(',',$values['tagsuser']), Default_Model_Tags::TAG_TYPE_PROJECT);    
         }else
         {
