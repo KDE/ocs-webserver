@@ -30,7 +30,6 @@ $modelCategory = new Default_Model_DbTable_ProjectCategory();
 $valueCatId = $this->form->project_category_id->getValue();
 //$valueCatId = 55;
 $categories = $modelCategory->fetchCategoriesForForm($valueCatId);
-var_dump($categories);
 $categoryAncestors = $modelCategory->fetchAncestorsAsId($valueCatId);
 if (count($categoryAncestors) > 0) {
     $categoryPath = explode(',',$categoryAncestors['ancestors']);
