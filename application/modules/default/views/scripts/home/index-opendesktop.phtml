@@ -36,19 +36,38 @@ $this->productsAddons = $modelInfo->getLastProductsForHostStores(5,"152");
 $this->productsWallpapers = $modelInfo->getLastProductsForHostStores(5,295);
 
 $this->countSupporters = $modelInfo->getCountActiveSupporters();
-//$countMembers = $modelInfo->getCountMembers();
+
+$featuredProducts = $modelInfo->getFeaturedProductsForHostStores(100);
+if ($featuredProducts->getTotalItemCount()) {  
+    $request = Zend_Controller_Front::getInstance()->getRequest();
+    $offset = (int)$request->getParam('page');
+    $irandom = rand(1,$featuredProducts->getTotalItemCount());    
+    $featuredProducts->setItemCountPerPage(1);
+    $featuredProducts->setCurrentPageNumber($irandom);
+    $this->featureProducts = $featuredProducts;
+}
 
 $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $helperImage = new Default_View_Helper_Image();
 $helpPrintDate = new Default_View_Helper_PrintDate();
 ?>
-<main id="explore-content" class="startpage-store" >
+<main id="explore-content" class="startpage-store " >
 <div class="GridFlex">
 <div class="GridFlex-cell sidebar-left">  
         <?php  echo $this->render('explore/partials/filter.phtml'); ?> 
 </div>
 <div class="GridFlex-cell content">   
         <div class="contentcontainer">
+
+                        <div class="row" style="height: 250px;" id="featureProductsContainer">
+                            
+                            <?php
+                            if ($this->featureProducts) {        
+                                          echo $this->render('home/partials/featured-products.phtml');
+                            } 
+                            ?>                        
+                        </div>
+
                         <div class="row">   
                         <?php                                 
                                     echo $this->partial('/home/partials/product_group.phtml', array(
@@ -179,6 +198,25 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
     </span>
 </div>
 </main>
+
+<script type="application/javascript">
+    $(document).ready(function () {
+        $('body').on('click', '.ajaxPartialFeatureProduct', function (event) {
+            event.preventDefault();            
+            $(this).off();                  
+            var target = '#featureProductsContainer';  
+            if($(this).hasClass( "disabled" )) return false;
+            var url = $(this).attr("href");                        
+            $(target).load(url, function (response, status, xhr) {
+                if (status == "error") {
+                    $(target).empty().html('Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.');
+                }                
+            });
+            
+            return false;
+        });
+    });
+</script>
 
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){                                             

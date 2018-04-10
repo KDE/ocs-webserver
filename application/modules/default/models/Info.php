@@ -432,6 +432,7 @@ class Default_Model_Info
             __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host') . (int)$limit . (int)$project_category_id);
 
         if (false !== ($resultSet = $cache->load($cacheName))) {
+            
             return new Zend_Paginator(new Zend_Paginator_Adapter_Array($resultSet));
         }
 
@@ -461,7 +462,7 @@ class Default_Model_Info
                 AND p.type_id = 1
                 AND p.featured = 1
                 AND p.project_category_id IN ('. implode(',', $activeCategories).')
-            ORDER BY p.changed_at DESC
+                ORDER BY p.changed_at DESC
             ';
         if (isset($limit)) {
             $sql .= ' limit ' . (int)$limit;
@@ -470,7 +471,8 @@ class Default_Model_Info
         $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
         $cache->save($resultSet, $cacheName, array(), 60);
 
-        if (count($resultSet) > 0) {
+        if (count($resultSet) > 0) {             
+             ;
             return new Zend_Paginator(new Zend_Paginator_Adapter_Array($resultSet));
         } else {
             return new Zend_Paginator(new Zend_Paginator_Adapter_Array(array()));

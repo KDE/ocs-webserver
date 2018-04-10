@@ -22,34 +22,37 @@
 if (false === isset($this->params)) {
     $this->params = array();
 }
+if(isset($this->next))
+{
+    $this->curr = $this->next-1;
+}else{
+    $this->curr = $this->pageCount;   
+}
 ?>
 
-
-<a class="left carousel-control ajaxPartial" style="height:333px;margin-top: 160px;" href="<?php echo isset($this->previous) ?'/showfeatureajax/page/'.$this->previous : '/showfeatureajax/page/1000'; ?>" data-slide="prev">
+<a class="left carousel-control ajaxPartialFeatureProduct"  href="<?php echo isset($this->previous) ?'/showfeatureajax/page/'.$this->previous : '/showfeatureajax/page/1000'; ?>" data-slide="prev">
                           <span class="glyphicon glyphicon-chevron-left"></span>
-                        </a>
+</a>
 
-<a class="right carousel-control ajaxPartial " style="height:333px;margin-top: 160px;" href="<?php echo isset($this->next) ? '/showfeatureajax/page/'.$this->next : '/showfeatureajax/page/1'; ?>" data-slide="next">
+<a class="right carousel-control ajaxPartialFeatureProduct "  href="<?php echo isset($this->next) ? '/showfeatureajax/page/'.$this->next : '/showfeatureajax/page/1'; ?>" data-slide="next">
   <span class="glyphicon glyphicon-chevron-right"></span>
 </a>
 
-<?php /*
-<ul class="pagination pagination-sm" style="margin: 0;padding:0;">
-    <li class="<?php echo isset($this->previous) ? '' : 'disabled' ?>">
-        <a class="<?php echo isset($this->previous) ? 'ajaxPartial' : '' ?>" href="<?php echo isset($this->previous) ? $this->url(array_merge($this->params,
-            array('page' => $this->previous))) : 'javascript:;'; ?>"><span
-                class="glyphicon glyphicon-chevron-left"></span></a></li>
+<?php if ($this->pageCount): ?>
 
-    <?php foreach ($this->pagesInRange as $page): ?>
-        <?php if ($page != $this->current): ?>
-            <li><a class="ajaxPartial" href="/showfeatureajax/page/<?=$page?>"><?php echo $page; ?></a></li>
-        <?php else: ?>
-            <li class="active"><a class="ajaxPartial" href="/showfeatureajax/page/<?=$page?>"><?php echo $page; ?></a>
-        <?php endif; ?>
-    <?php endforeach; ?>
-
-    <li class="<?php echo isset($this->next) ? '' : 'disabled' ?>">
-        <a class="<?php echo isset($this->next) ? 'ajaxPartial' : ''?>" href="<?php echo isset($this->next) ? '/showfeatureajax/page/'.$this->next : 'javascript:;'; ?>"><span class="glyphicon glyphicon-chevron-right"></span></a></li>
-</ul>
-*/
-?>
+<ol class="carousel-indicators">
+    <?php
+        $cnt = 1;
+        $cls = '';
+        for($cnt=1; $cnt<=$this->pageCount; $cnt++)                 
+        {
+            if($cnt==$this->curr){
+                $cls = 'active';
+            }else{
+                $cls = '';
+            }
+            echo '<li class="ajaxPartialFeatureProduct '.$cls.'" href="/showfeatureajax/page/'.$cnt.'" data-target="#myCarousel"  data-slide-to="'.$cnt.'"></li> ';
+        }
+    ?>
+</ol>
+<?php endif; ?>

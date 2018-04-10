@@ -59,10 +59,10 @@
             <span class="newsTitle"> News </span>
             <div class="prod-widget-box right bgwhite " id="rss-feeds"> </div>                  
 
-            <?php /**
+        
             <span class="newsTitle"> Forum </span>
             <div class="prod-widget-box right bgwhite " id="blogJson"> </div>     
-            */ ?>
+           
             
             <?php  if (count($this->comments) > 0) {
                 ?>
@@ -80,6 +80,6 @@
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){                               
                 RssNews.setup();   
-                //BlogJson.setup();                    
+                BlogJson.setup();                    
             });
         ');
