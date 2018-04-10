@@ -184,11 +184,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $mediaServerUrls = $this->saveGalleryPics($form->gallery->upload->upload_picture);
         $modelProject->updateGalleryPictures($newProject->project_id, $mediaServerUrls);
         
-        $modelTags = new Default_Model_Tags();
-        
-        $licenseTag = $form->getElement('license_tag_id')->getValue();
-        $modelTags->saveLicenseTagForProject($newProject->project_id, $licenseTag);
-
         //If there is no Logo, we take the 1. gallery pic
         if (!isset($values['image_small']) || $values['image_small'] == '') {
             $values['image_small'] = $mediaServerUrls[0];
@@ -213,6 +208,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $modelTags->processTagsUser($newProject->project_id, null, Default_Model_Tags::TAG_TYPE_PROJECT);    
         }
         
+        $licenseTag = $form->getElement('license_tag_id')->getValue();
+        $modelTags->saveLicenseTagForProject($newProject->project_id, $licenseTag);
+
      
 
         $activityLog = new Default_Model_ActivityLog();
