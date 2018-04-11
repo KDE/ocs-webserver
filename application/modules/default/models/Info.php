@@ -418,11 +418,43 @@ class Default_Model_Info
     }
 
 
+    public function getRandomStoreProjectIds()
+    {
+            /** @var Zend_Cache_Core $cache */
+            $cache = Zend_Registry::get('cache');
+            $cacheName =
+                __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host'));
+
+            $resultSet = $cache->load($cacheName);
+
+            if(false ==$resultSet)
+            {
+                        $activeCategories = $this->getActiveCategoriesForCurrentHost();    
+                        if (count($activeCategories) == 0) {
+                            return array();
+                        }        
+                        $sql = '
+                            SELECT 
+                                p.project_id                   
+                            FROM
+                                project AS p                
+                            WHERE
+                                p.status = 100
+                                AND p.type_id = 1                    
+                                AND p.project_category_id IN ('. implode(',', $activeCategories).')                    
+                            ';                        
+                        $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
+                        $cache->save($resultSet, $cacheName, array(), 6000);
+            }
+
+            $irandom = rand(0,sizeof($resultSet));
+            return $resultSet[$irandom];
+    }
+
+
     public function getRandProduct(){
-       $activeCategories = $this->getActiveCategoriesForCurrentHost();            
-        if (count($activeCategories) == 0) {
-            return array();
-        }
+           $pid = $this->getRandomStoreProjectIds();
+           $project_id = $pid['project_id'];
 
         $sql = '
             SELECT 
@@ -435,18 +467,46 @@ class Default_Model_Info
             JOIN 
                 member AS m ON m.member_id = p.member_id
             WHERE
-                p.status = 100
-                AND p.type_id = 1               
-                AND p.project_category_id IN ('. implode(',', $activeCategories).')                
-                ORDER BY RAND() LIMIT 1
+               p.project_id = :project_id
             ';
-        $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
+            $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql, array('project_id' => $project_id));
           if (count($resultSet) > 0) {                          
               return new Zend_Paginator(new Zend_Paginator_Adapter_Array($resultSet));
           } else {
               return new Zend_Paginator(new Zend_Paginator_Adapter_Array(array()));
           }
     }
+
+
+    // public function getRandProduct_(){
+    //    $activeCategories = $this->getActiveCategoriesForCurrentHost();            
+    //     if (count($activeCategories) == 0) {
+    //         return array();
+    //     }
+
+    //     $sql = '
+    //         SELECT 
+    //             p.*
+    //             ,laplace_score(p.count_likes, p.count_dislikes) AS laplace_score
+    //             ,m.profile_image_url
+    //             ,m.username
+    //         FROM
+    //             project AS p
+    //         JOIN 
+    //             member AS m ON m.member_id = p.member_id
+    //         WHERE
+    //             p.status = 100
+    //             AND p.type_id = 1               
+    //             AND p.project_category_id IN ('. implode(',', $activeCategories).')                
+    //             ORDER BY RAND() LIMIT 1
+    //         ';
+    //     $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
+    //       if (count($resultSet) > 0) {                          
+    //           return new Zend_Paginator(new Zend_Paginator_Adapter_Array($resultSet));
+    //       } else {
+    //           return new Zend_Paginator(new Zend_Paginator_Adapter_Array(array()));
+    //       }
+    // }
 
     /**
      * @param int  $limit
