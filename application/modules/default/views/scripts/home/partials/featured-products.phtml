@@ -50,7 +50,7 @@
         foreach ($this->featureProducts as $this->product): ?>            
                     <div style="width: 800px;display: block;margin:0 auto; ">                      
                         <span> Random Featured Product</span>
-                        <div style="width: 800px; border:1px solid #DFDCDA; border-radius: 3px; background-color: white;">
+                        <div style="width: 800px; border:1px solid #DFDCDA; border-radius: 3px; background-color: white;margin-top:5px;">
                             <a style="float: left; margin-right: 20px" title="<?=$helpTruncate->truncate($this->product['description'], 200, '...', false, true)?>" href="<?=$helpProductUrl->buildProductUrl($this->product['project_id'],'')?>">
                                <img class="productimg " src="<?=$helpImage->Image($this->product['image_small'], array('width' => 250, 'height' => 230 ,'crop' => 1))?>"  style="width: 250px; height: 230px; "/>
                             </a>
