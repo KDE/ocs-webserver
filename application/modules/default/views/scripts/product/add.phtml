@@ -294,8 +294,8 @@ $this->inlineScript()->appendScript('
                                                             <th><?= $this->translate('Filename') ?></th>
                                                             <th><?= $this->translate('Version') ?></th>
                                                             <th><?= $this->translate('Description') ?></th>                                                            
-                                                            <th><?= $this->translate('License') ?></th>
-                                                            <th><?= $this->translate('Filetype') ?></th>
+                                                            <!--<th><?= $this->translate('License') ?></th>-->
+                                                            <!--<th><?= $this->translate('Filetype') ?></th>-->
                                                             <th><?= $this->translate('Packagetype') ?></th>
                                                             <th><?= $this->translate('Date added') ?></th>
 
@@ -814,12 +814,16 @@ $this->inlineScript()->appendScript('
                                     + '<td>' + downloadLink + '</td>'
                                     + '<td>' + version + '</td>'
                                     + '<td>' + inputFileDescription + '</td>'
+                                    /*
                                     + '<td>'
                                     + '<select id="data-select-license' + this.id + '" data-license-id="" name="license" class="form-control input-sm" style="width: 200px;">'
                                     + '<option value=\"1000\"></option><option value=\"16\">AGPL</option><option value=\"3\">Artistic 2.0</option><option value=\"6\">BSD</option><option value=\"17\">CC0 1.0 Universal (Public Domain)</option><option value=\"9\">CPL 1.0</option><option value=\"10\">Creative Commons by</option><option value=\"13\">Creative Commons by-nc</option><option value=\"15\">Creative Commons by-nc-nd</option><option value=\"14\">Creative Commons by-nc-sa</option><option value=\"12\">Creative Commons by-nd</option><option value=\"11\">Creative Commons by-sa</option><option value=\"8\">GFDL</option><option value=\"1\">GPLv2 or later</option><option value=\"18\">GPLv2 only</option><option value=\"19\">GPLv3</option><option value=\"2\">LGPL</option><option value=\"0\">Other</option><option value=\"7\">Proprietary License</option><option value=\"5\">QPL</option><option value=\"4\">X11</option>'
                                     + '</select>'
                                     + '</td>'
+                                    */
+                                    /*
                                     + '<td>' + this.type + '</td>'
+                                    */
                                     + '<td>'
                                     + '<select id="data-select-packagetype' + this.id + '" data-packagetype-id="" name="packagetype" class="form-control input-sm" style="width: 150px;">'
                                     + '<option value=\"\"></option>'
@@ -843,14 +847,15 @@ $this->inlineScript()->appendScript('
                                     + '</tr>'
                                 );
 
-                                $("#data-select-license" + this.id + " option[value='"+licenseId+"']").attr('selected', 'selected');
+                                //$("#data-select-license" + this.id + " option[value='"+licenseId+"']").attr('selected', 'selected');
                                 $("#data-select-packagetype" + this.id + " option[value='"+packagetypeId+"']").attr('selected', 'selected');
                                 
-
+                                /*
                                 $licenseSelect = $modalPpload.find('#data-select-license' + this.id);
                                 if(this.active == '0') {
                                     $licenseSelect.prop('disabled', 'disabled');
                                 }
+                                */
 
                                 $packagetypeSelect = $modalPpload.find('#data-select-packagetype' + this.id);
                                 if(this.active == '0') {
@@ -1006,13 +1011,17 @@ $this->inlineScript()->appendScript('
                                 + '<td><input data-ppload-file-description="" class="form-control input-sm"'
                                 + ' type="text" maxlength="140" placeholder="File description"'
                                 + ' value="' + fileDescription + '"></td>'
-
+                                /*
                                 + '<td>'
                                 + '<select id="data-select-license' + data.file.id + '" data-license-id="" name="license" class="form-control input-sm">'
                                 + '<option value=\"1000\"></option><option value=\"16\">AGPL</option><option value=\"3\">Artistic 2.0</option><option value=\"6\">BSD</option><option value=\"17\">CC0 1.0 Universal (Public Domain)</option><option value=\"9\">CPL 1.0</option><option value=\"10\">Creative Commons by</option><option value=\"13\">Creative Commons by-nc</option><option value=\"15\">Creative Commons by-nc-nd</option><option value=\"14\">Creative Commons by-nc-sa</option><option value=\"12\">Creative Commons by-nd</option><option value=\"11\">Creative Commons by-sa</option><option value=\"8\">GFDL</option><option value=\"1\">GPLv2 or later</option><option value=\"18\">GPLv2 only</option><option value=\"19\">GPLv3</option><option value=\"2\">LGPL</option><option value=\"0\">Other</option><option value=\"7\">Proprietary License</option><option value=\"5\">QPL</option><option value=\"4\">X11</option>'
                                 + '</select>'
                                 + '</td>'
+                                */
+                                
+                                /*
                                 + '<td>' + data.file.type + '</td>'
+                                */
                                 + '<td>'
                                 + '<select id="data-select-packagetype' + data.file.id + '" data-packagetype-id="" name="packagetype" class="form-control input-sm" style="width: 200px;">'
                                 + '<option value=\"\"></option>'
@@ -1452,6 +1461,7 @@ $this->inlineScript()->appendScript('
                     $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags',newTags);
                 });
 
+                /*
                 $modalPpload.on('change', 'select[id*=data-select-license]', function(event) {
                     event.preventDefault();
                     var fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
@@ -1475,6 +1485,8 @@ $this->inlineScript()->appendScript('
                     updatePploadFileTags(fileId, newFileTags);
                     $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags',newFileTags);
                 });
+                
+                */
 
                 $modalPpload.on('change', 'select[id*=data-select-packagetype]', function(event) {
                     event.preventDefault();
@@ -1539,6 +1551,24 @@ $this->inlineScript()->appendScript('
               });
               $(this).empty().append(my_options);
           }
+          
+          function setSourceNeededForCategoryInfo(element_id, cat_id) {
+            $('.cat_source_info').remove();
+            jQuery.ajax({
+                data: {'cat_id': cat_id},
+                url: '/productcategory/fetchsourceneeded/',
+                type: 'get',
+                success: function (results) {
+                    var isSourceRequired = results.source_required;
+                    
+                    if(isSourceRequired == 1) {
+                        $('#wrapper_cat_id').append('<div class="cat_source_info" id="' + element_id + '_cat_source_info">*for this category a Source-Code Repository is needed for plings</div>');
+                    }
+                }
+            });
+          }
+          
+          
 
           ProductForm = {
 
@@ -1568,10 +1598,32 @@ $this->inlineScript()->appendScript('
                           new_html_element += '<option value="' + form_select_option + '" ' + attr_selected + '>' + this.cat_id_data[form_elem_name][form_select_option] + '</option>';
                       }
                       new_html_element += '</select>';
+                      
                       $('#wrapper_cat_id').append(new_html_element);
                       this.sortOptionByValue(form_elem_name);
+                      
+                      var size = <?=count($categories)?>;
+                      if((size-1) == level) {
+                            this.setSourceNeededForCategoryInfo(form_elem_name, this.cat_id_path[level]);
+                      }
+                      
                       level++;
                   }
+              },
+                  
+              setSourceNeededForCategoryInfo: function(element_id, cat_id) {
+                  
+                jQuery.ajax({
+                    data: {'cat_id': cat_id},
+                    url: '/productcategory/fetchsourceneeded/',
+                    type: 'get',
+                    success: function (results) {
+                        var isSourceRequired = results.source_required;
+                        if(isSourceRequired == 1) {
+                            $('#wrapper_cat_id').append('<div class="cat_source_info" id="' + element_id + '_cat_source_info">*for this category a Source-Code Repository is needed for plings</div>');
+                        }
+                    }
+                });
               },
 
               sortOptionByValue: function(element_id) {
@@ -1592,6 +1644,7 @@ $this->inlineScript()->appendScript('
                   $('body').on('change', 'div#wrapper_cat_id select.product_select_cat', function () {
 
                       var cat_id = $(this).val();
+                      var name_old_elem = $(this).attr('name');
                       var name_new_elem = $(this).data('target');
                       var level_elem = $(this).data('level') + 1;
                       var level_new_elem = level_elem + 1;
@@ -1600,6 +1653,7 @@ $this->inlineScript()->appendScript('
                       if (!cat_id) {
                           $('#wrapper_form_cat input:hidden:first').val($('#wrapper_cat_id').find("[data-level]:lt(" + (level_elem - 1) + ")").val());
                           $('#wrapper_cat_id').find("[data-level]:gt(" + (level_elem - 1) + ")").remove();
+                          $('.cat_source_info').remove();
                           return;
                       }
                       $('#wrapper_form_cat input:hidden:first').val(cat_id);
@@ -1610,6 +1664,8 @@ $this->inlineScript()->appendScript('
                           type: 'post',
                           success: function (results) {
                               $('#wrapper_cat_id').find("[data-level]:gt(" + (level_elem - 1) + ")").remove();
+                              $('#' + (level_elem - 1) + '_cat_source_info').remove();
+                              $('.cat_source_info').remove();
                               if (!$.isEmptyObject(results)) {
                                   var new_html_element = '<select name="' + name_new_elem + '" id="' + name_new_elem + '" class="required form-control product_select_cat" data-target="'+name_new_target+'" data-level="'+level_elem+'">';
                                   new_html_element += '<option value=""> </option>';
@@ -1619,7 +1675,10 @@ $this->inlineScript()->appendScript('
                                   new_html_element += '</select>';
 
                                   $('#wrapper_cat_id').append(new_html_element);
-                            }
+                             } else {
+                                var name_elem = name_old_elem; 
+                                setSourceNeededForCategoryInfo(name_elem, cat_id);
+                             }
                         }
                       });
                   });

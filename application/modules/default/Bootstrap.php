@@ -1069,7 +1069,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 ))
             );
       
-        
         // embed 
         $router->addRoute(
             'embed_v1_member_projects',

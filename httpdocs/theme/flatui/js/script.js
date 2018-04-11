@@ -1293,7 +1293,7 @@ var RssNews = (function () {
                     }
                     var m = moment(item.date);
                     crss += '<div class="commentstore"><a href="' + item.url + '"><span class="title">' + item.title + '</span></a><div class="newsrow">'                        
-                        + '<span class="date">' + m.format('MMM DD YYYY LT') + '</span><span class="newscomments">'+ item.comments.length 
+                        + '<span class="date">' + m.format('MMM DD YYYY') + '</span><span class="newscomments">'+ item.comments.length 
                         +' Comment'+(item.comments.length>1?'s':'')
                         +'</span></div></div>';
                 });
@@ -1310,17 +1310,25 @@ var BlogJson = (function () {
     return {
         setup: function () {          
             var urlforum = 'https://forum.opendesktop.org/';            
-            var json_url =urlforum+'latest.json?order=created';
+            var json_url =urlforum+'latest.json';
             $.ajax(json_url).then(function (result) { 
               var topics = result.topic_list.topics; 
               var crss = '';            
-              var count =5;                                       
+              var count =3;                                       
              $.each(topics, function (i, item) {
                  if(!item.pinned){                   
-                     var m = moment(item.created_at);
+                     var m = moment(item.last_posted_at);
+                     var r = 'Reply';
+                     var t = item.posts_count -1;
+                     if(t==0){
+                        r = 'Replies';
+                     }else if(t==1){
+                        r = 'Reply';
+                     }else{
+                        r = 'Replies';
+                     }
                      crss += '<div class="commentstore"><a href="' + urlforum+'/t/'+item.id + '"><span class="title">' + item.title + '</span></a><div class="newsrow">'                        
-                         + '<span class="date">' + m.format('MMM DD YYYY LT') + '</span><span class="newscomments">'+ item.posts_count 
-                         +' Post'+( item.posts_count>1?'s':'')
+                         + '<span class="date">' + m.fromNow() + '</span><span class="newscomments">'+ t +' '+ r                         
                          +'</span></div></div>';    
                     count--;
                  }

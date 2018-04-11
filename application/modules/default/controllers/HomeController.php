@@ -31,17 +31,20 @@ class HomeController extends Local_Controller_Action_DomainSwitch
          *  e.g.
          *  SetEnvIfNoCase Host opendesktop\.org$ SHOW_HOME_PAGE
          */
-        if (false == $this->hasParam('domain_store_id') AND getenv('SHOW_HOME_PAGE')) {
-            $this->_helper->viewRenderer('index-' . $this->getNameForStoreClient());
-            return;
-        }
+        // if (false == $this->hasParam('domain_store_id') AND getenv('SHOW_HOME_PAGE')) {
+        //     $this->_helper->viewRenderer('index-' . $this->getNameForStoreClient());
+        //     return;
+        // }
 
-        // forward is the faster way, but you have no influence to the url. On redirect the url changes.
-        $params = array('ord' => 'latest');
-        if ($this->hasParam('domain_store_id')) {
-            $params['domain_store_id'] = $this->getParam('domain_store_id');
-        }
-        $this->forward('index', 'explore', 'default', $params);
+        // // forward is the faster way, but you have no influence to the url. On redirect the url changes.
+        // $params = array('ord' => 'latest');
+        // if ($this->hasParam('domain_store_id')) {
+        //     $params['domain_store_id'] = $this->getParam('domain_store_id');
+        // }
+        // $this->forward('index', 'explore', 'default', $params);
+
+        $this->_helper->viewRenderer('index-opendesktop');
+            return;
     }
 
 
@@ -49,12 +52,23 @@ class HomeController extends Local_Controller_Action_DomainSwitch
     {
         $this->_helper->layout->disableLayout();
         $modelInfo = new Default_Model_Info();
-        $featureProducts = $modelInfo->getFeaturedProductsForHostStores(100);
+         $page = (int)$this->getParam('page');
+         if($page==0){
+                $featureProducts = $modelInfo->getRandProduct();  
+                $featureProducts->setItemCountPerPage(1);
+                $featureProducts->setCurrentPageNumber(1);  
+            }else{
+                $featureProducts = $modelInfo->getFeaturedProductsForHostStores(100);
+                if($featureProducts->getTotalItemCount() > 0){
+                    $offset = (int)$this->getParam('page');
+                    $irandom = rand(1,$featureProducts->getTotalItemCount());
+                    $featureProducts->setItemCountPerPage(1);
+                    $featureProducts->setCurrentPageNumber($irandom);
+                }
+            }
+        
 
-        if ($featureProducts->getTotalItemCount() > 0) {
-            $offset = (int)$this->getParam('page');
-            $featureProducts->setItemCountPerPage(1);
-            $featureProducts->setCurrentPageNumber($offset);
+        if ($featureProducts->getTotalItemCount() > 0) {           
             $this->view->featureProducts = $featureProducts;
             $this->_helper->viewRenderer('/partials/featuredProducts');
             // $this->_helper->json($featureProducts);
