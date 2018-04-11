@@ -418,6 +418,36 @@ class Default_Model_Info
     }
 
 
+    public function getRandProduct(){
+       $activeCategories = $this->getActiveCategoriesForCurrentHost();            
+        if (count($activeCategories) == 0) {
+            return array();
+        }
+
+        $sql = '
+            SELECT 
+                p.*
+                ,laplace_score(p.count_likes, p.count_dislikes) AS laplace_score
+                ,m.profile_image_url
+                ,m.username
+            FROM
+                project AS p
+            JOIN 
+                member AS m ON m.member_id = p.member_id
+            WHERE
+                p.status = 100
+                AND p.type_id = 1               
+                AND p.project_category_id IN ('. implode(',', $activeCategories).')
+                ORDER BY RAND() LIMIT 1
+            ';
+        $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
+          if (count($resultSet) > 0) {                          
+              return new Zend_Paginator(new Zend_Paginator_Adapter_Array($resultSet));
+          } else {
+              return new Zend_Paginator(new Zend_Paginator_Adapter_Array(array()));
+          }
+    }
+
     /**
      * @param int  $limit
      * @param null $project_category_id
@@ -437,8 +467,7 @@ class Default_Model_Info
         }
 
         if (empty($project_category_id)) {
-            $activeCategories = $this->getActiveCategoriesForCurrentHost();
-            $dummy = implode(',', $activeCategories);
+            $activeCategories = $this->getActiveCategoriesForCurrentHost();            
         } else {
             $activeCategories = $this->getActiveCategoriesForCatId($project_category_id);
         }
@@ -471,8 +500,7 @@ class Default_Model_Info
         $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
         $cache->save($resultSet, $cacheName, array(), 60);
 
-        if (count($resultSet) > 0) {             
-             ;
+        if (count($resultSet) > 0) {                          
             return new Zend_Paginator(new Zend_Paginator_Adapter_Array($resultSet));
         } else {
             return new Zend_Paginator(new Zend_Paginator_Adapter_Array(array()));
