@@ -27,67 +27,51 @@
         $helpDate = new Default_View_Helper_PrintDate();
         //$pageCount = $this->featureProducts->count();
 ?>
-<style type="text/css">
-
- ol.carousel-indicators 
-  {
-        bottom: -10px;
-  }
- ol.carousel-indicators li
-  {
-     background-color: #def;     
-  }
-  .carousel-indicators li.active
-  {
-     background-color: #2673b0;
-  }
-
-</style>
-    <div id="featureProducts" style="height:100%" class="carousel slide" data-ride="carousel" data-interval="false">       
+    <div id="featureProducts"  class="carousel slide" data-ride="carousel" data-interval="false">       
        
         <div id="featureProducts-content"  class="carousel-inner">
         <?php        
         foreach ($this->featureProducts as $this->product): ?>            
-                    <div style="width: 800px;display: block;margin:0 auto; ">                      
-                        <span> Random Featured Product</span>
-                        <div style="width: 800px; border:1px solid #DFDCDA; border-radius: 3px; background-color: white;margin-top:5px;">
-                            <a style="float: left; margin-right: 20px" title="<?=$helpTruncate->truncate($this->product['description'], 200, '...', false, true)?>" href="<?=$helpProductUrl->buildProductUrl($this->product['project_id'],'')?>">
-                               <img class="productimg " src="<?=$helpImage->Image($this->product['image_small'], array('width' => 250, 'height' => 230 ,'crop' => 1))?>"  style="width: 250px; height: 230px; "/>
+                    <div style=" " class="feature_container">                      
+                        <span style="" class="feature_title"> Featured Product</span>
+                        <div style="" class="main_container">
+                            <a class="feature_image" style="" title="<?=$helpTruncate->truncate($this->product['description'], 200, '...', false, true)?>" href="<?=$helpProductUrl->buildProductUrl($this->product['project_id'],'')?>">
+                               <img  src="<?=$helpImage->Image($this->product['image_small'], array('width' => 300, 'height' => 230 ,'crop' => 1))?>"  style=""/>
                             </a>
-                               <div class="" style="display:block; width:450px; float:right; margin-right:20px;padding-top: 10px">
+                               <div class="feature_text" >
                                <a href="<?=$helpProductUrl->buildProductUrl($this->product['project_id'],'')?>"><?=$this->product['title']?></a>
-                               <span  style="display: block; font-size: small;"><?=$helpCategories->fetchCategoriesForProductAsString($this->product['project_id'])?> </span>
+                               <span  class="feature_text_title" style=""><?=$helpCategories->fetchCategoriesForProductAsString($this->product['project_id'])?> </span>
 
-                               <span style="display:block; padding-top: 10px; font-size: small;">
-                               <a href="<?php echo $helpMemberUrl->buildMemberUrl($this->product['member_id']); ?>" style="float: left">
+                               <span class="feature_text_auth" style="">
+                               <a  class="auto_link" href="<?php echo $helpMemberUrl->buildMemberUrl($this->product['member_id']); ?>" style="">
                                    <figure >
-                                       <img src="<?php echo $helpImage->Image($this->product['profile_image_url'], array('width' => '50', 'height' => '50', 'crop' => 2)); ?>" style="width: 30px; height: 30px; border-radius: 50%"/>
+                                       <img src="<?php echo $helpImage->Image($this->product['profile_image_url'], array('width' => '50', 'height' => '50', 'crop' => 2)); ?>" style=""/>
                                    </figure>
                                         
                                </a>
-                                  <span style="line-height:2; padding-left:5px;"> created by <?php echo $this->product['username']; ?> </span>
+                                  <span class="created_by" style=""> created by <?php echo $this->product['username']; ?> </span>
                                </span>
                               
 
-                                <span style="display: block; font-size: small;margin-top:10px;">
+                                <span class="feature_text_comments" style="">
                                 <?php                                    
                                     $count_comments = $this->product['count_comments'];                                                                        
                                     echo ($count_comments>0 ? '<span class="cntComments">'.$count_comments.' comment':'').($count_comments>1?'s':'').($count_comments>0?'</span>':'') ;                                    
                                 ?>
                                 </span>
                                 
-                                <span style="display: block; font-size: small;padding-top: 15px">                                  
+                                <span class="feature_text_description" style="">                                  
                                         <?=$helpTruncate->truncate($this->product['description'], 300, '...', false, true)?>
                                 </span>
                                 
-                                <span class="time" style="font-size: small;display: block"><?=$helpDate->printDate($this->product['changed_at']==null?$this->product['created_at']:$this->product['changed_at'])?>
+                                <span class="time" style=""><?=$helpDate->printDate($this->product['changed_at']==null?$this->product['created_at']:$this->product['changed_at'])?>
                                 </span>
 
 
                                 </div>
                               
                                   <div style="clear: left"></div>
-                                  <span style="display: block; float: right;position: relative;bottom: 15px; right: 5px;" class="small">
+                                  <span class="button_next small">
                                          <a type="button" class="ajaxPartialFeatureProduct" href="/showfeatureajax/page/1">next</a>                                          
                                  </span>   
 
