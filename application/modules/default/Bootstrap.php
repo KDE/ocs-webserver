@@ -943,7 +943,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 )
             )
         );
-
+        
+        /** 20180404 ronald: disable local ocs-api. Use mod_proxy to redir to ocs-api-server
         // OCS API
         $router->addRoute(
             'ocs_providers_xml',
@@ -1068,7 +1069,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                     'second_id'    => null
                 ))
             );
-
+        
+        * 
+        */
       
         
         // embed 

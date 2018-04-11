@@ -53,6 +53,7 @@ class Default_Model_ProjectCategory
      * @param null $store_id
      *
      * @return array
+     * @throws Zend_Cache_Exception
      * @throws Zend_Exception
      */
     public function fetchTreeForView($store_id = null)
@@ -69,11 +70,16 @@ class Default_Model_ProjectCategory
         $cache = Zend_Registry::get('cache');
         $cache_id = __CLASS__ . '_' . __FUNCTION__ . "_{$store_id}";
 
-        if (false === ($tree = $cache->load($cache_id))) {
-            $rows = $this->fetchCategoryTreeWithPackageType($store_id, $package_type);
+        $tree = $cache->load($cache_id);
 
-            if (count($rows) == 0) {
-                throw new Zend_Exception('no Categories could be found for store id: ' . $store_id);
+        if (false === $tree OR empty($tree)) {
+            try {
+                $rows = $this->fetchCategoryTreeWithPackageType($store_id, $package_type);
+            } catch (Zend_Exception $e) {
+                Zend_Registry::get('logger')->err(__METHOD__ . ' - can not fetch categories : ' . $e->getMessage());
+                $modelCategories = new Default_Model_DbTable_ConfigStore();
+                $defaultStore = $modelCategories->fetchDefaultStoreId();
+                $rows = $this->fetchCategoryTreeWithPackageType($defaultStore->store_id, $defaultStore->package_type);
             }
 
             list($rows, $tree) = $this->buildTreeForView($rows);
@@ -88,6 +94,7 @@ class Default_Model_ProjectCategory
      * @param string|null $package_type
      *
      * @return array
+     * @throws Zend_Exception
      */
     protected function fetchCategoryTreeWithPackageType($store_id = null, $package_type = null)
     {
@@ -133,6 +140,10 @@ class Default_Model_ProjectCategory
 
         $result = $this->_dataTable->getAdapter()->fetchAll($sql);
 
+        if (count($result) == 0) {
+            throw new Zend_Exception('no Categories could be found for store id: ' . $store_id);
+        }
+
         return $result;
     }
 
@@ -164,7 +175,9 @@ class Default_Model_ProjectCategory
             if ($row['has_children'] == 1) {
                 $result_element['has_children'] = true;
                 $rememberParent = $row['id'];
-                list($rows, $result_element['children']) = $this->buildTreeForView($rows, $rememberParent);
+                list($rows, $children) = $this->buildTreeForView($rows, $rememberParent);
+                uasort($children, function ($a, $b) {return strcasecmp($a['title'], $b['title']);});
+                $result_element['children'] = $children;
                 $rememberParent = null;
             }
 

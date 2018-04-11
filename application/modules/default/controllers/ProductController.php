@@ -183,7 +183,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         //update the gallery pics
         $mediaServerUrls = $this->saveGalleryPics($form->gallery->upload->upload_picture);
         $modelProject->updateGalleryPictures($newProject->project_id, $mediaServerUrls);
-
+        
         //If there is no Logo, we take the 1. gallery pic
         if (!isset($values['image_small']) || $values['image_small'] == '') {
             $values['image_small'] = $mediaServerUrls[0];
@@ -201,13 +201,16 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
 
         $modelTags = new Default_Model_Tags();
-        if ($values['tags']){
+        if ($values['tagsuser']){           
             $modelTags->processTagsUser($newProject->project_id, implode(',',$values['tagsuser']), Default_Model_Tags::TAG_TYPE_PROJECT);    
         }else
         {
             $modelTags->processTagsUser($newProject->project_id, null, Default_Model_Tags::TAG_TYPE_PROJECT);    
         }
         
+        $licenseTag = $form->getElement('license_tag_id')->getValue();
+        $modelTags->saveLicenseTagForProject($newProject->project_id, $licenseTag);
+
      
 
         $activityLog = new Default_Model_ActivityLog();
@@ -336,6 +339,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $projectTable = new Default_Model_DbTable_Project();
         $projectModel = new Default_Model_Project();
         $modelTags = new Default_Model_Tags();
+        $tagTable = new Default_Model_DbTable_Tags();
 
         //check if product with given id exists
         $projectData = $projectTable->find($this->_projectId)->current();
@@ -383,6 +387,13 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $form->getElement('image_small')->setValue($projectData->image_small);
             //Bilder voreinstellen
             $form->getElement(self::IMAGE_SMALL_UPLOAD)->setValue($projectData->image_small);
+            
+            $licenseTags = $tagTable->fetchLicenseTagsForProject($this->_projectId);
+            $licenseTag = null;
+            if($licenseTags) {
+                $licenseTag = $licenseTags[0]['tag_id'];
+            }
+            $form->getElement('license_tag_id')->setValue($licenseTag);
 
             $this->view->form = $form;
 
@@ -401,7 +412,10 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         }
 
         $values = $form->getValues();
-
+        
+        
+        $licenseTag = $form->getElement('license_tag_id')->getValue();
+        $modelTags->saveLicenseTagForProject($this->_projectId, $licenseTag);
 
         $imageModel = new Default_Model_DbTable_Image();
         try {
@@ -431,8 +445,12 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         //     $modelTags->processTags($this->_projectId, implode(',',$values['tags']), Default_Model_Tags::TAG_TYPE_PROJECT);
         // }
           
-        
-        $modelTags->processTagsUser($this->_projectId,implode(',',$values['tagsuser']), Default_Model_Tags::TAG_TYPE_PROJECT);             
+        if($values['tagsuser']) {
+            $modelTags->processTagsUser($this->_projectId,implode(',',$values['tagsuser']), Default_Model_Tags::TAG_TYPE_PROJECT);             
+        }else
+        {
+            $modelTags->processTagsUser($this->_projectId,null, Default_Model_Tags::TAG_TYPE_PROJECT);             
+        }    
    
 
         $activityLog = new Default_Model_ActivityLog();

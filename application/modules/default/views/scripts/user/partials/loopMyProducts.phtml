@@ -80,7 +80,19 @@ $helperImage = new Default_View_Helper_Image();
         <span class="topicslink">
         <?php        
         $tagmodel = new Default_Model_Tags();
-        $tagsuser = $tagmodel->getTagsUser($this->project_id, Default_Model_Tags::TAG_TYPE_PROJECT);         
+        $tagsuser = $tagmodel->getTagsUser($this->project_id, Default_Model_Tags::TAG_TYPE_PROJECT);        
+        $tagscat = $tagmodel->getTagsCategory($this->project_id, Default_Model_Tags::TAG_TYPE_PROJECT);  
+
+
+        if(false === empty($tagscat))
+        {                  
+            foreach (explode(',',$tagscat) as $tag) { 
+        ?>
+        <a rel="nofollow" href="/search/projectSearchText/<?=$tag?>/t/<?=$tag?>/f/tags" class="topic-tag topic-tag-link usertagslabelcat"><?=$tag?></a>
+         <?php 
+            }                                       
+         }        
+
         if(false === empty($tagsuser))
         {                  
             foreach (explode(',',$tagsuser) as $tag) { 

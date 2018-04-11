@@ -214,18 +214,16 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
                                     <?php
                                     echo '<span class="topics">';
                                     $tagmodel = new Default_Model_Tags();
-                                    $tagsuser = $tagmodel->getTagsUser($this->product->project_id, Default_Model_Tags::TAG_TYPE_PROJECT);  
-
+                                    $tagsuser = $tagmodel->getTagsUser($this->product->project_id, Default_Model_Tags::TAG_TYPE_PROJECT);                                                             
                                     echo '<span class="topicslink">';
                                     if(false === empty($tagsuser))
-                                    {
-                                       
+                                    {                                       
                                         foreach (explode(',',$tagsuser) as $tag) { 
                                     ?>
                                     <a rel="nofollow" href="/search/projectSearchText/<?=$tag?>/t/<?=$tag?>/f/tags" class="topic-tag topic-tag-link usertagslabel"><?=$tag?></a>
                                      <?php 
                                         }                                       
-                                     }
+                                     }                                   
                                      echo '</span><!--end of topicslink-->';
                                      if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->product->member_id){
                                             $this->headLink()->appendStylesheet('/theme/flatui/css/select2.min.css');
@@ -654,7 +652,7 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
 
                         <?php echo $this->render('product/partials/details.phtml'); ?>
 
-                      
+                      <?php echo $this->render('product/partials/tags.phtml'); ?>
 
 
 

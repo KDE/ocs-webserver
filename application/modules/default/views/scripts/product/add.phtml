@@ -230,7 +230,30 @@ $this->inlineScript()->appendScript('
                                 <?= $this->form->embed_code ?>
                                 
                                 <?= $this->form->source_url ?>
-                                <?= $this->form->project_license_id ?>
+                                <?= $this->form->license_tag_id ?>
+                                 <?php 
+                                    if($this->project_id)
+                                    {
+                                                $tagmodel = new Default_Model_Tags();            
+                                                $tagscat = $tagmodel->getTagsCategory($this->project_id, Default_Model_Tags::TAG_TYPE_PROJECT);  
+                                                if(strlen($tagscat)>0)
+                                                {
+                                        ?>
+                                    <div class="form-group">
+                                        <div class="col-sm-12 margin-top-15">
+                                            <label class="form-label"> System Auto Tags</label>    
+                                        </div>
+                                        <div class="col-sm-12">
+                                          <?php 
+                                                
+                                                echo $tagscat ;
+                                          ?>
+                                        </div>
+                                    </div>
+                                    <?php
+                                    }}
+                                    ?>
+
                                 <?= $this->form->tagsuser ?>
                                 
                                 
