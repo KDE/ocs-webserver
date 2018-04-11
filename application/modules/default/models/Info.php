@@ -437,7 +437,7 @@ class Default_Model_Info
             WHERE
                 p.status = 100
                 AND p.type_id = 1               
-                AND p.project_category_id IN ('. implode(',', $activeCategories).')
+                AND p.project_category_id IN ('. implode(',', $activeCategories).')                
                 ORDER BY RAND() LIMIT 1
             ';
         $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);

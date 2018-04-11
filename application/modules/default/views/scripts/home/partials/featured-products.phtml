@@ -46,13 +46,13 @@
                                  <img  src="<?=$helpImage->Image($this->product['image_small'], array('width' => 300, 'height' => 230 ,'crop' => 1))?>"  />
                               </a>
 
-                               <div class="feature_text" >
+                               <div class="feature_text">
                                <div style="display: flex">
-                                        <div style="width:340px"><a href="<?=$helpProductUrl->buildProductUrl($this->product['project_id'],'')?>"><?=$this->product['title']?></a>
+                                        <div class="feature_category" style=""><a href="<?=$helpProductUrl->buildProductUrl($this->product['project_id'],'')?>"><?=$this->product['title']?></a>
                                                   <span  class="feature_text_title" ><?=$helpCategories->fetchCategoriesForProductAsString($this->product['project_id'])?> </span>
                                         </div>
-                                        <div style="flex: 1; text-align: right; width: 80px;padding-right:10px;padding-top: 5px;">
-                                              <div class="rating" style="font-size: small;">
+                                        <div class="feature_rating" >
+                                              <div class="rating" >
                                                   <?php                
                                                           $this->widgetRating = new stdClass();
                                                           $this->widgetRating->project_id = $this->product['project_id'];
