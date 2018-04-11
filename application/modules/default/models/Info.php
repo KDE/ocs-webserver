@@ -444,7 +444,7 @@ class Default_Model_Info
                                 AND p.project_category_id IN ('. implode(',', $activeCategories).')                    
                             ';                        
                         $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
-                        $cache->save($resultSet, $cacheName, array(), 6000);
+                        $cache->save($resultSet, $cacheName, array(), 3600 * 24);
             }
 
             $irandom = rand(0,sizeof($resultSet));
