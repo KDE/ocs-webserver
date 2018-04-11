@@ -44,12 +44,13 @@
 
 </style>
     <div id="featureProducts" style="height:100%" class="carousel slide" data-ride="carousel" data-interval="false">       
-        <div class="text-center"> Random Feature Products</div>
+       
         <div id="featureProducts-content"  class="carousel-inner">
         <?php        
         foreach ($this->featureProducts as $this->product): ?>            
-                    <div>                      
-                        <div style="width: 800px; display: block;margin:0 auto; border:1px solid #DFDCDA; border-radius: 3px; background-color: white;">
+                    <div style="width: 800px;display: block;margin:0 auto; ">                      
+                        <span> Random Featured Product</span>
+                        <div style="width: 800px; border:1px solid #DFDCDA; border-radius: 3px; background-color: white;">
                             <a style="float: left; margin-right: 20px" title="<?=$helpTruncate->truncate($this->product['description'], 200, '...', false, true)?>" href="<?=$helpProductUrl->buildProductUrl($this->product['project_id'],'')?>">
                                <img class="productimg " src="<?=$helpImage->Image($this->product['image_small'], array('width' => 250, 'height' => 230 ,'crop' => 1))?>"  style="width: 250px; height: 230px; "/>
                             </a>
@@ -84,12 +85,14 @@
 
 
                                 </div>
-                              <div style="clear: both"></div>
-
-                                 <span style="float: right; display: block">
+                              
+                                  <div style="clear: left"></div>
+                                  <span style="display: block; float: right;position: relative;bottom: 15px; right: 5px;" class="small">
                                          <a type="button" class="ajaxPartialFeatureProduct" href="/showfeatureajax/page/1">next</a>                                          
-                                </span>
-                          </div>                                                    
+                                 </span>   
+
+                          </div>      
+                                                                   
                     </div>                           
         <?php endforeach;?>        
         
