@@ -44,10 +44,7 @@
 
 </style>
     <div id="featureProducts" style="height:100%" class="carousel slide" data-ride="carousel" data-interval="false">       
-         <div style="float: right">
-                  <a type="button" class="btn btn-primary ajaxPartialFeatureProduct" href="/showfeatureajax/page/1">Random Feature Product</a> 
-                  
-         </div>
+        <div class="text-center"> Random Feature Products</div>
         <div id="featureProducts-content"  class="carousel-inner">
         <?php        
         foreach ($this->featureProducts as $this->product): ?>            
@@ -84,14 +81,21 @@
                                 
                                 <span class="time" style="font-size: small;display: block"><?=$helpDate->printDate($this->product['changed_at']==null?$this->product['created_at']:$this->product['changed_at'])?>
                                 </span>
+
+
                                 </div>
                               <div style="clear: both"></div>
+
+                                 <span style="float: right; display: block">
+                                         <a type="button" class="ajaxPartialFeatureProduct" href="/showfeatureajax/page/1">next</a>                                          
+                                </span>
                           </div>                                                    
                     </div>                           
         <?php endforeach;?>        
         
       </div>
 
+         
            <?php /*
        <?php if ($pageCount > 1) echo $this->paginationControl($this->featureProducts, 'Sliding', 'home/partials/paginationControl.phtml',
                     array('params' => array(), 'dom_target' => 'div#featureProductsContainer')); 
