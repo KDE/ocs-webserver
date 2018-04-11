@@ -31,20 +31,19 @@ class HomeController extends Local_Controller_Action_DomainSwitch
          *  e.g.
          *  SetEnvIfNoCase Host opendesktop\.org$ SHOW_HOME_PAGE
          */
-        // if (false == $this->hasParam('domain_store_id') AND getenv('SHOW_HOME_PAGE')) {
-        //     $this->_helper->viewRenderer('index-' . $this->getNameForStoreClient());
-        //     return;
-        // }
-
-        // // forward is the faster way, but you have no influence to the url. On redirect the url changes.
-        // $params = array('ord' => 'latest');
-        // if ($this->hasParam('domain_store_id')) {
-        //     $params['domain_store_id'] = $this->getParam('domain_store_id');
-        // }
-        // $this->forward('index', 'explore', 'default', $params);
-
-        $this->_helper->viewRenderer('index-opendesktop');
+        if (false == $this->hasParam('domain_store_id') AND getenv('SHOW_HOME_PAGE')) {
+            $this->_helper->viewRenderer('index-' . $this->getNameForStoreClient());
             return;
+        }
+
+        // forward is the faster way, but you have no influence to the url. On redirect the url changes.
+        $params = array('ord' => 'latest');
+        if ($this->hasParam('domain_store_id')) {
+            $params['domain_store_id'] = $this->getParam('domain_store_id');
+        }
+        $this->forward('index', 'explore', 'default', $params);
+
+     
     }
 
 
