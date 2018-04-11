@@ -1310,7 +1310,7 @@ var BlogJson = (function () {
     return {
         setup: function () {          
             var urlforum = 'https://forum.opendesktop.org/';            
-            var json_url =urlforum+'latest.json?order=created';
+            var json_url =urlforum+'latest.json';
             $.ajax(json_url).then(function (result) { 
               var topics = result.topic_list.topics; 
               var crss = '';            
