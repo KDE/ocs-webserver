@@ -469,8 +469,10 @@ class Default_Model_Tags
             }
         } else {
             //insert new tag
-            $sql = "INSERT IGNORE INTO tag_object (tag_id, tag_type_id, tag_object_id, tag_group_id) VALUES (:tag_id, :tag_type_id, :tag_object_id, :tag_group_id)";
-            $this->getAdapter()->query($sql, array('tag_id' => $tag_id, 'tag_type_id' => $this::TAG_TYPE_PROJECT, 'tag_object_id' => $object_id, 'tag_group_id' => $this::TAG_LICENSE_GROUPID));
+            if($tag_id) {
+                $sql = "INSERT IGNORE INTO tag_object (tag_id, tag_type_id, tag_object_id, tag_group_id) VALUES (:tag_id, :tag_type_id, :tag_object_id, :tag_group_id)";
+                $this->getAdapter()->query($sql, array('tag_id' => $tag_id, 'tag_type_id' => $this::TAG_TYPE_PROJECT, 'tag_object_id' => $object_id, 'tag_group_id' => $this::TAG_LICENSE_GROUPID));
+            }
         }
         
     }

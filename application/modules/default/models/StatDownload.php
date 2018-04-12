@@ -42,7 +42,10 @@ class Default_Model_StatDownload
                     project_category.title as cat_title,
                     member_payout.amount,
                     member_payout.`status`,
-                    member_payout.payment_transaction_id
+                    member_payout.payment_transaction_id,
+                    CASE WHEN tag_object.tag_item_id IS NULL THEN 1 ELSE 0 END AS is_license_missing_now,
+                    CASE WHEN ((project_category.source_required = 1 AND project.source_url IS NOT NULL AND LENGTH(project.source_url) > 0) OR  (project_category.source_required = 0)) THEN 0 ELSE 1 END AS is_source_missing_now,
+                    project.pling_excluded as is_pling_excluded_now
                 FROM
                     member_dl_plings
                         STRAIGHT_JOIN
@@ -52,6 +55,7 @@ class Default_Model_StatDownload
                         LEFT JOIN
                     member_payout ON member_payout.member_id = member_dl_plings.member_id
                         AND member_payout.yearmonth = member_dl_plings.yearmonth
+                    LEFT JOIN tag_object ON tag_object.tag_type_id = 1 AND tag_object.tag_group_id = 7 AND tag_object.tag_object_id = project.project_id
                 WHERE
                     member_dl_plings.member_id = :member_id
                     
