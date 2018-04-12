@@ -416,6 +416,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         
         $licenseTag = $form->getElement('license_tag_id')->getValue();
         $modelTags->saveLicenseTagForProject($this->_projectId, $licenseTag);
+        
+        $activityLog = new Default_Model_ActivityLog();
+        $activityLog->logActivity($this->_projectId, $this->_projectId, $this->_authMember->member_id, Default_Model_ActivityLog::PROJECT_LICENSE_CHANGED, array('title' => 'Member changed License Tag', 'description' => 'New TagId: '.$licenseTag));
 
         $imageModel = new Default_Model_DbTable_Image();
         try {

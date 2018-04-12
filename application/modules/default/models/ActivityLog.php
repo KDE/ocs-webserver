@@ -55,6 +55,7 @@ class Default_Model_ActivityLog extends Default_Model_DbTable_ActivityLog
     const PROJECT_FILES_CREATED = 200;
     const PROJECT_FILES_UPDATED = 210;
     const PROJECT_FILES_DELETED = 220;
+    const PROJECT_LICENSE_CHANGED = 70;
     const MEMBER_JOINED = 100;
     const MEMBER_UPDATED = 101;
     const MEMBER_DELETED = 102;
@@ -107,6 +108,7 @@ class Default_Model_ActivityLog extends Default_Model_DbTable_ActivityLog
         52  => 'project',
         60  => 'project',
         61  => 'project',
+        70  => 'project',
         100 => 'member',
         101 => 'member',
         102 => 'member',
