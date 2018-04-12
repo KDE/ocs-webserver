@@ -190,6 +190,12 @@ $lastMonth = date("Ym", strtotime("first day of previous month"));
                 },
             },
             recordsLoaded: function (event, data) {
+                
+                for (var i in data.records) {
+                    $('#TableContainer').find(".jtable tbody tr:eq(" + i + ")").css("cssText", "background-color:" + data.records[i].color + " !important; color:white !important;");
+                }
+                
+                /*
                 for (var i in data.records) {
                     
                     if (data.records[i].status > 0 && data.records[i].status < 99) {
@@ -208,6 +214,7 @@ $lastMonth = date("Ym", strtotime("first day of previous month"));
                         $('#TableContainer').find(".jtable tbody tr:eq(" + i + ")").css("cssText", "background-color:#a94442; !important; color:white !important;");
                     }
                 }
+                */
             },
             recordUpdated: function (event, data) {
                 if (data.record) {
