@@ -149,7 +149,9 @@ class Default_Model_Member extends Default_Model_DbTable_Member
     /**
      * @param int $member_id
      *
+     * @param     $verification_value
      * @return boolean returns true if successful
+     * @throws Zend_Db_Statement_Exception
      */
     public function activateMemberFromVerification($member_id, $verification_value)
     {

@@ -29,7 +29,6 @@ class Default_Model_Solr
 
     /**
      * @param $input
-     *
      * @return null|string|string[]
      */
     static public function escape($input)
@@ -40,10 +39,7 @@ class Default_Model_Solr
     }
 
     /**
-     * Pass in params like 'q', 'page', 'count'
-     *
      * @param array $op
-     *
      * @return null
      * @throws Zend_Exception
      * @throws Zend_Paginator_Exception
@@ -52,58 +48,63 @@ class Default_Model_Solr
      */
     public function search($op = array())
     {
-        $pagination_array = array();
         $output = null;
 
         $solr = $this->get_solr_connection();
-        if ($solr->ping()) {
+        if (false === $solr->ping()) {
+            Zend_Registry::get('logger')->warn('connection to solr server can not established');
 
-            $params = array(
-                'defType'           => 'dismax',
-                'wt'                => 'json',
-                'fl'                => '*,score',
-                'df'                => 'title',
-                'qf'                => empty($op['qf']) ? 'title^3 title_prefix^2 description^1 username^1 cat_title' : $op['qf'],
-                //'bq'                => 'changed_at:[NOW-1YEAR TO NOW/DAY]',
-                //'bf'                => 'if(lt(laplace_score,50),-10,10)',
-                'bf'                => 'product(recip(ms(NOW/HOUR,changed_at),3.16e-11,0.2,0.2),1300)',
-                //'sort'              => 'changed_at desc',
-                //'hl'                => 'on',
-                //'hl.fl'             => 'title, description, username',
-                'facet'             => 'true',
-                'facet.field'       => array('project_category_id', 'tags'),
-                'facet.mincount'    => '1',
-                //'facet.limit'       => '10',
-                'facet.sort'        => 'count',
-                'facet.range'       => 'laplace_score',
-                'facet.range.start' => '0',
-                'facet.range.end'   => '100',
-                'facet.range.gap'   => '10',
-                'spellcheck'        => 'true',
-            );
-
-            $params = $this->setStoreFilter($params);
-            $params = $this->addAnyFilter($params, $op);
-
-            $offset = ((int)$op['page'] - 1) * (int)$op['count'];
-
-            $query = trim($op['q']);
-
-            $results = $solr->search($query, $offset, $op['count'], $params);
-
-            $output['response'] = (array)$results->response;
-            $output['responseHeader'] = (array)$results->responseHeader;
-            $output['facet_counts'] = (array)$results->facet_counts;
-            $output['facet_fields'] = (array)$results->facet_counts->facet_fields;
-            $output['facet_ranges'] = (array)$results->facet_counts->facet_ranges;
-            $output['hits'] = (array)$results->response->docs;
-
-            $pagination_array = array();
-            if (isset($output['response']['numFound'])) {
-                $pagination_array =
-                    array_combine(range(0, $output['response']['numFound'] - 1), range(1, $output['response']['numFound']));
-            }
+            return $output;
         }
+
+        $params = array(
+            'defType'           => 'dismax',
+            'wt'                => 'json',
+            'fl'                => '*,score',
+            'df'                => 'title',
+            'qf'                => empty($op['qf']) ? 'title^3 title_prefix^2 description^1 username^1 cat_title' : $op['qf'],
+//          'bq'                => 'changed_at:[NOW-1YEAR TO NOW/DAY]',
+//          'bf'                => 'if(lt(laplace_score,50),-10,10)',
+            'bf'                => 'product(recip(ms(NOW/HOUR,changed_at),3.16e-11,0.2,0.2),1300)',
+//          'sort'              => 'changed_at desc',
+//          'hl'                => 'on',
+//          'hl.fl'             => 'title, description, username',
+            'facet'             => 'true',
+            'facet.field'       => array('project_category_id', 'tags'),
+            'facet.mincount'    => '1',
+//          'facet.limit'       => '10',
+            'facet.sort'        => 'count',
+            'facet.range'       => 'laplace_score',
+            'facet.range.start' => '0',
+            'facet.range.end'   => '100',
+            'facet.range.gap'   => '10',
+            'spellcheck'        => 'true',
+        );
+
+        $params = $this->setStoreFilter($params);
+        $params = $this->addAnyFilter($params, $op);
+
+        $offset = ((int)$op['page'] - 1) * (int)$op['count'];
+
+        $query = trim($op['q']);
+
+        $results = $solr->search($query, $offset, $op['count'], $params);
+
+        $output['response'] = (array)$results->response;
+        $output['responseHeader'] = (array)$results->responseHeader;
+        $output['facet_counts'] = (array)$results->facet_counts;
+        $output['facet_fields'] = (array)$results->facet_counts->facet_fields;
+        $output['facet_ranges'] = (array)$results->facet_counts->facet_ranges;
+        $output['hits'] = (array)$results->response->docs;
+
+        $pagination_array = array();
+        if (isset($output['response']['numFound'])) {
+            $pagination_array = array_combine(
+                range(0, $output['response']['numFound'] - 1),
+                range(1, $output['response']['numFound'])
+            );
+        }
+
         $pagination = Zend_Paginator::factory($pagination_array);
         $pagination->setCurrentPageNumber($op['page']);
         $pagination->setItemCountPerPage($op['count']);
@@ -123,12 +124,12 @@ class Default_Model_Solr
         $config = Zend_Registry::get('config');
         $config_search = $config->settings->search;
 
-        return new Zend_Service_Solr ($config_search->host, $config_search->port, $config_search->http_path); // Configure
+        return new Zend_Service_Solr ($config_search->host, $config_search->port,
+            $config_search->http_path); // Configure
     }
 
     /**
      * @param $params
-     *
      * @return mixed
      * @throws Zend_Exception
      */
@@ -181,7 +182,6 @@ class Default_Model_Solr
      * Get spell
      *
      * @param array $op
-     *
      * @return mixed
      * @throws Zend_Exception
      * @throws Zend_Service_Solr_HttpTransportException
@@ -190,20 +190,21 @@ class Default_Model_Solr
     public function spell($op = array())
     {
         $solr = $this->get_solr_connection();
-        if ($solr->ping()) {
 
-            $results = $solr->spell($op['q']);
-            $results = json_decode($results, true);
+        if (false === $solr->ping()) {
+            Zend_Registry::get('logger')->warn('connection to solr server can not established');
 
-            return $results['spellcheck'];
+            return $op['q'];
         }
 
-        return false;
+        $results = $solr->spell($op['q']);
+        $results = json_decode($results, true);
+
+        return $results['spellcheck'];
     }
 
     /**
      * @param $object
-     *
      * @return array
      */
     private function object_to_array($object)

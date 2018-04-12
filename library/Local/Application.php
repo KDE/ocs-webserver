@@ -40,10 +40,8 @@ class Local_Application extends Zend_Application
      *
      * @param  string                   $environment
      * @param  string|array|Zend_Config $options String path to configuration file, or array/Zend_Config of configuration options
-     * @param Zend_Cache_Core           $configCache
-     *
      * @throws Zend_Application_Exception
-     * @return \Local_Application
+     * @throws Zend_Cache_Exception
      */
     public function __construct($environment, $options = null)
     {
@@ -51,6 +49,10 @@ class Local_Application extends Zend_Application
         parent::__construct($environment, $options);
     }
 
+    /**
+     * @return Zend_Cache_Core|Zend_Cache_Frontend
+     * @throws Zend_Cache_Exception
+     */
     protected function _initCache()
     {
         $frontendOptions = array(
@@ -72,6 +74,10 @@ class Local_Application extends Zend_Application
         return Zend_Cache::factory('Core', 'File', $frontendOptions, $backendOptions);
     }
 
+    /**
+     * @return false|mixed|Zend_Config
+     * @throws Zend_Cache_Exception
+     */
     public function getApplicationConfig()
     {
         $cacheName = APPLICATION_ENV . '_' . self::CACHE_APP_INI;
@@ -88,8 +94,9 @@ class Local_Application extends Zend_Application
      *
      * @param  string $file
      *
-     * @throws Zend_Application_Exception When invalid configuration file is provided
      * @return array
+     * @throws Zend_Application_Exception When invalid configuration file is provided
+     * @throws Zend_Cache_Exception
      */
     protected function _loadConfig($file)
     {
@@ -109,6 +116,10 @@ class Local_Application extends Zend_Application
         return $config;
     }
 
+    /**
+     * @param $file
+     * @return string
+     */
     protected function _cacheId($file)
     {
         return 'config_' . $this->getEnvironment() . '_' . md5_file($file);

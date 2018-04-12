@@ -85,6 +85,9 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             $newPass = $this->generateNewPassword();
             $newPasswordHash = $this->storeNewPassword($newPass, $user);
 
+            $id_server = new Default_Model_IdServer();
+            $id_server->updatePasswordForUser($user->member_id);
+
             Zend_Registry::get('logger')->info(__METHOD__ . ' - old password hash: ' . $oldPasswordHash . ', new password hash: ' . $newPasswordHash);
 
             $this->sendNewPassword($user, $newPass);
@@ -418,6 +421,8 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
 
         $this->sendConfirmationMail($formRegisterValues, $newUserData['verificationVal']);
 
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - member_id: '.$newUserData['member_id'].' - Link for verification: ' . 'http://' . $this->getServerName() . '/verification/' . $newUserData['verificationVal']);
+
         if ($this->_request->isXmlHttpRequest()) {
             $viewRegisterForm = $this->view->render('authorization/partials/registerSuccess.phtml');
             $this->_helper->json(array('status' => 'ok', 'message' => $viewRegisterForm));
@@ -593,6 +598,10 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
 
         Zend_Registry::get('logger')->info(__METHOD__ . ' - user activated. member_id: ' . print_r($authUser->member_id,
                 true));
+
+        $id_server = new Default_Model_IdServer();
+        $id_server->createUser($authUser->member_id);
+
         Default_Model_ActivityLog::logActivity($authUser->member_id, null, $authUser->member_id,
             Default_Model_ActivityLog::MEMBER_EMAIL_CONFIRMED, array());
         $this->view->member = $authUser;
