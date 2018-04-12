@@ -210,6 +210,10 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         
         $licenseTag = $form->getElement('license_tag_id')->getValue();
         $modelTags->saveLicenseTagForProject($newProject->project_id, $licenseTag);
+        
+        $activityLog = new Default_Model_ActivityLog();
+        $activityLog->logActivity($newProject->project_id, $newProject->project_id, $newProject->member_id, Default_Model_ActivityLog::PROJECT_LICENSE_CHANGED, array('title' => 'Member changed License Tag', 'description' => 'New TagId: '.$licenseTag));
+
 
      
 
