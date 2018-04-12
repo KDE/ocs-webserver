@@ -146,6 +146,14 @@ $currency = new Zend_Currency('en_US');
 if ($this->countDownloadsOverall > 0) {
     foreach ($allDownloads as $month => $products) {
         $printMonth = new DateTime($month.'01');
+        $printCurrentMonth = new DateTime($currentDate.'01');
+        
+        if($printMonth == $printCurrentMonth) {
+            $isCurrentMonth = true;
+        } else {
+            $isCurrentMonth = false;
+        }
+        
         $sum_total_month = 0;
         $sum_total_text = '';
         $sum_total_payout = 0;
