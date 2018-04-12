@@ -50,7 +50,9 @@
 <ul class="nav nav-tabs margin-bottom-10">
 <?php
     
-if ($this->countDownloadsOverall > 0) {    
+$isCurrentMonth = false;
+if ($this->countDownloadsOverall > 0) {  
+    
     $currentMonth = '';
     $monthlyDownload = null;
     $allDownloads = array();
@@ -66,6 +68,9 @@ if ($this->countDownloadsOverall > 0) {
         
         if($printDateNow == $printDate) {
             $printDate = 'Current month';
+            $isCurrentMonth = true;
+        } else {
+            $isCurrentMonth = false;
         }
         
         if ($printDate != $currentMonth) {
@@ -178,17 +183,33 @@ if ($this->countDownloadsOverall > 0) {
                         <?php 
                             $errorMsg = "<ul>";
                             $showErrMsg = false;
-                            if($product['is_license_missing_now'] == 1) {
-                                $errorMsg .= "<li>License was not specified</li>";
-                                $showErrMsg = true;
-                            }
-                            if($product['is_source_missing_now'] == 1) {
-                                $errorMsg .= "<li>Source was not specified</li>";
-                                $showErrMsg = true;
-                            }
-                            if($product['is_pling_excluded_now'] == 1) {
-                                $errorMsg .= "<li>This Product was excluded from plings</li>";
-                                $showErrMsg = true;
+                            
+                            if($isCurrentMonth) {
+                                if($product['is_license_missing_now'] == 1) {
+                                    $errorMsg .= "<li>License was not specified</li>";
+                                    $showErrMsg = true;
+                                }
+                                if($product['is_source_missing_now'] == 1) {
+                                    $errorMsg .= "<li>Source was not specified</li>";
+                                    $showErrMsg = true;
+                                }
+                                if($product['is_pling_excluded_now'] == 1) {
+                                    $errorMsg .= "<li>This Product was excluded from plings</li>";
+                                    $showErrMsg = true;
+                                }
+                            } else {
+                                if($product['is_license_missing'] == 1) {
+                                    $errorMsg .= "<li>License was not specified</li>";
+                                    $showErrMsg = true;
+                                }
+                                if($product['is_source_missing'] == 1) {
+                                    $errorMsg .= "<li>Source was not specified</li>";
+                                    $showErrMsg = true;
+                                }
+                                if($product['is_pling_excluded'] == 1) {
+                                    $errorMsg .= "<li>This Product was excluded from plings</li>";
+                                    $showErrMsg = true;
+                                }
                             }
                             $errorMsg .= "</ul>";
                             
