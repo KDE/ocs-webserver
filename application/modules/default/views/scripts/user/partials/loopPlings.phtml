@@ -194,15 +194,15 @@ if ($this->countDownloadsOverall > 0) {
                             
                             if($isCurrentMonth) {
                                 if($product['is_license_missing_now'] == 1) {
-                                    $errorMsg .= "<li>Please specified a License</li>";
+                                    $errorMsg .= "<li>Please specify a License</li>";
                                     $showErrMsg = true;
                                 }
                                 if($product['is_source_missing_now'] == 1) {
-                                    $errorMsg .= "<li>Please specified a link to a online source repository</li>";
+                                    $errorMsg .= "<li>Please specify a link to the online source repository</li>";
                                     $showErrMsg = true;
                                 }
                                 if($product['is_pling_excluded_now'] == 1) {
-                                    $errorMsg .= "<li>This Product is excluded from plings</li>";
+                                    $errorMsg .= "<li>This Product has bin excluded from plings</li>";
                                     $showErrMsg = true;
                                 }
                             } else {
@@ -211,11 +211,11 @@ if ($this->countDownloadsOverall > 0) {
                                     $showErrMsg = true;
                                 }
                                 if($product['is_source_missing'] == 1) {
-                                    $errorMsg .= "<li>Link to a online source repository was not specified</li>";
+                                    $errorMsg .= "<li>Link to the online source repository was not specified</li>";
                                     $showErrMsg = true;
                                 }
                                 if($product['is_pling_excluded'] == 1) {
-                                    $errorMsg .= "<li>This Product was excluded from plings</li>";
+                                    $errorMsg .= "<li>This Product has bin excluded from plings</li>";
                                     $showErrMsg = true;
                                 }
                             } 
@@ -307,7 +307,7 @@ if ($this->countDownloadsOverall > 0) {
         <p>b) how much of the shown calculated amount is to be paid or</p>
         <p>c) to cancel partly or complete payment without giving any reasons (reasons are most likely cheating or inflating download numbers).</p>
         <p>d) Any PLING-FACTOR can be changed at any time and any rate (even to "0") to adjust the payout amount for products, even for a previous still to-be-paid-out pending month as long as it has not been paid out yet.</p>
-        <p><br>All products require a valid license. Certain products also require a link to an online source repository, like e.g. cigt.kde.orgm, github.com. If we find those requirements are set incorrectly, we reserve the right to exclude the product or user temporarily completely from receiving plings at any time. </p>
+        <p><br>All products require a valid license. Certain products also require a link to an online source repository, like e.g. cgit.kde.org or github. If we find those requirements are set in a misleading way, we reserve the right to exclude the product or user temporarily or completely from receiving plings at any time. </p>
         <p><br>A valid PayPal address must be maintained in your settings at the time of the payout. 
             The total payout amount for a completed month must be at least one dollar. 
             Lesser amounts will not be paid out and can not be transferred to the next month. 
