@@ -39,6 +39,7 @@ $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
 
 $helperUserRole = new Backend_View_Helper_UserRole();
 $userRoleName = $helperUserRole->userRole();
+$forum_url_postfix = Zend_Auth::getInstance()->hasIdentity() ? '/session/sso' : '';
 ?>
     <style>
 
@@ -217,7 +218,7 @@ $userRoleName = $helperUserRole->userRole();
                 ?>
 
             <ul class="nav nav-pills meta-nav-top right" style="margin-right: 30px;">             
-               <li><a href="http://forum.opendesktop.org/" target="_blank"> Forum</a> </li>
+               <li><a href="http://forum.opendesktop.org/<?=$forum_url_postfix?>" target="_blank"> Forum</a> </li>
                <li><a href="http://blog.opendesktop.org/" target="_blank"> Blog</a> </li>  
                <li><a  id="plingList" href="#plings" > What are Plings? </a> </li>             
                <li> <a id="aboutContent" href="#">About </a>   </li>              
