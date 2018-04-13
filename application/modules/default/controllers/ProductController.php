@@ -208,14 +208,16 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $modelTags->processTagsUser($newProject->project_id, null, Default_Model_Tags::TAG_TYPE_PROJECT);    
         }
         
-        $licenseTag = $form->getElement('license_tag_id')->getValue();
-        $modelTags->saveLicenseTagForProject($newProject->project_id, $licenseTag);
         
-        $activityLog = new Default_Model_ActivityLog();
-        $activityLog->logActivity($newProject->project_id, $newProject->project_id, $newProject->member_id, Default_Model_ActivityLog::PROJECT_LICENSE_CHANGED, array('title' => 'Member changed License Tag', 'description' => 'New TagId: '.$licenseTag));
+        //set license, if needed
+        $licenseTag = $form->getElement('license_tag_id')->getValue();
+        //only set/update license tags if something was changed
+        if($licenseTag && count($licenseTag)>0) {
+            $modelTags->saveLicenseTagForProject($newProject->project_id, $licenseTag);
+            $activityLog = new Default_Model_ActivityLog();
+            $activityLog->logActivity($newProject->project_id, $newProject->project_id, $this->_authMember->member_id, Default_Model_ActivityLog::PROJECT_LICENSE_CHANGED, array('title' => 'Set new License Tag', 'description' => 'New TagId: '.$licenseTag));
+        }
 
-
-     
 
         $activityLog = new Default_Model_ActivityLog();
         $activityLog->writeActivityLog($newProject->project_id, $newProject->member_id,
@@ -418,12 +420,23 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $values = $form->getValues();
         
         
-        $licenseTag = $form->getElement('license_tag_id')->getValue();
-        $modelTags->saveLicenseTagForProject($this->_projectId, $licenseTag);
+        //set license, if needed
+        $tagList = $modelTags->getTagsArray($this->_projectId, $modelTags::TAG_TYPE_PROJECT, $modelTags::TAG_LICENSE_GROUPID);
+        $oldLicenseTagId = null;
+        if($tagList && count($tagList) == 1) {
+            $oldLicenseTagId = $tagList[0]['tag_id'];
+        } 
         
-        $activityLog = new Default_Model_ActivityLog();
-        $activityLog->logActivity($this->_projectId, $this->_projectId, $this->_authMember->member_id, Default_Model_ActivityLog::PROJECT_LICENSE_CHANGED, array('title' => 'Member changed License Tag', 'description' => 'New TagId: '.$licenseTag));
-
+        $licenseTag = $form->getElement('license_tag_id')->getValue();
+        //only set/update license tags if something was changed
+        if($licenseTag <> $oldLicenseTagId) {
+            $modelTags->saveLicenseTagForProject($this->_projectId, $licenseTag);
+            $activityLog = new Default_Model_ActivityLog();
+            $activityLog->logActivity($this->_projectId, $this->_projectId, $this->_authMember->member_id, Default_Model_ActivityLog::PROJECT_LICENSE_CHANGED, array('title' => 'License Tag', 'description' => 'Old TagId: '.$oldLicenseTagId.' - New TagId: '.$licenseTag));
+        }
+        
+        
+        
         $imageModel = new Default_Model_DbTable_Image();
         try {
             $uploadedSmallImage = $imageModel->saveImage($form->getElement(self::IMAGE_SMALL_UPLOAD));
