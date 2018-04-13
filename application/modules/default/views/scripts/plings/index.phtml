@@ -27,39 +27,51 @@
      <section class="head-wrap">
       <section class="wrapper">
       <p><h1> What are Plings ? </h1>
-        <p>Contributors to any part of the Opendesktop platform get Plings each time their contribution/product is downloaded. Pling converts download-clicks into monetary value based on the following terms:
-        <p>
-        <p>Each product category is valued by a so-called “Pling-Factor”.
-        <p>
-        <p>1 Pling = 0.01 US-Dollar (1 $-cent)
-        <p>Plings = Number of Downloads * Pling-Factor
-        <p>
-        <p>You can see the value of each category in the list below.
-        <p>
-        <p>Based on the actual amount of content and downloads, we may adjust these values at any time, even during a month.
-        <p>
-        <p>The amount of collected Plings for each user is then paid out every month.
-        <p>
-        <p>Payouts are voluntary and we reserve the right to cancel any single product or payout or all payouts without any reason.
-        <p>
-        <p>In order to receive your Plings, you need to provide a valid PayPal option under your OpenDesktop account settings.
-        <p>We are currently evaluating using Bitcoin as a payout method in the future.
-        <p>
-        <p>We hope this form of compensation values those who put time and effort into creating free and open source software & content and leads to an ever increase of quality and sustainability.        
+        <p>Contributors to any part of the Opendesktop platform get Plings each time their contribution/product is downloaded. Pling converts download-clicks into monetary value based on the following terms:</p>
+        <p></p>
+        <p>Each product category is valued by a so-called “Pling-Factor”.</p>
+        <p></p>
+        <p>1 Pling = 0.01 US-Dollar (1 $-cent)</p>
+        <p>Plings = Number of Downloads * Pling-Factor</p>
+        <p></p>
+        <p>You can see the value of each category in the list below.</p>
+        <p></p>
+        <p>Based on the actual amount of content and downloads, we may adjust these values at any time, even during a month.</p>
+        <p></p>
+        <p>The amount of collected Plings for each user is then paid out every month.</p>
+        <p></p>
+        <p>Payouts are voluntary and we reserve the right to cancel any single product or payout or all payouts without any reason.</p>
+        <p></p>
+        <p>In order to receive your Plings, you need to provide a valid PayPal option under your OpenDesktop account settings.</p>
+        <!--<p>We are currently evaluating using Bitcoin as a payout method in the future.-->
+        <p>Products to be plinged require a libre license. Certain products also require a link to a source hosting site (see list below), like e.g. cgit.kde.org or github. This is different from just providing the source-code, but to provide an easy setup for collaboration and transparent changes.</p>
+        <p></p>
+        <p>We hope this form of compensation values those who put time and effort into creating free and open source software & content and leads to an ever increase of quality and sustainability.        </p>
+            
+            
+            
     </section>
     </section>
     <section class="body-wrap" id="cat-list">
         <section class="wrapper">
-        	<div class="row title">
-        	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-	        	<span class="label lable-default left">
-	        		Category
-	        	</span>
-        		<span class="label lable-default right" >
-        			Pling Factor
-        		</span>
+            <div class="row title">
+        	<div class="col-md-6">
+                    <span class="label lable-default left">
+                            Category
+                    </span>
+                </div>
+                <div class="col-md-3">    
+                    <span class="label lable-default right" >
+                            Pling Factor
+                    </span>
+                </div>
+                <div class="col-md-3">
+                    <span class="label lable-default right" >
+                            Source-Link required
+                    </span>
+                    
         	</div>
-        	</div>            
+            </div>            
             <?php
             $categories = $this->listCategories();
             foreach ($categories as $key => $element) {                                	                                    
@@ -67,13 +79,23 @@
                 $cls = 'depth'.$depth;
                 $countSubCat = (int)$element['rgt'] - (int)$element['lft'] - 1;
                 $plingFactor='';
+                $sourceRequired='';
                 if($countSubCat==0){
-                	$plingFactor = '<span class="right factor">'. $element['dl_pling_factor'].'</span>';                                       
+                	$plingFactor = '<span class="right factor">'. $element['dl_pling_factor'].'</span>';  
+                        $sourceRequired = ($element['source_required']?'Yes':'No');
                 }
+                /*
                 echo '<div class="row">'; 
                 echo '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 '.$cls.'">' . $this->translate($element['title']) 
-                      . $plingFactor.'</div>';                                                                                
+                      . $plingFactor.'<span class="right factor">' . $element['source_required'].'</span></div>';                                                                                
                 echo '</div>';
+                */
+                echo '<div class="row" style="padding-left: 15px; padding-right: 15px;">';
+                echo '    <div class="col-md-6 cell-default '.$cls.'">'. $this->translate($element['title']).'</div>';
+                echo '    <div class="col-md-3 text-right cell-default">'.$plingFactor.'</div>';
+                echo '    <div class="col-md-3 text-right cell-default">'.$sourceRequired.'</div>';
+                echo '</div>   ';
+                
             }
             ?>
                           
