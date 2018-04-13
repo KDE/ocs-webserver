@@ -61,7 +61,10 @@ class Default_Model_Id_OcsServer
                 'emailVerified'  => $userdata['emailVerified'],
                 'is_hive'        => $userdata['is_hive'],
                 'creationTime'   => $userdata['creationTime'],
-                'lastUpdateTime' => $userdata['lastUpdateTime']
+                'lastUpdateTime' => $userdata['lastUpdateTime'],
+                'avatarUrl'      => $userdata['avatarUrl'],
+                'biography'      => $userdata['biography'],
+                'admin'          => $userdata['admin'],
             )
         );
         if (false == $userdata['is_active'] AND true == $userdata['is_deleted']) {
