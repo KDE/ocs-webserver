@@ -23,14 +23,14 @@
 <div class="productrow"><div class="row">            
  <div class="col-lg-2 col-md-3 col-sm-4 col-xs-4">    
         <div class="text-center">
-            <a href="<?=$this->buildProductUrl($this->product['project_id'],'')?>"  class="tooltipuserleft" data-tooltip-content="#tooltip_content" data-user="<?=$this->product['member_id']?>" >
+            <a href="<?=$this->buildProductUrl($this->product['project_id'],'')?>"  class="tooltipuserright" data-tooltip-content="#tooltip_content" data-user="<?=$this->product['member_id']?>" >
                 <img class="productimg" src="<?=$this->Image($this->product['image_small'], array('width' => 80, 'height' => 80))?>" />
             </a>
             
         </div>
  </div>
  <div class="col-lg-7 col-md-6 col-sm-4 col-xs-4">
-        <a href="<?=$this->buildProductUrl($this->product['project_id'],'')?>"   class="tooltipuserleft" data-tooltip-content="#tooltip_content" data-user="<?=$this->product['member_id']?>"><?=$this->product['title']?>
+        <a href="<?=$this->buildProductUrl($this->product['project_id'],'')?>"   class="tooltipuserright" data-tooltip-content="#tooltip_content" data-user="<?=$this->product['member_id']?>"><?=$this->product['title']?>
             <span class="version"><?=Default_Model_HtmlPurify::purify($this->product['version'])?>
             </span>
         </a>
