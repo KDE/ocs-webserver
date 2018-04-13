@@ -95,7 +95,7 @@ class Default_Model_IdServer
             'creationTime'   => strtotime($user->created_at),
             'lastUpdateTime' => strtotime($user->changed_at),
             'avatarUrl'      => $user->profile_image_url,
-            'biography'      => $user->biography,
+            'biography'      => empty($user->biography) ? '' : $user->biography,
             'admin'          => $user->roleId == 100 ? 'true' : 'false',
             'is_hive'        => empty($user->source_id) ? 'false' : 'true',
             'is_active'      => $user->is_active,
