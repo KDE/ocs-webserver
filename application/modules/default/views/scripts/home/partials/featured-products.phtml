@@ -67,14 +67,14 @@
                                         </div>
                                 </div>
                                <div class="feature_text_auth" >
-                               <a  class="auto_link" href="<?php echo $helpMemberUrl->buildMemberUrl($this->product['member_id']); ?>" >
-                                   <figure >
-                                       <img src="<?php echo $helpImage->Image($this->product['profile_image_url'], array('width' => '50', 'height' => '50', 'crop' => 2)); ?>" />
-                                   </figure>                                        
-                               </a>
-                                  <span class="created_by" > created by <?php echo $this->product['username']; ?> </span>
+                                <a  class="auto_link" href="<?php echo $helpMemberUrl->buildMemberUrl($this->product['member_id']); ?>"  class="tooltipuserleft" data-tooltip-content="#tooltip_content" data-user="<?=$this->product['member_id']?>">
+                                    <figure >
+                                        <img src="<?php echo $helpImage->Image($this->product['profile_image_url'], array('width' => '50', 'height' => '50', 'crop' => 2)); ?>" />
+                                    </figure>                                        
+                                </a>
 
-                                  
+                                <span class="created_by" > created by <a  class="auto_link" href="<?php echo $helpMemberUrl->buildMemberUrl($this->product['member_id']); ?>"  class="tooltipuserleft" data-tooltip-content="#tooltip_content" data-user="<?=$this->product['member_id']?>"><?php echo $this->product['username']; ?></a> </span>
+
                                </div>
                               
 
