@@ -85,8 +85,12 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             $newPass = $this->generateNewPassword();
             $newPasswordHash = $this->storeNewPassword($newPass, $user);
 
-            $id_server = new Default_Model_IdServer();
-            $id_server->updatePasswordForUser($user->member_id);
+            try {
+                $id_server = new Default_Model_IdServer();
+                $id_server->updatePasswordForUser($user->member_id);
+            } catch (Exception $e) {
+                Zend_Registry::get('logger')->err($e->getMessage());
+            }
 
             Zend_Registry::get('logger')->info(__METHOD__ . ' - old password hash: ' . $oldPasswordHash . ', new password hash: ' . $newPasswordHash);
 
@@ -599,8 +603,12 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         Zend_Registry::get('logger')->info(__METHOD__ . ' - user activated. member_id: ' . print_r($authUser->member_id,
                 true));
 
-        $id_server = new Default_Model_IdServer();
-        $id_server->createUser($authUser->member_id);
+        try {
+            $id_server = new Default_Model_IdServer();
+            $id_server->createUser($authUser->member_id);
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err($e->getMessage());
+        }
 
         Default_Model_ActivityLog::logActivity($authUser->member_id, null, $authUser->member_id,
             Default_Model_ActivityLog::MEMBER_EMAIL_CONFIRMED, array());

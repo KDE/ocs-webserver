@@ -947,6 +947,13 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                 $this->view->member = $this->_memberSettings;
                 $form->populate($this->_memberSettings->toArray());
 
+                try {
+                    $id_server = new Default_Model_IdServer();
+                    $id_server->updatePasswordForUser($this->_memberSettings->member_id);
+                } catch (Exception $e) {
+                    Zend_Registry::get('logger')->err($e->getMessage());
+                }
+
                 $this->view->save = 1;
                 $this->view->pictureform = $form;
 
@@ -1056,8 +1063,12 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                     $this->view->passwordform = $this->formPassword();
                     $this->view->save = 1;
 
-                    $id_server = new Default_Model_IdServer();
-                    $id_server->updatePasswordForUser($this->_memberSettings->member_id);
+                    try {
+                        $id_server = new Default_Model_IdServer();
+                        $id_server->updatePasswordForUser($this->_memberSettings->member_id);
+                    } catch (Exception $e) {
+                        Zend_Registry::get('logger')->err($e->getMessage());
+                    }
 
                 }
             } else {
@@ -1384,8 +1395,12 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $result = $modelEmail->setDefaultEmail($emailId, $this->_authMember->member_id);
 
         if (true === $result) {
-            $id_server = new Default_Model_IdServer();
-            $id_server->updateMailForUser($this->_authMember->member_id);
+            try {
+                $id_server = new Default_Model_IdServer();
+                $id_server->updateMailForUser($this->_authMember->member_id);
+            } catch (Exception $e) {
+                Zend_Registry::get('logger')->err($e->getMessage());
+            }
         }
     }
 
