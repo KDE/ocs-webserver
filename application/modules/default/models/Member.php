@@ -701,7 +701,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
                       count(1) AS count
                   FROM
                       comments 
-                  where comment_member_id = :member_id and comment_active = :comment_status
+                  where comment_target_id <> 0 and comment_member_id = :member_id and comment_active = :comment_status
                  ";
           $result = $this->_db->fetchRow($sql,array(
             'member_id'      => $member_id,          
