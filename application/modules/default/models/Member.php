@@ -288,6 +288,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
      * @param int $member_id
      *
      * @return Zend_Db_Table_Row
+     * @throws Zend_Db_Statement_Exception
      */
     public function fetchMemberData($member_id)
     {
@@ -320,6 +321,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
      * @param bool $deleted
      *
      * @return null|Zend_Db_Table_Row_Abstract
+     * @throws Zend_Db_Statement_Exception
      */
     public function fetchMember($member_id, $active = true, $deleted = false)
     {

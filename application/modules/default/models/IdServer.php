@@ -64,7 +64,7 @@ class Default_Model_IdServer
     {
         $modelMember = new Default_Model_Member();
 
-        return $modelMember->fetchMemberData($member_id);
+        return $modelMember->find($member_id)->current();
     }
 
     public function updateMailForUser($member_id)
