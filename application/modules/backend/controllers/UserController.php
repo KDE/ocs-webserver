@@ -100,9 +100,10 @@ class Backend_UserController extends Local_Controller_Action_Backend
         $this->_model->setDeleted($dataId);
 
         $identity = Zend_Auth::getInstance()->getIdentity();
-        Default_Model_ActivityLog::logActivity($dataId, null, $identity->member_id, Default_Model_ActivityLog::BACKEND_USER_DELETE,null);
 
         try {
+            Default_Model_ActivityLog::logActivity($dataId, null, $identity->member_id, Default_Model_ActivityLog::BACKEND_USER_DELETE,null);
+
             $id_server = new Default_Model_IdServer();
             $id_server->deactivateLoginForUser($dataId);
         } catch (Exception $e) {

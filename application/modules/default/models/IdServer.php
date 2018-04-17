@@ -28,53 +28,6 @@ class Default_Model_IdServer
         return $this->id_server->pushHttpUserData($data);
     }
 
-    public function updateUser($member_id)
-    {
-        if (empty($member_id)) {
-            return false;
-        }
-
-        $data = $this->mapUserData($member_id);
-
-        $options = array('bypassEmailCheck' => 'true', 'bypassUsernameCheck' => 'true', 'update' => 'true');
-
-        return $this->id_server->pushHttpUserData($data, $options);
-    }
-
-
-    public function updateMailForUser($member_id)
-    {
-        if (empty($member_id)) {
-            return false;
-        }
-
-        return $this->updateUser($member_id);
-    }
-
-    public function updatePasswordForUser($member_id)
-    {
-        if (empty($member_id)) {
-            return false;
-        }
-
-        return $this->updateUser($member_id);
-    }
-
-    public function deactivateLoginForUser($member_id)
-    {
-        if (empty($member_id)) {
-            return false;
-        }
-
-        return $this->updateUser($member_id);
-    }
-
-    protected function getUserData($member_id)
-    {
-        $modelMember = new Default_Model_Member();
-        return $modelMember->fetchMemberData($member_id);
-    }
-
     /**
      * @param $member_id
      * @return array
@@ -105,6 +58,53 @@ class Default_Model_IdServer
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - $data:' . print_r($data, true));
 
         return $data;
+    }
+
+    protected function getUserData($member_id)
+    {
+        $modelMember = new Default_Model_Member();
+
+        return $modelMember->fetchMemberData($member_id);
+    }
+
+    public function updateMailForUser($member_id)
+    {
+        if (empty($member_id)) {
+            return false;
+        }
+
+        return $this->updateUser($member_id);
+    }
+
+    public function updateUser($member_id)
+    {
+        if (empty($member_id)) {
+            return false;
+        }
+
+        $data = $this->mapUserData($member_id);
+
+        $options = array('bypassEmailCheck' => 'true', 'bypassUsernameCheck' => 'true', 'update' => 'true');
+
+        return $this->id_server->pushHttpUserData($data, $options);
+    }
+
+    public function updatePasswordForUser($member_id)
+    {
+        if (empty($member_id)) {
+            return false;
+        }
+
+        return $this->updateUser($member_id);
+    }
+
+    public function deactivateLoginForUser($member_id)
+    {
+        if (empty($member_id)) {
+            return false;
+        }
+
+        return $this->updateUser($member_id);
     }
 
 }

@@ -126,8 +126,20 @@ class Backend_MemberController extends Zend_Controller_Action
         $this->_model->setDeleted($member_id);
 
         $identity = Zend_Auth::getInstance()->getIdentity();
-        Default_Model_ActivityLog::logActivity($member_id, null, $identity->member_id, Default_Model_ActivityLog::BACKEND_USER_DELETE,
-            null);
+
+        try {
+            Default_Model_ActivityLog::logActivity($member_id,
+                null,
+                $identity->member_id,
+                Default_Model_ActivityLog::BACKEND_USER_DELETE,
+                null);
+
+            $id_server = new Default_Model_IdServer();
+            $id_server->deactivateLoginForUser($member_id);
+
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err($e->getMessage());
+        }
 
         $this->_helper->json(true);
     }

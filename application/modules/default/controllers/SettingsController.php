@@ -949,7 +949,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
 
                 try {
                     $id_server = new Default_Model_IdServer();
-                    $id_server->updatePasswordForUser($this->_memberSettings->member_id);
+                    $id_server->updateUser($this->_memberSettings->member_id);
                 } catch (Exception $e) {
                     Zend_Registry::get('logger')->err($e->getMessage());
                 }
