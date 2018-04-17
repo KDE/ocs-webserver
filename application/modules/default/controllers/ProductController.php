@@ -60,6 +60,25 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $modelRating->rateForProject($this->_projectId, $this->_authMember->member_id, $userRating);
     }
 
+
+    public function pploadAction()
+    {
+        $this->_helper->layout->disableLayout();
+         $modelProduct = new Default_Model_Project();
+        $productInfo = $modelProduct->fetchProductInfo($this->_projectId);
+        //create ppload download hash: secret + collection_id + expire-timestamp
+        $salt = PPLOAD_DOWNLOAD_SECRET;
+        $collectionID = $productInfo->ppload_collection_id;
+        $timestamp = time() + 3600; // one hour valid
+        $hash = md5($salt . $collectionID . $timestamp); // order isn't important at all... just do the same when verifying
+
+        $this->view->download_hash = $hash;
+        $this->view->download_timestamp = $timestamp;
+        
+        $this->view->product = $productInfo;
+        $this->_helper->viewRenderer('/partials/pploadajax');
+    }
+
     public function indexAction()
     {
         if (!empty($this->_collectionId)) {
@@ -119,6 +138,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->_helper->viewRenderer('index');
         $this->indexAction();
     }
+
+   
 
     public function addAction()
     {
@@ -235,6 +256,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         return $imageModel->saveImages($form_element);
     }
+
 
     /**
      * @param $projectData

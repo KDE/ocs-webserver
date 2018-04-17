@@ -514,8 +514,8 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
                         
                         <div class="tab-pane" id="files-panel">
                             <div class="col-lg-12">
-                                <?php
-                                echo $this->render('product/partials/ppload.phtml');
+                                <?php                             
+                                        echo $this->render('product/partials/ppload.phtml');                              
                                 ?>
                             </div>
                         </div>
@@ -608,6 +608,17 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
                         <div>
                             <div class="prod-widget-box right">
                                 <div  class="btn-group dropleft" style="width: 100%">
+                                    <button style="width: 100%" id="project_btn_download" class="btn btn-primary active" type="button">
+                                    Get it                                 
+                                    </button>                                                               
+                                </div>                                                               
+                            </div>
+                        </div>
+
+                        <?php /*
+                        <div>
+                            <div class="prod-widget-box right">
+                                <div  class="btn-group dropleft" style="width: 100%">
                                     <button style="width: 100%" id="project_btn_download" class="btn dropdown-toggle disabled" type="button" data-toggle="dropdown">Download
                                     <span class="caret"></span></button>
                                     <ul class="dropdown-menu hide" id="dropdown_downloads" style="min-width: 270px;">
@@ -622,6 +633,8 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
                                 </div> 
                             </div>
                         </div>
+                        */ 
+                        ?>
 
 
                         <!-- MORE PRODUCTS -->
@@ -717,6 +730,7 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
             ProductDetailCarousel.setup();          
             PartialCommentReviewForm.setup();
             PartialsButtonHeartDetail.setup();           
-            TooltipUser.setup("tooltipuserleft","left");                  
+            TooltipUser.setup("tooltipuserleft","left");  
+            ProductDetailBtnGetItClick.setup('.$this->product->project_id.');                
         });
     ');
