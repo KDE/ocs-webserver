@@ -951,7 +951,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                     $id_server = new Default_Model_IdServer();
                     $id_server->updateUser($this->_memberSettings->member_id);
                 } catch (Exception $e) {
-                    Zend_Registry::get('logger')->err($e->getMessage());
+                    Zend_Registry::get('logger')->err($e->getTraceAsString());
                 }
 
                 $this->view->save = 1;
@@ -1067,7 +1067,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                         $id_server = new Default_Model_IdServer();
                         $id_server->updatePasswordForUser($this->_memberSettings->member_id);
                     } catch (Exception $e) {
-                        Zend_Registry::get('logger')->err($e->getMessage());
+                        Zend_Registry::get('logger')->err($e->getTraceAsString());
                     }
 
                 }
@@ -1399,7 +1399,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                 $id_server = new Default_Model_IdServer();
                 $id_server->updateMailForUser($this->_authMember->member_id);
             } catch (Exception $e) {
-                Zend_Registry::get('logger')->err($e->getMessage());
+                Zend_Registry::get('logger')->err($e->getTraceAsString());
             }
         }
     }

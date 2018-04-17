@@ -107,7 +107,7 @@ class Backend_UserController extends Local_Controller_Action_Backend
             $id_server = new Default_Model_IdServer();
             $id_server->deactivateLoginForUser($dataId);
         } catch (Exception $e) {
-            Zend_Registry::get('logger')->err($e->getMessage());
+            Zend_Registry::get('logger')->err($e->getTraceAsString());
         }
 
         $jTableResult = array();

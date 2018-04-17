@@ -67,7 +67,7 @@ class Default_Model_Id_OcsServer
                 'admin'          => $userdata['admin'],
             )
         );
-        if (false == $userdata['is_active'] AND true == $userdata['is_deleted']) {
+        if ((false == $userdata['is_active']) AND (true == $userdata['is_deleted'])) {
             $map_user_data['user']['disabledReason'] = 'user account disabled';
         }
 

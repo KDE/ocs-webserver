@@ -138,7 +138,7 @@ class Backend_MemberController extends Zend_Controller_Action
             $id_server->deactivateLoginForUser($member_id);
 
         } catch (Exception $e) {
-            Zend_Registry::get('logger')->err($e->getMessage());
+            Zend_Registry::get('logger')->err($e->getTraceAsString());
         }
 
         $this->_helper->json(true);
