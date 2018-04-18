@@ -21,82 +21,206 @@
  **/
 
 $modelInfo = new Default_Model_Info();
-$imgs = $modelInfo->getLast200ImgsProductsForAllStores(100);
-$helpBuildUrl = new Default_View_Helper_BuildProductUrl();
+$this->comments = $modelInfo->getLatestComments(10);
+$this->users = $modelInfo->getNewActiveMembers(18);
+$this->supporters = $modelInfo->getNewActiveSupporters(18);
+
+
+$this->productsThemesGTK = $modelInfo->getLastProductsForHostStores(5,"366,363,273,267,138,125,131,153,154,414,133");
+$this->productsThemesPlasma = $modelInfo->getLastProductsForHostStores(5,"365,119,123,266,114,118,349,417,101,100,111,422,423,446,417");
+$this->productsWindowmanager = $modelInfo->getLastProductsForHostStores(5,"117,267,139,143,142,140,141,144");
+$this->productsIconsCursors= $modelInfo->getLastProductsForHostStores(5,"386,107");
+$this->productsScreenshots= $modelInfo->getLastProductsForHostStores(5,"225,445");
+$this->productsApps = $modelInfo->getLastProductsForHostStores(5,233);
+$this->productsAddons = $modelInfo->getLastProductsForHostStores(5,"152");
+$this->productsWallpapers = $modelInfo->getLastProductsForHostStores(5,295);
+
+$this->countSupporters = $modelInfo->getCountActiveSupporters();
+
+$featuredProducts = $modelInfo->getFeaturedProductsForHostStores(100);
+if ($featuredProducts->getTotalItemCount()) {
+    $request = Zend_Controller_Front::getInstance()->getRequest();
+    $offset = (int)$request->getParam('page');
+    $irandom = rand(1,$featuredProducts->getTotalItemCount());
+    $featuredProducts->setItemCountPerPage(1);
+    $featuredProducts->setCurrentPageNumber($irandom);
+    $this->featureProducts = $featuredProducts;
+}
+
+$helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
+$helperImage = new Default_View_Helper_Image();
+$helpPrintDate = new Default_View_Helper_PrintDate();
 ?>
-    <style>
-        body.home-page main section#intro.wrapper .container article .logo_template {
-            background-image: <?=$this->template['homepage']['logo']['background-image']?>;
-            background-position: <?=$this->template['homepage']['logo']['background-position']?>;
-            background-repeat: <?=$this->template['homepage']['logo']['background-repeat']?>;
-            float: none;
-            height: <?=$this->template['homepage']['logo']['height']?>;
-            margin-left: auto;
-            margin-right: auto;
-            text-align: center;
-            width: <?=$this->template['homepage']['logo']['width']?>;
-        }
-    </style>
- 
-    <main id="mainpage" class="mainpage">
+<main id="explore-content" class="startpage-store " >
+<div class="GridFlex">
+<div class="GridFlex-cell sidebar-left">
+        <?php  echo $this->render('explore/partials/filter.phtml'); ?>
+</div>
+<div class="GridFlex-cell content">
+        <div class="contentcontainer">
 
-        <section class="wrapper" id="intro" >
-            <section class="container" >
-                <div class="row" style="">
-                    <article>
-                        <figure class="logo_template">
+                        <div class="row"  id="featureProductsContainer">
                             
-                        </figure>
-                      
-                    </article>
-                </div>
-            </section>
-        </section>
+                            <?php
+                            if ($this->featureProducts) {
+                                          echo $this->render('home/partials/featured-products.phtml');
+                            }
+                            ?>
+                        </div>
 
-        <section class="wrapper"  >
-        
-                <div class="card-wrapper" >
-                <?php                    
-                    $helperStoreConfig = new Default_View_Helper_FetchStoreConfigInfo();
-                    $helperSearchCategories = new Default_View_Helper_FetchDomainCategories();
-                    $domainshelper = new Default_View_Helper_FetchDomains();
-                    $this->domains = $domainshelper->fetchDomainObjects();         
-                    foreach ($this->domains as $obj) {      
-                        $host =$obj['host'];
-                        $name =$obj['name'];
-                         $o =  $obj['order'];
-                        $curOrder = floor($obj['order']/1000);
-                        if($curOrder<10 or $curOrder>30) continue;
-                        
-                        $logo = $helperStoreConfig->getDomainLogo($host);
-                        echo '<div class="row domainobj">';                        
-                        echo '<div class="col-lg-3"><a href="http://'.$host.'"><img src="'.$logo.'"  class="logo" /></a></div>';
-                        echo '<div class="col-lg-9">'.$obj['meta_keywords'].'</div>';
-                        echo '</div>';   
-                        
-                    }
-                ?>
-                </div>
-        
-        </section>
+                        <div class="row">
+                        <?php
+                                    echo $this->partial('/home/partials/product_group.phtml', array(
+                                            "title"  => "GTK/Gnome",
+                                            "products" => $this->productsThemesGTK,
+                                            "catIDs" =>"366"
+                                        )
+                                    );
 
+                                    echo $this->partial('/home/partials/product_group.phtml', array(
+                                            "title"  => "KDE Plasma",
+                                            "products" => $this->productsThemesPlasma,
+                                            "catIDs" =>"365"
+                                        )
+                                    );
+                        ?>
+                        </div>
 
-        
-         <section class="wrapper" id="indeximages" >            
-                         <?php     
-                         $helperImage = new Default_View_Helper_Image();
-                         foreach ($imgs as $obj) {   
-                            if($obj['image_small']=='') continue;
-                            $imgpath = $helperImage->Image($obj['image_small'],array('width' => 120, 'height' => 120));
-                            if('http://cn.pling.ws/cache/90x90/img/default.png'== $imgpath) continue;                                            
-                            ?>                    
-                           <a href="<?= $helpBuildUrl->buildProductUrl($obj['project_id'])?>" title="<?= $obj['title']?>"> <img class="logo"  src="<?= $imgpath?>"  alt="<?= $obj['title']?>" /></a>
+                        <div class="row blockpadding">
+                        <?php
+                                    echo $this->partial('/home/partials/product_group.phtml', array(
+                                            "title"  => "Window Managers",
+                                            "products" => $this->productsWindowmanager,
+                                            "catIDs" =>"147"
+                                        )
+                                    );
+
+                                    echo $this->partial('/home/partials/product_group.phtml', array(
+                                            "title"  => "Icons, Cursors",
+                                            "products" => $this->productsIconsCursors,
+                                            "catIDs" =>"386,107"
+                                        )
+                                    );
+                        ?>
+                        </div>
+
+                        <div class="row blockpadding">
+                        <?php
+                                    echo $this->partial('/home/partials/product_group.phtml', array(
+                                            "title"  => "Concepts, Screenshots",
+                                            "products" => $this->productsScreenshots,
+                                            "catIDs" =>"445,225"
+                                        )
+                                    );
+
+                                    echo $this->partial('/home/partials/product_group.phtml', array(
+                                            "title"  => "Wallpapers",
+                                            "products" => $this->productsWallpapers,
+                                            "catIDs" =>"295"
+
+                                        )
+                                    );
+                        ?>
+                        </div>
+                        <div class="row blockpadding" >
                          <?php
-                         }
+                                     echo $this->partial('/home/partials/product_group.phtml', array(
+                                             "title"  => "App Add-Ons",
+                                             "products" => $this->productsAddons,
+                                             "catIDs" =>"152"
+                                         )
+                                     );
+
+                                     echo $this->partial('/home/partials/product_group.phtml', array(
+                                             "title"  => "Applications",
+                                             "products" => $this->productsApps,
+                                             "catIDs" =>"233"
+                                         )
+                                     );
+
                          ?>
-                   
-        </section>          
-    </main>
+                        </div>
+
+                        <div class="row blockpadding supportersrow">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <?php
+                                        echo $this->partial('/home/partials/users.phtml', array(
+                                                "title"  => "Latest  Active Supporters",
+                                                "users" => $this->supporters
+                                            )
+                                        );
+                            ?>
+                            </div>
+                        </div>
+
+                        <div class="row blockpadding">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <?php
+                                        echo $this->partial('/home/partials/users.phtml', array(
+                                                "title"  => "Latest  Community Members ",
+                                                "users" => $this->users
+                                            )
+                                        );
+                            ?>
+                            </div>
+                        </div>
+             </div>
+</div>
+<div class="GridFlex-cell sidebar-right">
+        <aside  id="explore-sidebar" >
+
+        <?php
+            echo $this->render('/home/partials/common_rightsidebar.phtml');
+        ?>
 
 
-  
+        <div>
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <!-- Responsive New Displayblock -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1150932386931372"
+                 data-ad-slot="1024407251"
+                 data-ad-format="auto"></ins>
+            <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+
+            </script>
+        </div>
+
+        </aside>
+</div>
+</div>
+
+<div class="tooltip_templates" style="display: none">
+    <span id="tooltip_content">
+        <i class="fa fa-spinner"></i>
+    </span>
+</div>
+</main>
+
+<script type="application/javascript">
+    $(document).ready(function () {
+        $('body').on('click', '.ajaxPartialFeatureProduct', function (event) {
+            event.preventDefault();
+            $(this).off();
+            var target = '#featureProductsContainer';
+            if($(this).hasClass( "disabled" )) return false;
+            var url = $(this).attr("href");
+            $(target).load(url, function (response, status, xhr) {
+                if (status == "error") {
+                    $(target).empty().html('Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.');
+                }
+            });
+
+            return false;
+        });
+    });
+</script>
+
+<?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){                                             
+                TooltipUser.setup("tooltipuser","right");
+                TooltipUser.setup("tooltipuserleft","left");             
+            });
+        ');
