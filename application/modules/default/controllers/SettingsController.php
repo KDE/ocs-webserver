@@ -947,6 +947,13 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                 $this->view->member = $this->_memberSettings;
                 $form->populate($this->_memberSettings->toArray());
 
+                try {
+                    $id_server = new Default_Model_IdServer();
+                    $id_server->updateUser($this->_memberSettings->member_id);
+                } catch (Exception $e) {
+                    Zend_Registry::get('logger')->err($e->getTraceAsString());
+                }
+
                 $this->view->save = 1;
                 $this->view->pictureform = $form;
 
@@ -1046,19 +1053,23 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
             if ($form->isValid($_POST)) {
                 $values = $form->getValues();
 
-                if ($this->_memberSettings->password
-                    != Local_Auth_Adapter_Ocs::getEncryptedPassword($values['passwordOld'],
-                        $this->_memberSettings->source_id)) {
+                if ($this->_memberSettings->password != Local_Auth_Adapter_Ocs::getEncryptedPassword($values['passwordOld'], $this->_memberSettings->source_id)) {
                     $form->addErrorMessage('Your old Password is wrong!');
                     $this->view->passwordform = $form;
                     $this->view->error = 1;
                 } else {
-                    $this->_memberSettings->password =
-                        Local_Auth_Adapter_Ocs::getEncryptedPassword($values['password1'],
-                            $this->_memberSettings->source_id);
+                    $this->_memberSettings->password = Local_Auth_Adapter_Ocs::getEncryptedPassword($values['password1'], $this->_memberSettings->source_id);
                     $this->_memberSettings->save();
                     $this->view->passwordform = $this->formPassword();
                     $this->view->save = 1;
+
+                    try {
+                        $id_server = new Default_Model_IdServer();
+                        $id_server->updatePasswordForUser($this->_memberSettings->member_id);
+                    } catch (Exception $e) {
+                        Zend_Registry::get('logger')->err($e->getTraceAsString());
+                    }
+
                 }
             } else {
                 $this->view->passwordform = $form;
@@ -1382,6 +1393,15 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
 
         $modelEmail = new Default_Model_MemberEmail();
         $result = $modelEmail->setDefaultEmail($emailId, $this->_authMember->member_id);
+
+        if (true === $result) {
+            try {
+                $id_server = new Default_Model_IdServer();
+                $id_server->updateMailForUser($this->_authMember->member_id);
+            } catch (Exception $e) {
+                Zend_Registry::get('logger')->err($e->getTraceAsString());
+            }
+        }
     }
 
     public function resendverificationAction()
