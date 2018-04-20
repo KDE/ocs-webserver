@@ -384,7 +384,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $imageTable = new Default_Model_DbTable_Image();
         $productPicture = $form->createElement('file', 'profile_picture_upload')
                                ->setDisableLoadDefaultDecorators(true)
-                               ->setLabel('Profile Picture Preview')
+                               ->setLabel('Profile Picture')
                                ->setRequired(false)
                                ->setDecorators(array(
                 'File',
@@ -503,7 +503,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $productPicture =
             $form->createElement('file', 'profile_picture_background_upload')
                  ->setDisableLoadDefaultDecorators(true)
-                 ->setLabel('Profile Picture Background Preview')
+                 ->setLabel('Background Picture')
                  ->setRequired(false)
                  ->setDecorators(array(
                     'File',
@@ -975,6 +975,18 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         }
     }
 
+    public function deletepicturebackgroundAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $this->_memberSettings->profile_image_url_bg = NULL;
+        $this->_memberSettings->save();
+
+        $this->_helper->json(array(
+            'status' => 'ok'
+        ));
+    }
+    
+    
     public function picturebackgroundAction()
     {
         ini_set('memory_limit', '128M');

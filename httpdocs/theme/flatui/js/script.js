@@ -237,6 +237,28 @@ var ImagePreview = {
         $('#profile-picture-background-preview').attr('src', $('#profile_image_url_bg').attr('value'));
         $(imageTarget).show();
         $('button#add-profile-picture-background').text('CHANGE PICTURE');
+        
+        //init delete bg pic
+        $('body').on('click', '.delete_bg_img', function (event) {
+            event.stopPropagation();
+            var imageTarget = $('#profile_image_url_bg').data('target');
+            
+            jQuery.ajax({
+                data: '',
+                url: '/settings/deletepicturebackground',
+                type: 'GET',
+                error: function () {
+                    alert('Error');
+                    return false;
+                },
+                success: function (results) {
+                    $('#profile-picture-background-preview').attr('src', '/img/default.png');
+                    return false;
+                }
+            });
+        });
+        
+        
     }
 };
 

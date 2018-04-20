@@ -21,8 +21,19 @@
  **/
 ?>
 <?= $this->formLabel($this->element->getName(), $this->element->getLabel()) ?>
+<style>
+.image-preview .delete_img {
+    position: absolute;
+    top: 37px;
+    right: 67px;
+    z-index: 100;
+    color: #9a2b1f;
+    cursor: pointer;
+}
+</style>
 <div>
     <div class="bordered box image-preview" style="overflow: hidden;">
+        <span class="glyphicon glyphicon-trash delete_img delete_bg_img"></span>
         <img src="/theme/flatui/img/sample-profile-image-2.jpg"
              alt="profile-image"
              id="profile-picture-background-preview"
