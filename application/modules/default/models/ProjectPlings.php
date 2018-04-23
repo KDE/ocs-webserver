@@ -64,7 +64,7 @@ class Default_Model_ProjectPlings extends Default_Model_DbTable_ProjectPlings
                         ,m.profile_image_url
                         ,m.created_at as member_created_at
                         ,m.username
-                        FROM project_follower f
+                        FROM project_plings f
                         inner join member m on f.member_id = m.member_id and m.is_active=1 AND m.is_deleted=0 
                         WHERE  f.project_id = :project_id and f.is_deleted = 0
                         order by f.created_at desc
