@@ -288,6 +288,21 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
                                         </div>  
                                                       
                                     </div>
+
+                                    <div class="projectdtailHeart">
+                                        <div id="container-pling<?=$this->product->project_id?>">     
+                                        <?php                                 
+                                            echo $this->partial(
+                                                '/product/projectplings.phtml',
+                                                array(
+                                                    "authMember"  => $identity,
+                                                    "project_id" => $this->product->project_id
+                                                )
+                                            );                                
+                                        ?>                                
+                                        </div>  
+                                                      
+                                    </div>
                                     
                                     <div class="projectdetailRating" style="clear: right">
                                     <?php echo $this->render('partials/sidebarRating.phtml'); ?>
