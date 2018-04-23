@@ -41,6 +41,8 @@ class Default_Model_DbTable_Tags extends Local_Model_Table
     const TAG_GROUP_USER = 5;
     const TAG_GROUP_CATEGORY = 6;
     const TAG_GROUP_LICENSE = 7;
+    const TAG_GROUP_PACKAGETYPE = 8;
+    const TAG_GROUP_ARCHITECTURE = 9;
 
 
     /**
@@ -116,6 +118,15 @@ class Default_Model_DbTable_Tags extends Local_Model_Table
         }
 
         return $resultIds;
+    }
+    
+    
+    /**
+     * @return array
+     */
+    public function fetchArchitectureTagsForSelect()
+    {
+        return $this->fetchForGroupForSelect(Default_Model_DbTable_Tags::TAG_GROUP_ARCHITECTURE);
     }
     
     
