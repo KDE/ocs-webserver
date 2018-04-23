@@ -43,11 +43,18 @@ class Default_Model_DbTable_ProjectPlings extends Zend_Db_Table_Abstract
 
     public function setDelete($id)
     {
+        /*
         $updateValues = array(
             'is_deleted' => 1,
             'deleted_at' => new Zend_Db_Expr('Now()')
         );
         $this->update($updateValues,  array('project_plings_id = ?' => $id));
+    */
+        $sql = "update project_plings set is_deleted = 1, deleted_at = now() where project_plings_id = :id";
+
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('id' => $id))->execute();
+       
+        return $result;
     }
 
     public function countPlingsHeGave($member_id)
