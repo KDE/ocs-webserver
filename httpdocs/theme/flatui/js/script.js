@@ -806,6 +806,8 @@ var PartialsButtonPlingProject = (function () {
                 $(target).prepend(spin);
 
                 $(target).load(url + ' ' + pageFragment, function (response, status, xhr) {
+                    
+                    console.log(response);
                     if (status == "error") {
                         if (xhr.status == 401) {
                             if (response) {

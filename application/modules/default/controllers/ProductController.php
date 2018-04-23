@@ -1432,7 +1432,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $product = $tableProduct->find($this->_projectId)->current();
             $activityLog = new Default_Model_ActivityLog();
             $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id,
-                Default_Model_ActivityLog::PROJECT_FOLLOWED, $product->toArray());
+                Default_Model_ActivityLog::PROJECT_PLINGED_2, $product->toArray());
             
         }
        $this->_helper->json(array(
@@ -1462,7 +1462,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
             $activityLog = new Default_Model_ActivityLog();
             $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id,
-            Default_Model_ActivityLog::PROJECT_UNPLINGED, $product->toArray());
+            Default_Model_ActivityLog::PROJECT_DISPLINGED_2, $product->toArray());
         }else{
              $this->_helper->json(array(
                     'status' => 'error',

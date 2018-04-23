@@ -50,8 +50,8 @@ class Default_Model_ActivityLog extends Default_Model_DbTable_ActivityLog
     const PROJECT_FOLLOWED = 50;
     const PROJECT_UNFOLLOWED = 51;
     const PROJECT_SHARED = 52;
-    const PROJECT_PLINGED = 53;
-    const PROJECT_UNPLINGED = 54;
+    const PROJECT_PLINGED_2 = 53;
+    const PROJECT_DISPLINGED_2 = 54;
     const PROJECT_RATED_HIGHER = 60;
     const PROJECT_RATED_LOWER = 61;
     const PROJECT_FILES_CREATED = 200;
