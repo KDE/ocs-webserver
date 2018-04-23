@@ -774,6 +774,65 @@ var PartialsButtonHeartDetail = (function () {
 })();
 
 
+var PartialsButtonPlingProject = (function () {
+    return {
+        setup: function () {
+            $('body').on('click', '.partialbuttonplingproject', function (event) {
+                event.preventDefault();
+                var url = $(this).attr("data-href");
+                var target = $(this).attr("data-target");
+                var auth = $(this).attr("data-auth");
+                var issupporter = $(this).attr("data-issupporter");
+                var toggle = $(this).data('toggle');
+                var pageFragment = $(this).attr("data-fragment");
+                
+                if (!auth) {
+                    $('#like-product-modal').modal('show');
+                    return;
+                }
+                
+                // product owner not allow to heart copy from voting....
+                var loginuser = $('#like-product-modal').find('#loginuser').val();
+                var productcreator = $('#like-product-modal').find('#productcreator').val();
+                if (loginuser == productcreator) {
+                    // ignore
+                    $('#like-product-modal').find('#votelabel').text('Project owner not allowed');
+                    $('#like-product-modal').find('.modal-body').empty();
+                    $('#like-product-modal').modal('show');
+                    return;
+                }
+
+                var spin = $('<span class="glyphicon glyphicon-refresh spinning" style="opacity: 0.6; z-index:1000;position: relative; left: 0;top: 0px;"></span>');
+                $(target).prepend(spin);
+
+                $(target).load(url + ' ' + pageFragment, function (response, status, xhr) {
+                    if (status == "error") {
+                        if (xhr.status == 401) {
+                            if (response) {
+                                var data = jQuery.parseJSON(response);
+                                var redirect = data.login_url;
+                                if (redirect) {
+                                    window.location = redirect;
+                                } else {
+                                    window.location = "/login";
+                                }
+                            }
+                        } else {
+                            $(target).empty().html('Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.');
+                        }
+                    }
+                    if (toggle) {
+                        $(toggle).modal('show');
+                    }
+                });
+
+                return false;
+            });
+        }
+    }
+})();
+
+
 var PartialsReview = (function () {
     return {
         setup: function () {

@@ -177,6 +177,8 @@ class Default_Plugin_AclRules extends Zend_Acl
                 'unfollow',
                 'followp',
                 'unfollowp',
+                'plingproject',
+                'unplingproject',
                 'add',
                 'pling',
                 'pay',
