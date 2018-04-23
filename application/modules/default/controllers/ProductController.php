@@ -1454,6 +1454,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $projectplings->setDelete($pling->project_plings_id);
              $this->_helper->json(array(
                     'status' => 'ok',
+                    'deleted' => $pling->project_plings_id,
                     'msg'   => 'Success. '
                 ));
 
