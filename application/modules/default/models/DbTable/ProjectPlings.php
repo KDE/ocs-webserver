@@ -28,7 +28,8 @@ class Default_Model_DbTable_ProjectPlings extends Zend_Db_Table_Abstract
     public function getPlings($project_id)
     {
         $statement = $this->select()
-            ->where('project_id=?', $project_id);
+            ->where('project_id=?', $project_id)
+            ->where('is_deleted=?', 0);
         return $this->fetchAll($statement);
     }
 
@@ -37,7 +38,8 @@ class Default_Model_DbTable_ProjectPlings extends Zend_Db_Table_Abstract
     {
         $statement = $this->select()
             ->where('project_id=?', $project_id)
-            ->where('member_id=?', $member_id);
+            ->where('member_id=?', $member_id)
+            ->where('is_deleted=?', 0);
         return $this->fetchRow($statement);
     }
 
