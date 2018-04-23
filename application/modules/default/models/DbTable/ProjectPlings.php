@@ -47,8 +47,7 @@ class Default_Model_DbTable_ProjectPlings extends Zend_Db_Table_Abstract
             'is_deleted' => 1,
             'deleted_at' => new Zend_Db_Expr('Now()')
         );
-
-        $this->update($updateValues, 'project_plings_id=' . $id);
+        $this->update($updateValues,  array('project_plings_id = ?' => $id));
     }
 
     public function countPlingsHeGave($member_id)
