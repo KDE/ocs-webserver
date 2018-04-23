@@ -108,6 +108,8 @@ class Default_Model_ActivityLog extends Default_Model_DbTable_ActivityLog
         50  => 'project',
         51  => 'project',
         52  => 'project',
+        53  => 'project',
+        54  => 'project',
         60  => 'project',
         61  => 'project',
         70  => 'project',

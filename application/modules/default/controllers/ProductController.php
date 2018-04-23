@@ -1422,6 +1422,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $newVals = array('project_id' => $this->_projectId, 'member_id' => $this->_authMember->member_id);
         $sql = $projectplings->select()
                 ->where('member_id = ?', $this->_authMember->member_id)
+                ->where('is_deleted = ?',0)
                 ->where('project_id = ?', $this->_projectId, 'INTEGER')
         ;
         $result = $projectplings->fetchRow($sql);
