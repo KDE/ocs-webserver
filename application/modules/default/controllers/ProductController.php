@@ -1835,6 +1835,35 @@ class ProductController extends Local_Controller_Action_DomainSwitch
     }
     
     
+    public function updatearchitectureAction()
+    {
+        $this->_helper->layout()->disableLayout();
+
+        $error_text = "";
+
+        // Update a file information in ppload collection
+        if (!empty($_POST['file_id'])) {
+            $architectureId = null;
+            if (isset($_POST['architecture_id'])) {
+                $architectureId = $_POST['architecture_id'];
+            }
+
+            
+            //set architecture
+            $modelTags = new Default_Model_Tags();
+            $modelTags->saveArchitectureTagForProject($this->_projectId, $_POST['file_id'], $architectureId);
+            
+            $this->_helper->json(array('status' => 'ok'));
+
+            return;
+        } else {
+            $error_text .= 'No FileId. , FileId: ' . $_POST['file_id'];
+        }
+
+        $this->_helper->json(array('status' => 'error', 'error_text' => $error_text));
+    }
+    
+    
     public function updatecompatibleAction()
     {
         $this->_helper->layout()->disableLayout();

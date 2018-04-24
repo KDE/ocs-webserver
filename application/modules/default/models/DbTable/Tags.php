@@ -188,6 +188,16 @@ class Default_Model_DbTable_Tags extends Local_Model_Table
     
     
     /**
+     * @param int $projectId
+     * @return array
+     */
+    public function fetchArchitectureTagsForProject($projectId)
+    {
+        return $this->fetchTagsForProject($projectId, $this::TAG_GROUP_ARCHITECTURE);
+    }
+    
+    
+    /**
      * @param int $projectId Description
      * @param int|array $groupId
      * @return array

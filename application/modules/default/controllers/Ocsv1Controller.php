@@ -1289,6 +1289,32 @@ class Ocsv1Controller extends Zend_Controller_Action
             }
         }
         
+        if (!empty($this->_params['tags'])) {
+            // package_types parameter: values separated by ","
+            $tagList = explode(',', $this->_params['tags']);
+            
+            foreach ($tagList as $tag) {
+                $tagKeyValue = explode('-', $tag);
+                $tagName = $tagKeyValue[0];
+                $tagValue = $tagKeyValue[1];
+                
+                if($tagName == 'architectureid') {
+                    $tableProjectSelect->join(array(
+                        $tagName => new Zend_Db_Expr('(SELECT DISTINCT tag_parent_object_id as project_id FROM tag_object WHERE '
+                            . $tableProject->getAdapter()->quoteInto('tag_id = ?', $tagValue)
+                            . ' AND ' . $tableProject->getAdapter()->quoteInto('tag_type_id = ?', Default_Model_Tags::TAG_TYPE_FILE)
+                            . ')')
+                    ), 'project.project_id = '.$tagName. '.project_id', array());
+                } else {
+                    $tableProjectSelect->join(array(
+                        $tagName => new Zend_Db_Expr('(SELECT DISTINCT tag_object_id as project_id FROM tag_object WHERE '
+                            . $tableProject->getAdapter()->quoteInto('tag_id = ?', $tagValue) . ')')
+                    ), 'project.project_id = '.$tagName. '.project_id', array());
+                }
+            }
+            
+        }
+        
         $hasSearchPart = false;
         if (!empty($this->_params['search'])) {
             foreach (explode(' ', $this->_params['search']) as $keyword) {
@@ -1350,7 +1376,7 @@ class Ocsv1Controller extends Zend_Controller_Action
         }
 
         $tableProjectSelect->limit($limit, $offset);
-
+        
         $projects = $tableProject->fetchAll($tableProjectSelect);
         $count = $tableProject->getAdapter()->fetchRow('select FOUND_ROWS() AS counter');
 
