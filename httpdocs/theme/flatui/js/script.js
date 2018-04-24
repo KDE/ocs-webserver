@@ -810,6 +810,7 @@ var PartialsButtonPlingProject = (function () {
                           cache: false
                         })
                       .done(function( response ) {
+                        console.log(url);
                         $(target).remove(spin);
                         if(response.status =='error'){
                              $(target).html( response.msg );
