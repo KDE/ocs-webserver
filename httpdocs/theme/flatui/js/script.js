@@ -823,7 +823,7 @@ var PartialsButtonPlingProject = (function () {
                                 $(target).find('i').addClass('heartgrey')
                                 .removeClass('heartproject');
 
-                                var newurl = url.replace('unplingproject','plingproject');
+                                var newurl = $(url).text().replace('unplingproject','plingproject');
                                 $(target).find('.partialbuttonplingproject')
                                 .attr('data-href',newurl);
 
@@ -835,7 +835,7 @@ var PartialsButtonPlingProject = (function () {
                                 $(target).find('i').removeClass('heartgrey')
                                 .addClass('heartproject');
 
-                                var newurl = url.replace('plingproject','unplingproject');
+                                var newurl = $(url).text().replace('plingproject','unplingproject');
                                 $(target).find('.partialbuttonplingproject')
                                 .attr('data-href',newurl);
                             }
