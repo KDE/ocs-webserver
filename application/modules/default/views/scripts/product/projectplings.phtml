@@ -46,21 +46,21 @@ if ($member_id && $isSupporter && $isPlinged) {
 }
 
 $heartatt = $heartatt. 'role="button" data-fragment=""  '
-	      .' data-target="#container-follow'.$this->project_id.'"'
+	      .' data-target="#container-pling'.$this->project_id.'"'
 	      .' data-href="'.$urlUserFollows.'"'
             .' data-issupporter="'.$isSupporter.'"'
 	      .' data-auth="'.$member_id.'"';
 $out ='<div role="button" class="partialbuttonplingproject" '.$heartatt.'>';
 if($cntplings>0){
        if ($isPlinged){
-            $out = $out. '<i class="fa fa-check heartproject " aria-hidden="true" '.$heartatt.'></i>';
+            $out = $out. '<i class="fa fa-check heartproject " aria-hidden="true"></i>';
             $out = $out. '<span class="heartnumber small " >'.$cntplings.'</span>';
        }else{
-            $out = $out. '<i class="fa fa-check heartgrey " aria-hidden="true" '.$heartatt.'></i>';
+            $out = $out. '<i class="fa fa-check heartgrey " aria-hidden="true"></i>';
             $out = $out. '<span class="heartnumber heartnumberpurple small  " >'.$cntplings.'</span>';
        }
 }else{
-            $out = $out. '<i class="fa fa-check heartgrey " aria-hidden="true" '.$heartatt.'></i>';        
+            $out = $out. '<i class="fa fa-check heartgrey " aria-hidden="true" ></i>';        
 }
 
  $out = $out.'</div>';

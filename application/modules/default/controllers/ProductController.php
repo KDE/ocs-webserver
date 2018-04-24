@@ -1436,9 +1436,12 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 Default_Model_ActivityLog::PROJECT_PLINGED_2, $product->toArray());
             
         }
-       $this->_helper->json(array(
+        
+        $cnt = $projectplings->getPlings($this->_projectId);     
+        $this->_helper->json(array(
                     'status' => 'ok',
-                    'msg'   => 'Success. '
+                    'msg'   => 'Success. ',
+                    'cnt'  => $cnt
                 ));
     }
 
@@ -1453,10 +1456,12 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         if($pling)
         {
             $projectplings->setDelete($pling->project_plings_id);
+            $cnt = $projectplings->getPlings($this->_projectId);     
              $this->_helper->json(array(
                     'status' => 'ok',
                     'deleted' => $pling->project_plings_id,
-                    'msg'   => 'Success. '
+                    'msg'   => 'Success. ',
+                     'cnt'  => $cnt
                 ));
 
              $tableProduct = new Default_Model_Project();
