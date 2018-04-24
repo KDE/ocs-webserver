@@ -810,7 +810,7 @@ var PartialsButtonPlingProject = (function () {
                           cache: false
                         })
                       .done(function( response ) {
-                        console.log(url);
+                        
                         $(target).remove(spin);
                         if(response.status =='error'){
                              $(target).html( response.msg );
@@ -823,7 +823,8 @@ var PartialsButtonPlingProject = (function () {
                                 $(target).find('i').addClass('heartgrey')
                                 .removeClass('heartproject');
 
-                                var newurl = $(url).text().replace('unplingproject','plingproject');
+                                var newurl = url.substring(0,url.indexOf('unplingproject'))+'plingproject';
+                                
                                 $(target).find('.partialbuttonplingproject')
                                 .attr('data-href',newurl);
 
@@ -834,8 +835,9 @@ var PartialsButtonPlingProject = (function () {
                                 
                                 $(target).find('i').removeClass('heartgrey')
                                 .addClass('heartproject');
-
-                                var newurl = $(url).text().replace('plingproject','unplingproject');
+                                
+                                var newurl = url.substring(0,url.indexOf('plingproject'))+'unplingproject';
+                                
                                 $(target).find('.partialbuttonplingproject')
                                 .attr('data-href',newurl);
                             }
