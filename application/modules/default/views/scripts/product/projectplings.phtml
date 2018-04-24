@@ -36,14 +36,8 @@ if($this->authMember){
       $isSupporter = $this->isSupporter($member_id);
 }
 
-
- 	
 $heartatt = '';    	
-if ($member_id && $isSupporter && $isPlinged) {
-	$urlUserFollows = $this->buildProductUrl($this->project_id, 'unplingproject');					
-}else{
-	$urlUserFollows = $this->buildProductUrl($this->project_id, 'plingproject');    			   
-}
+$urlUserFollows = $this->buildProductUrl($this->project_id, 'plingproject');
 
 $heartatt = $heartatt. 'role="button" data-fragment=""  '
 	      .' data-target="#container-pling'.$this->project_id.'"'
@@ -67,12 +61,5 @@ if($cntplings>0){
 echo $out;
 ?>
 
-<style type="text/css">
-     .partialbuttonplingproject span.heartnumber{
-            top:0;
-            left:35px;
-      }
-
-</style>
 
 

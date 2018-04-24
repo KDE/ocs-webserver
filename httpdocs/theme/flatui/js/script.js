@@ -779,8 +779,7 @@ var PartialsButtonPlingProject = (function () {
         setup: function () {
             $('body').on('click', '.partialbuttonplingproject', function (event) {
                 event.preventDefault();
-                var url = $(this).attr("data-href");
-               
+                var url = $(this).attr("data-href");               
                 var target = $(this).attr("data-target");
                 var auth = $(this).attr("data-auth");
                 var issupporter = $(this).attr("data-issupporter");
@@ -816,32 +815,16 @@ var PartialsButtonPlingProject = (function () {
                         if(response.status =='error'){
                              $(target).html( response.msg );
                         }else{
-                            if(url.indexOf('unplingproject')>0){
-                                $(target).find('.heartnumber').html(response.cnt);
-                                $(target).find('.heartnumber').removeClass('heartnumberpurple')
-                                ;
-                                
-                                $(target).find('i').addClass('heartgrey')
-                                .removeClass('heartproject');
-
-                                var newurl = url.substring(0,url.indexOf('unplingproject')).concat('plingproject');
-                                
-                                
-                                $(target).find('.partialbuttonplingproject')
-                                .attr('data-href',newurl);
-
+                            if(response.action=='delete'){
+                                //pling deleted
+                                $(target).find('.heartnumber').removeClass('heartnumberpurple').html(response.cnt);
+                           
+                                $(target).find('i').addClass('heartgrey').removeClass('heartproject');
                             }else{
-                                $(target).find('.heartnumber').html(response.cnt);
-                                $(target).find('.heartnumber')
-                                .addClass('heartnumberpurple');
+                                //pling inserted
+                                 $(target).find('.heartnumber').addClass('heartnumberpurple').html(response.cnt);
+                                $(target).find('i').removeClass('heartgrey').addClass('heartproject');
                                 
-                                $(target).find('i').removeClass('heartgrey')
-                                .addClass('heartproject');
-                                
-                                var newurl = url.substring(0,url.indexOf('plingproject')).concat('unplingproject');
-                               
-                                $(target).find('.partialbuttonplingproject')
-                                .attr('data-href',newurl);
                             }
                                 
                         }

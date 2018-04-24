@@ -1388,6 +1388,15 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
     }
 
+    protected function logActivity($logId)
+    {
+        $tableProduct = new Default_Model_Project();
+        $product = $tableProduct->find($this->_projectId)->current();
+        $activityLog = new Default_Model_ActivityLog();
+        $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id,
+            $logId, $product->toArray());
+    }
+
     public function plingprojectAction()
     {
         $this->_helper->layout()->disableLayout();
@@ -1429,22 +1438,36 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         if (null === $result) {
              $projectplings->createRow($newVals)->save();
-            $tableProduct = new Default_Model_Project();
-            $product = $tableProduct->find($this->_projectId)->current();
-            $activityLog = new Default_Model_ActivityLog();
-            $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id,
-                Default_Model_ActivityLog::PROJECT_PLINGED_2, $product->toArray());
-            
-        }
-        
-        $cnt = count($projectplings->getPlings($this->_projectId));     
-        $this->_helper->json(array(
+             $this->logActivity(Default_Model_ActivityLog::PROJECT_PLINGED_2);
+
+
+            $cnt = count($projectplings->getPlings($this->_projectId));  
+             $this->_helper->json(array(
                     'status' => 'ok',
-                    'msg'   => 'Success. ',
-                    'cnt'  => $cnt
+                    'msg'   => 'Success.',
+                    'cnt'  => $cnt,
+                    'action' =>'insert'
+                ));           
+        }else{
+
+            // delete pling
+            $projectplings->setDelete($result->project_plings_id);
+           
+            $this->logActivity(Default_Model_ActivityLog::PROJECT_DISPLINGED_2);
+
+
+            $cnt = count($projectplings->getPlings($this->_projectId));  
+            $this->_helper->json(array(
+                    'status' => 'ok',
+                    'msg'   => 'Success.',
+                    'cnt'  => $cnt,
+                    'action' => 'delete'
                 ));
+        }           
+        
     }
 
+/**
 
     public function unplingprojectAction()
     {
@@ -1479,6 +1502,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
  
 
     }
+**/
 
     public function followsAction()
     {
