@@ -811,7 +811,7 @@ var PartialsButtonPlingProject = (function () {
                         })
                       .done(function( response ) {
                         
-                        $(target).remove(spin);
+                        $(target).find('.spinning').remove();
                         if(response.status =='error'){
                              $(target).html( response.msg );
                         }else{
