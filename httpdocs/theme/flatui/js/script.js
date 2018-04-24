@@ -780,6 +780,7 @@ var PartialsButtonPlingProject = (function () {
             $('body').on('click', '.partialbuttonplingproject', function (event) {
                 event.preventDefault();
                 var url = $(this).attr("data-href");
+                console.log('!datahref:'+url);
                 var target = $(this).attr("data-target");
                 var auth = $(this).attr("data-auth");
                 var issupporter = $(this).attr("data-issupporter");
@@ -815,7 +816,7 @@ var PartialsButtonPlingProject = (function () {
                         if(response.status =='error'){
                              $(target).html( response.msg );
                         }else{
-                            if(url.indexOf('unplingproject')){
+                            if(url.indexOf('unplingproject')>0){
                                 $(target).find('.heartnumber').html(response.cnt);
                                 $(target).find('.heartnumber').removeClass('heartnumberpurple')
                                 ;
