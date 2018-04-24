@@ -780,7 +780,7 @@ var PartialsButtonPlingProject = (function () {
             $('body').on('click', '.partialbuttonplingproject', function (event) {
                 event.preventDefault();
                 var url = $(this).attr("data-href");
-                console.log('!datahref:'+url);
+               
                 var target = $(this).attr("data-target");
                 var auth = $(this).attr("data-auth");
                 var issupporter = $(this).attr("data-issupporter");
@@ -826,7 +826,7 @@ var PartialsButtonPlingProject = (function () {
 
                                 var newurl = url.substring(0,url.indexOf('unplingproject')).concat('plingproject');
                                 
-                                console.log(newurl);
+                                
                                 $(target).find('.partialbuttonplingproject')
                                 .attr('data-href',newurl);
 
@@ -839,7 +839,7 @@ var PartialsButtonPlingProject = (function () {
                                 .addClass('heartproject');
                                 
                                 var newurl = url.substring(0,url.indexOf('plingproject')).concat('unplingproject');
-                                console.log(newurl);
+                               
                                 $(target).find('.partialbuttonplingproject')
                                 .attr('data-href',newurl);
                             }

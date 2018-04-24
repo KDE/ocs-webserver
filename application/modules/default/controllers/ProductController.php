@@ -1437,7 +1437,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             
         }
         
-        $cnt = $projectplings->getPlings($this->_projectId);     
+        $cnt = count($projectplings->getPlings($this->_projectId));     
         $this->_helper->json(array(
                     'status' => 'ok',
                     'msg'   => 'Success. ',
@@ -1456,7 +1456,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         if($pling)
         {
             $projectplings->setDelete($pling->project_plings_id);
-            $cnt = $projectplings->getPlings($this->_projectId);     
+            $cnt = count($projectplings->getPlings($this->_projectId));     
              $this->_helper->json(array(
                     'status' => 'ok',
                     'deleted' => $pling->project_plings_id,
