@@ -840,7 +840,7 @@ var PartialsButtonPlingProject = (function () {
                                 
                         }
                       });
-                            }
+                            
 
                 return false;
             });
