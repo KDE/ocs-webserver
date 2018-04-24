@@ -78,6 +78,8 @@ if (Zend_Auth::getInstance()->hasIdentity()){
 $tableProjectFollower = new Default_Model_DbTable_ProjectFollower();
 $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->project_id);
 
+$projectplings = new Default_Model_ProjectPlings();
+$this->projectplings = $projectplings->fetchPlingsForProject($this->product->project_id);
 ?>
 
     <!-- facebook -->
@@ -288,6 +290,21 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
                                         </div>  
                                                       
                                     </div>
+
+                                    <div class="projectdtailHeart">
+                                        <div id="container-pling<?=$this->product->project_id?>">     
+                                        <?php                                 
+                                            echo $this->partial(
+                                                '/product/projectplings.phtml',
+                                                array(
+                                                    "authMember"  => $identity,
+                                                    "project_id" => $this->product->project_id
+                                                )
+                                            );                                
+                                        ?>                                
+                                        </div>  
+                                                      
+                                    </div>
                                     
                                     <div class="projectdetailRating" style="clear: right">
                                     <?php echo $this->render('partials/sidebarRating.phtml'); ?>
@@ -392,6 +409,9 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
                         <?php } ?>
                          <?php if(count($this->likes)>0){ ?>
                             <li><a href="#likes-panel" data-toggle="tab">Favs <?php echo '('.count($this->likes).')';  ?></a></li>
+                        <?php } ?>
+                        <?php if(count($this->projectplings)>0){ ?>
+                            <li><a href="#plings-panel" data-toggle="tab">Plings <?php echo '('.count($this->projectplings).')';  ?></a></li>
                         <?php } ?>
                         </ul>
                     </div>
@@ -505,6 +525,21 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
                                 <div id="productLikesContainer">
                                 <?php                                    
                                        echo $this->render('product/partials/productLikes.phtml');                                   
+                                  ?>
+                                  </div>
+                            </article>
+                            </div>
+                        </div>
+                        <?php } ?>
+
+                        <!-- ratings panel -->
+                        <?php  if (count($this->projectplings) > 0) { ?>
+                        <div class="tab-pane" id="plings-panel">
+                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                            <article>
+                                <div id="productPlingsContainer">
+                                <?php                                    
+                                       echo $this->render('product/partials/productPlings.phtml');                                   
                                   ?>
                                   </div>
                             </article>
@@ -729,7 +764,8 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
             PartialJson.setup();
             ProductDetailCarousel.setup();          
             PartialCommentReviewForm.setup();
-            PartialsButtonHeartDetail.setup();           
+            PartialsButtonHeartDetail.setup();    
+            PartialsButtonPlingProject.setup();       
             TooltipUser.setup("tooltipuserleft","left");  
             ProductDetailBtnGetItClick.setup('.$this->product->project_id.');                
         });

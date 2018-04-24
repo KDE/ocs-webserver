@@ -1388,6 +1388,93 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
     }
 
+    public function plingprojectAction()
+    {
+        $this->_helper->layout()->disableLayout();
+       
+        $this->view->project_id = $this->_projectId;
+        $this->view->authMember = $this->_authMember;
+
+        // not allow to pling himself
+        if (array_key_exists($this->_projectId, $this->_authMember->projects)) 
+        {
+             $this->_helper->json(array(
+                    'status' => 'error',
+                    'msg'   => 'not allowed'
+                ));
+            return;
+        }
+
+        // not allow to pling if not supporter
+        $helperIsSupporter = new Default_View_Helper_IsSupporter();
+        if(!$helperIsSupporter->isSupporter($this->_authMember->member_id))
+        {
+             $this->_helper->json(array(
+                    'status' => 'error',
+                    'msg'   => 'become a supporter first please. '
+                ));
+            return;
+        }
+
+
+        $projectplings = new Default_Model_ProjectPlings();
+
+        $newVals = array('project_id' => $this->_projectId, 'member_id' => $this->_authMember->member_id);
+        $sql = $projectplings->select()
+                ->where('member_id = ?', $this->_authMember->member_id)
+                ->where('is_deleted = ?',0)
+                ->where('project_id = ?', $this->_projectId, 'INTEGER')
+        ;
+        $result = $projectplings->fetchRow($sql);
+
+        if (null === $result) {
+             $projectplings->createRow($newVals)->save();
+            $tableProduct = new Default_Model_Project();
+            $product = $tableProduct->find($this->_projectId)->current();
+            $activityLog = new Default_Model_ActivityLog();
+            $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id,
+                Default_Model_ActivityLog::PROJECT_PLINGED_2, $product->toArray());
+            
+        }
+       $this->_helper->json(array(
+                    'status' => 'ok',
+                    'msg'   => 'Success. '
+                ));
+    }
+
+
+    public function unplingprojectAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        
+        $projectplings = new Default_Model_ProjectPlings();
+        $pling = $projectplings->getPling($this->_projectId,$this->_authMember->member_id);
+
+        if($pling)
+        {
+            $projectplings->setDelete($pling->project_plings_id);
+             $this->_helper->json(array(
+                    'status' => 'ok',
+                    'deleted' => $pling->project_plings_id,
+                    'msg'   => 'Success. '
+                ));
+
+             $tableProduct = new Default_Model_Project();
+            $product = $tableProduct->find($this->_projectId)->current();   
+
+            $activityLog = new Default_Model_ActivityLog();
+            $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id,
+            Default_Model_ActivityLog::PROJECT_DISPLINGED_2, $product->toArray());
+        }else{
+             $this->_helper->json(array(
+                    'status' => 'error',
+                    'msg'   => 'not existing.'
+                ));
+        }
+ 
+
+    }
+
     public function followsAction()
     {
         $projectFollowTable = new Default_Model_Member();
