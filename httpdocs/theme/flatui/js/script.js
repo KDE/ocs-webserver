@@ -825,6 +825,7 @@ var PartialsButtonPlingProject = (function () {
 
                                 var newurl = url.substring(0,url.indexOf('unplingproject'))+'plingproject';
                                 
+                                console.log(newurl);
                                 $(target).find('.partialbuttonplingproject')
                                 .attr('data-href',newurl);
 
@@ -837,7 +838,7 @@ var PartialsButtonPlingProject = (function () {
                                 .addClass('heartproject');
                                 
                                 var newurl = url.substring(0,url.indexOf('plingproject'))+'unplingproject';
-                                
+                                console.log(newurl);
                                 $(target).find('.partialbuttonplingproject')
                                 .attr('data-href',newurl);
                             }
