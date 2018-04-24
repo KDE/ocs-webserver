@@ -805,28 +805,42 @@ var PartialsButtonPlingProject = (function () {
                 var spin = $('<span class="glyphicon glyphicon-refresh spinning" style="opacity: 0.6; z-index:1000;position: relative; left: 0;top: 0px;"></span>');
                 $(target).prepend(spin);
 
-                $(target).load(url + ' ' + pageFragment, function (response, status, xhr) {
-                    
-                    console.log(response);
-                    if (status == "error") {
-                        if (xhr.status == 401) {
-                            if (response) {
-                                var data = jQuery.parseJSON(response);
-                                var redirect = data.login_url;
-                                if (redirect) {
-                                    window.location = redirect;
-                                } else {
-                                    window.location = "/login";
-                                }
+                $.ajax({
+                          url: url,
+                          cache: false
+                        })
+                      .done(function( response ) {
+                        if(response.status =='error'){
+                             $(target).html( response.msg );
+                        }else{
+                            if(url.indexOf('unplingproject')){
+                                $(target).find('.heartnumber').html(response.cnt);
+                                $(target).find('.heartnumber').removeClass('heartnumberpurple')
+                                ;
+                                
+                                $(target).find('i').addClass('heartgrey')
+                                .removeClass('heartproject');
+
+                                var newurl = url.replace('unplingproject','plingproject');
+                                $(target).find('.partialbuttonplingproject')
+                                .attr('data-href',newurl);
+
+                            }else{
+                                $(target).find('.heartnumber').html(response.cnt);
+                                $(target).find('.heartnumber')
+                                .addClass('heartnumberpurple');
+                                
+                                $(target).find('i').removeClass('heartgrey')
+                                .addClass('heartproject');
+
+                                var newurl = url.replace('plingproject','unplingproject');
+                                $(target).find('.partialbuttonplingproject')
+                                .attr('data-href',newurl);
                             }
-                        } else {
-                            $(target).empty().html('Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.');
+                                
                         }
-                    }
-                    if (toggle) {
-                        $(toggle).modal('show');
-                    }
-                });
+                      });
+                            }
 
                 return false;
             });
