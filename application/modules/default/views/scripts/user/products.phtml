@@ -689,23 +689,21 @@ $this->inlineScript()->appendScript(
                             });
                         }
 
-                        //downloadlink is now: domain/api/files/download/id/ID/s/TOKEN/t/TIMESTAMP/FILE_NAME/u/USERID
+                        //downloadlink is now: domain/api/files/downloadfile/id/ID/s/TOKEN/t/TIMESTAMP/u/USERID/FILE_NAME
                         var hash = '<?= $this->download_hash ?>';
                         var timetamp = '<?= $this->download_timestamp ?>';
                         var userid = '<?= $this->member_id?>';
 
                         var downloadUrl = pploadApiUri + 'files/downloadfile/id/' + this.id + '/o/1/s/' + hash + '/t/' + timetamp + '/u/' + userid + '/' + this.name;
-                        var downloadLink = '<a href="' + downloadUrl + '" id="data-link' + this.id + '">' + this.name + '</a>';
+                        var downloadLinkFilename = link ? this.name + ' (External Link)' : this.name;
+                        var downloadLink = '<a href="' + downloadUrl + '" id="data-link' + this.id + '">' + downloadLinkFilename + '</a>';
 
-                        if(this.active == '0') {
-                            deletePploadFileBtnPerFile = '';
-                            downloadLink = this.name;
-                            if ((typeof link != 'undefined') && (link != "")) {
-                                downloadLink = this.name + ' (External Link)';
-                            }
-                        } else {
+                        if(this.active == '1') {
                             deletePploadFileBtnPerFile = deletePploadFileBtn;
+                        } else {
+                            deletePploadFileBtnPerFile = '';
                         }
+
                         var numDownloads = this.downloaded_count;
                         numDownloads = numDownloads || 0;
 

@@ -212,7 +212,7 @@ $architectureListHelper = new Default_View_Helper_FetchArchitectureTags();
                                     count_downloads = this.downloaded_count || 0;
                                     downloaded_count_total = downloaded_count_total+parseInt(count_downloads);
 
-                                    //downloadlink is now: domain/api/files/download/id/ID/s/TOKEN/t/TIMESTAMP/FILE_NAME/u/USERID
+                                    //downloadlink is now: domain/api/files/downloadfile/id/ID/s/TOKEN/t/TIMESTAMP/u/USERID/FILE_NAME
                                     var hash = '<?= $this->download_hash ?>';
                                     var timetamp = '<?= $this->download_timestamp ?>';
                                     var userid = '<?= $this->product->member_id?>';
@@ -228,9 +228,6 @@ $architectureListHelper = new Default_View_Helper_FetchArchitectureTags();
                                     var downloadBtnLink = downloadUrl;
                                     var downloadLinkFilename = shortFilename(this.name);
 
-                                    if(this.active == '0') {
-                                        downloadLink = this.name;
-                                    }
                                     var link = '';
 
                                     var fileDescription = '';
