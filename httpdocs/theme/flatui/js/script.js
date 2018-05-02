@@ -796,13 +796,22 @@ var PartialsButtonPlingProject = (function () {
                 var productcreator = $('#like-product-modal').find('#productcreator').val();
                 if (loginuser == productcreator) {
                     // ignore
+                    console.log(loginuser);
+                    console.log(productcreator);
                     $('#like-product-modal').find('#votelabel').text('Project owner not allowed');
                     $('#like-product-modal').find('.modal-body').empty();
                     $('#like-product-modal').modal('show');
                     return;
                 }
 
-                var spin = $('<span class="glyphicon glyphicon-refresh spinning" style="opacity: 0.6; z-index:1000;position: relative; left: 0;top: 0px;"></span>');
+                if (!issupporter) {
+                    // ignore
+                    $('#like-product-modal').find('#votelabel').text('Become a supporter please .');
+                    $('#like-product-modal').modal('show');
+                    return;
+                }
+
+                var spin = $('<span class="glyphicon glyphicon-refresh spinning" style="opacity: 0.6; z-index:1000;position: absolute; left:17px;top: 12px;"></span>');
                 $(target).prepend(spin);
 
                 $.ajax({
@@ -817,13 +826,15 @@ var PartialsButtonPlingProject = (function () {
                         }else{
                             if(response.action=='delete'){
                                 //pling deleted
-                                $(target).find('.heartnumber').removeClass('heartnumberpurple').html(response.cnt);
-                           
-                                $(target).find('i').addClass('heartgrey').removeClass('heartproject');
+                                $(target).find('.heartnumber').removeClass('heartnumberpurple').html(response.cnt);                           
+                                $(target).find('i').addClass('heartgrey').removeClass('heartproject');                                
+                                $(target).find('img').attr("src","/images/system/coin-base.png");
+
                             }else{
                                 //pling inserted
                                  $(target).find('.heartnumber').addClass('heartnumberpurple').html(response.cnt);
                                 $(target).find('i').removeClass('heartgrey').addClass('heartproject');
+                                $(target).find('img').attr("src","/images/system/pling-coin-plinged.png");
                                 
                             }
                                 

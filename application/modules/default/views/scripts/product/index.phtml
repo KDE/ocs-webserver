@@ -143,7 +143,7 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
     
     <?php } ?>
     
-    <?php if (Zend_Auth::getInstance()->hasIdentity() && $this->isSupporter($identity->member_id)) { ?>
+    <?php if (Zend_Auth::getInstance()->hasIdentity()) { ?>
     <div id="review-product-modal" class="modal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content" style="padding-bottom: 20px">
@@ -296,7 +296,7 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
                                     ?>
 
                                     <div class="projectdtailHeart">
-                                        <div id="container-pling<?=$this->product->project_id?>">     
+                                        <div id="container-pling<?=$this->product->project_id?>" class="container-pling">     
                                         <?php                                 
                                             echo $this->partial(
                                                 '/product/projectplings.phtml',
