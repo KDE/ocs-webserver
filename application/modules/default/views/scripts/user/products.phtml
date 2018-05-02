@@ -1060,9 +1060,9 @@ $this->inlineScript()->appendScript(
             });
         }
         
-        function updateArchitecture(fileId, architectureId) {
+        function updateArchitecture(fileId, architectureId) { 
             $.ajax({
-                url: $modalPpload.attr('data-updatepackagetype-uri'),
+                url: $modalPpload.attr('data-updatearchitecture-uri'),
                 type: 'POST',
                 data: {
                     file_id: fileId,
@@ -1223,6 +1223,7 @@ $this->inlineScript()->appendScript(
             $modalPpload.attr('data-addpploadfile-uri', $(this).attr('data-addpploadfile-uri'));
             $modalPpload.attr('data-updatepploadfile-uri', $(this).attr('data-updatepploadfile-uri'));
             $modalPpload.attr('data-updatepackagetype-uri', $(this).attr('data-updatepackagetype-uri'));
+            $modalPpload.attr('data-updatearchitecture-uri', $(this).attr('data-updatearchitecture-uri'));
             $modalPpload.attr('data-deletepploadfile-uri', $(this).attr('data-deletepploadfile-uri'));
             $modalPpload.attr('data-deletepploadfiles-uri', $(this).attr('data-deletepploadfiles-uri'));
             $modalPpload.find('div[data-file-upload]').css({

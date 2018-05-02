@@ -1164,6 +1164,59 @@ $this->inlineScript()->appendScript('
                     });
                 }
                 
+                function updateArchitecture(fileId, architectureId) { 
+                    var $url = ($modalPpload.attr('data-updatearchitecture-uri')).replace(/@@project_id@@/i, ProductForm.project_id);
+                    if (typeof ProductForm.project_id == 'undefined' || ProductForm.project_id == '' || ProductForm.project_id == '0') {
+                        $url = ($modalPpload.attr('data-updatearchitecture-uri')).replace(/@@project_id@@/i, <?= (isset($this->project_id))?$this->project_id:0  ?>);
+                    }
+
+                    $.ajax({
+                        url: $url,
+                        type: 'POST',
+                        data: {
+                            file_id: fileId,
+                            architecture_id: architectureId
+                        },
+                        dataType: 'json',
+                        success: function (data, textStatus, jqXHR) {
+                            if (data.status != 'ok') {
+                                return;
+                            }
+
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            alert("Error: " + textStatus + ", " + errorThrown);
+                            return;
+                        }
+                    });
+                }
+
+                    var $url = ($modalPpload.attr('data-updatearchitecture-uri')).replace(/@@project_id@@/i, ProductForm.project_id);
+                    if (typeof ProductForm.project_id == 'undefined' || ProductForm.project_id == '' || ProductForm.project_id == '0') {
+                        $url = ($modalPpload.attr('data-updatearchitecture-uri')).replace(/@@project_id@@/i, <?= (isset($this->project_id))?$this->project_id:0  ?>);
+                    }
+
+                    $.ajax({
+                        url: $url,
+                        type: 'POST',
+                        data: {
+                            file_id: fileId,
+                            architecture_id: architectureId
+                        },
+                        dataType: 'json',
+                        success: function (data, textStatus, jqXHR) {
+                            if (data.status != 'ok') {
+                                return;
+                            }
+
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            alert("Error: " + textStatus + ", " + errorThrown);
+                            return;
+                        }
+                    });
+                }
+                
                 function updatePploadFileVersion(fileId, version) {
                     var $url = ($modalPpload.attr('data-updatepploadfile-uri')).replace(/@@project_id@@/i, ProductForm.project_id);
                     if (typeof ProductForm.project_id == 'undefined' || ProductForm.project_id == '' || ProductForm.project_id == '0') {
@@ -1583,6 +1636,7 @@ $this->inlineScript()->appendScript('
                     newFileTags += ',architectureid-'+architectureId;
                     updatePploadFileTags(fileId, newFileTags);
                     $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags',newFileTags);
+                    updateArchitecture(fileId, architectureId);
                 });
 
         });

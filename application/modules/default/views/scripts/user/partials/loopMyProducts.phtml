@@ -149,6 +149,7 @@ $helperImage = new Default_View_Helper_Image();
                    data-addpploadfile-uri="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, 'addpploadfile') ?>"
                    data-updatepploadfile-uri="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, 'updatepploadfile') ?>"
                    data-updatepackagetype-uri="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, 'updatepackagetype') ?>"
+                   data-updatearchitecture-uri="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, 'updatearchitecture') ?>"
                    data-deletepploadfile-uri="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, 'deletepploadfile') ?>"
                    data-deletepploadfiles-uri="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, 'deletepploadfiles') ?>">
                     <?= $this->translate('Files') ?> (<?= $productFileInfos['fileCount'] ?>)
