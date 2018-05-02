@@ -383,7 +383,7 @@ $this->inlineScript()->appendScript(
                             <!--<th><?= $this->translate('License') ?></th>-->
                             <th><?= $this->translate('Filetype') ?></th>
                             <th><?= $this->translate('Packagetype') ?></th>
-                            <!--<th><?= $this->translate('Architecture') ?></th>-->
+                            <th><?= $this->translate('Architecture') ?></th>
                             <th><?= $this->translate('Date added') ?></th>
                             <th style="text-align: right"><?= $this->translate('Filesize') ?></th>
                             <th style="text-align: right"><?= $this->translate('# of Downloads') ?></th>
@@ -749,7 +749,7 @@ $this->inlineScript()->appendScript(
                             + '<option value=\"4\">Windows executable</option>'
                             + '</select>'
                             + '</td>'
-                            /*
+                            
                             + '<td>'
                             + '<select class="form-control input-sm" id="data-select-architecture' + this.id + '" data-architecture-id="" name="architecture">'
                             + '    <option value=""></option>'
@@ -765,7 +765,7 @@ $this->inlineScript()->appendScript(
                                 ?>
                             + '</select>'
                             + '</td>'
-                            */
+                            
                             + '<td>' + this.created_timestamp + '</td>'
                             + '<td style="text-align: right">' + humanFileSize(this.size) + '</td>'
                             + '<td style="text-align: right">' + numDownloads + '</td>'
@@ -975,7 +975,7 @@ $this->inlineScript()->appendScript(
                         + '<option value=\"4\">Windows executable</option>'
                         + '</select>'
                         + '</td>'
-                        /*
+                        
                         + '<td>'
                         + '<select class="form-control input-sm" id="data-select-architecture' + data.file.id + '" data-architecture-id="" name="architecture">'
                         + '    <option value=""></option>'
@@ -991,7 +991,7 @@ $this->inlineScript()->appendScript(
                             ?>
                         + '</select>'
                         + '</td>'
-                        */
+                        
                         + '<td>' + data.file.created_timestamp + '</td>'
                         + '<td style="text-align: right">' + humanFileSize(data.file.size) + '</td>'
                         + '<td style="text-align: right">0</td>'
