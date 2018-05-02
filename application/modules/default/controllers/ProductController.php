@@ -1864,7 +1864,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
     }
     
     
-    public function updatearchitectureAction()
+    public function updatearchitectureAction() 
     {
         $this->_helper->layout()->disableLayout();
 
