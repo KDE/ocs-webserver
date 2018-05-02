@@ -1054,20 +1054,15 @@ $this->inlineScript()->appendScript(
 
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    alert("Error: " + textStatus + ", " + errorThrown);
+                    //alert("Error: " + textStatus + ", " + errorThrown);
                     return;
                 }
             });
         }
         
         function updateArchitecture(fileId, architectureId) {
-            var $url = ($modalPpload.attr('data-updatearchitecture-uri')).replace(/@@project_id@@/i, ProductForm.project_id);
-            if (typeof ProductForm.project_id == 'undefined' || ProductForm.project_id == '' || ProductForm.project_id == '0') {
-                $url = ($modalPpload.attr('data-updatearchitecture-uri')).replace(/@@project_id@@/i, <?= (isset($this->project_id))?$this->project_id:0  ?>);
-            }
-
             $.ajax({
-                url: $url,
+                url: $modalPpload.attr('data-updatepackagetype-uri'),
                 type: 'POST',
                 data: {
                     file_id: fileId,
@@ -1081,7 +1076,7 @@ $this->inlineScript()->appendScript(
 
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    alert("Error: " + textStatus + ", " + errorThrown);
+                    //alert("Error: " + textStatus + ", " + errorThrown);
                     return;
                 }
             });
