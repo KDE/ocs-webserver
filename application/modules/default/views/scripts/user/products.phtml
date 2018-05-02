@@ -1058,9 +1058,9 @@ $this->inlineScript()->appendScript(
             });
         }
         
-        function updateArchitecture(fileId, architectureId) {
+        function updateArchitecture(fileId, architectureId) { 
             $.ajax({
-                url: $modalPpload.attr('data-updatepackagetype-uri'),
+                url: $modalPpload.attr('data-updatearchitecture-uri'),
                 type: 'POST',
                 data: {
                     file_id: fileId,

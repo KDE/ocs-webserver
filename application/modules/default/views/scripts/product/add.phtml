@@ -1162,7 +1162,7 @@ $this->inlineScript()->appendScript('
                 }
                 
                 
-                function updateArchitecture(fileId, architectureId) {
+                function updateArchitecture(fileId, architectureId) { 
                     var $url = ($modalPpload.attr('data-updatearchitecture-uri')).replace(/@@project_id@@/i, ProductForm.project_id);
                     if (typeof ProductForm.project_id == 'undefined' || ProductForm.project_id == '' || ProductForm.project_id == '0') {
                         $url = ($modalPpload.attr('data-updatearchitecture-uri')).replace(/@@project_id@@/i, <?= (isset($this->project_id))?$this->project_id:0  ?>);
