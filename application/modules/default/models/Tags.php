@@ -484,6 +484,7 @@ class Default_Model_Tags
     
     
     public function saveArchitectureTagForProject($project_id, $file_id, $tag_id) {
+        
         //first delte old
         $sql = "DELETE FROM tag_object WHERE tag_group_id = :tag_group_id AND tag_type_id = :tag_type_id AND tag_object_id = :tag_object_id AND tag_parent_object_id = :tag_parent_object_id";
         $this->getAdapter()->query($sql, array('tag_group_id' => $this::TAG_ARCHITECTURE_GROUPID, 'tag_type_id' => $this::TAG_TYPE_FILE, 'tag_object_id' => $file_id, 'tag_parent_object_id' => $project_id));
