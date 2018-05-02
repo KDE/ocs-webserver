@@ -70,5 +70,22 @@
     $(document).ready(function () {
         ImagePreview.initProfilePictureBackground();
         PartialFormsAjaxMemberBg.setup();
+        
+        //init delete bg pic
+        $('body').on('click', '.delete_bg_img', function (event) {
+            event.stopPropagation();
+            jQuery.ajax({
+                data: '',
+                url: '/settings/deletepicturebackground',
+                type: 'GET',
+                error: function () {
+                    return false;
+                },
+                success: function (results) {
+                    $('#profile-picture-background-preview').attr('src', '/img/default.png');
+                    return false;
+                }
+            });
+        });
     });
 </script>

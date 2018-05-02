@@ -237,6 +237,7 @@ var ImagePreview = {
         $('#profile-picture-background-preview').attr('src', $('#profile_image_url_bg').attr('value'));
         $(imageTarget).show();
         $('button#add-profile-picture-background').text('CHANGE PICTURE');
+        
     }
 };
 

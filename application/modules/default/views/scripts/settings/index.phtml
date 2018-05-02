@@ -52,14 +52,14 @@ $this->tab = 'settings';
                             <li>
                                 <a href="#form-picture-panel" data-toggle="tab">
                                     <span class="glyphicon glyphicon-camera"></span>
-                                    <?= $this->translate('Picture') ?>
+                                    <?= $this->translate('Profile Picture') ?>
                                 </a>
                             </li>
 
                             <li>
                                 <a href="#form-picture-background-panel" data-toggle="tab">
                                     <span class="glyphicon  glyphicon-picture"></span>
-                                    <?= $this->translate('Background Picture') ?>
+                                    <?= $this->translate('Background') ?>
                                 </a>
                             </li>
 
@@ -197,7 +197,7 @@ $this->tab = 'settings';
 
 <?php $this->inlineScript()->appendScript('
     $(document).ready(function(){
-            ImagePreview.setup();
-            PartialForms.setup();
+        ImagePreview.setup();
+        PartialForms.setup();
         });
-    ');
+');
