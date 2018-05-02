@@ -210,7 +210,8 @@ class Default_Plugin_AclRules extends Zend_Acl
             'deletepploadfile',
             'deletepploadfiles',
             'updatepackagetype',
-
+            'updatearchitecture',
+            
         ), new Default_Plugin_Acl_IsProjectOwnerAssertion());
 
         // resource default_support

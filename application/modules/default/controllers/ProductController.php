@@ -1724,7 +1724,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $this->_helper->json(array('status' => 'error', 'error_text' => $error_text));
     }
-
+    
+    
     public function updatecompatibleAction()
     {
         $this->_helper->layout()->disableLayout();
