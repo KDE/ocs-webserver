@@ -826,13 +826,15 @@ var PartialsButtonPlingProject = (function () {
                         }else{
                             if(response.action=='delete'){
                                 //pling deleted
-                                $(target).find('.heartnumber').removeClass('heartnumberpurple').html(response.cnt);
-                           
-                                $(target).find('i').addClass('heartgrey').removeClass('heartproject');
+                                $(target).find('.heartnumber').removeClass('heartnumberpurple').html(response.cnt);                           
+                                $(target).find('i').addClass('heartgrey').removeClass('heartproject');                                
+                                $(target).find('img').attr("src","/images/system/Silver_Star_Coin-Painted_empty-grey-small.png");
+
                             }else{
                                 //pling inserted
                                  $(target).find('.heartnumber').addClass('heartnumberpurple').html(response.cnt);
                                 $(target).find('i').removeClass('heartgrey').addClass('heartproject');
+                                $(target).find('img').attr("src","/images/system/Silver_Star_Coin-Painted_empty-gold-small.png");
                                 
                             }
                                 
