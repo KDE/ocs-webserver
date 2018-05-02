@@ -828,7 +828,7 @@ var PartialsButtonPlingProject = (function () {
                                 //pling deleted
                                 $(target).find('.heartnumber').removeClass('heartnumberpurple').html(response.cnt);                           
                                 $(target).find('i').addClass('heartgrey').removeClass('heartproject');                                
-                                $(target).find('img').attr("src","/images/system/coin-base.png");
+                                $(target).find('img').attr("src","/images/system/pling-coin.png");
 
                             }else{
                                 //pling inserted
