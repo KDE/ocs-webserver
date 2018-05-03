@@ -40,12 +40,14 @@ $heartatt = $heartatt. 'role="button" data-fragment=""  '
         .' data-auth="'.$member_id.'"';
 $out ='<div role="button" class="partialbuttonfollowproject" '.$heartatt.'>';
  if ($isFollower){         
-      $out = $out. '<i class="fa fa-heart-o heartproject " aria-hidden="true"></i>';      
+      $out = $out. '<i class="plingheart fa fa-heart heartproject " aria-hidden="true"></i>';      
+      $out = $out. '<div class="plingtext heartnumber  small"> '.$cntheart.' </div>';
  }else{                  
-        $out = $out. '<i class="fa fa-heart-o heartgrey " aria-hidden="true"></i>';      
+        $out = $out. '<i class="plingheart fa fa-heart-o heartgrey " aria-hidden="true"></i>';      
+        $out = $out. '<div class="plingtext heartnumber heartnumberpurple small"> '.$cntheart.' </div>';
  }
 
- $out = $out. '<span class="plingtext small heartnumber"  > '.$cntheart.' </span>';
+ 
  $out = $out.'</div>';
 echo $out;
 ?>
