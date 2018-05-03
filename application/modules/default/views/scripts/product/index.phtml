@@ -290,7 +290,7 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
                                         ?>                                
                                         </div>                                                        
                                     </div>
-                                    
+
                                 <div class="projectdtailHeart">
                                     <div id="container-pling<?=$this->product->project_id?>" class="container-pling">     
                                     <?php                                 
@@ -572,7 +572,10 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
             <div class="flex-item-4 flex-right" id="product-maker">
                 <div>
                     <div class="project-share-new col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        <script type="text/javascript">
+                      
+                        <?php /*
+
+                          <script type="text/javascript">
                             function fbs_click(a) {
                                 u = location.href;
                                 t = document.title;
@@ -610,6 +613,10 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
                             };
                         </script>
                         <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+                        
+                        */
+                        ?>
 
                         <?php if (empty($this->product->claimable)) { ?>
                             <div class="prod-widget-box prod-user right ">
