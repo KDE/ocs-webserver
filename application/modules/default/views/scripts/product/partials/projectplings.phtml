@@ -45,17 +45,13 @@ $heartatt = $heartatt. 'role="button" data-fragment=""  '
                          .' data-issupporter="'.$isSupporter.'"'                         
 	      .' data-auth="'.$member_id.'"';
 $out ='<div role="button" class="partialbuttonplingproject" '.$heartatt.'>';
- if ($isPlinged){
-      $out = $out. '<img src="/images/system/pling-coin-plinged.png" ></img>';
-      $out = $out. '<span class="heartnumber heartnumberpurple" >'.$cntplings.'</span>';
-      
- }else{            
-      $out = $out. '<img src="/images/system/pling-coin.png"></img>';
-      $out = $out. '<span class="heartnumber" >'.$cntplings.'</span>';
+ if ($isPlinged){     
+      $out = $out.'<span class="plingcircle active">p</span>';           
+ }else{                  
+      $out = $out.'<span class="plingcircle ">p</span>';     
  }
 
- $out = $out. '<span class="plingtext small"  >plings</span>';
-
+ $out = $out. '<span class="plingtext small left"  >plings : '.$cntplings.' </span>';
  $out = $out.'</div>';
 echo $out;
 ?>

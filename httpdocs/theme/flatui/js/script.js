@@ -719,7 +719,7 @@ var PartialsButton = (function () {
 var PartialsButtonHeartDetail = (function () {
     return {
         setup: function () {
-            $('body').on('click', '.partialbuttonheartdetail', function (event) {
+            $('body').on('click', '.partialbuttonfollowproject', function (event) {
                 event.preventDefault();
                 var url = $(this).attr("data-href");
                 var target = $(this).attr("data-target");
@@ -743,30 +743,27 @@ var PartialsButtonHeartDetail = (function () {
                     return;
                 }
 
-                var spin = $('<span class="glyphicon glyphicon-refresh spinning" style="opacity: 0.6; z-index:1000;position: relative; left: 0;top: 0px;"></span>');
-                $(target).prepend(spin);
+              var spin = $('<span class="glyphicon glyphicon-refresh spinning" style="opacity: 0.6; z-index:1000;position: absolute; left:24px;top: 4px;"></span>');
+                 $(target).prepend(spin);              
 
-                $(target).load(url + ' ' + pageFragment, function (response, status, xhr) {
-                    if (status == "error") {
-                        if (xhr.status == 401) {
-                            if (response) {
-                                var data = jQuery.parseJSON(response);
-                                var redirect = data.login_url;
-                                if (redirect) {
-                                    window.location = redirect;
-                                } else {
-                                    window.location = "/login";
-                                }
-                            }
-                        } else {
-                            $(target).empty().html('Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.');
+                $.ajax({
+                          url: url,
+                          cache: false
+                        })
+                      .done(function( response ) {                        
+                        $(target).find('.spinning').remove();
+                        if(response.status =='error'){
+                             $(target).html( response.msg );
+                        }else{
+                            if(response.action=='delete'){                                
+                                $(target).find('.plingtext').html('favs : '+response.cnt);                           
+                                $(target).find('.fa-heart-o').removeClass('heartproject').addClass('heartgrey');                                                                
+                            }else{                                
+                                $(target).find('.plingtext').html('favs : '+response.cnt);      
+                                $(target).find('.fa-heart-o').removeClass('heartgrey').addClass('heartproject');                                                                                            
+                            }                                
                         }
-                    }
-                    if (toggle) {
-                        $(toggle).modal('show');
-                    }
-                });
-
+                      }); 
                 return false;
             });
         }
@@ -796,8 +793,7 @@ var PartialsButtonPlingProject = (function () {
                 var productcreator = $('#like-product-modal').find('#productcreator').val();
                 if (loginuser == productcreator) {
                     // ignore
-                    console.log(loginuser);
-                    console.log(productcreator);
+                    
                     $('#like-product-modal').find('#votelabel').text('Project owner not allowed');
                     $('#like-product-modal').find('.modal-body').empty();
                     $('#like-product-modal').modal('show');
@@ -811,7 +807,7 @@ var PartialsButtonPlingProject = (function () {
                     return;
                 }
 
-                var spin = $('<span class="glyphicon glyphicon-refresh spinning" style="opacity: 0.6; z-index:1000;position: absolute; left:17px;top: 12px;"></span>');
+                var spin = $('<span class="glyphicon glyphicon-refresh spinning" style="opacity: 0.6; z-index:1000;position: absolute; left:11px;top: 5px;"></span>');
                 $(target).prepend(spin);
 
                 $.ajax({
@@ -826,22 +822,16 @@ var PartialsButtonPlingProject = (function () {
                         }else{
                             if(response.action=='delete'){
                                 //pling deleted
-                                $(target).find('.heartnumber').removeClass('heartnumberpurple').html(response.cnt);                           
-                                $(target).find('i').addClass('heartgrey').removeClass('heartproject');                                
-                                $(target).find('img').attr("src","/images/system/pling-coin.png");
-
+                                $(target).find('.plingtext').html('plings : '+response.cnt);                           
+                                $(target).find('.plingcircle').removeClass('active');                                                                
                             }else{
                                 //pling inserted
-                                 $(target).find('.heartnumber').addClass('heartnumberpurple').html(response.cnt);
-                                $(target).find('i').removeClass('heartgrey').addClass('heartproject');
-                                $(target).find('img').attr("src","/images/system/pling-coin-plinged.png");
-                                
+                                $(target).find('.plingtext').html('plings : '+response.cnt);       
+                                $(target).find('.plingcircle').addClass('active');                                                                 
                             }
                                 
                         }
-                      });
-                            
-
+                      });                            
                 return false;
             });
         }
