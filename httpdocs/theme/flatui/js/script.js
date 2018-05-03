@@ -1468,38 +1468,6 @@ var ProductDetailBtnGetItClick  = (function () {
 })();
 
 
-var ProductDetailBtnGetItClick_  = (function () {
-    return {
-        setup: function () {           
-           $('body').on('click', 'button#project_btn_download', function (event) {                 
-
-
-
-
-                    $.fancybox({
-                        'hideOnContentClick': true,
-                        'autoScale': true,
-                        'cyclic': 'true',
-                        'transitionIn': 'elastic',
-                        'transitionOut': 'elastic',
-                        'type': 'iframe',
-                        'scrolling': 'no',
-                        helpers: {
-                            overlay: {
-                                locked: false
-                            }
-                        },
-                        autoSize: true,
-                        content: $('#files-panel').html(),
-                        type: 'html'                        
-                    });        
-
-
-           });
-
-        }
-    }
-})();
 
 var AboutMeMyProjectsPaging = (function () {
   return {

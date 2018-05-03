@@ -380,7 +380,8 @@ $architectureListHelper = new Default_View_Helper_FetchArchitectureTags();
                                             + '</tr>'
                                         );
 
-                                        <?php /*  download/install dropdown btn
+                                        <?php /*  download/install dropdown btn  */
+                                        ?>
                                         var username = '<?= $this->product->username?>';
                                         $('#dropdown_downloads').append(                                       
                                             '<li><a data-username="' + username + '" href="' + downloadBtnLink + '" style="white-space: normal; color: #23527c;" class="opendownloadfile" id="data-link-dl' + this.id + '"><span id="download-link-filename' + this.id + '" style="white-space: normal; color: #23527c;">' + downloadLinkFilename + '</span><span class="right">&nbsp;' + humanFileSize(this.size,false) + '&nbsp;</span></a></li>'
@@ -406,8 +407,7 @@ $architectureListHelper = new Default_View_Helper_FetchArchitectureTags();
 
                                             );
                                         }
-                                        */
-                                        ?>
+                                      
 
                                         if ((typeof osId != 'undefined') && (osId != "")) {
                                             $("#data-updatepploadfile" + this.id + " option[value='" + osId + "']").attr('selected', 'selected');

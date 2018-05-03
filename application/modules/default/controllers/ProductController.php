@@ -189,6 +189,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 $newProject = $modelProject->updateProject($values['project_id'], $values);
             } else {
                 $newProject = $modelProject->createProject($this->_authMember->member_id, $values, $this->_authMember->username);
+                $this->createSystemPlingForNewProject($newProject->project_id);
             }
         } catch (Exception $exc) {
             Zend_Registry::get('logger')->warn(__METHOD__ . ' - traceString: ' . $exc->getTraceAsString());
@@ -1438,9 +1439,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         if (null === $result) {
              $projectplings->createRow($newVals)->save();
-             $this->logActivity(Default_Model_ActivityLog::PROJECT_PLINGED_2);
-
-
+             //$this->logActivity(Default_Model_ActivityLog::PROJECT_PLINGED_2);
             $cnt = count($projectplings->getPlings($this->_projectId));  
              $this->_helper->json(array(
                     'status' => 'ok',
@@ -1451,11 +1450,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         }else{
 
             // delete pling
-            $projectplings->setDelete($result->project_plings_id);
-           
-            $this->logActivity(Default_Model_ActivityLog::PROJECT_DISPLINGED_2);
-
-
+            $projectplings->setDelete($result->project_plings_id);           
+            //$this->logActivity(Default_Model_ActivityLog::PROJECT_DISPLINGED_2);
             $cnt = count($projectplings->getPlings($this->_projectId));  
             $this->_helper->json(array(
                     'status' => 'ok',
@@ -2102,11 +2098,33 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $modelProject = new Default_Model_Project();
         $newProject =
             $modelProject->createProject($this->_authMember->member_id, $formValues, $this->_authMember->username);
-
+        $this->createSystemPlingForNewProject($newProject->project_id);
         //New Project in Session, for AuthValidation (owner)
         $this->_auth->getIdentity()->projects[$newProject->project_id] = array('project_id' => $newProject->project_id);
 
         $this->_helper->json(array('status' => 'ok', 'project_id' => $newProject->project_id));
+    }
+
+
+    protected function createPling($member_id,$project_id)
+    {
+            $projectplings = new Default_Model_ProjectPlings();
+            $newVals = array('project_id' =>$project_id, 'member_id' => $member_id);
+            $sql = $projectplings->select()
+                    ->where('member_id = ?', $this->_authMember->member_id)
+                    ->where('is_deleted = ?',0)
+                    ->where('project_id = ?', $this->_projectId, 'INTEGER');
+            $result = $projectplings->fetchRow($sql);
+             if (null === $result) {
+                 $projectplings->createRow($newVals)->save();
+             }
+    }
+
+    protected function createSystemPlingForNewProject($project_id)
+    {
+            $config = Zend_Registry::get('config');
+            $member_id = $config->settings->member->plingcat->id;
+            $this->createPling($member_id,$project_id);
     }
 
     /**

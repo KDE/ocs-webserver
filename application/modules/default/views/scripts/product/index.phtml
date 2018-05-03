@@ -643,7 +643,7 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
                         <?php } ?>
 
                         <?php /* echo $this->render('partials/sidebarRating.phtml');  */ ?>
-                        
+                          <?php /*
                         <div>
                             <div class="prod-widget-box right">
                                 <div  class="btn-group dropleft" style="width: 100%">
@@ -653,8 +653,9 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
                                 </div>                                                               
                             </div>
                         </div>
+                            */ 
+                        ?>
 
-                        <?php /*
                         <div>
                             <div class="prod-widget-box right">
                                 <div  class="btn-group dropleft" style="width: 100%">
@@ -672,8 +673,7 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
                                 </div> 
                             </div>
                         </div>
-                        */ 
-                        ?>
+                       
 
 
                         <!-- MORE PRODUCTS -->
@@ -770,7 +770,6 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
             PartialCommentReviewForm.setup();
             PartialsButtonHeartDetail.setup();    
             PartialsButtonPlingProject.setup();       
-            TooltipUser.setup("tooltipuserleft","left");  
-            ProductDetailBtnGetItClick.setup('.$this->product->project_id.');                
+            TooltipUser.setup("tooltipuserleft","left");              
         });
     ');
