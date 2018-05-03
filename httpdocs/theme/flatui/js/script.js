@@ -822,11 +822,11 @@ var PartialsButtonPlingProject = (function () {
                         }else{
                             if(response.action=='delete'){
                                 //pling deleted
-                                $(target).find('.plingtext').html('Plings '+response.cnt);                           
+                                $(target).find('.plingnum').html(response.cnt);                           
                                 $(target).find('.plingcircle').removeClass('active');                                                                
                             }else{
                                 //pling inserted
-                                $(target).find('.plingtext').html('Plings '+response.cnt);       
+                                $(target).find('.plingnum').html(response.cnt);       
                                 $(target).find('.plingcircle').addClass('active');                                                                 
                             }
                                 
