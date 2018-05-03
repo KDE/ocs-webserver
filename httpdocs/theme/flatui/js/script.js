@@ -756,10 +756,10 @@ var PartialsButtonHeartDetail = (function () {
                              $(target).html( response.msg );
                         }else{
                             if(response.action=='delete'){                                
-                                $(target).find('.plingtext').html('favs : '+response.cnt);                           
+                                $(target).find('.plingtext').html('Likes '+response.cnt);                           
                                 $(target).find('.fa-heart-o').removeClass('heartproject').addClass('heartgrey');                                                                
                             }else{                                
-                                $(target).find('.plingtext').html('favs : '+response.cnt);      
+                                $(target).find('.plingtext').html('Likes '+response.cnt);      
                                 $(target).find('.fa-heart-o').removeClass('heartgrey').addClass('heartproject');                                                                                            
                             }                                
                         }
@@ -822,11 +822,11 @@ var PartialsButtonPlingProject = (function () {
                         }else{
                             if(response.action=='delete'){
                                 //pling deleted
-                                $(target).find('.plingtext').html('plings : '+response.cnt);                           
+                                $(target).find('.plingtext').html('Plings '+response.cnt);                           
                                 $(target).find('.plingcircle').removeClass('active');                                                                
                             }else{
                                 //pling inserted
-                                $(target).find('.plingtext').html('plings : '+response.cnt);       
+                                $(target).find('.plingtext').html('Plings '+response.cnt);       
                                 $(target).find('.plingcircle').addClass('active');                                                                 
                             }
                                 
