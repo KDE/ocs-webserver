@@ -277,19 +277,7 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
                           
                             <div class="product-title-right" >
 
-                                  <div class="projectdtailHeart">
-                                        <div id="container-follow<?=$this->product->project_id?>" class="container-pling">     
-                                        <?php                                 
-                                            echo $this->partial(
-                                                '/product/partials/projectlike.phtml',
-                                                array(
-                                                    "authMember"  => $identity,
-                                                    "project_id" => $this->product->project_id
-                                                )
-                                            );                                
-                                        ?>                                
-                                        </div>                                                        
-                                    </div>
+                                  
 
                                 <div class="projectdtailHeart">
                                     <div id="container-pling<?=$this->product->project_id?>" class="container-pling">     
@@ -305,7 +293,19 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
                                     </div>                                                  
                                 </div>
 
-                                
+                                <div class="projectdtailHeart">
+                                        <div id="container-follow<?=$this->product->project_id?>" class="container-pling">     
+                                        <?php                                 
+                                            echo $this->partial(
+                                                '/product/partials/projectlike.phtml',
+                                                array(
+                                                    "authMember"  => $identity,
+                                                    "project_id" => $this->product->project_id
+                                                )
+                                            );                                
+                                        ?>                                
+                                        </div>                                                        
+                                    </div>
                                   
                                  
 
