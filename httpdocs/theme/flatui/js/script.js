@@ -756,10 +756,10 @@ var PartialsButtonHeartDetail = (function () {
                              $(target).html( response.msg );
                         }else{
                             if(response.action=='delete'){                                
-                                $(target).find('.plingtext').html('Favs '+response.cnt);                           
+                                $(target).find('.plingtext').html(response.cnt);                           
                                 $(target).find('.fa-heart-o').removeClass('heartproject').addClass('heartgrey');                                                                
                             }else{                                
-                                $(target).find('.plingtext').html('Favs '+response.cnt);      
+                                $(target).find('.plingtext').html(response.cnt);      
                                 $(target).find('.fa-heart-o').removeClass('heartgrey').addClass('heartproject');                                                                                            
                             }                                
                         }

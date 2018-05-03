@@ -45,7 +45,7 @@ $heartatt = $heartatt. 'role="button" data-fragment=""  '
                          .' data-issupporter="'.$isSupporter.'"'                         
 	      .' data-auth="'.$member_id.'"';
 $out ='<div role="button" class="partialbuttonplingproject" '.$heartatt.' style="display:flex; align-items: center; justify-content: center;">';
- $out = $out. '<span class="plingtext small "  ><span class="plingnum"> '.$cntplings.'</span> Plings  </span>';
+ $out = $out. '<span class="plingtext  "  ><span class="plingnum"> '.$cntplings.'</span> Plings  </span>';
  if ($isPlinged){     
       $out = $out.'<span class="plingcircle active">p</span>';           
  }else{                  
@@ -62,7 +62,6 @@ echo $out;
       div.projectdtailHeart{
             float: right;           
             z-index: 100;
-            margin-right: 5px;
             
           
            
@@ -78,13 +77,13 @@ echo $out;
         }
 
         span.plingcircle{
-            width: 30px;
-            height: 30px;
+            width: 40px;
+            height: 40px;
             background-color: #fff;
             border: 3px solid #C8C8C8;
             border-radius: 50%;
            
-            font-size: 17px;
+            font-size: 20px;
             text-align: center;
             color: #C8C8C8;
             font-weight: bold;
