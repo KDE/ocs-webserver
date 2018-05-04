@@ -145,13 +145,17 @@ class PasswordController extends Local_Controller_Action_DomainSwitch
     {
 
         $uri_part = explode("?", $this->_request->getRequestUri());
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - $payload' . print_r($uri_part, true));
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - $uri_part = ' . print_r($uri_part, true));
         $secret = preg_replace('/[^-a-zA-Z0-9_=\/]/', '', array_pop($uri_part));
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - $payload' . print_r($secret, true));
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - $secret = ' . print_r($secret, true));
 
         $filter = $this->getDecryptFilter();
-        $payload = json_decode($filter->filter($this->base64url_decode($secret)), true);
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - $payload' . print_r($payload, true));
+        $step1 = $this->base64url_decode($secret);
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - $step1 = ' . print_r($step1, true));
+        $step2 = $filter->filter($step1);
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - $step2 = ' . print_r($step2, true));
+        $payload = json_decode($step2, true);
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - $payload = ' . print_r($payload, true));
 
         if (false == Zend_Registry::get('cache')->load(sha1($secret))) {
             throw new Zend_Controller_Action_Exception('Unknown request url for password change');
