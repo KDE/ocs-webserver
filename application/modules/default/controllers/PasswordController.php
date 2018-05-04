@@ -188,6 +188,11 @@ class PasswordController extends Local_Controller_Action_DomainSwitch
             return;
         }
 
+        if ($filterInput->getEscaped('password1') != $filterInput->getEscaped('password2')) {
+            $this->_helper->flashMessenger->addMessage('<p class="text-error">Your passwords are not identical.</p>');
+            return;
+        }
+
         $model_member = new Default_Model_DbTable_Member();
         $member_data = $model_member->fetchRow(array('member_id = ?' => $payload['member_id']));
         $member_data->password =
