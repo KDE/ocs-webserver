@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -26,11 +27,10 @@ class Default_Model_DbTable_MailTemplate extends Zend_Db_Table_Abstract
 
     public function findBy($column, $value)
     {
-        $sel = $this->select()
-            ->where($column . '=?', $value)
-            ->limit(1);
+        $sel = $this->select()->where($column . '=?', $value)->limit(1);
 
         $result = $this->fetchRow($sel);
+
         return $result;
     }
 
