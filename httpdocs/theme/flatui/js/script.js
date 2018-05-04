@@ -780,6 +780,12 @@ var PartialsButtonHeartDetail = (function () {
 var PartialsButtonPlingProject = (function () {
     return {
         setup: function () {
+            $('#plingbtn').hover(function(){
+                 $(this).attr('src','/images/system/pling-btn-hover.png');
+            }, function(){
+                $(this).attr('src',$(this).attr('data-src'));
+            });
+
             $('body').on('click', '.partialbuttonplingproject', function (event) {
                 event.preventDefault();
                 var url = $(this).attr("data-href");               
@@ -808,32 +814,32 @@ var PartialsButtonPlingProject = (function () {
 
                 if (!issupporter) {
                     // ignore
-                    $('#like-product-modal').find('#votelabel').text('Become a supporter please .');
+                    $('#like-product-modal').find('#votelabel').html('Become a supporter please .  <a href="/support">Support</a>');
                     $('#like-product-modal').modal('show');
                     return;
-                }
-
-                var spin = $('<span class="glyphicon glyphicon-refresh spinning" style="opacity: 0.6; z-index:1000;position: absolute; left:11px;top: 5px;"></span>');
-                $(target).prepend(spin);
-
+                }               
+                $(target).find('.plingnum').html('<span class="glyphicon glyphicon-refresh spinning"/>');    
                 $.ajax({
                           url: url,
                           cache: false
                         })
                       .done(function( response ) {
                         
-                        $(target).find('.spinning').remove();
+                        //$(target).find('.spinning').remove();
                         if(response.status =='error'){
                              $(target).html( response.msg );
                         }else{
                             if(response.action=='delete'){
                                 //pling deleted
                                 $(target).find('.plingnum').html(response.cnt);                           
-                                $(target).find('.plingcircle').removeClass('active');                                                                
+                                $(target).find('#plingbtn').attr('src','/images/system/pling-btn-normal.png');
+                                $(target).find('#plingbtn').attr('data-src','/images/system/pling-btn-normal.png');
+                                                                                             
                             }else{
                                 //pling inserted
                                 $(target).find('.plingnum').html(response.cnt);       
-                                $(target).find('.plingcircle').addClass('active');                                                                 
+                                $(target).find('#plingbtn').attr('src','/images/system/pling-btn-active.png');                                
+                                $(target).find('#plingbtn').attr('data-src','/images/system/pling-btn-active.png');                                
                             }
                                 
                         }

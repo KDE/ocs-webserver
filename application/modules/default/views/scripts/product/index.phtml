@@ -136,7 +136,7 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
     <div id="like-product-modal" class="modal fade noid" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-sm" role="document">
            <div class="modal-content" style="min-height: 100px; ">
-               <span style="text-align: center; display: block; padding-top: 30px">Please login.</span>
+               <span style="text-align: center; display: block; padding-top: 30px">Please login. <a href="<?=$loginUrl?>">Login</a></span>
            </div>
          </div>          
     </div>
@@ -654,7 +654,7 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
                                     <div id="container-pling<?=$this->product->project_id?>" class="container-pling" >     
                                     <?php                                 
                                         echo $this->partial(
-                                            '/product/partials/projectplings_test.phtml',
+                                            '/product/partials/projectplings.phtml',
                                             array(
                                                 "authMember"  => $identity,
                                                 "project_id" => $this->product->project_id

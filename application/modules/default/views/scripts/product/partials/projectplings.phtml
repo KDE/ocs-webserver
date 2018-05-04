@@ -20,15 +20,15 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
- // product detail pling single project button	
-$plings = new Default_Model_DbTable_ProjectPlings();			 			
+ // product detail pling single project button  
+$plings = new Default_Model_DbTable_ProjectPlings();            
 $cntplings = count($plings->getPlings($this->project_id));
 $isPlinged = false;
 $member_id = null;
 $isSupporter = false;
 if($this->authMember){
-	$member_id = $this->authMember->member_id;
-	$tmp = $plings->getPling($this->project_id,$member_id);
+  $member_id = $this->authMember->member_id;
+  $tmp = $plings->getPling($this->project_id,$member_id);
       if($tmp)
       {
             $isPlinged = true;
@@ -36,25 +36,32 @@ if($this->authMember){
       $isSupporter = $this->isSupporter($member_id);
 }
 
-$heartatt = '';    	
+$heartatt = '';     
 $urlUserFollows = $this->buildProductUrl($this->project_id, 'plingproject');
 
 $heartatt = $heartatt. 'role="button" data-fragment=""  '
-	      .' data-target="#container-pling'.$this->project_id.'"'
-	      .' data-href="'.$urlUserFollows.'"'
+        .' data-target="#container-pling'.$this->project_id.'"'
+        .' data-href="'.$urlUserFollows.'"'
                          .' data-issupporter="'.$isSupporter.'"'                         
-	      .' data-auth="'.$member_id.'"';
-$out ='<div role="button" class="partialbuttonplingproject" '.$heartatt.'>';
- if ($isPlinged){     
-      $out = $out.'<span class="plingcircle active">p</span>';           
+        .' data-auth="'.$member_id.'"';
+$out ='<div role="button" class="partialbuttonplingproject" '.$heartatt.' style="display:flex; align-items: center; justify-content: center;">';
+ $out = $out. '<span class="plingtext  "  ><span class="plingnum"> '.$cntplings.'</span> Plings  </span>';
+ if ($isPlinged){             
+      $out = $out.'<img id="plingbtn" data-src="/images/system/pling-btn-active.png" src="/images/system/pling-btn-active.png"/>';       
  }else{                  
-      $out = $out.'<span class="plingcircle ">p</span>';     
+      $out = $out.'<img id="plingbtn" data-src="/images/system/pling-btn-normal.png"  src="/images/system/pling-btn-normal.png"/>';       
  }
-
- $out = $out. '<span class="plingtext small "  >Plings  <span class="plingnum" >'.$cntplings.'</span> </span>';
- $out = $out.'</div>';
+$out = $out.'</div>';
 echo $out;
 ?>
 
-
-
+<style type="text/css">
+      div.projectdtailHeart{
+            float: right;           
+            z-index: 100;                                 
+        }
+     
+        span.plingtext{        
+          padding-right: 15px;
+        }
+</style>

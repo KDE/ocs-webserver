@@ -129,9 +129,19 @@ class UserController extends Local_Controller_Action_DomainSwitch
                     $list->setCurrentPageNumber($offset);
                     $this->view->likes  = $list;
                
+
+                    // plings   Currently no paging...                    
+                    $plingmodel = new Default_Model_ProjectPlings();
+                    $offset = null;
+                    $plist  = $plingmodel->fetchPlingsForMember($this->_memberId);
+                    $plist->setItemCountPerPage(1000);
+                    $plist->setCurrentPageNumber($offset);
+                    $this->view->plings  = $plist;
+
                     // rated
                     $ratemodel = new Default_Model_DbTable_ProjectRating();
                     $this->view->rated =  $ratemodel->getRatedForMember($this->_memberId);
+
 
                      
                     $stat = array();
@@ -146,7 +156,12 @@ class UserController extends Local_Controller_Action_DomainSwitch
 
                     $tblFollower = new Default_Model_DbTable_ProjectFollower();
                     $stat['cntLikesHeGave'] = $tblFollower->countLikesHeGave($this->_memberId);                    
-                    $stat['cntLikesHeGot'] = $tblFollower->countLikesHeGot($this->_memberId);                        
+                    $stat['cntLikesHeGot'] = $tblFollower->countLikesHeGot($this->_memberId);  
+
+                    $tblPling = new Default_Model_DbTable_ProjectPlings();
+                    $stat['cntPlingsHeGave'] = $tblPling->countPlingsHeGave($this->_memberId);                    
+                    $stat['cntPlingsHeGot'] = $tblPling->countPlingsHeGot($this->_memberId);  
+
 
                     $donationinfo = $tableMember->fetchSupporterDonationInfo($this->_memberId);      
                     if($donationinfo){
