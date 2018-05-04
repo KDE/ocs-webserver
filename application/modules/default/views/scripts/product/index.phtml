@@ -136,7 +136,7 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
     <div id="like-product-modal" class="modal fade noid" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-sm" role="document">
            <div class="modal-content" style="min-height: 100px; ">
-               <span style="text-align: center; display: block; padding-top: 30px">Please login. <a href="<?=$loginUrl?>">Login</a></span>
+               <span style="text-align: center; display: block; padding-top: 30px">Please login. <br/><a href="<?=$loginUrl?>">Login</a></span>
            </div>
          </div>          
     </div>
@@ -171,7 +171,17 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
         <div id="review-product-modal" class="modal fade noid" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-sm" role="document">
                <div class="modal-content" style="min-height: 150px; ">
-                   <span style="text-align: center; display: block; padding-top: 30px">Only registered members with an active supporting can vote<br/>to limit spam and fraud voting.<br/> <a href="/support">Become a supporter</a> <br/><br/>You can still 'Like' a product, but that doesn't affect its score. </span>
+                   <span style="text-align: center; display: block; padding-top: 30px">
+                    Please login.
+                    <br/>
+                    <a href="<?=$loginUrl?>"> Login </a>
+                   <?php /*
+                    Only registered members with an active supporting can vote<br/>to limit spam and fraud voting.<br/>
+                    <a href="/support">Become a supporter</a> 
+                    <br/><br/>You can still 'Like' a product, but that doesn't affect its score. 
+                        */
+                    ?>
+                    </span>
                </div>
              </div>          
         </div>

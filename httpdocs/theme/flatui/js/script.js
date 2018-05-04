@@ -795,7 +795,7 @@ var PartialsButtonPlingProject = (function () {
                 var toggle = $(this).data('toggle');
                 var pageFragment = $(this).attr("data-fragment");
                 
-                if (!auth) {
+                if (!auth) {                    
                     $('#like-product-modal').modal('show');
                     return;
                 }
@@ -814,7 +814,7 @@ var PartialsButtonPlingProject = (function () {
 
                 if (!issupporter) {
                     // ignore
-                    $('#like-product-modal').find('#votelabel').html('Become a supporter please .  <a href="/support">Support</a>');
+                    $('#like-product-modal').find('#votelabel').html('<div style="width:420px;text-align:center">Help to support the artists and keep the content free </br></br><a href="/support">Become a supporter</a></div>');                   
                     $('#like-product-modal').modal('show');
                     return;
                 }               
