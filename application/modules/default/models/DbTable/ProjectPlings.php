@@ -64,7 +64,7 @@ class Default_Model_DbTable_ProjectPlings extends Zend_Db_Table_Abstract
         $sql ="
                 SELECT count(*) AS count 
                 FROM project_plings f   
-                WHERE  f.member_id =:member_id and f.is_deleted = 0
+                WHERE  f.member_id =:member_id and f.is_deleted = 0 and f.is_active = 1
         ";
         $resultRow = $this->_db->fetchRow($sql, array('member_id' => $member_id));
         return $resultRow['count'];
@@ -76,10 +76,11 @@ class Default_Model_DbTable_ProjectPlings extends Zend_Db_Table_Abstract
                 SELECT count(*) AS count 
                 FROM project_plings f  
                 inner join stat_projects p on p.project_id = f.project_id and p.status = 100 
-                WHERE  p.member_id =:member_id
+                WHERE  p.member_id =:member_id and f.is_deleted = 0 and f.is_active = 1
         ";
         $resultRow = $this->_db->fetchRow($sql, array('member_id' => $member_id));
         return $resultRow['count'];
+
     }
 
 }

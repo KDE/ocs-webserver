@@ -64,6 +64,7 @@ class Default_Model_MemberEmail
      * @return bool
      * @throws Zend_Db_Statement_Exception
      * @throws Zend_Db_Table_Exception
+     * @throws Zend_Exception
      */
     public function setDefaultEmail($emailId, $member_id)
     {
@@ -92,6 +93,7 @@ class Default_Model_MemberEmail
      * @param $member_id
      *
      * @return mixed
+     * @throws Zend_Db_Statement_Exception
      * @throws Zend_Db_Table_Exception
      */
     private function updateMemberPrimaryMail($member_id)
@@ -120,6 +122,7 @@ class Default_Model_MemberEmail
      * @param $dataEmail
      *
      * @return mixed
+     * @throws Zend_Db_Statement_Exception
      */
     protected function saveMemberPrimaryMail($member_id, $dataEmail)
     {
@@ -162,7 +165,8 @@ class Default_Model_MemberEmail
         $data['email_verification_value'] =
             empty($user_verification) ? Default_Model_MemberEmail::getVerificationValue($user_id, $user_mail) : $user_verification;
 
-        Default_Model_ActivityLog::logActivity($user_id, null, $user_id, Default_Model_ActivityLog::MEMBER_EMAIL_CHANGED, array('description' => 'user saved new mail address: ' . $user_mail));
+        Default_Model_ActivityLog::logActivity($user_id, null, $user_id, Default_Model_ActivityLog::MEMBER_EMAIL_CHANGED,
+            array('description' => 'user saved new mail address: ' . $user_mail));
 
         return $this->_dataTable->save($data);
     }
@@ -199,7 +203,8 @@ class Default_Model_MemberEmail
 
         $this->updateMemberPrimaryMail($user_id);
 
-        Default_Model_ActivityLog::logActivity($user_id, null, $user_id, Default_Model_ActivityLog::MEMBER_EMAIL_CHANGED, array('description' => 'user saved new primary mail address: ' . $user_mail));
+        Default_Model_ActivityLog::logActivity($user_id, null, $user_id, Default_Model_ActivityLog::MEMBER_EMAIL_CHANGED,
+            array('description' => 'user saved new primary mail address: ' . $user_mail));
 
         return $result;
     }

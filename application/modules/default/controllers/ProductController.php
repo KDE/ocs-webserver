@@ -1398,6 +1398,59 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $logId, $product->toArray());
     }
 
+
+    public function followprojectAction()
+    {
+        $this->_helper->layout()->disableLayout();
+       
+        $this->view->project_id = $this->_projectId;
+        $this->view->authMember = $this->_authMember;
+
+        // not allow to pling himself
+        if (array_key_exists($this->_projectId, $this->_authMember->projects)) 
+        {
+             $this->_helper->json(array(
+                    'status' => 'error',
+                    'msg'   => 'not allowed'
+                ));
+            return;
+        }
+
+
+        $projectFollowTable = new Default_Model_DbTable_ProjectFollower();
+
+        $newVals = array('project_id' => $this->_projectId, 'member_id' => $this->_authMember->member_id);
+        $where = $projectFollowTable->select()->where('member_id = ?', $this->_authMember->member_id)
+                                    ->where('project_id = ?', $this->_projectId, 'INTEGER')  ;
+      
+        $result = $projectFollowTable->fetchRow($where);
+
+        if (null === $result) {
+            $projectFollowTable->createRow($newVals)->save();
+            $this->logActivity(Default_Model_ActivityLog::PROJECT_FOLLOWED);            
+            $cnt = $projectFollowTable->countForProject($this->_projectId);  
+             $this->_helper->json(array(
+                    'status' => 'ok',
+                    'msg'   => 'Success.',
+                    'cnt'  => $cnt,
+                    'action' =>'insert'
+                ));              
+        }else{            
+            $projectFollowTable->delete('member_id=' . $this->_authMember->member_id . ' AND project_id='
+            . $this->_projectId);
+            $this->logActivity(Default_Model_ActivityLog::PROJECT_UNFOLLOWED);
+            $cnt = $projectFollowTable->countForProject($this->_projectId);  
+            $this->_helper->json(array(
+                    'status' => 'ok',
+                    'msg'   => 'Success.',
+                    'cnt'  => $cnt,
+                    'action' => 'delete'
+                ));
+        }           
+        
+    }
+
+
     public function plingprojectAction()
     {
         $this->_helper->layout()->disableLayout();

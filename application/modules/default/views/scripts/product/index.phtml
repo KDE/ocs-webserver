@@ -136,7 +136,7 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
     <div id="like-product-modal" class="modal fade noid" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-sm" role="document">
            <div class="modal-content" style="min-height: 100px; ">
-               <span style="text-align: center; display: block; padding-top: 30px">Please login.</span>
+               <span style="text-align: center; display: block; padding-top: 30px">Please login. <br/><a href="<?=$loginUrl?>">Login</a></span>
            </div>
          </div>          
     </div>
@@ -171,7 +171,17 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
         <div id="review-product-modal" class="modal fade noid" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-sm" role="document">
                <div class="modal-content" style="min-height: 150px; ">
-                   <span style="text-align: center; display: block; padding-top: 30px">Only registered members with an active supporting can vote<br/>to limit spam and fraud voting.<br/> <a href="/support">Become a supporter</a> <br/><br/>You can still 'Like' a product, but that doesn't affect its score. </span>
+                   <span style="text-align: center; display: block; padding-top: 30px">
+                    Please login.
+                    <br/>
+                    <a href="<?=$loginUrl?>"> Login </a>
+                   <?php /*
+                    Only registered members with an active supporting can vote<br/>to limit spam and fraud voting.<br/>
+                    <a href="/support">Become a supporter</a> 
+                    <br/><br/>You can still 'Like' a product, but that doesn't affect its score. 
+                        */
+                    ?>
+                    </span>
                </div>
              </div>          
         </div>
@@ -277,42 +287,40 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
                           
                             <div class="product-title-right" >
 
-                                <?php /*
-                                    <div class="projectdtailHeart">
-                                        <div id="container-follow<?=$this->product->project_id?>">     
+<?php /*                                  
+                                <div class="projectdtailHeart">
+                                    <div id="container-pling<?=$this->product->project_id?>" class="container-pling">     
+                                    <?php                                 
+                                        echo $this->partial(
+                                            '/product/partials/projectplings.phtml',
+                                            array(
+                                                "authMember"  => $identity,
+                                                "project_id" => $this->product->project_id
+                                            )
+                                        );                                
+                                    ?>                                
+                                    </div>                                                  
+                                </div>
+*/
+?>
+                                <div class="projectdtailHeart">
+                                        <div id="container-follow<?=$this->product->project_id?>" class="container-pling">     
                                         <?php                                 
                                             echo $this->partial(
-                                                '/product/followp.phtml',
+                                                '/product/partials/projectlike.phtml',
                                                 array(
                                                     "authMember"  => $identity,
                                                     "project_id" => $this->product->project_id
                                                 )
                                             );                                
                                         ?>                                
-                                        </div>  
-                                                      
-                                    </div>
-                                    */
-                                    ?>
-
-                                    <div class="projectdtailHeart">
-                                        <div id="container-pling<?=$this->product->project_id?>" class="container-pling">     
-                                        <?php                                 
-                                            echo $this->partial(
-                                                '/product/projectplings.phtml',
-                                                array(
-                                                    "authMember"  => $identity,
-                                                    "project_id" => $this->product->project_id
-                                                )
-                                            );                                
-                                        ?>                                
-                                        </div>  
-                                                      
-                                    </div>
+                                        </div>                                                        
+                                </div>
+                                  
                                     
-                                    <div class="projectdetailRating" style="clear: right">
-                                    <?php echo $this->render('partials/sidebarRating.phtml'); ?>
-                                    </div>
+                                <div class="projectdetailRating" style="clear: right">
+                                        <?php echo $this->render('partials/sidebarRating.phtml'); ?>
+                                </div>
                             </div>
                         </div>
                         <div id="carouselContainer" class="carouselContainer">
@@ -572,7 +580,10 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
             <div class="flex-item-4 flex-right" id="product-maker">
                 <div>
                     <div class="project-share-new col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        <script type="text/javascript">
+                      
+                        <?php /*
+
+                          <script type="text/javascript">
                             function fbs_click(a) {
                                 u = location.href;
                                 t = document.title;
@@ -611,6 +622,12 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
                         </script>
                         <script src="https://apis.google.com/js/platform.js" async defer></script>
 
+                        
+                        */
+                        ?>
+
+
+
                         <?php if (empty($this->product->claimable)) { ?>
                             <div class="prod-widget-box prod-user right ">
                                 <div class="sidebar-content">
@@ -641,6 +658,22 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
                                 </div>
                             </div>
                         <?php } ?>
+
+                        <div class="prod-widget-box right ">
+                                <div class="projectdtailHeart">
+                                    <div id="container-pling<?=$this->product->project_id?>" class="container-pling" >     
+                                    <?php                                 
+                                        echo $this->partial(
+                                            '/product/partials/projectplings.phtml',
+                                            array(
+                                                "authMember"  => $identity,
+                                                "project_id" => $this->product->project_id
+                                            )
+                                        );                                
+                                    ?>                                
+                                    </div>                                                  
+                                </div>
+                        </div>
 
                         <?php /* echo $this->render('partials/sidebarRating.phtml');  */ ?>
                           <?php /*

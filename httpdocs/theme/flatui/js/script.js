@@ -719,7 +719,7 @@ var PartialsButton = (function () {
 var PartialsButtonHeartDetail = (function () {
     return {
         setup: function () {
-            $('body').on('click', '.partialbuttonheartdetail', function (event) {
+            $('body').on('click', '.partialbuttonfollowproject', function (event) {
                 event.preventDefault();
                 var url = $(this).attr("data-href");
                 var target = $(this).attr("data-target");
@@ -743,30 +743,33 @@ var PartialsButtonHeartDetail = (function () {
                     return;
                 }
 
-                var spin = $('<span class="glyphicon glyphicon-refresh spinning" style="opacity: 0.6; z-index:1000;position: relative; left: 0;top: 0px;"></span>');
-                $(target).prepend(spin);
+              var spin = $('<span class="glyphicon glyphicon-refresh spinning" style="opacity: 0.6; z-index:1000;position: absolute; left:24px;top: 4px;"></span>');
+                 $(target).prepend(spin);              
 
-                $(target).load(url + ' ' + pageFragment, function (response, status, xhr) {
-                    if (status == "error") {
-                        if (xhr.status == 401) {
-                            if (response) {
-                                var data = jQuery.parseJSON(response);
-                                var redirect = data.login_url;
-                                if (redirect) {
-                                    window.location = redirect;
-                                } else {
-                                    window.location = "/login";
-                                }
-                            }
-                        } else {
-                            $(target).empty().html('Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.');
+                $.ajax({
+                          url: url,
+                          cache: false
+                        })
+                      .done(function( response ) {                        
+                        $(target).find('.spinning').remove();
+                        if(response.status =='error'){
+                             $(target).html( response.msg );
+                        }else{
+                            if(response.action=='delete'){                                
+                                $(target).find('.plingtext').html(response.cnt);
+                                $(target).find('.plingtext').addClass('heartnumberpurple'); 
+                                 $(target).find('.plingheart').removeClass('heartproject').addClass('heartgrey');       
+                                 $(target).find('.plingheart').removeClass('fa-heart').addClass('fa-heart-o');      
+
+                                                                                                                                                
+                            }else{                                
+                                $(target).find('.plingtext').html(response.cnt);      
+                                $(target).find('.plingtext').removeClass('heartnumberpurple'); 
+                                $(target).find('.plingheart').removeClass('heartgrey').addClass('heartproject');        
+                                $(target).find('.plingheart').removeClass('fa-heart-o').addClass('fa-heart');                                                                                       
+                            }                                
                         }
-                    }
-                    if (toggle) {
-                        $(toggle).modal('show');
-                    }
-                });
-
+                      }); 
                 return false;
             });
         }
@@ -777,6 +780,12 @@ var PartialsButtonHeartDetail = (function () {
 var PartialsButtonPlingProject = (function () {
     return {
         setup: function () {
+            $('#plingbtn').hover(function(){
+                 $(this).attr('src','/images/system/pling-btn-hover.png');
+            }, function(){
+                $(this).attr('src',$(this).attr('data-src'));
+            });
+
             $('body').on('click', '.partialbuttonplingproject', function (event) {
                 event.preventDefault();
                 var url = $(this).attr("data-href");               
@@ -786,7 +795,7 @@ var PartialsButtonPlingProject = (function () {
                 var toggle = $(this).data('toggle');
                 var pageFragment = $(this).attr("data-fragment");
                 
-                if (!auth) {
+                if (!auth) {                    
                     $('#like-product-modal').modal('show');
                     return;
                 }
@@ -796,8 +805,7 @@ var PartialsButtonPlingProject = (function () {
                 var productcreator = $('#like-product-modal').find('#productcreator').val();
                 if (loginuser == productcreator) {
                     // ignore
-                    console.log(loginuser);
-                    console.log(productcreator);
+                    
                     $('#like-product-modal').find('#votelabel').text('Project owner not allowed');
                     $('#like-product-modal').find('.modal-body').empty();
                     $('#like-product-modal').modal('show');
@@ -806,42 +814,36 @@ var PartialsButtonPlingProject = (function () {
 
                 if (!issupporter) {
                     // ignore
-                    $('#like-product-modal').find('#votelabel').text('Become a supporter please .');
+                    $('#like-product-modal').find('#votelabel').html('<div style="width:420px;text-align:center">Help to support the artists and keep the content free </br></br><a href="/support">Become a supporter</a></div>');                   
                     $('#like-product-modal').modal('show');
                     return;
-                }
-
-                var spin = $('<span class="glyphicon glyphicon-refresh spinning" style="opacity: 0.6; z-index:1000;position: absolute; left:17px;top: 12px;"></span>');
-                $(target).prepend(spin);
-
+                }               
+                $(target).find('.plingnum').html('<span class="glyphicon glyphicon-refresh spinning"/>');    
                 $.ajax({
                           url: url,
                           cache: false
                         })
                       .done(function( response ) {
                         
-                        $(target).find('.spinning').remove();
+                        //$(target).find('.spinning').remove();
                         if(response.status =='error'){
                              $(target).html( response.msg );
                         }else{
                             if(response.action=='delete'){
                                 //pling deleted
-                                $(target).find('.heartnumber').removeClass('heartnumberpurple').html(response.cnt);                           
-                                $(target).find('i').addClass('heartgrey').removeClass('heartproject');                                
-                                $(target).find('img').attr("src","/images/system/pling-coin.png");
-
+                                $(target).find('.plingnum').html(response.cnt);                           
+                                $(target).find('#plingbtn').attr('src','/images/system/pling-btn-normal.png');
+                                $(target).find('#plingbtn').attr('data-src','/images/system/pling-btn-normal.png');
+                                                                                             
                             }else{
                                 //pling inserted
-                                 $(target).find('.heartnumber').addClass('heartnumberpurple').html(response.cnt);
-                                $(target).find('i').removeClass('heartgrey').addClass('heartproject');
-                                $(target).find('img').attr("src","/images/system/pling-coin-plinged.png");
-                                
+                                $(target).find('.plingnum').html(response.cnt);       
+                                $(target).find('#plingbtn').attr('src','/images/system/pling-btn-active.png');                                
+                                $(target).find('#plingbtn').attr('data-src','/images/system/pling-btn-active.png');                                
                             }
                                 
                         }
-                      });
-                            
-
+                      });                            
                 return false;
             });
         }

@@ -1,0 +1,63 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+    foreach ($this->plings as $file): 
+                $file=(object)$file;
+        ?>
+      <div class="row smaller " >
+        <div class="col-lg-5 col-md-5">
+            <figure>
+                <img src="<?php echo $this->Image($file->image_small, array('width' => 80, 'height' => 80)); ?>" class="downloadhistory-image" />
+            </figure>   
+            <div>
+                <a href="/p/<?=$file->project_id?>"><?=$file->title?></a>
+                <p><?=$file->cat_title?> 
+            </div>
+        </div>      
+                    
+        <div class="col-lg-2 col-md-2" style="white-space: nowrap; padding-top: 15px">         
+             by <a  href="<?php echo $this->buildMemberUrl($file->project_member_id); ?>" class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="<?=$file->project_member_id?>">
+             <?=$file->project_username?></a>
+        </div>
+
+        <div class="col-lg-2 col-md-2">             
+            <div class="rating text-center" >               
+                <?php                
+                        $this->widgetRating = new stdClass();
+                        $this->widgetRating->project_id =$file->project_id;
+                        $this->widgetRating->laplace_score = $file->laplace_score;
+                        $this->widgetRating->count_likes =$file->count_likes; 
+                        $this->widgetRating->count_dislikes =$file->count_dislikes;
+                        echo $this->render('partials/widgetRating.phtml'); 
+                ?>          
+            </div>            
+        </div>
+
+        <div class="col-lg-3" style="padding-top: 10px;">                                       
+                    <img src="/images/system/pling-btn-active.png" style="width: 20px; height:20px; "/>          
+                    <?=$this->printDate($file->created_at)?>
+        </div>
+
+      </div>
+
+ <?php endforeach; ?>
+
+ 

@@ -159,12 +159,10 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
         $status = 'ok';
         $message = '';
         
-        $tableMembers = new Default_Model_Member();
-        $row = $tableMembers->fetchSupporterDonationInfo((int)$this->_authMember->member_id);
-        $isSupporter = $row['issupporter'];
+        
         
         //Only Supporter can make a review
-        if(Zend_Auth::getInstance()->hasIdentity() && $isSupporter) {
+        if(Zend_Auth::getInstance()->hasIdentity() ) {
             if ($msg != '') {
                 // only vote then return
                 $data = array();
