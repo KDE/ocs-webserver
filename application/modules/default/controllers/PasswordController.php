@@ -154,7 +154,7 @@ class PasswordController extends Local_Controller_Action_DomainSwitch
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - $step1 = ' . print_r($step1, true));
         $step2 = $filter->filter($step1);
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - $step2 = ' . print_r($step2, true));
-        $payload = json_decode($step2, true);
+        $payload = json_decode(trim($step2), true);
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - $payload = ' . print_r($payload, true));
 
         if (false == Zend_Registry::get('cache')->load(sha1($secret))) {
