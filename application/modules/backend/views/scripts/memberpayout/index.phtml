@@ -226,8 +226,10 @@ $lastMonth = date("Ym", strtotime("first day of previous month"));
                         filter_mail: $('#filter_mail').val()
                     });
                 }
+                
             },
             rowUpdated: function (event, data) {
+                /*
                 if (data.record) {
                     $('#TableContainer').jtable('load', {
                     	filter_status: $('#filter_status').val(),
@@ -237,6 +239,7 @@ $lastMonth = date("Ym", strtotime("first day of previous month"));
                         filter_mail: $('#filter_mail').val()
                     });
                 }
+                */
             }
         });
 
