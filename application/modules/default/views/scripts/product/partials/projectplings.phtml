@@ -57,8 +57,8 @@ $out = $out.'</div>';
 
 $pmodel = new  Default_Model_DbTable_ProjectPlings();
 
-$soll = $this->getCurrentMonthPlings($this->ppload_collection_id, $this->project_category_id);
-//$soll = 5;
+//$soll = $this->getCurrentMonthPlings($this->ppload_collection_id, $this->project_category_id);
+$soll = 5;
 
 $pling = $cntplings;
 
@@ -66,25 +66,29 @@ $score = 0;
 $left = 0;
 $right = 0;
 $plingcolor = '#EE6E09';
-$is_f = 1;
-if($soll > $pling){
-    $score =$pling*100/$soll  ;    
-    $left = $score;
-    $right = 100-$left;
+$is_f = 0;
+$poshtml = '';
+if($soll > $pling){    
     $is_f = 1;
+    $score = 100;
+    $left=100;
+    $right = 0;
+    $rightlinepos = $pling*200/$soll;
+    $poshtml = '<div class="progress-bar" style="background-color:#fff; width:3px; position:relative; left:'.$rightlinepos.'px "></div>';
 }else{
-   $score = 100;    
-   $left = $score;
-   $right = 100-$left;
-   $is_f = 0;
+    $is_f = 0;
+    $score = $soll/$pling;
+    $left = $score*100;
+    $right = 100-$left;
 }
 
 
-$sollhtml = ' <div class="amountsoll" style="width:50px; text-align:right;padding-right:5px;">'.$soll.'</div>';
+$sollhtml = ' <div class="amountsoll" style="width:50px; text-align:right;">'.$soll.'$</div>';
 $out = $out.'<div style="display:flex;clear:both">'.$sollhtml.'<div class="plingbar" style="flex:1;padding-top:4px">                         
                           <div class="progress" style="height: 12px; width: 200px;padding:2px;background-color: transparent; box-shadow: none;">
-                          <div class="progress-bar" style="background-color: '.$plingcolor.';width: '.$left.'%;"> </div> 
-                          <div class="progress-bar" style="background-color: #eeeeee;width: '.$right.'%;"> </div> 
+                              <div class="progress-bar" style="background-color: '.$plingcolor.';width: '.$left.'%;">   '.$poshtml.'  </div> 
+                              <div class="progress-bar" style="background-color: #eeeeee;width: '.$right.'%;"> </div>       
+                                       
                           </div></div></div>';
 echo $out;
 
