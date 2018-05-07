@@ -70,12 +70,26 @@ class Default_Model_DbTable_ProjectPlings extends Zend_Db_Table_Abstract
         return $resultRow['count'];
     }
 
+    public function countPlingsHeGotAll($member_id)
+    {       
+        $sql ="
+                SELECT count(*) AS count 
+                FROM project_plings f  
+                inner join stat_projects p on p.project_id = f.project_id and p.status = 100 
+                WHERE  p.member_id =:member_id and f.is_deleted = 0 and f.is_active = 1
+        ";
+        $resultRow = $this->_db->fetchRow($sql, array('member_id' => $member_id));
+        return $resultRow['count'];
+
+    }
+
     public function countPlingsHeGot($member_id)
     {       
         $sql ="
                 SELECT count(*) AS count 
                 FROM project_plings f  
                 inner join stat_projects p on p.project_id = f.project_id and p.status = 100 
+                inner join member m on f.member_id = m.member_id and m.roleid <> 500 
                 WHERE  p.member_id =:member_id and f.is_deleted = 0 and f.is_active = 1
         ";
         $resultRow = $this->_db->fetchRow($sql, array('member_id' => $member_id));
