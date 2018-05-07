@@ -70,6 +70,17 @@ class Default_Model_DbTable_ProjectPlings extends Zend_Db_Table_Abstract
         return $resultRow['count'];
     }
 
+    public function getPlingsAmount($project_id)
+    {
+       $sql ="
+                SELECT count(*) AS count 
+                FROM project_plings f   
+                WHERE  f.project_id =:project_id and f.is_deleted = 0 and f.is_active = 1
+        ";
+        $resultRow = $this->_db->fetchRow($sql, array('project_id' => $project_id));
+        return $resultRow['count'];
+    }
+
     public function countPlingsHeGotAll($member_id)
     {       
         $sql ="
