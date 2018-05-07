@@ -28,6 +28,7 @@ class Default_Plugin_AclRules extends Zend_Acl
     const ROLENAME_MODERATOR = 'moderator';
     const ROLENAME_STAFF = 'staff';
     const ROLENAME_ADMIN = 'admin';
+    const ROLENAME_SYSUSER = 'sysuser';
 
     function __construct()
     {
@@ -37,6 +38,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addRole(new Zend_Acl_Role (self::ROLENAME_MODERATOR), self::ROLENAME_FEUSER);
         $this->addRole(new Zend_Acl_Role (self::ROLENAME_STAFF), self::ROLENAME_FEUSER);
         $this->addRole(new Zend_Acl_Role (self::ROLENAME_ADMIN));
+        $this->addRole(new Zend_Acl_Role (self::ROLENAME_SYSUSER));
 
         $this->addResource(new Zend_Acl_Resource ('default_logout'));
         $this->addResource(new Zend_Acl_Resource ('default_oauth'));
@@ -137,6 +139,32 @@ class Default_Plugin_AclRules extends Zend_Acl
             'default_stati',
             'default_password'
         ));
+
+         $this->allow(self::ROLENAME_SYSUSER, array(
+            'default_authorization',
+            'default_button',
+            'default_categories',
+            'default_content',
+            'default_community',
+            'default_donationlist',
+            'default_error',
+            'default_explore',
+            'default_gateway',
+            'default_hive',
+            'default_home',
+            'default_ocsv1', // OCS API
+            'default_embedv1', // embed API
+            'default_productcategory',
+            'default_report',
+            'default_rss',
+            'default_supporterbox',
+            'default_oauth',
+            'default_plings',
+            'default_ads',
+            'default_stati',
+            'default_password'
+        ));
+
 
         $this->allow(self::ROLENAME_COOKIEUSER, array(
                 'default_logout',
