@@ -79,10 +79,12 @@ class Backend_MemberpayoutController extends Local_Controller_Action_Backend
             }
 
             $record = $this->_model->save($values);
+            $resultArray = $record->toArray();
+            $resultArray['color'] = '#ffffff';
 
             $jTableResult = array();
             $jTableResult['Result'] = self::RESULT_OK;
-            $jTableResult['Record'] = $record->toArray();
+            $jTableResult['Record'] = $resultArray;
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . print_r($e, true));
             $translate = Zend_Registry::get('Zend_Translate');
