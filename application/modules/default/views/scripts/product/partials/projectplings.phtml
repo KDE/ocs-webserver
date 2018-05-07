@@ -57,8 +57,7 @@ $out = $out.'</div>';
 
 $pmodel = new  Default_Model_DbTable_ProjectPlings();
 
-//$soll = $this->getCurrentMonthPlings($this->ppload_collection_id, $this->project_category_id);
-$soll = 5;
+$soll = $this->getCurrentMonthPlings($this->ppload_collection_id, $this->project_category_id);
 
 $pling = $cntplings;
 
@@ -74,7 +73,7 @@ if($soll > $pling){
     $left=100;
     $right = 0;
     $rightlinepos = $pling*200/$soll;
-    $poshtml = '<div class="progress-bar" style="background-color:#fff; width:3px; position:relative; left:'.$rightlinepos.'px "></div>';
+    $poshtml = '<div class="progress-bar" style="background-color:#fff;  width:2px; position:relative; left:'.$rightlinepos.'px "></div>';
 }else{
     $is_f = 0;
     $score = $soll/$pling;
@@ -82,13 +81,11 @@ if($soll > $pling){
     $right = 100-$left;
 }
 
-
-$sollhtml = ' <div class="amountsoll" style="width:50px; text-align:right;">'.$soll.'$</div>';
+$sollhtml = ' <div class="amountsoll" style="width:50px; text-align:right;">$'.$soll.'</div>';
 $out = $out.'<div style="display:flex;clear:both">'.$sollhtml.'<div class="plingbar" style="flex:1;padding-top:4px">                         
                           <div class="progress" style="height: 12px; width: 200px;padding:2px;background-color: transparent; box-shadow: none;">
                               <div class="progress-bar" style="background-color: '.$plingcolor.';width: '.$left.'%;">   '.$poshtml.'  </div> 
-                              <div class="progress-bar" style="background-color: #eeeeee;width: '.$right.'%;"> </div>       
-                                       
+                              <div class="progress-bar" style="background-color: #eeeeee;width: '.$right.'%;"> </div>                                              
                           </div></div></div>';
 echo $out;
 
