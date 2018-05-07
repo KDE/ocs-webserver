@@ -22,7 +22,8 @@
 
  // product detail pling single project button  
 $plings = new Default_Model_DbTable_ProjectPlings();            
-$cntplings = count($plings->getPlings($this->project_id));
+$cntplings = $plings->getPlingsAmount($this->project_id);
+
 $isPlinged = false;
 $member_id = null;
 $isSupporter = false;
@@ -54,16 +55,40 @@ $out ='<div role="button" class="partialbuttonplingproject" '.$heartatt.' style=
 
 $out = $out.'</div>';
 
-$soll = $this->getCurrentMonthPlings($this->project_id);
-$sollhtml = ' <div class="amountsoll" style="width:50px; text-align:right;padding-right:5px;">'.$soll.'</div>';
+$pmodel = new  Default_Model_DbTable_ProjectPlings();
 
+$soll = $this->getCurrentMonthPlings($this->ppload_collection_id, $this->project_category_id);
+//$soll = 5;
+
+$pling = $cntplings;
+
+$score = 0;
+$left = 0;
+$right = 0;
+$plingcolor = '#EE6E09';
+$is_f = 1;
+if($soll > $pling){
+    $score =$pling*100/$soll  ;    
+    $left = $score;
+    $right = 100-$left;
+    $is_f = 1;
+}else{
+   $score = 100;    
+   $left = $score;
+   $right = 100-$left;
+   $is_f = 0;
+}
+
+
+$sollhtml = ' <div class="amountsoll" style="width:50px; text-align:right;padding-right:5px;">'.$soll.'</div>';
 $out = $out.'<div style="display:flex;clear:both">'.$sollhtml.'<div class="plingbar" style="flex:1;padding-top:4px">                         
                           <div class="progress" style="height: 12px; width: 200px;padding:2px;background-color: transparent; box-shadow: none;">
-                          <div class="progress-bar" style="background-color: #b8c8b8;width: 100%;"> </div> 
+                          <div class="progress-bar" style="background-color: '.$plingcolor.';width: '.$left.'%;"> </div> 
+                          <div class="progress-bar" style="background-color: #eeeeee;width: '.$right.'%;"> </div> 
                           </div></div></div>';
-
-
 echo $out;
+
+
 ?>
 
 <style type="text/css">

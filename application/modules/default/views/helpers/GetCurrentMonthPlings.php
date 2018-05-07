@@ -21,12 +21,39 @@
  **/
 
 class Default_View_Helper_GetCurrentMonthPlings extends Zend_View_Helper_Abstract
-{
-  	
-    public function getCurrentMonthPlings($project_id)
+{  	
+
+    public function getCurrentMonthPlings($ppload_collection_id,$project_category_id)
     {
-        $model = new Default_Model_Info();
-        return $model->getProbablyPayoutPlingsCurrentmonth($project_id);
+        
+         $pploadApi = new Ppload_Api(array(
+             'apiUri'   => PPLOAD_API_URI,
+             'clientId' => PPLOAD_CLIENT_ID,
+             'secret'   => PPLOAD_SECRET
+         ));
+        $dcnt = 0;
+        if ($ppload_collection_id)
+        {
+             $filesRequest = array(
+                 'collection_id' => $ppload_collection_id,
+                  'perpage'       => 100,
+                  'downloaded_timeperiod_begin' => date('Y-m-01') 
+             );
+
+             $filesResponse = $pploadApi->getFiles($filesRequest);
+
+             if (isset($filesResponse->status)  && $filesResponse->status == 'success') {
+                 $i=0;
+                
+                 foreach ($filesResponse->files as $file) {                     
+                     $dcnt = $dcnt +$file->downloaded_timeperiod_count;
+                 }
+             }
+         }
+
+         $pc = new Default_Model_DbTable_ProjectCategory();
+         $plingfactor = $pc->fetchElement($project_category_id)['dl_pling_factor'];
+        return $dcnt*$plingfactor*0.01;
     }
 
 } 

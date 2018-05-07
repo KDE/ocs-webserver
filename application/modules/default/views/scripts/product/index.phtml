@@ -667,7 +667,9 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
                                             '/product/partials/projectplings.phtml',
                                             array(
                                                 "authMember"  => $identity,
-                                                "project_id" => $this->product->project_id
+                                                "project_id" => $this->product->project_id,
+                                                "ppload_collection_id" => $this->product->ppload_collection_id,
+                                                "project_category_id" => $this->product->project_category_id
                                             )
                                         );                                
                                     ?>                                
