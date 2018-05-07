@@ -794,6 +794,7 @@ class Default_Model_Info
         return $totalcnt;
     }
 
+
      public function getCountMembers()
     {
         /** @var Zend_Cache_Core $cache */
@@ -863,5 +864,14 @@ class Default_Model_Info
         $cache->save($data, $cacheName,array() , 3600);
         return $data;
     }
+
+
+     public function getProbablyPayoutPlingsCurrentmonth($project_id)
+    {       
+        $sql = " select FORMAT(probably_payout_amount, 2) as amount from member_dl_plings where project_id = :project_id and yearmonth=(DATE_FORMAT(NOW(),'%Y%m'))";                   
+        $result = Zend_Db_Table::getDefaultAdapter()->fetchRow($sql,array('project_id'=>$project_id));
+         return $result['amount'];
+    }
+
 
 }
