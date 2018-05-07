@@ -44,14 +44,23 @@ $heartatt = $heartatt. 'role="button" data-fragment=""  '
         .' data-href="'.$urlUserFollows.'"'
                          .' data-issupporter="'.$isSupporter.'"'                         
         .' data-auth="'.$member_id.'"';
-$out ='<div role="button" class="partialbuttonplingproject" '.$heartatt.' style="display:flex; align-items: center; justify-content: center;">';
+$out ='<div role="button" class="partialbuttonplingproject" '.$heartatt.' style="display:block; float:right">';
  $out = $out. '<span class="plingtext  "  ><span class="plingnum"> '.$cntplings.'</span> Plings  </span>';
  if ($isPlinged){             
       $out = $out.'<img id="plingbtn" data-src="/images/system/pling-btn-active.png" src="/images/system/pling-btn-active.png"/>';       
  }else{                  
       $out = $out.'<img id="plingbtn" data-src="/images/system/pling-btn-normal.png"  src="/images/system/pling-btn-normal.png"/>';       
  }
+
 $out = $out.'</div>';
+
+
+
+$out = $out.'<div class="plingbar" style="display:block; float:right"><div class="progress" style="height: 12px; width: 200px">
+                          <div class="progress-bar" style="background-color: #b8c8b8;width: 100%;"> </div> 
+                          </div></div>';
+
+
 echo $out;
 ?>
 
