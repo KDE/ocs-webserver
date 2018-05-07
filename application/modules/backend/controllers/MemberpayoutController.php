@@ -173,8 +173,9 @@ class Backend_MemberpayoutController extends Local_Controller_Action_Backend
             if (false === empty($value)) {
                 $data_type = $metadata[$key]['DATA_TYPE'];
                 if (($data_type == 'varchar') OR ($data_type == 'text')) {
-                    $select->where("{$key} like ?", '%' . $value . '%');
-                    $where .= " AND {$key} like '%' . $value . '%'";
+                    $likeText = "'%".$value."%'";
+                    $select->where("{$key} like ?", $likeText);
+                    $where .= " AND {$key} like ".$likeText;
                 } else {
                     $select->where("{$key} = ?", $value);
                     $where .= " AND {$key} = " . $value;
