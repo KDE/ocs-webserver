@@ -81,7 +81,8 @@ if($soll > $pling){
     $right = 100-$left;
 }
 
-$sollhtml = ' <div class="amountsoll" style="width:50px; padding-right:10px;text-align:right;">$'.$soll.'</div>';
+$solltxt = number_format($soll,2,'.','');
+$sollhtml = ' <div class="amountsoll" style="width:50px; padding-right:5px;text-align:right;">$'.$solltxt.'</div>';
 $out = $out.'<div style="display:flex;clear:both">'.$sollhtml.'<div class="plingbar" style="flex:1;padding-top:4px">                         
                           <div class="progress" style="height: 12px; width: 200px;padding:2px;background-color: transparent; box-shadow: none;">
                               <div class="progress-bar" style="background-color: '.$plingcolor.';width: '.$left.'%;">   '.$poshtml.'  </div> 
