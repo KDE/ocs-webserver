@@ -787,24 +787,21 @@ class Default_Model_Info
         $sql = '  
                         select 
                         pl.member_id
-                        ,pl.project_id
-                        ,pt.c_at as created_at
+                        ,pl.project_id                        
                         ,p.title
                         ,p.image_small
                         ,(select profile_image_url from member m where pl.member_id = m.member_id) as profile_image_url
                         ,(select username from member m where pl.member_id = m.member_id) as username
                         ,laplace_score(p.count_likes, p.count_dislikes) AS laplace_score
                         ,p.count_likes
-                        ,p.count_dislikes
+                        ,p.count_dislikes         
+                        ,(
+                            select min(created_at) from project_plings pt where pt.member_id = pl.member_id and pt.project_id=pl.project_id
+                        ) as created_at        
                         from project_plings pl
-                        inner join project p on pl.project_id = p.project_id and p.status > 30
-                        left join (
-                            select member_id,project_id,min(created_at) c_at
-                            from project_plings  where member_id <> :sysuserid
-                            group by member_id, project_id
-                        ) pt on pl.project_id = pt.project_id and pl.member_id = pt.member_id
+                        inner join project p on pl.project_id = p.project_id and p.status > 30                        
                         where pl.is_deleted = 0 and pl.is_active = 1 and pl.member_id <> :sysuserid
-                        order by c_at desc                                                  
+                        order by created_at desc                                                  
         ';        
         if (isset($limit)) {
             $sql .= ' limit ' . (int)$limit;
