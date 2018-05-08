@@ -56,6 +56,8 @@ class Default_Model_ProjectPlings extends Default_Model_DbTable_ProjectPlings
 
      public function fetchPlingsForProject($project_id)
     {            
+            $config = Zend_Registry::get('config');
+            $member_id = $config->settings->member->plingcat->id;
             $sql = "
                          SELECT 
                         f.project_id
@@ -66,10 +68,10 @@ class Default_Model_ProjectPlings extends Default_Model_DbTable_ProjectPlings
                         ,m.username
                         FROM project_plings f
                         inner join member m on f.member_id = m.member_id and m.is_active=1 AND m.is_deleted=0 
-                        WHERE  f.project_id = :project_id and f.is_deleted = 0
+                        WHERE  f.project_id = :project_id and f.is_deleted = 0 and f.member_id <> :member_id
                         order by f.created_at desc
              ";
-            $resultSet = $this->_db->fetchAll($sql, array('project_id' => $project_id));
+            $resultSet = $this->_db->fetchAll($sql, array('project_id' => $project_id,'member_id' => $member_id));
             return $resultSet;     
     }
 } 
