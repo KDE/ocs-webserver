@@ -1493,7 +1493,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         if (null === $result) {
              $projectplings->createRow($newVals)->save();
              //$this->logActivity(Default_Model_ActivityLog::PROJECT_PLINGED_2);
-            $cnt = count($projectplings->getPlings($this->_projectId));  
+        
+             $cnt = $projectplings->getPlingsAmount($this->_projectId);  
              $this->_helper->json(array(
                     'status' => 'ok',
                     'msg'   => 'Success.',
@@ -1504,8 +1505,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
             // delete pling
             $projectplings->setDelete($result->project_plings_id);           
-            //$this->logActivity(Default_Model_ActivityLog::PROJECT_DISPLINGED_2);
-            $cnt = count($projectplings->getPlings($this->_projectId));  
+            //$this->logActivity(Default_Model_ActivityLog::PROJECT_DISPLINGED_2);            
+
+             $cnt = $projectplings->getPlingsAmount($this->_projectId);  
             $this->_helper->json(array(
                     'status' => 'ok',
                     'msg'   => 'Success.',
