@@ -54,6 +54,8 @@ class Default_View_Helper_GetCurrentMonthPlings extends Zend_View_Helper_Abstrac
          $pc = new Default_Model_DbTable_ProjectCategory();
          $cat = $pc->fetchElement($project_category_id);
          $plingfactor = $cat['dl_pling_factor'];
+
+          
         return $dcnt*$plingfactor*0.01;
     }
 
