@@ -247,7 +247,7 @@ if ($this->countDownloadsOverall > 0) {
                         <span><?= $sum_plings ?></span>
                     </div>
                     <div class="col-md-1 text-right cell-default">
-                        <?php if($product['is_license_missing'] == 0 && $product['is_source_missing'] == 0 && $product['is_pling_excluded'] == 0) {
+                        <?php if(!$showErrMsg) {
                                 $payout_sum = $product['num_downloads'] * $product['dl_pling_factor'] / 100;
                                 $show_payout_sum = $payout_sum;
                                 
