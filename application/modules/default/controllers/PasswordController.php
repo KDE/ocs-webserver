@@ -72,6 +72,7 @@ class PasswordController extends Local_Controller_Action_DomainSwitch
         $url = $this->generateUrl($member);
 
         $this->sendMail($member->mail, $url, 'Reset your password');
+        $this->redirect("/login");
     }
 
     private function generateUrl($member)
