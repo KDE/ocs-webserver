@@ -72,11 +72,23 @@ if($soll > $pling){
     $score = 100;
     $left=100;
     $right = 0;
-    $rightlinepos = $pling*200/$soll;
+    if($soll == 0)
+    {
+        $rightlinepos = 0;  
+    }else{
+        $rightlinepos = $pling*200/$soll;
+    }
+    
     $poshtml = '<div class="progress-bar" style="background-color:#fff;  width:2px; position:relative; left:'.$rightlinepos.'px "></div>';
 }else{
     $is_f = 0;
-    $score = $soll/$pling;
+    if($pling==0){
+       $score = 1;
+    }else
+    {
+        $score = $soll/$pling;  
+    }
+    
     $left = $score*100;
     $right = 100-$left;
 }
