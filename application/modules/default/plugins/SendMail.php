@@ -38,13 +38,12 @@ class Default_Plugin_SendMail extends Zend_Controller_Plugin_Abstract
 
     function __construct($tplName = null)
     {
-//		parent::__construct();
+        //		parent::__construct();
 
         $this->setTemplate($tplName);
         $this->setTemplateVar('username', '');
         $this->setTemplateVar('verificationlink', '');
         $this->setTemplateVar('sender', '');
-
     }
 
     public function setTemplate($tplName)
@@ -588,6 +587,7 @@ class Default_Plugin_SendMail extends Zend_Controller_Plugin_Abstract
     </body>
 </html>
 EOT;
+
         return $returnBodyText;
     }
 
