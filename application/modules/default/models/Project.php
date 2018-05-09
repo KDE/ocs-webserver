@@ -238,7 +238,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             'project_member_id'  => 'member_id',
             'laplace_score'      => new Zend_Db_Expr('laplace_score(count_likes,count_dislikes)'),
             'catTitle'           => new Zend_Db_Expr('(SELECT title FROM project_category WHERE project_category_id = project.project_category_id)')
-        ))->setIntegrityCheck(false)->join('member', 'project.member_id = member.member_id', array('username'))
+        ))->setIntegrityCheck(false)->join('member', 'project.member_id = member.member_id', array('username'))                            
                   ->where('project.status >= ?', ($onlyActiveProjects ? self::PROJECT_ACTIVE : self::PROJECT_INACTIVE))
                   ->where('project.member_id = ?', $member_id, 'INTEGER')
                   ->where('project.type_id = ?', self::PROJECT_TYPE_STANDARD)->order('project_changed_at DESC');
@@ -1408,5 +1408,51 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         $list = $this->_db->fetchAll($sql);
         return $list;
     }
+
+
+    /**
+     * @return array
+     */
+    public function getUserActiveProjects($member_id,$limit = null, $offset = null)
+    {
+      // for member me page
+        $sql = "
+                        SELECT
+                        p.project_id,
+                        p.title,
+                        p.created_at  as project_created_at,
+                        p.changed_at as project_changed_at,
+                        p.count_likes,
+                        p.count_dislikes,
+                        p.laplace_score,
+                        p.member_id,
+                        p.cat_title as catTitle,
+                        p.image_small,
+                        (select count(1) from project_plings l where p.project_id = l.project_id and l.is_deleted = 0 and l.is_active = 1 and l.member_id <> :sysuserid) countplings
+                        FROM stat_projects p
+                        where p.status =100
+                        and p.member_id = :member_id        
+                        order by p.changed_at DESC
+        ";
+
+        if (isset($limit)) {
+            $sql = $sql.' limit '.$limit;            
+        }
+
+        if (isset($offset)) {
+            $sql = $sql.' offset '.$offset;            
+        }
+
+        $config = Zend_Registry::get('config');
+        $sysuserid = $config->settings->member->plingcat->id;        
+        $result = $this->_db->fetchAll($sql, array('member_id' => $member_id, 'sysuserid' =>$sysuserid));
+          if ($result) {
+            return $this->generateRowClass($result);
+        } else {
+            return null;
+        }
+    }
+
+    
 
 }
