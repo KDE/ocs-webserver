@@ -814,7 +814,7 @@ var PartialsButtonPlingProject = (function () {
 
                 if (!issupporter) {
                     // ignore
-                    $('#like-product-modal').find('#votelabel').html('<div style="width:420px;text-align:center">Help to support the artists and keep the content free </br></br><a href="/support">Become a supporter</a></div>');                   
+                    $('#like-product-modal').find('#votelabel').html('<div style="width:420px;text-align:center">To pling a product and help the artist please consider becoming a supporter. Thanks!</br></br><a href="/support">Become a supporter</a></div>');                   
                     $('#like-product-modal').modal('show');
                     return;
                 }               
