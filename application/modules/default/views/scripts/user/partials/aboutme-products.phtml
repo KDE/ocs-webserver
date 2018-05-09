@@ -19,6 +19,16 @@
                         </span>
                     </div>
                 </a>
+                
+                <?php
+                if($product['countplings'] >0)
+                {
+                ?>
+                <div class="countplings"><span class="num"><?=$product['countplings']?></span> <img src="/images/system/pling-btn-active.png"/> </div>
+                <?php 
+                }
+                ?>
+                
                 <?php
                 $this->widgetRating = new stdClass();
                 $this->widgetRating->project_id = $product['project_id'];
@@ -37,3 +47,24 @@
             echo '<button id="btnshowmoreproducts" data-page='.($this->projectpage+1).'>Show More</button>';
         }
         ?>
+
+
+<style type="text/css">
+        .countplings 
+        {
+  
+            position: absolute;
+            bottom: 10px;
+            left: 20px;
+            font-size: 12px;
+
+        }
+        .countplings img
+        {
+            width: 15px;
+            height: 15px;
+        }
+
+
+
+</style>

@@ -98,7 +98,9 @@ class UserController extends Local_Controller_Action_DomainSwitch
                     $this->view->pageLimit =$pageLimit;
                     $this->view->projectpage =$projectpage;
                     $this->view->total_records = $total_records ;
-                    $this->view->userProducts = $tableProject->fetchAllProjectsForMember($this->_memberId, $pageLimit, ($projectpage - 1) * $pageLimit,true);
+                    //$this->view->userProducts = $tableProject->fetchAllProjectsForMember($this->_memberId, $pageLimit, ($projectpage - 1) * $pageLimit,true);
+                    $this->view->userProducts = $tableProject->getUserActiveProjects($this->_memberId, $pageLimit, ($projectpage - 1) * $pageLimit);
+                    
                     $this->_helper->layout->disableLayout();                         
                     $this->_helper->viewRenderer('partials/aboutmeProducts');       
                     
@@ -110,8 +112,9 @@ class UserController extends Local_Controller_Action_DomainSwitch
                     $this->view->pageLimit =$pageLimit;
                     $this->view->projectpage =$projectpage;
                     $this->view->total_records = $total_records ;
-                    $this->view->userProducts = $tableProject->fetchAllProjectsForMember($this->_memberId, $pageLimit, ($projectpage - 1) * $pageLimit,true);
-                   
+                    //$this->view->userProducts = $tableProject->fetchAllProjectsForMember($this->_memberId, $pageLimit, ($projectpage - 1) * $pageLimit,true);                    
+                    $this->view->userProducts = $tableProject->getUserActiveProjects($this->_memberId, $pageLimit, ($projectpage - 1) * $pageLimit);
+
                     $paginationComments = $tableMember->fetchComments($this->_memberId);
                     if ($paginationComments) {
                         $offset = (int)$this->getParam('page');
