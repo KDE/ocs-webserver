@@ -78,6 +78,8 @@ if (Zend_Auth::getInstance()->hasIdentity()){
 $tableProjectFollower = new Default_Model_DbTable_ProjectFollower();
 $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->project_id);
 
+$projectplings = new Default_Model_ProjectPlings();
+$this->projectplings = $projectplings->fetchPlingsForProject($this->product->project_id);
 ?>
 
     <!-- facebook -->
@@ -134,14 +136,14 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
     <div id="like-product-modal" class="modal fade noid" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-sm" role="document">
            <div class="modal-content" style="min-height: 100px; ">
-               <span style="text-align: center; display: block; padding-top: 30px">Please login.</span>
+               <span style="text-align: center; display: block; padding-top: 30px">Please login. <br/><a href="<?=$loginUrl?>">Login</a></span>
            </div>
          </div>          
     </div>
     
     <?php } ?>
     
-    <?php if (Zend_Auth::getInstance()->hasIdentity() && $this->isSupporter($identity->member_id)) { ?>
+    <?php if (Zend_Auth::getInstance()->hasIdentity()) { ?>
     <div id="review-product-modal" class="modal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content" style="padding-bottom: 20px">
@@ -169,7 +171,17 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
         <div id="review-product-modal" class="modal fade noid" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-sm" role="document">
                <div class="modal-content" style="min-height: 150px; ">
-                   <span style="text-align: center; display: block; padding-top: 30px">Only registered members with an active supporting can vote<br/>to limit spam and fraud voting.<br/> <a href="/support">Become a supporter</a> <br/><br/>You can still 'Like' a product, but that doesn't affect its score. </span>
+                   <span style="text-align: center; display: block; padding-top: 30px">
+                    Please login.
+                    <br/>
+                    <a href="<?=$loginUrl?>"> Login </a>
+                   <?php /*
+                    Only registered members with an active supporting can vote<br/>to limit spam and fraud voting.<br/>
+                    <a href="/support">Become a supporter</a> 
+                    <br/><br/>You can still 'Like' a product, but that doesn't affect its score. 
+                        */
+                    ?>
+                    </span>
                </div>
              </div>          
         </div>
@@ -274,24 +286,41 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
                             </div>
                           
                             <div class="product-title-right" >
-                                    <div class="projectdtailHeart">
-                                        <div id="container-follow<?=$this->product->project_id?>">     
+
+<?php /*                                  
+                                <div class="projectdtailHeart">
+                                    <div id="container-pling<?=$this->product->project_id?>" class="container-pling">     
+                                    <?php                                 
+                                        echo $this->partial(
+                                            '/product/partials/projectplings.phtml',
+                                            array(
+                                                "authMember"  => $identity,
+                                                "project_id" => $this->product->project_id
+                                            )
+                                        );                                
+                                    ?>                                
+                                    </div>                                                  
+                                </div>
+*/
+?>
+                                <div class="projectdtailHeart">
+                                        <div id="container-follow<?=$this->product->project_id?>" class="container-pling">     
                                         <?php                                 
                                             echo $this->partial(
-                                                '/product/followp.phtml',
+                                                '/product/partials/projectlike.phtml',
                                                 array(
                                                     "authMember"  => $identity,
                                                     "project_id" => $this->product->project_id
                                                 )
                                             );                                
                                         ?>                                
-                                        </div>  
-                                                      
-                                    </div>
+                                        </div>                                                        
+                                </div>
+                                  
                                     
-                                    <div class="projectdetailRating" style="clear: right">
-                                    <?php echo $this->render('partials/sidebarRating.phtml'); ?>
-                                    </div>
+                                <div class="projectdetailRating" style="clear: right">
+                                        <?php echo $this->render('partials/sidebarRating.phtml'); ?>
+                                </div>
                             </div>
                         </div>
                         <div id="carouselContainer" class="carouselContainer">
@@ -392,6 +421,9 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
                         <?php } ?>
                          <?php if(count($this->likes)>0){ ?>
                             <li><a href="#likes-panel" data-toggle="tab">Favs <?php echo '('.count($this->likes).')';  ?></a></li>
+                        <?php } ?>
+                        <?php if(count($this->projectplings)>0){ ?>
+                            <li><a href="#plings-panel" data-toggle="tab">Plings <?php echo '('.count($this->projectplings).')';  ?></a></li>
                         <?php } ?>
                         </ul>
                     </div>
@@ -511,11 +543,26 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
                             </div>
                         </div>
                         <?php } ?>
+
+                        <!-- ratings panel -->
+                        <?php  if (count($this->projectplings) > 0) { ?>
+                        <div class="tab-pane" id="plings-panel">
+                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                            <article>
+                                <div id="productPlingsContainer">
+                                <?php                                    
+                                       echo $this->render('product/partials/productPlings.phtml');                                   
+                                  ?>
+                                  </div>
+                            </article>
+                            </div>
+                        </div>
+                        <?php } ?>
                         
                         <div class="tab-pane" id="files-panel">
                             <div class="col-lg-12">
-                                <?php
-                                echo $this->render('product/partials/ppload.phtml');
+                                <?php                             
+                                        echo $this->render('product/partials/ppload.phtml');                              
                                 ?>
                             </div>
                         </div>
@@ -533,7 +580,8 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
             <div class="flex-item-4 flex-right" id="product-maker">
                 <div>
                     <div class="project-share-new col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        <script type="text/javascript">
+      
+                          <script type="text/javascript">
                             function fbs_click(a) {
                                 u = location.href;
                                 t = document.title;
@@ -572,6 +620,11 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
                         </script>
                         <script src="https://apis.google.com/js/platform.js" async defer></script>
 
+                        
+                        
+
+
+
                         <?php if (empty($this->product->claimable)) { ?>
                             <div class="prod-widget-box prod-user right ">
                                 <div class="sidebar-content">
@@ -603,8 +656,38 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
                             </div>
                         <?php } ?>
 
+                        <div class="prod-widget-box right ">
+                                <div class="projectdtailHeart">
+                                    <div id="container-pling<?=$this->product->project_id?>" class="container-pling" >     
+                                    <?php                                 
+                                        echo $this->partial(
+                                            '/product/partials/projectplings.phtml',
+                                            array(
+                                                "authMember"  => $identity,
+                                                "project_id" => $this->product->project_id,
+                                                "ppload_collection_id" => $this->product->ppload_collection_id,
+                                                "project_category_id" => $this->product->project_category_id
+                                            )
+                                        );                                
+                                    ?>                                
+                                    </div>                                                  
+                                </div>
+                        </div>
+
                         <?php /* echo $this->render('partials/sidebarRating.phtml');  */ ?>
-                        
+                          <?php /*
+                        <div>
+                            <div class="prod-widget-box right">
+                                <div  class="btn-group dropleft" style="width: 100%">
+                                    <button style="width: 100%" id="project_btn_download" class="btn btn-primary active" type="button">
+                                    Get it                                 
+                                    </button>                                                               
+                                </div>                                                               
+                            </div>
+                        </div>
+                            */ 
+                        ?>
+
                         <div>
                             <div class="prod-widget-box right">
                                 <div  class="btn-group dropleft" style="width: 100%">
@@ -622,6 +705,7 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
                                 </div> 
                             </div>
                         </div>
+                       
 
 
                         <!-- MORE PRODUCTS -->
@@ -716,7 +800,8 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
             PartialJson.setup();
             ProductDetailCarousel.setup();          
             PartialCommentReviewForm.setup();
-            PartialsButtonHeartDetail.setup();           
-            TooltipUser.setup("tooltipuserleft","left");                  
+            PartialsButtonHeartDetail.setup();    
+            PartialsButtonPlingProject.setup();       
+            TooltipUser.setup("tooltipuserleft","left");              
         });
     ');

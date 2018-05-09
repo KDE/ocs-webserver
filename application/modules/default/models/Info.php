@@ -771,6 +771,47 @@ class Default_Model_Info
         return $result;
     }
 
+     public function getNewActivePlingProduct($limit = 20)
+    {
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cacheName = __FUNCTION__ . '_' . md5((int)$limit);
+
+        if (false !== ($newSupporters = $cache->load($cacheName))) {
+            return $newSupporters;
+        }
+
+        $config = Zend_Registry::get('config');
+        $member_id = $config->settings->member->plingcat->id;
+        
+        $sql = '  
+                        select 
+                        pl.member_id
+                        ,pl.project_id                        
+                        ,p.title
+                        ,p.image_small
+                        ,(select profile_image_url from member m where pl.member_id = m.member_id) as profile_image_url
+                        ,(select username from member m where pl.member_id = m.member_id) as username
+                        ,laplace_score(p.count_likes, p.count_dislikes) AS laplace_score
+                        ,p.count_likes
+                        ,p.count_dislikes         
+                        ,(
+                            select min(created_at) from project_plings pt where pt.member_id = pl.member_id and pt.project_id=pl.project_id
+                        ) as created_at        
+                        from project_plings pl
+                        inner join project p on pl.project_id = p.project_id and p.status > 30                        
+                        where pl.is_deleted = 0 and pl.is_active = 1 and pl.member_id <> :sysuserid
+                        order by created_at desc                                                  
+        ';        
+        if (isset($limit)) {
+            $sql .= ' limit ' . (int)$limit;
+        }
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('sysuserid'=>$member_id))->fetchAll();
+        
+        $cache->save($result, $cacheName, array(), 300);
+        return $result;
+    }
+
     public function getCountActiveSupporters()
     {
         /** @var Zend_Cache_Core $cache */
@@ -793,6 +834,7 @@ class Default_Model_Info
         $cache->save($totalcnt, $cacheName,array() , 300);
         return $totalcnt;
     }
+
 
      public function getCountMembers()
     {
@@ -863,5 +905,14 @@ class Default_Model_Info
         $cache->save($data, $cacheName,array() , 3600);
         return $data;
     }
+
+
+     public function getProbablyPayoutPlingsCurrentmonth($project_id)
+    {       
+        $sql = " select FORMAT(probably_payout_amount, 2) as amount from member_dl_plings where project_id = :project_id and yearmonth=(DATE_FORMAT(NOW(),'%Y%m'))";                   
+        $result = Zend_Db_Table::getDefaultAdapter()->fetchRow($sql,array('project_id'=>$project_id));
+         return $result['amount'];
+    }
+
 
 }

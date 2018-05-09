@@ -33,8 +33,10 @@ $helperPrintDate = new Default_View_Helper_PrintDate();
 $textCountryCity = $this->member->city;
 $textCountryCity .= $this->member->country ? ', ' . $this->member->country : '';
 
-
 $isSupporter = $this->stat['donationIssupporter'];
+
+$config = Zend_Registry::get('config');
+$plingcatid = $config->settings->member->plingcat->id;
 ?>
     <main class="about-me-page">
 
@@ -86,6 +88,16 @@ $isSupporter = $this->stat['donationIssupporter'];
                                     <div class="row">
                                        <span class="cnt"><?=$this->stat['cntComments']?> </span> Comments
                                     </div>
+
+                                    <?php if($this->member->member_id != $plingcatid):?>
+                                    <div class="row">
+                                       Plinged <span class="cnt"> <?=$this->stat['cntPlingsHeGave']?> </span>Products
+                                    </div>
+                                    <div class="row">
+                                       Got <span class="cnt"> <?=$this->stat['cntPlingsHeGot']?> </span><img  src="/images/system/pling-btn-active.png" style="width:20px; height:20px" />
+                                    </div>
+                                <?php endif; ?>
+
                                     <div class="row">
                                        Likes <span class="cnt"> <?=$this->stat['cntLikesHeGave']?> </span>Products
                                     </div>
@@ -236,6 +248,14 @@ $isSupporter = $this->stat['donationIssupporter'];
                                 </a>
                             </li>
                           <?php } ?>
+
+                          <?php if(($this->member->member_id != $plingcatid) && $this->plings->getTotalItemCount()>0){ ?>
+                            <li>
+                                <a href="#user-plings" data-toggle="tab" role="tab"  aria-controls="user-plings">
+                                    Plings (<?=$this->plings->getTotalItemCount()?>)
+                                </a>
+                            </li>
+                          <?php } ?>
                           
                         </ul>
                         </div>
@@ -305,6 +325,15 @@ $isSupporter = $this->stat['donationIssupporter'];
                                   </div>
                             </div> 
                             <?php } ?>  
+
+                            <?php if(($this->member->member_id != $plingcatid) && $this->plings->getTotalItemCount()>0){ ?>
+                            <div  role="tabpanel" class="tab-pane " id="user-plings">       
+                                    <div class="my-fav-list">                                                                   
+                                  <?php echo $this->render('user/partials/aboutme-plings.phtml'); ?>
+                                  </div>
+                            </div> 
+                            <?php } ?>  
+
 
                              <?php if(count($this->rated)>0){ ?>
                             <div  role="tabpanel" class="tab-pane " id="user-rated">    

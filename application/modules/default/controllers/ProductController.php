@@ -60,6 +60,25 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $modelRating->rateForProject($this->_projectId, $this->_authMember->member_id, $userRating);
     }
 
+
+    public function pploadAction()
+    {
+        $this->_helper->layout->disableLayout();
+         $modelProduct = new Default_Model_Project();
+        $productInfo = $modelProduct->fetchProductInfo($this->_projectId);
+        //create ppload download hash: secret + collection_id + expire-timestamp
+        $salt = PPLOAD_DOWNLOAD_SECRET;
+        $collectionID = $productInfo->ppload_collection_id;
+        $timestamp = time() + 3600; // one hour valid
+        $hash = md5($salt . $collectionID . $timestamp); // order isn't important at all... just do the same when verifying
+
+        $this->view->download_hash = $hash;
+        $this->view->download_timestamp = $timestamp;
+        
+        $this->view->product = $productInfo;
+        $this->_helper->viewRenderer('/partials/pploadajax');
+    }
+
     public function indexAction()
     {
         if (!empty($this->_collectionId)) {
@@ -120,6 +139,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->indexAction();
     }
 
+   
+
     public function addAction()
     {
         $form = new Default_Form_Product();
@@ -168,6 +189,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 $newProject = $modelProject->updateProject($values['project_id'], $values);
             } else {
                 $newProject = $modelProject->createProject($this->_authMember->member_id, $values, $this->_authMember->username);
+                $this->createSystemPlingForNewProject($newProject->project_id);
             }
         } catch (Exception $exc) {
             Zend_Registry::get('logger')->warn(__METHOD__ . ' - traceString: ' . $exc->getTraceAsString());
@@ -235,6 +257,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         return $imageModel->saveImages($form_element);
     }
+
 
     /**
      * @param $projectData
@@ -1366,6 +1389,172 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
     }
 
+    protected function logActivity($logId)
+    {
+        $tableProduct = new Default_Model_Project();
+        $product = $tableProduct->find($this->_projectId)->current();
+        $activityLog = new Default_Model_ActivityLog();
+        $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id,
+            $logId, $product->toArray());
+    }
+
+
+    public function followprojectAction()
+    {
+        $this->_helper->layout()->disableLayout();
+       
+        $this->view->project_id = $this->_projectId;
+        $this->view->authMember = $this->_authMember;
+
+        // not allow to pling himself
+        if (array_key_exists($this->_projectId, $this->_authMember->projects)) 
+        {
+             $this->_helper->json(array(
+                    'status' => 'error',
+                    'msg'   => 'not allowed'
+                ));
+            return;
+        }
+
+
+        $projectFollowTable = new Default_Model_DbTable_ProjectFollower();
+
+        $newVals = array('project_id' => $this->_projectId, 'member_id' => $this->_authMember->member_id);
+        $where = $projectFollowTable->select()->where('member_id = ?', $this->_authMember->member_id)
+                                    ->where('project_id = ?', $this->_projectId, 'INTEGER')  ;
+      
+        $result = $projectFollowTable->fetchRow($where);
+
+        if (null === $result) {
+            $projectFollowTable->createRow($newVals)->save();
+            $this->logActivity(Default_Model_ActivityLog::PROJECT_FOLLOWED);            
+            $cnt = $projectFollowTable->countForProject($this->_projectId);  
+             $this->_helper->json(array(
+                    'status' => 'ok',
+                    'msg'   => 'Success.',
+                    'cnt'  => $cnt,
+                    'action' =>'insert'
+                ));              
+        }else{            
+            $projectFollowTable->delete('member_id=' . $this->_authMember->member_id . ' AND project_id='
+            . $this->_projectId);
+            $this->logActivity(Default_Model_ActivityLog::PROJECT_UNFOLLOWED);
+            $cnt = $projectFollowTable->countForProject($this->_projectId);  
+            $this->_helper->json(array(
+                    'status' => 'ok',
+                    'msg'   => 'Success.',
+                    'cnt'  => $cnt,
+                    'action' => 'delete'
+                ));
+        }           
+        
+    }
+
+
+    public function plingprojectAction()
+    {
+        $this->_helper->layout()->disableLayout();
+       
+        $this->view->project_id = $this->_projectId;
+        $this->view->authMember = $this->_authMember;
+
+        // not allow to pling himself
+        if (array_key_exists($this->_projectId, $this->_authMember->projects)) 
+        {
+             $this->_helper->json(array(
+                    'status' => 'error',
+                    'msg'   => 'not allowed'
+                ));
+            return;
+        }
+
+        // not allow to pling if not supporter
+        $helperIsSupporter = new Default_View_Helper_IsSupporter();
+        if(!$helperIsSupporter->isSupporter($this->_authMember->member_id))
+        {
+             $this->_helper->json(array(
+                    'status' => 'error',
+                    'msg'   => 'become a supporter first please. '
+                ));
+            return;
+        }
+
+
+        $projectplings = new Default_Model_ProjectPlings();
+
+        $newVals = array('project_id' => $this->_projectId, 'member_id' => $this->_authMember->member_id);
+        $sql = $projectplings->select()
+                ->where('member_id = ?', $this->_authMember->member_id)
+                ->where('is_deleted = ?',0)
+                ->where('project_id = ?', $this->_projectId, 'INTEGER')
+        ;
+        $result = $projectplings->fetchRow($sql);
+
+        if (null === $result) {
+             $projectplings->createRow($newVals)->save();
+             //$this->logActivity(Default_Model_ActivityLog::PROJECT_PLINGED_2);
+        
+             $cnt = $projectplings->getPlingsAmount($this->_projectId);  
+             $this->_helper->json(array(
+                    'status' => 'ok',
+                    'msg'   => 'Success.',
+                    'cnt'  => $cnt,
+                    'action' =>'insert'
+                ));           
+        }else{
+
+            // delete pling
+            $projectplings->setDelete($result->project_plings_id);           
+            //$this->logActivity(Default_Model_ActivityLog::PROJECT_DISPLINGED_2);            
+
+             $cnt = $projectplings->getPlingsAmount($this->_projectId);  
+            $this->_helper->json(array(
+                    'status' => 'ok',
+                    'msg'   => 'Success.',
+                    'cnt'  => $cnt,
+                    'action' => 'delete'
+                ));
+        }           
+        
+    }
+
+/**
+
+    public function unplingprojectAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        
+        $projectplings = new Default_Model_ProjectPlings();
+        $pling = $projectplings->getPling($this->_projectId,$this->_authMember->member_id);
+
+        if($pling)
+        {
+            $projectplings->setDelete($pling->project_plings_id);
+            $cnt = count($projectplings->getPlings($this->_projectId));     
+             $this->_helper->json(array(
+                    'status' => 'ok',
+                    'deleted' => $pling->project_plings_id,
+                    'msg'   => 'Success. ',
+                     'cnt'  => $cnt
+                ));
+
+             $tableProduct = new Default_Model_Project();
+            $product = $tableProduct->find($this->_projectId)->current();   
+
+            $activityLog = new Default_Model_ActivityLog();
+            $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id,
+            Default_Model_ActivityLog::PROJECT_DISPLINGED_2, $product->toArray());
+        }else{
+             $this->_helper->json(array(
+                    'status' => 'error',
+                    'msg'   => 'not existing.'
+                ));
+        }
+ 
+
+    }
+**/
+
     public function followsAction()
     {
         $projectFollowTable = new Default_Model_Member();
@@ -1726,7 +1915,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
     }
     
     
-    public function updatearchitectureAction()
+    public function updatearchitectureAction() 
     {
         $this->_helper->layout()->disableLayout();
 
@@ -1964,11 +2153,33 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $modelProject = new Default_Model_Project();
         $newProject =
             $modelProject->createProject($this->_authMember->member_id, $formValues, $this->_authMember->username);
-
+        $this->createSystemPlingForNewProject($newProject->project_id);
         //New Project in Session, for AuthValidation (owner)
         $this->_auth->getIdentity()->projects[$newProject->project_id] = array('project_id' => $newProject->project_id);
 
         $this->_helper->json(array('status' => 'ok', 'project_id' => $newProject->project_id));
+    }
+
+
+    protected function createPling($member_id,$project_id)
+    {
+            $projectplings = new Default_Model_ProjectPlings();
+            $newVals = array('project_id' =>$project_id, 'member_id' => $member_id);
+            $sql = $projectplings->select()
+                    ->where('member_id = ?', $this->_authMember->member_id)
+                    ->where('is_deleted = ?',0)
+                    ->where('project_id = ?', $this->_projectId, 'INTEGER');
+            $result = $projectplings->fetchRow($sql);
+             if (null === $result) {
+                 $projectplings->createRow($newVals)->save();
+             }
+    }
+
+    protected function createSystemPlingForNewProject($project_id)
+    {
+            $config = Zend_Registry::get('config');
+            $member_id = $config->settings->member->plingcat->id;
+            $this->createPling($member_id,$project_id);
     }
 
     /**

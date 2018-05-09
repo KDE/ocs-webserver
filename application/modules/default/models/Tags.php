@@ -25,10 +25,15 @@
 class Default_Model_Tags
 {
     const TAG_TYPE_PROJECT = 1;
+    const TAG_TYPE_MEMBER = 2;
+    const TAG_TYPE_FILE = 3;
+    
     const TAG_USER_GROUPID = 5;
     const TAG_CATEGORY_GROUPID = 6;
 
     const TAG_LICENSE_GROUPID = 7;
+    const TAG_PACKAGETYPE_GROUPID = 8;
+    const TAG_ARCHITECTURE_GROUPID = 9;
 
     /**
      * Default_Model_Tags constructor.
@@ -474,6 +479,48 @@ class Default_Model_Tags
                 $this->getAdapter()->query($sql, array('tag_id' => $tag_id, 'tag_type_id' => $this::TAG_TYPE_PROJECT, 'tag_object_id' => $object_id, 'tag_group_id' => $this::TAG_LICENSE_GROUPID));
             }
         }
+        
+    }
+    
+    
+    public function saveArchitectureTagForProject($project_id, $file_id, $tag_id) {
+        
+        //first delte old
+        $sql = "DELETE FROM tag_object WHERE tag_group_id = :tag_group_id AND tag_type_id = :tag_type_id AND tag_object_id = :tag_object_id AND tag_parent_object_id = :tag_parent_object_id";
+        $this->getAdapter()->query($sql, array('tag_group_id' => $this::TAG_ARCHITECTURE_GROUPID, 'tag_type_id' => $this::TAG_TYPE_FILE, 'tag_object_id' => $file_id, 'tag_parent_object_id' => $project_id));
+
+        if($tag_id) {
+            $sql = "INSERT IGNORE INTO tag_object (tag_id, tag_type_id, tag_object_id, tag_parent_object_id, tag_group_id) VALUES (:tag_id, :tag_type_id, :tag_object_id, :tag_parent_object_id, :tag_group_id)";
+            $this->getAdapter()->query($sql, array('tag_id' => $tag_id, 'tag_type_id' => $this::TAG_TYPE_FILE, 'tag_object_id' => $file_id, 'tag_parent_object_id' => $project_id, 'tag_group_id' => $this::TAG_ARCHITECTURE_GROUPID));
+        }
+            
+        /**
+        $tableTags = new Default_Model_DbTable_Tags();
+        
+        $tags = $tableTags->fetchArchitectureTagsForProject($object_id);
+        if(count($tags) == 1) {
+            $tag = $tags[0];
+            
+            //remove tag license
+            if(!$tag_id) {
+                $sql = "DELETE FROM tag_object WHERE tag_item_id = :tagItemId";
+                $this->getAdapter()->query($sql, array('tagItemId' => $tag['tag_item_id']));
+            } else {
+                //Update old tag
+                if($tag_id <> $tag['tag_id']) {
+                    $sql = "UPDATE tag_object SET tag_changed = NOW(),tag_id = :tag_id WHERE tag_item_id = :tagItemId";
+                    $this->getAdapter()->query($sql, array('tagItemId' => $tag['tag_item_id'], 'tag_id' => $tag_id));
+                }
+            }
+        } else {
+            //insert new tag
+            if($tag_id) {
+                $sql = "INSERT IGNORE INTO tag_object (tag_id, tag_type_id, tag_object_id, tag_group_id) VALUES (:tag_id, :tag_type_id, :tag_object_id, :tag_group_id)";
+                $this->getAdapter()->query($sql, array('tag_id' => $tag_id, 'tag_type_id' => $this::TAG_TYPE_PROJECT, 'tag_object_id' => $object_id, 'tag_group_id' => $this::TAG_ARCHITECTURE_GROUPID));
+            }
+        }
+         * 
+         */
         
     }
 

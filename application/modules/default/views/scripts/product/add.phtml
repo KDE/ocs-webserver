@@ -799,22 +799,19 @@ $this->inlineScript()->appendScript('
                                     });
                                 }
 
-                                //downloadlink is now: domain/api/files/download/id/ID/s/TOKEN/t/TIMESTAMP/FILE_NAME/u/USERID
+                                //downloadlink is now: domain/api/files/downloadfile/id/ID/s/TOKEN/t/TIMESTAMP/u/USERID/FILE_NAME
                                 var hash = '<?= $this->download_hash ?>';
                                 var timetamp = '<?= $this->download_timestamp ?>';
                                 var userid = '<?= $this->member_id?>';
 
                                 var downloadUrl = pploadApiUri + 'files/downloadfile/id/' + this.id + '/o/1/s/' + hash + '/t/' + timetamp + '/u/' + userid + '/' + this.name;
-                                var downloadLink = '<a href="' + downloadUrl + '" id="data-link' + this.id + '">' + this.name + '</a>';
+                                var downloadLinkFilename = link ? this.name + ' (External Link)' : this.name;
+                                var downloadLink = '<a href="' + downloadUrl + '" id="data-link' + this.id + '">' + downloadLinkFilename + '</a>';
 
-                                if(this.active == '0') {
-                                    deletePploadFileBtnPerFile = '';
-                                    downloadLink = this.name;
-                                    if ((typeof link != 'undefined') && (link != "")) {
-                                        downloadLink = this.name + ' (External Link)';
-                                    }
-                                } else {
+                                if(this.active == '1') {
                                     deletePploadFileBtnPerFile = deletePploadFileBtn;
+                                } else {
+                                    deletePploadFileBtnPerFile = '';
                                 }
 
                                 $modalPpload.find('table[data-ppload-files] tbody').append(
@@ -849,7 +846,7 @@ $this->inlineScript()->appendScript('
                                     + '<option value=\"4\">Windows executable</option>'
                                     + '</select>'
                                     + '</td>'
-                                    /*
+                                    <?php /*
                                     + '<td>'
                                     + '<select class="form-control input-sm" id="data-select-architecture' + this.id + '" data-architecture-id="" name="architecture">'
                                     + '    <option value=""></option>'
@@ -865,7 +862,7 @@ $this->inlineScript()->appendScript('
                                         ?>
                                     + '</select>'
                                     + '</td>'
-                                    */
+                                    */?>
                                     + '<td>' + this.created_timestamp + '</td>'
                                     + '<td style="text-align: right">' + humanFileSize(this.size) + '</td>'
                                     + '<td>' + deletePploadFileBtnPerFile + '</td>'
@@ -875,7 +872,7 @@ $this->inlineScript()->appendScript('
                                 //$("#data-select-license" + this.id + " option[value='"+licenseId+"']").attr('selected', 'selected');
                                 $("#data-select-packagetype" + this.id + " option[value='"+packagetypeId+"']").attr('selected', 'selected');
                                 
-                                $("#data-select-architecture" + this.id + " option[value='"+architectureId+"']").attr('selected', 'selected');
+                                //$("#data-select-architecture" + this.id + " option[value='"+architectureId+"']").attr('selected', 'selected');
                                 
                                 /*
                                 $licenseSelect = $modalPpload.find('#data-select-license' + this.id);
@@ -888,11 +885,12 @@ $this->inlineScript()->appendScript('
                                 if(this.active == '0') {
                                     $packagetypeSelect.prop('disabled', 'disabled');
                                 }
-                                
+                                /*
                                 $architectureSelect = $modalPpload.find('#data-select-architecture' + this.id);
                                 if(this.active == '0') {
                                     $architectureSelect.prop('disabled', 'disabled');
                                 }
+                                */
 
                                 if ((typeof link != 'undefined') && (link != "")) {
                                     //$("#data-link" + this.id).attr('href', decodeURIComponent(link));
@@ -1071,7 +1069,7 @@ $this->inlineScript()->appendScript('
                                 + '<option value=\"4\">Windows executable</option>'
                                 + '</select>'
                                 + '</td>'
-                                /*
+                                <?php /*
                                 + '<td>'
                                 + '<select class="form-control input-sm" id="data-select-architecture' + data.file.id + '" data-architecture-id="" name="architecture">'
                                 + '    <option value=""></option>'
@@ -1087,7 +1085,7 @@ $this->inlineScript()->appendScript('
                                     ?>
                                 + '</select>'
                                 + '</td>'
-                                */
+                                */ ?>
                         
                                 + '<td>' + data.file.created_timestamp + '</td>'
                                 + '<td style="text-align: right">' + humanFileSize(data.file.size) + '</td>'
@@ -1163,6 +1161,7 @@ $this->inlineScript()->appendScript('
                         }
                     });
                 }
+                
                 
                 function updateArchitecture(fileId, architectureId) { 
                     var $url = ($modalPpload.attr('data-updatearchitecture-uri')).replace(/@@project_id@@/i, ProductForm.project_id);

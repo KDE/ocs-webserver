@@ -126,14 +126,16 @@ if ($this->countDownloadsOverall > 0) {
 }
 ?>
 </ul>
-<div class="container-fluid margin-bottom-10" style="padding-left: 0; padding-right: 0;">
+<div class="container-fluid margin-bottom-12" style="padding-left: 0; padding-right: 0;">
     <div class="row">
         <div class="col-md-1"></div>
-        <div class="col-md-5 text-left text-uppercase"><strong>Products</strong></div>
-        <div class="col-md-2 text-right text-uppercase"><strong>Downloads</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Downloads" data-trigger="hover" data-html="true" data-content="Sum of all downloads of all files (active or archived of this product within this month."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
-        <div class="col-md-2 text-right text-uppercase"><strong>Pling-Factor</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Pling-Factor" data-trigger="hover" data-html="true" data-content="The Pling-Factor's base is $-cent and depends on the product category.<br>A factor of '1' means:<br>1 Download equals 1 $-cent."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+        <div class="col-md-6 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Products</strong></div>
+        <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong>Downloads</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Downloads" data-trigger="hover" data-html="true" data-content="Sum of all downloads of all files (active or archived of this product within this month."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+        <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong>Pling-Factor</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Pling-Factor" data-trigger="hover" data-html="true" data-content="The Pling-Factor's base is $-cent and depends on the product category.<br>A factor of '1' means:<br>1 Download equals 1 $-cent."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
         <!--<div class="col-md-2 text-right text-uppercase"><strong>plings</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="plings" data-trigger="hover" data-html="true" data-content="You can collect new plings every month. The number of plings results from the pling factor. At the beginning of each month you will be paid the plings of the previous month to your PayPal account. Where: <b>1 pling = $0.01</b>.<br>A valid PayPal address must be maintained in your settings and the payout amount must be at least one dollar. If you do not meet these requirements, we can not pay you anything. We will check these requirements every month."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>-->
-        <div class="col-md-2 text-right text-uppercase"><strong>Earned</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="payout" data-trigger="hover" data-html="true" data-content="The payout amount results from the Pling-Factor of each product, where the result in $-cent is the number of downloads multiplied by the Pling-Factor."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+        <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong>Earned</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="payout" data-trigger="hover" data-html="true" data-content="The payout amount results from the Pling-Factor of each product, where the result in $-cent is the number of downloads multiplied by the Pling-Factor."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+        <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong>Limit</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Limit" data-trigger="hover" data-html="true" data-content="The Limit is 1 + number of plings of products."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+        <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong>Payout</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Payout Sum" data-trigger="hover" data-html="true" data-content="Your Payout Sum."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
     </div>
 </div>
 <div class="tab-content">
@@ -163,30 +165,31 @@ if ($this->countDownloadsOverall > 0) {
             $css_active = '';
 
             foreach ($products as $product) { ?>
-                <div class="row margin-bottom-10">
+                <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;">
 
                     <div class="col-md-1 cell-default">
                         <a href="<?= $helperBuildProductUrl->buildProductUrl($product['project_id'], ''); ?>">
                             <img src="<?php echo $helpImage->Image($product['image_small'], array('width' => 80, 'height' => 65)); ?> " height="81" width="101"/>
                         </a>
                     </div>
-                    <div class="col-md-5 text-left cell-default">
+                    <div class="col-md-6 text-left cell-default">
+                    
                         <a href="<?= $helperBuildProductUrl->buildProductUrl($product['project_id'], ''); ?>">
                             <span style="line-height: 3em;"><?= $product['title']; ?></span>
                         </a>
                         <b style="display: block; margin-bottom: 5px; font-size: 10pt; line-height: 0em;"><?=$product['cat_title']?></b>
                     </div>
-                    <div class="col-md-2 text-right cell-default">
+                    <div class="col-md-1 text-right cell-default">
                         <span><?= $product['num_downloads'] ?></span>
                     </div>
-                    <div class="col-md-2 text-right cell-default">
+                    <div class="col-md-1 text-right cell-default">
                         <span><?= $product['dl_pling_factor'] ?></span>
                     </div>
                     <?php /*
                     <div class="col-md-2 text-right cell-default">
                         <span><?= $product['num_downloads'] * $product['dl_pling_factor'] ?></span>
                     </div> */ ?>
-                    <div class="col-md-2 text-right cell-default">
+                    <div class="col-md-1 text-right cell-default">
                         <span>
                         <?php 
                             $errorMsg = "<ul>";
@@ -205,6 +208,7 @@ if ($this->countDownloadsOverall > 0) {
                                     $errorMsg .= "<li>This Product has been excluded from plings</li>";
                                     $showErrMsg = true;
                                 }
+                                $sum_plings = $product['num_plings_now'];
                             } else {
                                 if($product['is_license_missing'] == 1) {
                                     $errorMsg .= "<li>License was not specified</li>";
@@ -218,6 +222,8 @@ if ($this->countDownloadsOverall > 0) {
                                     $errorMsg .= "<li>This Product has been excluded from plings</li>";
                                     $showErrMsg = true;
                                 }
+                                $sum_plings = $product['num_plings'];
+                                
                             } 
                             $errorMsg .= "</ul>";
                             
@@ -230,14 +236,49 @@ if ($this->countDownloadsOverall > 0) {
                         </span>
                         
                     </div>
+                    
+                    <div class="col-md-1 text-right cell-default">
+                        <?php
+                            $show_plings_sum = $sum_plings;
+                            if(!$sum_plings) {
+                                $show_plings_sum = '-';
+                            }
+                        ?>
+                        <span><?= $show_plings_sum ?></span>
+                    </div>
+                    <div class="col-md-1 text-right cell-default">
+                        <?php if(!$showErrMsg) {
+                                $payout_sum = $product['num_downloads'] * $product['dl_pling_factor'] / 100;
+                                $show_payout_sum = $payout_sum;
+                                
+                                if($sum_plings && $sum_plings < $payout_sum) {
+                                    $show_payout_sum = $sum_plings;
+                                    $payout_sum = $sum_plings;
+                                } 
+                                if($sum_plings && $sum_plings>0) {
+                                   $show_payout_sum = $currency->toCurrency($show_payout_sum) ;
+                                   
+                                } else {
+                                    $show_payout_sum = $currency->toCurrency($payout_sum) ;
+                                }
+                        ?>
+                        <span><?= $show_payout_sum ?></span>
+                        <?php } else { ?>
+                        <span>&nbsp;</span>
+                        <?php } ?>
+
+                    </div>
 
                 </div>
                 <?php
+                
                 if(!$showErrMsg) {       
-                    $sum_total_month += $product['num_downloads'] * $product['dl_pling_factor'];
+                    $sum_total_month += $payout_sum;
+                    $sum_total_payout = $currency->toCurrency($sum_total_month);
                 }
+                
                 $sum_total_text = 'Possible payout for this month (<span style="font-size: smaller;">*</span>):';
-                $sum_total_payout = $currency->toCurrency($sum_total_month/100);
+                
                 $payout_success = false;
                 if ($product['status'] == Default_Model_DbTable_MemberPayout::$PAYOUT_STATUS_COMPLETED) {
                     $payout_success = true;
