@@ -242,10 +242,6 @@ if ($this->countDownloadsOverall > 0) {
                             $show_plings_sum = $sum_plings;
                             if(!$sum_plings) {
                                 $show_plings_sum = '-';
-                            } else {
-                                if($show_plings_sum>1) {
-                                    $show_plings_sum = '1 + ' . ($show_plings_sum-1);
-                                }
                             }
                         ?>
                         <span><?= $show_plings_sum ?></span>
