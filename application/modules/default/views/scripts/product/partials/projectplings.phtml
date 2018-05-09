@@ -55,12 +55,12 @@ $out ='<div role="button" class="partialbuttonplingproject" '.$heartatt.' style=
 
 $out = $out.'</div>';
 
+echo $out;
+/**
+
 $pmodel = new  Default_Model_DbTable_ProjectPlings();
-
 $soll = $this->getCurrentMonthPlings($this->ppload_collection_id, $this->project_category_id);
-
 $pling = $cntplings;
-
 $score = 0;
 $left = 0;
 $right = 0;
@@ -100,8 +100,13 @@ $out = $out.'<div style="display:flex;clear:both">'.$sollhtml.'<div class="pling
                               <div class="progress-bar" style="background-color: '.$plingcolor.';width: '.$left.'%;">   '.$poshtml.'  </div> 
                               <div class="progress-bar" style="background-color: #eeeeee;width: '.$right.'%;"> </div>                                              
                           </div></div></div>';
-echo $out;
 
+
+
+
+
+
+**/
 
 ?>
 
