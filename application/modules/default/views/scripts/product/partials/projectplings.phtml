@@ -46,7 +46,17 @@ $heartatt = $heartatt. 'role="button" data-fragment=""  '
                          .' data-issupporter="'.$isSupporter.'"'                         
         .' data-auth="'.$member_id.'"';
 $out ='<div role="button" class="partialbuttonplingproject" '.$heartatt.' style="display:block; float:right">';
- $out = $out. '<div class="plingbartext"  ><span class="plingnum"> '.$cntplings.'</span> Plings  </div>';
+
+if($cntplings==0)
+{
+    $out = $out. '<div class="plingbartext"><span class="plingnum">  Pling me </span> </div>';  
+}
+else
+{
+    $out = $out. '<div class="plingbartext"><span class="plingnum"> '.$cntplings.' Plings</span> </div>';
+}
+
+ 
  if ($isPlinged){             
       $out = $out.'<img id="plingbtn" data-src="/images/system/pling-btn-active.png" src="/images/system/pling-btn-active.png"/>';       
  }else{                  
@@ -55,12 +65,12 @@ $out ='<div role="button" class="partialbuttonplingproject" '.$heartatt.' style=
 
 $out = $out.'</div>';
 
+echo $out;
+/**
+
 $pmodel = new  Default_Model_DbTable_ProjectPlings();
-
 $soll = $this->getCurrentMonthPlings($this->ppload_collection_id, $this->project_category_id);
-
 $pling = $cntplings;
-
 $score = 0;
 $left = 0;
 $right = 0;
@@ -100,8 +110,13 @@ $out = $out.'<div style="display:flex;clear:both">'.$sollhtml.'<div class="pling
                               <div class="progress-bar" style="background-color: '.$plingcolor.';width: '.$left.'%;">   '.$poshtml.'  </div> 
                               <div class="progress-bar" style="background-color: #eeeeee;width: '.$right.'%;"> </div>                                              
                           </div></div></div>';
-echo $out;
 
+
+
+
+
+
+**/
 
 ?>
 

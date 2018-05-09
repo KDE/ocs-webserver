@@ -831,13 +831,20 @@ var PartialsButtonPlingProject = (function () {
                         }else{
                             if(response.action=='delete'){
                                 //pling deleted
-                                $(target).find('.plingnum').html(response.cnt);                           
+                                if(response.cnt==0)
+                                {
+                                    $(target).find('.plingnum').html('Pling me');                               
+                                }else
+                                {
+                                    $(target).find('.plingnum').html(response.cnt+ ' Plings');                           
+                                }
+                                
                                 $(target).find('#plingbtn').attr('src','/images/system/pling-btn-normal.png');
                                 $(target).find('#plingbtn').attr('data-src','/images/system/pling-btn-normal.png');
                                                                                              
                             }else{
                                 //pling inserted
-                                $(target).find('.plingnum').html(response.cnt);       
+                                $(target).find('.plingnum').html(response.cnt+ ' Plings');                           
                                 $(target).find('#plingbtn').attr('src','/images/system/pling-btn-active.png');                                
                                 $(target).find('#plingbtn').attr('data-src','/images/system/pling-btn-active.png');                                
                             }
