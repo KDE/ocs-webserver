@@ -46,7 +46,7 @@ $heartatt = $heartatt. 'role="button" data-fragment=""  '
                          .' data-issupporter="'.$isSupporter.'"'                         
         .' data-auth="'.$member_id.'"';
 $out ='<div role="button" class="partialbuttonplingproject" '.$heartatt.' style="display:block; float:right">';
- $out = $out. '<div class="plingtext"  ><span class="plingnum"> '.$cntplings.'</span> Plings  </div>';
+ $out = $out. '<div class="plingbartext"  ><span class="plingnum"> '.$cntplings.'</span> Plings  </div>';
  if ($isPlinged){             
       $out = $out.'<img id="plingbtn" data-src="/images/system/pling-btn-active.png" src="/images/system/pling-btn-active.png"/>';       
  }else{                  
@@ -72,11 +72,23 @@ if($soll > $pling){
     $score = 100;
     $left=100;
     $right = 0;
-    $rightlinepos = $pling*200/$soll;
+    if($soll == 0)
+    {
+        $rightlinepos = 0;  
+    }else{
+        $rightlinepos = $pling*200/$soll;
+    }
+    
     $poshtml = '<div class="progress-bar" style="background-color:#fff;  width:2px; position:relative; left:'.$rightlinepos.'px "></div>';
 }else{
     $is_f = 0;
-    $score = $soll/$pling;
+    if($pling==0){
+       $score = 1;
+    }else
+    {
+        $score = $soll/$pling;  
+    }
+    
     $left = $score*100;
     $right = 100-$left;
 }
@@ -93,13 +105,10 @@ echo $out;
 
 ?>
 
-<style type="text/css">
-      div.projectdtailHeart{
-            float: right;           
-            z-index: 100;                                 
-        }
+<style type="text/css"> 
+  
      
-        div.plingtext{        
+        div.plingbartext{        
           padding-right: 15px;
           float: left;
           padding-top: 6px;
