@@ -737,7 +737,7 @@ $architectureListHelper = new Default_View_Helper_FetchArchitectureTags();
 
                                  $pploadCollection.find('table[data-ppload-files] tfoot').append(
                                      '<tr>'
-                                     + '<th colspan="5">' + myArrayActive.length + ' <?= $this->translate("files")?> (<span style="color: #ccc;" ><a style="cursor:pointer" onclick="fnToggleInactiveFiles();return false;">'+myArrayInactive.length+' archived</a></span>)</th>'
+                                     + '<th colspan="6">' + myArrayActive.length + ' <?= $this->translate("files")?> (<span style="color: #ccc;" ><a style="cursor:pointer" onclick="fnToggleInactiveFiles();return false;">'+myArrayInactive.length+' archived</a></span>)</th>'
                                      + '<th style="text-align: right">' + downloaded_count_total + '</th>'
                                      + '<th></th>'
                                     + '<th style="text-align: right">' + fileSizeSum.toFixed(2) + ' MB</th>'
