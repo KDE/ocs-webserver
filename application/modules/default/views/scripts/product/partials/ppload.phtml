@@ -44,8 +44,10 @@ $architectureListHelper = new Default_View_Helper_FetchArchitectureTags();
                                     <h3 id="modal-installation-instructions-label"><?= $this->translate('Installation Instructions') ?></h3>
                                 </div>
                                 <div class="modal-body">
-
+<?php /*
                                 <iframe src="https://opendesktop.github.io/ocs-url/opendesktoporg-help.html" width="100%" height="500" frameborder="0" seamless id="iframeInstallInstruction"></iframe>
+              */
+                                ?>
                                 </div>
                             </div>
                         </div>
@@ -937,16 +939,10 @@ $architectureListHelper = new Default_View_Helper_FetchArchitectureTags();
                  });
 
                 $(function() {
-                    $('#modal-installation-instructions').on('hidden.bs.modal', function (e) {
-                              var iframe = document.getElementById('iframeInstallInstruction');
-                              var leg=$(iframe).attr("src");
-                              $(iframe).attr("src","");
-                        });
 
                     $('#modal-installation-instructions').on('show.bs.modal', function (e) {
-                              var iframe = document.getElementById('iframeInstallInstruction');
-                              var leg=$(iframe).attr("src");
-                              $(iframe).attr("src","https://opendesktop.github.io/ocs-url/opendesktoporg-help.html");
+                              var framehtml = '<iframe src="https://opendesktop.github.io/ocs-url/opendesktoporg-help.html" width="100%" height="500" frameborder="0" seamless id="iframeInstallInstruction"></iframe>';
+                              $('#modal-installation-instructions').find('.modal-body').html(framehtml);                              
                         });
 
                 });
