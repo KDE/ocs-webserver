@@ -757,6 +757,7 @@ class Default_Model_Info
                         SELECT 
                         distinct s.member_id as supporter_id
                         ,m.*
+                        ,s.active_time as created_at
                         from support s 
                         left join member m on s.member_id = m.member_id
                         where s.status_id = 2  
