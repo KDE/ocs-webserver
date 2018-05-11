@@ -32,8 +32,8 @@
                             
                             <img class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="<?=$p['member_id']?>" src="<?php echo $this->Image($p['profile_image_url'], array('width' => '50', 'height' => '50', 'crop' => 2)); ?>" style="width:40px; height: 40px"/>
                         </figure>
-                        <h3 class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><?php echo Default_Model_HtmlPurify::purify($p['username']); ?></h3>
-                        <div class="projecttitle"> 
+                        
+                        <div class="projecttitle" style="font-size: 12px;"> 
                                 <?= $this->truncate($p['title'], 45) ?>
                         </div>                                                   
                     </a>
