@@ -110,7 +110,7 @@ class Default_Model_DbTable_ProjectPlings extends Zend_Db_Table_Abstract
         $config = Zend_Registry::get('config');
         $plingcat_id = $config->settings->member->plingcat->id;
          $sql = "
-                    select sum(cntplings) AS count 
+                    select IFNULL(sum(cntplings), 0)  AS count 
                     from
                     (
                         select 
