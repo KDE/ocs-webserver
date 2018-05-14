@@ -755,7 +755,8 @@ var PartialsButtonHeartDetail = (function () {
                         if(response.status =='error'){
                              $(target).html( response.msg );
                         }else{
-                            if(response.action=='delete'){                                
+                            if(response.action=='delete'){             
+                                //$(target).find('.likelabel').html(response.cnt +' Likes');                   
                                 $(target).find('.plingtext').html(response.cnt);
                                 $(target).find('.plingtext').addClass('heartnumberpurple'); 
                                  $(target).find('.plingheart').removeClass('heartproject').addClass('heartgrey');       
@@ -763,6 +764,7 @@ var PartialsButtonHeartDetail = (function () {
 
                                                                                                                                                 
                             }else{                                
+                                //$(target).find('.likelabel').html(response.cnt +' Likes');       
                                 $(target).find('.plingtext').html(response.cnt);      
                                 $(target).find('.plingtext').removeClass('heartnumberpurple'); 
                                 $(target).find('.plingheart').removeClass('heartgrey').addClass('heartproject');        
