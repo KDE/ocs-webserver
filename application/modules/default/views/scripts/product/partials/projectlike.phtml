@@ -39,6 +39,8 @@ $heartatt = $heartatt. 'role="button" data-fragment=""  '
         .' data-href="'.$urlUserFollows.'"'                                          
         .' data-auth="'.$member_id.'"';
 $out ='<div role="button" class="partialbuttonfollowproject" '.$heartatt.'>';
+
+$out = $out.$cntheart.' Favs ';
  if ($isFollower){         
       $out = $out. '<i class="plingheart fa fa-heart heartproject " aria-hidden="true"></i>';      
       $out = $out. '<div class="plingtext heartnumber  small"> '.$cntheart.' </div>';
@@ -53,4 +55,13 @@ echo $out;
 ?>
 
 
+<style type="text/css">
+	.container-like{
+		width: 80px !important;
+	}
+	.container-like .heartproject {
+		float: right !important;
+	}
+
+</style>
 
