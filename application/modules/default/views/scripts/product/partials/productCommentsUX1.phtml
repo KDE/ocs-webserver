@@ -126,7 +126,23 @@ $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountP
                                 </p>
                         </h4>
                         
-                        <div class="text"><?= nl2br(Default_Model_HtmlPurify::purify($comment['comment_text']),true) ?></div>
+                        <div class="text">
+                        
+                        <?php
+
+                            if(!is_null($comment['rating']))
+                            {
+                                if($comment['rating']==1){
+                                    echo '<span class="btn btn-success active" style="cursor:default;line-height: 10px;padding: 3px 6px;"><span class="fa fa-plus" ></span></span>';
+                                }else
+                                {
+                                    echo '<span class="btn btn-danger active" style="cursor:default;line-height: 10px;padding: 3px 6px;"><span class="fa fa-minus" ></span></span>';
+                                }
+                            }
+                        ?>
+                        
+                        <?= nl2br(Default_Model_HtmlPurify::purify($comment['comment_text']),true) ?>                            
+                        </div>
                         <p>
                             <small class="small pull-right">
                             <?php if (Zend_Auth::getInstance()->hasIdentity()) { ?>
