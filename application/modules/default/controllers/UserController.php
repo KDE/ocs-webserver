@@ -141,6 +141,14 @@ class UserController extends Local_Controller_Action_DomainSwitch
                     $plist->setCurrentPageNumber($offset);
                     $this->view->plings  = $plist;
 
+                     // plings   Currently no paging...                    
+                    $plingmodel = new Default_Model_ProjectPlings();
+                    $offset = null;
+                    $pslist  = $plingmodel->fetchPlingsForSupporter($this->_memberId);
+                    $pslist->setItemCountPerPage(1000);
+                    $pslist->setCurrentPageNumber($offset);
+                    $this->view->supportersplings  = $pslist;
+
                     // rated
                     $ratemodel = new Default_Model_DbTable_ProjectRating();
                     $this->view->rated =  $ratemodel->getRatedForMember($this->_memberId);

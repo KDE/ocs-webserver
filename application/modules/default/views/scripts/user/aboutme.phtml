@@ -252,7 +252,15 @@ $plingcatid = $config->settings->member->plingcat->id;
                           <?php if(($this->member->member_id != $plingcatid) && $this->plings->getTotalItemCount()>0){ ?>
                             <li>
                                 <a href="#user-plings" data-toggle="tab" role="tab"  aria-controls="user-plings">
-                                    Plings (<?=$this->plings->getTotalItemCount()?>)
+                                    Plinged (<?=$this->plings->getTotalItemCount()?>)
+                                </a>
+                            </li>
+                          <?php } ?>
+
+                          <?php if(($this->member->member_id != $plingcatid) && $this->supportersplings->getTotalItemCount()>0){ ?>
+                            <li>
+                                <a href="#supporters-plings" data-toggle="tab" role="tab"  aria-controls="supporters-plings">
+                                    Supporters (<?=$this->supportersplings->getTotalItemCount()?>)
                                 </a>
                             </li>
                           <?php } ?>
@@ -330,6 +338,14 @@ $plingcatid = $config->settings->member->plingcat->id;
                             <div  role="tabpanel" class="tab-pane " id="user-plings">       
                                     <div class="my-fav-list">                                                                   
                                   <?php echo $this->render('user/partials/aboutme-plings.phtml'); ?>
+                                  </div>
+                            </div> 
+                            <?php } ?>  
+
+                            <?php if(($this->member->member_id != $plingcatid) && $this->supportersplings->getTotalItemCount()>0){ ?>
+                            <div  role="tabpanel" class="tab-pane " id="supporters-plings">       
+                                    <div class="my-fav-list">                                                                   
+                                        <?php echo $this->render('user/partials/aboutme-supporters.phtml'); ?>       
                                   </div>
                             </div> 
                             <?php } ?>  

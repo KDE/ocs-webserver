@@ -43,16 +43,39 @@ class Default_Model_ProjectPlings extends Default_Model_DbTable_ProjectPlings
                         ,p.cat_title
                         ,p.count_likes
                         ,p.count_dislikes
-                        FROM project_plings f
-                        inner join member m on f.member_id = m.member_id and m.is_active=1 AND m.is_deleted=0 
+                        ,p.laplace_score
+                        FROM project_plings f                        
                         INNER JOIN stat_projects p ON p.project_id = f.project_id 
-                        WHERE (p.status = 100) AND f.is_deleted= 0 AND (f.member_id = :member_id) 
+                        WHERE (p.status = 100) and f.is_active = 1 AND f.is_deleted= 0 AND (f.member_id = :member_id) 
                         order by f.created_at desc
              ";
 
             $resultSet = $this->_db->fetchAll($sql, array('member_id' => $memberId));
             return new Zend_Paginator(new Zend_Paginator_Adapter_Array($resultSet ));     
     }
+
+    public function fetchPlingsForSupporter($memberId)
+     {            
+            $config = Zend_Registry::get('config');
+            $plingcat_id = $config->settings->member->plingcat->id;
+              $sql = "
+                                SELECT                          
+                                                  f.member_id                       
+                                                 , count(1) as cntplings
+                                                ,(select profile_image_url from  member m where m.member_id = f.member_id ) as profile_image_url
+                                                ,(select username from  member m where m.member_id = f.member_id ) as username
+                                                 ,(select max(active_time) from support s where s.member_id = f.member_id and status_id = 2) as active_time
+                                                 FROM project_plings f                        
+                                                 INNER JOIN stat_projects p ON p.project_id = f.project_id 
+                                                 WHERE (p.status = 100) AND f.is_active = 1 and f.is_deleted= 0 AND (p.member_id = :member_id) and f.member_id <> :plingcat_id
+                                                 group by f.member_id
+                                                 order by cntplings desc
+                                                
+              ";
+
+             $resultSet = $this->_db->fetchAll($sql, array('member_id' => $memberId, 'plingcat_id' =>$plingcat_id));
+             return new Zend_Paginator(new Zend_Paginator_Adapter_Array($resultSet ));     
+     }
 
      public function fetchPlingsForProject($project_id)
     {            
