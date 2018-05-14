@@ -223,7 +223,7 @@ if ($this->countDownloadsOverall > 0) {
         if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {        
 ?>
                     <div class="col-md-1 text-right cell-default">
-                        <span><?= $product['laplace_score'] ?></span>
+                        <span><?= round($product['laplace_score'],2) ?></span>
                     </div>
                     <div class="col-md-1 text-right cell-default">
                         <span><?php print($currency->toCurrency( ($product['num_downloads'] * $product['dl_pling_factor'] / 100) * $product['laplace_score'])); ?></span>
