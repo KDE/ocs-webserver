@@ -266,7 +266,7 @@ if ($this->countDownloadsOverall > 0) {
                                     $show_payout_new_sum = $payout_sum_new;
                                 }
                         ?>
-                        <span><?= $show_payout_new_sum ?></span>
+                        <span><?= $currency->toCurrency($show_payout_new_sum) ?></span>
                         <?php } else { ?>
                         <span>&nbsp;</span>
                         <?php } ?>
@@ -297,7 +297,7 @@ if ($this->countDownloadsOverall > 0) {
             $sum_total_month_view = number_format($sum_total_month);
             ?>
             <div class='row row-total'>
-                <div class='col-md-9 text-right'><?=$sum_total_text?></div><div class='col-md-1 text-right'><strong><?=$sum_total_payout?></strong></div><div class='col-md-1 text-right'></div><div class='col-md-1 text-right'><strong><?=$sum_total_payout_new?></strong></div>
+                <div class='col-md-9 text-right'><?=$sum_total_text?></div><div class='col-md-1 text-right'><strong style="color: green;"><?=$sum_total_payout?></strong></div><div class='col-md-1 text-right'></div><div class='col-md-1 text-right'><strong style="color: red;"><?=$sum_total_payout_new?></strong></div>
                 
             </div>
             
