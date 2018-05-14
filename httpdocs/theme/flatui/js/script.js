@@ -755,16 +755,18 @@ var PartialsButtonHeartDetail = (function () {
                         if(response.status =='error'){
                              $(target).html( response.msg );
                         }else{
-                            if(response.action=='delete'){                                
-                                $(target).find('.plingtext').html(response.cnt);
-                                $(target).find('.plingtext').addClass('heartnumberpurple'); 
+                            if(response.action=='delete'){             
+                                $(target).find('.likelabel').html(response.cnt +' Likes');                   
+                                // $(target).find('.plingtext').html(response.cnt);
+                                // $(target).find('.plingtext').addClass('heartnumberpurple'); 
                                  $(target).find('.plingheart').removeClass('heartproject').addClass('heartgrey');       
                                  $(target).find('.plingheart').removeClass('fa-heart').addClass('fa-heart-o');      
 
                                                                                                                                                 
                             }else{                                
-                                $(target).find('.plingtext').html(response.cnt);      
-                                $(target).find('.plingtext').removeClass('heartnumberpurple'); 
+                                $(target).find('.likelabel').html(response.cnt +' Likes');       
+                                // $(target).find('.plingtext').html(response.cnt);      
+                                // $(target).find('.plingtext').removeClass('heartnumberpurple'); 
                                 $(target).find('.plingheart').removeClass('heartgrey').addClass('heartproject');        
                                 $(target).find('.plingheart').removeClass('fa-heart-o').addClass('fa-heart');                                                                                       
                             }                                
