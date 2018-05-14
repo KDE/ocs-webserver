@@ -301,7 +301,7 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
                                         ?>                                
                                         </div>                                                        
                                 </div>
-
+                                          
          
                                     
                                 <div class="projectdetailRating" style="clear: right">
@@ -406,7 +406,7 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
                             <li><a href="#ratings-panel" data-toggle="tab">Ratings & Reviews <?php echo '('.count($this->ratings).')';  ?></a></li>
                         <?php } ?>
                          <?php if(count($this->likes)>0){ ?>
-                            <li><a href="#likes-panel" data-toggle="tab">Fans <?php echo '('.count($this->likes).')';  ?></a></li>
+                            <li><a href="#likes-panel" data-toggle="tab">Favs <?php echo '('.count($this->likes).')';  ?></a></li>
                         <?php } ?>
                         <?php if(count($this->projectplings)>0){ ?>
                             <li><a href="#plings-panel" data-toggle="tab">Plings <?php echo '('.count($this->projectplings).')';  ?></a></li>
