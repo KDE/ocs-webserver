@@ -41,6 +41,7 @@ class Default_Model_StatDownload
                     project.title,
                     project.image_small,
                     project_category.title as cat_title,
+                    laplace_score(project.count_likes, project.count_dislikes)/100 AS laplace_score,
                     member_payout.amount,
                     member_payout.`status`,
                     member_payout.payment_transaction_id,
