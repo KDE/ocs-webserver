@@ -126,10 +126,21 @@ if ($this->countDownloadsOverall > 0) {
 }
 ?>
 </ul>
+
 <div class="container-fluid margin-bottom-12" style="padding-left: 0; padding-right: 0;">
     <div class="row">
         <div class="col-md-1"></div>
+<?php
+        if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {        
+?>                    
+        <div class="col-md-4 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Products</strong></div>
+<?php
+        } else {
+?>
         <div class="col-md-6 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Products</strong></div>
+<?php
+        }
+?>        
         <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong>Downloads</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Downloads" data-trigger="hover" data-html="true" data-content="Sum of all downloads of all files (active or archived of this product within this month."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
         <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong>Pling-Factor</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Pling-Factor" data-trigger="hover" data-html="true" data-content="The Pling-Factor's base is $-cent and depends on the product category.<br>A factor of '1' means:<br>1 Download equals 1 $-cent."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
 <?php
@@ -183,7 +194,18 @@ if ($this->countDownloadsOverall > 0) {
                             <img src="<?php echo $helpImage->Image($product['image_small'], array('width' => 80, 'height' => 65)); ?> " height="81" width="101"/>
                         </a>
                     </div>
+<?php
+        if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {        
+?>                    
+                    <div class="col-md-4 text-left cell-default">
+<?php
+        } else {
+?>
                     <div class="col-md-6 text-left cell-default">
+<?php
+        }
+?>
+                        
                     
                         <a href="<?= $helperBuildProductUrl->buildProductUrl($product['project_id'], ''); ?>">
                             <span style="line-height: 3em;"><?= $product['title']; ?></span>
