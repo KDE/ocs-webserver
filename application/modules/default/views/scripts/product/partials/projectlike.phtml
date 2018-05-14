@@ -40,18 +40,17 @@ $heartatt = $heartatt. 'role="button" data-fragment=""  '
         .' data-auth="'.$member_id.'"';
 $out ='<div role="button" class="partialbuttonfollowproject" '.$heartatt.'>';
 
-$out = $out.'<span class="likelabel">'.$cntheart.' Likes </span>';
+//$out = $out.'<span class="likelabel">'.$cntheart.' Likes </span>';
  if ($isFollower){         
       $out = $out. '<i class="plingheart fa fa-heart heartproject " aria-hidden="true"></i>';      
-    //   $out = $out. '<div class="plingtext heartnumber  small"> '.$cntheart.' </div>';
- }else{                  
-        $out = $out. '<i class="plingheart fa fa-heart-o heartgrey " aria-hidden="true"></i>';      
-      //  $out = $out. '<div class="plingtext heartnumber heartnumberpurple small"> '.$cntheart.' </div>';
+      $out = $out. '<div class="plingtext heartnumber  small"> '.$cntheart.' </div>';
+ } else{                  
+      $out = $out. '<i class="plingheart fa fa-heart-o heartgrey " aria-hidden="true"></i>';      
+      $out = $out. '<div class="plingtext heartnumber heartnumberpurple small"> '.$cntheart.' </div>';
  }
-
  
  $out = $out.'</div>';
-echo $out;
+ echo $out;
 ?>
 
 
