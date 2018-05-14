@@ -271,21 +271,6 @@ if ($this->countDownloadsOverall > 0) {
                         
                     </div>
 
-<?php
-        if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {        
-?>
-                    <div class="col-md-1 text-right cell-default">
-                        <span><?= round($product['laplace_score'],2) ?></span>
-                    </div>
-                    <div class="col-md-1 text-right cell-default">
-                        <span><?php print($currency->toCurrency( ($product['num_downloads'] * $product['dl_pling_factor'] / 100) * $product['laplace_score'])); ?></span>
-                    </div>
-<?php
-        }
-?>
-                        
-                        
-                        
                     <div class="col-md-1 text-right cell-default">
                         <?php
                             $show_plings_sum = $sum_plings;
@@ -345,11 +330,11 @@ if ($this->countDownloadsOverall > 0) {
             $sum_total_month_view = number_format($sum_total_month);
             ?>
             <div class='row row-total'>
+                
 <?php
         if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {        
 ?>                
                 <div class='col-md-8 text-right'><?=$sum_total_text?></div>
-                <div class='col-md-1 text-right'><strong><?=$sum_total_payout_score?></strong></div>
 <?php
         } else {
 ?>
@@ -358,6 +343,14 @@ if ($this->countDownloadsOverall > 0) {
         }
 ?>                
                 <div class='col-md-1 text-right'><strong style="color: green;"><?=$sum_total_payout?></strong></div>
+                
+<?php
+        if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {        
+?>                 
+                <div class='col-md-1 text-right'><strong><?=$sum_total_payout_score?></strong></div>
+<?php
+        }
+?>                
                 <div class='col-md-1 text-right'></div>
                 <div class='col-md-1 text-right'><strong style="color: red;"><?=$sum_total_payout_new?></strong></div>
                 
