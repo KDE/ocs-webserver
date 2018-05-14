@@ -287,22 +287,7 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
                           
                             <div class="product-title-right" >
 
-<?php /*                                  
-                                <div class="projectdtailHeart">
-                                    <div id="container-pling<?=$this->product->project_id?>" class="container-pling">     
-                                    <?php                                 
-                                        echo $this->partial(
-                                            '/product/partials/projectplings.phtml',
-                                            array(
-                                                "authMember"  => $identity,
-                                                "project_id" => $this->product->project_id
-                                            )
-                                        );                                
-                                    ?>                                
-                                    </div>                                                  
-                                </div>
-*/
-?>
+                                                    <?php /*           
                                 <div class="projectdtailHeart">
                                         <div id="container-follow<?=$this->product->project_id?>" class="container-pling">     
                                         <?php                                 
@@ -316,7 +301,9 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
                                         ?>                                
                                         </div>                                                        
                                 </div>
-                                  
+                                            */
+                                ?>
+         
                                     
                                 <div class="projectdetailRating" style="clear: right">
                                         <?php echo $this->render('partials/sidebarRating.phtml'); ?>
@@ -657,7 +644,20 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
                         <?php } ?>
 
                         <div class="prod-widget-box right ">
+                            
                                 <div class="projectdtailHeart">
+                                    <div id="container-follow<?=$this->product->project_id?>" class="container-like" >     
+                                    <?php                                 
+                                        echo $this->partial(
+                                            '/product/partials/projectlike.phtml',
+                                            array(
+                                                "authMember"  => $identity,
+                                                "project_id" => $this->product->project_id
+                                            )
+                                        );                                
+                                    ?>                                
+                                    </div>        
+
                                     <div id="container-pling<?=$this->product->project_id?>" class="container-pling" >     
                                     <?php                                 
                                         echo $this->partial(
