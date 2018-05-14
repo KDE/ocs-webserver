@@ -133,9 +133,9 @@ if ($this->countDownloadsOverall > 0) {
         <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong>Downloads</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Downloads" data-trigger="hover" data-html="true" data-content="Sum of all downloads of all files (active or archived of this product within this month."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
         <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong>Pling-Factor</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Pling-Factor" data-trigger="hover" data-html="true" data-content="The Pling-Factor's base is $-cent and depends on the product category.<br>A factor of '1' means:<br>1 Download equals 1 $-cent."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
         <!--<div class="col-md-2 text-right text-uppercase"><strong>plings</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="plings" data-trigger="hover" data-html="true" data-content="You can collect new plings every month. The number of plings results from the pling factor. At the beginning of each month you will be paid the plings of the previous month to your PayPal account. Where: <b>1 pling = $0.01</b>.<br>A valid PayPal address must be maintained in your settings and the payout amount must be at least one dollar. If you do not meet these requirements, we can not pay you anything. We will check these requirements every month."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>-->
-        <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong>Amount</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Amount" data-trigger="hover" data-html="true" data-content="This shows the maximum possible amount that is the result of the number of downloads multiplied by the Pling-Factor."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+        <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong style="color: green;">Payout</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Payout" data-trigger="hover" data-html="true" data-content="This shows the amount that will be payed out to you until May 2019."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
         <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong>Plings</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Plings" data-trigger="hover" data-html="true" data-content="Plings = 1 System Pling + Supporter Plings for that product."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
-        <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong>Payout</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Payout Sum" data-trigger="hover" data-html="true" data-content="Your Payout Sum."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+        <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong style="color: red;">Payout-New**</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Payout-New" data-trigger="hover" data-html="true" data-content="This new Payout will become active in May 2019."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
     </div>
 </div>
 <div class="tab-content">
@@ -157,8 +157,10 @@ if ($this->countDownloadsOverall > 0) {
         }
         
         $sum_total_month = 0;
+        $sum_total_month_new = 0;
         $sum_total_text = '';
         $sum_total_payout = 0;
+        $sum_total_payout_new = 0;
         ?>
         <div class="tab-pane fade <?=$css_active?>" id="<?=$month?>">
             <?php
@@ -250,19 +252,20 @@ if ($this->countDownloadsOverall > 0) {
                         <?php if(!$showErrMsg) {
                                 $payout_sum = $product['num_downloads'] * $product['dl_pling_factor'] / 100;
                                 $show_payout_sum = $payout_sum;
+                                $show_payout_new_sum = $payout_sum;
                                 
                                 if($sum_plings && $sum_plings < $payout_sum) {
-                                    $show_payout_sum = $sum_plings;
+                                    $show_payout_new_sum = $sum_plings;
                                     $payout_sum = $sum_plings;
                                 } 
                                 if($sum_plings && $sum_plings>0) {
-                                   $show_payout_sum = $currency->toCurrency($show_payout_sum) ;
+                                   $show_payout_new_sum = $currency->toCurrency($show_payout_new_sum) ;
                                    
                                 } else {
-                                    $show_payout_sum = $currency->toCurrency($payout_sum) ;
+                                    $show_payout_new_sum = $currency->toCurrency($payout_sum) ;
                                 }
                         ?>
-                        <span><?= $show_payout_sum ?></span>
+                        <span><?= $show_payout_new_sum ?></span>
                         <?php } else { ?>
                         <span>&nbsp;</span>
                         <?php } ?>
@@ -275,6 +278,8 @@ if ($this->countDownloadsOverall > 0) {
                 if(!$showErrMsg) {       
                     $sum_total_month += $payout_sum;
                     $sum_total_payout = $currency->toCurrency($sum_total_month);
+                    $sum_total_month_new += $show_payout_new_sum;
+                    $sum_total_payout_new = $currency->toCurrency($sum_total_month_new);
                 }
                 
                 $sum_total_text = 'Possible payout for this month (<span style="font-size: smaller;">*</span>):';
@@ -291,7 +296,7 @@ if ($this->countDownloadsOverall > 0) {
             $sum_total_month_view = number_format($sum_total_month);
             ?>
             <div class='row row-total'>
-                <div class='col-md-11 text-right'><?=$sum_total_text?></div><div class='col-md-1 text-right'><strong><?=$sum_total_payout?></strong></div>
+                <div class='col-md-9 text-right'><?=$sum_total_text?></div><div class='col-md-1 text-right'><strong><?=$sum_total_payout?></strong></div><div class='col-md-1 text-right'></div><div class='col-md-1 text-right'><strong><?=$sum_total_payout_new?></strong></div>
                 
             </div>
             
@@ -338,6 +343,9 @@ if ($this->countDownloadsOverall > 0) {
     
     
 ?>
+    <div id="le-alert"  class="alert alert-warning alert-block" role="alert">
+        <p>(**) The Payout-New will not become active until May 2019.</p>
+    </div>
     <div id="le-alert"  class="alert alert-warning alert-block" role="alert">
         <p>(*) Info:</p><p>This service will become active on May, 1st 2017. All previous months are shown for internal testing only. </p>
         <p>This service is considered Beta until othwise announced.</p>
