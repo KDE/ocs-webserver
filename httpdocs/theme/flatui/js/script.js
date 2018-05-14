@@ -891,7 +891,7 @@ var PartialsReview = (function () {
                     } else {
                         $('#review-product-modal').find('input#voteup').val(1);
                         $('#review-product-modal').find('#votelabel').empty()
-                            .append('<a class="btn btn-success active" style="line-height: 10px;"><span class="fa fa-plus"></span></a> Add Comment (optional):');
+                            .append('<a class="btn btn-success active" style="line-height: 10px;"><span class="fa fa-plus"></span></a> Add Comment (min. 3 chars):');
                         $('#review-product-modal').find('#commenttext').val('');
                         $('#review-product-modal').find('#commenttext').removeAttr("disabled");
                         $('#review-product-modal').find(':submit').css("display", "block").removeAttr("disabled");
@@ -907,7 +907,7 @@ var PartialsReview = (function () {
                     } else {
                         $('#review-product-modal').find('input#voteup').val(2);
                         $('#review-product-modal').find('#votelabel').empty()
-                            .append('<a class="btn btn-danger active" style="line-height: 10px;"><span class="fa fa-minus"></span></a> Add Comment (optional): ');
+                            .append('<a class="btn btn-danger active" style="line-height: 10px;"><span class="fa fa-minus"></span></a> Add Comment (min. 3 chars): ');
                         $('#review-product-modal').find('#commenttext').val('');
                         $('#review-product-modal').find('#commenttext').removeAttr("disabled");
                         $('#review-product-modal').find(':submit').removeAttr("disabled").css("display", "block");
@@ -948,7 +948,7 @@ var PartialsReviewDownloadHistory = (function () {
                     } else {
                         $('#review-product-modal').find('input#voteup').val(1);
                         $('#review-product-modal').find('#votelabel').empty()
-                            .append('<a class="btn btn-success active" style="line-height: 10px;"><span class="fa fa-plus"></span></a> Add Comment (optional):');
+                            .append('<a class="btn btn-success active" style="line-height: 10px;"><span class="fa fa-plus"></span></a> Add Comment (min. 3 chars):');
                         $('#review-product-modal').find('#commenttext').val('');
                         $('#review-product-modal').find('#commenttext').removeAttr("disabled");
                         $('#review-product-modal').find(':submit').css("display", "block").removeAttr("disabled");
@@ -964,7 +964,7 @@ var PartialsReviewDownloadHistory = (function () {
                     } else {
                         $('#review-product-modal').find('input#voteup').val(2);
                         $('#review-product-modal').find('#votelabel').empty()
-                            .append('<a class="btn btn-danger active" style="line-height: 10px;"><span class="fa fa-minus"></span></a> Add Comment (optional): ');
+                            .append('<a class="btn btn-danger active" style="line-height: 10px;"><span class="fa fa-minus"></span></a> Add Comment (min. 3 chars): ');
                         $('#review-product-modal').find('#commenttext').val('');
                         $('#review-product-modal').find('#commenttext').removeAttr("disabled");
                         $('#review-product-modal').find(':submit').removeAttr("disabled").css("display", "block");
@@ -1139,7 +1139,16 @@ var PartialCommentReviewForm = (function () {
         initForm: function () {
             $('body').on("submit", 'form.product-add-comment-review', function (event) {
                 event.preventDefault();
-                event.stopImmediatePropagation();
+                event.stopImmediatePropagation();            
+                var c = $.trim($('#commenttext').val());                
+                if(c.length<4)
+                {
+                        if($('#review-product-modal').find('#votelabel').find('.warning').length==0)
+                        {
+                            $('#review-product-modal').find('#votelabel').append("</br><span class='warning' style='color:red'> Please give a comment, thanks!</span>");                   
+                        }                        
+                        return;
+                }                
 
                 $(this).find(':submit').attr("disabled", "disabled");
                 $(this).find(':submit').css("white-space", "normal");

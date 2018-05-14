@@ -755,14 +755,16 @@ class Default_Model_Info
         }
         $sql = '
                         SELECT 
-                        distinct s.member_id as supporter_id
-                        ,m.*
-                        ,s.active_time as created_at
+                        s.member_id as supporter_id
+                        ,s.member_id
+                        ,(select username from member m where m.member_id = s.member_id) as username
+                        ,(select profile_image_url from member m where m.member_id = s.member_id) as profile_image_url
+                        ,min(s.active_time) as created_at
                         from support s 
-                        left join member m on s.member_id = m.member_id
                         where s.status_id = 2  
                         and (DATE_ADD((s.active_time), INTERVAL 1 YEAR) > now())
-                        order by s.active_time desc                        
+                        group by member_id
+                        order by s.active_time desc                                       
         ';        
         if (isset($limit)) {
             $sql .= ' limit ' . (int)$limit;

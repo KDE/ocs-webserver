@@ -193,11 +193,13 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
                     //Send a notification to the parent comment writer
                     $this->sendNotificationToParent($this->view->product, $data['comment_text'], $data['comment_parent_id']);
                 }
-            } else {
-                $voteup = (int)$this->getParam('v');
-                $modelRating = new Default_Model_DbTable_ProjectRating();
-                $modelRating->rateForProject($project_id, $this->_authMember->member_id, $voteup);
-            }
+            } 
+            // 14.05.18 not allowed anymore
+            // else {
+            //     $voteup = (int)$this->getParam('v');
+            //     $modelRating = new Default_Model_DbTable_ProjectRating();
+            //     $modelRating->rateForProject($project_id, $this->_authMember->member_id, $voteup);
+            // }
 
             $this->_helper->json(array('status' => $status, 'message' => $message, 'data' => ''));
         } else {
