@@ -346,7 +346,7 @@ if ($this->countDownloadsOverall > 0) {
 <?php
         if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {        
 ?>                
-                <div class='col-md-8 text-right'><?=$sum_total_text?></div>
+                <div class='col-md-7 text-right'><?=$sum_total_text?></div>
 <?php
         } else {
 ?>
@@ -360,6 +360,7 @@ if ($this->countDownloadsOverall > 0) {
 <?php
         if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {        
 ?>                
+                <div class='col-md-1 text-right'></div>
                 <div class='col-md-1 text-right'><strong><?=$sum_total_payout_score?></strong></div>
 <?php
         }
