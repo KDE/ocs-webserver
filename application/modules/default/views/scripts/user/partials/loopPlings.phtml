@@ -175,7 +175,7 @@ if ($this->countDownloadsOverall > 0) {
         } else {
             $isCurrentMonth = false;
         }
-        
+        $sum_total_month_score = 0;
         $sum_total_month = 0;
         $sum_total_month_new = 0;
         $sum_total_text = '';
@@ -348,7 +348,7 @@ if ($this->countDownloadsOverall > 0) {
         if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {        
 ?>                
                 <div class='col-md-8 text-right'><?=$sum_total_text?></div>
-                <div class='col-md-1 text-right'><strong><?=$sum_total_month_score?></strong></div>
+                <div class='col-md-1 text-right'><strong><?=$sum_total_payout_score?></strong></div>
 <?php
         } else {
 ?>
