@@ -65,6 +65,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addResource(new Zend_Acl_Resource ('default_rss'));
         $this->addResource(new Zend_Acl_Resource ('default_settings'));
         $this->addResource(new Zend_Acl_Resource ('default_supporterbox'));
+        $this->addResource(new Zend_Acl_Resource ('default_plingbox'));
         $this->addResource(new Zend_Acl_Resource ('default_user'));
         $this->addResource(new Zend_Acl_Resource ('default_widget'));
         $this->addResource(new Zend_Acl_Resource ('default_file'));
@@ -133,6 +134,7 @@ class Default_Plugin_AclRules extends Zend_Acl
             'default_report',
             'default_rss',
             'default_supporterbox',
+            'default_plingbox',
             'default_oauth',
             'default_plings',
             'default_ads',
@@ -158,6 +160,7 @@ class Default_Plugin_AclRules extends Zend_Acl
             'default_report',
             'default_rss',
             'default_supporterbox',
+            'default_plingbox',
             'default_oauth',
             'default_plings',
             'default_ads',

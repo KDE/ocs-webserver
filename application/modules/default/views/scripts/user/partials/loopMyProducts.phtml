@@ -168,21 +168,23 @@ $helperImage = new Default_View_Helper_Image();
                        data-toggle="modal"><?= $this->translate('Verification') ?></a>
                 <?php } ?>
 
-
+              
                  <a href="#modal-box-code-<?= $loopProductId ?>"
                    class="btn btn-native"
                    data-toggle="modal"><?= $this->translate('Box') ?></a>
+                  
+                  
 
                 <!-- /updates -->
                 <span class="publish-product-wrapper">
                     <?php $p_action = $this->isProjectActive($this->project_status) ? 'unpublish' : 'publish' ?>
                     <a href="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, $p_action, array('m' => $this->member_id)) ?>"
-                       class="btn btn-native" data-target="#<?= $loopProductId ?> .publish-product-wrapper">
+                       class="btn btn-native btn-pling-red" data-target="#<?= $loopProductId ?> .publish-product-wrapper">
                         <?=ucfirst($p_action) ?>
                     </a>
                 </span>
                 <form method="post" action="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, 'delete', array('m' => $this->member_id)) ?>" class="inline">
-                    <button data-title="Delete Confirmation" data-callback="defaultCallbackConfirmation" data-message="Do you really want to delete this product?<br>This is permanent and can not be undone!" aria-label="Delete" class="btn btn-native remove" style="font-size: 12px;padding: 3px 6px;">
+                    <button data-title="Delete Confirmation" data-callback="defaultCallbackConfirmation" data-message="Do you really want to delete this product?<br>This is permanent and can not be undone!" aria-label="Delete" class="btn btn-native btn-pling-red remove" style="font-size: 12px;padding: 3px 6px;">
                         Delete
                     </button>
                 </form>
@@ -226,6 +228,7 @@ $helperImage = new Default_View_Helper_Image();
 
 
     <!-- box code modal -->
+
     <div id="modal-box-code-<?= $loopProductId ?>" class="code-embed-modal modal fade">
         <div class="modal-dialog content-modal">
             <div class="modal-content">
@@ -249,6 +252,7 @@ $helperImage = new Default_View_Helper_Image();
             </div>
         </div>
     </div>
+  
     <!-- /box code modal -->
 
 
