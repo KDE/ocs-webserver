@@ -757,7 +757,7 @@ var PartialsButtonHeartDetail = (function () {
                         }else{
                             if(response.action=='delete'){             
                                 //$(target).find('.likelabel').html(response.cnt +' Likes');                   
-                                //$(target).find('.plingtext').html(response.cnt+' Fans');
+                                $(target).find('.plingtext').html(response.cnt);
                                 $(target).find('.plingtext').addClass('heartnumberpurple'); 
                                  $(target).find('.plingheart').removeClass('heartproject').addClass('heartgrey');       
                                  $(target).find('.plingheart').removeClass('fa-heart').addClass('fa-heart-o');      
@@ -765,7 +765,7 @@ var PartialsButtonHeartDetail = (function () {
                                                                                                                                                 
                             }else{                                
                                 //$(target).find('.likelabel').html(response.cnt +' Likes');       
-                                //$(target).find('.plingtext').html(response.cnt);      
+                                $(target).find('.plingtext').html(response.cnt);      
                                 //$(target).find('.plingtext').html(response.cnt+' Fans'); 
                                 $(target).find('.plingtext').removeClass('heartnumberpurple'); 
                                 $(target).find('.plingheart').removeClass('heartgrey').addClass('heartproject');        
