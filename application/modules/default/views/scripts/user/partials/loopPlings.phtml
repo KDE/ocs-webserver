@@ -253,17 +253,17 @@ if ($this->countDownloadsOverall > 0) {
                                 $payout_sum = $product['num_downloads'] * $product['dl_pling_factor'] / 100;
                                 $payout_sum_new = $product['num_downloads'] * $product['dl_pling_factor'] / 100;
                                 $show_payout_sum = $payout_sum;
-                                $show_payout_new_sum = $payout_sum;
+                                $show_payout_new_sum = $payout_sum_new;
                                 
                                 if($sum_plings && $sum_plings < $payout_sum) {
                                     $show_payout_new_sum = $sum_plings;
                                     $payout_sum_new = $sum_plings;
                                 } 
                                 if($sum_plings && $sum_plings>0) {
-                                   $show_payout_new_sum = $currency->toCurrency($show_payout_new_sum) ;
+                                   $show_payout_new_sum = $show_payout_new_sum ;
                                    
                                 } else {
-                                    $show_payout_new_sum = $currency->toCurrency($payout_sum_new) ;
+                                    $show_payout_new_sum = $payout_sum_new;
                                 }
                         ?>
                         <span><?= $show_payout_new_sum ?></span>
