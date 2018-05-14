@@ -756,6 +756,7 @@ class Default_Model_Info
         $sql = '
                         SELECT 
                         s.member_id as supporter_id
+                        ,m.member_id
                         ,(select username from member m where m.member_id = s.member_id) as username
                         ,(select profile_image_url from member m where m.member_id = s.member_id) as profile_image_url
                         ,min(s.active_time) as created_at
