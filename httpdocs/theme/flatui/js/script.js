@@ -1144,7 +1144,7 @@ var PartialCommentReviewForm = (function () {
                 event.preventDefault();
                 event.stopImmediatePropagation();            
                 var c = $.trim($('#commenttext').val());                
-                if(c.length<4)
+                if(c.length<1)
                 {
                         if($('#review-product-modal').find('#votelabel').find('.warning').length==0)
                         {
