@@ -119,8 +119,8 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
                 <form id="product-report-fraud" class="full-width partialjson" action="/report/productfraud/"
                       data-target="#report-product-fraud-<?= $this->product->project_id ?>-message">
                     <input type="hidden" name="p" value="<?= $this->product->project_id ?>">
-                    <div id="report-product-fraud-<?= $this->product->project_id ?>-message">
-                        <div style="padding: 20px">Please specify why this product is fraud : 
+                    <div id="report-product-fraud-<?= $this->product->project_id ?>-message" class="message" style="padding: 20px">
+                        <div>Please specify why this product is fraud : 
                            <textarea class="" id="report-text" name="t" cols="50" rows="3"></textarea>                                                     
                         </div>
                         <div class="modal-footer">
