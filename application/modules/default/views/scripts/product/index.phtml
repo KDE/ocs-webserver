@@ -147,19 +147,19 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
                     <input type="hidden" name="p" value="<?= $this->product->project_id ?>">
                     <div id="report-product-clone-<?= $this->product->project_id ?>-message" class="message" style="padding: 20px">
                         <div>
-                            <label class="form-label">Clone from project ID :  </label><br/>
+                            <label class="form-label">Original product ID on opendesktop :  </label><br/>
                             <input name="pc" onkeyup="this.value=this.value.replace(/[^\d]/,'')"/><br/>
-                            <label class="form-label">OR extern project link : </label><br/>
-                            <input name="l"/>
+                            <label class="form-label">OR external link to original product : </label><br/>
+                            <input name="l" style="width: 440px;" />
                             <br/><br/>
 
-                            <label class="form-label">Message : </label>
+                            <label class="form-label">addtional message : </label>
                             <br/>
                            <textarea class="" id="report-text" name="t" cols="50" rows="3"></textarea>                                                     
                         </div>
                         <div class="modal-footer">
                             <button type="submit" class="small">
-                                <span class="glyphicon glyphicon-share-alt"></span> Report
+                                <span class="glyphicon glyphicon-share-alt"></span> Report clone
                             </button>
                         </div>
                     </div>
