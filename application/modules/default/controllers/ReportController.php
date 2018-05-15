@@ -160,7 +160,7 @@ class ReportController extends Zend_Controller_Action
                     if (empty($productData)) {
                         $this->_helper->json(array(
                             'status'  => 'ok',
-                            'message' => '<p>Thank you, the misued report has been sent .</p><div class="modal-footer">
+                            'message' => '<p>Thank you for reporting the misuse.</p><div class="modal-footer">
                                                     <button type="button" style="border:none;background: transparent;color: #2673b0;" class="small close" data-dismiss="modal" > Close</button>
                                                 </div>',
                             'data'    => array()
@@ -176,7 +176,7 @@ class ReportController extends Zend_Controller_Action
 
         $this->_helper->json(array(
             'status'  => 'ok',
-            'message' => '<p>Thank you, the misued report has been sent.</p><div class="modal-footer">
+            'message' => '<p>Thank you for reporting the misuse.</p><div class="modal-footer">
                                             <button type="button" style="border:none;background: transparent;color: #2673b0;" class="small close" data-dismiss="modal" > Close</button>
                                         </div>',
             'data'    => array()
@@ -209,7 +209,7 @@ class ReportController extends Zend_Controller_Action
                     if (empty($productData)) {
                         $this->_helper->json(array(
                             'status'  => 'ok',
-                            'message' => '<p>Thank you, your clone has been reported.</p><div class="modal-footer">
+                            'message' => '<p>Thank you. The clone has been reported.</p><div class="modal-footer">
                                                     <button type="button" style="border:none;background: transparent;color: #2673b0;" class="small close" data-dismiss="modal" > Close</button>
                                                 </div>',
                             'data'    => array()
@@ -226,7 +226,7 @@ class ReportController extends Zend_Controller_Action
 
         $this->_helper->json(array(
             'status'  => 'ok',
-            'message' => '<p>Thank you, your clone has been reported.</p><div class="modal-footer">
+            'message' => '<p>Thank you. The clone has been reported.</p><div class="modal-footer">
                                             <button type="button" style="border:none;background: transparent;color: #2673b0;" class="small close" data-dismiss="modal" > Close</button>
                                         </div>',
             'data'    => array()
