@@ -757,19 +757,19 @@ var PartialsButtonHeartDetail = (function () {
                         }else{
                             if(response.action=='delete'){             
                                 //$(target).find('.likelabel').html(response.cnt +' Likes');                   
-                                $(target).find('.plingtext').html(response.cnt+' Fans');
-                                //$(target).find('.plingtext').addClass('heartnumberpurple'); 
+                                $(target).find('.plingtext').html(response.cnt);
+                                $(target).find('.plingtext').addClass('heartnumberpurple'); 
                                  $(target).find('.plingheart').removeClass('heartproject').addClass('heartgrey');       
-                                // $(target).find('.plingheart').removeClass('fa-heart').addClass('fa-heart-o');      
+                                 $(target).find('.plingheart').removeClass('fa-heart').addClass('fa-heart-o');      
 
                                                                                                                                                 
                             }else{                                
                                 //$(target).find('.likelabel').html(response.cnt +' Likes');       
-                                //$(target).find('.plingtext').html(response.cnt);      
-                                $(target).find('.plingtext').html(response.cnt+' Fans'); 
-                                //$(target).find('.plingtext').removeClass('heartnumberpurple'); 
+                                $(target).find('.plingtext').html(response.cnt);      
+                                //$(target).find('.plingtext').html(response.cnt+' Fans'); 
+                                $(target).find('.plingtext').removeClass('heartnumberpurple'); 
                                 $(target).find('.plingheart').removeClass('heartgrey').addClass('heartproject');        
-                                //$(target).find('.plingheart').removeClass('fa-heart-o').addClass('fa-heart');                                                                                       
+                                $(target).find('.plingheart').removeClass('fa-heart-o').addClass('fa-heart');                                                                                       
                             }                                
                         }
                       }); 
