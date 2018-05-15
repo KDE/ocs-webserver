@@ -214,10 +214,11 @@ class ReportController extends Zend_Controller_Action
                                                 </div>',
                             'data'    => array()
                         ));
+                        return;
                     }
 
                     if ($productData->spam_checked == 0) {
-                        $reportProducts = new Default_Model_DbTable_ReportProductsClone();
+                        $reportProducts = new Default_Model_DbTable_ProjectClone();
                         $reportProducts->save(array('project_id' => $project_id, 'reported_by' => $reported_by,'text' => $text, 'project_id_clone' =>$project_clone,'external_link' => $link));
                     }
 

@@ -20,27 +20,29 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-class Default_Model_DbTable_ReportProductsClone extends Local_Model_Table
+class Default_Model_DbTable_ProjectClone extends Local_Model_Table
 {
 
-    protected $_name = "reports_project_clone";
+    protected $_name = "project_clone";
 
-    protected $_keyColumnsForRow = array('report_id');
+    protected $_keyColumnsForRow = array('project_clone_id');
 
-    protected $_key = 'report_id';
+    protected $_key = 'project_clone_id';
 
     protected $_defaultValues = array(
-        'report_id'   => null,
+        'project_clone_id'   => null,
         'project_id'  => null,
         'project_id_clone'  => null,
         'external_link'  => null,
-        'reported_by' => null,
+        'member_id'  => null,       
         'text' => null,
         'is_deleted'  => null,
         'is_valid'   => null,
-        'created_at'  => null
+        'created_at'  => null,
+        'changed_at'  => null,
+        'deleted_at'  => null
     );
-
+ 
     public function setDelete($reportId)
     {
         $updateValues = array(
@@ -56,7 +58,7 @@ class Default_Model_DbTable_ReportProductsClone extends Local_Model_Table
             'is_deleted' => 1,
         );
 
-        $this->update($updateValues, 'reported_by=' . $member_id);
+        $this->update($updateValues, 'member_id=' . $member_id);
     }
 
 }
