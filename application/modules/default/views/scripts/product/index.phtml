@@ -771,7 +771,7 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
                                 <?php
                                 $modelClone = new Default_Model_ProjectClone();
                                $this->moreProducts = $modelClone->fetchOrigins($this->product->project_id);
-                               $this->moreProductsTitle = 'Credit';
+                               $this->moreProductsTitle = 'Credits';
                                if (count($this->moreProducts) > 0) {
                                        echo $this->render('product/partials/productCloneFrom.phtml');
 

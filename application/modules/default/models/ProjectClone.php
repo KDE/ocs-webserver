@@ -34,6 +34,7 @@ class Default_Model_ProjectClone extends Default_Model_DbTable_ProjectClone
                         ,(select cat_title from stat_projects p where p.project_id = c.project_id_clone) catTitle
                         ,(select title from stat_projects p where p.project_id = c.project_id_clone) title
                         ,(select image_small from stat_projects p where p.project_id = c.project_id_clone) image_small
+                        ,(select changed_at from stat_projects p where p.project_id = c.project_id_clone) changed_at
                         FROM project_clone c
                         WHERE c.is_deleted = 0 and c.is_valid = 1 and c.project_id = :project_id
                         order by c.created_at desc
