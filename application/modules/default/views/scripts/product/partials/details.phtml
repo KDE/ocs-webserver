@@ -96,6 +96,13 @@ $userRoleName = $helperUserRole->userRole();
                    href="#report-product-<?= $this->product->project_id ?>">
                     <span class="glyphicon glyphicon-alert"></span> Report SPAM
                 </a>
+
+                <span style="padding-left: 20px;">
+                <a data-toggle="modal" data-target="#report-product-fraud-<?= $this->product->project_id ?>" role="button"
+                   href="#report-product-fraud-<?= $this->product->project_id ?>">
+                    <span class="glyphicon glyphicon-alert"></span> Report Fraud
+                </a>
+                </span>
             </div>
         </div>
     </div>
