@@ -723,6 +723,8 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
                                 </div>
                         </div>
 
+                        
+
                         <?php /* echo $this->render('partials/sidebarRating.phtml');  */ ?>
                           <?php /*
                         <div>
@@ -755,6 +757,28 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
                             </div>
                         </div>
                        
+
+                       <!-- Report clone-->
+                       <div>
+                           <div class="prod-widget-box right">
+                                <div style="float: right">
+                               <a data-toggle="modal" data-target="#report-product-clone-<?= $this->product->project_id ?>" role="button"
+                                  href="#report-product-clone-<?= $this->product->project_id ?>">
+                                   <span class="glyphicon glyphicon-alert"></span> Report Clone
+                               </a>
+                               </div>
+
+                                <?php
+                                $modelClone = new Default_Model_ProjectClone();
+                               $this->moreProducts = $modelClone->fetchOrigins($this->product->project_id);
+                               $this->moreProductsTitle = 'Cloned From';
+                               if (count($this->moreProducts) > 0) {
+                                       echo $this->render('product/partials/productCloneFrom.phtml');
+
+                               } ?>
+                              
+                           </div>
+                       </div>
 
 
                         <!-- MORE PRODUCTS -->
@@ -843,6 +867,16 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
 </script>
 
 
+<script type="application/javascript">
+    // tool tips
+    $('body').on('mouseenter', '.product-thumbnail, .supporter-thumbnail', function () {
+        $(this).popover('show');
+    });
+
+    $('body').on('mouseleave', '.product-thumbnail, .supporter-thumbnail', function () {
+        $(this).popover('hide');
+    });
+</script>
 
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){       

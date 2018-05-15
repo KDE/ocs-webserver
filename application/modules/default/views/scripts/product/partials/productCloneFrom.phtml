@@ -23,7 +23,6 @@
 $helpImage = new Default_View_Helper_Image();
 $helpBuildProductUrl = new Default_View_Helper_BuildProductUrl();
 ?>
-<div class="prod-widget-box right moreproducts">
 
     <div class="sidebar-content">
         <span><?= $this->moreProductsTitle ?>: </span>
@@ -31,6 +30,10 @@ $helpBuildProductUrl = new Default_View_Helper_BuildProductUrl();
             <div class="row product-row" style="margin-top: -20px">
                 <?php
                 foreach ($this->moreProducts as $product):
+
+                    if($product->project_id==0 || is_null($product->project_id)) {
+                        continue;
+                    }
                     $imgUrl = $helpImage->Image($product->image_small, array('width' => 200, 'height' => 160));
                     $title = substr($product->title, 0, 20) . ' - ' . substr($product->catTitle, 0, 20);
                     $title = str_replace('"', '&#8221;', $title);
@@ -61,8 +64,33 @@ $helpBuildProductUrl = new Default_View_Helper_BuildProductUrl();
                     </div>
                     <!-- /product item -->
                 <?php endforeach; ?>
+
+
+                    <div class="externallinkclone">
+                    <?php
+                    foreach ($this->moreProducts as $product):
+                        if($product->project_id==0 || is_null($product->project_id)) {
+                            echo '<a href="'.$product->external_link.'">'.$product->external_link.'</a>';
+                        }
+
+                    endforeach; 
+                    ?>
+                    </div>
+             
             </div>
         </div>
     </div>
+<style type="text/css">
+        
+         .externallinkclone {
+           display: block; 
+           float: left; 
+           clear: both; 
+           padding-top:20px; 
+           padding-left:20px;
+        }
+        .externallinkclone a{
+            display: block;
+        }
 
-</div>
+</style>

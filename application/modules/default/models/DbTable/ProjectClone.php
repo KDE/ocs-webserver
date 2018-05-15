@@ -61,4 +61,20 @@ class Default_Model_DbTable_ProjectClone extends Local_Model_Table
         $this->update($updateValues, 'member_id=' . $member_id);
     }
 
+    /**
+     * @param array $data
+     *
+     * @return Zend_Db_Table_Rowset_Abstract
+     */
+    protected function generateRowSet($data)
+    {
+        $classRowSet = $this->getRowsetClass();
+
+        return new $classRowSet(array(
+            'table'    => $this,
+            'rowClass' => $this->getRowClass(),
+            'stored'   => true,
+            'data'     => $data
+        ));
+    }
 }
