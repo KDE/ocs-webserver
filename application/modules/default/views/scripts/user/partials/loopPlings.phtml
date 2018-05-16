@@ -155,7 +155,7 @@ if ($this->countDownloadsOverall > 0) {
 ?>        
         
         <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong style="color: #BBB">Plings</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Plings" data-trigger="hover" data-html="true" data-content="Plings = 1 System Pling + Supporter Plings for that product."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
-        <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong style="color: #BBB">Potential Payout**</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Payout-New" data-trigger="hover" data-html="true" data-content="This new Payout will become active in May 2019."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+        <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong style="color: #BBB">Potential Payout**</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Potential Payout" data-trigger="hover" data-html="true" data-content="This new Payout will become active in May 2019."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
     </div>
 </div>
 <div class="tab-content">
@@ -394,7 +394,7 @@ if ($this->countDownloadsOverall > 0) {
             }
 
             if (($sum_total_month/100) < 1) {
-                echo '<div class="alert alert-warning" role="alert">We only pay out money if the amount is over $1.</div>';
+                echo '<div class="alert alert-warning" role="alert">We only pay out money if the total sum is over $1.</div>';
             }
 ?>
             
@@ -414,7 +414,7 @@ if ($this->countDownloadsOverall > 0) {
     
 ?>
     <div id="le-alert"  class="alert alert-warning alert-block" role="alert">
-        <p>(**) The Potential Payout will become active on May 2019.</p>
+        <p>(**) The Payout is planned to become active on May 2019.</p>
     </div>
     <div id="le-alert"  class="alert alert-warning alert-block" role="alert">
         <p>(*) Info:</p><p>This service will become active on May, 1st 2017. All previous months are shown for internal testing only. </p>
