@@ -65,4 +65,59 @@ class Default_Model_ProjectClone extends Default_Model_DbTable_ProjectClone
              return $this->generateRowSet($resultSet);
             // return $resultSet;     
     }
+
+    public function fetchParent($project_id)
+    {
+            $sql = "
+                        SELECT 
+                        *
+                        FROM project_clone c
+                        WHERE c.is_deleted = 0 and c.is_valid = 1 and  c.project_id = :project_id
+             ";
+            $resultSet = $this->_db->fetchRow($sql, array('project_id' => $project_id));
+             return $this->generateRowSet($resultSet);
+    }
+
+    public function fetchRelatedProducts($project_id)
+    {
+            $sql = "
+                                    SELECT 
+                                       c.project_id as project_id
+                                       ,c.project_id_parent as project_id_origin
+                                       ,c.external_link
+                                       ,c.member_id
+                                       ,c.text
+                                       ,(select cat_title from stat_projects p where p.project_id = c.project_id) catTitle
+                                       ,(select title from stat_projects p where p.project_id = c.project_id) title
+                                       ,(select image_small from stat_projects p where p.project_id = c.project_id) image_small
+                                       ,(select changed_at from stat_projects p where p.project_id = c.project_id) changed_at
+                                       FROM project_clone c
+                                       WHERE c.is_deleted = 0 and c.is_valid = 1 and  c.project_id_parent =  :project_id 
+
+                                   union
+
+                                      SELECT 
+                                       c.project_id as project_id
+                                       ,c.project_id_parent as project_id_origin
+                                       ,c.external_link
+                                       ,c.member_id
+                                       ,c.text
+                                       ,(select cat_title from stat_projects p where p.project_id = c.project_id) catTitle
+                                       ,(select title from stat_projects p where p.project_id = c.project_id) title
+                                       ,(select image_small from stat_projects p where p.project_id = c.project_id) image_small
+                                       ,(select changed_at from stat_projects p where p.project_id = c.project_id) changed_at
+                                       FROM project_clone c
+                                       WHERE  c.project_id<> :project_id and  c.is_deleted = 0 and c.is_valid = 1 and  c.project_id_parent in (
+                                            select project_id_parent from project_clone c 
+                                                where c.project_id = :project_id and c.is_valid = 1 and c.is_deleted = 0
+                                          )
+
+                        ";
+             $resultSet = $this->_db->fetchAll($sql, array('project_id' => $project_id));
+
+         
+              return $this->generateRowSet($resultSet);
+             
+    }
+
 } 

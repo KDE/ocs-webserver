@@ -130,8 +130,7 @@ class Default_Plugin_AclRules extends Zend_Acl
             'default_home',
             'default_ocsv1', // OCS API
             'default_embedv1', // embed API
-            'default_productcategory',
-            'default_report',
+            'default_productcategory',            
             'default_rss',
             'default_supporterbox',
             'default_plingbox',
@@ -258,6 +257,9 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->allow(self::ROLENAME_COOKIEUSER, 'default_support',
             array('index','pay', 'paymentok', 'paymentcancel'));
 
+        // resource default_support
+        $this->allow(self::ROLENAME_COOKIEUSER, 'default_report',
+            array('comment','product', 'productfraud', 'productclone'));
 
 
         // resource default_widget
