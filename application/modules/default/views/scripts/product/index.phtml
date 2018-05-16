@@ -117,11 +117,11 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                 aria-hidden="true">&times;</span></button>
                 </div>
-                <form id="product-report-fraud" class="full-width partialjson" action="/report/productfraud/"
-                      data-target="#report-product-fraud-<?= $this->product->project_id ?>-message">
+                <form id="product-report-fraud" class="full-width partialjsonfraud" action="/report/productfraud/"
+                      data-target="#report-product-fraud-<?= $this->product->project_id ?>-message" >
                     <input type="hidden" name="p" value="<?= $this->product->project_id ?>">
                     <div id="report-product-fraud-<?= $this->product->project_id ?>-message" class="message" style="padding: 20px">
-                        <div>Please specify why this product is misused: 
+                        <div>Please specify why this product is misused (min 5 chars): 
                            <textarea class="" id="report-text" name="t" cols="50" rows="3"></textarea>                                                     
                         </div>
                         <div class="modal-footer">
@@ -908,6 +908,7 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){       
             PartialJson.setup();
+            PartialJsonFraud.setup();
             ProductDetailCarousel.setup();          
             PartialCommentReviewForm.setup();
             PartialsButtonHeartDetail.setup();    
