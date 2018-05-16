@@ -781,7 +781,7 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
 
                                <?php                     
                                  
-                              $this->moreProducts = $modelClone->fetchClones($this->product->project_id);
+                              $this->moreProducts = $modelClone->fetchRelatedProducts($this->product->project_id);
                  
                               $this->moreProductsTitle = 'Related products';
                               if (count($this->moreProducts) > 0) {                                
