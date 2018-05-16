@@ -84,7 +84,8 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
 
     <!-- facebook -->
     <div id="fb-root"></div>
-
+    <?php if (Zend_Auth::getInstance()->hasIdentity()) {       
+        ?>    
     <div id="report-product-<?= $this->product->project_id ?>" class="modal report-product" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
@@ -134,6 +135,7 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
         </div>
     </div>
     
+    <?php } ?>
 
      <div id="report-product-clone-<?= $this->product->project_id ?>" class="modal report-product-clone" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-sm">

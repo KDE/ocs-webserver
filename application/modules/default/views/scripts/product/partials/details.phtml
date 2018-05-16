@@ -89,26 +89,27 @@ $userRoleName = $helperUserRole->userRole();
      * </span>
      * </div>
      **/ ?>
-    <div class="row" style="padding-top: 5px">
-        <div class="col-lg-12">
-            <div class="small " id="product-actions">
-                <a data-toggle="modal" data-target="#report-product-<?= $this->product->project_id ?>" role="button"
-                   href="#report-product-<?= $this->product->project_id ?>">
-                    <span class="glyphicon glyphicon-alert"></span> Report SPAM
-                </a>
 
-                <span style="padding-left: 20px;">
-                <a data-toggle="modal" data-target="#report-product-fraud-<?= $this->product->project_id ?>" role="button"
-                   href="#report-product-fraud-<?= $this->product->project_id ?>">
-                    <span class="glyphicon glyphicon-alert"></span> Report Misuse
-                </a>
-                </span>
-              
+    <?php if (Zend_Auth::getInstance()->hasIdentity()) {  ?>    
+        <div class="row" style="padding-top: 5px">
+            <div class="col-lg-12">
+                <div class="small " id="product-actions">
+                    <a data-toggle="modal" data-target="#report-product-<?= $this->product->project_id ?>" role="button"
+                       href="#report-product-<?= $this->product->project_id ?>">
+                        <span class="glyphicon glyphicon-alert"></span> Report SPAM
+                    </a>
+
+                    <span style="padding-left: 20px;">
+                    <a data-toggle="modal" data-target="#report-product-fraud-<?= $this->product->project_id ?>" role="button"
+                       href="#report-product-fraud-<?= $this->product->project_id ?>">
+                        <span class="glyphicon glyphicon-alert"></span> Report Misuse
+                    </a>
+                    </span>
+                  
+                </div>
             </div>
         </div>
-    </div>
-
-
+    <?php } ?>
   
     <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
         <span class="page-views">
