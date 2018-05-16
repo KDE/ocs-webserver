@@ -1,7 +1,7 @@
 CREATE TABLE `project_clone` (
 	`project_clone_id` INT(11) NOT NULL AUTO_INCREMENT,
 	`project_id` INT(11) NOT NULL,
-	`project_id_clone` INT(11) NULL DEFAULT NULL COMMENT 'Project Id of the clone on opendesktop',
+	`project_id_parent` INT(11) NULL DEFAULT NULL COMMENT 'Project Id of the clone on opendesktop',
 	`external_link` VARCHAR(255) NULL DEFAULT NULL COMMENT 'External Link to the original project',
 	`member_id` INT(11) NULL DEFAULT NULL COMMENT 'Who send the report',
 	`text` TEXT NULL,
@@ -15,7 +15,6 @@ CREATE TABLE `project_clone` (
 )
 COLLATE='latin1_swedish_ci'
 ENGINE=InnoDB
-;
 
 
 
