@@ -134,8 +134,7 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
             </div>
         </div>
     </div>
-    
-    <?php } ?>
+
 
      <div id="report-product-clone-<?= $this->product->project_id ?>" class="modal report-product-clone" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-sm">
@@ -169,6 +168,10 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
             </div>
         </div>
     </div>
+    
+    <?php } ?>
+
+     
 
 
     <?php if (Zend_Auth::getInstance()->hasIdentity()) {       
@@ -764,10 +767,18 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
                        <div>
                            <div class="prod-widget-box right">
                                 <div style="float: right">
-                               <a data-toggle="modal" data-target="#report-product-clone-<?= $this->product->project_id ?>" role="button"
-                                  href="#report-product-clone-<?= $this->product->project_id ?>">
-                                    add credits
-                               </a>
+
+                                <?php if (Zend_Auth::getInstance()->hasIdentity()) {      ?>
+                                       <a data-toggle="modal" data-target="#report-product-clone-<?= $this->product->project_id ?>" role="button"
+                                          href="#report-product-clone-<?= $this->product->project_id ?>">
+                                            add credits
+                                       </a>
+                                   <?php }else{ ?>
+                                            <a data-toggle="modal" data-target="#like-product-modal" role="button">
+                                                 add credits
+                                            </a>
+                                   <?php } ?>
+
                                </div>
 
                                 <?php
