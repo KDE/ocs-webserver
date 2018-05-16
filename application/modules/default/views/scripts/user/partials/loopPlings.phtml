@@ -154,8 +154,8 @@ if ($this->countDownloadsOverall > 0) {
         }
 ?>        
         
-        <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong>Plings</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Plings" data-trigger="hover" data-html="true" data-content="Plings = 1 System Pling + Supporter Plings for that product."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
-        <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong style="color: red;">Payout-New**</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Payout-New" data-trigger="hover" data-html="true" data-content="This new Payout will become active in May 2019."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+        <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong style="color: #BBB">Plings</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Plings" data-trigger="hover" data-html="true" data-content="Plings = 1 System Pling + Supporter Plings for that product."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+        <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong style="color: #BBB">Potential Payout**</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Payout-New" data-trigger="hover" data-html="true" data-content="This new Payout will become active in May 2019."><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
     </div>
 </div>
 <div class="tab-content">
@@ -291,7 +291,7 @@ if ($this->countDownloadsOverall > 0) {
                                 $show_plings_sum = '-';
                             }
                         ?>
-                        <span><?= $show_plings_sum ?></span>
+                        <span style="color: #BBB"><?= $show_plings_sum ?></span>
                     </div>
                     <div class="col-md-1 text-right cell-default">
                         <?php if(!$showErrMsg) {
@@ -311,7 +311,7 @@ if ($this->countDownloadsOverall > 0) {
                                     $show_payout_new_sum = $payout_sum_new;
                                 }
                         ?>
-                        <span><?= $currency->toCurrency($show_payout_new_sum) ?></span>
+                        <span style="color: #BBB"><?= $currency->toCurrency($show_payout_new_sum) ?></span>
                         <?php } else { ?>
                         <span>&nbsp;</span>
                         <?php } ?>
@@ -366,7 +366,7 @@ if ($this->countDownloadsOverall > 0) {
         }
 ?>                
                 <div class='col-md-1 text-right'></div>
-                <div class='col-md-1 text-right'><strong style="color: red;"><?=$sum_total_payout_new?></strong></div>
+                <div class='col-md-1 text-right'><strong style="color: #BBB"><?=$sum_total_payout_new?></strong></div>
                 
             </div>
             
