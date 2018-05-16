@@ -196,8 +196,7 @@ class ReportController extends Zend_Controller_Action
                     $text = $this->getParam('t');
                     $project_clone = $this->getParam('pc');
                     $link = $this->getParam('l');
-                    $isClone= $this->getParam('o');
-                
+                    
 
                     $reported_by = 0;
                     if (Zend_Auth::getInstance()->hasIdentity()) {
@@ -205,13 +204,9 @@ class ReportController extends Zend_Controller_Action
                     }                   
                     
                     $reportProducts = new Default_Model_DbTable_ProjectClone();
-                    if($isClone==1)
-                    {
-                        $reportProducts->save(array('project_id' => $project_id, 'reported_by' => $reported_by,'text' => $text, 'project_id_parent' =>$project_clone,'external_link' => $link));    
-                    }else
-                    {
-                        $reportProducts->save(array('project_id' => $project_clone, 'reported_by' => $reported_by,'text' => $text, 'project_id_parent' =>$project_id,'external_link' => $link));
-                    }                                            
+                 
+                    $reportProducts->save(array('project_id' => $project_id, 'reported_by' => $reported_by,'text' => $text, 'project_id_parent' =>$project_clone,'external_link' => $link));    
+                                                         
         }
 
         $this->_helper->json(array(

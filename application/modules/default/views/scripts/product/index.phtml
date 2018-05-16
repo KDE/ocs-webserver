@@ -141,16 +141,13 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                 aria-hidden="true">&times;</span></button>
+                                <h2 class="modal-title">This product is based on:</h2>
                 </div>
                 <form id="product-report-clone" class="full-width partialjson" action="/report/productclone/"
                       data-target="#report-product-clone-<?= $this->product->project_id ?>-message">
                     <input type="hidden" name="p" value="<?= $this->product->project_id ?>">
                     <div id="report-product-clone-<?= $this->product->project_id ?>-message" class="message" style="padding: 20px">
-                        <div>
-                            <label class="form-label">The added product is:  </label><br/>
-                            original <input type="radio" id="mc" name="o" value="1">
-                            clone    <input type="radio" id="mc" name="o" value="0" checked="checked">
-                            <br/><br/>
+                        <div>                            
                             <label class="form-label">Product ID on opendesktop:  </label><br/>
                             <input name="pc" onkeyup="this.value=this.value.replace(/[^\d]/,'')"/><br/><br/>
                             <label class="form-label">External link to product: </label><br/>
@@ -162,7 +159,7 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
                         </div>
                         <div class="modal-footer">
                             <button type="submit" class="small">
-                                <span class="glyphicon glyphicon-share-alt"></span> add 
+                                <span class="glyphicon glyphicon-share-alt"></span> add credits
                             </button>
                         </div>
                     </div>
@@ -767,7 +764,7 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
                                 <div style="float: right">
                                <a data-toggle="modal" data-target="#report-product-clone-<?= $this->product->project_id ?>" role="button"
                                   href="#report-product-clone-<?= $this->product->project_id ?>">
-                                    add clone/credit
+                                    add credits
                                </a>
                                </div>
 
