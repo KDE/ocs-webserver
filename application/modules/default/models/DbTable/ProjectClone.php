@@ -20,26 +20,29 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-class Default_Model_DbTable_ReportProducts extends Local_Model_Table
+class Default_Model_DbTable_ProjectClone extends Local_Model_Table
 {
 
-    protected $_name = "reports_project";
+    protected $_name = "project_clone";
 
-    protected $_keyColumnsForRow = array('report_id');
+    protected $_keyColumnsForRow = array('project_clone_id');
 
-    protected $_key = 'report_id';
+    protected $_key = 'project_clone_id';
 
     protected $_defaultValues = array(
-        'report_id'   => null,
-        'report_type'   => null,
+        'project_clone_id'   => null,
         'project_id'  => null,
-        'reported_by' => null,
-        'text'  => null,
+        'project_id_parent'  => null,
+        'external_link'  => null,
+        'member_id'  => null,       
+        'text' => null,
         'is_deleted'  => null,
         'is_valid'   => null,
-        'created_at'  => null
+        'created_at'  => null,
+        'changed_at'  => null,
+        'deleted_at'  => null
     );
-
+ 
     public function setDelete($reportId)
     {
         $updateValues = array(
@@ -55,29 +58,23 @@ class Default_Model_DbTable_ReportProducts extends Local_Model_Table
             'is_deleted' => 1,
         );
 
-        $this->update($updateValues, 'reported_by=' . $member_id);
+        $this->update($updateValues, 'member_id=' . $member_id);
     }
 
-    public function countMisuseForProject($project_id)
+    /**
+     * @param array $data
+     *
+     * @return Zend_Db_Table_Rowset_Abstract
+     */
+    protected function generateRowSet($data)
     {
-        $q = $this->select()
-                        ->where('project_id = ?', $project_id)
-                        ->where('report_type = ?', 1)
-                         ->where('is_deleted = ?', 0)
-                        ;
-        return count($q->query()->fetchAll());
+        $classRowSet = $this->getRowsetClass();
+
+        return new $classRowSet(array(
+            'table'    => $this,
+            'rowClass' => $this->getRowClass(),
+            'stored'   => true,
+            'data'     => $data
+        ));
     }
-
-    public function countSpamForProject($project_id)
-    {
-        $q = $this->select()
-                        ->where('project_id = ?', $project_id)
-                        ->where('report_type = ?', 0)
-                         ->where('is_deleted = ?', 0)
-                        ;
-        return count($q->query()->fetchAll());
-    }
-
-    
-
 }

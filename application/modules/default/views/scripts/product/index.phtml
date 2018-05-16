@@ -84,7 +84,8 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
 
     <!-- facebook -->
     <div id="fb-root"></div>
-
+    <?php if (Zend_Auth::getInstance()->hasIdentity()) {       
+        ?>    
     <div id="report-product-<?= $this->product->project_id ?>" class="modal report-product" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
@@ -107,10 +108,74 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
             </div>
         </div>
     </div>
+
+
+    <div id="report-product-fraud-<?= $this->product->project_id ?>" class="modal report-product-fraud" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                </div>
+                <form id="product-report-fraud" class="full-width partialjsonfraud" action="/report/productfraud/"
+                      data-target="#report-product-fraud-<?= $this->product->project_id ?>-message" >
+                    <input type="hidden" name="p" value="<?= $this->product->project_id ?>">
+                    <div id="report-product-fraud-<?= $this->product->project_id ?>-message" class="message" style="padding: 20px">
+                        <div>Please specify why this product is misused (min 5 chars): 
+                           <textarea class="" id="report-text" name="t" cols="50" rows="3"></textarea>                                                     
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="small">
+                                <span class="glyphicon glyphicon-share-alt"></span> Report
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+     <div id="report-product-clone-<?= $this->product->project_id ?>" class="modal report-product-clone" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                                <h2 class="modal-title">This product is based on:</h2>
+                </div>
+                <form id="product-report-clone" class="full-width partialjson" action="/report/productclone/"
+                      data-target="#report-product-clone-<?= $this->product->project_id ?>-message">
+                    <input type="hidden" name="p" value="<?= $this->product->project_id ?>">
+                    <div id="report-product-clone-<?= $this->product->project_id ?>-message" class="message" style="padding: 20px">
+                        <div>                            
+                            <label class="form-label">Original product ID on opendesktop:  </label><br/>
+                            <input name="pc" onkeyup="this.value=this.value.replace(/[^\d]/,'')"/><br/><br/>
+                            <label class="form-label">External link to original product: </label><br/>
+                            <input name="l" style="width: 440px;" />
+                            <br/><br/>
+                            <label class="form-label">Additional message: </label>
+                            <br/>
+                           <textarea class="" id="report-text" name="t"  rows="3" style="width: 440px;"></textarea>                                                     
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="small">
+                                <span class="glyphicon glyphicon-share-alt"></span> add credits
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     
+    <?php } ?>
+
+     
+
+
     <?php if (Zend_Auth::getInstance()->hasIdentity()) {       
-        ?>
-    
+        ?>    
     <div id="like-product-modal" class="modal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content" style="padding-bottom: 20px">
@@ -663,6 +728,8 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
                                 </div>
                         </div>
 
+                        
+
                         <?php /* echo $this->render('partials/sidebarRating.phtml');  */ ?>
                           <?php /*
                         <div>
@@ -695,6 +762,50 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
                             </div>
                         </div>
                        
+
+                       <!-- origins-->
+                       <div>
+                           <div class="prod-widget-box right">
+                                <div style="float: right">
+
+                                <?php if (Zend_Auth::getInstance()->hasIdentity()) {      ?>
+                                       <a data-toggle="modal" data-target="#report-product-clone-<?= $this->product->project_id ?>" role="button"
+                                          href="#report-product-clone-<?= $this->product->project_id ?>">
+                                            add credits
+                                       </a>
+                                   <?php }else{ ?>
+                                            <a data-toggle="modal" data-target="#like-product-modal" role="button">
+                                                 add credits
+                                            </a>
+                                   <?php } ?>
+
+                               </div>
+
+                                <?php
+                                $modelClone = new Default_Model_ProjectClone();
+
+                               $this->moreProducts = $modelClone->fetchOrigins($this->product->project_id);
+                               $this->moreProductsTitle = 'Originals';
+                               if (count($this->moreProducts) > 0) {
+                                       echo $this->render('product/partials/productCloneFrom.phtml');
+
+                               } ?>
+                              
+
+                               <?php                     
+                                 
+                              $this->moreProducts = $modelClone->fetchRelatedProducts($this->product->project_id);
+                 
+                              $this->moreProductsTitle = 'Related products';
+                              if (count($this->moreProducts) > 0) {                                
+                                      echo $this->render('product/partials/productCloneFrom.phtml');
+
+                              } ?>
+
+                           </div>
+                       </div>
+
+                  
 
 
                         <!-- MORE PRODUCTS -->
@@ -783,10 +894,21 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
 </script>
 
 
+<script type="application/javascript">
+    // tool tips
+    $('body').on('mouseenter', '.product-thumbnail, .supporter-thumbnail', function () {
+        $(this).popover('show');
+    });
+
+    $('body').on('mouseleave', '.product-thumbnail, .supporter-thumbnail', function () {
+        $(this).popover('hide');
+    });
+</script>
 
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){       
             PartialJson.setup();
+            PartialJsonFraud.setup();
             ProductDetailCarousel.setup();          
             PartialCommentReviewForm.setup();
             PartialsButtonHeartDetail.setup();    

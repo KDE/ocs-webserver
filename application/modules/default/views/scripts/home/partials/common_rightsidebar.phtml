@@ -30,7 +30,7 @@
                 $identity = Zend_Auth::getInstance()->getIdentity();
                 if(null == $identity || (null != $identity && !$this->isSupporter($identity->member_id))) {                                                  
         ?>
-            <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Become a Supporter</a>
+            <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Become a Supporter<br>of all artists</a>
         <?php   } else if((null != $identity && $this->isSupporter($identity->member_id))) { ?>
             <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Thank you for your support!</a>
         <?php   }?>
@@ -39,7 +39,7 @@
         <div  class="supportDiv  withborder" >    
         <span><b><?=$this->countSupporters?></b> people support </span>        
         <span style="display: block">
-        those who support freedom
+        those who create freedom
          </span>
          <div class="row">
             <?php 
