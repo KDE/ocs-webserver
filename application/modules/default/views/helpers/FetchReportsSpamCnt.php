@@ -20,13 +20,18 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-class Default_View_Helper_FetchMisuseReports extends Zend_View_Helper_Abstract
+class Default_View_Helper_FetchReportsSpamCnt extends Zend_View_Helper_Abstract
 {
 
-    public function fetchMisuseReports($project_id)
+    public function fetchReportsSpamCnt($project_id)
     {        
         $m = new Default_Model_DbTable_ReportProducts();
-        return $m->countForProject($project_id);
+        $cnt =$m->countSpamForProject($project_id);
+        if($cnt>0) {
+        	return $cnt;
+        }else{
+        	return '';
+        }        
     }
 
 } 

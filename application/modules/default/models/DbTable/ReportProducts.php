@@ -58,7 +58,7 @@ class Default_Model_DbTable_ReportProducts extends Local_Model_Table
         $this->update($updateValues, 'reported_by=' . $member_id);
     }
 
-    public function countForProject($project_id)
+    public function countMisuseForProject($project_id)
     {
         $q = $this->select()
                         ->where('project_id = ?', $project_id)
@@ -67,5 +67,17 @@ class Default_Model_DbTable_ReportProducts extends Local_Model_Table
                         ;
         return count($q->query()->fetchAll());
     }
+
+    public function countSpamForProject($project_id)
+    {
+        $q = $this->select()
+                        ->where('project_id = ?', $project_id)
+                        ->where('report_type = ?', 0)
+                         ->where('is_deleted = ?', 0)
+                        ;
+        return count($q->query()->fetchAll());
+    }
+
+    
 
 }

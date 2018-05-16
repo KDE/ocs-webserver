@@ -69,12 +69,12 @@ $userRoleName = $helperUserRole->userRole();
      
     <div class="row">
         <span class=" col-lg-6">spam reports</span>
-        <span class="col-lg-6 value"> <?= $this->product->amount_reports ?></span>
+        <span class="col-lg-6 value"> <?= $this->fetchReportsSpamCnt($this->product->project_id) ?></span>
     </div>
 
     <div class="row">
         <span class=" col-lg-6">misuse reports</span>
-        <span class="col-lg-6 value"> <?= $this->fetchMisuseReports($this->product->project_id)?></span>
+        <span class="col-lg-6 value"> <?= $this->fetchReportsMisuseCnt($this->product->project_id)?></span>
     </div>
      <?php endif; ?>
 
