@@ -147,19 +147,22 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
                     <input type="hidden" name="p" value="<?= $this->product->project_id ?>">
                     <div id="report-product-clone-<?= $this->product->project_id ?>-message" class="message" style="padding: 20px">
                         <div>
-                            <label class="form-label">Original product ID on opendesktop:  </label><br/>
+                            <label class="form-label">The added product is:  </label><br/>
+                            original <input type="radio" id="mc" name="o" value="1">
+                            clone    <input type="radio" id="mc" name="o" value="0" checked="checked">
+                            <br/><br/>
+                            <label class="form-label">Product ID on opendesktop:  </label><br/>
                             <input name="pc" onkeyup="this.value=this.value.replace(/[^\d]/,'')"/><br/><br/>
-                            <label class="form-label">External link to original product: </label><br/>
+                            <label class="form-label">External link to product: </label><br/>
                             <input name="l" style="width: 440px;" />
                             <br/><br/>
-
                             <label class="form-label">Additional message: </label>
                             <br/>
                            <textarea class="" id="report-text" name="t"  rows="3" style="width: 440px;"></textarea>                                                     
                         </div>
                         <div class="modal-footer">
                             <button type="submit" class="small">
-                                <span class="glyphicon glyphicon-share-alt"></span> add clone
+                                <span class="glyphicon glyphicon-share-alt"></span> add 
                             </button>
                         </div>
                     </div>
@@ -758,18 +761,19 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
                         </div>
                        
 
-                       <!-- Report clone-->
+                       <!-- origins-->
                        <div>
                            <div class="prod-widget-box right">
                                 <div style="float: right">
                                <a data-toggle="modal" data-target="#report-product-clone-<?= $this->product->project_id ?>" role="button"
                                   href="#report-product-clone-<?= $this->product->project_id ?>">
-                                    add clone
+                                    add clone/credit
                                </a>
                                </div>
 
                                 <?php
                                 $modelClone = new Default_Model_ProjectClone();
+
                                $this->moreProducts = $modelClone->fetchOrigins($this->product->project_id);
                                $this->moreProductsTitle = 'Credits';
                                if (count($this->moreProducts) > 0) {
@@ -777,8 +781,21 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
 
                                } ?>
                               
+
+                               <?php                     
+                                 
+                              $this->moreProducts = $modelClone->fetchClones($this->product->project_id);
+                 
+                              $this->moreProductsTitle = 'Clones';
+                              if (count($this->moreProducts) > 0) {                                
+                                      echo $this->render('product/partials/productCloneFrom.phtml');
+
+                              } ?>
+
                            </div>
                        </div>
+
+                  
 
 
                         <!-- MORE PRODUCTS -->

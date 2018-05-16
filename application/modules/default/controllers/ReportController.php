@@ -196,32 +196,22 @@ class ReportController extends Zend_Controller_Action
                     $text = $this->getParam('t');
                     $project_clone = $this->getParam('pc');
                     $link = $this->getParam('l');
+                    $isClone= $this->getParam('o');
                 
 
                     $reported_by = 0;
                     if (Zend_Auth::getInstance()->hasIdentity()) {
                         $reported_by = (int)Zend_Auth::getInstance()->getStorage()->read()->member_id;
-                    }
-
-                    $modelProduct = new Default_Model_Project();
-                    $productData = $modelProduct->fetchRow(array('project_id = ?' => $project_id, 'status' => Default_Model_DbTable_Project::PROJECT_ACTIVE));                 
-
-                    if (empty($productData)) {
-                        $this->_helper->json(array(
-                            'status'  => 'ok',
-                            'message' => '<p>Thank you. The clone has been reported.</p><div class="modal-footer">
-                                                    <button type="button" style="border:none;background: transparent;color: #2673b0;" class="small close" data-dismiss="modal" > Close</button>
-                                                </div>',
-                            'data'    => array()
-                        ));
-                        return;
-                    }
-
-                    if ($productData->spam_checked == 0) {
-                        $reportProducts = new Default_Model_DbTable_ProjectClone();
-                        $reportProducts->save(array('project_id' => $project_id, 'reported_by' => $reported_by,'text' => $text, 'project_id_clone' =>$project_clone,'external_link' => $link));
-                    }
-
+                    }                   
+                    
+                    $reportProducts = new Default_Model_DbTable_ProjectClone();
+                    if($isClone==1)
+                    {
+                        $reportProducts->save(array('project_id' => $project_id, 'reported_by' => $reported_by,'text' => $text, 'project_id_parent' =>$project_clone,'external_link' => $link));    
+                    }else
+                    {
+                        $reportProducts->save(array('project_id' => $project_clone, 'reported_by' => $reported_by,'text' => $text, 'project_id_parent' =>$project_id,'external_link' => $link));
+                    }                                            
         }
 
         $this->_helper->json(array(

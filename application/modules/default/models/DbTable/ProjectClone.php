@@ -32,7 +32,7 @@ class Default_Model_DbTable_ProjectClone extends Local_Model_Table
     protected $_defaultValues = array(
         'project_clone_id'   => null,
         'project_id'  => null,
-        'project_id_clone'  => null,
+        'project_id_parent'  => null,
         'external_link'  => null,
         'member_id'  => null,       
         'text' => null,
