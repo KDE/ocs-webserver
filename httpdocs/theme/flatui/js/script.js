@@ -1064,6 +1064,55 @@ var PartialJson = (function () {
     }
 })();
 
+
+var PartialJsonFraud = (function () {
+    return {
+        setup: function () {
+            $('body').on("submit", 'form.partialjsonfraud', function (event) {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+
+                var target = $(this).attr("data-target");
+                var trigger = $(this).attr("data-trigger");
+
+                var text = $('form.partialjsonfraud').find('#report-text').val();
+                if(text.length<5)
+                {
+                    $('form.partialjsonfraud').find('p.warning').remove();
+                    $('form.partialjsonfraud').find('#report-text').parent().append('<p class="warning" style="color:red">at least 5 chars</p>');
+                    return false;
+                }
+
+                jQuery.ajax({
+                    data: $(this).serialize(),
+                    url: this.action,
+                    type: this.method,
+                    dataType: "json",
+                    error: function () {
+                        $(target).empty().html("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+                    },
+                    success: function (data, textStatus) {
+                        if (data.redirect) {
+                            // data.redirect contains the string URL to redirect to
+                            window.location = data.redirect;
+                            return;
+                        }
+                        if (target) {
+                            // data.message contains the HTML for the replacement form
+                            $(target).empty().html(data.message);
+                        }
+                        if (trigger) {
+                            $(target).find(trigger).trigger('click');
+                        }
+                    }
+                });
+
+                return false;
+            });
+        }
+    }
+})();
+
 var PartialPayPal = (function () {
     return {
         setup: function () {
@@ -1401,6 +1450,7 @@ var RssNews = (function () {
 
     }
 })();
+
 
 
 var BlogJson = (function () {
