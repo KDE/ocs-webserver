@@ -110,6 +110,15 @@ class Backend_Model_Reports
         $this->updateMaterializedView($projectId);
         return $result;
     }
+    
+    
+    public function setValid($reportId)
+    {
+        $sql = "update reports_project set is_valid = 1 where report_id = :reportId";
+
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('reportId' => $reportId))->execute();
+        return $result;
+    }
 
     private function updateMaterializedView($project_id)
     {
