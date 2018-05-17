@@ -1508,6 +1508,21 @@ var ProductDetailCarousel = (function () {
     }
 })();
 
+var AppimagequestionOnClick = (function () {
+    return {
+        setup: function (projectid) {           
+           $('body').on('click', 'i.appimagequestion', function (event) {         
+                    var msgBox = $('#generic-dialog');                    
+                    msgBox.modal('show');                    
+                    msgBox.find('.modal-header-text').empty().append('AppImage Info');
+                    msgBox.find('.modal-body').empty().append("<div class='info' >For easy appimage use, install appimage launcher :"
+                        +"<p><a target='_blank' href='https://www.opendesktop.org/p/1228228'>www.opendesktop.org/p/1228228</a><p>More info: <br/><a target='_blank' href='https://www.linuxuprising.com/2018/04/easily-run-and-integrate-appimage-files.html'>www.linuxuprising.com/2018/04/easily-run-and-integrate-appimage-files.html  </a>  </div>");
+           });
+
+        }
+    }
+})();
+
 
 var ProductDetailBtnGetItClick  = (function () {
     return {

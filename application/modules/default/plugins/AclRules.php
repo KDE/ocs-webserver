@@ -71,6 +71,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addResource(new Zend_Acl_Resource ('default_file'));
         $this->addResource(new Zend_Acl_Resource ('default_plings'));
         $this->addResource(new Zend_Acl_Resource ('default_spam'));
+        $this->addResource(new Zend_Acl_Resource ('default_misuse'));
         $this->addResource(new Zend_Acl_Resource ('default_credits'));
         $this->addResource(new Zend_Acl_Resource ('default_ads'));
         $this->addResource(new Zend_Acl_Resource ('default_password'));
