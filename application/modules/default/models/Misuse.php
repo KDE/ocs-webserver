@@ -31,7 +31,7 @@ class Default_Model_Misuse
             select p.*, rp.text as report_text, rp.report_id, rp.created_at as report_created_at, m.member_id as report_member_id, m.username as report_username
             from reports_project rp
             inner join stat_projects p on p.project_id = rp.project_id
-            inner join member m on m.member_id = rp.reported_by
+            left outer join member m on m.member_id = rp.reported_by
             where rp.report_type = 1
             and rp.is_deleted = 0
             and rp.is_valid = 0
