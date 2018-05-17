@@ -225,11 +225,11 @@ $credits = $model->fetchCredits();
                              style="border-top: 1px solid #ccc;font-size: 12px;padding: 10px 0;">
                             
                               <a  href="/credits/delete?id=<?= $this->product->project_clone_id?>"
-                               class="delete-this btn btn-danger" >delete
+                               class="delete-this btn btn-danger" data-title="Do you really want to delete this ?" >delete
                               </a>
 
                               <a  href="/credits/valid?id=<?= $this->product->project_clone_id?>"
-                               class="delete-this btn btn-danger" >validate
+                               class="delete-this btn btn-danger" data-title="Do you really want to validate this ?">validate
                               </a>
 
                               <a 
