@@ -156,6 +156,22 @@ class Backend_ReportProductsController extends Local_Controller_Action_Backend
 
         $this->_helper->json($jTableResult);
     }
+    
+    
+    public function validatemisuseAction()
+    {
+        
+        $projectId = (int)$this->getParam('p', null);
+        $dataModel = new Backend_Model_Reports();
+        $result = $dataModel->setDelete($projectId);
+        
+        $result = $dataModel->saveNewFraud($projectId);
+
+        $jTableResult = array();
+        $jTableResult['Result'] = self::RESULT_OK;
+
+        $this->_helper->json($jTableResult);
+    }
 
     public function listAction()
     {

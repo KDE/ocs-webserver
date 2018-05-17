@@ -133,5 +133,13 @@ class Backend_Model_Reports
         $sql = "update stat_projects set amount_reports = 0 where project_id = :project_id";
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('project_id' => $project_id))->execute();
     }
+    
+    public function saveNewFraud($project_id)
+    {
+        $sql = "INSERT INTO reports_project (project_id, report_type, reported_by, is_valid, created_at) VALUES (:project_id, 1, 0, 1, :now)";
+
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('project_id' => $project_id, 'now' => new Zend_Db_Expr('Now()')))->execute();
+        return $result;
+    }
 
 }
