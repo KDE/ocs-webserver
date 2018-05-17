@@ -82,46 +82,6 @@ $credits = $model->fetchCredits();
                                     <?= intval($this->rownum) ?>.
                                 </div>
                             </div>
-                            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 explore-product-imgcolumn">
-                                <figure>                                   
-                                            <img class="reporterimage tooltipuser" data-tooltip-content="#tooltip_content" data-user="<?=$this->product->reported_by?>" 
-                                                    src="<?php echo $this->Image($this->product->reporter_profile_image_url,array('width' => 80, 'height' => 80)); ?>" 
-                                                />                                       
-                                </figure>
-                                <span><?=$this->product->reporter_username?></span>
-                            </div>                            
-                            <div class="explore-product-details col-lg-3">                                    
-                                      <div class="mini-card">
-                                            <div class="u-wrap">
-                                                <a href="<?= $this->buildProductUrl($this->product->project_id, '', null, true); ?>">
-                                                    <figure>
-                                                        <img src="<?php echo $this->Image($this->product->image_small, array('width' => 101, 'height' => 81)); ?>"
-                                                             class="explore-product-image" width="101" height="81" />
-                                                    </figure>
-                                                    <div class="u-content">
-                                                        <h3><?php echo $this->product->title; ?></h3>
-                                                        <span class="productCategory"> <?php echo $this->product->catTitle; ?> </span>
-
-                                                        <span class="productCategory" style="width: 100%; float: left;">
-                                                            <?= $helperPrintDate->printDate($this->product->changed_at) ?>
-                                                        </span>
-                                                    </div>
-                                                </a>
-                                                                                          
-                                                
-                                                <?php
-                                                $this->widgetRating = new stdClass();
-                                                $this->widgetRating->project_id = $this->product->project_id;
-                                                $this->widgetRating->laplace_score =$this->product->laplace_score;
-                                                $this->widgetRating->count_likes = 0;
-                                                $this->widgetRating->count_dislikes = 0;
-                                                echo $this->render('partials/widgetRating.phtml'); ?>
-                                            </div>
-                                      </div>
-                            </div>
-                            <div class="col-lg-1">
-                                    <?php  echo $this->product->text ; ?>
-                            </div>
                             <div class="col-lg-3 ">
                                         <?php if($this->product->project_id_parent!=null && $this->product->parent_title!=null ) { ?>
 
@@ -154,10 +114,54 @@ $credits = $model->fetchCredits();
                                         </div>
                                     <?php }else{
 
-                                                echo $this->product->external_link;
+                                               
 
                                         } ?>
                             </div>
+
+                            <div class="explore-product-details col-lg-3">                                    
+                                      <div class="mini-card">
+                                            <div class="u-wrap">
+                                                <a href="<?= $this->buildProductUrl($this->product->project_id, '', null, true); ?>">
+                                                    <figure>
+                                                        <img src="<?php echo $this->Image($this->product->image_small, array('width' => 101, 'height' => 81)); ?>"
+                                                             class="explore-product-image" width="101" height="81" />
+                                                    </figure>
+                                                    <div class="u-content">
+                                                        <h3><?php echo $this->product->title; ?></h3>
+                                                        <span class="productCategory"> <?php echo $this->product->catTitle; ?> </span>
+
+                                                        <span class="productCategory" style="width: 100%; float: left;">
+                                                            <?= $helperPrintDate->printDate($this->product->changed_at) ?>
+                                                        </span>
+                                                    </div>
+                                                </a>
+                                                                                          
+                                                
+                                                <?php
+                                                $this->widgetRating = new stdClass();
+                                                $this->widgetRating->project_id = $this->product->project_id;
+                                                $this->widgetRating->laplace_score =$this->product->laplace_score;
+                                                $this->widgetRating->count_likes = 0;
+                                                $this->widgetRating->count_dislikes = 0;
+                                                echo $this->render('partials/widgetRating.phtml'); ?>
+                                            </div>
+                                      </div>
+                            </div>
+                            <div class="col-lg-1">
+                                    <?php   echo $this->product->external_link ; ?>
+                                    <?php  echo $this->product->text ; ?>
+                            </div>
+                            
+
+                            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 explore-product-imgcolumn">
+                                <figure>                                   
+                                            <img class="reporterimage tooltipuser" data-tooltip-content="#tooltip_content" data-user="<?=$this->product->reported_by?>" 
+                                                    src="<?php echo $this->Image($this->product->reporter_profile_image_url,array('width' => 80, 'height' => 80)); ?>" 
+                                                />                                       
+                                </figure>
+                                <span><?=$this->product->reporter_username?></span>
+                            </div>    
 
 
 
