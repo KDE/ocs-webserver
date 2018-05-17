@@ -86,8 +86,8 @@
                                 </h3>
 
                                 <b style="display: block; margin-bottom: 5px"><?php echo $this->product['cat_title'] ?></b>
-                                <b style="display: block; margin-bottom: 5px" class="small">by <a
-                                            href="<?php echo $helpMemberUrl->buildMemberUrl($this->product['member_id']) ?>"><?php echo $this->product['username'] ?></a></b>
+                                <b style="display: block; margin-bottom: 5px" class="small">by 
+                                    <a href="<?php echo $helpMemberUrl->buildMemberUrl($this->product['member_id']) ?>"><?php echo $this->product['username'] ?></a></b>
                                 <?php
                                 $helperPackageTypes = new Default_View_Helper_FetchProjectPackageTypes();
                                 $type = $helperPackageTypes->FetchProjectPackageTypes($this->product['project_id']);
@@ -132,7 +132,14 @@
                             <div class="explore-product-plings col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                 
                                 <div class="reportInfo">
-                                    <b>Reported by <a href="<?php echo $helpMemberUrl->buildMemberUrl($this->product['report_member_id']) ?>"><?php echo $this->product['report_username'] ?></a> <?php echo $reportTime ?></b>
+                                    <b>Reported by 
+                                        <?php if(isset($this->product['member_id'])) { ?>
+                                        <a href="<?php echo $helpMemberUrl->buildMemberUrl($this->product['report_member_id']) ?>"><?php echo $this->product['report_username'] ?></a> 
+                                        <?php } else { ?>
+                                        unkonwn
+                                        <?php } ?>
+                                            
+                                        <?php echo $reportTime ?></b>
                                 </div>
                                 
                                 <div class="reportInfo" style="padding-top: 5px;">
