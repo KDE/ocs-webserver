@@ -46,7 +46,11 @@ $credits = $model->fetchCredits();
         .u-wrap{
             position: relative;
         }
-
+        div.header{
+            font-weight: bold;
+            height: 30px;
+            background-color: #ccc; 
+        }
 </style>
 <div class="tooltip_templates" style="display: none">
     <span id="tooltip_content">
@@ -93,6 +97,19 @@ $credits = $model->fetchCredits();
             <div class="row">
                 <div class="sidebar-left col-md-1"></div>
                 <div class="content col-md-10">
+                <h2>
+                     List of credits
+                </h2>
+                 <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10" style="padding: 10px 0;">
+                    
+                                <div class="col-lg-1 "></div>
+                                <div class="col-lg-3 center" >Original</div>
+                                <div class="col-lg-3 center">Clone</div>
+                                <div class="col-lg-3 center">Text</div>
+                                <div class="col-lg-2 col-md-2 center">Reported by</div>
+                                <div class="col-lg-1 "></div>
+                 
+                </div>
                     <?php
                     $helperPrintDate = new Default_View_Helper_PrintDate();
                     $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
@@ -111,7 +128,10 @@ $credits = $model->fetchCredits();
                     }
                     foreach ($this->products as $this->product) {                        
                         ?>
-                        <div class="explore-product col-lg-10 col-md-10 col-sm-10 col-xs-10" style="border-top: 1px solid #ccc;font-size: 12px;padding: 10px 0;">
+
+                        <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10" style="border-top: 1px solid #ccc;font-size: 12px;padding: 10px 0;">
+
+
                             <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
                                 <div class="rownum">
                                     <?= intval($this->rownum) ?>.
