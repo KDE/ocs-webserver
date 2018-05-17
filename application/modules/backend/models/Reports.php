@@ -136,9 +136,9 @@ class Backend_Model_Reports
     
     public function saveNewFraud($project_id)
     {
-        $sql = "INSERT INTO reports_project (project_id, report_type, reported_by, is_valid, created_at) VALUES (:project_id, 1, 0, 1, :now)";
+        $sql = "INSERT INTO reports_project (project_id, report_type, reported_by, is_valid) VALUES (:project_id, 1, 0, 1)";
 
-        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('project_id' => $project_id, 'now' => new Zend_Db_Expr('Now()')))->execute();
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('project_id' => $project_id))->execute();
         return $result;
     }
 
