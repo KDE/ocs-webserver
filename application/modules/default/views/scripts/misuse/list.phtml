@@ -108,32 +108,36 @@
                                             ? '</span>' : '');
                                     ?>
                                 </div>
-
-                                <div class="reportInfo" style="padding-top: 25px;font-size: medium">
-                                    <b>Reported by <a href="<?php echo $helpMemberUrl->buildMemberUrl($this->product['report_member_id']) ?>"><?php echo $this->product['report_username'] ?></a> <?php echo $reportTime ?></b>
-                                </div>
                                 
-                                <div class="reportInfo" style="padding-top: 5px;font-size: medium">
-                                    <b>Report-Text:</b> <span style="font-size: medium"><?php echo $this->product['report_text']; ?></span>
-                                    
+                                <div style=" width: 100px; padding-top: 10px;">
+                                
+                                    <!-- RATING -->
+                                    <?php
+                                    $this->widgetRating = new stdClass();
+                                    $this->widgetRating->project_id = $this->product['project_id'];
+                                    $this->widgetRating->laplace_score = $this->product['laplace_score'];
+                                    $this->widgetRating->count_likes = $this->product['count_likes'];
+                                    $this->widgetRating->count_dislikes = $this->product['count_dislikes'];
+                                    // it is a trial
+                                    include APPLICATION_PATH . '/modules/default/views/scripts/partials/widgetRating.phtml';
+                                    //echo $this->render('partials/widgetRating.phtml'); ?>
+                                    <!-- /RATING -->
+
+                                </div>
+                                <div class="collected">
+                                    <span><?php echo $updateTime ?></span>
                                 </div>
                             </div>
                             
                             <div class="explore-product-plings col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                                <!-- RATING -->
-                                <?php
-                                $this->widgetRating = new stdClass();
-                                $this->widgetRating->project_id = $this->product['project_id'];
-                                $this->widgetRating->laplace_score = $this->product['laplace_score'];
-                                $this->widgetRating->count_likes = $this->product['count_likes'];
-                                $this->widgetRating->count_dislikes = $this->product['count_dislikes'];
-                                // it is a trial
-                                include APPLICATION_PATH . '/modules/default/views/scripts/partials/widgetRating.phtml';
-                                //echo $this->render('partials/widgetRating.phtml'); ?>
-                                <!-- /RATING -->
-
-                                <div class="collected">
-                                    <span><?php echo $updateTime ?></span>
+                                
+                                <div class="reportInfo">
+                                    <b>Reported by <a href="<?php echo $helpMemberUrl->buildMemberUrl($this->product['report_member_id']) ?>"><?php echo $this->product['report_username'] ?></a> <?php echo $reportTime ?></b>
+                                </div>
+                                
+                                <div class="reportInfo" style="padding-top: 5px;">
+                                    <b>Report-Text:</b><br><span><?php echo $this->product['report_text']; ?></span>
+                                    
                                 </div>
 
                             </div>
@@ -152,8 +156,11 @@
                             <hr/>
                             */ ?>
                             
-                            <a href="/backend/reportproducts/validate?r=<?= $this->product['report_id'] ?>"
+                            <a href="/backend/reportproducts/validatereport?r=<?= $this->product['report_id'] ?>"
                                class="delete-this" data-title="Mark report as valid?">validate report</a>
+                            <hr/>
+                            <a href="/backend/reportproducts/deletreport?r=<?= $this->product['report_id'] ?>"
+                               class="delete-this" data-title="Mark report as deleted?">delete report</a>
                         </div>
                         <?php
                         $this->rownum++;

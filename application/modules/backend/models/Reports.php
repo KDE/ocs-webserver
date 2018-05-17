@@ -112,9 +112,17 @@ class Backend_Model_Reports
     }
     
     
-    public function setValid($reportId)
+    public function setReportAsValid($reportId)
     {
         $sql = "update reports_project set is_valid = 1 where report_id = :reportId";
+
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('reportId' => $reportId))->execute();
+        return $result;
+    }
+    
+    public function setReportAsDeleted($reportId)
+    {
+        $sql = "update reports_project set is_deleted = 1 where report_id = :reportId";
 
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('reportId' => $reportId))->execute();
         return $result;
