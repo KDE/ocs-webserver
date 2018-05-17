@@ -1514,8 +1514,9 @@ var AppimagequestionOnClick = (function () {
            $('body').on('click', 'i.appimagequestion', function (event) {         
                     var msgBox = $('#generic-dialog');                    
                     msgBox.modal('show');                    
-                    msgBox.find('.modal-header-text').empty().append('About AppImage');
-                    msgBox.find('.modal-body').empty().append("<span class='info'>What is AppImage?</span>");
+                    msgBox.find('.modal-header-text').empty().append('AppImage Info');
+                    msgBox.find('.modal-body').empty().append("<div class='info' >To use appimage, install appimage launcher :"
+                        +"<p><a href='https://www.opendesktop.org/p/1228228'>www.opendesktop.org/p/1228228</a><p><a href='https://www.linuxuprising.com/2018/04/easily-run-and-integrate-appimage-files.html'> more info  </a>  </div>");
            });
 
         }
