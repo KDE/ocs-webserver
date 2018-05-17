@@ -72,7 +72,7 @@ $architectureListHelper = new Default_View_Helper_FetchArchitectureTags();
                                  <th><?= $this->translate('Description'); ?></th>
                             
                                  <th><?= $this->translate('Packagetype'); ?></th>
-                                 <!--<th><?= $this->translate('Architecture'); ?></th>-->
+                                 <th><?= $this->translate('Architecture'); ?></th>
                              
                                  <th style="text-align: right"><?= $this->translate('Downloads'); ?></th>
                                  <th><?= $this->translate('Date'); ?></th>
@@ -354,7 +354,6 @@ $architectureListHelper = new Default_View_Helper_FetchArchitectureTags();
                                             + '<option value=\"4\">Windows executable</option>'
                                             + '</select><span id="file-tag-packagetype'+this.id+'">'
                                             + '</td>'
-                                            <?php /*
                                             + '<td>'
                                             + '<select class="form-control input-sm" id="data-select-architecture' + this.id + '" data-architecture-id="" name="architecture">'
                                             + '    <option value=""></option>'
@@ -370,7 +369,6 @@ $architectureListHelper = new Default_View_Helper_FetchArchitectureTags();
                                                 ?>
                                             + '</select><span id="file-tag-architecture'+this.id+'">'
                                             + '</td>'
-                                            */?>
                                             + '<td style="text-align: right"><span id="download_counter_' + this.id + '">' + count_downloads + '</td>'
                                             + '<td>' +mnt.format('YYYY-MM-DD') + '</td>'
                                             + '<td style="text-align: right">' + humanFileSize(this.size,false) + '</td>'
@@ -445,7 +443,6 @@ $architectureListHelper = new Default_View_Helper_FetchArchitectureTags();
 
                                         $("#data-select-packagetype" + this.id).hide();
                                         
-                                        /**
                                         if ((typeof architectureId != 'undefined') && (architectureId != "")) {
                                             $("#data-select-architecture" + this.id + " option[value='" + architectureId + "']").attr('selected', 'selected');
                                             $architectureIdText = $("#data-select-architecture" + this.id + " option[value='" + architectureId + "']").text();
@@ -456,7 +453,7 @@ $architectureListHelper = new Default_View_Helper_FetchArchitectureTags();
                                         }
 
                                         $("#data-select-architecture" + this.id).hide();
-                                        */
+                                        
                                         if ((typeof this.ocs_compatible != 'undefined') && (this.ocs_compatible != "") && this.ocs_compatible == 1) {
                                             $("#data-checkbox-compatible-" + this.id).attr('checked', 'checked');
                                         }
