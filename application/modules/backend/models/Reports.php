@@ -138,7 +138,7 @@ class Backend_Model_Reports
     {
         $sql = "INSERT INTO reports_project (project_id, report_type, reported_by, is_valid) VALUES (:project_id, 1, 0, 1)";
 
-        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('project_id' => $project_id))->execute();
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('project_id' => $project_id))->commit();
         return $result;
     }
 
