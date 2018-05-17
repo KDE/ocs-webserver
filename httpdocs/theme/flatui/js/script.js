@@ -1508,6 +1508,20 @@ var ProductDetailCarousel = (function () {
     }
 })();
 
+var AppimagequestionOnClick = (function () {
+    return {
+        setup: function (projectid) {           
+           $('body').on('click', 'i.appimagequestion', function (event) {         
+                    var msgBox = $('#generic-dialog');                    
+                    msgBox.modal('show');                    
+                    msgBox.find('.modal-header-text').empty().append('About AppImage');
+                    msgBox.find('.modal-body').empty().append("<span class='info'>What is AppImage?</span>");
+           });
+
+        }
+    }
+})();
+
 
 var ProductDetailBtnGetItClick  = (function () {
     return {

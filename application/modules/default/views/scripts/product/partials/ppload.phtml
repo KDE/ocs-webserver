@@ -437,6 +437,10 @@ $architectureListHelper = new Default_View_Helper_FetchArchitectureTags();
                                             $packagetypeIdText = $("#data-select-packagetype" + this.id + " option[value='" + packagetypeId + "']").text();
                                             $("#data-select-packagetype" + this.id).hide();
                                             $("#file-tag-packagetype" + this.id).text($packagetypeIdText);
+                                            if(packagetypeId==1){
+                                                $("#file-tag-packagetype" + this.id).append(' <i class="fa fa-question-circle appimagequestion"></i>');
+                                            }
+
                                         } else {
                                          $("#data-select-packagetype" + this.id).hide();
                                         }
@@ -676,6 +680,10 @@ $architectureListHelper = new Default_View_Helper_FetchArchitectureTags();
                                              $packagetypeIdText = $("#data-select-packagetype" + this.id + " option[value='" + packagetypeId + "']").text();
                                              $("#data-select-packagetype" + this.id).hide();
                                              $("#file-tag-packagetype" + this.id).text($packagetypeIdText);
+                                             if(packagetypeId==1){
+                                             $("#file-tag-packagetype" + this.id).append(' <i class="fa fa-question-circle appimagequestion"></i>');
+                                             }
+
                                          } else {
                                           $("#data-select-packagetype" + this.id).hide();
                                          }
