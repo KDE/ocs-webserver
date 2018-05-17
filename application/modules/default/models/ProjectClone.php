@@ -122,7 +122,8 @@ class Default_Model_ProjectClone extends Default_Model_DbTable_ProjectClone
           $sql = "
 
                       SELECT 
-                       c.project_id 
+                       c.project_clone_id
+                      ,c.project_id 
                       ,c.project_id_parent
                       ,c.external_link
                       ,c.text

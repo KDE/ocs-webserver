@@ -43,23 +43,24 @@ class Default_Model_DbTable_ProjectClone extends Local_Model_Table
         'deleted_at'  => null
     );
  
-    public function setDelete($reportId)
+    public function setDelete($project_clone_id)
     {
         $updateValues = array(
             'is_deleted' => 1,
         );
 
-        $this->update($updateValues, 'report_id=' . $reportId);
+        $this->update($updateValues, 'project_clone_id=' . $project_clone_id);
     }
 
-    public function setDeleteByMember($member_id)
+    public function setValid($project_clone_id)
     {
         $updateValues = array(
-            'is_deleted' => 1,
+            'is_valid' => 1,
         );
 
-        $this->update($updateValues, 'member_id=' . $member_id);
+        $this->update($updateValues, 'project_clone_id=' . $project_clone_id);
     }
+   
 
     /**
      * @param array $data

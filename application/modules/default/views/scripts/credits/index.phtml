@@ -28,7 +28,8 @@ $credits = $model->fetchCredits();
 <style type="text/css">
         img.reporterimage
         {
-                width: 100%;
+                width: 80px;
+                height: 80px;
                 border: 1px solid #dbdbdb;
                 -webkit-border-radius: 999px;
                 -moz-border-radius: 999px;
@@ -39,7 +40,7 @@ $credits = $model->fetchCredits();
         }
 
         .mini-card{
-            width: 90%;
+            width: 70%;
             
         }
         .u-wrap{
@@ -52,12 +53,46 @@ $credits = $model->fetchCredits();
         <i class="fa fa-spinner"></i>
     </span>
 </div>
+
+ <div id="report-product-clone" class="modal report-product-clone" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                            <h2 class="modal-title">This product is based on:</h2>
+            </div>
+            <form id="product-report-clone" class="full-width partialjson" action="/credits/edit/"
+                  data-target="#report-product-clone-message">
+                <input type="hidden" name="id" value="">
+                <div id="report-product-clone-message" class="message" style="padding: 20px">
+                    <div>                            
+                        <label class="form-label">Original product ID on opendesktop:  </label><br/>
+                        <input name="p" onkeyup="this.value=this.value.replace(/[^\d]/,'')"/><br/><br/>
+                        <label class="form-label">External link to original product: </label><br/>
+                        <input name="l" style="width: 440px;" />
+                        <br/><br/>
+                        <label class="form-label">Additional message: </label>
+                        <br/>
+                       <textarea class="" id="report-text" name="t"  rows="3" style="width: 440px;"></textarea>                                                     
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="small">
+                            <span class="glyphicon glyphicon-share-alt"></span> add credits
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <main id="explore-content">
     <section class="wrapper" id="products-wrapper">
         <div class="container-fluid">
             <div class="row">
-                <div class="sidebar-left col-md-2"></div>
-                <div class="content col-md-8">
+                <div class="sidebar-left col-md-1"></div>
+                <div class="content col-md-10">
                     <?php
                     $helperPrintDate = new Default_View_Helper_PrintDate();
                     $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
@@ -148,16 +183,16 @@ $credits = $model->fetchCredits();
                                             </div>
                                       </div>
                             </div>
-                            <div class="col-lg-1">
+                            <div class="col-lg-3">
                                     <?php   echo $this->product->external_link ; ?>
                                     <?php  echo $this->product->text ; ?>
                             </div>
                             
 
-                            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 explore-product-imgcolumn">
+                            <div class="col-lg-1 col-md-1 col-sm-1">
                                 <figure>                                   
                                             <img class="reporterimage tooltipuser" data-tooltip-content="#tooltip_content" data-user="<?=$this->product->reported_by?>" 
-                                                    src="<?php echo $this->Image($this->product->reporter_profile_image_url,array('width' => 80, 'height' => 80)); ?>" 
+                                                    src="<?php echo $this->Image($this->product->reporter_profile_image_url,array('width' => 50, 'height' => 50)); ?>" 
                                                 />                                       
                                 </figure>
                                 <span><?=$this->product->reporter_username?></span>
@@ -169,13 +204,30 @@ $credits = $model->fetchCredits();
                         <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 small text-right"
                              style="border-top: 1px solid #ccc;font-size: 12px;padding: 10px 0;">
                             
+                              <a  href="/credits/delete?id=<?= $this->product->project_clone_id?>"
+                               class="delete-this btn btn-danger" >delete
+                              </a>
+
+                              <a  href="/credits/valid?id=<?= $this->product->project_clone_id?>"
+                               class="delete-this btn btn-danger" >validate
+                              </a>
+
+                              <a 
+                                          class="btn btn-default eventmodal" 
+                                          data-p="<?=$this->product->project_id_parent?>"
+                                          data-t="<?=$this->product->text?>"
+                                          data-l="<?=$this->product->external_link?>"
+                                          data-id="<?=$this->product->project_clone_id?>">
+                                           edit 
+                              </a>
+                            
                         </div>
                         <?php
                         $this->rownum++;
                     }
                     ?>
                 </div>
-                <div class="sidebar-right col-md-2"></div>
+                <div class="sidebar-right col-md-1"></div>
             </div>
             <section class="explore-footer text-center">
                 <?php echo $this->paginationControl($this->products, 'Sliding',
@@ -207,10 +259,24 @@ $credits = $model->fetchCredits();
 
         return false;
     });
+
+    $('body').on('click', 'a.eventmodal', function (event) {
+             event.stopPropagation();
+             $('#report-product-clone').modal('toggle');           
+             $('#report-product-clone').find('input[name="id"]').val($(this).attr('data-id'));
+             $('#report-product-clone').find('input[name="p"]').val($(this).attr('data-p'));
+             $('#report-product-clone').find('input[name="l"]').val($(this).attr('data-l'));
+             $('#report-product-clone').find('textarea[name="t"]').text($(this).attr('data-t'));            
+    })
+
+    $("#report-product-clone").on("hidden.bs.modal", function () {
+        location.reload();
+    });
 </script>
 
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){                                             
-                TooltipUser.setup("tooltipuser","right");                       
+                TooltipUser.setup("tooltipuser","right");            
+                  PartialJson.setup();           
             });
         ');

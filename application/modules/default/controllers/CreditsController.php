@@ -30,5 +30,55 @@ class CreditsController extends Local_Controller_Action_DomainSwitch
        	$this->view->page = (int)$this->getParam('page', 1);
     }
 
+    public function deleteAction()
+    {
+       	$this->_helper->layout->disableLayout();
+       	$id =  (int)$this->getParam('id');
+       	$m = new Default_Model_ProjectClone();
+       	$m->setDelete($id);
+       	$this->_helper->json(array(
+       	    'status'  => 'ok',
+       	    'message' => 'deleted',
+       	    'data'    => array()
+       	));
+
+    }
+
+     public function validAction()
+    {
+       	$this->_helper->layout->disableLayout();
+	 $id =  (int)$this->getParam('id');
+	 $m = new Default_Model_ProjectClone();
+       	$m->setValid($id);
+       	$this->_helper->json(array(
+       	    'status'  => 'ok',
+       	    'message' => 'validated',
+       	    'data'    => array()
+       	));
+       	
+    }
+
+     public function editAction()
+    {
+       	$this->_helper->layout->disableLayout();
+	$id =  (int)$this->getParam('id');
+	$text =$this->getParam('t');
+	$project_id_parent =  (int)$this->getParam('p');
+	$link =  $this->getParam('l');
+	$m = new Default_Model_ProjectClone();
+       	              	
+
+	$m->update(array( 'text' => $text
+	 		     , 'project_id_parent' =>$project_id_parent
+	 		     , 'external_link' => $link) , 'project_clone_id='.$id);                             
+	
+       	$this->_helper->json(array(
+       	    'status'  => 'ok',
+       	    'message' => 'updated',
+       	    'data'    => array()
+       	));
+       	
+    }
+
  
 }
