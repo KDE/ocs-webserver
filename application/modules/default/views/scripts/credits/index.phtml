@@ -100,6 +100,9 @@ $credits = $model->fetchCredits();
                 <h2>
                      List of credits
                 </h2>
+                <?php if(count($credits)>0)
+                {
+                    ?>
                  <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10" style="padding: 10px 0;">
                     
                                 <div class="col-lg-1 "></div>
@@ -110,6 +113,7 @@ $credits = $model->fetchCredits();
                                 <div class="col-lg-1 "></div>
                  
                 </div>
+                <?php } ?>
                     <?php
                     $helperPrintDate = new Default_View_Helper_PrintDate();
                     $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
@@ -121,7 +125,6 @@ $credits = $model->fetchCredits();
                     $paginator = Zend_Paginator::factory($credits);
                     $paginator->setItemCountPerPage($pageLimit);
                     $paginator->setCurrentPageNumber($this->page);                    
-
                     $this->products = $paginator;
                     if ($paginator->count() == 0) {
                         echo '<div class="alert alert-success" role="alert"><p class="text-success">Congratulations. No more SPAM in sight. (For the moment)</p></div>';
@@ -249,11 +252,15 @@ $credits = $model->fetchCredits();
                 </div>
                 <div class="sidebar-right col-md-1"></div>
             </div>
+             <?php if(count($credits)>0)
+                {
+                    ?>
             <section class="explore-footer text-center">
                 <?php echo $this->paginationControl($this->products, 'Sliding',
                     'partials/paginationControlWithoutAjax.phtml',
                     array('params' => $this->filters, 'dom_target' => 'section#products-wrapper')); ?>
             </section>
+            <?php } ?>
         </div>
     </section>
 </main>
