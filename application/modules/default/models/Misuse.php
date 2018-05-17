@@ -36,7 +36,7 @@ class Default_Model_Misuse
             and rp.is_deleted = 0
             and rp.is_valid = 0
             and p.`status` = 100
-            order by p.changed_at desc, p.changed_at desc, rp.created_at desc;
+            order by rp.created_at desc;
         ";
 
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql);
