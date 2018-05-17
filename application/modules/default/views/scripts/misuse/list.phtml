@@ -133,7 +133,7 @@
                                 
                                 <div class="reportInfo">
                                     <b>Reported by 
-                                        <?php if(isset($this->product['member_id'])) { ?>
+                                        <?php if(isset($this->product['report_member_id'])) { ?>
                                         <a href="<?php echo $helpMemberUrl->buildMemberUrl($this->product['report_member_id']) ?>"><?php echo $this->product['report_username'] ?></a> 
                                         <?php } else { ?>
                                         unkonwn
