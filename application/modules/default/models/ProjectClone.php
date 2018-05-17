@@ -113,11 +113,48 @@ class Default_Model_ProjectClone extends Default_Model_DbTable_ProjectClone
                                           )
 
                         ";
-             $resultSet = $this->_db->fetchAll($sql, array('project_id' => $project_id));
+             $resultSet = $this->_db->fetchAll($sql, array('project_id' => $project_id));         
+              return $this->generateRowSet($resultSet);             
+    }
 
-         
-              return $this->generateRowSet($resultSet);
-             
+    public function fetchCredits()
+    {
+          $sql = "
+
+                      SELECT 
+                       c.project_clone_id
+                      ,c.project_id 
+                      ,c.project_id_parent
+                      ,c.external_link
+                      ,c.text
+                      ,c.member_id as reported_by
+                      ,(select username from member m where m.member_id = c.member_id) as reporter_username
+                      ,(select profile_image_url from member m where m.member_id = c.member_id) as reporter_profile_image_url
+
+                      ,(select cat_title from stat_projects p where p.project_id = c.project_id) catTitle
+                      ,(select title from stat_projects p where p.project_id = c.project_id) title
+                      ,(select image_small from stat_projects p where p.project_id = c.project_id) image_small
+                      ,(select changed_at from stat_projects p where p.project_id = c.project_id) changed_at
+                      ,(select laplace_score from stat_projects p where p.project_id = c.project_id) laplace_score
+                      ,(select member_id from stat_projects p where p.project_id = c.project_id) member_id
+                      ,(select username from stat_projects p where p.project_id = c.project_id) username
+
+
+                      ,(select cat_title from stat_projects p where p.project_id = c.project_id_parent) parent_catTitle
+                      ,(select title from stat_projects p where p.project_id = c.project_id_parent) parent_title
+                      ,(select image_small from stat_projects p where p.project_id = c.project_id_parent) parent_image_small
+                      ,(select changed_at from stat_projects p where p.project_id = c.project_id_parent) parent_changed_at
+                      ,(select laplace_score from stat_projects p where p.project_id = c.project_id_parent) parent_laplace_score
+                      ,(select member_id from stat_projects p where p.project_id = c.project_id_parent) parent_member_id
+                      ,(select username from stat_projects p where p.project_id = c.project_id_parent) parent_username
+                      FROM project_clone c
+                      WHERE c.is_deleted = 0 and c.is_valid = 0 
+                      order by c.created_at desc
+
+          ";
+
+          $resultSet = $this->_db->fetchAll($sql);         
+          return $this->generateRowSet($resultSet);            
     }
 
 } 

@@ -128,6 +128,34 @@ class Backend_ReportProductsController extends Local_Controller_Action_Backend
 
         $this->_helper->json($jTableResult);
     }
+    
+    public function validatereportAction()
+    {
+        $reportId = (int)$this->getParam('r', null);
+
+        $dataModel = new Backend_Model_Reports();
+
+        $result = $dataModel->setReportAsValid($reportId);
+
+        $jTableResult = array();
+        $jTableResult['Result'] = self::RESULT_OK;
+
+        $this->_helper->json($jTableResult);
+    }
+    
+    public function deletereportAction()
+    {
+        $reportId = (int)$this->getParam('r', null);
+
+        $dataModel = new Backend_Model_Reports();
+
+        $result = $dataModel->setReportAsDeleted($reportId);
+
+        $jTableResult = array();
+        $jTableResult['Result'] = self::RESULT_OK;
+
+        $this->_helper->json($jTableResult);
+    }
 
     public function listAction()
     {
