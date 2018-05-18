@@ -31,8 +31,6 @@ class Backend_ReportProductsController extends Local_Controller_Action_Backend
 
     protected $_modelName = 'Default_Model_DbTable_ReportProducts';
     
-    protected $_authMember;
-
     /**
      *
      */
@@ -168,7 +166,7 @@ class Backend_ReportProductsController extends Local_Controller_Action_Backend
         $dataModel = new Backend_Model_Reports();
         $result = $dataModel->setDelete($projectId);
         
-        $result = $dataModel->saveNewFraud($projectId);
+        $result = $dataModel->saveNewFraud($projectId, $this->_authMember);
 
         $jTableResult = array();
         $jTableResult['Result'] = self::RESULT_OK;
