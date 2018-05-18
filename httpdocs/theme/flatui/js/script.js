@@ -1461,7 +1461,11 @@ var BlogJson = (function () {
             $.ajax(json_url).then(function (result) { 
               var topics = result.topic_list.topics; 
               var crss = '';            
-              var count =3;                                       
+              var count =3;      
+              topics.sort(function(a,b){                  
+                  return new Date(b.last_posted_at) - new Date(a.last_posted_at);
+                });
+
              $.each(topics, function (i, item) {
                  if(!item.pinned){                   
                      var m = moment(item.last_posted_at);
