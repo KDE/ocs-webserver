@@ -35,7 +35,8 @@
                         <h3 class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><?php echo Default_Model_HtmlPurify::purify($p['username']); ?></h3>
                                                                   
                     </a>
-                     <span class="small created_at" ><img src="/images/system/pling-btn-active.png" style="width: 15px; height: 15px">
+                     <span class="small created_at" >
+                        <a class="tooltipuserplings" data-tooltip-content="#tooltip_content" data-user="<?=$p['project_id']?>" ><img src="/images/system/pling-btn-active.png" style="width: 15px; height: 15px" /> </a>
                         <?= /*$this->printDate($p['created_at'])*/ $p['sum_plings']; ?>
                      </span>
                 </div>
