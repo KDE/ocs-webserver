@@ -545,7 +545,12 @@ $architectureListHelper = new Default_View_Helper_FetchArchitectureTags();
 
                                     downloaded_count_total = downloaded_count_total+parseInt(cout_downloads);
 
-                                    downloadLink = this.name;
+                                    var hash = '<?= $this->download_hash ?>';
+                                    var timetamp = '<?= $this->download_timestamp ?>';
+                                    var userid = '<?= $this->product->member_id?>';
+                                    var downloadUrl = "https://<?= $_SERVER["SERVER_NAME"]?>/p/<?= $this->product->project_id ?>/startdownload?file_id=" + this.id + "&file_name=" + this.name + "&file_type=" + this.type + "&file_size=" + this.size + "&url=" + encodeURIComponent(pploadApiUri + 'files/downloadfile/id/' + this.id + '/s/' + hash + '/t/' + timetamp + '/u/' + userid + '/' + this.name);
+                                    var downloadLink = '<a class="inactiverows" style="color: #ccc; display:none;"" href="' + downloadUrl + '" id="data-link' + this.id + '">' + this.name + '</a>';
+
 
                                      var fileDescription = '';
                                      if (this.description) {

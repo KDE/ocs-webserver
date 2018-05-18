@@ -188,7 +188,7 @@ class Backend_MemberController extends Zend_Controller_Action
             Default_Model_ActivityLog::BACKEND_USER_PLING_EXCLUDED, $logArray);
 
         $jTableResult = array();
-        $jTableResult['Result'] = self::RESULT_OK;
+        $jTableResult['Result'] = 'OK';
 
         $this->_helper->json($jTableResult);
     }

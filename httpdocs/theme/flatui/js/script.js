@@ -1461,7 +1461,11 @@ var BlogJson = (function () {
             $.ajax(json_url).then(function (result) { 
               var topics = result.topic_list.topics; 
               var crss = '';            
-              var count =3;                                       
+              var count =3;      
+              topics.sort(function(a,b){                  
+                  return new Date(b.last_posted_at) - new Date(a.last_posted_at);
+                });
+
              $.each(topics, function (i, item) {
                  if(!item.pinned){                   
                      var m = moment(item.last_posted_at);
@@ -1706,6 +1710,10 @@ var TooltipUserPlings = (function () {
                                     if(value.profile_image_url.indexOf('http')<0)
                                     {
                                          value.profile_image_url = "https://cn.pling.com/cache/40x40-2/img/"+value.profile_image_url ;                                           
+                                    }
+                                    if(value.profile_image_url.indexOf('.gif')>0)
+                                    {
+                                         value.profile_image_url = "https://cn.pling.com/img/"+value.profile_image_url ;                                           
                                     }
                                     tmp = tmp+'<div class="user"><a href="/member/'+value.member_id+'"><img src="'+value.profile_image_url+'" /></a><span class="caption">'+value.username+'</span></div>';
                                 });    
