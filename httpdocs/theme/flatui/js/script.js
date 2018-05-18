@@ -1684,6 +1684,40 @@ var TooltipUser = (function () {
 })();
 
 
+var TooltipUserPlings = (function () {
+    return {
+        setup: function (tooltipCls, tooltipSide) {
+            $('.'+tooltipCls).tooltipster(
+                {
+                    side: tooltipSide,
+                    theme: ['tooltipster-light', 'tooltipster-light-customized'],
+                    contentCloning: true,
+                    contentAsHTML: true,
+                    interactive: true,
+                    functionBefore: function (instance, helper) {
+                        var origin = $(helper.origin);
+                        var userid = origin.attr('data-user');
+                        if (origin.data('loaded') !== true) {
+                            $.get('/plings/tooltip/id/'+userid, function (data) {
+                                
+                                var tmp = '<div class="tooltipuserplingscontainer">';
+                                $.each(data.data, function( index, value ) {
+                                    if(index>10) return false;
+                                    tmp = tmp+'<div class="user"><a href="/member/'+value.member_id+'"><img src="'+value.profile_image_url+'" /></a><span class="caption">'+value.username+'</span></div>';
+                                });    
+                                tmp = tmp + '</div>';
+                                instance.content(tmp);
+                                origin.data('loaded', true);
+                            });
+                        }
+                    }
+
+                }
+            );
+        }
+    }
+})();
+
 
 var AboutMePage = (function () {
     return {
