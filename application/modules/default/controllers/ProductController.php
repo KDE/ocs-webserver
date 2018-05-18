@@ -495,10 +495,10 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $modelTags->processTagsUser($this->_projectId,null, Default_Model_Tags::TAG_TYPE_PROJECT);             
         }    
    
-
         $activityLog = new Default_Model_ActivityLog();
-        $activityLog->writeActivityLog($this->_projectId, $projectData->member_id,
-            Default_Model_ActivityLog::PROJECT_EDITED, $projectData->toArray());
+        //20180518 ronald: we will log the auth-member_id, not the project-member_id
+        //$activityLog->writeActivityLog($this->_projectId, $projectData->member_id, Default_Model_ActivityLog::PROJECT_EDITED, $projectData->toArray());
+        $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id, Default_Model_ActivityLog::PROJECT_EDITED, $projectData->toArray());
 
         // ppload
         $this->processPploadId($projectData);
