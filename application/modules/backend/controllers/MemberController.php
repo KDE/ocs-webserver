@@ -173,7 +173,7 @@ class Backend_MemberController extends Zend_Controller_Action
         $member = $this->_model->find($memberId)->current();
         $exclude = (int)$this->getParam('pling_excluded', null);
 
-        $sql = "UPDATE mmeber SET pling_excluded = :exclude WHERE member_id = :member_id";
+        $sql = "UPDATE member SET pling_excluded = :exclude WHERE member_id = :member_id";
         $this->_model->getAdapter()->query($sql, array('exclude' => $exclude, 'member_id' => $memberId));
 
         $auth = Zend_Auth::getInstance();
