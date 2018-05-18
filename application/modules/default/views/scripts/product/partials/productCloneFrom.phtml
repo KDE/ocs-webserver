@@ -26,8 +26,8 @@ $helpBuildProductUrl = new Default_View_Helper_BuildProductUrl();
 
     <div class="sidebar-content">
         <span><?= $this->moreProductsTitle ?>: </span>
-        <div class="sidebar-content-section">
-            <div class="row product-row" style="margin-top: -20px">
+        <div class="">
+            <div class="row product-row" >
                 <?php
                 foreach ($this->moreProducts as $product):
 
@@ -91,6 +91,9 @@ $helpBuildProductUrl = new Default_View_Helper_BuildProductUrl();
         }
         .externallinkclone a{
             display: block;
+        }
+        .product-row{
+            margin-top: 0px;
         }
 
 </style>
