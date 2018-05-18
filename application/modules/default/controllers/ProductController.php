@@ -1937,7 +1937,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
             return;
         } else {
-            $error_text .= 'No FileId. , FileId: ' . $_POST['file_id'];
+            $error_text .= 'updatearchitectureAction: No FileId!';
         }
 
         $this->_helper->json(array('status' => 'error', 'error_text' => $error_text));
