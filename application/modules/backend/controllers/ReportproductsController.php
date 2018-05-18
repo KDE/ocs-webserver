@@ -30,6 +30,8 @@ class Backend_ReportProductsController extends Local_Controller_Action_Backend
     protected $_model;
 
     protected $_modelName = 'Default_Model_DbTable_ReportProducts';
+    
+    protected $_authMember;
 
     /**
      *
@@ -41,6 +43,7 @@ class Backend_ReportProductsController extends Local_Controller_Action_Backend
         $this->view->pageTitle = 'Manage Reported Products';
 
         parent::init();
+        
     }
 
     public function indexAction()
