@@ -180,7 +180,10 @@ class ReportController extends Zend_Controller_Action
                     $text = $this->getParam('t');
                     $project_clone = $this->getParam('pc');
                     $link = $this->getParam('l');
-                    
+                    if(trim($project_clone)=='')
+                    {
+                        $project_clone = null;
+                    }
                     if (Zend_Auth::getInstance()->hasIdentity()) {
                         $reported_by = (int)Zend_Auth::getInstance()->getStorage()->read()->member_id;
                         $reportProducts = new Default_Model_DbTable_ProjectClone();                 

@@ -28,5 +28,13 @@ class PlingsController extends Local_Controller_Action_DomainSwitch
         $this->_helper->layout->disableLayout();
     }
 
+    public function tooltipAction()
+    {
+        $this->_helper->layout->disableLayout();  
+        $info = new Default_Model_ProjectPlings();
+        $project_id = (int)$this->getParam('id');
+        $data = $info->fetchPlingsForProject($project_id);       
+        $this->_helper->json(array('status' => 'ok', 'data' =>$data));            
+    }
    
 }
