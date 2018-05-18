@@ -166,4 +166,24 @@ class Backend_MemberController extends Zend_Controller_Action
 
         $form = new Zend_Form();
     }
+    
+    public function doexcludeAction()
+    {
+        $memberId = (int)$this->getParam('member_id', null);
+        $member = $this->_model->find($memberId)->current();
+        $exclude = (int)$this->getParam('pling_excluded', null);
+
+        $sql = "UPDATE mmeber SET pling_excluded = :exclude WHERE member_id = :member_id";
+        $this->_model->getAdapter()->query($sql, array('exclude' => $exclude, 'member_id' => $memberId));
+
+        $auth = Zend_Auth::getInstance();
+        $identity = $auth->getIdentity();
+        Default_Model_ActivityLog::logActivity($memberId, $memberId, $identity->member_id,
+            Default_Model_ActivityLog::BACKEND_USER_PLING_EXCLUDED, $member);
+
+        $jTableResult = array();
+        $jTableResult['Result'] = self::RESULT_OK;
+
+        $this->_helper->json($jTableResult);
+    }
 }
