@@ -1703,6 +1703,10 @@ var TooltipUserPlings = (function () {
                                 var tmp = '<div class="tooltipuserplingscontainer">';
                                 $.each(data.data, function( index, value ) {
                                     if(index>10) return false;
+                                    if(value.profile_image_url.indexOf('http')<0)
+                                    {
+                                         value.profile_image_url = "https://cn.pling.com/cache/40x40-2/img/"+value.profile_image_url ;                                           
+                                    }
                                     tmp = tmp+'<div class="user"><a href="/member/'+value.member_id+'"><img src="'+value.profile_image_url+'" /></a><span class="caption">'+value.username+'</span></div>';
                                 });    
                                 tmp = tmp + '</div>';
