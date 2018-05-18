@@ -30,14 +30,9 @@ class Default_Model_Spam
     public function fetchSpamCandidate()
     {
         $sql = "
-            select p.*, rp.text as report_text, rp.report_id, rp.created_at as report_created_at, m.member_id as report_member_id, m.username as report_username
-            from reports_project rp
-            inner join stat_projects p on p.project_id = rp.project_id
-            left outer join member m on m.member_id = rp.reported_by
-            where rp.report_type = 0
-            and rp.is_deleted = 0
-            and rp.is_valid = 0
-            and p.`status` = 100
+            SELECT *
+            FROM stat_projects
+            WHERE stat_projects.amount_reports >= :threshold AND stat_projects.status = 100
             ORDER BY stat_projects.changed_at DESC, stat_projects.created_at DESC, stat_projects.amount_reports DESC
         ";
 
