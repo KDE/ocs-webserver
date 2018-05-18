@@ -138,7 +138,7 @@ class Backend_Model_Reports
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('project_id' => $project_id))->execute();
     }
     
-    public function saveNewFraud($project_id, $_authMemeber)
+    public function saveNewFraud($project_id, $_authMemeber) 
     {
         $sql = "INSERT INTO reports_project (project_id, report_type, reported_by, is_valid, text) VALUES (:project_id, 1, :member_id, 1, :text)";
 
