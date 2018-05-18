@@ -102,9 +102,13 @@ class Backend_Model_Reports
         return count($rowSet);
     }
 
-    public function setDelete($projectId)
+    public function setDelete($projectId, $onlySpam = true)
     {
         $sql = "update reports_project set is_deleted = 1 where project_id = :projectId";
+        
+        if($onlySpam) {
+            $sql .= " and report_type = 0";
+        }
 
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('projectId' => $projectId))->execute();
         $this->updateMaterializedView($projectId);
