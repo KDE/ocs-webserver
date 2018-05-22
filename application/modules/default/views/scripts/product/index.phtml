@@ -790,7 +790,8 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
                                 <?php
                                 $modelClone = new Default_Model_ProjectClone();
 
-                               $this->moreProducts = $modelClone->fetchOrigins($this->product->project_id);
+                               $origins =  $modelClone->fetchOrigins($this->product->project_id);
+                               $this->moreProducts = $origins;
                                $this->moreProductsTitle = 'Based on';
                                if (count($this->moreProducts) > 0) {
                                        echo $this->render('product/partials/productCloneFrom.phtml');
@@ -799,8 +800,26 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
                               
 
                                <?php                     
-                                 
-                              $this->moreProducts = $modelClone->fetchRelatedProducts($this->product->project_id);
+                              $relatednew=array();
+                              $related =  $modelClone->fetchRelatedProducts($this->product->project_id);
+                              $bflag = false;
+                              foreach ($related as $r){
+                                    $rid = $r->project_id;
+                                    $bflag = false;
+                                    foreach ($origins as $o){
+                                          $oid = $o->project_id;
+                                          if($rid == $oid){
+                                                $bflag = true;
+                                                break;
+                                          }
+                                    }
+                                    if(!$bflag)
+                                    {
+                                        $relatednew[] = $r;
+                                    }
+                              }
+
+                              $this->moreProducts = $relatednew;
                  
                               $this->moreProductsTitle = 'Variants';
                               if (count($this->moreProducts) > 0) {                                

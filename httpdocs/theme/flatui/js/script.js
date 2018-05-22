@@ -961,7 +961,7 @@ var PartialsReviewDownloadHistory = (function () {
                         $('#review-product-modal').find('input#voteup').val(1);
                         $('#review-product-modal').find('#votelabel').empty()
                             .append('<a class="btn btn-success active" style="line-height: 10px;"><span class="fa fa-plus"></span></a> Add Comment (min. 1 char):');
-                        $('#review-product-modal').find('#commenttext').val('');
+                        $('#review-product-modal').find('#commenttext').val('+');
                         $('#review-product-modal').find('#commenttext').removeAttr("disabled");
                         $('#review-product-modal').find(':submit').css("display", "block").removeAttr("disabled");
 
@@ -977,7 +977,7 @@ var PartialsReviewDownloadHistory = (function () {
                         $('#review-product-modal').find('input#voteup').val(2);
                         $('#review-product-modal').find('#votelabel').empty()
                             .append('<a class="btn btn-danger active" style="line-height: 10px;"><span class="fa fa-minus"></span></a> Add Comment (min. 1 chars): ');
-                        $('#review-product-modal').find('#commenttext').val('');
+                        $('#review-product-modal').find('#commenttext').val('-');
                         $('#review-product-modal').find('#commenttext').removeAttr("disabled");
                         $('#review-product-modal').find(':submit').removeAttr("disabled").css("display", "block");
 
