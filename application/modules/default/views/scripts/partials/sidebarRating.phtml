@@ -59,7 +59,7 @@ if(strlen($red)==1) $red='0'.$red;
         <tbody>
         <tr>
             <td width="10%" class="text-center">
-                <a class="btn btn-danger partial votedown <?=$this->ratingOfUser!=null && $this->ratingOfUser['user_dislike']>0 ? 'active' :''?>"                
+                <a class="btn btn-danger partialreview votedown <?=$this->ratingOfUser!=null && $this->ratingOfUser['user_dislike']>0 ? 'active' :''?>"                
                    role="button"
                    style="line-height:10px;"                   
                    data-target="#widget-rating"
@@ -86,7 +86,7 @@ if(strlen($red)==1) $red='0'.$red;
                 </div>
             </td>
             <td width="10%" class="text-center">
-                <a class="btn btn-success partial voteup <?=$this->ratingOfUser!=null && $this->ratingOfUser['user_like']>0 ? 'active' :''?> "                 
+                <a class="btn btn-success partialreview voteup <?=$this->ratingOfUser!=null && $this->ratingOfUser['user_like']>0 ? 'active' :''?> "                 
                    role="button"
                    style="line-height:10px;"
                    data-target="#widget-rating"

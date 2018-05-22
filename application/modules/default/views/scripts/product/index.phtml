@@ -71,6 +71,11 @@ $this->updates = $tableProjectUpdates->fetchProjectUpdates($this->product->proje
 
 $tableProjectRatings = new Default_Model_DbTable_ProjectRating();
 $this->ratings = $tableProjectRatings->fetchRating($this->product->project_id);
+$cntRatingsActive = 0;
+ foreach ($this->ratings as $p) { 
+    if($p['rating_active']==1) $cntRatingsActive =$cntRatingsActive+1;
+ }
+
 if (Zend_Auth::getInstance()->hasIdentity()){
     $this->ratingOfUser = $tableProjectRatings->getProjectRateForUser($this->product->project_id,$identity->member_id);  
 } 
@@ -185,7 +190,7 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
                                aria-hidden="true">&times;</span></button>
                </div>
                <div class="modal-body">
-                 <form class="full-width product-add-comment-review" action="/" method="post">
+                 <form class="full-width " action="/" method="post">
                             <input type="hidden" name="p" value="<?= $this->product->project_id ?>"/>
                             <input type="hidden" name="m" value="<?= $identity->member_id ?>" id="loginuser"/>
                             <input type="hidden" name="pm" value="<?=$this->product->member_id?>" id="productcreator"/>
@@ -218,12 +223,13 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
                                aria-hidden="true">&times;</span></button>
                </div>
                <div class="modal-body">
-                 <form class="full-width product-add-comment-review" action="/productcomment/addreplyreview/" method="post">
+                 <form class="full-width product-add-comment-review" action="/productcomment/addreplyreview/" method="post" >
                             <input type="hidden" name="p" value="<?= $this->product->project_id ?>"/>
                             <input type="hidden" name="m" value="<?= $identity->member_id ?>" id="loginuser"/>
                             <input type="hidden" name="v" value="1" id="voteup"/>
                             <input type="hidden" name="pm" value="<?=$this->product->member_id?>" id="productcreator"/>
-                            <input type="hidden" name="userrate" value="<?=$this->ratingOfUser==null?-1:$this->ratingOfUser['user_like']?>" id="userrate"/>
+                            <input type="hidden" name="otxt" value="<?=$this->ratingOfUser!=null?$this->ratingOfUser['comment_text']:''?>" id="otxt"/>
+                            <input type="hidden" name="userrate" value="<?=$this->ratingOfUser==null?-1:$this->ratingOfUser['user_like']?>" id="userrate"/>                            
                             <textarea name="msg" class="full-width" id="commenttext"><?=$this->ratingOfUser!=null?$this->ratingOfUser['comment_text']:''?></textarea>
                             <button type="submit" class="small pull-right">Rate Now</button>
                 </form>
@@ -467,8 +473,8 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
                         <?php if(count($this->updates)>0){ ?>
                             <li><a href="#updates-panel" data-toggle="tab">Changelogs <?php echo '('.count($this->updates).')';  ?></a></li>
                         <?php } ?>
-                        <?php if(count($this->ratings)>0){ ?>
-                            <li><a href="#ratings-panel" data-toggle="tab">Ratings & Reviews <?php echo '('.count($this->ratings).')';  ?></a></li>
+                        <?php if($cntRatingsActive>0){ ?>
+                            <li><a href="#ratings-panel" data-toggle="tab">Ratings & Reviews <?php echo '('.$cntRatingsActive.')';  ?></a></li>
                         <?php } ?>
                          <?php if(count($this->likes)>0){ ?>
                             <li><a href="#likes-panel" data-toggle="tab">Favs <?php echo '('.count($this->likes).')';  ?></a></li>
@@ -566,7 +572,7 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
                         <?php } ?>
 
                         <!-- ratings panel -->
-                        <?php  if (count($this->ratings) > 0) { ?>
+                        <?php  if ($cntRatingsActive > 0) { ?>
                         <div class="tab-pane" id="ratings-panel">
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                             <article>
@@ -580,7 +586,7 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
                         </div>
                         <?php } ?>
 
-                        <!-- ratings panel -->
+                        <!-- likes panel -->
                         <?php  if (count($this->likes) > 0) { ?>
                         <div class="tab-pane" id="likes-panel">
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
@@ -595,7 +601,7 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
                         </div>
                         <?php } ?>
 
-                        <!-- ratings panel -->
+                        <!-- plings panel -->
                         <?php  if (count($this->projectplings) > 0) { ?>
                         <div class="tab-pane" id="plings-panel">
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">

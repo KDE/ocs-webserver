@@ -613,6 +613,9 @@ a.partial{
   
   padding:3px 6px;
 }
+a.partialreview{  
+  padding:3px 6px;
+}
 
 .dropdown:hover .dropdown-menu {
     display: block;

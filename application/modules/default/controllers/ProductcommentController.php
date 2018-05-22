@@ -163,7 +163,7 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
         
         //Only Supporter can make a review
         if(Zend_Auth::getInstance()->hasIdentity() ) {
-            if ($msg != '') {
+            if ($msg != '' && strlen($msg)>0) {
                 // only vote then return
                 $data = array();
                 $data['comment_target_id'] = (int)$this->getParam('p');
@@ -176,7 +176,7 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
                 $result = $tableReplies->save($data);
 
                 $voteup = (int)$this->getParam('v');
-                $modelRating = new Default_Model_DbTable_ProjectRating();
+                $modelRating = new Default_Model_DbTable_ProjectRating();                
                 $modelRating->rateForProject($project_id, $this->_authMember->member_id, $voteup, $result->comment_id);
 
                 $status = count($result->toArray()) > 0 ? 'ok' : 'error';
