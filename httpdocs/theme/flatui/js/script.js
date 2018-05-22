@@ -892,14 +892,13 @@ var PartialsReview = (function () {
                         $('#review-product-modal').find('#commenttext').val($('#review-product-modal').find('#otxt').val());
                         //$('#review-product-modal').find(':submit').attr("disabled", "disabled").css("display", "none");
                         //$('#review-product-modal').find('#commenttext').attr("disabled", "disabled");
-
                         $('#review-product-modal').find(':submit').text("Remove Rating");
                         
                     } else {
                         $('#review-product-modal').find('input#voteup').val(1);
                         $('#review-product-modal').find('#votelabel').empty()
                             .append('<a class="btn btn-success active" style="line-height: 10px;"><span class="fa fa-plus"></span></a> Add Comment (min. 1 char):');
-                        $('#review-product-modal').find('#commenttext').val('');
+                        $('#review-product-modal').find('#commenttext').val('+');
                         
                         $('#review-product-modal').find(':submit').text("Rate Now");
                         $('#review-product-modal').find('#commenttext').removeAttr("disabled");
@@ -921,7 +920,7 @@ var PartialsReview = (function () {
                         $('#review-product-modal').find('input#voteup').val(2);
                         $('#review-product-modal').find('#votelabel').empty()
                             .append('<a class="btn btn-danger active" style="line-height: 10px;"><span class="fa fa-minus"></span></a> Add Comment (min. 1 char): ');
-                        $('#review-product-modal').find('#commenttext').val('');
+                        $('#review-product-modal').find('#commenttext').val('-');
                         $('#review-product-modal').find('#commenttext').removeAttr("disabled");
                         $('#review-product-modal').find(':submit').removeAttr("disabled").css("display", "block");
                          $('#review-product-modal').find(':submit').text("Rate Now");

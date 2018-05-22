@@ -473,7 +473,7 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
                         <?php if(count($this->updates)>0){ ?>
                             <li><a href="#updates-panel" data-toggle="tab">Changelogs <?php echo '('.count($this->updates).')';  ?></a></li>
                         <?php } ?>
-                        <?php if($cntRatingsActive>0){ ?>
+                        <?php if(count($this->ratings)>0){ ?>
                             <li><a href="#ratings-panel" data-toggle="tab">Ratings & Reviews <?php echo '('.$cntRatingsActive.')';  ?></a></li>
                         <?php } ?>
                          <?php if(count($this->likes)>0){ ?>
@@ -572,7 +572,7 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
                         <?php } ?>
 
                         <!-- ratings panel -->
-                        <?php  if ($cntRatingsActive > 0) { ?>
+                        <?php  if (count($this->ratings) > 0) { ?>
                         <div class="tab-pane" id="ratings-panel">
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                             <article>

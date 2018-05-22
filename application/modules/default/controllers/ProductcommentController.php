@@ -164,20 +164,20 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
         //Only Supporter can make a review
         if(Zend_Auth::getInstance()->hasIdentity() ) {
             if ($msg != '' && strlen($msg)>0) {
-                // only vote then return
-                $data = array();
-                $data['comment_target_id'] = (int)$this->getParam('p');
-                $data['comment_parent_id'] = (int)$this->getParam('i');
-                $data['comment_member_id'] = (int)$this->_authMember->member_id;
 
-                $data['comment_text'] = Default_Model_HtmlPurify::purify($this->getParam('msg'));
+                // only vote then return             
+                // $data = array();
+                // $data['comment_target_id'] = (int)$this->getParam('p');
+                // $data['comment_parent_id'] = (int)$this->getParam('i');
+                // $data['comment_member_id'] = (int)$this->_authMember->member_id;
+                // $data['comment_text'] = Default_Model_HtmlPurify::purify($this->getParam('msg'));
+                // $tableReplies = new Default_Model_ProjectComments();
+                // $result = $tableReplies->save($data);
 
-                $tableReplies = new Default_Model_ProjectComments();
-                $result = $tableReplies->save($data);
-
+             
                 $voteup = (int)$this->getParam('v');
                 $modelRating = new Default_Model_DbTable_ProjectRating();                
-                $modelRating->rateForProject($project_id, $this->_authMember->member_id, $voteup, $result->comment_id);
+                $modelRating->rateForProject($project_id, $this->_authMember->member_id, $voteup, $msg);
 
                 $status = count($result->toArray()) > 0 ? 'ok' : 'error';
 

@@ -109,10 +109,10 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
      * @param int      $projectId
      * @param int      $member_id
      * @param int      $userRating
-     * @param int|null $comment_id
+     * @param int|null $msg comment
      * @TODO: revise this, double check against specification. the source code seems to be too complicated.
      */
-    public function rateForProject($projectId, $member_id, $userRating, $comment_id = null)
+    public function rateForProject($projectId, $member_id, $userRating, $msg )
     {
 
         $userLikeIt = $userRating == 1 ? 1 : 0;
@@ -140,20 +140,19 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
 
                 if ($alreadyExists->user_like == 1) {
                       $flagFromLikeToDislike = true;
-                      
+
                 }else{
                       $flagFromDislikeToLike = true;
                 } 
 
-
-                $this->save(array(
-                    'project_id'    => $projectId,
-                    'member_id'     => $member_id,
-                    'user_like'     => -1,
-                    'user_dislike'  => -1,
-                    'rating_active' => 0,
-                    'comment_id'    => $comment_id
-                ));    
+                // $this->save(array(
+                //     'project_id'    => $projectId,
+                //     'member_id'     => $member_id,
+                //     'user_like'     => -1,
+                //     'user_dislike'  => -1,
+                //     'rating_active' => 0,
+                //     'comment_id'    => $comment_id
+                // ));    
                
 
                   $projectTable = new Default_Model_Project();
@@ -185,7 +184,17 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
 
          }else{
 
-             
+
+            // only vote then return             
+                $data = array();
+                $data['comment_target_id'] =$projectId;               
+                $data['comment_member_id'] =$member_id;
+                $data['comment_parent_id'] = 0;
+                $data['comment_text'] = $msg;
+                $tableReplies = new Default_Model_ProjectComments();
+                $result = $tableReplies->save($data);
+                $comment_id =  $result->comment_id;
+
                  $alreadyExists = $this->fetchRow(array(
                      'project_id = ?'    => $projectId,
                      'member_id = ?'     => $member_id,
