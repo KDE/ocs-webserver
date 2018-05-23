@@ -542,6 +542,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             )
         );
 
+/*
         $router->addRoute(
             'supporter_box_show',
             new Zend_Controller_Router_Route(
@@ -553,6 +554,20 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 )
             )
         );
+*/
+
+         $router->addRoute(
+            'pling_box_show',
+            new Zend_Controller_Router_Route(
+                '/supporterbox/:memberid/',
+                array(
+                    'module'     => 'default',
+                    'controller' => 'plingbox',
+                    'action'     => 'index'
+                )
+            )
+        );
+
 
         $router->addRoute(
             'external_donation_list',

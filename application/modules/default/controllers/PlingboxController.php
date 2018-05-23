@@ -22,34 +22,29 @@
 class PlingboxController extends Zend_Controller_Action
 {
 
+
     public function indexAction()
-    {
-        $this->_helper->viewRenderer('render');
-        $this->renderAction();
+    {   
+            $member_id = $this->getParam('memberid');
+         
+            $membermodel = new Default_Model_DbTable_Member();
+            $this->view->member =  $membermodel->find($member_id)->current();        
+
+             if (empty($this->view->member )) {
+                throw new Zend_Controller_Action_Exception('This page does not exist', 404);
+            }
+
+            $plingModel = new Default_Model_ProjectPlings();
+            $this->view->supporters = $plingModel->fetchPlingsForSupporter($member_id);
+            
+
+            // $this->view->authCode = '';
+            // if ($productRow->link_1) {
+            //     $websiteOwner = new Local_Verification_WebsiteProject();
+            //     $this->view->authCode = '<meta name="ocs-site-verification" content="' . $websiteOwner->generateAuthCode(stripslashes($productRow->link_1)) . '" />';
+            // }            
     }
 
-    public function renderAction()
-    {
-        $this->_helper->layout->disableLayout();
-        $member = (int)$this->getParam('member');
-
-        if (false == isset($member)) {
-            throw new Zend_Controller_Action_Exception('This page does not exist', 404);
-        }
-
-        $projectModel = new Default_Model_Project();
-        $projectRow = $projectModel->fetchRow(array('project_id = ?' => $productUuid));
-
-        if (!isset($projectRow)) {
-            throw new Zend_Controller_Action_Exception('This page does not exist', 404);
-        } else {
-            $plingModel = new Default_Model_DbTable_Plings();
-            $this->view->product = $projectRow;
-            $this->view->supporters = $plingModel->getProjectSupporters($projectRow->project_id, 8, true);
-            $this->view->nrOfSupporters = $plingModel->getCountSupporters($projectRow->project_id);
-            $websiteOwner = new Local_Verification_WebsiteProject();
-            $this->view->authCode = '<meta name="ocs-site-verification" content="' . $websiteOwner->generateAuthCode(stripslashes($projectRow->link_1)) . '" />';
-        }
-    }
+   
 
 }
