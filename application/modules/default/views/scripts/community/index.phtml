@@ -52,7 +52,7 @@ $membersCount = new Default_View_Helper_FetchTotalMembersCount();
 
                     <div class="top">
                         <div class="large"><?= $membersCount->fetchActiveMembersInStoreCount($this->categories) ?></div>
-                        <div class="small margin-bottom-10">contributors of</div>
+                        <div class="small margin-bottom-10">support</div>
 
                         <div class="large"><?= $membersCount->fetchTotalMembersCount() ?></div>
                         <div class="small margin-bottom-10">members</div>
@@ -82,7 +82,12 @@ $membersCount = new Default_View_Helper_FetchTotalMembersCount();
                 <ul class="nav nav-tabs">
                   
                     <li class="active"><a href="#newMemberPanel" data-toggle="tab"><?= $this->translate('New Members') ?></a></li>
-                    <li><a href="#topMemberPanel" data-toggle="tab"><?= $this->translate('Top Members') ?></a></li>
+                    <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
+                        ?>
+                        <li><a href="#topMemberPanel" data-toggle="tab"><?= $this->translate('Top Members') ?></a></li>
+                  <?php 
+                  }?>
+                    
                     <li><a href="#supportersPanel" data-toggle="tab"><?= $this->translate('Latest Supporters') ?></a></li>
                     <li><a href="#plingedproductsPanel" data-toggle="tab"><?= $this->translate('Recently plinged Products ') ?></a></li>
                     
@@ -117,7 +122,8 @@ $membersCount = new Default_View_Helper_FetchTotalMembersCount();
                 </div>
             </div> <!-- end row -->
 
-
+            <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
+                        ?>
             <div class="row tab-pane" id="topMemberPanel">
                     <div class="list  ">
                         <?php 
@@ -140,7 +146,7 @@ $membersCount = new Default_View_Helper_FetchTotalMembersCount();
                         <?php } ?>
                     </div>
                 </div> <!-- end row -->
-
+                <?php } ?>
 
                 <div class="row tab-pane" id="supportersPanel">
                         <div class="list  ">
