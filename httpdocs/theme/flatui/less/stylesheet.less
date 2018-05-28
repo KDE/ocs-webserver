@@ -1622,16 +1622,30 @@ ul.meta-nav-top
       position: relative;
 
       .wrapper {
-        width: 95%;
+        width: 70%;
       }
 
       #user-lists {
         padding-top: 1em;
-
-              .list{
-                max-width: 1300px;
+              #community-tabs{
+                  margin-bottom:20px;                   
+                  text-align:center;
+                  .pling-nav-tabs{
+                     display: inline-block; 
+                     margin: auto;
+                  }
+              }
+              .list{             
+                display:block; 
+                margin:auto;
                 padding-right: 15px;
                 padding-left: 15px;
+
+                display:flex;
+                flex-wrap: wrap;
+                align-items: center;
+                justify-content: center;
+
                     .u-wrap{
                       float: left;
                       width: 100%;

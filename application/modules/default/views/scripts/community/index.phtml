@@ -78,29 +78,32 @@ $membersCount = new Default_View_Helper_FetchTotalMembersCount();
         <section class="wrapper" id="user-lists">
 
 
-            <div id="community-tabs" style="margin-bottom:20px;">
-                <ul class="nav nav-tabs">
-                  
-                    <li class="active"><a href="#newMemberPanel" data-toggle="tab"><?= $this->translate('New Members') ?></a></li>
-                    <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
-                        ?>
-                        <li><a href="#topMemberPanel" data-toggle="tab"><?= $this->translate('Top Members') ?></a></li>
-                  <?php 
-                  }?>
-                    
-                    <li><a href="#supportersPanel" data-toggle="tab"><?= $this->translate('Latest Supporters') ?></a></li>
-                    <li><a href="#plingedproductsPanel" data-toggle="tab"><?= $this->translate('Recently plinged Products ') ?></a></li>
-                    
-                </ul>
+            <div id="community-tabs" >
+
+                 <div class="pling-nav-tabs" >
+                        <ul class="nav nav-tabs" >
+                          
+                            <li class="active"><a href="#newMemberPanel" data-toggle="tab"><?= $this->translate('New Members') ?></a></li>
+                            <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
+                                ?>
+                                <li><a href="#topMemberPanel" data-toggle="tab"><?= $this->translate('Top Members') ?></a></li>
+                          <?php 
+                          }?>                            
+                            <li><a href="#supportersPanel" data-toggle="tab"><?= $this->translate('Latest Supporters') ?></a></li>
+                            <li><a href="#plingedproductsPanel" data-toggle="tab"><?= $this->translate('Recently plinged Products ') ?></a></li>
+                            
+                        </ul>
+                </div>
+
+
             </div>
         
         <div class="tab-content" id="communityPanels">
            
            
 
-            <div class="row tab-pane active" id="newMemberPanel">
-                <div class="list"
-                     id="new-members">
+            <div class="row tab-pane active" id="newMemberPanel" >
+                <div class="list" id="new-members">
                     <?php foreach ($users as $key => $user) {                      
                         ?>
 
