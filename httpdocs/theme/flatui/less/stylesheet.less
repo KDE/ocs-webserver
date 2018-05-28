@@ -1622,16 +1622,37 @@ ul.meta-nav-top
       position: relative;
 
       .wrapper {
-        width: 95%;
+        width: 70%;
       }
 
       #user-lists {
         padding-top: 1em;
+              #community-tabs{
+                  margin-bottom:20px;                   
+                  text-align:center;
 
-              .list{
-                max-width: 1300px;
+                  .pling-nav-tabs{                    
+                     .nav-tabs {                        
+                          text-align:center;
+                      }
+                      .nav-tabs > li, .nav-pills > li {
+                          float:none;
+                          display:inline-block;                          
+                      }
+
+                  }
+              }
+              .list{             
+                display:block; 
+                margin:auto;
                 padding-right: 15px;
                 padding-left: 15px;
+
+                display:flex;
+                flex-wrap: wrap;
+                align-items: center;
+                justify-content: center;
+
                     .u-wrap{
                       float: left;
                       width: 100%;
@@ -1649,7 +1670,7 @@ ul.meta-nav-top
                       -ms-transition: all 0.2s ease-out;
                       -o-transition: all 0.2s ease-out;
                       position: relative;
-
+                      text-align: center;
                       figure {
                         float: left;
                         padding: .25em;

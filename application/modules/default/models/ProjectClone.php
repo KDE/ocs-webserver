@@ -114,6 +114,7 @@ class Default_Model_ProjectClone extends Default_Model_DbTable_ProjectClone
                                                 where c.project_id = :project_id and c.is_valid = 1 and c.is_deleted = 0
                                           )
                               ) a
+                              where a.catTitle is not null
                               order by changed_at desc
                         ";
              $resultSet = $this->_db->fetchAll($sql, array('project_id' => $project_id));         

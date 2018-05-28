@@ -32,7 +32,7 @@ $this->productsIconsCursors= $modelInfo->getLastProductsForHostStores(5,"386,107
 $this->productsScreenshots= $modelInfo->getLastProductsForHostStores(5,"225,445");
 $this->productsApps = $modelInfo->getLastProductsForHostStores(5,233);
 $this->productsAddons = $modelInfo->getLastProductsForHostStores(5,"152");
-$this->productsWallpapers = $modelInfo->getLastProductsForHostStores(5,295);
+$this->productsWallpapers = $modelInfo->getLastProductsForHostStores(5,"295,158");
 $this->countSupporters = $modelInfo->getCountActiveSupporters();
 
 $featuredProducts = $modelInfo->getFeaturedProductsForHostStores(100);
@@ -112,9 +112,9 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                                     );                                                                     
 
                                     echo $this->partial('/home/partials/product_group.phtml', array(
-                                            "title"  => "Wallpapers",
+                                            "title"  => "Artwork, Wallpapers",
                                             "products" => $this->productsWallpapers,
-                                            "catIDs" =>"295"   
+                                            "catIDs" =>"158,295"   
 
                                         )
                                     );                                        
