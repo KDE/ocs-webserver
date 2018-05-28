@@ -749,7 +749,7 @@ class Default_Model_Info
      *
      * @return array|false|mixed
      */
-    public function getTopScoreUsers($limit = 100)
+    public function getTopScoreUsers($limit = 120)
     {
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
