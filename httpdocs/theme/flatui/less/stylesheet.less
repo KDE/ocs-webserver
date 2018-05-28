@@ -1529,7 +1529,7 @@ ul.meta-nav-top
 
 /** COMMUNITY PAGE **/
 
-  main#community-page {
+  main#community-page {     
 
     .head-wrap {
       padding-top: 1em;
@@ -1628,6 +1628,79 @@ ul.meta-nav-top
       #user-lists {
         padding-top: 1em;
 
+              .list{
+                max-width: 1300px;
+                padding-right: 15px;
+                padding-left: 15px;
+                    .u-wrap{
+                      float: left;
+                      width: 100%;
+                      padding: 0.3em;
+                      border: 0.35em solid #dee0e0;
+                      border-radius: 5px;
+                      height: 14em;
+                      margin-bottom: 1em;
+                      background: white;
+                      width: 115px;
+                      height: 200px;
+                      margin-right: 10px;
+                      -webkit-transition: all 0.2s ease-out;
+                      -moz-transition: all 0.2s ease-out;
+                      -ms-transition: all 0.2s ease-out;
+                      -o-transition: all 0.2s ease-out;
+                      position: relative;
+
+                      figure {
+                        float: left;
+                        padding: .25em;
+                        border: 1px solid #dbdbdb;
+                        background: #f6f6f6;
+                        .border_radius(999px);
+                        img{
+                                                width: 100%;
+                                                border: 1px solid #dbdbdb;
+                                                -webkit-border-radius: 999px;
+                                                -moz-border-radius: 999px;
+                                                border-radius: 999px;
+                                                -webkit-background-clip: padding-box;
+                                                -moz-background-clip: padding;
+                                                background-clip: padding-box;
+
+                                              }
+                      }                   
+                      h3{
+                        font-size: 13px;
+                        font-weight: bold;
+                        word-wrap: break-word;
+                        line-height: 20px;
+                        height: 20px;
+                        padding: 0;
+                        margin: 0;
+                       }
+                      span.small {
+                        font-size: 13px;                    
+                        color: #444;                                        
+                        position: absolute;
+                        bottom: 5px;
+                        right: 5px;
+                      }
+                       div.projecttitle{
+                          font-size: 11px;              
+                      }
+                      span.rank {
+                          font-size: 14px;
+                          position: absolute;
+                          bottom: 5px;
+                          left: 5px; 
+                          color: #444;                                                                
+                          font-weight: bold;
+                      }
+                      
+
+                    }
+              }
+
+        /*
         .list {
 
           .user {
@@ -1704,9 +1777,23 @@ ul.meta-nav-top
                   color: #444;
               }
 
+              span.rank {
+                  font-size: 14px;
+                  position: absolute;
+                  bottom: 0;
+                  left: 0;
+                  width: 100%;
+                  margin: 0;                            
+                  color: #444;
+                  font-weight: bold;
+              }
+
             }
           }
         }
+        */
+
+
       }
     }
 
@@ -6398,3 +6485,21 @@ main#plings-page{
 
  }
 
+ .tooltipuserplingscontainer{
+        .user{
+          display: block;
+          float: left;
+          text-align: center;
+          width: 60px;
+          overflow: hidden;
+          img{
+            width:40px; 
+            height:40px;
+            border:1px solid #ccc;
+            border-radius: 999px;
+          }   
+          .caption{
+            display: block;
+          }
+        }
+      }

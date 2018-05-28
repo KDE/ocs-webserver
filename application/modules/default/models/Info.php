@@ -744,6 +744,30 @@ class Default_Model_Info
     }
 
 
+ /**
+     * @param int $limit
+     *
+     * @return array|false|mixed
+     */
+    public function getTopScoreUsers($limit = 120)
+    {
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cacheName = __FUNCTION__ . '_' . md5((int)$limit);
+
+        if (false !== ($resultMembers = $cache->load($cacheName))) {
+            return $resultMembers;
+        }
+
+        $model = new Default_Model_DbTable_MemberScore();
+        $resultMembers = $model->fetchTopUsers($limit);
+
+        $cache->save($resultMembers, $cacheName, array(), 300);
+
+        return $resultMembers;
+    }
+
+
     public function getNewActiveSupporters($limit = 20)
     {
         /** @var Zend_Cache_Core $cache */

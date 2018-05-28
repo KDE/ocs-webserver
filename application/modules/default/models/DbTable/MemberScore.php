@@ -63,4 +63,41 @@ class Default_Model_DbTable_MemberScore extends Local_Model_Table
         }
     }
 
+    public function fetchTopUsers($limit = 100)
+    {
+            $sql = "
+                    select  
+                    s.*
+                    ,m.profile_image_url
+                    ,m.username
+                    from member_score s
+                    inner join member m on s.member_id = m.member_id
+                    order by s.score desc             
+            ";
+            if (isset($limit)) {
+                $sql .= ' limit ' . (int)$limit;
+            }
+            $result = $this->_db->query($sql)->fetchAll();
+
+            return $this->generateRowSet($result);
+    }
+
+
+    /**
+     * @param array $data
+     *
+     * @return Zend_Db_Table_Rowset_Abstract
+     */
+    protected function generateRowSet($data)
+    {
+        $classRowSet = $this->getRowsetClass();
+
+        return new $classRowSet(array(
+            'table'    => $this,
+            'rowClass' => $this->getRowClass(),
+            'stored'   => true,
+            'data'     => $data
+        ));
+    }
+
 }
