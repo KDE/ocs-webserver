@@ -26,15 +26,17 @@ $helperImage = new Default_View_Helper_Image();
 
 $modelInfo = new Default_Model_Info();
 $users = $modelInfo->getNewActiveMembers(12);
+$topusers = $modelInfo->getTopScoreUsers(100);
 
-$recentDonations = new Default_View_Helper_FetchRecentDonations();
-$donations = $recentDonations->fetchRecentDonations($limit = 12);
+
+//$recentDonations = new Default_View_Helper_FetchRecentDonations();
+//$donations = $recentDonations->fetchRecentDonations($limit = 12);
 
 $buildMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $humanTiming = new Default_View_Helper_HumanTiming();
 $buildProductUrl = new Default_View_Helper_BuildProductUrl();
 $membersCount = new Default_View_Helper_FetchTotalMembersCount();
-$totalAMountSupported = new Default_View_Helper_FetchTotalAmountSupported();
+//$totalAMountSupported = new Default_View_Helper_FetchTotalAmountSupported();
 
 ?>
 <main id="community-page">
@@ -88,16 +90,21 @@ $totalAMountSupported = new Default_View_Helper_FetchTotalAmountSupported();
 
             <div id="community-tabs" style="margin-bottom:20px;">
                 <ul class="nav nav-tabs">
-                    <li class="active"><a href="#recentDonationsPanel" data-toggle="tab"><?= $this->translate('Recent Donations') ?></a></li>
-                    <li><a href="#newMemberPanel" data-toggle="tab"><?= $this->translate('New Members') ?></a></li>
+                   <?php 
+                   /*
+                        <li class="active"><a href="#recentDonationsPanel" data-toggle="tab"><?= $this->translate('Recent Donations') ?></a></li>
+                   */
+                   ?>
+                    <li class="active"><a href="#newMemberPanel" data-toggle="tab"><?= $this->translate('New Members') ?></a></li>
+                    <li><a href="#topMemberPanel" data-toggle="tab"><?= $this->translate('Top Members') ?></a></li>
                 </ul>
             </div>
         
         <div class="tab-content" id="communityPanels">
+           
+            <?php /*
             <div class="row tab-pane active"  id="recentDonationsPanel">
-                <div class="list col-lg-10 col-md-10 col-sm-10 col-xs-10 " id="top-supporters">
-
-                   
+                <div class="list col-lg-10 col-md-10 col-sm-10 col-xs-10 " id="top-supporters">                   
                     <?php foreach ($donations as $key => $user) {
                         $age = $humanTiming->humanTiming($user['create_time']);
                         ?>
@@ -122,10 +129,13 @@ $totalAMountSupported = new Default_View_Helper_FetchTotalAmountSupported();
 
                     <?php } ?>
 
-                </div>
-               
+                </div>               
             </div> <!-- end row -->
-            <div class="row tab-pane" id="newMemberPanel">
+
+            */
+            ?>
+
+            <div class="row tab-pane active" id="newMemberPanel">
                 <div class="list col-lg-10 col-md-10 col-sm-10 col-xs-10 "
                      id="new-members">
                     <?php foreach ($users as $key => $user) {
@@ -150,7 +160,36 @@ $totalAMountSupported = new Default_View_Helper_FetchTotalAmountSupported();
                 </div>
             </div> <!-- end row -->
 
+
+            <div class="row tab-pane" id="topMemberPanel">
+                    <div class="list col-lg-10 col-md-10 col-sm-10 col-xs-10 ">
+                        <?php 
+                        $nr = 1;
+                        foreach ($topusers as $key => $user) {                      
+                            ?>
+                            <div class="user col-lg-1 col-md-2 col-sm-2 col-xs-2">
+                                <div class="u-wrap" >
+                                    <a href="<?php echo $buildMemberUrl->buildMemberUrl($user['member_id']); ?>">
+                                        <figure >
+                                            <img src="<?php echo $helperImage->Image($user['profile_image_url'], array('width' => '200', 'height' => '200', 'crop' => 2)); ?>"/>
+                                        </figure>
+                                        <h3 class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><?php echo $user['username']; ?></h3>
+                                        
+                                        <span class="rank">#<?=$nr++?></span>
+                                            <p class="small"><b><?=number_format($user['score'],0,'.',',') ?></b> </p>
+                                                                      
+                                    </a>
+                                </div>
+                            </div>
+
+                        <?php } ?>
+                    </div>
+                </div> <!-- end row -->
+
+
         </div>
+
+       
         </section>
 
     </section>

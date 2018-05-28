@@ -80,10 +80,12 @@ class Default_Model_ProjectClone extends Default_Model_DbTable_ProjectClone
 
     public function fetchRelatedProducts($project_id)
     {
-            $sql = "
+            $sql = "  
+                              select distinct * from 
+                              (
                                     SELECT 
                                        c.project_id as project_id
-                                       ,c.project_id_parent as project_id_origin
+                                       
                                        ,c.external_link
                                        ,c.member_id
                                        ,c.text
@@ -98,7 +100,7 @@ class Default_Model_ProjectClone extends Default_Model_DbTable_ProjectClone
 
                                       SELECT 
                                        c.project_id as project_id
-                                       ,c.project_id_parent as project_id_origin
+                                      
                                        ,c.external_link
                                        ,c.member_id
                                        ,c.text
@@ -111,7 +113,8 @@ class Default_Model_ProjectClone extends Default_Model_DbTable_ProjectClone
                                             select project_id_parent from project_clone c 
                                                 where c.project_id = :project_id and c.is_valid = 1 and c.is_deleted = 0
                                           )
-
+                              ) a
+                              order by changed_at desc
                         ";
              $resultSet = $this->_db->fetchAll($sql, array('project_id' => $project_id));         
               return $this->generateRowSet($resultSet);             

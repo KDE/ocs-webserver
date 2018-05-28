@@ -744,6 +744,30 @@ class Default_Model_Info
     }
 
 
+ /**
+     * @param int $limit
+     *
+     * @return array|false|mixed
+     */
+    public function getTopScoreUsers($limit = 100)
+    {
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cacheName = __FUNCTION__ . '_' . md5((int)$limit);
+
+        if (false !== ($resultMembers = $cache->load($cacheName))) {
+            return $resultMembers;
+        }
+
+        $model = new Default_Model_DbTable_MemberScore();
+        $resultMembers = $model->fetchTopUsers($limit);
+
+        $cache->save($resultMembers, $cacheName, array(), 300);
+
+        return $resultMembers;
+    }
+
+
     public function getNewActiveSupporters($limit = 20)
     {
         /** @var Zend_Cache_Core $cache */
@@ -793,19 +817,19 @@ class Default_Model_Info
                         ,pl.project_id                        
                         ,p.title
                         ,p.image_small
-                        ,laplace_score(p.count_likes, p.count_dislikes) AS laplace_score
+                        ,p.laplace_score
                         ,p.count_likes
                         ,p.count_dislikes   
                         ,p.member_id 
-                        ,m.profile_image_url
-                        ,m.username
+                        ,p.profile_image_url
+                        ,p.username
+                        ,p.cat_title as catTitle
                         ,(
                             select min(created_at) from project_plings pt where pt.member_id = pl.member_id and pt.project_id=pl.project_id
                         ) as created_at
                         ,(select count(1) from project_plings pl2 where pl2.project_id = p.project_id and pl2.is_active = 1 and pl2.is_deleted = 0  and pl2.member_id <> :sysuserid ) as sum_plings
                         from project_plings pl
-                        inner join project p on pl.project_id = p.project_id and p.status > 30
-                        inner join member m on m.member_id = p.member_id                        
+                        inner join stat_projects p on pl.project_id = p.project_id and p.status > 30                        
                         where pl.is_deleted = 0 and pl.is_active = 1 and pl.member_id <> :sysuserid
                         order by created_at desc                                                  
         ';        

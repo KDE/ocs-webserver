@@ -130,8 +130,8 @@ $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountP
                         
                         <?php
 
-                            if(!is_null($comment['rating']))
-                            {
+                            if(!is_null($comment['rating']) && $comment['rating']!='-1')
+                            {                                   
                                 if($comment['rating']==1){
                                     echo '<span class="btn btn-success active" style="cursor:default;line-height: 10px;padding: 3px 6px;"><span class="fa fa-plus" ></span></span>';
                                 }else

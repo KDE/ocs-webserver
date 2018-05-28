@@ -864,7 +864,7 @@ var PartialsButtonPlingProject = (function () {
 var PartialsReview = (function () {
     return {
         setup: function () {
-            $('body').on('click', 'a.partial', function (event) {
+            $('body').on('click', 'a.partialreview', function (event) {
                 event.preventDefault();
                 var url = this.href;
                 var target = $(this).attr("data-target");
@@ -889,32 +889,41 @@ var PartialsReview = (function () {
                     if (userrate == 1) {
                         $('#review-product-modal').find('#votelabel').empty()
                             .append('<a class="btn btn-success active" style="line-height: 10px;"><span class="fa fa-plus"></span></a> is given already with comment:');
-                        $('#review-product-modal').find(':submit').attr("disabled", "disabled").css("display", "none");
-                        $('#review-product-modal').find('#commenttext').attr("disabled", "disabled");
+                        $('#review-product-modal').find('#commenttext').val($('#review-product-modal').find('#otxt').val());
+                        //$('#review-product-modal').find(':submit').attr("disabled", "disabled").css("display", "none");
+                        //$('#review-product-modal').find('#commenttext').attr("disabled", "disabled");
+                        $('#review-product-modal').find(':submit').text("Remove Rating");
+                        
                     } else {
                         $('#review-product-modal').find('input#voteup').val(1);
                         $('#review-product-modal').find('#votelabel').empty()
-                            .append('<a class="btn btn-success active" style="line-height: 10px;"><span class="fa fa-plus"></span></a> Add Comment (min. 3 chars):');
-                        $('#review-product-modal').find('#commenttext').val('');
+                            .append('<a class="btn btn-success active" style="line-height: 10px;"><span class="fa fa-plus"></span></a> Add Comment (min. 1 char):');
+                        $('#review-product-modal').find('#commenttext').val('+');
+                        
+                        $('#review-product-modal').find(':submit').text("Rate Now");
                         $('#review-product-modal').find('#commenttext').removeAttr("disabled");
                         $('#review-product-modal').find(':submit').css("display", "block").removeAttr("disabled");
+
 
                     }
                 } else { // vote down
                     if (userrate == 0) {
                         $('#review-product-modal').find('#votelabel').empty()
                             .append('<a class="btn btn-danger active" style="line-height: 10px;"><span class="fa fa-minus"></span></a> is given already with comment: ');
-                        $('#review-product-modal').find('#commenttext').attr("disabled", "disabled");
-                        $('#review-product-modal').find(':submit').attr("disabled", "disabled").css("display", "none");
+                        $('#review-product-modal').find('#commenttext').val($('#review-product-modal').find('#otxt').val());
+                        // $('#review-product-modal').find('#commenttext').attr("disabled", "disabled");
+                        // $('#review-product-modal').find(':submit').attr("disabled", "disabled").css("display", "none");
+
+                        $('#review-product-modal').find(':submit').text("Remove Rating");
 
                     } else {
                         $('#review-product-modal').find('input#voteup').val(2);
                         $('#review-product-modal').find('#votelabel').empty()
-                            .append('<a class="btn btn-danger active" style="line-height: 10px;"><span class="fa fa-minus"></span></a> Add Comment (min. 3 chars): ');
-                        $('#review-product-modal').find('#commenttext').val('');
+                            .append('<a class="btn btn-danger active" style="line-height: 10px;"><span class="fa fa-minus"></span></a> Add Comment (min. 1 char): ');
+                        $('#review-product-modal').find('#commenttext').val('-');
                         $('#review-product-modal').find('#commenttext').removeAttr("disabled");
                         $('#review-product-modal').find(':submit').removeAttr("disabled").css("display", "block");
-
+                         $('#review-product-modal').find(':submit').text("Rate Now");
                     }
                 }
 
@@ -951,8 +960,8 @@ var PartialsReviewDownloadHistory = (function () {
                     } else {
                         $('#review-product-modal').find('input#voteup').val(1);
                         $('#review-product-modal').find('#votelabel').empty()
-                            .append('<a class="btn btn-success active" style="line-height: 10px;"><span class="fa fa-plus"></span></a> Add Comment (min. 3 chars):');
-                        $('#review-product-modal').find('#commenttext').val('');
+                            .append('<a class="btn btn-success active" style="line-height: 10px;"><span class="fa fa-plus"></span></a> Add Comment (min. 1 char):');
+                        $('#review-product-modal').find('#commenttext').val('+');
                         $('#review-product-modal').find('#commenttext').removeAttr("disabled");
                         $('#review-product-modal').find(':submit').css("display", "block").removeAttr("disabled");
 
@@ -967,8 +976,8 @@ var PartialsReviewDownloadHistory = (function () {
                     } else {
                         $('#review-product-modal').find('input#voteup').val(2);
                         $('#review-product-modal').find('#votelabel').empty()
-                            .append('<a class="btn btn-danger active" style="line-height: 10px;"><span class="fa fa-minus"></span></a> Add Comment (min. 3 chars): ');
-                        $('#review-product-modal').find('#commenttext').val('');
+                            .append('<a class="btn btn-danger active" style="line-height: 10px;"><span class="fa fa-minus"></span></a> Add Comment (min. 1 chars): ');
+                        $('#review-product-modal').find('#commenttext').val('-');
                         $('#review-product-modal').find('#commenttext').removeAttr("disabled");
                         $('#review-product-modal').find(':submit').removeAttr("disabled").css("display", "block");
 
@@ -1461,7 +1470,11 @@ var BlogJson = (function () {
             $.ajax(json_url).then(function (result) { 
               var topics = result.topic_list.topics; 
               var crss = '';            
-              var count =3;                                       
+              var count =3;      
+              topics.sort(function(a,b){                  
+                  return new Date(b.last_posted_at) - new Date(a.last_posted_at);
+                });
+
              $.each(topics, function (i, item) {
                  if(!item.pinned){                   
                      var m = moment(item.last_posted_at);

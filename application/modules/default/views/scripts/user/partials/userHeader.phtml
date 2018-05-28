@@ -79,7 +79,16 @@ $helperMember = new Default_View_Helper_BuildMemberUrl();
             <?= $this->translate('Settings') ?>
         </a>
     </li>
-
+ <?php if (Zend_Auth::getInstance()->hasIdentity()){
+    $identity = Zend_Auth::getInstance()->getStorage()->read();
+    ?>
+    <li class="header-menu-left-item <?php echo $this->tab == 'supporterbox' ? 'active' : ''; ?>">
+        <a href="/supporterbox/<?=$identity->member_id?>">            
+            <i class="fa fa-user"></i>
+            <?= $this->translate('Supporter box') ?>
+        </a>
+    </li>
+    <?php } ?>
 
    <?php /*
     <li class="header-menu-left-item <?php echo $this->tab == 'earnings' ? 'active' : ''; ?>">
