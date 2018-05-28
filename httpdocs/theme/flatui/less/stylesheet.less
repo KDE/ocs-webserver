@@ -1630,9 +1630,16 @@ ul.meta-nav-top
               #community-tabs{
                   margin-bottom:20px;                   
                   text-align:center;
-                  .pling-nav-tabs{
-                     display: inline-block; 
-                     margin: auto;
+
+                  .pling-nav-tabs{                    
+                     .nav-tabs {                        
+                          text-align:center;
+                      }
+                      .nav-tabs > li, .nav-pills > li {
+                          float:none;
+                          display:inline-block;                          
+                      }
+
                   }
               }
               .list{             
