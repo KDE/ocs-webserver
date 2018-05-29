@@ -73,14 +73,12 @@ class Default_Model_DbTable_ProjectPlings extends Zend_Db_Table_Abstract
     public function getPlingsAmount($project_id)
     {
 
-       $config = Zend_Registry::get('config');
-       $member_id = $config->settings->member->plingcat->id;
        $sql ="
                 SELECT count(*) AS count 
                 FROM project_plings f   
-                WHERE  f.project_id =:project_id and f.is_deleted = 0 and f.is_active = 1 and f.member_id<> :sysuser
+                WHERE  f.project_id =:project_id and f.is_deleted = 0 and f.is_active = 1 
         ";
-        $resultRow = $this->_db->fetchRow($sql, array('project_id' => $project_id, 'sysuser' => $member_id));
+        $resultRow = $this->_db->fetchRow($sql, array('project_id' => $project_id));
         return $resultRow['count'];
     }
 
@@ -100,26 +98,18 @@ class Default_Model_DbTable_ProjectPlings extends Zend_Db_Table_Abstract
     public function countPlingsHeGot($member_id)
     {       
 
-        // $sql ="
-        //         SELECT count(*) AS count 
-        //         FROM project_plings f  
-        //         inner join stat_projects p on p.project_id = f.project_id and p.status = 100 
-        //         inner join member m on f.member_id = m.member_id and m.roleid <> 500 
-        //         WHERE  p.member_id =:member_id and f.is_deleted = 0 and f.is_active = 1
-        // ";
-        $config = Zend_Registry::get('config');
-        $plingcat_id = $config->settings->member->plingcat->id;
+       
          $sql = "
                     select IFNULL(sum(cntplings), 0)  AS count 
                     from
                     (
                         select 
                         p.project_id
-                        ,(select count(1) from project_plings f where f.project_id = p.project_id and f.is_deleted = 0 and f.is_active = 1 and f.member_id <> :plingcat_id) cntplings
+                        ,(select count(1) from project_plings f where f.project_id = p.project_id and f.is_deleted = 0 and f.is_active = 1 ) cntplings
                         from stat_projects p where p.member_id =:member_id and p.status = 100
                     ) tt
          ";       
-         $resultRow = $this->_db->fetchRow($sql, array('member_id' => $member_id,'plingcat_id' => $plingcat_id));
+         $resultRow = $this->_db->fetchRow($sql, array('member_id' => $member_id));
         return $resultRow['count'];
     }
 
