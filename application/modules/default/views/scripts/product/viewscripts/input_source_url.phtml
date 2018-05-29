@@ -25,13 +25,21 @@
         <?php if ($this->element->isRequired()) { ?>
             <div class="small grey bold-font pull-left margin-right-5">*</div>
         <?php } ?>
-        <label class="form-label" for="<?= $this->escape($this->element->getName()) ?>">Source-Code or Repository (GitHub, GitLab, SourceForge, ...)</label>
+        <label class="form-label" for="<?= $this->escape($this->element->getName()) ?>">Source-Code Repository (GitHub, GitLab, SourceForge, ...) *needed for plings depending on product category</label>
     </div>
     <div class="col-sm-12">
         <input placeholder="https://github.com/github-tools/github" 
                id="<?= $this->escape($this->element->getName()) ?>"
                class="form-control"
                type="text"
+               pattern="https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)"
+               maxlength="200"
+               aria-required="false"
+               aria-invalid="false"
+               data-rule-minlength="10"
+               data-rule-maxlength="200"
+               data-msg-minlength="At least 10 chars"
+               data-msg-maxlength="At most 200 chars"               
                value="<?= $this->escape($this->element->getValue()) ?>"
                name="<?= $this->escape($this->element->getName()) ?>"/>
         <?php if ($this->element->getMessages()) {

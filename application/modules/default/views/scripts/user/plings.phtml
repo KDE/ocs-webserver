@@ -39,6 +39,12 @@ $this->countDownloadsOverall = count($this->downloads);
                 <!-- /NAVIGATION -->
                 <div class="my-products-heading">
                     <h1 class="page-title left"><?= $this->translate('Payout') ?></h1>
+                <?php
+                    $member = $this->view_member;
+                    if($member->pling_excluded == 1) {
+                        echo "<br><br><br><h1 style='color: red; '>This account has been excluded from receiving plings, due to various misuses.</h1>";
+                    }
+                ?>
                 </div>
                 <section>
                 <?php
@@ -60,6 +66,10 @@ $this->countDownloadsOverall = count($this->downloads);
                     }
                 ?>
                 </section>
+                
+                <?php
+                    if($member->pling_excluded == 0 || (Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin')) {        
+                ?>  
                 <div class="my-products-list" id="my-payout-list">
                     <?php
                     //if ($this->countDownloadsOverall > 0) {
@@ -69,7 +79,9 @@ $this->countDownloadsOverall = count($this->downloads);
                     //}
                     ?>
                 </div>
-
+                <?php
+                    }
+                ?>
             </section>
             <!-- /PAGE BODY -->
         </section>

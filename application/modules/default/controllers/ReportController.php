@@ -98,7 +98,8 @@ class ReportController extends Zend_Controller_Action
             }
 
             $modelProduct = new Default_Model_Project();
-            $productData = $modelProduct->fetchRow(array('project_id = ?' => $project_id));
+            $productData = $modelProduct->fetchRow(array('project_id = ?' => $project_id, 'status' => Default_Model_DbTable_Project::PROJECT_ACTIVE));
+
 
             if (empty($productData)) {
                 $this->_helper->json(array(
@@ -126,6 +127,78 @@ class ReportController extends Zend_Controller_Action
         ));
     }
 
+    public function productfraudAction()
+    {   
+        $report_type = 1;
+
+        $this->_helper->layout()->disableLayout();
+
+        if (APPLICATION_ENV != 'searchbotenv') {
+
+                    $session = new Zend_Session_Namespace();
+                    $reportedFraudProducts = isset($session->reportedFraudProducts) ? $session->reportedFraudProducts : array();
+                    $project_id = (int)$this->getParam('p');
+                    $text = $this->getParam('t');
+                    if (in_array($project_id, $reportedFraudProducts)) {
+                        $this->_helper->json(array(
+                            'status'  => 'ok',
+                            'message' => '<p>Thank you, but you have already reported this product.</p><div class="modal-footer">
+                                                    <button type="button" style="border:none;background: transparent;color: #2673b0;" class="small close" data-dismiss="modal" > Close</button>
+                                                </div>',
+                            'data'    => array()
+                        ));
+                    }
+                    
+                    if (Zend_Auth::getInstance()->hasIdentity()) {
+                        $reported_by = (int)Zend_Auth::getInstance()->getStorage()->read()->member_id;
+                        $reportProducts = new Default_Model_DbTable_ReportProducts();
+                        $reportProducts->save(array('project_id' => $project_id, 'reported_by' => $reported_by,'text' => $text, 'report_type' =>$report_type));
+                    }
+                    
+                    $session->reportedFraudProducts[] = $project_id;
+        }
+
+        $this->_helper->json(array(
+            'status'  => 'ok',
+            'message' => '<p>Thank you for reporting the misuse.</p><p>We will try to verify the reason for this case.</p><div class="modal-footer">
+                                            <button type="button" style="border:none;background: transparent;color: #2673b0;" class="small close" data-dismiss="modal" > Close</button>
+                                        </div>',
+            'data'    => array()
+        ));
+    }
+
+
+    public function productcloneAction()
+    {   
+        $report_type = 1;
+
+        $this->_helper->layout()->disableLayout();
+
+        if (APPLICATION_ENV != 'searchbotenv') {
+
+                    $project_id = (int)$this->getParam('p');
+                    $text = $this->getParam('t');
+                    $project_clone = $this->getParam('pc');
+                    $link = $this->getParam('l');
+                    if(trim($project_clone)=='')
+                    {
+                        $project_clone = null;
+                    }
+                    if (Zend_Auth::getInstance()->hasIdentity()) {
+                        $reported_by = (int)Zend_Auth::getInstance()->getStorage()->read()->member_id;
+                        $reportProducts = new Default_Model_DbTable_ProjectClone();                 
+                        $reportProducts->save(array('project_id' => $project_id, 'member_id' => $reported_by,'text' => $text, 'project_id_parent' =>$project_clone,'external_link' => $link));                             
+                    }                                                                                               
+        }
+
+        $this->_helper->json(array(
+            'status'  => 'ok',
+            'message' => '<p>Thank you. The credits have been submitted.</p><p>It can take some time to appear while we verify it.</p><div class="modal-footer">
+                                            <button type="button" style="border:none;background: transparent;color: #2673b0;" class="small close" data-dismiss="modal" > Close</button>
+                                        </div>',
+            'data'    => array()
+        ));
+    }
     public function memberAction()
     {
     }

@@ -418,6 +418,96 @@ class Default_Model_Info
     }
 
 
+    public function getRandomStoreProjectIds()
+    {
+            /** @var Zend_Cache_Core $cache */
+            $cache = Zend_Registry::get('cache');
+            $cacheName =
+                __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host'));
+
+            $resultSet = $cache->load($cacheName);
+
+            if(false ==$resultSet)
+            {
+                        $activeCategories = $this->getActiveCategoriesForCurrentHost();    
+                        if (count($activeCategories) == 0) {
+                            return array();
+                        }        
+                        $sql = '
+                            SELECT 
+                                p.project_id                   
+                            FROM
+                                project AS p                
+                            WHERE
+                                p.status = 100
+                                AND p.type_id = 1                    
+                                AND p.project_category_id IN ('. implode(',', $activeCategories).')                    
+                            ';                        
+                        $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
+                        $cache->save($resultSet, $cacheName, array(), 3600 * 24);
+            }
+
+            $irandom = rand(0,sizeof($resultSet));
+            return $resultSet[$irandom];
+    }
+
+
+    public function getRandProduct(){
+           $pid = $this->getRandomStoreProjectIds();
+           $project_id = $pid['project_id'];
+
+        $sql = '
+            SELECT 
+                p.*
+                ,laplace_score(p.count_likes, p.count_dislikes) AS laplace_score
+                ,m.profile_image_url
+                ,m.username
+            FROM
+                project AS p
+            JOIN 
+                member AS m ON m.member_id = p.member_id
+            WHERE
+               p.project_id = :project_id
+            ';
+            $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql, array('project_id' => $project_id));
+          if (count($resultSet) > 0) {                          
+              return new Zend_Paginator(new Zend_Paginator_Adapter_Array($resultSet));
+          } else {
+              return new Zend_Paginator(new Zend_Paginator_Adapter_Array(array()));
+          }
+    }
+
+
+    // public function getRandProduct_(){
+    //    $activeCategories = $this->getActiveCategoriesForCurrentHost();            
+    //     if (count($activeCategories) == 0) {
+    //         return array();
+    //     }
+
+    //     $sql = '
+    //         SELECT 
+    //             p.*
+    //             ,laplace_score(p.count_likes, p.count_dislikes) AS laplace_score
+    //             ,m.profile_image_url
+    //             ,m.username
+    //         FROM
+    //             project AS p
+    //         JOIN 
+    //             member AS m ON m.member_id = p.member_id
+    //         WHERE
+    //             p.status = 100
+    //             AND p.type_id = 1               
+    //             AND p.project_category_id IN ('. implode(',', $activeCategories).')                
+    //             ORDER BY RAND() LIMIT 1
+    //         ';
+    //     $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
+    //       if (count($resultSet) > 0) {                          
+    //           return new Zend_Paginator(new Zend_Paginator_Adapter_Array($resultSet));
+    //       } else {
+    //           return new Zend_Paginator(new Zend_Paginator_Adapter_Array(array()));
+    //       }
+    // }
+
     /**
      * @param int  $limit
      * @param null $project_category_id
@@ -432,12 +522,12 @@ class Default_Model_Info
             __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host') . (int)$limit . (int)$project_category_id);
 
         if (false !== ($resultSet = $cache->load($cacheName))) {
+            
             return new Zend_Paginator(new Zend_Paginator_Adapter_Array($resultSet));
         }
 
         if (empty($project_category_id)) {
-            $activeCategories = $this->getActiveCategoriesForCurrentHost();
-            $dummy = implode(',', $activeCategories);
+            $activeCategories = $this->getActiveCategoriesForCurrentHost();            
         } else {
             $activeCategories = $this->getActiveCategoriesForCatId($project_category_id);
         }
@@ -461,7 +551,7 @@ class Default_Model_Info
                 AND p.type_id = 1
                 AND p.featured = 1
                 AND p.project_category_id IN ('. implode(',', $activeCategories).')
-            ORDER BY p.changed_at DESC
+                ORDER BY p.changed_at DESC
             ';
         if (isset($limit)) {
             $sql .= ' limit ' . (int)$limit;
@@ -470,7 +560,7 @@ class Default_Model_Info
         $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
         $cache->save($resultSet, $cacheName, array(), 60);
 
-        if (count($resultSet) > 0) {
+        if (count($resultSet) > 0) {                          
             return new Zend_Paginator(new Zend_Paginator_Adapter_Array($resultSet));
         } else {
             return new Zend_Paginator(new Zend_Paginator_Adapter_Array(array()));
@@ -654,6 +744,30 @@ class Default_Model_Info
     }
 
 
+ /**
+     * @param int $limit
+     *
+     * @return array|false|mixed
+     */
+    public function getTopScoreUsers($limit = 120)
+    {
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cacheName = __FUNCTION__ . '_' . md5((int)$limit);
+
+        if (false !== ($resultMembers = $cache->load($cacheName))) {
+            return $resultMembers;
+        }
+
+        $model = new Default_Model_DbTable_MemberScore();
+        $resultMembers = $model->fetchTopUsers($limit);
+
+        $cache->save($resultMembers, $cacheName, array(), 300);
+
+        return $resultMembers;
+    }
+
+
     public function getNewActiveSupporters($limit = 20)
     {
         /** @var Zend_Cache_Core $cache */
@@ -665,18 +779,63 @@ class Default_Model_Info
         }
         $sql = '
                         SELECT 
-                        distinct s.member_id as supporter_id
-                        ,m.*
+                        s.member_id as supporter_id
+                        ,s.member_id
+                        ,(select username from member m where m.member_id = s.member_id) as username
+                        ,(select profile_image_url from member m where m.member_id = s.member_id) as profile_image_url
+                        ,min(s.active_time) as created_at
                         from support s 
-                        left join member m on s.member_id = m.member_id
                         where s.status_id = 2  
                         and (DATE_ADD((s.active_time), INTERVAL 1 YEAR) > now())
-                        order by s.active_time desc                        
+                        group by member_id
+                        order by s.active_time desc                                       
         ';        
         if (isset($limit)) {
             $sql .= ' limit ' . (int)$limit;
         }
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array())->fetchAll();
+        $cache->save($result, $cacheName, array(), 300);
+        return $result;
+    }
+
+     public function getNewActivePlingProduct($limit = 20)
+    {
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cacheName = __FUNCTION__ . '_' . md5((int)$limit);
+
+        if (false !== ($newSupporters = $cache->load($cacheName))) {
+            return $newSupporters;
+        }
+
+        
+        $sql = '  
+                        select 
+                        pl.member_id as pling_member_id
+                        ,pl.project_id                        
+                        ,p.title
+                        ,p.image_small
+                        ,p.laplace_score
+                        ,p.count_likes
+                        ,p.count_dislikes   
+                        ,p.member_id 
+                        ,p.profile_image_url
+                        ,p.username
+                        ,p.cat_title as catTitle
+                        ,(
+                            select min(created_at) from project_plings pt where pt.member_id = pl.member_id and pt.project_id=pl.project_id
+                        ) as created_at
+                        ,(select count(1) from project_plings pl2 where pl2.project_id = p.project_id and pl2.is_active = 1 and pl2.is_deleted = 0  ) as sum_plings
+                        from project_plings pl
+                        inner join stat_projects p on pl.project_id = p.project_id and p.status > 30                        
+                        where pl.is_deleted = 0 and pl.is_active = 1 
+                        order by created_at desc                                                  
+        ';        
+        if (isset($limit)) {
+            $sql .= ' limit ' . (int)$limit;
+        }
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array())->fetchAll();
+        
         $cache->save($result, $cacheName, array(), 300);
         return $result;
     }
@@ -703,6 +862,7 @@ class Default_Model_Info
         $cache->save($totalcnt, $cacheName,array() , 300);
         return $totalcnt;
     }
+
 
      public function getCountMembers()
     {
@@ -773,5 +933,14 @@ class Default_Model_Info
         $cache->save($data, $cacheName,array() , 3600);
         return $data;
     }
+
+
+     public function getProbablyPayoutPlingsCurrentmonth($project_id)
+    {       
+        $sql = " select FORMAT(probably_payout_amount, 2) as amount from member_dl_plings where project_id = :project_id and yearmonth=(DATE_FORMAT(NOW(),'%Y%m'))";                   
+        $result = Zend_Db_Table::getDefaultAdapter()->fetchRow($sql,array('project_id'=>$project_id));
+         return $result['amount'];
+    }
+
 
 }

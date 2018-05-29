@@ -39,8 +39,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
     public function init()
     {
         parent::init();
-        $this->getResponse()->clearHeaders(array('Expires', 'Pragma', 'Cache-Control'))
-             ->setHeader('Pragma', 'no-cache', true)
+        $this->getResponse()->clearHeaders(array('Expires', 'Pragma', 'Cache-Control'))->setHeader('Pragma', 'no-cache', true)
              ->setHeader('Cache-Control', 'private, no-cache, must-revalidate', true)
         ;
 
@@ -89,8 +88,8 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
 
         $websiteOwner = new Local_Verification_WebsiteOwner();
         $linkWebsite = stripslashes($this->_memberSettings->link_website);
-        $this->view->homepageform = $this->formHomepage($linkWebsite, $websiteOwner->generateAuthCode($linkWebsite),
-            $this->_memberSettings->validated);
+        $this->view->homepageform =
+            $this->formHomepage($linkWebsite, $websiteOwner->generateAuthCode($linkWebsite), $this->_memberSettings->validated);
 
         $this->view->newsletterform = $this->formNewsletter(stripslashes($this->_memberSettings->newsletter));
 
@@ -101,34 +100,31 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
     /**
      * Forms
      */
-
     private function formProfile()
     {
         $form = new Default_Form_Settings();
         $form->setMethod("POST")->setAttrib("id", "settingsProfileForm")->setAction('/settings/profile');
 
         $userNameLength = new Zend_Validate_StringLength(array('min' => 4, 'max' => 35));
-        $username = $form->createElement('text', 'username')->setLabel("Username:")->setRequired(false)
-                         ->setFilters(array('StringTrim'))
-                         ->addValidator($userNameLength)
-                         ->setAttrib('readonly', 'true')
-                         ->setDecorators(array(
-                             'ViewHelper',
-                             'Label',
-                             'Errors',
-                             array(
-                                 'ViewScript',
-                                 array(
-                                     'viewScript' => 'settings/viewscripts/flatui_input.phtml',
-                                     'placement'  => false
-                                 )
-                             )
-                         ))
+        $username =
+            $form->createElement('text', 'username')->setLabel("Username:")->setRequired(false)->setFilters(array('StringTrim'))
+                 ->addValidator($userNameLength)->setAttrib('readonly', 'true')->setDecorators(array(
+                    'ViewHelper',
+                    'Label',
+                    'Errors',
+                    array(
+                        'ViewScript',
+                        array(
+                            'viewScript' => 'settings/viewscripts/flatui_input.phtml',
+                            'placement'  => false
+                        )
+                    )
+                ))
         ;
         $form->addElement($username);
 
-        $firstname = $form->createElement('text', 'firstname')->setLabel("First Name:")->setRequired(false)
-                          ->removeDecorator('HtmlTag')->setFilters(array('StringTrim'))->setDecorators(array(
+        $firstname = $form->createElement('text', 'firstname')->setLabel("First Name:")->setRequired(false)->removeDecorator('HtmlTag')
+                          ->setFilters(array('StringTrim'))->setDecorators(array(
                 'ViewHelper',
                 'Label',
                 'Errors',
@@ -143,12 +139,8 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         ;
         $form->addElement($firstname);
 
-        $lastname = $form->createElement('text', 'lastname')
-                         ->setLabel("Last Name:")
-                         ->setRequired(false)
-                         ->removeDecorator('HtmlTag')
-                         ->setFilters(array('StringTrim'))
-                         ->setDecorators(array(
+        $lastname = $form->createElement('text', 'lastname')->setLabel("Last Name:")->setRequired(false)->removeDecorator('HtmlTag')
+                         ->setFilters(array('StringTrim'))->setDecorators(array(
                 'ViewHelper',
                 'Label',
                 'Errors',
@@ -163,32 +155,24 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         ;
         $form->addElement($lastname);
 
-        $city = $form->createElement('text', 'city')
-                     ->setLabel("City:")
-                     ->setRequired(false)
-                     ->setFilters(array('StringTrim'))
-                     ->removeDecorator('HtmlTag')
-                     ->setDecorators(array(
-                         'ViewHelper',
-                         'Label',
-                         'Errors',
-                         array(
-                             'ViewScript',
-                             array(
-                                 'viewScript' => 'settings/viewscripts/flatui_input.phtml',
-                                 'placement'  => false
-                             )
-                         )
-                     ))
+        $city = $form->createElement('text', 'city')->setLabel("City:")->setRequired(false)->setFilters(array('StringTrim'))
+                     ->removeDecorator('HtmlTag')->setDecorators(array(
+                'ViewHelper',
+                'Label',
+                'Errors',
+                array(
+                    'ViewScript',
+                    array(
+                        'viewScript' => 'settings/viewscripts/flatui_input.phtml',
+                        'placement'  => false
+                    )
+                )
+            ))
         ;
         $form->addElement($city);
 
-        $country = $form->createElement('text', 'country')
-                        ->setLabel("Country:")
-                        ->setRequired(false)
-                        ->setFilters(array('StringTrim'))
-                        ->removeDecorator('HtmlTag')
-                        ->setDecorators(array(
+        $country = $form->createElement('text', 'country')->setLabel("Country:")->setRequired(false)->setFilters(array('StringTrim'))
+                        ->removeDecorator('HtmlTag')->setDecorators(array(
                 'ViewHelper',
                 'Label',
                 'Errors',
@@ -203,22 +187,19 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         ;
         $form->addElement($country);
 
-        $about = $form->createElement('textarea', 'aboutme')
-                      ->setLabel('About me:')
-                      ->setRequired(false)
-                      ->setAttrib('class', 'about')
+        $about = $form->createElement('textarea', 'aboutme')->setLabel('About me:')->setRequired(false)->setAttrib('class', 'about')
                       ->setDecorators(array(
-                'ViewHelper',
-                'Label',
-                'Errors',
-                array(
-                    'ViewScript',
-                    array(
-                        'viewScript' => 'settings/viewscripts/flatui_input.phtml',
-                        'placement'  => false
-                    )
-                )
-            ))
+                          'ViewHelper',
+                          'Label',
+                          'Errors',
+                          array(
+                              'ViewScript',
+                              array(
+                                  'viewScript' => 'settings/viewscripts/flatui_input.phtml',
+                                  'placement'  => false
+                              )
+                          )
+                      ))
         ;
         $form->addElement($about);
 
@@ -230,11 +211,8 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $form = new Default_Form_Settings();
         $form->setMethod("POST")->setAttrib("id", "settingsConnectedAccounts")->setAction('/settings/accounts');
 
-        $facebook = $form->createElement('text', 'link_facebook')
-                         ->setLabel("Facebook Profile:")
-                         ->setRequired(false)
-                         ->removeDecorator('HtmlTag')
-                         ->setDecorators(array(
+        $facebook = $form->createElement('text', 'link_facebook')->setLabel("Facebook Profile:")->setRequired(false)
+                         ->removeDecorator('HtmlTag')->setDecorators(array(
                 'ViewHelper',
                 'Label',
                 'Errors',
@@ -250,62 +228,56 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $facebook->addValidator(new Local_Validate_PartialUrl());
         $form->addElement($facebook);
 
-        $twitter = $form->createElement('text', 'link_twitter')
-                        ->setLabel("Twitter Profile:")
-                        ->setRequired(false)
-                        ->removeDecorator('HtmlTag')
-                        ->setDecorators(array(
-                'ViewHelper',
-                'Label',
-                'Errors',
-                array(
-                    'ViewScript',
-                    array(
-                        'viewScript' => 'settings/viewscripts/flatui_input.phtml',
-                        'placement'  => false
-                    )
-                )
-            ))
+        $twitter =
+            $form->createElement('text', 'link_twitter')->setLabel("Twitter Profile:")->setRequired(false)->removeDecorator('HtmlTag')
+                 ->setDecorators(array(
+                     'ViewHelper',
+                     'Label',
+                     'Errors',
+                     array(
+                         'ViewScript',
+                         array(
+                             'viewScript' => 'settings/viewscripts/flatui_input.phtml',
+                             'placement'  => false
+                         )
+                     )
+                 ))
         ;
         $twitter->addValidator(new Local_Validate_PartialUrl);
         $form->addElement($twitter);
 
-        $google = $form->createElement('text', 'link_google')
-                       ->setLabel("Google+ Profile:")
-                       ->setRequired(false)
-                       ->removeDecorator('HtmlTag')
-                       ->setDecorators(array(
-                'ViewHelper',
-                'Label',
-                'Errors',
-                array(
-                    'ViewScript',
-                    array(
-                        'viewScript' => 'settings/viewscripts/flatui_input.phtml',
-                        'placement'  => false
-                    )
-                )
-            ))
+        $google =
+            $form->createElement('text', 'link_google')->setLabel("Google+ Profile:")->setRequired(false)->removeDecorator('HtmlTag')
+                 ->setDecorators(array(
+                     'ViewHelper',
+                     'Label',
+                     'Errors',
+                     array(
+                         'ViewScript',
+                         array(
+                             'viewScript' => 'settings/viewscripts/flatui_input.phtml',
+                             'placement'  => false
+                         )
+                     )
+                 ))
         ;
         $google->addValidator(new Local_Validate_PartialUrl);
         $form->addElement($google);
 
-        $github = $form->createElement('text', 'link_github')
-                       ->setLabel("GitHub Profile:")
-                       ->setRequired(false)
-                       ->removeDecorator('HtmlTag')
-                       ->setDecorators(array(
-                'ViewHelper',
-                'Label',
-                'Errors',
-                array(
-                    'ViewScript',
-                    array(
-                        'viewScript' => 'settings/viewscripts/flatui_input.phtml',
-                        'placement'  => false
-                    )
-                )
-            ))
+        $github =
+            $form->createElement('text', 'link_github')->setLabel("GitHub Profile:")->setRequired(false)->removeDecorator('HtmlTag')
+                 ->setDecorators(array(
+                     'ViewHelper',
+                     'Label',
+                     'Errors',
+                     array(
+                         'ViewScript',
+                         array(
+                             'viewScript' => 'settings/viewscripts/flatui_input.phtml',
+                             'placement'  => false
+                         )
+                     )
+                 ))
         ;
         $google->addValidator(new Local_Validate_PartialUrl);
         $form->addElement($github);
@@ -319,10 +291,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $form->setMethod("POST")->setAttrib("id", "settingsGithub")->setAction('/settings/github');
 
         $github = new Default_Form_Element_UsernameGithub('link_github');
-        $github->setLabel("GitHub Profile:")
-               ->setRequired(false)
-               ->removeDecorator('HtmlTag')
-               ->setDecorators(array(
+        $github->setLabel("GitHub Profile:")->setRequired(false)->removeDecorator('HtmlTag')->setDecorators(array(
                 'ViewHelper',
                 'Label',
                 'Errors',
@@ -338,10 +307,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $form->addElement($github);
 
         $token = new Default_Form_Element_TokenGithub('token_github');
-        $token->setLabel("GitHub Access Token:")
-              ->setRequired(false)
-              ->removeDecorator('HtmlTag')
-              ->setDecorators(array(
+        $token->setLabel("GitHub Access Token:")->setRequired(false)->removeDecorator('HtmlTag')->setDecorators(array(
                 'ViewHelper',
                 'Label',
                 'Errors',
@@ -366,8 +332,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
              ->setAttrib('enctype', 'multipart/form-data')
         ;
 
-        $hiddenProfilePicture = $form->createElement('hidden', 'profile_image_url')
-                                     ->setDecorators(array(
+        $hiddenProfilePicture = $form->createElement('hidden', 'profile_image_url')->setDecorators(array(
                 'ViewHelper',
                 array(
                     'ViewScript',
@@ -382,91 +347,68 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $form->addElement($hiddenProfilePicture);
 
         $imageTable = new Default_Model_DbTable_Image();
-        $productPicture = $form->createElement('file', 'profile_picture_upload')
-                               ->setDisableLoadDefaultDecorators(true)
-                               ->setLabel('Profile Picture Preview')
-                               ->setRequired(false)
-                               ->setDecorators(array(
-                'File',
-                array(
-                    'ViewScript',
+        $productPicture =
+            $form->createElement('file', 'profile_picture_upload')->setDisableLoadDefaultDecorators(true)->setLabel('Profile Picture')
+                 ->setRequired(false)->setDecorators(array(
+                    'File',
                     array(
-                        'viewScript' => 'settings/viewscripts/flatui_profile_image.phtml',
-                        'placement'  => false
+                        'ViewScript',
+                        array(
+                            'viewScript' => 'settings/viewscripts/flatui_profile_image.phtml',
+                            'placement'  => false
+                        )
                     )
-                )
 
-            ))
-                               ->setAttrib('class', 'product-picture')
-                               ->setAttrib('onchange', 'ImagePreview.previewImage(this, \'profile-picture-preview\');')
-                               ->setTransferAdapter(new Local_File_Transfer_Adapter_Http())->setMaxFileSize(2097152)
-                               ->addValidator('Count', false, 1)
-                               ->addValidator('Size', false, array('min' => '5kB', 'max' => '2MB'))
-                               ->addValidator('Extension', false, $imageTable->getAllowedFileExtension())
-                               ->addValidator('ImageSize', false, array(
-                                       'minwidth'  => 20,
-                                       'maxwidth'  => 1024,
-                                       'minheight' => 20,
-                                       'maxheight' => 1024
-                                   ))
-                               ->addValidator('MimeType', false, $imageTable->getAllowedMimeTypes())
+                ))->setAttrib('class', 'product-picture')
+                 ->setAttrib('onchange', 'ImagePreview.previewImage(this, \'profile-picture-preview\');')
+                 ->setTransferAdapter(new Local_File_Transfer_Adapter_Http())->setMaxFileSize(2097152)->addValidator('Count', false, 1)
+                 ->addValidator('Size', false, array('min' => '5kB', 'max' => '2MB'))
+                 ->addValidator('Extension', false, $imageTable->getAllowedFileExtension())->addValidator('ImageSize', false, array(
+                    'minwidth'  => 20,
+                    'maxwidth'  => 1024,
+                    'minheight' => 20,
+                    'maxheight' => 1024
+                ))->addValidator('MimeType', false, $imageTable->getAllowedMimeTypes())
         ;
 
         $form->addElement($productPicture);
 
-        $facebook_username =
-            $form->createElement('text', 'facebook_username')
-                 ->setLabel("From Facebook Profile:")
-                 ->setRequired(false)
-                 ->removeDecorator('HtmlTag')
-                 ->setAttrib('data-href', 'https://graph.facebook.com/{username}/picture?type=large')
-                 ->setAttrib('data-target', '#profile-picture-preview')
-                 ->setAttrib('data-src', 'facebook')
-                 ->setAttrib('class', 'avatar')
-                 ->setDecorators(array(
-                    'ViewHelper',
-                    'Label',
-                    'Errors'
-                ))
+        $facebook_username = $form->createElement('text', 'facebook_username')->setLabel("From Facebook Profile:")->setRequired(false)
+                                  ->removeDecorator('HtmlTag')
+                                  ->setAttrib('data-href', 'https://graph.facebook.com/{username}/picture?type=large')
+                                  ->setAttrib('data-target', '#profile-picture-preview')->setAttrib('data-src', 'facebook')
+                                  ->setAttrib('class', 'avatar')->setDecorators(array(
+                'ViewHelper',
+                'Label',
+                'Errors'
+            ))
         ;
         $form->addElement($facebook_username);
 
-        $twitter_username =
-            $form->createElement('text', 'twitter_username')
-                 ->setLabel("From Twitter Profile:")
-                 ->setRequired(false)
-                 ->removeDecorator('HtmlTag')
-                 ->setAttrib('data-href', 'http://twitter.com/api/users/profile_image/{username}')
-                 ->setAttrib('data-target', '#profile-picture-preview')
-                 ->setAttrib('data-src', 'twitter')
-                 ->setAttrib('class', 'avatar')
-                 ->setDecorators(array(
-                    'ViewHelper',
-                    'Label',
-                    'Errors'
-                ))
+        $twitter_username = $form->createElement('text', 'twitter_username')->setLabel("From Twitter Profile:")->setRequired(false)
+                                 ->removeDecorator('HtmlTag')
+                                 ->setAttrib('data-href', 'http://twitter.com/api/users/profile_image/{username}')
+                                 ->setAttrib('data-target', '#profile-picture-preview')->setAttrib('data-src', 'twitter')
+                                 ->setAttrib('class', 'avatar')->setDecorators(array(
+                'ViewHelper',
+                'Label',
+                'Errors'
+            ))
         ;
         $form->addElement($twitter_username);
 
-        $gravatar_email =
-            $form->createElement('text', 'gravatar_email')
-                 ->setLabel("From Gravatar Profile:")
-                 ->setRequired(false)
-                 ->setAttrib('data-href', 'http://www.gravatar.com/avatar/{username}.jpg')
-                 ->setAttrib('data-target', '#profile-picture-preview')
-                 ->setAttrib('data-func', 'MD5')
-                 ->setAttrib('data-src', 'gravatar')
-                 ->setAttrib('class', 'avatar')
-                 ->setDecorators(array(
-                    'ViewHelper',
-                    'Label',
-                    'Errors'
-                ))
+        $gravatar_email = $form->createElement('text', 'gravatar_email')->setLabel("From Gravatar Profile:")->setRequired(false)
+                               ->setAttrib('data-href', 'http://www.gravatar.com/avatar/{username}.jpg')
+                               ->setAttrib('data-target', '#profile-picture-preview')->setAttrib('data-func', 'MD5')
+                               ->setAttrib('data-src', 'gravatar')->setAttrib('class', 'avatar')->setDecorators(array(
+                'ViewHelper',
+                'Label',
+                'Errors'
+            ))
         ;
         $form->addElement($gravatar_email);
 
-        $hiddenProfilePictureSrc = $form->createElement('hidden', 'profile_img_src')
-                                        ->setDecorators(array(
+        $hiddenProfilePictureSrc = $form->createElement('hidden', 'profile_img_src')->setDecorators(array(
                 'ViewHelper'
             ))
         ;
@@ -476,16 +418,14 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         return $form;
     }
 
-
     private function formProfilePictureBackground()
     {
         $form = new Default_Form_Settings();
-        $form->setMethod("POST")->setAttrib("id", "settingsPictureBackgroundForm")
-             ->setAction('/settings/picturebackground')->setAttrib('enctype', 'multipart/form-data')
+        $form->setMethod("POST")->setAttrib("id", "settingsPictureBackgroundForm")->setAction('/settings/picturebackground')
+             ->setAttrib('enctype', 'multipart/form-data')
         ;
 
-        $hiddenProfilePicture = $form->createElement('hidden', 'profile_image_url_bg')
-                                     ->setDecorators(array(
+        $hiddenProfilePicture = $form->createElement('hidden', 'profile_image_url_bg')->setDecorators(array(
                 'ViewHelper',
                 array(
                     'ViewScript',
@@ -500,29 +440,23 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $form->addElement($hiddenProfilePicture);
 
         $imageTable = new Default_Model_DbTable_Image();
-        $productPicture =
-            $form->createElement('file', 'profile_picture_background_upload')
-                 ->setDisableLoadDefaultDecorators(true)
-                 ->setLabel('Profile Picture Background Preview')
-                 ->setRequired(false)
-                 ->setDecorators(array(
-                    'File',
+        $productPicture = $form->createElement('file', 'profile_picture_background_upload')->setDisableLoadDefaultDecorators(true)
+                               ->setLabel('Background Picture')->setRequired(false)->setDecorators(array(
+                'File',
+                array(
+                    'ViewScript',
                     array(
-                        'ViewScript',
-                        array(
-                            'viewScript' => 'settings/viewscripts/flatui_profile_image_background.phtml',
-                            'placement'  => false
-                        )
+                        'viewScript' => 'settings/viewscripts/flatui_profile_image_background.phtml',
+                        'placement'  => false
                     )
+                )
 
-                ))
-                 ->setAttrib('class', 'product-picture')
-                 ->setAttrib('onchange',
-                    'ImagePreview.previewImageMember(this, \'profile-picture-background-preview\');')
-                 ->setTransferAdapter(new Local_File_Transfer_Adapter_Http())//->setMaxFileSize(2097152)
-                 ->addValidator('Count', false, 1)//->addValidator('Size', false, array('min' => '5kB', 'max' => '2MB'))
-                 ->addValidator('Extension', false, $imageTable->getAllowedFileExtension())
-                 ->addValidator('MimeType', false, $imageTable->getAllowedMimeTypes())
+            ))->setAttrib('class', 'product-picture')->setAttrib('onchange',
+                'ImagePreview.previewImageMember(this, \'profile-picture-background-preview\');')
+                               ->setTransferAdapter(new Local_File_Transfer_Adapter_Http())//->setMaxFileSize(2097152)
+                               ->addValidator('Count', false, 1)//->addValidator('Size', false, array('min' => '5kB', 'max' => '2MB'))
+                               ->addValidator('Extension', false, $imageTable->getAllowedFileExtension())
+                               ->addValidator('MimeType', false, $imageTable->getAllowedMimeTypes())
         ;
 
         $form->addElement($productPicture);
@@ -536,51 +470,50 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $form->setMethod("POST")->setAttrib("id", "settingsPasswordForm")->setAction('/settings/password');
 
         $passOld = $form->createElement('password', 'passwordOld')->setLabel('Enter old Password:')->setRequired(true)
-                        ->removeDecorator('HtmlTag')->addValidator(new Local_Validate_OldPasswordConfirm())
-                        ->setDecorators(array(
-                            'ViewHelper',
-                            'Label',
-                            'Errors',
-                            array(
-                                'ViewScript',
-                                array(
-                                    'viewScript' => 'settings/viewscripts/flatui_input.phtml',
-                                    'placement'  => false
-                                )
-                            )
-                        ))
+                        ->removeDecorator('HtmlTag')->addValidator(new Local_Validate_OldPasswordConfirm())->setDecorators(array(
+                'ViewHelper',
+                'Label',
+                'Errors',
+                array(
+                    'ViewScript',
+                    array(
+                        'viewScript' => 'settings/viewscripts/flatui_input.phtml',
+                        'placement'  => false
+                    )
+                )
+            ))
         ;
 
         $pass1 = $form->createElement('password', 'password1')->setLabel('Enter new Password:')->setRequired(true)
-                      ->addValidator(new Zend_Validate_NotEmpty(Zend_Validate_NotEmpty::STRING))
-                      ->removeDecorator('HtmlTag')->setDecorators(array(
-                'ViewHelper',
-                'Label',
-                'Errors',
-                array(
-                    'ViewScript',
-                    array(
-                        'viewScript' => 'settings/viewscripts/flatui_input.phtml',
-                        'placement'  => false
-                    )
-                )
-            ))
+                      ->addValidator(new Zend_Validate_NotEmpty(Zend_Validate_NotEmpty::STRING))->removeDecorator('HtmlTag')
+                      ->setDecorators(array(
+                          'ViewHelper',
+                          'Label',
+                          'Errors',
+                          array(
+                              'ViewScript',
+                              array(
+                                  'viewScript' => 'settings/viewscripts/flatui_input.phtml',
+                                  'placement'  => false
+                              )
+                          )
+                      ))
         ;
 
         $pass2 = $form->createElement('password', 'password2')->setLabel('Re-enter new Password:')->setRequired(true)
-                      ->addValidator(new Zend_Validate_NotEmpty(Zend_Validate_NotEmpty::STRING))
-                      ->removeDecorator('HtmlTag')->setDecorators(array(
-                'ViewHelper',
-                'Label',
-                'Errors',
-                array(
-                    'ViewScript',
-                    array(
-                        'viewScript' => 'settings/viewscripts/flatui_input.phtml',
-                        'placement'  => false
-                    )
-                )
-            ))
+                      ->addValidator(new Zend_Validate_NotEmpty(Zend_Validate_NotEmpty::STRING))->removeDecorator('HtmlTag')
+                      ->setDecorators(array(
+                          'ViewHelper',
+                          'Label',
+                          'Errors',
+                          array(
+                              'ViewScript',
+                              array(
+                                  'viewScript' => 'settings/viewscripts/flatui_input.phtml',
+                                  'placement'  => false
+                              )
+                          )
+                      ))
         ;
 
         $passValid = new Local_Validate_PasswordConfirm($pass2->getValue());
@@ -599,8 +532,8 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
              ->addPrefixPath('Local_Form_Element_', 'Local/Form/Element/', 'element')
         ;
 
-        $homepage = $form->createElement('text', 'link_website')->setLabel("Website:")->setRequired(false)
-                         ->setValue($valHomepage)->addValidator(new Local_Validate_PartialUrl)->setDecorators(array(
+        $homepage = $form->createElement('text', 'link_website')->setLabel("Website:")->setRequired(false)->setValue($valHomepage)
+                         ->addValidator(new Local_Validate_PartialUrl)->setDecorators(array(
                 'ViewHelper',
                 'Label',
                 'Errors',
@@ -631,9 +564,8 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
 
         if ('' != $valVerifyKey) {
             $value = str_replace('?', $valVerifyKey, $this->htmlVerifier);
-            $verifyCode = $form->createElement('note', 'html_verifier')->setValue($value)->removeDecorator('HtmlTag')
-                               ->removeDecorator('Label')
-            ;
+            $verifyCode =
+                $form->createElement('note', 'html_verifier')->setValue($value)->removeDecorator('HtmlTag')->removeDecorator('Label');
             $form->addElement($verifyCode);
         }
 
@@ -697,19 +629,19 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $form->addElement($mail);
 
         $bitcoinAddress =
-            $form->createElement('text', 'wallet_address')->setLabel('Bitcoin: Your Public Wallet Address')
-                 ->setRequired(false)->setDecorators(array(
-                    'ViewHelper',
-                    'Label',
-                    'Errors',
-                    array(
-                        'ViewScript',
-                        array(
-                            'viewScript' => 'settings/viewscripts/flatui_input.phtml',
-                            'placement'  => false
-                        )
-                    )
-                ))->addValidators(array(
+            $form->createElement('text', 'wallet_address')->setLabel('Bitcoin: Your Public Wallet Address')->setRequired(false)
+                 ->setDecorators(array(
+                     'ViewHelper',
+                     'Label',
+                     'Errors',
+                     array(
+                         'ViewScript',
+                         array(
+                             'viewScript' => 'settings/viewscripts/flatui_input.phtml',
+                             'placement'  => false
+                         )
+                     )
+                 ))->addValidators(array(
                     array(
                         'regex',
                         false,
@@ -723,26 +655,26 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $bitcoinAddress->setValue($valWalletAddress);
         $form->addElement($bitcoinAddress);
 
-        $dwolla =
-            $form->createElement('text', 'dwolla_id')->setLabel('Dwolla: User ID (xxx-xxx-xxxx)')->setRequired(false)
-                 ->setDecorators(array(
-                     'ViewHelper',
-                     'Label',
-                     'Errors',
-                     array(
-                         'ViewScript',
-                         array(
-                             'viewScript' => 'settings/viewscripts/flatui_input.phtml',
-                             'placement'  => false
-                         )
-                     )
-                 ))
+        $dwolla = $form->createElement('text', 'dwolla_id')->setLabel('Dwolla: User ID (xxx-xxx-xxxx)')->setRequired(false)
+                       ->setDecorators(array(
+                           'ViewHelper',
+                           'Label',
+                           'Errors',
+                           array(
+                               'ViewScript',
+                               array(
+                                   'viewScript' => 'settings/viewscripts/flatui_input.phtml',
+                                   'placement'  => false
+                               )
+                           )
+                       ))
         ;
         $dwolla->setValue($valDwollaId);
         $form->addElement($dwolla);
 
         return $form;
     }
+
 
     public function profileAction()
     {
@@ -912,8 +844,8 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
             }
             if ($form->isValid($_POST)) {
 
-                $tmpProfilePictureTitle = IMAGES_UPLOAD_PATH . 'tmp/' . Local_Tools_UUID::generateUUID() . '_'
-                    . $profilePictureTitleFilename['basename'];
+                $tmpProfilePictureTitle =
+                    IMAGES_UPLOAD_PATH . 'tmp/' . Local_Tools_UUID::generateUUID() . '_' . $profilePictureTitleFilename['basename'];
                 $form->getElement('profile_picture_upload')
                      ->addFilter('Rename', array('target' => $tmpProfilePictureTitle, 'overwrite' => true))
                 ;
@@ -935,17 +867,22 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                 }
                 if ($values['profile_img_src'] == 'local' && isset($newImageName)) {
                     $this->_auth->getIdentity()->avatar = $newImageName;
-                    $this->_auth->getIdentity()->profile_image_url =
-                        IMAGES_MEDIA_SERVER . '/cache/200x200-2/img/' . $newImageName;
+                    $this->_auth->getIdentity()->profile_image_url = IMAGES_MEDIA_SERVER . '/cache/200x200-2/img/' . $newImageName;
                     $this->_memberSettings->avatar = $newImageName;
-                    $this->_memberSettings->profile_image_url =
-                        IMAGES_MEDIA_SERVER . '/cache/200x200-2/img/' . $newImageName;
+                    $this->_memberSettings->profile_image_url = IMAGES_MEDIA_SERVER . '/cache/200x200-2/img/' . $newImageName;
                 }
                 $this->_memberSettings->profile_img_src = $values['profile_img_src'];
 
                 $this->_memberSettings->save();
                 $this->view->member = $this->_memberSettings;
                 $form->populate($this->_memberSettings->toArray());
+
+                try {
+                    $id_server = new Default_Model_IdServer();
+                    $id_server->updateUser($this->_memberSettings->member_id);
+                } catch (Exception $e) {
+                    Zend_Registry::get('logger')->err($e->getTraceAsString());
+                }
 
                 $this->view->save = 1;
                 $this->view->pictureform = $form;
@@ -966,6 +903,17 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
             $this->view->pictureform = $form;
             $this->renderScript('settings/partials/picture.phtml');
         }
+    }
+
+    public function deletepicturebackgroundAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $this->_memberSettings->profile_image_url_bg = null;
+        $this->_memberSettings->save();
+
+        $this->_helper->json(array(
+            'status' => 'ok'
+        ));
     }
 
     public function picturebackgroundAction()
@@ -990,13 +938,12 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                 return;
             }
 
-            $profilePictureTitleFilename =
-                pathinfo($form->getElement('profile_picture_background_upload')->getFileName());
+            $profilePictureTitleFilename = pathinfo($form->getElement('profile_picture_background_upload')->getFileName());
 
             if ($form->isValid($_POST)) {
 
-                $tmpProfilePictureTitle = IMAGES_UPLOAD_PATH . 'tmp/' . Local_Tools_UUID::generateUUID() . '_'
-                    . $profilePictureTitleFilename['basename'];
+                $tmpProfilePictureTitle =
+                    IMAGES_UPLOAD_PATH . 'tmp/' . Local_Tools_UUID::generateUUID() . '_' . $profilePictureTitleFilename['basename'];
                 $form->getElement('profile_picture_background_upload')
                      ->addFilter('Rename', array('target' => $tmpProfilePictureTitle, 'overwrite' => true))
                 ;
@@ -1010,8 +957,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                 }
 
                 if (isset($newImageName)) {
-                    $this->_memberSettings->profile_image_url_bg =
-                        IMAGES_MEDIA_SERVER . '/cache/1920x450-2/img/' . $newImageName;
+                    $this->_memberSettings->profile_image_url_bg = IMAGES_MEDIA_SERVER . '/cache/1920x450-2/img/' . $newImageName;
                 }
 
                 $this->_memberSettings->save();
@@ -1046,19 +992,24 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
             if ($form->isValid($_POST)) {
                 $values = $form->getValues();
 
-                if ($this->_memberSettings->password
-                    != Local_Auth_Adapter_Ocs::getEncryptedPassword($values['passwordOld'],
+                if ($this->_memberSettings->password != Local_Auth_Adapter_Ocs::getEncryptedPassword($values['passwordOld'],
                         $this->_memberSettings->source_id)) {
                     $form->addErrorMessage('Your old Password is wrong!');
                     $this->view->passwordform = $form;
                     $this->view->error = 1;
                 } else {
                     $this->_memberSettings->password =
-                        Local_Auth_Adapter_Ocs::getEncryptedPassword($values['password1'],
-                            $this->_memberSettings->source_id);
+                        Local_Auth_Adapter_Ocs::getEncryptedPassword($values['password1'], $this->_memberSettings->source_id);
                     $this->_memberSettings->save();
                     $this->view->passwordform = $this->formPassword();
                     $this->view->save = 1;
+
+                    try {
+                        $id_server = new Default_Model_IdServer();
+                        $id_server->updatePasswordForUser($this->_memberSettings->member_id);
+                    } catch (Exception $e) {
+                        Zend_Registry::get('logger')->err($e->getTraceAsString());
+                    }
                 }
             } else {
                 $this->view->passwordform = $form;
@@ -1079,8 +1030,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         if ($this->_request->isGet()) {
             $websiteVerifier = new Local_Verification_WebsiteOwner();
             $authCode = $websiteVerifier->generateAuthCode($this->_memberSettings->link_website);
-            $form =
-                $this->formHomepage($this->_memberSettings->link_website, $authCode, $this->_memberSettings->validated);
+            $form = $this->formHomepage($this->_memberSettings->link_website, $authCode, $this->_memberSettings->validated);
             $this->view->homepageform = $form;
 
             return;
@@ -1170,17 +1120,17 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                     //$showMember->paypal_valid_status = null;
                     //$this->_memberTable->save($showMember);
                     //$this->view->member = $showMember;
-                    $this->_memberTable->update(array('paypal_valid_status' => null),
-                        'member_id = ' . $this->_memberId);
-                    
+                    $this->_memberTable->update(array('paypal_valid_status' => null), 'member_id = ' . $this->_memberId);
+
                     //Log if paypal changes
-                    
+
                     $desc = 'Paypal-Address changed from ';
-                    if(isset($this->_memberSettings->paypal_mail)) {
+                    if (isset($this->_memberSettings->paypal_mail)) {
                         $desc .= $this->_memberSettings->paypal_mail;
                     }
-                    $desc .= ' to '.$values['paypal_mail'];
-                    Default_Model_ActivityLog::logActivity($this->_memberSettings->member_id, null, $this->_memberId, Default_Model_ActivityLog::MEMBER_PAYPAL_CHANGED, array('title' => '', 'description' => $desc));
+                    $desc .= ' to ' . $values['paypal_mail'];
+                    Default_Model_ActivityLog::logActivity($this->_memberSettings->member_id, null, $this->_memberId,
+                        Default_Model_ActivityLog::MEMBER_PAYPAL_CHANGED, array('title' => '', 'description' => $desc));
                 }
 
                 $this->_memberSettings->paypal_mail = $values['paypal_mail'];
@@ -1281,6 +1231,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
 
     /**
      * @return Zend_Filter_Input
+     * @throws Zend_Validate_Exception
      */
     protected function createFilter()
     {
@@ -1292,17 +1243,16 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
             'field'   => 'email_address',
             'exclude' => array('field' => 'email_deleted', 'value' => 1)
         ));
-        $mailExistCheck->setMessage('RegisterFormEmailErrAlreadyRegistered',
-            Zend_Validate_Db_NoRecordExists::ERROR_RECORD_FOUND);
+        $mailExistCheck->setMessage('RegisterFormEmailErrAlreadyRegistered', Zend_Validate_Db_NoRecordExists::ERROR_RECORD_FOUND);
 
         // Filter-Parameter
         $filterInput = new Zend_Filter_Input(array('*' => 'StringTrim', 'user_email' => 'StripTags'), array(
-                'user_email' => array(
-                    $mailValidCheck,
-                    $mailExistCheck,
-                    'presence' => 'required'
-                )
-            ), $this->getAllParams());
+            'user_email' => array(
+                $mailValidCheck,
+                $mailExistCheck,
+                'presence' => 'required'
+            )
+        ), $this->getAllParams());
 
         return $filterInput;
     }
@@ -1311,6 +1261,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
      * @param Zend_Filter_Input $filterInput
      *
      * @return Zend_Db_Table_Row_Abstract
+     * @throws Exception
      */
     protected function saveEmail($filterInput)
     {
@@ -1318,8 +1269,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $data['email_member_id'] = $this->_authMember->member_id;
         $data['email_address'] = $filterInput->getEscaped('user_email');
         $data['email_verification_value'] =
-            Default_Model_MemberEmail::getVerificationValue($this->_authMember->username,
-                $filterInput->getEscaped('user_email'));
+            Default_Model_MemberEmail::getVerificationValue($this->_authMember->username, $filterInput->getEscaped('user_email'));
         $modelMemberEmail = new Default_Model_DbTable_MemberEmail();
 
         return $modelMemberEmail->save($data);
@@ -1335,12 +1285,11 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $confirmMail->setTemplateVar('username', $this->_authMember->username);
         $confirmMail->setTemplateVar('email_address', $data['email_address']);
         $confirmMail->setTemplateVar('verificationlinktext',
-            '<a href="https://' . $this->getServerName() . '/settings/verification/v/'
-            . $data['email_verification_value'] . '">Click here to verify your email address</a>');
+            '<a href="https://' . $this->getServerName() . '/settings/verification/v/' . $data['email_verification_value']
+            . '">Click here to verify your email address</a>');
         $confirmMail->setTemplateVar('verificationlink',
-            '<a href="https://' . $this->getServerName() . '/settings/verification/v/'
-            . $data['email_verification_value'] . '">https://' . $this->getServerName() . '/settings/verification/v/'
-            . $data['email_verification_value'] . '</a>');
+            '<a href="https://' . $this->getServerName() . '/settings/verification/v/' . $data['email_verification_value']
+            . '">https://' . $this->getServerName() . '/settings/verification/v/' . $data['email_verification_value'] . '</a>');
         $confirmMail->setTemplateVar('verificationurl',
             'https://' . $this->getServerName() . '/settings/verification/v/' . $data['email_verification_value']);
         $confirmMail->setReceiverMail($data['email_address']);
@@ -1382,6 +1331,15 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
 
         $modelEmail = new Default_Model_MemberEmail();
         $result = $modelEmail->setDefaultEmail($emailId, $this->_authMember->member_id);
+
+        if (true === $result) {
+            try {
+                $id_server = new Default_Model_IdServer();
+                $id_server->updateMailForUser($this->_authMember->member_id);
+            } catch (Exception $e) {
+                Zend_Registry::get('logger')->err($e->getTraceAsString());
+            }
+        }
     }
 
     public function resendverificationAction()
@@ -1408,10 +1366,10 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
 
         // Filter-Parameter
         $filterInput = new Zend_Filter_Input(array('*' => 'StringTrim', 'v' => 'StripTags'), array(
-                'v' => array(
-                    'presence' => 'required'
-                )
-            ), $this->getAllParams());
+            'v' => array(
+                'presence' => 'required'
+            )
+        ), $this->getAllParams());
 
         if ($filterInput->hasInvalid()) {
             $this->_helper->flashMessenger->addMessage('<p class="text-error">There was an error verifying your email. </p>');

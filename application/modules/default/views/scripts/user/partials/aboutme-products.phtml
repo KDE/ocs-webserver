@@ -2,6 +2,7 @@
     $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
     $helperImage = new Default_View_Helper_Image();
     $helperPrintDate = new Default_View_Helper_PrintDate();
+    if($this->userProducts == null || count($this->userProducts)==0) return;
     foreach ($this->userProducts as $product): ?>
         <div class="product mini-card col-lg-2 col-md-2 col-sm-3 col-xs-2">
             <div class="u-wrap">
@@ -19,6 +20,16 @@
                         </span>
                     </div>
                 </a>
+                
+                <?php
+                if($product['countplings'] >0)
+                {
+                ?>
+                <div class="countplings"> <span class="num"><?=$product['countplings']?></span> <img src="/images/system/pling-btn-active.png"/> </div>
+                <?php 
+                }
+                ?>
+                
                 <?php
                 $this->widgetRating = new stdClass();
                 $this->widgetRating->project_id = $product['project_id'];
@@ -37,3 +48,21 @@
             echo '<button id="btnshowmoreproducts" data-page='.($this->projectpage+1).'>Show More</button>';
         }
         ?>
+
+
+<style type="text/css">
+        .countplings 
+        {
+            position: absolute;
+            bottom: 10px;
+            left: 8px;
+            font-size: 11px;
+
+        }
+        .countplings img
+        {
+            width: 20px;
+            height: 20px;
+        }
+
+</style>

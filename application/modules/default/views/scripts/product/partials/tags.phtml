@@ -20,10 +20,9 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-$tableProject = new Default_Model_Tags();
-$tags = $tableProject->getTags($this->product->project_id, Default_Model_Tags::TAG_TYPE_PROJECT);
-$tagsuser = $tableProject->getTagsUser($this->product->project_id, Default_Model_Tags::TAG_TYPE_PROJECT);
-if (false === empty($tags) || false === empty($tagsuser)) {
+$model = new Default_Model_Tags();
+$tags = $model->getTagsSystem($this->product->project_id, Default_Model_Tags::TAG_TYPE_PROJECT); 
+if (false === empty($tags)) {
 ?>
 <style>
     .tag-element {
@@ -46,7 +45,7 @@ if (false === empty($tags) || false === empty($tagsuser)) {
 </style>
 <div class="prod-widget-box right details">
 
-    <span class="title"> View More </span>
+    <span class="title"> System Tags </span>
 
     <span class="row">
         <?php if(false === empty($tags))
@@ -55,13 +54,6 @@ if (false === empty($tags) || false === empty($tagsuser)) {
             <a href="/search?projectSearchText=<?=$tag?>&f=tags" class="tag-element"><span class="glyphicon glyphicon-tag" aria-hidden="true"></span> <?=$tag?></a>
         <?php }}?>
 
-
-        <?php 
-            if(false === empty($tagsuser))
-            {
-             foreach (explode(',',$tagsuser) as $tag) { ?>
-            <a href="/search?projectSearchText=<?=$tag?>&f=tags" class="tag-element"><span class="glyphicon glyphicon-tag" aria-hidden="true"></span> <?=$tag?></a>
-        <?php }}?>
     </span>
     </div>
 

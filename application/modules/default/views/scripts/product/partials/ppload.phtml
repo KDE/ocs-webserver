@@ -19,6 +19,7 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
+$architectureListHelper = new Default_View_Helper_FetchArchitectureTags();
 ?>
 
   <!-- ppload -->
@@ -43,8 +44,10 @@
                                     <h3 id="modal-installation-instructions-label"><?= $this->translate('Installation Instructions') ?></h3>
                                 </div>
                                 <div class="modal-body">
-
+<?php /*
                                 <iframe src="https://opendesktop.github.io/ocs-url/opendesktoporg-help.html" width="100%" height="500" frameborder="0" seamless id="iframeInstallInstruction"></iframe>
+              */
+                                ?>
                                 </div>
                             </div>
                         </div>
@@ -67,9 +70,10 @@
                                  <th><?= $this->translate('File (click to download)'); ?></th>
                                  <th><?= $this->translate('Version'); ?></th>
                                  <th><?= $this->translate('Description'); ?></th>
-                                 <th><?= $this->translate('Filetype'); ?></th>
+                            
                                  <th><?= $this->translate('Packagetype'); ?></th>
-                                 <th><?= $this->translate('License'); ?></th>
+                                 <th><?= $this->translate('Architecture'); ?></th>
+                             
                                  <th style="text-align: right"><?= $this->translate('Downloads'); ?></th>
                                  <th><?= $this->translate('Date'); ?></th>
 
@@ -210,7 +214,7 @@
                                     count_downloads = this.downloaded_count || 0;
                                     downloaded_count_total = downloaded_count_total+parseInt(count_downloads);
 
-                                    //downloadlink is now: domain/api/files/download/id/ID/s/TOKEN/t/TIMESTAMP/FILE_NAME/u/USERID
+                                    //downloadlink is now: domain/api/files/downloadfile/id/ID/s/TOKEN/t/TIMESTAMP/u/USERID/FILE_NAME
                                     var hash = '<?= $this->download_hash ?>';
                                     var timetamp = '<?= $this->download_timestamp ?>';
                                     var userid = '<?= $this->product->member_id?>';
@@ -226,19 +230,17 @@
                                     var downloadBtnLink = downloadUrl;
                                     var downloadLinkFilename = shortFilename(this.name);
 
-                                    if(this.active == '0') {
-                                        downloadLink = this.name;
-                                    }
                                     var link = '';
 
                                     var fileDescription = '';
                                     if (this.description) {
                                         fileDescription = this.description;
                                     }
-                                     var licenseId = '';
-                                     var license = '';
-                                     var packagetypeId = '';
-                                     if (this.tags) {
+                                    var licenseId = '';
+                                    var license = '';
+                                    var packagetypeId = '';
+                                    var architectureId = '';
+                                    if (this.tags) {
                                          fileTags = this.tags;
 
                                          $.each(fileTags.split(','), function () {
@@ -251,6 +253,8 @@
                                                   licenseId = tagStr[1];
                                               } else if (tagStr.length == 2 && tagStr[0] == 'packagetypeid') {
                                                   packagetypeId = tagStr[1];
+                                              } else if (tagStr.length == 2 && tagStr[0] == 'architectureid') {
+                                                  architectureId = tagStr[1];
                                               }
                                              } else {
                                               var tagStr = this.split('##');
@@ -261,6 +265,8 @@
                                                   license = Base64.decode(license);
                                               } else if (tagStr.length == 2 && tagStr[0] == 'packagetypeid') {
                                                   packagetypeId = tagStr[1];
+                                              } else if (tagStr.length == 2 && tagStr[0] == 'architectureid') {
+                                                  architectureId = tagStr[1];
                                               }
                                              }
                                              /*else if (tagStr.length == 2 && tagStr[0] == 'package') {
@@ -330,8 +336,7 @@
                                             '<tr data-ppload-file-id="' + this.id + '"' + greyText + '>'
                                             + '<td>' + downloadLink + '</td>'
                                             + '<td>' + version + '</td>'
-                                            + '<td>' + fileDescription + '</td>'
-                                            + '<td>' + this.type + '</td>'
+                                            + '<td>' + fileDescription + '</td>'                                            
                                             + '<td>'
                                             + '<select id="data-select-packagetype' + this.id + '" data-packagetype-id="" name="packagetype" class="form-control input-sm" style="width: 200px;">'
                                             + '<option value=\"\"></option>'
@@ -350,9 +355,19 @@
                                             + '</select><span id="file-tag-packagetype'+this.id+'">'
                                             + '</td>'
                                             + '<td>'
-                                            + '<select id="data-select-license' + this.id + '" data-license-id="" name="license">'
-                                            + '<option value=\"1000\"></option><option value=\"16\">AGPL</option><option value=\"3\">Artistic 2.0</option><option value=\"6\">BSD</option><option value=\"17\">CC0 1.0 Universal (Public Domain)</option><option value=\"9\">CPL 1.0</option><option value=\"10\">Creative Commons by</option><option value=\"13\">Creative Commons by-nc</option><option value=\"15\">Creative Commons by-nc-nd</option><option value=\"14\">Creative Commons by-nc-sa</option><option value=\"12\">Creative Commons by-nd</option><option value=\"11\">Creative Commons by-sa</option><option value=\"8\">GFDL</option><option value=\"1\">GPLv2 or later</option><option value=\"18\">GPLv2 only</option><option value=\"19\">GPLv3</option><option value=\"2\">LGPL</option><option value=\"0\">Other</option><option value=\"7\">Proprietary License</option><option value=\"5\">QPL</option><option value=\"4\">X11</option>'
-                                            + '</select><span id="file-tag-license'+this.id+'"><span id="file-tag-license-text'+this.id+'">'
+                                            + '<select class="form-control input-sm" id="data-select-architecture' + this.id + '" data-architecture-id="" name="architecture">'
+                                            + '    <option value=""></option>'
+                                                <?php
+                                                // force $value to array so we can compare multiple values to multiple
+                                                // options; also ensure it's a string for comparison purposes.
+                                                $tagList = $architectureListHelper->fetchList();
+                                                foreach ($tagList as $opt_value => $opt_label) {
+                                                ?>
+                                                  + '<option value="<?= $opt_value ?>"><?= $opt_label ?></option>'
+                                                <?php
+                                                }
+                                                ?>
+                                            + '</select><span id="file-tag-architecture'+this.id+'">'
                                             + '</td>'
                                             + '<td style="text-align: right"><span id="download_counter_' + this.id + '">' + count_downloads + '</td>'
                                             + '<td>' +mnt.format('YYYY-MM-DD') + '</td>'
@@ -365,10 +380,10 @@
                                             + '</tr>'
                                         );
 
-
+                                        <?php /*  download/install dropdown btn  */
+                                        ?>
                                         var username = '<?= $this->product->username?>';
-                                        $('#dropdown_downloads').append(
-                                            //'<li style="padding-bottom: 4px;padding-top: 4px;">&nbsp;<span>' + downloadBtnLink + '</span><span class="right">&nbsp;' + humanFileSize(this.size,false) + '&nbsp;</span></li>'
+                                        $('#dropdown_downloads').append(                                       
                                             '<li><a data-username="' + username + '" href="' + downloadBtnLink + '" style="white-space: normal; color: #23527c;" class="opendownloadfile" id="data-link-dl' + this.id + '"><span id="download-link-filename' + this.id + '" style="white-space: normal; color: #23527c;">' + downloadLinkFilename + '</span><span class="right">&nbsp;' + humanFileSize(this.size,false) + '&nbsp;</span></a></li>'
                                         );
                                         $('#dropdown_downloads').addClass("active");
@@ -392,6 +407,7 @@
 
                                             );
                                         }
+                                      
 
                                         if ((typeof osId != 'undefined') && (osId != "")) {
                                             $("#data-updatepploadfile" + this.id + " option[value='" + osId + "']").attr('selected', 'selected');
@@ -421,12 +437,27 @@
                                             $packagetypeIdText = $("#data-select-packagetype" + this.id + " option[value='" + packagetypeId + "']").text();
                                             $("#data-select-packagetype" + this.id).hide();
                                             $("#file-tag-packagetype" + this.id).text($packagetypeIdText);
+                                            if(packagetypeId==1){
+                                                $("#file-tag-packagetype" + this.id).append(' <i class="fa fa-question-circle appimagequestion" style="cursor: pointer;"></i>');
+                                            }
+
                                         } else {
                                          $("#data-select-packagetype" + this.id).hide();
                                         }
 
                                         $("#data-select-packagetype" + this.id).hide();
+                                        
+                                        if ((typeof architectureId != 'undefined') && (architectureId != "")) {
+                                            $("#data-select-architecture" + this.id + " option[value='" + architectureId + "']").attr('selected', 'selected');
+                                            $architectureIdText = $("#data-select-architecture" + this.id + " option[value='" + architectureId + "']").text();
+                                            $("#data-select-architecture" + this.id).hide();
+                                            $("#file-tag-architecture" + this.id).text($architectureIdText);
+                                        } else {
+                                         $("#data-select-architecture" + this.id).hide();
+                                        }
 
+                                        $("#data-select-architecture" + this.id).hide();
+                                        
                                         if ((typeof this.ocs_compatible != 'undefined') && (this.ocs_compatible != "") && this.ocs_compatible == 1) {
                                             $("#data-checkbox-compatible-" + this.id).attr('checked', 'checked');
                                         }
@@ -514,7 +545,12 @@
 
                                     downloaded_count_total = downloaded_count_total+parseInt(cout_downloads);
 
-                                    downloadLink = this.name;
+                                    var hash = '<?= $this->download_hash ?>';
+                                    var timetamp = '<?= $this->download_timestamp ?>';
+                                    var userid = '<?= $this->product->member_id?>';
+                                    var downloadUrl = "https://<?= $_SERVER["SERVER_NAME"]?>/p/<?= $this->product->project_id ?>/startdownload?file_id=" + this.id + "&file_name=" + this.name + "&file_type=" + this.type + "&file_size=" + this.size + "&url=" + encodeURIComponent(pploadApiUri + 'files/downloadfile/id/' + this.id + '/s/' + hash + '/t/' + timetamp + '/u/' + userid + '/' + this.name);
+                                    var downloadLink = '<a class="inactiverows" style="color: #ccc; display:none;"" href="' + downloadUrl + '" id="data-link' + this.id + '">' + this.name + '</a>';
+
 
                                      var fileDescription = '';
                                      if (this.description) {
@@ -535,6 +571,8 @@
                                                   licenseId = tagStr[1];
                                               } else if (tagStr.length == 2 && tagStr[0] == 'packagetypeid') {
                                                   packagetypeId = tagStr[1];
+                                              } else if (tagStr.length == 2 && tagStr[0] == 'architectureid') {
+                                                  architectureId = tagStr[1];
                                               }
                                              } else {
                                               var tagStr = this.split('##');
@@ -545,6 +583,8 @@
                                                   license = Base64.decode(license);
                                               } else if (tagStr.length == 2 && tagStr[0] == 'packagetypeid') {
                                                   packagetypeId = tagStr[1];
+                                              } else if (tagStr.length == 2 && tagStr[0] == 'architectureid') {
+                                                  architectureId = tagStr[1];
                                               }
                                              }
                                              /*else if (tagStr.length == 2 && tagStr[0] == 'package') {
@@ -573,31 +613,59 @@
                                          $pploadCollection.find('table[data-ppload-files] tbody').append(
                                             '<tr' + greyText + '>'
                                             + '<td>' + downloadLink + '</td>'
-                                                + '<td>' + version + '</td>'
+                                            + '<td>' + version + '</td>'
                                             + '<td>' + fileDescription + '</td>'
-                                            + '<td>' + this.type + '</td>'
-                                                + '<td>'
-                                                + '<select id="data-select-packagetype' + this.id + '" data-packagetype-id=" name="packagetype" class="form-control input-sm" style="width: 200px;">'
-                                                + '<option value=\"\"></option>'
-                                                + '<option value=\"2\">Android (APK)</option>'
-                                                + '<option value=\"1\">AppImage</option>'
-                                                + '<option value=\"9\">Arch</option>'
-                                                + '<option value=\"5\">Debian</option>'
-                                                + '<option value=\"8\">Electron-Webapp</option>'
-                                                + '<option value=\"7\">Flatpak</option>'
-                                                + '<option value=\"10\">open/Suse</option>'
-                                                + '<option value=\"3\">OS X compatible</option>'
-                                                + '<option value=\"11\">Redhat</option>'
-                                                + '<option value=\"6\">Snappy</option>'
-                                                + '<option value=\"12\">Source Code</option>'
-                                                + '<option value=\"4\">Windows executable</option>'
-                                                + '</select><span id="file-tag-packagetype'+this.id+'">'
-                                                + '</td>'
                                             + '<td>'
-                                            + '<select id="data-select-license' + this.id + '" data-license-id=" name="license">'
-                                            + '<option value=\"1000\"></option><option value=\"16\">AGPL</option><option value=\"3\">Artistic 2.0</option><option value=\"6\">BSD</option><option value=\"17\">CC0 1.0 Universal (Public Domain)</option><option value=\"9\">CPL 1.0</option><option value=\"10\">Creative Commons by</option><option value=\"13\">Creative Commons by-nc</option><option value=\"15\">Creative Commons by-nc-nd</option><option value=\"14\">Creative Commons by-nc-sa</option><option value=\"12\">Creative Commons by-nd</option><option value=\"11\">Creative Commons by-sa</option><option value=\"8\">GFDL</option><option value=\"1\">GPLv2 or later</option><option value=\"18\">GPLv2 only</option><option value=\"19\">GPLv3</option><option value=\"2\">LGPL</option><option value=\"0\">Other</option><option value=\"7\">Proprietary License</option><option value=\"5\">QPL</option><option value=\"4\">X11</option>'
-                                            + '</select><span id="file-tag-license'+this.id+'"><span id="file-tag-license-text'+this.id+'">'
+                                            + '<select id="data-select-packagetype' + this.id + '" data-packagetype-id=" name="packagetype" class="form-control input-sm" style="width: 200px;">'
+                                            + '<option value=\"\"></option>'
+                                            + '<option value=\"2\">Android (APK)</option>'
+                                            + '<option value=\"1\">AppImage</option>'
+                                            + '<option value=\"9\">Arch</option>'
+                                            + '<option value=\"5\">Debian</option>'
+                                            + '<option value=\"8\">Electron-Webapp</option>'
+                                            + '<option value=\"7\">Flatpak</option>'
+                                            + '<option value=\"10\">open/Suse</option>'
+                                            + '<option value=\"3\">OS X compatible</option>'
+                                            + '<option value=\"11\">Redhat</option>'
+                                            + '<option value=\"6\">Snappy</option>'
+                                            + '<option value=\"12\">Source Code</option>'
+                                            + '<option value=\"4\">Windows executable</option>'
+                                            + '</select><span id="file-tag-packagetype'+this.id+'">'
                                             + '</td>'
+                                            <?php /**
+                                            + '<td>'
+                                            + '<select class="form-control input-sm" id="data-select-architecture' + this.id + '" data-architecture-id="" name="architecture">'
+                                            + '    <option value=""></option>'
+                                                <?php
+                                                // force $value to array so we can compare multiple values to multiple
+                                                // options; also ensure it's a string for comparison purposes.
+                                                $tagList = $architectureListHelper->fetchList();
+                                                foreach ($tagList as $opt_value => $opt_label) {
+                                                ?>
+                                                  + '<option value="<?= $opt_value ?>"><?= $opt_label ?></option>'
+                                                <?php
+                                                }
+                                                ?>
+                                            + '</select><span id="file-tag-architecture'+this.id+'">'
+                                            + '</td>'
+                                            */?>
+
+                                            + '<td>'
+                                            + '<select class="form-control input-sm" id="data-select-architecture' + this.id + '" data-architecture-id="" name="architecture">'
+                                            + '    <option value=""></option>'
+                                                <?php
+                                                // force $value to array so we can compare multiple values to multiple
+                                                // options; also ensure it's a string for comparison purposes.
+                                                $tagList = $architectureListHelper->fetchList();
+                                                foreach ($tagList as $opt_value => $opt_label) {
+                                                ?>
+                                                  + '<option value="<?= $opt_value ?>"><?= $opt_label ?></option>'
+                                                <?php
+                                                }
+                                                ?>
+                                            + '</select><span id="file-tag-architecture'+this.id+'">'
+                                            + '</td>'
+
                                             + '<td style="text-align: right"><span id="download_counter_' + this.id + '">' + cout_downloads + '</td>'
                                             + '<td>' +mnt.format('YYYY-MM-DD')  + '</td>'
                                             + '<td style="text-align: right">' + humanFileSize(this.size,false) + '</td>'
@@ -629,18 +697,44 @@
                                              $("#file-tag-license-text" + this.id).text(license);
                                          }
 
-                                             if ((typeof packagetypeId != 'undefined') && (packagetypeId != "")) {
+                                         if ((typeof packagetypeId != 'undefined') && (packagetypeId != "")) {
                                              $("#data-select-packagetype" + this.id + " option[value='" + packagetypeId + "']").attr('selected', 'selected');
                                              $packagetypeIdText = $("#data-select-packagetype" + this.id + " option[value='" + packagetypeId + "']").text();
                                              $("#data-select-packagetype" + this.id).hide();
                                              $("#file-tag-packagetype" + this.id).text($packagetypeIdText);
+                                             if(packagetypeId==1){
+                                             $("#file-tag-packagetype" + this.id).append(' <i class="fa fa-question-circle appimagequestion" style="cursor: pointer;"></i>');
+                                             }
+
                                          } else {
                                           $("#data-select-packagetype" + this.id).hide();
                                          }
 
                                          $("#data-select-packagetype" + this.id).hide();
 
+                                          if ((typeof architectureId != 'undefined') && (architectureId != "")) {
+                                              $("#data-select-architecture" + this.id + " option[value='" + architectureId + "']").attr('selected', 'selected');
+                                              $architectureIdText = $("#data-select-architecture" + this.id + " option[value='" + architectureId + "']").text();
+                                              $("#data-select-architecture" + this.id).hide();
+                                              $("#file-tag-architecture" + this.id).text($architectureIdText);
+                                          } else {
+                                           $("#data-select-architecture" + this.id).hide();
+                                          }
 
+                                          $("#data-select-architecture" + this.id).hide();
+
+                                         /**
+                                         if ((typeof architectureId != 'undefined') && (architectureId != "")) {
+                                             $("#data-select-architecture" + this.id + " option[value='" + architectureId + "']").attr('selected', 'selected');
+                                             $architectureIdText = $("#data-select-architecture" + this.id + " option[value='" + architectureId + "']").text();
+                                             $("#data-select-architecture" + this.id).hide();
+                                             $("#file-tag-architecture" + this.id).text($architectureIdText);
+                                         } else {
+                                          $("#data-select-architecture" + this.id).hide();
+                                         }
+
+                                         $("#data-select-architecture" + this.id).hide();
+                                         */
 
                                          if (isExternLink) {
                                             //$("#data-link" + this.id).attr('href', decodeURIComponent(link));
@@ -668,7 +762,7 @@
 
                                  });
 
-
+ 
                                  //add old download counter
                                  downloaded_count_total += parseInt(<?= $this->product->count_downloads_hive?>);
 
@@ -683,7 +777,7 @@
 
                                  $pploadCollection.find('table[data-ppload-files] tfoot').append(
                                      '<tr>'
-                                     + '<th colspan="6">' + myArrayActive.length + ' <?= $this->translate("files")?> (<span style="color: #ccc;" ><a style="cursor:pointer" onclick="fnToggleInactiveFiles();return false;">'+myArrayInactive.length+' archived</a></span>)</th>'
+                                     + '<th colspan="5">' + myArrayActive.length + ' <?= $this->translate("files")?> (<span style="color: #ccc;" ><a style="cursor:pointer" onclick="fnToggleInactiveFiles();return false;">'+myArrayInactive.length+' archived</a></span>)</th>'
                                      + '<th style="text-align: right">' + downloaded_count_total + '</th>'
                                      + '<th></th>'
                                     + '<th style="text-align: right">' + fileSizeSum.toFixed(2) + ' MB</th>'
@@ -883,16 +977,10 @@
                  });
 
                 $(function() {
-                    $('#modal-installation-instructions').on('hidden.bs.modal', function (e) {
-                              var iframe = document.getElementById('iframeInstallInstruction');
-                              var leg=$(iframe).attr("src");
-                              $(iframe).attr("src","");
-                        });
 
                     $('#modal-installation-instructions').on('show.bs.modal', function (e) {
-                              var iframe = document.getElementById('iframeInstallInstruction');
-                              var leg=$(iframe).attr("src");
-                              $(iframe).attr("src","https://opendesktop.github.io/ocs-url/opendesktoporg-help.html");
+                              var framehtml = '<iframe src="https://opendesktop.github.io/ocs-url/opendesktoporg-help.html" width="100%" height="500" frameborder="0" seamless id="iframeInstallInstruction"></iframe>';
+                              $('#modal-installation-instructions').find('.modal-body').html(framehtml);                              
                         });
 
                 });

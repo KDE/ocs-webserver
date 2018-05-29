@@ -19,6 +19,8 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
+$modelInfo = new Default_Model_Info();
+$this->supporters = $modelInfo->getNewActiveSupporters(9);
 ?>
 
         <div class="downloadDiv" >
@@ -30,16 +32,16 @@
                 $identity = Zend_Auth::getInstance()->getIdentity();
                 if(null == $identity || (null != $identity && !$this->isSupporter($identity->member_id))) {                                                  
         ?>
-            <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Help to support the artists<br/>and keep the content free</a>
+            <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Become a Supporter</a>
         <?php   } else if((null != $identity && $this->isSupporter($identity->member_id))) { ?>
-            <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Support<br>Opendesktop.org</a>
+            <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Thank you for your support!</a>
         <?php   }?>
         </div>
 
         <div  class="supportDiv  withborder" >    
         <span><b><?=$this->countSupporters?></b> people support </span>        
         <span style="display: block">
-        those who support freedom
+        those who create freedom
          </span>
          <div class="row">
             <?php 
@@ -59,10 +61,10 @@
             <span class="newsTitle"> News </span>
             <div class="prod-widget-box right bgwhite " id="rss-feeds"> </div>                  
 
-            <?php /**
+        
             <span class="newsTitle"> Forum </span>
             <div class="prod-widget-box right bgwhite " id="blogJson"> </div>     
-            */ ?>
+           
             
             <?php  if (count($this->comments) > 0) {
                 ?>
@@ -80,6 +82,6 @@
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){                               
                 RssNews.setup();   
-                //BlogJson.setup();                    
+                BlogJson.setup();                    
             });
         ');

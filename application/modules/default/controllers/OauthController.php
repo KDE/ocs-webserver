@@ -54,6 +54,8 @@ class OAuthController extends Zend_Controller_Action
             Zend_Registry::get('logger')->warn(__METHOD__ . ' - ' . print_r($this->getAllParams(), true));
             $this->_helper->flashMessenger->addMessage(self::ERR_MSG_DEFAULT);
             $this->forward('index', 'explore', 'default');
+
+            return;
         }
 
         $data = array(
@@ -63,6 +65,7 @@ class OAuthController extends Zend_Controller_Action
         );
         $token_id = $this->createAToken($data);
 
+        /** @var Default_Model_OAuth_Ocs $authAdapter */
         $authAdapter = Default_Model_OAuth::factory($this->getParam(self::PARAM_NAME_PROVIDER));
         $requestUrl = $authAdapter->authStartWithToken($token_id);
 
@@ -79,6 +82,7 @@ class OAuthController extends Zend_Controller_Action
         $token_id = $modelToken->createToken($data);
         setcookie(Default_Model_SingleSignOnToken::ACTION_LOGIN, $token_id, time() + 120, '/',
             Local_Tools_ParseDomain::get_domain($this->getRequest()->getHttpHost()), null, true);
+
         return $token_id;
     }
 
@@ -102,6 +106,8 @@ class OAuthController extends Zend_Controller_Action
             Zend_Registry::get('logger')->info(__METHOD__ . ' - ip: ' . $this->_request->getClientIp() . ' - authentication failed.');
             $this->_helper->flashMessenger->addMessage(self::ERR_MSG_DEFAULT);
             $this->forward('index', 'explore', 'default');
+
+            return;
         }
 
         Zend_Registry::get('logger')->info(__METHOD__ . ' - authentication successful - member_id: ' . Zend_Auth::getInstance()->getIdentity()->member_id);
@@ -117,6 +123,8 @@ class OAuthController extends Zend_Controller_Action
 
         if (false === $redirect_url) {
             $this->forward('products', 'user');
+
+            return;
         }
         $this->redirect($redirect_url);
     }
@@ -134,15 +142,18 @@ class OAuthController extends Zend_Controller_Action
         if (false == $authAdapter->isConnected()) {
             $this->_helper->flashMessenger->addMessage(self::ERR_MSG_DEFAULT);
             $this->forward('index', 'explore', 'default');
+
+            return;
         }
 
         $authResult = $authAdapter->authenticate();
         Zend_Registry::get('logger')->info(__METHOD__ . ' - AuthResult: ' . print_r($authResult, true));
         Zend_Registry::get('logger')->info(__METHOD__ . ' - AuthResult: ' . print_r($authResult->isValid(), true));
         if (false == $authResult->isValid()) {
-            Zend_Registry::get('logger')->info(__METHOD__ . '('.__LINE__.')'.' - ip: ' . $this->_request->getClientIp() . ' - authentication failed.');
+            Zend_Registry::get('logger')->info(__METHOD__ . '(' . __LINE__ . ')' . ' - ip: ' . $this->_request->getClientIp() . ' - authentication failed.');
             $this->_helper->flashMessenger->addMessage(self::ERR_MSG_DEFAULT);
             $this->forward('index', 'explore', 'default');
+
             return;
         }
 
@@ -159,6 +170,8 @@ class OAuthController extends Zend_Controller_Action
 
         if (false === $redirect_url) {
             $this->forward('products', 'user');
+
+            return;
         }
         $this->redirect($redirect_url);
     }
@@ -178,6 +191,8 @@ class OAuthController extends Zend_Controller_Action
             Zend_Registry::get('logger')->warn(__METHOD__ . ' - ' . print_r($this->getAllParams(), true));
             $this->_helper->flashMessenger->addMessage(self::ERR_MSG_DEFAULT);
             $this->forward('index', 'explore', 'default');
+
+            return;
         }
 
         $authAdapter = Default_Model_OAuth::factory($filterInput->getEscaped(self::PARAM_NAME_PROVIDER));

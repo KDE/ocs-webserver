@@ -26,10 +26,6 @@ class Default_Model_OAuth_Ocs implements Default_Model_OAuth_Interface
 {
     const PREFIX_SEPARATOR = '_';
 
-    const URI_AUTH = 'https://id.opendesktop.org/oauth/authorize';
-    const URI_ACCESS = 'https://id.opendesktop.org/oauth/token';
-    const URI_USER = 'https://id.opendesktop.org/api/me';
-
     /** @var Zend_Db_Adapter_Abstract $_db */
     protected $_db;
     /** @var null|string $_tableName */
@@ -46,6 +42,12 @@ class Default_Model_OAuth_Ocs implements Default_Model_OAuth_Interface
     protected $connected;
     /** @var  string */
     protected $redirect;
+    private $client_secret;
+    private $client_id;
+    private $uri_callback;
+    private $uri_token;
+    private $uri_auth;
+    private $uri_profile;
 
     /**
      * Default_Model_Oauth_Ocs constructor.
@@ -73,6 +75,15 @@ class Default_Model_OAuth_Ocs implements Default_Model_OAuth_Interface
             throw new Zend_Exception('No config present');
         }
 
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - config: ' . print_r($this->config->toArray(), true));
+
+        $this->uri_auth = $this->config->authorize_url;
+        $this->uri_token = $this->config->token_url;
+        $this->uri_callback = $this->config->callback;
+        $this->client_id = $this->config->client_id;
+        $this->client_secret = $this->config->client_secret;
+        $this->uri_profile = $this->config->profile_user_url;
+
         $this->session = new Zend_Session_Namespace('OCS_AUTH');
     }
 
@@ -86,7 +97,7 @@ class Default_Model_OAuth_Ocs implements Default_Model_OAuth_Interface
         $state_token = $this->generateToken('auth');
         $this->saveStateData($state_token, $redirectUrlAfterSuccess);
 
-        $requestUrl = self::URI_AUTH . "?client_id={$this->config->client_id}&redirect_uri=" . urlencode($this->config->client_callback) . "&scope=profile&state={$state_token}";
+        $requestUrl = $this->uri_auth . "?client_id={$this->client_id}&redirect_uri=" . urlencode($this->uri_callback) . "&scope=profile&state={$state_token}";
 
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - redirectUrl: ' . print_r($requestUrl, true));
 
@@ -205,14 +216,14 @@ class Default_Model_OAuth_Ocs implements Default_Model_OAuth_Interface
      */
     protected function requestHttpAccessToken($request_code, $state_token)
     {
-        $httpClient = new Zend_Http_Client(self::URI_ACCESS);
+        $httpClient = new Zend_Http_Client($this->uri_token);
         $httpClient->setMethod(Zend_Http_Client::POST);
         $httpClient->setHeaders('Accept', 'application/json');
         $httpClient->setParameterPost(array(
-            'client_id' => $this->config->client_id,
-            'client_secret' => $this->config->client_secret,
+            'client_id' => $this->client_id,
+            'client_secret' => $this->client_secret,
             'code' => $request_code,
-            'redirect_uri' => $this->config->client_callback,
+            'redirect_uri' => $this->uri_callback,
             'state' => $state_token,
             'grant_type' => 'authorization_code'
         ));
@@ -288,7 +299,7 @@ class Default_Model_OAuth_Ocs implements Default_Model_OAuth_Interface
      */
     public function getUserEmail()
     {
-        $httpClient = new Zend_Http_Client(self::URI_USER);
+        $httpClient = new Zend_Http_Client($this->uri_profile);
         $httpClient->setHeaders('Authorization', 'Bearer ' . $this->access_token);
         $httpClient->setHeaders('Accept', 'application/json');
         $response = $httpClient->request();
@@ -466,7 +477,7 @@ class Default_Model_OAuth_Ocs implements Default_Model_OAuth_Interface
      */
     public function authStartWithToken($token_id)
     {
-        $requestUrl = self::URI_AUTH . "?client_id={$this->config->client_id}&redirect_uri=" . urlencode($this->config->client_callback) . "&scope=profile&state={$token_id}&response_type=code";
+        $requestUrl = $this->uri_auth . "?client_id={$this->client_id}&redirect_uri=" . urlencode($this->uri_callback) . "&scope=profile&state={$token_id}&response_type=code";
 
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - redirectUrl: ' . print_r($requestUrl, true));
 

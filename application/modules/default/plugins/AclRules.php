@@ -28,6 +28,7 @@ class Default_Plugin_AclRules extends Zend_Acl
     const ROLENAME_MODERATOR = 'moderator';
     const ROLENAME_STAFF = 'staff';
     const ROLENAME_ADMIN = 'admin';
+    const ROLENAME_SYSUSER = 'sysuser';
 
     function __construct()
     {
@@ -37,6 +38,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addRole(new Zend_Acl_Role (self::ROLENAME_MODERATOR), self::ROLENAME_FEUSER);
         $this->addRole(new Zend_Acl_Role (self::ROLENAME_STAFF), self::ROLENAME_FEUSER);
         $this->addRole(new Zend_Acl_Role (self::ROLENAME_ADMIN));
+        $this->addRole(new Zend_Acl_Role (self::ROLENAME_SYSUSER));
 
         $this->addResource(new Zend_Acl_Resource ('default_logout'));
         $this->addResource(new Zend_Acl_Resource ('default_oauth'));
@@ -63,12 +65,16 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addResource(new Zend_Acl_Resource ('default_rss'));
         $this->addResource(new Zend_Acl_Resource ('default_settings'));
         $this->addResource(new Zend_Acl_Resource ('default_supporterbox'));
+        $this->addResource(new Zend_Acl_Resource ('default_plingbox'));
         $this->addResource(new Zend_Acl_Resource ('default_user'));
         $this->addResource(new Zend_Acl_Resource ('default_widget'));
         $this->addResource(new Zend_Acl_Resource ('default_file'));
         $this->addResource(new Zend_Acl_Resource ('default_plings'));
         $this->addResource(new Zend_Acl_Resource ('default_spam'));
+        $this->addResource(new Zend_Acl_Resource ('default_misuse'));
+        $this->addResource(new Zend_Acl_Resource ('default_credits'));
         $this->addResource(new Zend_Acl_Resource ('default_ads'));
+        $this->addResource(new Zend_Acl_Resource ('default_password'));
 
         $this->addResource(new Zend_Acl_Resource ('default_stati'));
         $this->addResource(new Zend_Acl_Resource ('default_tag'));
@@ -126,15 +132,43 @@ class Default_Plugin_AclRules extends Zend_Acl
             'default_home',
             'default_ocsv1', // OCS API
             'default_embedv1', // embed API
+            'default_productcategory',            
+            'default_rss',
+            'default_supporterbox',
+            'default_plingbox',
+            'default_oauth',
+            'default_plings',
+            'default_ads',
+            'default_stati',
+            'default_password'
+        ));
+
+         $this->allow(self::ROLENAME_SYSUSER, array(
+            'default_authorization',
+            'default_button',
+            'default_categories',
+            'default_content',
+            'default_community',
+            'default_donationlist',
+            'default_error',
+            'default_explore',
+            'default_gateway',
+            'default_hive',
+            'default_home',
+            'default_ocsv1', // OCS API
+            'default_embedv1', // embed API
             'default_productcategory',
             'default_report',
             'default_rss',
             'default_supporterbox',
+            'default_plingbox',
             'default_oauth',
             'default_plings',
             'default_ads',
-            'default_stati'
+            'default_stati',
+            'default_password'
         ));
+
 
         $this->allow(self::ROLENAME_COOKIEUSER, array(
                 'default_logout',
@@ -167,16 +201,23 @@ class Default_Plugin_AclRules extends Zend_Acl
 
         // resource default_product
         $this->allow(self::ROLENAME_GUEST, 'default_product',
-            array('index', 'show', 'getupdatesajax', 'updates', 'follows', 'fetch', 'search', 'startdownload'));
+            array('index', 'show', 'getupdatesajax', 'updates', 'follows', 'fetch', 'search', 'startdownload','ppload'));
+
+
+
+        // resource default_product
+        $this->allow(self::ROLENAME_SYSUSER, 'default_product',
+            array('index', 'show', 'getupdatesajax', 'updates', 'follows', 'fetch', 'search', 'startdownload','ppload'));
 
         $this->allow(self::ROLENAME_COOKIEUSER, 'default_product',
             array(
                 'add',
                 'rating',
                 'follow',
-                'unfollow',
-                'followp',
-                'unfollowp',
+                'unfollow',            
+                'plingproject',
+                'followproject',
+                'unplingproject',
                 'add',
                 'pling',
                 'pay',
@@ -210,13 +251,17 @@ class Default_Plugin_AclRules extends Zend_Acl
             'deletepploadfile',
             'deletepploadfiles',
             'updatepackagetype',
-
+            'updatearchitecture',
+            
         ), new Default_Plugin_Acl_IsProjectOwnerAssertion());
 
         // resource default_support
         $this->allow(self::ROLENAME_COOKIEUSER, 'default_support',
             array('index','pay', 'paymentok', 'paymentcancel'));
 
+        // resource default_support
+        $this->allow(self::ROLENAME_COOKIEUSER, 'default_report',
+            array('comment','product', 'productfraud', 'productclone'));
 
 
         // resource default_widget

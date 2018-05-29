@@ -22,10 +22,9 @@
 
 $modelInfo = new Default_Model_Info();
 $this->comments = $modelInfo->getLatestComments(10);
-$this->users = $modelInfo->getNewActiveMembers(18);
-$this->supporters = $modelInfo->getNewActiveSupporters(18);
-
-
+//$this->users = $modelInfo->getNewActiveMembers(18);
+//$this->supporters = $modelInfo->getNewActiveSupporters(9);
+//$this->plingproducts = $modelInfo->getNewActivePlingProduct(9);
 $this->productsThemesGTK = $modelInfo->getLastProductsForHostStores(5,"366,363,273,267,138,125,131,153,154,414,133");
 $this->productsThemesPlasma = $modelInfo->getLastProductsForHostStores(5,"365,119,123,266,114,118,349,417,101,100,111,422,423,446,417");
 $this->productsWindowmanager = $modelInfo->getLastProductsForHostStores(5,"117,267,139,143,142,140,141,144");
@@ -33,22 +32,40 @@ $this->productsIconsCursors= $modelInfo->getLastProductsForHostStores(5,"386,107
 $this->productsScreenshots= $modelInfo->getLastProductsForHostStores(5,"225,445");
 $this->productsApps = $modelInfo->getLastProductsForHostStores(5,233);
 $this->productsAddons = $modelInfo->getLastProductsForHostStores(5,"152");
-$this->productsWallpapers = $modelInfo->getLastProductsForHostStores(5,295);
-
+$this->productsWallpapers = $modelInfo->getLastProductsForHostStores(5,"295,158");
 $this->countSupporters = $modelInfo->getCountActiveSupporters();
-//$countMembers = $modelInfo->getCountMembers();
+
+$featuredProducts = $modelInfo->getFeaturedProductsForHostStores(100);
+if ($featuredProducts->getTotalItemCount()) {  
+    $request = Zend_Controller_Front::getInstance()->getRequest();
+    $offset = (int)$request->getParam('page');
+    $irandom = rand(1,$featuredProducts->getTotalItemCount());    
+    $featuredProducts->setItemCountPerPage(1);
+    $featuredProducts->setCurrentPageNumber($irandom);
+    $this->featureProducts = $featuredProducts;
+}
 
 $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $helperImage = new Default_View_Helper_Image();
 $helpPrintDate = new Default_View_Helper_PrintDate();
 ?>
-<main id="explore-content" class="startpage-store" >
+<main id="explore-content" class="startpage-store " >
 <div class="GridFlex">
 <div class="GridFlex-cell sidebar-left">  
         <?php  echo $this->render('explore/partials/filter.phtml'); ?> 
 </div>
 <div class="GridFlex-cell content">   
         <div class="contentcontainer">
+
+                        <div class="row"  id="featureProductsContainer">
+                            
+                            <?php
+                            if ($this->featureProducts) {        
+                                          echo $this->render('home/partials/featured-products.phtml');
+                            } 
+                            ?>                        
+                        </div>
+
                         <div class="row">   
                         <?php                                 
                                     echo $this->partial('/home/partials/product_group.phtml', array(
@@ -95,9 +112,9 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                                     );                                                                     
 
                                     echo $this->partial('/home/partials/product_group.phtml', array(
-                                            "title"  => "Wallpapers",
+                                            "title"  => "Artwork, Wallpapers",
                                             "products" => $this->productsWallpapers,
-                                            "catIDs" =>"295"   
+                                            "catIDs" =>"158,295"   
 
                                         )
                                     );                                        
@@ -122,11 +139,25 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                          ?>                                         
                         </div>
 
+                        <?php /*
+
+                        <div class="row blockpadding supportersrow">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <?php                                 
+                                        echo $this->partial('/home/partials/plingprojects.phtml', array(
+                                                "title"  => "Recently plinged Products",
+                                                "projects" => $this->plingproducts
+                                            )
+                                        );                   
+                            ?>                                                              
+                            </div>
+                        </div>
+
                         <div class="row blockpadding supportersrow">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <?php                                 
                                         echo $this->partial('/home/partials/users.phtml', array(
-                                                "title"  => "Latest  Active Supporters",
+                                                "title"  => "Latest Supporters",
                                                 "users" => $this->supporters
                                             )
                                         );                   
@@ -144,7 +175,10 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                                         );                   
                             ?>                                               
                             </div>
-                        </div>                        
+                        </div>   
+
+                        */
+                        ?>                     
              </div>
 </div>
 <div class="GridFlex-cell sidebar-right">   
@@ -180,9 +214,29 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
 </div>
 </main>
 
+<script type="application/javascript">
+    $(document).ready(function () {
+        $('body').on('click', '.ajaxPartialFeatureProduct', function (event) {
+            event.preventDefault();            
+            $(this).off();                  
+            var target = '#featureProductsContainer';  
+            if($(this).hasClass( "disabled" )) return false;
+            var url = $(this).attr("href");                        
+            $(target).load(url, function (response, status, xhr) {
+                if (status == "error") {
+                    $(target).empty().html('Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.');
+                }                
+            });
+            
+            return false;
+        });
+    });
+</script>
+
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){                                             
                 TooltipUser.setup("tooltipuser","right");
                 TooltipUser.setup("tooltipuserleft","left");             
+                TooltipUserPlings.setup("tooltipuserplings","right");
             });
         ');

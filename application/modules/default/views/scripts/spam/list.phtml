@@ -136,6 +136,9 @@
                             <a href="/backend/reportproducts/nospam?p=<?= $this->product['project_id'] ?>"
                                class="delete-this" data-title="Reset reports and set product spam checked?">delete
                                 reports (<?= $this->product['amount_reports'] ?>)</a>
+                            <hr/>
+                            <a href="/backend/reportproducts/validatemisuse?p=<?= $this->product['project_id'] ?>"
+                               class="delete-this" data-title="Validate this project as misuse!">validate misuse</a>
                         </div>
                         <?php
                         $this->rownum++;

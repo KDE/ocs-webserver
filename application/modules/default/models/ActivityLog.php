@@ -50,11 +50,14 @@ class Default_Model_ActivityLog extends Default_Model_DbTable_ActivityLog
     const PROJECT_FOLLOWED = 50;
     const PROJECT_UNFOLLOWED = 51;
     const PROJECT_SHARED = 52;
+    const PROJECT_PLINGED_2 = 53;
+    const PROJECT_DISPLINGED_2 = 54;
     const PROJECT_RATED_HIGHER = 60;
     const PROJECT_RATED_LOWER = 61;
     const PROJECT_FILES_CREATED = 200;
     const PROJECT_FILES_UPDATED = 210;
     const PROJECT_FILES_DELETED = 220;
+    const PROJECT_LICENSE_CHANGED = 70;
     const MEMBER_JOINED = 100;
     const MEMBER_UPDATED = 101;
     const MEMBER_DELETED = 102;
@@ -70,6 +73,7 @@ class Default_Model_ActivityLog extends Default_Model_DbTable_ActivityLog
     const BACKEND_PROJECT_GHNS_EXCLUDED = 314;
     const BACKEND_PROJECT_CAT_CHANGE = 316;
     const BACKEND_PROJECT_PLING_EXCLUDED = 318;
+    const BACKEND_USER_PLING_EXCLUDED = 319;
     const BACKEND_USER_DELETE = 320;
 
     //internal system logs
@@ -105,8 +109,11 @@ class Default_Model_ActivityLog extends Default_Model_DbTable_ActivityLog
         50  => 'project',
         51  => 'project',
         52  => 'project',
+        53  => 'project',
+        54  => 'project',
         60  => 'project',
         61  => 'project',
+        70  => 'project',
         100 => 'member',
         101 => 'member',
         102 => 'member',
@@ -127,6 +134,7 @@ class Default_Model_ActivityLog extends Default_Model_DbTable_ActivityLog
         314 => 'backend',
         316 => 'backend',
         318 => 'backend',
+        319 => 'backend',
         320 => 'backend',
         401 => 'member',
         402 => 'member_email',

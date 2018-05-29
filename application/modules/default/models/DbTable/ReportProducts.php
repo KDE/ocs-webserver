@@ -31,10 +31,12 @@ class Default_Model_DbTable_ReportProducts extends Local_Model_Table
 
     protected $_defaultValues = array(
         'report_id'   => null,
+        'report_type'   => null,
         'project_id'  => null,
         'reported_by' => null,
+        'text'  => null,
         'is_deleted'  => null,
-        'is_active'   => null,
+        'is_valid'   => null,
         'created_at'  => null
     );
 
@@ -55,5 +57,27 @@ class Default_Model_DbTable_ReportProducts extends Local_Model_Table
 
         $this->update($updateValues, 'reported_by=' . $member_id);
     }
+
+    public function countMisuseForProject($project_id)
+    {
+        $q = $this->select()
+                        ->where('project_id = ?', $project_id)
+                        ->where('report_type = ?', 1)
+                         ->where('is_deleted = ?', 0)
+                        ;
+        return count($q->query()->fetchAll());
+    }
+
+    public function countSpamForProject($project_id)
+    {
+        $q = $this->select()
+                        ->where('project_id = ?', $project_id)
+                        ->where('report_type = ?', 0)
+                         ->where('is_deleted = ?', 0)
+                        ;
+        return count($q->query()->fetchAll());
+    }
+
+    
 
 }

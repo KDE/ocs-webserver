@@ -79,10 +79,12 @@ class Backend_MemberpayoutController extends Local_Controller_Action_Backend
             }
 
             $record = $this->_model->save($values);
+            $resultArray = $record->toArray();
+            $resultArray['color'] = '#ffffff';
 
             $jTableResult = array();
             $jTableResult['Result'] = self::RESULT_OK;
-            $jTableResult['Record'] = $record->toArray();
+            $jTableResult['Record'] = $resultArray;
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . print_r($e, true));
             $translate = Zend_Registry::get('Zend_Translate');
@@ -122,8 +124,20 @@ class Backend_MemberpayoutController extends Local_Controller_Action_Backend
         $filter['member_id'] = $this->getParam('filter_member_id');
         $filter['paypal_mail'] = $this->getParam('filter_paypal_mail');
         $filter['mail'] = $this->getParam('filter_mail');
+        
+        
+        $sql = " 
+                select member_payout.*, payout_status.color
+                from member_payout
+                join payout_status on payout_status.id = member_payout.`status`
+
+                ";
+        
 
         $select = $this->_model->select()->order($sorting)->limit($pageSize, $startIndex);
+        
+        $where = " WHERE 1=1 ";
+        
         /*
         $select->join('payout_status',
         		'member_payout.status = payout_status.id',
@@ -153,27 +167,36 @@ class Backend_MemberpayoutController extends Local_Controller_Action_Backend
                 $list = substr($list, 1);
 
                 $select->where("{$key} in ({$list})");
+                
+                $where .= " AND {$key} in ({$list})";
 
                 continue;
             }
             if (false === empty($value)) {
                 $data_type = $metadata[$key]['DATA_TYPE'];
                 if (($data_type == 'varchar') OR ($data_type == 'text')) {
-                    $select->where("{$key} like ?", '%' . $value . '%');
+                    $likeText = "'%".$value."%'";
+                    $select->where("{$key} like ?", $likeText);
+                    $where .= " AND {$key} like ".$likeText;
                 } else {
                     $select->where("{$key} = ?", $value);
+                    $where .= " AND {$key} = " . $value;
                 }
             }
         }
+        $sql .= $where;
+        $sql .= " ORDER BY ". $sorting;
+        $sql .= " LIMIT ".$startIndex.",".$pageSize;
 
         $reports = $this->_model->fetchAll($select);
+        $reportsReturn = $this->_model->getAdapter()->fetchAll($sql);
 
         $reportsAll = $this->_model->fetchAll($select->limit(null, null)->reset('columns')
                                                      ->columns(array('countAll' => new Zend_Db_Expr('count(*)'))));
 
         $jTableResult = array();
         $jTableResult['Result'] = self::RESULT_OK;
-        $jTableResult['Records'] = $reports->toArray();
+        $jTableResult['Records'] = $reportsReturn;
         $jTableResult['TotalRecordCount'] = $reportsAll->current()->countAll;
 
         $this->_helper->json($jTableResult);

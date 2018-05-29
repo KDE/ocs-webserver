@@ -86,11 +86,25 @@
                                             defaultValue: jTableData.record.group_id
                                         },
                                         tag_id: {
-                                            type: 'hidden',
+                                             title: 'Tag ID',
+                                             key: true,
+                                            create: false,
+                                            edit: false,
                                         },
                                         tag_name: {
                                             title: 'Tag Name',
                                             width: '30%'
+                                        }
+                                        ,
+                                        tag_fullname: {
+                                            title: 'Tag Fullname',
+                                            width: '30%'
+                                        }
+                                        ,
+                                        tag_description: {
+                                            title: 'Tag Description',
+                                            width: '30%',
+                                            type: 'textarea'
                                         }
                                     }
                                 }, function (data) { //opened handler

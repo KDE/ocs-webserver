@@ -237,6 +237,7 @@ var ImagePreview = {
         $('#profile-picture-background-preview').attr('src', $('#profile_image_url_bg').attr('value'));
         $(imageTarget).show();
         $('button#add-profile-picture-background').text('CHANGE PICTURE');
+        
     }
 };
 
@@ -718,7 +719,7 @@ var PartialsButton = (function () {
 var PartialsButtonHeartDetail = (function () {
     return {
         setup: function () {
-            $('body').on('click', '.partialbuttonheartdetail', function (event) {
+            $('body').on('click', '.partialbuttonfollowproject', function (event) {
                 event.preventDefault();
                 var url = $(this).attr("data-href");
                 var target = $(this).attr("data-target");
@@ -742,30 +743,117 @@ var PartialsButtonHeartDetail = (function () {
                     return;
                 }
 
-                var spin = $('<span class="glyphicon glyphicon-refresh spinning" style="opacity: 0.6; z-index:1000;position: relative; left: 0;top: 0px;"></span>');
-                $(target).prepend(spin);
+              var spin = $('<span class="glyphicon glyphicon-refresh spinning" style="opacity: 0.6; z-index:1000;position: absolute; left:24px;top: 4px;"></span>');
+                 $(target).prepend(spin);              
 
-                $(target).load(url + ' ' + pageFragment, function (response, status, xhr) {
-                    if (status == "error") {
-                        if (xhr.status == 401) {
-                            if (response) {
-                                var data = jQuery.parseJSON(response);
-                                var redirect = data.login_url;
-                                if (redirect) {
-                                    window.location = redirect;
-                                } else {
-                                    window.location = "/login";
-                                }
-                            }
-                        } else {
-                            $(target).empty().html('Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.');
+                $.ajax({
+                          url: url,
+                          cache: false
+                        })
+                      .done(function( response ) {                        
+                        $(target).find('.spinning').remove();
+                        if(response.status =='error'){
+                             $(target).html( response.msg );
+                        }else{
+                            if(response.action=='delete'){             
+                                //$(target).find('.likelabel').html(response.cnt +' Likes');                   
+                                $(target).find('.plingtext').html(response.cnt);
+                                $(target).find('.plingtext').addClass('heartnumberpurple'); 
+                                 $(target).find('.plingheart').removeClass('heartproject').addClass('heartgrey');       
+                                 $(target).find('.plingheart').removeClass('fa-heart').addClass('fa-heart-o');      
+
+                                                                                                                                                
+                            }else{                                
+                                //$(target).find('.likelabel').html(response.cnt +' Likes');       
+                                $(target).find('.plingtext').html(response.cnt);      
+                                //$(target).find('.plingtext').html(response.cnt+' Fans'); 
+                                $(target).find('.plingtext').removeClass('heartnumberpurple'); 
+                                $(target).find('.plingheart').removeClass('heartgrey').addClass('heartproject');        
+                                $(target).find('.plingheart').removeClass('fa-heart-o').addClass('fa-heart');                                                                                       
+                            }                                
                         }
-                    }
-                    if (toggle) {
-                        $(toggle).modal('show');
-                    }
-                });
+                      }); 
+                return false;
+            });
+        }
+    }
+})();
 
+
+var PartialsButtonPlingProject = (function () {
+    return {
+        setup: function () {
+            $('#plingbtn').hover(function(){
+                 $(this).attr('src','/images/system/pling-btn-hover.png');
+            }, function(){
+                $(this).attr('src',$(this).attr('data-src'));
+            });
+
+            $('body').on('click', '.partialbuttonplingproject', function (event) {
+                event.preventDefault();
+                var url = $(this).attr("data-href");               
+                var target = $(this).attr("data-target");
+                var auth = $(this).attr("data-auth");
+                var issupporter = $(this).attr("data-issupporter");
+                var toggle = $(this).data('toggle');
+                var pageFragment = $(this).attr("data-fragment");
+                
+                if (!auth) {                    
+                    $('#like-product-modal').modal('show');
+                    return;
+                }
+                
+                // product owner not allow to heart copy from voting....
+                var loginuser = $('#like-product-modal').find('#loginuser').val();
+                var productcreator = $('#like-product-modal').find('#productcreator').val();
+                if (loginuser == productcreator) {
+                    // ignore
+                    
+                    $('#like-product-modal').find('#votelabel').text('Project owner not allowed');
+                    $('#like-product-modal').find('.modal-body').empty();
+                    $('#like-product-modal').modal('show');
+                    return;
+                }
+
+                if (!issupporter) {
+                    // ignore
+                    $('#like-product-modal').find('#votelabel').html('<div style="width:420px;text-align:center">To pling a product and help the artist please consider becoming a supporter. Thanks!</br></br><a href="/support">Become a supporter</a></div>');                   
+                    $('#like-product-modal').modal('show');
+                    return;
+                }               
+                $(target).find('.plingnum').html('<span class="glyphicon glyphicon-refresh spinning"/>');    
+                $.ajax({
+                          url: url,
+                          cache: false
+                        })
+                      .done(function( response ) {
+                        
+                        //$(target).find('.spinning').remove();
+                        if(response.status =='error'){
+                             $(target).html( response.msg );
+                        }else{
+                            if(response.action=='delete'){
+                                //pling deleted
+                                if(response.cnt==0)
+                                {
+                                    $(target).find('.plingnum').html('Pling me');                               
+                                }else
+                                {
+                                    $(target).find('.plingnum').html(response.cnt+ ' Plings');                           
+                                }
+                                
+                                $(target).find('#plingbtn').attr('src','/images/system/pling-btn-normal.png');
+                                $(target).find('#plingbtn').attr('data-src','/images/system/pling-btn-normal.png');
+                                                                                             
+                            }else{
+                                //pling inserted
+                                $(target).find('.plingnum').html(response.cnt+ ' Plings');                           
+                                $(target).find('#plingbtn').attr('src','/images/system/pling-btn-active.png');                                
+                                $(target).find('#plingbtn').attr('data-src','/images/system/pling-btn-active.png');                                
+                            }
+                                
+                        }
+                      });                            
                 return false;
             });
         }
@@ -776,7 +864,7 @@ var PartialsButtonHeartDetail = (function () {
 var PartialsReview = (function () {
     return {
         setup: function () {
-            $('body').on('click', 'a.partial', function (event) {
+            $('body').on('click', 'a.partialreview', function (event) {
                 event.preventDefault();
                 var url = this.href;
                 var target = $(this).attr("data-target");
@@ -801,32 +889,41 @@ var PartialsReview = (function () {
                     if (userrate == 1) {
                         $('#review-product-modal').find('#votelabel').empty()
                             .append('<a class="btn btn-success active" style="line-height: 10px;"><span class="fa fa-plus"></span></a> is given already with comment:');
-                        $('#review-product-modal').find(':submit').attr("disabled", "disabled").css("display", "none");
-                        $('#review-product-modal').find('#commenttext').attr("disabled", "disabled");
+                        $('#review-product-modal').find('#commenttext').val($('#review-product-modal').find('#otxt').val());
+                        //$('#review-product-modal').find(':submit').attr("disabled", "disabled").css("display", "none");
+                        //$('#review-product-modal').find('#commenttext').attr("disabled", "disabled");
+                        $('#review-product-modal').find(':submit').text("Remove Rating");
+                        
                     } else {
                         $('#review-product-modal').find('input#voteup').val(1);
                         $('#review-product-modal').find('#votelabel').empty()
-                            .append('<a class="btn btn-success active" style="line-height: 10px;"><span class="fa fa-plus"></span></a> Add Comment (optional):');
-                        $('#review-product-modal').find('#commenttext').val('');
+                            .append('<a class="btn btn-success active" style="line-height: 10px;"><span class="fa fa-plus"></span></a> Add Comment (min. 1 char):');
+                        $('#review-product-modal').find('#commenttext').val('+');
+                        
+                        $('#review-product-modal').find(':submit').text("Rate Now");
                         $('#review-product-modal').find('#commenttext').removeAttr("disabled");
                         $('#review-product-modal').find(':submit').css("display", "block").removeAttr("disabled");
+
 
                     }
                 } else { // vote down
                     if (userrate == 0) {
                         $('#review-product-modal').find('#votelabel').empty()
                             .append('<a class="btn btn-danger active" style="line-height: 10px;"><span class="fa fa-minus"></span></a> is given already with comment: ');
-                        $('#review-product-modal').find('#commenttext').attr("disabled", "disabled");
-                        $('#review-product-modal').find(':submit').attr("disabled", "disabled").css("display", "none");
+                        $('#review-product-modal').find('#commenttext').val($('#review-product-modal').find('#otxt').val());
+                        // $('#review-product-modal').find('#commenttext').attr("disabled", "disabled");
+                        // $('#review-product-modal').find(':submit').attr("disabled", "disabled").css("display", "none");
+
+                        $('#review-product-modal').find(':submit').text("Remove Rating");
 
                     } else {
                         $('#review-product-modal').find('input#voteup').val(2);
                         $('#review-product-modal').find('#votelabel').empty()
-                            .append('<a class="btn btn-danger active" style="line-height: 10px;"><span class="fa fa-minus"></span></a> Add Comment (optional): ');
-                        $('#review-product-modal').find('#commenttext').val('');
+                            .append('<a class="btn btn-danger active" style="line-height: 10px;"><span class="fa fa-minus"></span></a> Add Comment (min. 1 char): ');
+                        $('#review-product-modal').find('#commenttext').val('-');
                         $('#review-product-modal').find('#commenttext').removeAttr("disabled");
                         $('#review-product-modal').find(':submit').removeAttr("disabled").css("display", "block");
-
+                         $('#review-product-modal').find(':submit').text("Rate Now");
                     }
                 }
 
@@ -863,8 +960,8 @@ var PartialsReviewDownloadHistory = (function () {
                     } else {
                         $('#review-product-modal').find('input#voteup').val(1);
                         $('#review-product-modal').find('#votelabel').empty()
-                            .append('<a class="btn btn-success active" style="line-height: 10px;"><span class="fa fa-plus"></span></a> Add Comment (optional):');
-                        $('#review-product-modal').find('#commenttext').val('');
+                            .append('<a class="btn btn-success active" style="line-height: 10px;"><span class="fa fa-plus"></span></a> Add Comment (min. 1 char):');
+                        $('#review-product-modal').find('#commenttext').val('+');
                         $('#review-product-modal').find('#commenttext').removeAttr("disabled");
                         $('#review-product-modal').find(':submit').css("display", "block").removeAttr("disabled");
 
@@ -879,8 +976,8 @@ var PartialsReviewDownloadHistory = (function () {
                     } else {
                         $('#review-product-modal').find('input#voteup').val(2);
                         $('#review-product-modal').find('#votelabel').empty()
-                            .append('<a class="btn btn-danger active" style="line-height: 10px;"><span class="fa fa-minus"></span></a> Add Comment (optional): ');
-                        $('#review-product-modal').find('#commenttext').val('');
+                            .append('<a class="btn btn-danger active" style="line-height: 10px;"><span class="fa fa-minus"></span></a> Add Comment (min. 1 chars): ');
+                        $('#review-product-modal').find('#commenttext').val('-');
                         $('#review-product-modal').find('#commenttext').removeAttr("disabled");
                         $('#review-product-modal').find(':submit').removeAttr("disabled").css("display", "block");
 
@@ -945,6 +1042,55 @@ var PartialJson = (function () {
 
                 var target = $(this).attr("data-target");
                 var trigger = $(this).attr("data-trigger");
+
+                jQuery.ajax({
+                    data: $(this).serialize(),
+                    url: this.action,
+                    type: this.method,
+                    dataType: "json",
+                    error: function () {
+                        $(target).empty().html("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+                    },
+                    success: function (data, textStatus) {
+                        if (data.redirect) {
+                            // data.redirect contains the string URL to redirect to
+                            window.location = data.redirect;
+                            return;
+                        }
+                        if (target) {
+                            // data.message contains the HTML for the replacement form
+                            $(target).empty().html(data.message);
+                        }
+                        if (trigger) {
+                            $(target).find(trigger).trigger('click');
+                        }
+                    }
+                });
+
+                return false;
+            });
+        }
+    }
+})();
+
+
+var PartialJsonFraud = (function () {
+    return {
+        setup: function () {
+            $('body').on("submit", 'form.partialjsonfraud', function (event) {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+
+                var target = $(this).attr("data-target");
+                var trigger = $(this).attr("data-trigger");
+
+                var text = $('form.partialjsonfraud').find('#report-text').val();
+                if(text.length<5)
+                {
+                    $('form.partialjsonfraud').find('p.warning').remove();
+                    $('form.partialjsonfraud').find('#report-text').parent().append('<p class="warning" style="color:red">at least 5 chars</p>');
+                    return false;
+                }
 
                 jQuery.ajax({
                     data: $(this).serialize(),
@@ -1054,7 +1200,16 @@ var PartialCommentReviewForm = (function () {
         initForm: function () {
             $('body').on("submit", 'form.product-add-comment-review', function (event) {
                 event.preventDefault();
-                event.stopImmediatePropagation();
+                event.stopImmediatePropagation();            
+                var c = $.trim($('#commenttext').val());                
+                if(c.length<1)
+                {
+                        if($('#review-product-modal').find('#votelabel').find('.warning').length==0)
+                        {
+                            $('#review-product-modal').find('#votelabel').append("</br><span class='warning' style='color:red'> Please give a comment, thanks!</span>");                   
+                        }                        
+                        return;
+                }                
 
                 $(this).find(':submit').attr("disabled", "disabled");
                 $(this).find(':submit').css("white-space", "normal");
@@ -1293,7 +1448,7 @@ var RssNews = (function () {
                     }
                     var m = moment(item.date);
                     crss += '<div class="commentstore"><a href="' + item.url + '"><span class="title">' + item.title + '</span></a><div class="newsrow">'                        
-                        + '<span class="date">' + m.format('MMM DD YYYY LT') + '</span><span class="newscomments">'+ item.comments.length 
+                        + '<span class="date">' + m.format('MMM DD YYYY') + '</span><span class="newscomments">'+ item.comments.length 
                         +' Comment'+(item.comments.length>1?'s':'')
                         +'</span></div></div>';
                 });
@@ -1306,6 +1461,7 @@ var RssNews = (function () {
 })();
 
 
+
 var BlogJson = (function () {
     return {
         setup: function () {          
@@ -1314,13 +1470,25 @@ var BlogJson = (function () {
             $.ajax(json_url).then(function (result) { 
               var topics = result.topic_list.topics; 
               var crss = '';            
-              var count =5;                                       
+              var count =3;      
+              topics.sort(function(a,b){                  
+                  return new Date(b.last_posted_at) - new Date(a.last_posted_at);
+                });
+
              $.each(topics, function (i, item) {
                  if(!item.pinned){                   
-                     var m = moment(item.created_at);
+                     var m = moment(item.last_posted_at);
+                     var r = 'Reply';
+                     var t = item.posts_count -1;
+                     if(t==0){
+                        r = 'Replies';
+                     }else if(t==1){
+                        r = 'Reply';
+                     }else{
+                        r = 'Replies';
+                     }
                      crss += '<div class="commentstore"><a href="' + urlforum+'/t/'+item.id + '"><span class="title">' + item.title + '</span></a><div class="newsrow">'                        
-                         + '<span class="date">' + m.format('MMM DD YYYY LT') + '</span><span class="newscomments">'+ item.posts_count 
-                         +' Post'+( item.posts_count>1?'s':'')
+                         + '<span class="date">' + m.fromNow() + '</span><span class="newscomments">'+ t +' '+ r                         
                          +'</span></div></div>';    
                     count--;
                  }
@@ -1352,6 +1520,53 @@ var ProductDetailCarousel = (function () {
         }
     }
 })();
+
+var AppimagequestionOnClick = (function () {
+    return {
+        setup: function (projectid) {           
+           $('body').on('click', 'i.appimagequestion', function (event) {         
+                    var msgBox = $('#generic-dialog');                    
+                    msgBox.modal('show');                    
+                    msgBox.find('.modal-header-text').empty().append('AppImage Info');
+                    msgBox.find('.modal-body').empty().append("<div class='info' >For easy appimage use, install appimage launcher :"
+                        +"<p><a target='_blank' href='https://www.opendesktop.org/p/1228228'>www.opendesktop.org/p/1228228</a><p>More info: <br/><a target='_blank' href='https://www.linuxuprising.com/2018/04/easily-run-and-integrate-appimage-files.html'>www.linuxuprising.com/2018/04/easily-run-and-integrate-appimage-files.html  </a>  </div>");
+           });
+
+        }
+    }
+})();
+
+
+var ProductDetailBtnGetItClick  = (function () {
+    return {
+        setup: function (projectid) {           
+           $('body').on('click', 'button#project_btn_download', function (event) {                 
+             
+                    $.fancybox({
+                        'hideOnContentClick': true,
+                        'autoScale': true,
+                        'cyclic': 'true',
+                        'transitionIn': 'elastic',
+                        'transitionOut': 'elastic',
+                        'type': 'ajax',                      
+                        helpers: {
+                            overlay: {
+                                locked: false
+                            }
+                        },
+                        autoSize: true,
+                        href:'/p/'+projectid+'/ppload'
+                      
+                    });        
+
+
+           });
+
+        }
+    }
+})();
+
+
 
 var AboutMeMyProjectsPaging = (function () {
   return {
@@ -1482,6 +1697,48 @@ var TooltipUser = (function () {
 })();
 
 
+var TooltipUserPlings = (function () {
+    return {
+        setup: function (tooltipCls, tooltipSide) {
+            $('.'+tooltipCls).tooltipster(
+                {
+                    side: tooltipSide,
+                    theme: ['tooltipster-light', 'tooltipster-light-customized'],
+                    contentCloning: true,
+                    contentAsHTML: true,
+                    interactive: true,
+                    functionBefore: function (instance, helper) {
+                        var origin = $(helper.origin);
+                        var userid = origin.attr('data-user');
+                        if (origin.data('loaded') !== true) {
+                            $.get('/plings/tooltip/id/'+userid, function (data) {
+                                
+                                var tmp = '<div class="tooltipuserplingscontainer">';
+                                $.each(data.data, function( index, value ) {
+                                    if(index>10) return false;
+                                    if(value.profile_image_url.indexOf('http')<0)
+                                    {
+                                         value.profile_image_url = "https://cn.pling.com/cache/40x40-2/img/"+value.profile_image_url ;                                           
+                                    }
+                                    if(value.profile_image_url.indexOf('.gif')>0)
+                                    {
+                                         value.profile_image_url = "https://cn.pling.com/img/"+value.profile_image_url ;                                           
+                                    }
+                                    tmp = tmp+'<div class="user"><a href="/member/'+value.member_id+'"><img src="'+value.profile_image_url+'" /></a><span class="caption">'+value.username+'</span></div>';
+                                });    
+                                tmp = tmp + '</div>';
+                                instance.content(tmp);
+                                origin.data('loaded', true);
+                            });
+                        }
+                    }
+
+                }
+            );
+        }
+    }
+})();
+
 
 var AboutMePage = (function () {
     return {
@@ -1568,8 +1825,8 @@ var TagingProductDetail = (function () {
                             setup: function () {
                                            TagingProductDetailSelect2.setup();
                                            $('body').on('click', 'button.topic-tags-btn', function (event) {
-                                                $(this).toggleClass('Done');
-                                                $('.product_category').find('.usertagslabel').toggle();
+                                                $(this).toggleClass('Done');                                                                                                                                            
+                                                $('.product_category').find('.usertagslabel').remove();
                                                 $('.tagsuserselectpanel').toggle();
                                                 if($(this).text() == 'Done'){
                                                         $(this).text('Manage tags');
@@ -1578,8 +1835,8 @@ var TagingProductDetail = (function () {
                                                         $.each(lis, function( index, value ) {
                                                             newhtml=newhtml+'<a rel="nofollow" href="/search/projectSearchText/'+value.title+'/t/'+value.title+'/f/tags" '
                                                                                           +'class="topic-tag topic-tag-link usertagslabel">'+value.title+'</a>';
-                                                        });                                                       
-                                                        $('.product_category').find('.topicslink').html(newhtml);                                                        
+                                                        });                                                                                                                                                               
+                                                         $('.product_category').find('.topicslink').html(newhtml);                                                        
                                                 }else{
                                                     $(this).text('Done');                                                    
                                                 }                                               

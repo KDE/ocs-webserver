@@ -30,7 +30,7 @@ class Backend_ReportProductsController extends Local_Controller_Action_Backend
     protected $_model;
 
     protected $_modelName = 'Default_Model_DbTable_ReportProducts';
-
+    
     /**
      *
      */
@@ -41,6 +41,7 @@ class Backend_ReportProductsController extends Local_Controller_Action_Backend
         $this->view->pageTitle = 'Manage Reported Products';
 
         parent::init();
+        
     }
 
     public function indexAction()
@@ -122,6 +123,50 @@ class Backend_ReportProductsController extends Local_Controller_Action_Backend
 
         $modelProducts = new Default_Model_DbTable_Project();
         $modelProducts->setSpamChecked($projectId, Default_Model_DbTable_Project::PROJECT_SPAM_CHECKED);
+
+        $jTableResult = array();
+        $jTableResult['Result'] = self::RESULT_OK;
+
+        $this->_helper->json($jTableResult);
+    }
+    
+    public function validatereportAction()
+    {
+        $reportId = (int)$this->getParam('r', null);
+
+        $dataModel = new Backend_Model_Reports();
+
+        $result = $dataModel->setReportAsValid($reportId);
+
+        $jTableResult = array();
+        $jTableResult['Result'] = self::RESULT_OK;
+
+        $this->_helper->json($jTableResult);
+    }
+    
+    public function deletereportAction()
+    {
+        $reportId = (int)$this->getParam('r', null);
+
+        $dataModel = new Backend_Model_Reports();
+
+        $result = $dataModel->setReportAsDeleted($reportId);
+
+        $jTableResult = array();
+        $jTableResult['Result'] = self::RESULT_OK;
+
+        $this->_helper->json($jTableResult);
+    }
+    
+    
+    public function validatemisuseAction()
+    {
+        
+        $projectId = (int)$this->getParam('p', null);
+        $dataModel = new Backend_Model_Reports();
+        $result = $dataModel->setDelete($projectId);
+        
+        $result = $dataModel->saveNewFraud($projectId, $this->_authMember);
 
         $jTableResult = array();
         $jTableResult['Result'] = self::RESULT_OK;

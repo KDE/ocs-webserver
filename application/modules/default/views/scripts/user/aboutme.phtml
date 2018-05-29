@@ -32,9 +32,11 @@ $helperImage = new Default_View_Helper_Image();
 $helperPrintDate = new Default_View_Helper_PrintDate();
 $textCountryCity = $this->member->city;
 $textCountryCity .= $this->member->country ? ', ' . $this->member->country : '';
-
+$helperMemberScore = new Default_View_Helper_FetchMemberScore();
 
 $isSupporter = $this->stat['donationIssupporter'];
+
+
 ?>
     <main class="about-me-page">
 
@@ -86,6 +88,16 @@ $isSupporter = $this->stat['donationIssupporter'];
                                     <div class="row">
                                        <span class="cnt"><?=$this->stat['cntComments']?> </span> Comments
                                     </div>
+
+                                   
+                                    <div class="row">
+                                       Plinged <span class="cnt"> <?=$this->stat['cntPlingsHeGave']?> </span>Products
+                                    </div>
+                                    <div class="row">
+                                       Got <span class="cnt"> <?=$this->stat['cntPlingsHeGot']?> </span><img  src="/images/system/pling-btn-active.png" style="width:20px; height:20px" />
+                                    </div>
+                               
+
                                     <div class="row">
                                        Likes <span class="cnt"> <?=$this->stat['cntLikesHeGave']?> </span>Products
                                     </div>
@@ -236,6 +248,22 @@ $isSupporter = $this->stat['donationIssupporter'];
                                 </a>
                             </li>
                           <?php } ?>
+
+                          <?php if( $this->plings->getTotalItemCount()>0){ ?>
+                            <li>
+                                <a href="#user-plings" data-toggle="tab" role="tab"  aria-controls="user-plings">
+                                    Plinged (<?=$this->plings->getTotalItemCount()?>)
+                                </a>
+                            </li>
+                          <?php } ?>
+
+                          <?php if( $this->supportersplings->getTotalItemCount()>0){ ?>
+                            <li>
+                                <a href="#supporters-plings" data-toggle="tab" role="tab"  aria-controls="supporters-plings">
+                                    Supporters (<?=$this->supportersplings->getTotalItemCount()?>)
+                                </a>
+                            </li>
+                          <?php } ?>
                           
                         </ul>
                         </div>
@@ -306,6 +334,23 @@ $isSupporter = $this->stat['donationIssupporter'];
                             </div> 
                             <?php } ?>  
 
+                            <?php if( $this->plings->getTotalItemCount()>0){ ?>
+                            <div  role="tabpanel" class="tab-pane " id="user-plings">       
+                                    <div class="my-fav-list">                                                                   
+                                  <?php echo $this->render('user/partials/aboutme-plings.phtml'); ?>
+                                  </div>
+                            </div> 
+                            <?php } ?>  
+
+                            <?php if($this->supportersplings->getTotalItemCount()>0){ ?>
+                            <div  role="tabpanel" class="tab-pane " id="supporters-plings">       
+                                    <div class="my-fav-list">                                                                   
+                                        <?php echo $this->render('user/partials/aboutme-supporters.phtml'); ?>       
+                                  </div>
+                            </div> 
+                            <?php } ?>  
+
+
                              <?php if(count($this->rated)>0){ ?>
                             <div  role="tabpanel" class="tab-pane " id="user-rated">    
                                 <div class="my-fav-list">                               
@@ -326,6 +371,18 @@ $isSupporter = $this->stat['donationIssupporter'];
 
 
                     <aside class="col-md-4 col-lg-4 col-sm-4 col-xs-12">
+                        <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') { ?>
+                        <?php 
+                            $scoreArray= $helperMemberScore->fetchScore($this->member->member_id);
+                        ?>
+                        <div class="col-container">
+                            <div class="well details about">
+                                <div>
+                                    <span>Score: <?php echo $scoreArray['score']; ?> <div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Member Score" data-trigger="hover" data-html="true" data-content="The score is calculated from the following values:<br> <ul><li>Products: <?php echo $scoreArray['count_product'];?> * <?php echo $scoreArray['factor_prod'];?></li><li>Plings: <?php echo $scoreArray['count_pling'];?> * <?php echo $scoreArray['factor_pling'];?></li><li>Likes: <?php echo $scoreArray['count_like'];?> * <?php echo $scoreArray['factor_like'];?></li><li>Comments: <?php echo $scoreArray['count_comment'];?> * <?php echo $scoreArray['factor_comment'];?></li><li>Years of membership: <?php echo $scoreArray['count_years_membership'];?> * <?php echo $scoreArray['factor_year'];?></li><li>Spam-Reports: <?php echo $scoreArray['count_report_product_spam'];?> * <?php echo $scoreArray['factor_report_prod_spam'];?></li><li>Misuse-Reports: <?php echo $scoreArray['count_report_product_fraud'];?> * <?php echo $scoreArray['factor_report_prod_fraud'];?></li></ul>"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div> </span>
+                                </div>
+                            </div>
+                        </div>
+                        <?php } ?>
                         <div class="col-container">
                             <div class="well details about">
                                 <h3>About me</h3>
@@ -440,7 +497,8 @@ $isSupporter = $this->stat['donationIssupporter'];
             AboutMePage.setup("'.$this->member->username.'");
             AboutMeMyProjectsPaging.setup();
             AboutMeMyProjectsPagingButton.setup();        
-             TooltipUser.setup("tooltipuser","right");        
+            TooltipUser.setup("tooltipuser","right");   
+            $(\'[data-toggle="popover"]\').popover();
         });
     ');
 

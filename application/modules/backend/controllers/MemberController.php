@@ -126,8 +126,20 @@ class Backend_MemberController extends Zend_Controller_Action
         $this->_model->setDeleted($member_id);
 
         $identity = Zend_Auth::getInstance()->getIdentity();
-        Default_Model_ActivityLog::logActivity($member_id, null, $identity->member_id, Default_Model_ActivityLog::BACKEND_USER_DELETE,
-            null);
+
+        try {
+            Default_Model_ActivityLog::logActivity($member_id,
+                null,
+                $identity->member_id,
+                Default_Model_ActivityLog::BACKEND_USER_DELETE,
+                null);
+
+            $id_server = new Default_Model_IdServer();
+            $id_server->deactivateLoginForUser($member_id);
+
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err($e->getTraceAsString());
+        }
 
         $this->_helper->json(true);
     }
@@ -153,5 +165,31 @@ class Backend_MemberController extends Zend_Controller_Action
     {
 
         $form = new Zend_Form();
+    }
+    
+    public function doexcludeAction()
+    {
+        $memberId = (int)$this->getParam('member_id', null);
+        $member = $this->_model->find($memberId)->current();
+        $exclude = (int)$this->getParam('pling_excluded', null);
+        $excludOrg = $member['pling_excluded'];
+
+        $sql = "UPDATE member SET pling_excluded = :exclude WHERE member_id = :member_id";
+        $this->_model->getAdapter()->query($sql, array('exclude' => $exclude, 'member_id' => $memberId));
+
+        $auth = Zend_Auth::getInstance();
+        $identity = $auth->getIdentity();
+        
+        $logArray = array();
+        $logArray['title'] = $member['username'];
+        $logArray['description'] = 'Change pling_excluded from '.$excludOrg.' to '.$exclude;
+        
+        Default_Model_ActivityLog::logActivity($memberId, $memberId, $identity->member_id,
+            Default_Model_ActivityLog::BACKEND_USER_PLING_EXCLUDED, $logArray);
+
+        $jTableResult = array();
+        $jTableResult['Result'] = 'OK';
+
+        $this->_helper->json($jTableResult);
     }
 }

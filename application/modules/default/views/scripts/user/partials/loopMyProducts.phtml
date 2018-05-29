@@ -80,7 +80,19 @@ $helperImage = new Default_View_Helper_Image();
         <span class="topicslink">
         <?php        
         $tagmodel = new Default_Model_Tags();
-        $tagsuser = $tagmodel->getTagsUser($this->project_id, Default_Model_Tags::TAG_TYPE_PROJECT);         
+        $tagsuser = $tagmodel->getTagsUser($this->project_id, Default_Model_Tags::TAG_TYPE_PROJECT);        
+        $tagscat = $tagmodel->getTagsCategory($this->project_id, Default_Model_Tags::TAG_TYPE_PROJECT);  
+
+
+        if(false === empty($tagscat))
+        {                  
+            foreach (explode(',',$tagscat) as $tag) { 
+        ?>
+        <a rel="nofollow" href="/search/projectSearchText/<?=$tag?>/t/<?=$tag?>/f/tags" class="topic-tag topic-tag-link usertagslabelcat"><?=$tag?></a>
+         <?php 
+            }                                       
+         }        
+
         if(false === empty($tagsuser))
         {                  
             foreach (explode(',',$tagsuser) as $tag) { 
@@ -137,6 +149,7 @@ $helperImage = new Default_View_Helper_Image();
                    data-addpploadfile-uri="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, 'addpploadfile') ?>"
                    data-updatepploadfile-uri="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, 'updatepploadfile') ?>"
                    data-updatepackagetype-uri="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, 'updatepackagetype') ?>"
+                   data-updatearchitecture-uri="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, 'updatearchitecture') ?>"
                    data-deletepploadfile-uri="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, 'deletepploadfile') ?>"
                    data-deletepploadfiles-uri="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, 'deletepploadfiles') ?>">
                     <?= $this->translate('Files') ?> (<?= $productFileInfos['fileCount'] ?>)
@@ -155,21 +168,24 @@ $helperImage = new Default_View_Helper_Image();
                        data-toggle="modal"><?= $this->translate('Verification') ?></a>
                 <?php } ?>
 
-
+              <?php /*
                  <a href="#modal-box-code-<?= $loopProductId ?>"
                    class="btn btn-native"
                    data-toggle="modal"><?= $this->translate('Box') ?></a>
+                  */
+                   ?>
+                  
 
                 <!-- /updates -->
                 <span class="publish-product-wrapper">
                     <?php $p_action = $this->isProjectActive($this->project_status) ? 'unpublish' : 'publish' ?>
                     <a href="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, $p_action, array('m' => $this->member_id)) ?>"
-                       class="btn btn-native" data-target="#<?= $loopProductId ?> .publish-product-wrapper">
+                       class="btn btn-native <?=($p_action=='unpublish')?'btn-pling-green':'btn-pling-red'?> " data-target="#<?= $loopProductId ?> .publish-product-wrapper">
                         <?=ucfirst($p_action) ?>
                     </a>
                 </span>
                 <form method="post" action="<?= $helperBuildProductUrl->buildProductUrl($this->project_id, 'delete', array('m' => $this->member_id)) ?>" class="inline">
-                    <button data-title="Delete Confirmation" data-callback="defaultCallbackConfirmation" data-message="Do you really want to delete this product?<br>This is permanent and can not be undone!" aria-label="Delete" class="btn btn-native remove" style="font-size: 12px;padding: 3px 6px;">
+                    <button data-title="Delete Confirmation" data-callback="defaultCallbackConfirmation" data-message="Do you really want to delete this product?<br>This is permanent and can not be undone!" aria-label="Delete" class="btn btn-native btn-pling-red remove" style="font-size: 12px;padding: 3px 6px;">
                         Delete
                     </button>
                 </form>
@@ -213,6 +229,8 @@ $helperImage = new Default_View_Helper_Image();
 
 
     <!-- box code modal -->
+
+    <?php /*
     <div id="modal-box-code-<?= $loopProductId ?>" class="code-embed-modal modal fade">
         <div class="modal-dialog content-modal">
             <div class="modal-content">
@@ -236,6 +254,8 @@ $helperImage = new Default_View_Helper_Image();
             </div>
         </div>
     </div>
+    */
+    ?>
     <!-- /box code modal -->
 
 

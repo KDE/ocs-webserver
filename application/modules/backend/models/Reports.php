@@ -102,12 +102,33 @@ class Backend_Model_Reports
         return count($rowSet);
     }
 
-    public function setDelete($projectId)
+    public function setDelete($projectId, $onlySpam = true)
     {
         $sql = "update reports_project set is_deleted = 1 where project_id = :projectId";
+        
+        if($onlySpam) {
+            $sql .= " and report_type = 0";
+        }
 
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('projectId' => $projectId))->execute();
         $this->updateMaterializedView($projectId);
+        return $result;
+    }
+    
+    
+    public function setReportAsValid($reportId)
+    {
+        $sql = "update reports_project set is_valid = 1 where report_id = :reportId";
+
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('reportId' => $reportId))->execute();
+        return $result;
+    }
+    
+    public function setReportAsDeleted($reportId)
+    {
+        $sql = "update reports_project set is_deleted = 1 where report_id = :reportId";
+
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('reportId' => $reportId))->execute();
         return $result;
     }
 
@@ -115,6 +136,14 @@ class Backend_Model_Reports
     {
         $sql = "update stat_projects set amount_reports = 0 where project_id = :project_id";
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('project_id' => $project_id))->execute();
+    }
+    
+    public function saveNewFraud($project_id, $_authMemeber) 
+    {
+        $sql = "INSERT INTO reports_project (project_id, report_type, reported_by, is_valid, text) VALUES (:project_id, 1, :member_id, 1, :text)";
+
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('project_id' => $project_id, 'member_id' => $_authMemeber->member_id, 'text' => 'Admin: moved from spam to misuse'));
+        return $result;
     }
 
 }
