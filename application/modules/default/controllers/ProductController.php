@@ -189,7 +189,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 $newProject = $modelProject->updateProject($values['project_id'], $values);
             } else {
                 $newProject = $modelProject->createProject($this->_authMember->member_id, $values, $this->_authMember->username);
-                //$this->createSystemPlingForNewProject($newProject->project_id);
+                $this->createSystemPlingForNewProject($newProject->project_id);
             }
         } catch (Exception $exc) {
             Zend_Registry::get('logger')->warn(__METHOD__ . ' - traceString: ' . $exc->getTraceAsString());
@@ -495,10 +495,10 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $modelTags->processTagsUser($this->_projectId,null, Default_Model_Tags::TAG_TYPE_PROJECT);             
         }    
    
-
         $activityLog = new Default_Model_ActivityLog();
-        $activityLog->writeActivityLog($this->_projectId, $projectData->member_id,
-            Default_Model_ActivityLog::PROJECT_EDITED, $projectData->toArray());
+        //20180518 ronald: we will log the auth-member_id, not the project-member_id
+        //$activityLog->writeActivityLog($this->_projectId, $projectData->member_id, Default_Model_ActivityLog::PROJECT_EDITED, $projectData->toArray());
+        $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id, Default_Model_ActivityLog::PROJECT_EDITED, $projectData->toArray());
 
         // ppload
         $this->processPploadId($projectData);
@@ -1937,7 +1937,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
             return;
         } else {
-            $error_text .= 'No FileId. , FileId: ' . $_POST['file_id'];
+            $error_text .= 'updatearchitectureAction: No FileId!';
         }
 
         $this->_helper->json(array('status' => 'error', 'error_text' => $error_text));
@@ -2153,7 +2153,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $modelProject = new Default_Model_Project();
         $newProject =
             $modelProject->createProject($this->_authMember->member_id, $formValues, $this->_authMember->username);
-        //$this->createSystemPlingForNewProject($newProject->project_id);
+        $this->createSystemPlingForNewProject($newProject->project_id);
         //New Project in Session, for AuthValidation (owner)
         $this->_auth->getIdentity()->projects[$newProject->project_id] = array('project_id' => $newProject->project_id);
 
@@ -2175,7 +2175,12 @@ class ProductController extends Local_Controller_Action_DomainSwitch
              }
     }
 
-  
+    protected function createSystemPlingForNewProject($project_id)
+    {
+            $config = Zend_Registry::get('config');
+            $member_id = $config->settings->member->plingcat->id;
+            $this->createPling($member_id,$project_id);
+    }
 
     /**
      * @param $errors

@@ -1428,7 +1428,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                         p.member_id,
                         p.cat_title as catTitle,
                         p.image_small,
-                        (select count(1) from project_plings l where p.project_id = l.project_id and l.is_deleted = 0 and l.is_active = 1 ) countplings
+                        (select count(1) from project_plings l where p.project_id = l.project_id and l.is_deleted = 0 and l.is_active = 1 and l.member_id <> :sysuserid) countplings
                         FROM stat_projects p
                         where p.status =100
                         and p.member_id = :member_id        
@@ -1442,8 +1442,10 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         if (isset($offset)) {
             $sql = $sql.' offset '.$offset;            
         }
-      
-        $result = $this->_db->fetchAll($sql, array('member_id' => $member_id));
+
+        $config = Zend_Registry::get('config');
+        $sysuserid = $config->settings->member->plingcat->id;        
+        $result = $this->_db->fetchAll($sql, array('member_id' => $member_id, 'sysuserid' =>$sysuserid));
           if ($result) {
             return $this->generateRowClass($result);
         } else {
