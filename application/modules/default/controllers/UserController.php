@@ -51,7 +51,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
         $tableMember = new Default_Model_Member();
         $tableProject = new Default_Model_Project();
 
-        $pageLimit = 3000;        
+        $pageLimit = 500;        
         $projectpage = (int)$this->getParam('projectpage', 1);
 
         $this->view->authMember = $this->_authMember;

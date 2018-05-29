@@ -37,7 +37,7 @@ class Default_Model_StatDownload
         $sql = "
                 SELECT 
                     member_dl_plings.*,
-                    (select count(1) as sum_plings from project_plings pp where pp.project_id = member_dl_plings.project_id and pp.is_deleted = 0 and is_active = 1 group by pp.project_id) as num_plings_now,
+                    case when (select count(1) as sum_plings from project_plings pp where pp.project_id = member_dl_plings.project_id and pp.is_deleted = 0 and is_active = 1 group by pp.project_id) > 0 then (select count(1) as sum_plings from project_plings pp where pp.project_id = member_dl_plings.project_id and pp.is_deleted = 0 and is_active = 1 group by pp.project_id) + 1 else 1 end as num_plings_now,
                     project.title,
                     project.image_small,
                     project_category.title as cat_title,

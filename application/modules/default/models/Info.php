@@ -808,8 +808,6 @@ class Default_Model_Info
             return $newSupporters;
         }
 
-        $config = Zend_Registry::get('config');
-        $member_id = $config->settings->member->plingcat->id;
         
         $sql = '  
                         select 
@@ -827,16 +825,16 @@ class Default_Model_Info
                         ,(
                             select min(created_at) from project_plings pt where pt.member_id = pl.member_id and pt.project_id=pl.project_id
                         ) as created_at
-                        ,(select count(1) from project_plings pl2 where pl2.project_id = p.project_id and pl2.is_active = 1 and pl2.is_deleted = 0  and pl2.member_id <> :sysuserid ) as sum_plings
+                        ,(select count(1) from project_plings pl2 where pl2.project_id = p.project_id and pl2.is_active = 1 and pl2.is_deleted = 0  ) as sum_plings
                         from project_plings pl
                         inner join stat_projects p on pl.project_id = p.project_id and p.status > 30                        
-                        where pl.is_deleted = 0 and pl.is_active = 1 and pl.member_id <> :sysuserid
+                        where pl.is_deleted = 0 and pl.is_active = 1 
                         order by created_at desc                                                  
         ';        
         if (isset($limit)) {
             $sql .= ' limit ' . (int)$limit;
         }
-        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('sysuserid'=>$member_id))->fetchAll();
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array())->fetchAll();
         
         $cache->save($result, $cacheName, array(), 300);
         return $result;

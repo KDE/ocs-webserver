@@ -56,8 +56,7 @@ class Default_Model_ProjectPlings extends Default_Model_DbTable_ProjectPlings
 
     public function fetchPlingsForSupporter($memberId)
      {            
-            $config = Zend_Registry::get('config');
-            $plingcat_id = $config->settings->member->plingcat->id;
+            
               $sql = "
                                 SELECT                          
                                                   f.member_id                       
@@ -67,20 +66,19 @@ class Default_Model_ProjectPlings extends Default_Model_DbTable_ProjectPlings
                                                  ,(select max(active_time) from support s where s.member_id = f.member_id and status_id = 2) as active_time
                                                  FROM project_plings f                        
                                                  INNER JOIN stat_projects p ON p.project_id = f.project_id 
-                                                 WHERE (p.status = 100) AND f.is_active = 1 and f.is_deleted= 0 AND (p.member_id = :member_id) and f.member_id <> :plingcat_id
+                                                 WHERE (p.status = 100) AND f.is_active = 1 and f.is_deleted= 0 AND (p.member_id = :member_id) 
                                                  group by f.member_id
                                                  order by cntplings desc
                                                 
               ";
 
-             $resultSet = $this->_db->fetchAll($sql, array('member_id' => $memberId, 'plingcat_id' =>$plingcat_id));
+             $resultSet = $this->_db->fetchAll($sql, array('member_id' => $memberId));
              return new Zend_Paginator(new Zend_Paginator_Adapter_Array($resultSet ));     
      }
 
      public function fetchPlingsForProject($project_id)
     {            
-            $config = Zend_Registry::get('config');
-            $member_id = $config->settings->member->plingcat->id;
+            
             $sql = "
                          SELECT 
                         f.project_id
@@ -91,10 +89,10 @@ class Default_Model_ProjectPlings extends Default_Model_DbTable_ProjectPlings
                         ,m.username
                         FROM project_plings f
                         inner join member m on f.member_id = m.member_id and m.is_active=1 AND m.is_deleted=0 
-                        WHERE  f.project_id = :project_id and f.is_deleted = 0 and f.member_id <> :member_id
+                        WHERE  f.project_id = :project_id and f.is_deleted = 0
                         order by f.created_at desc
              ";
-            $resultSet = $this->_db->fetchAll($sql, array('project_id' => $project_id,'member_id' => $member_id));
+            $resultSet = $this->_db->fetchAll($sql, array('project_id' => $project_id));
             return $resultSet;     
     }
 } 

@@ -79,7 +79,7 @@ $helperMember = new Default_View_Helper_BuildMemberUrl();
             <?= $this->translate('Settings') ?>
         </a>
     </li>
- <?php if (Zend_Auth::getInstance()->hasIdentity()){
+ <?php if (Zend_Auth::getInstance()->hasIdentity() && Zend_Auth::getInstance()->getIdentity()->roleName == 'admin'){
     $identity = Zend_Auth::getInstance()->getStorage()->read();
     ?>
     <li class="header-menu-left-item <?php echo $this->tab == 'supporterbox' ? 'active' : ''; ?>">
