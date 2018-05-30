@@ -1,5 +1,4 @@
 <?php
-
 /**
  *  ocs-webserver
  *
@@ -20,33 +19,31 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- *    Created: 24.10.2016
- **/
-interface Local_Auth_Adapter_Interface extends Zend_Auth_Adapter_Interface
+ * Created: 30.05.2018
+ */
+
+class Local_Auth_Result extends Zend_Auth_Result
 {
 
-    /**
-     * @param string $identity
-     *
-     * @return Zend_Auth_Adapter_Interface
-     */
-    public function setIdentity($identity);
+    const MAIL_ADDRESS_NOT_VALIDATED = -10;
+
+    const ACCOUNT_INACTIVE = -20;
 
     /**
-     * @param string $credential
+     * Sets the result code, identity, and failure messages
      *
-     * @return Zend_Auth_Adapter_Interface
+     * @param int   $code
+     * @param mixed $identity
+     * @param array $messages
      */
-    public function setCredential($credential);
+    public function __construct($code, $identity, array $messages = array())
+    {
+        $code = (int) $code;
 
-    /**
-     * getResultRowObject() - Returns the result row as a stdClass object
-     *
-     * @param  string|array $returnColumns
-     * @param  string|array $omitColumns
-     *
-     * @return stdClass|boolean
-     */
-    public function getResultRowObject($returnColumns = null, $omitColumns = null);
+        $this->_code     = $code;
+        $this->_identity = $identity;
+        $this->_messages = $messages;
+    }
+
 
 }

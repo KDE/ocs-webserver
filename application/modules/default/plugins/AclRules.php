@@ -75,6 +75,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addResource(new Zend_Acl_Resource ('default_credits'));
         $this->addResource(new Zend_Acl_Resource ('default_ads'));
         $this->addResource(new Zend_Acl_Resource ('default_password'));
+        $this->addResource(new Zend_Acl_Resource ('default_verify'));
 
         $this->addResource(new Zend_Acl_Resource ('default_stati'));
         $this->addResource(new Zend_Acl_Resource ('default_tag'));
@@ -140,7 +141,8 @@ class Default_Plugin_AclRules extends Zend_Acl
             'default_plings',
             'default_ads',
             'default_stati',
-            'default_password'
+            'default_password',
+            'default_verify'
         ));
 
          $this->allow(self::ROLENAME_SYSUSER, array(

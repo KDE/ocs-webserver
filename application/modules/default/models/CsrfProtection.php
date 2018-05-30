@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -21,12 +22,15 @@
  **/
 class Default_Model_CsrfProtection
 {
+    const validity = 3600;
 
     /**
      * @param Zend_Form $form
-     * @param string $csrf_salt_name
-     * @param string $field_name
+     * @param string    $csrf_salt_name
+     * @param string    $field_name
+     *
      * @return Zend_Form_Element
+     * @throws Zend_Form_Exception
      */
     public static function createCSRF($form, $csrf_salt_name, $field_name = "csrf")
     {
@@ -37,7 +41,60 @@ class Default_Model_CsrfProtection
         $element->setAttrib('id', $form->getName() . '_' . $element->getId());
         $element->setDecorators(array('ViewHelper'));
         $form->addElement($element);
+
         return $element;
+    }
+
+    /**
+     * @param $hash
+     *
+     * @return bool
+     * @throws Zend_Session_Exception
+     */
+    public static function validateCrsfToken($hash)
+    {
+        $session = new Zend_Session_Namespace();
+        if (hash_equals($session->crsf_token, $hash)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * @return Zend_Form_Element_Hidden
+     * @throws Zend_Form_Exception
+     * @throws Zend_Session_Exception
+     */
+    public static function getFormCrsf()
+    {
+        $form_crsf = new Zend_Form_Element_Hidden('crsf_token');
+        $form_crsf->setFilters(array('StringTrim'));
+        $form_crsf->setRequired(true);
+        $form_crsf->setDecorators(array('ViewHelper'));
+        $form_crsf->setValue(self::getCrsfToken());
+
+        return $form_crsf;
+    }
+
+    /**
+     * @return mixed|string
+     * @throws Zend_Session_Exception
+     */
+    public static function getCrsfToken()
+    {
+        $session = new Zend_Session_Namespace();
+        if ($session->crsf_token AND $session->crsf_expire AND ($session->crsf_expire < microtime(true))) {
+            return $session->crsf_token;
+        }
+        $session->crsf_expire = microtime(true) + self::validity;
+        if (function_exists('mcrypt_create_iv')) {
+            $session->crsf_token = bin2hex(mcrypt_create_iv(32, MCRYPT_DEV_URANDOM));
+        } else {
+            $session->crsf_token = bin2hex(openssl_random_pseudo_bytes(32));
+        }
+
+        return $session->crsf_token;
     }
 
 }

@@ -209,4 +209,19 @@ class Default_Model_MemberEmail
         return $result;
     }
 
+    /**
+     * @param $member_id
+     *
+     * @return null
+     * @throws Zend_Db_Table_Exception
+     */
+    public function getValidationValue($member_id)
+    {
+        $memberData = $this->fetchMemberPrimaryMail($member_id);
+        if (count($memberData) == 0) {
+            return null;
+        }
+        return $memberData['email_verification_value'];
+    }
+
 }
