@@ -1,0 +1,242 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$modelInfo = new Default_Model_Info();
+$this->comments = $modelInfo->getLatestComments(10);
+//$this->users = $modelInfo->getNewActiveMembers(18);
+//$this->supporters = $modelInfo->getNewActiveSupporters(9);
+//$this->plingproducts = $modelInfo->getNewActivePlingProduct(9);
+$this->productsThemesGTK = $modelInfo->getLastProductsForHostStores(5,"366,363,273,267,138,125,131,153,154,414,133");
+$this->productsThemesPlasma = $modelInfo->getLastProductsForHostStores(5,"365,119,123,266,114,118,349,417,101,100,111,422,423,446,417");
+$this->productsWindowmanager = $modelInfo->getLastProductsForHostStores(5,"117,267,139,143,142,140,141,144");
+$this->productsIconsCursors= $modelInfo->getLastProductsForHostStores(5,"386,107");
+$this->productsScreenshots= $modelInfo->getLastProductsForHostStores(5,"225,445");
+$this->productsApps = $modelInfo->getLastProductsForHostStores(5,233);
+$this->productsAddons = $modelInfo->getLastProductsForHostStores(5,"152");
+$this->productsWallpapers = $modelInfo->getLastProductsForHostStores(5,"295,158");
+$this->countSupporters = $modelInfo->getCountActiveSupporters();
+
+$featuredProducts = $modelInfo->getFeaturedProductsForHostStores(100);
+if ($featuredProducts->getTotalItemCount()) {  
+    $request = Zend_Controller_Front::getInstance()->getRequest();
+    $offset = (int)$request->getParam('page');
+    $irandom = rand(1,$featuredProducts->getTotalItemCount());    
+    $featuredProducts->setItemCountPerPage(1);
+    $featuredProducts->setCurrentPageNumber($irandom);
+    $this->featureProducts = $featuredProducts;
+}
+
+$helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
+$helperImage = new Default_View_Helper_Image();
+$helpPrintDate = new Default_View_Helper_PrintDate();
+?>
+<main id="explore-content" class="startpage-store " >
+<div class="GridFlex">
+<div class="GridFlex-cell sidebar-left">  
+        <?php  echo $this->render('explore/partials/filter.phtml'); ?> 
+</div>
+<div class="GridFlex-cell content">   
+        <div class="contentcontainer">
+
+                        <div class="row"  id="featureProductsContainer">
+                            
+                            <?php
+                            if ($this->featureProducts) {        
+                                          echo $this->render('home/partials/featured-products.phtml');
+                            } 
+                            ?>                        
+                        </div>
+
+                        <div class="row">   
+                        <?php                                 
+                                    echo $this->partial('/home/partials/product_group.phtml', array(
+                                            "title"  => "GTK/Gnome",
+                                            "products" => $this->productsThemesGTK,
+                                            "catIDs" =>"366"
+                                        )
+                                    );       
+                                 
+                                    echo $this->partial('/home/partials/product_group.phtml', array(
+                                            "title"  => "KDE Plasma",
+                                            "products" => $this->productsThemesPlasma,
+                                            "catIDs" =>"365"   
+                                        )
+                                    );                                       
+                        ?>                                                      
+                        </div>
+
+                        <div class="row blockpadding">   
+                        <?php                                 
+                                    echo $this->partial('/home/partials/product_group.phtml', array(
+                                            "title"  => "Window Managers",
+                                            "products" => $this->productsWindowmanager,
+                                            "catIDs" =>"147"   
+                                        )
+                                    );       
+                                    
+                                    echo $this->partial('/home/partials/product_group.phtml', array(
+                                            "title"  => "Icons, Cursors",
+                                            "products" => $this->productsIconsCursors,
+                                            "catIDs" =>"386,107"   
+                                        )
+                                    );                                           
+                        ?>                                                                                                                        
+                        </div>
+
+                        <div class="row blockpadding">
+                        <?php                                 
+                                    echo $this->partial('/home/partials/product_group.phtml', array(
+                                            "title"  => "Concepts, Screenshots",
+                                            "products" => $this->productsScreenshots,
+                                            "catIDs" =>"445,225"   
+                                        )
+                                    );                                                                     
+
+                                    echo $this->partial('/home/partials/product_group.phtml', array(
+                                            "title"  => "Artwork, Wallpapers",
+                                            "products" => $this->productsWallpapers,
+                                            "catIDs" =>"158,295"   
+
+                                        )
+                                    );                                        
+                        ?>                                                                                                          
+                        </div>
+                        <div class="row blockpadding" >
+                         <?php                                 
+                                     echo $this->partial('/home/partials/product_group.phtml', array(
+                                             "title"  => "App Add-Ons",
+                                             "products" => $this->productsAddons,
+                                             "catIDs" =>"152"   
+                                         )
+                                     );       
+                                
+                                     echo $this->partial('/home/partials/product_group.phtml', array(
+                                             "title"  => "Applications",
+                                             "products" => $this->productsApps,
+                                             "catIDs" =>"233"   
+                                         )
+                                     );      
+                                                        
+                         ?>                                         
+                        </div>
+
+                        <?php /*
+
+                        <div class="row blockpadding supportersrow">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <?php                                 
+                                        echo $this->partial('/home/partials/plingprojects.phtml', array(
+                                                "title"  => "Recently plinged Products",
+                                                "projects" => $this->plingproducts
+                                            )
+                                        );                   
+                            ?>                                                              
+                            </div>
+                        </div>
+
+                        <div class="row blockpadding supportersrow">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <?php                                 
+                                        echo $this->partial('/home/partials/users.phtml', array(
+                                                "title"  => "Latest Supporters",
+                                                "users" => $this->supporters
+                                            )
+                                        );                   
+                            ?>                                                              
+                            </div>
+                        </div>
+
+                        <div class="row blockpadding">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <?php                                 
+                                        echo $this->partial('/home/partials/users.phtml', array(
+                                                "title"  => "Latest  Community Members ",
+                                                "users" => $this->users
+                                            )
+                                        );                   
+                            ?>                                               
+                            </div>
+                        </div>   
+
+                        */
+                        ?>                     
+             </div>
+</div>
+<div class="GridFlex-cell sidebar-right">   
+        <aside  id="explore-sidebar" > 
+
+        <?php
+            echo $this->render('/home/partials/common_rightsidebar.phtml');
+        ?>
+            
+            
+        <div>
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <!-- Responsive New Displayblock -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1150932386931372"
+                 data-ad-slot="1024407251"
+                 data-ad-format="auto"></ins>
+            <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+
+            </script>
+        </div>
+       
+        </aside>
+</div>
+</div>
+
+<div class="tooltip_templates" style="display: none">
+    <span id="tooltip_content">
+        <i class="fa fa-spinner"></i>
+    </span>
+</div>
+</main>
+
+<script type="application/javascript">
+    $(document).ready(function () {
+        $('body').on('click', '.ajaxPartialFeatureProduct', function (event) {
+            event.preventDefault();            
+            $(this).off();                  
+            var target = '#featureProductsContainer';  
+            if($(this).hasClass( "disabled" )) return false;
+            var url = $(this).attr("href");                        
+            $(target).load(url, function (response, status, xhr) {
+                if (status == "error") {
+                    $(target).empty().html('Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.');
+                }                
+            });
+            
+            return false;
+        });
+    });
+</script>
+
+<?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){                                             
+                TooltipUser.setup("tooltipuser","right");
+                TooltipUser.setup("tooltipuserleft","left");             
+                TooltipUserPlings.setup("tooltipuserplings","right");
+            });
+        ');
