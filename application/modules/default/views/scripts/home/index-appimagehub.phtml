@@ -36,10 +36,10 @@ $this->productsWallpapers = $modelInfo->getLastProductsForHostStores(5,"295,158"
 $this->countSupporters = $modelInfo->getCountActiveSupporters();
 
 $featuredProducts = $modelInfo->getFeaturedProductsForHostStores(100);
-if ($featuredProducts->getTotalItemCount()) {  
+if ($featuredProducts->getTotalItemCount()) {
     $request = Zend_Controller_Front::getInstance()->getRequest();
     $offset = (int)$request->getParam('page');
-    $irandom = rand(1,$featuredProducts->getTotalItemCount());    
+    $irandom = rand(1,$featuredProducts->getTotalItemCount());
     $featuredProducts->setItemCountPerPage(1);
     $featuredProducts->setCurrentPageNumber($irandom);
     $this->featureProducts = $featuredProducts;
@@ -49,146 +49,146 @@ $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $helperImage = new Default_View_Helper_Image();
 $helpPrintDate = new Default_View_Helper_PrintDate();
 ?>
-<main id="explore-content" class="startpage-store " >
+<main id="explore-content" class="startpage-store david-kann-arbeiten" >
 <div class="GridFlex">
-<div class="GridFlex-cell sidebar-left">  
-        <?php  echo $this->render('explore/partials/filter.phtml'); ?> 
+<div class="GridFlex-cell sidebar-left">
+        <?php  echo $this->render('explore/partials/filter.phtml'); ?>
 </div>
-<div class="GridFlex-cell content">   
+<div class="GridFlex-cell content">
         <div class="contentcontainer">
 
                         <div class="row"  id="featureProductsContainer">
-                            
+
                             <?php
-                            if ($this->featureProducts) {        
+                            if ($this->featureProducts) {
                                           echo $this->render('home/partials/featured-products.phtml');
-                            } 
-                            ?>                        
+                            }
+                            ?>
                         </div>
 
-                        <div class="row">   
-                        <?php                                 
+                        <div class="row">
+                        <?php
                                     echo $this->partial('/home/partials/product_group.phtml', array(
                                             "title"  => "GTK/Gnome",
                                             "products" => $this->productsThemesGTK,
                                             "catIDs" =>"366"
                                         )
-                                    );       
-                                 
+                                    );
+
                                     echo $this->partial('/home/partials/product_group.phtml', array(
                                             "title"  => "KDE Plasma",
                                             "products" => $this->productsThemesPlasma,
-                                            "catIDs" =>"365"   
+                                            "catIDs" =>"365"
                                         )
-                                    );                                       
-                        ?>                                                      
-                        </div>
-
-                        <div class="row blockpadding">   
-                        <?php                                 
-                                    echo $this->partial('/home/partials/product_group.phtml', array(
-                                            "title"  => "Window Managers",
-                                            "products" => $this->productsWindowmanager,
-                                            "catIDs" =>"147"   
-                                        )
-                                    );       
-                                    
-                                    echo $this->partial('/home/partials/product_group.phtml', array(
-                                            "title"  => "Icons, Cursors",
-                                            "products" => $this->productsIconsCursors,
-                                            "catIDs" =>"386,107"   
-                                        )
-                                    );                                           
-                        ?>                                                                                                                        
+                                    );
+                        ?>
                         </div>
 
                         <div class="row blockpadding">
-                        <?php                                 
+                        <?php
+                                    echo $this->partial('/home/partials/product_group.phtml', array(
+                                            "title"  => "Window Managers",
+                                            "products" => $this->productsWindowmanager,
+                                            "catIDs" =>"147"
+                                        )
+                                    );
+
+                                    echo $this->partial('/home/partials/product_group.phtml', array(
+                                            "title"  => "Icons, Cursors",
+                                            "products" => $this->productsIconsCursors,
+                                            "catIDs" =>"386,107"
+                                        )
+                                    );
+                        ?>
+                        </div>
+
+                        <div class="row blockpadding">
+                        <?php
                                     echo $this->partial('/home/partials/product_group.phtml', array(
                                             "title"  => "Concepts, Screenshots",
                                             "products" => $this->productsScreenshots,
-                                            "catIDs" =>"445,225"   
+                                            "catIDs" =>"445,225"
                                         )
-                                    );                                                                     
+                                    );
 
                                     echo $this->partial('/home/partials/product_group.phtml', array(
                                             "title"  => "Artwork, Wallpapers",
                                             "products" => $this->productsWallpapers,
-                                            "catIDs" =>"158,295"   
+                                            "catIDs" =>"158,295"
 
                                         )
-                                    );                                        
-                        ?>                                                                                                          
+                                    );
+                        ?>
                         </div>
                         <div class="row blockpadding" >
-                         <?php                                 
+                         <?php
                                      echo $this->partial('/home/partials/product_group.phtml', array(
                                              "title"  => "App Add-Ons",
                                              "products" => $this->productsAddons,
-                                             "catIDs" =>"152"   
+                                             "catIDs" =>"152"
                                          )
-                                     );       
-                                
+                                     );
+
                                      echo $this->partial('/home/partials/product_group.phtml', array(
                                              "title"  => "Applications",
                                              "products" => $this->productsApps,
-                                             "catIDs" =>"233"   
+                                             "catIDs" =>"233"
                                          )
-                                     );      
-                                                        
-                         ?>                                         
+                                     );
+
+                         ?>
                         </div>
 
                         <?php /*
 
                         <div class="row blockpadding supportersrow">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <?php                                 
+                            <?php
                                         echo $this->partial('/home/partials/plingprojects.phtml', array(
                                                 "title"  => "Recently plinged Products",
                                                 "projects" => $this->plingproducts
                                             )
-                                        );                   
-                            ?>                                                              
+                                        );
+                            ?>
                             </div>
                         </div>
 
                         <div class="row blockpadding supportersrow">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <?php                                 
+                            <?php
                                         echo $this->partial('/home/partials/users.phtml', array(
                                                 "title"  => "Latest Supporters",
                                                 "users" => $this->supporters
                                             )
-                                        );                   
-                            ?>                                                              
+                                        );
+                            ?>
                             </div>
                         </div>
 
                         <div class="row blockpadding">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <?php                                 
+                            <?php
                                         echo $this->partial('/home/partials/users.phtml', array(
                                                 "title"  => "Latest  Community Members ",
                                                 "users" => $this->users
                                             )
-                                        );                   
-                            ?>                                               
+                                        );
+                            ?>
                             </div>
-                        </div>   
+                        </div>
 
                         */
-                        ?>                     
+                        ?>
              </div>
 </div>
-<div class="GridFlex-cell sidebar-right">   
-        <aside  id="explore-sidebar" > 
+<div class="GridFlex-cell sidebar-right">
+        <aside  id="explore-sidebar" >
 
         <?php
             echo $this->render('/home/partials/common_rightsidebar.phtml');
         ?>
-            
-            
+
+
         <div>
             <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
             <!-- Responsive New Displayblock -->
@@ -202,7 +202,7 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
 
             </script>
         </div>
-       
+
         </aside>
 </div>
 </div>
@@ -217,26 +217,26 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
 <script type="application/javascript">
     $(document).ready(function () {
         $('body').on('click', '.ajaxPartialFeatureProduct', function (event) {
-            event.preventDefault();            
-            $(this).off();                  
-            var target = '#featureProductsContainer';  
+            event.preventDefault();
+            $(this).off();
+            var target = '#featureProductsContainer';
             if($(this).hasClass( "disabled" )) return false;
-            var url = $(this).attr("href");                        
+            var url = $(this).attr("href");
             $(target).load(url, function (response, status, xhr) {
                 if (status == "error") {
                     $(target).empty().html('Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.');
-                }                
+                }
             });
-            
+
             return false;
         });
     });
 </script>
 
 <?php $this->inlineScript()->appendScript(
-    '    $(document).ready(function(){                                             
+    '    $(document).ready(function(){
                 TooltipUser.setup("tooltipuser","right");
-                TooltipUser.setup("tooltipuserleft","left");             
+                TooltipUser.setup("tooltipuserleft","left");
                 TooltipUserPlings.setup("tooltipuserplings","right");
             });
         ');
