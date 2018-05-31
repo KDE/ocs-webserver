@@ -154,6 +154,10 @@ $isSupporter = $this->stat['donationIssupporter'];
                                 <a id="linktohive" target="_blank" href="http://cp1.hive01.com/usermanager/search.php?username=<?= $this->member->username ?>">link to hive</a>
                                 <a id="delete-this" href="/backend/user/delete?member_id=<?= $this->member->member_id ?>">delete user</a>
                                 </span>
+                                <br>
+                                <span class="page-views" style="color: red;">
+                                    <input type="checkbox" id="pling-excluded-checkbox" <?php echo $this->member->pling_excluded == 1 ? ' checked=\'checked\' ' : ''; ?> />  user-pling-excluded
+                                </span>
                                 <script>
                                     $('#delete-this').on('click', function (event) {
 
@@ -166,6 +170,39 @@ $isSupporter = $this->stat['donationIssupporter'];
                                                 alert('User deleted successfully');
                                             },
                                             error: function() {
+                                                alert('Service is temporarily unavailable.');
+                                            }
+                                        });
+
+                                        return false;
+                                    });
+                                    
+                                    
+                                    $('#pling-excluded-checkbox').on('click', function (event) {
+                                        event.stopPropagation();
+                                        var status = 0;
+                                        if (this.checked) {
+                                            status = 1;
+                                        } else {
+                                            status = 0;
+                                        }
+
+                                        var target = "/backend/member/doexclude?member_id=<?= $this->member->member_id ?>&pling_excluded=" + status;
+                                        $.ajax({
+                                            url: target,
+                                            success: function (results) {
+                                                if (status == 0) {
+                                                    alert('Member was successfully included for plinging');
+                                                    $('#pling-excluded-checkbox').prop("checked", false);
+
+                                                } else {
+                                                    alert('Member was successfully excluded for plinging');
+                                                    $('#pling-excluded-checkbox').prop("checked", true);
+
+                                                }
+
+                                            },
+                                            error: function () {
                                                 alert('Service is temporarily unavailable.');
                                             }
                                         });
