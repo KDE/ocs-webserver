@@ -321,7 +321,7 @@ class Default_Model_Authorization
 
             return (object)$resultRow;
         }
-        Zend_Registry::get('logger')->warn(__METHOD__ . ' - unverified user not found');
+        Zend_Registry::get('logger')->warn(__METHOD__ . ' - unverified user was not found');
 
         return null;
     }
