@@ -35,6 +35,8 @@ class Default_Model_Project extends Default_Model_DbTable_Project
     const ITEM_TYPE_PRODUCT = 1;
     const ITEM_TYPE_UPDATE = 2;
 
+    const TAG_LICENCE_GID = 7;
+    const TAG_TYPE_ID = 1;
 
     /**
      * @param int $status
@@ -96,41 +98,6 @@ class Default_Model_Project extends Default_Model_DbTable_Project
     /**
      * @param int $id
      */
-    public function setActive($id)
-    {
-        $updateValues = array(
-            'status'     => self::PROJECT_ACTIVE,
-            'deleted_at' => null
-        );
-
-        $this->update($updateValues, $this->_db->quoteInto('project_id=?', $id, 'INTEGER'));
-
-        $this->setActiveForUpdates($id);
-        $this->setActiveForComments($id);
-    }
-
-    /**
-     * @param int $id
-     */
-    protected function setActiveForUpdates($id)
-    {
-        $updateValues = array(
-            'status'     => self::PROJECT_ACTIVE,
-            'deleted_at' => null
-        );
-
-        $this->update($updateValues, $this->_db->quoteInto('pid=?', $id, 'INTEGER'));
-    }
-
-    private function setActiveForComments($id)
-    {
-        $modelComments = new Default_Model_ProjectComments();
-        $modelComments->setAllCommentsForProjectActivated($id);
-    }
-
-    /**
-     * @param int $id
-     */
     public function setInActive($id)
     {
         $id = (int)$id;
@@ -139,7 +106,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             'deleted_at' => new Zend_Db_Expr('Now()')
         );
 
-        $this->update($updateValues, 'status > 40 AND project_id='.$id);
+        $this->update($updateValues, 'status > 40 AND project_id=' . $id);
 
         $this->setInActiveForUpdates($id);
         $this->setDeletedForComments($id);
@@ -156,52 +123,16 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             'changed_at' => new Zend_Db_Expr('Now()')
         );
 
-        $this->update($updateValues, 'status > 40 AND pid='. $id);
+        $this->update($updateValues, 'status > 40 AND pid=' . $id);
     }
 
+    /**
+     * @param $id
+     */
     private function setDeletedForComments($id)
     {
         $modelComments = new Default_Model_ProjectComments();
         $modelComments->setAllCommentsForProjectDeleted($id);
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setDeleted($id)
-    {
-        $id = (int)$id;
-        $updateValues = array(
-            'status'     => self::PROJECT_DELETED,
-            'deleted_at' => new Zend_Db_Expr('Now()')
-        );
-
-        $this->update($updateValues, 'status > 30 AND project_id='. $id);
-
-        $this->setDeletedForUpdates($id);
-        $this->setDeletedForComments($id);
-        $this->setDeletedInMaterializedView($id);
-    }
-
-    /**
-     * @param int $id
-     */
-    protected function setDeletedForUpdates($id)
-    {
-        $id = (int)$id;
-        $updateValues = array(
-            'status'     => self::PROJECT_DELETED,
-            'deleted_at' => new Zend_Db_Expr('Now()')
-        );
-
-        $this->update($updateValues,'status > 30 AND pid='. $id);
-    }
-
-    private function setDeletedInMaterializedView($id)
-    {
-        $sql = "UPDATE stat_projects SET status = :new_status WHERE project_id = :project_id";
-
-        $result = $this->_db->query($sql, array('new_status' => self::PROJECT_DELETED, 'project_id' => $id))->execute();
     }
 
     /**
@@ -213,8 +144,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
     public function fetchActiveBySourcePk($id)
     {
         $q = $this->select()->where('status = ?', self::PROJECT_ACTIVE)->where('source_pk = ?', (int)$id)
-                  ->where('source_type = "project"')
-        ;
+                  ->where('source_type = "project"');
 
         return $q->query()->fetch();
     }
@@ -230,8 +160,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         $q = $this->select()->from($this, array('countAll' => new Zend_Db_Expr('count(*)')))->setIntegrityCheck(false)
                   ->where('project.status >= ?', ($onlyActiveProjects ? self::PROJECT_ACTIVE : self::PROJECT_INACTIVE))
                   ->where('project.member_id = ?', $member_id, 'INTEGER')
-                  ->where('project.type_id = ?', self::PROJECT_TYPE_STANDARD)
-        ;
+                  ->where('project.type_id = ?', self::PROJECT_TYPE_STANDARD);
         $resultSet = $q->query()->fetchAll();
 
         return $resultSet[0]['countAll'];
@@ -249,8 +178,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         $q = $this->select()->from($this, array('countAll' => new Zend_Db_Expr('count(*)')))->setIntegrityCheck(false)
                   ->where('project.status >= ?', ($onlyActiveProjects ? self::PROJECT_ACTIVE : self::PROJECT_INACTIVE))
                   ->where('project.member_id = ?', $member_id, 'INTEGER')
-                  ->where('project.type_id = ?', self::PROJECT_TYPE_STANDARD)
-        ;
+                  ->where('project.type_id = ?', self::PROJECT_TYPE_STANDARD);
         if (isset($catids)) {
             $q->where('project_category_id in (' . $this->_getCatIds($catids) . ')');
         }
@@ -259,6 +187,10 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         return $resultSet[0]['countAll'];
     }
 
+    /**
+     * @param $catids
+     * @return string
+     */
     protected function _getCatIds($catids)
     {
         $sqlwhereCat = "";
@@ -283,10 +215,6 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         return $sqlwhereSubCat . $sqlwhereCat;
     }
 
-    /*
-    @ param string categoryids: 111,107 return id and child ids...
-    */
-
     /**
      * By default it will show all projects for a member included the unpublished elements.
      *
@@ -310,11 +238,10 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             'project_member_id'  => 'member_id',
             'laplace_score'      => new Zend_Db_Expr('laplace_score(count_likes,count_dislikes)'),
             'catTitle'           => new Zend_Db_Expr('(SELECT title FROM project_category WHERE project_category_id = project.project_category_id)')
-        ))->setIntegrityCheck(false)->join('member', 'project.member_id = member.member_id', array('username'))
+        ))->setIntegrityCheck(false)->join('member', 'project.member_id = member.member_id', array('username'))                            
                   ->where('project.status >= ?', ($onlyActiveProjects ? self::PROJECT_ACTIVE : self::PROJECT_INACTIVE))
                   ->where('project.member_id = ?', $member_id, 'INTEGER')
-                  ->where('project.type_id = ?', self::PROJECT_TYPE_STANDARD)->order('project_changed_at DESC')
-        ;
+                  ->where('project.type_id = ?', self::PROJECT_TYPE_STANDARD)->order('project_changed_at DESC');
         if (isset($limit)) {
             $q->limit($limit, $offset);
         }
@@ -372,8 +299,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         ))->setIntegrityCheck(false)->join('member', 'project.member_id = member.member_id', array('username'))
                   ->where('project.status >= ?', ($onlyActiveProjects ? self::PROJECT_ACTIVE : self::PROJECT_INACTIVE))
                   ->where('project.member_id = ?', $member_id, 'INTEGER')
-                  ->where('project.type_id = ?', self::PROJECT_TYPE_STANDARD)->order('project_changed_at DESC')
-        ;
+                  ->where('project.type_id = ?', self::PROJECT_TYPE_STANDARD)->order('project_changed_at DESC');
 
         if (isset($catids)) {
             $q->where('project_category_id in (' . $this->_getCatIds($catids) . ')');
@@ -385,10 +311,9 @@ class Default_Model_Project extends Default_Model_DbTable_Project
 
         return $this->generateRowSet($q->query()->fetchAll());
     }
-    
+
     /**
-     * @param int $project_id
-     *
+     * @param $collection_id
      * @return null|Zend_Db_Table_Row_Abstract
      */
     public function fetchProductForCollectionId($collection_id)
@@ -402,7 +327,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                   AND p.status >= :projectStatus AND p.type_id = :typeId
         ';
         $result = $this->_db->fetchRow($sql, array(
-            'collectionId'     => $collection_id,
+            'collectionId'  => $collection_id,
             'projectStatus' => self::PROJECT_INACTIVE,
             'typeId'        => self::PROJECT_TYPE_STANDARD
         ));
@@ -414,7 +339,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         }
     }
 
-    /**
+   /**
      * @param int $project_id
      *
      * @return null|Zend_Db_Table_Row_Abstract
@@ -440,12 +365,68 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                   m.mail,
                   m.paypal_mail,
                   m.dwolla_id,
-               	 laplace_score(p.count_likes,p.count_dislikes) AS laplace_score,
-                 `view_reported_projects`.`amount_reports` AS `amount_reports`
+                  laplace_score(p.count_likes,p.count_dislikes) AS laplace_score,
+                 `view_reported_projects`.`amount_reports` AS `amount_reports`,
+                (select tag.tag_fullname from tag_object, tag where tag_object.tag_id=tag.tag_id and tag_object_id = p.project_id and tag_group_id = :tag_licence_gid and tag_type_id = :tag_type_id )
+                                AS project_license_title
+                FROM project AS p
+                  JOIN member AS m ON p.member_id = m.member_id AND m.is_active = 1 AND m.is_deleted = 0
+                  JOIN project_category AS pc ON p.project_category_id = pc.project_category_id
+                  LEFT JOIN `view_reported_projects` ON ((`view_reported_projects`.`project_id` = p.`project_id`))                  
+                WHERE 
+                  p.project_id = :projectId
+                  AND p.status >= :projectStatus AND p.type_id = :typeId
+        ';
+        $result = $this->_db->fetchRow($sql, array(
+            'projectId'     => $project_id,
+            'projectStatus' => self::PROJECT_INACTIVE,
+            'typeId'        => self::PROJECT_TYPE_STANDARD,
+            'tag_licence_gid'        => self::TAG_LICENCE_GID,
+            'tag_type_id'        => self::TAG_TYPE_ID
+
+        ));
+
+        if ($result) {
+            return $this->generateRowClass($result);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * @param int $project_id
+     *
+     * @return null|Zend_Db_Table_Row_Abstract
+     */
+    public function fetchProductInfo_($project_id)
+    {
+        $sql = '
+                SELECT
+                  p.*,
+                  p.validated AS project_validated,
+                  p.uuid AS project_uuid,
+                  p.status AS project_status,
+                  p.created_at AS project_created_at,
+                  p.changed_at AS project_changed_at,
+                  p.member_id AS project_member_id,
+                  p.source_pk AS project_source_pk,
+                  p.version AS project_version,
+                  pc.title AS cat_title,
+                  m.username,
+                  m.avatar,
+                  m.profile_image_url,
+                  m.roleId,
+                  m.mail,
+                  m.paypal_mail,
+                  m.dwolla_id,
+                  laplace_score(p.count_likes,p.count_dislikes) AS laplace_score,
+                 `view_reported_projects`.`amount_reports` AS `amount_reports`,
+                `project_license`.title AS project_license_title
                 FROM project AS p
                   JOIN member AS m ON p.member_id = m.member_id AND m.is_active = 1 AND m.is_deleted = 0
                   JOIN project_category AS pc ON p.project_category_id = pc.project_category_id
                   LEFT JOIN `view_reported_projects` ON ((`view_reported_projects`.`project_id` = p.`project_id`))
+                  LEFT JOIN `project_license` ON ((`project_license`.`project_license_id` = p.`project_license_id`))
                 WHERE 
                   p.project_id = :projectId
                   AND p.status >= :projectStatus AND p.type_id = :typeId
@@ -474,13 +455,12 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                            ->join('member', 'project.member_id = member.member_id', array('*'))
                            ->where('project.pid=?', $project_id, 'INTEGER')
                            ->where('project.status>?', self::PROJECT_INACTIVE)
-                           ->where('project.type_id=?', self::PROJECT_TYPE_UPDATE)->order('RAND()')
-        ;
+                           ->where('project.type_id=?', self::PROJECT_TYPE_UPDATE)->order('RAND()');
 
         return $this->fetchAll($projectSel);
     }
 
-    /**
+     /**
      * @param $project_id
      *
      * @return Zend_Db_Table_Rowset_Abstract
@@ -490,8 +470,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         $projectSel = $this->select()->setIntegrityCheck(false)->from($this->_name)
                            ->where('project.pid=?', $project_id, 'INTEGER')
                            ->where('project.status>?', self::PROJECT_INACTIVE)
-                           ->where('project.type_id=?', self::PROJECT_TYPE_UPDATE)
-        ;
+                           ->where('project.type_id=?', self::PROJECT_TYPE_UPDATE);
 
         return $this->fetchAll($projectSel);
     }
@@ -514,7 +493,10 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         ";
 
         $result = $this->_db->fetchAll($sql,
-            array('cat_id' => $project->project_category_id, 'project_id' => $project->project_id));
+            array(
+                'cat_id'     => $project->project_category_id,
+                'project_id' => $project->project_id
+            ));
 
         return $this->generateRowSet($result);
     }
@@ -524,6 +506,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
      * @param int               $count
      *
      * @return Zend_Db_Table_Rowset_Abstract
+     * @throws Zend_Exception
      */
     public function fetchMoreProjects($project, $count = 6)
     {
@@ -539,8 +522,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                   ->where('type_id = ?', self::PROJECT_TYPE_STANDARD)
                   ->where('project_category_id = ?', $project->project_category_id, 'INTEGER')
                   ->limit($count)
-                  ->order('project_created_at DESC')
-        ;
+                  ->order('project_created_at DESC');
 
         $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
         $storePackageTypeIds = null;
@@ -572,7 +554,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         if (is_array($filter)) {
             $statement->join(array(
                 'package_type' => new Zend_Db_Expr('(SELECT DISTINCT project_id FROM project_package_type WHERE package_type_id in ('
-                    . $filter . '))')
+                                                   . $filter . '))')
             ), 'project.project_id = package_type.project_id', array());
         } else {
             $statement->where('find_in_set(?, package_types)', $filter);
@@ -586,6 +568,8 @@ class Default_Model_Project extends Default_Model_DbTable_Project
      * @param int $count
      *
      * @return Zend_Db_Table_Rowset_Abstract
+     * @throws Zend_Db_Statement_Exception
+     * @throws Zend_Exception
      * @todo improve processing speed
      */
     public function fetchMoreProjectsOfOtherUsr($project, $count = 8)
@@ -604,8 +588,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             'current_member_id' => $project->member_id,
             'category_id'       => $project->project_category_id,
             'project_type'      => self::PROJECT_TYPE_STANDARD
-        ))->fetch()
-        ;
+        ))->fetch();
 
         if ($result['count'] > $count) {
             $offset = rand(0, $result['count'] - $count);
@@ -624,8 +607,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                   ->where('type_id = ?', 1)
                   ->where('project_category_id = ?', $project->project_category_id, 'INTEGER')
                   ->limit($count, $offset)
-                  ->order('project_created_at DESC')
-        ;
+                  ->order('project_created_at DESC');
 
         $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
         $storePackageTypeIds = null;
@@ -697,6 +679,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
      * @param int $project_id
      *
      * @return array
+     * @throws Zend_Db_Statement_Exception
      */
     public function fetchProjectViews($project_id)
     {
@@ -727,6 +710,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
      * @param int $member_id
      *
      * @return int
+     * @throws Zend_Db_Statement_Exception
      */
     public function fetchOverallPageViewsByMember($member_id)
     {
@@ -748,6 +732,10 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         }
     }
 
+    /**
+     * @return array
+     * @throws Zend_Db_Statement_Exception
+     */
     public function getStatsForNewProjects()
     {
         $sql = "
@@ -768,12 +756,18 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         return $resultSet;
     }
 
+    /**
+     * @param      $idCategory
+     * @param null $limit
+     * @return Zend_Db_Table_Rowset_Abstract
+     */
     public function fetchProductsByCategory($idCategory, $limit = null)
     {
         $select = $this->select()->setIntegrityCheck(false)->from($this->_name)
                        ->where('project.project_category_id in (?)', $idCategory)
                        ->where('project.status = ?', self::PROJECT_ACTIVE)
-                       ->where('project.type_id = ?', self::PROJECT_TYPE_STANDARD)->joinLeft(array(
+                       ->where('project.type_id = ?', self::PROJECT_TYPE_STANDARD)
+                       ->joinLeft(array(
                 'pling_amount' => new Zend_Db_Expr('(SELECT
                 project_id as plinged_project_id, SUM(amount) AS sumAmount, count(1) as countPlings
             FROM
@@ -781,10 +775,12 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             where status_id >= 2
             group by project_id
             order by sumAmount DESC)')
-            ), 'pling_amount.plinged_project_id = project.project_id')->joinLeft('project_category',
-                'project_category.project_category_id = project.project_category_id', array('cat_title' => 'title'))
-                       ->order('pling_amount.sumAmount DESC')
-        ;
+            ),
+                'pling_amount.plinged_project_id = project.project_id')
+                       ->joinLeft('project_category',
+                'project_category.project_category_id = project.project_category_id',
+                array('cat_title' => 'title'))
+                       ->order('pling_amount.sumAmount DESC');
         if (false === is_null($limit)) {
             $select->limit($limit);
         }
@@ -844,10 +840,9 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         }
 
         $select = $this->select()->setIntegrityCheck(false)
-                                 ->from('stat_projects', array('count_active_projects' => 'COUNT(1)'))
-                                 ->where('status = ? ', self::PROJECT_ACTIVE)
-                                 ->where('type_id = ?', self::PROJECT_TYPE_STANDARD)
-        ;
+                       ->from('stat_projects', array('count_active_projects' => 'COUNT(1)'))
+                       ->where('status = ? ', self::PROJECT_ACTIVE)
+                       ->where('type_id = ?', self::PROJECT_TYPE_STANDARD);
 
         $select =
             $this->generatePackageTypeFilter($select, array(self::FILTER_NAME_PACKAGETYPE => $storePackageTypeIds));
@@ -855,7 +850,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         if ($withSubCat) {
             $modelCategory = new Default_Model_DbTable_ProjectCategory();
             $subCategories = $modelCategory->fetchChildIds($idCategory);
-            $inCategories = implode(',',array_unique(array_merge($idCategory, $subCategories)));
+            $inCategories = implode(',', array_unique(array_merge($idCategory, $subCategories)));
         } else {
             $inCategories = implode(',', $idCategory);
         }
@@ -872,6 +867,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
      * @param int|array $idCategory
      *
      * @return int
+     * @throws Zend_Exception
      */
     public function countActiveMembersForCategory($idCategory)
     {
@@ -922,7 +918,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                     SELECT count(1) AS count_active_projects FROM project p
                     WHERE p.`status` = 100
                     AND p.type_id = 1
-                    {$selectWhere}
+                    {$selectWhere} GROUP BY p.member_id
                 ) AS A;";
 
         //$resultSet = $this->fetchRow($select);
@@ -932,6 +928,9 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         return (int)$result['count_active_members'];
     }
 
+    /**
+     * @return mixed
+     */
     public function fetchTotalProjectsCount()
     {
         $sql =
@@ -943,28 +942,133 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         return $result['total_project_count'];
     }
 
+    /**
+     * @param $member_id
+     * @throws Zend_Db_Statement_Exception
+     */
     public function setAllProjectsForMemberDeleted($member_id)
     {
         $sql = "SELECT project_id FROM project WHERE member_id = :memberId AND type_id = :typeId AND status > :project_status";
-        $projectForDelete = $this->_db->fetchAll($sql, array('memberId' => $member_id, 'typeId' => self::PROJECT_TYPE_STANDARD, 'project_status' => self::PROJECT_DELETED));
+        $projectForDelete = $this->_db->fetchAll($sql, array(
+            'memberId'       => $member_id,
+            'typeId'         => self::PROJECT_TYPE_STANDARD,
+            'project_status' => self::PROJECT_DELETED
+        ));
         foreach ($projectForDelete as $item) {
             $this->setDeleted($item['project_id']);
         }
         // set personal page deleted
         $sql = "UPDATE project SET `status` = :statusCode, deleted_at = NOW() WHERE member_id = :memberId AND type_id = :typeId";
-        $this->_db->query($sql, array('statusCode' => self::PROJECT_ACTIVE, 'memberId' => $member_id, 'typeId' => self::PROJECT_TYPE_PERSONAL))->execute();
+        $this->_db->query($sql, array(
+            'statusCode' => self::PROJECT_ACTIVE,
+            'memberId'   => $member_id,
+            'typeId'     => self::PROJECT_TYPE_PERSONAL
+        ))->execute();
     }
 
+    /**
+     * @param int $id
+     */
+    public function setDeleted($id)
+    {
+        $id = (int)$id;
+        $updateValues = array(
+            'status'     => self::PROJECT_DELETED,
+            'deleted_at' => new Zend_Db_Expr('Now()')
+        );
+
+        $this->update($updateValues, 'status > 30 AND project_id=' . $id);
+
+        $this->setDeletedForUpdates($id);
+        $this->setDeletedForComments($id);
+        $this->setDeletedInMaterializedView($id);
+    }
+
+    /**
+     * @param int $id
+     */
+    protected function setDeletedForUpdates($id)
+    {
+        $id = (int)$id;
+        $updateValues = array(
+            'status'     => self::PROJECT_DELETED,
+            'deleted_at' => new Zend_Db_Expr('Now()')
+        );
+
+        $this->update($updateValues, 'status > 30 AND pid=' . $id);
+    }
+
+    /**
+     * @param $id
+     * @throws Zend_Db_Statement_Exception
+     */
+    private function setDeletedInMaterializedView($id)
+    {
+        $sql = "UPDATE stat_projects SET status = :new_status WHERE project_id = :project_id";
+
+        $result = $this->_db->query($sql, array('new_status' => self::PROJECT_DELETED, 'project_id' => $id))->execute();
+    }
+
+    /**
+     * @param $member_id
+     * @throws Zend_Db_Statement_Exception
+     */
     public function setAllProjectsForMemberActivated($member_id)
     {
         $sql = "SELECT project_id FROM project WHERE member_id = :memberId AND type_id = :typeId";
-        $projectForDelete = $this->_db->fetchAll($sql, array('memberId' => $member_id, 'typeId' => self::PROJECT_TYPE_STANDARD));
+        $projectForDelete = $this->_db->fetchAll($sql,
+            array(
+                'memberId' => $member_id,
+                'typeId'   => self::PROJECT_TYPE_STANDARD
+            ));
         foreach ($projectForDelete as $item) {
             $this->setActive($item['project_id']);
         }
         // set personal page active
-        $sql = "UPDATE project SET `status` = :statusCode, deleted_at = null WHERE member_id = :memberId AND type_id = :typeId";
-        $this->_db->query($sql, array('statusCode' => self::PROJECT_ACTIVE, 'memberId' => $member_id, 'typeId' => self::PROJECT_TYPE_PERSONAL))->execute();
+        $sql = "UPDATE project SET `status` = :statusCode, deleted_at = NULL WHERE member_id = :memberId AND type_id = :typeId";
+        $this->_db->query($sql, array(
+            'statusCode' => self::PROJECT_ACTIVE,
+            'memberId'   => $member_id,
+            'typeId'     => self::PROJECT_TYPE_PERSONAL
+        ))->execute();
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setActive($id)
+    {
+        $updateValues = array(
+            'status'     => self::PROJECT_ACTIVE,
+            'deleted_at' => null
+        );
+
+        $this->update($updateValues, $this->_db->quoteInto('project_id=?', $id, 'INTEGER'));
+
+        $this->setActiveForUpdates($id);
+        $this->setActiveForComments($id);
+    }
+
+    /**
+     * @param int $id
+     */
+    protected function setActiveForUpdates($id)
+    {
+        $updateValues = array(
+            'status'     => self::PROJECT_ACTIVE,
+            'deleted_at' => null
+        );
+
+        $this->update($updateValues, $this->_db->quoteInto('pid=?', $id, 'INTEGER'));
+    }
+
+    /**
+     * @param $id
+     */
+    private function setActiveForComments($id)
+    {
+        $modelComments = new Default_Model_ProjectComments();
+        $modelComments->setAllCommentsForProjectActivated($id);
     }
 
     /**
@@ -973,6 +1077,9 @@ class Default_Model_Project extends Default_Model_DbTable_Project
      * @param int|null $offset
      *
      * @return array
+     * @throws Zend_Cache_Exception
+     * @throws Zend_Db_Select_Exception
+     * @throws Zend_Exception
      */
     public function fetchProjectsByFilter($inputFilterParams, $limit = null, $offset = null)
     {
@@ -981,14 +1088,15 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         $cache = Zend_Registry::get('cache');
 
         if (false === ($returnValue = $cache->load($cacheName))) {
+            Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . print_r($inputFilterParams, true));
             $statement = $this->generateStatement($inputFilterParams, $limit, $offset);
-            //Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . $statement->__toString());
+            Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . $statement->__toString());
             /** @var Zend_Db_Table_Rowset $fetchedElements */
             $fetchedElements = $this->fetchAll($statement);
 
             $statement->reset('limitcount')->reset('limitoffset');
             $statement->reset('columns')->columns(array('count' => new Zend_Db_Expr('count(*)')));
-            //Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . $statement->__toString());
+            Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . $statement->__toString());
             $countElements = $this->fetchRow($statement);
             $returnValue = array('elements' => $fetchedElements, 'total_count' => $countElements->count);
 
@@ -1004,7 +1112,6 @@ class Default_Model_Project extends Default_Model_DbTable_Project
      * @param int|null $offset
      *
      * @return Zend_Db_Select
-     * @throws Zend_Exception
      */
     protected function generateStatement($inputFilterParams, $limit = null, $offset = null)
     {
@@ -1030,8 +1137,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             '*'
         ));
         $statement->where('project.status = ?', self::PROJECT_ACTIVE)
-                  ->where('project.type_id=?', self::PROJECT_TYPE_STANDARD)
-        ;
+                  ->where('project.type_id=?', self::PROJECT_TYPE_STANDARD);
 
         return $statement;
     }
@@ -1122,6 +1228,10 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         return $statement;
     }
 
+    /**
+     * @param Zend_Db_Select $statement
+     * @return Zend_Db_Select
+     */
     protected function generateReportedSpamFilter(Zend_Db_Select $statement)
     {
         return $statement->where('(amount_reports is null)');
@@ -1192,6 +1302,8 @@ class Default_Model_Project extends Default_Model_DbTable_Project
      * @param boolean   $withoutUpdates
      *
      * @return array
+     * @throws Zend_Db_Statement_Exception
+     * @throws Zend_Exception
      * @todo: update the sql. It is deprecated since we store only one cat_id for the product.
      */
     public function fetchProductsForCategories($storeCategories, $withoutUpdates = true)
@@ -1227,7 +1339,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
 
         if ($storePackageTypeIds) {
             $sql .= ' JOIN (SELECT DISTINCT project_id FROM project_package_type WHERE package_type_id in ('
-                . $storePackageTypeIds . ')) package_type  ON p.project_id = package_type.project_id';
+                    . $storePackageTypeIds . ')) package_type  ON p.project_id = package_type.project_id';
         }
 
         $sql .= ' WHERE p.project_category_id IN (' . implode(',', $storeCategories) . ') AND p.status >= 100';
@@ -1263,6 +1375,11 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         }
     }
 
+    /**
+     * @param $project_id
+     * @return Zend_Db_Table_Row_Abstract
+     * @throws Zend_Db_Statement_Exception
+     */
     public function fetchProductDataFromMV($project_id)
     {
         $sql = "SELECT * FROM stat_projects WHERE project_id = :project_id";
@@ -1274,21 +1391,66 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         return $this->generateRowClass($resultSet);
     }
 
-    
+
     /**
      * @return array
      */
-    public function fetchGhnsExcludedProjects() {
+    public function fetchGhnsExcludedProjects()
+    {
         $sql = "
-        	select p.project_id, p.title, l.member_id as exclude_member_id, l.time as exclude_time, m.username as exclude_member_name from project p
-                join activity_log l on l.project_id = p.project_id and l.activity_type_id = 314
-                inner join member m on m.member_id = l.member_id
-                where p.ghns_excluded = 1
+        	SELECT p.project_id, p.title, l.member_id AS exclude_member_id, l.time AS exclude_time, m.username AS exclude_member_name FROM project p
+                JOIN activity_log l ON l.project_id = p.project_id AND l.activity_type_id = 314
+                INNER JOIN member m ON m.member_id = l.member_id
+                WHERE p.ghns_excluded = 1
 
         ";
 
         $list = $this->_db->fetchAll($sql);
         return $list;
     }
+
+
+    /**
+     * @return array
+     */
+    public function getUserActiveProjects($member_id,$limit = null, $offset = null)
+    {
+      // for member me page
+        $sql = "
+                        SELECT
+                        p.project_id,
+                        p.title,
+                        p.created_at  as project_created_at,
+                        p.changed_at as project_changed_at,
+                        p.count_likes,
+                        p.count_dislikes,
+                        p.laplace_score,
+                        p.member_id,
+                        p.cat_title as catTitle,
+                        p.image_small,
+                        (select count(1) from project_plings l where p.project_id = l.project_id and l.is_deleted = 0 and l.is_active = 1 ) countplings
+                        FROM stat_projects p
+                        where p.status =100
+                        and p.member_id = :member_id        
+                        order by p.changed_at DESC
+        ";
+
+        if (isset($limit)) {
+            $sql = $sql.' limit '.$limit;            
+        }
+
+        if (isset($offset)) {
+            $sql = $sql.' offset '.$offset;            
+        }
+      
+        $result = $this->_db->fetchAll($sql, array('member_id' => $member_id));
+          if ($result) {
+            return $this->generateRowClass($result);
+        } else {
+            return null;
+        }
+    }
+
     
+
 }
