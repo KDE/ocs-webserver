@@ -106,10 +106,11 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
     private function fetchUserByEmail()
     {
         $sql = "
-            SELECT *, member_email.email_verification_value 
+            SELECT *, member_email.email_verification_value, member_email.email_checked 
             FROM {$this->_tableName}
             JOIN member_email ON member.member_id = member_email.email_member_id
             WHERE  
+            is_active = :active AND
             is_deleted = :deleted AND 
             login_method = :login AND 
             mail = :mail AND 
@@ -117,6 +118,7 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
 
         $this->_db->getProfiler()->setEnabled(true);
         $resultSet = $this->_db->fetchAll($sql, array(
+            'active'   => Default_Model_DbTable_Member::MEMBER_ACTIVE,
             'deleted'  => Default_Model_DbTable_Member::MEMBER_NOT_DELETED,
             'login'    => Default_Model_DbTable_Member::MEMBER_LOGIN_LOCAL,
             'mail'     => $this->_identity,
@@ -135,10 +137,11 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
     private function fetchUserByUsername()
     {
         $sql = "
-            SELECT *, member_email.email_verification_value 
+            SELECT *, member_email.email_verification_value, member_email.email_checked 
             FROM {$this->_tableName} 
             JOIN member_email ON member.member_id = member_email.email_member_id
             WHERE  
+            is_active = :active AND 
             is_deleted = :deleted AND 
             login_method = :login AND 
             username = :username AND 
@@ -146,6 +149,7 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
 
         $this->_db->getProfiler()->setEnabled(true);
         $resultSet = $this->_db->fetchAll($sql, array(
+            'active'   => Default_Model_DbTable_Member::MEMBER_ACTIVE,
             'deleted'  => Default_Model_DbTable_Member::MEMBER_NOT_DELETED,
             'login'    => Default_Model_DbTable_Member::MEMBER_LOGIN_LOCAL,
             'username' => $this->_identity,
