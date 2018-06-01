@@ -106,15 +106,15 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
     private function fetchUserByEmail()
     {
         $sql = "
-            SELECT *, member_email.email_verification_value, member_email.email_checked 
-            FROM {$this->_tableName}
-            JOIN member_email ON member.member_id = member_email.email_member_id
+            SELECT m.*, member_email.email_verification_value, member_email.email_checked 
+            FROM {$this->_tableName} as m
+            JOIN member_email ON m.member_id = member_email.email_member_id AND member_email.email_primary = 1
             WHERE  
-            is_active = :active AND
-            is_deleted = :deleted AND 
-            login_method = :login AND 
-            mail = :mail AND 
-            password = :password";
+            m.is_active = :active AND
+            m.is_deleted = :deleted AND 
+            m.login_method = :login AND 
+            m.mail = :mail AND 
+            m.`password` = :password";
 
         $this->_db->getProfiler()->setEnabled(true);
         $resultSet = $this->_db->fetchAll($sql, array(
@@ -137,15 +137,15 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
     private function fetchUserByUsername()
     {
         $sql = "
-            SELECT *, member_email.email_verification_value, member_email.email_checked 
-            FROM {$this->_tableName} 
-            JOIN member_email ON member.member_id = member_email.email_member_id
+            SELECT m.*, member_email.email_verification_value, member_email.email_checked 
+            FROM {$this->_tableName} as m
+            JOIN member_email ON m.member_id = member_email.email_member_id AND member_email.email_primary = 1
             WHERE  
-            is_active = :active AND 
-            is_deleted = :deleted AND 
-            login_method = :login AND 
-            username = :username AND 
-            password = :password";
+            m.is_active = :active AND 
+            m.is_deleted = :deleted AND 
+            m.login_method = :login AND 
+            m.username = :username AND 
+            m.`password` = :password";
 
         $this->_db->getProfiler()->setEnabled(true);
         $resultSet = $this->_db->fetchAll($sql, array(
