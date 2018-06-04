@@ -69,8 +69,18 @@ header div.container.header {
     }
 
     .grid-image-container {
-      margin-bottom: 15px;
+      margin-bottom: 30px;
+
+      > a {
+        display: block;
+        width: 100%;
+        img {
+          width: 100%;
+        }
+      }
     }
+
+
 
     .supporter-info-wrapper {
       .column {
@@ -88,6 +98,9 @@ header div.container.header {
             display: table-cell;
             vertical-align: middle;
             text-align: center;
+            max-width: 100%;
+            word-break: break-all;
+
           }
         }
       }

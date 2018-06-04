@@ -22,8 +22,8 @@
 
   $modelInfo = new Default_Model_Info();
   $this->comments = $modelInfo->getLatestComments(16);
-  $this->users = $modelInfo->getNewActiveMembers(10);
-  $this->supporters = $modelInfo->getNewActiveSupporters(10);
+  $this->users = $modelInfo->getNewActiveMembers(8);
+  $this->supporters = $modelInfo->getNewActiveSupporters(8);
   //$this->plingproducts = $modelInfo->getNewActivePlingProduct(9);
   $this->productsThemesGTK = $modelInfo->getLastProductsForHostStores(10);
   $this->productsThemesPlasma = $modelInfo->getLastProductsForHostStores(10);

@@ -132,7 +132,11 @@ class LatestProducts extends React.Component {
       latestProducts = this.state.products.map((product, index) => React.createElement(
         "div",
         { key: index, className: "three wide column computer grid-image-container" },
-        React.createElement("img", { src: "https://cn.pling.it/cache/200x171/img/" + product.image_small })
+        React.createElement(
+          "a",
+          { href: "/p/" + product.project_id },
+          React.createElement("img", { src: "https://cn.pling.it/cache/200x171/img/" + product.image_small })
+        )
       ));
     }
 
@@ -202,7 +206,11 @@ class TopProducts extends React.Component {
       topProducts = this.state.products.map((product, index) => React.createElement(
         "div",
         { key: index, className: "three wide column computer grid-image-container" },
-        React.createElement("img", { src: "https://cn.pling.it/cache/280x171/img/" + product.image_small })
+        React.createElement(
+          "a",
+          { href: "/p/" + product.project_id },
+          React.createElement("img", { src: "https://cn.pling.it/cache/280x171/img/" + product.image_small })
+        )
       ));
     }
     return React.createElement(
@@ -260,6 +268,7 @@ class TopSupporters extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log(nextProps);
     if (nextProps.supporters && !this.state.supporters) {
       this.setState({ supporters: nextProps.supporters });
     }
@@ -331,7 +340,7 @@ class TopSupportersItem extends React.Component {
   render() {
     return React.createElement(
       "div",
-      { className: "three wide column computer grid-image-container" },
+      { className: "four wide column computer grid-image-container" },
       React.createElement(
         "div",
         { className: "ui grid supporter-info-wrapper" },

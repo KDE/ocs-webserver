@@ -61,7 +61,9 @@ class LatestProducts extends React.Component {
     if (this.state.products){
       latestProducts = this.state.products.map((product,index) => (
         <div key={index} className="three wide column computer grid-image-container">
-          <img src={"https://cn.pling.it/cache/200x171/img/" + product.image_small}/>
+          <a href={"/p/"+product.project_id}>
+            <img src={"https://cn.pling.it/cache/200x171/img/" + product.image_small}/>
+          </a>
         </div>
       ));
     }
@@ -120,7 +122,9 @@ class TopProducts extends React.Component {
     if (this.state.products){
       topProducts = this.state.products.map((product,index) => (
         <div key={index} className="three wide column computer grid-image-container">
-          <img src={"https://cn.pling.it/cache/280x171/img/" + product.image_small}/>
+          <a href={"/p/"+product.project_id}>
+            <img src={"https://cn.pling.it/cache/280x171/img/" + product.image_small}/>
+          </a>
         </div>
       ));
     }
@@ -168,6 +172,7 @@ class TopSupporters extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log(nextProps);
     if (nextProps.supporters && !this.state.supporters){
       this.setState({supporters:nextProps.supporters});
     }
@@ -229,7 +234,7 @@ class TopSupportersItem extends React.Component {
 
   render(){
     return (
-      <div className="three wide column computer grid-image-container">
+      <div className="four wide column computer grid-image-container">
         <div className="ui grid supporter-info-wrapper">
           <div className="eight wide column computer">
             <img src={"https://cn.pling.it/cache/280x171/img/" + this.props.supporter.avatar}/>
