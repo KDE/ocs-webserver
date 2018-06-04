@@ -1886,14 +1886,15 @@ var TagingProductDetailSelect2 = (function () {
                                         var projectid = $("#tagsuserselect").attr('data-pid');                                                    
                                             $.post( "/tag/add", { p: projectid, t: data.id })
                                                  .done(function( data ) {
-                                                           console.log(data);    
+                                                           
                                                            if(data.status=='error'){
-                                                               $('span.topic-tags-saved').css({ color: "red" }).html(data.message).show().delay(1000).fadeOut();    
-                                                                t.find("option[value="+data.data.tag+"]").last().remove();                                                               
+                                                               $('span.topic-tags-saved').css({ color: "red" }).html(data.message).show().delay(2000).fadeOut();                                                                   
+                                                                t.find("option[value='"+data.data.tag+"']").last().remove();   
+                                                                //t.find("option[value="+data.data.tag+"]").last().remove();                                                               
                                                            }
                                                            else
                                                            {
-                                                               $('span.topic-tags-saved').show().delay(1000).fadeOut();                                                        
+                                                               $('span.topic-tags-saved').css({ color: "green" }).html('<i class="fa fa-check"></i> Saved').show().delay(1000).fadeOut();                                                        
                                                            }                                                           
                                                  });                                                                          
                                        
@@ -1906,7 +1907,8 @@ var TagingProductDetailSelect2 = (function () {
                                 $.post( "/tag/del", { p: projectid, t: data.id })
                                   .done(function( data ) {
                                             console.log(data);    
-                                            $('span.topic-tags-saved').show().delay(1000).fadeOut();
+                                             $('span.topic-tags-saved').css({ color: "green" }).html('<i class="fa fa-trash"></i>'+data.message).show().delay(1000).fadeOut();  
+                                            //$('span.topic-tags-saved').show().delay(1000).fadeOut();
                                   });
                                 
                         });
