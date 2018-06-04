@@ -88,15 +88,23 @@ class IntroDiv extends React.Component {
             React.createElement(
               "div",
               { className: "column eight wide computer" },
-              React.createElement("img", { src: "/images/system/download-app.png" })
+              React.createElement(
+                "a",
+                { href: "https://www.opendesktop.org/p/1175480/" },
+                React.createElement("img", { id: "download-app", src: "/images/system/download-app.png" })
+              )
             ),
             React.createElement(
               "div",
               { className: "column eight wide computer" },
               React.createElement(
-                "p",
-                null,
-                "become a supporter"
+                "a",
+                { id: "become-supporter", href: "/supprt" },
+                React.createElement(
+                  "h1",
+                  null,
+                  "become a supporter"
+                )
               )
             )
           )
@@ -123,10 +131,11 @@ class LatestProducts extends React.Component {
     if (this.state.products) {
       latestProducts = this.state.products.map((product, index) => React.createElement(
         "div",
-        { key: index, className: "two wide column computer" },
+        { key: index, className: "three wide column computer grid-image-container" },
         React.createElement("img", { src: "https://cn.pling.it/cache/200x171/img/" + product.image_small })
       ));
     }
+
     return React.createElement(
       "div",
       { id: "latest-products", className: "hp-section" },
@@ -141,7 +150,7 @@ class LatestProducts extends React.Component {
             { className: "row" },
             React.createElement(
               "div",
-              { className: "column eight wide computer" },
+              { className: "column sixtenn wide computer" },
               React.createElement(
                 "h2",
                 null,
@@ -192,7 +201,7 @@ class TopProducts extends React.Component {
     if (this.state.products) {
       topProducts = this.state.products.map((product, index) => React.createElement(
         "div",
-        { key: index, className: "four wide column computer" },
+        { key: index, className: "three wide column computer grid-image-container" },
         React.createElement("img", { src: "https://cn.pling.it/cache/280x171/img/" + product.image_small })
       ));
     }
@@ -210,7 +219,7 @@ class TopProducts extends React.Component {
             { className: "row" },
             React.createElement(
               "div",
-              { className: "column eight wide computer" },
+              { className: "column sixtenn wide computer" },
               React.createElement(
                 "h2",
                 null,
@@ -259,12 +268,12 @@ class TopSupporters extends React.Component {
   render() {
     let topSupporters;
     if (this.state.supporters) {
-      topSupporters = this.state.supporters.map((supporter, index) => React.createElement(
-        "div",
-        { key: index, className: "four wide column computer" },
-        React.createElement("img", { src: "https://cn.pling.it/cache/280x171/img/" + supporter.avatar })
-      ));
+      topSupporters = this.state.supporters.map((supporter, index) => React.createElement(TopSupportersItem, {
+        key: index,
+        supporter: supporter
+      }));
     }
+
     return React.createElement(
       "div",
       { id: "top-supporters", className: "hp-section" },
@@ -279,7 +288,7 @@ class TopSupporters extends React.Component {
             { className: "row" },
             React.createElement(
               "div",
-              { className: "column eight wide computer" },
+              { className: "column sixteen wide computer" },
               React.createElement(
                 "h2",
                 null,
@@ -312,6 +321,42 @@ const mapDispatchToTopSupportersProps = dispatch => {
 };
 
 const TopSupportersWrapper = ReactRedux.connect(mapStateToTopSupportersProps, mapDispatchToTopSupportersProps)(TopSupporters);
+
+class TopSupportersItem extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  render() {
+    return React.createElement(
+      "div",
+      { className: "three wide column computer grid-image-container" },
+      React.createElement(
+        "div",
+        { className: "ui grid supporter-info-wrapper" },
+        React.createElement(
+          "div",
+          { className: "eight wide column computer" },
+          React.createElement("img", { src: "https://cn.pling.it/cache/280x171/img/" + this.props.supporter.avatar })
+        ),
+        React.createElement(
+          "div",
+          { className: "eight wide column computer" },
+          React.createElement(
+            "div",
+            { className: "supporter-name" },
+            React.createElement(
+              "h3",
+              null,
+              this.props.supporter.username
+            )
+          )
+        )
+      )
+    );
+  }
+}
 const { Provider, connect } = ReactRedux;
 const store = Redux.createStore(reducer);
 

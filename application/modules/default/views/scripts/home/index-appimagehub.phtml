@@ -22,10 +22,10 @@
 
   $modelInfo = new Default_Model_Info();
   $this->comments = $modelInfo->getLatestComments(16);
-  $this->users = $modelInfo->getNewActiveMembers(18);
-  $this->supporters = $modelInfo->getNewActiveSupporters(9);
+  $this->users = $modelInfo->getNewActiveMembers(10);
+  $this->supporters = $modelInfo->getNewActiveSupporters(10);
   //$this->plingproducts = $modelInfo->getNewActivePlingProduct(9);
-  $this->productsThemesGTK = $modelInfo->getLastProductsForHostStores(12);
+  $this->productsThemesGTK = $modelInfo->getLastProductsForHostStores(10);
   $this->productsThemesPlasma = $modelInfo->getLastProductsForHostStores(10);
   $this->productsWindowmanager = $modelInfo->getLastProductsForHostStores(10);
   $this->productsIconsCursors= $modelInfo->getLastProductsForHostStores(10);
@@ -33,7 +33,6 @@
   $this->productsApps = $modelInfo->getLastProductsForHostStores(10);
   $this->productsAddons = $modelInfo->getLastProductsForHostStores(10);
   $this->productsWallpapers = $modelInfo->getLastProductsForHostStores(10);
-
   $this->countSupporters = $modelInfo->getCountActiveSupporters();
 
   $featuredProducts = $modelInfo->getFeaturedProductsForHostStores(100);
