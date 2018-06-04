@@ -21,18 +21,19 @@
  **/
 
   $modelInfo = new Default_Model_Info();
-  $this->comments = $modelInfo->getLatestComments(10);
-  //$this->users = $modelInfo->getNewActiveMembers(18);
-  //$this->supporters = $modelInfo->getNewActiveSupporters(9);
+  $this->comments = $modelInfo->getLatestComments(16);
+  $this->users = $modelInfo->getNewActiveMembers(18);
+  $this->supporters = $modelInfo->getNewActiveSupporters(9);
   //$this->plingproducts = $modelInfo->getNewActivePlingProduct(9);
-  $this->productsThemesGTK = $modelInfo->getLastProductsForHostStores(5,"366,363,273,267,138,125,131,153,154,414,133");
-  $this->productsThemesPlasma = $modelInfo->getLastProductsForHostStores(5,"365,119,123,266,114,118,349,417,101,100,111,422,423,446,417");
-  $this->productsWindowmanager = $modelInfo->getLastProductsForHostStores(5,"117,267,139,143,142,140,141,144");
-  $this->productsIconsCursors= $modelInfo->getLastProductsForHostStores(5,"386,107");
-  $this->productsScreenshots= $modelInfo->getLastProductsForHostStores(5,"225,445");
-  $this->productsApps = $modelInfo->getLastProductsForHostStores(5,233);
-  $this->productsAddons = $modelInfo->getLastProductsForHostStores(5,"152");
-  $this->productsWallpapers = $modelInfo->getLastProductsForHostStores(5,"295,158");
+  $this->productsThemesGTK = $modelInfo->getLastProductsForHostStores(12);
+  $this->productsThemesPlasma = $modelInfo->getLastProductsForHostStores(10);
+  $this->productsWindowmanager = $modelInfo->getLastProductsForHostStores(10);
+  $this->productsIconsCursors= $modelInfo->getLastProductsForHostStores(10);
+  $this->productsScreenshots= $modelInfo->getLastProductsForHostStores(10);
+  $this->productsApps = $modelInfo->getLastProductsForHostStores(10);
+  $this->productsAddons = $modelInfo->getLastProductsForHostStores(10);
+  $this->productsWallpapers = $modelInfo->getLastProductsForHostStores(10);
+
   $this->countSupporters = $modelInfo->getCountActiveSupporters();
 
   $featuredProducts = $modelInfo->getFeaturedProductsForHostStores(100);
@@ -50,12 +51,46 @@
   $helpPrintDate = new Default_View_Helper_PrintDate();
 ?>
 
-<main id="explore-content">
+<link type="text/css" rel="stylesheet" href="/theme/react/lib/semantic-ui/semantic.min.css"/>
+<link type="text/css" rel="stylesheet" href="/theme/react/assets/css/style.css"/>
 
-</main>
+<main id="explore-content"></main>
+
+<script type="text/javascript">
+  <?php
+    $js_productsThemesGTK = json_encode($this->productsThemesGTK);
+    $js_productsThemesPlasma = json_encode($this->productsThemesPlasma);
+    $js_productsWindowmanager = json_encode($this->productsWindowmanager);
+    $js_productsIconsCursors = json_encode($this->productsIconsCursors);
+    $js_productsScreenshots = json_encode($this->productsScreenshots);
+    $js_productsApps = json_encode($this->productsApps);
+    $js_productsAddons = json_encode($this->productsAddons);
+    $js_productsWallpapers = json_encode($this->productsWallpapers);
+    $js_countSupporters = json_encode($this->countSupporters);
+    $js_featuredProducts = json_encode($this->featuredProducts);
+    $js_users = json_encode($this->users);
+    $js_supporters = json_encode($this->supporters)
+  ?>
+  var products = {
+    ThemeGTK:<?php echo $js_productsThemesGTK ?>,
+    ThemesPlasma:<?php echo $js_productsThemesPlasma ?>,
+    Windowmanager:<?php echo $js_productsWindowmanager ?>,
+    IconsCursors:<?php echo $js_productsIconsCursors ?>,
+    Screenshots:<?php echo $js_productsScreenshots ?>,
+    Apps:<?php echo $js_productsApps ?>,
+    Addons:<?php echo $js_productsAddons ?>,
+    Wallpapers:<?php echo $js_productsWallpapers ?>,
+    Featured:<?php echo $js_featuredProducts ?>
+  };
+  var users = <?php echo $js_users ?>;
+  var supporters = <?php echo $js_supporters ?>;
+</script>
 
 <script type="text/javascript" src="/theme/react/lib/react/react.js"></script>
 <script type="text/javascript" src="/theme/react/lib/react-dom/react-dom.js"></script>
 <script type="text/javascript" src="/theme/react/lib/redux/redux.min.js"></script>
 <script type="text/javascript" src="/theme/react/lib/redux/react-redux.min.js"></script>
+
+<script type="text/javascript" src="/theme/react/lib/semantic-ui/semantic.min.js"></script>
+
 <script type="text/javascript" src="/theme/react/all.js"></script>
