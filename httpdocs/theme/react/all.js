@@ -347,7 +347,9 @@ class TopSupportersItem extends React.Component {
         React.createElement(
           "div",
           { className: "eight wide column computer" },
-          React.createElement("img", { src: "https://cn.pling.it/cache/280x171/img/" + this.props.supporter.avatar })
+          React.createElement("img", { src: "https://cn.pling.it/cache/280x171/img/" + this.props.supporter.avatar, onError: e => {
+              e.target.src = "/images_sys/cc-icons-png/by.large.png";
+            } })
         ),
         React.createElement(
           "div",

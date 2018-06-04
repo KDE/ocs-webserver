@@ -237,7 +237,7 @@ class TopSupportersItem extends React.Component {
       <div className="four wide column computer grid-image-container">
         <div className="ui grid supporter-info-wrapper">
           <div className="eight wide column computer">
-            <img src={"https://cn.pling.it/cache/280x171/img/" + this.props.supporter.avatar}/>
+            <img src={"https://cn.pling.it/cache/280x171/img/" + this.props.supporter.avatar} onError={(e)=>{e.target.src="/images_sys/cc-icons-png/by.large.png"}}/>
           </div>
           <div className="eight wide column computer">
             <div className="supporter-name">
