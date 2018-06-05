@@ -1,0 +1,1 @@
+alter table tag_object add column is_deleted int(1) default 0;
