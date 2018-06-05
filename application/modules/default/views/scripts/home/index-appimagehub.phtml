@@ -34,6 +34,9 @@
   $this->productsAddons = $modelInfo->getLastProductsForHostStores(10);
   $this->productsWallpapers = $modelInfo->getLastProductsForHostStores(10);
   $this->countSupporters = $modelInfo->getCountActiveSupporters();
+  
+  $topProducts = new Default_View_Helper_FetchTopProductsForStore();
+  $this->topProducts = $topProducts->fetchTopProducts();
 
   $featuredProducts = $modelInfo->getFeaturedProductsForHostStores(100);
   if ($featuredProducts->getTotalItemCount()) {
@@ -68,7 +71,9 @@
     $js_countSupporters = json_encode($this->countSupporters);
     $js_featuredProducts = json_encode($this->featuredProducts);
     $js_users = json_encode($this->users);
-    $js_supporters = json_encode($this->supporters)
+    $js_supporters = json_encode($this->supporters);
+    $js_productsTop = json_encode($this->topProducts);
+    
   ?>
   var products = {
     ThemeGTK:<?php echo $js_productsThemesGTK ?>,
