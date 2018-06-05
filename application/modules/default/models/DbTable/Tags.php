@@ -211,6 +211,7 @@ class Default_Model_DbTable_Tags extends Local_Model_Table
             JOIN tag t on t.tag_id = to.tag_id
             JOIN tag_group_item g on g.tag_id = t.tag_id 
             WHERE g.tag_group_id = $groupId 
+            and `to`.is_deleted = 0
             and `to`.tag_type_id = $typeId 
             and `to`.tag_object_id = $projectId
             ";
