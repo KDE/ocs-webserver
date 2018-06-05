@@ -21,7 +21,9 @@
  **/
 
 $this->headLink()->appendStylesheet('/theme/flatui/css/stylesheets/general.css');
-
+ $this->headLink()->appendStylesheet('/theme/flatui/css/select2.min.css');
+$this->headLink()->appendStylesheet('/theme/flatui/css/select2.custmized.css');
+$this->inlineScript()->appendFile('/theme/flatui/js/lib/select2.min.js');
 $architectureListHelper = new Default_View_Helper_FetchArchitectureTags();
 
 $this->tab = 'products';
@@ -1605,3 +1607,12 @@ $this->inlineScript()->appendScript(
 </script>
 <script type="text/javascript" src="/theme/flatui/js/lib/chosen.jquery.min.js"></script>
 <!-- /ppload -->
+
+<?php
+            $this->inlineScript()->appendScript(
+                '    $(document).ready(function(){       
+                        TagingLoopMyProducts.setup();            
+                    });
+                ');
+                            
+     ?>

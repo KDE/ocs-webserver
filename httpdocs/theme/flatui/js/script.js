@@ -1808,12 +1808,22 @@ var TagingProductSelect2 = (function () {
 
                         // Bind an event
                         t.on('select2:select', function (e) { 
-                                      var data = e.params.data;     
+                                      var data = e.params.data;                                                                             
                                       var projectid = $("#tagsuserselect").attr('data-pid');                                        
                                       var lis = t.parent().find('ul.select2-selection__rendered').find('li.select2-selection__choice').length;
                                       if(lis>5){                                                
-                                           t.find("option[value="+data.id+"]").remove();                                             
-                                      }          
+                                           t.find("option[value='"+data.id+"']").remove(); 
+                                           return;                                            
+                                      }                                                
+                                      var regexp=new RegExp("^[0-9A-Za-z_.-]+$");
+                                      if(!(regexp.test(data.text))){
+                                           t.find("option[value='"+data.id+"']").remove();                                             
+                                           alert('Must be letter or number and can include hyphens');
+                                      }
+                                      if(data.text.length>10){                                            
+                                            t.find("option[value='"+data.id+"']").remove();                                             
+                                           alert('Max. length 45 chars');
+                                      }
                                        
                         });
         }
@@ -1916,6 +1926,103 @@ var TagingProductDetailSelect2 = (function () {
     }
 })();
 
+
+
+var TagingLoopMyProducts = (function () {
+                        return {
+                            setup: function () {
+                                           TagingLoopMyProductsSelect2.setup();
+                                           $('body').on('click', 'button.topic-tags-btn', function (event) {
+                                                $(this).toggleClass('Done');     
+                                                $(this).parent().find('.topicsuser').html('');                                                                                                                                       
+                                                
+                                                $(this).parent().find('.tagsuserselectpanel').toggle();
+                                                if($(this).text() == 'Done'){
+                                                        $(this).text('Manage tags');
+                                                        var newhtml = '';
+                                                        var lis =  $(this).parent().find('li.select2-selection__choice');                                                        
+                                                        $.each(lis, function( index, value ) {
+                                                            newhtml=newhtml+'<a rel="nofollow" href="/search/projectSearchText/'+value.title+'/t/'+value.title+'/f/tags" '
+                                                                                          +'class="topic-tag topic-tag-link usertagslabel">'+value.title+'</a>';
+                                                        });                                                                                                                                                               
+                                                        $(this).parent().find('.topicsuser').html(newhtml);                                                        
+                                                }else{
+                                                    $(this).text('Done');                                                    
+                                                }                                               
+                                           });
+                            }
+                        }
+})();
+
+var TagingLoopMyProductsSelect2 = (function () {
+    return {
+        setup: function () {
+
+                        $.fn.select2.amd.require(['select2/selection/search'], function (Search) {
+                            Search.prototype.searchRemoveChoice = function (decorated, item) {
+                                this.trigger('unselect', {
+                                    data: item
+                                });
+
+                                this.$search.val('');
+                                this.handleSearch();
+                            };
+                        }, null, true);
+
+                        //var t = $("#tagsuserselect").select2({
+                        var t = $(".taggingSelect2").select2({                            
+                            placeholder: "Input tags please...", //placeholder
+                            tags: true,
+                            minimumInputLength: 3,
+                            closeOnSelect:true,
+                            maximumSelectionLength: 5,
+                            tokenSeparators: [",", " "],
+                            ajax: {
+                                    url: '/tag/filter',
+                                    dataType: 'json',
+                                    type: "GET",
+                                    delay: 500, // wait 250 milliseconds before triggering the request                                      
+                                    processResults: function (data) {                                          
+                                          return {
+                                                results : data.data.tags                                          
+                                          };
+                                        }                                                                   
+                                    }
+                        });                      
+
+                        // Bind an event
+                        t.on('select2:select', function (e) { 
+                                        var data = e.params.data;    
+                                        var projectid  = $(this).attr('id').replace('tagsuserselect','');                                   
+                                        //var projectid = $("#tagsuserselect").attr('data-pid');                                                    
+                                            $.post( "/tag/add", { p: projectid, t: data.id })
+                                                 .done(function( data ) {                                                           
+                                                           if(data.status=='error'){
+                                                                $('#topic-tags-saved'+projectid).css({ color: "red" }).html(data.message).show().delay(2000).fadeOut();                                                                   
+                                                                t.find("option[value='"+data.data.tag+"']").last().remove();                                                                                                                       
+                                                           }
+                                                           else
+                                                           {
+                                                                $('#topic-tags-saved'+projectid).css({ color: "green" }).html('<i class="fa fa-check"></i> Saved').show().delay(1000).fadeOut();                                                        
+                                                           }                                                           
+                                                 });                                                                          
+                                       
+                        });
+                       
+                        // Unbind the event
+                        t.on('select2:unselect', function(e){
+                                var data = e.params.data;     
+                                //var projectid = $("#tagsuserselect").attr('data-pid');
+                                var projectid  = $(this).attr('id').replace('tagsuserselect','');
+                                $.post( "/tag/del", { p: projectid, t: data.id })
+                                  .done(function( data ) {                                           
+                                             $('#topic-tags-saved'+projectid).css({ color: "green" }).html('<i class="fa fa-trash"></i>'+data.message).show().delay(1000).fadeOut();                                            
+                                  });
+                                
+                        });
+        }
+    }
+})();
 
 var productRatingToggle = (function () {
     return {

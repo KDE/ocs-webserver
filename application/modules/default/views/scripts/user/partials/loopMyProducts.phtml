@@ -93,6 +93,7 @@ $helperImage = new Default_View_Helper_Image();
             }                                       
          }        
 
+        echo '<span class="topicsuser">';
         if(false === empty($tagsuser))
         {                  
             foreach (explode(',',$tagsuser) as $tag) { 
@@ -101,9 +102,35 @@ $helperImage = new Default_View_Helper_Image();
          <?php 
             }                                       
          }
+         echo '</span>';
          ?>        
+        </span>            
+      
+            <span id="tagsuserselectpanel<?=$this->project_id?>" class="tagsuserselectpanel" style="display: none">
+                    <select   
+                            id="tagsuserselect<?=$this->project_id?>"                                           
+                            name="tagsuser"                
+                            multiple="true"                                                                                                                        
+                            class="taggingSelect2"
+                            data-pid="<?php echo $this->project_id?>"
+                            >
+                        <option value=""></option>
+                        <?php
+                        $element_value =$tagsuser;
+                        $value = empty($element_value) ? array() : explode(',',$element_value);
+                        foreach ($value as $v) {
+                            echo '<option value="'.$v.'" selected="selected">'.$v.'</option>';                
+                        }
+                        ?>         
+                    </select>
+            </span>
+
+            <button id="topic-tags-btn<?=$this->project_id?>" class="btn-link topic-tags-btn"  type="button" >Manage tags</button>
+            <span id="topic-tags-saved<?=$this->project_id?>" class="topic-tags-saved" style="display: none"><i class="fa fa-check"></i> Saved </span>
+
         </span>
-        </span>
+
+      
 
         <!-- /text -->
         <!-- buttons -->
