@@ -28,6 +28,12 @@ header div.container.header {
       &:nth-child(even){
         background-image: none;
         background-color: white;
+
+        .grid-image-container {
+          &:hover {
+            background-color: #ccc;
+          }
+        }
       }
     }
 
@@ -69,14 +75,21 @@ header div.container.header {
     }
 
     .grid-image-container {
-      margin-bottom: 30px;
-
+      .transition();
+      background-color: transparent;
+      padding: 15px;
+      border:1px solid transparent;
       > a {
         display: block;
         width: 100%;
         img {
           width: 100%;
         }
+      }
+
+      &:hover {
+        border-color:#ccc;
+        background-color: white;
       }
     }
 
@@ -89,6 +102,7 @@ header div.container.header {
           width: 100%;
           border-radius: 100%;
           border: 1px solid #c1c1c1;
+
         }
         .supporter-name {
           display: table;

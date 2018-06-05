@@ -241,16 +241,18 @@ class TopSupportersItem extends React.Component {
   render(){
     return (
       <div className="four wide column computer grid-image-container">
-        <div className="ui grid supporter-info-wrapper">
-          <div className="eight wide column computer">
-            <img src={"https://cn.pling.it/cache/280x171/img/" + this.props.supporter.avatar} onError={(e)=>{e.target.src="/images_sys/cc-icons-png/by.large.png"}}/>
-          </div>
-          <div className="eight wide column computer">
-            <div className="supporter-name">
-                <h3>{this.props.supporter.username}</h3>
+        <a href={"/member/"+this.props.supporter.member_id}>
+          <div className="ui grid supporter-info-wrapper">
+            <div className="eight wide column computer">
+              <img src={"https://cn.pling.it/cache/280x171/img/" + this.props.supporter.avatar} onError={(e)=>{e.target.src="/images_sys/cc-icons-png/by.large.png"}}/>
+            </div>
+            <div className="eight wide column computer">
+              <div className="supporter-name">
+                  <h3>{this.props.supporter.username}</h3>
+              </div>
             </div>
           </div>
-        </div>
+        </a>
       </div>
     )
   }

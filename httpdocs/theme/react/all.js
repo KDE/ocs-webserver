@@ -348,25 +348,29 @@ class TopSupportersItem extends React.Component {
       "div",
       { className: "four wide column computer grid-image-container" },
       React.createElement(
-        "div",
-        { className: "ui grid supporter-info-wrapper" },
+        "a",
+        { href: "/member/" + this.props.supporter.member_id },
         React.createElement(
           "div",
-          { className: "eight wide column computer" },
-          React.createElement("img", { src: "https://cn.pling.it/cache/280x171/img/" + this.props.supporter.avatar, onError: e => {
-              e.target.src = "/images_sys/cc-icons-png/by.large.png";
-            } })
-        ),
-        React.createElement(
-          "div",
-          { className: "eight wide column computer" },
+          { className: "ui grid supporter-info-wrapper" },
           React.createElement(
             "div",
-            { className: "supporter-name" },
+            { className: "eight wide column computer" },
+            React.createElement("img", { src: "https://cn.pling.it/cache/280x171/img/" + this.props.supporter.avatar, onError: e => {
+                e.target.src = "/images_sys/cc-icons-png/by.large.png";
+              } })
+          ),
+          React.createElement(
+            "div",
+            { className: "eight wide column computer" },
             React.createElement(
-              "h3",
-              null,
-              this.props.supporter.username
+              "div",
+              { className: "supporter-name" },
+              React.createElement(
+                "h3",
+                null,
+                this.props.supporter.username
+              )
             )
           )
         )
