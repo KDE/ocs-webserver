@@ -1,4 +1,4 @@
-class Template extends React.Component {
+class HomePageTemplateOne extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {};
@@ -52,7 +52,7 @@ class LatestProducts extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.products && !this.state.products){
-      this.setState({products:nextProps.products.ThemeGTK});
+      this.setState({products:nextProps.products.ThemesPlasma});
     }
   }
 
@@ -113,7 +113,13 @@ class TopProducts extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.products && !this.state.products){
-      this.setState({products:nextProps.products.ThemesPlasma});
+      let products;
+      if (nextProps.products.TopProducts.elements.length > 0){
+        products = nextProps.products.TopProducts.elements;
+      } else {
+        products = nextProps.products.ThemesPlasma;
+      }
+      this.setState({products:products});
     }
   }
 
@@ -246,6 +252,14 @@ class TopSupportersItem extends React.Component {
           </div>
         </div>
       </div>
+    )
+  }
+}
+
+class HomePageTemplateTwo extends React.Component {
+  render(){
+    return (
+      <p>template two</p>
     )
   }
 }

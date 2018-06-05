@@ -48,7 +48,7 @@ function setSupporters(supporters) {
     supporters: supporters
   };
 }
-class Template extends React.Component {
+class HomePageTemplateOne extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -122,7 +122,7 @@ class LatestProducts extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.products && !this.state.products) {
-      this.setState({ products: nextProps.products.ThemeGTK });
+      this.setState({ products: nextProps.products.ThemesPlasma });
     }
   }
 
@@ -196,7 +196,13 @@ class TopProducts extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.products && !this.state.products) {
-      this.setState({ products: nextProps.products.ThemesPlasma });
+      let products;
+      if (nextProps.products.TopProducts.elements.length > 0) {
+        products = nextProps.products.TopProducts.elements;
+      } else {
+        products = nextProps.products.ThemesPlasma;
+      }
+      this.setState({ products: products });
     }
   }
 
@@ -368,6 +374,16 @@ class TopSupportersItem extends React.Component {
     );
   }
 }
+
+class HomePageTemplateTwo extends React.Component {
+  render() {
+    return React.createElement(
+      "p",
+      null,
+      "template two"
+    );
+  }
+}
 const { Provider, connect } = ReactRedux;
 const store = Redux.createStore(reducer);
 
@@ -375,7 +391,8 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: true
+      loading: true,
+      version: 1
     };
   }
 
@@ -387,11 +404,16 @@ class App extends React.Component {
   }
 
   render() {
-
+    let templateDisplay;
+    if (this.state.version === 1) {
+      templateDisplay = React.createElement(HomePageTemplateOne, null);
+    } else if (this.state.version === 2) {
+      templateDisplay = React.createElement(HomePageTemplateTwo, null);
+    }
     return React.createElement(
       "div",
       { id: "app-root" },
-      React.createElement(Template, null)
+      templateDisplay
     );
   }
 

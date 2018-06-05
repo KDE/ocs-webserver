@@ -5,7 +5,8 @@ class App extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {
-      loading:true
+      loading:true,
+      version:1
     };
   }
 
@@ -17,10 +18,15 @@ class App extends React.Component {
   }
 
   render(){
-
+    let templateDisplay;
+    if (this.state.version === 1){
+      templateDisplay = <HomePageTemplateOne/>;
+    } else if (this.state.version === 2) {
+      templateDisplay = <HomePageTemplateTwo/>;
+    }
     return (
       <div id="app-root">
-        <Template/>
+        {templateDisplay}
       </div>
     )
   }

@@ -34,7 +34,7 @@
   $this->productsAddons = $modelInfo->getLastProductsForHostStores(10);
   $this->productsWallpapers = $modelInfo->getLastProductsForHostStores(10);
   $this->countSupporters = $modelInfo->getCountActiveSupporters();
-  
+
   $topProducts = new Default_View_Helper_FetchTopProductsForStore();
   $this->topProducts = $topProducts->fetchTopProducts();
 
@@ -59,6 +59,7 @@
 <main id="explore-content"></main>
 
 <script type="text/javascript">
+
   <?php
     $js_productsThemesGTK = json_encode($this->productsThemesGTK);
     $js_productsThemesPlasma = json_encode($this->productsThemesPlasma);
@@ -71,10 +72,11 @@
     $js_countSupporters = json_encode($this->countSupporters);
     $js_featuredProducts = json_encode($this->featuredProducts);
     $js_users = json_encode($this->users);
+    $js_topProducts = json_encode($this->topProducts);
     $js_supporters = json_encode($this->supporters);
     $js_productsTop = json_encode($this->topProducts);
-    
   ?>
+
   var products = {
     ThemeGTK:<?php echo $js_productsThemesGTK ?>,
     ThemesPlasma:<?php echo $js_productsThemesPlasma ?>,
@@ -84,10 +86,14 @@
     Apps:<?php echo $js_productsApps ?>,
     Addons:<?php echo $js_productsAddons ?>,
     Wallpapers:<?php echo $js_productsWallpapers ?>,
-    Featured:<?php echo $js_featuredProducts ?>
+    Featured:<?php echo $js_featuredProducts ?>,
+    TopProducts:<?php echo $js_topProducts ?>
   };
+
   var users = <?php echo $js_users ?>;
+
   var supporters = <?php echo $js_supporters ?>;
+
 </script>
 
 <script type="text/javascript" src="/theme/react/lib/react/react.js"></script>
