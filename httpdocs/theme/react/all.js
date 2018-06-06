@@ -61,6 +61,7 @@ class HomePageTemplateOne extends React.Component {
       React.createElement(SpotlightProductWrapper, null),
       React.createElement(LatestProductsWrapper, null),
       React.createElement(TopProductsWrapper, null),
+      React.createElement(CommunitySection, null),
       React.createElement(TopSupportersWrapper, null),
       React.createElement(IntroDiv, null)
     );
@@ -345,6 +346,147 @@ const mapDispatchToTopProductsProps = dispatch => {
 };
 
 const TopProductsWrapper = ReactRedux.connect(mapStateToTopProductsProps, mapDispatchToTopProductsProps)(TopProducts);
+
+class CommunitySection extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  render() {
+    return React.createElement(
+      "div",
+      { id: "community-section", className: "hp-section" },
+      React.createElement(
+        "div",
+        { className: "ui container grid" },
+        React.createElement(
+          "div",
+          { className: "row" },
+          React.createElement(
+            "div",
+            { id: "latest-rss-news-container", className: "column eight wide computer" },
+            React.createElement(LatestRssNewsPosts, null)
+          ),
+          React.createElement(
+            "div",
+            { id: "latest-blog-posts-container", className: "column eight wide computer" },
+            React.createElement(LatestBlogPosts, null)
+          )
+        )
+      )
+    );
+  }
+}
+
+class LatestRssNewsPosts extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+    this.getLatestRssNewsPosts = this.getLatestRssNewsPosts.bind(this);
+  }
+
+  componentDidMount() {
+    this.getLatestRssNewsPosts();
+  }
+
+  getLatestRssNewsPosts() {
+    const json_url = "https://blog.opendesktop.org/?json=1&callback=?";
+    const self = this;
+    $.getJSON(json_url, function (res) {
+      self.setState({ posts: res.posts });
+    });
+  }
+
+  render() {
+    let rssNewsPostsDisplay;
+    if (this.state.posts) {
+      rssNewsPostsDisplay = this.state.posts.slice(0, 3).map((np, index) => React.createElement(
+        "div",
+        { className: "item rss-news-post", key: index },
+        React.createElement(
+          "h3",
+          null,
+          React.createElement(
+            "a",
+            { href: np.url },
+            np.title
+          )
+        ),
+        React.createElement("p", { dangerouslySetInnerHTML: { __html: np.excerpt } })
+      ));
+    }
+    return React.createElement(
+      "div",
+      { id: "latest-rss-news" },
+      React.createElement(
+        "h2",
+        null,
+        "latest rss news"
+      ),
+      React.createElement(
+        "div",
+        { className: "ui menu vertical" },
+        rssNewsPostsDisplay
+      )
+    );
+  }
+}
+
+class LatestBlogPosts extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+    this.getLatestBlogPosts = this.getLatestBlogPosts.bind(this);
+  }
+
+  componentDidMount() {
+    this.getLatestBlogPosts();
+  }
+
+  getLatestBlogPosts() {
+    const urlforum = 'https://forum.opendesktop.org/';
+    const json_url = urlforum + 'latest.json';
+    const self = this;
+    $.ajax(json_url).then(function (result) {
+      self.setState({ posts: result.topic_list.topics });
+    });
+  }
+
+  render() {
+    let blogPostsDisplay;
+    if (this.state.posts) {
+      blogPostsDisplay = this.state.posts.slice(0, 3).map((bp, index) => React.createElement(
+        "div",
+        { className: "item rss-news-post", key: index },
+        React.createElement(
+          "h3",
+          null,
+          React.createElement(
+            "a",
+            { href: bp.url },
+            bp.title
+          )
+        ),
+        React.createElement("p", { dangerouslySetInnerHTML: { __html: bp.excerpt } })
+      ));
+    }
+    return React.createElement(
+      "div",
+      { id: "latest-blog-posts" },
+      React.createElement(
+        "h2",
+        null,
+        "Latest Blog Posts"
+      ),
+      React.createElement(
+        "div",
+        { className: "ui menu vertical" },
+        blogPostsDisplay
+      )
+    );
+  }
+}
 
 class TopSupporters extends React.Component {
   constructor(props) {

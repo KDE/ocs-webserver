@@ -10,6 +10,7 @@ class HomePageTemplateOne extends React.Component {
         <SpotlightProductWrapper/>
         <LatestProductsWrapper/>
         <TopProductsWrapper/>
+        <CommunitySection/>
         <TopSupportersWrapper/>
         <IntroDiv/>
       </div>
@@ -235,6 +236,111 @@ const TopProductsWrapper = ReactRedux.connect(
   mapStateToTopProductsProps,
   mapDispatchToTopProductsProps
 )(TopProducts)
+
+class CommunitySection extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+  }
+
+  render(){
+    return (
+      <div id="community-section" className="hp-section">
+        <div className="ui container grid">
+          <div className="row">
+            <div id="latest-rss-news-container" className="column eight wide computer">
+              <LatestRssNewsPosts/>
+            </div>
+            <div id="latest-blog-posts-container" className="column eight wide computer">
+              <LatestBlogPosts/>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+}
+
+class LatestRssNewsPosts extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+    this.getLatestRssNewsPosts = this.getLatestRssNewsPosts.bind(this);
+  }
+
+  componentDidMount() {
+    this.getLatestRssNewsPosts()
+  }
+
+  getLatestRssNewsPosts(){
+    const json_url = "https://blog.opendesktop.org/?json=1&callback=?"
+    const self = this;
+    $.getJSON(json_url, function (res) {
+      self.setState({posts:res.posts})
+    });
+  }
+
+  render(){
+    let rssNewsPostsDisplay;
+    if (this.state.posts){
+      rssNewsPostsDisplay = this.state.posts.slice(0,3).map((np,index) => (
+        <div className="item rss-news-post" key={index}>
+          <h3><a href={np.url}>{np.title}</a></h3>
+          <p dangerouslySetInnerHTML={{__html:np.excerpt}}></p>
+        </div>
+      ));
+    }
+    return(
+      <div id="latest-rss-news">
+        <h2>latest rss news</h2>
+        <div className="ui menu vertical">
+          {rssNewsPostsDisplay}
+        </div>
+      </div>
+    )
+  }
+}
+
+class LatestBlogPosts extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+    this.getLatestBlogPosts = this.getLatestBlogPosts.bind(this);
+  }
+
+  componentDidMount() {
+    this.getLatestBlogPosts()
+  }
+
+  getLatestBlogPosts(){
+    const urlforum = 'https://forum.opendesktop.org/';
+    const json_url =urlforum+'latest.json';
+    const self = this;
+    $.ajax(json_url).then(function (result) {
+      self.setState({posts:result.topic_list.topics});
+    });
+  }
+
+  render(){
+    let blogPostsDisplay;
+    if (this.state.posts){
+      blogPostsDisplay = this.state.posts.slice(0,3).map((bp,index) => (
+        <div className="item rss-news-post" key={index}>
+          <h3><a href={bp.url}>{bp.title}</a></h3>
+          <p dangerouslySetInnerHTML={{__html:bp.excerpt}}></p>
+        </div>
+      ));
+    }
+    return (
+      <div id="latest-blog-posts">
+        <h2>Latest Blog Posts</h2>
+        <div className="ui menu vertical">
+          {blogPostsDisplay}
+        </div>
+      </div>
+    )
+  }
+}
 
 class TopSupporters extends React.Component {
   constructor(props){
