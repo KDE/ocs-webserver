@@ -171,27 +171,21 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
                 $data['comment_parent_id'] = (int)$this->getParam('i');
                 $data['comment_member_id'] = (int)$this->_authMember->member_id;
                 $data['comment_text'] = Default_Model_HtmlPurify::purify($this->getParam('msg'));
-                // $tableReplies = new Default_Model_ProjectComments();
-                // $result = $tableReplies->save($data);
+        
 
              
                 $voteup = (int)$this->getParam('v');
                 $modelRating = new Default_Model_DbTable_ProjectRating();                
                 $modelRating->rateForProject($project_id, $this->_authMember->member_id, $voteup, $msg);
 
-                $status = count($result->toArray()) > 0 ? 'ok' : 'error';
-
+               
                 $this->view->product = $this->loadProductInfo((int)$this->getParam('p'));
                 $this->view->member_id = (int)$this->_authMember->member_id;
 
-                if($this->view->product){
-                    $this->updateActivityLog($result, $this->view->product->image_small);
-
+                if($this->view->product){                    
                     //Send a notification to the owner
                     $this->sendNotificationToOwner($this->view->product, $data['comment_text']);
-
-                    //Send a notification to the parent comment writer
-                    $this->sendNotificationToParent($this->view->product, $data['comment_text'], $data['comment_parent_id']);
+                   
                 }
             } 
             // 14.05.18 not allowed anymore
