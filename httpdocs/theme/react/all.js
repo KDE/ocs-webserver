@@ -57,14 +57,93 @@ class HomePageTemplateOne extends React.Component {
   render() {
     return React.createElement(
       "div",
-      { id: "template" },
-      React.createElement(IntroDiv, null),
+      { id: "homepage-version-one" },
+      React.createElement(SpotlightProductWrapper, null),
       React.createElement(LatestProductsWrapper, null),
       React.createElement(TopProductsWrapper, null),
-      React.createElement(TopSupportersWrapper, null)
+      React.createElement(TopSupportersWrapper, null),
+      React.createElement(IntroDiv, null)
     );
   }
 }
+
+class SpotlightProduct extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.products && !this.state.product) {
+      this.setState({ product: nextProps.products.ThemeGTK[0] });
+    }
+  }
+
+  render() {
+
+    let spotlightProduct;
+    if (this.state.product) {
+      spotlightProduct = React.createElement(
+        "div",
+        { className: "ui grid segment", id: "spotlight-product" },
+        React.createElement(
+          "div",
+          { className: "column four wide computer" },
+          React.createElement("img", { className: "product-image", src: "https://cn.pling.it/cache/200x171/img/" + this.state.product.image_small })
+        ),
+        React.createElement(
+          "div",
+          { className: "column twelve wide computer" },
+          React.createElement(
+            "h2",
+            null,
+            this.state.product.title
+          ),
+          React.createElement("div", { className: "spotlight-product-sub-info" }),
+          React.createElement(
+            "div",
+            { className: "spotlight-product-description" },
+            this.state.product.description
+          )
+        )
+      );
+    }
+
+    return React.createElement(
+      "div",
+      { id: "spotlight-product-container", className: "hp-section" },
+      React.createElement(
+        "div",
+        { className: "ui container" },
+        React.createElement(
+          "div",
+          { className: "row" },
+          React.createElement(
+            "h2",
+            null,
+            "in the spotlight"
+          ),
+          spotlightProduct
+        )
+      )
+    );
+  }
+}
+
+const mapStateToSpotlightProductProps = state => {
+  const products = state.products;
+  return {
+    products
+  };
+};
+
+const mapDispatchToSpotlightProductProps = dispatch => {
+  return {
+    dispatch
+  };
+};
+
+const SpotlightProductWrapper = ReactRedux.connect(mapStateToSpotlightProductProps, mapDispatchToSpotlightProductProps)(SpotlightProduct);
 
 class IntroDiv extends React.Component {
   constructor(props) {
@@ -135,7 +214,7 @@ class LatestProducts extends React.Component {
         React.createElement(
           "a",
           { href: "/p/" + product.project_id },
-          React.createElement("img", { src: "https://cn.pling.it/cache/200x171/img/" + product.image_small })
+          React.createElement("img", { className: "product-image", src: "https://cn.pling.it/cache/200x171/img/" + product.image_small })
         )
       ));
     }
@@ -215,7 +294,7 @@ class TopProducts extends React.Component {
         React.createElement(
           "a",
           { href: "/p/" + product.project_id },
-          React.createElement("img", { src: "https://cn.pling.it/cache/280x171/img/" + product.image_small })
+          React.createElement("img", { className: "product-image", src: "https://cn.pling.it/cache/280x171/img/" + product.image_small })
         )
       ));
     }
@@ -378,16 +457,166 @@ class TopSupportersItem extends React.Component {
     );
   }
 }
-
 class HomePageTemplateTwo extends React.Component {
   render() {
     return React.createElement(
-      "p",
-      null,
-      "template two"
+      "div",
+      { id: "hompage-version-two" },
+      React.createElement(FeaturedSlideshowWrapper, null),
+      React.createElement(
+        "div",
+        { id: "top-products", className: "hp-section" },
+        "top 4 products with pic and info"
+      ),
+      React.createElement(
+        "div",
+        { id: "other-products", className: "hp-section" },
+        "another top 6 products with pic and info"
+      ),
+      React.createElement(
+        "div",
+        { id: "latest-products", className: "hp-section" },
+        "3 columns with 3 products each"
+      )
     );
   }
 }
+
+class FeaturedSlideshow extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  componentDidMount() {
+    $('.shape').shape();
+  }
+
+  onFlipButtonClick() {
+    $('.shape').shape('flip down');
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps);
+  }
+
+  render() {
+    return React.createElement(
+      "div",
+      { id: "featured-sideshow", className: "hp-section" },
+      React.createElement(
+        "a",
+        { onClick: this.onFlipButtonClick },
+        "flip shape"
+      ),
+      React.createElement(
+        "div",
+        { className: "ui contaier" },
+        React.createElement(
+          "div",
+          { className: "ui cube shape" },
+          React.createElement(
+            "div",
+            { className: "sides" },
+            React.createElement(
+              "div",
+              { className: "side" },
+              React.createElement(
+                "div",
+                { className: "content" },
+                React.createElement(
+                  "div",
+                  { className: "center" },
+                  "1"
+                )
+              )
+            ),
+            React.createElement(
+              "div",
+              { className: "side" },
+              React.createElement(
+                "div",
+                { className: "content" },
+                React.createElement(
+                  "div",
+                  { className: "center" },
+                  "2"
+                )
+              )
+            ),
+            React.createElement(
+              "div",
+              { className: "side" },
+              React.createElement(
+                "div",
+                { className: "content" },
+                React.createElement(
+                  "div",
+                  { className: "center" },
+                  "3"
+                )
+              )
+            ),
+            React.createElement(
+              "div",
+              { className: "side active" },
+              React.createElement(
+                "div",
+                { className: "content" },
+                React.createElement(
+                  "div",
+                  { className: "center" },
+                  "4"
+                )
+              )
+            ),
+            React.createElement(
+              "div",
+              { className: "side" },
+              React.createElement(
+                "div",
+                { className: "content" },
+                React.createElement(
+                  "div",
+                  { className: "center" },
+                  "5"
+                )
+              )
+            ),
+            React.createElement(
+              "div",
+              { className: "side" },
+              React.createElement(
+                "div",
+                { className: "content" },
+                React.createElement(
+                  "div",
+                  { className: "center" },
+                  "6"
+                )
+              )
+            )
+          )
+        )
+      )
+    );
+  }
+}
+
+const mapStateToFeaturedSlideshowProps = state => {
+  const products = state.products;
+  return {
+    products
+  };
+};
+
+const mapDispatchToFeaturedSlideshowProps = dispatch => {
+  return {
+    dispatch
+  };
+};
+
+const FeaturedSlideshowWrapper = ReactRedux.connect(mapStateToFeaturedSlideshowProps, mapDispatchToFeaturedSlideshowProps)(FeaturedSlideshow);
 const { Provider, connect } = ReactRedux;
 const store = Redux.createStore(reducer);
 

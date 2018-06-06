@@ -75,6 +75,7 @@
     $js_topProducts = json_encode($this->topProducts);
     $js_supporters = json_encode($this->supporters);
     $js_productsTop = json_encode($this->topProducts);
+    $js_comments = json_encode($this->comments);
   ?>
 
   var products = {
@@ -93,6 +94,8 @@
   var users = <?php echo $js_users ?>;
 
   var supporters = <?php echo $js_supporters ?>;
+
+  var comments = <?php echo $js_comments ?>;
 
 </script>
 

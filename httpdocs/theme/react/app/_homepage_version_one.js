@@ -6,15 +6,80 @@ class HomePageTemplateOne extends React.Component {
 
   render(){
     return (
-      <div id="template">
-        <IntroDiv/>
+      <div id="homepage-version-one">
+        <SpotlightProductWrapper/>
         <LatestProductsWrapper/>
         <TopProductsWrapper/>
         <TopSupportersWrapper/>
+        <IntroDiv/>
       </div>
     )
   }
 }
+
+class SpotlightProduct extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.products && !this.state.product){
+      this.setState({product:nextProps.products.ThemeGTK[0]});
+    }
+  }
+
+  render(){
+
+    let spotlightProduct;
+    if (this.state.product){
+      spotlightProduct = (
+          <div className="ui grid segment" id="spotlight-product">
+            <div className="column four wide computer">
+              <img className="product-image" src={"https://cn.pling.it/cache/200x171/img/" + this.state.product.image_small}/>
+            </div>
+            <div className="column twelve wide computer">
+              <h2>{this.state.product.title}</h2>
+              <div className="spotlight-product-sub-info">
+              </div>
+              <div className="spotlight-product-description">
+                {this.state.product.description}
+              </div>
+            </div>
+          </div>
+      );
+    }
+
+    return (
+      <div id="spotlight-product-container" className="hp-section">
+        <div className="ui container">
+          <div className="row">
+            <h2>in the spotlight</h2>
+            {spotlightProduct}
+          </div>
+        </div>
+      </div>
+    )
+  }
+}
+
+const mapStateToSpotlightProductProps = (state) => {
+  const products = state.products;
+  return {
+    products
+  }
+}
+
+const mapDispatchToSpotlightProductProps = (dispatch) => {
+  return {
+    dispatch
+  }
+}
+
+const SpotlightProductWrapper = ReactRedux.connect(
+  mapStateToSpotlightProductProps,
+  mapDispatchToSpotlightProductProps
+)(SpotlightProduct)
 
 class IntroDiv extends React.Component {
   constructor(props){
@@ -62,7 +127,7 @@ class LatestProducts extends React.Component {
       latestProducts = this.state.products.map((product,index) => (
         <div key={index} className="three wide column computer grid-image-container">
           <a href={"/p/"+product.project_id}>
-            <img src={"https://cn.pling.it/cache/200x171/img/" + product.image_small}/>
+            <img className="product-image" src={"https://cn.pling.it/cache/200x171/img/" + product.image_small}/>
           </a>
         </div>
       ));
@@ -129,7 +194,7 @@ class TopProducts extends React.Component {
       topProducts = this.state.products.map((product,index) => (
         <div key={index} className="three wide column computer grid-image-container">
           <a href={"/p/"+product.project_id}>
-            <img src={"https://cn.pling.it/cache/280x171/img/" + product.image_small}/>
+            <img className="product-image" src={"https://cn.pling.it/cache/280x171/img/" + product.image_small}/>
           </a>
         </div>
       ));
@@ -254,14 +319,6 @@ class TopSupportersItem extends React.Component {
           </div>
         </a>
       </div>
-    )
-  }
-}
-
-class HomePageTemplateTwo extends React.Component {
-  render(){
-    return (
-      <p>template two</p>
     )
   }
 }
