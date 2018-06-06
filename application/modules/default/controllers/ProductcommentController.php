@@ -165,12 +165,12 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
         if(Zend_Auth::getInstance()->hasIdentity() ) {
             if ($msg != '' && strlen($msg)>0) {
 
-                // only vote then return             
-                // $data = array();
-                // $data['comment_target_id'] = (int)$this->getParam('p');
-                // $data['comment_parent_id'] = (int)$this->getParam('i');
-                // $data['comment_member_id'] = (int)$this->_authMember->member_id;
-                // $data['comment_text'] = Default_Model_HtmlPurify::purify($this->getParam('msg'));
+                
+                $data = array();
+                $data['comment_target_id'] = (int)$this->getParam('p');
+                $data['comment_parent_id'] = (int)$this->getParam('i');
+                $data['comment_member_id'] = (int)$this->_authMember->member_id;
+                $data['comment_text'] = Default_Model_HtmlPurify::purify($this->getParam('msg'));
                 // $tableReplies = new Default_Model_ProjectComments();
                 // $result = $tableReplies->save($data);
 
