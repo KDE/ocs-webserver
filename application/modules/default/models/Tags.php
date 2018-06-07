@@ -559,7 +559,7 @@ class Default_Model_Tags
     
     public function getProjectPackageTypesString($projectId)
     {
-        $sql = 'SELECT DISTINCT ta.tag_fullname FROM tag_object t INNER JOIN tag ta on ta.tag_id = t.tag_id WHERE t.tag_group_id = :tag_group_id AND t.tag_parent_object_id = :project_id AND t.is_deleted = 0';
+        $sql = 'SELECT DISTINCT ta.tag_fullname as name FROM tag_object t INNER JOIN tag ta on ta.tag_id = t.tag_id WHERE t.tag_group_id = :tag_group_id AND t.tag_parent_object_id = :project_id AND t.is_deleted = 0';
         $resultSet = $this->getAdapter()->fetchAll($sql, array('tag_group_id' => $this::TAG_PACKAGETYPE_GROUPID,'project_id' => $projectId));
         $resultString = '';
         if (count($resultSet) > 0) {
@@ -573,7 +573,7 @@ class Default_Model_Tags
     
     public function getProjectPackageTypesPureStrings($projectId)
     {
-        $sql = 'SELECT DISTINCT ta.tag_fullname FROM tag_object t INNER JOIN tag ta on ta.tag_id = t.tag_id WHERE t.tag_group_id = :tag_group_id AND t.tag_parent_object_id = :project_id AND t.is_deleted = 0';
+        $sql = 'SELECT DISTINCT ta.tag_fullname as name FROM tag_object t INNER JOIN tag ta on ta.tag_id = t.tag_id WHERE t.tag_group_id = :tag_group_id AND t.tag_parent_object_id = :project_id AND t.is_deleted = 0';
         $resultSet = $this->getAdapter()->fetchAll($sql, array('tag_group_id' => $this::TAG_PACKAGETYPE_GROUPID,'project_id' => $projectId));
         $resultString = '';
         if (count($resultSet) > 0) {
@@ -602,7 +602,7 @@ class Default_Model_Tags
      */
     public function getPackageType($projectId, $fileId)
     {
-        $sql = 'SELECT ta.tag_fullname FROM tag_object t INNER JOIN tag ta on ta.tag_id = t.tag_id WHERE t.tag_group_id = :tag_group_id AND t.tag_parent_object_id = :project_id AND t.tag_object_id = :file_id AND t.is_deleted = 0';
+        $sql = 'SELECT ta.tag_fullname as name FROM tag_object t INNER JOIN tag ta on ta.tag_id = t.tag_id WHERE t.tag_group_id = :tag_group_id AND t.tag_parent_object_id = :project_id AND t.tag_object_id = :file_id AND t.is_deleted = 0';
         $resultSet = $this->getAdapter()->fetchAll($sql, array('tag_group_id' => $this::TAG_PACKAGETYPE_GROUPID,'project_id' => $projectId, 'file_id' => $fileId));
         
         if (count($resultSet) > 0) {
