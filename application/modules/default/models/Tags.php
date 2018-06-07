@@ -404,7 +404,7 @@ class Default_Model_Tags
         // $sql = "DELETE tag_object FROM tag_object JOIN tag ON tag.tag_id = tag_object.tag_id WHERE tag_group_id = ".Default_Model_Tags::TAG_USER_GROUPID." and  tag.tag_name = :name and tag_object.tag_object_id=:object_id
         //             and tag_group_id =".Default_Model_Tags::TAG_USER_GROUPID;
        
-       $sql = "UPDATE tag_object inner join tag ON tag.tag_id = tag_object.tag_id set tag_changed = NOW() , is_deleted = 1 
+        $sql = "UPDATE tag_object inner join tag ON tag.tag_id = tag_object.tag_id set tag_changed = NOW() , is_deleted = 1 
                     WHERE tag_group_id = ".Default_Model_Tags::TAG_USER_GROUPID." and tag.tag_name = :name and tag_object.tag_object_id=:object_id";
 
         $this->getAdapter()->query($sql, array('name' => $removable_tag,'object_id' => $object_id));
@@ -537,6 +537,79 @@ class Default_Model_Tags
          * 
          */
         
+    }
+    
+    
+    public function savePackagetypeTagForProject($project_id, $file_id, $tag_id) {
+        
+        //first delte old
+        $sql = "UPDATE tag_object SET tag_changed = NOW() , is_deleted = 1  WHERE tag_group_id = :tag_group_id AND tag_type_id = :tag_type_id AND tag_object_id = :tag_object_id AND tag_parent_object_id = :tag_parent_object_id";
+
+        $this->getAdapter()->query($sql, array('tag_group_id' => $this::TAG_PACKAGETYPE_GROUPID, 'tag_type_id' => $this::TAG_TYPE_FILE, 'tag_object_id' => $file_id, 'tag_parent_object_id' => $project_id));
+
+        if($tag_id) {
+            $sql = "INSERT IGNORE INTO tag_object (tag_id, tag_type_id, tag_object_id, tag_parent_object_id, tag_group_id) VALUES (:tag_id, :tag_type_id, :tag_object_id, :tag_parent_object_id, :tag_group_id)";
+            $this->getAdapter()->query($sql, array('tag_id' => $tag_id, 'tag_type_id' => $this::TAG_TYPE_FILE, 'tag_object_id' => $file_id, 'tag_parent_object_id' => $project_id, 'tag_group_id' => $this::TAG_PACKAGETYPE_GROUPID));
+        }
+            
+        
+        
+    }
+    
+    
+    public function getProjectPackageTypesString($projectId)
+    {
+        $sql = 'SELECT DISTINCT ta.tag_fullname FROM tag_object t INNER JOIN tag ta on ta.tag_id = t.tag_id WHERE t.tag_group_id = :tag_group_id AND t.tag_parent_object_id = :project_id AND t.is_deleted = 0';
+        $resultSet = $this->_db->fetchAll($sql, array('tag_group_id' => $this::TAG_PACKAGETYPE_GROUPID,'project_id' => $projectId));
+        $resultString = '';
+        if (count($resultSet) > 0) {
+            foreach ($resultSet as $item) {                
+                $resultString = $resultString . ' <span class="packagetypeos" > ' . stripslashes($item['name']) . '</span>';
+            }
+            return $resultString;
+        }
+        return '';
+    }
+    
+    public function getProjectPackageTypesPureStrings($projectId)
+    {
+        $sql = 'SELECT DISTINCT ta.tag_fullname FROM tag_object t INNER JOIN tag ta on ta.tag_id = t.tag_id WHERE t.tag_group_id = :tag_group_id AND t.tag_parent_object_id = :project_id AND t.is_deleted = 0';
+        $resultSet = $this->_db->fetchAll($sql, array('tag_group_id' => $this::TAG_PACKAGETYPE_GROUPID,'project_id' => $projectId));
+        $resultString = '';
+        if (count($resultSet) > 0) {
+            foreach ($resultSet as $item) {                
+                $resultString = $resultString .'  '. stripslashes($item['name']) ;
+            }
+            return $resultString;
+        }
+        return '';
+    }
+    
+    
+    public function deletePackageTypeOnProject($projectId, $fileId)
+    {
+        $sql = "UPDATE tag_object inner join tag ON tag.tag_id = tag_object.tag_id set tag_changed = NOW() , is_deleted = 1 
+                    WHERE tag_group_id = :tag_group_id and tag.tag_name = :name and tag_object.tag_object_id=:object_id and tag_object.tag_parent_object_id=:parent_object_id";
+
+        $this->getAdapter()->query($sql, array('tag_group_id' => $this::TAG_PACKAGETYPE_GROUPID, 'object_id' => $fileId, 'parent_object_id' => $projectId));
+    }
+    
+    
+    /**
+     * @param int $projectId
+     * @param int $fileId
+     * @return string
+     */
+    public function getPackageType($projectId, $fileId)
+    {
+        $sql = 'SELECT ta.tag_fullname FROM tag_object t INNER JOIN tag ta on ta.tag_id = t.tag_id WHERE t.tag_group_id = :tag_group_id AND t.tag_parent_object_id = :project_id AND t.tag_object_id = :file_id AND t.is_deleted = 0';
+        $resultSet = $this->_db->fetchAll($sql, array('tag_group_id' => $this::TAG_PACKAGETYPE_GROUPID,'project_id' => $projectId, 'file_id' => $fileId));
+        
+        if (count($resultSet) > 0) {
+            return $resultSet[0]['name'];
+        } else {
+            return '';
+        }
     }
 
 }

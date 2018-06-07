@@ -25,7 +25,8 @@ class Default_View_Helper_FetchProjectPackageTypes extends Zend_View_Helper_Abst
 
     public function FetchProjectPackageTypes($projectId)
     {
-        $tbl = new Default_Model_DbTable_ProjectPackageType();
+        //$tbl = new Default_Model_DbTable_ProjectPackageType();
+        $tbl = new Default_Model_Tags();
         return $tbl->getProjectPackageTypesString($projectId);
     }
 

@@ -130,6 +130,15 @@ class Default_Model_DbTable_Tags extends Local_Model_Table
     }
     
     
+    /**
+     * @return array
+     */
+    public function fetchPackagetypeTagsForSelect()
+    {
+        return $this->fetchForGroupForSelect(Default_Model_DbTable_Tags::TAG_GROUP_PACKAGETYPE);
+    }
+    
+    
     
     /**
      * @return array
@@ -194,6 +203,15 @@ class Default_Model_DbTable_Tags extends Local_Model_Table
     public function fetchArchitectureTagsForProject($projectId)
     {
         return $this->fetchTagsForProject($projectId, $this::TAG_GROUP_ARCHITECTURE);
+    }
+    
+    /**
+     * @param int $projectId
+     * @return array
+     */
+    public function fetchPackagetypeTagsForProject($projectId)
+    {
+        return $this->fetchTagsForProject($projectId, $this::TAG_GROUP_PACKAGETYPE);
     }
     
     
