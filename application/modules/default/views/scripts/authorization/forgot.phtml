@@ -22,6 +22,7 @@
 $users = $this->newUsers($limit = 216,'created_at','DESC');
 $buildMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $helperImage = new Default_View_Helper_Image();
+$this->headMeta()->setName('robots', 'noindex, nofollow');
 ?>
 
     <!-- new code -->

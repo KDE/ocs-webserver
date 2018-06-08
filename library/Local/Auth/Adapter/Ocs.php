@@ -84,6 +84,16 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
                 array('More than one record matches the supplied identity.'));
         }
 
+        if ($resultSet[0]['mail_checked'] == 0) {
+            return $this->createAuthResult(Local_Auth_Result::MAIL_ADDRESS_NOT_VALIDATED, $resultSet[0]['member_id'],
+                array('Mail address not validated.'));
+        }
+
+        if ($resultSet[0]['is_active'] == 0) {
+            return $this->createAuthResult(Local_Auth_Result::ACCOUNT_INACTIVE, $this->_identity,
+                array('User account is inactive.'));
+        }
+
         $this->_resultRow = array_shift($resultSet);
         return $this->createAuthResult(Zend_Auth_Result::SUCCESS, $this->_identity,
             array('Authentication successful.'));
@@ -96,14 +106,15 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
     private function fetchUserByEmail()
     {
         $sql = "
-            SELECT * 
-            FROM {$this->_tableName} 
-            WHERE 
-            is_active = :active AND 
-            is_deleted = :deleted AND 
-            login_method = :login AND 
-            mail = :mail AND 
-            password = :password";
+            SELECT m.*, member_email.email_verification_value, member_email.email_checked 
+            FROM {$this->_tableName} as m
+            JOIN member_email ON m.member_id = member_email.email_member_id AND member_email.email_primary = 1
+            WHERE  
+            m.is_active = :active AND
+            m.is_deleted = :deleted AND 
+            m.login_method = :login AND 
+            m.mail = :mail AND 
+            m.`password` = :password";
 
         $this->_db->getProfiler()->setEnabled(true);
         $resultSet = $this->_db->fetchAll($sql, array(
@@ -126,14 +137,15 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
     private function fetchUserByUsername()
     {
         $sql = "
-            SELECT * 
-            FROM {$this->_tableName} 
-            WHERE 
-            is_active = :active AND 
-            is_deleted = :deleted AND 
-            login_method = :login AND 
-            username = :username AND 
-            password = :password";
+            SELECT m.*, member_email.email_verification_value, member_email.email_checked 
+            FROM {$this->_tableName} as m
+            JOIN member_email ON m.member_id = member_email.email_member_id AND member_email.email_primary = 1
+            WHERE  
+            m.is_active = :active AND 
+            m.is_deleted = :deleted AND 
+            m.login_method = :login AND 
+            m.username = :username AND 
+            m.`password` = :password";
 
         $this->_db->getProfiler()->setEnabled(true);
         $resultSet = $this->_db->fetchAll($sql, array(
@@ -151,7 +163,7 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
 
     protected function createAuthResult($code, $identity, $messages)
     {
-        return new Zend_Auth_Result(
+        return new Local_Auth_Result(
             $code,
             $identity,
             $messages

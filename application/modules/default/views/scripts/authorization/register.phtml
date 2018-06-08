@@ -24,6 +24,7 @@ $helperNewUsers = new Default_View_Helper_NewUsers();
 $users = $helperNewUsers->newUsers($limit = 216,'created_at','DESC');
 $buildMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $helperImage = new Default_View_Helper_Image();
+$this->headMeta()->setName('robots', 'noindex, nofollow');
 ?>
 	<!-- new code -->
     <main id="reg-page">
@@ -42,7 +43,7 @@ $helperImage = new Default_View_Helper_Image();
                     <div id="social-login-elements">
                         <div class="register-facebook">
                             <p class="small center light greylight">Register with</p>
-                            <a  href="/login/github/" class="btn btn-block btn-social btn-github">
+                            <a  href="/login/github/" class="btn btn-block btn-social btn-github" rel="nofollow">
                                 <span class="fa fa-github"></span>
                                 <span class="small">Github</span>
                             </a>

@@ -27,12 +27,14 @@ interface Local_Auth_Adapter_Interface extends Zend_Auth_Adapter_Interface
 
     /**
      * @param string $identity
+     *
      * @return Zend_Auth_Adapter_Interface
      */
     public function setIdentity($identity);
 
     /**
      * @param string $credential
+     *
      * @return Zend_Auth_Adapter_Interface
      */
     public function setCredential($credential);
@@ -42,6 +44,7 @@ interface Local_Auth_Adapter_Interface extends Zend_Auth_Adapter_Interface
      *
      * @param  string|array $returnColumns
      * @param  string|array $omitColumns
+     *
      * @return stdClass|boolean
      */
     public function getResultRowObject($returnColumns = null, $omitColumns = null);

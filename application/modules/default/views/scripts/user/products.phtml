@@ -21,8 +21,11 @@
  **/
 
 $this->headLink()->appendStylesheet('/theme/flatui/css/stylesheets/general.css');
-
+ $this->headLink()->appendStylesheet('/theme/flatui/css/select2.min.css');
+$this->headLink()->appendStylesheet('/theme/flatui/css/select2.custmized.css');
+$this->inlineScript()->appendFile('/theme/flatui/js/lib/select2.min.js');
 $architectureListHelper = new Default_View_Helper_FetchArchitectureTags();
+$packagetypeListHelper = new Default_View_Helper_FetchPackagetypeTags();
 
 $this->tab = 'products';
 ?>
@@ -400,7 +403,7 @@ $this->inlineScript()->appendScript(
 
 
                 <div style="float: right; padding-top: 10px;" class="small light">
-                    Deleted files are no longer publicly accessible but number of downloads still kept. *
+                    Deleted files are archived. Number of downloads are kept. *
                 </div>
             </div>
 
@@ -735,18 +738,16 @@ $this->inlineScript()->appendScript(
                             + '<td>'
                             + '<select id="data-select-packagetype' + this.id + '" data-packagetype-id="" name="packagetype" class="form-control input-sm" style="width: 200px;">'
                             + '<option value=\"\"></option>'
-                            + '<option value=\"2\">Android (APK)</option>'
-                            + '<option value=\"1\">AppImage</option>'
-                            + '<option value=\"9\">Arch</option>'
-                            + '<option value=\"5\">Debian</option>'
-                            + '<option value=\"8\">Electron-Webapp</option>'
-                            + '<option value=\"7\">Flatpak</option>'
-                            + '<option value=\"10\">open/Suse</option>'
-                            + '<option value=\"3\">OS X compatible</option>'
-                            + '<option value=\"11\">Redhat</option>'
-                            + '<option value=\"6\">Snappy</option>'
-                            + '<option value=\"12\">Source Code</option>'
-                            + '<option value=\"4\">Windows executable</option>'
+                                <?php
+                                // force $value to array so we can compare multiple values to multiple
+                                // options; also ensure it's a string for comparison purposes.
+                                $tagList = $packagetypeListHelper->fetchList();
+                                foreach ($tagList as $opt_value => $opt_label) {
+                                ?>
+                                  + '<option value="<?= $opt_value ?>"><?= $opt_label ?></option>'
+                                <?php
+                                }
+                                ?>
                             + '</select>'
                             + '</td>'
                             
@@ -962,21 +963,18 @@ $this->inlineScript()->appendScript(
                         + '<td>'
                         + '<select id="data-select-packagetype' + data.file.id + '" data-packagetype-id="" name="packagetype" class="form-control input-sm" style="width: 200px;">'
                         + '<option value=\"\"></option>'
-                        + '<option value=\"2\">Android (APK)</option>'
-                        + '<option value=\"1\">AppImage</option>'
-                        + '<option value=\"9\">Arch</option>'
-                        + '<option value=\"5\">Debian</option>'
-                        + '<option value=\"8\">Electron-Webapp</option>'
-                        + '<option value=\"7\">Flatpak</option>'
-                        + '<option value=\"10\">open/Suse</option>'
-                        + '<option value=\"3\">OS X compatible</option>'
-                        + '<option value=\"11\">Redhat</option>'
-                        + '<option value=\"6\">Snappy</option>'
-                        + '<option value=\"12\">Source Code</option>'
-                        + '<option value=\"4\">Windows executable</option>'
+                            <?php
+                            // force $value to array so we can compare multiple values to multiple
+                            // options; also ensure it's a string for comparison purposes.
+                            $tagList = $packagetypeListHelper->fetchList();
+                            foreach ($tagList as $opt_value => $opt_label) {
+                            ?>
+                              + '<option value="<?= $opt_value ?>"><?= $opt_label ?></option>'
+                            <?php
+                            }
+                            ?>
                         + '</select>'
                         + '</td>'
-                        <?php /*
                         + '<td>'
                         + '<select class="form-control input-sm" id="data-select-architecture' + data.file.id + '" data-architecture-id="" name="architecture">'
                         + '    <option value=""></option>'
@@ -992,7 +990,6 @@ $this->inlineScript()->appendScript(
                             ?>
                         + '</select>'
                         + '</td>'
-                        */?>
                         + '<td>' + data.file.created_timestamp + '</td>'
                         + '<td style="text-align: right">' + humanFileSize(data.file.size) + '</td>'
                         + '<td style="text-align: right">0</td>'
@@ -1607,3 +1604,12 @@ $this->inlineScript()->appendScript(
 </script>
 <script type="text/javascript" src="/theme/flatui/js/lib/chosen.jquery.min.js"></script>
 <!-- /ppload -->
+
+<?php
+            $this->inlineScript()->appendScript(
+                '    $(document).ready(function(){       
+                        TagingLoopMyProducts.setup();            
+                    });
+                ');
+                            
+     ?>

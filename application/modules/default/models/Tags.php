@@ -95,6 +95,7 @@ class Default_Model_Tags
             join tag_group_item on tag_object.tag_id = tag_group_item.tag_id
             WHERE tag_type_id = :type AND tag_object_id = :object_id
             and tag_group_item.tag_group_id <> :tag_user_groupid
+            and tag_object.is_deleted = 0
             GROUP BY tag_object.tag_object_id
         ";
 
@@ -123,7 +124,8 @@ class Default_Model_Tags
                         JOIN tag ON tag.tag_id = tag_object.tag_id
                         join tag_group_item on tag_object.tag_id = tag_group_item.tag_id and tag_object.tag_group_id = tag_group_item.tag_group_id
                         WHERE tag_type_id = :type AND tag_object_id = :object_id
-                        and tag_object.tag_group_id in  ({$tag_group_ids} )       
+                        and tag_object.tag_group_id in  ({$tag_group_ids} )     
+                        and tag_object.is_deleted = 0  
                         order by tag_group_item.tag_group_id desc , tag.tag_name asc
             ";
        
@@ -217,6 +219,7 @@ class Default_Model_Tags
             join tag_group_item on tag_object.tag_id = tag_group_item.tag_id
             WHERE tag_type_id = :type AND tag_object_id = :object_id
             and tag_group_item.tag_group_id = :tag_user_groupid
+            and tag_object.is_deleted = 0
             GROUP BY tag_object.tag_object_id
         ";
 
@@ -241,7 +244,8 @@ class Default_Model_Tags
             FROM tag_object
             JOIN tag ON tag.tag_id = tag_object.tag_id
             join tag_group_item on tag_object.tag_id = tag_group_item.tag_id and tag_object.tag_group_id = tag_group_item.tag_group_id
-            WHERE tag_type_id = :type AND tag_object_id = :object_id            
+            WHERE tag_type_id = :type AND tag_object_id = :object_id      
+            and tag_object.is_deleted = 0      
             and tag_group_item.tag_group_id = :tag_user_groupid     
 
         ";
@@ -289,11 +293,13 @@ class Default_Model_Tags
     {
         $removable_tags = array_diff(explode(',', $this->getTags($object_id, $tag_type)), explode(',', $tags));
 
-        $sql = "DELETE tag_object FROM tag_object JOIN tag ON tag.tag_id = tag_object.tag_id WHERE tag.tag_name = :name and tag_object.tag_object_id=:object_id";
+        //$sql = "DELETE tag_object FROM tag_object JOIN tag ON tag.tag_id = tag_object.tag_id WHERE tag.tag_name = :name and tag_object.tag_object_id=:object_id";
+        $sql = "UPDATE tag_object inner join tag ON tag.tag_id = tag_object.tag_id  SET tag_changed = NOW() , is_deleted = 1 WHERE tag.tag_name = :name and tag_object.tag_object_id=:object_id";
+        $this->getAdapter()->query($sql, array('tagObjectId' => $object_id, 'tagType' => $tag_type));
+
         foreach ($removable_tags as $removable_tag) {
             $this->getAdapter()->query($sql, array('name' => $removable_tag,'object_id' => $object_id));
         }
-
         $this->updateChanged($object_id, $tag_type);
     }
     
@@ -372,7 +378,10 @@ class Default_Model_Tags
             $removable_tags = explode(',', $this->getTagsUser($object_id, $tag_type));
         }
 
-        $sql = "DELETE tag_object FROM tag_object JOIN tag ON tag.tag_id = tag_object.tag_id WHERE tag_group_id = ".Default_Model_Tags::TAG_USER_GROUPID." and tag.tag_name = :name and tag_object.tag_object_id=:object_id";
+        //$sql = "DELETE tag_object FROM tag_object JOIN tag ON tag.tag_id = tag_object.tag_id WHERE tag_group_id = ".Default_Model_Tags::TAG_USER_GROUPID." and tag.tag_name = :name and tag_object.tag_object_id=:object_id";
+        $sql = "UPDATE tag_object inner join tag ON tag.tag_id = tag_object.tag_id set tag_changed = NOW() , is_deleted = 1 
+                    WHERE tag_group_id = ".Default_Model_Tags::TAG_USER_GROUPID." and tag.tag_name = :name and tag_object.tag_object_id=:object_id";
+
         foreach ($removable_tags as $removable_tag) {
             $this->getAdapter()->query($sql, array('name' => $removable_tag,'object_id' => $object_id));
             // if Tag is the only one in Tag_object table then delete this tag for user_groupid = 5
@@ -392,9 +401,12 @@ class Default_Model_Tags
     public function deleteTagUser($object_id, $tag, $tag_type)
     {
         $removable_tag =$tag;
-        $sql = "DELETE tag_object FROM tag_object JOIN tag ON tag.tag_id = tag_object.tag_id WHERE tag_group_id = ".Default_Model_Tags::TAG_USER_GROUPID." and  tag.tag_name = :name and tag_object.tag_object_id=:object_id
-                    and tag_group_id =".Default_Model_Tags::TAG_USER_GROUPID;
+        // $sql = "DELETE tag_object FROM tag_object JOIN tag ON tag.tag_id = tag_object.tag_id WHERE tag_group_id = ".Default_Model_Tags::TAG_USER_GROUPID." and  tag.tag_name = :name and tag_object.tag_object_id=:object_id
+        //             and tag_group_id =".Default_Model_Tags::TAG_USER_GROUPID;
        
+        $sql = "UPDATE tag_object inner join tag ON tag.tag_id = tag_object.tag_id set tag_changed = NOW() , is_deleted = 1 
+                    WHERE tag_group_id = ".Default_Model_Tags::TAG_USER_GROUPID." and tag.tag_name = :name and tag_object.tag_object_id=:object_id";
+
         $this->getAdapter()->query($sql, array('name' => $removable_tag,'object_id' => $object_id));
             // if Tag is the only one in Tag_object table then delete this tag for user_groupid = 5
 
@@ -463,7 +475,8 @@ class Default_Model_Tags
             
             //remove tag license
             if(!$tag_id) {
-                $sql = "DELETE FROM tag_object WHERE tag_item_id = :tagItemId";
+                //$sql = "DELETE FROM tag_object WHERE tag_item_id = :tagItemId";
+                $sql = "UPDATE tag_object set tag_changed = NOW() , is_deleted = 1  WHERE tag_item_id = :tagItemId";
                 $this->getAdapter()->query($sql, array('tagItemId' => $tag['tag_item_id']));
             } else {
                 //Update old tag
@@ -486,7 +499,9 @@ class Default_Model_Tags
     public function saveArchitectureTagForProject($project_id, $file_id, $tag_id) {
         
         //first delte old
-        $sql = "DELETE FROM tag_object WHERE tag_group_id = :tag_group_id AND tag_type_id = :tag_type_id AND tag_object_id = :tag_object_id AND tag_parent_object_id = :tag_parent_object_id";
+        //$sql = "DELETE FROM tag_object WHERE tag_group_id = :tag_group_id AND tag_type_id = :tag_type_id AND tag_object_id = :tag_object_id AND tag_parent_object_id = :tag_parent_object_id";
+        $sql = "UPDATE tag_object SET tag_changed = NOW() , is_deleted = 1  WHERE tag_group_id = :tag_group_id AND tag_type_id = :tag_type_id AND tag_object_id = :tag_object_id AND tag_parent_object_id = :tag_parent_object_id";
+
         $this->getAdapter()->query($sql, array('tag_group_id' => $this::TAG_ARCHITECTURE_GROUPID, 'tag_type_id' => $this::TAG_TYPE_FILE, 'tag_object_id' => $file_id, 'tag_parent_object_id' => $project_id));
 
         if($tag_id) {
@@ -522,6 +537,79 @@ class Default_Model_Tags
          * 
          */
         
+    }
+    
+    
+    public function savePackagetypeTagForProject($project_id, $file_id, $tag_id) {
+        
+        //first delte old
+        $sql = "UPDATE tag_object SET tag_changed = NOW() , is_deleted = 1  WHERE tag_group_id = :tag_group_id AND tag_type_id = :tag_type_id AND tag_object_id = :tag_object_id AND tag_parent_object_id = :tag_parent_object_id";
+
+        $this->getAdapter()->query($sql, array('tag_group_id' => $this::TAG_PACKAGETYPE_GROUPID, 'tag_type_id' => $this::TAG_TYPE_FILE, 'tag_object_id' => $file_id, 'tag_parent_object_id' => $project_id));
+
+        if($tag_id) {
+            $sql = "INSERT IGNORE INTO tag_object (tag_id, tag_type_id, tag_object_id, tag_parent_object_id, tag_group_id) VALUES (:tag_id, :tag_type_id, :tag_object_id, :tag_parent_object_id, :tag_group_id)";
+            $this->getAdapter()->query($sql, array('tag_id' => $tag_id, 'tag_type_id' => $this::TAG_TYPE_FILE, 'tag_object_id' => $file_id, 'tag_parent_object_id' => $project_id, 'tag_group_id' => $this::TAG_PACKAGETYPE_GROUPID));
+        }
+            
+        
+        
+    }
+    
+    
+    public function getProjectPackageTypesString($projectId)
+    {
+        $sql = 'SELECT DISTINCT ta.tag_fullname as name FROM tag_object t INNER JOIN tag ta on ta.tag_id = t.tag_id WHERE t.tag_group_id = :tag_group_id AND t.tag_parent_object_id = :project_id AND t.is_deleted = 0';
+        $resultSet = $this->getAdapter()->fetchAll($sql, array('tag_group_id' => $this::TAG_PACKAGETYPE_GROUPID,'project_id' => $projectId));
+        $resultString = '';
+        if (count($resultSet) > 0) {
+            foreach ($resultSet as $item) {                
+                $resultString = $resultString . ' <span class="packagetypeos" > ' . stripslashes($item['name']) . '</span>';
+            }
+            return $resultString;
+        }
+        return '';
+    }
+    
+    public function getProjectPackageTypesPureStrings($projectId)
+    {
+        $sql = 'SELECT DISTINCT ta.tag_fullname as name FROM tag_object t INNER JOIN tag ta on ta.tag_id = t.tag_id WHERE t.tag_group_id = :tag_group_id AND t.tag_parent_object_id = :project_id AND t.is_deleted = 0';
+        $resultSet = $this->getAdapter()->fetchAll($sql, array('tag_group_id' => $this::TAG_PACKAGETYPE_GROUPID,'project_id' => $projectId));
+        $resultString = '';
+        if (count($resultSet) > 0) {
+            foreach ($resultSet as $item) {                
+                $resultString = $resultString .'  '. stripslashes($item['name']) ;
+            }
+            return $resultString;
+        }
+        return '';
+    }
+    
+    
+    public function deletePackageTypeOnProject($projectId, $fileId)
+    {
+        $sql = "UPDATE tag_object inner join tag ON tag.tag_id = tag_object.tag_id set tag_changed = NOW() , is_deleted = 1 
+                    WHERE tag_group_id = :tag_group_id and tag.tag_name = :name and tag_object.tag_object_id=:object_id and tag_object.tag_parent_object_id=:parent_object_id";
+
+        $this->getAdapter()->query($sql, array('tag_group_id' => $this::TAG_PACKAGETYPE_GROUPID, 'object_id' => $fileId, 'parent_object_id' => $projectId));
+    }
+    
+    
+    /**
+     * @param int $projectId
+     * @param int $fileId
+     * @return string
+     */
+    public function getPackageType($projectId, $fileId)
+    {
+        $sql = 'SELECT ta.tag_fullname as name FROM tag_object t INNER JOIN tag ta on ta.tag_id = t.tag_id WHERE t.tag_group_id = :tag_group_id AND t.tag_parent_object_id = :project_id AND t.tag_object_id = :file_id AND t.is_deleted = 0';
+        $resultSet = $this->getAdapter()->fetchAll($sql, array('tag_group_id' => $this::TAG_PACKAGETYPE_GROUPID,'project_id' => $projectId, 'file_id' => $fileId));
+        
+        if (count($resultSet) > 0) {
+            return $resultSet[0]['name'];
+        } else {
+            return '';
+        }
     }
 
 }
