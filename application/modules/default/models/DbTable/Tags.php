@@ -146,7 +146,11 @@ class Default_Model_DbTable_Tags extends Local_Model_Table
     public function fetchGhnsExcludedTagId()
     {
         $tag = $this->fetchForGroupForSelect(Default_Model_DbTable_Tags::TAG_GROUP_GHNS_EXCLUDED);
-        return array_keys($tag)[0];
+        $keys = array_keys($tag);
+        if(isset($keys) && count($keys) == 1) {
+            return $keys[0];
+        }
+        return null;
     }
     
     
