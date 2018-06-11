@@ -43,6 +43,7 @@ class Default_Model_DbTable_Tags extends Local_Model_Table
     const TAG_GROUP_LICENSE = 7;
     const TAG_GROUP_PACKAGETYPE = 8;
     const TAG_GROUP_ARCHITECTURE = 9;
+    const TAG_GROUP_GHNS_EXCLUDED = 10;
 
 
     /**
@@ -136,6 +137,16 @@ class Default_Model_DbTable_Tags extends Local_Model_Table
     public function fetchPackagetypeTagsForSelect()
     {
         return $this->fetchForGroupForSelect(Default_Model_DbTable_Tags::TAG_GROUP_PACKAGETYPE);
+    }
+    
+    
+    /**
+     * @return array
+     */
+    public function fetchGhnsExcludedTagId()
+    {
+        $tag = $this->fetchForGroupForSelect(Default_Model_DbTable_Tags::TAG_GROUP_GHNS_EXCLUDED);
+        return array_keys($tag)[0];
     }
     
     
@@ -260,6 +271,7 @@ class Default_Model_DbTable_Tags extends Local_Model_Table
     {
         return $this->fetchTagsForProject($projectId, $this::TAG_GROUP_PACKAGETYPE);
     }
+    
     
     
     /**

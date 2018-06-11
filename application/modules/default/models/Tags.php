@@ -34,6 +34,7 @@ class Default_Model_Tags
     const TAG_LICENSE_GROUPID = 7;
     const TAG_PACKAGETYPE_GROUPID = 8;
     const TAG_ARCHITECTURE_GROUPID = 9;
+    const TAG_GHNS_EXCLUDED_GROUPID = 10;
 
     /**
      * Default_Model_Tags constructor.
@@ -188,7 +189,7 @@ class Default_Model_Tags
      */
     public function getTagsSystem($object_id, $tag_type)
     {
-        $tag_group_ids ='6,7';
+        $tag_group_ids ='6,7,10'; 
         $tags = $this->getTagsArray($object_id, $tag_type,$tag_group_ids);
 
         $tag_names = '';
@@ -496,12 +497,28 @@ class Default_Model_Tags
     }
     
     
+    public function saveGhnsExcludedTagForProject($object_id, $tag_value) {
+        
+        $tableTags = new Default_Model_DbTable_Tags();
+        $ghnsExcludedTagId = $tableTags->fetchGhnsExcludedTagId();
+        
+        $sql = "UPDATE tag_object SET tag_changed = NOW() , is_deleted = 1  WHERE tag_group_id = :tag_group_id AND tag_type_id = :tag_type_id AND tag_object_id = :tag_object_id";
+        $this->getAdapter()->query($sql, array('tag_group_id' => $this::TAG_GHNS_EXCLUDED_GROUPID, 'tag_type_id' => $this::TAG_TYPE_PROJECT, 'tag_object_id' => $object_id));
+
+        if($tag_value == 1) {
+            $sql = "INSERT IGNORE INTO tag_object (tag_id, tag_type_id, tag_object_id, tag_group_id) VALUES (:tag_id, :tag_type_id, :tag_object_id, :tag_group_id)";
+            $this->getAdapter()->query($sql, array('tag_id' => $ghnsExcludedTagId, 'tag_type_id' => $this::TAG_TYPE_PROJECT, 'tag_object_id' => $object_id, 'tag_group_id' => $this::TAG_GHNS_EXCLUDED_GROUPID));
+        }
+
+        
+    }
+    
+    
     public function saveArchitectureTagForProject($project_id, $file_id, $tag_id) {
         
         //first delte old
         //$sql = "DELETE FROM tag_object WHERE tag_group_id = :tag_group_id AND tag_type_id = :tag_type_id AND tag_object_id = :tag_object_id AND tag_parent_object_id = :tag_parent_object_id";
         $sql = "UPDATE tag_object SET tag_changed = NOW() , is_deleted = 1  WHERE tag_group_id = :tag_group_id AND tag_type_id = :tag_type_id AND tag_object_id = :tag_object_id AND tag_parent_object_id = :tag_parent_object_id";
-
         $this->getAdapter()->query($sql, array('tag_group_id' => $this::TAG_ARCHITECTURE_GROUPID, 'tag_type_id' => $this::TAG_TYPE_FILE, 'tag_object_id' => $file_id, 'tag_parent_object_id' => $project_id));
 
         if($tag_id) {
