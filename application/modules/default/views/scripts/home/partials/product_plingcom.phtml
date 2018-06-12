@@ -57,7 +57,7 @@
                  $tags = $tags . '  ' . stripslashes($item);
              }
              $tags = $this->truncate(Default_Model_HtmlPurify::purify($tags), 30, '...', false, true);
-             $resultStringAll .= '</span>';
+             $resultStringAll .= $tags.'</span>';
              echo $resultString;
          } ?>
         </div>
