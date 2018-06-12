@@ -48,9 +48,10 @@
             ?>
             </span>
 
-          <?php      
-          if (false === empty($this->product->package_names)) {
-             $list_packages = explode(',', $this->product->package_names);
+          <?php   
+          
+          if (false === empty($this->product['package_names'])) {
+             $list_packages = explode(',', $this->product['package_names']);
              $resultStringAll = '<span class="packagetypeos" >';
              $tags = "";
              foreach ($list_packages as $item) {
