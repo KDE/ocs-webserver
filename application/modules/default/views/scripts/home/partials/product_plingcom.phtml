@@ -39,23 +39,28 @@
        
         <div class="productInfo">
         
-        <span class="cntComments">
-        <?php
+            <span class="cntComments">
+            <?php
             //$count_plingers = $this->product['count_plingers'];
             $count_comments = $this->product['count_comments'];            
             //echo ($count_plingers>0 ? '<span style="padding-top: 5px; padding-right: 6px; font-size: smaller;" class="cntSupporters">'.$count_plingers.' supporter':'').($count_plingers>1?'s':'').($count_plingers>0?'</span>':'') ;
             echo ($count_comments>0 ? $count_comments.' comment':'').($count_comments>1?'s':'');            
-        ?>
-        </span>
+            ?>
+            </span>
 
-          <?php          
-          $type = $this->FetchProjectPackageTypesPureStrings($this->product['project_id']);
-          if(!empty($type)){
-            ?>           
-            <span class="packagetypeos" >
-            <?=$this->truncate(Default_Model_HtmlPurify::purify($type), 30, '...', false, true)?>
-             </span>
-        <?php } ?>
+          <?php   
+          
+          if (false === empty($this->product['package_names'])) {
+             $list_packages = explode(',', $this->product['package_names']);
+             $resultStringAll = '<span class="packagetypeos" >';
+             $tags = "";
+             foreach ($list_packages as $item) {
+                 $tags = $tags . '  ' . stripslashes($item);
+             }
+             $tags = $this->truncate(Default_Model_HtmlPurify::purify($tags), 30, '...', false, true);
+             $resultStringAll .= $tags.'</span>';
+             echo $resultStringAll;
+         } ?>
         </div>
  </div>
  <div class="col-lg-3 col-md-3 col-sm-4 col-xs-4">
