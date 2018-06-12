@@ -1,5 +1,4 @@
 <?php
-
 /**
  *  ocs-webserver
  *
@@ -20,14 +19,26 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-class Default_View_Helper_FetchPackageType extends Zend_View_Helper_Abstract
+
+class Default_View_Helper_FetchTopProductsForStore
 {
 
-    public function FetchPackageType($projectId, $fileId)
+    public function fetchTopProducts($pageLimit = 10)
     {
-        //$tbl = new Default_Model_DbTable_ProjectPackageType();
-        $tbl = new Default_Model_Tags();
-        return $tbl->getPackageType($projectId, $fileId);
+        $filter = array();
+        
+        $storeCatIds = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
+        $filter['category'] = $storeCatIds;
+        $filter['order'] = "top";
+        
+        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
+        if ($storeConfig) {
+            $filter['package_type'] = $storeConfig['package_type'];
+        }
+        $modelProject = new Default_Model_Project();
+        $requestedElements = $modelProject->fetchProjectsByFilter($filter, $pageLimit, 0);
+
+        return $requestedElements;
     }
 
-}
+} 

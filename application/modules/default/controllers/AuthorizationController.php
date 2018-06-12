@@ -48,113 +48,6 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
     }
 
     /**
-     * @throws Zend_Exception
-     * @throws Zend_Form_Exception
-     */
-    public function forgotAction()
-    {
-        $formForgot = new Default_Form_Forgot();
-
-        if ($this->_request->isGet()) { // not a POST request
-            $this->view->form = $formForgot;
-            $this->view->error = 0;
-
-            return;
-        }
-
-        if (false === $formForgot->isValid($_POST)) { // form not valid
-            $this->view->form = $formForgot;
-
-            if ($this->_request->isXmlHttpRequest()) {
-                $viewFormForgot = $this->view->render('authorization/partials/forgot-form.phtml');
-                $this->_helper->json(array('status' => 'ok', 'message' => $viewFormForgot));
-            }
-
-            return;
-        }
-
-        $userTable = new Default_Model_Member();
-
-        $emailAddress = $formForgot->getValue('mail');
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - ' . print_r($emailAddress, true));
-
-        $user = $userTable->fetchCheckedActiveLocalMemberByEmail($emailAddress);
-
-        if ($user) {
-            $oldPasswordHash = $user->password;
-            $newPass = $this->generateNewPassword();
-            $newPasswordHash = $this->storeNewPassword($newPass, $user);
-
-            try {
-                $id_server = new Default_Model_IdServer();
-                $id_server->updatePasswordForUser($user->member_id);
-            } catch (Exception $e) {
-                Zend_Registry::get('logger')->err($e->getTraceAsString());
-            }
-
-            Zend_Registry::get('logger')->info(__METHOD__ . ' - old password hash: ' . $oldPasswordHash . ', new password hash: ' . $newPasswordHash);
-
-            $this->sendNewPassword($user, $newPass);
-
-            $this->view->form = $formForgot;
-            $this->view->text = $this->view->translate("index.forget.new_password");
-
-            if ($this->_request->isXmlHttpRequest()) {
-                $viewFormForgot = $this->view->render('authorization/partials/forgotSuccess.phtml');
-                $this->_helper->json(array('status' => 'ok', 'message' => $viewFormForgot));
-            } else {
-                $this->_helper->viewRenderer('forgotSuccess');
-            }
-        } else {
-            if ($this->_request->isXmlHttpRequest()) {
-                $viewFormForgot = $this->view->render('authorization/partials/forgotSuccess.phtml');
-                $this->_helper->json(array('status' => 'ok', 'message' => $viewFormForgot));
-            } else {
-                $this->_helper->viewRenderer('forgotSuccess');
-            }
-        }
-    }
-
-    /**
-     * @return string
-     */
-    protected function generateNewPassword()
-    {
-        include_once('PWGen.php');
-        $pwgen = new PWGen();
-        $newPass = $pwgen->generate();
-        return $newPass;
-    }
-
-    /**
-     * @param string                     $newPass
-     * @param Zend_Db_Table_Row_Abstract $user
-     * @return string return new password hash
-     */
-    protected function storeNewPassword($newPass, $user)
-    {
-        $user->password = Local_Auth_Adapter_Ocs::getEncryptedPassword($newPass, $user->source_id);
-        $user->changed_at = new Zend_Db_Expr('Now()');
-        $user->save();
-        return $user->password;
-    }
-
-    /**
-     * @param $user
-     * @param $newPass
-     */
-    protected function sendNewPassword($user, $newPass)
-    {
-        $newPasMail = new Default_Plugin_SendMail('tpl_user_newpass');
-        $newPasMail->setReceiverMail($user->mail);
-        $newPasMail->setReceiverAlias($user->firstname . " " . $user->lastname);
-        $newPasMail->setTemplateVar('username', $user->username);
-        $newPasMail->setTemplateVar('newpass', $newPass);
-
-        $newPasMail->send();
-    }
-
-    /**
      * login from cookie
      *
      * @throws Zend_Auth_Storage_Exception
@@ -319,7 +212,17 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         $authResult = $authModel->authenticateUser($values['mail'], $values['password'], $values['remember_me']);
 
         if (false == $authResult->isValid()) { // authentication fail
-            Zend_Registry::get('logger')->info(__METHOD__ . ' - ip: ' . $this->_request->getClientIp() . ' - authentication failed.');
+            Zend_Registry::get('logger')->info(__METHOD__ . ' - ip: ' . $this->_request->getClientIp() . ' - authentication fail: ' .  print_r($authResult->getMessages(), true));
+
+            if ($authResult->getCode() == Local_Auth_Result::MAIL_ADDRESS_NOT_VALIDATED) {
+                $session = new Zend_Session_Namespace();
+                $session->mail_verify_member_id =  $authResult->getIdentity();
+
+                if ($this->_request->isXmlHttpRequest()) {
+                    $viewMessage = $this->view->render('verify/resend.phtml');
+                    $this->_helper->json(array('status' => 'ok', 'message' => $viewMessage));
+                }
+            }
 
             $this->view->errorText = 'index.login.error.auth';
             $this->view->formLogin = $formLogin;
@@ -356,6 +259,8 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
 
     /**
      * @param int $userId
+     *
+     * @throws Zend_Controller_Action_Exception
      */
     protected function handleRedirect($userId)
     {
@@ -490,6 +395,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
     }
 
     /**
+     * @throws Zend_Controller_Action_Exception
      * @throws Zend_Session_Exception
      */
     public function propagatelogoutAction()
@@ -508,6 +414,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
     }
 
     /**
+     * @throws Zend_Controller_Action_Exception
      * @throws Zend_Session_Exception
      */
     public function logoutAction()

@@ -24,6 +24,14 @@ $tableProject = new Default_Model_Project();
 $this->product_views = $tableProject->fetchProjectViews($this->product->project_id);
  $helperUserRole = new Backend_View_Helper_UserRole();
 $userRoleName = $helperUserRole->userRole();
+
+$tableTags = new Default_Model_Tags();
+$tagsArray = $tableTags->getTagsArray($this->product->project_id, $tableTags::TAG_TYPE_PROJECT, $tableTags::TAG_GHNS_EXCLUDED_GROUPID);
+$isGhnsExcluded = false;
+if(isset($tagsArray) && (count($tagsArray) == 1)) {
+    $isGhnsExcluded = true;
+}
+
 ?>
 <div class="prod-widget-box right details">
     <span class="title"> Details </span>
@@ -148,7 +156,7 @@ $userRoleName = $helperUserRole->userRole();
           <input type="checkbox" id="feature-this-checkbox" <?php echo $this->product->featured == 1 ? ' checked=\'checked\' ' : ''; ?> />  featured
         </span>
         <span class="page-views " style="color: red;">
-            <input type="checkbox" id="ghns_excluded-this-checkbox" <?php echo $this->product->ghns_excluded == 1 ? ' checked=\'checked\' ' : ''; ?> />  ghns-excluded
+            <input type="checkbox" id="ghns_excluded-this-checkbox" <?php echo $isGhnsExcluded == 1 ? ' checked=\'checked\' ' : ''; ?> />  ghns-excluded
         </span>
         <span class="page-views" style="color: red;">
             <input type="checkbox" id="pling-excluded-checkbox" <?php echo $this->product->pling_excluded == 1 ? ' checked=\'checked\' ' : ''; ?> />  pling-excluded

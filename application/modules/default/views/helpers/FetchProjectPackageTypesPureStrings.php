@@ -25,7 +25,8 @@ class Default_View_Helper_FetchProjectPackageTypesPureStrings extends Zend_View_
 
     public function FetchProjectPackageTypesPureStrings($projectId)
     {
-        $tbl = new Default_Model_DbTable_ProjectPackageType();
+        //$tbl = new Default_Model_DbTable_ProjectPackageType();
+        $tbl = new Default_Model_Tags();
         return $tbl->getProjectPackageTypesPureStrings($projectId);
     }
 

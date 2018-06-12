@@ -27,9 +27,31 @@ class TagController extends Zend_Controller_Action
     {
         $this->_helper->layout()->disableLayout();
 
-        $tag = Default_Model_HtmlPurify::purify($this->getParam('t'));
+        //$tag = Default_Model_HtmlPurify::purify($this->getParam('t'));
+        $tag = $this->getParam('t');
         $projectid = (int) $this->getParam('p');
-        
+
+        if(strlen($tag)>45){
+
+             $this->_helper->json(array(
+                'status'  => 'error',
+                'message' => 'Max. length 45 chars',
+                'data'    => array('pid' => $projectid, 'tag' => $tag)
+            ));
+
+          return;
+        }
+
+        if (!preg_match('/^[\w-]+$/', $tag)) {         
+          $this->_helper->json(array(
+                'status'  => 'error',
+                'message' => 'Must be letter or number and can include hyphens',
+                'data'    => array('pid' => $projectid, 'tag' => $tag)
+            ));
+
+          return;
+        }
+
         $model = new Default_Model_Tags();
         $cnt = $model->getTagsUserCount($projectid,Default_Model_Tags::TAG_TYPE_PROJECT);
         if($cnt<5){
@@ -62,7 +84,7 @@ class TagController extends Zend_Controller_Action
 
         $this->_helper->json(array(
             'status'  => 'ok',
-            'message' => 'removed',
+            'message' => 'Removed',
             'data'    => array('pid' => $projectid, 'tag'=>$tag)
         ));
     }

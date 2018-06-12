@@ -1300,14 +1300,14 @@ class Ocsv1Controller extends Zend_Controller_Action
                 
                 if($tagName == 'architectureid') {
                     $tableProjectSelect->join(array(
-                        $tagName => new Zend_Db_Expr('(SELECT DISTINCT tag_parent_object_id as project_id FROM tag_object WHERE '
+                        $tagName => new Zend_Db_Expr('(SELECT DISTINCT tag_parent_object_id as project_id FROM tag_object WHERE  is_deleted = 0 and '
                             . $tableProject->getAdapter()->quoteInto('tag_id = ?', $tagValue)
                             . ' AND ' . $tableProject->getAdapter()->quoteInto('tag_type_id = ?', Default_Model_Tags::TAG_TYPE_FILE)
                             . ')')
                     ), 'project.project_id = '.$tagName. '.project_id', array());
                 } else {
                     $tableProjectSelect->join(array(
-                        $tagName => new Zend_Db_Expr('(SELECT DISTINCT tag_object_id as project_id FROM tag_object WHERE '
+                        $tagName => new Zend_Db_Expr('(SELECT DISTINCT tag_object_id as project_id FROM tag_object WHERE is_deleted = 0 and  '
                             . $tableProject->getAdapter()->quoteInto('tag_id = ?', $tagValue) . ')')
                     ), 'project.project_id = '.$tagName. '.project_id', array());
                 }

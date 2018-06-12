@@ -1,5 +1,4 @@
 <?php
-
 /**
  *  ocs-webserver
  *
@@ -19,15 +18,32 @@
  *
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
- **/
-class Default_View_Helper_FetchPackageType extends Zend_View_Helper_Abstract
+ *
+ * Created: 30.05.2018
+ */
+
+class Local_Auth_Result extends Zend_Auth_Result
 {
 
-    public function FetchPackageType($projectId, $fileId)
+    const MAIL_ADDRESS_NOT_VALIDATED = -10;
+
+    const ACCOUNT_INACTIVE = -20;
+
+    /**
+     * Sets the result code, identity, and failure messages
+     *
+     * @param int   $code
+     * @param mixed $identity
+     * @param array $messages
+     */
+    public function __construct($code, $identity, array $messages = array())
     {
-        //$tbl = new Default_Model_DbTable_ProjectPackageType();
-        $tbl = new Default_Model_Tags();
-        return $tbl->getPackageType($projectId, $fileId);
+        $code = (int) $code;
+
+        $this->_code     = $code;
+        $this->_identity = $identity;
+        $this->_messages = $messages;
     }
+
 
 }

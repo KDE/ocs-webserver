@@ -43,6 +43,7 @@ class Default_Model_DbTable_Tags extends Local_Model_Table
     const TAG_GROUP_LICENSE = 7;
     const TAG_GROUP_PACKAGETYPE = 8;
     const TAG_GROUP_ARCHITECTURE = 9;
+    const TAG_GROUP_GHNS_EXCLUDED = 10;
 
 
     /**
@@ -130,6 +131,29 @@ class Default_Model_DbTable_Tags extends Local_Model_Table
     }
     
     
+    /**
+     * @return array
+     */
+    public function fetchPackagetypeTagsForSelect()
+    {
+        return $this->fetchForGroupForSelect(Default_Model_DbTable_Tags::TAG_GROUP_PACKAGETYPE);
+    }
+    
+    
+    /**
+     * @return array
+     */
+    public function fetchGhnsExcludedTagId()
+    {
+        $tag = $this->fetchForGroupForSelect(Default_Model_DbTable_Tags::TAG_GROUP_GHNS_EXCLUDED);
+        $keys = array_keys($tag);
+        if(isset($keys) && count($keys) == 1) {
+            return $keys[0];
+        }
+        return null;
+    }
+    
+    
     
     /**
      * @return array
@@ -178,6 +202,53 @@ class Default_Model_DbTable_Tags extends Local_Model_Table
     }
     
     /**
+     * @return array
+     */
+    public function fetchPackagetypeTagsAsJsonArray()
+    {
+        return $this->fetchForGroupAsJsonArray(Default_Model_DbTable_Tags::TAG_GROUP_PACKAGETYPE);
+    }
+    
+    
+    /**
+     * @param int|array $groupId
+     * @return array
+     */
+    public function fetchForGroupAsJsonArray($groupId)
+    {
+        $str = is_array($groupId) ? implode(',', $groupId) : $groupId;
+        /** @var Zend_Cache_Core $cache */
+        $cache = $this->cache;
+        $cacheName = __FUNCTION__ . '_' . md5($str);
+
+        if (false === ($tags = $cache->load($cacheName))) {
+            $inQuery = '?';
+            if (is_array($groupId)) {
+                $inQuery = implode(',', array_fill(0, count($groupId), '?'));
+            }
+
+            $sql = "
+                SELECT t.* FROM tag t
+                JOIN tag_group_item g on g.tag_id = t.tag_id
+                WHERE g.tag_group_id IN ($inQuery)
+                ORDER BY t.tag_fullname
+                ";
+
+            $tagsList = $this->_db->query($sql, $groupId)->fetchAll();
+            
+            $tags = "{";
+            $tags .= "'':'',"; 
+            foreach ($tagsList as $tag) {
+               $tags .= "'".$tag['tag_id']."':'" . $tag['tag_fullname']. "',"; 
+            }
+            $tags .= "}";
+            
+            $cache->save($tags, $cacheName, array(), 3600);
+        }
+        return $tags;
+    }
+    
+    /**
      * @param int $projectId
      * @return array
      */
@@ -196,6 +267,16 @@ class Default_Model_DbTable_Tags extends Local_Model_Table
         return $this->fetchTagsForProject($projectId, $this::TAG_GROUP_ARCHITECTURE);
     }
     
+    /**
+     * @param int $projectId
+     * @return array
+     */
+    public function fetchPackagetypeTagsForProject($projectId)
+    {
+        return $this->fetchTagsForProject($projectId, $this::TAG_GROUP_PACKAGETYPE);
+    }
+    
+    
     
     /**
      * @param int $projectId Description
@@ -211,6 +292,7 @@ class Default_Model_DbTable_Tags extends Local_Model_Table
             JOIN tag t on t.tag_id = to.tag_id
             JOIN tag_group_item g on g.tag_id = t.tag_id 
             WHERE g.tag_group_id = $groupId 
+            and `to`.is_deleted = 0
             and `to`.tag_type_id = $typeId 
             and `to`.tag_object_id = $projectId
             ";

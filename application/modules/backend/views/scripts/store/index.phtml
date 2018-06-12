@@ -19,6 +19,9 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
+
+$tagHelper = new Backend_View_Helper_FetchPackagetypeTags();
+
 ?>
 <style>
     #dialog-form form dl dl dd {
@@ -169,9 +172,9 @@
                 package_type: {
                     title: 'package type',
                     width: '10%',
-                    options: { '':'', '1': 'AppImage', '7': 'Flatpak', '6': 'Snappy', '5': 'Debian', '2': 'Android (apk)', '3': 'OS X compatible','4': 'Windows executable','8':'Electron-Webapp', '9':'Arch','10':'open/Suse','11':'Redhat','12':'Source Code'},
+                    options: <?php echo $tagHelper->fetchList(); ?>,
                     defaultValue: '',
-		            optionsSorting: 'text'
+		    optionsSorting: 'text'
                 },
                 cross_domain_login: {
                     title: 'cross domain login',
