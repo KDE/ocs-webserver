@@ -85,12 +85,24 @@
                                 <b style="display: block; margin-bottom: 5px" class="small">by <a
                                             href="<?php echo $helpMemberUrl->buildMemberUrl($this->product['member_id']) ?>"><?php echo $this->product['username'] ?></a></b>
                                 <?php
-                                $helperPackageTypes = new Default_View_Helper_FetchProjectPackageTypes();
+                                if (false === empty($this->product['package_names'])) {
+                                    $list_packages = explode(',', $this->product['package_names']);
+                                    $resultString = "";
+                                    foreach ($list_packages as $item) {
+                                        $resultString = $resultString . ' <span class="packagetypeos" > ' . stripslashes($item) . '</span>';
+                                    }
+                                    echo $resultString;
+                                }
+                                
+                                
+                                /*$helperPackageTypes = new Default_View_Helper_FetchProjectPackageTypes();
                                 $type = $helperPackageTypes->FetchProjectPackageTypes($this->product['project_id']);
                                 if (!empty($type)) {
                                     ?>
                                     <?= $type ?>
-                                <?php } ?>
+                                <?php } */
+                                
+                                ?>
 
                                 <div class="productInfo">
                                     <?php

@@ -51,13 +51,25 @@ $helperImage = new Default_View_Helper_Image();
         </h3>
        
         <b style="display: block; margin-bottom: 5px"><?php echo $helperFetchSubcategoriesForProduct->fetchCategoriesForProductAsString($this->product->project_id) ?></b>
-         <?php 
-          $helperPackageTypes = new Default_View_Helper_FetchProjectPackageTypes();
+        <?php
+            if (false === empty($this->product->package_names)) {
+                $list_packages = explode(',', $this->product->package_names);
+                $resultString = "";
+                foreach ($list_packages as $item) {
+                    $resultString = $resultString . ' <span class="packagetypeos" > ' . stripslashes($item) . '</span>';
+                }
+                echo $resultString;
+            }
+            
+         
+          /*$helperPackageTypes = new Default_View_Helper_FetchProjectPackageTypes();
           $type = $helperPackageTypes->FetchProjectPackageTypes($this->product->project_id);
           if(!empty($type)){
-            ?>
+        ?>
                 <?=$type ?>
-            <?php } ?>
+        <?php } */
+            
+        ?>
         
         <div class="productInfo">
        <?php
