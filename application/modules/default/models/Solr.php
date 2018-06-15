@@ -51,9 +51,11 @@ class Default_Model_Solr
         $output = null;
 
         $solr = $this->get_solr_connection();
-        if (false === $solr->ping()) {
+        
+        if (false === $solr->ping()) {           
+            echo 'connection to solr server can not established';
+            die;
             Zend_Registry::get('logger')->warn('connection to solr server can not established');
-
             return $output;
         }
 
@@ -62,15 +64,16 @@ class Default_Model_Solr
             'wt'                => 'json',
             'fl'                => '*,score',
             'df'                => 'title',
-            'qf'                => empty($op['qf']) ? 'title^3 title_prefix^2 description^1 username^1 cat_title' : $op['qf'],
+            'qf'                => empty($op['qf']) ? 'title^3 title_prefix^2 description^1 username^1 cat_title tags package_names arch_names' : $op['qf'],
 //          'bq'                => 'changed_at:[NOW-1YEAR TO NOW/DAY]',
 //          'bf'                => 'if(lt(laplace_score,50),-10,10)',
-            'bf'                => 'product(recip(ms(NOW/HOUR,changed_at),3.16e-11,0.2,0.2),1300)',
+//           'bf'                => 'product(recip(ms(NOW/HOUR,changed_at),3.16e-11,0.2,0.2),1300)',
+            'bf'                => 'product(recip(ms(NOW/HOUR,changed_at),3.16e-11,0.2,0.2),40)',            
 //          'sort'              => 'changed_at desc',
 //          'hl'                => 'on',
 //          'hl.fl'             => 'title, description, username',
             'facet'             => 'true',
-            'facet.field'       => array('project_category_id', 'tags'),
+            'facet.field'       => array('project_category_id', 'tags','package_names','arch_names'),
             'facet.mincount'    => '1',
 //          'facet.limit'       => '10',
             'facet.sort'        => 'count',
@@ -81,12 +84,15 @@ class Default_Model_Solr
             'spellcheck'        => 'true',
         );
 
+
+
         $params = $this->setStoreFilter($params);
         $params = $this->addAnyFilter($params, $op);
 
         $offset = ((int)$op['page'] - 1) * (int)$op['count'];
 
         $query = trim($op['q']);
+
 
         $results = $solr->search($query, $offset, $op['count'], $params);
 

@@ -2,7 +2,9 @@
 $filterScore = $this->ls ? 'laplace_score:['.$this->ls.' TO '.($this->ls+9).']':null;
 $filterCat = $this->pci ? 'project_category_id:('.$this->pci.')' : null;
 $filterTags = $this->t ? 'tags:('.$this->t.')' : null;
-$param = array('q' => $this->searchText ,'page' => $this->page, 'count' => 10, 'qf' => $this->searchField, 'fq' => array($filterCat, $filterScore, $filterTags));
+$filterPkg = $this->pkg ? 'package_names:('.$this->pkg.')' : null;
+$filterArch = $this->arch ? 'arch_names:('.$this->arch.')' : null;
+$param = array('q' => $this->searchText ,'page' => $this->page, 'count' => 10, 'qf' => $this->searchField, 'fq' => array($filterCat, $filterScore, $filterTags,$filterPkg,$filterArch));
 $modelSearch = new Default_Model_Solr();
 try {
     $this->result = $modelSearch->search($param);

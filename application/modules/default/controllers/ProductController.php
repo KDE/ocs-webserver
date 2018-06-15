@@ -2238,7 +2238,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     'page' => 'digits',
                     'pci' => 'digits',
                     'ls'  => 'digits',
-                    't' => array(new Zend_Filter_Callback('stripslashes'),'StripTags')
+                    't' => array(new Zend_Filter_Callback('stripslashes'),'StripTags'),
+                    'pkg'=> array(new Zend_Filter_Callback('stripslashes'),'StripTags'),
+                    'arch'=> array(new Zend_Filter_Callback('stripslashes'),'StripTags')
                 ),
                 array(
                     'projectSearchText' => array(
@@ -2258,6 +2260,12 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                         'allowEmpty' => true
                     ),
                     't'                 => array(new Zend_Validate_StringLength(array('min' => 3, 'max' => 100)),
+                        'allowEmpty' => true
+                    ),
+                    'pkg'                 => array(new Zend_Validate_StringLength(array('min' => 3, 'max' => 100)),
+                        'allowEmpty' => true
+                    ),
+                    'arch'                 => array(new Zend_Validate_StringLength(array('min' => 3, 'max' => 100)),
                         'allowEmpty' => true)
                 ), $this->getAllParams());
 
@@ -2272,6 +2280,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->view->pci = $filterInput->getEscaped('pci');
         $this->view->ls = $filterInput->getEscaped('ls');
         $this->view->t = $filterInput->getEscaped('t');
+        $this->view->pkg = $filterInput->getEscaped('pkg');
+        $this->view->arch = $filterInput->getEscaped('arch');
     }
 
     /**
