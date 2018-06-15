@@ -21,7 +21,7 @@
  **/
 
 $model = new Default_Model_Tags();
-$tags = $model->getTagsSystem($this->product->project_id, Default_Model_Tags::TAG_TYPE_PROJECT); 
+$tags = $model->getTagsSystemList($this->product->project_id, Default_Model_Tags::TAG_TYPE_PROJECT); 
 if (false === empty($tags)) {
 ?>
 <style>
@@ -50,8 +50,13 @@ if (false === empty($tags)) {
     <span class="row">
         <?php if(false === empty($tags))
         {
-        foreach (explode(',',$tags) as $tag) { ?>
-            <a href="/search?projectSearchText=<?=$tag?>&f=tags" class="tag-element"><span class="glyphicon glyphicon-tag" aria-hidden="true"></span> <?=$tag?></a>
+        foreach ($tags as $tag) {            
+                $filterfield = 'tags';
+                if($tag['tag_group_id']==Default_Model_Tags::TAG_LICENSE_GROUPID){
+                        $filterfield = 'license_names';
+                }   
+            ?>
+            <a href="/search?projectSearchText=<?=$tag['tag_name']?>&f=<?=$filterfield?>" class="tag-element"><span class="glyphicon glyphicon-tag" aria-hidden="true"></span> <?=$tag['tag_name']?></a>
         <?php }}?>
 
     </span>
