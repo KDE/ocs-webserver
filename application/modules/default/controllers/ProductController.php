@@ -2052,7 +2052,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
                     //$packageTypeTable = new Default_Model_DbTable_ProjectPackageType();
                     $packageTypeTable = new Default_Model_Tags();
-                    $packageTypeTable->deleteFileTagsOnProject($this->_projectId, $_POST['file_id']);
+                    $packageTypeTable->deletePackageTypeOnProject($this->_projectId, $_POST['file_id']);
 
                     $this->_helper->json(array('status' => 'ok'));
 
@@ -2240,7 +2240,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     'ls'  => 'digits',
                     't' => array(new Zend_Filter_Callback('stripslashes'),'StripTags'),
                     'pkg'=> array(new Zend_Filter_Callback('stripslashes'),'StripTags'),
+                    'lic'=> array(new Zend_Filter_Callback('stripslashes'),'StripTags'),
                     'arch'=> array(new Zend_Filter_Callback('stripslashes'),'StripTags')
+
                 ),
                 array(
                     'projectSearchText' => array(
@@ -2265,6 +2267,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                     'pkg'                 => array(new Zend_Validate_StringLength(array('min' => 3, 'max' => 100)),
                         'allowEmpty' => true
                     ),
+                    'lic'                 => array(new Zend_Validate_StringLength(array('min' => 3, 'max' => 100)),
+                        'allowEmpty' => true
+                    ),
                     'arch'                 => array(new Zend_Validate_StringLength(array('min' => 3, 'max' => 100)),
                         'allowEmpty' => true)
                 ), $this->getAllParams());
@@ -2282,6 +2287,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->view->t = $filterInput->getEscaped('t');
         $this->view->pkg = $filterInput->getEscaped('pkg');
         $this->view->arch = $filterInput->getEscaped('arch');
+        $this->view->lic = $filterInput->getEscaped('lic');
     }
 
     /**

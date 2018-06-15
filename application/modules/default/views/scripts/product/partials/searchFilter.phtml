@@ -5,15 +5,16 @@
         $modelCategories = new Default_Model_ProjectCategory();
         $mapCategories = $modelCategories->fetchCatNames();
 
-        $mapFields = array('project_category_id' => 'Category', 'tags' => 'Tags', 'package_names' => 'Package', 'arch_names' => 'Architecture', 'laplace_score' => 'Score');
-        $mapUrlIdent = array('project_category_id' => 'pci', 'tags' => 't', 'laplace_score' => 'ls', 'package_names' =>'pkg','arch_names' =>'arch');
-        $mapCurrentParam = array('project_category_id' => $this->pci, 'tags' => $this->t, 'laplace_score' => $this->ls,'package_names' => $this->pkg,'arch_names' => $this->arch);
+        $mapFields = array('project_category_id' => 'Category', 'tags' => 'Tags', 'package_names' => 'Package', 'arch_names' => 'Architecture', 'license_names' => 'License', 'laplace_score' => 'Score');
+        $mapUrlIdent = array('project_category_id' => 'pci', 'tags' => 't', 'laplace_score' => 'ls', 'package_names' =>'pkg','arch_names' =>'arch','license_names' =>'lic');
+        $mapCurrentParam = array('project_category_id' => $this->pci, 'tags' => $this->t, 'laplace_score' => $this->ls,'package_names' => $this->pkg,'arch_names' => $this->arch,'license_names' => $this->lic);
 
         $currentCat = $this->pci;
         $currentScore = $this->ls;
         $currentTag = $this->t;
         $currentPkg = $this->pkg;
         $currentArch = $this->arch;
+        $currentLic= $this->lic;
 
         /**
         $urlCatPart = $this->pci ? array('pci'=>$this->pci) : array();
@@ -23,6 +24,7 @@
         $hasTagField = isset($this->searchField) AND $this->searchField == 'tags' ? true : false;
         $hasPkgField = isset($this->searchField) AND $this->searchField == 'package_names' ? true : false;
         $hasArchField = isset($this->searchField) AND $this->searchField == 'arch_names' ? true : false;
+        $hasLicField = isset($this->searchField) AND $this->searchField == 'license_names' ? true : false;
 
         ?>
     <style>
@@ -89,6 +91,12 @@
          <?php if ($currentArch) : ?>
             <a rel="nofollow" href="<?=$helperUrl->url(array('projectSearchText'=>$this->searchText, 'page'=>1, 'arch' => null))?>" class="btn btn-default btn-xs" role="button">
                 <span class="glyphicon glyphicon-remove text-danger" aria-hidden="true" style="margin-right: 2px;top:2px;"></span><?= $currentArch?>
+            </a>
+        <?php endif; ?>
+
+         <?php if ($currentLic) : ?>
+            <a rel="nofollow" href="<?=$helperUrl->url(array('projectSearchText'=>$this->searchText, 'page'=>1, 'arch' => null))?>" class="btn btn-default btn-xs" role="button">
+                <span class="glyphicon glyphicon-remove text-danger" aria-hidden="true" style="margin-right: 2px;top:2px;"></span><?= $currentLic?>
             </a>
         <?php endif; ?>
 
@@ -165,6 +173,24 @@
                             <li><span class="no-tags-msg"> no Architecture found </span></li>
                         <?php endif; ?>
                         <?php $searchTextForTags = $hasArchField ? $currentArch : $this->searchText;
+                            foreach ($facet_field as $key =>$count) { ?>
+                            <?php if ($key == $mapCurrentParam[$field_name]) : ?>
+                                <li><a rel="nofollow" href="<?=$helperUrl->url(array('projectSearchText'=>$searchTextForTags, 'page'=>1, $mapUrlIdent[$field_name] => null))?>" class="active">
+                                        <span class="glyphicon glyphicon-remove text-danger" aria-hidden="true" style="margin-right: 2px;top:2px;"></span><?= $key?> <span class="badge"><?=$count?></span>
+                                    </a></li>
+                            <?php else : ?>
+                                <li><a rel="nofollow" href="<?=$helperUrl->url(array('projectSearchText'=>$searchTextForTags, 'page'=>1, $mapUrlIdent[$field_name] => $key))?>" >
+                                        <?= $key?> <span class="badge"><?=$count?></span>
+                                    </a></li>
+                            <?php endif; ?>
+                            <?php } ?>
+                        <?php break;    
+
+                    case 'License' : ?>
+                        <?php if (count((array)$facet_field) == 0) :?>
+                            <li><span class="no-tags-msg"> no License found </span></li>
+                        <?php endif; ?>
+                        <?php $searchTextForTags = $hasLicField ? $currentLic : $this->searchText;
                             foreach ($facet_field as $key =>$count) { ?>
                             <?php if ($key == $mapCurrentParam[$field_name]) : ?>
                                 <li><a rel="nofollow" href="<?=$helperUrl->url(array('projectSearchText'=>$searchTextForTags, 'page'=>1, $mapUrlIdent[$field_name] => null))?>" class="active">
