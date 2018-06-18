@@ -1,3 +1,14 @@
+window.appHelpers = function () {
+
+  function getTimeAgo(datetime) {
+    const a = timeago().format(datetime);
+    return a;
+  }
+
+  return {
+    getTimeAgo
+  };
+}();
 const reducer = Redux.combineReducers({
   products: productsReducer,
   users: usersReducer,
@@ -62,7 +73,6 @@ class HomePageTemplateOne extends React.Component {
       React.createElement(LatestProductsWrapper, null),
       React.createElement(TopProductsWrapper, null),
       React.createElement(CommunitySection, null),
-      React.createElement(TopSupportersWrapper, null),
       React.createElement(IntroDiv, null)
     );
   }
@@ -84,23 +94,73 @@ class SpotlightProduct extends React.Component {
 
     let spotlightProduct;
     if (this.state.product) {
+      const productTimeAgo = appHelpers.getTimeAgo(this.state.product.created_at);
       spotlightProduct = React.createElement(
         "div",
-        { className: "ui grid segment", id: "spotlight-product" },
+        { className: "content-grid mdl-grid mdl-card mdl-shadow--2dp", id: "spotlight-product" },
         React.createElement(
           "div",
-          { className: "column four wide computer" },
-          React.createElement("img", { className: "product-image", src: "https://cn.pling.it/cache/200x171/img/" + this.state.product.image_small })
+          { className: "mdl-cell mdl-cell--4-col mdl-cell--3-col-tablet mdl-cell--1-col-phone" },
+          React.createElement("img", { className: "product-image mdl-shadow--2dp", src: "https://cn.pling.it/cache/200x171/img/" + this.state.product.image_small })
         ),
         React.createElement(
           "div",
-          { className: "column twelve wide computer" },
+          { className: "mdl-cell mdl-cell--8-col mdl-cell--5-col-tablet mdl-cell--3-col-phone" },
           React.createElement(
             "h2",
-            null,
+            { className: "mdl-color-text--primary" },
             this.state.product.title
           ),
-          React.createElement("div", { className: "spotlight-product-sub-info" }),
+          React.createElement(
+            "div",
+            { className: "spotlight-product-sub-info" },
+            React.createElement(
+              "span",
+              { className: "mdl-chip mdl-shadow--2dp mdl-chip--contact" },
+              React.createElement("img", { className: "mdl-chip__contact", src: this.state.product.profile_image_url }),
+              React.createElement(
+                "span",
+                { className: "mdl-chip__text" },
+                this.state.product.username
+              )
+            ),
+            React.createElement(
+              "span",
+              { className: "mdl-chip mdl-shadow--2dp mdl-chip--contact" },
+              React.createElement(
+                "span",
+                { className: "mdl-chip__contact mdl-color--primary mdl-color-text--white" },
+                React.createElement(
+                  "i",
+                  { className: "material-icons" },
+                  "category"
+                )
+              ),
+              React.createElement(
+                "span",
+                { className: "mdl-chip__text" },
+                this.state.product.cat_title
+              )
+            ),
+            React.createElement(
+              "span",
+              { className: "mdl-chip mdl-shadow--2dp mdl-chip--contact" },
+              React.createElement(
+                "span",
+                { className: "mdl-chip__contact  mdl-color--primary mdl-color-text--white" },
+                React.createElement(
+                  "i",
+                  { className: "material-icons" },
+                  "date_range"
+                )
+              ),
+              React.createElement(
+                "span",
+                { className: "mdl-chip__text" },
+                productTimeAgo
+              )
+            )
+          ),
           React.createElement(
             "div",
             { className: "spotlight-product-description" },
@@ -117,15 +177,11 @@ class SpotlightProduct extends React.Component {
         "div",
         { className: "ui container" },
         React.createElement(
-          "div",
-          { className: "row" },
-          React.createElement(
-            "h2",
-            null,
-            "in the spotlight"
-          ),
-          spotlightProduct
-        )
+          "h2",
+          { className: "mdl-color-text--primary" },
+          "in the spotlight"
+        ),
+        spotlightProduct
       )
     );
   }
@@ -158,33 +214,29 @@ class IntroDiv extends React.Component {
       { id: "intro", className: "hp-section" },
       React.createElement(
         "div",
-        { className: "ui container" },
+        { className: "container" },
         React.createElement(
           "div",
-          { className: "ui grid" },
+          { className: "mdl-content mdl-grid" },
           React.createElement(
             "div",
-            { className: "row" },
+            { className: "mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--2-col-phone" },
             React.createElement(
-              "div",
-              { className: "column eight wide computer" },
-              React.createElement(
-                "a",
-                { href: "https://www.opendesktop.org/p/1175480/" },
-                React.createElement("img", { id: "download-app", src: "/images/system/download-app.png" })
-              )
-            ),
+              "a",
+              { href: "https://www.opendesktop.org/p/1175480/" },
+              React.createElement("img", { id: "download-app", src: "/images/system/download-app.png" })
+            )
+          ),
+          React.createElement(
+            "div",
+            { className: "mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--2-col-phone" },
             React.createElement(
-              "div",
-              { className: "column eight wide computer" },
+              "a",
+              { id: "become-supporter", href: "/supprt" },
               React.createElement(
-                "a",
-                { id: "become-supporter", href: "/supprt" },
-                React.createElement(
-                  "h1",
-                  null,
-                  "become a supporter"
-                )
+                "h1",
+                null,
+                "become a supporter"
               )
             )
           )
@@ -211,42 +263,43 @@ class LatestProducts extends React.Component {
     if (this.state.products) {
       latestProducts = this.state.products.map((product, index) => React.createElement(
         "div",
-        { key: index, className: "three wide column computer grid-image-container" },
+        { key: index, className: "mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--2-col-phone" },
         React.createElement(
-          "a",
-          { href: "/p/" + product.project_id },
-          React.createElement("img", { className: "product-image", src: "https://cn.pling.it/cache/200x171/img/" + product.image_small })
+          "div",
+          { className: "mdl-card mdl-shadow--2dp" },
+          React.createElement(
+            "div",
+            { className: "mdl-card__title mdl-card--expand", style: { backgroundImage: 'url(https://cn.pling.it/cache/200x171/img/' + product.image_small + ')' } },
+            React.createElement("a", { href: "/p/" + product.project_id })
+          ),
+          React.createElement(
+            "div",
+            { className: "mdl-card__actions mdl-color--primary" },
+            React.createElement(
+              "a",
+              { href: "/p/" + product.project_id, className: "demo-card-image__filename mdl-color-text--white" },
+              product.title
+            )
+          )
         )
       ));
     }
 
     return React.createElement(
       "div",
-      { id: "latest-products", className: "hp-section" },
+      { id: "latest-products", className: "hp-section products-showcase" },
       React.createElement(
         "div",
-        { className: "ui container" },
+        { className: "container" },
+        React.createElement(
+          "h2",
+          { className: "mdl-color-text--primary" },
+          "latest products"
+        ),
         React.createElement(
           "div",
-          { className: "ui grid" },
-          React.createElement(
-            "div",
-            { className: "row" },
-            React.createElement(
-              "div",
-              { className: "column sixtenn wide computer" },
-              React.createElement(
-                "h2",
-                null,
-                "latest products"
-              )
-            )
-          ),
-          React.createElement(
-            "div",
-            { className: "row" },
-            latestProducts
-          )
+          { className: "content-grid mdl-grid" },
+          latestProducts
         )
       )
     );
@@ -291,41 +344,42 @@ class TopProducts extends React.Component {
     if (this.state.products) {
       topProducts = this.state.products.map((product, index) => React.createElement(
         "div",
-        { key: index, className: "three wide column computer grid-image-container" },
+        { key: index, className: "mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--2-col-phone" },
         React.createElement(
-          "a",
-          { href: "/p/" + product.project_id },
-          React.createElement("img", { className: "product-image", src: "https://cn.pling.it/cache/280x171/img/" + product.image_small })
+          "div",
+          { className: "mdl-card mdl-shadow--2dp" },
+          React.createElement(
+            "div",
+            { className: "mdl-card__title mdl-card--expand", style: { backgroundImage: 'url(https://cn.pling.it/cache/200x171/img/' + product.image_small + ')' } },
+            React.createElement("a", { href: "/p/" + product.project_id })
+          ),
+          React.createElement(
+            "div",
+            { className: "mdl-card__actions  mdl-color--primary" },
+            React.createElement(
+              "a",
+              { href: "/p/" + product.project_id, className: "demo-card-image__filename  mdl-color-text--white" },
+              product.title
+            )
+          )
         )
       ));
     }
     return React.createElement(
       "div",
-      { id: "hottest-products", className: "hp-section" },
+      { id: "hottest-products", className: "products-showcase hp-section" },
       React.createElement(
         "div",
-        { className: "ui container" },
+        { className: "container" },
+        React.createElement(
+          "h2",
+          { className: "mdl-color-text--primary" },
+          "hottest products"
+        ),
         React.createElement(
           "div",
-          { className: "ui grid" },
-          React.createElement(
-            "div",
-            { className: "row" },
-            React.createElement(
-              "div",
-              { className: "column sixtenn wide computer" },
-              React.createElement(
-                "h2",
-                null,
-                "hottest products"
-              )
-            )
-          ),
-          React.createElement(
-            "div",
-            { className: "row" },
-            topProducts
-          )
+          { className: "content-grid mdl-grid" },
+          topProducts
         )
       )
     );
@@ -359,18 +413,18 @@ class CommunitySection extends React.Component {
       { id: "community-section", className: "hp-section" },
       React.createElement(
         "div",
-        { className: "ui container grid" },
+        { className: "container" },
         React.createElement(
           "div",
-          { className: "row" },
+          { className: "mdl-content mdl-grid" },
           React.createElement(
             "div",
-            { id: "latest-rss-news-container", className: "column eight wide computer" },
+            { id: "latest-rss-news-container", className: "community-section-div mdl-cell mdl-cell--6-col mdl-cell--3-col-tablet mdl-cell--2-col-phone" },
             React.createElement(LatestRssNewsPosts, null)
           ),
           React.createElement(
             "div",
-            { id: "latest-blog-posts-container", className: "column eight wide computer" },
+            { id: "latest-blog-posts-container", className: "community-section-div mdl-cell mdl-cell--6-col mdl-cell--3-col-tablet mdl-cell--2-col-phone" },
             React.createElement(LatestBlogPosts, null)
           )
         )
@@ -403,30 +457,34 @@ class LatestRssNewsPosts extends React.Component {
     if (this.state.posts) {
       rssNewsPostsDisplay = this.state.posts.slice(0, 3).map((np, index) => React.createElement(
         "div",
-        { className: "item rss-news-post", key: index },
+        { className: "mdl-list__item rss-news-post", key: index },
         React.createElement(
-          "h3",
-          null,
+          "div",
+          { className: "mdl-list__item-text-body" },
           React.createElement(
-            "a",
-            { href: np.url },
-            np.title
-          )
-        ),
-        React.createElement("p", { dangerouslySetInnerHTML: { __html: np.excerpt } })
+            "h3",
+            null,
+            React.createElement(
+              "a",
+              { href: np.url },
+              np.title
+            )
+          ),
+          React.createElement("p", { dangerouslySetInnerHTML: { __html: np.excerpt } })
+        )
       ));
     }
     return React.createElement(
       "div",
-      { id: "latest-rss-news" },
+      { id: "latest-rss-news", className: "mdl-shadow--2dp" },
       React.createElement(
         "h2",
-        null,
+        { className: "mdl-color--primary mdl-color-text--white" },
         "latest rss news"
       ),
       React.createElement(
         "div",
-        { className: "ui menu vertical" },
+        { className: "mdl-list" },
         rssNewsPostsDisplay
       )
     );
@@ -458,143 +516,35 @@ class LatestBlogPosts extends React.Component {
     if (this.state.posts) {
       blogPostsDisplay = this.state.posts.slice(0, 3).map((bp, index) => React.createElement(
         "div",
-        { className: "item rss-news-post", key: index },
+        { className: "mdl-list__item rss-news-post", key: index },
         React.createElement(
-          "h3",
-          null,
+          "div",
+          { className: "mdl-list__item-text-body" },
           React.createElement(
-            "a",
-            { href: bp.url },
-            bp.title
-          )
-        ),
-        React.createElement("p", { dangerouslySetInnerHTML: { __html: bp.excerpt } })
+            "h3",
+            null,
+            React.createElement(
+              "a",
+              { href: bp.url },
+              bp.title
+            )
+          ),
+          React.createElement("p", { dangerouslySetInnerHTML: { __html: bp.excerpt } })
+        )
       ));
     }
     return React.createElement(
       "div",
-      { id: "latest-blog-posts" },
+      { id: "latest-blog-posts", className: "mdl-shadow--2dp" },
       React.createElement(
         "h2",
-        null,
+        { className: "mdl-color--primary mdl-color-text--white" },
         "Latest Blog Posts"
       ),
       React.createElement(
         "div",
-        { className: "ui menu vertical" },
+        { className: "mdl-list" },
         blogPostsDisplay
-      )
-    );
-  }
-}
-
-class TopSupporters extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
-  componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
-    if (nextProps.supporters && !this.state.supporters) {
-      this.setState({ supporters: nextProps.supporters });
-    }
-  }
-
-  render() {
-    let topSupporters;
-    if (this.state.supporters) {
-      topSupporters = this.state.supporters.map((supporter, index) => React.createElement(TopSupportersItem, {
-        key: index,
-        supporter: supporter
-      }));
-    }
-
-    return React.createElement(
-      "div",
-      { id: "top-supporters", className: "hp-section" },
-      React.createElement(
-        "div",
-        { className: "ui container" },
-        React.createElement(
-          "div",
-          { className: "ui grid" },
-          React.createElement(
-            "div",
-            { className: "row" },
-            React.createElement(
-              "div",
-              { className: "column sixteen wide computer" },
-              React.createElement(
-                "h2",
-                null,
-                "top supporters "
-              )
-            )
-          ),
-          React.createElement(
-            "div",
-            { className: "row" },
-            topSupporters
-          )
-        )
-      )
-    );
-  }
-}
-
-const mapStateToTopSupportersProps = state => {
-  const supporters = state.users; // temp
-  return {
-    supporters
-  };
-};
-
-const mapDispatchToTopSupportersProps = dispatch => {
-  return {
-    dispatch
-  };
-};
-
-const TopSupportersWrapper = ReactRedux.connect(mapStateToTopSupportersProps, mapDispatchToTopSupportersProps)(TopSupporters);
-
-class TopSupportersItem extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
-  render() {
-    return React.createElement(
-      "div",
-      { className: "four wide column computer grid-image-container" },
-      React.createElement(
-        "a",
-        { href: "/member/" + this.props.supporter.member_id },
-        React.createElement(
-          "div",
-          { className: "ui grid supporter-info-wrapper" },
-          React.createElement(
-            "div",
-            { className: "eight wide column computer" },
-            React.createElement("img", { src: "https://cn.pling.it/cache/280x171/img/" + this.props.supporter.avatar, onError: e => {
-                e.target.src = "/images_sys/cc-icons-png/by.large.png";
-              } })
-          ),
-          React.createElement(
-            "div",
-            { className: "eight wide column computer" },
-            React.createElement(
-              "div",
-              { className: "supporter-name" },
-              React.createElement(
-                "h3",
-                null,
-                this.props.supporter.username
-              )
-            )
-          )
-        )
       )
     );
   }
