@@ -100,12 +100,12 @@ class SpotlightProduct extends React.Component {
         { className: "content-grid mdl-grid mdl-card mdl-shadow--2dp", id: "spotlight-product" },
         React.createElement(
           "div",
-          { className: "mdl-cell mdl-cell--4-col mdl-cell--3-col-tablet mdl-cell--1-col-phone" },
+          { className: "mdl-cell mdl-cell--4-col mdl-cell--3-col-tablet mdl-cell--4-col-phone" },
           React.createElement("img", { className: "product-image mdl-shadow--2dp", src: "https://cn.pling.it/cache/200x171/img/" + this.state.product.image_small })
         ),
         React.createElement(
           "div",
-          { className: "mdl-cell mdl-cell--8-col mdl-cell--5-col-tablet mdl-cell--3-col-phone" },
+          { className: "mdl-cell mdl-cell--8-col mdl-cell--5-col-tablet mdl-cell--4-col-phone" },
           React.createElement(
             "h2",
             { className: "mdl-color-text--primary" },
@@ -220,7 +220,7 @@ class IntroDiv extends React.Component {
           { className: "mdl-content mdl-grid" },
           React.createElement(
             "div",
-            { className: "mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--2-col-phone" },
+            { className: "mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--4-col-phone" },
             React.createElement(
               "a",
               { href: "https://www.opendesktop.org/p/1175480/" },
@@ -229,7 +229,7 @@ class IntroDiv extends React.Component {
           ),
           React.createElement(
             "div",
-            { className: "mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--2-col-phone" },
+            { className: "mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--4-col-phone" },
             React.createElement(
               "a",
               { id: "become-supporter", href: "/supprt" },
@@ -298,8 +298,12 @@ class LatestProducts extends React.Component {
         ),
         React.createElement(
           "div",
-          { className: "content-grid mdl-grid" },
-          latestProducts
+          { className: "row" },
+          React.createElement(
+            "div",
+            { className: "content-grid mdl-grid" },
+            latestProducts
+          )
         )
       )
     );
@@ -378,8 +382,12 @@ class TopProducts extends React.Component {
         ),
         React.createElement(
           "div",
-          { className: "content-grid mdl-grid" },
-          topProducts
+          { className: "row" },
+          React.createElement(
+            "div",
+            { className: "content-grid mdl-grid" },
+            topProducts
+          )
         )
       )
     );
@@ -419,12 +427,12 @@ class CommunitySection extends React.Component {
           { className: "mdl-content mdl-grid" },
           React.createElement(
             "div",
-            { id: "latest-rss-news-container", className: "community-section-div mdl-cell mdl-cell--6-col mdl-cell--3-col-tablet mdl-cell--2-col-phone" },
+            { id: "latest-rss-news-container", className: "community-section-div mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--4-col-phone" },
             React.createElement(LatestRssNewsPosts, null)
           ),
           React.createElement(
             "div",
-            { id: "latest-blog-posts-container", className: "community-section-div mdl-cell mdl-cell--6-col mdl-cell--3-col-tablet mdl-cell--2-col-phone" },
+            { id: "latest-blog-posts-container", className: "community-section-div mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--4-col-phone" },
             React.createElement(LatestBlogPosts, null)
           )
         )

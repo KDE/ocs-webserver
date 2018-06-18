@@ -36,10 +36,10 @@ class SpotlightProduct extends React.Component {
       const productTimeAgo = appHelpers.getTimeAgo(this.state.product.created_at);
       spotlightProduct = (
         <div className="content-grid mdl-grid mdl-card mdl-shadow--2dp" id="spotlight-product">
-          <div className="mdl-cell mdl-cell--4-col mdl-cell--3-col-tablet mdl-cell--1-col-phone">
+          <div className="mdl-cell mdl-cell--4-col mdl-cell--3-col-tablet mdl-cell--4-col-phone">
             <img className="product-image mdl-shadow--2dp" src={"https://cn.pling.it/cache/200x171/img/" + this.state.product.image_small}/>
           </div>
-          <div className="mdl-cell mdl-cell--8-col mdl-cell--5-col-tablet mdl-cell--3-col-phone">
+          <div className="mdl-cell mdl-cell--8-col mdl-cell--5-col-tablet mdl-cell--4-col-phone">
             <h2 className="mdl-color-text--primary">{this.state.product.title}</h2>
             <div className="spotlight-product-sub-info">
               <span className="mdl-chip mdl-shadow--2dp mdl-chip--contact">
@@ -107,12 +107,12 @@ class IntroDiv extends React.Component {
       <div id="intro" className="hp-section">
         <div className="container">
           <div className="mdl-content mdl-grid">
-              <div className="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--2-col-phone">
+              <div className="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--4-col-phone">
                 <a href="https://www.opendesktop.org/p/1175480/">
                   <img id="download-app" src="/images/system/download-app.png"/>
                 </a>
               </div>
-              <div className="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--2-col-phone">
+              <div className="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--4-col-phone">
                 <a id="become-supporter" href="/supprt"><h1>become a supporter</h1></a>
               </div>
           </div>
@@ -156,8 +156,10 @@ class LatestProducts extends React.Component {
       <div id="latest-products" className="hp-section products-showcase">
         <div className="container">
           <h2  className="mdl-color-text--primary">latest products</h2>
-          <div className="content-grid mdl-grid">
-            {latestProducts}
+          <div className="row">
+            <div className="content-grid mdl-grid">
+              {latestProducts}
+            </div>
           </div>
         </div>
       </div>
@@ -222,8 +224,10 @@ class TopProducts extends React.Component {
       <div id="hottest-products" className="products-showcase hp-section">
         <div className="container">
           <h2  className="mdl-color-text--primary">hottest products</h2>
-          <div className="content-grid mdl-grid">
-            {topProducts}
+          <div className="row">
+            <div className="content-grid mdl-grid">
+              {topProducts}
+            </div>
           </div>
         </div>
       </div>
@@ -260,10 +264,10 @@ class CommunitySection extends React.Component {
       <div id="community-section" className="hp-section">
         <div className="container">
           <div className="mdl-content mdl-grid">
-              <div id="latest-rss-news-container" className="community-section-div mdl-cell mdl-cell--6-col mdl-cell--3-col-tablet mdl-cell--2-col-phone">
+              <div id="latest-rss-news-container" className="community-section-div mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--4-col-phone">
                 <LatestRssNewsPosts/>
               </div>
-              <div id="latest-blog-posts-container" className="community-section-div mdl-cell mdl-cell--6-col mdl-cell--3-col-tablet mdl-cell--2-col-phone">
+              <div id="latest-blog-posts-container" className="community-section-div mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--4-col-phone">
                 <LatestBlogPosts/>
               </div>
           </div>
