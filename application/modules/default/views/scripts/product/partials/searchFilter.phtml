@@ -74,7 +74,8 @@
                     foreach ($facet_field as $key =>$count) { ?>
                     <?php if ($key == $mapCurrentParam[$field_name]) : ?>
                         <li><a rel="nofollow" href="<?=$helperUrl->url(array('projectSearchText'=>$this->searchText, 'page'=>1, $mapUrlIdent[$field_name] => null))?>" class="active">
-                                <span class="glyphicon glyphicon-remove text-danger" aria-hidden="true" style="margin-right: 2px;top:2px;"></span><?= $key?> <span class="badge"><?=$count?></span>
+                                <span class="glyphicon glyphicon-remove text-danger" aria-hidden="true" style="margin-right: 2px;top:2px;"></span>
+                                <?= ($mapFields[$field_name]=='Category' ?$mapCategories[intval($key)]:$key)?> <span class="badge"><?=$count?></span>
                             </a></li>
                     <?php else : ?>
                         <li><a rel="nofollow" href="<?=$helperUrl->url(array('projectSearchText'=>$this->searchText,'page'=>1, $mapUrlIdent[$field_name] => $key))?>" >
