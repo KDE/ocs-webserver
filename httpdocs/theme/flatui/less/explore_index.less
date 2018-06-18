@@ -109,6 +109,66 @@
 		/*padding-left: 0px;*/
 	}
 
+	.refine-search-group
+	{
+		>ul.dropdown-menu{
+			 min-width: 100%;
+			 > li{
+			 	a {
+					    position: relative;
+					    padding: 3px 10px;
+					    > span.badge {
+						    font-weight: normal;
+						    font-size: smaller;
+						    position: absolute;
+						    top: 3px;
+						    right: 3px;
+						}	    
+				  }
+			 	
+				}
+		}
+
+		> button {
+		    text-align: left;
+		    min-width: 100%;
+		    background-color: #fff;
+		    border-color: #ccc;
+		    color: #333;
+		    &:hover {
+		      	color: #333;
+			background-color: #e6e6e6;
+			border-color: #adadad;
+		    }
+		    span.caret {
+			    position: absolute;
+			    top: 20px;
+			    right: 15px;
+			}
+		}
+		 .no-tags-msg {
+		    padding-left: 10px;
+		}
+
+	}
+
+	
+	.refine-search-header {
+		.btn-xs {
+		    font-size: 12px;
+		    line-height: 1.5;
+		    padding: 1px 5px;
+		}
+		.current-search {
+			    padding-left: 2px;
+			    padding-right: 2px;
+			    padding-bottom: 1px;
+		}
+
+	}
+
+		
+	
 }
 
 
