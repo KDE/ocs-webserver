@@ -93,7 +93,7 @@ class Default_Model_Solr
 
         $query = trim($op['q']);
 
-      
+        if($offset<0) $offset = 0;
         $results = $solr->search($query, $offset, $op['count'], $params);
 
         $output['response'] = (array)$results->response;
