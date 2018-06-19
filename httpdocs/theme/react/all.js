@@ -521,6 +521,7 @@ class PaddedImageProducts extends React.Component {
   }
 
   render() {
+
     let topProducts;
     if (this.state.products) {
       const limit = appHelpers.getNumberOfProducts(this.props.device);
