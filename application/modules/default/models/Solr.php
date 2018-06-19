@@ -70,8 +70,8 @@ class Default_Model_Solr
 //           'bf'                => 'product(recip(ms(NOW/HOUR,changed_at),3.16e-11,0.2,0.2),1300)',
             'bf'                => 'product(recip(ms(NOW/HOUR,changed_at),3.16e-11,0.2,0.2),40)',            
 //          'sort'              => 'changed_at desc',
-//          'hl'                => 'on',
-//          'hl.fl'             => 'title, description, username',
+            'hl'                => 'on',
+            'hl.fl'             => 'description,tags,package_names,arch_names,license_names',
             'facet'             => 'true',
             'facet.field'       => array('project_category_id', 'tags','package_names','arch_names','license_names'),
             'facet.mincount'    => '1',
@@ -102,6 +102,9 @@ class Default_Model_Solr
         $output['facet_fields'] = (array)$results->facet_counts->facet_fields;
         $output['facet_ranges'] = (array)$results->facet_counts->facet_ranges;
         $output['hits'] = (array)$results->response->docs;
+        //$output['highlighting'] =(array)$results->highlighting;
+        $output['highlighting'] = json_decode(json_encode($results->highlighting), true);
+        
 
         $pagination_array = array();
         if (isset($output['response']['numFound'])) {
