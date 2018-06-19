@@ -5,8 +5,42 @@ window.appHelpers = function () {
     return a;
   }
 
+  function getDeviceWidth(width) {
+    let device;
+    if (width > 1250) {
+      device = "full";
+    } else if (width < 1250 && width >= 1000) {
+      device = "large";
+    } else if (width < 1000 && width >= 661) {
+      device = "mid";
+    } else if (width < 661 && width >= 400) {
+      device = "tablet";
+    } else if (width < 400) {
+      device = "phone";
+    }
+    return device;
+  }
+
+  function getNumberOfProducts(device) {
+    let num;
+    if (device === "full") {
+      num = 5;
+    } else if (device === "large") {
+      num = 4;
+    } else if (device === "mid") {
+      num = 3;
+    } else if (device === "tablet") {
+      num = 2;
+    } else if (device === "phone") {
+      num = 1;
+    }
+    return num;
+  }
+
   return {
-    getTimeAgo
+    getTimeAgo,
+    getDeviceWidth,
+    getNumberOfProducts
   };
 }();
 const reducer = Redux.combineReducers({
@@ -63,15 +97,34 @@ class HomePageTemplateOne extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
+    this.updateDimensions = this.updateDimensions.bind(this);
+  }
+
+  componentWillMount() {
+    this.updateDimensions();
+  }
+
+  componentDidMount() {
+    window.addEventListener("resize", this.updateDimensions);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.updateDimensions);
+  }
+
+  updateDimensions() {
+    const device = appHelpers.getDeviceWidth(window.innerWidth);
+    this.setState({ device: device });
   }
 
   render() {
+    console.log(this.state.device);
     return React.createElement(
       "div",
       { id: "homepage-version-one" },
       React.createElement(Introduction, null),
-      React.createElement(LatestProductsWrapper, null),
-      React.createElement(TopProductsWrapper, null)
+      React.createElement(LatestProductsWrapper, { device: this.state.device }),
+      React.createElement(TopProductsWrapper, { device: this.state.device })
     );
   }
 }
@@ -132,7 +185,8 @@ class LatestProducts extends React.Component {
   render() {
     let latestProducts;
     if (this.state.products) {
-      latestProducts = this.state.products.map((product, index) => React.createElement(
+      const limit = appHelpers.getNumberOfProducts(this.props.device);
+      latestProducts = this.state.products.slice(0, limit).map((product, index) => React.createElement(
         "div",
         { key: index, className: "product square" },
         React.createElement(
@@ -244,7 +298,8 @@ class TopProducts extends React.Component {
   render() {
     let topProducts;
     if (this.state.products) {
-      topProducts = this.state.products.map((product, index) => React.createElement(
+      const limit = appHelpers.getNumberOfProducts(this.props.device);
+      topProducts = this.state.products.slice(0, limit).map((product, index) => React.createElement(
         "div",
         { key: index, className: "product square" },
         React.createElement(

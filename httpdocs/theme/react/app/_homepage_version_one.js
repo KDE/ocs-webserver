@@ -2,14 +2,34 @@ class HomePageTemplateOne extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {};
+    this.updateDimensions = this.updateDimensions.bind(this);
   }
 
+  componentWillMount(){
+    this.updateDimensions();
+  }
+
+  componentDidMount() {
+    window.addEventListener("resize", this.updateDimensions);
+  }
+
+  componentWillUnmount(){
+    window.removeEventListener("resize", this.updateDimensions);
+  }
+
+  updateDimensions(){
+    const device = appHelpers.getDeviceWidth(window.innerWidth);
+    this.setState({device:device});
+  }
+
+
   render(){
+    console.log(this.state.device);
     return (
       <div id="homepage-version-one">
         <Introduction/>
-        <LatestProductsWrapper/>
-        <TopProductsWrapper/>
+        <LatestProductsWrapper device={this.state.device}/>
+        <TopProductsWrapper  device={this.state.device}/>
       </div>
     )
   }
@@ -49,7 +69,8 @@ class LatestProducts extends React.Component {
   render(){
     let latestProducts;
     if (this.state.products){
-      latestProducts = this.state.products.map((product,index) => (
+      const limit = appHelpers.getNumberOfProducts(this.props.device);
+      latestProducts = this.state.products.slice(0,limit).map((product,index) => (
         <div key={index} className="product square">
             <div className="content">
               <div className="product-wrapper mdl-shadow--2dp">
@@ -129,7 +150,8 @@ class TopProducts extends React.Component {
   render(){
     let topProducts;
     if (this.state.products){
-      topProducts = this.state.products.map((product,index) => (
+      const limit = appHelpers.getNumberOfProducts(this.props.device);
+      topProducts = this.state.products.slice(0,limit).map((product,index) => (
         <div key={index} className="product square">
             <div className="content">
               <div className="product-wrapper mdl-shadow--2dp">
