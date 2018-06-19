@@ -101,7 +101,7 @@ class HomePageTemplateOne extends React.Component {
   }
 
   componentWillMount() {
-    this.updateDimensions();
+    // this.updateDimensions();
   }
 
   componentDidMount() {
@@ -118,13 +118,14 @@ class HomePageTemplateOne extends React.Component {
   }
 
   render() {
-    console.log(this.state.device);
     return React.createElement(
       "div",
       { id: "homepage-version-one" },
       React.createElement(Introduction, null),
-      React.createElement(LatestProductsWrapper, { device: this.state.device }),
-      React.createElement(TopProductsWrapper, { device: this.state.device })
+      React.createElement(LatestProductsWrapper, null),
+      React.createElement(TopProductsWrapper, null),
+      React.createElement(FullImageProductsWrapper, null),
+      React.createElement(PaddedImageProductsWrapper, null)
     );
   }
 }
@@ -133,7 +134,7 @@ class Introduction extends React.Component {
   render() {
     return React.createElement(
       "div",
-      { id: "Introduction", className: "hp-section" },
+      { id: "introduction", className: "hp-section" },
       React.createElement(
         "div",
         { className: "container" },
@@ -204,7 +205,7 @@ class LatestProducts extends React.Component {
                 React.createElement(
                   "figure",
                   null,
-                  React.createElement("img", { className: "mdl-shadow--2dp", src: 'https://cn.pling.it/cache/200x171/img/' + product.image_small })
+                  React.createElement("img", { src: 'https://cn.pling.it/cache/200x171/img/' + product.image_small })
                 )
               ),
               React.createElement(
@@ -237,9 +238,9 @@ class LatestProducts extends React.Component {
           "div",
           { className: "section-header" },
           React.createElement(
-            "h2",
+            "h3",
             { className: "mdl-color-text--primary" },
-            "latest products"
+            "Round Images Layout"
           ),
           React.createElement(
             "div",
@@ -317,7 +318,7 @@ class TopProducts extends React.Component {
                 React.createElement(
                   "figure",
                   null,
-                  React.createElement("img", { className: "mdl-shadow--2dp", src: 'https://cn.pling.it/cache/200x171/img/' + product.image_small })
+                  React.createElement("img", { className: "squared", src: 'https://cn.pling.it/cache/200x171/img/' + product.image_small })
                 )
               ),
               React.createElement(
@@ -349,9 +350,9 @@ class TopProducts extends React.Component {
           "div",
           { className: "section-header" },
           React.createElement(
-            "h2",
+            "h3",
             { className: "mdl-color-text--primary" },
-            "hottest products"
+            "Square Images Layout"
           ),
           React.createElement(
             "div",
@@ -388,154 +389,229 @@ const mapDispatchToTopProductsProps = dispatch => {
 
 const TopProductsWrapper = ReactRedux.connect(mapStateToTopProductsProps, mapDispatchToTopProductsProps)(TopProducts);
 
-class CommunitySection extends React.Component {
+class FullImageProducts extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
 
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps);
+    if (nextProps.products && !this.state.products) {
+      let products;
+      if (nextProps.products.TopProducts.elements.length > 0) {
+        products = nextProps.products.TopProducts.elements;
+      } else {
+        products = nextProps.products.Apps;
+      }
+      this.setState({ products: products });
+    }
+  }
+
   render() {
+    let topProducts;
+    if (this.state.products) {
+      const limit = appHelpers.getNumberOfProducts(this.props.device);
+      topProducts = this.state.products.slice(0, limit).map((product, index) => React.createElement(
+        "div",
+        { key: index, className: "product square" },
+        React.createElement(
+          "div",
+          { className: "content" },
+          React.createElement(
+            "div",
+            { className: "product-wrapper mdl-shadow--2dp" },
+            React.createElement(
+              "a",
+              { href: "/p/" + product.project_id },
+              React.createElement(
+                "div",
+                { className: "product-image-container" },
+                React.createElement(
+                  "figure",
+                  { className: "no-padding" },
+                  React.createElement("img", { className: "full", src: 'https://cn.pling.it/cache/200x171/img/' + product.image_small })
+                )
+              ),
+              React.createElement(
+                "div",
+                { className: "product-info mdl-color--primary" },
+                React.createElement(
+                  "span",
+                  { className: "product-info-title" },
+                  product.title
+                ),
+                React.createElement(
+                  "span",
+                  { className: "product-info-description" },
+                  product.description
+                )
+              )
+            )
+          )
+        )
+      ));
+    }
     return React.createElement(
       "div",
-      { id: "community-section", className: "hp-section" },
+      { id: "hottest-products", className: "hp-section products-showcase" },
       React.createElement(
         "div",
         { className: "container" },
         React.createElement(
           "div",
-          { className: "mdl-content mdl-grid" },
+          { className: "section-header" },
           React.createElement(
-            "div",
-            { id: "latest-rss-news-container", className: "community-section-div mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--4-col-phone" },
-            React.createElement(LatestRssNewsPosts, null)
+            "h3",
+            { className: "mdl-color-text--primary" },
+            "Full Images Layout"
           ),
           React.createElement(
             "div",
-            { id: "latest-blog-posts-container", className: "community-section-div mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--4-col-phone" },
-            React.createElement(LatestBlogPosts, null)
+            { className: "actions" },
+            React.createElement(
+              "button",
+              { className: "mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary" },
+              "show more"
+            )
+          )
+        ),
+        React.createElement(
+          "div",
+          { className: "products-container row" },
+          topProducts
+        )
+      )
+    );
+  }
+}
+
+const mapStateToFullImageProductsProps = state => {
+  const products = state.products;
+  return {
+    products
+  };
+};
+
+const mapDispatchToFullImageProductsProps = dispatch => {
+  return {
+    dispatch
+  };
+};
+
+const FullImageProductsWrapper = ReactRedux.connect(mapStateToFullImageProductsProps, mapDispatchToFullImageProductsProps)(FullImageProducts);
+
+class PaddedImageProducts extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps);
+    if (nextProps.products && !this.state.products) {
+      let products;
+      if (nextProps.products.TopProducts.elements.length > 0) {
+        products = nextProps.products.TopProducts.elements;
+      } else {
+        products = nextProps.products.Apps;
+      }
+      this.setState({ products: products });
+    }
+  }
+
+  render() {
+    let topProducts;
+    if (this.state.products) {
+      const limit = appHelpers.getNumberOfProducts(this.props.device);
+      topProducts = this.state.products.slice(0, limit).map((product, index) => React.createElement(
+        "div",
+        { key: index, className: "product square" },
+        React.createElement(
+          "div",
+          { className: "content" },
+          React.createElement(
+            "div",
+            { className: "product-wrapper mdl-shadow--2dp" },
+            React.createElement(
+              "a",
+              { href: "/p/" + product.project_id },
+              React.createElement(
+                "div",
+                { className: "product-image-container" },
+                React.createElement(
+                  "figure",
+                  { className: "no-padding" },
+                  React.createElement("img", { className: "full padded", src: 'https://cn.pling.it/cache/200x171/img/' + product.image_small })
+                )
+              ),
+              React.createElement(
+                "div",
+                { className: "product-info mdl-color--primary" },
+                React.createElement(
+                  "span",
+                  { className: "product-info-title" },
+                  product.title
+                ),
+                React.createElement(
+                  "span",
+                  { className: "product-info-description" },
+                  product.description
+                )
+              )
+            )
           )
         )
-      )
-    );
-  }
-}
-
-class LatestRssNewsPosts extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-    this.getLatestRssNewsPosts = this.getLatestRssNewsPosts.bind(this);
-  }
-
-  componentDidMount() {
-    this.getLatestRssNewsPosts();
-  }
-
-  getLatestRssNewsPosts() {
-    const json_url = "https://blog.opendesktop.org/?json=1&callback=?";
-    const self = this;
-    $.getJSON(json_url, function (res) {
-      self.setState({ posts: res.posts });
-    });
-  }
-
-  render() {
-    let rssNewsPostsDisplay;
-    if (this.state.posts) {
-      rssNewsPostsDisplay = this.state.posts.slice(0, 3).map((np, index) => React.createElement(
-        "div",
-        { className: "mdl-list__item rss-news-post", key: index },
-        React.createElement(
-          "div",
-          { className: "mdl-list__item-text-body" },
-          React.createElement(
-            "h3",
-            null,
-            React.createElement(
-              "a",
-              { href: np.url },
-              np.title
-            )
-          ),
-          React.createElement("p", { dangerouslySetInnerHTML: { __html: np.excerpt } })
-        )
       ));
     }
     return React.createElement(
       "div",
-      { id: "latest-rss-news", className: "mdl-shadow--2dp" },
-      React.createElement(
-        "h2",
-        { className: "mdl-color--primary mdl-color-text--white" },
-        "latest rss news"
-      ),
+      { id: "hottest-products", className: "hp-section products-showcase" },
       React.createElement(
         "div",
-        { className: "mdl-list" },
-        rssNewsPostsDisplay
-      )
-    );
-  }
-}
-
-class LatestBlogPosts extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-    this.getLatestBlogPosts = this.getLatestBlogPosts.bind(this);
-  }
-
-  componentDidMount() {
-    this.getLatestBlogPosts();
-  }
-
-  getLatestBlogPosts() {
-    const urlforum = 'https://forum.opendesktop.org/';
-    const json_url = urlforum + 'latest.json';
-    const self = this;
-    $.ajax(json_url).then(function (result) {
-      self.setState({ posts: result.topic_list.topics });
-    });
-  }
-
-  render() {
-    let blogPostsDisplay;
-    if (this.state.posts) {
-      blogPostsDisplay = this.state.posts.slice(0, 3).map((bp, index) => React.createElement(
-        "div",
-        { className: "mdl-list__item rss-news-post", key: index },
+        { className: "container" },
         React.createElement(
           "div",
-          { className: "mdl-list__item-text-body" },
+          { className: "section-header" },
           React.createElement(
             "h3",
-            null,
-            React.createElement(
-              "a",
-              { href: bp.url },
-              bp.title
-            )
+            { className: "mdl-color-text--primary" },
+            "Padded Images Layout"
           ),
-          React.createElement("p", { dangerouslySetInnerHTML: { __html: bp.excerpt } })
+          React.createElement(
+            "div",
+            { className: "actions" },
+            React.createElement(
+              "button",
+              { className: "mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary" },
+              "show more"
+            )
+          )
+        ),
+        React.createElement(
+          "div",
+          { className: "products-container row" },
+          topProducts
         )
-      ));
-    }
-    return React.createElement(
-      "div",
-      { id: "latest-blog-posts", className: "mdl-shadow--2dp" },
-      React.createElement(
-        "h2",
-        { className: "mdl-color--primary mdl-color-text--white" },
-        "Latest Blog Posts"
-      ),
-      React.createElement(
-        "div",
-        { className: "mdl-list" },
-        blogPostsDisplay
       )
     );
   }
 }
+
+const mapStateToPaddedImageProductsProps = state => {
+  const products = state.products;
+  return {
+    products
+  };
+};
+
+const mapDispatchToPaddedImageProductsProps = dispatch => {
+  return {
+    dispatch
+  };
+};
+
+const PaddedImageProductsWrapper = ReactRedux.connect(mapStateToPaddedImageProductsProps, mapDispatchToPaddedImageProductsProps)(PaddedImageProducts);
 class HomePageTemplateTwo extends React.Component {
   render() {
     return React.createElement(

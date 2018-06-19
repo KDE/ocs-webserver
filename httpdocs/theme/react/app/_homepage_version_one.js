@@ -6,7 +6,7 @@ class HomePageTemplateOne extends React.Component {
   }
 
   componentWillMount(){
-    this.updateDimensions();
+    // this.updateDimensions();
   }
 
   componentDidMount() {
@@ -22,14 +22,14 @@ class HomePageTemplateOne extends React.Component {
     this.setState({device:device});
   }
 
-
   render(){
-    console.log(this.state.device);
     return (
       <div id="homepage-version-one">
         <Introduction/>
-        <LatestProductsWrapper device={this.state.device}/>
-        <TopProductsWrapper  device={this.state.device}/>
+        <LatestProductsWrapper/>
+        <TopProductsWrapper/>
+        <FullImageProductsWrapper/>
+        <PaddedImageProductsWrapper/>
       </div>
     )
   }
@@ -38,7 +38,7 @@ class HomePageTemplateOne extends React.Component {
 class Introduction extends React.Component {
   render(){
     return (
-      <div id="Introduction" className="hp-section">
+      <div id="introduction" className="hp-section">
         <div className="container">
           <article>
             <h2 className="mdl-color-text--primary">App Images Hub, right here</h2>
@@ -77,7 +77,7 @@ class LatestProducts extends React.Component {
                 <a href={"/p/"+product.project_id}>
                   <div className="product-image-container">
                     <figure>
-                      <img className="mdl-shadow--2dp" src={'https://cn.pling.it/cache/200x171/img/' + product.image_small} />
+                      <img src={'https://cn.pling.it/cache/200x171/img/' + product.image_small} />
                     </figure>
                   </div>
                   <div className="product-info mdl-color--primary">
@@ -96,7 +96,7 @@ class LatestProducts extends React.Component {
       <div id="latest-products" className="hp-section products-showcase">
         <div className="container">
           <div className="section-header">
-            <h2  className="mdl-color-text--primary">latest products</h2>
+            <h3  className="mdl-color-text--primary">Round Images Layout</h3>
             <div className="actions">
               <button className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">show more</button>
             </div>
@@ -158,7 +158,7 @@ class TopProducts extends React.Component {
                 <a href={"/p/"+product.project_id}>
                   <div className="product-image-container">
                     <figure>
-                      <img className="mdl-shadow--2dp" src={'https://cn.pling.it/cache/200x171/img/' + product.image_small} />
+                      <img className="squared" src={'https://cn.pling.it/cache/200x171/img/' + product.image_small} />
                     </figure>
                   </div>
                   <div className="product-info mdl-color--primary">
@@ -175,7 +175,7 @@ class TopProducts extends React.Component {
       <div id="hottest-products" className="hp-section products-showcase">
         <div className="container">
           <div className="section-header">
-            <h2  className="mdl-color-text--primary">hottest products</h2>
+            <h3 className="mdl-color-text--primary">Square Images Layout</h3>
             <div className="actions">
               <button className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">show more</button>
             </div>
@@ -207,23 +207,60 @@ const TopProductsWrapper = ReactRedux.connect(
   mapDispatchToTopProductsProps
 )(TopProducts)
 
-class CommunitySection extends React.Component {
+class FullImageProducts extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {};
   }
 
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps);
+    if (nextProps.products && !this.state.products){
+      let products;
+      if (nextProps.products.TopProducts.elements.length > 0){
+        products = nextProps.products.TopProducts.elements;
+      } else {
+        products = nextProps.products.Apps;
+      }
+      this.setState({products:products});
+    }
+  }
+
   render(){
+    let topProducts;
+    if (this.state.products){
+      const limit = appHelpers.getNumberOfProducts(this.props.device);
+      topProducts = this.state.products.slice(0,limit).map((product,index) => (
+        <div key={index} className="product square">
+            <div className="content">
+              <div className="product-wrapper mdl-shadow--2dp">
+                <a href={"/p/"+product.project_id}>
+                  <div className="product-image-container">
+                    <figure className="no-padding">
+                      <img className="full" src={'https://cn.pling.it/cache/200x171/img/' + product.image_small} />
+                    </figure>
+                  </div>
+                  <div className="product-info mdl-color--primary">
+                    <span className="product-info-title">{product.title}</span>
+                    <span className="product-info-description">{product.description}</span>
+                  </div>
+                </a>
+              </div>
+          </div>
+        </div>
+      ));
+    }
     return (
-      <div id="community-section" className="hp-section">
+      <div id="hottest-products" className="hp-section products-showcase">
         <div className="container">
-          <div className="mdl-content mdl-grid">
-              <div id="latest-rss-news-container" className="community-section-div mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--4-col-phone">
-                <LatestRssNewsPosts/>
-              </div>
-              <div id="latest-blog-posts-container" className="community-section-div mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--4-col-phone">
-                <LatestBlogPosts/>
-              </div>
+          <div className="section-header">
+            <h3 className="mdl-color-text--primary">Full Images Layout</h3>
+            <div className="actions">
+              <button className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">show more</button>
+            </div>
+          </div>
+          <div className="products-container row">
+            {topProducts}
           </div>
         </div>
       </div>
@@ -231,87 +268,99 @@ class CommunitySection extends React.Component {
   }
 }
 
-class LatestRssNewsPosts extends React.Component {
+const mapStateToFullImageProductsProps = (state) => {
+  const products = state.products;
+  return {
+    products
+  }
+}
+
+const mapDispatchToFullImageProductsProps = (dispatch) => {
+  return {
+    dispatch
+  }
+}
+
+const FullImageProductsWrapper = ReactRedux.connect(
+  mapStateToFullImageProductsProps,
+  mapDispatchToFullImageProductsProps
+)(FullImageProducts)
+
+class PaddedImageProducts extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {};
-    this.getLatestRssNewsPosts = this.getLatestRssNewsPosts.bind(this);
   }
 
-  componentDidMount() {
-    this.getLatestRssNewsPosts()
-  }
-
-  getLatestRssNewsPosts(){
-    const json_url = "https://blog.opendesktop.org/?json=1&callback=?"
-    const self = this;
-    $.getJSON(json_url, function (res) {
-      self.setState({posts:res.posts})
-    });
-  }
-
-  render(){
-    let rssNewsPostsDisplay;
-    if (this.state.posts){
-      rssNewsPostsDisplay = this.state.posts.slice(0,3).map((np,index) => (
-        <div className="mdl-list__item rss-news-post" key={index}>
-          <div className="mdl-list__item-text-body">
-            <h3><a href={np.url}>{np.title}</a></h3>
-            <p dangerouslySetInnerHTML={{__html:np.excerpt}}></p>
-          </div>
-        </div>
-      ));
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps);
+    if (nextProps.products && !this.state.products){
+      let products;
+      if (nextProps.products.TopProducts.elements.length > 0){
+        products = nextProps.products.TopProducts.elements;
+      } else {
+        products = nextProps.products.Apps;
+      }
+      this.setState({products:products});
     }
-    return(
-      <div id="latest-rss-news" className="mdl-shadow--2dp">
-        <h2 className="mdl-color--primary mdl-color-text--white">latest rss news</h2>
-        <div className="mdl-list">
-          {rssNewsPostsDisplay}
-        </div>
-      </div>
-    )
-  }
-}
-
-class LatestBlogPosts extends React.Component {
-  constructor(props){
-  	super(props);
-  	this.state = {};
-    this.getLatestBlogPosts = this.getLatestBlogPosts.bind(this);
-  }
-
-  componentDidMount() {
-    this.getLatestBlogPosts()
-  }
-
-  getLatestBlogPosts(){
-    const urlforum = 'https://forum.opendesktop.org/';
-    const json_url =urlforum+'latest.json';
-    const self = this;
-    $.ajax(json_url).then(function (result) {
-      self.setState({posts:result.topic_list.topics});
-    });
   }
 
   render(){
-    let blogPostsDisplay;
-    if (this.state.posts){
-      blogPostsDisplay = this.state.posts.slice(0,3).map((bp,index) => (
-        <div className="mdl-list__item rss-news-post" key={index}>
-          <div className="mdl-list__item-text-body">
-            <h3><a href={bp.url}>{bp.title}</a></h3>
-            <p dangerouslySetInnerHTML={{__html:bp.excerpt}}></p>
+    let topProducts;
+    if (this.state.products){
+      const limit = appHelpers.getNumberOfProducts(this.props.device);
+      topProducts = this.state.products.slice(0,limit).map((product,index) => (
+        <div key={index} className="product square">
+            <div className="content">
+              <div className="product-wrapper mdl-shadow--2dp">
+                <a href={"/p/"+product.project_id}>
+                  <div className="product-image-container">
+                    <figure className="no-padding">
+                      <img className="full padded" src={'https://cn.pling.it/cache/200x171/img/' + product.image_small} />
+                    </figure>
+                  </div>
+                  <div className="product-info mdl-color--primary">
+                    <span className="product-info-title">{product.title}</span>
+                    <span className="product-info-description">{product.description}</span>
+                  </div>
+                </a>
+              </div>
           </div>
         </div>
       ));
     }
     return (
-      <div id="latest-blog-posts" className="mdl-shadow--2dp">
-        <h2 className="mdl-color--primary mdl-color-text--white">Latest Blog Posts</h2>
-        <div className="mdl-list">
-          {blogPostsDisplay}
+      <div id="hottest-products" className="hp-section products-showcase">
+        <div className="container">
+          <div className="section-header">
+            <h3 className="mdl-color-text--primary">Padded Images Layout</h3>
+            <div className="actions">
+              <button className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">show more</button>
+            </div>
+          </div>
+          <div className="products-container row">
+            {topProducts}
+          </div>
         </div>
       </div>
     )
   }
 }
+
+const mapStateToPaddedImageProductsProps = (state) => {
+  const products = state.products;
+  return {
+    products
+  }
+}
+
+const mapDispatchToPaddedImageProductsProps = (dispatch) => {
+  return {
+    dispatch
+  }
+}
+
+const PaddedImageProductsWrapper = ReactRedux.connect(
+  mapStateToPaddedImageProductsProps,
+  mapDispatchToPaddedImageProductsProps
+)(PaddedImageProducts)

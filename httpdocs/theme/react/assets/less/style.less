@@ -9,12 +9,14 @@ header div.container.header {
 .products-showcase {
 
   .products-container {
-    
+
     .square {
       width: 20%;
       position: relative;
       float: left;
+      margin-bottom: 15px;
     }
+
 
     .square:after {
       content: "";
@@ -63,6 +65,25 @@ header div.container.header {
             height: 100px;
             margin: -50px 0 0 -50px;
             border-radius: 100%;
+
+            &.squared {
+              border-radius: 0;
+            }
+
+            &.full {
+              position: relative;
+              width: 100%;
+              height: 100%;
+              margin: 0;
+              border-radius: 0;
+              top: 0;
+              left: 0;
+            }
+
+            &.padded {
+              border-radius: 0;
+              border:10px solid white;
+            }
           }
         }
       }
@@ -83,10 +104,11 @@ header div.container.header {
           overflow: hidden;
           white-space: nowrap;
           text-overflow: ellipsis;
+          line-height: 1.5;
 
           &.product-info-title {
             font-size: 80%;
-            font-weight: bold;
+            font-weight: 500 !important;
           }
 
           &.product-info-description {
@@ -104,19 +126,30 @@ header div.container.header {
   }
 }
 
-.actions {
-  .mdl-button + .mdl-button {
-    margin-left: 10px;
+#app-root {
+  font-family: Source Sans Pro,Source Sans,sans-serif;
+  font-size: 13pt;
+  font-weight: 400;
+  line-height: 1.8;
+
+  .container {
+    width: 100% !important;
+    padding: 0 10%;
   }
 
-}
+  * {
+    font-weight: 300;
+  }
 
-#app-root {
-  font-size: 13pt;
+  .mdl-button {
+    text-transform: lowercase !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+  }
 
   .hp-section {
-    padding: 60px 0;
-    background-image: url('../img/hp-section-bg.png');
+    padding: 20px 0;
+    // background-image: url('../img/hp-section-bg.png');
 
     .section-header {
       position: relative;
@@ -128,203 +161,47 @@ header div.container.header {
       }
     }
 
-    h2 {
-      color: #c1c1c1;
-      padding-bottom: 15px;
+    h1, h2, h3, h4, h5 ,h6 {
       width: 100%;
-      margin-top: 0px;
+      margin-top: 0;
       text-transform: capitalize;
+      font-weight: 300;
+    }
+
+    h2 {
+      padding-bottom: 15px;
+      font-size: 40px;
+    }
+
+    h3 {
+      font-size: 30px;
+      margin-bottom: 5px;
     }
 
     &:nth-child(even){
-      background-image: none;
-      background-color: white;
+      // background-image: none;
+      // background-color: white;
     }
-  }
-
-  .hp-section + .hp-section {
-    border-top: 1px solid #ccc;
   }
 
   #homepage-version-one {
 
-    #spotlight-product {
-      width: 100% !important;
-
-      h2 {
-        font-size: 30px;
-        margin-bottom: 10px;
-        padding-bottom: 5px;
+    .actions {
+      .mdl-button + .mdl-button {
+        margin-left: 10px;
       }
 
-      .spotlight-product-sub-info {
-        margin-bottom: 10px;
-        .mdl-chip {
-          margin-right: 5px;
-          .material-icons {
-            margin: 3px;
-          }
-        }
-      }
     }
 
-    .products-showcase {
-
-      .mdl-card {
-        width: 100% !important;
-
-        .mdl-card--expand {
-          background-size: cover;
-          background-position: center center;
-          background-repeat: no-repeat;
-          background-color: black;
-          position: relative;
-
-          a {
-            display: block;
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-          }
-        }
-
-        .mdl-card__actions {
-          height: 52px;
-          padding: 16px;
-        }
-      }
-    }
-
-    img#download-app {
-      border-radius: 21px;
-      width: 100%;
-      height: auto;
-      .transition();
-
-      &:hover {
-        box-shadow: 0px 1px 5px rgba(0,0,0,0.5);
-      }
-    }
-
-    #become-supporter {
-      color: #fff;
-      background-color: #286090;
-      border-color: #204d74;
-      font-size: 20px;
-      text-align: center;
-      display: table;
-      width: 100%;
-      height: 100%;
-      border-radius: 21px;
-      min-height: 112px;
-
-
-      h1 {
-        display: table-cell;
-        vertical-align: middle;
-        text-align: center;
-        text-transform: uppercase;
-        font-weight: 300;
-        font-size: 3.5vw;
-      }
-    }
-
-    img.product-image {
-      width: 100% !important;
-    }
-
-    .grid-image-container {
-      .transition();
-      background-color: transparent;
-      padding: 15px;
-      border:1px solid transparent;
-      > a {
-        display: block;
-        width: 100%;
-        position: relative;
-
-        figure {
-          margin: 0;
-          width: 3vw;
-          height: 3vw;
-          position: absolute;
-          bottom: 1vw;
-          right: 1vw;
-          background: white;
-          border-radius: 100%;
-          overflow: hidden;
-          border: 1px solid #ccc;
-
-          img {
-            width:100%;
-            height: 100%;
-          }
-        }
-      }
-
-      &:hover {
-        border-color:#ccc;
-        background-color: white;
-      }
-    }
-
-    .supporter-info-wrapper {
-      .column {
-        img {
-          max-width: 100%;
-          width: 100%;
-          border-radius: 100%;
-          border: 1px solid #c1c1c1;
-
-        }
-        .supporter-name {
-          display: table;
-          width: 100%;
-          height: 100%;
-          h3 {
-            display: table-cell;
-            vertical-align: middle;
-            text-align: center;
-            max-width: 100%;
-            word-break: break-all;
-
-          }
-        }
-      }
-    }
-
-    #latest-rss-news,
-    #latest-blog-posts {
-      h2 {
-        padding: 10px;
-        margin: 0;
-        font-size: 30px;
-      }
-
-      .mdl-list {
-        padding-top: 0;
-        padding-bottom: 0;
-
-        .mdl-list__item {
-          h3 {
-            padding: 0;
-            margin: 0 0 10px 0;
-            font-size: 20px;
-          }
-        }
-
-
-        .mdl-list__item + .mdl-list__item {
-          border-top: 1px solid #ccc;
-        }
+    #introduction {
+      p {
+        max-width: 700px;
+        font-size: 13pt;
       }
     }
 
   }
 }
-
 
 @media (max-width: 1250px) and (min-width: 1000px) {
   .products-showcase {
