@@ -6,35 +6,139 @@ header div.container.header {
   height: 110px;
 }
 
-h2 {
-  font-size: 40px;
+.products-showcase {
+
+  .products-container {
+    
+    .square {
+      width: 20%;
+      position: relative;
+      float: left;
+    }
+
+    .square:after {
+      content: "";
+      display: block;
+      padding-bottom: 100%;
+    }
+
+    .content {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      padding: 0 15px;
+
+      a {
+        display: block;
+        width: 100%;
+        height: 100%;
+        position: relative;
+      }
+
+      .product-wrapper {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        background-color: white;
+        .transition();
+      }
+
+      .product-image-container {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+        padding-bottom: 60px;
+
+        figure {
+          width: 100%;
+          height: 100%;
+          position: relative;
+
+          img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100px;
+            height: 100px;
+            margin: -50px 0 0 -50px;
+            border-radius: 100%;
+          }
+        }
+      }
+
+      .product-info {
+        width: 100%;
+        height: 60px;
+        color: white;
+        padding: 10px;
+        position:  absolute;
+        bottom: 0;
+        left: 0;
+
+
+        span {
+          width: 100%;
+          float: left;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+
+          &.product-info-title {
+            font-size: 80%;
+            font-weight: bold;
+          }
+
+          &.product-info-description {
+            font-size: 70%;
+          }
+        }
+      }
+
+      &:hover {
+        .product-wrapper {
+          background-color: #c1c1c1;
+        }
+      }
+    }
+  }
 }
 
+.actions {
+  .mdl-button + .mdl-button {
+    margin-left: 10px;
+  }
+
+}
 
 #app-root {
+  font-size: 13pt;
 
   .hp-section {
     padding: 60px 0;
     background-image: url('../img/hp-section-bg.png');
 
+    .section-header {
+      position: relative;
+
+      .actions {
+        position: absolute;
+        top: 0;
+        right: 0;
+      }
+    }
+
     h2 {
-      text-transform: uppercase;
       color: #c1c1c1;
       padding-bottom: 15px;
-      border-bottom: 1px solid #ccc;
       width: 100%;
       margin-top: 0px;
+      text-transform: capitalize;
     }
 
     &:nth-child(even){
       background-image: none;
       background-color: white;
-
-      .grid-image-container {
-        &:hover {
-          background-color: url('../img/hp-section-bg.png') !important;
-        }
-      }
     }
   }
 
@@ -115,7 +219,7 @@ h2 {
       height: 100%;
       border-radius: 21px;
       min-height: 112px;
-      
+
 
       h1 {
         display: table-cell;
@@ -218,5 +322,46 @@ h2 {
       }
     }
 
+  }
+}
+
+
+@media (max-width: 1250px) and (min-width: 1000px) {
+  .products-showcase {
+    .products-container {
+      .square {
+        width: 25%;
+      }
+    }
+  }
+}
+
+@media (max-width: 999px) and (min-width: 662px) {
+  .products-showcase {
+    .products-container {
+      .square {
+        width: 33.3333%;
+      }
+    }
+  }
+}
+
+@media (max-width: 661px) {
+  .products-showcase {
+    .products-container {
+      .square {
+        width: 50%;
+      }
+    }
+  }
+}
+
+@media (max-width: 401px) {
+  .products-showcase {
+    .products-container {
+      .square {
+        width: 100%;
+      }
+    }
   }
 }
