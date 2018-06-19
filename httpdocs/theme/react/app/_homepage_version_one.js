@@ -30,6 +30,7 @@ class HomePageTemplateOne extends React.Component {
         <TopProductsWrapper/>
         <FullImageProductsWrapper/>
         <PaddedImageProductsWrapper/>
+        <RoundedCornersProductsWrapper/>
       </div>
     )
   }
@@ -240,9 +241,10 @@ class FullImageProducts extends React.Component {
                       <img className="full" src={'https://cn.pling.it/cache/200x171/img/' + product.image_small} />
                     </figure>
                   </div>
-                  <div className="product-info mdl-color--primary">
+                  <div className="product-info music-image mdl-color--primary">
+                    <i className="material-icons left-icon">play_circle_filled</i>
                     <span className="product-info-title">{product.title}</span>
-                    <span className="product-info-description">{product.description}</span>
+                    <i className="material-icons right-icon">add_shopping_cart</i>
                   </div>
                 </a>
               </div>
@@ -306,7 +308,7 @@ class PaddedImageProducts extends React.Component {
   }
 
   render(){
-    
+
     let topProducts;
     if (this.state.products){
       const limit = appHelpers.getNumberOfProducts(this.props.device);
@@ -365,3 +367,83 @@ const PaddedImageProductsWrapper = ReactRedux.connect(
   mapStateToPaddedImageProductsProps,
   mapDispatchToPaddedImageProductsProps
 )(PaddedImageProducts)
+
+class RoundedCornersProducts extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps);
+    if (nextProps.products && !this.state.products){
+      let products;
+      if (nextProps.products.TopProducts.elements.length > 0){
+        products = nextProps.products.TopProducts.elements;
+      } else {
+        products = nextProps.products.Apps;
+      }
+      this.setState({products:products});
+    }
+  }
+
+  render(){
+
+    let topProducts;
+    if (this.state.products){
+      const limit = appHelpers.getNumberOfProducts(this.props.device);
+      topProducts = this.state.products.slice(0,limit).map((product,index) => (
+        <div key={index} className="product square">
+            <div className="content">
+              <div className="product-wrapper mdl-shadow--2dp">
+                <a href={"/p/"+product.project_id}>
+                  <div className="product-image-container">
+                    <figure className="no-padding">
+                      <img className="rounded-corners" src={'https://cn.pling.it/cache/200x171/img/' + product.image_small} />
+                    </figure>
+                  </div>
+                  <div className="product-info mdl-color--primary">
+                    <span className="product-info-title">{product.title}</span>
+                    <span className="product-info-description">{product.description}</span>
+                  </div>
+                </a>
+              </div>
+          </div>
+        </div>
+      ));
+    }
+    return (
+      <div id="hottest-products" className="hp-section products-showcase">
+        <div className="container">
+          <div className="section-header">
+            <h3 className="mdl-color-text--primary">Rounded Corner Images Layout</h3>
+            <div className="actions">
+              <button className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">show more</button>
+            </div>
+          </div>
+          <div className="products-container row">
+            {topProducts}
+          </div>
+        </div>
+      </div>
+    )
+  }
+}
+
+const mapStateToRoundedCornersProductsProps = (state) => {
+  const products = state.products;
+  return {
+    products
+  }
+}
+
+const mapDispatchToRoundedCornersProductsProps = (dispatch) => {
+  return {
+    dispatch
+  }
+}
+
+const RoundedCornersProductsWrapper = ReactRedux.connect(
+  mapStateToRoundedCornersProductsProps,
+  mapDispatchToRoundedCornersProductsProps
+)(RoundedCornersProducts)

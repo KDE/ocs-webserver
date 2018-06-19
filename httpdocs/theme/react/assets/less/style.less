@@ -61,10 +61,11 @@ header div.container.header {
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 100px;
-            height: 100px;
-            margin: -50px 0 0 -50px;
+            width: 120px;
+            height: 120px;
+            margin: -60px 0 0 -60px;
             border-radius: 100%;
+
 
             &.squared {
               border-radius: 0;
@@ -84,6 +85,11 @@ header div.container.header {
               border-radius: 0;
               border:10px solid white;
             }
+
+            &.rounded-corners {
+              border-radius: 5px;
+              
+            }
           }
         }
       }
@@ -96,7 +102,6 @@ header div.container.header {
         position:  absolute;
         bottom: 0;
         left: 0;
-
 
         span {
           width: 100%;
@@ -113,6 +118,27 @@ header div.container.header {
 
           &.product-info-description {
             font-size: 70%;
+          }
+        }
+
+        &.music-image {
+          padding-right: 40px;
+          padding-left: 40px;
+          padding-top: 20px;
+          text-align: center;
+
+          .material-icons {
+            position: absolute;
+            top: 18px;
+
+            &.left-icon {
+              left: 10px;
+
+            }
+
+            &.right-icon {
+              right: 10px;
+            }
           }
         }
       }
@@ -200,7 +226,7 @@ header div.container.header {
 
     #introduction {
     padding-top: 100px;
-    
+
       p {
         max-width: 700px;
         font-size: 13pt;
