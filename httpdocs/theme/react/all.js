@@ -126,7 +126,8 @@ class HomePageTemplateOne extends React.Component {
       React.createElement(TopProductsWrapper, null),
       React.createElement(FullImageProductsWrapper, null),
       React.createElement(PaddedImageProductsWrapper, null),
-      React.createElement(RoundedCornersProductsWrapper, null)
+      React.createElement(RoundedCornersProductsWrapper, null),
+      React.createElement(RounderCornersProductsWrapper, null)
     );
   }
 }
@@ -732,6 +733,119 @@ const mapDispatchToRoundedCornersProductsProps = dispatch => {
 };
 
 const RoundedCornersProductsWrapper = ReactRedux.connect(mapStateToRoundedCornersProductsProps, mapDispatchToRoundedCornersProductsProps)(RoundedCornersProducts);
+
+class RounderCornersProducts extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps);
+    if (nextProps.products && !this.state.products) {
+      let products;
+      if (nextProps.products.TopProducts.elements.length > 0) {
+        products = nextProps.products.TopProducts.elements;
+      } else {
+        products = nextProps.products.Apps;
+      }
+      this.setState({ products: products });
+    }
+  }
+
+  render() {
+
+    let topProducts;
+    if (this.state.products) {
+      const limit = appHelpers.getNumberOfProducts(this.props.device);
+      topProducts = this.state.products.slice(0, limit).map((product, index) => React.createElement(
+        "div",
+        { key: index, className: "product square" },
+        React.createElement(
+          "div",
+          { className: "content" },
+          React.createElement(
+            "div",
+            { className: "product-wrapper mdl-shadow--2dp" },
+            React.createElement(
+              "a",
+              { href: "/p/" + product.project_id },
+              React.createElement(
+                "div",
+                { className: "product-image-container" },
+                React.createElement(
+                  "figure",
+                  { className: "no-padding" },
+                  React.createElement("img", { className: "very-rounded-corners", src: 'https://cn.pling.it/cache/200x171/img/' + product.image_small })
+                )
+              ),
+              React.createElement(
+                "div",
+                { className: "product-info mdl-color--primary" },
+                React.createElement(
+                  "span",
+                  { className: "product-info-title" },
+                  product.title
+                ),
+                React.createElement(
+                  "span",
+                  { className: "product-info-description" },
+                  product.description
+                )
+              )
+            )
+          )
+        )
+      ));
+    }
+    return React.createElement(
+      "div",
+      { id: "hottest-products", className: "hp-section products-showcase" },
+      React.createElement(
+        "div",
+        { className: "container" },
+        React.createElement(
+          "div",
+          { className: "section-header" },
+          React.createElement(
+            "h3",
+            { className: "mdl-color-text--primary" },
+            "Rounder Corner Images Layout"
+          ),
+          React.createElement(
+            "div",
+            { className: "actions" },
+            React.createElement(
+              "button",
+              { className: "mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary" },
+              "show more"
+            )
+          )
+        ),
+        React.createElement(
+          "div",
+          { className: "products-container row" },
+          topProducts
+        )
+      )
+    );
+  }
+}
+
+const mapStateToRounderCornersProductsProps = state => {
+  const products = state.products;
+  return {
+    products
+  };
+};
+
+const mapDispatchToRounderCornersProductsProps = dispatch => {
+  return {
+    dispatch
+  };
+};
+
+const RounderCornersProductsWrapper = ReactRedux.connect(mapStateToRounderCornersProductsProps, mapDispatchToRounderCornersProductsProps)(RounderCornersProducts);
 class HomePageTemplateTwo extends React.Component {
   render() {
     return React.createElement(
