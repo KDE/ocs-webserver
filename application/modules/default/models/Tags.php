@@ -205,19 +205,57 @@ class Default_Model_Tags
         return null;
     }
 
+    //   /**
+    //  * @param int $object_id
+    //  * @param int $tag_type
+    //  *
+    //  * @return string|null
+    //  */
+    // public function getTagsSystemList($object_id, $tag_type)
+    // {
+    //     $tag_group_ids ='6,7,10'; 
+    //     $tags = $this->getTagsArray($object_id, $tag_type,$tag_group_ids);
+    //     return $tags;
+    // }
+
       /**
      * @param int $object_id
      * @param int $tag_type
      *
      * @return string|null
      */
-    public function getTagsSystemList($object_id, $tag_type)
+    public function getTagsSystemList($project_id)
     {
-        $tag_group_ids ='6,7,10'; 
-        $tags = $this->getTagsArray($object_id, $tag_type,$tag_group_ids);
-        return $tags;
-    }
+        $tag_project_group_ids ='6,7,10';  //type product : category-tags, license-tags,ghns_excluded
+        $tag_file_group_ids ='8,9';  //file-packagetype-tags,file-architecture-tags
+        
+        $sql = "
+                    SELECT tag.tag_id,tag.tag_name,tag_group_item.tag_group_id
+                    FROM tag_object
+                    JOIN tag ON tag.tag_id = tag_object.tag_id
+                    join tag_group_item on tag_object.tag_id = tag_group_item.tag_id and tag_object.tag_group_id = tag_group_item.tag_group_id
+                    WHERE tag_type_id = :type_project AND tag_object_id = :project_id
+                    and tag_object.tag_group_id in  ({$tag_project_group_ids} )     
+                    and tag_object.is_deleted = 0  
+                    union all
+                    SELECT tag.tag_id,tag.tag_name,tag_group_item.tag_group_id
+                    FROM tag_object
+                    JOIN tag ON tag.tag_id = tag_object.tag_id
+                    join tag_group_item on tag_object.tag_id = tag_group_item.tag_id and tag_object.tag_group_id = tag_group_item.tag_group_id
+                    WHERE tag_type_id = :type_file AND tag_parent_object_id = :project_id
+                    and tag_object.tag_group_id in  ({$tag_file_group_ids} )     
+                    and tag_object.is_deleted = 0  
+                    order by tag_group_id  , tag_name 
+        ";
+        
+        $result = $this->getAdapter()->fetchAll($sql, array('type_project' => Default_Model_Tags::TAG_TYPE_PROJECT
+                                                                                      , 'project_id' => $project_id                                                                                  
+                                                                                      , 'type_file' =>  Default_Model_Tags::TAG_TYPE_FILE                                                                                                                                                                  
+                                                                                      ));
 
+
+        return $result;
+    }
 
      /**
      * @param int $object_id
