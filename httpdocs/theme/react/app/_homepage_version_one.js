@@ -46,8 +46,8 @@ class Introduction extends React.Component {
             <h2 className="mdl-color-text--primary">App Images Hub, right here</h2>
             <p>Welcome to appimagehub, the home of hundreds of apps which can be easily installed on any Linux distribution. Browse the apps online, from your app center or the command line.</p>
             <div className="actions">
-              <button className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary">browse</button>
-              <button className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary">join</button>
+              <button className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary">Quick setup</button>
+              <button className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary">Browse the apps</button>
             </div>
           </article>
         </div>
@@ -82,7 +82,8 @@ class LatestProducts extends React.Component {
                       <img src={'https://cn.pling.it/cache/200x171/img/' + product.image_small} />
                     </figure>
                   </div>
-                  <div className="product-info mdl-color--primary">
+                  <div className="product-info">
+
                     <span className="product-info-title">{product.title}</span>
                     <span className="product-info-description">{product.description}</span>
                   </div>
@@ -100,7 +101,7 @@ class LatestProducts extends React.Component {
           <div className="section-header">
             <h3  className="mdl-color-text--primary">Round Images Layout</h3>
             <div className="actions">
-              <button className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">show more</button>
+              <button className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">see more</button>
             </div>
           </div>
           <div className="products-container row">
@@ -163,7 +164,7 @@ class TopProducts extends React.Component {
                       <img className="squared" src={'https://cn.pling.it/cache/200x171/img/' + product.image_small} />
                     </figure>
                   </div>
-                  <div className="product-info mdl-color--primary">
+                  <div className="product-info">
                     <span className="product-info-title">{product.title}</span>
                     <span className="product-info-description">{product.description}</span>
                   </div>
@@ -179,7 +180,7 @@ class TopProducts extends React.Component {
           <div className="section-header">
             <h3 className="mdl-color-text--primary">Square Images Layout</h3>
             <div className="actions">
-              <button className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">show more</button>
+              <button className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">see more</button>
             </div>
           </div>
           <div className="products-container row">
@@ -259,7 +260,7 @@ class FullImageProducts extends React.Component {
           <div className="section-header">
             <h3 className="mdl-color-text--primary">Full Images Layout</h3>
             <div className="actions">
-              <button className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">show more</button>
+              <button className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">see more</button>
             </div>
           </div>
           <div className="products-container row">
@@ -323,7 +324,7 @@ class PaddedImageProducts extends React.Component {
                       <img className="full padded" src={'https://cn.pling.it/cache/200x171/img/' + product.image_small} />
                     </figure>
                   </div>
-                  <div className="product-info mdl-color--primary">
+                  <div className="product-info">
                     <span className="product-info-title">{product.title}</span>
                     <span className="product-info-description">{product.description}</span>
                   </div>
@@ -339,7 +340,7 @@ class PaddedImageProducts extends React.Component {
           <div className="section-header">
             <h3 className="mdl-color-text--primary">Padded Images Layout</h3>
             <div className="actions">
-              <button className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">show more</button>
+              <button className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">see more</button>
             </div>
           </div>
           <div className="products-container row">
@@ -403,7 +404,7 @@ class RoundedCornersProducts extends React.Component {
                       <img className="rounded-corners" src={'https://cn.pling.it/cache/200x171/img/' + product.image_small} />
                     </figure>
                   </div>
-                  <div className="product-info mdl-color--primary">
+                  <div className="product-info">
                     <span className="product-info-title">{product.title}</span>
                     <span className="product-info-description">{product.description}</span>
                   </div>
@@ -419,7 +420,7 @@ class RoundedCornersProducts extends React.Component {
           <div className="section-header">
             <h3 className="mdl-color-text--primary">Rounded Corner Images Layout</h3>
             <div className="actions">
-              <button className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">show more</button>
+              <button className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">see more</button>
             </div>
           </div>
           <div className="products-container row">
@@ -483,7 +484,7 @@ class RounderCornersProducts extends React.Component {
                       <img className="very-rounded-corners" src={'https://cn.pling.it/cache/200x171/img/' + product.image_small} />
                     </figure>
                   </div>
-                  <div className="product-info mdl-color--primary">
+                  <div className="product-info">
                     <span className="product-info-title">{product.title}</span>
                     <span className="product-info-description">{product.description}</span>
                   </div>
@@ -499,7 +500,7 @@ class RounderCornersProducts extends React.Component {
           <div className="section-header">
             <h3 className="mdl-color-text--primary">Rounder Corner Images Layout</h3>
             <div className="actions">
-              <button className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">show more</button>
+              <button className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">see more</button>
             </div>
           </div>
           <div className="products-container row">

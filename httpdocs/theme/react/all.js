@@ -159,12 +159,12 @@ class Introduction extends React.Component {
             React.createElement(
               "button",
               { className: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary" },
-              "browse"
+              "Quick setup"
             ),
             React.createElement(
               "button",
               { className: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary" },
-              "join"
+              "Browse the apps"
             )
           )
         )
@@ -212,7 +212,7 @@ class LatestProducts extends React.Component {
               ),
               React.createElement(
                 "div",
-                { className: "product-info mdl-color--primary" },
+                { className: "product-info" },
                 React.createElement(
                   "span",
                   { className: "product-info-title" },
@@ -250,7 +250,7 @@ class LatestProducts extends React.Component {
             React.createElement(
               "button",
               { className: "mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary" },
-              "show more"
+              "see more"
             )
           )
         ),
@@ -325,7 +325,7 @@ class TopProducts extends React.Component {
               ),
               React.createElement(
                 "div",
-                { className: "product-info mdl-color--primary" },
+                { className: "product-info" },
                 React.createElement(
                   "span",
                   { className: "product-info-title" },
@@ -362,7 +362,7 @@ class TopProducts extends React.Component {
             React.createElement(
               "button",
               { className: "mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary" },
-              "show more"
+              "see more"
             )
           )
         ),
@@ -479,7 +479,7 @@ class FullImageProducts extends React.Component {
             React.createElement(
               "button",
               { className: "mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary" },
-              "show more"
+              "see more"
             )
           )
         ),
@@ -555,7 +555,7 @@ class PaddedImageProducts extends React.Component {
               ),
               React.createElement(
                 "div",
-                { className: "product-info mdl-color--primary" },
+                { className: "product-info" },
                 React.createElement(
                   "span",
                   { className: "product-info-title" },
@@ -592,7 +592,7 @@ class PaddedImageProducts extends React.Component {
             React.createElement(
               "button",
               { className: "mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary" },
-              "show more"
+              "see more"
             )
           )
         ),
@@ -668,7 +668,7 @@ class RoundedCornersProducts extends React.Component {
               ),
               React.createElement(
                 "div",
-                { className: "product-info mdl-color--primary" },
+                { className: "product-info" },
                 React.createElement(
                   "span",
                   { className: "product-info-title" },
@@ -705,7 +705,7 @@ class RoundedCornersProducts extends React.Component {
             React.createElement(
               "button",
               { className: "mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary" },
-              "show more"
+              "see more"
             )
           )
         ),
@@ -781,7 +781,7 @@ class RounderCornersProducts extends React.Component {
               ),
               React.createElement(
                 "div",
-                { className: "product-info mdl-color--primary" },
+                { className: "product-info" },
                 React.createElement(
                   "span",
                   { className: "product-info-title" },
@@ -818,7 +818,7 @@ class RounderCornersProducts extends React.Component {
             React.createElement(
               "button",
               { className: "mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary" },
-              "show more"
+              "see more"
             )
           )
         ),
