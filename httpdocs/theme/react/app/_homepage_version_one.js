@@ -28,8 +28,6 @@ class HomePageTemplateOne extends React.Component {
         <Introduction/>
         <LatestProductsWrapper/>
         <TopProductsWrapper/>
-        <FullImageProductsWrapper/>
-        <PaddedImageProductsWrapper/>
         <RoundedCornersProductsWrapper/>
         <RounderCornersProductsWrapper/>
       </div>

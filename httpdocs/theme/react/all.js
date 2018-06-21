@@ -124,8 +124,6 @@ class HomePageTemplateOne extends React.Component {
       React.createElement(Introduction, null),
       React.createElement(LatestProductsWrapper, null),
       React.createElement(TopProductsWrapper, null),
-      React.createElement(FullImageProductsWrapper, null),
-      React.createElement(PaddedImageProductsWrapper, null),
       React.createElement(RoundedCornersProductsWrapper, null),
       React.createElement(RounderCornersProductsWrapper, null)
     );
