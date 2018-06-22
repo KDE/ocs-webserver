@@ -25,6 +25,8 @@
   $this->users = $modelInfo->getNewActiveMembers(12);
   $this->supporters = $modelInfo->getNewActiveSupporters(12);
   //$this->plingproducts = $modelInfo->getNewActivePlingProduct(9);
+  
+  //Latest Products
   $this->productsThemesGTK = $modelInfo->getLastProductsForHostStores(6);
   $this->productsThemesPlasma = $modelInfo->getLastProductsForHostStores(6);
   $this->productsWindowmanager = $modelInfo->getLastProductsForHostStores(6);
@@ -34,6 +36,17 @@
   $this->productsAddons = $modelInfo->getLastProductsForHostStores(6);
   $this->productsWallpapers = $modelInfo->getLastProductsForHostStores(6);
   $this->countSupporters = $modelInfo->getCountActiveSupporters();
+  
+  //Top Products
+  $this->topProductsThemesGTK = $modelInfo->getTopProductsForHostStores(6);
+  $this->topProductsThemesPlasma = $modelInfo->getTopProductsForHostStores(6);
+  $this->topProductsWindowmanager = $modelInfo->getTopProductsForHostStores(6);
+  $this->topProductsIconsCursors= $modelInfo->getTopProductsForHostStores(6);
+  $this->topProductsScreenshots= $modelInfo->getTopProductsForHostStores(6);
+  $this->topProductsApps = $modelInfo->getTopProductsForHostStores(6);
+  $this->topProductsAddons = $modelInfo->getTopProductsForHostStores(6);
+  $this->topProductsWallpapers = $modelInfo->getTopProductsForHostStores(6);
+  
 
   $topProducts = new Default_View_Helper_FetchTopProductsForStore();
   $this->topProducts = $topProducts->fetchTopProducts();
