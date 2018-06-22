@@ -283,10 +283,12 @@ class Ocsv1Controller extends Zend_Controller_Action
         header('Expires: ' . $expires);
         if ($format == 'json') {
             header('Content-Type: application/json; charset=UTF-8');
-            echo json_encode($response);
+            //echo json_encode($response);
+            echo $response;
         } else {
             header('Content-Type: application/xml; charset=UTF-8');
-            echo $this->_convertXmlDom($response, $xmlRootTag)->saveXML();
+            //echo $this->_convertXmlDom($response, $xmlRootTag)->saveXML();
+            echo $response;
         }
 
         exit;
@@ -776,11 +778,23 @@ class Ocsv1Controller extends Zend_Controller_Action
 
     public function contentcategoriesAction()
     {
+        
+        $uri = $this->view->url();
+        
+        $params = $this->getRequest()->getParams();
+        $params['domain_store_id'] = $this->_getNameForStoreClient();
+        
+        $result = $this->_request('GET', $uri, $params);
+        $this->_sendResponse($result, $this->_format);
+        
+        
+        
+        /**
         if (!$this->_authenticateUser()) {
             //    $this->_sendErrorResponse(999, '');
         }
 
-        /** @var Zend_Cache_Core $cache */
+        ** @var Zend_Cache_Core $cache *
         $cache = Zend_Registry::get('cache');
         $cacheName = 'api_content_categories';
 
@@ -816,6 +830,7 @@ class Ocsv1Controller extends Zend_Controller_Action
         }
 
         $this->_sendResponse($response, $this->_format);
+         */
     }
 
     protected function _buildCategories()
@@ -1877,6 +1892,47 @@ class Ocsv1Controller extends Zend_Controller_Action
         }
 
         return $commentList;
+    }
+    
+    
+    protected function _request($method, $uri = '', array $params = null)
+    {
+        $ocsServer = "http://api.pling.cc"; //$this->_config['apiUri']
+        $timeout = 60;
+        $postFields = array();
+        if ($params) {
+            $postFields = $postFields + $params;
+        }
+        if (isset($postFields['file'])) {
+            $timeout = 600;
+            if ($postFields['file'][0] != '@') {
+                $postFields['file'] = $this->_getCurlValue($postFields['file']);
+            }
+        }
+        else {
+            $postFields = http_build_query($postFields, '', '&');
+        }
+        
+        //var_dump($ocsServer . $uri . '?' . $postFields);
+        
+        
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $ocsServer . $uri,
+            CURLOPT_HEADER => false,
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => $postFields,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT => $timeout
+        ));
+        
+        $response = curl_exec($curl);
+        curl_close($curl);
+
+        if ($response) {
+            return $response;
+        }
+        return false;
     }
 
 }
