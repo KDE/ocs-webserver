@@ -102,6 +102,7 @@ class HomePageTemplateOne extends React.Component {
 
   componentWillMount() {
     this.updateDimensions();
+    console.log(store.getState());
   }
 
   componentDidMount() {
@@ -118,7 +119,6 @@ class HomePageTemplateOne extends React.Component {
   }
 
   render() {
-    console.log(this.state.device);
     return React.createElement(
       "div",
       { id: "homepage-version-one" },
@@ -181,10 +181,10 @@ class LatestProducts extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.products && !this.state.products) {
       let products;
-      if (nextProps.products.TopProducts.elements.length > 0) {
-        products = nextProps.products.TopProducts.elements;
+      if (nextProps.products.LatestProducts && nextProps.products.LatestProducts.length > 0) {
+        products = nextProps.products.LatestProducts;
       } else {
-        products = nextProps.products.ThemesPlasma;
+        products = nextProps.products.ThemeGTK;
       }
       this.setState({ products: products });
     }
@@ -212,7 +212,7 @@ class LatestProducts extends React.Component {
                 React.createElement(
                   "figure",
                   null,
-                  React.createElement("img", { src: 'https://cn.pling.it/cache/200x171/img/' + product.image_small })
+                  React.createElement("img", { className: "very-rounded-corners", src: 'https://cn.pling.it/cache/200x171/img/' + product.image_small })
                 )
               ),
               React.createElement(
@@ -296,7 +296,6 @@ class TopProducts extends React.Component {
       if (nextProps.products.TopProducts.elements.length > 0) {
         products = nextProps.products.TopProducts.elements;
       } else {
-        console.log(nextProps.products);
         products = nextProps.products.Apps;
       }
       this.setState({ products: products });
@@ -325,7 +324,7 @@ class TopProducts extends React.Component {
                 React.createElement(
                   "figure",
                   null,
-                  React.createElement("img", { className: "squared", src: 'https://cn.pling.it/cache/200x171/img/' + product.image_small })
+                  React.createElement("img", { className: "very-rounded-corners", src: 'https://cn.pling.it/cache/200x171/img/' + product.image_small })
                 )
               ),
               React.createElement(
@@ -437,7 +436,7 @@ class RoundedCornersProducts extends React.Component {
                 React.createElement(
                   "figure",
                   { className: "no-padding" },
-                  React.createElement("img", { className: "rounded-corners", src: 'https://cn.pling.it/cache/200x171/img/' + product.image_small })
+                  React.createElement("img", { className: "very-rounded-corners", src: 'https://cn.pling.it/cache/200x171/img/' + product.image_small })
                 )
               ),
               React.createElement(
