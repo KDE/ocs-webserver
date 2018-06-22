@@ -63,7 +63,13 @@ class LatestProducts extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.products && !this.state.products){
-      this.setState({products:nextProps.products.ThemesPlasma});
+      let products;
+      if (nextProps.products.TopProducts.elements.length > 0){
+        products = nextProps.products.TopProducts.elements;
+      } else {
+        products = nextProps.products.ThemesPlasma;
+      }
+      this.setState({products:products});
     }
   }
 
@@ -209,166 +215,6 @@ const TopProductsWrapper = ReactRedux.connect(
   mapDispatchToTopProductsProps
 )(TopProducts)
 
-class FullImageProducts extends React.Component {
-  constructor(props){
-  	super(props);
-  	this.state = {};
-  }
-
-  componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
-    if (nextProps.products && !this.state.products){
-      let products;
-      if (nextProps.products.TopProducts.elements.length > 0){
-        products = nextProps.products.TopProducts.elements;
-      } else {
-        products = nextProps.products.Apps;
-      }
-      this.setState({products:products});
-    }
-  }
-
-  render(){
-    let topProducts;
-    if (this.state.products){
-      const limit = appHelpers.getNumberOfProducts(this.props.device);
-      topProducts = this.state.products.slice(0,limit).map((product,index) => (
-        <div key={index} className="product square">
-            <div className="content">
-              <div className="product-wrapper mdl-shadow--2dp">
-                <a href={"/p/"+product.project_id}>
-                  <div className="product-image-container">
-                    <figure className="no-padding">
-                      <img className="full" src={'https://cn.pling.it/cache/200x171/img/' + product.image_small} />
-                    </figure>
-                  </div>
-                  <div className="product-info music-image mdl-color--primary">
-                    <i className="material-icons left-icon">play_circle_filled</i>
-                    <span className="product-info-title">{product.title}</span>
-                    <i className="material-icons right-icon">add_shopping_cart</i>
-                  </div>
-                </a>
-              </div>
-          </div>
-        </div>
-      ));
-    }
-    return (
-      <div id="hottest-products" className="hp-section products-showcase">
-        <div className="container">
-          <div className="section-header">
-            <h3 className="mdl-color-text--primary">Full Images Layout</h3>
-            <div className="actions">
-              <button className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">see more</button>
-            </div>
-          </div>
-          <div className="products-container row">
-            {topProducts}
-          </div>
-        </div>
-      </div>
-    )
-  }
-}
-
-const mapStateToFullImageProductsProps = (state) => {
-  const products = state.products;
-  return {
-    products
-  }
-}
-
-const mapDispatchToFullImageProductsProps = (dispatch) => {
-  return {
-    dispatch
-  }
-}
-
-const FullImageProductsWrapper = ReactRedux.connect(
-  mapStateToFullImageProductsProps,
-  mapDispatchToFullImageProductsProps
-)(FullImageProducts)
-
-class PaddedImageProducts extends React.Component {
-  constructor(props){
-  	super(props);
-  	this.state = {};
-  }
-
-  componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
-    if (nextProps.products && !this.state.products){
-      let products;
-      if (nextProps.products.TopProducts.elements.length > 0){
-        products = nextProps.products.TopProducts.elements;
-      } else {
-        products = nextProps.products.Apps;
-      }
-      this.setState({products:products});
-    }
-  }
-
-  render(){
-
-    let topProducts;
-    if (this.state.products){
-      const limit = appHelpers.getNumberOfProducts(this.props.device);
-      topProducts = this.state.products.slice(0,limit).map((product,index) => (
-        <div key={index} className="product square">
-            <div className="content">
-              <div className="product-wrapper mdl-shadow--2dp">
-                <a href={"/p/"+product.project_id}>
-                  <div className="product-image-container">
-                    <figure className="no-padding">
-                      <img className="full padded" src={'https://cn.pling.it/cache/200x171/img/' + product.image_small} />
-                    </figure>
-                  </div>
-                  <div className="product-info">
-                    <span className="product-info-title">{product.title}</span>
-                    <span className="product-info-description">{product.description}</span>
-                  </div>
-                </a>
-              </div>
-          </div>
-        </div>
-      ));
-    }
-    return (
-      <div id="hottest-products" className="hp-section products-showcase">
-        <div className="container">
-          <div className="section-header">
-            <h3 className="mdl-color-text--primary">Padded Images Layout</h3>
-            <div className="actions">
-              <button className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">see more</button>
-            </div>
-          </div>
-          <div className="products-container row">
-            {topProducts}
-          </div>
-        </div>
-      </div>
-    )
-  }
-}
-
-const mapStateToPaddedImageProductsProps = (state) => {
-  const products = state.products;
-  return {
-    products
-  }
-}
-
-const mapDispatchToPaddedImageProductsProps = (dispatch) => {
-  return {
-    dispatch
-  }
-}
-
-const PaddedImageProductsWrapper = ReactRedux.connect(
-  mapStateToPaddedImageProductsProps,
-  mapDispatchToPaddedImageProductsProps
-)(PaddedImageProducts)
-
 class RoundedCornersProducts extends React.Component {
   constructor(props){
   	super(props);
@@ -376,13 +222,12 @@ class RoundedCornersProducts extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
     if (nextProps.products && !this.state.products){
       let products;
       if (nextProps.products.TopProducts.elements.length > 0){
         products = nextProps.products.TopProducts.elements;
       } else {
-        products = nextProps.products.Apps;
+        products = nextProps.products.ThemesPlasma;
       }
       this.setState({products:products});
     }
@@ -456,13 +301,12 @@ class RounderCornersProducts extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
     if (nextProps.products && !this.state.products){
       let products;
       if (nextProps.products.TopProducts.elements.length > 0){
         products = nextProps.products.TopProducts.elements;
       } else {
-        products = nextProps.products.Apps;
+        products = nextProps.products.Wallpapers;
       }
       this.setState({products:products});
     }

@@ -180,7 +180,13 @@ class LatestProducts extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.products && !this.state.products) {
-      this.setState({ products: nextProps.products.ThemesPlasma });
+      let products;
+      if (nextProps.products.TopProducts.elements.length > 0) {
+        products = nextProps.products.TopProducts.elements;
+      } else {
+        products = nextProps.products.ThemesPlasma;
+      }
+      this.setState({ products: products });
     }
   }
 
@@ -390,236 +396,6 @@ const mapDispatchToTopProductsProps = dispatch => {
 
 const TopProductsWrapper = ReactRedux.connect(mapStateToTopProductsProps, mapDispatchToTopProductsProps)(TopProducts);
 
-class FullImageProducts extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
-  componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
-    if (nextProps.products && !this.state.products) {
-      let products;
-      if (nextProps.products.TopProducts.elements.length > 0) {
-        products = nextProps.products.TopProducts.elements;
-      } else {
-        products = nextProps.products.Apps;
-      }
-      this.setState({ products: products });
-    }
-  }
-
-  render() {
-    let topProducts;
-    if (this.state.products) {
-      const limit = appHelpers.getNumberOfProducts(this.props.device);
-      topProducts = this.state.products.slice(0, limit).map((product, index) => React.createElement(
-        "div",
-        { key: index, className: "product square" },
-        React.createElement(
-          "div",
-          { className: "content" },
-          React.createElement(
-            "div",
-            { className: "product-wrapper mdl-shadow--2dp" },
-            React.createElement(
-              "a",
-              { href: "/p/" + product.project_id },
-              React.createElement(
-                "div",
-                { className: "product-image-container" },
-                React.createElement(
-                  "figure",
-                  { className: "no-padding" },
-                  React.createElement("img", { className: "full", src: 'https://cn.pling.it/cache/200x171/img/' + product.image_small })
-                )
-              ),
-              React.createElement(
-                "div",
-                { className: "product-info music-image mdl-color--primary" },
-                React.createElement(
-                  "i",
-                  { className: "material-icons left-icon" },
-                  "play_circle_filled"
-                ),
-                React.createElement(
-                  "span",
-                  { className: "product-info-title" },
-                  product.title
-                ),
-                React.createElement(
-                  "i",
-                  { className: "material-icons right-icon" },
-                  "add_shopping_cart"
-                )
-              )
-            )
-          )
-        )
-      ));
-    }
-    return React.createElement(
-      "div",
-      { id: "hottest-products", className: "hp-section products-showcase" },
-      React.createElement(
-        "div",
-        { className: "container" },
-        React.createElement(
-          "div",
-          { className: "section-header" },
-          React.createElement(
-            "h3",
-            { className: "mdl-color-text--primary" },
-            "Full Images Layout"
-          ),
-          React.createElement(
-            "div",
-            { className: "actions" },
-            React.createElement(
-              "button",
-              { className: "mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary" },
-              "see more"
-            )
-          )
-        ),
-        React.createElement(
-          "div",
-          { className: "products-container row" },
-          topProducts
-        )
-      )
-    );
-  }
-}
-
-const mapStateToFullImageProductsProps = state => {
-  const products = state.products;
-  return {
-    products
-  };
-};
-
-const mapDispatchToFullImageProductsProps = dispatch => {
-  return {
-    dispatch
-  };
-};
-
-const FullImageProductsWrapper = ReactRedux.connect(mapStateToFullImageProductsProps, mapDispatchToFullImageProductsProps)(FullImageProducts);
-
-class PaddedImageProducts extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
-  componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
-    if (nextProps.products && !this.state.products) {
-      let products;
-      if (nextProps.products.TopProducts.elements.length > 0) {
-        products = nextProps.products.TopProducts.elements;
-      } else {
-        products = nextProps.products.Apps;
-      }
-      this.setState({ products: products });
-    }
-  }
-
-  render() {
-
-    let topProducts;
-    if (this.state.products) {
-      const limit = appHelpers.getNumberOfProducts(this.props.device);
-      topProducts = this.state.products.slice(0, limit).map((product, index) => React.createElement(
-        "div",
-        { key: index, className: "product square" },
-        React.createElement(
-          "div",
-          { className: "content" },
-          React.createElement(
-            "div",
-            { className: "product-wrapper mdl-shadow--2dp" },
-            React.createElement(
-              "a",
-              { href: "/p/" + product.project_id },
-              React.createElement(
-                "div",
-                { className: "product-image-container" },
-                React.createElement(
-                  "figure",
-                  { className: "no-padding" },
-                  React.createElement("img", { className: "full padded", src: 'https://cn.pling.it/cache/200x171/img/' + product.image_small })
-                )
-              ),
-              React.createElement(
-                "div",
-                { className: "product-info" },
-                React.createElement(
-                  "span",
-                  { className: "product-info-title" },
-                  product.title
-                ),
-                React.createElement(
-                  "span",
-                  { className: "product-info-description" },
-                  product.description
-                )
-              )
-            )
-          )
-        )
-      ));
-    }
-    return React.createElement(
-      "div",
-      { id: "hottest-products", className: "hp-section products-showcase" },
-      React.createElement(
-        "div",
-        { className: "container" },
-        React.createElement(
-          "div",
-          { className: "section-header" },
-          React.createElement(
-            "h3",
-            { className: "mdl-color-text--primary" },
-            "Padded Images Layout"
-          ),
-          React.createElement(
-            "div",
-            { className: "actions" },
-            React.createElement(
-              "button",
-              { className: "mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary" },
-              "see more"
-            )
-          )
-        ),
-        React.createElement(
-          "div",
-          { className: "products-container row" },
-          topProducts
-        )
-      )
-    );
-  }
-}
-
-const mapStateToPaddedImageProductsProps = state => {
-  const products = state.products;
-  return {
-    products
-  };
-};
-
-const mapDispatchToPaddedImageProductsProps = dispatch => {
-  return {
-    dispatch
-  };
-};
-
-const PaddedImageProductsWrapper = ReactRedux.connect(mapStateToPaddedImageProductsProps, mapDispatchToPaddedImageProductsProps)(PaddedImageProducts);
-
 class RoundedCornersProducts extends React.Component {
   constructor(props) {
     super(props);
@@ -627,13 +403,12 @@ class RoundedCornersProducts extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
     if (nextProps.products && !this.state.products) {
       let products;
       if (nextProps.products.TopProducts.elements.length > 0) {
         products = nextProps.products.TopProducts.elements;
       } else {
-        products = nextProps.products.Apps;
+        products = nextProps.products.ThemesPlasma;
       }
       this.setState({ products: products });
     }
@@ -740,13 +515,12 @@ class RounderCornersProducts extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
     if (nextProps.products && !this.state.products) {
       let products;
       if (nextProps.products.TopProducts.elements.length > 0) {
         products = nextProps.products.TopProducts.elements;
       } else {
-        products = nextProps.products.Apps;
+        products = nextProps.products.Wallpapers;
       }
       this.setState({ products: products });
     }
