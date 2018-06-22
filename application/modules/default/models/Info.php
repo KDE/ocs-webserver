@@ -430,7 +430,7 @@ class Default_Model_Info
         }
         $cache = Zend_Registry::get('cache');
         $cacheName =
-            __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host_top') . (int)$limit .$catids);
+            __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host') . (int)$limit .$catids);
 
         if (($resultSet = $cache->load($cacheName))) {
             return $resultSet;
