@@ -23,6 +23,7 @@ class HomePageTemplateOne extends React.Component {
   }
 
   render(){
+    console.log(this.state.device);
     return (
       <div id="homepage-version-one">
         <Introduction device={this.state.device}/>

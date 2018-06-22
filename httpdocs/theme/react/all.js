@@ -101,7 +101,7 @@ class HomePageTemplateOne extends React.Component {
   }
 
   componentWillMount() {
-    // this.updateDimensions();
+    this.updateDimensions();
   }
 
   componentDidMount() {
@@ -118,14 +118,15 @@ class HomePageTemplateOne extends React.Component {
   }
 
   render() {
+    console.log(this.state.device);
     return React.createElement(
       "div",
       { id: "homepage-version-one" },
-      React.createElement(Introduction, null),
-      React.createElement(LatestProductsWrapper, null),
-      React.createElement(TopProductsWrapper, null),
-      React.createElement(RoundedCornersProductsWrapper, null),
-      React.createElement(RounderCornersProductsWrapper, null)
+      React.createElement(Introduction, { device: this.state.device }),
+      React.createElement(LatestProductsWrapper, { device: this.state.device }),
+      React.createElement(TopProductsWrapper, { device: this.state.device }),
+      React.createElement(RoundedCornersProductsWrapper, { device: this.state.device }),
+      React.createElement(RounderCornersProductsWrapper, { device: this.state.device })
     );
   }
 }
