@@ -102,7 +102,6 @@ class HomePageTemplateOne extends React.Component {
 
   componentWillMount() {
     this.updateDimensions();
-    console.log(store.getState());
   }
 
   componentDidMount() {
@@ -179,12 +178,7 @@ class NewProducts extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.products && !this.state.products) {
-      let products;
-      if (nextProps.products.LatestProducts && nextProps.products.LatestProducts.length > 0) {
-        products = nextProps.products.LatestProducts;
-      } else {
-        products = nextProps.products.ThemeGTK;
-      }
+      products = nextProps.products.LatestProducts;
       this.setState({ products: products });
     }
   }
@@ -290,13 +284,10 @@ class TopAppsProducts extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log(nextProps);
     if (nextProps.products && !this.state.products) {
-      let products;
-      if (nextProps.products.TopProducts.elements.length > 0) {
-        products = nextProps.products.TopProducts.elements;
-      } else {
-        products = nextProps.products.Apps;
-      }
+      products = nextProps.products.TopApps;
+      console.log(products);
       this.setState({ products: products });
     }
   }
@@ -304,6 +295,7 @@ class TopAppsProducts extends React.Component {
   render() {
     let topProducts;
     if (this.state.products) {
+      console.log(this.state);
       const limit = appHelpers.getNumberOfProducts(this.props.device);
       topProducts = this.state.products.slice(0, limit).map((product, index) => React.createElement(
         "div",
@@ -402,12 +394,7 @@ class RoundedCornersProducts extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.products && !this.state.products) {
-      let products;
-      if (nextProps.products.TopProducts.elements.length > 0) {
-        products = nextProps.products.TopProducts.elements;
-      } else {
-        products = nextProps.products.ThemesPlasma;
-      }
+      products = nextProps.products.TopGames;
       this.setState({ products: products });
     }
   }

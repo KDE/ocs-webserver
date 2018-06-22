@@ -65,8 +65,9 @@
   $helperImage = new Default_View_Helper_Image();
   $helpPrintDate = new Default_View_Helper_PrintDate();
 
-  $this->productsLatestProducts = $modelInfo->getLastProductsForHostStores(6,"366,363,273,267,138,125,131,153,154,414,133");
-
+  $this->LatestProducts = $modelInfo->getLastProductsForHostStores(6,"366,363,273,267,138,125,131,153,154,414,133");
+  $this->topGames = $modelInfo->getLastProductsForHostStores(6,"6");
+  $this->topApps = $modelInfo->getLastProductsForHostStores(6,"234,239,243,244,245,388,391,392,450,481,492");
 ?>
 
 <link type="text/css" rel="stylesheet" href="/theme/react/lib/mdl/material.min.css"/>
@@ -79,37 +80,15 @@
 <script type="text/javascript">
 
   <?php
-    $js_latestProducts = json_encode($this->productsLatestProducts);
-    $js_topProductsApps = json_encode($this->topProductsApps);
-    $js_productsThemesGTK = json_encode($this->productsThemesGTK);
-    $js_productsThemesPlasma = json_encode($this->productsThemesPlasma);
-    $js_productsWindowmanager = json_encode($this->productsWindowmanager);
-    $js_productsIconsCursors = json_encode($this->productsIconsCursors);
-    $js_productsScreenshots = json_encode($this->productsScreenshots);
-    $js_productsApps = json_encode($this->productsApps);
-    $js_productsAddons = json_encode($this->productsAddons);
-    $js_productsWallpapers = json_encode($this->productsWallpapers);
-    $js_countSupporters = json_encode($this->countSupporters);
-    $js_featuredProducts = json_encode($this->featuredProducts);
-    $js_users = json_encode($this->users);
-    $js_topProducts = json_encode($this->topProducts);
-    $js_supporters = json_encode($this->supporters);
-    $js_productsTop = json_encode($this->topProducts);
-    $js_comments = json_encode($this->comments);
+    $js_latestProducts = json_encode($this->LatestProducts);
+    $js_topGames = json_encode($this->topGames);
+    $js_topApps = json_encode($this->topApps);
   ?>
 
   var products = {
-    ThemeGTK:<?php echo $js_productsThemesGTK ?>,
-    ThemesPlasma:<?php echo $js_productsThemesPlasma ?>,
-    Windowmanager:<?php echo $js_productsWindowmanager ?>,
-    IconsCursors:<?php echo $js_productsIconsCursors ?>,
-    Screenshots:<?php echo $js_productsScreenshots ?>,
-    Apps:<?php echo $js_topProductsApps ?>,
-    Addons:<?php echo $js_productsAddons ?>,
-    Wallpapers:<?php echo $js_productsWallpapers ?>,
-    Featured:<?php echo $js_featuredProducts ?>,
-    TopProducts:<?php echo $js_topProducts ?>,
-    LatestProducts:<?php echo $js_latestProducts ?>
+    LatestProducts:<?php echo $js_latestProducts ?>,
+    TopGames:<?php echo $js_topGames ?>,
+    TopApps:<?php echo $js_topApps ?>
   };
 
 </script>
