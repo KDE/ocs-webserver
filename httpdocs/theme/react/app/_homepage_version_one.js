@@ -27,10 +27,9 @@ class HomePageTemplateOne extends React.Component {
     return (
       <div id="homepage-version-one">
         <Introduction device={this.state.device}/>
-        <LatestProductsWrapper device={this.state.device}/>
-        <TopProductsWrapper device={this.state.device}/>
+        <NewProductsWrapper device={this.state.device}/>
+        <TopAppsProducts device={this.state.device}/>
         <RoundedCornersProductsWrapper device={this.state.device}/>
-        <RounderCornersProductsWrapper device={this.state.device}/>
       </div>
     )
   }
@@ -55,7 +54,7 @@ class Introduction extends React.Component {
   }
 }
 
-class LatestProducts extends React.Component {
+class NewProducts extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {};
@@ -88,7 +87,6 @@ class LatestProducts extends React.Component {
                     </figure>
                   </div>
                   <div className="product-info">
-
                     <span className="product-info-title">{product.title}</span>
                     <span className="product-info-description">{product.description}</span>
                   </div>
@@ -104,7 +102,7 @@ class LatestProducts extends React.Component {
       <div id="latest-products" className="hp-section products-showcase">
         <div className="container">
           <div className="section-header">
-            <h3  className="mdl-color-text--primary">Round Images Layout</h3>
+            <h3  className="mdl-color-text--primary">New</h3>
             <div className="actions">
               <button className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">see more</button>
             </div>
@@ -118,25 +116,25 @@ class LatestProducts extends React.Component {
   }
 }
 
-const mapStateToLatestProductsProps = (state) => {
+const mapStateToNewProductsProps = (state) => {
   const products = state.products;
   return {
     products
   }
 }
 
-const mapDispatchToLatestProductsProps = (dispatch) => {
+const mapDispatchToNewProductsProps = (dispatch) => {
   return {
     dispatch
   }
 }
 
-const LatestProductsWrapper = ReactRedux.connect(
-  mapStateToLatestProductsProps,
-  mapDispatchToLatestProductsProps
-)(LatestProducts);
+const NewProductsWrapper = ReactRedux.connect(
+  mapStateToNewProductsProps,
+  mapDispatchToNewProductsProps
+)(NewProducts);
 
-class TopProducts extends React.Component {
+class TopAppsProducts extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {};
@@ -182,7 +180,7 @@ class TopProducts extends React.Component {
       <div id="hottest-products" className="hp-section products-showcase">
         <div className="container">
           <div className="section-header">
-            <h3 className="mdl-color-text--primary">Square Images Layout</h3>
+            <h3 className="mdl-color-text--primary">Top Apps</h3>
             <div className="actions">
               <button className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">see more</button>
             </div>
@@ -196,23 +194,23 @@ class TopProducts extends React.Component {
   }
 }
 
-const mapStateToTopProductsProps = (state) => {
+const mapStateToTopAppsProductsProps = (state) => {
   const products = state.products;
   return {
     products
   }
 }
 
-const mapDispatchToTopProductsProps = (dispatch) => {
+const mapDispatchToTopAppsProductsProps = (dispatch) => {
   return {
     dispatch
   }
 }
 
-const TopProductsWrapper = ReactRedux.connect(
-  mapStateToTopProductsProps,
-  mapDispatchToTopProductsProps
-)(TopProducts)
+const TopAppsProductsWrapper = ReactRedux.connect(
+  mapStateToTopAppsProductsProps,
+  mapDispatchToTopAppsProductsProps
+)(TopAppsProducts)
 
 class RoundedCornersProducts extends React.Component {
   constructor(props){
@@ -261,7 +259,7 @@ class RoundedCornersProducts extends React.Component {
       <div id="hottest-products" className="hp-section products-showcase">
         <div className="container">
           <div className="section-header">
-            <h3 className="mdl-color-text--primary">Rounded Corner Images Layout</h3>
+            <h3 className="mdl-color-text--primary">Top Games</h3>
             <div className="actions">
               <button className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">see more</button>
             </div>

@@ -12,8 +12,6 @@ class App extends React.Component {
 
   componentDidMount() {
     store.dispatch(setProducts(products));
-    store.dispatch(setSupporters(supporters));
-    store.dispatch(setUsers(users));
     this.setState({loading:false});
   }
 
