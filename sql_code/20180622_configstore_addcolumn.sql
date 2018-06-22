@@ -1,0 +1,1 @@
+alter table config_store add column is_show_title int(1) default 1 after cross_domain_login;

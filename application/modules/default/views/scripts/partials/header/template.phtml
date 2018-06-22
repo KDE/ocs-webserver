@@ -34,6 +34,7 @@ $sname = Zend_Registry::get('store_host');
 $store_config = Zend_Registry::get('store_config');
 $store_order = $store_config['order'];
 $store_name = $store_config['name'];
+$is_show_title = $store_config['is_show_title'];
 $last_char_store_order = substr($store_order, -1); 
 
 echo $this->render('partials/header/metaheader.phtml'); ?>
@@ -119,6 +120,7 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
                 </section>
             </section>
 
+            <?php if($is_show_title==1): ?>
             <section class="container">
                 <section class="wrapper">
                     <span class="header_cat_link" id="header_cat_link">
@@ -129,6 +131,7 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
                     </span>
                 </section>
             </section>
+        <?php endif; ?>
         </div>
     </header>
 
