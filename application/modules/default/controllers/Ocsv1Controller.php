@@ -873,6 +873,17 @@ class Ocsv1Controller extends Zend_Controller_Action
 
     public function contentdataAction()
     {
+        
+        $uri = $this->view->url();
+        
+        $params = $this->getRequest()->getParams();
+        $params['domain_store_id'] = $this->_getNameForStoreClient();
+        
+        $result = $this->_request('GET', $uri, $params);
+        $this->_sendResponse($result, $this->_format);
+        
+        /*
+        
         if (!$this->_authenticateUser()) {
             //    $this->_sendErrorResponse(999, '');
         }
@@ -905,6 +916,8 @@ class Ocsv1Controller extends Zend_Controller_Action
 
             $this->_sendResponse($response, $this->_format);
         }
+         * 
+         */
     }
 
     /**
@@ -1571,6 +1584,17 @@ class Ocsv1Controller extends Zend_Controller_Action
 
     public function contentdownloadAction()
     {
+        
+        $uri = $this->view->url();
+        
+        $params = $this->getRequest()->getParams();
+        $params['domain_store_id'] = $this->_getNameForStoreClient();
+        
+        $result = $this->_request('GET', $uri, $params);
+        $this->_sendResponse($result, $this->_format);
+        
+        /*
+        
         if (!$this->_authenticateUser()) {
             //$this->_sendErrorResponse(999, '');
         }
@@ -1678,10 +1702,24 @@ class Ocsv1Controller extends Zend_Controller_Action
         }
 
         $this->_sendResponse($response, $this->_format);
+         * 
+         */
     }
 
     public function contentpreviewpicAction()
     {
+        
+        $uri = $this->view->url();
+        
+        $params = $this->getRequest()->getParams();
+        $params['domain_store_id'] = $this->_getNameForStoreClient();
+        
+        $result = $this->_request('GET', $uri, $params);
+        $this->_sendResponse($result, $this->_format);
+        
+        
+        
+        /*
         if (!$this->_authenticateUser()) {
             //$this->_sendErrorResponse(999, '');
         }
@@ -1719,6 +1757,8 @@ class Ocsv1Controller extends Zend_Controller_Action
 
         header('Location: ' . $previewPicUri);
         exit;
+         * 
+         */
     }
 
     /**
@@ -1797,6 +1837,15 @@ class Ocsv1Controller extends Zend_Controller_Action
 
     public function commentsAction()
     {
+        $uri = $this->view->url();
+        
+        $params = $this->getRequest()->getParams();
+        $params['domain_store_id'] = $this->_getNameForStoreClient();
+        
+        $result = $this->_request('GET', $uri, $params);
+        $this->_sendResponse($result, $this->_format);
+        
+        /*
         if ($this->_format == 'json') {
             $response = array(
                 'status'     => 'ok',
@@ -1828,7 +1877,7 @@ class Ocsv1Controller extends Zend_Controller_Action
         $page = (int)$this->getParam('page', 0) + 1;
         $pagesize = (int)$this->getParam('pagesize', 10);
 
-        /** @var Zend_Cache_Core $cache */
+        ** @var Zend_Cache_Core $cache *
         $cache = Zend_Registry::get('cache');
         $cacheName = 'api_fetch_comments_' . md5("{$commentType}, {$contentId}, {$page}, {$pagesize}" . '_format_' . $this->_format);
 
@@ -1850,6 +1899,8 @@ class Ocsv1Controller extends Zend_Controller_Action
         $cache->save($response, $cacheName, array(), 1800);
 
         $this->_sendResponse($response, $this->_format);
+         * 
+         */
     }
 
     /**
