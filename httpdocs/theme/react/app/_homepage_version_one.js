@@ -7,6 +7,7 @@ class HomePageTemplateOne extends React.Component {
 
   componentWillMount(){
     this.updateDimensions();
+    console.log(store.getState());
   }
 
   componentDidMount() {
@@ -23,7 +24,6 @@ class HomePageTemplateOne extends React.Component {
   }
 
   render(){
-    console.log(this.state.device);
     return (
       <div id="homepage-version-one">
         <Introduction device={this.state.device}/>
@@ -64,10 +64,10 @@ class LatestProducts extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.products && !this.state.products){
       let products;
-      if (nextProps.products.TopProducts.elements.length > 0){
-        products = nextProps.products.TopProducts.elements;
+      if (nextProps.products.LatestProducts && nextProps.products.LatestProducts.length > 0){
+        products = nextProps.products.LatestProducts;
       } else {
-        products = nextProps.products.ThemesPlasma;
+        products = nextProps.products.ThemeGTK;
       }
       this.setState({products:products});
     }
@@ -84,7 +84,7 @@ class LatestProducts extends React.Component {
                 <a href={"/p/"+product.project_id}>
                   <div className="product-image-container">
                     <figure>
-                      <img src={'https://cn.pling.it/cache/200x171/img/' + product.image_small} />
+                      <img className="very-rounded-corners" src={'https://cn.pling.it/cache/200x171/img/' + product.image_small} />
                     </figure>
                   </div>
                   <div className="product-info">
@@ -148,7 +148,6 @@ class TopProducts extends React.Component {
       if (nextProps.products.TopProducts.elements.length > 0){
         products = nextProps.products.TopProducts.elements;
       } else {
-        console.log(nextProps.products);
         products = nextProps.products.Apps;
       }
       this.setState({products:products});
@@ -166,7 +165,7 @@ class TopProducts extends React.Component {
                 <a href={"/p/"+product.project_id}>
                   <div className="product-image-container">
                     <figure>
-                      <img className="squared" src={'https://cn.pling.it/cache/200x171/img/' + product.image_small} />
+                      <img className="very-rounded-corners" src={'https://cn.pling.it/cache/200x171/img/' + product.image_small} />
                     </figure>
                   </div>
                   <div className="product-info">
@@ -245,7 +244,7 @@ class RoundedCornersProducts extends React.Component {
                 <a href={"/p/"+product.project_id}>
                   <div className="product-image-container">
                     <figure className="no-padding">
-                      <img className="rounded-corners" src={'https://cn.pling.it/cache/200x171/img/' + product.image_small} />
+                      <img className="very-rounded-corners" src={'https://cn.pling.it/cache/200x171/img/' + product.image_small} />
                     </figure>
                   </div>
                   <div className="product-info">

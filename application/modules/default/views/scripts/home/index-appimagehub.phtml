@@ -51,11 +51,14 @@
   $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
   $helperImage = new Default_View_Helper_Image();
   $helpPrintDate = new Default_View_Helper_PrintDate();
+
+  $this->productsLatestProducts = $modelInfo->getLastProductsForHostStores(6,"366,363,273,267,138,125,131,153,154,414,133");
+
 ?>
 
 <link type="text/css" rel="stylesheet" href="/theme/react/lib/mdl/material.min.css"/>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-><link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,500" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,500" rel="stylesheet">
 <link type="text/css" rel="stylesheet" href="/theme/react/assets/css/style.css"/>
 
 <main id="explore-content"></main>
@@ -63,6 +66,7 @@
 <script type="text/javascript">
 
   <?php
+    $js_latestProducts = json_encode($this->productsLatestProducts);
     $js_productsThemesGTK = json_encode($this->productsThemesGTK);
     $js_productsThemesPlasma = json_encode($this->productsThemesPlasma);
     $js_productsWindowmanager = json_encode($this->productsWindowmanager);
@@ -90,7 +94,8 @@
     Addons:<?php echo $js_productsAddons ?>,
     Wallpapers:<?php echo $js_productsWallpapers ?>,
     Featured:<?php echo $js_featuredProducts ?>,
-    TopProducts:<?php echo $js_topProducts ?>
+    TopProducts:<?php echo $js_topProducts ?>,
+    LatestProducts:<?php echo $js_latestProducts ?>
   };
 
   var users = <?php echo $js_users ?>;
