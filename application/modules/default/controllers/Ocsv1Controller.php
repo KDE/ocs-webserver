@@ -434,7 +434,7 @@ class Ocsv1Controller extends Zend_Controller_Action
      */
     protected function _buildCategories()
     {
-        $modelCategoryTree = new Application_Model_ProjectCategory();
+        $modelCategoryTree = new Default_Model_ProjectCategory();
         $tree = $modelCategoryTree->fetchCategoryTreeCurrentStore();
 
         return $this->buildResponseTree($tree);
