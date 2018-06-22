@@ -107,6 +107,11 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
      */
     public function indexAction()
     {
+        
+        if ($this->hasParam('new') && $this->getParam("new") == 1) {
+            $this->_helper->viewRenderer('index-new');
+        }
+        
         $filter = array();
         $storeCatIds = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
         $this->view->categories = $storeCatIds;
@@ -149,6 +154,7 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         $this->view->totalcount = $requestedElements['total_count'];
         $this->view->filters = $filter;
         $this->view->page = $page;
+        
     }
 
     /**
