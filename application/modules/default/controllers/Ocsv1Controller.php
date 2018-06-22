@@ -428,6 +428,54 @@ class Ocsv1Controller extends Zend_Controller_Action
         $this->_sendResponse($response, $this->_format);
         
     }
+    
+    /**
+     * @return array
+     */
+    protected function _buildCategories()
+    {
+        $modelCategoryTree = new Application_Model_ProjectCategory();
+        $tree = $modelCategoryTree->fetchCategoryTreeCurrentStore();
+
+        return $this->buildResponseTree($tree);
+    }
+
+    /**
+     * @param array $tree
+     *
+     * @return array
+     */
+    protected function buildResponseTree($tree)
+    {
+        $result = array();
+        foreach ($tree as $element) {
+            if ($this->_format == 'json') {
+                $result[] = array(
+                    'id'           => $element['id'],
+                    'name'         => (false === empty($element['name_legacy'])) ? $element['name_legacy'] : $element['title'],
+                    'display_name' => $element['title'],
+                    'parent_id'    => (false === empty($element['parent_id'])) ? $element['parent_id'] : '',
+                    'xdg_type'     => (false === empty($element['xdg_type'])) ? $element['xdg_type'] : ''
+                );
+            } else {
+                $result[] = array(
+                    'id'           => array('@text' => $element['id']),
+                    'name'         => array(
+                        '@text' => (false === empty($element['name_legacy'])) ? $element['name_legacy'] : $element['title']
+                    ),
+                    'display_name' => array('@text' => $element['title']),
+                    'parent_id'    => array('@text' => (false === empty($element['parent_id'])) ? $element['parent_id'] : ''),
+                    'xdg_type'     => array('@text' => (false === empty($element['xdg_type'])) ? $element['xdg_type'] : '')
+                );
+            }
+            if ($element['has_children']) {
+                $sub_tree = $this->buildResponseTree($element['children']);
+                $result = array_merge($result, $sub_tree);
+            }
+        }
+
+        return $result;
+    }
 
     public function contentdataAction()
     {
