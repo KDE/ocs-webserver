@@ -274,7 +274,7 @@ class Ocsv1Controller extends Zend_Controller_Action
         $this->_sendResponse($response, $this->_format);
     }
 
-    protected function _sendResponse($response, $format = 'xml', $xmlRootTag = 'ocs')
+    protected function _sendResponse($response, $format = 'xml', $xmlRootTag = 'ocs', $local = false)
     {
         header('Pragma: public');
         header('Cache-Control: cache, must-revalidate');
@@ -283,12 +283,18 @@ class Ocsv1Controller extends Zend_Controller_Action
         header('Expires: ' . $expires);
         if ($format == 'json') {
             header('Content-Type: application/json; charset=UTF-8');
-            //echo json_encode($response);
-            echo $response;
+            if($local) {
+                echo json_encode($response);
+            } else {
+                echo $response;
+            }
         } else {
             header('Content-Type: application/xml; charset=UTF-8');
-            //echo $this->_convertXmlDom($response, $xmlRootTag)->saveXML();
-            echo $response;
+            if($local) {
+                echo $this->_convertXmlDom($response, $xmlRootTag)->saveXML();
+            } else {
+                echo $response;
+            }
         }
 
         exit;
