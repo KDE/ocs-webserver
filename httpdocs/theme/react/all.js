@@ -100,6 +100,13 @@ class HomePageTemplateOne extends React.Component {
     this.updateDimensions = this.updateDimensions.bind(this);
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.products && !this.state.products) {
+      console.log(nextProps);
+      this.setState({ products: nextProps.products });
+    }
+  }
+
   componentWillMount() {
     this.updateDimensions();
   }
@@ -118,16 +125,49 @@ class HomePageTemplateOne extends React.Component {
   }
 
   render() {
+    let homePageDisplay;
+    if (this.state.products) {
+      homePageDisplay = React.createElement(
+        "div",
+        { className: "hp-wrapper" },
+        React.createElement(Introduction, { device: this.state.device }),
+        React.createElement(NewProducts, {
+          device: this.state.device,
+          products: this.state.products.LatestProducts
+        }),
+        React.createElement(TopAppsProducts, {
+          device: this.state.device,
+          products: this.state.products.TopApps
+        }),
+        React.createElement(TopGamesProducts, {
+          device: this.state.device,
+          products: this.state.products.TopGames
+        })
+      );
+    }
+
     return React.createElement(
       "div",
       { id: "homepage-version-one" },
-      React.createElement(Introduction, { device: this.state.device }),
-      React.createElement(NewProductsWrapper, { device: this.state.device }),
-      React.createElement(TopAppsProducts, { device: this.state.device }),
-      React.createElement(RoundedCornersProductsWrapper, { device: this.state.device })
+      homePageDisplay
     );
   }
 }
+
+const mapStateToHomePageProps = state => {
+  const products = state.products;
+  return {
+    products
+  };
+};
+
+const mapDispatchToHomePageProps = dispatch => {
+  return {
+    dispatch
+  };
+};
+
+const HomePageWrapper = ReactRedux.connect(mapStateToHomePageProps, mapDispatchToHomePageProps)(HomePageTemplateOne);
 
 class Introduction extends React.Component {
   render() {
@@ -185,9 +225,9 @@ class NewProducts extends React.Component {
 
   render() {
     let latestProducts;
-    if (this.state.products) {
+    if (this.props.products) {
       const limit = appHelpers.getNumberOfProducts(this.props.device);
-      latestProducts = this.state.products.slice(0, limit).map((product, index) => React.createElement(
+      latestProducts = this.props.products.slice(0, limit).map((product, index) => React.createElement(
         "div",
         { key: index, className: "product square" },
         React.createElement(
@@ -262,42 +302,12 @@ class NewProducts extends React.Component {
   }
 }
 
-const mapStateToNewProductsProps = state => {
-  const products = state.products;
-  return {
-    products
-  };
-};
-
-const mapDispatchToNewProductsProps = dispatch => {
-  return {
-    dispatch
-  };
-};
-
-const NewProductsWrapper = ReactRedux.connect(mapStateToNewProductsProps, mapDispatchToNewProductsProps)(NewProducts);
-
 class TopAppsProducts extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
-  componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
-    if (nextProps.products && !this.state.products) {
-      products = nextProps.products.TopApps;
-      console.log(products);
-      this.setState({ products: products });
-    }
-  }
-
   render() {
     let topProducts;
-    if (this.state.products) {
-      console.log(this.state);
+    if (this.props.products) {
       const limit = appHelpers.getNumberOfProducts(this.props.device);
-      topProducts = this.state.products.slice(0, limit).map((product, index) => React.createElement(
+      topProducts = this.props.products.slice(0, limit).map((product, index) => React.createElement(
         "div",
         { key: index, className: "product square" },
         React.createElement(
@@ -371,40 +381,18 @@ class TopAppsProducts extends React.Component {
   }
 }
 
-const mapStateToTopAppsProductsProps = state => {
-  const products = state.products;
-  return {
-    products
-  };
-};
-
-const mapDispatchToTopAppsProductsProps = dispatch => {
-  return {
-    dispatch
-  };
-};
-
-const TopAppsProductsWrapper = ReactRedux.connect(mapStateToTopAppsProductsProps, mapDispatchToTopAppsProductsProps)(TopAppsProducts);
-
-class RoundedCornersProducts extends React.Component {
+class TopGamesProducts extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.products && !this.state.products) {
-      products = nextProps.products.TopGames;
-      this.setState({ products: products });
-    }
-  }
-
   render() {
 
     let topProducts;
-    if (this.state.products) {
+    if (this.props.products) {
       const limit = appHelpers.getNumberOfProducts(this.props.device);
-      topProducts = this.state.products.slice(0, limit).map((product, index) => React.createElement(
+      topProducts = this.props.products.slice(0, limit).map((product, index) => React.createElement(
         "div",
         { key: index, className: "product square" },
         React.createElement(
@@ -477,21 +465,6 @@ class RoundedCornersProducts extends React.Component {
     );
   }
 }
-
-const mapStateToRoundedCornersProductsProps = state => {
-  const products = state.products;
-  return {
-    products
-  };
-};
-
-const mapDispatchToRoundedCornersProductsProps = dispatch => {
-  return {
-    dispatch
-  };
-};
-
-const RoundedCornersProductsWrapper = ReactRedux.connect(mapStateToRoundedCornersProductsProps, mapDispatchToRoundedCornersProductsProps)(RoundedCornersProducts);
 
 class RounderCornersProducts extends React.Component {
   constructor(props) {
@@ -589,21 +562,6 @@ class RounderCornersProducts extends React.Component {
     );
   }
 }
-
-const mapStateToRounderCornersProductsProps = state => {
-  const products = state.products;
-  return {
-    products
-  };
-};
-
-const mapDispatchToRounderCornersProductsProps = dispatch => {
-  return {
-    dispatch
-  };
-};
-
-const RounderCornersProductsWrapper = ReactRedux.connect(mapStateToRounderCornersProductsProps, mapDispatchToRounderCornersProductsProps)(RounderCornersProducts);
 class HomePageTemplateTwo extends React.Component {
   render() {
     return React.createElement(
@@ -648,7 +606,7 @@ class App extends React.Component {
   render() {
     let templateDisplay;
     if (this.state.version === 1) {
-      templateDisplay = React.createElement(HomePageTemplateOne, null);
+      templateDisplay = React.createElement(HomePageWrapper, null);
     } else if (this.state.version === 2) {
       templateDisplay = React.createElement(HomePageTemplateTwo, null);
     }

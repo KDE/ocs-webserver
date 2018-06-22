@@ -5,6 +5,13 @@ class HomePageTemplateOne extends React.Component {
     this.updateDimensions = this.updateDimensions.bind(this);
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.products && !this.state.products){
+      console.log(nextProps);
+      this.setState({products:nextProps.products});
+    }
+  }
+
   componentWillMount(){
     this.updateDimensions();
   }
@@ -23,16 +30,52 @@ class HomePageTemplateOne extends React.Component {
   }
 
   render(){
+    let homePageDisplay;
+    if (this.state.products){
+      homePageDisplay = (
+        <div className="hp-wrapper">
+          <Introduction device={this.state.device}/>
+          <NewProducts
+            device={this.state.device}
+            products={this.state.products.LatestProducts}
+          />
+          <TopAppsProducts
+            device={this.state.device}
+            products={this.state.products.TopApps}
+          />
+          <TopGamesProducts
+            device={this.state.device}
+            products={this.state.products.TopGames}
+          />
+        </div>
+      )
+    }
+
     return (
       <div id="homepage-version-one">
-        <Introduction device={this.state.device}/>
-        <NewProductsWrapper device={this.state.device}/>
-        <TopAppsProducts device={this.state.device}/>
-        <RoundedCornersProductsWrapper device={this.state.device}/>
+        {homePageDisplay}
       </div>
     )
   }
 }
+
+const mapStateToHomePageProps = (state) => {
+  const products = state.products;
+  return {
+    products
+  }
+}
+
+const mapDispatchToHomePageProps = (dispatch) => {
+  return {
+    dispatch
+  }
+}
+
+const HomePageWrapper = ReactRedux.connect(
+  mapStateToHomePageProps,
+  mapDispatchToHomePageProps
+)(HomePageTemplateOne);
 
 class Introduction extends React.Component {
   render(){
@@ -68,9 +111,9 @@ class NewProducts extends React.Component {
 
   render(){
     let latestProducts;
-    if (this.state.products){
+    if (this.props.products){
       const limit = appHelpers.getNumberOfProducts(this.props.device);
-      latestProducts = this.state.products.slice(0,limit).map((product,index) => (
+      latestProducts = this.props.products.slice(0,limit).map((product,index) => (
         <div key={index} className="product square">
             <div className="content">
               <div className="product-wrapper mdl-shadow--2dp">
@@ -110,45 +153,12 @@ class NewProducts extends React.Component {
   }
 }
 
-const mapStateToNewProductsProps = (state) => {
-  const products = state.products;
-  return {
-    products
-  }
-}
-
-const mapDispatchToNewProductsProps = (dispatch) => {
-  return {
-    dispatch
-  }
-}
-
-const NewProductsWrapper = ReactRedux.connect(
-  mapStateToNewProductsProps,
-  mapDispatchToNewProductsProps
-)(NewProducts);
-
 class TopAppsProducts extends React.Component {
-  constructor(props){
-  	super(props);
-  	this.state = {};
-  }
-
-  componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
-    if (nextProps.products && !this.state.products){
-      products = nextProps.products.TopApps;
-      console.log(products);
-      this.setState({products:products});
-    }
-  }
-
   render(){
     let topProducts;
-    if (this.state.products){
-      console.log(this.state);
+    if (this.props.products){
       const limit = appHelpers.getNumberOfProducts(this.props.device);
-      topProducts = this.state.products.slice(0,limit).map((product,index) => (
+      topProducts = this.props.products.slice(0,limit).map((product,index) => (
         <div key={index} className="product square">
             <div className="content">
               <div className="product-wrapper mdl-shadow--2dp">
@@ -186,43 +196,18 @@ class TopAppsProducts extends React.Component {
   }
 }
 
-const mapStateToTopAppsProductsProps = (state) => {
-  const products = state.products;
-  return {
-    products
-  }
-}
-
-const mapDispatchToTopAppsProductsProps = (dispatch) => {
-  return {
-    dispatch
-  }
-}
-
-const TopAppsProductsWrapper = ReactRedux.connect(
-  mapStateToTopAppsProductsProps,
-  mapDispatchToTopAppsProductsProps
-)(TopAppsProducts)
-
-class RoundedCornersProducts extends React.Component {
+class TopGamesProducts extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {};
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.products && !this.state.products){
-      products = nextProps.products.TopGames;
-      this.setState({products:products});
-    }
-  }
-
   render(){
 
     let topProducts;
-    if (this.state.products){
+    if (this.props.products){
       const limit = appHelpers.getNumberOfProducts(this.props.device);
-      topProducts = this.state.products.slice(0,limit).map((product,index) => (
+      topProducts = this.props.products.slice(0,limit).map((product,index) => (
         <div key={index} className="product square">
             <div className="content">
               <div className="product-wrapper mdl-shadow--2dp">
@@ -259,24 +244,6 @@ class RoundedCornersProducts extends React.Component {
     )
   }
 }
-
-const mapStateToRoundedCornersProductsProps = (state) => {
-  const products = state.products;
-  return {
-    products
-  }
-}
-
-const mapDispatchToRoundedCornersProductsProps = (dispatch) => {
-  return {
-    dispatch
-  }
-}
-
-const RoundedCornersProductsWrapper = ReactRedux.connect(
-  mapStateToRoundedCornersProductsProps,
-  mapDispatchToRoundedCornersProductsProps
-)(RoundedCornersProducts)
 
 class RounderCornersProducts extends React.Component {
   constructor(props){
@@ -338,21 +305,3 @@ class RounderCornersProducts extends React.Component {
     )
   }
 }
-
-const mapStateToRounderCornersProductsProps = (state) => {
-  const products = state.products;
-  return {
-    products
-  }
-}
-
-const mapDispatchToRounderCornersProductsProps = (dispatch) => {
-  return {
-    dispatch
-  }
-}
-
-const RounderCornersProductsWrapper = ReactRedux.connect(
-  mapStateToRounderCornersProductsProps,
-  mapDispatchToRounderCornersProductsProps
-)(RounderCornersProducts)

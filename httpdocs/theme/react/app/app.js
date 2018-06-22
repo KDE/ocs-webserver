@@ -18,7 +18,7 @@ class App extends React.Component {
   render(){
     let templateDisplay;
     if (this.state.version === 1){
-      templateDisplay = <HomePageTemplateOne/>;
+      templateDisplay = <HomePageWrapper/>;
     } else if (this.state.version === 2) {
       templateDisplay = <HomePageTemplateTwo/>;
     }
