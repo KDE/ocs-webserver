@@ -6,7 +6,7 @@ class HomePageTemplateOne extends React.Component {
   }
 
   componentWillMount(){
-    // this.updateDimensions();
+    this.updateDimensions();
   }
 
   componentDidMount() {
@@ -25,11 +25,11 @@ class HomePageTemplateOne extends React.Component {
   render(){
     return (
       <div id="homepage-version-one">
-        <Introduction/>
-        <LatestProductsWrapper/>
-        <TopProductsWrapper/>
-        <RoundedCornersProductsWrapper/>
-        <RounderCornersProductsWrapper/>
+        <Introduction device={this.state.device}/>
+        <LatestProductsWrapper device={this.state.device}/>
+        <TopProductsWrapper device={this.state.device}/>
+        <RoundedCornersProductsWrapper device={this.state.device}/>
+        <RounderCornersProductsWrapper device={this.state.device}/>
       </div>
     )
   }
