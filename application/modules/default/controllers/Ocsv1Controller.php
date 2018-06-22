@@ -375,13 +375,57 @@ class Ocsv1Controller extends Zend_Controller_Action
     public function contentcategoriesAction()
     {
         
-        $uri = $this->view->url();
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $storeName = $this->_getNameForStoreClient();
         
-        $params = $this->getRequest()->getParams();
-        $params['domain_store_id'] = $this->_getNameForStoreClient();
+        $storeNameParam = $this->getParam('domain_store_id') ? $this->getParam('domain_store_id') : "";
         
-        $result = $this->_request('GET', $uri, $params);
-        $this->_sendResponse($result, $this->_format);
+        $cacheName = 'api_content_categories'.md5($storeName);
+        //$cacheName = 'api_content_categories';
+        
+        $debugMode = (int)$this->getParam('debug') ? (int)$this->getParam('debug') : false;
+        
+        
+
+        if (false == ($categoriesList = $cache->load($cacheName))) {
+            $categoriesList = $this->_buildCategories();
+            $cache->save($categoriesList, $cacheName, array(), 1800);
+        }
+
+        if ($this->_format == 'json') {
+            $response = array(
+                'status'     => 'ok',
+                'statuscode' => 100,
+                'message'    => '',
+                'totalitems' => count($categoriesList),
+                'data'       => array()
+            );
+            if (!empty($categoriesList)) {
+                $response['data'] = $categoriesList;
+            }
+        } else {
+            $response = array(
+                'meta' => array(
+                    'status'     => array('@text' => 'ok'),
+                    'statuscode' => array('@text' => 100),
+                    'message'    => array('@text' => ''),
+                    'totalitems' => array('@text' => count($categoriesList))
+                ),
+                'data' => array()
+            );
+            if (!empty($categoriesList)) {
+                $response['data'] = array('category' => $categoriesList);
+            }
+        }
+        
+        if($debugMode) {
+            $response['meta']['debug']['store_client_name'] = $this->_getNameForStoreClient();
+            $response['meta']['debug']['parameter_store_client_name'] = $storeNameParam;
+            $response['meta']['debug']['parameter'] = $this->getRequest()->getParams();
+        }
+
+        $this->_sendResponse($response, $this->_format);
         
     }
 
