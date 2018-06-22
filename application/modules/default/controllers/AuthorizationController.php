@@ -349,17 +349,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
     protected function createNewUser($userData)
     {
         $userTable = new Default_Model_Member();
-        $userData = $userTable->createNewUser($userData)->toArray();
-
-        if (false == isset($userData['verificationVal'])) {
-            $verificationVal = Default_Model_MemberEmail::getVerificationValue($userData['username'],
-                $userData['mail']);
-            $userData['verificationVal'] = $verificationVal;
-        }
-
-        $modelEmail = new Default_Model_MemberEmail();
-        $userEmail = $modelEmail->saveEmailAsPrimary($userData['member_id'], $userData['mail'],
-            $userData['verificationVal']);
+        $userData = $userTable->createNewUser($userData);
 
         return $userData;
     }
@@ -511,8 +501,10 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
                 true));
 
         try {
-            $id_server = new Default_Model_IdServer();
+            $id_server = new Default_Model_OcsOpenId();
             $id_server->createUser($authUser->member_id);
+            $opencode_server = new Default_Model_OcsOpenCode();
+            $opencode_server->createUser($authUser->member_id);
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err($e->getTraceAsString());
         }

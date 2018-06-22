@@ -33,10 +33,11 @@ CREATE TABLE `member_score_factors` (
 COLLATE='latin1_swedish_ci'
 ;
 
-INSERT INTO `pling-import`.`member_score_factors` (`factor_id`, `name`, `value`) VALUES ('1', 'project', '1');
-INSERT INTO `pling-import`.`member_score_factors` (`factor_id`, `name`, `value`) VALUES ('2', 'pling', '100');
-INSERT INTO `pling-import`.`member_score_factors` (`factor_id`, `name`, `value`) VALUES ('3', 'like', '100');
-INSERT INTO `pling-import`.`member_score_factors` (`factor_id`, `name`, `value`) VALUES ('4', 'comment', '10');
-INSERT INTO `pling-import`.`member_score_factors` (`factor_id`, `name`, `value`) VALUES ('5', 'year', '10');
-INSERT INTO `pling-import`.`member_score_factors` (`factor_id`, `name`, `value`) VALUES ('6', 'report_product_spam', '-100');
-INSERT INTO `pling-import`.`member_score_factors` (`factor_id`, `name`, `value`) VALUES ('7', 'report_product_fraud', '-100');
+USE pling;
+INSERT INTO `member_score_factors` (`factor_id`, `name`, `value`) VALUES ('1', 'project', '1');
+INSERT INTO `member_score_factors` (`factor_id`, `name`, `value`) VALUES ('2', 'pling', '100');
+INSERT INTO `member_score_factors` (`factor_id`, `name`, `value`) VALUES ('3', 'like', '100');
+INSERT INTO `member_score_factors` (`factor_id`, `name`, `value`) VALUES ('4', 'comment', '10');
+INSERT INTO `member_score_factors` (`factor_id`, `name`, `value`) VALUES ('5', 'year', '10');
+INSERT INTO `member_score_factors` (`factor_id`, `name`, `value`) VALUES ('6', 'report_product_spam', '-100');
+INSERT INTO `member_score_factors` (`factor_id`, `name`, `value`) VALUES ('7', 'report_product_fraud', '-100');

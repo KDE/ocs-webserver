@@ -1,1 +1,3 @@
-alter table tag_object add column is_deleted int(1) default 0;
+USE `pling`;
+ALTER TABLE `tag_object`
+  ADD COLUMN `is_deleted` INT(1) DEFAULT 0;
