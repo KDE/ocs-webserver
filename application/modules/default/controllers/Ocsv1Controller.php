@@ -825,7 +825,7 @@ class Ocsv1Controller extends Zend_Controller_Action
             }
         }
 
-        $this->_sendResponse($response, $this->_format);
+        $this->_sendResponse($response, $this->_format, 'ocs', true);
     }
 
     protected function _buildCategories()
