@@ -416,6 +416,71 @@ class Default_Model_Info
                     return array();
         }        
     }
+    
+    
+    public function getTopProductsForHostStores($limit = 10, $project_category_id = null)
+    {
+        /** @var Zend_Cache_Core $cache */
+      
+        if($project_category_id) {
+            $catids = str_replace(',', '', (string)$project_category_id);
+        }else
+        {
+            $catids="";
+        }
+        $cache = Zend_Registry::get('cache');
+        $cacheName =
+            __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host_top') . (int)$limit .$catids);
+
+        if (($resultSet = $cache->load($cacheName))) {
+            return $resultSet;
+        }
+
+
+        $activeCategories =array();
+        if (empty($project_category_id)) {
+            $activeCategories = $this->getActiveCategoriesForCurrentHost();
+        } else {
+            $cats = explode(",", $project_category_id);
+            if(count($cats)==1){
+                $activeCategories = $this->getActiveCategoriesForCatId($project_category_id);    
+            }else{
+                foreach ($cats as $cat) {
+                    $tmp = $this->getActiveCategoriesForCatId($cat);    
+                    $activeCategories = array_merge($tmp, $activeCategories);
+                }                
+            }            
+        }
+
+        if (count($activeCategories) == 0) {
+            return array();
+        }
+
+        $sql = '
+            SELECT 
+                p.*              
+            FROM
+                stat_projects  AS p
+            WHERE
+                p.status = 100                
+                AND p.project_category_id IN (' . implode(',', $activeCategories) . ')
+                AND p.amount_reports is null
+            ORDER BY (round(((count_likes + 6) / ((count_likes + count_dislikes) + 12)),2) * 100) DESC, `project`.`created_at` DESC
+            ';
+        if (isset($limit)) {
+            $sql .= ' limit ' . (int)$limit;
+        }
+
+        $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
+
+        if (count($resultSet) > 0) {
+                    $cache->save($resultSet, $cacheName, array(), 300);
+                    return $resultSet;
+        } else {
+                    $cache->save($resultSet, $cacheName, array(), 300);
+                    return array();
+        }        
+    }
 
 
     public function getRandomStoreProjectIds()
