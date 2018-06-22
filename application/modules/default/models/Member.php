@@ -52,8 +52,8 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         } else {
 
             $sql = '
-              SELECT count(*) AS total_count
-              FROM member
+              SELECT count(*) AS `total_count`
+              FROM `member`
               WHERE `is_active` = :activeVal
                  AND `type` = :typeVal
                AND `profile_image_url` <> :defaultImgUrl
@@ -77,7 +77,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
 
             $sql = '
                 SELECT *
-                FROM member
+                FROM `member`
                 WHERE `is_active` = :activeVal
                    AND `type` = :typeVal
             	   AND `profile_image_url` <> :defaultImgUrl
@@ -130,7 +130,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
     public function getMembersForSelectList()
     {
         $selectArr =
-            $this->_db->fetchAll("SELECT member_id,username,firstname, lastname FROM {$this->_name} WHERE is_active=1 AND is_deleted=0 ORDER BY username");
+            $this->_db->fetchAll("SELECT `member_id`,`username`,`firstname`, `lastname` FROM {$this->_name} WHERE is_active=1 AND is_deleted=0 ORDER BY username");
 
         $arrayModified = array();
 
@@ -228,7 +228,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
 
     private function setDeletedInMaterializedView($member_id)
     {
-        $sql = "UPDATE stat_projects SET status = :new_status WHERE member_id = :member_id";
+        $sql = "UPDATE `stat_projects` SET `status` = :new_status WHERE `member_id` = :member_id";
 
         $this->_db->query($sql, array('new_status' => Default_Model_DbTable_Project::PROJECT_DELETED, 'member_id' => $member_id))
                   ->execute()
@@ -312,7 +312,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
             return null;
         }
 
-        $sql = 'SELECT * FROM member WHERE is_deleted = :deleted AND is_active = :active AND member.member_id = :memberId';
+        $sql = 'SELECT * FROM `member` WHERE `is_deleted` = :deleted AND `is_active` = :active AND `member`.`member_id` = :memberId';
         $stmnt = $this->_db->query($sql, array('deleted' => $deleted, 'active' => $active, 'memberId' => $member_id));
 
         if ($stmnt->rowCount() == 0) {
@@ -377,15 +377,15 @@ class Default_Model_Member extends Default_Model_DbTable_Member
     public function fetchFollowedProjects($member_id, $limit = null)
     {
         $sql = "
-                SELECT project_follower.project_id,
-                        project.title,
-                        project.image_small                                              
-                FROM project_follower
-                  JOIN project ON project_follower.project_id = project.project_id                 
-                  WHERE project_follower.member_id = :member_id
-                  AND project.status = :project_status
-                  AND project.type_id = 1               
-                ORDER BY project_follower.project_follower_id DESC
+                SELECT `project_follower`.`project_id`,
+                        `project`.`title`,
+                        `project`.`image_small`                                              
+                FROM `project_follower`
+                  JOIN `project` ON `project_follower`.`project_id` = `project`.`project_id`                 
+                  WHERE `project_follower`.`member_id` = :member_id
+                  AND `project`.`status` = :project_status
+                  AND `project`.`type_id` = 1               
+                ORDER BY `project_follower`.`project_follower_id` DESC
                 ";
 
         if (null != $limit) {
@@ -463,7 +463,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
     /**
      * @param $userData
      *
-     * @return Zend_Db_Table_Row_Abstract
+     * @return array
      * @throws Exception
      */
     public function createNewUser($userData)
@@ -473,8 +473,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         if (false == isset($userData['password'])) {
             throw new Exception(__METHOD__ . ' - user password is not set.');
         }
-        $userData['password'] =
-            Local_Auth_Adapter_Ocs::getEncryptedPassword($userData['password'], Default_Model_DbTable_Member::SOURCE_LOCAL);
+        $userData['password'] = Local_Auth_Adapter_Ocs::getEncryptedPassword($userData['password'], Default_Model_DbTable_Member::SOURCE_LOCAL);
         if (false == isset($userData['roleId'])) {
             $userData['roleId'] = self::ROLE_ID_DEFAULT;
         }
@@ -487,7 +486,15 @@ class Default_Model_Member extends Default_Model_DbTable_Member
             $userData['uuid'] = $uuidMember;
         }
 
-        return $this->storeNewUser($userData);
+        $newUser = $this->storeNewUser($userData)->toArray();
+
+        $memberMail = $this->createPrimaryMailAddress($newUser);
+        $externalId = $this->createExternalId($newUser['member_id']);
+
+        $newUser['verificationVal'] = $memberMail->email_verification_value;
+        $newUser['externalId'] = $externalId;
+
+        return $newUser;
     }
 
     /**
@@ -520,7 +527,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         $newUserData->save();
 
         //create a user specified main project in project table
-        $projectId = $this->storePersonalProject($newUserData->toArray());
+        $projectId = $this->createPersonalProject($newUserData->toArray());
 
         //and save the id in member table
         $newUserData->main_project_id = $projectId;
@@ -534,7 +541,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
      *
      * @return mixed $projectId
      */
-    protected function storePersonalProject($userData)
+    protected function createPersonalProject($userData)
     {
         $tableProject = new Default_Model_Project();
         /** @var Default_Model_DbRow_Project $newPersonalProject */
@@ -551,13 +558,38 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         return $projectId;
     }
 
+    /**
+     * @param array $newUser
+     *
+     * @return Zend_Db_Table_Row_Abstract
+     * @throws Exception
+     */
+    private function createPrimaryMailAddress($newUser)
+    {
+        $modelEmail = new Default_Model_MemberEmail();
+        return $modelEmail->saveEmailAsPrimary($newUser['member_id'], $newUser['mail']);
+    }
+
+    /**
+     * @param int $member_id
+     *
+     * @return string
+     */
+    private function createExternalId($member_id)
+    {
+        $modelExternalId = new Default_Model_DbTable_MemberExternalId();
+        $externalId = $modelExternalId->createExternalId($member_id);
+
+        return $externalId;
+    }
+
     public function fetchTotalMembersCount()
     {
         $sql = "
                 SELECT
-                    count(1) AS total_member_count
+                    count(1) AS `total_member_count`
                 FROM
-                    member
+                    `member`
                ";
 
         $result = $this->_db->fetchRow($sql);
@@ -569,9 +601,9 @@ class Default_Model_Member extends Default_Model_DbTable_Member
     {
         $sql = "
                 SELECT
-                    count(1) AS total_member_count
+                    count(1) AS `total_member_count`
                 FROM
-                    member
+                    `member`
                ";
 
         $result = $this->_db->fetchRow($sql);
@@ -759,13 +791,13 @@ class Default_Model_Member extends Default_Model_DbTable_Member
     public function fetchCntSupporters($member_id)
     {
         $sql = '
-                SELECT DISTINCT plings.member_id FROM plings
-                 JOIN project ON plings.project_id = project.project_id                
-                 JOIN member ON project.member_id = member.member_id
-                WHERE plings.status_id = 2
-                  AND project.status = :project_status
-                  AND project.type_id = 1
-                  AND project.member_id = :member_id
+                SELECT DISTINCT `plings`.`member_id` FROM `plings`
+                 JOIN `project` ON `plings`.`project_id` = `project`.`project_id`                
+                 JOIN `member` ON `project`.`member_id` = `member`.`member_id`
+                WHERE `plings`.`status_id` = 2
+                  AND `project`.`status` = :project_status
+                  AND `project`.`type_id` = 1
+                  AND `project`.`member_id` = :member_id
             ';
         $result =
             $this->_db->fetchAll($sql, array('member_id' => $member_id, 'project_status' => Default_Model_Project::PROJECT_ACTIVE));
@@ -787,7 +819,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
     public function fetchLastActiveTime($member_id)
     {
         $sql_page_views =
-            "SELECT created_at AS lastactive FROM stat_page_views WHERE member_id = :member_id ORDER BY created_at DESC LIMIT 1";
+            "SELECT `created_at` AS `lastactive` FROM `stat_page_views` WHERE `member_id` = :member_id ORDER BY `created_at` DESC LIMIT 1";
         $sql_activities = "SELECT `time` AS lastactive FROM activity_log WHERE member_id = :member_id ORDER BY `time` DESC LIMIT 1";
 
         $result_page_views = $this->getAdapter()->fetchRow($sql_page_views, array('member_id' => $member_id));

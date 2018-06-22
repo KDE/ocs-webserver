@@ -100,6 +100,11 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
     /**
      * Forms
      */
+
+    /**
+     * @return Default_Form_Settings
+     * @throws Zend_Form_Exception
+     */
     private function formProfile()
     {
         $form = new Default_Form_Settings();
@@ -206,6 +211,10 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         return $form;
     }
 
+    /**
+     * @return Default_Form_Settings
+     * @throws Zend_Form_Exception
+     */
     private function formConnectedAccounts()
     {
         $form = new Default_Form_Settings();
@@ -285,6 +294,10 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         return $form;
     }
 
+    /**
+     * @return Default_Form_Settings
+     * @throws Zend_Form_Exception
+     */
     private function formGithub()
     {
         $form = new Default_Form_Settings();
@@ -292,39 +305,44 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
 
         $github = new Default_Form_Element_UsernameGithub('link_github');
         $github->setLabel("GitHub Profile:")->setRequired(false)->removeDecorator('HtmlTag')->setDecorators(array(
-                'ViewHelper',
-                'Label',
-                'Errors',
+            'ViewHelper',
+            'Label',
+            'Errors',
+            array(
+                'ViewScript',
                 array(
-                    'ViewScript',
-                    array(
-                        'viewScript' => 'settings/viewscripts/flatui_input.phtml',
-                        'placement'  => false
-                    )
+                    'viewScript' => 'settings/viewscripts/flatui_input.phtml',
+                    'placement'  => false
                 )
-            ))
+            )
+        ))
         ;
         $form->addElement($github);
 
         $token = new Default_Form_Element_TokenGithub('token_github');
         $token->setLabel("GitHub Access Token:")->setRequired(false)->removeDecorator('HtmlTag')->setDecorators(array(
-                'ViewHelper',
-                'Label',
-                'Errors',
+            'ViewHelper',
+            'Label',
+            'Errors',
+            array(
+                'ViewScript',
                 array(
-                    'ViewScript',
-                    array(
-                        'viewScript' => 'settings/viewscripts/flatui_input.phtml',
-                        'placement'  => false
-                    )
+                    'viewScript' => 'settings/viewscripts/flatui_input.phtml',
+                    'placement'  => false
                 )
-            ))
+            )
+        ))
         ;
         $form->addElement($token);
 
         return $form;
     }
 
+    /**
+     * @return Default_Form_Settings
+     * @throws Zend_File_Transfer_Exception
+     * @throws Zend_Form_Exception
+     */
     private function formProfilePicture()
     {
         $form = new Default_Form_Settings();
@@ -333,15 +351,15 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         ;
 
         $hiddenProfilePicture = $form->createElement('hidden', 'profile_image_url')->setDecorators(array(
-                'ViewHelper',
+            'ViewHelper',
+            array(
+                'ViewScript',
                 array(
-                    'ViewScript',
-                    array(
-                        'viewScript' => 'settings/viewscripts/flatui_hidden_image.phtml',
-                        'placement'  => false
-                    )
+                    'viewScript' => 'settings/viewscripts/flatui_hidden_image.phtml',
+                    'placement'  => false
                 )
-            ))->setAttrib('data-target', '#profile-picture-preview')
+            )
+        ))->setAttrib('data-target', '#profile-picture-preview')
         ;
 
         $form->addElement($hiddenProfilePicture);
@@ -409,8 +427,8 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $form->addElement($gravatar_email);
 
         $hiddenProfilePictureSrc = $form->createElement('hidden', 'profile_img_src')->setDecorators(array(
-                'ViewHelper'
-            ))
+            'ViewHelper'
+        ))
         ;
 
         $form->addElement($hiddenProfilePictureSrc);
@@ -418,6 +436,11 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         return $form;
     }
 
+    /**
+     * @return Default_Form_Settings
+     * @throws Zend_File_Transfer_Exception
+     * @throws Zend_Form_Exception
+     */
     private function formProfilePictureBackground()
     {
         $form = new Default_Form_Settings();
@@ -426,15 +449,15 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         ;
 
         $hiddenProfilePicture = $form->createElement('hidden', 'profile_image_url_bg')->setDecorators(array(
-                'ViewHelper',
+            'ViewHelper',
+            array(
+                'ViewScript',
                 array(
-                    'ViewScript',
-                    array(
-                        'viewScript' => 'settings/viewscripts/flatui_hidden_image.phtml',
-                        'placement'  => false
-                    )
+                    'viewScript' => 'settings/viewscripts/flatui_hidden_image.phtml',
+                    'placement'  => false
                 )
-            ))->setAttrib('data-target', '#profile-picture-bg-preview')
+            )
+        ))->setAttrib('data-target', '#profile-picture-bg-preview')
         ;
 
         $form->addElement($hiddenProfilePicture);
@@ -464,6 +487,10 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         return $form;
     }
 
+    /**
+     * @return Default_Form_Settings
+     * @throws Zend_Form_Exception
+     */
     private function formPassword()
     {
         $form = new Default_Form_Settings();
@@ -524,6 +551,14 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         return $form;
     }
 
+    /**
+     * @param string $valHomepage
+     * @param string $valVerifyKey
+     * @param bool   $isVerified
+     *
+     * @return Local_Form
+     * @throws Zend_Form_Exception
+     */
     private function formHomepage($valHomepage = '', $valVerifyKey = '', $isVerified = false)
     {
 
@@ -572,6 +607,13 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         return $form;
     }
 
+    /**
+     * @param string $valNewsletter
+     *
+     * @return Default_Form_Settings
+     * @throws Zend_Form_Exception
+     * @throws Zend_Validate_Exception
+     */
     private function formNewsletter($valNewsletter = '')
     {
         $form = new Default_Form_Settings();
@@ -590,6 +632,15 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         return $form;
     }
 
+    /**
+     * @param string $valPaypalEmail
+     * @param string $valWalletAddress
+     * @param string $valDwollaId
+     *
+     * @return Default_Form_Settings
+     * @throws Zend_Form_Exception
+     * @throws Zend_Validate_Exception
+     */
     private function formPayment($valPaypalEmail = '', $valWalletAddress = '', $valDwollaId = '')
     {
         $form = new Default_Form_Settings();
@@ -878,8 +929,11 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                 $form->populate($this->_memberSettings->toArray());
 
                 try {
-                    $id_server = new Default_Model_IdServer();
+                    $id_server = new Default_Model_OcsOpenId();
                     $id_server->updateUser($this->_memberSettings->member_id);
+
+                    //$opencode_server = new Default_Model_OcsOpenCode();
+                    //$opencode_server->updateUser($this->_memberSettings->member_id);
                 } catch (Exception $e) {
                     Zend_Registry::get('logger')->err($e->getTraceAsString());
                 }
@@ -1005,8 +1059,12 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                     $this->view->save = 1;
 
                     try {
-                        $id_server = new Default_Model_IdServer();
+                        $id_server = new Default_Model_OcsOpenId();
                         $id_server->updatePasswordForUser($this->_memberSettings->member_id);
+
+                        //$opencode_server = new Default_Model_OcsOpenCode();
+                        //$opencode_server->updateUser($this->_memberSettings->member_id);
+
                     } catch (Exception $e) {
                         Zend_Registry::get('logger')->err($e->getTraceAsString());
                     }
@@ -1334,8 +1392,11 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
 
         if (true === $result) {
             try {
-                $id_server = new Default_Model_IdServer();
+                $id_server = new Default_Model_OcsOpenId();
                 $id_server->updateMailForUser($this->_authMember->member_id);
+
+                $opencode_server = new Default_Model_OcsOpenCode();
+                $opencode_server->updateUserMail($this->_memberSettings->member_id);
             } catch (Exception $e) {
                 Zend_Registry::get('logger')->err($e->getTraceAsString());
             }

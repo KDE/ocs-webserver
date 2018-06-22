@@ -134,8 +134,11 @@ class Backend_MemberController extends Zend_Controller_Action
                 Default_Model_ActivityLog::BACKEND_USER_DELETE,
                 null);
 
-            $id_server = new Default_Model_IdServer();
+            $id_server = new Default_Model_OcsOpenId();
             $id_server->deactivateLoginForUser($member_id);
+
+            $opencode_server = new Default_Model_OcsOpenCode();
+            $opencode_server->deactivateLoginForUser($member_id);
 
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err($e->getTraceAsString());
