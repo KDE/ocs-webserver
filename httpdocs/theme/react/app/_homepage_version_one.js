@@ -6,9 +6,12 @@ class HomePageTemplateOne extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log(nextProps);
     if (nextProps.products && !this.state.products){
-      console.log(nextProps);
       this.setState({products:nextProps.products});
+    }
+    if (nextProps.domain){
+
     }
   }
 
@@ -61,8 +64,10 @@ class HomePageTemplateOne extends React.Component {
 
 const mapStateToHomePageProps = (state) => {
   const products = state.products;
+  const domain = state.domain;
   return {
-    products
+    products,
+    domain
   }
 }
 

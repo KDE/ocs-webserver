@@ -1,7 +1,8 @@
 const reducer = Redux.combineReducers({
   products:productsReducer,
   users:usersReducer,
-  supporters:supportersReducer
+  supporters:supportersReducer,
+  domain:domainReducer
 });
 
 function productsReducer(state = {}, action){
@@ -28,6 +29,14 @@ function supportersReducer(state = {},action){
   }
 }
 
+function domainReducer(state = {},action){
+  if (action.type === 'SET_DOMAIN'){
+    return action.domain;
+  } else {
+    return state;
+  }
+}
+
 function setProducts(products){
   return {
     type:'SET_PRODUCTS',
@@ -46,5 +55,12 @@ function setSupporters(supporters){
   return {
     type:'SET_SUPPORTERS',
     supporters:supporters
+  }
+}
+
+function setDomain(domain){
+  return {
+    type:'SET_DOMAIN',
+    domain:domain
   }
 }

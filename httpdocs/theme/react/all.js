@@ -46,7 +46,8 @@ window.appHelpers = function () {
 const reducer = Redux.combineReducers({
   products: productsReducer,
   users: usersReducer,
-  supporters: supportersReducer
+  supporters: supportersReducer,
+  domain: domainReducer
 });
 
 function productsReducer(state = {}, action) {
@@ -73,6 +74,14 @@ function supportersReducer(state = {}, action) {
   }
 }
 
+function domainReducer(state = {}, action) {
+  if (action.type === 'SET_DOMAIN') {
+    return action.domain;
+  } else {
+    return state;
+  }
+}
+
 function setProducts(products) {
   return {
     type: 'SET_PRODUCTS',
@@ -93,6 +102,13 @@ function setSupporters(supporters) {
     supporters: supporters
   };
 }
+
+function setDomain(domain) {
+  return {
+    type: 'SET_DOMAIN',
+    domain: domain
+  };
+}
 class HomePageTemplateOne extends React.Component {
   constructor(props) {
     super(props);
@@ -101,10 +117,11 @@ class HomePageTemplateOne extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log(nextProps);
     if (nextProps.products && !this.state.products) {
-      console.log(nextProps);
       this.setState({ products: nextProps.products });
     }
+    if (nextProps.domain) {}
   }
 
   componentWillMount() {
@@ -156,8 +173,10 @@ class HomePageTemplateOne extends React.Component {
 
 const mapStateToHomePageProps = state => {
   const products = state.products;
+  const domain = state.domain;
   return {
-    products
+    products,
+    domain
   };
 };
 
@@ -600,6 +619,9 @@ class App extends React.Component {
 
   componentDidMount() {
     store.dispatch(setProducts(products));
+    console.log(window.location.hostname);
+    store.dispatch(setDomain(window.location.hostname));
+    console.log(store.getState());
     this.setState({ loading: false });
   }
 
