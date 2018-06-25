@@ -245,7 +245,7 @@ class NewProducts extends React.Component {
                 React.createElement(
                   "figure",
                   null,
-                  React.createElement("img", { className: "very-rounded-corners", src: 'https://cn.pling.it/cache/200x171/img/' + product.image_small })
+                  React.createElement("img", { className: "very-rounded-corners", src: 'https://cn.pling.com/cache/200x171/img/' + product.image_small })
                 )
               ),
               React.createElement(
@@ -325,7 +325,7 @@ class TopAppsProducts extends React.Component {
                 React.createElement(
                   "figure",
                   null,
-                  React.createElement("img", { className: "very-rounded-corners", src: 'https://cn.pling.it/cache/200x171/img/' + product.image_small })
+                  React.createElement("img", { className: "very-rounded-corners", src: 'https://cn.pling.com/cache/200x171/img/' + product.image_small })
                 )
               ),
               React.createElement(
@@ -410,7 +410,7 @@ class TopGamesProducts extends React.Component {
                 React.createElement(
                   "figure",
                   { className: "no-padding" },
-                  React.createElement("img", { className: "very-rounded-corners", src: 'https://cn.pling.it/cache/200x171/img/' + product.image_small })
+                  React.createElement("img", { className: "very-rounded-corners", src: 'https://cn.pling.com/cache/200x171/img/' + product.image_small })
                 )
               ),
               React.createElement(
@@ -507,7 +507,7 @@ class RounderCornersProducts extends React.Component {
                 React.createElement(
                   "figure",
                   { className: "no-padding" },
-                  React.createElement("img", { className: "very-rounded-corners", src: 'https://cn.pling.it/cache/200x171/img/' + product.image_small })
+                  React.createElement("img", { className: "very-rounded-corners", src: 'https://cn.pling.com/cache/200x171/img/' + product.image_small })
                 )
               ),
               React.createElement(

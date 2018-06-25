@@ -124,7 +124,7 @@ class NewProducts extends React.Component {
                 <a href={"/p/"+product.project_id}>
                   <div className="product-image-container">
                     <figure>
-                      <img className="very-rounded-corners" src={'https://cn.pling.it/cache/200x171/img/' + product.image_small} />
+                      <img className="very-rounded-corners" src={'https://cn.pling.com/cache/200x171/img/' + product.image_small} />
                     </figure>
                   </div>
                   <div className="product-info">
@@ -169,7 +169,7 @@ class TopAppsProducts extends React.Component {
                 <a href={"/p/"+product.project_id}>
                   <div className="product-image-container">
                     <figure>
-                      <img className="very-rounded-corners" src={'https://cn.pling.it/cache/200x171/img/' + product.image_small} />
+                      <img className="very-rounded-corners" src={'https://cn.pling.com/cache/200x171/img/' + product.image_small} />
                     </figure>
                   </div>
                   <div className="product-info">
@@ -218,7 +218,7 @@ class TopGamesProducts extends React.Component {
                 <a href={"/p/"+product.project_id}>
                   <div className="product-image-container">
                     <figure className="no-padding">
-                      <img className="very-rounded-corners" src={'https://cn.pling.it/cache/200x171/img/' + product.image_small} />
+                      <img className="very-rounded-corners" src={'https://cn.pling.com/cache/200x171/img/' + product.image_small} />
                     </figure>
                   </div>
                   <div className="product-info">
@@ -279,7 +279,7 @@ class RounderCornersProducts extends React.Component {
                 <a href={"/p/"+product.project_id}>
                   <div className="product-image-container">
                     <figure className="no-padding">
-                      <img className="very-rounded-corners" src={'https://cn.pling.it/cache/200x171/img/' + product.image_small} />
+                      <img className="very-rounded-corners" src={'https://cn.pling.com/cache/200x171/img/' + product.image_small} />
                     </figure>
                   </div>
                   <div className="product-info">
