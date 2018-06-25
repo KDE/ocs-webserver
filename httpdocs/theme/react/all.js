@@ -188,9 +188,7 @@ class Introduction extends React.Component {
           React.createElement(
             "p",
             null,
-            "AppImages are self-contained apps which can be easily installed on any Linux distribution.",
-            React.createElement("br", null),
-            "For easy usage, download AppImageLauncher:"
+            "AppImages are self-contained apps which can simply be downloaded & run on any Linux distribution. For easy usage, download AppImageLauncher:"
           ),
           React.createElement(
             "div",

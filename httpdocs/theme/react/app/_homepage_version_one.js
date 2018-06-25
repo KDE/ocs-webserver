@@ -85,8 +85,7 @@ class Introduction extends React.Component {
           <article>
             <h2 className="mdl-color-text--primary">Welcome to AppImageHub</h2>
             <p>
-              AppImages are self-contained apps which can be easily installed on any Linux distribution.<br/>
-              For easy usage, download AppImageLauncher:
+              AppImages are self-contained apps which can simply be downloaded & run on any Linux distribution. For easy usage, download AppImageLauncher:
             </p>
             <div className="actions">
               <a href="https://www.appimagehub.com/p/1228228" className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary">
