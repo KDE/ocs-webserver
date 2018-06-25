@@ -99,6 +99,7 @@ class Default_Model_ProjectComments
                 SELECT comment_id, comment_target_id, comment_parent_id, comment_text, comment_created_at, comment_active, comment_type, member_id, username, profile_image_url 
                 ,(SELECT (DATE_ADD(max(active_time), INTERVAL 1 YEAR) > now())  from support  where support.status_id = 2  AND support.member_id = comments.comment_member_id)  AS issupporter    
                 ,(select user_like from project_rating where project_rating.comment_id = comments.comment_id ) as rating
+                ,(select rating_active from project_rating where project_rating.comment_id = comments.comment_id ) as is_rating_active
                 FROM comments 
                 STRAIGHT_JOIN member ON comments.comment_member_id = member.member_id                 
                 WHERE comment_active = :status_active AND comment_type = :type_id AND comment_target_id = :project_id AND comment_parent_id = 0 
@@ -114,6 +115,7 @@ class Default_Model_ProjectComments
                 SELECT comment_id, comment_target_id, comment_parent_id, comment_text, comment_created_at, comment_active, comment_type, member_id, username, profile_image_url 
                 ,(SELECT (DATE_ADD(max(active_time), INTERVAL 1 YEAR) > now())  from support  where support.status_id = 2  AND support.member_id = comments.comment_member_id)  AS issupporter     
                ,(select user_like from project_rating where project_rating.comment_id = comments.comment_id ) as rating
+               ,(select rating_active from project_rating where project_rating.comment_id = comments.comment_id ) as is_rating_active
                 FROM comments 
                 STRAIGHT_JOIN member ON comments.comment_member_id = member.member_id 
                 WHERE comment_active = :status_active AND comment_type = :type_id AND comment_target_id = :project_id AND comment_parent_id <> 0 
@@ -128,11 +130,17 @@ class Default_Model_ProjectComments
         $rowset = array_merge($rowset, $rowset2);
 
         /* create array with comment_id as key */
-        foreach ($rowset as $item) {
+        foreach ($rowset as $item) {            
+            if(!is_null($item['rating']) && $item['is_rating_active']=='0'){
+                    continue;
+            }
             $this->data[$item['comment_id']] = $item;
         }
         /* create an array with all parent_id's and their immediate children */
         foreach ($rowset as $item) {
+            if(!is_null($item['rating']) && $item['is_rating_active']=='0'){
+                    continue;
+            }
             $this->index[$item['comment_parent_id']][] = $item['comment_id'];
         }
         /* create the final sorted array */
