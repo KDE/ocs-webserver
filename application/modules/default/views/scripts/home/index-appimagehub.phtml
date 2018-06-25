@@ -60,7 +60,8 @@
    */
 
   $host = $_SERVER['REQUEST_URI'];
-  var_dump($host);
+  echo "Host: " . $host;
+  
   if(strpos ( $host , ".cc" ) > 0) {
     $this->LatestProducts = $modelInfo->getLastProductsForHostStores(6,"98,52,53,48,104,105");
     $this->topGames = $modelInfo->getLastProductsForHostStores(6,"98");
