@@ -59,9 +59,18 @@
    * 
    */
 
-  $this->LatestProducts = $modelInfo->getLastProductsForHostStores(6,"6,234,239,243,244,245,388,391,392,450,481,492");
-  $this->topGames = $modelInfo->getLastProductsForHostStores(6,"6");
-  $this->topApps = $modelInfo->getLastProductsForHostStores(6,"234,239,243,244,245,388,391,392,450,481,492");
+  $host = $_SERVER['REQUEST_URI'];
+  if(strpos ( $host , ".cc" ) > 0) {
+    $this->LatestProducts = $modelInfo->getLastProductsForHostStores(6,"98,52,53,48,104,105");
+    $this->topGames = $modelInfo->getLastProductsForHostStores(6,"98");
+    $this->topApps = $modelInfo->getLastProductsForHostStores(6,"98,52,53,48,104,105");
+  } else {
+    $this->LatestProducts = $modelInfo->getLastProductsForHostStores(6,"6,234,239,243,244,245,388,391,392,450,481,492");
+    $this->topGames = $modelInfo->getLastProductsForHostStores(6,"6");
+    $this->topApps = $modelInfo->getLastProductsForHostStores(6,"234,239,243,244,245,388,391,392,450,481,492");  
+  }
+  
+  
 ?>
 
 <link type="text/css" rel="stylesheet" href="/theme/react/lib/mdl/material.min.css"/>
