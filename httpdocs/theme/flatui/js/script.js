@@ -1345,18 +1345,16 @@ var PartialFormsAjaxMemberBg = (function () {
     }
 })();
 
+
 var AjaxForm = (function () {
     return {
-        setup: function (idElement, idTargetElement) {
-            var form = $(idElement);
+        setup: function (idElement, idTargetElement) {          
             var target = $(idTargetElement);
-
-            $('body').on("submit", idElement, function (event) {
-                //event.preventDefault();
-                //event.stopImmediatePropagation();
-
-                $(idElement).find('button').attr("disabled", "disabled");
-                $(idElement).find('.glyphicon.glyphicon-send').removeClass('glyphicon-send').addClass('glyphicon-refresh spinning');
+            $('body').on("submit", 'form.product-add-comment', function (event) {
+                event.preventDefault();
+                event.stopImmediatePropagation();               
+                $(this).find('button').attr("disabled", "disabled");
+                $(this).find('.glyphicon.glyphicon-send').removeClass('glyphicon-send').addClass('glyphicon-refresh spinning');
 
                 jQuery.ajax({
                     data: $(this).serialize(),
@@ -1393,6 +1391,7 @@ var AjaxForm = (function () {
         }
     }
 })();
+
 
 var WidgetModalAjax = (function () {
     return {
