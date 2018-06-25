@@ -12,6 +12,9 @@ class App extends React.Component {
 
   componentDidMount() {
     store.dispatch(setProducts(products));
+    console.log(window.location.hostname);
+    store.dispatch(setDomain(window.location.hostname));
+    console.log(store.getState());
     this.setState({loading:false});
   }
 

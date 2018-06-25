@@ -37,10 +37,17 @@ window.appHelpers = (function(){
     return num;
   }
 
+  function  splitByLastDot(text) {
+      var index = text.lastIndexOf('.');
+      return text.slice(index + 1);
+  }
+
+
   return {
     getTimeAgo,
     getDeviceWidth,
-    getNumberOfProducts
+    getNumberOfProducts,
+    splitByLastDot
   }
 
 }());
