@@ -59,7 +59,7 @@
    * 
    */
 
-  $host = $_SERVER['REQUEST_URI'];
+  $host = $_SERVER['SERVER_NAME'];
   echo "Host: " . $host;
   
   if(strpos ( $host , ".cc" ) > 0) {
