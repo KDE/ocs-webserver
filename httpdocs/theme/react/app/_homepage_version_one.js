@@ -83,11 +83,16 @@ class Introduction extends React.Component {
       <div id="introduction" className="hp-section">
         <div className="container">
           <article>
-            <h2 className="mdl-color-text--primary">App Images Hub, right here</h2>
-            <p>Welcome to appimagehub, the home of hundreds of apps which can be easily installed on any Linux distribution. Browse the apps online, from your app center or the command line.</p>
+            <h2 className="mdl-color-text--primary">Welcome to App Image Hub</h2>
+            <p>App images are self contained apps which can be easily installed on any Linux distribution. Browse the apps online, from your app center or the command line.<br/>
+                For easy usage, download App image launcher</p>
             <div className="actions">
-              <button className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary">Quick setup</button>
-              <button className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary">Browse the apps</button>
+              <a href="https://www.appimagehub.com/p/1228228" className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary">
+                Setup App Image launcher
+              </a>
+              <a href="https://www.appimagehub.com/browse" className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary">
+                Browse all apps
+              </a>
             </div>
           </article>
         </div>
@@ -141,7 +146,7 @@ class NewProducts extends React.Component {
           <div className="section-header">
             <h3  className="mdl-color-text--primary">New</h3>
             <div className="actions">
-              <button className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">see more</button>
+              <a a href="https://www.appimagehub.com/browse" className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">see more</a>
             </div>
           </div>
           <div className="products-container row">
@@ -184,7 +189,7 @@ class TopAppsProducts extends React.Component {
           <div className="section-header">
             <h3 className="mdl-color-text--primary">Top Apps</h3>
             <div className="actions">
-              <button className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">see more</button>
+              <a href="https://www.opendesktop.org/s/AppImageHub.com/browse/ord/top/" className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">see more</a>
             </div>
           </div>
           <div className="products-container row">
@@ -233,7 +238,7 @@ class TopGamesProducts extends React.Component {
           <div className="section-header">
             <h3 className="mdl-color-text--primary">Top Games</h3>
             <div className="actions">
-              <button className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">see more</button>
+              <a href="https://www.opendesktop.org/s/AppImageHub.com/browse/cat/6/ord/top/" className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">see more</a>
             </div>
           </div>
           <div className="products-container row">
