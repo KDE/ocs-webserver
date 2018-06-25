@@ -183,14 +183,14 @@ class Introduction extends React.Component {
           React.createElement(
             "h2",
             { className: "mdl-color-text--primary" },
-            "Welcome to App Image Hub"
+            "Welcome to AppImageHub"
           ),
           React.createElement(
             "p",
             null,
-            "App images are self contained apps which can be easily installed on any Linux distribution. Browse the apps online, from your app center or the command line.",
+            "AppImages are self-contained apps which can be easily installed on any Linux distribution.",
             React.createElement("br", null),
-            "For easy usage, download App image launcher"
+            "For easy usage, download AppImageLauncher:"
           ),
           React.createElement(
             "div",
@@ -198,7 +198,7 @@ class Introduction extends React.Component {
             React.createElement(
               "a",
               { href: "https://www.appimagehub.com/p/1228228", className: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary" },
-              "Setup App Image launcher"
+              "-> AppImageLauncher"
             ),
             React.createElement(
               "a",
@@ -289,7 +289,7 @@ class NewProducts extends React.Component {
             { className: "actions" },
             React.createElement(
               "a",
-              { a: true, href: "https://www.appimagehub.com/browse", className: "mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary" },
+              { href: "https://www.appimagehub.com/browse/ord/latest/", className: "mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary" },
               "see more"
             )
           )
@@ -368,7 +368,7 @@ class TopAppsProducts extends React.Component {
             { className: "actions" },
             React.createElement(
               "a",
-              { href: "https://www.opendesktop.org/s/AppImageHub.com/browse/ord/top/", className: "mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary" },
+              { href: "https://www.appimagehub.com/browse/ord/top/", className: "mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary" },
               "see more"
             )
           )
@@ -453,7 +453,7 @@ class TopGamesProducts extends React.Component {
             { className: "actions" },
             React.createElement(
               "a",
-              { href: "https://www.opendesktop.org/s/AppImageHub.com/browse/cat/6/ord/top/", className: "mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary" },
+              { href: "https://www.appimagehub.com/browse/cat/6/ord/latest/", className: "mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary" },
               "see more"
             )
           )
