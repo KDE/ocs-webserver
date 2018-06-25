@@ -11,7 +11,13 @@ class HomePageTemplateOne extends React.Component {
       this.setState({products:nextProps.products});
     }
     if (nextProps.domain){
-
+      let env;
+      if (appHelpers.splitByLastDot(nextProps.domain) === 'com'){
+        env = 'live';
+      } else {
+        env = 'test';
+      }
+      this.setState({env:env});
     }
   }
 
@@ -41,14 +47,17 @@ class HomePageTemplateOne extends React.Component {
           <NewProducts
             device={this.state.device}
             products={this.state.products.LatestProducts}
+            env={this.state.env}
           />
           <TopAppsProducts
             device={this.state.device}
             products={this.state.products.TopApps}
+            env={this.state.env}
           />
           <TopGamesProducts
             device={this.state.device}
             products={this.state.products.TopGames}
+            env={this.state.env}
           />
         </div>
       )
@@ -121,6 +130,12 @@ class NewProducts extends React.Component {
   render(){
     let latestProducts;
     if (this.props.products){
+      let baseUrl;
+      if (this.props.env === 'live') {
+        baseUrl = 'cn.pling.com';
+      } else {
+        baseUrl = 'cn.pling.it';
+      }
       const limit = appHelpers.getNumberOfProducts(this.props.device);
       latestProducts = this.props.products.slice(0,limit).map((product,index) => (
         <div key={index} className="product square">
@@ -129,7 +144,7 @@ class NewProducts extends React.Component {
                 <a href={"/p/"+product.project_id}>
                   <div className="product-image-container">
                     <figure>
-                      <img className="very-rounded-corners" src={'https://cn.pling.com/cache/200x171/img/' + product.image_small} />
+                      <img className="very-rounded-corners" src={'https://' + baseUrl + '/cache/200x171/img/' + product.image_small} />
                     </figure>
                   </div>
                   <div className="product-info">
@@ -166,6 +181,12 @@ class TopAppsProducts extends React.Component {
   render(){
     let topProducts;
     if (this.props.products){
+      let baseUrl;
+      if (this.props.env === 'live') {
+        baseUrl = 'cn.pling.com';
+      } else {
+        baseUrl = 'cn.pling.it';
+      }
       const limit = appHelpers.getNumberOfProducts(this.props.device);
       topProducts = this.props.products.slice(0,limit).map((product,index) => (
         <div key={index} className="product square">
@@ -174,7 +195,7 @@ class TopAppsProducts extends React.Component {
                 <a href={"/p/"+product.project_id}>
                   <div className="product-image-container">
                     <figure>
-                      <img className="very-rounded-corners" src={'https://cn.pling.com/cache/200x171/img/' + product.image_small} />
+                      <img className="very-rounded-corners" src={'https://' + baseUrl + '/cache/200x171/img/' + product.image_small} />
                     </figure>
                   </div>
                   <div className="product-info">
@@ -215,6 +236,12 @@ class TopGamesProducts extends React.Component {
 
     let topProducts;
     if (this.props.products){
+      let baseUrl;
+      if (this.props.env === 'live') {
+        baseUrl = 'cn.pling.com';
+      } else {
+        baseUrl = 'cn.pling.it';
+      }
       const limit = appHelpers.getNumberOfProducts(this.props.device);
       topProducts = this.props.products.slice(0,limit).map((product,index) => (
         <div key={index} className="product square">
@@ -223,7 +250,7 @@ class TopGamesProducts extends React.Component {
                 <a href={"/p/"+product.project_id}>
                   <div className="product-image-container">
                     <figure className="no-padding">
-                      <img className="very-rounded-corners" src={'https://cn.pling.com/cache/200x171/img/' + product.image_small} />
+                      <img className="very-rounded-corners" src={'https://' + baseUrl + '/cache/200x171/img/' + product.image_small} />
                     </figure>
                   </div>
                   <div className="product-info">
@@ -243,67 +270,6 @@ class TopGamesProducts extends React.Component {
             <h3 className="mdl-color-text--primary">Top Games</h3>
             <div className="actions">
               <a href="https://www.appimagehub.com/browse/cat/6/ord/latest/" className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">see more</a>
-            </div>
-          </div>
-          <div className="products-container row">
-            {topProducts}
-          </div>
-        </div>
-      </div>
-    )
-  }
-}
-
-class RounderCornersProducts extends React.Component {
-  constructor(props){
-  	super(props);
-  	this.state = {};
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.products && !this.state.products){
-      let products;
-      if (nextProps.products.TopProducts.elements.length > 0){
-        products = nextProps.products.TopProducts.elements;
-      } else {
-        products = nextProps.products.Wallpapers;
-      }
-      this.setState({products:products});
-    }
-  }
-
-  render(){
-
-    let topProducts;
-    if (this.state.products){
-      const limit = appHelpers.getNumberOfProducts(this.props.device);
-      topProducts = this.state.products.slice(0,limit).map((product,index) => (
-        <div key={index} className="product square">
-            <div className="content">
-              <div className="product-wrapper mdl-shadow--2dp">
-                <a href={"/p/"+product.project_id}>
-                  <div className="product-image-container">
-                    <figure className="no-padding">
-                      <img className="very-rounded-corners" src={'https://cn.pling.com/cache/200x171/img/' + product.image_small} />
-                    </figure>
-                  </div>
-                  <div className="product-info">
-                    <span className="product-info-title">{product.title}</span>
-                    <span className="product-info-description">{product.description}</span>
-                  </div>
-                </a>
-              </div>
-          </div>
-        </div>
-      ));
-    }
-    return (
-      <div id="hottest-products" className="hp-section products-showcase">
-        <div className="container">
-          <div className="section-header">
-            <h3 className="mdl-color-text--primary">Rounder Corner Images Layout</h3>
-            <div className="actions">
-              <button className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">see more</button>
             </div>
           </div>
           <div className="products-container row">
