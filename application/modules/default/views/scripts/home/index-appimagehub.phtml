@@ -21,39 +21,43 @@
  **/
 
   $modelInfo = new Default_Model_Info();
-  $this->comments = $modelInfo->getLatestComments(16);
-  $this->users = $modelInfo->getNewActiveMembers(12);
-  $this->supporters = $modelInfo->getNewActiveSupporters(12);
-  //$this->plingproducts = $modelInfo->getNewActivePlingProduct(9);
+  /**
+        $this->comments = $modelInfo->getLatestComments(16);
+        $this->users = $modelInfo->getNewActiveMembers(12);
+        $this->supporters = $modelInfo->getNewActiveSupporters(12);
+        //$this->plingproducts = $modelInfo->getNewActivePlingProduct(9);
 
-  $this->productsThemesGTK = $modelInfo->getLastProductsForHostStores(6);
-  $this->productsThemesPlasma = $modelInfo->getLastProductsForHostStores(6);
-  $this->productsWindowmanager = $modelInfo->getLastProductsForHostStores(6);
-  $this->productsIconsCursors= $modelInfo->getLastProductsForHostStores(6);
-  $this->productsScreenshots= $modelInfo->getLastProductsForHostStores(6);
-  $this->productsApps = $modelInfo->getLastProductsForHostStores(6);
-  $this->productsAddons = $modelInfo->getLastProductsForHostStores(6);
-  $this->productsWallpapers = $modelInfo->getLastProductsForHostStores(6);
-  $this->countSupporters = $modelInfo->getCountActiveSupporters();
+        $this->productsThemesGTK = $modelInfo->getLastProductsForHostStores(6);
+        $this->productsThemesPlasma = $modelInfo->getLastProductsForHostStores(6);
+        $this->productsWindowmanager = $modelInfo->getLastProductsForHostStores(6);
+        $this->productsIconsCursors= $modelInfo->getLastProductsForHostStores(6);
+        $this->productsScreenshots= $modelInfo->getLastProductsForHostStores(6);
+        $this->productsApps = $modelInfo->getLastProductsForHostStores(6);
+        $this->productsAddons = $modelInfo->getLastProductsForHostStores(6);
+        $this->productsWallpapers = $modelInfo->getLastProductsForHostStores(6);
+        $this->countSupporters = $modelInfo->getCountActiveSupporters();
 
 
 
-  $topProducts = new Default_View_Helper_FetchTopProductsForStore();
-  $this->topProducts = $topProducts->fetchTopProducts();
+        $topProducts = new Default_View_Helper_FetchTopProductsForStore();
+        $this->topProducts = $topProducts->fetchTopProducts();
 
-  $featuredProducts = $modelInfo->getFeaturedProductsForHostStores(100);
-  if ($featuredProducts->getTotalItemCount()) {
-      $request = Zend_Controller_Front::getInstance()->getRequest();
-      $offset = (int)$request->getParam('page');
-      $irandom = rand(1,$featuredProducts->getTotalItemCount());
-      $featuredProducts->setItemCountPerPage(1);
-      $featuredProducts->setCurrentPageNumber($irandom);
-      $this->featureProducts = $featuredProducts;
-  }
+        $featuredProducts = $modelInfo->getFeaturedProductsForHostStores(100);
+        if ($featuredProducts->getTotalItemCount()) {
+            $request = Zend_Controller_Front::getInstance()->getRequest();
+            $offset = (int)$request->getParam('page');
+            $irandom = rand(1,$featuredProducts->getTotalItemCount());
+            $featuredProducts->setItemCountPerPage(1);
+            $featuredProducts->setCurrentPageNumber($irandom);
+            $this->featureProducts = $featuredProducts;
+        }
 
-  $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
-  $helperImage = new Default_View_Helper_Image();
-  $helpPrintDate = new Default_View_Helper_PrintDate();
+        $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
+        $helperImage = new Default_View_Helper_Image();
+        $helpPrintDate = new Default_View_Helper_PrintDate();
+   * 
+   * 
+   */
 
   $this->LatestProducts = $modelInfo->getLastProductsForHostStores(6,"366,363,273,267,138,125,131,153,154,414,133");
   $this->topGames = $modelInfo->getLastProductsForHostStores(6,"6");
