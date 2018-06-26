@@ -83,7 +83,7 @@ class Default_Model_OcsOpenCode
 
         $modelExternalId = new Default_Model_DbTable_MemberExternalId();
         $externalId = $modelExternalId->fetchRow(array("member_id = ?" => $member['member_id']));
-        if (count($externalId->toArray() > 0)) {
+        if (count($externalId->toArray()) > 0) {
             $member['external_id'] = $externalId->external_id;
         }
 

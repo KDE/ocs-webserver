@@ -506,7 +506,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             $opencode_server = new Default_Model_OcsOpenCode();
             $opencode_server->createUser($authUser->member_id);
         } catch (Exception $e) {
-            Zend_Registry::get('logger')->err($e->getTraceAsString());
+            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }
 
         Default_Model_ActivityLog::logActivity($authUser->member_id, null, $authUser->member_id,
