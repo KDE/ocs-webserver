@@ -274,7 +274,7 @@ class Ocsv1Controller extends Zend_Controller_Action
         $this->_sendResponse($response, $this->_format);
     }
 
-    protected function _sendResponse($response, $format = 'xml', $xmlRootTag = 'ocs', $local = false)
+    protected function _sendResponse($response, $format = 'xml', $xmlRootTag = 'ocs')
     {
         header('Pragma: public');
         header('Cache-Control: cache, must-revalidate');
@@ -283,18 +283,10 @@ class Ocsv1Controller extends Zend_Controller_Action
         header('Expires: ' . $expires);
         if ($format == 'json') {
             header('Content-Type: application/json; charset=UTF-8');
-            if($local) {
-                echo json_encode($response);
-            } else {
-                echo $response;
-            }
+            echo json_encode($response);
         } else {
             header('Content-Type: application/xml; charset=UTF-8');
-            if($local) {
-                echo $this->_convertXmlDom($response, $xmlRootTag)->saveXML();
-            } else {
-                echo $response;
-            }
+            echo $this->_convertXmlDom($response, $xmlRootTag)->saveXML();
         }
 
         exit;
@@ -784,15 +776,13 @@ class Ocsv1Controller extends Zend_Controller_Action
 
     public function contentcategoriesAction()
     {
-        
         if (!$this->_authenticateUser()) {
             //    $this->_sendErrorResponse(999, '');
         }
 
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
-        $storeName = $this->_getNameForStoreClient();
-        $cacheName = 'api_content_categories'.md5($storeName);
+        $cacheName = 'api_content_categories';
 
         if (false == ($categoriesList = $cache->load($cacheName))) {
             $categoriesList = $this->_buildCategories();
@@ -825,7 +815,7 @@ class Ocsv1Controller extends Zend_Controller_Action
             }
         }
 
-        $this->_sendResponse($response, $this->_format, 'ocs', true);
+        $this->_sendResponse($response, $this->_format);
     }
 
     protected function _buildCategories()
@@ -868,17 +858,6 @@ class Ocsv1Controller extends Zend_Controller_Action
 
     public function contentdataAction()
     {
-        
-        $uri = $this->view->url();
-        
-        $params = $this->getRequest()->getParams();
-        $params['domain_store_id'] = $this->_getNameForStoreClient();
-        
-        $result = $this->_request('GET', $uri, $params);
-        $this->_sendResponse($result, $this->_format);
-        
-        /*
-        
         if (!$this->_authenticateUser()) {
             //    $this->_sendErrorResponse(999, '');
         }
@@ -911,8 +890,6 @@ class Ocsv1Controller extends Zend_Controller_Action
 
             $this->_sendResponse($response, $this->_format);
         }
-         * 
-         */
     }
 
     /**
@@ -1579,17 +1556,6 @@ class Ocsv1Controller extends Zend_Controller_Action
 
     public function contentdownloadAction()
     {
-        
-        $uri = $this->view->url();
-        
-        $params = $this->getRequest()->getParams();
-        $params['domain_store_id'] = $this->_getNameForStoreClient();
-        
-        $result = $this->_request('GET', $uri, $params);
-        $this->_sendResponse($result, $this->_format);
-        
-        /*
-        
         if (!$this->_authenticateUser()) {
             //$this->_sendErrorResponse(999, '');
         }
@@ -1697,24 +1663,10 @@ class Ocsv1Controller extends Zend_Controller_Action
         }
 
         $this->_sendResponse($response, $this->_format);
-         * 
-         */
     }
 
     public function contentpreviewpicAction()
     {
-        
-        $uri = $this->view->url();
-        
-        $params = $this->getRequest()->getParams();
-        $params['domain_store_id'] = $this->_getNameForStoreClient();
-        
-        $result = $this->_request('GET', $uri, $params);
-        $this->_sendResponse($result, $this->_format);
-        
-        
-        
-        /*
         if (!$this->_authenticateUser()) {
             //$this->_sendErrorResponse(999, '');
         }
@@ -1752,8 +1704,6 @@ class Ocsv1Controller extends Zend_Controller_Action
 
         header('Location: ' . $previewPicUri);
         exit;
-         * 
-         */
     }
 
     /**
@@ -1832,15 +1782,6 @@ class Ocsv1Controller extends Zend_Controller_Action
 
     public function commentsAction()
     {
-        $uri = $this->view->url();
-        
-        $params = $this->getRequest()->getParams();
-        $params['domain_store_id'] = $this->_getNameForStoreClient();
-        
-        $result = $this->_request('GET', $uri, $params);
-        $this->_sendResponse($result, $this->_format);
-        
-        /*
         if ($this->_format == 'json') {
             $response = array(
                 'status'     => 'ok',
@@ -1872,7 +1813,7 @@ class Ocsv1Controller extends Zend_Controller_Action
         $page = (int)$this->getParam('page', 0) + 1;
         $pagesize = (int)$this->getParam('pagesize', 10);
 
-        ** @var Zend_Cache_Core $cache *
+        /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
         $cacheName = 'api_fetch_comments_' . md5("{$commentType}, {$contentId}, {$page}, {$pagesize}" . '_format_' . $this->_format);
 
@@ -1894,8 +1835,6 @@ class Ocsv1Controller extends Zend_Controller_Action
         $cache->save($response, $cacheName, array(), 1800);
 
         $this->_sendResponse($response, $this->_format);
-         * 
-         */
     }
 
     /**
@@ -1938,47 +1877,6 @@ class Ocsv1Controller extends Zend_Controller_Action
         }
 
         return $commentList;
-    }
-    
-    
-    protected function _request($method, $uri = '', array $params = null)
-    {
-        $ocsServer = "http://api.pling.cc"; //$this->_config['apiUri']
-        $timeout = 60;
-        $postFields = array();
-        if ($params) {
-            $postFields = $postFields + $params;
-        }
-        if (isset($postFields['file'])) {
-            $timeout = 600;
-            if ($postFields['file'][0] != '@') {
-                $postFields['file'] = $this->_getCurlValue($postFields['file']);
-            }
-        }
-        else {
-            $postFields = http_build_query($postFields, '', '&');
-        }
-        
-        //var_dump($ocsServer . $uri . '?' . $postFields);
-        
-        
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => $ocsServer . $uri,
-            CURLOPT_HEADER => false,
-            CURLOPT_POST => true,
-            CURLOPT_POSTFIELDS => $postFields,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_TIMEOUT => $timeout
-        ));
-        
-        $response = curl_exec($curl);
-        curl_close($curl);
-
-        if ($response) {
-            return $response;
-        }
-        return false;
     }
 
 }
