@@ -353,7 +353,7 @@ class Default_Model_Info
         }
     }
 
-    public function getLastProductsForHostStores($limit = 10, $project_category_id = null)
+    public function getLastProductsForHostStores($limit = 10, $project_category_id = null, $package_type = null)
     {
         /** @var Zend_Cache_Core $cache */
       
@@ -399,8 +399,13 @@ class Default_Model_Info
             WHERE
                 p.status = 100                
                 AND p.project_category_id IN (' . implode(',', $activeCategories) . ')
-                AND p.amount_reports is null
-            ORDER BY IFNULL(p.changed_at,p.created_at)  DESC
+                AND p.amount_reports is null';
+        
+        if(isset($package_type)) {
+            $sql .= ' AND find_in_set('.$package_type.', package_types)';
+        }
+        
+        $sql .= ' ORDER BY IFNULL(p.changed_at,p.created_at)  DESC
             ';
         if (isset($limit)) {
             $sql .= ' limit ' . (int)$limit;
@@ -418,7 +423,7 @@ class Default_Model_Info
     }
     
     
-    public function getTopProductsForHostStores($limit = 10, $project_category_id = null)
+    public function getTopProductsForHostStores($limit = 10, $project_category_id = null, $package_type = null)
     {
         /** @var Zend_Cache_Core $cache */
       
@@ -464,8 +469,13 @@ class Default_Model_Info
             WHERE
                 p.status = 100                
                 AND p.project_category_id IN (' . implode(',', $activeCategories) . ')
-                AND p.amount_reports is null
-            ORDER BY (round(((count_likes + 6) / ((count_likes + count_dislikes) + 12)),2) * 100) DESC, created_at DESC
+                AND p.amount_reports is null';
+        
+        if(isset($package_type)) {
+            $sql .= ' AND find_in_set('.$package_type.', package_types)';
+        }
+        
+        $sql .= ' ORDER BY (round(((count_likes + 6) / ((count_likes + count_dislikes) + 12)),2) * 100) DESC, created_at DESC
             ';
         if (isset($limit)) {
             $sql .= ' limit ' . (int)$limit;

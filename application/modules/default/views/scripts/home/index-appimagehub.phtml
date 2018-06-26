@@ -60,15 +60,28 @@
    */
 
   $host = $_SERVER['SERVER_NAME'];
+<<<<<<< HEAD
 
+=======
+  $package_type = $this->package_type;
+  
+  echo "<!-- PackageType: " . $package_type . " -->";
+  
+>>>>>>> 9c5cb8ebff65dddbc083da4eee6c0321f1f8055e
   if(strpos ( $host , ".cc" ) > 0) {
-    $this->LatestProducts = $modelInfo->getLastProductsForHostStores(6,"98,52,53,48,104,105");
-    $this->topGames = $modelInfo->getTopProductsForHostStores(6,"98");
-    $this->topApps = $modelInfo->getTopProductsForHostStores(6,"98,52,53,48,104,105");
+    $this->LatestProducts = $modelInfo->getLastProductsForHostStores(6,"98,52,53,48,104,105",$package_type);
+    $this->topGames = $modelInfo->getTopProductsForHostStores(6,"98",$package_type);
+    $this->topApps = $modelInfo->getTopProductsForHostStores(6,"98,52,53,48,104,105",$package_type);
   } else {
+<<<<<<< HEAD
     $this->LatestProducts = $modelInfo->getLastProductsForHostStores(6,"6,234,239,243,244,245,388,391,392,450,481,492");
     $this->topGames = $modelInfo->getTopProductsForHostStores(6,"6");
     $this->topApps = $modelInfo->getTopProductsForHostStores(6,"234,239,243,244,245,388,391,392,450,481,492");
+=======
+    $this->LatestProducts = $modelInfo->getLastProductsForHostStores(6,"6,234,239,243,244,245,388,391,392,450,481,492",$package_type);
+    $this->topGames = $modelInfo->getTopProductsForHostStores(6,"6",$package_type);
+    $this->topApps = $modelInfo->getTopProductsForHostStores(6,"234,239,243,244,245,388,391,392,450,481,492",$package_type);  
+>>>>>>> 9c5cb8ebff65dddbc083da4eee6c0321f1f8055e
   }
 
 
