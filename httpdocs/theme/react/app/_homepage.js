@@ -32,14 +32,14 @@ class HomePage extends React.Component {
             link={'https://www.appimagehub.com/browse/ord/latest/'}
           />
           <ProductGroup
-            products={this.state.products.LatestProducts}
+            products={this.state.products.TopApps}
             device={this.state.device}
             numRows={1}
             title={'Top Apps'}
             link={'https://www.appimagehub.com/browse/ord/top/'}
           />
           <ProductGroup
-            products={this.state.products.LatestProducts}
+            products={this.state.products.TopGames}
             device={this.state.device}
             numRows={1}
             title={'Top Games'}

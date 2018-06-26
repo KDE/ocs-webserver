@@ -351,14 +351,14 @@ class HomePage extends React.Component {
           link: 'https://www.appimagehub.com/browse/ord/latest/'
         }),
         React.createElement(ProductGroup, {
-          products: this.state.products.LatestProducts,
+          products: this.state.products.TopApps,
           device: this.state.device,
           numRows: 1,
           title: 'Top Apps',
           link: 'https://www.appimagehub.com/browse/ord/top/'
         }),
         React.createElement(ProductGroup, {
-          products: this.state.products.LatestProducts,
+          products: this.state.products.TopGames,
           device: this.state.device,
           numRows: 1,
           title: 'Top Games',
