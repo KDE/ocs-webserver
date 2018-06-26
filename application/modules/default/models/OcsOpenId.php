@@ -60,22 +60,23 @@ class Default_Model_OcsOpenId
     {
         $user = $this->getUserData($member_id);
 
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - $user:' . print_r($user->toArray(), true));
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - $user:' . print_r($user, true));
 
         $data = array(
-            'ocs_user_id'    => $user->member_id,
-            'username'       => $user->username,
-            'password'       => $user->password,
-            'email'          => $user->mail,
-            'emailVerified'  => empty($user->mail_checked) ? 'false' : 'true',
-            'creationTime'   => strtotime($user->created_at),
-            'lastUpdateTime' => strtotime($user->changed_at),
-            'avatarUrl'      => $user->profile_image_url,
-            'biography'      => empty($user->biography) ? '' : $user->biography,
-            'admin'          => $user->roleId == 100 ? 'true' : 'false',
-            'is_hive'        => empty($user->source_id) ? 'false' : 'true',
-            'is_active'      => $user->is_active,
-            'is_deleted'     => $user->is_deleted
+            'external_id'    => $user['external_id'],
+            'ocs_user_id'    => $user['member_id'],
+            'username'       => $user['username'],
+            'password'       => $user['password'],
+            'email'          => $user['mail'],
+            'emailVerified'  => empty($user['mail_checked']) ? 'false' : 'true',
+            'creationTime'   => strtotime($user['created_at']),
+            'lastUpdateTime' => strtotime($user['changed_at']),
+            'avatarUrl'      => $user['profile_image_url'],
+            'biography'      => empty($user['biography']) ? '' : $user['biography'],
+            'admin'          => $user['roleId'] == 100 ? 'true' : 'false',
+            'is_hive'        => empty($user['source_id']) ? 'false' : 'true',
+            'is_active'      => $user['is_active'],
+            'is_deleted'     => $user['is_deleted']
         );
 
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - $data:' . print_r($data, true));
@@ -83,11 +84,24 @@ class Default_Model_OcsOpenId
         return $data;
     }
 
+    /**
+     * @param $member_id
+     *
+     * @return array
+     * @throws Zend_Db_Statement_Exception
+     */
     protected function getUserData($member_id)
     {
         $modelMember = new Default_Model_Member();
+        $member = $modelMember->fetchMemberData($member_id)->toArray();
 
-        return $modelMember->find($member_id)->current();
+        $modelExternalId = new Default_Model_DbTable_MemberExternalId();
+        $externalId = $modelExternalId->fetchRow(array("member_id = ?" => $member['member_id']));
+        if (count($externalId->toArray()) > 0) {
+            $member['external_id'] = $externalId->external_id;
+        }
+
+        return $member;
     }
 
     public function updateMailForUser($member_id)
