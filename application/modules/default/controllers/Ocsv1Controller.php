@@ -890,7 +890,7 @@ class Ocsv1Controller extends Zend_Controller_Action
 
             $this->_sendResponse($response, $this->_format);
         }
-    }
+    } 
 
     /**
      * @param int        $contentId
