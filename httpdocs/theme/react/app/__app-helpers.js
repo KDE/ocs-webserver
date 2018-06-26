@@ -1,13 +1,20 @@
 window.appHelpers = (function(){
 
-  function getTimeAgo(datetime){
-    const a = timeago().format(datetime);
-    return a;
+  function getEnv(domain){
+    let env;
+    if (this.splitByLastDot(domain) === 'com'){
+      env = 'live';
+    } else {
+      env = 'test';
+    }
+    return env;
   }
 
   function getDeviceWidth(width){
     let device;
-    if (width > 1250){
+    if (width > 1500){
+      device = "huge";
+    } else if (width < 1500 && width > 1250){
       device = "full";
     } else if (width < 1250 && width >= 1000){
       device = "large";
@@ -21,33 +28,21 @@ window.appHelpers = (function(){
     return device;
   }
 
-  function getNumberOfProducts(device){
-    let num;
-    if (device === "full"){
-      num = 5;
-    } else if (device === "large"){
-      num = 4;
-    } else if (device === "mid"){
-      num = 3;
-    } else if (device === "tablet"){
-      num = 2;
-    } else if (device === "phone"){
-      num = 1;
-    }
-    return num;
-  }
-
-  function  splitByLastDot(text) {
+  function splitByLastDot(text) {
       var index = text.lastIndexOf('.');
       return text.slice(index + 1);
   }
 
+  function getTimeAgo(datetime){
+    const a = timeago().format(datetime);
+    return a;
+  }
 
   return {
-    getTimeAgo,
+    getEnv,
     getDeviceWidth,
-    getNumberOfProducts,
-    splitByLastDot
+    splitByLastDot,
+    getTimeAgo
   }
 
 }());

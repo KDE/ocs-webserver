@@ -8,30 +8,45 @@ class App extends React.Component {
       loading:true,
       version:1
     };
+    this.updateDimensions = this.updateDimensions.bind(this);
+  }
+
+  componentWillMount() {
+    // device
+    this.updateDimensions();
   }
 
   componentDidMount() {
+    // products
     store.dispatch(setProducts(products));
-    console.log(window.location.hostname);
+    // domain
     store.dispatch(setDomain(window.location.hostname));
-    console.log(store.getState());
+    // env
+    const env = appHelpers.getEnv(window.location.hostname);
+    store.dispatch(setEnv(env));
+    // device
+    window.addEventListener("resize", this.updateDimensions);
+    // finish loading
     this.setState({loading:false});
   }
 
+  componentWillUnmount(){
+    // device
+    window.removeEventListener("resize", this.updateDimensions);
+  }
+
+  updateDimensions(){
+    const device = appHelpers.getDeviceWidth(window.innerWidth);
+    store.dispatch(setDevice(device));
+  }
+
   render(){
-    let templateDisplay;
-    if (this.state.version === 1){
-      templateDisplay = <HomePageWrapper/>;
-    } else if (this.state.version === 2) {
-      templateDisplay = <HomePageTemplateTwo/>;
-    }
     return (
       <div id="app-root">
-        {templateDisplay}
+        <HomePageWrapper/>
       </div>
     )
   }
-
 }
 
 class AppWrapper extends React.Component {
