@@ -369,7 +369,7 @@ class Ocsv1Controller extends Zend_Controller_Action
             )
         );
 
-        $this->_sendResponse($response, 'xml', 'providers');
+        $this->_sendResponse($response, 'xml', 'providers', true);
     }
 
     public function configAction()
@@ -404,7 +404,7 @@ class Ocsv1Controller extends Zend_Controller_Action
             );
         }
 
-        $this->_sendResponse($response, $this->_format);
+        $this->_sendResponse($response, $this->_format, 'ocs', true);
     }
 
     public function personcheckAction()
@@ -454,7 +454,7 @@ class Ocsv1Controller extends Zend_Controller_Action
             );
         }
 
-        $this->_sendResponse($response, $this->_format);
+        $this->_sendResponse($response, $this->_format, 'ocs', true);
     }
 
     protected function _authenticateUser($identity = null, $credential = null, $force = false)
@@ -633,7 +633,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                 );
             }
 
-            $this->_sendResponse($response, $this->_format);
+            $this->_sendResponse($response, $this->_format, 'ocs', true);
         } // Find a specific list of persons
         else {
             $limit = 10; // 1 - 100
@@ -736,7 +736,7 @@ class Ocsv1Controller extends Zend_Controller_Action
             }
 
             if (!count($members)) {
-                $this->_sendResponse($response, $this->_format);
+                $this->_sendResponse($response, $this->_format, 'ocs', true);
             }
 
             $personsList = array();
@@ -778,7 +778,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                 $response['data'] = array('person' => $personsList);
             }
 
-            $this->_sendResponse($response, $this->_format);
+            $this->_sendResponse($response, $this->_format, 'ocs', true);
         }
     }
 
