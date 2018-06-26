@@ -1,0 +1,151 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$helperBuildExploreUrl = new Default_View_Helper_BuildExploreUrl();
+$modelInfo = new Default_Model_Info();
+$modelCategory = new Default_Model_DbTable_ProjectCategory();
+$this->dataCategory = $modelCategory->findSingleRow($this->cat_id);
+$this->countSupporters = $modelInfo->getCountActiveSupporters();
+$this->supporters = $modelInfo->getNewActiveSupporters(7);
+$this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
+?>
+<main id="explore-content">
+    <section class="wrapper" id="products-wrapper">
+    <span class="glyphicon  togglesidebar" id="btnTogglesidebar" ></span>
+    <div class="GridFlex">
+      <div class="GridFlex-cell sidebar-left" >          
+          <?php  $time_start = microtime(true);echo $this->render('explore/partials/filter.phtml'); $time_elapsed = microtime(true) - $time_start; ?>
+          <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
+             echo '<div class="alert alert-warning" role="alert"><strong>Rendering Time: </strong>'.$time_elapsed.' s</div>';
+          }?>
+      </div>
+      <div class="GridFlex-cell content">
+        <section class="explore-products" id="explore-products">
+
+            <div class="pling-nav-tabs">
+              <ul class="nav nav-tabs pling-nav-tabs" id="sort">               
+                  <li  <?=$this->filters['order'] == 'latest' ? 'class="active"' :'' ?>>
+                      <a href="<?= $helperBuildExploreUrl->buildExploreUrl($this->filters['category'], null,
+                          'latest') ?>"><span><?= $this->translate('Latest') ?></span></a>
+                  </li>
+                  <li <?=$this->filters['order'] == 'top' ? 'class="active"' :'' ?>>
+                      <a href="<?= $helperBuildExploreUrl->buildExploreUrl($this->filters['category'], null,
+                          'top') ?>"><span><?= $this->translate('Top') ?></span></a>
+                  </li>      
+                  
+              </ul>
+            </div>
+
+              <div class="product-list">
+                  <h1>New Layout</h1>
+                  <?php                
+                  if (count($this->products) == 0) {
+                      echo '<div class="empty">No products to show in this category.</div>';
+                  } else {
+                       $time_start = microtime(true);
+                       echo $this->render('explore/partials/products.phtml');
+                       $time_elapsed = microtime(true) - $time_start;
+                  }
+                  ?>
+                  <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
+                      echo '<div class="explore-product col-lg-12 col-md-12 col-sm-12 col-xs-12">';
+                      echo '<div class="alert alert-warning" role="alert"><strong>Rendering Time: </strong>'.$time_elapsed.' s</div>';
+                      echo '</div>';
+                  }?>
+              </div>
+
+
+              <section class="explore-footer">
+                  <?php echo $this->paginationControl($this->products, 'Sliding',
+                      'explore/partials/paginationControl.phtml',
+                      array('params' => $this->filters, 'dom_target' => 'section.explore-products')); ?>
+              </section>
+          </section>
+      </div>
+
+<?php
+$time_start = microtime(true);
+     $this->comments = $modelInfo->getLatestComments(5, $this->cat_id);
+     //$donations = $modelInfo->getLatestPlings(5, $this->cat_id);
+     $topprods = $modelInfo->getMostDownloaded(100, $this->cat_id);
+     $asidehide = '';
+     if(!$this->catabout && count($this->comments)==0  && count($topprods)==0 )
+     {
+        $asidehide = 'hide';
+     }
+?>
+      <div class="GridFlex-cell sidebar-right">
+          <aside  id="explore-sidebar <?=$asidehide?>" >                      
+             <?php
+                echo $this->render('/home/partials/common_rightsidebar.phtml');
+            ?>
+
+            <div  class="row sidebar-right-info" >                                           
+              <?php
+              if (count($topprods) > 0) {
+                  ?>
+                  <span class="commentTitle"> 3 Months Ranking <span class="small light"> (based on downloads)</span></span>
+
+                  <div class="prod-widget-box right bgwhite" id="mostdownloaded">
+                      <?php
+                      $this->rownum = 1;
+                      foreach ($topprods as $this->product) {
+                          echo $this->render('explore/partials/productTop.phtml');
+                          $this->rownum++;
+                      }
+                      ?>
+                  </div>
+              <?php } ?>
+
+                <?php
+                if ($this->catabout) {
+                ?>
+                    <div class="prod-widget-box right catabout" id="catcontent">
+                        <?php include $this->catabout; ?>
+                    </div>
+                <?php
+                }
+                ?>
+            </div>
+        </aside>
+          <?php
+          $time_elapsed = microtime(true) - $time_start;
+          if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
+              echo '<div class="alert alert-warning" role="alert"><strong>Rendering Time: </strong>'.$time_elapsed.' s</div>';
+          }?>
+      </div>
+    </div>
+    </section>
+
+    <div class="tooltip_templates" style="display: none">
+    <span id="tooltip_content">
+        <i class="fa fa-spinner"></i>
+    </span>
+</div>
+</main>
+
+<?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){          
+            TooltipUser.setup("tooltipuserleft","left");  
+            TooltipUser.setup("tooltipuser","right");              
+        });
+    ');

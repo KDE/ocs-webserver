@@ -89,12 +89,23 @@ class Backend_StoreController extends Local_Controller_Action_Backend
     {
         $jTableResult = array();
         try {
-            $values = $this->getAllParams();
+            $values = $this->getAllParams();            
 
             foreach ($values as $key => $value) {
                 if ($value == '') {
                     $values[$key] = new Zend_Db_Expr('NULL');
                 }
+            }
+
+            // patch checkbox is_show_title get no parameter when is_show_title = 0
+            if(!isset($values['is_show_title'])){
+                $values['is_show_title'] = 0;
+            }
+            if(!isset($values['cross_domain_login'])){
+                $values['cross_domain_login'] = 0;
+            }
+            if(!isset($values['is_client'])){
+                $values['is_client'] = 0;
             }
 
             $record = $this->_model->save($values);

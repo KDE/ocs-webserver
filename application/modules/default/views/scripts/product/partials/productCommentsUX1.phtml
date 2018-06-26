@@ -30,6 +30,7 @@ $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $helperImage = new Default_View_Helper_Image();
 $identity = Zend_Auth::getInstance()->getStorage()->read();
 $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountPerPage();
+
 //$captcha = new Zend_Captcha_Image(array(
 //    'name' => 'foo',
 //    'wordLen' => 6,
@@ -47,8 +48,8 @@ $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountP
                 <h3 style="line-height: 15px;">
                     <small class="pull-right">
                         <div class="row" style="margin:0;padding: 0;text-align: right;"><?=$this->comments->getTotalItemCount()?> comments</div>
-                        <?php if ($pageCount > 1) echo $this->paginationControl($this->comments, 'Sliding', '/partials/paginationControlBootstrap.phtml',
-                            array('params' => array(), 'dom_target' => 'div#product-discussion')); ?></small>
+                        <?php if ($pageCount > 1) echo $this->paginationControl($this->comments, 'Sliding', '/partials/paginationControlComment.phtml',
+                            array('params' => array('project_id'=>$this->product->project_id), 'dom_target' => 'div#product-discussion')); ?></small>
                     Comments
                 </h3>
                 <?php if (Zend_Auth::getInstance()->hasIdentity()) { ?>
@@ -194,8 +195,8 @@ $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountP
                     <div class="row" >
                         <div class="col-lg-12">
                         <small class="pull-right">                         
-                        <?php if ($pageCount > 1) echo $this->paginationControl($this->comments, 'Sliding', '/partials/paginationControlBootstrap.phtml',
-                            array('params' => array(), 'dom_target' => 'div#product-discussion')); ?></small>
+                        <?php if ($pageCount > 1) echo $this->paginationControl($this->comments, 'Sliding', '/partials/paginationControlComment.phtml',
+                            array('params' => array('project_id'=>$this->product->project_id), 'dom_target' => 'div#product-discussion')); ?></small>
                             </div>
                     </div>
         </div>
@@ -208,8 +209,9 @@ $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountP
 </div>
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){            
-            AjaxForm.setup("form#product-add-comment1", "div#product-discussion");
-            AjaxForm.setup("form#product-add-comment2", "div#product-discussion");
+            //AjaxForm.setup("form#product-add-comment1", "div#product-discussion");
+            //AjaxForm.setup("form#product-add-comment2", "div#product-discussion");
+            AjaxForm.setup("form.product-add-comment", "div#product-discussion");
             ProductDetailCommentTooltip.setup();
         });
     ');

@@ -1014,7 +1014,7 @@ span.packagetypeos
 
 .comments-list .creator-badge-1{
   position: absolute;
-  left: 0px;
+  right: 0px;
   bottom: 0px;
   background: blue;
   text-align: center;
@@ -1026,7 +1026,7 @@ span.packagetypeos
 
 .comments-list .creator-badge-2{
   position: absolute;
-  left: 0px;
+  right: 0px;
   bottom: 0px;
   background: blue;
   text-align: center;
@@ -1038,7 +1038,7 @@ span.packagetypeos
 
 .comments-list .supporter-badge-1{
     position: absolute;
-    right: 0px;
+    left: 0px;
     bottom: 0px;
     background:#EE6E09;
     text-align: center;
@@ -1049,7 +1049,7 @@ span.packagetypeos
 }
 .comments-list .supporter-badge-2{
     position: absolute;
-    right: 0px;
+    left: 0px;
     bottom: 0px;
     background: #EE6E09;
     text-align: center;

@@ -21,28 +21,9 @@
  **/
 
 $model = new Default_Model_Tags();
-$tags = $model->getTagsSystemList($this->product->project_id, Default_Model_Tags::TAG_TYPE_PROJECT); 
+$tags = $model->getTagsSystemList($this->product->project_id); 
 if (false === empty($tags)) {
 ?>
-<style>
-    .tag-element {
-        background-clip: padding-box;
-        background-color: #eeeeee;
-        background-image: linear-gradient(#f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eee 100%);
-        background-repeat: repeat-x;
-        background-size: 100% 19px;
-        border: 1px solid #aaa;
-        border-radius: 3px;
-        box-shadow: 0 0 2px #fff inset, 0 1px 0 rgba(0, 0, 0, 0.05);
-        color: #333;
-        line-height: 25px !important;
-        margin: 3px 3px 3px 0;
-        max-width: 100%;
-        padding: 0 10px;
-        position: relative;
-        display: inline-block;
-    }
-</style>
 <div class="prod-widget-box right details">
 
     <span class="title"> System Tags </span>
@@ -54,7 +35,13 @@ if (false === empty($tags)) {
                 $filterfield = 'tags';
                 if($tag['tag_group_id']==Default_Model_Tags::TAG_LICENSE_GROUPID){
                         $filterfield = 'license_names';
-                }   
+                } 
+                if($tag['tag_group_id']==Default_Model_Tags::TAG_ARCHITECTURE_GROUPID){
+                        $filterfield = 'arch_names';
+                } 
+                 if($tag['tag_group_id']==Default_Model_Tags::TAG_PACKAGETYPE_GROUPID){
+                        $filterfield = 'package_names';
+                }  
             ?>
             <a href="/search?projectSearchText=<?=$tag['tag_name']?>&f=<?=$filterfield?>" class="tag-element"><span class="glyphicon glyphicon-tag" aria-hidden="true"></span> <?=$tag['tag_name']?></a>
         <?php }}?>

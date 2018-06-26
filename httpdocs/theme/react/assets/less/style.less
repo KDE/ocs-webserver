@@ -1,0 +1,321 @@
+out: ../css/style.css, sourcemap: true, compress: true
+
+@import "elements.less";
+
+header div.container.header {
+  height: 110px;
+}
+
+.products-showcase {
+
+  .products-container {
+
+    .square {
+      width: 16.66667%;
+      position: relative;
+      float: left;
+      margin-bottom: 15px;
+    }
+
+    .square:after {
+      content: "";
+      display: block;
+      padding-bottom: 120%;
+
+    }
+
+    .content {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      padding: 0 6px;
+
+      a {
+        display: block;
+        width: 100%;
+        height: 100%;
+        position: relative;
+      }
+
+      .product-wrapper {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        background-color: white;
+      }
+
+      .product-image-container {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+        padding-bottom: 60px;
+
+        figure {
+          width: 100%;
+          height: 100%;
+          position: relative;
+
+          img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 110px;
+            height: 110px;
+            margin: -55px 0 0 -55px;
+            border-radius: 100%;
+
+
+            &.squared {
+              border-radius: 0;
+            }
+
+            &.full {
+              position: relative;
+              width: 100%;
+              height: 100%;
+              margin: 0;
+              border-radius: 0;
+              top: 0;
+              left: 0;
+            }
+
+            &.padded {
+              border-radius: 0;
+              border:10px solid white;
+            }
+
+            &.rounded-corners {
+              border-radius: 20%;
+            }
+
+            &.very-rounded-corners {
+              border-radius: 40%;
+
+            }
+          }
+        }
+      }
+
+      .product-info {
+        width: 100%;
+        height: 60px;
+        color: white;
+        padding:14px 16px;
+        position:  absolute;
+        bottom: 0;
+        left: 0;
+        background-color: rgba(0,0,0,.38);
+
+        span {
+          width: 100%;
+          float: left;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          line-height: 1.2;
+          font-weight: 500 !important;
+
+          &.product-info-title {
+            font-size: 90%;
+          }
+
+          &.product-info-description {
+            font-size: 70%;
+          }
+        }
+
+        &.music-image {
+          padding-right: 40px;
+          padding-left: 40px;
+          padding-top: 20px;
+          text-align: center;
+
+          .material-icons {
+            position: absolute;
+            top: 18px;
+
+            &.left-icon {
+              left: 10px;
+
+            }
+
+            &.right-icon {
+              right: 10px;
+            }
+          }
+        }
+      }
+
+      &:hover {
+        .product-wrapper {
+          background-color: #c1c1c1;
+        }
+      }
+    }
+  }
+}
+
+#app-root {
+  font-family: Source Sans Pro,Source Sans,sans-serif;
+  font-size: 13pt;
+  font-weight: 400;
+  line-height: 1.8;
+
+  .container {
+    width: 100% !important;
+    padding: 0 10%;
+  }
+
+  .row {
+    margin-left: -6px;
+    margin-right: -6px;
+  }
+
+  * {
+    font-weight: 300;
+  }
+
+  .mdl-button {
+    text-transform: capitalize !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    font-family: Source Sans Pro,Source Sans,sans-serif !important;
+  }
+
+  .hp-section {
+    padding: 20px 0;
+    // background-image: url('../img/hp-section-bg.png');
+
+    .section-header {
+      position: relative;
+
+      .actions {
+        position: absolute;
+        top: 5px;
+        right: 0;
+      }
+    }
+
+
+    h1, h2, h3, h4, h5 ,h6 {
+      width: 100%;
+      margin-top: 0;
+      font-weight: 300;
+      color: black !important;
+    }
+
+
+    h2 {
+      padding-bottom: 0;
+      font-size: 40px;
+      margin-bottom: 1em;
+    }
+
+    h3 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    &:nth-child(even){
+      // background-image: none;
+      // background-color: white;
+    }
+  }
+
+  #homepage-version-one {
+
+    .actions {
+      .mdl-button + .mdl-button {
+        margin-left: 3px;
+      }
+    }
+
+    #introduction {
+      padding-top: 100px;
+      margin-bottom: 30px;
+
+      p {
+        max-width: 700px;
+        font-size: 14pt;
+        line-height: 1.4;
+        margin-bottom: 45px;
+      }
+    }
+
+  }
+}
+
+@media (min-width: 1920px) {
+  #app-root {
+    .container {
+      padding: 0 15%;
+    }
+  }
+}
+
+@media (max-width: 1500px) and (min-width: 1251px) {
+  .products-showcase {
+    .products-container {
+      .square {
+        width: 20%;
+      }
+    }
+  }
+}
+
+
+@media (max-width: 1250px) and (min-width: 1000px) {
+  .products-showcase {
+    .products-container {
+      .square {
+        width: 25%;
+      }
+    }
+  }
+}
+
+@media (max-width: 999px) and (min-width: 662px) {
+  #app-root {
+    .container {
+      padding: 0 5%;
+    }
+  }
+  .products-showcase {
+    .products-container {
+      .square {
+        width: 33.3333%;
+      }
+    }
+  }
+}
+
+@media (max-width: 661px) {
+  #app-root {
+    .container {
+      padding: 0 5%;
+    }
+  }
+  .products-showcase {
+    .products-container {
+      .square {
+        width: 50%;
+      }
+    }
+  }
+}
+
+@media (max-width: 401px) {
+  #app-root {
+    .container {
+      padding: 0 5%;
+    }
+  }
+  .products-showcase {
+    .products-container {
+      .square {
+        width: 100%;
+      }
+    }
+  }
+}
