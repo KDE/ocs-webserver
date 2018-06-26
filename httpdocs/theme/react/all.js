@@ -306,7 +306,7 @@ class HomePage extends React.Component {
   render() {
     return React.createElement(
       "div",
-      { id: "homepage-version-one" },
+      { id: "homepage" },
       React.createElement(
         "div",
         { className: "hp-wrapper" },
@@ -383,7 +383,8 @@ class Introduction extends React.Component {
             React.createElement(
               "a",
               { href: "https://www.appimagehub.com/p/1228228", className: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary" },
-              "-> AppImageLauncher"
+              React.createElement("img", { src: "/theme/react/assets/img/icon-download_white.png" }),
+              " AppImageLauncher"
             ),
             React.createElement(
               "a",

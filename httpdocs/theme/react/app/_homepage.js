@@ -18,7 +18,7 @@ class HomePage extends React.Component {
 
   render(){
     return (
-      <div id="homepage-version-one">
+      <div id="homepage">
         <div className="hp-wrapper">
           <Introduction
             device={this.state.device}
@@ -82,7 +82,7 @@ class Introduction extends React.Component {
             </p>
             <div className="actions">
               <a href="https://www.appimagehub.com/p/1228228" className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary">
-                -> AppImageLauncher
+                <img src="/theme/react/assets/img/icon-download_white.png"/> AppImageLauncher
               </a>
               <a href="https://www.appimagehub.com/browse" className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary">Browse all apps</a>
             </div>
