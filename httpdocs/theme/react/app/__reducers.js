@@ -13,6 +13,7 @@ function productsReducer(state = {}, action){
   }
 }
 
+
 function usersReducer(state = {},action){
   if (action.type === 'SET_USERS'){
     return action.users;
