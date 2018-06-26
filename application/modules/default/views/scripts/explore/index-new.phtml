@@ -64,6 +64,8 @@ $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
                   if (count($this->products) == 0) {
                       echo '<div class="empty">No products to show in this category.</div>';
                   } else {
+                                      
+
                        $time_start = microtime(true);
                        echo $this->render('explore/partials/products.phtml');
                        $time_elapsed = microtime(true) - $time_start;
@@ -149,10 +151,10 @@ $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
 <script type="text/javascript">
 
   <?php
-    $js_products = json_encode($this->products);
-    $js_filters = json_encode($this->filters);
-    $js_catid = json_encode($this->cat_id);
-    $js_topprod = json_encode($topprods);
+    $js_products = $this->productsJson;
+    $js_filters = $this->filtersJson;
+    $js_catid = $this->cat_idJson;
+    $js_topprod =$this->topprodsJson;
   ?>
 
   var state = {
