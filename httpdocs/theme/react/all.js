@@ -75,6 +75,7 @@ class ProductGroup extends React.Component {
         const limit = productHelpers.getNumberOfProducts(this.props.device, this.props.numRows);
         productsArray = productsArray.slice(0, limit);
       }
+      console.log(productsArray);
       products = productsArray.map((product, index) => React.createElement(ProductGroupItem, {
         key: index,
         product: product
