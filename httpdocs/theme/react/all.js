@@ -174,8 +174,11 @@ const reducer = Redux.combineReducers({
   supporters: supportersReducer,
   domain: domainReducer,
   env: envReducer,
-  device: deviceReducer
+  device: deviceReducer,
+  view: viewReducer
 });
+
+/* reducers */
 
 function productsReducer(state = {}, action) {
   if (action.type === 'SET_PRODUCTS') {
@@ -225,6 +228,18 @@ function deviceReducer(state = {}, action) {
   }
 }
 
+function viewReducer(state = {}, action) {
+  if (action.type === 'SET_VIEW') {
+    return action.view;
+  } else {
+    return state;
+  }
+}
+
+/* /reducers */
+
+/* dispatch */
+
 function setProducts(products) {
   return {
     type: 'SET_PRODUCTS',
@@ -266,6 +281,15 @@ function setDevice(device) {
     device: device
   };
 }
+
+function setView(view) {
+  return {
+    type: 'SET_VIEW',
+    view: view
+  };
+}
+
+/* /dispatch */
 class HomePageTemplateTwo extends React.Component {
   render() {
     return React.createElement(
@@ -429,6 +453,8 @@ class App extends React.Component {
     // env
     const env = appHelpers.getEnv(window.location.hostname);
     store.dispatch(setEnv(env));
+    // view
+    store.dispatch(setView(view));
     // device
     window.addEventListener("resize", this.updateDimensions);
     // finish loading

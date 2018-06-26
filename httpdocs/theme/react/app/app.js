@@ -24,6 +24,8 @@ class App extends React.Component {
     // env
     const env = appHelpers.getEnv(window.location.hostname);
     store.dispatch(setEnv(env));
+    // view
+    store.dispatch(setView(view));
     // device
     window.addEventListener("resize", this.updateDimensions);
     // finish loading
