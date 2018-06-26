@@ -54,6 +54,7 @@ class Default_Model_Id_OcsServer
         $access_token = $this->getAccessToken();
         $map_user_data = array(
             'user' => array(
+                'id'             => $userdata['external_id'],
                 'ocs_user_id'    => $userdata['ocs_user_id'],
                 'username'       => $userdata['username'],
                 'password'       => $userdata['password'],
