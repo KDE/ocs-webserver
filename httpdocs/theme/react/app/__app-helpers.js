@@ -12,7 +12,9 @@ window.appHelpers = (function(){
 
   function getDeviceWidth(width){
     let device;
-    if (width > 1250){
+    if (width > 1500){
+      device = "huge";
+    } else if (width < 1500 && width > 1250){
       device = "full";
     } else if (width < 1250 && width >= 1000){
       device = "large";

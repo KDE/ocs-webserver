@@ -12,7 +12,9 @@ window.appHelpers = function () {
 
   function getDeviceWidth(width) {
     let device;
-    if (width > 1250) {
+    if (width > 1500) {
+      device = "huge";
+    } else if (width < 1500 && width > 1250) {
       device = "full";
     } else if (width < 1250 && width >= 1000) {
       device = "large";
@@ -47,7 +49,9 @@ window.productHelpers = function () {
 
   function getNumberOfProducts(device, numRows) {
     let num;
-    if (device === "full") {
+    if (device === "huge") {
+      num = 6;
+    } else if (device === "full") {
       num = 5;
     } else if (device === "large") {
       num = 4;
