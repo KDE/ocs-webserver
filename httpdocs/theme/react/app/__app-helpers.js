@@ -1,8 +1,13 @@
 window.appHelpers = (function(){
 
-  function getTimeAgo(datetime){
-    const a = timeago().format(datetime);
-    return a;
+  function getEnv(domain){
+    let env;
+    if (this.splitByLastDot(domain) === 'com'){
+      env = 'live';
+    } else {
+      env = 'test';
+    }
+    return env;
   }
 
   function getDeviceWidth(width){
@@ -21,33 +26,21 @@ window.appHelpers = (function(){
     return device;
   }
 
-  function getNumberOfProducts(device){
-    let num;
-    if (device === "full"){
-      num = 5;
-    } else if (device === "large"){
-      num = 4;
-    } else if (device === "mid"){
-      num = 3;
-    } else if (device === "tablet"){
-      num = 2;
-    } else if (device === "phone"){
-      num = 1;
-    }
-    return num;
-  }
-
-  function  splitByLastDot(text) {
+  function splitByLastDot(text) {
       var index = text.lastIndexOf('.');
       return text.slice(index + 1);
   }
 
+  function getTimeAgo(datetime){
+    const a = timeago().format(datetime);
+    return a;
+  }
 
   return {
-    getTimeAgo,
+    getEnv,
     getDeviceWidth,
-    getNumberOfProducts,
-    splitByLastDot
+    splitByLastDot,
+    getTimeAgo
   }
 
 }());

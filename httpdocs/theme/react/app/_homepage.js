@@ -8,7 +8,6 @@ class HomePage extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
     if (nextProps.device){
       this.setState({device:nextProps.device});
     }

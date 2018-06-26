@@ -2,7 +2,9 @@ const reducer = Redux.combineReducers({
   products:productsReducer,
   users:usersReducer,
   supporters:supportersReducer,
-  domain:domainReducer
+  domain:domainReducer,
+  env:envReducer,
+  device:deviceReducer
 });
 
 function productsReducer(state = {}, action){
@@ -12,7 +14,6 @@ function productsReducer(state = {}, action){
     return state;
   }
 }
-
 
 function usersReducer(state = {},action){
   if (action.type === 'SET_USERS'){
@@ -33,6 +34,22 @@ function supportersReducer(state = {},action){
 function domainReducer(state = {},action){
   if (action.type === 'SET_DOMAIN'){
     return action.domain;
+  } else {
+    return state;
+  }
+}
+
+function envReducer(state = {},action){
+  if (action.type === 'SET_ENV'){
+    return action.env;
+  } else {
+    return state;
+  }
+}
+
+function deviceReducer(state = {}, action){
+  if (action.type === 'SET_DEVICE'){
+    return action.device;
   } else {
     return state;
   }
@@ -63,5 +80,19 @@ function setDomain(domain){
   return {
     type:'SET_DOMAIN',
     domain:domain
+  }
+}
+
+function setEnv(env){
+  return {
+    type:'SET_ENV',
+    env:env
+  }
+}
+
+function setDevice(device){
+  return {
+    type:'SET_DEVICE',
+    device:device
   }
 }

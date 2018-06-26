@@ -1,8 +1,13 @@
 window.appHelpers = function () {
 
-  function getTimeAgo(datetime) {
-    const a = timeago().format(datetime);
-    return a;
+  function getEnv(domain) {
+    let env;
+    if (this.splitByLastDot(domain) === 'com') {
+      env = 'live';
+    } else {
+      env = 'test';
+    }
+    return env;
   }
 
   function getDeviceWidth(width) {
@@ -21,7 +26,26 @@ window.appHelpers = function () {
     return device;
   }
 
-  function getNumberOfProducts(device) {
+  function splitByLastDot(text) {
+    var index = text.lastIndexOf('.');
+    return text.slice(index + 1);
+  }
+
+  function getTimeAgo(datetime) {
+    const a = timeago().format(datetime);
+    return a;
+  }
+
+  return {
+    getEnv,
+    getDeviceWidth,
+    splitByLastDot,
+    getTimeAgo
+  };
+}();
+window.productHelpers = function () {
+
+  function getNumberOfProducts(device, numRows) {
     let num;
     if (device === "full") {
       num = 5;
@@ -34,26 +58,118 @@ window.appHelpers = function () {
     } else if (device === "phone") {
       num = 1;
     }
+    if (numRows) num = num * numRows;
     return num;
   }
 
-  function splitByLastDot(text) {
-    var index = text.lastIndexOf('.');
-    return text.slice(index + 1);
-  }
-
   return {
-    getTimeAgo,
-    getDeviceWidth,
-    getNumberOfProducts,
-    splitByLastDot
+    getNumberOfProducts
   };
 }();
+class ProductGroup extends React.Component {
+  render() {
+    let products;
+    if (this.props.products) {
+      let productsArray = this.props.products;
+      if (this.props.numRows) {
+        const limit = productHelpers.getNumberOfProducts(this.props.device, this.props.numRows);
+        productsArray = productsArray.slice(0, limit);
+      }
+      products = productsArray.map((product, index) => React.createElement(ProductGroupItem, {
+        key: index,
+        product: product
+      }));
+    }
+    return React.createElement(
+      "div",
+      { className: "hp-section products-showcase" },
+      React.createElement(
+        "div",
+        { className: "container" },
+        React.createElement(
+          "div",
+          { className: "section-header" },
+          React.createElement(
+            "h3",
+            { className: "mdl-color-text--primary" },
+            this.props.title
+          ),
+          React.createElement(
+            "div",
+            { className: "actions" },
+            React.createElement(
+              "a",
+              { href: this.props.link, className: "mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary" },
+              "see more"
+            )
+          )
+        ),
+        React.createElement(
+          "div",
+          { className: "products-container row" },
+          products
+        )
+      )
+    );
+  }
+}
+
+class ProductGroupItem extends React.Component {
+  render() {
+    let imageBaseUrl;
+    if (store.getState().env === 'live') {
+      imageBaseUrl = 'cn.pling.com';
+    } else {
+      imageBaseUrl = 'cn.pling.it';
+    }
+    return React.createElement(
+      "div",
+      { className: "product square" },
+      React.createElement(
+        "div",
+        { className: "content" },
+        React.createElement(
+          "div",
+          { className: "product-wrapper mdl-shadow--2dp" },
+          React.createElement(
+            "a",
+            { href: "/p/" + this.props.product.project_id },
+            React.createElement(
+              "div",
+              { className: "product-image-container" },
+              React.createElement(
+                "figure",
+                null,
+                React.createElement("img", { className: "very-rounded-corners", src: 'https://' + imageBaseUrl + '/cache/200x171/img/' + this.props.product.image_small })
+              )
+            ),
+            React.createElement(
+              "div",
+              { className: "product-info" },
+              React.createElement(
+                "span",
+                { className: "product-info-title" },
+                this.props.product.title
+              ),
+              React.createElement(
+                "span",
+                { className: "product-info-description" },
+                this.props.product.description
+              )
+            )
+          )
+        )
+      )
+    );
+  }
+}
 const reducer = Redux.combineReducers({
   products: productsReducer,
   users: usersReducer,
   supporters: supportersReducer,
-  domain: domainReducer
+  domain: domainReducer,
+  env: envReducer,
+  device: deviceReducer
 });
 
 function productsReducer(state = {}, action) {
@@ -88,6 +204,22 @@ function domainReducer(state = {}, action) {
   }
 }
 
+function envReducer(state = {}, action) {
+  if (action.type === 'SET_ENV') {
+    return action.env;
+  } else {
+    return state;
+  }
+}
+
+function deviceReducer(state = {}, action) {
+  if (action.type === 'SET_DEVICE') {
+    return action.device;
+  } else {
+    return state;
+  }
+}
+
 function setProducts(products) {
   return {
     type: 'SET_PRODUCTS',
@@ -115,6 +247,44 @@ function setDomain(domain) {
     domain: domain
   };
 }
+
+function setEnv(env) {
+  return {
+    type: 'SET_ENV',
+    env: env
+  };
+}
+
+function setDevice(device) {
+  return {
+    type: 'SET_DEVICE',
+    device: device
+  };
+}
+class HomePageTemplateTwo extends React.Component {
+  render() {
+    return React.createElement(
+      "div",
+      { id: "hompage-version-two" },
+      React.createElement(FeaturedSlideshowWrapper, null),
+      React.createElement(
+        "div",
+        { id: "top-products", className: "hp-section" },
+        "top 4 products with pic and info"
+      ),
+      React.createElement(
+        "div",
+        { id: "other-products", className: "hp-section" },
+        "another top 6 products with pic and info"
+      ),
+      React.createElement(
+        "div",
+        { id: "latest-products", className: "hp-section" },
+        "3 columns with 3 products each"
+      )
+    );
+  }
+}
 class HomePage extends React.Component {
   constructor(props) {
     super(props);
@@ -125,7 +295,6 @@ class HomePage extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
     if (nextProps.device) {
       this.setState({ device: nextProps.device });
     }
@@ -238,30 +407,45 @@ class App extends React.Component {
       loading: true,
       version: 1
     };
+    this.updateDimensions = this.updateDimensions.bind(this);
+  }
+
+  componentWillMount() {
+    // device
+    this.updateDimensions();
   }
 
   componentDidMount() {
+    // products
     store.dispatch(setProducts(products));
-    console.log(window.location.hostname);
+    // domain
     store.dispatch(setDomain(window.location.hostname));
-    console.log(store.getState());
+    // env
+    const env = appHelpers.getEnv(window.location.hostname);
+    store.dispatch(setEnv(env));
+    // device
+    window.addEventListener("resize", this.updateDimensions);
+    // finish loading
     this.setState({ loading: false });
   }
 
+  componentWillUnmount() {
+    // device
+    window.removeEventListener("resize", this.updateDimensions);
+  }
+
+  updateDimensions() {
+    const device = appHelpers.getDeviceWidth(window.innerWidth);
+    store.dispatch(setDevice(device));
+  }
+
   render() {
-    let templateDisplay;
-    if (this.state.version === 1) {
-      templateDisplay = React.createElement(HomePageWrapper, null);
-    } else if (this.state.version === 2) {
-      templateDisplay = React.createElement(HomePageTemplateTwo, null);
-    }
     return React.createElement(
       "div",
       { id: "app-root" },
-      templateDisplay
+      React.createElement(HomePageWrapper, null)
     );
   }
-
 }
 
 class AppWrapper extends React.Component {
