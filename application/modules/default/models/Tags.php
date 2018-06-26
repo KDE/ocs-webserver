@@ -238,7 +238,7 @@ class Default_Model_Tags
                     and tag_object.tag_group_id in  ({$tag_project_group_ids} )     
                     and tag_object.is_deleted = 0  
                     union all
-                    SELECT tag.tag_id,tag.tag_name,tag_group_item.tag_group_id
+                    SELECT distinct tag.tag_id,tag.tag_name,tag_group_item.tag_group_id
                     FROM tag_object
                     JOIN tag ON tag.tag_id = tag_object.tag_id
                     join tag_group_item on tag_object.tag_id = tag_group_item.tag_id and tag_object.tag_group_id = tag_group_item.tag_group_id
