@@ -55,12 +55,12 @@
         $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
         $helperImage = new Default_View_Helper_Image();
         $helpPrintDate = new Default_View_Helper_PrintDate();
-   * 
-   * 
+   *
+   *
    */
 
   $host = $_SERVER['SERVER_NAME'];
-  
+
   if(strpos ( $host , ".cc" ) > 0) {
     $this->LatestProducts = $modelInfo->getLastProductsForHostStores(6,"98,52,53,48,104,105");
     $this->topGames = $modelInfo->getLastProductsForHostStores(6,"98");
@@ -68,9 +68,8 @@
   } else {
     $this->LatestProducts = $modelInfo->getLastProductsForHostStores(6,"6,234,239,243,244,245,388,391,392,450,481,492");
     $this->topGames = $modelInfo->getLastProductsForHostStores(6,"6");
-    $this->topApps = $modelInfo->getLastProductsForHostStores(6,"234,239,243,244,245,388,391,392,450,481,492");  
+    $this->topApps = $modelInfo->getLastProductsForHostStores(6,"234,239,243,244,245,388,391,392,450,481,492");
   }
-  
   
 ?>
 

@@ -35,14 +35,14 @@ class HomePage extends React.Component {
             products={this.state.products.LatestProducts}
             device={this.state.device}
             numRows={1}
-            title={'Apps'}
+            title={'Top Apps'}
             link={'https://www.appimagehub.com/browse/ord/top/'}
           />
           <ProductGroup
             products={this.state.products.LatestProducts}
             device={this.state.device}
             numRows={1}
-            title={'Games'}
+            title={'Top Games'}
             link={'https://www.appimagehub.com/browse/cat/6/ord/top/'}
           />
         </div>
