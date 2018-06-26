@@ -32,7 +32,7 @@ $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
     <section class="wrapper" id="products-wrapper">
     <span class="glyphicon  togglesidebar" id="btnTogglesidebar" ></span>
     <div class="GridFlex">
-      <div class="GridFlex-cell sidebar-left" >          
+      <div class="GridFlex-cell sidebar-left" >
           <?php  $time_start = microtime(true);echo $this->render('explore/partials/filter.phtml'); $time_elapsed = microtime(true) - $time_start; ?>
           <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
              echo '<div class="alert alert-warning" role="alert"><strong>Rendering Time: </strong>'.$time_elapsed.' s</div>';
@@ -42,7 +42,7 @@ $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
         <section class="explore-products" id="explore-products">
 
             <div class="pling-nav-tabs">
-              <ul class="nav nav-tabs pling-nav-tabs" id="sort">               
+              <ul class="nav nav-tabs pling-nav-tabs" id="sort">
                   <li  <?=$this->filters['order'] == 'latest' ? 'class="active"' :'' ?>>
                       <a href="<?= $helperBuildExploreUrl->buildExploreUrl($this->filters['category'], null,
                           'latest') ?>"><span><?= $this->translate('Latest') ?></span></a>
@@ -50,14 +50,14 @@ $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
                   <li <?=$this->filters['order'] == 'top' ? 'class="active"' :'' ?>>
                       <a href="<?= $helperBuildExploreUrl->buildExploreUrl($this->filters['category'], null,
                           'top') ?>"><span><?= $this->translate('Top') ?></span></a>
-                  </li>      
-                  
+                  </li>
+
               </ul>
             </div>
 
               <div class="product-list">
                   <h1>New Layout</h1>
-                  <?php                
+                  <?php
                   if (count($this->products) == 0) {
                       echo '<div class="empty">No products to show in this category.</div>';
                   } else {
@@ -94,12 +94,12 @@ $time_start = microtime(true);
      }
 ?>
       <div class="GridFlex-cell sidebar-right">
-          <aside  id="explore-sidebar <?=$asidehide?>" >                      
+          <aside  id="explore-sidebar <?=$asidehide?>" >
              <?php
                 echo $this->render('/home/partials/common_rightsidebar.phtml');
             ?>
 
-            <div  class="row sidebar-right-info" >                                           
+            <div  class="row sidebar-right-info" >
               <?php
               if (count($topprods) > 0) {
                   ?>
@@ -143,9 +143,27 @@ $time_start = microtime(true);
 </div>
 </main>
 
+<script>
+
+  <?php
+    $js_products = json_encode($this->products);
+    $js_filters = json_encode($this->filters);
+    $js_catId = json_encode($this->cat_id);
+  ?>
+
+  var state = {
+    products:<?php echo $js_products ?>,
+    filters:<?php echo $js_filters ?>,
+    catId:<?php echo $js_catId ?>
+  };
+
+  console.log(state);
+
+</script>
+
 <?php $this->inlineScript()->appendScript(
-    '    $(document).ready(function(){          
-            TooltipUser.setup("tooltipuserleft","left");  
-            TooltipUser.setup("tooltipuser","right");              
+    '    $(document).ready(function(){
+            TooltipUser.setup("tooltipuserleft","left");
+            TooltipUser.setup("tooltipuser","right");
         });
     ');
