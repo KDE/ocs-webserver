@@ -115,6 +115,119 @@ function setDomain(domain) {
     domain: domain
   };
 }
+class HomePage extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      device: store.getState().device,
+      products: store.getState().products
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps);
+    if (nextProps.device) {
+      this.setState({ device: nextProps.device });
+    }
+    if (nextProps.products) {
+      this.setState({ products: nextProps.products });
+    }
+  }
+
+  render() {
+    return React.createElement(
+      "div",
+      { id: "homepage" },
+      React.createElement(
+        "div",
+        { className: "hp-wrapper" },
+        React.createElement(Introduction, {
+          device: this.state.device
+        }),
+        React.createElement(ProductGroup, {
+          products: this.state.products.LatestProducts,
+          device: this.state.device,
+          numRows: 1,
+          title: 'New',
+          link: 'https://www.appimagehub.com/browse/ord/latest/'
+        }),
+        React.createElement(ProductGroup, {
+          products: this.state.products.LatestProducts,
+          device: this.state.device,
+          numRows: 1,
+          title: 'Apps',
+          link: 'https://www.appimagehub.com/browse/ord/top/'
+        }),
+        React.createElement(ProductGroup, {
+          products: this.state.products.LatestProducts,
+          device: this.state.device,
+          numRows: 1,
+          title: 'Games',
+          link: 'https://www.appimagehub.com/browse/cat/6/ord/top/'
+        })
+      )
+    );
+  }
+}
+
+const mapStateToHomePageProps = state => {
+  const device = state.device;
+  const products = state.products;
+  return {
+    device,
+    products
+  };
+};
+
+const mapDispatchToHomePageProps = dispatch => {
+  return {
+    dispatch
+  };
+};
+
+const HomePageWrapper = ReactRedux.connect(mapStateToHomePageProps, mapDispatchToHomePageProps)(HomePage);
+
+class Introduction extends React.Component {
+  render() {
+    return React.createElement(
+      "div",
+      { id: "introduction", className: "hp-section" },
+      React.createElement(
+        "div",
+        { className: "container" },
+        React.createElement(
+          "article",
+          null,
+          React.createElement(
+            "h2",
+            { className: "mdl-color-text--primary" },
+            "Welcome to AppImageHub"
+          ),
+          React.createElement(
+            "p",
+            null,
+            "AppImages are self-contained apps which can simply be downloaded & run on any Linux distribution. For easy usage, download AppImageLauncher:"
+          ),
+          React.createElement(
+            "div",
+            { className: "actions" },
+            React.createElement(
+              "a",
+              { href: "https://www.appimagehub.com/p/1228228", className: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary" },
+              React.createElement("img", { src: "/theme/react/assets/img/icon-download_white.png" }),
+              " AppImageLauncher"
+            ),
+            React.createElement(
+              "a",
+              { href: "https://www.appimagehub.com/browse", className: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary" },
+              "Browse all apps"
+            )
+          )
+        )
+      )
+    );
+  }
+}
 class HomePageTemplateOne extends React.Component {
   constructor(props) {
     super(props);
@@ -515,30 +628,6 @@ class TopGamesProducts extends React.Component {
           { className: 'products-container row' },
           topProducts
         )
-      )
-    );
-  }
-}
-class HomePageTemplateTwo extends React.Component {
-  render() {
-    return React.createElement(
-      "div",
-      { id: "hompage-version-two" },
-      React.createElement(FeaturedSlideshowWrapper, null),
-      React.createElement(
-        "div",
-        { id: "top-products", className: "hp-section" },
-        "top 4 products with pic and info"
-      ),
-      React.createElement(
-        "div",
-        { id: "other-products", className: "hp-section" },
-        "another top 6 products with pic and info"
-      ),
-      React.createElement(
-        "div",
-        { id: "latest-products", className: "hp-section" },
-        "3 columns with 3 products each"
       )
     );
   }
