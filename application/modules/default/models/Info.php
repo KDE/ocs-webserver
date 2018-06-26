@@ -465,7 +465,7 @@ class Default_Model_Info
                 p.status = 100                
                 AND p.project_category_id IN (' . implode(',', $activeCategories) . ')
                 AND p.amount_reports is null
-            ORDER BY (round(((count_likes + 6) / ((count_likes + count_dislikes) + 12)),2) * 100) DESC, `project`.`created_at` DESC
+            ORDER BY (round(((count_likes + 6) / ((count_likes + count_dislikes) + 12)),2) * 100) DESC, created_at DESC
             ';
         if (isset($limit)) {
             $sql .= ' limit ' . (int)$limit;
