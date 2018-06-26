@@ -40,7 +40,6 @@ class App extends React.Component {
     store.dispatch(setDevice(device));
   }
 
-
   render(){
     return (
       <div id="app-root">
