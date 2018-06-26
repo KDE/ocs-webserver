@@ -74,3 +74,8 @@ httpdocs/src/status.jsx
 
 httpdocs/images_sys/flatpak-kde/*
 httpdocs/images_sys/superstore/*
+
+#appimageshub
+node_modules/*
+.ftpconfig
+appimagehub-bu/*
