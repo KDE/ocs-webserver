@@ -174,8 +174,11 @@ const reducer = Redux.combineReducers({
   supporters: supportersReducer,
   domain: domainReducer,
   env: envReducer,
-  device: deviceReducer
+  device: deviceReducer,
+  view: viewReducer
 });
+
+/* reducers */
 
 function productsReducer(state = {}, action) {
   if (action.type === 'SET_PRODUCTS') {
@@ -225,6 +228,18 @@ function deviceReducer(state = {}, action) {
   }
 }
 
+function viewReducer(state = {}, action) {
+  if (action.type === 'SET_VIEW') {
+    return action.view;
+  } else {
+    return state;
+  }
+}
+
+/* /reducers */
+
+/* dispatch */
+
 function setProducts(products) {
   return {
     type: 'SET_PRODUCTS',
@@ -266,6 +281,15 @@ function setDevice(device) {
     device: device
   };
 }
+
+function setView(view) {
+  return {
+    type: 'SET_VIEW',
+    view: view
+  };
+}
+
+/* /dispatch */
 class HomePageTemplateTwo extends React.Component {
   render() {
     return React.createElement(
@@ -327,17 +351,17 @@ class HomePage extends React.Component {
           link: 'https://www.appimagehub.com/browse/ord/latest/'
         }),
         React.createElement(ProductGroup, {
-          products: this.state.products.LatestProducts,
+          products: this.state.products.TopApps,
           device: this.state.device,
           numRows: 1,
-          title: 'Apps',
+          title: 'Top Apps',
           link: 'https://www.appimagehub.com/browse/ord/top/'
         }),
         React.createElement(ProductGroup, {
-          products: this.state.products.LatestProducts,
+          products: this.state.products.TopGames,
           device: this.state.device,
           numRows: 1,
-          title: 'Games',
+          title: 'Top Games',
           link: 'https://www.appimagehub.com/browse/cat/6/ord/top/'
         })
       )
@@ -381,7 +405,7 @@ class Introduction extends React.Component {
           React.createElement(
             "p",
             null,
-            "AppImages are self-contained apps which can simply be downloaded & run on any Linux distribution. For easy usage, download AppImageLauncher:"
+            "AppImages are self-contained apps which can simply be downloaded & run on any Linux distribution. For easy integration, download AppImageLauncher:"
           ),
           React.createElement(
             "div",
@@ -429,6 +453,8 @@ class App extends React.Component {
     // env
     const env = appHelpers.getEnv(window.location.hostname);
     store.dispatch(setEnv(env));
+    // view
+    store.dispatch(setView(view));
     // device
     window.addEventListener("resize", this.updateDimensions);
     // finish loading

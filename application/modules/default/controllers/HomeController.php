@@ -25,6 +25,12 @@ class HomeController extends Local_Controller_Action_DomainSwitch
 
     public function indexAction()
     {
+        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
+        $storePackageTypeIds = null;
+        if ($storeConfig) {
+            $this->view->package_type = $filter['package_type'] = $storeConfig['package_type'];
+        }
+        
         Zend_Registry::get('logger')->debug('*** SHOW_HOME_PAGE: ' . getenv('SHOW_HOME_PAGE'));
         /**
          *  The SHOW_HOME_PAGE environment var will be set in apache .htaccess for some specific host names
@@ -35,6 +41,8 @@ class HomeController extends Local_Controller_Action_DomainSwitch
             $this->_helper->viewRenderer('index-' . $this->getNameForStoreClient());
             return;
         }
+        
+        
 
         // forward is the faster way, but you have no influence to the url. On redirect the url changes.
         $params = array('ord' => 'latest');

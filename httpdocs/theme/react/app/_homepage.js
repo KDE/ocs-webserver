@@ -32,17 +32,17 @@ class HomePage extends React.Component {
             link={'https://www.appimagehub.com/browse/ord/latest/'}
           />
           <ProductGroup
-            products={this.state.products.LatestProducts}
+            products={this.state.products.TopApps}
             device={this.state.device}
             numRows={1}
-            title={'Apps'}
+            title={'Top Apps'}
             link={'https://www.appimagehub.com/browse/ord/top/'}
           />
           <ProductGroup
-            products={this.state.products.LatestProducts}
+            products={this.state.products.TopGames}
             device={this.state.device}
             numRows={1}
-            title={'Games'}
+            title={'Top Games'}
             link={'https://www.appimagehub.com/browse/cat/6/ord/top/'}
           />
         </div>
@@ -79,7 +79,7 @@ class Introduction extends React.Component {
           <article>
             <h2 className="mdl-color-text--primary">Welcome to AppImageHub</h2>
             <p>
-              AppImages are self-contained apps which can simply be downloaded & run on any Linux distribution. For easy usage, download AppImageLauncher:
+              AppImages are self-contained apps which can simply be downloaded & run on any Linux distribution. For easy integration, download AppImageLauncher:
             </p>
             <div className="actions">
               <a href="https://www.appimagehub.com/p/1228228" className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary">

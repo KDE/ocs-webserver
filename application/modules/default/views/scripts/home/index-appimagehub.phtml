@@ -55,23 +55,26 @@
         $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
         $helperImage = new Default_View_Helper_Image();
         $helpPrintDate = new Default_View_Helper_PrintDate();
-   * 
-   * 
+   *
+   *
    */
 
   $host = $_SERVER['SERVER_NAME'];
-  
+  $package_type = $this->package_type;
+
+  echo "<!-- PackageType: " . $package_type . " -->";
+
   if(strpos ( $host , ".cc" ) > 0) {
-    $this->LatestProducts = $modelInfo->getLastProductsForHostStores(6,"98,52,53,48,104,105");
-    $this->topGames = $modelInfo->getLastProductsForHostStores(6,"98");
-    $this->topApps = $modelInfo->getLastProductsForHostStores(6,"98,52,53,48,104,105");
+    $this->LatestProducts = $modelInfo->getLastProductsForHostStores(6,"33,112",$package_type);
+    $this->topGames = $modelInfo->getTopProductsForHostStores(6,"112",$package_type);
+    $this->topApps = $modelInfo->getTopProductsForHostStores(6,"33",$package_type);
   } else {
-    $this->LatestProducts = $modelInfo->getLastProductsForHostStores(6,"6,234,239,243,244,245,388,391,392,450,481,492");
-    $this->topGames = $modelInfo->getLastProductsForHostStores(6,"6");
-    $this->topApps = $modelInfo->getLastProductsForHostStores(6,"234,239,243,244,245,388,391,392,450,481,492");  
+    $this->LatestProducts = $modelInfo->getLastProductsForHostStores(6,"6,234,239,243,244,245,388,391,392,450,481,492",$package_type);
+    $this->topGames = $modelInfo->getTopProductsForHostStores(6,"6",$package_type);
+    $this->topApps = $modelInfo->getTopProductsForHostStores(6,"234,239,243,244,245,388,391,392,450,481,492",$package_type);
   }
-  
-  
+
+
 ?>
 
 <link type="text/css" rel="stylesheet" href="/theme/react/lib/mdl/material.min.css"/>
@@ -94,6 +97,8 @@
     TopGames:<?php echo $js_topGames ?>,
     TopApps:<?php echo $js_topApps ?>
   };
+
+  var view = "home";
 
 </script>
 

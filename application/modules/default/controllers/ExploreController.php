@@ -108,7 +108,7 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
     public function indexAction()
     {
         
-        if ($this->hasParam('new') && $this->getParam("new") == 1) {
+        if ($this->hasParam('new') && $this->getParam("new") == 1) {            
             $this->_helper->viewRenderer('index-new');
         }
         
@@ -144,6 +144,15 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         $pageLimit = 10;
 
         $requestedElements = $this->fetchRequestedElements($filter, $pageLimit, ($page - 1) * $pageLimit);
+        
+        if ($this->hasParam('new') && $this->getParam("new") == 1) {        
+            $this->view->productsJson =Zend_Json::encode($requestedElements['elements']);           
+            $this->view->filtersJson = json_encode($filter);
+            $this->view->cat_idJson = json_encode($inputCatId);
+            $modelInfo = new Default_Model_Info();
+            $topprods = $modelInfo->getMostDownloaded(100, $inputCatId);
+            $this->view->topprodsJson = json_encode($topprods);
+        }
 
         $paginator = Local_Paginator::factory($requestedElements['elements']);
         $paginator->setItemCountPerPage($pageLimit);
