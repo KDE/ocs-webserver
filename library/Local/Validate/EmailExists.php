@@ -20,12 +20,12 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-class Local_Validate_UsernameExists extends Zend_Validate_Abstract
+class Local_Validate_EmailExists extends Zend_Validate_Abstract
 {
     const EXISTS = 'already_exists';
 
     protected $_messageTemplates = array(
-        self::EXISTS => 'Username already exists.'
+        self::EXISTS => 'e-mail already exists.'
     );
 
     public function isValid($value, $context = null)
@@ -33,7 +33,7 @@ class Local_Validate_UsernameExists extends Zend_Validate_Abstract
         $value = (string)$value;
         $this->_setValue($value);
 
-        return $this->checkUsernameExist($value);
+        return $this->checkMailExist($value);
     }
 
     /**
@@ -41,10 +41,10 @@ class Local_Validate_UsernameExists extends Zend_Validate_Abstract
      *
      * @return bool
      */
-    private function checkUsernameExist($value)
+    private function checkMailExist($value)
     {
-        $modelMember = new Default_Model_Member();
-        $resultSet = $modelMember->findUsername($value, Default_Model_Member::CASE_INSENSITIVE);
+        $modelMember = new Default_Model_MemberEmail();
+        $resultSet = $modelMember->findMailAddress($value, Default_Model_MemberEmail::CASE_INSENSITIVE);
         if (count($resultSet) > 0) {
             return false;
         }

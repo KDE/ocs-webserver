@@ -23,6 +23,11 @@
 class Default_Form_Register extends Zend_Form
 {
 
+    /**
+     * @throws Zend_Exception
+     * @throws Zend_Form_Exception
+     * @throws Zend_Validate_Exception
+     */
     public function init()
     {
 
@@ -69,18 +74,23 @@ class Default_Form_Register extends Zend_Form
                        ->setOptions(array('domain' => true))
         ;
 
-        $mailExistCheck = new Zend_Validate_Db_NoRecordExists(array(
-            'table'   => 'member_email',
-            'field'   => 'email_address',
-            'exclude' => array('field' => 'email_deleted', 'value' => 1)
-        ));
-        $mailExistCheck->setMessage('RegisterFormEmailErrAlreadyRegistered', Zend_Validate_Db_NoRecordExists::ERROR_RECORD_FOUND);
+        //$mailExistCheck = new Zend_Validate_Db_NoRecordExists(array(
+        //    'table'   => 'member_email',
+        //    'field'   => 'email_address',
+        //    'exclude' => array('field' => 'email_deleted', 'value' => 1)
+        //));
+        //$mailExistCheck->setMessage('RegisterFormEmailErrAlreadyRegistered', Zend_Validate_Db_NoRecordExists::ERROR_RECORD_FOUND);
+        $mailExistCheck = new Local_Validate_EmailExists();
+        $mailExistCheck->setMessage('RegisterFormEmailErrAlreadyRegistered', Local_Validate_EmailExists::EXISTS);
 
         $mailEmpty = new Zend_Validate_NotEmpty();
         $mailEmpty->setMessage('RegisterFormEmailErrEmpty', Zend_Validate_NotEmpty::IS_EMPTY);
 
         $mailValidatorChain = new Zend_Validate();
-        $mailValidatorChain->addValidator($mailEmpty, true)->addValidator($mailValidCheck, true)->addValidator($mailExistCheck);
+        $mailValidatorChain->addValidator($mailEmpty, true)
+                           ->addValidator($mailValidCheck, true)
+                           ->addValidator($mailExistCheck)
+        ;
 
         $mail = $this->createElement('text', 'mail')->setLabel('RegisterFormEmailLabel')->addValidator($mailEmpty, true)
                      ->addValidator($mailValidCheck, true)->addValidator($mailExistCheck)->setDecorators(array('ViewHelper', 'Errors'))
