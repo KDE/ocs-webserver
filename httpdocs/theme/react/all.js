@@ -342,12 +342,12 @@ class ExplorePage extends React.Component {
             { className: "container mdl-grid" },
             React.createElement(
               "div",
-              { className: "sidebar-container mdl-cell--3-col" },
+              { className: "sidebar-container mdl-cell--3-col mdl-cell--2-col-tablet" },
               React.createElement(ExploreSideBarWrapper, null)
             ),
             React.createElement(
               "div",
-              { className: "main-content mdl-cell--9-col" },
+              { className: "main-content mdl-cell--9-col  mdl-cell--6-col-tablet" },
               React.createElement(
                 "div",
                 { className: "top-bar" },
@@ -759,10 +759,12 @@ class App extends React.Component {
 
   render() {
     console.log(store.getState());
+
     let displayView = React.createElement(HomePageWrapper, null);
     if (store.getState().view === 'explore') {
       displayView = React.createElement(ExplorePageWrapper, null);
     }
+
     return React.createElement(
       "div",
       { id: "app-root" },

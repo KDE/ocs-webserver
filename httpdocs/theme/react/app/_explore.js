@@ -25,10 +25,10 @@ class ExplorePage extends React.Component {
         <div className="wrapper">
           <div className="section">
             <div className="container mdl-grid">
-              <div className="sidebar-container mdl-cell--3-col">
+              <div className="sidebar-container mdl-cell--3-col mdl-cell--2-col-tablet">
                 <ExploreSideBarWrapper/>
               </div>
-              <div className="main-content mdl-cell--9-col">
+              <div className="main-content mdl-cell--9-col  mdl-cell--6-col-tablet">
                 <div className="top-bar">
                   <ExploreTopBarWrapper/>
                 </div>

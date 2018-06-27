@@ -166,6 +166,30 @@ header div.container.header {
   }
 }
 
+.explore-top-bar {
+  margin-bottom: 20px;
+  border-bottom: 2px solid #ccc;
+  float: left;
+  width: 100%;
+
+  .item {
+    padding: 5px 10px;
+    border-bottom: 2px solid transparent;
+    font-size: 14px;
+    margin-bottom: -2px;
+    float: left;
+    cursor: pointer;
+
+    &.active {
+      border-bottom-color: #2673b0;
+    }
+
+    &:hover {
+      border-bottom-color: lighten(#2673b0,10%);
+    }
+  }
+}
+
 #app-root {
   font-family: Source Sans Pro,Source Sans,sans-serif;
   font-size: 13pt;
