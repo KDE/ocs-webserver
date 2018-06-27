@@ -16,7 +16,7 @@ class ProductGroup extends React.Component {
       ));
     }
     return (
-      <div className="hp-section products-showcase">
+      <div className="section products-showcase">
         <div className="container">
           <div className="section-header">
             <h3  className="mdl-color-text--primary">{this.props.title}</h3>

@@ -8,7 +8,6 @@ class HomePage extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
     if (nextProps.device){
       this.setState({device:nextProps.device});
     }
@@ -74,7 +73,7 @@ const HomePageWrapper = ReactRedux.connect(
 class Introduction extends React.Component {
   render(){
     return (
-      <div id="introduction" className="hp-section">
+      <div id="introduction" className="section">
         <div className="container">
           <article>
             <h2 className="mdl-color-text--primary">Welcome to AppImageHub</h2>

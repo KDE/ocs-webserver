@@ -87,7 +87,7 @@ class ProductGroup extends React.Component {
     }
     return React.createElement(
       "div",
-      { className: "hp-section products-showcase" },
+      { className: "section products-showcase" },
       React.createElement(
         "div",
         { className: "container" },
@@ -290,30 +290,62 @@ function setView(view) {
 }
 
 /* /dispatch */
-class HomePageTemplateTwo extends React.Component {
+class ExplorePage extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      device: store.getState().device,
+      products: store.getState().products
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.device) {
+      this.setState({ device: nextProps.device });
+    }
+    if (nextProps.products) {
+      this.setState({ products: nextProps.products });
+    }
+  }
+
   render() {
+    console.log(this.state);
     return React.createElement(
       "div",
-      { id: "hompage-version-two" },
-      React.createElement(FeaturedSlideshowWrapper, null),
+      { id: "explore-page" },
       React.createElement(
         "div",
-        { id: "top-products", className: "hp-section" },
-        "top 4 products with pic and info"
-      ),
-      React.createElement(
-        "div",
-        { id: "other-products", className: "hp-section" },
-        "another top 6 products with pic and info"
-      ),
-      React.createElement(
-        "div",
-        { id: "latest-products", className: "hp-section" },
-        "3 columns with 3 products each"
+        { className: "wrapper" },
+        React.createElement(
+          "div",
+          { className: "section" },
+          React.createElement(
+            "p",
+            null,
+            "hello"
+          )
+        )
       )
     );
   }
 }
+
+const mapStateToExploreProps = state => {
+  const device = state.device;
+  const products = state.products;
+  return {
+    device,
+    products
+  };
+};
+
+const mapDispatchToExploreProps = dispatch => {
+  return {
+    dispatch
+  };
+};
+
+const ExplorePageWrapper = ReactRedux.connect(mapStateToExploreProps, mapDispatchToExploreProps)(ExplorePage);
 class HomePage extends React.Component {
   constructor(props) {
     super(props);
@@ -324,7 +356,6 @@ class HomePage extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
     if (nextProps.device) {
       this.setState({ device: nextProps.device });
     }
@@ -390,7 +421,7 @@ class Introduction extends React.Component {
   render() {
     return React.createElement(
       "div",
-      { id: "introduction", className: "hp-section" },
+      { id: "introduction", className: "section" },
       React.createElement(
         "div",
         { className: "container" },
@@ -472,10 +503,16 @@ class App extends React.Component {
   }
 
   render() {
+    let displayView;
+    if (store.getState().view === 'main') {
+      displayView = React.createElement(HomePageWrapper, null);
+    } else if (store.getState().view === 'explore') {
+      displayView = React.createElement(ExplorePageWrapper, null);
+    }
     return React.createElement(
       "div",
       { id: "app-root" },
-      React.createElement(HomePageWrapper, null)
+      displayView
     );
   }
 }

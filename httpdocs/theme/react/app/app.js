@@ -43,9 +43,15 @@ class App extends React.Component {
   }
 
   render(){
+    let displayView;
+    if (store.getState().view === 'main'){
+      displayView = <HomePageWrapper/>;
+    } else if (store.getState().view === 'explore'){
+      displayView = <ExplorePageWrapper/>;
+    }
     return (
       <div id="app-root">
-        <HomePageWrapper/>
+        {displayView}
       </div>
     )
   }
