@@ -17,17 +17,19 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    // products
-    store.dispatch(setProducts(products));
     // domain
     store.dispatch(setDomain(window.location.hostname));
     // env
     const env = appHelpers.getEnv(window.location.hostname);
     store.dispatch(setEnv(env));
-    // view
-    store.dispatch(setView(view));
     // device
     window.addEventListener("resize", this.updateDimensions);
+    // view
+    store.dispatch(setView(view));
+    // products
+    store.dispatch(setProducts(products));
+    // filters
+    store.dispatch(setFilters(filters));
     // finish loading
     this.setState({loading:false});
   }
@@ -43,8 +45,9 @@ class App extends React.Component {
   }
 
   render(){
+    console.log(store.getState());
     let displayView;
-    if (store.getState().view === 'main'){
+    if (store.getState().view === 'home'){
       displayView = <HomePageWrapper/>;
     } else if (store.getState().view === 'explore'){
       displayView = <ExplorePageWrapper/>;

@@ -41,12 +41,11 @@
     $js_products = $this->productsJson;
     $js_filters = $this->filtersJson;
     $js_catid = $this->cat_idJson;
-    $js_topprod =$this->topprodsJson;
+    $js_topprods =$this->topprods;
     $js_comments = $this->commentsJson;
   ?>
 
   var products = <?php echo $js_products ?>;
-  var topprod = <?php echo $js_topprod ?>;
   var filters = <?php echo $js_filters ?>;
   var catId = <?php echo $js_catid ?>;
   var comments = <?php echo $js_comments ?>;
