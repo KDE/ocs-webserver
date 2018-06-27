@@ -738,11 +738,11 @@ class App extends React.Component {
     // device
     window.addEventListener("resize", this.updateDimensions);
     // view
-    store.dispatch(setView(view));
+    if (view) store.dispatch(setView(view));
     // products
-    store.dispatch(setProducts(products));
+    if (products) store.dispatch(setProducts(products));
     // filters
-    store.dispatch(setFilters(filters));
+    if (filters) store.dispatch(setFilters(filters));
     // finish loading
     this.setState({ loading: false });
   }
@@ -759,10 +759,8 @@ class App extends React.Component {
 
   render() {
     console.log(store.getState());
-    let displayView;
-    if (store.getState().view === 'home') {
-      displayView = React.createElement(HomePageWrapper, null);
-    } else if (store.getState().view === 'explore') {
+    let displayView = React.createElement(HomePageWrapper, null);
+    if (store.getState().view === 'explore') {
       displayView = React.createElement(ExplorePageWrapper, null);
     }
     return React.createElement(
