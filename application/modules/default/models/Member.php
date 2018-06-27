@@ -22,6 +22,7 @@
  **/
 class Default_Model_Member extends Default_Model_DbTable_Member
 {
+    const CASE_INSENSITIVE = 1;
 
     /**
      * @param int    $count
@@ -903,6 +904,27 @@ class Default_Model_Member extends Default_Model_DbTable_Member
             $this->_db->fetchAll($sql, array('member_id' => $member_id, 'project_status' => Default_Model_Project::PROJECT_ACTIVE));
 
         return $this->generateRowSet($result);
+    }
+
+    /**
+     * @param string $value
+     * @param int $param
+     *
+     * @return array
+     */
+    public function findUsername($value, $param)
+    {
+        $sql = "
+            SELECT *
+            FROM `member`
+        ";
+        if ($param == self::CASE_INSENSITIVE) {
+            $sql .= "WHERE LCASE(member.username) = LCASE(:username)";
+        } else {
+            $sql .= "WHERE member.username = :username";
+        }
+
+        return $this->_db->fetchAll($sql, array('username' => $value));
     }
 
     /**

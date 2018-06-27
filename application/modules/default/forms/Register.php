@@ -35,12 +35,14 @@ class Default_Form_Register extends Zend_Form
         $this->addElement($redir);
 
         $usernameValidChars = new Zend_Validate_Regex('/^[^\s\\\"\.\';\^\[\]\$\{\}]*$/');
-        $userExistCheck = new Zend_Validate_Db_NoRecordExists(array(
-            'table'   => 'member',
-            'field'   => 'username',
-            'exclude' => array('field' => 'is_deleted', 'value' => Default_Model_DbTable_Member::MEMBER_DELETED)
-        ));
-        $userExistCheck->setMessage('This username already exists.', Zend_Validate_Db_NoRecordExists::ERROR_RECORD_FOUND);
+        //$userExistCheck = new Zend_Validate_Db_NoRecordExists(array(
+        //    'table'   => 'member',
+        //    'field'   => 'username',
+        //    'exclude' => array('field' => 'is_deleted', 'value' => Default_Model_DbTable_Member::MEMBER_DELETED)
+        //));
+        //$userExistCheck->setMessage('This username already exists.', Zend_Validate_Db_NoRecordExists::ERROR_RECORD_FOUND);
+        $userExistCheck = new Local_Validate_UsernameExists();
+        $userExistCheck->setMessage('This username already exists.', Local_Validate_UsernameExists::EXISTS);
         $userEmptyCheck = new Zend_Validate_NotEmpty();
         $userEmptyCheck->setMessage('RegisterFormUsernameErr', Zend_Validate_NotEmpty::IS_EMPTY);
         $userNameLength = new Zend_Validate_StringLength(array('min' => 4, 'max' => 35));
