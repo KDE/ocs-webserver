@@ -89,9 +89,9 @@ $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
 
       <?php
         $time_start = microtime(true);
-        $this->comments = $modelInfo->getLatestComments(5, $this->cat_id);
+        $this->comments = $modelInfo->getLatestComments(5, $this->cat_id,$this->package_type);
         //$donations = $modelInfo->getLatestPlings(5, $this->cat_id);
-        $topprods = $modelInfo->getMostDownloaded(100, $this->cat_id);
+        $topprods = $modelInfo->getMostDownloaded(100, $this->cat_id,$this->package_type);
         $asidehide = '';
         if(!$this->catabout && count($this->comments)==0  && count($topprods)==0 )
         {
@@ -155,13 +155,15 @@ $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
     $js_filters = $this->filtersJson;
     $js_catid = $this->cat_idJson;
     $js_topprod =$this->topprodsJson;
+    $js_comments = $this->commentsJson;
   ?>
 
   var state = {
     products:<?php echo $js_products ?>,
     topprod:<?php echo $js_topprod ?>,
     filters:<?php echo $js_filters ?>,
-    catId:<?php echo $js_catid ?>
+    catId:<?php echo $js_catid ?>,
+    comments:<?php echo $js_comments ?>
   };
 
   var view = "explore";

@@ -147,11 +147,13 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         
         if ($this->hasParam('new') && $this->getParam("new") == 1) {        
             $this->view->productsJson =Zend_Json::encode($requestedElements['elements']);           
-            $this->view->filtersJson = json_encode($filter);
-            $this->view->cat_idJson = json_encode($inputCatId);
+            $this->view->filtersJson = Zend_Json::encode($filter);
+            $this->view->cat_idJson = Zend_Json::encode($inputCatId);
             $modelInfo = new Default_Model_Info();
-            $topprods = $modelInfo->getMostDownloaded(100, $inputCatId);
-            $this->view->topprodsJson = json_encode($topprods);
+            $topprods = $modelInfo->getMostDownloaded(100, $inputCatId,$this->view->package_type);
+            $this->view->topprodsJson = Zend_Json::encode($topprods);
+            $comments = $modelInfo->getLatestComments(5, $inputCatId,$this->view->package_type);
+            $this->view->commentsJson = Zend_Json::encode($comments);
         }
 
         $paginator = Local_Paginator::factory($requestedElements['elements']);

@@ -110,12 +110,12 @@ class Default_Model_Info
      * @throws Zend_Cache_Exception
      * @throws Zend_Exception
      */
-    public function getLatestComments($limit = 5, $project_category_id = null)
+    public function getLatestComments($limit = 5, $project_category_id = null,$package_type = null)
     {
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
         $cacheName =
-            __FUNCTION__ . '_new_' . md5(Zend_Registry::get('store_host') . (int)$limit . (int)$project_category_id);
+            __FUNCTION__ . '_new_' . md5(Zend_Registry::get('store_host') . (int)$limit . (int)$project_category_id.$package_type);
 
         if (($latestComments = $cache->load($cacheName))) {
             return $latestComments;
@@ -132,6 +132,9 @@ class Default_Model_Info
         }
 
         $sql = '
+                select *
+                from
+                (
                    SELECT
                        comment_id
                        ,comment_text
@@ -141,22 +144,29 @@ class Default_Model_Info
                        ,member.username
                        ,comment_target_id
                        ,title
-                       ,stat_projects.project_id               
+                       ,stat_projects.project_id    
+                       ,(select rating_active from project_rating where project_rating.comment_id = comments.comment_id) rating_active           
                    FROM comments
                    STRAIGHT_JOIN member ON comments.comment_member_id = member.member_id
-                   inner JOIN stat_projects ON comments.comment_target_id = stat_projects.project_id AND comments.comment_type = 0';      
+                   inner JOIN stat_projects ON comments.comment_target_id = stat_projects.project_id ';      
 
         $sql .= ' WHERE comments.comment_active = 1            
             AND stat_projects.status = 100
             AND stat_projects.type_id = 1
-            AND stat_projects.project_category_id IN (' . implode(',', $activeCategories) . ')              
-            ORDER BY comments.comment_created_at DESC
-        ';
+            AND comments.comment_type = 0
+            AND stat_projects.project_category_id IN (' . implode(',', $activeCategories) . ')                          
+        ';        
+
+        if(isset($package_type)) {
+            $sql .= ' AND find_in_set('.$package_type.', stat_projects.package_types)';
+        }
+
+        $sql .=' ) t where rating_active is null or rating_active=1 ORDER BY comment_created_at DESC ';
 
         if (isset($limit)) {
             $sql .= ' limit ' . (int)$limit;
         }
-
+       
         $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
 
         if (count($resultSet) > 0) {
@@ -300,12 +310,12 @@ class Default_Model_Info
      *
      * @return array|false|mixed
      */
-    public function getMostDownloaded($limit = 100, $project_category_id = null)
+    public function getMostDownloaded($limit = 100, $project_category_id = null, $package_type=null)
     {
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
         $cacheName =
-            __FUNCTION__ . '_new_' . md5(Zend_Registry::get('store_host') . (int)$limit . (int)$project_category_id);
+            __FUNCTION__ . '_new_' . md5(Zend_Registry::get('store_host') . (int)$limit . (int)$project_category_id.$package_type);
 
         if (($mostDownloaded = $cache->load($cacheName))) {
             return $mostDownloaded;
@@ -332,13 +342,19 @@ class Default_Model_Info
         $sql .= ' WHERE
                     p.status=100
                     and 
-                    p.project_category_id IN (' . implode(',', $activeCategories) . ')
-            ORDER BY s.amount DESC
+                    p.project_category_id IN (' . implode(',', $activeCategories) . ')          
             ';
+
+        if(isset($package_type)) {
+            $sql .= ' AND find_in_set('.$package_type.', p.package_types)';
+        }
+
+        $sql .= '  ORDER BY s.amount DESC ';
 
         if (isset($limit)) {
             $sql .= ' limit ' . (int)$limit;
         }
+
 
         $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
 
@@ -365,7 +381,7 @@ class Default_Model_Info
         }
         $cache = Zend_Registry::get('cache');
         $cacheName =
-            __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host') . (int)$limit .$catids);
+            __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host') . (int)$limit .$catids.$package_type);
 
         if (($resultSet = $cache->load($cacheName))) {
             return $resultSet;
@@ -435,7 +451,7 @@ class Default_Model_Info
         }
         $cache = Zend_Registry::get('cache');
         $cacheName =
-            __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host') . (int)$limit .$catids);
+            __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host') . (int)$limit .$catids.$package_type);
 
         if (($resultSet = $cache->load($cacheName))) {
             return $resultSet;
