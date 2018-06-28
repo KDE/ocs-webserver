@@ -727,10 +727,10 @@ class RssNewsContainer extends React.Component {
         { key: index },
         React.createElement(
           "a",
-          { href: fi.url },
+          { className: "title", href: fi.url },
           React.createElement(
             "span",
-            { className: "title" },
+            null,
             fi.title
           )
         ),
@@ -797,10 +797,10 @@ class BlogFeedContainer extends React.Component {
         { key: index },
         React.createElement(
           "a",
-          { href: "https://forum.opendesktop.org//t/" + fi.id },
+          { className: "title", href: "https://forum.opendesktop.org//t/" + fi.id },
           React.createElement(
             "span",
-            { className: "title" },
+            null,
             fi.title
           )
         ),
@@ -853,16 +853,7 @@ class ExploreCommentsContainer extends React.Component {
         "li",
         { key: index },
         React.createElement(
-          "span",
-          { className: "cm-title" },
-          React.createElement(
-            "a",
-            { href: "/p/" + cm.comment_title_id },
-            cm.title
-          )
-        ),
-        React.createElement(
-          "span",
+          "div",
           { className: "cm-content" },
           React.createElement(
             "span",
@@ -871,15 +862,28 @@ class ExploreCommentsContainer extends React.Component {
             cm.username
           ),
           React.createElement(
+            "a",
+            { className: "title", href: "/p/" + cm.comment_title_id },
+            React.createElement(
+              "span",
+              null,
+              cm.title
+            )
+          ),
+          React.createElement(
             "span",
-            { className: "cm-content" },
+            { className: "content" },
             cm.comment_text
+          ),
+          React.createElement(
+            "span",
+            { className: "info-row" },
+            React.createElement(
+              "span",
+              { className: "date" },
+              appHelpers.getTimeAgo(cm.comment_created_at)
+            )
           )
-        ),
-        React.createElement(
-          "span",
-          { className: "cm-info" },
-          appHelpers.getTimeAgo(cm.comment_created_at)
         )
       ));
       commentsContainer = React.createElement(
@@ -924,9 +928,36 @@ class ExploreTopProducts extends React.Component {
 
   render() {
     let topProductsContainer;
-    console.log(this.props);
     if (this.props.topProducts) {
-      const topProducts = this.props.topProducts.map((tp, index) => React.createElement("li", { key: index }));
+
+      let imageBaseUrl;
+      if (store.getState().env === 'live') {
+        imageBaseUrl = 'cn.pling.com';
+      } else {
+        imageBaseUrl = 'cn.pling.it';
+      }
+
+      const topProducts = this.props.topProducts.map((tp, index) => React.createElement(
+        "li",
+        { key: index },
+        React.createElement("img", { src: "https://" + imageBaseUrl + "/cache/40x40/img/" + tp.image_small }),
+        React.createElement(
+          "a",
+          { href: "/p/" + tp.project_id },
+          tp.title
+        ),
+        React.createElement(
+          "span",
+          { className: "cat-name" },
+          tp.cat_title
+        )
+      ));
+
+      topProductsContainer = React.createElement(
+        "ol",
+        null,
+        topProducts
+      );
     }
     return React.createElement(
       "div",

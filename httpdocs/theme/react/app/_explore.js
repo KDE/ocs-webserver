@@ -273,8 +273,8 @@ class RssNewsContainer extends React.Component {
 
       const feedItems = this.state.items.slice(0,3).map((fi,index) => (
         <li key={index}>
-          <a href={fi.url}>
-            <span className="title">{fi.title}</span>
+          <a className="title" href={fi.url}>
+            <span>{fi.title}</span>
           </a>
           <span className="info-row">
             <span className="date">{appHelpers.getTimeAgo(fi.date)}</span>
@@ -318,8 +318,8 @@ class BlogFeedContainer extends React.Component {
 
       const feedItems = this.state.items.map((fi,index) => (
         <li key={index}>
-          <a href={"https://forum.opendesktop.org//t/" + fi.id}>
-            <span className="title">{fi.title}</span>
+          <a className="title" href={"https://forum.opendesktop.org//t/" + fi.id}>
+            <span>{fi.title}</span>
           </a>
           <span className="info-row">
             <span className="date">{appHelpers.getTimeAgo(fi.created_at)}</span>
@@ -350,21 +350,21 @@ class ExploreCommentsContainer extends React.Component {
     if (this.props.comments){
       const comments = this.props.comments.map((cm,index) => (
         <li key={index}>
-          <span className="cm-title">
-            <a href={"/p/"+cm.comment_title_id}>{cm.title}</a>
-          </span>
-          <span className="cm-content">
+          <div className="cm-content">
             <span className="cm-userinfo">
               <img src={cm.profile_image_url}/>
               {cm.username}
-            </span>
-            <span className="cm-content">
+            </span>            
+            <a className="title" href={"/p/"+cm.comment_title_id}><span>{cm.title}</span></a>
+            <span className="content">
               {cm.comment_text}
             </span>
-          </span>
-          <span className="cm-info">
-            {appHelpers.getTimeAgo(cm.comment_created_at)}
-          </span>
+            <span className="info-row">
+              <span className="date">
+                {appHelpers.getTimeAgo(cm.comment_created_at)}
+              </span>
+            </span>
+          </div>
         </li>
       ));
       commentsContainer = <ul>{comments}</ul>
@@ -404,13 +404,29 @@ class ExploreTopProducts extends React.Component {
 
   render(){
     let topProductsContainer;
-    console.log(this.props);
     if (this.props.topProducts){
+
+      let imageBaseUrl;
+      if (store.getState().env === 'live') {
+        imageBaseUrl = 'cn.pling.com';
+      } else {
+        imageBaseUrl = 'cn.pling.it';
+      }
+
       const topProducts = this.props.topProducts.map((tp,index) => (
         <li key={index}>
-          
+          <img src={"https://" + imageBaseUrl + "/cache/40x40/img/" + tp.image_small}/>
+          <a href={"/p/" + tp.project_id}>
+            {tp.title}
+          </a>
+          <span className="cat-name">
+            {tp.cat_title}
+          </span>
         </li>
       ));
+
+      topProductsContainer = <ol>{topProducts}</ol>
+
     }
     return (
       <div id="top-products-container" className="sidebar-feed-container">
