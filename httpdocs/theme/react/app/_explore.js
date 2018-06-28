@@ -73,6 +73,7 @@ class ExploreSideBar extends React.Component {
   	this.state = {};
   }
   render(){
+    console.log(this.props);
     return (
       <aside className="explore-sidebar">
         <ul>
@@ -99,11 +100,9 @@ class ExploreSideBar extends React.Component {
 }
 
 const mapStateToExploreSideBarProps = (state) => {
-  const device = state.device;
-  const products = state.products;
+  const categories = state.categories;
   return {
-    device,
-    products
+    categories
   }
 }
 
@@ -124,12 +123,7 @@ class ExploreTopBar extends React.Component {
   	this.state = {};
   }
 
-  componentWillReceiveProps(nextProps) {
-    console.log(nextProps.filters);
-  }
-
   render(){
-    console.log(this.props);
     return (
       <div className="explore-top-bar">
         <a className={this.props.filters.order === "latest" ? "item active" : "item"}>Latest</a>

@@ -26,10 +26,12 @@ class App extends React.Component {
     window.addEventListener("resize", this.updateDimensions);
     // view
     if (view) store.dispatch(setView(view));
-    // products
-    if (products) store.dispatch(setProducts(products));
     // filters
     if (filters) store.dispatch(setFilters(filters));
+    // products
+    if (products) store.dispatch(setProducts(products));
+    // categories
+    if (categories) store.dispatch(setCategories(categories));
     // finish loading
     this.setState({loading:false});
   }
@@ -45,11 +47,8 @@ class App extends React.Component {
   }
 
   render(){
-    console.log(store.getState());
-
     let displayView = <HomePageWrapper/>;
     if (store.getState().view === 'explore'){ displayView = <ExplorePageWrapper/>; }
-
     return (
       <div id="app-root">
         {displayView}

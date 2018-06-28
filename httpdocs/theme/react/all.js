@@ -170,6 +170,7 @@ class ProductGroupItem extends React.Component {
 }
 const reducer = Redux.combineReducers({
   products: productsReducer,
+  categories: categoriesReducer,
   users: usersReducer,
   supporters: supportersReducer,
   domain: domainReducer,
@@ -184,6 +185,14 @@ const reducer = Redux.combineReducers({
 function productsReducer(state = {}, action) {
   if (action.type === 'SET_PRODUCTS') {
     return action.products;
+  } else {
+    return state;
+  }
+}
+
+function categoriesReducer(state = {}, action) {
+  if (action.type === 'SET_CATEGORIES') {
+    return action.categories;
   } else {
     return state;
   }
@@ -253,6 +262,13 @@ function setProducts(products) {
   return {
     type: 'SET_PRODUCTS',
     products: products
+  };
+}
+
+function setCategories(categories) {
+  return {
+    type: 'SET_CATEGORIES',
+    categories: categories
   };
 }
 
@@ -392,6 +408,7 @@ class ExploreSideBar extends React.Component {
     this.state = {};
   }
   render() {
+    console.log(this.props);
     return React.createElement(
       "aside",
       { className: "explore-sidebar" },
@@ -516,11 +533,9 @@ class ExploreSideBar extends React.Component {
 }
 
 const mapStateToExploreSideBarProps = state => {
-  const device = state.device;
-  const products = state.products;
+  const categories = state.categories;
   return {
-    device,
-    products
+    categories
   };
 };
 
@@ -538,12 +553,7 @@ class ExploreTopBar extends React.Component {
     this.state = {};
   }
 
-  componentWillReceiveProps(nextProps) {
-    console.log(nextProps.filters);
-  }
-
   render() {
-    console.log(this.props);
     return React.createElement(
       "div",
       { className: "explore-top-bar" },
@@ -739,10 +749,12 @@ class App extends React.Component {
     window.addEventListener("resize", this.updateDimensions);
     // view
     if (view) store.dispatch(setView(view));
-    // products
-    if (products) store.dispatch(setProducts(products));
     // filters
     if (filters) store.dispatch(setFilters(filters));
+    // products
+    if (products) store.dispatch(setProducts(products));
+    // categories
+    if (categories) store.dispatch(setCategories(categories));
     // finish loading
     this.setState({ loading: false });
   }
@@ -758,13 +770,10 @@ class App extends React.Component {
   }
 
   render() {
-    console.log(store.getState());
-
     let displayView = React.createElement(HomePageWrapper, null);
     if (store.getState().view === 'explore') {
       displayView = React.createElement(ExplorePageWrapper, null);
     }
-
     return React.createElement(
       "div",
       { id: "app-root" },
