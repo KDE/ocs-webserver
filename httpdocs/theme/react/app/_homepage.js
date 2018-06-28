@@ -12,6 +12,7 @@ class HomePage extends React.Component {
       this.setState({device:nextProps.device});
     }
     if (nextProps.products){
+      console.log(nextProps.products);
       this.setState({products:nextProps.products});
     }
   }

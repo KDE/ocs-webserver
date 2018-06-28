@@ -26,10 +26,10 @@ class App extends React.Component {
     window.addEventListener("resize", this.updateDimensions);
     // view
     if (view) store.dispatch(setView(view));
-    // filters
-    if (filters) store.dispatch(setFilters(filters));
     // products
     if (products) store.dispatch(setProducts(products));
+    // filters
+    if (filters) store.dispatch(setFilters(filters));    
     // top products
     if (topProducts) store.dispatch(setTopProducts(topProducts));
     // categories

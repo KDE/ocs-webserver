@@ -974,6 +974,7 @@ class HomePage extends React.Component {
       this.setState({ device: nextProps.device });
     }
     if (nextProps.products) {
+      console.log(nextProps.products);
       this.setState({ products: nextProps.products });
     }
   }
@@ -1124,10 +1125,10 @@ class App extends React.Component {
     window.addEventListener("resize", this.updateDimensions);
     // view
     if (view) store.dispatch(setView(view));
-    // filters
-    if (filters) store.dispatch(setFilters(filters));
     // products
     if (products) store.dispatch(setProducts(products));
+    // filters
+    if (filters) store.dispatch(setFilters(filters));
     // top products
     if (topProducts) store.dispatch(setTopProducts(topProducts));
     // categories
