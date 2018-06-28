@@ -154,6 +154,9 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
             $this->view->topprodsJson = Zend_Json::encode($topprods);
             $comments = $modelInfo->getLatestComments(5, $inputCatId,$this->view->package_type);
             $this->view->commentsJson = Zend_Json::encode($comments);
+            $modelCategory = new Default_Model_ProjectCategory();            
+            $this->view->categoriesJson = Zend_Json::encode($modelCategory->fetchTreeForView());
+
         }
 
         $paginator = Local_Paginator::factory($requestedElements['elements']);

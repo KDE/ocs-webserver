@@ -26,6 +26,7 @@
   $this->dataCategory = $modelCategory->findSingleRow($this->cat_id);
   $this->countSupporters = $modelInfo->getCountActiveSupporters();
   $this->supporters = $modelInfo->getNewActiveSupporters(7);
+
   $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
   $this->headLink()->appendStylesheet('/theme/react/lib/mdl/material.min.css');
   $this->headLink()->appendStylesheet('https://fonts.googleapis.com/icon?family=Material+Icons');
@@ -49,12 +50,14 @@
     $js_catid = $this->cat_idJson;
     $js_topprods =$this->topprods;
     $js_comments = $this->commentsJson;
+    $js_categries = $this->categoriesJson;
   ?>
 
   var products = <?php echo $js_products ?>;
   var filters = <?php echo $js_filters ?>;
   var catId = <?php echo $js_catid ?>;
   var comments = <?php echo $js_comments ?>;
+  var categories = <?php echo $js_categries ?>;
   var view = "explore";
   console.log(view);
 
