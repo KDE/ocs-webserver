@@ -119,7 +119,8 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
         $userDislikeIt = $userRating == 2 ? 1 : 0;        
         $flagFromDislikeToLike = false;
         $flagFromLikeToDislike = false;
-
+        $modelComments = new Default_Model_ProjectComments();
+        
         $aray =array(
             'project_id = ?'    => $projectId,
             'member_id = ?'     => $member_id,
@@ -127,6 +128,7 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
             'user_like =?'     => $userLikeIt,
             'user_dislike = ?'  => $userDislikeIt
         );
+        
         
         $alreadyExists = $this->fetchRow($aray);
 
@@ -136,7 +138,8 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
 
          
             // already existing then deactive
-                $this->update(array('rating_active' => 0), 'rating_id=' . $alreadyExists->rating_id);           
+                $this->update(array('rating_active' => 0), 'rating_id=' . $alreadyExists->rating_id);        
+                $modelComments->deactiveComment($alreadyExists->comment_id);   
 
                 if ($alreadyExists->user_like == 1) {
                       $flagFromLikeToDislike = true;
@@ -208,7 +211,7 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
                              // update comment_id
                              //$this->update(array('comment_id' =>$comment_id),'rating_id='.$alreadyExists->rating_id);    
                              //return;
-                             $this->update(array('rating_active' => 0), 'rating_id=' . $alreadyExists->rating_id);
+                             $this->update(array('rating_active' => 0), 'rating_id=' . $alreadyExists->rating_id);                            
                          } else {
                              // else userRating ==2 dislike then deactivate current rating add new line
                              $this->update(array('rating_active' => 0), 'rating_id=' . $alreadyExists->rating_id);
@@ -225,6 +228,8 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
                              $flagFromDislikeToLike = true;
                          }
                      }
+
+                    $modelComments->deactiveComment($alreadyExists->comment_id);   
                  }
                  if (2 < $userRating) {
                      return;
