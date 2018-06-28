@@ -370,6 +370,389 @@ function setFilters(filters) {
 }
 
 /* /dispatch */
+class ExplorePage extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      device: store.getState().device,
+      products: store.getState().products
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.device) {
+      this.setState({ device: nextProps.device });
+    }
+    if (nextProps.products) {
+      this.setState({ products: nextProps.products });
+    }
+    if (nextProps.filters) {
+      this.setState({ filters: filters });
+    }
+  }
+
+  render() {
+    return React.createElement(
+      "div",
+      { id: "explore-page" },
+      React.createElement(
+        "div",
+        { className: "wrapper" },
+        React.createElement(
+          "div",
+          { className: "main-content-container" },
+          React.createElement(
+            "div",
+            { className: "mdl-grid" },
+            React.createElement(
+              "div",
+              { className: "left-sidebar-container mdl-cell--3-col mdl-cell--2-col-tablet" },
+              React.createElement(ExploreLeftSideBarWrapper, null)
+            ),
+            React.createElement(
+              "div",
+              { className: "main-content mdl-cell--9-col mdl-cell--4-col-tablet" },
+              React.createElement(
+                "div",
+                { className: "top-bar" },
+                React.createElement(ExploreTopBarWrapper, null)
+              ),
+              React.createElement(
+                "div",
+                { className: "explore-products-container" },
+                React.createElement(ProductGroup, {
+                  products: this.state.products,
+                  device: this.state.device
+                })
+              )
+            )
+          )
+        ),
+        React.createElement(
+          "div",
+          { className: "right-sidebar-container" },
+          React.createElement(ExploreRightSideBarWrapper, null)
+        )
+      )
+    );
+  }
+}
+
+const mapStateToExploreProps = state => {
+  const device = state.device;
+  const products = state.products;
+  return {
+    device,
+    products
+  };
+};
+
+const mapDispatchToExploreProps = dispatch => {
+  return {
+    dispatch
+  };
+};
+
+const ExplorePageWrapper = ReactRedux.connect(mapStateToExploreProps, mapDispatchToExploreProps)(ExplorePage);
+
+class ExploreTopBar extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  render() {
+    const link = appHelpers.generateFilterUrl(window.location, store.getState().categories.current);
+    return React.createElement(
+      "div",
+      { className: "explore-top-bar" },
+      React.createElement(
+        "a",
+        { href: link.base + "latest" + link.search, className: this.props.filters.order === "latest" ? "item active" : "item" },
+        "Latest"
+      ),
+      React.createElement(
+        "a",
+        { href: link.base + "top" + link.search, className: this.props.filters.order === "top" ? "item active" : "item" },
+        "Top"
+      )
+    );
+  }
+}
+
+const mapStateToExploreTopBarProps = state => {
+  const filters = state.filters;
+  return {
+    filters
+  };
+};
+
+const mapDispatchToExploreTopBarProps = dispatch => {
+  return {
+    dispatch
+  };
+};
+
+const ExploreTopBarWrapper = ReactRedux.connect(mapStateToExploreTopBarProps, mapDispatchToExploreTopBarProps)(ExploreTopBar);
+
+class ExploreLeftSideBar extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+  render() {
+
+    let categoryTree;
+    if (this.props.categories) {
+      const filters = this.props.filters;
+      const current = this.props.categories.current;
+      categoryTree = this.props.categories.items.map((cat, index) => React.createElement(ExploreSideBarItem, {
+        key: index,
+        category: cat,
+        current: current
+      }));
+    }
+
+    return React.createElement(
+      "aside",
+      { className: "explore-left-sidebar" },
+      React.createElement(
+        "ul",
+        null,
+        React.createElement(
+          "li",
+          { className: "category-item" },
+          React.createElement(
+            "a",
+            { className: this.props.categories.current === 0 ? "active" : "", href: "/browse/ord/" + filters.order },
+            React.createElement(
+              "span",
+              { className: "title" },
+              "All"
+            )
+          )
+        ),
+        categoryTree
+      )
+    );
+  }
+}
+
+const mapStateToExploreLeftSideBarProps = state => {
+  const categories = state.categories;
+  const filters = state.filters;
+  return {
+    categories
+  };
+};
+
+const mapDispatchToExploreLeftSideBarProps = dispatch => {
+  return {
+    dispatch
+  };
+};
+
+const ExploreLeftSideBarWrapper = ReactRedux.connect(mapStateToExploreLeftSideBarProps, mapDispatchToExploreLeftSideBarProps)(ExploreLeftSideBar);
+
+class ExploreSideBarItem extends React.Component {
+  render() {
+
+    const order = store.getState().filters.order;
+
+    let active;
+    if (this.props.current === parseInt(this.props.category.id)) active = true;
+
+    let subcatMenu;
+    if (this.props.category.has_children && active) {
+      const cArray = categoryHelpers.convertCatChildrenObjectToArray(this.props.category.children);
+      const subcategories = cArray.map((cat, index) => React.createElement(ExploreSideBarItem, {
+        key: index,
+        category: cat
+      }));
+      subcatMenu = React.createElement(
+        "ul",
+        null,
+        subcategories
+      );
+    }
+
+    return React.createElement(
+      "li",
+      { className: "category-item" },
+      React.createElement(
+        "a",
+        { className: active === true ? "active" : "", href: "/browse/cat/" + this.props.category.id + "/ord/" + order + window.location.search },
+        React.createElement(
+          "span",
+          { className: "title" },
+          this.props.category.title
+        ),
+        React.createElement(
+          "span",
+          { className: "product-counter" },
+          this.props.category.product_count
+        )
+      ),
+      subcatMenu
+    );
+  }
+}
+
+class ExploreRightSideBar extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  render() {
+    console.log(store.getState());
+    return React.createElement(
+      "aside",
+      { className: "explore-right-sidebar" },
+      React.createElement(
+        "div",
+        { className: "ers-section" },
+        React.createElement(
+          "a",
+          { href: "https://www.opendesktop.org/p/1175480/", target: "_blank" },
+          React.createElement("img", { id: "download-app", src: "/images/system/download-app.png" })
+        )
+      ),
+      React.createElement(
+        "div",
+        { className: "ers-section" },
+        React.createElement(
+          "a",
+          { href: "/support", className: "mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary" },
+          "Become a supporter"
+        )
+      ),
+      React.createElement(
+        "div",
+        { className: "ers-section" },
+        React.createElement(
+          "p",
+          null,
+          "supporters"
+        )
+      ),
+      React.createElement(
+        "div",
+        { className: "ers-section" },
+        React.createElement(RssNewsContainer, null)
+      ),
+      React.createElement(
+        "div",
+        { className: "ers-section" },
+        React.createElement(
+          "p",
+          null,
+          "forum"
+        )
+      ),
+      React.createElement(
+        "div",
+        { className: "ers-section" },
+        React.createElement(
+          "p",
+          null,
+          "comments"
+        )
+      ),
+      React.createElement(
+        "div",
+        { className: "ers-section" },
+        React.createElement(
+          "p",
+          null,
+          "top products"
+        )
+      )
+    );
+  }
+}
+
+const mapStateToExploreRightSideBarProps = state => {
+  const categories = state.categories;
+  const filters = state.filters;
+  return {
+    categories
+  };
+};
+
+const mapDispatchToExploreRightSideBarProps = dispatch => {
+  return {
+    dispatch
+  };
+};
+
+const ExploreRightSideBarWrapper = ReactRedux.connect(mapStateToExploreRightSideBarProps, mapDispatchToExploreRightSideBarProps)(ExploreRightSideBar);
+
+class RssNewsContainer extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  componentDidMount() {
+    const self = this;
+    $.getJSON("https://blog.opendesktop.org/?json=1&callback=?", function (res) {
+      self.setState({ items: res.posts });
+    });
+  }
+
+  render() {
+    let feedItemsContainer;
+    if (this.state.items) {
+
+      const feedItems = this.state.items.slice(0, 3).map((fi, index) => React.createElement(
+        "li",
+        { key: index },
+        React.createElement(
+          "a",
+          { href: fi.url },
+          React.createElement(
+            "span",
+            { className: "title" },
+            fi.title
+          )
+        ),
+        React.createElement(
+          "span",
+          { className: "info-row" },
+          React.createElement(
+            "span",
+            { className: "date" },
+            appHelpers.getTimeAgo(fi.date)
+          ),
+          React.createElement(
+            "span",
+            { className: "comment-counter" },
+            fi.comment_count,
+            " comments"
+          )
+        )
+      ));
+
+      feedItemsContainer = React.createElement(
+        "ul",
+        null,
+        feedItems
+      );
+    }
+    return React.createElement(
+      "div",
+      { id: "rss-new-container", className: "sidebar-feed-container" },
+      React.createElement(
+        "h3",
+        null,
+        "News"
+      ),
+      feedItemsContainer
+    );
+  }
+
+}
 class HomePage extends React.Component {
   constructor(props) {
     super(props);

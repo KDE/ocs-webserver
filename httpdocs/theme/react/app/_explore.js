@@ -207,7 +207,9 @@ class ExploreRightSideBar extends React.Component {
     return (
       <aside className="explore-right-sidebar">
         <div className="ers-section">
-          <img src="/images/system/download-app.png"/>
+          <a href="https://www.opendesktop.org/p/1175480/" target="_blank">
+            <img id="download-app" src="/images/system/download-app.png"/>            
+          </a>
         </div>
         <div className="ers-section">
           <a href="/support" className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">Become a supporter</a>
@@ -260,28 +262,32 @@ class RssNewsContainer extends React.Component {
   componentDidMount() {
     const self = this;
     $.getJSON("https://blog.opendesktop.org/?json=1&callback=?", function (res) {
-      console.log(res);
-      this.setState({items:res.posts});
+      self.setState({items:res.posts});
     });
   }
 
   render(){
     let feedItemsContainer;
     if (this.state.items){
-      const feedItems = this.state.items.slice(0,3).map((fi,index){
+
+      const feedItems = this.state.items.slice(0,3).map((fi,index) => (
         <li key={index}>
-          
+          <a href={fi.url}>
+            <span className="title">{fi.title}</span>
+          </a>
+          <span className="info-row">
+            <span className="date">{appHelpers.getTimeAgo(fi.date)}</span>
+            <span className="comment-counter">{fi.comment_count} comments</span>
+          </span>
         </li>
-      });
-      feedItemsContainer = (
-        <ul>
-          {feedItems}
-        </ul>
-      )
+      ));
+
+      feedItemsContainer = <ul>{feedItems}</ul>;
     }
     return (
       <div id="rss-new-container" className="sidebar-feed-container">
         <h3>News</h3>
+        {feedItemsContainer}
       </div>
     )
   }
