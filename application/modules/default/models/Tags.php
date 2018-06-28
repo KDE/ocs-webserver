@@ -229,6 +229,25 @@ class Default_Model_Tags
         $tag_project_group_ids ='6,7,10';  //type product : category-tags, license-tags,ghns_excluded
         $tag_file_group_ids ='8,9';  //file-packagetype-tags,file-architecture-tags
         
+        $sql ="
+                SELECT tag.tag_id,tag.tag_name,tag_object.tag_group_id
+                FROM tag_object
+                JOIN tag ON tag.tag_id = tag_object.tag_id                
+                WHERE tag_type_id = :type_project AND tag_object_id = :project_id
+                and tag_object.tag_group_id in  ({$tag_project_group_ids} )     
+                and tag_object.is_deleted = 0  
+                union all
+                SELECT distinct t.tag_id,t.tag_name,o.tag_group_id
+                FROM tag_object o
+                JOIN tag t ON t.tag_id = o.tag_id  
+                inner join stat_projects p on o.tag_parent_object_id = p.project_id 
+                inner join ppload.ppload_files f on p.ppload_collection_id = f.collection_id and o.tag_object_id=f.id and f.active = 1
+                WHERE o.tag_type_id = :type_file AND p.project_id = :project_id
+                and o.tag_group_id in  ({$tag_file_group_ids} )       
+                and o.is_deleted = 0  
+                order by tag_group_id  , tag_name                 
+        ";
+        /**
         $sql = "
                     SELECT tag.tag_id,tag.tag_name,tag_group_item.tag_group_id
                     FROM tag_object
@@ -247,6 +266,7 @@ class Default_Model_Tags
                     and tag_object.is_deleted = 0  
                     order by tag_group_id  , tag_name 
         ";
+        **/
         
         $result = $this->getAdapter()->fetchAll($sql, array('type_project' => Default_Model_Tags::TAG_TYPE_PROJECT
                                                                                       , 'project_id' => $project_id                                                                                  
