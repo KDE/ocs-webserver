@@ -34,6 +34,8 @@ class App extends React.Component {
     if (categories) store.dispatch(setCategories(categories));
     // current category
     if (typeof(catId) === 'number') store.dispatch(setCurrentCategory(catId));
+    // parent category
+    // if (!parentCat) categoryHelpers.findParentCategory(categories);
     // finish loading
     this.setState({loading:false});
   }

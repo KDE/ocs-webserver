@@ -291,13 +291,24 @@ header div.container.header {
 
 #explore-page {
 
-  .sidebar-container {
+  .main-content-container {
+    width: 80%;
+    float: left;
+  }
+
+  .right-sidebar-container {
+    width: 20%;
+    float: right;
+  }
+
+  .left-sidebar-container {
     padding-right: 0;
 
-    aside.explore-sidebar {
+    aside.explore-left-sidebar {
       background: rgba(0,0,0,.03);
       padding: 15px 0;
       overflow: auto;
+
 
       ul {
         margin: 0;
@@ -346,7 +357,9 @@ header div.container.header {
 
   .main-content {
     padding-left: 15px;
+    padding-right: 15px;
   }
+
 }
 
 @media (min-width: 1920px) {

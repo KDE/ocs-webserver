@@ -23,12 +23,13 @@ class ExplorePage extends React.Component {
     return (
       <div id="explore-page">
         <div className="wrapper">
-          <div className="section">
-            <div className="container mdl-grid">
-              <div className="sidebar-container mdl-cell--3-col mdl-cell--2-col-tablet">
-                <ExploreSideBarWrapper/>
+          <div className="main-content-container">
+            <div className="mdl-grid">
+              <div className="left-sidebar-container mdl-cell--3-col mdl-cell--2-col-tablet">
+                <ExploreLeftSideBarWrapper/>
               </div>
-              <div className="main-content mdl-cell--9-col  mdl-cell--6-col-tablet">
+
+              <div className="main-content mdl-cell--9-col mdl-cell--4-col-tablet">
                 <div className="top-bar">
                   <ExploreTopBarWrapper/>
                 </div>
@@ -40,6 +41,9 @@ class ExplorePage extends React.Component {
                 </div>
               </div>
             </div>
+          </div>
+          <div className="right-sidebar-container">
+            <ExploreRightSideBarWrapper/>
           </div>
         </div>
       </div>
@@ -67,7 +71,42 @@ const ExplorePageWrapper = ReactRedux.connect(
   mapDispatchToExploreProps
 )(ExplorePage);
 
-class ExploreSideBar extends React.Component {
+class ExploreTopBar extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+  }
+
+  render(){
+    const link = appHelpers.generateFilterUrl(window.location,store.getState().categories.current);
+    return (
+      <div className="explore-top-bar">
+        <a href={link.base + "latest" + link.search} className={this.props.filters.order === "latest" ? "item active" : "item"}>Latest</a>
+        <a href={link.base + "top" + link.search} className={this.props.filters.order === "top" ? "item active" : "item"}>Top</a>
+      </div>
+    )
+  }
+}
+
+const mapStateToExploreTopBarProps = (state) => {
+  const filters = state.filters;
+  return {
+    filters
+  }
+}
+
+const mapDispatchToExploreTopBarProps = (dispatch) => {
+  return {
+    dispatch
+  }
+}
+
+const ExploreTopBarWrapper = ReactRedux.connect(
+  mapStateToExploreTopBarProps,
+  mapDispatchToExploreTopBarProps
+)(ExploreTopBar);
+
+class ExploreLeftSideBar extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {};
@@ -88,7 +127,7 @@ class ExploreSideBar extends React.Component {
     }
 
     return (
-      <aside className="explore-sidebar">
+      <aside className="explore-left-sidebar">
         <ul>
           <li className="category-item">
             <a className={this.props.categories.current === 0 ? "active" : ""} href={"/browse/ord/" + filters.order}>
@@ -102,7 +141,7 @@ class ExploreSideBar extends React.Component {
   }
 }
 
-const mapStateToExploreSideBarProps = (state) => {
+const mapStateToExploreLeftSideBarProps = (state) => {
   const categories = state.categories;
   const filters = state.filters;
   return {
@@ -110,16 +149,16 @@ const mapStateToExploreSideBarProps = (state) => {
   }
 }
 
-const mapDispatchToExploreSideBarProps = (dispatch) => {
+const mapDispatchToExploreLeftSideBarProps = (dispatch) => {
   return {
     dispatch
   }
 }
 
-const ExploreSideBarWrapper = ReactRedux.connect(
-  mapStateToExploreSideBarProps,
-  mapDispatchToExploreSideBarProps
-)(ExploreSideBar);
+const ExploreLeftSideBarWrapper = ReactRedux.connect(
+  mapStateToExploreLeftSideBarProps,
+  mapDispatchToExploreLeftSideBarProps
+)(ExploreLeftSideBar);
 
 class ExploreSideBarItem extends React.Component {
   render(){
@@ -157,37 +196,94 @@ class ExploreSideBarItem extends React.Component {
   }
 }
 
-class ExploreTopBar extends React.Component {
+class ExploreRightSideBar extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {};
   }
 
   render(){
-    const link = appHelpers.generateFilterUrl(window.location,store.getState().categories.current);
+    console.log(store.getState());
     return (
-      <div className="explore-top-bar">
-        <a href={link.base + "latest" + link.search} className={this.props.filters.order === "latest" ? "item active" : "item"}>Latest</a>
-        <a href={link.base + "top" + link.search} className={this.props.filters.order === "top" ? "item active" : "item"}>Top</a>
-      </div>
+      <aside className="explore-right-sidebar">
+        <div className="ers-section">
+          <img src="/images/system/download-app.png"/>
+        </div>
+        <div className="ers-section">
+          <a href="/support" className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">Become a supporter</a>
+        </div>
+        <div className="ers-section">
+          <p>supporters</p>
+        </div>
+        <div className="ers-section">
+          <RssNewsContainer/>
+        </div>
+        <div className="ers-section">
+          <p>forum</p>
+        </div>
+        <div className="ers-section">
+          <p>comments</p>
+        </div>
+        <div className="ers-section">
+          <p>top products</p>
+        </div>
+      </aside>
     )
   }
 }
 
-const mapStateToExploreTopBarProps = (state) => {
+const mapStateToExploreRightSideBarProps = (state) => {
+  const categories = state.categories;
   const filters = state.filters;
   return {
-    filters
+    categories
   }
 }
 
-const mapDispatchToExploreTopBarProps = (dispatch) => {
+const mapDispatchToExploreRightSideBarProps = (dispatch) => {
   return {
     dispatch
   }
 }
 
-const ExploreTopBarWrapper = ReactRedux.connect(
-  mapStateToExploreTopBarProps,
-  mapDispatchToExploreTopBarProps
-)(ExploreTopBar);
+const ExploreRightSideBarWrapper = ReactRedux.connect(
+  mapStateToExploreRightSideBarProps,
+  mapDispatchToExploreRightSideBarProps
+)(ExploreRightSideBar);
+
+class RssNewsContainer extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+  }
+
+  componentDidMount() {
+    const self = this;
+    $.getJSON("https://blog.opendesktop.org/?json=1&callback=?", function (res) {
+      console.log(res);
+      this.setState({items:res.posts});
+    });
+  }
+
+  render(){
+    let feedItemsContainer;
+    if (this.state.items){
+      const feedItems = this.state.items.slice(0,3).map((fi,index){
+        <li key={index}>
+          
+        </li>
+      });
+      feedItemsContainer = (
+        <ul>
+          {feedItems}
+        </ul>
+      )
+    }
+    return (
+      <div id="rss-new-container" className="sidebar-feed-container">
+        <h3>News</h3>
+      </div>
+    )
+  }
+
+}

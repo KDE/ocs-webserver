@@ -59,17 +59,20 @@ window.appHelpers = function () {
 }();
 window.categoryHelpers = function () {
 
+  function findParentCategory(categories) {
+    console.log(categories);
+  }
+
   function convertCatChildrenObjectToArray(children) {
-    console.log(children);
     let cArray = [];
     for (var i in children) {
       cArray.push(children[i]);
     }
-    console.log(cArray);
     return cArray;
   }
 
   return {
+    findParentCategory,
     convertCatChildrenObjectToArray
   };
 }();
@@ -367,228 +370,6 @@ function setFilters(filters) {
 }
 
 /* /dispatch */
-class ExplorePage extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      device: store.getState().device,
-      products: store.getState().products
-    };
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.device) {
-      this.setState({ device: nextProps.device });
-    }
-    if (nextProps.products) {
-      this.setState({ products: nextProps.products });
-    }
-    if (nextProps.filters) {
-      this.setState({ filters: filters });
-    }
-  }
-
-  render() {
-    return React.createElement(
-      "div",
-      { id: "explore-page" },
-      React.createElement(
-        "div",
-        { className: "wrapper" },
-        React.createElement(
-          "div",
-          { className: "section" },
-          React.createElement(
-            "div",
-            { className: "container mdl-grid" },
-            React.createElement(
-              "div",
-              { className: "sidebar-container mdl-cell--3-col mdl-cell--2-col-tablet" },
-              React.createElement(ExploreSideBarWrapper, null)
-            ),
-            React.createElement(
-              "div",
-              { className: "main-content mdl-cell--9-col  mdl-cell--6-col-tablet" },
-              React.createElement(
-                "div",
-                { className: "top-bar" },
-                React.createElement(ExploreTopBarWrapper, null)
-              ),
-              React.createElement(
-                "div",
-                { className: "explore-products-container" },
-                React.createElement(ProductGroup, {
-                  products: this.state.products,
-                  device: this.state.device
-                })
-              )
-            )
-          )
-        )
-      )
-    );
-  }
-}
-
-const mapStateToExploreProps = state => {
-  const device = state.device;
-  const products = state.products;
-  return {
-    device,
-    products
-  };
-};
-
-const mapDispatchToExploreProps = dispatch => {
-  return {
-    dispatch
-  };
-};
-
-const ExplorePageWrapper = ReactRedux.connect(mapStateToExploreProps, mapDispatchToExploreProps)(ExplorePage);
-
-class ExploreSideBar extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-  render() {
-
-    let categoryTree;
-    if (this.props.categories) {
-      const filters = this.props.filters;
-      const current = this.props.categories.current;
-      categoryTree = this.props.categories.items.map((cat, index) => React.createElement(ExploreSideBarItem, {
-        key: index,
-        category: cat,
-        current: current
-      }));
-    }
-
-    return React.createElement(
-      "aside",
-      { className: "explore-sidebar" },
-      React.createElement(
-        "ul",
-        null,
-        React.createElement(
-          "li",
-          { className: "category-item" },
-          React.createElement(
-            "a",
-            { className: this.props.categories.current === 0 ? "active" : "", href: "/browse/ord/" + filters.order },
-            React.createElement(
-              "span",
-              { className: "title" },
-              "All"
-            )
-          )
-        ),
-        categoryTree
-      )
-    );
-  }
-}
-
-const mapStateToExploreSideBarProps = state => {
-  const categories = state.categories;
-  const filters = state.filters;
-  return {
-    categories
-  };
-};
-
-const mapDispatchToExploreSideBarProps = dispatch => {
-  return {
-    dispatch
-  };
-};
-
-const ExploreSideBarWrapper = ReactRedux.connect(mapStateToExploreSideBarProps, mapDispatchToExploreSideBarProps)(ExploreSideBar);
-
-class ExploreSideBarItem extends React.Component {
-  render() {
-
-    const order = store.getState().filters.order;
-
-    let active;
-    if (this.props.current === parseInt(this.props.category.id)) active = true;
-
-    let subcatMenu;
-    if (this.props.category.has_children && active) {
-      const cArray = categoryHelpers.convertCatChildrenObjectToArray(this.props.category.children);
-      const subcategories = cArray.map((cat, index) => React.createElement(ExploreSideBarItem, {
-        key: index,
-        category: cat
-      }));
-      subcatMenu = React.createElement(
-        "ul",
-        null,
-        subcategories
-      );
-    }
-
-    return React.createElement(
-      "li",
-      { className: "category-item" },
-      React.createElement(
-        "a",
-        { className: active === true ? "active" : "", href: "/browse/cat/" + this.props.category.id + "/ord/" + order + window.location.search },
-        React.createElement(
-          "span",
-          { className: "title" },
-          this.props.category.title
-        ),
-        React.createElement(
-          "span",
-          { className: "product-counter" },
-          this.props.category.product_count
-        )
-      ),
-      subcatMenu
-    );
-  }
-}
-
-class ExploreTopBar extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
-  render() {
-    const link = appHelpers.generateFilterUrl(window.location, store.getState().categories.current);
-    return React.createElement(
-      "div",
-      { className: "explore-top-bar" },
-      React.createElement(
-        "a",
-        { href: link.base + "latest" + link.search, className: this.props.filters.order === "latest" ? "item active" : "item" },
-        "Latest"
-      ),
-      React.createElement(
-        "a",
-        { href: link.base + "top" + link.search, className: this.props.filters.order === "top" ? "item active" : "item" },
-        "Top"
-      )
-    );
-  }
-}
-
-const mapStateToExploreTopBarProps = state => {
-  const filters = state.filters;
-  return {
-    filters
-  };
-};
-
-const mapDispatchToExploreTopBarProps = dispatch => {
-  return {
-    dispatch
-  };
-};
-
-const ExploreTopBarWrapper = ReactRedux.connect(mapStateToExploreTopBarProps, mapDispatchToExploreTopBarProps)(ExploreTopBar);
 class HomePage extends React.Component {
   constructor(props) {
     super(props);
@@ -761,6 +542,8 @@ class App extends React.Component {
     if (categories) store.dispatch(setCategories(categories));
     // current category
     if (typeof catId === 'number') store.dispatch(setCurrentCategory(catId));
+    // parent category
+    // if (!parentCat) categoryHelpers.findParentCategory(categories);
     // finish loading
     this.setState({ loading: false });
   }

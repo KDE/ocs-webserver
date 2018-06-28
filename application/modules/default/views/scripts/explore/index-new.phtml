@@ -45,20 +45,22 @@
 
 <script type="text/javascript">
   <?php
-    $js_products = $this->productsJson;
-    $js_filters = $this->filtersJson;
-    $js_catid = $this->cat_idJson;
-    $js_topprods =$this->topprods;
-    $js_comments = $this->commentsJson;
     $js_categries = $this->categoriesJson;
-    $js_dataCateogry = $this->dataCategory;
+    $js_catid = $this->cat_idJson;
+    $js_filters = $this->filtersJson;
+    $js_products = $this->productsJson;
+    $js_supporters = $this->supporters;
+    $js_topprods =$this->topprodsJson;
+    $js_comments = $this->commentsJson;
   ?>
 
-  var products = <?php echo $js_products ?>;
-  var filters = <?php echo $js_filters ?>;
-  var catId = <?php echo $js_catid ?>;
-  var comments = <?php echo $js_comments ?>;
   var categories = <?php echo $js_categries ?>;
+  var catId = <?php echo $js_catid ?>;
+  var filters = <?php echo $js_filters ?>;
+  var products = <?php echo $js_products ?>;
+  var topProducts = <?php echo $js_topprods ?>;
+  var comments = <?php echo $js_comments ?>;
+  console.log(topProducts);
   var view = "explore";
 
 </script>
