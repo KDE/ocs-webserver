@@ -850,8 +850,8 @@ class Ocsv1Controller extends Zend_Controller_Action
                     'xdg_type'     => (false === empty($element['xdg_type'])) ? $element['xdg_type'] : ''
                 );
                 //set parent name to name, if neeed
-                if(isset($result['parent_id'])) {
-                    $parent = $modelCategory->fetchParentForId($result['id']);
+                if(isset($element['parent_id'])) {
+                    $parent = $modelCategory->fetchParentForId($element['parent_id']);
                     if($parent) {
                         $result['name'] = $parent['title'] . "/ " . $result['name'];
                     }
@@ -865,8 +865,8 @@ class Ocsv1Controller extends Zend_Controller_Action
                     'xdg_type'     => array('@text' => (false === empty($element['xdg_type'])) ? $element['xdg_type'] : '')
                 );
                 //set parent name to name, if neeed
-                if(isset($result['parent_id'])) {
-                    $parent = $modelCategory->fetchParentForId($result['id']);
+                if(isset($element['parent_id'])) {
+                    $parent = $modelCategory->fetchParentForId($element['parent_id']);
                     if($parent) {
                         $name = (false === empty($element['name_legacy'])) ? $element['name_legacy'] : $element['title'];
                         $name = $parent['title'] . "/ " . $name;
