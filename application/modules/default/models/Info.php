@@ -131,10 +131,7 @@ class Default_Model_Info
             return array();
         }
 
-        $sql = '
-                select *
-                from
-                (
+        $sql = '                
                    SELECT
                        comment_id
                        ,comment_text
@@ -144,8 +141,7 @@ class Default_Model_Info
                        ,member.username
                        ,comment_target_id
                        ,title
-                       ,stat_projects.project_id    
-                       ,(select rating_active from project_rating where project_rating.comment_id = comments.comment_id) rating_active           
+                       ,stat_projects.project_id                                    
                    FROM comments
                    STRAIGHT_JOIN member ON comments.comment_member_id = member.member_id
                    inner JOIN stat_projects ON comments.comment_target_id = stat_projects.project_id ';      
@@ -161,7 +157,7 @@ class Default_Model_Info
             $sql .= ' AND find_in_set('.$package_type.', stat_projects.package_types)';
         }
 
-        $sql .=' ) t where rating_active is null or rating_active=1 ORDER BY comment_created_at DESC ';
+        $sql .='  ORDER BY comments.comment_created_at DESC ';
 
         if (isset($limit)) {
             $sql .= ' limit ' . (int)$limit;
