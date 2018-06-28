@@ -1116,29 +1116,53 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+
     // domain
     store.dispatch(setDomain(window.location.hostname));
+
     // env
     const env = appHelpers.getEnv(window.location.hostname);
     store.dispatch(setEnv(env));
+
     // device
     window.addEventListener("resize", this.updateDimensions);
+
     // view
-    if (view) store.dispatch(setView(view));
+    if (window.view) store.dispatch(setView(view));
+
     // products
-    if (products) store.dispatch(setProducts(products));
+    if (window.products) {
+      store.dispatch(setProducts(products));
+    }
+
     // filters
-    if (filters) store.dispatch(setFilters(filters));
+    if (window.filters) {
+      store.dispatch(setFilters(filters));
+    }
+
     // top products
-    if (topProducts) store.dispatch(setTopProducts(topProducts));
+    if (window.topProducts) {
+      store.dispatch(setTopProducts(topProducts));
+    }
+
     // categories
-    if (categories) store.dispatch(setCategories(categories));
-    // current category
-    if (typeof catId === 'number') store.dispatch(setCurrentCategory(catId));
-    // parent category
-    // if (!parentCat) categoryHelpers.findParentCategory(categories);
+    if (window.categories) {
+      store.dispatch(setCategories(categories));
+
+      // current category
+      if (window.catId) store.dispatch(setCurrentCategory(catId));
+
+      // parent category
+      if (!window.parentCat) {
+        const parent_category = categoryHelpers.findParentCategory(categories);
+      }
+    }
+
     // comments
-    if (comments) store.dispatch(setComments(comments));
+    if (window.comments) {
+      store.dispatch(setComments(comments));
+    }
+
     // finish loading
     this.setState({ loading: false });
   }
