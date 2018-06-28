@@ -38,18 +38,14 @@ window.appHelpers = (function(){
     return a;
   }
 
-  function generateFilterUrl(pathname,currentCat){
-    let link;
-    console.log(currentCat);
+  function generateFilterUrl(location,currentCat){
+    let link = {}
     if (currentCat !== 0){
-      console.log(currentCat);
-      console.log('with category');
-      link = "/browse/cat/" + currentCat + "/ord/";
+      link.base = "/browse/cat/" + currentCat + "/ord/";
     } else {
-      console.log('without category');
-      link = "/browse/ord/";
+      link.base = "/browse/ord/";
     }
-    console.log(link);
+    if (location.search) link.search = location.search;
     return link;
   }
 

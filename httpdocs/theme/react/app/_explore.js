@@ -147,7 +147,7 @@ class ExploreSideBarItem extends React.Component {
 
     return (
       <li className="category-item">
-        <a className={active === true ? "active" : ""} href={"/browse/cat/" + this.props.category.id + "/ord/" + order}>
+        <a className={active === true ? "active" : ""} href={"/browse/cat/" + this.props.category.id + "/ord/" + order + window.location.search}>
           <span className="title">{this.props.category.title}</span>
           <span className="product-counter">{this.props.category.product_count}</span>
         </a>
@@ -164,11 +164,11 @@ class ExploreTopBar extends React.Component {
   }
 
   render(){
-    const link = appHelpers.generateFilterUrl(window.location.pathname,store.getState().categories.current);
+    const link = appHelpers.generateFilterUrl(window.location,store.getState().categories.current);
     return (
       <div className="explore-top-bar">
-        <a href={link + "latest"} className={this.props.filters.order === "latest" ? "item active" : "item"}>Latest</a>
-        <a href={link + "top"} className={this.props.filters.order === "top" ? "item active" : "item"}>Top</a>
+        <a href={link.base + "latest" + link.search} className={this.props.filters.order === "latest" ? "item active" : "item"}>Latest</a>
+        <a href={link.base + "top" + link.search} className={this.props.filters.order === "top" ? "item active" : "item"}>Top</a>
       </div>
     )
   }

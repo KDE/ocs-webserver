@@ -38,18 +38,14 @@ window.appHelpers = function () {
     return a;
   }
 
-  function generateFilterUrl(pathname, currentCat) {
-    let link;
-    console.log(currentCat);
+  function generateFilterUrl(location, currentCat) {
+    let link = {};
     if (currentCat !== 0) {
-      console.log(currentCat);
-      console.log('with category');
-      link = "/browse/cat/" + currentCat + "/ord/";
+      link.base = "/browse/cat/" + currentCat + "/ord/";
     } else {
-      console.log('without category');
-      link = "/browse/ord/";
+      link.base = "/browse/ord/";
     }
-    console.log(link);
+    if (location.search) link.search = location.search;
     return link;
   }
 
@@ -537,7 +533,7 @@ class ExploreSideBarItem extends React.Component {
       { className: "category-item" },
       React.createElement(
         "a",
-        { className: active === true ? "active" : "", href: "/browse/cat/" + this.props.category.id + "/ord/" + order },
+        { className: active === true ? "active" : "", href: "/browse/cat/" + this.props.category.id + "/ord/" + order + window.location.search },
         React.createElement(
           "span",
           { className: "title" },
@@ -561,18 +557,18 @@ class ExploreTopBar extends React.Component {
   }
 
   render() {
-    const link = appHelpers.generateFilterUrl(window.location.pathname, store.getState().categories.current);
+    const link = appHelpers.generateFilterUrl(window.location, store.getState().categories.current);
     return React.createElement(
       "div",
       { className: "explore-top-bar" },
       React.createElement(
         "a",
-        { href: link + "latest", className: this.props.filters.order === "latest" ? "item active" : "item" },
+        { href: link.base + "latest" + link.search, className: this.props.filters.order === "latest" ? "item active" : "item" },
         "Latest"
       ),
       React.createElement(
         "a",
-        { href: link + "top", className: this.props.filters.order === "top" ? "item active" : "item" },
+        { href: link.base + "top" + link.search, className: this.props.filters.order === "top" ? "item active" : "item" },
         "Top"
       )
     );
