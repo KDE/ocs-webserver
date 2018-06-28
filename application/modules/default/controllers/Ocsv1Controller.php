@@ -848,6 +848,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                     'parent_id'    => (false === empty($element['parent_id'])) ? $element['parent_id'] : '',
                     'xdg_type'     => (false === empty($element['xdg_type'])) ? $element['xdg_type'] : ''
                 );
+                //set parent name to name, if neeed
             } else {
                 $result[] = array(
                     'id'           => array('@text' => $element['id']),
