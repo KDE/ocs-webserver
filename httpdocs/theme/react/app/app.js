@@ -30,12 +30,16 @@ class App extends React.Component {
     if (filters) store.dispatch(setFilters(filters));
     // products
     if (products) store.dispatch(setProducts(products));
+    // top products
+    if (topProducts) store.dispatch(setTopProducts(topProducts));
     // categories
     if (categories) store.dispatch(setCategories(categories));
     // current category
     if (typeof(catId) === 'number') store.dispatch(setCurrentCategory(catId));
     // parent category
     // if (!parentCat) categoryHelpers.findParentCategory(categories);
+    // comments
+    if (comments) store.dispatch(setComments(comments));
     // finish loading
     this.setState({loading:false});
   }

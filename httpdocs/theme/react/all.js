@@ -201,7 +201,9 @@ class ProductGroupItem extends React.Component {
 }
 const reducer = Redux.combineReducers({
   products: productsReducer,
+  topProducts: topProductsReducer,
   categories: categoriesReducer,
+  comments: commentsReducer,
   users: usersReducer,
   supporters: supportersReducer,
   domain: domainReducer,
@@ -221,6 +223,14 @@ function productsReducer(state = {}, action) {
   }
 }
 
+function topProductsReducer(state = {}, action) {
+  if (action.type === 'SET_TOP_PRODUCTS') {
+    return action.products;
+  } else {
+    return state;
+  }
+}
+
 function categoriesReducer(state = {}, action) {
   if (action.type === 'SET_CATEGORIES') {
     const s = Object.assign({}, state, {
@@ -231,8 +241,15 @@ function categoriesReducer(state = {}, action) {
     const s = Object.assign({}, state, {
       current: action.catId
     });
-    console.log(s);
     return s;
+  } else {
+    return state;
+  }
+}
+
+function commentsReducer(state = {}, action) {
+  if (action.type === 'SET_COMMENTS') {
+    return action.comments;
   } else {
     return state;
   }
@@ -305,6 +322,13 @@ function setProducts(products) {
   };
 }
 
+function setTopProducts(topProducts) {
+  return {
+    type: 'SET_TOP_PRODUCTS',
+    products: topProducts
+  };
+}
+
 function setCategories(categories) {
   return {
     type: 'SET_CATEGORIES',
@@ -313,10 +337,16 @@ function setCategories(categories) {
 }
 
 function setCurrentCategory(catId) {
-  console.log(catId);
   return {
     type: 'SET_CURRENT_CAT',
     catId: catId
+  };
+}
+
+function setComments(comments) {
+  return {
+    type: 'SET_COMMENTS',
+    comments: comments
   };
 }
 
@@ -605,7 +635,6 @@ class ExploreRightSideBar extends React.Component {
   }
 
   render() {
-    console.log(store.getState());
     return React.createElement(
       "aside",
       { className: "explore-right-sidebar" },
@@ -649,20 +678,12 @@ class ExploreRightSideBar extends React.Component {
       React.createElement(
         "div",
         { className: "ers-section" },
-        React.createElement(
-          "p",
-          null,
-          "comments"
-        )
+        React.createElement(ExploreCommentsContainerWrapper, null)
       ),
       React.createElement(
         "div",
         { className: "ers-section" },
-        React.createElement(
-          "p",
-          null,
-          "top products"
-        )
+        React.createElement(ExploreTopProductsWrapper, null)
       )
     );
   }
@@ -763,7 +784,6 @@ class BlogFeedContainer extends React.Component {
         return new Date(b.last_posted_at) - new Date(a.last_posted_at);
       });
       topics = topics.slice(0, 3);
-      console.log(topics);
       self.setState({ items: topics });
     });
   }
@@ -819,6 +839,127 @@ class BlogFeedContainer extends React.Component {
     );
   }
 }
+
+class ExploreCommentsContainer extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  render() {
+    let commentsContainer;
+    if (this.props.comments) {
+      const comments = this.props.comments.map((cm, index) => React.createElement(
+        "li",
+        { key: index },
+        React.createElement(
+          "span",
+          { className: "cm-title" },
+          React.createElement(
+            "a",
+            { href: "/p/" + cm.comment_title_id },
+            cm.title
+          )
+        ),
+        React.createElement(
+          "span",
+          { className: "cm-content" },
+          React.createElement(
+            "span",
+            { className: "cm-userinfo" },
+            React.createElement("img", { src: cm.profile_image_url }),
+            cm.username
+          ),
+          React.createElement(
+            "span",
+            { className: "cm-content" },
+            cm.comment_text
+          )
+        ),
+        React.createElement(
+          "span",
+          { className: "cm-info" },
+          appHelpers.getTimeAgo(cm.comment_created_at)
+        )
+      ));
+      commentsContainer = React.createElement(
+        "ul",
+        null,
+        comments
+      );
+    }
+    return React.createElement(
+      "div",
+      { id: "blog-feed-container", className: "sidebar-feed-container" },
+      React.createElement(
+        "h3",
+        null,
+        "Forum"
+      ),
+      commentsContainer
+    );
+  }
+}
+
+const mapStateToExploreCommentsContainerProps = state => {
+  const comments = state.comments;
+  return {
+    comments
+  };
+};
+
+const mapDispatchToExploreCommentsContainerProps = dispatch => {
+  return {
+    dispatch
+  };
+};
+
+const ExploreCommentsContainerWrapper = ReactRedux.connect(mapStateToExploreCommentsContainerProps, mapDispatchToExploreCommentsContainerProps)(ExploreCommentsContainer);
+
+class ExploreTopProducts extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  render() {
+    let topProductsContainer;
+    console.log(this.props);
+    if (this.props.topProducts) {
+      const topProducts = this.props.topProducts.map((tp, index) => React.createElement("li", { key: index }));
+    }
+    return React.createElement(
+      "div",
+      { id: "top-products-container", className: "sidebar-feed-container" },
+      React.createElement(
+        "h3",
+        null,
+        "3 Months Ranking"
+      ),
+      React.createElement(
+        "small",
+        null,
+        "(based on downloads)"
+      ),
+      topProductsContainer
+    );
+  }
+}
+
+const mapStateToExploreTopProductsProps = state => {
+  const topProducts = state.topProducts;
+  return {
+    topProducts
+  };
+};
+
+const mapDispatchToExploreTopProductsProps = dispatch => {
+  return {
+    dispatch
+  };
+};
+
+const ExploreTopProductsWrapper = ReactRedux.connect(mapStateToExploreTopProductsProps, mapDispatchToExploreTopProductsProps)(ExploreTopProducts);
 class HomePage extends React.Component {
   constructor(props) {
     super(props);
@@ -987,12 +1128,16 @@ class App extends React.Component {
     if (filters) store.dispatch(setFilters(filters));
     // products
     if (products) store.dispatch(setProducts(products));
+    // top products
+    if (topProducts) store.dispatch(setTopProducts(topProducts));
     // categories
     if (categories) store.dispatch(setCategories(categories));
     // current category
     if (typeof catId === 'number') store.dispatch(setCurrentCategory(catId));
     // parent category
     // if (!parentCat) categoryHelpers.findParentCategory(categories);
+    // comments
+    if (comments) store.dispatch(setComments(comments));
     // finish loading
     this.setState({ loading: false });
   }

@@ -1,6 +1,8 @@
 const reducer = Redux.combineReducers({
   products:productsReducer,
+  topProducts:topProductsReducer,
   categories:categoriesReducer,
+  comments:commentsReducer,
   users:usersReducer,
   supporters:supportersReducer,
   domain:domainReducer,
@@ -20,6 +22,14 @@ const reducer = Redux.combineReducers({
     }
   }
 
+  function topProductsReducer(state = {}, action){
+    if (action.type === 'SET_TOP_PRODUCTS'){
+      return action.products;
+    } else {
+      return state;
+    }
+  }
+
   function categoriesReducer(state = {}, action){
     if (action.type === 'SET_CATEGORIES'){
       const s = Object.assign({},state,{
@@ -30,8 +40,15 @@ const reducer = Redux.combineReducers({
       const s = Object.assign({},state,{
         current:action.catId
       });
-      console.log(s);
       return s;
+    } else {
+      return state;
+    }
+  }
+
+  function commentsReducer(state = {},action){
+    if (action.type === 'SET_COMMENTS'){
+      return action.comments;
     } else {
       return state;
     }
@@ -104,6 +121,13 @@ const reducer = Redux.combineReducers({
     }
   }
 
+  function setTopProducts(topProducts){
+    return {
+      type:'SET_TOP_PRODUCTS',
+      products:topProducts
+    }
+  }
+
   function setCategories(categories){
     return {
       type:'SET_CATEGORIES',
@@ -112,10 +136,16 @@ const reducer = Redux.combineReducers({
   }
 
   function setCurrentCategory(catId){
-    console.log(catId);
     return {
       type:'SET_CURRENT_CAT',
       catId:catId
+    }
+  }
+
+  function setComments(comments){
+    return {
+      type:'SET_COMMENTS',
+      comments:comments
     }
   }
 

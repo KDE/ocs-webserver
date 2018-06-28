@@ -203,7 +203,6 @@ class ExploreRightSideBar extends React.Component {
   }
 
   render(){
-    console.log(store.getState());
     return (
       <aside className="explore-right-sidebar">
         <div className="ers-section">
@@ -226,10 +225,10 @@ class ExploreRightSideBar extends React.Component {
           <BlogFeedContainer/>
         </div>
         <div className="ers-section">
-          <p>comments</p>
+          <ExploreCommentsContainerWrapper/>
         </div>
         <div className="ers-section">
-          <p>top products</p>
+          <ExploreTopProductsWrapper/>
         </div>
       </aside>
     )
@@ -309,7 +308,6 @@ class BlogFeedContainer extends React.Component {
         return new Date(b.last_posted_at) - new Date(a.last_posted_at);
       });
       topics = topics.slice(0,3);
-      console.log(topics);
       self.setState({items:topics});
     });
   }
@@ -340,3 +338,104 @@ class BlogFeedContainer extends React.Component {
     )
   }
 }
+
+class ExploreCommentsContainer extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+  }
+
+  render(){
+    let commentsContainer;
+    if (this.props.comments){
+      const comments = this.props.comments.map((cm,index) => (
+        <li key={index}>
+          <span className="cm-title">
+            <a href={"/p/"+cm.comment_title_id}>{cm.title}</a>
+          </span>
+          <span className="cm-content">
+            <span className="cm-userinfo">
+              <img src={cm.profile_image_url}/>
+              {cm.username}
+            </span>
+            <span className="cm-content">
+              {cm.comment_text}
+            </span>
+          </span>
+          <span className="cm-info">
+            {appHelpers.getTimeAgo(cm.comment_created_at)}
+          </span>
+        </li>
+      ));
+      commentsContainer = <ul>{comments}</ul>
+    }
+    return (
+      <div id="blog-feed-container" className="sidebar-feed-container">
+        <h3>Forum</h3>
+        {commentsContainer}
+      </div>
+    )
+  }
+}
+
+const mapStateToExploreCommentsContainerProps = (state) => {
+  const comments = state.comments;
+  return {
+    comments
+  }
+}
+
+const mapDispatchToExploreCommentsContainerProps = (dispatch) => {
+  return {
+    dispatch
+  }
+}
+
+const ExploreCommentsContainerWrapper = ReactRedux.connect(
+  mapStateToExploreCommentsContainerProps,
+  mapDispatchToExploreCommentsContainerProps
+)(ExploreCommentsContainer);
+
+class ExploreTopProducts extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+  }
+
+  render(){
+    let topProductsContainer;
+    console.log(this.props);
+    if (this.props.topProducts){
+      const topProducts = this.props.topProducts.map((tp,index) => (
+        <li key={index}>
+          
+        </li>
+      ));
+    }
+    return (
+      <div id="top-products-container" className="sidebar-feed-container">
+        <h3>3 Months Ranking</h3>
+        <small>(based on downloads)</small>
+        {topProductsContainer}
+      </div>
+    )
+  }
+}
+
+const mapStateToExploreTopProductsProps = (state) => {
+  const topProducts = state.topProducts;
+  return {
+    topProducts
+  }
+}
+
+const mapDispatchToExploreTopProductsProps = (dispatch) => {
+  return {
+    dispatch
+  }
+}
+
+const ExploreTopProductsWrapper = ReactRedux.connect(
+  mapStateToExploreTopProductsProps,
+  mapDispatchToExploreTopProductsProps
+)(ExploreTopProducts);
