@@ -84,57 +84,8 @@ $this->supporters = $modelInfo->getNewActiveSupporters(18);
                 </section>
             </div>
 
-            <?php
-            $time_start = microtime(true);
-            $this->comments = $modelInfo->getLatestComments(5, $this->cat_id);
-            $topprods = $modelInfo->getMostDownloaded(100, $this->cat_id);
-            $asidehide = '';
-            if(!$this->catabout && count($this->comments)==0  && count($topprods)==0 )
-            {
-                $asidehide = 'hide';
-            }
-            ?>
-            <div class="GridFlex-cell sidebar-right">
-                <aside  id="explore-sidebar <?=$asidehide?>" >
-                    
-                      <?php
-                            echo $this->render('/home/partials/common_rightsidebar.phtml');
-                        ?>
-
-                    <div  class="row sidebar-right-info" >                        
-                        <?php
-                        if (count($topprods) > 0) {
-                            ?>
-                            <span class="commentTitle"> 3 Months Ranking <span class="small light"> (based on downloads)</span></span>
-
-                            <div class="prod-widget-box right bgwhite" id="mostdownloaded">
-                                <?php
-                                $this->rownum = 1;
-                                foreach ($topprods as $this->product) {
-                                    echo $this->render('explore/partials/productTop.phtml');
-                                    $this->rownum++;
-                                }
-                                ?>
-                            </div>
-                        <?php } ?>
-
-                        <?php
-                        if ($this->catabout) {
-                            ?>
-                            <div class="prod-widget-box right catabout" id="catcontent">
-                                <?php include $this->catabout; ?>
-                            </div>
-                            <?php
-                        }
-                        ?>
-                    </div>
-                </aside>
-                <?php
-                $time_elapsed = microtime(true) - $time_start;
-                if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
-                    echo '<div class="alert alert-warning" role="alert"><strong>Rendering Time: </strong>'.$time_elapsed.' s</div>';
-                }?>
-            </div>
+        
+            
         </div>
     </section>
     <div class="tooltip_templates" style="display: none">
@@ -146,7 +97,7 @@ $this->supporters = $modelInfo->getNewActiveSupporters(18);
 
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){                               
-                RssNews.setup();   
+              
                 TooltipUser.setup("tooltipuser","right");
                 TooltipUser.setup("tooltipuserleft","left");             
             });

@@ -24,6 +24,7 @@
  **/
 class Default_Model_MemberEmail
 {
+    const CASE_INSENSITIVE = 1;
     /** @var string */
     protected $_dataTableName;
     /** @var  Default_Model_DbTable_MemberEmail */
@@ -222,6 +223,28 @@ class Default_Model_MemberEmail
             return null;
         }
         return $memberData['email_verification_value'];
+    }
+
+    /**
+     * @param string $value
+     * @param int    $param
+     *
+     * @return mixed
+     */
+    public function findMailAddress($value, $param)
+    {
+        $sql = "
+            SELECT *
+            FROM `member_email`
+            WHERE `member_email`.`email_deleted` = 0
+        ";
+        if ($param == self::CASE_INSENSITIVE) {
+            $sql .= "AND LCASE(member_email.email_address) = LCASE(:mail_address)";
+        } else {
+            $sql .= "AND member_email.email_address = :mail_address";
+        }
+
+        return $this->_dataTable->getAdapter()->fetchAll($sql, array('mail_address' => $value));
     }
 
 }

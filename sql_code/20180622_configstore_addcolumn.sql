@@ -1,1 +1,3 @@
-alter table config_store add column is_show_title int(1) default 1 after cross_domain_login;
+ALTER TABLE `config_store`
+  ADD COLUMN `is_show_title` INT(1) DEFAULT 1
+  AFTER `cross_domain_login`;
