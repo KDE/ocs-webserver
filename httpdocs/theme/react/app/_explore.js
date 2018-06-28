@@ -208,11 +208,13 @@ class ExploreRightSideBar extends React.Component {
       <aside className="explore-right-sidebar">
         <div className="ers-section">
           <a href="https://www.opendesktop.org/p/1175480/" target="_blank">
-            <img id="download-app" src="/images/system/download-app.png"/>            
+            <img id="download-app" src="/images/system/download-app.png"/>
           </a>
         </div>
         <div className="ers-section">
-          <a href="/support" className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">Become a supporter</a>
+          <a href="/support" className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">
+            Become a supporter
+          </a>
         </div>
         <div className="ers-section">
           <p>supporters</p>
@@ -221,7 +223,7 @@ class ExploreRightSideBar extends React.Component {
           <RssNewsContainer/>
         </div>
         <div className="ers-section">
-          <p>forum</p>
+          <BlogFeedContainer/>
         </div>
         <div className="ers-section">
           <p>comments</p>
@@ -291,5 +293,50 @@ class RssNewsContainer extends React.Component {
       </div>
     )
   }
+}
 
+class BlogFeedContainer extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+  }
+
+  componentDidMount() {
+    const self = this;
+    $.ajax("https://forum.opendesktop.org/latest.json").then(function (result) {
+      let topics = result.topic_list.topics;
+      topics.sort(function(a,b){
+        return new Date(b.last_posted_at) - new Date(a.last_posted_at);
+      });
+      topics = topics.slice(0,3);
+      console.log(topics);
+      self.setState({items:topics});
+    });
+  }
+
+  render(){
+    let feedItemsContainer;
+    if (this.state.items){
+
+      const feedItems = this.state.items.map((fi,index) => (
+        <li key={index}>
+          <a href={"https://forum.opendesktop.org//t/" + fi.id}>
+            <span className="title">{fi.title}</span>
+          </a>
+          <span className="info-row">
+            <span className="date">{appHelpers.getTimeAgo(fi.created_at)}</span>
+            <span className="comment-counter">{fi.reply_count} replies</span>
+          </span>
+        </li>
+      ));
+
+      feedItemsContainer = <ul>{feedItems}</ul>;
+    }
+    return (
+      <div id="blog-feed-container" className="sidebar-feed-container">
+        <h3>Forum</h3>
+        {feedItemsContainer}
+      </div>
+    )
+  }
 }

@@ -644,11 +644,7 @@ class ExploreRightSideBar extends React.Component {
       React.createElement(
         "div",
         { className: "ers-section" },
-        React.createElement(
-          "p",
-          null,
-          "forum"
-        )
+        React.createElement(BlogFeedContainer, null)
       ),
       React.createElement(
         "div",
@@ -751,7 +747,77 @@ class RssNewsContainer extends React.Component {
       feedItemsContainer
     );
   }
+}
 
+class BlogFeedContainer extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  componentDidMount() {
+    const self = this;
+    $.ajax("https://forum.opendesktop.org/latest.json").then(function (result) {
+      let topics = result.topic_list.topics;
+      topics.sort(function (a, b) {
+        return new Date(b.last_posted_at) - new Date(a.last_posted_at);
+      });
+      topics = topics.slice(0, 3);
+      console.log(topics);
+      self.setState({ items: topics });
+    });
+  }
+
+  render() {
+    let feedItemsContainer;
+    if (this.state.items) {
+
+      const feedItems = this.state.items.map((fi, index) => React.createElement(
+        "li",
+        { key: index },
+        React.createElement(
+          "a",
+          { href: "https://forum.opendesktop.org//t/" + fi.id },
+          React.createElement(
+            "span",
+            { className: "title" },
+            fi.title
+          )
+        ),
+        React.createElement(
+          "span",
+          { className: "info-row" },
+          React.createElement(
+            "span",
+            { className: "date" },
+            appHelpers.getTimeAgo(fi.created_at)
+          ),
+          React.createElement(
+            "span",
+            { className: "comment-counter" },
+            fi.reply_count,
+            " replies"
+          )
+        )
+      ));
+
+      feedItemsContainer = React.createElement(
+        "ul",
+        null,
+        feedItems
+      );
+    }
+    return React.createElement(
+      "div",
+      { id: "blog-feed-container", className: "sidebar-feed-container" },
+      React.createElement(
+        "h3",
+        null,
+        "Forum"
+      ),
+      feedItemsContainer
+    );
+  }
 }
 class HomePage extends React.Component {
   constructor(props) {
