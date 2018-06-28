@@ -838,6 +838,7 @@ class Ocsv1Controller extends Zend_Controller_Action
 
     protected function buildResponseTree($tree)
     {
+        $modelCategory = new Default_Model_DbTable_ProjectCategory();
         $result = array();
         foreach ($tree as $element) {
             if ($this->_format == 'json') {
@@ -849,6 +850,12 @@ class Ocsv1Controller extends Zend_Controller_Action
                     'xdg_type'     => (false === empty($element['xdg_type'])) ? $element['xdg_type'] : ''
                 );
                 //set parent name to name, if neeed
+                if(isset($result['parent_id'])) {
+                    $parent = $modelCategory->fetchParentForId($result['id']);
+                    if($parent) {
+                        $result['name'] = $parent['title'] . "/ " . $result['name'];
+                    }
+                }
             } else {
                 $result[] = array(
                     'id'           => array('@text' => $element['id']),
@@ -857,6 +864,15 @@ class Ocsv1Controller extends Zend_Controller_Action
                     'parent_id'    => array('@text' => (false === empty($element['parent_id'])) ? $element['parent_id'] : ''),
                     'xdg_type'     => array('@text' => (false === empty($element['xdg_type'])) ? $element['xdg_type'] : '')
                 );
+                //set parent name to name, if neeed
+                if(isset($result['parent_id'])) {
+                    $parent = $modelCategory->fetchParentForId($result['id']);
+                    if($parent) {
+                        $name = (false === empty($element['name_legacy'])) ? $element['name_legacy'] : $element['title'];
+                        $name = $parent['title'] . "/ " . $name;
+                        $result['name'] = array('@text' => $name);
+                    }
+                }
             }
             if ($element['has_children']) {
                 $sub_tree = $this->buildResponseTree($element['children']);
