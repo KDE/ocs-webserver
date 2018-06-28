@@ -7,7 +7,6 @@ class ProductGroup extends React.Component {
         const limit = productHelpers.getNumberOfProducts(this.props.device,this.props.numRows);
         productsArray = productsArray.slice(0,limit)
       }
-      console.log(productsArray);
       products = productsArray.map((product,index) => (
         <ProductGroupItem
           key={index}
@@ -15,18 +14,23 @@ class ProductGroup extends React.Component {
         />
       ));
     }
+
+    let sectionHeader;
+    if (this.props.title){
+      sectionHeader = (
+        <div className="section-header">
+          <h3 className="mdl-color-text--primary">{this.props.title}</h3>
+          <div className="actions">
+            <a href={this.props.link} className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">see more</a>
+          </div>
+        </div>
+      );
+    }
     return (
-      <div className="hp-section products-showcase">
-        <div className="container">
-          <div className="section-header">
-            <h3  className="mdl-color-text--primary">{this.props.title}</h3>
-            <div className="actions">
-              <a href={this.props.link} className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">see more</a>
-            </div>
-          </div>
-          <div className="products-container row">
-            {products}
-          </div>
+      <div className="products-showcase">
+        {sectionHeader}
+        <div className="products-container row">
+          {products}
         </div>
       </div>
     )

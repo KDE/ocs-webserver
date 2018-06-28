@@ -74,13 +74,13 @@
     $this->topApps = $modelInfo->getTopProductsForHostStores(6,"234,239,243,244,245,388,391,392,450,481,492",$package_type);
   }
 
+  $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
+  $this->headLink()->appendStylesheet('/theme/react/lib/mdl/material.min.css');
+  $this->headLink()->appendStylesheet('https://fonts.googleapis.com/icon?family=Material+Icons');
+  $this->headLink()->appendStylesheet('https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,500');
+  $this->headLink()->appendStylesheet('/theme/react/assets/css/style.css');
 
 ?>
-
-<link type="text/css" rel="stylesheet" href="/theme/react/lib/mdl/material.min.css"/>
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,500" rel="stylesheet">
-<link type="text/css" rel="stylesheet" href="/theme/react/assets/css/style.css"/>
 
 <main id="explore-content"></main>
 
@@ -106,9 +106,6 @@
 <script type="text/javascript" src="/theme/react/lib/react-dom/react-dom.js"></script>
 <script type="text/javascript" src="/theme/react/lib/redux/redux.min.js"></script>
 <script type="text/javascript" src="/theme/react/lib/redux/react-redux.min.js"></script>
-
 <script type="text/javascript" src="/theme/react/lib/mdl/material.min.js"></script>
-
 <script type="text/javascript" src="/theme/react/lib/timeago/timeago.min.js"></script>
-
 <script type="text/javascript" src="/theme/react/all.js"></script>

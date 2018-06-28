@@ -79,41 +79,41 @@ class ProductGroup extends React.Component {
         const limit = productHelpers.getNumberOfProducts(this.props.device, this.props.numRows);
         productsArray = productsArray.slice(0, limit);
       }
-      console.log(productsArray);
       products = productsArray.map((product, index) => React.createElement(ProductGroupItem, {
         key: index,
         product: product
       }));
     }
-    return React.createElement(
-      "div",
-      { className: "hp-section products-showcase" },
-      React.createElement(
+
+    let sectionHeader;
+    if (this.props.title) {
+      sectionHeader = React.createElement(
         "div",
-        { className: "container" },
+        { className: "section-header" },
         React.createElement(
-          "div",
-          { className: "section-header" },
-          React.createElement(
-            "h3",
-            { className: "mdl-color-text--primary" },
-            this.props.title
-          ),
-          React.createElement(
-            "div",
-            { className: "actions" },
-            React.createElement(
-              "a",
-              { href: this.props.link, className: "mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary" },
-              "see more"
-            )
-          )
+          "h3",
+          { className: "mdl-color-text--primary" },
+          this.props.title
         ),
         React.createElement(
           "div",
-          { className: "products-container row" },
-          products
+          { className: "actions" },
+          React.createElement(
+            "a",
+            { href: this.props.link, className: "mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary" },
+            "see more"
+          )
         )
+      );
+    }
+    return React.createElement(
+      "div",
+      { className: "products-showcase" },
+      sectionHeader,
+      React.createElement(
+        "div",
+        { className: "products-container row" },
+        products
       )
     );
   }
@@ -175,7 +175,8 @@ const reducer = Redux.combineReducers({
   domain: domainReducer,
   env: envReducer,
   device: deviceReducer,
-  view: viewReducer
+  view: viewReducer,
+  filters: filtersReducer
 });
 
 /* reducers */
@@ -236,6 +237,14 @@ function viewReducer(state = {}, action) {
   }
 }
 
+function filtersReducer(state = {}, action) {
+  if (action.type === 'SET_FILTERS') {
+    return action.filters;
+  } else {
+    return state;
+  }
+}
+
 /* /reducers */
 
 /* dispatch */
@@ -289,31 +298,283 @@ function setView(view) {
   };
 }
 
+function setFilters(filters) {
+  return {
+    type: 'SET_FILTERS',
+    filters: filters
+  };
+}
+
 /* /dispatch */
-class HomePageTemplateTwo extends React.Component {
+class ExplorePage extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      device: store.getState().device,
+      products: store.getState().products
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.device) {
+      this.setState({ device: nextProps.device });
+    }
+    if (nextProps.products) {
+      this.setState({ products: nextProps.products });
+    }
+    if (nextProps.filters) {
+      this.setState({ filters: filters });
+    }
+  }
+
   render() {
     return React.createElement(
       "div",
-      { id: "hompage-version-two" },
-      React.createElement(FeaturedSlideshowWrapper, null),
+      { id: "explore-page" },
       React.createElement(
         "div",
-        { id: "top-products", className: "hp-section" },
-        "top 4 products with pic and info"
-      ),
-      React.createElement(
-        "div",
-        { id: "other-products", className: "hp-section" },
-        "another top 6 products with pic and info"
-      ),
-      React.createElement(
-        "div",
-        { id: "latest-products", className: "hp-section" },
-        "3 columns with 3 products each"
+        { className: "wrapper" },
+        React.createElement(
+          "div",
+          { className: "section" },
+          React.createElement(
+            "div",
+            { className: "container mdl-grid" },
+            React.createElement(
+              "div",
+              { className: "sidebar-container mdl-cell--3-col mdl-cell--2-col-tablet" },
+              React.createElement(ExploreSideBarWrapper, null)
+            ),
+            React.createElement(
+              "div",
+              { className: "main-content mdl-cell--9-col  mdl-cell--6-col-tablet" },
+              React.createElement(
+                "div",
+                { className: "top-bar" },
+                React.createElement(ExploreTopBarWrapper, null)
+              ),
+              React.createElement(
+                "div",
+                { className: "explore-products-container" },
+                React.createElement(ProductGroup, {
+                  products: this.state.products,
+                  device: this.state.device
+                })
+              )
+            )
+          )
+        )
       )
     );
   }
 }
+
+const mapStateToExploreProps = state => {
+  const device = state.device;
+  const products = state.products;
+  return {
+    device,
+    products
+  };
+};
+
+const mapDispatchToExploreProps = dispatch => {
+  return {
+    dispatch
+  };
+};
+
+const ExplorePageWrapper = ReactRedux.connect(mapStateToExploreProps, mapDispatchToExploreProps)(ExplorePage);
+
+class ExploreSideBar extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+  render() {
+    return React.createElement(
+      "aside",
+      null,
+      React.createElement(
+        "ul",
+        null,
+        React.createElement(
+          "li",
+          null,
+          React.createElement(
+            "a",
+            { href: "#" },
+            "category"
+          )
+        ),
+        React.createElement(
+          "li",
+          { className: "active" },
+          React.createElement(
+            "a",
+            { href: "#" },
+            "category"
+          ),
+          React.createElement(
+            "ul",
+            null,
+            React.createElement(
+              "li",
+              null,
+              React.createElement(
+                "a",
+                { href: "#" },
+                "subcategory"
+              )
+            ),
+            React.createElement(
+              "li",
+              null,
+              React.createElement(
+                "a",
+                { href: "#" },
+                "subcategory"
+              )
+            ),
+            React.createElement(
+              "li",
+              null,
+              React.createElement(
+                "a",
+                { href: "#" },
+                "subcategory"
+              )
+            ),
+            React.createElement(
+              "li",
+              null,
+              React.createElement(
+                "a",
+                { href: "#" },
+                "subcategory"
+              )
+            ),
+            React.createElement(
+              "li",
+              null,
+              React.createElement(
+                "a",
+                { href: "#" },
+                "subcategory"
+              )
+            ),
+            React.createElement(
+              "li",
+              null,
+              React.createElement(
+                "a",
+                { href: "#" },
+                "subcategory"
+              )
+            )
+          )
+        ),
+        React.createElement(
+          "li",
+          null,
+          React.createElement(
+            "a",
+            { href: "#" },
+            "category"
+          )
+        ),
+        React.createElement(
+          "li",
+          null,
+          React.createElement(
+            "a",
+            { href: "#" },
+            "category"
+          )
+        ),
+        React.createElement(
+          "li",
+          null,
+          React.createElement(
+            "a",
+            { href: "#" },
+            "category"
+          )
+        ),
+        React.createElement(
+          "li",
+          null,
+          React.createElement(
+            "a",
+            { href: "#" },
+            "category"
+          )
+        )
+      )
+    );
+  }
+}
+
+const mapStateToExploreSideBarProps = state => {
+  const device = state.device;
+  const products = state.products;
+  return {
+    device,
+    products
+  };
+};
+
+const mapDispatchToExploreSideBarProps = dispatch => {
+  return {
+    dispatch
+  };
+};
+
+const ExploreSideBarWrapper = ReactRedux.connect(mapStateToExploreSideBarProps, mapDispatchToExploreSideBarProps)(ExploreSideBar);
+
+class ExploreTopBar extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps.filters);
+  }
+
+  render() {
+    console.log(this.props);
+    return React.createElement(
+      "div",
+      { className: "explore-top-bar" },
+      React.createElement(
+        "a",
+        { className: this.props.filters.order === "latest" ? "item active" : "item" },
+        "Latest"
+      ),
+      React.createElement(
+        "a",
+        { className: this.props.filters.order === "top" ? "item active" : "item" },
+        "Top"
+      )
+    );
+  }
+}
+
+const mapStateToExploreTopBarProps = state => {
+  const filters = state.filters;
+  return {
+    filters
+  };
+};
+
+const mapDispatchToExploreTopBarProps = dispatch => {
+  return {
+    dispatch
+  };
+};
+
+const ExploreTopBarWrapper = ReactRedux.connect(mapStateToExploreTopBarProps, mapDispatchToExploreTopBarProps)(ExploreTopBar);
 class HomePage extends React.Component {
   constructor(props) {
     super(props);
@@ -324,7 +585,6 @@ class HomePage extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
     if (nextProps.device) {
       this.setState({ device: nextProps.device });
     }
@@ -343,27 +603,51 @@ class HomePage extends React.Component {
         React.createElement(Introduction, {
           device: this.state.device
         }),
-        React.createElement(ProductGroup, {
-          products: this.state.products.LatestProducts,
-          device: this.state.device,
-          numRows: 1,
-          title: 'New',
-          link: 'https://www.appimagehub.com/browse/ord/latest/'
-        }),
-        React.createElement(ProductGroup, {
-          products: this.state.products.TopApps,
-          device: this.state.device,
-          numRows: 1,
-          title: 'Top Apps',
-          link: 'https://www.appimagehub.com/browse/ord/top/'
-        }),
-        React.createElement(ProductGroup, {
-          products: this.state.products.TopGames,
-          device: this.state.device,
-          numRows: 1,
-          title: 'Top Games',
-          link: 'https://www.appimagehub.com/browse/cat/6/ord/top/'
-        })
+        React.createElement(
+          "div",
+          { className: "section" },
+          React.createElement(
+            "div",
+            { className: "container" },
+            React.createElement(ProductGroup, {
+              products: this.state.products.LatestProducts,
+              device: this.state.device,
+              numRows: 1,
+              title: 'New',
+              link: 'https://www.appimagehub.com/browse/ord/latest/'
+            })
+          )
+        ),
+        React.createElement(
+          "div",
+          { className: "section" },
+          React.createElement(
+            "div",
+            { className: "container" },
+            React.createElement(ProductGroup, {
+              products: this.state.products.TopApps,
+              device: this.state.device,
+              numRows: 1,
+              title: 'Top Apps',
+              link: 'https://www.appimagehub.com/browse/ord/top/'
+            })
+          )
+        ),
+        React.createElement(
+          "div",
+          { className: "section" },
+          React.createElement(
+            "div",
+            { className: "container" },
+            React.createElement(ProductGroup, {
+              products: this.state.products.TopGames,
+              device: this.state.device,
+              numRows: 1,
+              title: 'Top Games',
+              link: 'https://www.appimagehub.com/browse/cat/6/ord/top/'
+            })
+          )
+        )
       )
     );
   }
@@ -390,7 +674,7 @@ class Introduction extends React.Component {
   render() {
     return React.createElement(
       "div",
-      { id: "introduction", className: "hp-section" },
+      { id: "introduction", className: "section" },
       React.createElement(
         "div",
         { className: "container" },
@@ -446,17 +730,19 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    // products
-    store.dispatch(setProducts(products));
     // domain
     store.dispatch(setDomain(window.location.hostname));
     // env
     const env = appHelpers.getEnv(window.location.hostname);
     store.dispatch(setEnv(env));
-    // view
-    store.dispatch(setView(view));
     // device
     window.addEventListener("resize", this.updateDimensions);
+    // view
+    if (view) store.dispatch(setView(view));
+    // products
+    if (products) store.dispatch(setProducts(products));
+    // filters
+    if (filters) store.dispatch(setFilters(filters));
     // finish loading
     this.setState({ loading: false });
   }
@@ -472,10 +758,17 @@ class App extends React.Component {
   }
 
   render() {
+    console.log(store.getState());
+
+    let displayView = React.createElement(HomePageWrapper, null);
+    if (store.getState().view === 'explore') {
+      displayView = React.createElement(ExplorePageWrapper, null);
+    }
+
     return React.createElement(
       "div",
       { id: "app-root" },
-      React.createElement(HomePageWrapper, null)
+      displayView
     );
   }
 }

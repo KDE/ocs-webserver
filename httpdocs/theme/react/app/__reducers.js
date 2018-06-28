@@ -5,7 +5,8 @@ const reducer = Redux.combineReducers({
   domain:domainReducer,
   env:envReducer,
   device:deviceReducer,
-  view:viewReducer
+  view:viewReducer,
+  filters:filtersReducer
 });
 
 /* reducers */
@@ -66,6 +67,14 @@ const reducer = Redux.combineReducers({
     }
   }
 
+  function filtersReducer(state = {}, action){
+    if (action.type === 'SET_FILTERS'){
+      return action.filters;
+    } else {
+      return state;
+    }
+  }
+
 /* /reducers */
 
 /* dispatch */
@@ -116,6 +125,13 @@ const reducer = Redux.combineReducers({
     return {
       type:'SET_VIEW',
       view:view
+    }
+  }
+
+  function setFilters(filters){
+    return {
+      type:'SET_FILTERS',
+      filters:filters
     }
   }
 
