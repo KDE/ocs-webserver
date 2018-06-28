@@ -842,37 +842,40 @@ class Ocsv1Controller extends Zend_Controller_Action
         $result = array();
         foreach ($tree as $element) {
             if ($this->_format == 'json') {
+                $name = (false === empty($element['name_legacy'])) ? $element['name_legacy'] : $element['title'];
+                //set parent name to name, if neeed
+                if(isset($element['parent_id'])) {
+                    $parent = $modelCategory->find($element['parent_id'])->current();
+                    if($parent) {
+                        $name = $parent['title'] . "/ " . $name;
+                    }
+                }
                 $result[] = array(
                     'id'           => $element['id'],
-                    'name'         => (false === empty($element['name_legacy'])) ? $element['name_legacy'] : $element['title'],
+                    'name'         => $name,
                     'display_name' => $element['title'],
                     'parent_id'    => (false === empty($element['parent_id'])) ? $element['parent_id'] : '',
                     'xdg_type'     => (false === empty($element['xdg_type'])) ? $element['xdg_type'] : ''
                 );
+            } else {
+                $name = (false === empty($element['name_legacy'])) ? $element['name_legacy'] : $element['title'];
+                
                 //set parent name to name, if neeed
                 if(isset($element['parent_id'])) {
-                    $parent = $modelCategory->fetchParentForId($element['parent_id']);
+                    $parent = $modelCategory->find($element['parent_id'])->current();
                     if($parent) {
-                        $result['name'] = $parent['title'] . "/ " . $result['name'];
+                        $name = $parent['title'] . "/ " . $name;
                     }
                 }
-            } else {
+                
                 $result[] = array(
                     'id'           => array('@text' => $element['id']),
-                    'name'         => array('@text' => (false === empty($element['name_legacy'])) ? $element['name_legacy'] : $element['title']),
+                    'name'         => array('@text' => $name),
                     'display_name' => array('@text' => $element['title']),
                     'parent_id'    => array('@text' => (false === empty($element['parent_id'])) ? $element['parent_id'] : ''),
                     'xdg_type'     => array('@text' => (false === empty($element['xdg_type'])) ? $element['xdg_type'] : '')
                 );
-                //set parent name to name, if neeed
-                if(isset($element['parent_id'])) {
-                    $parent = $modelCategory->fetchParentForId($element['parent_id']);
-                    if($parent) {
-                        $name = (false === empty($element['name_legacy'])) ? $element['name_legacy'] : $element['title'];
-                        $name = $parent['title'] . "/ " . $name;
-                        $result['name'] = array('@text' => $name);
-                    }
-                }
+                
             }
             if ($element['has_children']) {
                 $sub_tree = $this->buildResponseTree($element['children']);
