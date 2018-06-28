@@ -408,7 +408,16 @@ class ExploreSideBar extends React.Component {
     this.state = {};
   }
   render() {
-    console.log(this.props);
+
+    let categoryTree;
+    if (this.props.categories) {
+      const filters = this.props.filters;
+      categoryTree = this.props.categories.map((cat, index) => React.createElement(ExploreSideBarItem, {
+        key: index,
+        category: cat,
+        filters: filters
+      }));
+    }
     return React.createElement(
       "aside",
       { className: "explore-sidebar" },
@@ -417,116 +426,18 @@ class ExploreSideBar extends React.Component {
         null,
         React.createElement(
           "li",
-          null,
+          { className: "category-item" },
           React.createElement(
             "a",
-            { href: "#" },
-            "category"
-          )
-        ),
-        React.createElement(
-          "li",
-          { className: "active" },
-          React.createElement(
-            "a",
-            { href: "#" },
-            "category"
-          ),
-          React.createElement(
-            "ul",
-            null,
+            { href: "/browse/ord/" + filters.order },
             React.createElement(
-              "li",
-              null,
-              React.createElement(
-                "a",
-                { href: "#" },
-                "subcategory"
-              )
-            ),
-            React.createElement(
-              "li",
-              null,
-              React.createElement(
-                "a",
-                { href: "#" },
-                "subcategory"
-              )
-            ),
-            React.createElement(
-              "li",
-              null,
-              React.createElement(
-                "a",
-                { href: "#" },
-                "subcategory"
-              )
-            ),
-            React.createElement(
-              "li",
-              null,
-              React.createElement(
-                "a",
-                { href: "#" },
-                "subcategory"
-              )
-            ),
-            React.createElement(
-              "li",
-              null,
-              React.createElement(
-                "a",
-                { href: "#" },
-                "subcategory"
-              )
-            ),
-            React.createElement(
-              "li",
-              null,
-              React.createElement(
-                "a",
-                { href: "#" },
-                "subcategory"
-              )
+              "span",
+              { className: "title" },
+              "All"
             )
           )
         ),
-        React.createElement(
-          "li",
-          null,
-          React.createElement(
-            "a",
-            { href: "#" },
-            "category"
-          )
-        ),
-        React.createElement(
-          "li",
-          null,
-          React.createElement(
-            "a",
-            { href: "#" },
-            "category"
-          )
-        ),
-        React.createElement(
-          "li",
-          null,
-          React.createElement(
-            "a",
-            { href: "#" },
-            "category"
-          )
-        ),
-        React.createElement(
-          "li",
-          null,
-          React.createElement(
-            "a",
-            { href: "#" },
-            "category"
-          )
-        )
+        categoryTree
       )
     );
   }
@@ -534,6 +445,7 @@ class ExploreSideBar extends React.Component {
 
 const mapStateToExploreSideBarProps = state => {
   const categories = state.categories;
+  const filters = state.filters;
   return {
     categories
   };
@@ -546,6 +458,50 @@ const mapDispatchToExploreSideBarProps = dispatch => {
 };
 
 const ExploreSideBarWrapper = ReactRedux.connect(mapStateToExploreSideBarProps, mapDispatchToExploreSideBarProps)(ExploreSideBar);
+
+class ExploreSideBarItem extends React.Component {
+  render() {
+
+    const order = store.getState().filters.order;
+
+    let subcatMenu;
+    /*if (this.props.category.has_children){
+      const subcategories = this.props.category.children.map((cat,index) => (
+        <ExploreSideBarItem
+          key={index}
+          category={cat}
+        />
+      ));
+      subcatMenu = (
+        <ul>
+          {subcategories}
+        </ul>
+      );
+    }*/
+
+    console.log(this.props.category);
+
+    return React.createElement(
+      "li",
+      { className: "category-item" },
+      React.createElement(
+        "a",
+        { href: "/browse/cat/" + this.props.category.id + "/ord/" + order },
+        React.createElement(
+          "span",
+          { className: "title" },
+          this.props.category.title
+        ),
+        React.createElement(
+          "span",
+          { className: "product-counter" },
+          this.props.category.product_count
+        )
+      ),
+      subcatMenu
+    );
+  }
+}
 
 class ExploreTopBar extends React.Component {
   constructor(props) {

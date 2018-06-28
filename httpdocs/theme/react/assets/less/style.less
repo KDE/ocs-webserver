@@ -296,27 +296,47 @@ header div.container.header {
 
     aside.explore-sidebar {
       background: rgba(0,0,0,.03);
-      padding: 5px 15px;
+      padding: 15px;
+      overflow: auto;
 
       ul {
         margin: 0;
         padding: 0;
         list-style-type: none;
-
+        float: left;
+        width: 100%;
 
         li {
+          float: left;
+          width: 100%;
 
           a {
             width: 100%;
             float: left;
             height: 25px;
-          }
+            background-color: transparent;
+            .transition();
 
+            span {
+              display: block;
+              width: auto;
+              float: left;
+
+              &.product-counter {
+                float: right;
+              }
+            }
+
+            &:hover,
+            &.active {
+              background-color: #60bcff;
+              color: white;
+              
+            }
+          }
           ul {
             border-left: 2px solid #ccc;
             padding-left: 15px;
-            float: left;
-            width: 100%;
           }
         }
       }

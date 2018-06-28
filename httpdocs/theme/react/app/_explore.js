@@ -73,26 +73,27 @@ class ExploreSideBar extends React.Component {
   	this.state = {};
   }
   render(){
-    console.log(this.props);
+
+    let categoryTree;
+    if (this.props.categories){
+      const filters = this.props.filters;
+      categoryTree = this.props.categories.map((cat,index) => (
+        <ExploreSideBarItem
+          key={index}
+          category={cat}
+          filters={filters}
+        />
+      ));
+    }
     return (
       <aside className="explore-sidebar">
         <ul>
-          <li><a href="#">category</a></li>
-          <li className="active">
-            <a href="#">category</a>
-            <ul>
-              <li><a href="#">subcategory</a></li>
-              <li><a href="#">subcategory</a></li>
-              <li><a href="#">subcategory</a></li>
-              <li><a href="#">subcategory</a></li>
-              <li><a href="#">subcategory</a></li>
-              <li><a href="#">subcategory</a></li>
-            </ul>
+          <li className="category-item">
+            <a href={"/browse/ord/" + filters.order}>
+              <span className="title">All</span>
+            </a>
           </li>
-          <li><a href="#">category</a></li>
-          <li><a href="#">category</a></li>
-          <li><a href="#">category</a></li>
-          <li><a href="#">category</a></li>
+          {categoryTree}
         </ul>
       </aside>
     )
@@ -101,6 +102,7 @@ class ExploreSideBar extends React.Component {
 
 const mapStateToExploreSideBarProps = (state) => {
   const categories = state.categories;
+  const filters = state.filters;
   return {
     categories
   }
@@ -116,6 +118,40 @@ const ExploreSideBarWrapper = ReactRedux.connect(
   mapStateToExploreSideBarProps,
   mapDispatchToExploreSideBarProps
 )(ExploreSideBar);
+
+class ExploreSideBarItem extends React.Component {
+  render(){
+
+    const order = store.getState().filters.order;
+
+    let subcatMenu;
+    /*if (this.props.category.has_children){
+      const subcategories = this.props.category.children.map((cat,index) => (
+        <ExploreSideBarItem
+          key={index}
+          category={cat}
+        />
+      ));
+      subcatMenu = (
+        <ul>
+          {subcategories}
+        </ul>
+      );
+    }*/
+
+    console.log(this.props.category);
+
+    return (
+      <li className="category-item">
+        <a href={"/browse/cat/" + this.props.category.id + "/ord/" + order}>
+          <span className="title">{this.props.category.title}</span>
+          <span className="product-counter">{this.props.category.product_count}</span>
+        </a>
+        {subcatMenu}
+      </li>
+    )
+  }
+}
 
 class ExploreTopBar extends React.Component {
   constructor(props){
