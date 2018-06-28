@@ -38,11 +38,27 @@ window.appHelpers = (function(){
     return a;
   }
 
+  function generateFilterUrl(pathname,currentCat){
+    let link;
+    console.log(currentCat);
+    if (currentCat !== 0){
+      console.log(currentCat);
+      console.log('with category');
+      link = "/browse/cat/" + currentCat + "/ord/";
+    } else {
+      console.log('without category');
+      link = "/browse/ord/";
+    }
+    console.log(link);
+    return link;
+  }
+
   return {
     getEnv,
     getDeviceWidth,
     splitByLastDot,
-    getTimeAgo
+    getTimeAgo,
+    generateFilterUrl
   }
 
 }());

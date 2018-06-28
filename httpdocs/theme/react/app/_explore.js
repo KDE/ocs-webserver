@@ -164,10 +164,11 @@ class ExploreTopBar extends React.Component {
   }
 
   render(){
+    const link = appHelpers.generateFilterUrl(window.location.pathname,store.getState().categories.current);
     return (
       <div className="explore-top-bar">
-        <a className={this.props.filters.order === "latest" ? "item active" : "item"}>Latest</a>
-        <a className={this.props.filters.order === "top" ? "item active" : "item"}>Top</a>
+        <a href={link + "latest"} className={this.props.filters.order === "latest" ? "item active" : "item"}>Latest</a>
+        <a href={link + "top"} className={this.props.filters.order === "top" ? "item active" : "item"}>Top</a>
       </div>
     )
   }

@@ -38,11 +38,27 @@ window.appHelpers = function () {
     return a;
   }
 
+  function generateFilterUrl(pathname, currentCat) {
+    let link;
+    console.log(currentCat);
+    if (currentCat !== 0) {
+      console.log(currentCat);
+      console.log('with category');
+      link = "/browse/cat/" + currentCat + "/ord/";
+    } else {
+      console.log('without category');
+      link = "/browse/ord/";
+    }
+    console.log(link);
+    return link;
+  }
+
   return {
     getEnv,
     getDeviceWidth,
     splitByLastDot,
-    getTimeAgo
+    getTimeAgo,
+    generateFilterUrl
   };
 }();
 window.categoryHelpers = function () {
@@ -545,17 +561,18 @@ class ExploreTopBar extends React.Component {
   }
 
   render() {
+    const link = appHelpers.generateFilterUrl(window.location.pathname, store.getState().categories.current);
     return React.createElement(
       "div",
       { className: "explore-top-bar" },
       React.createElement(
         "a",
-        { className: this.props.filters.order === "latest" ? "item active" : "item" },
+        { href: link + "latest", className: this.props.filters.order === "latest" ? "item active" : "item" },
         "Latest"
       ),
       React.createElement(
         "a",
-        { className: this.props.filters.order === "top" ? "item active" : "item" },
+        { href: link + "top", className: this.props.filters.order === "top" ? "item active" : "item" },
         "Top"
       )
     );
