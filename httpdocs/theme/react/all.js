@@ -394,7 +394,7 @@ class ExploreSideBar extends React.Component {
   render() {
     return React.createElement(
       "aside",
-      null,
+      { className: "explore-sidebar" },
       React.createElement(
         "ul",
         null,

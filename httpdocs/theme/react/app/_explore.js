@@ -74,7 +74,7 @@ class ExploreSideBar extends React.Component {
   }
   render(){
     return (
-      <aside>
+      <aside className="explore-sidebar">
         <ul>
           <li><a href="#">category</a></li>
           <li className="active">
