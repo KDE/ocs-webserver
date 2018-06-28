@@ -35,8 +35,14 @@
 
 <main id="explore-content"></main>
 
-<script type="text/javascript">
+<script type="text/javascript" src="/theme/react/lib/react/react.js"></script>
+<script type="text/javascript" src="/theme/react/lib/react-dom/react-dom.js"></script>
+<script type="text/javascript" src="/theme/react/lib/redux/redux.min.js"></script>
+<script type="text/javascript" src="/theme/react/lib/redux/react-redux.min.js"></script>
+<script type="text/javascript" src="/theme/react/lib/mdl/material.min.js"></script>
+<script type="text/javascript" src="/theme/react/lib/timeago/timeago.min.js"></script>
 
+<script type="text/javascript">
   <?php
     $js_products = $this->productsJson;
     $js_filters = $this->filtersJson;
@@ -50,13 +56,7 @@
   var catId = <?php echo $js_catid ?>;
   var comments = <?php echo $js_comments ?>;
   var view = "explore";
+  console.log(view);
 
 </script>
-
-<script type="text/javascript" src="/theme/react/lib/react/react.js"></script>
-<script type="text/javascript" src="/theme/react/lib/react-dom/react-dom.js"></script>
-<script type="text/javascript" src="/theme/react/lib/redux/redux.min.js"></script>
-<script type="text/javascript" src="/theme/react/lib/redux/react-redux.min.js"></script>
-<script type="text/javascript" src="/theme/react/lib/mdl/material.min.js"></script>
-<script type="text/javascript" src="/theme/react/lib/timeago/timeago.min.js"></script>
 <script type="text/javascript" src="/theme/react/all.js"></script>
