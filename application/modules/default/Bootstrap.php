@@ -655,6 +655,18 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 )
             )
         );
+
+         $router->addRoute(
+            'product_referrer_url',
+            new Zend_Controller_Router_Route(
+                '/p/:project_id/new/:new/*',
+                array(
+                    'module'       => 'default',
+                    'controller'   => 'product',
+                    'action'       => 'index-new'
+                )
+            )
+        );
         
         $router->addRoute(
             'product_collectionid_url',
