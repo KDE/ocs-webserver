@@ -32,6 +32,8 @@ class App extends React.Component {
     if (products) store.dispatch(setProducts(products));
     // categories
     if (categories) store.dispatch(setCategories(categories));
+    // current category
+    if (typeof(catId) === 'number') store.dispatch(setCurrentCategory(catId));
     // finish loading
     this.setState({loading:false});
   }

@@ -77,19 +77,21 @@ class ExploreSideBar extends React.Component {
     let categoryTree;
     if (this.props.categories){
       const filters = this.props.filters;
-      categoryTree = this.props.categories.map((cat,index) => (
+      const current = this.props.categories.current;
+      categoryTree = this.props.categories.items.map((cat,index) => (
         <ExploreSideBarItem
           key={index}
           category={cat}
-          filters={filters}
+          current={current}
         />
       ));
     }
+
     return (
       <aside className="explore-sidebar">
         <ul>
           <li className="category-item">
-            <a href={"/browse/ord/" + filters.order}>
+            <a className={this.props.categories.current === 0 ? "active" : ""} href={"/browse/ord/" + filters.order}>
               <span className="title">All</span>
             </a>
           </li>
@@ -124,9 +126,13 @@ class ExploreSideBarItem extends React.Component {
 
     const order = store.getState().filters.order;
 
+    let active;
+    if (this.props.current === parseInt(this.props.category.id)) active = true;
+
     let subcatMenu;
-    /*if (this.props.category.has_children){
-      const subcategories = this.props.category.children.map((cat,index) => (
+    if (this.props.category.has_children && active){
+      const cArray = categoryHelpers.convertCatChildrenObjectToArray(this.props.category.children);
+      const subcategories = cArray.map((cat,index) => (
         <ExploreSideBarItem
           key={index}
           category={cat}
@@ -137,13 +143,11 @@ class ExploreSideBarItem extends React.Component {
           {subcategories}
         </ul>
       );
-    }*/
-
-    console.log(this.props.category);
+    }
 
     return (
       <li className="category-item">
-        <a href={"/browse/cat/" + this.props.category.id + "/ord/" + order}>
+        <a className={active === true ? "active" : ""} href={"/browse/cat/" + this.props.category.id + "/ord/" + order}>
           <span className="title">{this.props.category.title}</span>
           <span className="product-counter">{this.props.category.product_count}</span>
         </a>

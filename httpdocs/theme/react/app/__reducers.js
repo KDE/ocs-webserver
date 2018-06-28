@@ -22,7 +22,16 @@ const reducer = Redux.combineReducers({
 
   function categoriesReducer(state = {}, action){
     if (action.type === 'SET_CATEGORIES'){
-      return action.categories;
+      const s = Object.assign({},state,{
+        items:categories
+      });
+      return s;
+    } else if (action.type === 'SET_CURRENT_CAT'){
+      const s = Object.assign({},state,{
+        current:action.catId
+      });
+      console.log(s);
+      return s;
     } else {
       return state;
     }
@@ -99,6 +108,14 @@ const reducer = Redux.combineReducers({
     return {
       type:'SET_CATEGORIES',
       categories:categories
+    }
+  }
+
+  function setCurrentCategory(catId){
+    console.log(catId);
+    return {
+      type:'SET_CURRENT_CAT',
+      catId:catId
     }
   }
 

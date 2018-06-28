@@ -45,6 +45,22 @@ window.appHelpers = function () {
     getTimeAgo
   };
 }();
+window.categoryHelpers = function () {
+
+  function convertCatChildrenObjectToArray(children) {
+    console.log(children);
+    let cArray = [];
+    for (var i in children) {
+      cArray.push(children[i]);
+    }
+    console.log(cArray);
+    return cArray;
+  }
+
+  return {
+    convertCatChildrenObjectToArray
+  };
+}();
 window.productHelpers = function () {
 
   function getNumberOfProducts(device, numRows) {
@@ -192,7 +208,16 @@ function productsReducer(state = {}, action) {
 
 function categoriesReducer(state = {}, action) {
   if (action.type === 'SET_CATEGORIES') {
-    return action.categories;
+    const s = Object.assign({}, state, {
+      items: categories
+    });
+    return s;
+  } else if (action.type === 'SET_CURRENT_CAT') {
+    const s = Object.assign({}, state, {
+      current: action.catId
+    });
+    console.log(s);
+    return s;
   } else {
     return state;
   }
@@ -269,6 +294,14 @@ function setCategories(categories) {
   return {
     type: 'SET_CATEGORIES',
     categories: categories
+  };
+}
+
+function setCurrentCategory(catId) {
+  console.log(catId);
+  return {
+    type: 'SET_CURRENT_CAT',
+    catId: catId
   };
 }
 
@@ -412,12 +445,14 @@ class ExploreSideBar extends React.Component {
     let categoryTree;
     if (this.props.categories) {
       const filters = this.props.filters;
-      categoryTree = this.props.categories.map((cat, index) => React.createElement(ExploreSideBarItem, {
+      const current = this.props.categories.current;
+      categoryTree = this.props.categories.items.map((cat, index) => React.createElement(ExploreSideBarItem, {
         key: index,
         category: cat,
-        filters: filters
+        current: current
       }));
     }
+
     return React.createElement(
       "aside",
       { className: "explore-sidebar" },
@@ -429,7 +464,7 @@ class ExploreSideBar extends React.Component {
           { className: "category-item" },
           React.createElement(
             "a",
-            { href: "/browse/ord/" + filters.order },
+            { className: this.props.categories.current === 0 ? "active" : "", href: "/browse/ord/" + filters.order },
             React.createElement(
               "span",
               { className: "title" },
@@ -464,29 +499,29 @@ class ExploreSideBarItem extends React.Component {
 
     const order = store.getState().filters.order;
 
-    let subcatMenu;
-    /*if (this.props.category.has_children){
-      const subcategories = this.props.category.children.map((cat,index) => (
-        <ExploreSideBarItem
-          key={index}
-          category={cat}
-        />
-      ));
-      subcatMenu = (
-        <ul>
-          {subcategories}
-        </ul>
-      );
-    }*/
+    let active;
+    if (this.props.current === parseInt(this.props.category.id)) active = true;
 
-    console.log(this.props.category);
+    let subcatMenu;
+    if (this.props.category.has_children && active) {
+      const cArray = categoryHelpers.convertCatChildrenObjectToArray(this.props.category.children);
+      const subcategories = cArray.map((cat, index) => React.createElement(ExploreSideBarItem, {
+        key: index,
+        category: cat
+      }));
+      subcatMenu = React.createElement(
+        "ul",
+        null,
+        subcategories
+      );
+    }
 
     return React.createElement(
       "li",
       { className: "category-item" },
       React.createElement(
         "a",
-        { href: "/browse/cat/" + this.props.category.id + "/ord/" + order },
+        { className: active === true ? "active" : "", href: "/browse/cat/" + this.props.category.id + "/ord/" + order },
         React.createElement(
           "span",
           { className: "title" },
@@ -711,6 +746,8 @@ class App extends React.Component {
     if (products) store.dispatch(setProducts(products));
     // categories
     if (categories) store.dispatch(setCategories(categories));
+    // current category
+    if (typeof catId === 'number') store.dispatch(setCurrentCategory(catId));
     // finish loading
     this.setState({ loading: false });
   }
