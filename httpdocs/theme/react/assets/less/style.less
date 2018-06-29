@@ -215,6 +215,17 @@ header div.container.header {
     font-size: 14px !important;
     font-weight: 500 !important;
     font-family: Source Sans Pro,Source Sans,sans-serif !important;
+
+    &#become-a-supporter {
+      width: 100%;
+      font-size: 20px !important;
+      text-transform: none !important;
+      padding-top: 15px;
+      padding-bottom: 15px;
+      height: auto !important;
+      border-radius: 8px !important;
+      line-height: 1;
+    }
   }
 
   .section {
@@ -325,13 +336,23 @@ header div.container.header {
           background-color: white;
 
           li {
-            padding-left: 45px;
+            padding-left: 40px !important;
             position: relative;
 
             img {
               position: absolute;
-              left: 3px;
-              top: 3px;
+              top: 5px;
+              left: 5px;
+              width: 30px;
+              height: 30px;
+            }
+
+            > a {
+              display: block;
+            }
+
+            span.cat-name {
+              font-size: 12px;
             }
           }
         }
@@ -344,12 +365,24 @@ header div.container.header {
             background-color: white;
 
             .cm-userinfo {
+              background: rgba(0,0,0,0.03);
               float: right;
-              width: 50px;
+              width: 48px;
               text-align: center;
+              padding: 3px;
 
               img {
-                width: 50px;
+                width: 42px;
+                height: 42px;
+                border-radius: 100%;
+              }
+
+              .username {
+                display: block;
+                text-align: center;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
               }
             }
 
@@ -357,6 +390,16 @@ header div.container.header {
               display: block;
               width: 100%;
             }
+
+            .title {
+              font-size: 15px;
+            }
+
+            .content {
+              font-size: 13px;
+              line-height: 1;
+            }
+
             .info-row {
               overflow: auto;
 

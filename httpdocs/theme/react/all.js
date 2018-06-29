@@ -652,7 +652,7 @@ class ExploreRightSideBar extends React.Component {
         { className: "ers-section" },
         React.createElement(
           "a",
-          { href: "/support", className: "mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary" },
+          { href: "/support", id: "become-a-supporter", className: "mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary" },
           "Become a supporter"
         )
       ),
@@ -859,11 +859,19 @@ class ExploreCommentsContainer extends React.Component {
             "span",
             { className: "cm-userinfo" },
             React.createElement("img", { src: cm.profile_image_url }),
-            cm.username
+            React.createElement(
+              "span",
+              { className: "username" },
+              React.createElement(
+                "a",
+                { href: "/p/" + cm.comment_target_id },
+                cm.username
+              )
+            )
           ),
           React.createElement(
             "a",
-            { className: "title", href: "/p/" + cm.comment_title_id },
+            { className: "title", href: "/member/" + cm.member_id },
             React.createElement(
               "span",
               null,

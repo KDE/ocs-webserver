@@ -44,15 +44,15 @@
 <script type="text/javascript" src="/theme/react/lib/timeago/timeago.min.js"></script>
 
 <script type="text/javascript">
+
   <?php
     $js_categries = $this->categoriesJson;
     $js_catid = $this->cat_idJson;
     $js_filters = $this->filtersJson;
     $js_products = $this->productsJson;
-    $js_supporters = $this->supporters;
+    $js_supporters = $this->supportersJson;
     $js_topprods =$this->topprodsJson;
     $js_comments = $this->commentsJson;
-    $js_supporters = $this->supporters;
   ?>
 
   var categories = <?php echo $js_categries ?>;
@@ -60,10 +60,7 @@
   var filters = <?php echo $js_filters ?>;
   var products = <?php echo $js_products ?>;
   var topProducts = <?php echo $js_topprods ?>;
-
-
   var comments = <?php echo $js_comments ?>;
-
   var view = "explore";
 
 </script>

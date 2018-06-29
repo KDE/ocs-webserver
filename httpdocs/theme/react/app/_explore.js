@@ -211,7 +211,7 @@ class ExploreRightSideBar extends React.Component {
           </a>
         </div>
         <div className="ers-section">
-          <a href="/support" className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">
+          <a href="/support" id="become-a-supporter" className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">
             Become a supporter
           </a>
         </div>
@@ -353,9 +353,9 @@ class ExploreCommentsContainer extends React.Component {
           <div className="cm-content">
             <span className="cm-userinfo">
               <img src={cm.profile_image_url}/>
-              {cm.username}
-            </span>            
-            <a className="title" href={"/p/"+cm.comment_title_id}><span>{cm.title}</span></a>
+              <span className="username"><a href={"/p/"+cm.comment_target_id}>{cm.username}</a></span>
+            </span>
+            <a className="title" href={"/member/"+cm.member_id}><span>{cm.title}</span></a>
             <span className="content">
               {cm.comment_text}
             </span>
