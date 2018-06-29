@@ -31,7 +31,7 @@ class HomePage extends React.Component {
                 device={this.state.device}
                 numRows={1}
                 title={'New'}
-                link={'https://www.appimagehub.com/browse/ord/latest/'}
+                link={'/browse/ord/latest/'}
               />
             </div>
           </div>
@@ -42,7 +42,7 @@ class HomePage extends React.Component {
                 device={this.state.device}
                 numRows={1}
                 title={'Top Apps'}
-                link={'https://www.appimagehub.com/browse/ord/top/'}
+                link={'/browse/ord/top/'}
               />
             </div>
           </div>
@@ -53,7 +53,7 @@ class HomePage extends React.Component {
                 device={this.state.device}
                 numRows={1}
                 title={'Top Games'}
-                link={'https://www.appimagehub.com/browse/cat/6/ord/top/'}
+                link={'/browse/cat/6/ord/top/'}
               />
             </div>
           </div>
@@ -94,10 +94,10 @@ class Introduction extends React.Component {
               AppImages are self-contained apps which can simply be downloaded & run on any Linux distribution. For easy integration, download AppImageLauncher:
             </p>
             <div className="actions">
-              <a href="https://www.appimagehub.com/p/1228228" className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary">
+              <a href="/p/1228228" className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary">
                 <img src="/theme/react/assets/img/icon-download_white.png"/> AppImageLauncher
               </a>
-              <a href="https://www.appimagehub.com/browse" className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary">Browse all apps</a>
+              <a href="/browse" className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary">Browse all apps</a>
             </div>
           </article>
         </div>

@@ -1039,7 +1039,7 @@ class HomePage extends React.Component {
               device: this.state.device,
               numRows: 1,
               title: 'New',
-              link: 'https://www.appimagehub.com/browse/ord/latest/'
+              link: '/browse/ord/latest/'
             })
           )
         ),
@@ -1054,7 +1054,7 @@ class HomePage extends React.Component {
               device: this.state.device,
               numRows: 1,
               title: 'Top Apps',
-              link: 'https://www.appimagehub.com/browse/ord/top/'
+              link: '/browse/ord/top/'
             })
           )
         ),
@@ -1069,7 +1069,7 @@ class HomePage extends React.Component {
               device: this.state.device,
               numRows: 1,
               title: 'Top Games',
-              link: 'https://www.appimagehub.com/browse/cat/6/ord/top/'
+              link: '/browse/cat/6/ord/top/'
             })
           )
         )
@@ -1121,13 +1121,13 @@ class Introduction extends React.Component {
             { className: "actions" },
             React.createElement(
               "a",
-              { href: "https://www.appimagehub.com/p/1228228", className: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary" },
+              { href: "/p/1228228", className: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary" },
               React.createElement("img", { src: "/theme/react/assets/img/icon-download_white.png" }),
               " AppImageLauncher"
             ),
             React.createElement(
               "a",
-              { href: "https://www.appimagehub.com/browse", className: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary" },
+              { href: "/browse", className: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary" },
               "Browse all apps"
             )
           )
