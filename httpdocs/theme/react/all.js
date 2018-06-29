@@ -436,12 +436,12 @@ class ExplorePage extends React.Component {
             { className: "mdl-grid" },
             React.createElement(
               "div",
-              { className: "left-sidebar-container mdl-cell--3-col mdl-cell--2-col-tablet" },
+              { className: "left-sidebar-container mdl-cell--3-col mdl-cell--3-col-tablet" },
               React.createElement(ExploreLeftSideBarWrapper, null)
             ),
             React.createElement(
               "div",
-              { className: "main-content mdl-cell--9-col mdl-cell--4-col-tablet" },
+              { className: "main-content mdl-cell--9-col mdl-cell--5-col-tablet" },
               React.createElement(
                 "div",
                 { className: "top-bar" },
