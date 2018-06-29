@@ -2108,8 +2108,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
                     //$packageTypeTable = new Default_Model_DbTable_ProjectPackageType();
                     $packageTypeTable = new Default_Model_Tags();
-                    $packageTypeTable->deletePackageTypeOnProject($this->_projectId, $_POST['file_id']);
-
+                    $packageTypeTable->deleteFileTagsOnProject($this->_projectId, $_POST['file_id']);
+                    
                     $this->_helper->json(array('status' => 'ok'));
 
                     return;
