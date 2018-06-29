@@ -50,7 +50,7 @@ class Default_Form_Register extends Zend_Form
         $userExistCheck->setMessage('This username already exists.', Local_Validate_UsernameExists::EXISTS);
         $userEmptyCheck = new Zend_Validate_NotEmpty();
         $userEmptyCheck->setMessage('RegisterFormUsernameErr', Zend_Validate_NotEmpty::IS_EMPTY);
-        $userNameLength = new Zend_Validate_StringLength(array('min' => 4, 'max' => 35));
+        $userNameLength = new Zend_Validate_StringLength(array('min' => 4, 'max' => 255));
         //        $userNameLength->setMessages(array(
         //            Zend_Validate_StringLength::TOO_SHORT =>
         //                'Der String \'%value%\' ist zu kurz',
