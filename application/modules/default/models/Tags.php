@@ -675,13 +675,30 @@ class Default_Model_Tags
         return '';
     }
     
+    public function deleteFileTagsOnProject($projectId, $fileId)
+    {
+        $sql = "UPDATE tag_object inner join tag ON tag.tag_id = tag_object.tag_id set tag_changed = NOW() , is_deleted = 1 
+                    WHERE tag_type_id = :tag_type_id and tag_object.tag_object_id=:object_id and tag_object.tag_parent_object_id=:parent_object_id";
+
+        $this->getAdapter()->query($sql, array('tag_type_id' => $this::TAG_TYPE_FILE, 'object_id' => $fileId, 'parent_object_id' => $projectId));
+    }
+    
     
     public function deletePackageTypeOnProject($projectId, $fileId)
     {
         $sql = "UPDATE tag_object inner join tag ON tag.tag_id = tag_object.tag_id set tag_changed = NOW() , is_deleted = 1 
-                    WHERE tag_group_id = :tag_group_id and tag.tag_name = :name and tag_object.tag_object_id=:object_id and tag_object.tag_parent_object_id=:parent_object_id";
+                    WHERE tag_group_id = :tag_group_id and tag_object.tag_object_id=:object_id and tag_object.tag_parent_object_id=:parent_object_id";
 
         $this->getAdapter()->query($sql, array('tag_group_id' => $this::TAG_PACKAGETYPE_GROUPID, 'object_id' => $fileId, 'parent_object_id' => $projectId));
+    }
+    
+    
+    public function deleteArchitectureOnProject($projectId, $fileId)
+    {
+        $sql = "UPDATE tag_object inner join tag ON tag.tag_id = tag_object.tag_id set tag_changed = NOW() , is_deleted = 1 
+                    WHERE tag_group_id = :tag_group_id and tag_object.tag_object_id=:object_id and tag_object.tag_parent_object_id=:parent_object_id";
+
+        $this->getAdapter()->query($sql, array('tag_group_id' => $this::TAG_ARCHITECTURE_GROUPID, 'object_id' => $fileId, 'parent_object_id' => $projectId));
     }
     
     
