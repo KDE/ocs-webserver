@@ -50,7 +50,6 @@
     $js_catid = $this->cat_idJson;
     $js_filters = $this->filtersJson;
     $js_products = $this->productsJson;
-    $js_supporters = $this->supportersJson;
     $js_topprods =$this->topprodsJson;
     $js_comments = $this->commentsJson;
   ?>
@@ -61,6 +60,16 @@
   var products = <?php echo $js_products ?>;
   var topProducts = <?php echo $js_topprods ?>;
   var comments = <?php echo $js_comments ?>;
+  var supporters = <?php echo json_encode($this->supporters) ?>;
+
+  var pagination = {
+    totalcount:<?php echo $this->totalcount ?>,
+    page:<?php echo $this->page ?>
+  }
+
+  console.log(supporters);
+  console.log(pagination);
+
   var view = "explore";
 
 </script>
