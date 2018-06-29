@@ -38,6 +38,7 @@ class ExplorePage extends React.Component {
                     products={this.state.products}
                     device={this.state.device}
                   />
+                  <PaginationWrapper/>
                 </div>
               </div>
             </div>
@@ -70,6 +71,44 @@ const ExplorePageWrapper = ReactRedux.connect(
   mapStateToExploreProps,
   mapDispatchToExploreProps
 )(ExplorePage);
+
+class Pagination extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+  }
+
+  componentDidMount() {
+    const itemsPerPage = 10;
+    const numPages = Math.ceil(this.props.pagination.totalcount / itemsPerPage);
+    const pagination = productHelpers.generatePaginationObject(numPages,window.location.pathname,store.getState().categories.current,store.getState().filters.order);
+    this.setState({pagination:pagination});
+  }
+
+  render(){
+    return (
+      <p>pagination</p>
+    )
+  }
+}
+
+const mapStateToPaginationProps = (state) => {
+  const pagination = state.pagination;
+  return {
+    pagination
+  }
+}
+
+const mapDispatchToPaginationProps = (dispatch) => {
+  return {
+    dispatch
+  }
+}
+
+const PaginationWrapper = ReactRedux.connect(
+  mapStateToPaginationProps,
+  mapDispatchToPaginationProps
+)(Pagination);
 
 class ExploreTopBar extends React.Component {
   constructor(props){

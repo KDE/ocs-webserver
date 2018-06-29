@@ -36,6 +36,11 @@ class App extends React.Component {
       store.dispatch(setProducts(products));
     }
 
+    // pagination
+    if (window.pagination){
+      store.dispatch(setPagination(pagination));
+    }
+
     // filters
     if (window.filters) {
       store.dispatch(setFilters(filters));
@@ -49,15 +54,12 @@ class App extends React.Component {
     // categories
     if (window.categories) {
       store.dispatch(setCategories(categories));
-
       // current category
       if (window.catId) store.dispatch(setCurrentCategory(catId));
-
       // parent category
       if (!window.parentCat) {
         const parent_category = categoryHelpers.findParentCategory(categories);
       }
-
     }
 
     // supporters

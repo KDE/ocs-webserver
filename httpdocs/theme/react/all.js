@@ -97,8 +97,27 @@ window.productHelpers = function () {
     return num;
   }
 
+  function generatePaginationObject(numPages, pathname, currentCategoy, order) {
+    let pagination = [];
+
+    let baseHref = "/browse";
+    if (pathname.indexOf('cat') > -1) {
+      baseHref += "/cat/" + currentCategoy;
+    }
+
+    for (var i = 0; i < numPages; i++) {
+      const page = {
+        number: parseInt(i + 1),
+        link: baseHref + "/page/" + parseInt(i + 1) + "/ord/" + order
+      };
+      pagination.push(page);
+    }
+    return pagination;
+  }
+
   return {
-    getNumberOfProducts
+    getNumberOfProducts,
+    generatePaginationObject
   };
 }();
 class ProductGroup extends React.Component {
@@ -201,6 +220,7 @@ class ProductGroupItem extends React.Component {
 }
 const reducer = Redux.combineReducers({
   products: productsReducer,
+  pagination: paginationReducer,
   topProducts: topProductsReducer,
   categories: categoriesReducer,
   comments: commentsReducer,
@@ -218,6 +238,14 @@ const reducer = Redux.combineReducers({
 function productsReducer(state = {}, action) {
   if (action.type === 'SET_PRODUCTS') {
     return action.products;
+  } else {
+    return state;
+  }
+}
+
+function paginationReducer(state = {}, action) {
+  if (action.type === 'SET_PAGINATION') {
+    return action.pagination;
   } else {
     return state;
   }
@@ -319,6 +347,13 @@ function setProducts(products) {
   return {
     type: 'SET_PRODUCTS',
     products: products
+  };
+}
+
+function setPagination(pagination) {
+  return {
+    type: 'SET_PAGINATION',
+    pagination: pagination
   };
 }
 
@@ -453,7 +488,8 @@ class ExplorePage extends React.Component {
                 React.createElement(ProductGroup, {
                   products: this.state.products,
                   device: this.state.device
-                })
+                }),
+                React.createElement(PaginationWrapper, null)
               )
             )
           )
@@ -484,6 +520,43 @@ const mapDispatchToExploreProps = dispatch => {
 };
 
 const ExplorePageWrapper = ReactRedux.connect(mapStateToExploreProps, mapDispatchToExploreProps)(ExplorePage);
+
+class Pagination extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  componentDidMount() {
+    const itemsPerPage = 10;
+    const numPages = Math.ceil(this.props.pagination.totalcount / itemsPerPage);
+    const pagination = productHelpers.generatePaginationObject(numPages, window.location.pathname, store.getState().categories.current, store.getState().filters.order);
+    this.setState({ pagination: pagination });
+  }
+
+  render() {
+    return React.createElement(
+      "p",
+      null,
+      "pagination"
+    );
+  }
+}
+
+const mapStateToPaginationProps = state => {
+  const pagination = state.pagination;
+  return {
+    pagination
+  };
+};
+
+const mapDispatchToPaginationProps = dispatch => {
+  return {
+    dispatch
+  };
+};
+
+const PaginationWrapper = ReactRedux.connect(mapStateToPaginationProps, mapDispatchToPaginationProps)(Pagination);
 
 class ExploreTopBar extends React.Component {
   constructor(props) {
@@ -1225,6 +1298,11 @@ class App extends React.Component {
       store.dispatch(setProducts(products));
     }
 
+    // pagination
+    if (window.pagination) {
+      store.dispatch(setPagination(pagination));
+    }
+
     // filters
     if (window.filters) {
       store.dispatch(setFilters(filters));
@@ -1238,10 +1316,8 @@ class App extends React.Component {
     // categories
     if (window.categories) {
       store.dispatch(setCategories(categories));
-
       // current category
       if (window.catId) store.dispatch(setCurrentCategory(catId));
-
       // parent category
       if (!window.parentCat) {
         const parent_category = categoryHelpers.findParentCategory(categories);
