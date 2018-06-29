@@ -57,7 +57,12 @@ class App extends React.Component {
       if (!window.parentCat) {
         const parent_category = categoryHelpers.findParentCategory(categories);
       }
-      
+
+    }
+
+    // supporters
+    if (window.supporters){
+      store.dispatch(setSupporters(supporters));
     }
 
     // comments

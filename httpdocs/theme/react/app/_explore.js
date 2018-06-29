@@ -216,7 +216,7 @@ class ExploreRightSideBar extends React.Component {
           </a>
         </div>
         <div className="ers-section">
-          <p>supporters</p>
+          <ExploreSupportersContainerWrapper/>
         </div>
         <div className="ers-section">
           <RssNewsContainer/>
@@ -253,6 +253,54 @@ const ExploreRightSideBarWrapper = ReactRedux.connect(
   mapStateToExploreRightSideBarProps,
   mapDispatchToExploreRightSideBarProps
 )(ExploreRightSideBar);
+
+class ExploreSupportersContainer extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+  }
+
+
+  render(){
+    let supportersContainer;
+    if (this.props.supporters){
+      const cArray = categoryHelpers.convertCatChildrenObjectToArray(this.props.supporters);
+      const supporters = cArray.map((sp,index) => (
+        <div className="supporter-item" key={index}>
+          <a href={"/member/"+sp.member_id} className="item">
+            <img src={sp.profile_image_url}/>
+          </a>
+        </div>
+      ));
+      supportersContainer = <div className="supporter-list-wrapper">{supporters}</div>;
+    }
+
+    return (
+      <div id="supporters-container" className="sidebar-feed-container">
+        <h3>{this.props.supporters.length} people support those who create freedom</h3>
+        {supportersContainer}
+      </div>
+    )
+  }
+}
+
+const mapStateToExploreSupportersContainerProps = (state) => {
+  const supporters = state.supporters;
+  return {
+    supporters
+  }
+}
+
+const mapDispatchToExploreSupportersContainerProps = (dispatch) => {
+  return {
+    dispatch
+  }
+}
+
+const ExploreSupportersContainerWrapper = ReactRedux.connect(
+  mapStateToExploreSupportersContainerProps,
+  mapDispatchToExploreSupportersContainerProps
+)(ExploreSupportersContainer)
 
 class RssNewsContainer extends React.Component {
   constructor(props){

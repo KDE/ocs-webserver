@@ -324,6 +324,7 @@ header div.container.header {
       .sidebar-feed-container {
         background: rgba(0,0,0,.03);
         padding: 10px;
+        overflow: auto;
 
         ul {
           padding: 0;
@@ -418,6 +419,41 @@ header div.container.header {
 
           li + li {
             border-top:1px solid #ccc;
+          }
+        }
+
+        .supporter-list-wrapper {
+          border: 1px solid #ccc;
+          background-color: white;
+          padding: 10px;
+          float: left;
+          width: 100%;
+
+          .supporter-item {
+            float: left;
+            padding: 3px;
+            height: 31px;
+            width: 31px;
+
+            a {
+              display: block;
+              width: 100%;
+              height: 100%;
+              float: left;
+
+              img {
+                width: 25px;
+                height: 25px;
+                float: left;
+              }
+            }
+          }
+        }
+
+        &#top-products-container {
+          small {
+            margin-top: -10px;
+            display: block;
           }
         }
       }

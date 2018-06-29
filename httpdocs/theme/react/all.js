@@ -659,11 +659,7 @@ class ExploreRightSideBar extends React.Component {
       React.createElement(
         "div",
         { className: "ers-section" },
-        React.createElement(
-          "p",
-          null,
-          "supporters"
-        )
+        React.createElement(ExploreSupportersContainerWrapper, null)
       ),
       React.createElement(
         "div",
@@ -704,6 +700,61 @@ const mapDispatchToExploreRightSideBarProps = dispatch => {
 };
 
 const ExploreRightSideBarWrapper = ReactRedux.connect(mapStateToExploreRightSideBarProps, mapDispatchToExploreRightSideBarProps)(ExploreRightSideBar);
+
+class ExploreSupportersContainer extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  render() {
+    let supportersContainer;
+    if (this.props.supporters) {
+      const cArray = categoryHelpers.convertCatChildrenObjectToArray(this.props.supporters);
+      const supporters = cArray.map((sp, index) => React.createElement(
+        "div",
+        { className: "supporter-item", key: index },
+        React.createElement(
+          "a",
+          { href: "/member/" + sp.member_id, className: "item" },
+          React.createElement("img", { src: sp.profile_image_url })
+        )
+      ));
+      supportersContainer = React.createElement(
+        "div",
+        { className: "supporter-list-wrapper" },
+        supporters
+      );
+    }
+
+    return React.createElement(
+      "div",
+      { id: "supporters-container", className: "sidebar-feed-container" },
+      React.createElement(
+        "h3",
+        null,
+        this.props.supporters.length,
+        " people support those who create freedom"
+      ),
+      supportersContainer
+    );
+  }
+}
+
+const mapStateToExploreSupportersContainerProps = state => {
+  const supporters = state.supporters;
+  return {
+    supporters
+  };
+};
+
+const mapDispatchToExploreSupportersContainerProps = dispatch => {
+  return {
+    dispatch
+  };
+};
+
+const ExploreSupportersContainerWrapper = ReactRedux.connect(mapStateToExploreSupportersContainerProps, mapDispatchToExploreSupportersContainerProps)(ExploreSupportersContainer);
 
 class RssNewsContainer extends React.Component {
   constructor(props) {
@@ -1195,6 +1246,11 @@ class App extends React.Component {
       if (!window.parentCat) {
         const parent_category = categoryHelpers.findParentCategory(categories);
       }
+    }
+
+    // supporters
+    if (window.supporters) {
+      store.dispatch(setSupporters(supporters));
     }
 
     // comments
