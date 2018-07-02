@@ -97,7 +97,7 @@ window.productHelpers = function () {
     return num;
   }
 
-  function generatePaginationObject(numPages, pathname, currentCategoy, order) {
+  function generatePaginationObject(numPages, pathname, currentCategoy, order, page) {
     let pagination = [];
 
     let baseHref = "/browse";
@@ -105,13 +105,30 @@ window.productHelpers = function () {
       baseHref += "/cat/" + currentCategoy;
     }
 
+    if (page > 1) {
+      const prev = {
+        number: 'previous',
+        link: baseHref + "/page/" + parseInt(page - 1) + "/ord/" + order
+      };
+      pagination.push(prev);
+    }
+
     for (var i = 0; i < numPages; i++) {
-      const page = {
+      const p = {
         number: parseInt(i + 1),
         link: baseHref + "/page/" + parseInt(i + 1) + "/ord/" + order
       };
-      pagination.push(page);
+      pagination.push(p);
     }
+
+    if (page < numPages) {
+      const next = {
+        number: 'next',
+        link: baseHref + "/page/" + parseInt(page + 1) + "/ord/" + order
+      };
+      pagination.push(next);
+    }
+
     return pagination;
   }
 
@@ -521,43 +538,6 @@ const mapDispatchToExploreProps = dispatch => {
 
 const ExplorePageWrapper = ReactRedux.connect(mapStateToExploreProps, mapDispatchToExploreProps)(ExplorePage);
 
-class Pagination extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
-  componentDidMount() {
-    const itemsPerPage = 10;
-    const numPages = Math.ceil(this.props.pagination.totalcount / itemsPerPage);
-    const pagination = productHelpers.generatePaginationObject(numPages, window.location.pathname, store.getState().categories.current, store.getState().filters.order);
-    this.setState({ pagination: pagination });
-  }
-
-  render() {
-    return React.createElement(
-      "p",
-      null,
-      "pagination"
-    );
-  }
-}
-
-const mapStateToPaginationProps = state => {
-  const pagination = state.pagination;
-  return {
-    pagination
-  };
-};
-
-const mapDispatchToPaginationProps = dispatch => {
-  return {
-    dispatch
-  };
-};
-
-const PaginationWrapper = ReactRedux.connect(mapStateToPaginationProps, mapDispatchToPaginationProps)(Pagination);
-
 class ExploreTopBar extends React.Component {
   constructor(props) {
     super(props);
@@ -700,6 +680,111 @@ class ExploreSideBarItem extends React.Component {
     );
   }
 }
+
+class Pagination extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  componentDidMount() {
+    const itemsPerPage = 10;
+    const numPages = Math.ceil(this.props.pagination.totalcount / itemsPerPage);
+    const pagination = productHelpers.generatePaginationObject(numPages, window.location.pathname, this.props.currentCategoy, this.props.filters.order, this.props.pagination.page);
+    this.setState({ pagination: pagination });
+  }
+
+  render() {
+    let paginationDisplay;
+    if (this.state.pagination) {
+      const pagination = this.state.pagination.map((pi, index) => {
+
+        let numberDisplay;
+        if (pi.number === 'previous') {
+          numberDisplay = React.createElement(
+            "span",
+            { className: "num-wrap" },
+            React.createElement(
+              "i",
+              { className: "material-icons" },
+              "arrow_back_ios"
+            ),
+            React.createElement(
+              "span",
+              null,
+              pi.number
+            )
+          );
+        } else if (pi.number === 'next') {
+          numberDisplay = React.createElement(
+            "span",
+            { className: "num-wrap" },
+            React.createElement(
+              "span",
+              null,
+              pi.number
+            ),
+            React.createElement(
+              "i",
+              { className: "material-icons" },
+              "arrow_forward_ios"
+            )
+          );
+        } else {
+          numberDisplay = pi.number;
+        }
+
+        let cssClass;
+        if (pi.number === this.props.pagination.page) {
+          cssClass = "active";
+        }
+
+        return React.createElement(
+          "li",
+          { key: index },
+          React.createElement(
+            "a",
+            { href: pi.link, className: cssClass },
+            numberDisplay
+          )
+        );
+      });
+      paginationDisplay = React.createElement(
+        "ul",
+        null,
+        pagination
+      );
+    }
+    return React.createElement(
+      "div",
+      { id: "pagination-container" },
+      React.createElement(
+        "div",
+        { className: "wrapper" },
+        paginationDisplay
+      )
+    );
+  }
+}
+
+const mapStateToPaginationProps = state => {
+  const pagination = state.pagination;
+  const filters = state.filters;
+  const currentCategoy = state.categories.current;
+  return {
+    pagination,
+    filters,
+    currentCategoy
+  };
+};
+
+const mapDispatchToPaginationProps = dispatch => {
+  return {
+    dispatch
+  };
+};
+
+const PaginationWrapper = ReactRedux.connect(mapStateToPaginationProps, mapDispatchToPaginationProps)(Pagination);
 
 class ExploreRightSideBar extends React.Component {
   constructor(props) {

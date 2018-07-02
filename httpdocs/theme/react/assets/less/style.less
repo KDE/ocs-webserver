@@ -157,10 +157,52 @@ header div.container.header {
 }
 
 .explore-products-container {
+
   .products-showcase {
     .products-container {
       .square {
         width: 25%;
+      }
+    }
+  }
+
+  #pagination-container {
+    text-align: center;
+
+    .wrapper {
+      margin: 0 auto;
+      display: table;
+      width: auto;
+
+      ul {
+        padding: 0;
+        margin: 0;
+        list-style-type: none;
+
+        li {
+          float: left;
+          width: auto;
+          margin-right:5px;
+
+          a {
+            font-size: 18px;
+
+            .num-wrap {
+              display: block;
+              float: left;
+
+              span, i {
+                display: block;
+                float: left;
+              }
+            }
+
+            &.active {
+              font-weight: 500;
+              text-decoration: underline;
+            }
+          }
+        }
       }
     }
   }

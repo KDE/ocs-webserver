@@ -19,7 +19,7 @@ window.productHelpers = (function(){
     return num;
   }
 
-  function generatePaginationObject(numPages,pathname,currentCategoy,order){
+  function generatePaginationObject(numPages,pathname,currentCategoy,order,page){
     let pagination = [];
 
     let baseHref = "/browse";
@@ -27,13 +27,30 @@ window.productHelpers = (function(){
       baseHref += "/cat/" + currentCategoy;
     }
 
+    if (page > 1){
+      const prev = {
+        number:'previous',
+        link:baseHref + "/page/" + parseInt(page - 1) + "/ord/" + order
+      }
+      pagination.push(prev);
+    }
+
     for (var i = 0; i < numPages; i++){
-      const page = {
+      const p = {
         number:parseInt(i + 1),
         link:baseHref + "/page/" + parseInt(i + 1) + "/ord/" + order
       }
-      pagination.push(page);
+      pagination.push(p);
     }
+
+    if (page < numPages){
+      const next = {
+        number:'next',
+        link:baseHref + "/page/" + parseInt(page + 1) + "/ord/" + order
+      }
+      pagination.push(next);
+    }
+
     return pagination;
   }
 
