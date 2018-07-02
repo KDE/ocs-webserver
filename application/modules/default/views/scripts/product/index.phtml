@@ -345,7 +345,7 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
                                      ?>
                                     
                                     <p class="light small">
-                                    <span class="source">Source: </span>
+                                    <span class="source">Source(required if based on other people's work): </span>
                                     <?php if (false === empty($this->product->source_url)):
                                         echo '<a target="_blank" href="' . $this->product->source_url . '" rel="nofollow">' . $this->product->source_url
                                             . ' <span class="fa fa-external-link"></span></a>';
