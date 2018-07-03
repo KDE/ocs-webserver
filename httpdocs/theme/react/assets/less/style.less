@@ -11,7 +11,7 @@ header div.container.header {
   .products-container {
 
     .square {
-      width: 16.66667%;
+      width: 14.28571%;      
       position: relative;
       float: left;
       margin-bottom: 15px;
@@ -161,7 +161,7 @@ header div.container.header {
   .products-showcase {
     .products-container {
       .square {
-        width: 25%;
+        // width: 25%;
       }
     }
   }
@@ -346,13 +346,15 @@ header div.container.header {
 #explore-page {
 
   .main-content-container {
-    width: 80%;
+    //width: 80%;
+    width: 100%;
     float: left;
   }
 
   .right-sidebar-container {
-    width: 20%;
-    float: right;
+    // width: 20%;
+    // float: right;
+    display: none;
 
     .ers-section {
       float: left;
@@ -361,7 +363,7 @@ header div.container.header {
 
       h3 {
         font-size: 20px;
-        font-weight: 500; 
+        font-weight: 500;
       }
 
       img#download-app {
@@ -568,10 +570,27 @@ header div.container.header {
 
 }
 
-@media (min-width: 1920px) {
+@media (max-width: 1720px) and (min-width:1501px) {
   #app-root {
     .container {
       padding: 0 15%;
+    }
+  }
+  .products-showcase {
+    .products-container {
+      .square {
+        width: 14.28571%;
+      }
+    }
+  }
+}
+
+@media (max-width: 1720px) and (min-width:1501px) {
+  .products-showcase {
+    .products-container {
+      .square {
+        width: 16.66667%;
+      }
     }
   }
 }
@@ -584,7 +603,7 @@ header div.container.header {
       }
     }
   }
-  .explore-products-container {
+  /*.explore-products-container {
     .products-showcase {
       .products-container {
         .square {
@@ -592,7 +611,7 @@ header div.container.header {
         }
       }
     }
-  }
+  }*/
 }
 
 @media (max-width: 1250px) and (min-width: 1000px) {
@@ -603,17 +622,17 @@ header div.container.header {
       }
     }
   }
-  .explore-products-container {
+  /*.explore-products-container {
     .products-showcase {
       .products-container {
         .square {
-          width: 33.3333%;
+          width: 33.33333%;
         }
       }
     }
-  }
+  }*/
 
-  #explore-page {
+  /*#explore-page {
     .main-content-container {
       width: 75%;
       float: left;
@@ -623,7 +642,7 @@ header div.container.header {
       width: 25%;
       float: right;
     }
-  }
+  }*/
 
 }
 
@@ -640,7 +659,7 @@ header div.container.header {
       }
     }
   }
-  .explore-products-container {
+  /*.explore-products-container {
     .products-showcase {
       .products-container {
         .square {
@@ -648,7 +667,7 @@ header div.container.header {
         }
       }
     }
-  }
+  }*/
 
   #explore-page {
     .main-content-container {
