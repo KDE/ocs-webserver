@@ -141,11 +141,14 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         $filter['order'] = preg_replace('/[^-a-zA-Z0-9_]/', '', $this->getParam('ord', self::DEFAULT_ORDER));
 
         $page = (int)$this->getParam('page', 1);
-        $pageLimit = 10;
-
-        $requestedElements = $this->fetchRequestedElements($filter, $pageLimit, ($page - 1) * $pageLimit);
+        if ($this->hasParam('new') && $this->getParam("new") == 1) {                 
+            $pageLimit = 1000;    
+        }else{
+            $pageLimit = 10;    
+        }
         
-        if ($this->hasParam('new') && $this->getParam("new") == 1) {        
+        $requestedElements = $this->fetchRequestedElements($filter, $pageLimit, ($page - 1) * $pageLimit);        
+        if ($this->hasParam('new') && $this->getParam("new") == 1) {                             
             $this->view->productsJson =Zend_Json::encode($requestedElements['elements']);           
             $this->view->filtersJson = Zend_Json::encode($filter);
             $this->view->cat_idJson = Zend_Json::encode($inputCatId);
