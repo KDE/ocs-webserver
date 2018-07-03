@@ -3,8 +3,11 @@ class ExplorePage extends React.Component {
   	super(props);
   	this.state = {
       device:store.getState().device,
-      products:store.getState().products
+      products:store.getState().products,
+      minHeight:'auto'
     };
+
+    this.updateContainerHeight = this.updateContainerHeight.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -19,30 +22,34 @@ class ExplorePage extends React.Component {
     }
   }
 
+  updateContainerHeight(sideBarHeight){
+    console.log(sideBarHeight);
+    this.setState({minHeight:sideBarHeight + 100});
+  }
+
   render(){
+
     return (
       <div id="explore-page">
         <div className="wrapper">
-          <div className="main-content-container">
-
-
-              <div className="left-sidebar-container">
-                <ExploreLeftSideBarWrapper/>
+          <div className="main-content-container" style={{"minHeight":this.state.minHeight}}>
+            <div className="left-sidebar-container">
+              <ExploreLeftSideBarWrapper
+                updateContainerHeight={this.updateContainerHeight}
+              />
+            </div>
+            <div className="main-content">
+              <div className="top-bar">
+                <ExploreTopBarWrapper/>
               </div>
-
-              <div className="main-content">
-                <div className="top-bar">
-                  <ExploreTopBarWrapper/>
-                </div>
-                <div className="explore-products-container">
-                  <ProductGroup
-                    products={this.state.products}
-                    device={this.state.device}
-                  />
-                  <PaginationWrapper/>
-                </div>
+              <div className="explore-products-container">
+                <ProductGroup
+                  products={this.state.products}
+                  device={this.state.device}
+                />
+                <PaginationWrapper/>
               </div>
-
+            </div>
           </div>
           <div className="right-sidebar-container">
             <ExploreRightSideBarWrapper/>
@@ -113,6 +120,12 @@ class ExploreLeftSideBar extends React.Component {
   	super(props);
   	this.state = {};
   }
+
+  componentDidMount() {
+    const sideBarHeight = $('#left-sidebar').height();
+    this.props.updateContainerHeight(sideBarHeight);
+  }
+
   render(){
 
     let categoryTree;
@@ -129,7 +142,7 @@ class ExploreLeftSideBar extends React.Component {
     }
 
     return (
-      <aside className="explore-left-sidebar">
+      <aside className="explore-left-sidebar" id="left-sidebar">
         <ul>
           <li className="category-item">
             <a className={this.props.categories.current === 0 ? "active" : ""} href={"/browse/ord/" + filters.order}>

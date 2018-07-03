@@ -59,8 +59,31 @@ window.appHelpers = function () {
 }();
 window.categoryHelpers = function () {
 
-  function findParentCategory(categories) {
-    console.log(categories);
+  function findParentCategory(categories, catId) {
+    let selectedCategories = {};
+    categories.forEach(function (mc, index) {
+      if (parseInt(mc.id) === catId) {
+        selectedCategories.category = mc;
+      } else {
+        const cArray = categoryHelpers.convertCatChildrenObjectToArray(mc.children);
+        cArray.forEach(function (sc, index) {
+          if (parseInt(sc.id) === catId) {
+            selectedCategories.category = mc;
+            selectedCategories.subcategry = sc;
+          } else {
+            const scArray = categoryHelpers.convertCatChildrenObjectToArray(sc.children);
+            scArray.forEach(function (ssc, index) {
+              if (parseInt(ssc.id) === catId) {
+                selectedCategories.category = mc;
+                selectedCategories.subcategry = sc;
+                selectedCategories.secondSubCategory = ssc;
+              }
+            });
+          }
+        });
+      }
+    });
+    return selectedCategories;
   }
 
   function convertCatChildrenObjectToArray(children) {
@@ -457,8 +480,11 @@ class ExplorePage extends React.Component {
     super(props);
     this.state = {
       device: store.getState().device,
-      products: store.getState().products
+      products: store.getState().products,
+      minHeight: 'auto'
     };
+
+    this.updateContainerHeight = this.updateContainerHeight.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -473,7 +499,13 @@ class ExplorePage extends React.Component {
     }
   }
 
+  updateContainerHeight(sideBarHeight) {
+    console.log(sideBarHeight);
+    this.setState({ minHeight: sideBarHeight + 100 });
+  }
+
   render() {
+
     return React.createElement(
       "div",
       { id: "explore-page" },
@@ -482,11 +514,13 @@ class ExplorePage extends React.Component {
         { className: "wrapper" },
         React.createElement(
           "div",
-          { className: "main-content-container" },
+          { className: "main-content-container", style: { "minHeight": this.state.minHeight } },
           React.createElement(
             "div",
             { className: "left-sidebar-container" },
-            React.createElement(ExploreLeftSideBarWrapper, null)
+            React.createElement(ExploreLeftSideBarWrapper, {
+              updateContainerHeight: this.updateContainerHeight
+            })
           ),
           React.createElement(
             "div",
@@ -579,6 +613,12 @@ class ExploreLeftSideBar extends React.Component {
     super(props);
     this.state = {};
   }
+
+  componentDidMount() {
+    const sideBarHeight = $('#left-sidebar').height();
+    this.props.updateContainerHeight(sideBarHeight);
+  }
+
   render() {
 
     let categoryTree;
@@ -594,7 +634,7 @@ class ExploreLeftSideBar extends React.Component {
 
     return React.createElement(
       "aside",
-      { className: "explore-left-sidebar" },
+      { className: "explore-left-sidebar", id: "left-sidebar" },
       React.createElement(
         "ul",
         null,
@@ -1401,7 +1441,8 @@ class App extends React.Component {
       if (window.catId) store.dispatch(setCurrentCategory(catId));
       // parent category
       if (!window.parentCat) {
-        const parent_category = categoryHelpers.findParentCategory(categories);
+        const selectedCategories = categoryHelpers.findParentCategory(categories, catId);
+        console.log(selectedCategories);
       }
     }
 

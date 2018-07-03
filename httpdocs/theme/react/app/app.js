@@ -58,7 +58,8 @@ class App extends React.Component {
       if (window.catId) store.dispatch(setCurrentCategory(catId));
       // parent category
       if (!window.parentCat) {
-        const parent_category = categoryHelpers.findParentCategory(categories);
+        const selectedCategories = categoryHelpers.findParentCategory(categories,catId);
+        console.log(selectedCategories);
       }
     }
 
