@@ -532,7 +532,6 @@ class ExplorePage extends React.Component {
     let titleDisplay;
     if (this.props.categories) {
       let title = "";
-
       if (this.props.categories.currentSecondSub) {
         title = this.props.categories.currentSecondSub.title;
       } else {
@@ -545,21 +544,23 @@ class ExplorePage extends React.Component {
         }
       }
 
-      titleDisplay = React.createElement(
-        "div",
-        { className: "explore-page-category-title" },
-        React.createElement(
-          "h2",
-          null,
-          title
-        ),
-        React.createElement(
-          "small",
-          null,
-          store.getState().pagination.totalcount,
-          " results"
-        )
-      );
+      if (title.length > 0) {
+        titleDisplay = React.createElement(
+          "div",
+          { className: "explore-page-category-title" },
+          React.createElement(
+            "h2",
+            null,
+            title
+          ),
+          React.createElement(
+            "small",
+            null,
+            store.getState().pagination.totalcount,
+            " results"
+          )
+        );
+      }
     }
 
     return React.createElement(

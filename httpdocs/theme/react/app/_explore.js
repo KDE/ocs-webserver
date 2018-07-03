@@ -31,7 +31,6 @@ class ExplorePage extends React.Component {
     let titleDisplay;
     if (this.props.categories){
       let title = "";
-
       if (this.props.categories.currentSecondSub){
         title = this.props.categories.currentSecondSub.title;
       } else {
@@ -44,12 +43,15 @@ class ExplorePage extends React.Component {
         }
       }
 
-      titleDisplay = (
-        <div className="explore-page-category-title">
-          <h2>{title}</h2>
-          <small>{store.getState().pagination.totalcount} results</small>
-        </div>
-      );
+      if (title.length > 0){
+        titleDisplay = (
+          <div className="explore-page-category-title">
+            <h2>{title}</h2>
+            <small>{store.getState().pagination.totalcount} results</small>
+          </div>
+        );
+      }
+
     }
 
     return (
