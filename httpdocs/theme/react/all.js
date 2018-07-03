@@ -635,7 +635,19 @@ class ExploreTopBar extends React.Component {
   }
 
   render() {
-    const link = appHelpers.generateFilterUrl(window.location, store.getState().categories.current);
+    const categories = this.props.categories;
+    let currentId;
+    if (categories.current) {
+      currentId = categories.current.id;
+    }
+    if (categories.currentSub) {
+      currentId = categories.currentSub.id;
+    }
+    if (categories.currentSecondSub) {
+      currentId = categories.currentSecondSub.id;
+    }
+
+    const link = appHelpers.generateFilterUrl(window.location, currentId);
     return React.createElement(
       "div",
       { className: "explore-top-bar" },
@@ -655,8 +667,10 @@ class ExploreTopBar extends React.Component {
 
 const mapStateToExploreTopBarProps = state => {
   const filters = state.filters;
+  const categories = state.categories;
   return {
-    filters
+    filters,
+    categories
   };
 };
 
@@ -793,7 +807,7 @@ class Pagination extends React.Component {
   }
 
   componentDidMount() {
-    const itemsPerPage = 10;
+    const itemsPerPage = 1000;
     const numPages = Math.ceil(this.props.pagination.totalcount / itemsPerPage);
     const pagination = productHelpers.generatePaginationObject(numPages, window.location.pathname, this.props.currentCategoy, this.props.filters.order, this.props.pagination.page);
     this.setState({ pagination: pagination });
@@ -801,7 +815,7 @@ class Pagination extends React.Component {
 
   render() {
     let paginationDisplay;
-    if (this.state.pagination) {
+    if (this.state.pagination && this.props.pagination.totalcount > 1000) {
       const pagination = this.state.pagination.map((pi, index) => {
 
         let numberDisplay;
@@ -1510,7 +1524,6 @@ class App extends React.Component {
       if (window.catId) {
         // current categories
         const currentCategories = categoryHelpers.findCurrentCategories(categories, catId);
-        console.log(currentCategories);
         store.dispatch(setCurrentCategory(currentCategories.category));
         store.dispatch(setCurrentSubCategory(currentCategories.subcategory));
         store.dispatch(setCurrentSecondSubCategory(currentCategories.secondSubCategory));

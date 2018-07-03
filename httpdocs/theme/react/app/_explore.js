@@ -115,7 +115,13 @@ class ExploreTopBar extends React.Component {
   }
 
   render(){
-    const link = appHelpers.generateFilterUrl(window.location,store.getState().categories.current);
+    const categories = this.props.categories;
+    let currentId;
+    if (categories.current) { currentId = categories.current.id; }
+    if (categories.currentSub){ currentId = categories.currentSub.id; }
+    if (categories.currentSecondSub){ currentId = categories.currentSecondSub.id; }
+
+    const link = appHelpers.generateFilterUrl(window.location,currentId);
     return (
       <div className="explore-top-bar">
         <a href={link.base + "latest" + link.search} className={this.props.filters.order === "latest" ? "item active" : "item"}>Latest</a>
@@ -127,8 +133,10 @@ class ExploreTopBar extends React.Component {
 
 const mapStateToExploreTopBarProps = (state) => {
   const filters = state.filters;
+  const categories = state.categories;
   return {
-    filters
+    filters,
+    categories
   }
 }
 
@@ -249,7 +257,7 @@ class Pagination extends React.Component {
   }
 
   componentDidMount() {
-    const itemsPerPage = 10;
+    const itemsPerPage = 1000;
     const numPages = Math.ceil(this.props.pagination.totalcount / itemsPerPage);
     const pagination = productHelpers.generatePaginationObject(numPages,window.location.pathname,this.props.currentCategoy,this.props.filters.order, this.props.pagination.page);
     this.setState({pagination:pagination});
@@ -257,7 +265,7 @@ class Pagination extends React.Component {
 
   render(){
     let paginationDisplay;
-    if (this.state.pagination){
+    if (this.state.pagination && this.props.pagination.totalcount > 1000){
       const pagination = this.state.pagination.map((pi,index) => {
 
         let numberDisplay;
