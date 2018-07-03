@@ -27,7 +27,7 @@ class ExplorePage extends React.Component {
   }
 
   render(){
-
+    console.log(store.getState().pagination);
     let titleDisplay;
     if (this.props.categories){
       let title = "";
@@ -44,11 +44,10 @@ class ExplorePage extends React.Component {
         }
       }
 
-      console.log(title);
-
       titleDisplay = (
         <div className="explore-page-category-title">
           <h2>{title}</h2>
+          <small>{store.getState().pagination.totalcount} results</small>
         </div>
       );
     }

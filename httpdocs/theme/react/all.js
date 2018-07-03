@@ -528,7 +528,7 @@ class ExplorePage extends React.Component {
   }
 
   render() {
-
+    console.log(store.getState().pagination);
     let titleDisplay;
     if (this.props.categories) {
       let title = "";
@@ -545,8 +545,6 @@ class ExplorePage extends React.Component {
         }
       }
 
-      console.log(title);
-
       titleDisplay = React.createElement(
         "div",
         { className: "explore-page-category-title" },
@@ -554,6 +552,12 @@ class ExplorePage extends React.Component {
           "h2",
           null,
           title
+        ),
+        React.createElement(
+          "small",
+          null,
+          store.getState().pagination.totalcount,
+          " results"
         )
       );
     }
