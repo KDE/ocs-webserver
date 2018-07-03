@@ -53,13 +53,16 @@ class App extends React.Component {
 
     // categories
     if (window.categories) {
+      // set categories
       store.dispatch(setCategories(categories));
-      // current category
-      if (window.catId) store.dispatch(setCurrentCategory(catId));
-      // parent category
-      if (!window.parentCat) {
-        const selectedCategories = categoryHelpers.findParentCategory(categories,catId);
-        console.log(selectedCategories);
+      if (window.catId){
+        // current categories
+        const currentCategories = categoryHelpers.findCurrentCategories(categories,catId);
+        console.log(currentCategories);
+        store.dispatch(setCurrentCategory(currentCategories.category));
+        store.dispatch(setCurrentSubCategory(currentCategories.subcategory));
+        store.dispatch(setCurrentSecondSubCategory(currentCategories.secondSubCategory));
+
       }
     }
 

@@ -1,30 +1,30 @@
 window.categoryHelpers = (function(){
 
-  function findParentCategory(categories,catId){
-    let selectedCategories = {}
+  function findCurrentCategories(categories,catId){
+    let currentCategories = {}
     categories.forEach(function(mc,index){
       if (parseInt(mc.id) === catId){
-        selectedCategories.category = mc;
+        currentCategories.category = mc;
       } else {
         const cArray = categoryHelpers.convertCatChildrenObjectToArray(mc.children);
         cArray.forEach(function(sc,index){
           if (parseInt(sc.id) === catId){
-            selectedCategories.category = mc;
-            selectedCategories.subcategry = sc;
+            currentCategories.category = mc;
+            currentCategories.subcategory = sc;
           } else {
             const scArray = categoryHelpers.convertCatChildrenObjectToArray(sc.children);
             scArray.forEach(function(ssc,index){
               if (parseInt(ssc.id) === catId){
-                selectedCategories.category = mc;
-                selectedCategories.subcategry = sc;
-                selectedCategories.secondSubCategory = ssc;
+                currentCategories.category = mc;
+                currentCategories.subcategory = sc;
+                currentCategories.secondSubCategory = ssc;
               }
             })
           }
         });
       }
     });
-    return selectedCategories;
+    return currentCategories;
   }
 
   function convertCatChildrenObjectToArray(children){
@@ -36,7 +36,7 @@ window.categoryHelpers = (function(){
   }
 
   return {
-    findParentCategory,
+    findCurrentCategories,
     convertCatChildrenObjectToArray
   }
 }());

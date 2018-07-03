@@ -23,11 +23,35 @@ class ExplorePage extends React.Component {
   }
 
   updateContainerHeight(sideBarHeight){
-    console.log(sideBarHeight);
     this.setState({minHeight:sideBarHeight + 100});
   }
 
   render(){
+
+    let titleDisplay;
+    if (this.props.categories){
+      let title = "";
+
+      if (this.props.categories.currentSecondSub){
+        title = this.props.categories.currentSecondSub.title;
+      } else {
+        if (this.props.categories.currentSub){
+          title = this.props.categories.currentSub.title;
+        } else {
+          if (this.props.categories.current){
+            title = this.props.categories.current.title;
+          }
+        }
+      }
+
+      console.log(title);
+
+      titleDisplay = (
+        <div className="explore-page-category-title">
+          <h2>{title}</h2>
+        </div>
+      );
+    }
 
     return (
       <div id="explore-page">
@@ -39,6 +63,7 @@ class ExplorePage extends React.Component {
               />
             </div>
             <div className="main-content">
+              {titleDisplay}
               <div className="top-bar">
                 <ExploreTopBarWrapper/>
               </div>
@@ -63,9 +88,11 @@ class ExplorePage extends React.Component {
 const mapStateToExploreProps = (state) => {
   const device = state.device;
   const products = state.products;
+  const categories = state.categories;
   return {
     device,
-    products
+    products,
+    categories
   }
 }
 
@@ -127,16 +154,12 @@ class ExploreLeftSideBar extends React.Component {
   }
 
   render(){
-
     let categoryTree;
     if (this.props.categories){
-      const filters = this.props.filters;
-      const current = this.props.categories.current;
       categoryTree = this.props.categories.items.map((cat,index) => (
         <ExploreSideBarItem
           key={index}
           category={cat}
-          current={current}
         />
       ));
     }
@@ -177,14 +200,25 @@ const ExploreLeftSideBarWrapper = ReactRedux.connect(
 
 class ExploreSideBarItem extends React.Component {
   render(){
-
     const order = store.getState().filters.order;
+    const categories = store.getState().categories;
+
+    let currentId,
+        currentSubId,
+        currentSecondSubId;
+    if (categories.current) { currentId = categories.current.id; }
+    if (categories.currentSub){ currentSubId = categories.currentSub.id; }
+    if (categories.currentSecondSub){ currentSecondSubId = categories.currentSecondSub.id; }
 
     let active;
-    if (this.props.current === parseInt(this.props.category.id)) active = true;
+    if (currentId === this.props.category.id ||
+        currentSubId === this.props.category.id ||
+        currentSecondSubId === this.props.category.id){
+        active = true;
+    }
 
     let subcatMenu;
-    if (this.props.category.has_children && active){
+    if (this.props.category.has_children === true && active){
       const cArray = categoryHelpers.convertCatChildrenObjectToArray(this.props.category.children);
       const subcategories = cArray.map((cat,index) => (
         <ExploreSideBarItem
@@ -192,11 +226,7 @@ class ExploreSideBarItem extends React.Component {
           category={cat}
         />
       ));
-      subcatMenu = (
-        <ul>
-          {subcategories}
-        </ul>
-      );
+      subcatMenu = (<ul>{subcategories}</ul>);
     }
 
     return (

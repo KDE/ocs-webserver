@@ -59,31 +59,31 @@ window.appHelpers = function () {
 }();
 window.categoryHelpers = function () {
 
-  function findParentCategory(categories, catId) {
-    let selectedCategories = {};
+  function findCurrentCategories(categories, catId) {
+    let currentCategories = {};
     categories.forEach(function (mc, index) {
       if (parseInt(mc.id) === catId) {
-        selectedCategories.category = mc;
+        currentCategories.category = mc;
       } else {
         const cArray = categoryHelpers.convertCatChildrenObjectToArray(mc.children);
         cArray.forEach(function (sc, index) {
           if (parseInt(sc.id) === catId) {
-            selectedCategories.category = mc;
-            selectedCategories.subcategry = sc;
+            currentCategories.category = mc;
+            currentCategories.subcategory = sc;
           } else {
             const scArray = categoryHelpers.convertCatChildrenObjectToArray(sc.children);
             scArray.forEach(function (ssc, index) {
               if (parseInt(ssc.id) === catId) {
-                selectedCategories.category = mc;
-                selectedCategories.subcategry = sc;
-                selectedCategories.secondSubCategory = ssc;
+                currentCategories.category = mc;
+                currentCategories.subcategory = sc;
+                currentCategories.secondSubCategory = ssc;
               }
             });
           }
         });
       }
     });
-    return selectedCategories;
+    return currentCategories;
   }
 
   function convertCatChildrenObjectToArray(children) {
@@ -95,7 +95,7 @@ window.categoryHelpers = function () {
   }
 
   return {
-    findParentCategory,
+    findCurrentCategories,
     convertCatChildrenObjectToArray
   };
 }();
@@ -307,7 +307,17 @@ function categoriesReducer(state = {}, action) {
     return s;
   } else if (action.type === 'SET_CURRENT_CAT') {
     const s = Object.assign({}, state, {
-      current: action.catId
+      current: action.cat
+    });
+    return s;
+  } else if (action.type === 'SET_CURRENT_SUBCAT') {
+    const s = Object.assign({}, state, {
+      currentSub: action.cat
+    });
+    return s;
+  } else if (action.type === 'SET_CURRENT_SECONDSUBCAT') {
+    const s = Object.assign({}, state, {
+      currentSecondSub: action.cat
     });
     return s;
   } else {
@@ -411,10 +421,24 @@ function setCategories(categories) {
   };
 }
 
-function setCurrentCategory(catId) {
+function setCurrentCategory(cat) {
   return {
     type: 'SET_CURRENT_CAT',
-    catId: catId
+    cat: cat
+  };
+}
+
+function setCurrentSubCategory(cat) {
+  return {
+    type: 'SET_CURRENT_SUBCAT',
+    cat: cat
+  };
+}
+
+function setCurrentSecondSubCategory(cat) {
+  return {
+    type: 'SET_CURRENT_SECONDSUBCAT',
+    cat: cat
   };
 }
 
@@ -500,11 +524,39 @@ class ExplorePage extends React.Component {
   }
 
   updateContainerHeight(sideBarHeight) {
-    console.log(sideBarHeight);
     this.setState({ minHeight: sideBarHeight + 100 });
   }
 
   render() {
+
+    let titleDisplay;
+    if (this.props.categories) {
+      let title = "";
+
+      if (this.props.categories.currentSecondSub) {
+        title = this.props.categories.currentSecondSub.title;
+      } else {
+        if (this.props.categories.currentSub) {
+          title = this.props.categories.currentSub.title;
+        } else {
+          if (this.props.categories.current) {
+            title = this.props.categories.current.title;
+          }
+        }
+      }
+
+      console.log(title);
+
+      titleDisplay = React.createElement(
+        "div",
+        { className: "explore-page-category-title" },
+        React.createElement(
+          "h2",
+          null,
+          title
+        )
+      );
+    }
 
     return React.createElement(
       "div",
@@ -525,6 +577,7 @@ class ExplorePage extends React.Component {
           React.createElement(
             "div",
             { className: "main-content" },
+            titleDisplay,
             React.createElement(
               "div",
               { className: "top-bar" },
@@ -554,9 +607,11 @@ class ExplorePage extends React.Component {
 const mapStateToExploreProps = state => {
   const device = state.device;
   const products = state.products;
+  const categories = state.categories;
   return {
     device,
-    products
+    products,
+    categories
   };
 };
 
@@ -620,15 +675,11 @@ class ExploreLeftSideBar extends React.Component {
   }
 
   render() {
-
     let categoryTree;
     if (this.props.categories) {
-      const filters = this.props.filters;
-      const current = this.props.categories.current;
       categoryTree = this.props.categories.items.map((cat, index) => React.createElement(ExploreSideBarItem, {
         key: index,
-        category: cat,
-        current: current
+        category: cat
       }));
     }
 
@@ -675,14 +726,27 @@ const ExploreLeftSideBarWrapper = ReactRedux.connect(mapStateToExploreLeftSideBa
 
 class ExploreSideBarItem extends React.Component {
   render() {
-
     const order = store.getState().filters.order;
+    const categories = store.getState().categories;
+
+    let currentId, currentSubId, currentSecondSubId;
+    if (categories.current) {
+      currentId = categories.current.id;
+    }
+    if (categories.currentSub) {
+      currentSubId = categories.currentSub.id;
+    }
+    if (categories.currentSecondSub) {
+      currentSecondSubId = categories.currentSecondSub.id;
+    }
 
     let active;
-    if (this.props.current === parseInt(this.props.category.id)) active = true;
+    if (currentId === this.props.category.id || currentSubId === this.props.category.id || currentSecondSubId === this.props.category.id) {
+      active = true;
+    }
 
     let subcatMenu;
-    if (this.props.category.has_children && active) {
+    if (this.props.category.has_children === true && active) {
       const cArray = categoryHelpers.convertCatChildrenObjectToArray(this.props.category.children);
       const subcategories = cArray.map((cat, index) => React.createElement(ExploreSideBarItem, {
         key: index,
@@ -1436,13 +1500,15 @@ class App extends React.Component {
 
     // categories
     if (window.categories) {
+      // set categories
       store.dispatch(setCategories(categories));
-      // current category
-      if (window.catId) store.dispatch(setCurrentCategory(catId));
-      // parent category
-      if (!window.parentCat) {
-        const selectedCategories = categoryHelpers.findParentCategory(categories, catId);
-        console.log(selectedCategories);
+      if (window.catId) {
+        // current categories
+        const currentCategories = categoryHelpers.findCurrentCategories(categories, catId);
+        console.log(currentCategories);
+        store.dispatch(setCurrentCategory(currentCategories.category));
+        store.dispatch(setCurrentSubCategory(currentCategories.subcategory));
+        store.dispatch(setCurrentSecondSubCategory(currentCategories.secondSubCategory));
       }
     }
 

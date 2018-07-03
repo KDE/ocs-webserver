@@ -47,7 +47,17 @@ const reducer = Redux.combineReducers({
       return s;
     } else if (action.type === 'SET_CURRENT_CAT'){
       const s = Object.assign({},state,{
-        current:action.catId
+        current:action.cat
+      });
+      return s;
+    } else if (action.type === 'SET_CURRENT_SUBCAT'){
+      const s = Object.assign({},state,{
+        currentSub:action.cat
+      });
+      return s;
+    } else if (action.type === 'SET_CURRENT_SECONDSUBCAT'){
+      const s = Object.assign({},state,{
+        currentSecondSub:action.cat
       });
       return s;
     } else {
@@ -151,10 +161,24 @@ const reducer = Redux.combineReducers({
     }
   }
 
-  function setCurrentCategory(catId){
+  function setCurrentCategory(cat){
     return {
       type:'SET_CURRENT_CAT',
-      catId:catId
+      cat:cat
+    }
+  }
+
+  function setCurrentSubCategory(cat){
+    return {
+      type:'SET_CURRENT_SUBCAT',
+      cat:cat
+    }
+  }
+
+  function setCurrentSecondSubCategory(cat){
+    return {
+      type:'SET_CURRENT_SECONDSUBCAT',
+      cat:cat
     }
   }
 
