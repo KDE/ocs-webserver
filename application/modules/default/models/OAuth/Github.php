@@ -448,6 +448,13 @@ class Default_Model_OAuth_Github implements Default_Model_OAuth_Interface
 
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - new user data: '. print_r($newUserValues, true));
         $modelMember = new Default_Model_Member();
+        $result = $modelMember->findUsername($userInfo['login']);
+        $flagUsernameChanged = false;
+        if (count($result) > 0) {
+         $userInfo['username'] = $modelMember->generateUniqueUsername($userInfo['login']);
+         $flagUsernameChanged = true;
+         Zend_Registry::get('logger')->info(__METHOD__ . ' - username already in use. new generated username: ' . $userInfo['username']);
+        }
         $member = $modelMember->createNewUser($newUserValues);
         
         Default_Model_ActivityLog::logActivity($member['main_project_id'], null, $member['member_id'], Default_Model_ActivityLog::MEMBER_JOINED, array());
@@ -463,6 +470,10 @@ class Default_Model_OAuth_Github implements Default_Model_OAuth_Interface
             $authModel->storeAuthSessionDataByIdentity($member->member_id);
             $authModel->updateRememberMe(true);
             $authModel->updateUserLastOnline('member_id', $member->member_id);
+            if ($flagUsernameChanged) {
+                return $this->createAuthResult(Zend_Auth_Result::SUCCESS, $userInfo,
+                    array('Authentication successful but username was changed.'));
+            }
             return $this->createAuthResult(Zend_Auth_Result::SUCCESS, $member['mail'],
                 array('Authentication successful.'));
         }

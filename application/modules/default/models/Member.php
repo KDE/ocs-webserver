@@ -908,23 +908,35 @@ class Default_Model_Member extends Default_Model_DbTable_Member
 
     /**
      * @param string $value
-     * @param int $param
+     * @param int    $test_case_sensitive
      *
      * @return array
      */
-    public function findUsername($value, $param)
+    public function findUsername($value, $test_case_sensitive = self::CASE_INSENSITIVE)
     {
         $sql = "
             SELECT *
             FROM `member`
         ";
-        if ($param == self::CASE_INSENSITIVE) {
+        if ($test_case_sensitive == self::CASE_INSENSITIVE) {
             $sql .= "WHERE LCASE(member.username) = LCASE(:username)";
         } else {
             $sql .= "WHERE member.username = :username";
         }
 
         return $this->_db->fetchAll($sql, array('username' => $value));
+    }
+
+    /**
+     * @param string $login
+     *
+     * @return int
+     */
+    public function generateUniqueUsername($login)
+    {
+        $sql = "SELECT COUNT(*) as counter FROM member WHERE username REGEXP ':username[_0-9]*$'";
+        $result = $this->_db->fetchRow($sql, array('username' => $login));
+        return $login . '_' .$result['counter'];
     }
 
     /**
