@@ -24,12 +24,13 @@ class ExplorePage extends React.Component {
       <div id="explore-page">
         <div className="wrapper">
           <div className="main-content-container">
-            <div className="mdl-grid">
-              <div className="left-sidebar-container mdl-cell--2-col mdl-cell--2-col-tablet mdl-cell--4-col-phone">
+
+
+              <div className="left-sidebar-container">
                 <ExploreLeftSideBarWrapper/>
               </div>
 
-              <div className="main-content mdl-cell--10-col mdl-cell--6-col-tablet mdl-cell--4-col-phone">
+              <div className="main-content">
                 <div className="top-bar">
                   <ExploreTopBarWrapper/>
                 </div>
@@ -41,7 +42,7 @@ class ExplorePage extends React.Component {
                   <PaginationWrapper/>
                 </div>
               </div>
-            </div>
+
           </div>
           <div className="right-sidebar-container">
             <ExploreRightSideBarWrapper/>

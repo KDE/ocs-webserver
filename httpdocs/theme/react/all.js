@@ -485,29 +485,25 @@ class ExplorePage extends React.Component {
           { className: "main-content-container" },
           React.createElement(
             "div",
-            { className: "mdl-grid" },
+            { className: "left-sidebar-container" },
+            React.createElement(ExploreLeftSideBarWrapper, null)
+          ),
+          React.createElement(
+            "div",
+            { className: "main-content" },
             React.createElement(
               "div",
-              { className: "left-sidebar-container mdl-cell--2-col mdl-cell--2-col-tablet mdl-cell--4-col-phone" },
-              React.createElement(ExploreLeftSideBarWrapper, null)
+              { className: "top-bar" },
+              React.createElement(ExploreTopBarWrapper, null)
             ),
             React.createElement(
               "div",
-              { className: "main-content mdl-cell--10-col mdl-cell--6-col-tablet mdl-cell--4-col-phone" },
-              React.createElement(
-                "div",
-                { className: "top-bar" },
-                React.createElement(ExploreTopBarWrapper, null)
-              ),
-              React.createElement(
-                "div",
-                { className: "explore-products-container" },
-                React.createElement(ProductGroup, {
-                  products: this.state.products,
-                  device: this.state.device
-                }),
-                React.createElement(PaginationWrapper, null)
-              )
+              { className: "explore-products-container" },
+              React.createElement(ProductGroup, {
+                products: this.state.products,
+                device: this.state.device
+              }),
+              React.createElement(PaginationWrapper, null)
             )
           )
         ),
