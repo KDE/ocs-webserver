@@ -483,7 +483,7 @@ class Default_Model_OAuth_Github implements Default_Model_OAuth_Interface
         $result = $modelMember->findUsername($userInfo['login']);
         $flagUsernameChanged = false;
         if (count($result) > 0) {
-            $userInfo['username'] = $modelMember->generateUniqueUsername($userInfo['login']);
+            $newUserValues['username'] = $modelMember->generateUniqueUsername($userInfo['login']);
             $flagUsernameChanged = true;
             Zend_Registry::get('logger')->info(__METHOD__ . ' - username already in use. new generated username: '
                 . $userInfo['username'])
