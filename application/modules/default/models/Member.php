@@ -158,10 +158,10 @@ class Default_Model_Member extends Default_Model_DbTable_Member
     public function activateMemberFromVerification($member_id, $verification_value)
     {
         $sql = "
-            UPDATE member
-              STRAIGHT_JOIN member_email ON member.member_id = member_email.email_member_id AND member_email.email_checked IS NULL AND member.is_deleted = 0 AND member_email.email_deleted = 0
-            SET member.mail_checked = 1, member.is_active = 1, member.changed_at = NOW(), member_email.email_checked = NOW()
-            WHERE member.member_id = :memberId AND member_email.email_verification_value = :verificationValue;
+            UPDATE `member`
+              STRAIGHT_JOIN `member_email` ON `member`.`member_id` = `member_email`.`email_member_id` AND `member_email`.`email_checked` IS NULL AND `member`.`is_deleted` = 0 AND `member_email`.`email_deleted` = 0
+            SET `member`.`mail_checked` = 1, `member`.`is_active` = 1, `member`.`changed_at` = NOW(), `member_email`.`email_checked` = NOW()
+            WHERE `member`.`member_id` = :memberId AND `member_email`.`email_verification_value` = :verificationValue;
         ";
         $stmnt = $this->_db->query($sql, array('memberId' => $member_id, 'verificationValue' => $verification_value));
 
@@ -332,9 +332,9 @@ class Default_Model_Member extends Default_Model_DbTable_Member
     {
         $sql = "
                 SELECT *
-                FROM member
-        		WHERE source_id = :sourceId
-                  AND username = :userName
+                FROM `member`
+        		WHERE `source_id` = :sourceId
+                  AND `username` = :userName
                 ";
 
         return $this->_db->fetchRow($sql, array('sourceId' => Default_Model_Member::SOURCE_HIVE, 'userName' => $user_name));
@@ -430,25 +430,25 @@ class Default_Model_Member extends Default_Model_DbTable_Member
     public function fetchProjectsSupported($member_id, $limit = null)
     {
         $sql = "
-                SELECT project_category.title AS catTitle,
-                       project.project_id,
-                       project.title,
-                       project.image_small,
-                       plings.member_id,
-                       plings.amount,
-                       plings.create_time,
-                       member.profile_image_url,
-                       member.username
+                SELECT `project_category`.`title` AS `catTitle`,
+                       `project`.`project_id`,
+                       `project`.`title`,
+                       `project`.`image_small`,
+                       `plings`.`member_id`,
+                       `plings`.`amount`,
+                       `plings`.`create_time`,
+                       `member`.`profile_image_url`,
+                       `member`.`username`
 
-                FROM plings
-                JOIN project ON plings.project_id = project.project_id
-                JOIN project_category ON project.project_category_id = project_category.project_category_id
-                JOIN member ON plings.member_id = member.member_id
-                WHERE project.member_id = :member_id
-                  AND plings.status_id = 2
-                  AND project.status = :project_status
-                  AND project.type_id = 1
-                ORDER BY plings.create_time DESC
+                FROM `plings`
+                JOIN `project` ON `plings`.`project_id` = `project`.`project_id`
+                JOIN `project_category` ON `project`.`project_category_id` = `project_category`.`project_category_id`
+                JOIN `member` ON `plings`.`member_id` = `member`.`member_id`
+                WHERE `project`.`member_id` = :member_id
+                  AND `plings`.`status_id` = 2
+                  AND `project`.`status` = :project_status
+                  AND `project`.`type_id` = 1
+                ORDER BY `plings`.`create_time` DESC
                 ";
 
         if (null != $limit) {
@@ -474,7 +474,8 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         if (false == isset($userData['password'])) {
             throw new Exception(__METHOD__ . ' - user password is not set.');
         }
-        $userData['password'] = Local_Auth_Adapter_Ocs::getEncryptedPassword($userData['password'], Default_Model_DbTable_Member::SOURCE_LOCAL);
+        $userData['password'] =
+            Local_Auth_Adapter_Ocs::getEncryptedPassword($userData['password'], Default_Model_DbTable_Member::SOURCE_LOCAL);
         if (false == isset($userData['roleId'])) {
             $userData['roleId'] = self::ROLE_ID_DEFAULT;
         }
@@ -561,14 +562,21 @@ class Default_Model_Member extends Default_Model_DbTable_Member
 
     /**
      * @param array $newUser
+     * @param bool  $isVerified
      *
      * @return Zend_Db_Table_Row_Abstract
      * @throws Exception
      */
-    private function createPrimaryMailAddress($newUser)
+    private function createPrimaryMailAddress($newUser, $isVerified = false)
     {
         $modelEmail = new Default_Model_MemberEmail();
-        return $modelEmail->saveEmailAsPrimary($newUser['member_id'], $newUser['mail']);
+        $userMail = $modelEmail->saveEmailAsPrimary($newUser['member_id'], $newUser['mail']);
+        if ($isVerified) {
+            $userMail->email_checked = new Zend_Db_Expr('Now()');
+            $userMail->save();
+        }
+
+        return $userMail;
     }
 
     /**
@@ -631,19 +639,19 @@ class Default_Model_Member extends Default_Model_DbTable_Member
     public function fetchEarnings($member_id, $limit = null)
     {
         $sql = "
-                SELECT project_category.title AS catTitle,
-                       project.*,
-                       member.*,
-                       plings.*
-                FROM plings
-                 JOIN project ON plings.project_id = project.project_id
-                 JOIN project_category ON project.project_category_id = project_category.project_category_id
-                 JOIN member ON project.member_id = member.member_id
-                WHERE plings.status_id = 2
-                  AND project.status = :status
-                  AND project.type_id = 1
-                  AND project.member_id = :memberId
-                ORDER BY plings.create_time DESC
+                SELECT `project_category`.`title` AS `catTitle`,
+                       `project`.*,
+                       `member`.*,
+                       `plings`.*
+                FROM `plings`
+                 JOIN `project` ON `plings`.`project_id` = `project`.`project_id`
+                 JOIN `project_category` ON `project`.`project_category_id` = `project_category`.`project_category_id`
+                 JOIN `member` ON `project`.`member_id` = `member`.`member_id`
+                WHERE `plings`.`status_id` = 2
+                  AND `project`.`status` = :status
+                  AND `project`.`type_id` = 1
+                  AND `project`.`member_id` = :memberId
+                ORDER BY `plings`.`create_time` DESC
                 ";
 
         if (null != $limit) {
@@ -666,7 +674,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
     public function findActiveMemberByIdentity($identity, $withLoginLocal = false)
     {
         $sqlName = "SELECT * FROM member WHERE is_active = :active AND is_deleted = :deleted AND username = :identity";
-        $sqlMail = "SELECT * FROM member WHERE is_active = :active AND is_deleted = :deleted AND mail = :identity";
+        $sqlMail = "SELECT * FROM `member` WHERE `is_active` = :active AND `is_deleted` = :deleted AND `mail` = :identity";
         if ($withLoginLocal) {
             $sqlName .= " AND login_method = '" . self::MEMBER_LOGIN_LOCAL . "'";
             $sqlMail .= " AND login_method = '" . self::MEMBER_LOGIN_LOCAL . "'";
@@ -936,7 +944,8 @@ class Default_Model_Member extends Default_Model_DbTable_Member
     {
         $sql = "SELECT COUNT(*) as counter FROM member WHERE username REGEXP ':username[_0-9]*$'";
         $result = $this->_db->fetchRow($sql, array('username' => $login));
-        return $login . '_' .$result['counter'];
+
+        return $login . '_' . $result['counter'];
     }
 
     /**

@@ -93,6 +93,7 @@ class Default_Model_Authorization
      * @param      $identity
      * @param      $credential
      * @param null $loginMethod
+     *
      * @return Zend_Auth_Result
      * @throws Zend_Auth_Adapter_Exception
      */
@@ -178,9 +179,9 @@ class Default_Model_Authorization
         $database = Zend_Db_Table::getDefaultAdapter();
 
         $sql = "
-                SELECT shortname
-                FROM member_role
-                WHERE  member_role_id = ?;
+                SELECT `shortname`
+                FROM `member_role`
+                WHERE  `member_role_id` = ?;
         ";
         $sql = $database->quoteInto($sql, $roleId, 'INTEGER', 1);
         $resultSet = $database->query($sql)->fetchAll();
@@ -201,9 +202,9 @@ class Default_Model_Authorization
     {
         $database = Zend_Db_Table::getDefaultAdapter();
         $sql = "
-                SELECT p.project_id
-                FROM project AS p
-                WHERE p.member_id = ?;
+                SELECT `p`.`project_id`
+                FROM `project` AS `p`
+                WHERE `p`.`member_id` = ?;
         ";
         $sql = $database->quoteInto($sql, $identifier, 'INTEGER', 1);
         $resultSet = $database->query($sql)->fetchAll();
@@ -251,6 +252,7 @@ class Default_Model_Authorization
 
     /**
      * @param int $identity
+     *
      * @throws Zend_Auth_Storage_Exception
      * @throws exception
      */
@@ -285,14 +287,13 @@ class Default_Model_Authorization
      */
     protected function getAuthUserData($identifier, $identity)
     {
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - $identifier: ' . print_r($identifier, true)
-                                           . ' :: $identity: ' . print_r($identity, true));
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - $identifier: ' . print_r($identifier, true) . ' :: $identity: '
+            . print_r($identity, true))
+        ;
         $dataTable = $this->_dataTable;
-        $where = $dataTable->select()->where($dataTable->getAdapter()->quoteIdentifier($identifier, true) . ' = ?',
-            $identity);
+        $where = $dataTable->select()->where($dataTable->getAdapter()->quoteIdentifier($identifier, true) . ' = ?', $identity);
         $resultRow = $dataTable->fetchRow($where)->toArray();
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - user found. username: ' . print_r($resultRow['username'],
-                true));
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - user found. username: ' . print_r($resultRow['username'], true));
         unset($resultRow['password']);
 
         return (object)$resultRow;
@@ -308,15 +309,16 @@ class Default_Model_Authorization
     {
         Zend_Registry::get('logger')->info(__METHOD__ . ' - $identity: ' . print_r($identity, true));
         $sql = "
-            SELECT member_email.email_checked, member_email.email_address, member.*
-            FROM member_email
-            JOIN member ON member.member_id = member_email.email_member_id
-            WHERE email_deleted = 0 AND member_email.email_verification_value = :verification
+            SELECT `member_email`.`email_checked`, `member_email`.`email_address`, `member`.*
+            FROM `member_email`
+            JOIN `member` ON `member`.`member_id` = `member_email`.`email_member_id`
+            WHERE `email_deleted` = 0 AND `member_email`.`email_verification_value` = :verification
         ";
         $resultRow = $this->_dataTable->getAdapter()->fetchRow($sql, array('verification' => $identity));
         if ($resultRow) {
             Zend_Registry::get('logger')->info(__METHOD__
-                                               . " - found (member_id,mail,is_active,email_address,email_checked): ({$resultRow['member_id']},{$resultRow['mail']},{$resultRow['is_active']},{$resultRow['email_address']},{$resultRow['email_checked']})");
+                . " - found (member_id,mail,is_active,email_address,email_checked): ({$resultRow['member_id']},{$resultRow['mail']},{$resultRow['is_active']},{$resultRow['email_address']},{$resultRow['email_checked']})")
+            ;
             unset($resultRow['password']);
 
             return (object)$resultRow;
@@ -357,9 +359,7 @@ class Default_Model_Authorization
     {
 
         $dataTable = new Default_Model_DbTable_Session();
-        $where =
-            $dataTable->getAdapter()->quoteInto($dataTable->getAdapter()->quoteIdentifier($identifier, true) . ' = ?',
-                $identity);
+        $where = $dataTable->getAdapter()->quoteInto($dataTable->getAdapter()->quoteIdentifier($identifier, true) . ' = ?', $identity);
 
         return $dataTable->delete($where);
     }

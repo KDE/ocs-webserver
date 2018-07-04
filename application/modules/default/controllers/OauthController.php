@@ -103,6 +103,10 @@ class OAuthController extends Zend_Controller_Action
 
         $authResult = $authAdapter->authenticate();
         if (false == $authResult->isValid()) {
+            if ($authResult->getCode() == Zend_Auth_Result::FAILURE_IDENTITY_NOT_FOUND) {
+                $registerResult = $authAdapter->registerLocal();
+            }
+
             Zend_Registry::get('logger')->info(__METHOD__ . ' - ip: ' . $this->_request->getClientIp() . ' - authentication failed.');
             $this->_helper->flashMessenger->addMessage(self::ERR_MSG_DEFAULT);
             $this->forward('index', 'explore', 'default');
