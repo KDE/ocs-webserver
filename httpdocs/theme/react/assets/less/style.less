@@ -56,6 +56,20 @@ header div.container.header {
           height: 100%;
           position: relative;
 
+          span {
+            position: absolute;
+            bottom: 5px;
+            left: 15px;
+            font-weight: 500;
+            color: black;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            line-height: 1.2;
+            font-weight: 500 !important;
+            width: 80%;
+          }
+
           img {
             position: absolute;
             top: 50%;
@@ -111,7 +125,7 @@ header div.container.header {
           width: 100%;
           float: left;
           overflow: hidden;
-          white-space: nowrap;
+          // white-space: nowrap;
           text-overflow: ellipsis;
           line-height: 1.2;
           font-weight: 500 !important;
@@ -122,6 +136,13 @@ header div.container.header {
 
           &.product-info-description {
             font-size: 70%;
+            height: 30px;
+            line-height: 15px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
           }
         }
 
@@ -171,7 +192,7 @@ header div.container.header {
       width: 100%;
       float: left;
       padding: 20px 0;
-      
+
       .icon-wrapper {
         display: table;
         margin: 0 auto;

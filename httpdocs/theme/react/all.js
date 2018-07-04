@@ -261,7 +261,7 @@ class ProductGroup extends React.Component {
           { className: "actions" },
           React.createElement(
             "a",
-            { href: this.props.link, className: "mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary" },
+            { href: this.props.link + "?new=1", className: "mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary" },
             "see more"
           )
         )
@@ -306,17 +306,17 @@ class ProductGroupItem extends React.Component {
               React.createElement(
                 "figure",
                 null,
-                React.createElement("img", { className: "very-rounded-corners", src: 'https://' + imageBaseUrl + '/cache/200x171/img/' + this.props.product.image_small })
+                React.createElement("img", { className: "very-rounded-corners", src: 'https://' + imageBaseUrl + '/cache/200x171/img/' + this.props.product.image_small }),
+                React.createElement(
+                  "span",
+                  { className: "product-info-title" },
+                  this.props.product.title
+                )
               )
             ),
             React.createElement(
               "div",
               { className: "product-info" },
-              React.createElement(
-                "span",
-                { className: "product-info-title" },
-                this.props.product.title
-              ),
               React.createElement(
                 "span",
                 { className: "product-info-description" },
