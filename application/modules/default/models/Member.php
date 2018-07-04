@@ -941,8 +941,8 @@ class Default_Model_Member extends Default_Model_DbTable_Member
      */
     public function generateUniqueUsername($login)
     {
-        $sql = "SELECT COUNT(*) as counter FROM member WHERE username REGEXP ':username[_0-9]*$'";
-        $result = $this->_db->fetchRow($sql, array('username' => $login));
+        $sql = "SELECT COUNT(*) AS `counter` FROM `member` WHERE `username` REGEXP CONCAT(:user_name,'[_0-9]*$')";
+        $result = $this->_db->fetchRow($sql, array('user_name' => $login));
 
         return $login . '_' . $result['counter'];
     }
