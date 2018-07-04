@@ -191,9 +191,10 @@ class ProductGroupScrollWrapper extends React.Component {
   }
 
   loadMoreProducts() {
-    const moreProducts = store.getState().products.slice(this.state.offset, this.state.offset + 20);
+    const itemsPerScroll = 500;
+    const moreProducts = store.getState().products.slice(this.state.offset, this.state.offset + itemsPerScroll);
     const products = this.state.products.concat(moreProducts);
-    const offset = this.state.offset + 20;
+    const offset = this.state.offset + itemsPerScroll;
     this.setState({
       products: products,
       offset: offset,
