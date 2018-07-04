@@ -186,16 +186,21 @@ class Default_Model_MemberEmail
     /**
      * @param int         $user_id
      * @param string      $user_mail
+     * @param int         $user_mail_checked
      * @param null|string $user_verification
      *
      * @return Zend_Db_Table_Row_Abstract
+     * @throws Zend_Db_Statement_Exception
+     * @throws Zend_Db_Table_Exception
+     * @throws Zend_Exception
      * @throws Exception
      */
-    public function saveEmailAsPrimary($user_id, $user_mail, $user_verification = null)
+    public function saveEmailAsPrimary($user_id, $user_mail, $user_mail_checked = 0, $user_verification = null)
     {
         $data = array();
         $data['email_member_id'] = $user_id;
         $data['email_address'] = $user_mail;
+        $data['email_checked'] = $user_mail_checked == 1 ? new Zend_Db_Expr('Now()') : new Zend_Db_Expr('NULL');
         $data['email_verification_value'] =
             empty($user_verification) ? Default_Model_MemberEmail::getVerificationValue($user_id, $user_mail) : $user_verification;
         $data['email_primary'] = Default_Model_DbTable_MemberEmail::EMAIL_PRIMARY;
