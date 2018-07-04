@@ -44,11 +44,8 @@ class OAuthController extends Zend_Controller_Action
      */
     public function loginAction()
     {
-        $filterInput = new Zend_Filter_Input(
-            array('*' => array('StringTrim', 'StripTags')),
-            array(self::PARAM_NAME_PROVIDER => array('Alpha', 'presence' => 'required')),
-            $this->getAllParams()
-        );
+        $filterInput = new Zend_Filter_Input(array('*' => array('StringTrim', 'StripTags')),
+            array(self::PARAM_NAME_PROVIDER => array('Alpha', 'presence' => 'required')), $this->getAllParams());
 
         if ($filterInput->hasInvalid()) {
             Zend_Registry::get('logger')->warn(__METHOD__ . ' - ' . print_r($this->getAllParams(), true));
@@ -74,6 +71,7 @@ class OAuthController extends Zend_Controller_Action
 
     /**
      * @param $data
+     *
      * @return string
      */
     protected function createAToken($data)
@@ -102,19 +100,43 @@ class OAuthController extends Zend_Controller_Action
         }
 
         $authResult = $authAdapter->authenticate();
-        if (false == $authResult->isValid()) {
-            if ($authResult->getCode() == Zend_Auth_Result::FAILURE_IDENTITY_NOT_FOUND) {
+
+        switch ($authResult->getCode()) {
+            
+            case Zend_Auth_Result::SUCCESS:
+                Zend_Registry::get('logger')->info(__METHOD__ . ' - authentication successful - member_id: ' . Zend_Auth::getInstance()
+                                                                                                                        ->getIdentity()->member_id)
+                ;
+                break;
+
+            case Zend_Auth_Result::FAILURE_IDENTITY_NOT_FOUND:
                 $registerResult = $authAdapter->registerLocal();
-            }
+                if (false === $registerResult->isValid()) {
+                    Zend_Registry::get('logger')->info(__METHOD__ . ' - ip: ' . $this->_request->getClientIp()
+                        . ' - authentication failed.' . print_r(PHP_EOL . $registerResult->getMessages(), true))
+                    ;
+                    $this->_helper->flashMessenger->addMessage(self::ERR_MSG_DEFAULT);
+                    $this->forward('index', 'explore', 'default');
 
-            Zend_Registry::get('logger')->info(__METHOD__ . ' - ip: ' . $this->_request->getClientIp() . ' - authentication failed.');
-            $this->_helper->flashMessenger->addMessage(self::ERR_MSG_DEFAULT);
-            $this->forward('index', 'explore', 'default');
+                    return;
+                }
+                Zend_Registry::get('logger')->info(__METHOD__ . ' - registration from social provider successful - member_id: '
+                    . Zend_Auth::getInstance()->getIdentity()->member_id)
+                ;
+                break;
 
-            return;
+            case  Zend_Auth_Result::FAILURE_UNCATEGORIZED:
+            case  Zend_Auth_Result::FAILURE_CREDENTIAL_INVALID:
+            case  Zend_Auth_Result::FAILURE_IDENTITY_AMBIGUOUS:
+            case  Zend_Auth_Result::FAILURE:
+                Zend_Registry::get('logger')->info(__METHOD__ . ' - ip: ' . $this->_request->getClientIp()
+                    . ' - authentication failed.')
+                ;
+                $this->_helper->flashMessenger->addMessage(self::ERR_MSG_DEFAULT);
+                $this->forward('index', 'explore', 'default');
+
+                return;
         }
-
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - authentication successful - member_id: ' . Zend_Auth::getInstance()->getIdentity()->member_id);
 
         $modelToken = new Default_Model_SingleSignOnToken();
         $modelToken->addData($this->getParam('state'), array(
@@ -154,14 +176,18 @@ class OAuthController extends Zend_Controller_Action
         Zend_Registry::get('logger')->info(__METHOD__ . ' - AuthResult: ' . print_r($authResult, true));
         Zend_Registry::get('logger')->info(__METHOD__ . ' - AuthResult: ' . print_r($authResult->isValid(), true));
         if (false == $authResult->isValid()) {
-            Zend_Registry::get('logger')->info(__METHOD__ . '(' . __LINE__ . ')' . ' - ip: ' . $this->_request->getClientIp() . ' - authentication failed.');
+            Zend_Registry::get('logger')->info(__METHOD__ . '(' . __LINE__ . ')' . ' - ip: ' . $this->_request->getClientIp()
+                . ' - authentication failed.')
+            ;
             $this->_helper->flashMessenger->addMessage(self::ERR_MSG_DEFAULT);
             $this->forward('index', 'explore', 'default');
 
             return;
         }
 
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - authentication successful - member_id: ' . Zend_Auth::getInstance()->getIdentity()->member_id);
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - authentication successful - member_id: ' . Zend_Auth::getInstance()
+                                                                                                                ->getIdentity()->member_id)
+        ;
 
         $modelToken = new Default_Model_SingleSignOnToken();
         $modelToken->addData($this->getParam('state'), array(
@@ -185,11 +211,8 @@ class OAuthController extends Zend_Controller_Action
      */
     public function registerAction()
     {
-        $filterInput = new Zend_Filter_Input(
-            array('*' => array('StringTrim', 'StripTags')),
-            array(self::PARAM_NAME_PROVIDER => array('Alpha', 'presence' => 'required')),
-            $this->getAllParams()
-        );
+        $filterInput = new Zend_Filter_Input(array('*' => array('StringTrim', 'StripTags')),
+            array(self::PARAM_NAME_PROVIDER => array('Alpha', 'presence' => 'required')), $this->getAllParams());
 
         if (false == $filterInput->isValid(self::PARAM_NAME_PROVIDER)) {
             Zend_Registry::get('logger')->warn(__METHOD__ . ' - ' . print_r($this->getAllParams(), true));
