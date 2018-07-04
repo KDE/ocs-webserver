@@ -102,7 +102,7 @@ class OAuthController extends Zend_Controller_Action
         $authResult = $authAdapter->authenticate();
 
         switch ($authResult->getCode()) {
-            
+
             case Zend_Auth_Result::SUCCESS:
                 Zend_Registry::get('logger')->info(__METHOD__ . ' - authentication successful - member_id: ' . Zend_Auth::getInstance()
                                                                                                                         ->getIdentity()->member_id)

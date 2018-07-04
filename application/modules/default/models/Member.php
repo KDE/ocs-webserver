@@ -487,6 +487,9 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         if (false == isset($userData['uuid'])) {
             $userData['uuid'] = $uuidMember;
         }
+        if (false == isset($userData['mail_checked'])) {
+            $userData['mail_checked'] = 0;
+        }
 
         $newUser = $this->storeNewUser($userData)->toArray();
 
@@ -567,14 +570,10 @@ class Default_Model_Member extends Default_Model_DbTable_Member
      * @return Zend_Db_Table_Row_Abstract
      * @throws Exception
      */
-    private function createPrimaryMailAddress($newUser, $isVerified = false)
+    private function createPrimaryMailAddress($newUser)
     {
         $modelEmail = new Default_Model_MemberEmail();
-        $userMail = $modelEmail->saveEmailAsPrimary($newUser['member_id'], $newUser['mail']);
-        if ($isVerified) {
-            $userMail->email_checked = new Zend_Db_Expr('Now()');
-            $userMail->save();
-        }
+        $userMail = $modelEmail->saveEmailAsPrimary($newUser['member_id'], $newUser['mail'], $newUser['mail_checked']);
 
         return $userMail;
     }
