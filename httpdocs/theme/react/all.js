@@ -160,6 +160,72 @@ window.productHelpers = function () {
     generatePaginationObject
   };
 }();
+class ProductGroupScrollWrapper extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      products: [],
+      offset: 0
+    };
+    this.onProductGroupScroll = this.onProductGroupScroll.bind(this);
+    this.loadMoreProducts = this.loadMoreProducts.bind(this);
+  }
+
+  componentWillMount() {
+    window.addEventListener("scroll", this.onProductGroupScroll);
+  }
+
+  componentDidMount() {
+    this.loadMoreProducts();
+  }
+
+  onProductGroupScroll() {
+    const end = $("footer").offset().top;
+    const viewEnd = $(window).scrollTop() + $(window).height();
+    const distance = end - viewEnd;
+    if (distance < 0 && this.state.loadingMoreProducts !== true) {
+      this.setState({ loadingMoreProducts: true }, function () {
+        this.loadMoreProducts();
+      });
+    }
+  }
+
+  loadMoreProducts() {
+    const moreProducts = store.getState().products.slice(this.state.offset, this.state.offset + 20);
+    const products = this.state.products.concat(moreProducts);
+    const offset = this.state.offset + 20;
+    this.setState({
+      products: products,
+      offset: offset,
+      loadingMoreProducts: false
+    });
+  }
+
+  render() {
+    let loadingMoreProductsDisplay;
+    if (this.state.loadingMoreProducts) {
+      loadingMoreProductsDisplay = React.createElement(
+        "div",
+        { className: "product-group-scroll-loading-container" },
+        React.createElement(
+          "div",
+          { className: "icon-wrapper" },
+          React.createElement("span", { className: "glyphicon glyphicon-refresh spinning" })
+        )
+      );
+    }
+    return React.createElement(
+      "div",
+      { className: "product-group-scroll-wrapper" },
+      React.createElement(ProductGroup, {
+        products: this.state.products,
+        device: this.props.device
+      }),
+      loadingMoreProductsDisplay
+    );
+  }
+}
+
 class ProductGroup extends React.Component {
   render() {
     let products;
@@ -504,7 +570,6 @@ class ExplorePage extends React.Component {
     super(props);
     this.state = {
       device: store.getState().device,
-      products: store.getState().products,
       minHeight: 'auto'
     };
 
@@ -528,7 +593,7 @@ class ExplorePage extends React.Component {
   }
 
   render() {
-    console.log(store.getState().pagination);
+
     let titleDisplay;
     if (this.props.categories) {
       let title = "";
@@ -591,8 +656,7 @@ class ExplorePage extends React.Component {
             React.createElement(
               "div",
               { className: "explore-products-container" },
-              React.createElement(ProductGroup, {
-                products: this.state.products,
+              React.createElement(ProductGroupScrollWrapper, {
                 device: this.state.device
               }),
               React.createElement(PaginationWrapper, null)

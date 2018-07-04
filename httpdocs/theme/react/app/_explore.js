@@ -3,7 +3,6 @@ class ExplorePage extends React.Component {
   	super(props);
   	this.state = {
       device:store.getState().device,
-      products:store.getState().products,
       minHeight:'auto'
     };
 
@@ -27,7 +26,7 @@ class ExplorePage extends React.Component {
   }
 
   render(){
-    console.log(store.getState().pagination);
+
     let titleDisplay;
     if (this.props.categories){
       let title = "";
@@ -69,8 +68,7 @@ class ExplorePage extends React.Component {
                 <ExploreTopBarWrapper/>
               </div>
               <div className="explore-products-container">
-                <ProductGroup
-                  products={this.state.products}
+                <ProductGroupScrollWrapper
                   device={this.state.device}
                 />
                 <PaginationWrapper/>

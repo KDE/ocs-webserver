@@ -1,3 +1,67 @@
+class ProductGroupScrollWrapper extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {
+      products:[],
+      offset:0
+    };
+    this.onProductGroupScroll = this.onProductGroupScroll.bind(this);
+    this.loadMoreProducts = this.loadMoreProducts.bind(this);
+  }
+
+  componentWillMount() {
+    window.addEventListener("scroll", this.onProductGroupScroll);
+  }
+
+  componentDidMount() {
+    this.loadMoreProducts();
+  }
+
+  onProductGroupScroll(){
+    const end = $("footer").offset().top;
+    const viewEnd = $(window).scrollTop() + $(window).height();
+    const distance = end - viewEnd;
+    if (distance < 0 && this.state.loadingMoreProducts !== true){
+      this.setState({loadingMoreProducts:true},function(){
+        this.loadMoreProducts();
+      });
+    }
+  }
+
+  loadMoreProducts(){
+    const moreProducts = store.getState().products.slice(this.state.offset,this.state.offset + 20);
+    const products = this.state.products.concat(moreProducts);
+    const offset = this.state.offset + 20;
+    this.setState({
+      products:products,
+      offset:offset,
+      loadingMoreProducts:false
+    });
+  }
+
+  render(){
+    let loadingMoreProductsDisplay;
+    if (this.state.loadingMoreProducts){
+      loadingMoreProductsDisplay = (
+        <div className="product-group-scroll-loading-container">
+          <div className="icon-wrapper">
+            <span className="glyphicon glyphicon-refresh spinning"></span>
+          </div>
+        </div>
+      );
+    }
+    return (
+      <div className="product-group-scroll-wrapper">
+        <ProductGroup
+          products={this.state.products}
+          device={this.props.device}
+        />
+        {loadingMoreProductsDisplay}
+      </div>
+    )
+  }
+}
+
 class ProductGroup extends React.Component {
   render(){
     let products;
