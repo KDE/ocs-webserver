@@ -2,7 +2,9 @@ window.productHelpers = (function(){
 
   function getNumberOfProducts(device,numRows){
     let num;
-    if (device === "huge"){
+    if (device === "very-huge"){
+      num = 7;
+    } else if (device === "huge"){
       num = 6;
     } else if (device === "full"){
       num = 5;

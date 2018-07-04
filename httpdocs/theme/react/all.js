@@ -12,7 +12,9 @@ window.appHelpers = function () {
 
   function getDeviceWidth(width) {
     let device;
-    if (width > 1500) {
+    if (width > 1720) {
+      device = "very-huge";
+    } else if (width < 1720 && width > 1500) {
       device = "huge";
     } else if (width < 1500 && width > 1250) {
       device = "full";
@@ -103,7 +105,9 @@ window.productHelpers = function () {
 
   function getNumberOfProducts(device, numRows) {
     let num;
-    if (device === "huge") {
+    if (device === "very-huge") {
+      num = 7;
+    } else if (device === "huge") {
       num = 6;
     } else if (device === "full") {
       num = 5;
@@ -191,7 +195,7 @@ class ProductGroupScrollWrapper extends React.Component {
   }
 
   loadMoreProducts() {
-    const itemsPerScroll = 500;
+    const itemsPerScroll = 50;
     const moreProducts = store.getState().products.slice(this.state.offset, this.state.offset + itemsPerScroll);
     const products = this.state.products.concat(moreProducts);
     const offset = this.state.offset + itemsPerScroll;
