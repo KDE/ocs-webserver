@@ -1533,6 +1533,30 @@ class Introduction extends React.Component {
     );
   }
 }
+class ProductPage extends React.Component {
+  render() {
+    return React.createElement(
+      "p",
+      null,
+      "product page"
+    );
+  }
+}
+
+const mapStateToProductPageProps = state => {
+  const product = state.product;
+  return {
+    product
+  };
+};
+
+const mapDispatchToProductPageProps = dispatch => {
+  return {
+    dispatch
+  };
+};
+
+const ProductPageWrapper = ReactRedux.connect(mapStateToProductPageProps, mapDispatchToProductPageProps)(ProductPage);
 const { Provider, connect } = ReactRedux;
 const store = Redux.createStore(reducer);
 
@@ -1627,6 +1651,8 @@ class App extends React.Component {
     let displayView = React.createElement(HomePageWrapper, null);
     if (store.getState().view === 'explore') {
       displayView = React.createElement(ExplorePageWrapper, null);
+    } else if (store.getState().view === 'product') {
+      displayView = React.createElement(ProductPageWrapper, null);
     }
     return React.createElement(
       "div",
