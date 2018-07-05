@@ -24,18 +24,7 @@ $this->supporters = $modelInfo->getNewActiveSupporters(9);
 ?>
 
         <div class="downloadDiv" >
-            <a href="https://www.opendesktop.org/p/1175480/" target="_blank"><img src="/images/system/download-app.png" /></a>
-        </div>
-
-        <div class="supportDiv" >
-        <?php 
-                $identity = Zend_Auth::getInstance()->getIdentity();
-                if(null == $identity || (null != $identity && !$this->isSupporter($identity->member_id))) {                                                  
-        ?>
-            <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Become a Supporter</a>
-        <?php   } else if((null != $identity && $this->isSupporter($identity->member_id))) { ?>
-            <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Thank you for your support!</a>
-        <?php   }?>
+            <a href="https://www.opendesktop.org/p/1175480/"><img src="/images/system/ocsstore-download-button.png" /></a>
         </div>
 
         <div  class="supportDiv  withborder" >    
@@ -58,6 +47,18 @@ $this->supporters = $modelInfo->getNewActiveSupporters(9);
                 <a href="/community#supportersPanel">see all</a>
          </span>
         </div>
+
+        <div class="supportDiv" >
+        <?php 
+                $identity = Zend_Auth::getInstance()->getIdentity();
+                if(null == $identity || (null != $identity && !$this->isSupporter($identity->member_id))) {                                                  
+        ?>
+            <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Become a Supporter</a>
+        <?php   } else if((null != $identity && $this->isSupporter($identity->member_id))) { ?>
+            <a href="/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Thank you for your support!</a>
+        <?php   }?>
+        </div>
+
 
         <div  class="row sidebar-right-info" >       
             
