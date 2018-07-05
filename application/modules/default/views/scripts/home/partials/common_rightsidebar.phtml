@@ -23,10 +23,6 @@ $modelInfo = new Default_Model_Info();
 $this->supporters = $modelInfo->getNewActiveSupporters(9);
 ?>
 
-        <div class="downloadDiv" >
-            <a href="https://www.opendesktop.org/p/1175480/" target="_blank"><img src="/images/system/download-app.png" /></a>
-        </div>
-
         <div class="supportDiv" >
         <?php 
                 $identity = Zend_Auth::getInstance()->getIdentity();
@@ -58,6 +54,12 @@ $this->supporters = $modelInfo->getNewActiveSupporters(9);
                 <a href="/community#supportersPanel">see all</a>
          </span>
         </div>
+
+        <div class="downloadDiv" >
+            <a href="https://www.opendesktop.org/p/1175480/" target="_blank"><img src="/images/system/ocsstore-download-button.png" /></a>
+        </div>
+
+
 
         <div  class="row sidebar-right-info" >       
             
