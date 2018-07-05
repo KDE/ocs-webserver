@@ -1,4 +1,4 @@
-class ProductPage extends React.Component {
+class ProductView extends React.Component {
   render(){
     return(
       <p>product page</p>
@@ -19,7 +19,7 @@ const mapDispatchToProductPageProps = (dispatch) => {
   }
 }
 
-const ProductPageWrapper = ReactRedux.connect(
+const ProductViewWrapper = ReactRedux.connect(
   mapStateToProductPageProps,
   mapDispatchToProductPageProps
 )(ProductPage);

@@ -92,7 +92,7 @@ class App extends React.Component {
   render(){
     let displayView = <HomePageWrapper/>;
     if (store.getState().view === 'explore'){ displayView = <ExplorePageWrapper/>; }
-    else if (store.getState().view === 'product'){ displayView = <ProductPageWrapper/>}
+    else if (store.getState().view === 'product'){ displayView = <ProductViewWrapper/>}
     return (
       <div id="app-root">
         {displayView}
