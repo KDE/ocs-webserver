@@ -1,7 +1,20 @@
 class ProductView extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+  }
+
+  componentDidMount() {
+    if (window.product){
+      console.log(product);
+    }
+  }
+
   render(){
     return(
-      <p>product page</p>
+      <div id="product-page">
+        <p>product page</p>
+      </div>
     );
   }
 }
