@@ -22,4 +22,4 @@ const mapDispatchToProductPageProps = (dispatch) => {
 const ProductViewWrapper = ReactRedux.connect(
   mapStateToProductPageProps,
   mapDispatchToProductPageProps
-)(ProductPage);
+)(ProductView);

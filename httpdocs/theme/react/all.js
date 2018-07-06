@@ -1556,7 +1556,7 @@ const mapDispatchToProductPageProps = dispatch => {
   };
 };
 
-const ProductViewWrapper = ReactRedux.connect(mapStateToProductPageProps, mapDispatchToProductPageProps)(ProductPage);
+const ProductViewWrapper = ReactRedux.connect(mapStateToProductPageProps, mapDispatchToProductPageProps)(ProductView);
 const { Provider, connect } = ReactRedux;
 const store = Redux.createStore(reducer);
 
