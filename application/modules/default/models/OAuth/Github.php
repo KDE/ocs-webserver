@@ -491,13 +491,13 @@ class Default_Model_OAuth_Github implements Default_Model_OAuth_Interface
         }
         $member = $modelMember->createNewUser($newUserValues);
 
-        Default_Model_ActivityLog::logActivity($member['main_project_id'], null, $member['member_id'],
-            Default_Model_ActivityLog::MEMBER_JOINED, array());
-
         if(empty($member)) {
             return $this->createAuthResult(Zend_Auth_Result::FAILURE, $member['mail'],
                 array('A user with given data could not registered.'));
         }
+
+        Default_Model_ActivityLog::logActivity($member['main_project_id'], null, $member['member_id'],
+            Default_Model_ActivityLog::MEMBER_JOINED, array());
 
         $authModel = new Default_Model_Authorization();
         $authModel->storeAuthSessionDataByIdentity($member['member_id']);
