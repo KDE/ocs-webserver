@@ -623,6 +623,56 @@ header div.container.header {
 
 }
 
+#product-page {
+
+  #product-view-header {
+    padding-left: 170px;
+    position: relative;
+
+    .image-container {
+      position: absolute;
+      left: 20px;
+    }
+
+    .details-container {
+
+      .info-row {
+        width: 100%;
+        float: left;
+        margin-bottom: 15px;
+
+        a.user {
+          display: block;
+          float: left;
+          position: relative;
+          padding-left: 40px;
+
+          span.avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 100%;
+            display: block;
+            overflow: hidden;
+            position: absolute;
+            left: 0;
+            top: 0;
+
+            img {
+              width: 100%;
+              height: 100%;
+              float: left;
+            }
+          }
+
+          span.username {
+            display: block;
+          }
+        }
+      }
+    }
+  }
+}
+
 @media (max-width: 1720px) and (min-width:1501px) {
   #app-root {
     .container {

@@ -1,5 +1,6 @@
 const reducer = Redux.combineReducers({
   products:productsReducer,
+  product:productReducer,
   pagination:paginationReducer,
   topProducts:topProductsReducer,
   categories:categoriesReducer,
@@ -18,6 +19,14 @@ const reducer = Redux.combineReducers({
   function productsReducer(state = {}, action){
     if (action.type === 'SET_PRODUCTS'){
       return action.products;
+    } else {
+      return state;
+    }
+  }
+
+  function productReducer(state = {}, action){
+    if (action.type === 'SET_PRODUCT'){
+      return action.product;
     } else {
       return state;
     }
@@ -137,6 +146,13 @@ const reducer = Redux.combineReducers({
     return {
       type:'SET_PRODUCTS',
       products:products
+    }
+  }
+
+  function setProduct(product){
+    return {
+      type:'SET_PRODUCT',
+      product:product
     }
   }
 

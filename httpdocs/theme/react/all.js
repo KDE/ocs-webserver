@@ -331,6 +331,7 @@ class ProductGroupItem extends React.Component {
 }
 const reducer = Redux.combineReducers({
   products: productsReducer,
+  product: productReducer,
   pagination: paginationReducer,
   topProducts: topProductsReducer,
   categories: categoriesReducer,
@@ -349,6 +350,14 @@ const reducer = Redux.combineReducers({
 function productsReducer(state = {}, action) {
   if (action.type === 'SET_PRODUCTS') {
     return action.products;
+  } else {
+    return state;
+  }
+}
+
+function productReducer(state = {}, action) {
+  if (action.type === 'SET_PRODUCT') {
+    return action.product;
   } else {
     return state;
   }
@@ -468,6 +477,13 @@ function setProducts(products) {
   return {
     type: 'SET_PRODUCTS',
     products: products
+  };
+}
+
+function setProduct(product) {
+  return {
+    type: 'SET_PRODUCT',
+    product: product
   };
 }
 
@@ -1410,7 +1426,6 @@ class HomePage extends React.Component {
       this.setState({ device: nextProps.device });
     }
     if (nextProps.products) {
-      console.log(nextProps.products);
       this.setState({ products: nextProps.products });
     }
   }
@@ -1534,11 +1549,31 @@ class Introduction extends React.Component {
   }
 }
 class ProductView extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  componentDidMount() {}
+
   render() {
+    console.log(this.props.product);
     return React.createElement(
-      "p",
-      null,
-      "product page"
+      "div",
+      { id: "product-page" },
+      React.createElement(
+        "div",
+        { className: "container" },
+        React.createElement(ProductViewHeader, {
+          product: this.props.product
+        }),
+        React.createElement(ProductViewGallery, {
+          product: this.props.product
+        }),
+        React.createElement(ProductViewContent, {
+          product: this.props.product
+        })
+      )
     );
   }
 }
@@ -1557,6 +1592,89 @@ const mapDispatchToProductPageProps = dispatch => {
 };
 
 const ProductViewWrapper = ReactRedux.connect(mapStateToProductPageProps, mapDispatchToProductPageProps)(ProductView);
+
+class ProductViewHeader extends React.Component {
+  render() {
+    let imageBaseUrl;
+    if (store.getState().env === 'live') {
+      imageBaseUrl = 'cn.pling.com';
+    } else {
+      imageBaseUrl = 'cn.pling.it';
+    }
+    return React.createElement(
+      "div",
+      { className: "section mdl-grid", id: "product-view-header" },
+      React.createElement(
+        "div",
+        { className: "image-container" },
+        React.createElement("img", { src: 'https://' + imageBaseUrl + '/cache/130x130/img/' + this.props.product.image_small })
+      ),
+      React.createElement(
+        "div",
+        { className: "details-container" },
+        React.createElement(
+          "h1",
+          null,
+          this.props.product.title
+        ),
+        React.createElement(
+          "div",
+          { className: "info-row" },
+          React.createElement(
+            "a",
+            { href: "/member/" + this.props.product.member_id },
+            React.createElement(
+              "span",
+              { className: "avatar" },
+              React.createElement("img", { src: this.props.product.profile_image_url })
+            ),
+            React.createElement(
+              "span",
+              { className: "username" },
+              this.props.product.username
+            )
+          ),
+          React.createElement(
+            "a",
+            { href: "/browse/cat/" + this.props.product.project_category_id + "/order/latest/" },
+            this.props.product.cat_title
+          )
+        ),
+        React.createElement(
+          "a",
+          { href: "#", className: "mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary" },
+          "Download"
+        )
+      )
+    );
+  }
+}
+
+class ProductViewGallery extends React.Component {
+  render() {
+
+    let galleryDisplay;
+    if (this.props.product.embed_code.length > 0) {
+      galleryDisplay = React.createElement("div", { id: "product-view-gallery",
+        dangerouslySetInnerHTML: { __html: this.props.product.embed_code } });
+    }
+    return React.createElement(
+      "div",
+      { className: "section", id: "product-view-gallery-container" },
+      galleryDisplay
+    );
+  }
+}
+
+class ProductViewContent extends React.Component {
+  render() {
+    return React.createElement(
+      "div",
+      { className: "section", id: "product-view-content-container" },
+      React.createElement("p", { dangerouslySetInnerHTML: { __html: this.props.product.description } })
+    );
+  }
+}
 const { Provider, connect } = ReactRedux;
 const store = Redux.createStore(reducer);
 
@@ -1593,6 +1711,11 @@ class App extends React.Component {
     // products
     if (window.products) {
       store.dispatch(setProducts(products));
+    }
+
+    // product (single)
+    if (window.product) {
+      store.dispatch(setProduct(product));
     }
 
     // pagination
