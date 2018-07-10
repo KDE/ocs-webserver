@@ -27,6 +27,43 @@ const reducer = Redux.combineReducers({
   function productReducer(state = {}, action){
     if (action.type === 'SET_PRODUCT'){
       return action.product;
+    } else if (action.type === 'SET_PRODUCT_FILES'){
+      console.log(action.files);
+      const s = Object.assign({},state,{
+        r_files:action.files
+      });
+      console.log(s);
+      return s;
+    } else if (action.type === 'SET_PRODUCT_UPDATES'){
+      const s = Object.assign({},state,{
+        r_updates:action.updates
+      });
+      return s;
+    } else if (action.type === 'SET_PRODUCT_RATINGS'){
+      const s = Object.assign({},state,{
+        r_ratings:action.ratings
+      });
+      return s;
+    } else if (action.type === 'SET_PRODUCT_LIKES'){
+      const s = Object.assign({},state,{
+        r_likes:action.likes
+      });
+      return s;
+    } else if (action.type === 'SET_PRODUCT_PLINGS'){
+      const s = Object.assign({},state,{
+        r_plings:action.plings
+      });
+      return s;
+    } else if (action.type === 'SET_PRODUCT_USER_RATINGS'){
+      const s = Object.assign({},state,{
+        r_userRatings:action.userRatings
+      });
+      return s;
+    } else if (action.type === 'SET_PRODUCT_GALLERY'){
+      const s = Object.assign({},state,{
+        r_gallery:action.gallery
+      });
+      return s;
     } else {
       return state;
     }
@@ -153,6 +190,57 @@ const reducer = Redux.combineReducers({
     return {
       type:'SET_PRODUCT',
       product:product
+    }
+  }
+
+  function setProductFiles(files){
+    console.log(files);
+    return {
+      type:'SET_PRODUCT_FILES',
+      files:files
+    }
+  }
+
+  function setProductUpdates(updates){
+    return {
+      type:'SET_PRODUCT_UPDATES',
+      updates:updates
+    }
+  }
+
+  function setProductRatings(ratings){
+    return {
+      type:'SET_PRODUCT_RATINGS',
+      ratings:ratings
+    }
+  }
+
+  function setProductLikes(likes){
+    return {
+      type:'SET_PRODUCT_LIKES',
+      likes:likes
+    }
+  }
+
+  function setProductPlings(plings){
+    return {
+      type:'SET_PRODUCT_PLINGS',
+      plings:plings
+    }
+  }
+
+  function setProductUserRatings(userRatings){
+    return {
+      type:'SET_PRODUCT_USER_RATINGS',
+      userRatings:userRatings
+    }
+  }
+
+  function setProductGallery(gallery){
+    console.log('gallery - ' + gallery);
+    return {
+      type:'SET_PRODUCT_GALLERY',
+      gallery:gallery
     }
   }
 

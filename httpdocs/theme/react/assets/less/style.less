@@ -626,12 +626,12 @@ header div.container.header {
 #product-page {
 
   #product-view-header {
-    padding-left: 170px;
+    padding-left: 150px;
     position: relative;
 
     .image-container {
       position: absolute;
-      left: 20px;
+      left: 0;
     }
 
     .details-container {
@@ -640,6 +640,19 @@ header div.container.header {
         width: 100%;
         float: left;
         margin-bottom: 15px;
+
+        a {
+          height: 30px;
+          display: block;
+          span {
+            font-size: 15px;
+            font-weight: 500;
+          }
+        }
+
+        a + a {
+          margin-left: 10px;
+        }
 
         a.user {
           display: block;
@@ -656,6 +669,7 @@ header div.container.header {
             position: absolute;
             left: 0;
             top: 0;
+            border:1px solid #ccc;
 
             img {
               width: 100%;

@@ -39,6 +39,15 @@ class App extends React.Component {
     // product (single)
     if (window.product){
       store.dispatch(setProduct(product));
+      console.log('product files infos - ' + productFileInfos);
+      store.dispatch(setProductFiles(productFileInfos));
+      store.dispatch(setProductUpdates(productUpdates));
+      store.dispatch(setProductRatings(productRatings));
+      store.dispatch(setProductLikes(productLikes));
+      store.dispatch(setProductPlings(productPlings));
+      store.dispatch(setProductUserRatings(productRatingOfUser));
+      store.dispatch(setProductGallery(productGalleryPictures));
+      console.log(store.getState());
     }
 
     // pagination

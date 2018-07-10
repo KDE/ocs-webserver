@@ -358,6 +358,43 @@ function productsReducer(state = {}, action) {
 function productReducer(state = {}, action) {
   if (action.type === 'SET_PRODUCT') {
     return action.product;
+  } else if (action.type === 'SET_PRODUCT_FILES') {
+    console.log(action.files);
+    const s = Object.assign({}, state, {
+      r_files: action.files
+    });
+    console.log(s);
+    return s;
+  } else if (action.type === 'SET_PRODUCT_UPDATES') {
+    const s = Object.assign({}, state, {
+      r_updates: action.updates
+    });
+    return s;
+  } else if (action.type === 'SET_PRODUCT_RATINGS') {
+    const s = Object.assign({}, state, {
+      r_ratings: action.ratings
+    });
+    return s;
+  } else if (action.type === 'SET_PRODUCT_LIKES') {
+    const s = Object.assign({}, state, {
+      r_likes: action.likes
+    });
+    return s;
+  } else if (action.type === 'SET_PRODUCT_PLINGS') {
+    const s = Object.assign({}, state, {
+      r_plings: action.plings
+    });
+    return s;
+  } else if (action.type === 'SET_PRODUCT_USER_RATINGS') {
+    const s = Object.assign({}, state, {
+      r_userRatings: action.userRatings
+    });
+    return s;
+  } else if (action.type === 'SET_PRODUCT_GALLERY') {
+    const s = Object.assign({}, state, {
+      r_gallery: action.gallery
+    });
+    return s;
   } else {
     return state;
   }
@@ -484,6 +521,57 @@ function setProduct(product) {
   return {
     type: 'SET_PRODUCT',
     product: product
+  };
+}
+
+function setProductFiles(files) {
+  console.log(files);
+  return {
+    type: 'SET_PRODUCT_FILES',
+    files: files
+  };
+}
+
+function setProductUpdates(updates) {
+  return {
+    type: 'SET_PRODUCT_UPDATES',
+    updates: updates
+  };
+}
+
+function setProductRatings(ratings) {
+  return {
+    type: 'SET_PRODUCT_RATINGS',
+    ratings: ratings
+  };
+}
+
+function setProductLikes(likes) {
+  return {
+    type: 'SET_PRODUCT_LIKES',
+    likes: likes
+  };
+}
+
+function setProductPlings(plings) {
+  return {
+    type: 'SET_PRODUCT_PLINGS',
+    plings: plings
+  };
+}
+
+function setProductUserRatings(userRatings) {
+  return {
+    type: 'SET_PRODUCT_USER_RATINGS',
+    userRatings: userRatings
+  };
+}
+
+function setProductGallery(gallery) {
+  console.log('gallery - ' + gallery);
+  return {
+    type: 'SET_PRODUCT_GALLERY',
+    gallery: gallery
   };
 }
 
@@ -1551,25 +1639,78 @@ class Introduction extends React.Component {
 class ProductView extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { tab: 'product' };
+    this.toggleProductTab = this.toggleProductTab.bind(this);
+    this.toggleFilesTab = this.toggleFilesTab.bind(this);
+    this.toggleRatingsTab = this.toggleRatingsTab.bind(this);
+    this.toggleFavTab = this.toggleFavTab.bind(this);
   }
 
-  componentDidMount() {}
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.product !== this.props.product) {
+      this.forceUpdate();
+    }
+  }
+
+  toggleProductTab() {
+    this.setState({ tab: 'product' });
+  }
+
+  toggleFilesTab() {
+    this.setState({ tab: 'files' });
+  }
+
+  toggleRatingsTab() {
+    this.setState({ tab: 'ratings' });
+  }
+
+  toggleFavTab() {
+    this.setState({ tab: 'fav' });
+  }
 
   render() {
-    console.log(this.props.product);
+    console.log(this.state);
+    let galleryDisplay;
+    if (this.props.product.r_gallery.length > 0) {
+      galleryDisplay = React.createElement(ProductViewGallery, {
+        product: this.props.product
+      });
+    }
+
     return React.createElement(
-      "div",
-      { id: "product-page" },
+      'div',
+      { id: 'product-page' },
       React.createElement(
-        "div",
-        { className: "container" },
+        'div',
+        { className: 'container' },
         React.createElement(ProductViewHeader, {
           product: this.props.product
         }),
-        React.createElement(ProductViewGallery, {
-          product: this.props.product
-        }),
+        galleryDisplay,
+        React.createElement(
+          'div',
+          { className: 'explore-top-bar' },
+          React.createElement(
+            'a',
+            { className: this.state.tab === "product" ? "item active" : "item", onClick: this.toggleProductTab },
+            'Product'
+          ),
+          React.createElement(
+            'a',
+            { className: this.state.tab === "files" ? "item active" : "item", onClick: this.toggleFilesTab },
+            'Files'
+          ),
+          React.createElement(
+            'a',
+            { className: this.state.tab === "ratings" ? "item active" : "item", onClick: this.toggleRatingsTab },
+            'Ratings & Reviews'
+          ),
+          React.createElement(
+            'a',
+            { className: this.state.tab === "fav" ? "item active" : "item", onClick: this.toggleFavTab },
+            'Favs'
+          )
+        ),
         React.createElement(ProductViewContent, {
           product: this.props.product
         })
@@ -1602,48 +1743,52 @@ class ProductViewHeader extends React.Component {
       imageBaseUrl = 'cn.pling.it';
     }
     return React.createElement(
-      "div",
-      { className: "section mdl-grid", id: "product-view-header" },
+      'div',
+      { className: 'section mdl-grid', id: 'product-view-header' },
       React.createElement(
-        "div",
-        { className: "image-container" },
-        React.createElement("img", { src: 'https://' + imageBaseUrl + '/cache/130x130/img/' + this.props.product.image_small })
+        'div',
+        { className: 'image-container' },
+        React.createElement('img', { src: 'https://' + imageBaseUrl + '/cache/140x140/img/' + this.props.product.image_small })
       ),
       React.createElement(
-        "div",
-        { className: "details-container" },
+        'div',
+        { className: 'details-container' },
         React.createElement(
-          "h1",
+          'h1',
           null,
           this.props.product.title
         ),
         React.createElement(
-          "div",
-          { className: "info-row" },
+          'div',
+          { className: 'info-row' },
           React.createElement(
-            "a",
-            { href: "/member/" + this.props.product.member_id },
+            'a',
+            { className: 'user', href: "/member/" + this.props.product.member_id },
             React.createElement(
-              "span",
-              { className: "avatar" },
-              React.createElement("img", { src: this.props.product.profile_image_url })
+              'span',
+              { className: 'avatar' },
+              React.createElement('img', { src: this.props.product.profile_image_url })
             ),
             React.createElement(
-              "span",
-              { className: "username" },
+              'span',
+              { className: 'username' },
               this.props.product.username
             )
           ),
           React.createElement(
-            "a",
+            'a',
             { href: "/browse/cat/" + this.props.product.project_category_id + "/order/latest/" },
-            this.props.product.cat_title
+            React.createElement(
+              'span',
+              null,
+              this.props.product.cat_title
+            )
           )
         ),
         React.createElement(
-          "a",
-          { href: "#", className: "mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary" },
-          "Download"
+          'a',
+          { href: '#', className: 'mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary' },
+          'Download'
         )
       )
     );
@@ -1655,12 +1800,12 @@ class ProductViewGallery extends React.Component {
 
     let galleryDisplay;
     if (this.props.product.embed_code.length > 0) {
-      galleryDisplay = React.createElement("div", { id: "product-view-gallery",
+      galleryDisplay = React.createElement('div', { id: 'product-view-gallery',
         dangerouslySetInnerHTML: { __html: this.props.product.embed_code } });
     }
     return React.createElement(
-      "div",
-      { className: "section", id: "product-view-gallery-container" },
+      'div',
+      { className: 'section', id: 'product-view-gallery-container' },
       galleryDisplay
     );
   }
@@ -1669,9 +1814,9 @@ class ProductViewGallery extends React.Component {
 class ProductViewContent extends React.Component {
   render() {
     return React.createElement(
-      "div",
-      { className: "section", id: "product-view-content-container" },
-      React.createElement("p", { dangerouslySetInnerHTML: { __html: this.props.product.description } })
+      'div',
+      { className: 'section', id: 'product-view-content-container' },
+      React.createElement('p', { dangerouslySetInnerHTML: { __html: this.props.product.description } })
     );
   }
 }
@@ -1716,6 +1861,15 @@ class App extends React.Component {
     // product (single)
     if (window.product) {
       store.dispatch(setProduct(product));
+      console.log('product files infos - ' + productFileInfos);
+      store.dispatch(setProductFiles(productFileInfos));
+      store.dispatch(setProductUpdates(productUpdates));
+      store.dispatch(setProductRatings(productRatings));
+      store.dispatch(setProductLikes(productLikes));
+      store.dispatch(setProductPlings(productPlings));
+      store.dispatch(setProductUserRatings(productRatingOfUser));
+      store.dispatch(setProductGallery(productGalleryPictures));
+      console.log(store.getState());
     }
 
     // pagination

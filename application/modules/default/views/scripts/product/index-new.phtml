@@ -72,15 +72,14 @@ $this->headLink()->appendStylesheet('/theme/react/assets/css/style.css');
 <script type="text/javascript" src="/theme/react/lib/timeago/timeago.min.js"></script>
 
 <script type="text/javascript">
-var view = "product";
-var productJson = <?php echo $this->productJson ?>;
-var productFileInfosJson =<?php echo $this->productFileInfosJson ?>;
-var updatesJson =<?php echo $this->updatesJson ?>;
-var ratingsJson =<?php echo $this->ratingsJson ?>;
-var likeJson =<?php echo $this->likeJson ?>;
-var projectplingsJson =<?php echo $this->projectplingsJson ?>;
-var ratingOfUserJson =<?php echo $this->ratingOfUserJson ?>;
-var galleryPicturesJson = <?php echo $this->galleryPicturesJson ?>;
-
+  var view = "product";
+  var product = <?php echo $this->productJson ?>;
+  var productFileInfos =<?php echo $this->productFileInfosJson ?>;
+  var productUpdates =<?php echo $this->updatesJson ?>;
+  var productRatings =<?php echo $this->ratingsJson ?>;
+  var productLikes =<?php echo $this->likeJson ?>;
+  var productPlings =<?php echo $this->projectplingsJson ?>;
+  var productRatingOfUser =<?php echo $this->ratingOfUserJson ?>;
+  var productGalleryPictures = <?php echo $this->galleryPicturesJson ?>;
 </script>
 <script type="text/javascript" src="/theme/react/all.js"></script>

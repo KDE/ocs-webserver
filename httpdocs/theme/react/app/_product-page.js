@@ -1,24 +1,59 @@
 class ProductView extends React.Component {
   constructor(props){
   	super(props);
-  	this.state = {};
+  	this.state = {tab:'product'};
+    this.toggleProductTab = this.toggleProductTab.bind(this);
+    this.toggleFilesTab = this.toggleFilesTab.bind(this);
+    this.toggleRatingsTab = this.toggleRatingsTab.bind(this);
+    this.toggleFavTab = this.toggleFavTab.bind(this);
   }
 
-  componentDidMount() {
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.product !== this.props.product){
+      this.forceUpdate();
+    }
+  }
 
+  toggleProductTab(){
+    this.setState({tab:'product'});
+  }
+
+  toggleFilesTab(){
+    this.setState({tab:'files'});
+  }
+
+  toggleRatingsTab(){
+    this.setState({tab:'ratings'});
+  }
+
+  toggleFavTab(){
+    this.setState({tab:'fav'});
   }
 
   render(){
-    console.log(this.props.product);
+    console.log(this.state);
+    let galleryDisplay;
+    if (this.props.product.r_gallery.length > 0){
+      galleryDisplay = (
+        <ProductViewGallery
+          product={this.props.product}
+        />
+      );
+    }
+
     return(
       <div id="product-page">
         <div className="container">
           <ProductViewHeader
             product={this.props.product}
           />
-          <ProductViewGallery
-            product={this.props.product}
-          />
+          {galleryDisplay}
+          <div className="explore-top-bar">
+            <a className={this.state.tab === "product" ? "item active" : "item"} onClick={this.toggleProductTab}>Product</a>
+            <a className={this.state.tab === "files" ? "item active" : "item"} onClick={this.toggleFilesTab}>Files</a>
+            <a className={this.state.tab === "ratings" ? "item active" : "item"} onClick={this.toggleRatingsTab}>Ratings & Reviews</a>
+            <a className={this.state.tab === "fav" ? "item active" : "item"} onClick={this.toggleFavTab}>Favs</a>
+          </div>
           <ProductViewContent
             product={this.props.product}
           />
@@ -57,17 +92,17 @@ class ProductViewHeader extends React.Component {
     return (
       <div className="section mdl-grid" id="product-view-header">
         <div className="image-container">
-          <img src={'https://' + imageBaseUrl + '/cache/130x130/img/' + this.props.product.image_small} />
+          <img src={'https://' + imageBaseUrl + '/cache/140x140/img/' + this.props.product.image_small} />
         </div>
         <div className="details-container">
           <h1>{this.props.product.title}</h1>
           <div className="info-row">
-            <a href={"/member/" + this.props.product.member_id }>
+            <a className="user" href={"/member/" + this.props.product.member_id }>
               <span className="avatar"><img src={this.props.product.profile_image_url}/></span>
               <span className="username">{this.props.product.username}</span>
             </a>
             <a href={"/browse/cat/" + this.props.product.project_category_id + "/order/latest/"}>
-              {this.props.product.cat_title}
+              <span>{this.props.product.cat_title}</span>
             </a>
           </div>
           <a href="#" className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">
