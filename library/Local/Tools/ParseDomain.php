@@ -26,8 +26,9 @@ class Local_Tools_ParseDomain
 {
 
     /**
-     * @param $domain
+     * @param      $domain
      * @param bool $debug
+     *
      * @return string
      */
     public static function get_domain($domain, $debug = false)
@@ -40,14 +41,12 @@ class Local_Tools_ParseDomain
         if (filter_var($domain, FILTER_VALIDATE_IP)) {
             return $domain;
         }
-        $debug ? print('<strong style="color:green">&raquo;</strong> Parsing: ' . $original) : false;
         $arr = array_slice(array_filter(explode('.', $domain, 4), function ($value) {
             return $value !== 'www';
         }), 0); //rebuild array indexes
         if (count($arr) > 2) {
             $count = count($arr);
             $_sub = explode('.', $count === 4 ? $arr[3] : $arr[2]);
-            $debug ? print(" (parts count: {$count})") : false;
             if (count($_sub) === 2) // two level TLD
             {
                 $removed = array_shift($arr);
@@ -55,8 +54,7 @@ class Local_Tools_ParseDomain
                 {
                     $removed = array_shift($arr);
                 }
-                $debug ? print("<br>\n" . '[*] Two level TLD: <strong>' . join('.', $_sub) . '</strong> ') : false;
-            } elseif (count($_sub) === 1) // one level TLD
+            } else if (count($_sub) === 1) // one level TLD
             {
                 $removed = array_shift($arr); //remove the subdomain
                 if (strlen($_sub[0]) === 2 && $count === 3) // TLD domain must be 2 letters
@@ -93,28 +91,22 @@ class Local_Tools_ParseDomain
                         array_shift($arr);
                     }
                 }
-                $debug ? print("<br>\n" . '[*] One level TLD: <strong>' . join('.', $_sub) . '</strong> ') : false;
             } else // more than 3 levels, something is wrong
             {
                 for ($i = count($_sub); $i > 1; $i--) {
                     $removed = array_shift($arr);
                 }
-                $debug ? print("<br>\n" . '[*] Three level TLD: <strong>' . join('.', $_sub) . '</strong> ') : false;
             }
-        } elseif (count($arr) === 2) {
+        } else if (count($arr) === 2) {
             $arr0 = array_shift($arr);
             if (strpos(join('.', $arr), '.') === false
-                && in_array($arr[0], array('localhost', 'test', 'invalid')) === false
-            ) // not a reserved domain
+                && in_array($arr[0], array('localhost', 'test', 'invalid')) === false) // not a reserved domain
             {
-                $debug ? print("<br>\n" . 'Seems invalid domain: <strong>' . join('.',
-                        $arr) . '</strong> re-adding: <strong>' . $arr0 . '</strong> ') : false;
                 // seems invalid domain, restore it
                 array_unshift($arr, $arr0);
             }
         }
-        $debug ? print("<br>\n" . '<strong style="color:gray">&laquo;</strong> Done parsing: <span style="color:red">' . $original . '</span> as <span style="color:blue">' . join('.',
-                $arr) . "</span><br>\n") : false;
+
         return join('.', $arr);
     }
 
