@@ -180,6 +180,29 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $galleryPictures = $tableProject->getGalleryPictureSources($this->view->product->project_id);
             $this->view->galleryPicturesJson = Zend_Json::encode($galleryPictures);
 
+            $tagmodel = new Default_Model_Tags();
+            $tagsuser = $tagmodel->getTagsUser($this->view->product->project_id, Default_Model_Tags::TAG_TYPE_PROJECT);     
+            $this->view->tagsuserJson = Zend_Json::encode($tagsuser);
+
+            $modelComments = new Default_Model_ProjectComments();            
+            $offset = 0;
+            $testComments = $modelComments->getCommentTreeForProject($this->view->product->project_id);
+            $testComments->setItemCountPerPage(25);
+            $testComments->setCurrentPageNumber($offset);
+            $this->view->commentsJson = Zend_Json::encode($testComments);
+
+            $modelClone = new Default_Model_ProjectClone();
+            $origins =  $modelClone->fetchOrigins($this->view->product->project_id);
+            $this->view->originsJson = Zend_Json::encode($origins);
+            $related =  $modelClone->fetchRelatedProducts($this->view->product->project_id);
+             $this->view->relatedJson = Zend_Json::encode($related);
+
+             $moreProducts = $tableProject->fetchMoreProjects($this->view->product, 8);
+             $this->view->moreProductsJson = Zend_Json::encode($moreProducts);
+
+            $moreProducts = $tableProject->fetchMoreProjectsOfOtherUsr($this->view->product, 8);
+            $this->view->moreProductsOfOtherUsrJson = Zend_Json::encode($moreProducts);
+
     }
 
     public function indexAction()
