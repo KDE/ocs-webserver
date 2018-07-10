@@ -98,26 +98,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 $this->view->member_id = $this->_authMember->member_id;
             }
 
-            //        $this->fetchDataForIndexView();
-
-            $modelProduct = new Default_Model_Project();
-            $productInfo = $modelProduct->fetchProductInfo($this->_projectId);
-            $this->view->product = $productInfo;
-            if (empty($this->view->product)) {
-                throw new Zend_Controller_Action_Exception('This page does not exist', 404);
-            }
-
-            $helpAddDefaultScheme = new Default_View_Helper_AddDefaultScheme();
-            $this->view->product->title = Default_Model_HtmlPurify::purify($this->view->product->title);
-            $this->view->product->description = Default_Model_BBCode::renderHtml(Default_Model_HtmlPurify::purify($this->view->product->description));
-            $this->view->product->version = Default_Model_HtmlPurify::purify($this->view->product->version);            
-            $this->view->product->link_1 = Default_Model_HtmlPurify::purify($helpAddDefaultScheme->addDefaultScheme($this->view->product->link_1),Default_Model_HtmlPurify::ALLOW_URL);
-            $this->view->product->source_url = Default_Model_HtmlPurify::purify($this->view->product->source_url,Default_Model_HtmlPurify::ALLOW_URL);
-            $this->view->product->facebook_code = Default_Model_HtmlPurify::purify($this->view->product->facebook_code,Default_Model_HtmlPurify::ALLOW_URL);
-            $this->view->product->twitter_code = Default_Model_HtmlPurify::purify($this->view->product->twitter_code,Default_Model_HtmlPurify::ALLOW_URL);
-            $this->view->product->google_code = Default_Model_HtmlPurify::purify($this->view->product->google_code,Default_Model_HtmlPurify::ALLOW_URL);
-            $this->view->productJson = Zend_Json::encode($this->view->product );
-
+            $this->initJsonForProduct();
+            //        $this->fetchDataForIndexView();            
 
             $this->view->cat_id = $this->view->product->project_category_id;
 
@@ -146,6 +128,59 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
     }
     
+    public function initJsonForProduct(){
+            $modelProduct = new Default_Model_Project();
+            $productInfo = $modelProduct->fetchProductInfo($this->_projectId);
+            $this->view->product = $productInfo;
+            if (empty($this->view->product)) {
+                throw new Zend_Controller_Action_Exception('This page does not exist', 404);
+            }
+
+            $helpAddDefaultScheme = new Default_View_Helper_AddDefaultScheme();
+            $this->view->product->title = Default_Model_HtmlPurify::purify($this->view->product->title);
+            $this->view->product->description = Default_Model_BBCode::renderHtml(Default_Model_HtmlPurify::purify($this->view->product->description));
+            $this->view->product->version = Default_Model_HtmlPurify::purify($this->view->product->version);            
+            $this->view->product->link_1 = Default_Model_HtmlPurify::purify($helpAddDefaultScheme->addDefaultScheme($this->view->product->link_1),Default_Model_HtmlPurify::ALLOW_URL);
+            $this->view->product->source_url = Default_Model_HtmlPurify::purify($this->view->product->source_url,Default_Model_HtmlPurify::ALLOW_URL);
+            $this->view->product->facebook_code = Default_Model_HtmlPurify::purify($this->view->product->facebook_code,Default_Model_HtmlPurify::ALLOW_URL);
+            $this->view->product->twitter_code = Default_Model_HtmlPurify::purify($this->view->product->twitter_code,Default_Model_HtmlPurify::ALLOW_URL);
+            $this->view->product->google_code = Default_Model_HtmlPurify::purify($this->view->product->google_code,Default_Model_HtmlPurify::ALLOW_URL);
+            $this->view->productJson = Zend_Json::encode($this->view->product );
+
+                    
+            $helpProjectFiles = new Default_View_Helper_ProjectFiles();               
+            $this->view->productFileInfosJson = Zend_Json::encode($helpProjectFiles->projectFiles($this->view->product->ppload_collection_id));
+            $tableProjectUpdates = new Default_Model_ProjectUpdates();
+            $this->view->updatesJson =  Zend_Json::encode($tableProjectUpdates->fetchProjectUpdates($this->view->product->project_id));
+            $tableProjectRatings = new Default_Model_DbTable_ProjectRating();            
+            $ratings = $tableProjectRatings->fetchRating($this->view->product->project_id);
+            $cntRatingsActive = 0;
+             foreach ($ratings as $p) { 
+                if($p['rating_active']==1) $cntRatingsActive =$cntRatingsActive+1;
+             }
+             $this->view->ratingsJson = Zend_Json::encode($ratings);
+             $this->view->cntRatingsActiveJson = Zend_Json::encode($cntRatingsActive);
+
+            $identity = Zend_Auth::getInstance()->getStorage()->read(); 
+            if (Zend_Auth::getInstance()->hasIdentity()){           
+                $ratingOfUserJson = $tableProjectRatings->getProjectRateForUser($this->view->product->project_id,$identity->member_id);  
+                $this->view->ratingOfUserJson =  Zend_Json::encode($ratingOfUserJson);
+            }else{
+                $this->view->ratingOfUserJson =  Zend_Json::encode(null);
+            }
+            $tableProjectFollower = new Default_Model_DbTable_ProjectFollower();
+            $likes = $tableProjectFollower->fetchLikesForProject($this->view->product->project_id);
+            $this->view->likeJson = Zend_Json::encode($likes);
+
+            $projectplings = new Default_Model_ProjectPlings();
+            $plings = $projectplings->fetchPlingsForProject($this->view->product->project_id);
+            $this->view->projectplingsJson = Zend_Json::encode($plings);
+
+            $tableProject = new Default_Model_Project();
+            $galleryPictures = $tableProject->getGalleryPictureSources($this->view->product->project_id);
+            $this->view->galleryPicturesJson = Zend_Json::encode($galleryPictures);
+
+    }
 
     public function indexAction()
     {

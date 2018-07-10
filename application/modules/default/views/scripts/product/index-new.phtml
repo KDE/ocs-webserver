@@ -37,18 +37,7 @@ $viewClaimBox = false;
 if ($this->product->claimable == 1) {
     $viewClaimBox = 'product/partials/productClaimTopHeader.phtml';
 }
-$helpProjectFiles = new Default_View_Helper_ProjectFiles();
-$productFileInfos = $helpProjectFiles->projectFiles($this->product->ppload_collection_id);
 
-$this->product->title = Default_Model_HtmlPurify::purify($this->product->title);
-$this->product->description = Default_Model_BBCode::renderHtml(Default_Model_HtmlPurify::purify($this->product->description));
-$this->product->version = Default_Model_HtmlPurify::purify($this->product->version);
-//$this->product->embed_code =Default_Model_HtmlPurify::purify($this->product->embed_code,Default_Model_HtmlPurify::ALLOW_EMBED);
-$this->product->link_1 = Default_Model_HtmlPurify::purify($helpAddDefaultScheme->addDefaultScheme($this->product->link_1),Default_Model_HtmlPurify::ALLOW_URL);
-$this->product->source_url = Default_Model_HtmlPurify::purify($this->product->source_url,Default_Model_HtmlPurify::ALLOW_URL);
-$this->product->facebook_code = Default_Model_HtmlPurify::purify($this->product->facebook_code,Default_Model_HtmlPurify::ALLOW_URL);
-$this->product->twitter_code = Default_Model_HtmlPurify::purify($this->product->twitter_code,Default_Model_HtmlPurify::ALLOW_URL);
-$this->product->google_code = Default_Model_HtmlPurify::purify($this->product->google_code,Default_Model_HtmlPurify::ALLOW_URL);
 
 $this->headTitle($this->product->title . ' - ' . $_SERVER['HTTP_HOST'], 'SET');
 $this->doctype(Zend_View_Helper_Doctype::XHTML1_RDFA);
@@ -64,27 +53,6 @@ $this->headMeta()->appendProperty('og:description',
     $helpTruncate->truncate($this->product->description, 200, '...', false, true));
 $this->headMeta()->appendProperty('og:image',
     $helpImage->Image($this->product->image_small, array('width' => 400, 'height' => 400)));
-$tableProject = new Default_Model_Project();
-
-$tableProjectUpdates = new Default_Model_ProjectUpdates();
-$this->updates = $tableProjectUpdates->fetchProjectUpdates($this->product->project_id);
-
-$tableProjectRatings = new Default_Model_DbTable_ProjectRating();
-$this->ratings = $tableProjectRatings->fetchRating($this->product->project_id);
-$cntRatingsActive = 0;
- foreach ($this->ratings as $p) {
-    if($p['rating_active']==1) $cntRatingsActive =$cntRatingsActive+1;
- }
-
-if (Zend_Auth::getInstance()->hasIdentity()){
-    $this->ratingOfUser = $tableProjectRatings->getProjectRateForUser($this->product->project_id,$identity->member_id);
-}
-
-$tableProjectFollower = new Default_Model_DbTable_ProjectFollower();
-$this->likes = $tableProjectFollower->fetchLikesForProject($this->product->project_id);
-
-$projectplings = new Default_Model_ProjectPlings();
-$this->projectplings = $projectplings->fetchPlingsForProject($this->product->project_id);
 
 $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
 $this->headLink()->appendStylesheet('/theme/react/lib/mdl/material.min.css');
@@ -104,7 +72,15 @@ $this->headLink()->appendStylesheet('/theme/react/assets/css/style.css');
 <script type="text/javascript" src="/theme/react/lib/timeago/timeago.min.js"></script>
 
 <script type="text/javascript">
-  var view = "product";
-  var product = <?php echo $this->productJson ?>;
+var view = "product";
+var productJson = <?php echo $this->productJson ?>;
+var productFileInfosJson =<?php echo $this->productFileInfosJson ?>;
+var updatesJson =<?php echo $this->updatesJson ?>;
+var ratingsJson =<?php echo $this->ratingsJson ?>;
+var likeJson =<?php echo $this->likeJson ?>;
+var projectplingsJson =<?php echo $this->projectplingsJson ?>;
+var ratingOfUserJson =<?php echo $this->ratingOfUserJson ?>;
+var galleryPicturesJson = <?php echo $this->galleryPicturesJson ?>;
+
 </script>
 <script type="text/javascript" src="/theme/react/all.js"></script>
