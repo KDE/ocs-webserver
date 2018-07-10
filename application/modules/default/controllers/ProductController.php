@@ -106,6 +106,19 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             if (empty($this->view->product)) {
                 throw new Zend_Controller_Action_Exception('This page does not exist', 404);
             }
+
+            $helpAddDefaultScheme = new Default_View_Helper_AddDefaultScheme();
+            $this->view->product->title = Default_Model_HtmlPurify::purify($this->view->product->title);
+            $this->view->product->description = Default_Model_BBCode::renderHtml(Default_Model_HtmlPurify::purify($this->view->product->description));
+            $this->view->product->version = Default_Model_HtmlPurify::purify($this->view->product->version);            
+            $this->view->product->link_1 = Default_Model_HtmlPurify::purify($helpAddDefaultScheme->addDefaultScheme($this->view->product->link_1),Default_Model_HtmlPurify::ALLOW_URL);
+            $this->view->product->source_url = Default_Model_HtmlPurify::purify($this->view->product->source_url,Default_Model_HtmlPurify::ALLOW_URL);
+            $this->view->product->facebook_code = Default_Model_HtmlPurify::purify($this->view->product->facebook_code,Default_Model_HtmlPurify::ALLOW_URL);
+            $this->view->product->twitter_code = Default_Model_HtmlPurify::purify($this->view->product->twitter_code,Default_Model_HtmlPurify::ALLOW_URL);
+            $this->view->product->google_code = Default_Model_HtmlPurify::purify($this->view->product->google_code,Default_Model_HtmlPurify::ALLOW_URL);
+            $this->view->productJson = Zend_Json::encode($this->view->product );
+
+
             $this->view->cat_id = $this->view->product->project_category_id;
 
             //create ppload download hash: secret + collection_id + expire-timestamp

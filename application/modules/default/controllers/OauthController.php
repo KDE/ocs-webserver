@@ -113,7 +113,7 @@ class OAuthController extends Zend_Controller_Action
                 $registerResult = $authAdapter->registerLocal();
                 if (false === $registerResult->isValid()) {
                     Zend_Registry::get('logger')->info(__METHOD__ . ' - ip: ' . $this->_request->getClientIp()
-                        . ' - authentication failed.' . print_r(PHP_EOL . $registerResult->getMessages(), true))
+                        . ' - registration from social provider failed.' . PHP_EOL . print_r($registerResult->getMessages(), true))
                     ;
                     $this->_helper->flashMessenger->addMessage(self::ERR_MSG_DEFAULT);
                     $this->forward('index', 'explore', 'default');
