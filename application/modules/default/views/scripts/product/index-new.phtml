@@ -72,14 +72,26 @@ $this->headLink()->appendStylesheet('/theme/react/assets/css/style.css');
 <script type="text/javascript" src="/theme/react/lib/timeago/timeago.min.js"></script>
 
 <script type="text/javascript">
-  var view = "product";
-  var product = <?php echo $this->productJson ?>;
-  var productFileInfos =<?php echo $this->productFileInfosJson ?>;
-  var productUpdates =<?php echo $this->updatesJson ?>;
-  var productRatings =<?php echo $this->ratingsJson ?>;
-  var productLikes =<?php echo $this->likeJson ?>;
-  var productPlings =<?php echo $this->projectplingsJson ?>;
-  var productRatingOfUser =<?php echo $this->ratingOfUserJson ?>;
-  var productGalleryPictures = <?php echo $this->galleryPicturesJson ?>;
+var view = "product";
+var productJson = <?php echo $this->productJson ?>;  // product info. title, category, image ...
+var filesCntJson =<?php echo $this->filesCntJson ?>;   // Tab( active files cnt )
+var filesJson  = <?php echo $this->filesJson ?>;  // Tab files
+var updatesJson =<?php echo $this->updatesJson ?>; // Tab changelogs
+var ratingsJson =<?php echo $this->ratingsJson ?>; //  Tab Ratings & Reviews
+var ratingOfUserJson =<?php echo $this->ratingOfUserJson ?>;  // Rating of user if exist
+
+var likeJson =<?php echo $this->likeJson ?>;    // Tab Favs
+var projectplingsJson =<?php echo $this->projectplingsJson ?>; // Tab Plings
+
+var galleryPicturesJson = <?php echo $this->galleryPicturesJson ?>; 
+var commentsJson = <?php echo $this->commentsJson ?>; // comments  TODO Paging 
+var originsJson = <?php echo $this->originsJson ?>; // rightsidebar origins products = Based on
+var relatedJson = <?php echo $this->relatedJson ?>;// rightsidebar Variants 
+var moreProductsJson = <?php echo $this->moreProductsJson ?>; // rightsidebar more proudcts of category
+var moreProductsOfOtherUsrJson = <?php echo $this->moreProductsOfOtherUsrJson ?>; // rightsidebar more products of user
+
+var tagsuserJson = <?php echo $this->tagsuserJson ?>;  // user tags 
+var tagssystemJson = <?php echo $this->tagssystemJson ?>;  // rightsidebar bottom system tags
+
 </script>
 <script type="text/javascript" src="/theme/react/all.js"></script>

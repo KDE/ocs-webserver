@@ -48,6 +48,7 @@ class Default_Model_RememberMe
      *
      * @param string $_dataTableName
      *
+     * @throws Zend_Exception
      * @link http://php.net/manual/en/language.oop5.decon.php
      */
     public function __construct($_dataTableName = 'Default_Model_DbTable_Session')
@@ -66,6 +67,7 @@ class Default_Model_RememberMe
      * @param $identifier
      *
      * @return array|null
+     * @throws Zend_Db_Statement_Exception
      */
     public function updateSession($identifier)
     {
@@ -112,6 +114,7 @@ class Default_Model_RememberMe
      * @param int $identifier
      *
      * @return array return new session data
+     * @throws Exception
      */
     public function createSession($identifier)
     {
@@ -160,14 +163,14 @@ class Default_Model_RememberMe
         // delete old cookie with wrong domain
         //setcookie($this->cookieName, null, time() - $this->cookieTimeout, '/', $this->request->getHttpHost(), null, true);
 
-        return setcookie($this->cookieName, serialize($sessionData), $newSessionData['expiry'], '/', $domain, null,
-            true);
+        return setcookie($this->cookieName, serialize($sessionData), $newSessionData['expiry'], '/', $domain, null, true);
     }
 
     /**
      * @param $newSessionData
      *
      * @return mixed
+     * @throws Exception
      */
     protected function saveSessionData($newSessionData)
     {
@@ -183,6 +186,7 @@ class Default_Model_RememberMe
      * @param int   $identifier
      *
      * @return int count of updated rows
+     * @throws Zend_Db_Statement_Exception
      */
     private function updateSessionData($currentSessionData, $newSessionData, $identifier)
     {
@@ -191,14 +195,14 @@ class Default_Model_RememberMe
         }
 
         $sql =
-            "UPDATE `session` SET remember_me_id = :remember_new, expiry = FROM_UNIXTIME(:expiry_new), changed = NOW() WHERE member_id = :member_id AND remember_me_id = :remember_old";
+            "UPDATE `session` SET `remember_me_id` = :remember_new, `expiry` = FROM_UNIXTIME(:expiry_new), `changed` = NOW() WHERE `member_id` = :member_id AND `remember_me_id` = :remember_old";
 
         $result = $this->dataTable->getAdapter()->query($sql, array(
-                'remember_new' => $newSessionData['remember_me_id'],
-                'expiry_new'   => $newSessionData['expiry'],
-                'member_id'    => $identifier,
-                'remember_old' => $currentSessionData['remember_me_id']
-            ))
+            'remember_new' => $newSessionData['remember_me_id'],
+            'expiry_new'   => $newSessionData['expiry'],
+            'member_id'    => $identifier,
+            'remember_old' => $currentSessionData['remember_me_id']
+        ))
         ;
 
         return $result->rowCount();
@@ -248,15 +252,16 @@ class Default_Model_RememberMe
      * @param array $currentSessionCookie
      *
      * @return bool
+     * @throws Zend_Db_Statement_Exception
      */
     protected function removeSessionData($currentSessionCookie)
     {
-        $sql = "DELETE FROM `session` WHERE member_id = :member_id AND remember_me_id = :uuid";
+        $sql = "DELETE FROM `session` WHERE `member_id` = :member_id AND `remember_me_id` = :uuid";
 
         $result = $this->dataTable->getAdapter()->query($sql, array(
-                'member_id' => $currentSessionCookie['member_id'],
-                'uuid'      => $currentSessionCookie['remember_me_id']
-            ))
+            'member_id' => $currentSessionCookie['member_id'],
+            'uuid'      => $currentSessionCookie['remember_me_id']
+        ))
         ;
         if ($result->rowCount() > 0) {
             return true;
@@ -265,7 +270,7 @@ class Default_Model_RememberMe
         }
     }
 
-    protected function deleteCookie()
+    public function deleteCookie()
     {
         $domain = Local_Tools_ParseDomain::get_domain($this->request->getHttpHost());
         $cookieExpire = time() - $this->cookieTimeout;
