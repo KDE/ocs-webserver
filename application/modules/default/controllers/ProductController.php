@@ -147,13 +147,15 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $this->view->product->google_code = Default_Model_HtmlPurify::purify($this->view->product->google_code,Default_Model_HtmlPurify::ALLOW_URL);
             $this->view->productJson = Zend_Json::encode($this->view->product );
 
-                    
-            $helpProjectFiles = new Default_View_Helper_ProjectFiles();               
-            $this->view->productFileInfosJson = Zend_Json::encode($helpProjectFiles->projectFiles($this->view->product->ppload_collection_id));
+            $fmodel =new  Default_Model_DbTable_PploadFiles();
+            $files = $fmodel->fetchFilesForProject($this->view->product->ppload_collection_id);
+            $this->view->filesJson = Zend_Json::encode($files);                
+            $this->view->filesCntJson = Zend_Json::encode($fmodel->fetchFilesCntForProject($this->view->product->ppload_collection_id));
+
             $tableProjectUpdates = new Default_Model_ProjectUpdates();
-            $this->view->updatesJson =  Zend_Json::encode($tableProjectUpdates->fetchProjectUpdates($this->view->product->project_id));
+            $this->view->updatesJson =  Zend_Json::encode($tableProjectUpdates->fetchProjectUpdates($this->_projectId));
             $tableProjectRatings = new Default_Model_DbTable_ProjectRating();            
-            $ratings = $tableProjectRatings->fetchRating($this->view->product->project_id);
+            $ratings = $tableProjectRatings->fetchRating($this->_projectId);
             $cntRatingsActive = 0;
              foreach ($ratings as $p) { 
                 if($p['rating_active']==1) $cntRatingsActive =$cntRatingsActive+1;
@@ -163,38 +165,40 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
             $identity = Zend_Auth::getInstance()->getStorage()->read(); 
             if (Zend_Auth::getInstance()->hasIdentity()){           
-                $ratingOfUserJson = $tableProjectRatings->getProjectRateForUser($this->view->product->project_id,$identity->member_id);  
+                $ratingOfUserJson = $tableProjectRatings->getProjectRateForUser($this->_projectId,$identity->member_id);  
                 $this->view->ratingOfUserJson =  Zend_Json::encode($ratingOfUserJson);
             }else{
                 $this->view->ratingOfUserJson =  Zend_Json::encode(null);
             }
             $tableProjectFollower = new Default_Model_DbTable_ProjectFollower();
-            $likes = $tableProjectFollower->fetchLikesForProject($this->view->product->project_id);
+            $likes = $tableProjectFollower->fetchLikesForProject($this->_projectId);
             $this->view->likeJson = Zend_Json::encode($likes);
 
             $projectplings = new Default_Model_ProjectPlings();
-            $plings = $projectplings->fetchPlingsForProject($this->view->product->project_id);
+            $plings = $projectplings->fetchPlingsForProject($this->_projectId);
             $this->view->projectplingsJson = Zend_Json::encode($plings);
 
             $tableProject = new Default_Model_Project();
-            $galleryPictures = $tableProject->getGalleryPictureSources($this->view->product->project_id);
+            $galleryPictures = $tableProject->getGalleryPictureSources($this->_projectId);
             $this->view->galleryPicturesJson = Zend_Json::encode($galleryPictures);
 
             $tagmodel = new Default_Model_Tags();
-            $tagsuser = $tagmodel->getTagsUser($this->view->product->project_id, Default_Model_Tags::TAG_TYPE_PROJECT);     
+            $tagsuser = $tagmodel->getTagsUser($this->_projectId, Default_Model_Tags::TAG_TYPE_PROJECT);     
+            $tagssystem = $tagmodel->getTagsSystemList($this->_projectId); 
             $this->view->tagsuserJson = Zend_Json::encode($tagsuser);
+            $this->view->tagssystemJson = Zend_Json::encode($tagssystem);
 
             $modelComments = new Default_Model_ProjectComments();            
             $offset = 0;
-            $testComments = $modelComments->getCommentTreeForProject($this->view->product->project_id);
+            $testComments = $modelComments->getCommentTreeForProject($this->_projectId);
             $testComments->setItemCountPerPage(25);
             $testComments->setCurrentPageNumber($offset);
             $this->view->commentsJson = Zend_Json::encode($testComments);
 
             $modelClone = new Default_Model_ProjectClone();
-            $origins =  $modelClone->fetchOrigins($this->view->product->project_id);
+            $origins =  $modelClone->fetchOrigins($this->_projectId);
             $this->view->originsJson = Zend_Json::encode($origins);
-            $related =  $modelClone->fetchRelatedProducts($this->view->product->project_id);
+            $related =  $modelClone->fetchRelatedProducts($this->_projectId);
              $this->view->relatedJson = Zend_Json::encode($related);
 
              $moreProducts = $tableProject->fetchMoreProjects($this->view->product, 8);
@@ -203,6 +207,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $moreProducts = $tableProject->fetchMoreProjectsOfOtherUsr($this->view->product, 8);
             $this->view->moreProductsOfOtherUsrJson = Zend_Json::encode($moreProducts);
 
+
+            
     }
 
     public function indexAction()
