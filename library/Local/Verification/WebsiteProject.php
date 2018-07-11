@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -19,7 +20,6 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-
 class Local_Verification_WebsiteProject
 {
 
@@ -34,13 +34,17 @@ class Local_Verification_WebsiteProject
      */
     protected $_config = array(
         'maxredirects' => 0,
-        'timeout' => 30
+        'timeout'      => 30
     );
 
     /**
      * @param string $url
      * @param string $authCode
+     *
      * @return bool
+     * @throws Zend_Exception
+     * @throws Zend_Http_Client_Exception
+     * @throws Zend_Uri_Exception
      */
     public function testForAuthCodeExist($url, $authCode)
     {
@@ -59,37 +63,49 @@ class Local_Verification_WebsiteProject
             $httpClient->setUri($url);
             $response = $this->retrieveBody($httpClient);
             if (false === $response) {
-                Zend_Registry::get('logger')->err(__METHOD__ . " - Error while validate AuthCode for Website: " . $url . ".\n Server replay was: " . $httpClient->getLastResponse()->getStatus() . ". " . $httpClient->getLastResponse()->getMessage() . PHP_EOL);
+                Zend_Registry::get('logger')->err(__METHOD__ . " - Error while validate AuthCode for Website: " . $url
+                    . ".\n Server replay was: " . $httpClient->getLastResponse()->getStatus() . ". " . $httpClient->getLastResponse()
+                                                                                                                  ->getMessage()
+                    . PHP_EOL)
+                ;
+
                 return false;
             }
         }
+
         return (strpos($response, $authCode) !== false) ? true : false;
     }
 
     /**
      * @return Zend_Http_Client
+     * @throws Zend_Http_Client_Exception
      */
     public function getHttpClient()
     {
         $httpClient = new Zend_Http_Client();
         $httpClient->setConfig($this->_config);
+
         return $httpClient;
     }
 
     /**
      * @param $url
+     *
      * @return Zend_Uri
      * @throws Zend_Uri_Exception
      */
     protected function generateUri($url)
     {
         $uri = Zend_Uri::factory($url);
+
         return $uri;
     }
 
     /**
      * @param Zend_Http_Client $httpClient
+     *
      * @return bool
+     * @throws Zend_Http_Client_Exception
      */
     public function retrieveBody($httpClient)
     {
@@ -104,6 +120,7 @@ class Local_Verification_WebsiteProject
 
     /**
      * @param string $domain
+     *
      * @return string
      */
     public function getAuthFileUri($domain)
@@ -113,6 +130,7 @@ class Local_Verification_WebsiteProject
 
     /**
      * @param string $domain
+     *
      * @return string
      */
     public function getAuthFileName($domain)
@@ -122,6 +140,7 @@ class Local_Verification_WebsiteProject
 
     /**
      * @param string $domain
+     *
      * @return null|string
      */
     public function generateAuthCode($domain)
@@ -129,6 +148,7 @@ class Local_Verification_WebsiteProject
         if (empty($domain)) {
             return null;
         }
+
         return md5($domain . self::SALT_KEY);
     }
 
@@ -148,6 +168,12 @@ class Local_Verification_WebsiteProject
         $this->_config = $config;
     }
 
+    /**
+     * @param $project_id
+     * @param $verificationResult
+     *
+     * @throws Zend_Db_Table_Exception
+     */
     public function updateData($project_id, $verificationResult)
     {
         $modelProject = new Default_Model_Project();
@@ -163,6 +189,7 @@ class Local_Verification_WebsiteProject
 
     /**
      * @param $url
+     *
      * @return mixed
      * @throws Exception
      */

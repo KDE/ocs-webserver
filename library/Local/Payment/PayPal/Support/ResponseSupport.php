@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -19,7 +20,6 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-
 class Local_Payment_PayPal_Support_ResponseSupport implements Local_Payment_PayPal_PaymentInterface
 {
 
@@ -51,7 +51,7 @@ class Local_Payment_PayPal_Support_ResponseSupport implements Local_Payment_PayP
     {
         return strtoupper($this->_rawResponse['payment_status']);
     }
-    
+
     /**
      * @return mixed
      */
@@ -83,6 +83,7 @@ class Local_Payment_PayPal_Support_ResponseSupport implements Local_Payment_PayP
 
     /**
      * @param $name
+     *
      * @return mixed
      */
     public function getField($name)

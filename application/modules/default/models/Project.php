@@ -1088,15 +1088,12 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         $cache = Zend_Registry::get('cache');
 
         if (false === ($returnValue = $cache->load($cacheName))) {
-            Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . print_r($inputFilterParams, true));
             $statement = $this->generateStatement($inputFilterParams, $limit, $offset);
-            Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . $statement->__toString());
             /** @var Zend_Db_Table_Rowset $fetchedElements */
             $fetchedElements = $this->fetchAll($statement);
 
             $statement->reset('limitcount')->reset('limitoffset');
             $statement->reset('columns')->columns(array('count' => new Zend_Db_Expr('count(*)')));
-            Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . $statement->__toString());
             $countElements = $this->fetchRow($statement);
             $returnValue = array('elements' => $fetchedElements, 'total_count' => $countElements->count);
 

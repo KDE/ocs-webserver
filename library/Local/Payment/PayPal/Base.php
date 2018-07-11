@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -19,7 +20,6 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-
 abstract class Local_Payment_PayPal_Base
 {
     /** @var \Zend_Config */
@@ -28,8 +28,9 @@ abstract class Local_Payment_PayPal_Base
     protected $_logger;
 
     /**
-     * @param array|Zend_config $config
+     * @param array|Zend_config        $config
      * @param Zend_Log_Writer_Abstract $logger
+     *
      * @throws Exception
      */
     function __construct($config, $logger = null)
@@ -55,12 +56,14 @@ abstract class Local_Payment_PayPal_Base
     }
 
     /**
-     * @param array $request
+     * @param array  $request
      * @param string $apiName
      * @param string $apiOperation
-     * @param bool $withAuthHeader
-     * @throws Local_Payment_Exception
+     * @param bool   $withAuthHeader
+     *
      * @return array
+     * @throws Local_Payment_Exception
+     * @throws Zend_Http_Client_Exception
      */
     protected function _makeRequest($request, $apiName, $apiOperation, $withAuthHeader = true)
     {
@@ -72,7 +75,7 @@ abstract class Local_Payment_PayPal_Base
         $http->setMethod(Zend_Http_Client::POST);
         $http->setParameterPost($request);
         // Increasing the HTTP timeout
-        $http->setConfig(array('timeout'=>60));
+        $http->setConfig(array('timeout' => 60));
 
         try {
             $response = $http->request();
@@ -81,7 +84,9 @@ abstract class Local_Payment_PayPal_Base
         }
 
         if (false === $response) {
-            $this->_logger->err(__METHOD__ . " - Error while request PayPal Website.\n Server replay was: " . $http->getLastResponse()->getStatus() . PHP_EOL . $http->getLastResponse()->getMessage() . PHP_EOL);
+            $this->_logger->err(__METHOD__ . " - Error while request PayPal Website.\n Server replay was: " . $http->getLastResponse()
+                                                                                                                   ->getStatus()
+                . PHP_EOL . $http->getLastResponse()->getMessage() . PHP_EOL);
             $this->_logger->err(__METHOD__ . ' - Last Request: ' . print_r($http->getLastRequest(), true));
             $this->_logger->err(__METHOD__ . ' - Headers: ' . print_r($response->getHeaders(), true));
             $this->_logger->err(__METHOD__ . ' - Body: ' . print_r($response->getBody(), true) . PHP_EOL);
@@ -101,7 +106,9 @@ abstract class Local_Payment_PayPal_Base
      * Build all HTTP headers required for the API call.
      *
      * @access    protected
+     *
      * @param array|Zend_Config $config
+     *
      * @return    array $headers
      */
     protected function _buildHeader($config = null)
@@ -127,6 +134,7 @@ abstract class Local_Payment_PayPal_Base
 
     /**
      * @param string $raw_post
+     *
      * @return array
      */
     protected function _parseRawMessage($raw_post)
@@ -142,7 +150,7 @@ abstract class Local_Payment_PayPal_Base
             $key = urldecode($key);
             $value = urldecode($value);
             # This is look for a key as simple as 'return_url' or as complex as 'somekey[x].property'
-//            preg_match('/(\w+)(?:\[(\d+)\])?(?:\.(\w+))?/', $key, $key_parts);
+            //            preg_match('/(\w+)(?:\[(\d+)\])?(?:\.(\w+))?/', $key, $key_parts);
             preg_match('/(\w+)(?:(?:\[|\()(\d+)(?:\]|\)))?(?:\.(\w+))?/', $key, $key_parts);
             switch (count($key_parts)) {
                 case 4:
@@ -181,6 +189,7 @@ abstract class Local_Payment_PayPal_Base
             }
             #switch
         }
+
         #foreach
 
         return $parsedPost;
