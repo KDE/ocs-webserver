@@ -1861,15 +1861,22 @@ class App extends React.Component {
     // product (single)
     if (window.product) {
       store.dispatch(setProduct(product));
-      console.log('product files infos - ' + productFileInfos);
-      store.dispatch(setProductFiles(productFileInfos));
-      store.dispatch(setProductUpdates(productUpdates));
-      store.dispatch(setProductRatings(productRatings));
-      store.dispatch(setProductLikes(productLikes));
-      store.dispatch(setProductPlings(productPlings));
-      store.dispatch(setProductUserRatings(productRatingOfUser));
-      store.dispatch(setProductGallery(productGalleryPictures));
+      // store.dispatch(setProductFiles(filesJson));
+      store.dispatch(setProductUpdates(updatesJson));
+      store.dispatch(setProductRatings(ratingsJson));
+      store.dispatch(setProductLikes(likeJson));
+      store.dispatch(setProductPlings(projectplingsJson));
+      store.dispatch(setProductUserRatings(ratingOfUserJson));
+      store.dispatch(setProductGallery(galleryPicturesJson));
       console.log(store.getState());
+      console.log(filesCntJson);
+      console.log(commentsJson);
+      console.log(originsJson);
+      console.log(relatedJson);
+      console.log(moreProductsJson);
+      console.log(moreProductsOfOtherUsrJson);
+      console.log(tagsuserJson);
+      console.log(tagssystemJson);
     }
 
     // pagination
