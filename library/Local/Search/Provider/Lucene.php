@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -19,7 +20,7 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-
+/** @deprecated  */
 class Local_Search_Provider_Lucene implements Local_Search_ProviderInterface
 {
 
@@ -31,8 +32,9 @@ class Local_Search_Provider_Lucene implements Local_Search_ProviderInterface
     protected $logger;
 
     /**
-     * @param array|Zend_config $config
+     * @param array|Zend_config        $config
      * @param Zend_Log_Writer_Abstract $logger
+     *
      * @throws Exception
      */
     function __construct($config, $logger)
@@ -43,7 +45,7 @@ class Local_Search_Provider_Lucene implements Local_Search_ProviderInterface
 
         if ($config instanceof Zend_Config) {
             $this->config = $config;
-        } elseif (is_array($config)) {
+        } else if (is_array($config)) {
             $this->config = new Zend_Config($config);
         }
 
@@ -61,8 +63,8 @@ class Local_Search_Provider_Lucene implements Local_Search_ProviderInterface
     public function createIndex()
     {
         $tableProject = new Default_Model_Project();
-        $rowSetProject = $tableProject->fetchAll('status = ' . Default_Model_DbTable_Project::PROJECT_ACTIVE .
-            ' AND type_id = ' . Default_Model_DbTable_Project::PROJECT_TYPE_STANDARD, 'created_at desc');
+        $rowSetProject = $tableProject->fetchAll('status = ' . Default_Model_DbTable_Project::PROJECT_ACTIVE . ' AND type_id = '
+            . Default_Model_DbTable_Project::PROJECT_TYPE_STANDARD, 'created_at desc');
 
         $tableMember = new Default_Model_Member();
         $tableCategory = new Default_Model_DbTable_ProjectCategory();
@@ -109,8 +111,7 @@ class Local_Search_Provider_Lucene implements Local_Search_ProviderInterface
                 $doc->addField(Zend_Search_Lucene_Field::unIndexed('twitter_code', $project->twitter_code));
                 $doc->addField(Zend_Search_Lucene_Field::unIndexed('google_code', $project->google_code));
                 $doc->addField(Zend_Search_Lucene_Field::unIndexed('link_1', $project->link_1));
-                $doc->addField(Zend_Search_Lucene_Field::unIndexed('ppload_collection_id',
-                    $project->ppload_collection_id));
+                $doc->addField(Zend_Search_Lucene_Field::unIndexed('ppload_collection_id', $project->ppload_collection_id));
 
                 $doc->addField(Zend_Search_Lucene_Field::unIndexed('validated', $project->validated));
                 $doc->addField(Zend_Search_Lucene_Field::unIndexed('amount', $project->amount));
@@ -135,6 +136,8 @@ class Local_Search_Provider_Lucene implements Local_Search_ProviderInterface
     /**
      * @param $storeId
      * @param $searchIndexId
+     *
+     * @throws Zend_Exception
      * @deprecated
      */
     public function createStoreSearchIndex($storeId, $searchIndexId)
@@ -151,6 +154,11 @@ class Local_Search_Provider_Lucene implements Local_Search_ProviderInterface
         $this->createSearchIndex($searchIndexEngine, $elementsForIndex);
     }
 
+    /**
+     * @param $searchIndexId
+     *
+     * @throws Exception
+     */
     private function initStoreForSearchEngine($searchIndexId)
     {
         $dataPath = $this->config->path;
@@ -173,9 +181,18 @@ class Local_Search_Provider_Lucene implements Local_Search_ProviderInterface
         }
     }
 
+    /**
+     * @param $storeId
+     *
+     * @return array
+     * @throws Zend_Cache_Exception
+     * @throws Zend_Db_Statement_Exception
+     * @throws Zend_Exception
+     */
     private function fetchElementsForIndex($storeId)
     {
         $storeCategories = $this->fetchCategoriesForStore($storeId);
+
         return $this->fetchElementsForCategories($storeCategories);
     }
 
@@ -184,7 +201,10 @@ class Local_Search_Provider_Lucene implements Local_Search_ProviderInterface
      * nothing was found, it returns all main categories in database.
      *
      * @param int $storeId
+     *
      * @return array
+     * @throws Zend_Cache_Exception
+     * @throws Zend_Db_Statement_Exception
      */
     private function fetchCategoriesForStore($storeId)
     {
@@ -195,18 +215,27 @@ class Local_Search_Provider_Lucene implements Local_Search_ProviderInterface
         }
         $modelCategories = new Default_Model_DbTable_ProjectCategory();
         $resultSet = $modelCategories->fetchMainCatIdsOrdered();
+
         return $resultSet;
     }
 
+    /**
+     * @param $storeCategories
+     *
+     * @return array
+     * @throws Zend_Db_Statement_Exception
+     * @throws Zend_Exception
+     */
     private function fetchElementsForCategories($storeCategories)
     {
         $modelProduct = new Default_Model_Project();
+
         return $modelProduct->fetchProductsForCategories($storeCategories);
     }
 
     /**
      * @param Zend_Search_Lucene_Interface $searchIndexEngine
-     * @param array $elementsForIndex
+     * @param array                        $elementsForIndex
      */
     private function createSearchIndex($searchIndexEngine, $elementsForIndex)
     {
@@ -218,6 +247,7 @@ class Local_Search_Provider_Lucene implements Local_Search_ProviderInterface
 
     /**
      * @param array $element
+     *
      * @return Zend_Search_Lucene_Document
      */
     protected function createIndexDocument($element)
@@ -255,8 +285,7 @@ class Local_Search_Provider_Lucene implements Local_Search_ProviderInterface
         $doc->addField(Zend_Search_Lucene_Field::unIndexed('twitter_code', $element['twitter_code']));
         $doc->addField(Zend_Search_Lucene_Field::unIndexed('google_code', $element['google_code']));
         $doc->addField(Zend_Search_Lucene_Field::unIndexed('link_1', $element['link_1']));
-        $doc->addField(Zend_Search_Lucene_Field::unIndexed('ppload_collection_id',
-            $element['ppload_collection_id']));
+        $doc->addField(Zend_Search_Lucene_Field::unIndexed('ppload_collection_id', $element['ppload_collection_id']));
 
         $doc->addField(Zend_Search_Lucene_Field::unIndexed('validated', $element['validated']));
         $doc->addField(Zend_Search_Lucene_Field::unIndexed('amount', $element['amount']));
@@ -276,8 +305,7 @@ class Local_Search_Provider_Lucene implements Local_Search_ProviderInterface
         $doc->addField(Zend_Search_Lucene_Field::unIndexed('count_likes', $element['count_likes']));
         $doc->addField(Zend_Search_Lucene_Field::unIndexed('count_dislikes', $element['count_dislikes']));
         $doc->addField(Zend_Search_Lucene_Field::unIndexed('count_comments', $element['count_comments']));
-        $doc->addField(Zend_Search_Lucene_Field::unIndexed('count_downloads_hive',
-            $element['count_downloads_hive']));
+        $doc->addField(Zend_Search_Lucene_Field::unIndexed('count_downloads_hive', $element['count_downloads_hive']));
 
         //$doc->addField(Zend_Search_Lucene_Field::unIndexed('amount_received', $element['amount_received']));
         //$doc->addField(Zend_Search_Lucene_Field::unIndexed('count_plings', $element['count_plings']));
@@ -288,6 +316,7 @@ class Local_Search_Provider_Lucene implements Local_Search_ProviderInterface
 
         $doc->addField(Zend_Search_Lucene_Field::unIndexed('source_id', $element['source_id']));
         $doc->addField(Zend_Search_Lucene_Field::unIndexed('source_pk', $element['source_pk']));
+
         return $doc;
     }
 

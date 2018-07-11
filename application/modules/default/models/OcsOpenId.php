@@ -60,8 +60,6 @@ class Default_Model_OcsOpenId
     {
         $user = $this->getUserData($member_id);
 
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - $user:' . print_r($user, true));
-
         $data = array(
             'external_id'    => $user['external_id'],
             'ocs_user_id'    => $user['member_id'],
@@ -78,8 +76,6 @@ class Default_Model_OcsOpenId
             'is_active'      => $user['is_active'],
             'is_deleted'     => $user['is_deleted']
         );
-
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - $data:' . print_r($data, true));
 
         return $data;
     }

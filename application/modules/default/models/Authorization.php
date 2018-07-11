@@ -287,13 +287,9 @@ class Default_Model_Authorization
      */
     protected function getAuthUserData($identifier, $identity)
     {
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - $identifier: ' . print_r($identifier, true) . ' :: $identity: '
-            . print_r($identity, true))
-        ;
         $dataTable = $this->_dataTable;
         $where = $dataTable->select()->where($dataTable->getAdapter()->quoteIdentifier($identifier, true) . ' = ?', $identity);
         $resultRow = $dataTable->fetchRow($where)->toArray();
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - user found. username: ' . print_r($resultRow['username'], true));
         unset($resultRow['password']);
 
         return (object)$resultRow;
@@ -307,7 +303,6 @@ class Default_Model_Authorization
      */
     public function getAuthUserDataFromUnverified($identity)
     {
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - $identity: ' . print_r($identity, true));
         $sql = "
             SELECT `member_email`.`email_checked`, `member_email`.`email_address`, `member`.*
             FROM `member_email`
@@ -316,14 +311,10 @@ class Default_Model_Authorization
         ";
         $resultRow = $this->_dataTable->getAdapter()->fetchRow($sql, array('verification' => $identity));
         if ($resultRow) {
-            Zend_Registry::get('logger')->info(__METHOD__
-                . " - found (member_id,mail,is_active,email_address,email_checked): ({$resultRow['member_id']},{$resultRow['mail']},{$resultRow['is_active']},{$resultRow['email_address']},{$resultRow['email_checked']})")
-            ;
             unset($resultRow['password']);
 
             return (object)$resultRow;
         }
-        Zend_Registry::get('logger')->warn(__METHOD__ . ' - unverified user was not found');
 
         return null;
     }

@@ -27,6 +27,7 @@ class Local_Queue_Factory
      * @param $queueName
      *
      * @return Zend_Queue
+     * @throws Zend_Exception
      * @deprecated
      */
     public static function createQueue($queueName)
@@ -41,6 +42,8 @@ class Local_Queue_Factory
      * @param $config
      *
      * @return Zend_Queue
+     * @throws Zend_Exception
+     * @throws Zend_Queue_Exception
      * @deprecated
      */
     protected static function _initQueue($config)
@@ -65,7 +68,6 @@ class Local_Queue_Factory
         /** @var Zend_Config $configAll */
         $configAll = Zend_Registry::get('config');
         $configDb = $configAll->resources->db->params->toArray();
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - db config:' . print_r($configDb, true));
         $nameQueue = isset($identifier) ? $identifier : Zend_Registry::get('config')->settings->queue->general->name;
         $queueAdapter = new Local_Queue_Adapter_Db(array('driverOptions' => $configDb));
 
