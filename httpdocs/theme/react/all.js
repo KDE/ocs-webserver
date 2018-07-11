@@ -359,11 +359,9 @@ function productReducer(state = {}, action) {
   if (action.type === 'SET_PRODUCT') {
     return action.product;
   } else if (action.type === 'SET_PRODUCT_FILES') {
-    console.log(action.files);
     const s = Object.assign({}, state, {
       r_files: action.files
     });
-    console.log(s);
     return s;
   } else if (action.type === 'SET_PRODUCT_UPDATES') {
     const s = Object.assign({}, state, {
@@ -393,6 +391,37 @@ function productReducer(state = {}, action) {
   } else if (action.type === 'SET_PRODUCT_GALLERY') {
     const s = Object.assign({}, state, {
       r_gallery: action.gallery
+    });
+    return s;
+  } else if (action.type === 'SET_PRODUCT_COMMENTS') {
+    const s = Object.assign({}, state, {
+      r_comments: action.comments
+    });
+    return s;
+  } else if (action.type === 'SET_PRODUCT_ORIGINS') {
+    const s = Object.assign({}, state, {
+      r_origins: action.origins
+    });
+    return s;
+  } else if (action.type === 'SET_PRODUCT_RELATED') {
+    const s = Object.assign({}, state, {
+      r_related: action.related
+    });
+    return s;
+  } else if (action.type === 'SET_PRODUCT_MORE_PRODUCTS') {
+    const s = Object.assign({}, state, {
+      r_more_products: action.products
+    });
+    return s;
+  } else if (action.type === 'SET_PRODUCT_MORE_PRODUCTS_OTHER_USERS') {
+    const s = Object.assign({}, state, {
+      r_more_products_other_users: action.products
+    });
+    return s;
+  } else if (action.type === 'SET_PRODUCT_TAGS') {
+    const s = Object.assign({}, state, {
+      r_tags_user: action.userTags,
+      r_tags_system: action.systemTags
     });
     return s;
   } else {
@@ -525,7 +554,6 @@ function setProduct(product) {
 }
 
 function setProductFiles(files) {
-  console.log(files);
   return {
     type: 'SET_PRODUCT_FILES',
     files: files
@@ -568,10 +596,52 @@ function setProductUserRatings(userRatings) {
 }
 
 function setProductGallery(gallery) {
-  console.log('gallery - ' + gallery);
   return {
     type: 'SET_PRODUCT_GALLERY',
     gallery: gallery
+  };
+}
+
+function setProductComments(comments) {
+  return {
+    type: 'SET_PRODUCT_COMMENTS',
+    comments: comments
+  };
+}
+
+function setProductOrigins(origins) {
+  return {
+    type: 'SET_PRODUCT_ORIGINS',
+    origins: origins
+  };
+}
+
+function setProductRelated(related) {
+  return {
+    type: 'SET_PRODUCT_RELATED',
+    related: related
+  };
+}
+
+function setProductMoreProducts(products) {
+  return {
+    type: 'SET_PRODUCT_MORE_PRODUCTS',
+    products: products
+  };
+}
+
+function setProductMoreProductsOtherUsers(products) {
+  return {
+    type: 'SET_PRODUCT_MORE_PRODUCTS_OTHER_USERS',
+    products: products
+  };
+}
+
+function setProductTags(userTags, systemTags) {
+  return {
+    type: 'SET_PRODUCT_TAGS',
+    userTags: userTags,
+    systemTags: systemTags
   };
 }
 
@@ -1640,10 +1710,7 @@ class ProductView extends React.Component {
   constructor(props) {
     super(props);
     this.state = { tab: 'product' };
-    this.toggleProductTab = this.toggleProductTab.bind(this);
-    this.toggleFilesTab = this.toggleFilesTab.bind(this);
-    this.toggleRatingsTab = this.toggleRatingsTab.bind(this);
-    this.toggleFavTab = this.toggleFavTab.bind(this);
+    this.toggleTab = this.toggleTab.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -1652,67 +1719,39 @@ class ProductView extends React.Component {
     }
   }
 
-  toggleProductTab() {
-    this.setState({ tab: 'product' });
-  }
-
-  toggleFilesTab() {
-    this.setState({ tab: 'files' });
-  }
-
-  toggleRatingsTab() {
-    this.setState({ tab: 'ratings' });
-  }
-
-  toggleFavTab() {
-    this.setState({ tab: 'fav' });
+  toggleTab(tab) {
+    this.setState({ tab: tab });
   }
 
   render() {
     console.log(this.state);
     let galleryDisplay;
-    if (this.props.product.r_gallery.length > 0) {
-      galleryDisplay = React.createElement(ProductViewGallery, {
-        product: this.props.product
-      });
-    }
+    /*if (this.props.product.r_gallery .length > 0){
+      galleryDisplay = (
+        <ProductViewGallery
+          product={this.props.product}
+        />
+      );
+    }*/
 
     return React.createElement(
-      'div',
-      { id: 'product-page' },
+      "div",
+      { id: "product-page" },
       React.createElement(
-        'div',
-        { className: 'container' },
+        "div",
+        { className: "container" },
         React.createElement(ProductViewHeader, {
           product: this.props.product
         }),
-        galleryDisplay,
-        React.createElement(
-          'div',
-          { className: 'explore-top-bar' },
-          React.createElement(
-            'a',
-            { className: this.state.tab === "product" ? "item active" : "item", onClick: this.toggleProductTab },
-            'Product'
-          ),
-          React.createElement(
-            'a',
-            { className: this.state.tab === "files" ? "item active" : "item", onClick: this.toggleFilesTab },
-            'Files'
-          ),
-          React.createElement(
-            'a',
-            { className: this.state.tab === "ratings" ? "item active" : "item", onClick: this.toggleRatingsTab },
-            'Ratings & Reviews'
-          ),
-          React.createElement(
-            'a',
-            { className: this.state.tab === "fav" ? "item active" : "item", onClick: this.toggleFavTab },
-            'Favs'
-          )
-        ),
-        React.createElement(ProductViewContent, {
+        React.createElement(ProductNavBar, {
+          onTabToggle: this.toggleTab,
+          tab: this.state.tab,
           product: this.props.product
+        }),
+        galleryDisplay,
+        React.createElement(ProductViewContent, {
+          product: this.props.product,
+          tab: this.state.tab
         })
       )
     );
@@ -1736,6 +1775,7 @@ const ProductViewWrapper = ReactRedux.connect(mapStateToProductPageProps, mapDis
 
 class ProductViewHeader extends React.Component {
   render() {
+    console.log(this.props.product);
     let imageBaseUrl;
     if (store.getState().env === 'live') {
       imageBaseUrl = 'cn.pling.com';
@@ -1743,54 +1783,137 @@ class ProductViewHeader extends React.Component {
       imageBaseUrl = 'cn.pling.it';
     }
     return React.createElement(
-      'div',
-      { className: 'section mdl-grid', id: 'product-view-header' },
+      "div",
+      { className: "section mdl-grid", id: "product-view-header" },
       React.createElement(
-        'div',
-        { className: 'image-container' },
-        React.createElement('img', { src: 'https://' + imageBaseUrl + '/cache/140x140/img/' + this.props.product.image_small })
+        "div",
+        { className: "image-container" },
+        React.createElement("img", { src: 'https://' + imageBaseUrl + '/cache/140x140/img/' + this.props.product.image_small })
       ),
       React.createElement(
-        'div',
-        { className: 'details-container' },
+        "div",
+        { className: "details-container" },
         React.createElement(
-          'h1',
+          "h1",
           null,
           this.props.product.title
         ),
         React.createElement(
-          'div',
-          { className: 'info-row' },
+          "div",
+          { className: "info-row" },
           React.createElement(
-            'a',
-            { className: 'user', href: "/member/" + this.props.product.member_id },
+            "a",
+            { className: "user", href: "/member/" + this.props.product.member_id },
             React.createElement(
-              'span',
-              { className: 'avatar' },
-              React.createElement('img', { src: this.props.product.profile_image_url })
+              "span",
+              { className: "avatar" },
+              React.createElement("img", { src: this.props.product.profile_image_url })
             ),
             React.createElement(
-              'span',
-              { className: 'username' },
+              "span",
+              { className: "username" },
               this.props.product.username
             )
           ),
           React.createElement(
-            'a',
+            "a",
             { href: "/browse/cat/" + this.props.product.project_category_id + "/order/latest/" },
             React.createElement(
-              'span',
+              "span",
               null,
               this.props.product.cat_title
             )
           )
         ),
         React.createElement(
-          'a',
-          { href: '#', className: 'mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary' },
-          'Download'
+          "a",
+          { href: "#", className: "mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary" },
+          "Download"
         )
       )
+    );
+  }
+}
+
+class ProductNavBar extends React.Component {
+  constructor(props) {
+    super(props);
+    this.toggleProductTab = this.toggleProductTab.bind(this);
+    this.toggleFilesTab = this.toggleFilesTab.bind(this);
+    this.toggleRatingsTab = this.toggleRatingsTab.bind(this);
+    this.toggleFavTab = this.toggleFavTab.bind(this);
+    this.toggleCommentsTab = this.toggleCommentsTab.bind(this);
+  }
+
+  toggleProductTab() {
+    this.props.onTabToggle('product');
+  }
+
+  toggleFilesTab() {
+    this.props.onTabToggle('files');
+  }
+
+  toggleRatingsTab() {
+    this.props.onTabToggle('ratings');
+  }
+
+  toggleFavTab() {
+    this.props.onTabToggle('fav');
+  }
+
+  toggleCommentsTab() {
+    this.props.onTabToggle('comments');
+  }
+
+  render() {
+
+    let productNavBarDisplay;
+    let filesMenuItem, ratingsMenuItem, commentsMenuItem, favsMenuItem;
+    if (this.props.product.r_files.length > 0) {
+      filesMenuItem = React.createElement(
+        "a",
+        { className: this.props.tab === "files" ? "item active" : "item", onClick: this.toggleFilesTab },
+        "Files (",
+        this.props.product.r_files.length,
+        ")"
+      );
+    }
+    if (this.props.product.r_ratings.length > 0) {
+      ratingsMenuItem = React.createElement(
+        "a",
+        { className: this.props.tab === "ratings" ? "item active" : "item", onClick: this.toggleRatingsTab },
+        "Ratings & Reviews"
+      );
+    }
+    if (this.props.product.r_plings.length > 0) {
+      favsMenuItem = React.createElement(
+        "a",
+        { className: this.props.tab === "fav" ? "item active" : "item", onClick: this.toggleFavTab },
+        "Favs (",
+        this.props.product.r_plings.length,
+        ")"
+      );
+    }
+    if (this.props.product.r_comments.length > 0) {
+      commentsMenuItem = React.createElement(
+        "a",
+        { className: this.props.tab === "fav" ? "item active" : "item", onClick: this.toggleCommentsTab },
+        "Comments"
+      );
+    }
+
+    return React.createElement(
+      "div",
+      { className: "explore-top-bar" },
+      React.createElement(
+        "a",
+        { className: this.props.tab === "product" ? "item active" : "item", onClick: this.toggleProductTab },
+        "Product"
+      ),
+      filesMenuItem,
+      ratingsMenuItem,
+      favsMenuItem,
+      commentsMenuItem
     );
   }
 }
@@ -1800,12 +1923,12 @@ class ProductViewGallery extends React.Component {
 
     let galleryDisplay;
     if (this.props.product.embed_code.length > 0) {
-      galleryDisplay = React.createElement('div', { id: 'product-view-gallery',
+      galleryDisplay = React.createElement("div", { id: "product-view-gallery",
         dangerouslySetInnerHTML: { __html: this.props.product.embed_code } });
     }
     return React.createElement(
-      'div',
-      { className: 'section', id: 'product-view-gallery-container' },
+      "div",
+      { className: "section", id: "product-view-gallery-container" },
       galleryDisplay
     );
   }
@@ -1813,10 +1936,156 @@ class ProductViewGallery extends React.Component {
 
 class ProductViewContent extends React.Component {
   render() {
+    let currentTabDisplay;
+    if (this.props.tab === 'product') {
+      currentTabDisplay = React.createElement(
+        "div",
+        { className: "product-tab", id: "product-tab" },
+        React.createElement("p", { dangerouslySetInnerHTML: { __html: this.props.product.description } })
+      );
+    } else if (this.props.tab === 'files') {
+      currentTabDisplay = React.createElement(ProductViewFilesTab, {
+        files: this.props.product.r_files
+      });
+    }
     return React.createElement(
-      'div',
-      { className: 'section', id: 'product-view-content-container' },
-      React.createElement('p', { dangerouslySetInnerHTML: { __html: this.props.product.description } })
+      "div",
+      { className: "section", id: "product-view-content-container" },
+      currentTabDisplay
+    );
+  }
+}
+
+class ProductViewFilesTab extends React.Component {
+  render() {
+
+    let filesDisplay;
+    const files = this.props.files.map((f, index) => React.createElement(
+      "tr",
+      { key: index },
+      React.createElement(
+        "th",
+        { className: "mdl-data-table__cell--non-numericm" },
+        f.title
+      ),
+      React.createElement(
+        "th",
+        null,
+        f.version
+      ),
+      React.createElement(
+        "th",
+        { className: "mdl-data-table__cell--non-numericm" },
+        f.description
+      ),
+      React.createElement(
+        "th",
+        { className: "mdl-data-table__cell--non-numericm" },
+        f.packagename
+      ),
+      React.createElement(
+        "th",
+        { className: "mdl-data-table__cell--non-numericm" },
+        f.archname
+      ),
+      React.createElement(
+        "th",
+        null,
+        f.downloaded_count
+      ),
+      React.createElement(
+        "th",
+        { className: "mdl-data-table__cell--non-numericm" },
+        f.created_timestamp
+      ),
+      React.createElement(
+        "th",
+        { className: "mdl-data-table__cell--non-numericm" },
+        f.size
+      ),
+      React.createElement(
+        "th",
+        null,
+        "download icon"
+      ),
+      React.createElement(
+        "th",
+        null,
+        f.ocs_compatible
+      )
+    ));
+    filesDisplay = React.createElement(
+      "tbody",
+      null,
+      files
+    );
+
+    return React.createElement(
+      "div",
+      { id: "files-tab", className: "product-tab" },
+      React.createElement(
+        "table",
+        { className: "mdl-data-table mdl-js-data-table mdl-shadow--2dp" },
+        React.createElement(
+          "thead",
+          null,
+          React.createElement(
+            "tr",
+            null,
+            React.createElement(
+              "th",
+              { className: "mdl-data-table__cell--non-numericm" },
+              "File (click to download)"
+            ),
+            React.createElement(
+              "th",
+              { className: "mdl-data-table__cell--non-numericm" },
+              "Version"
+            ),
+            React.createElement(
+              "th",
+              { className: "mdl-data-table__cell--non-numericm" },
+              "Description"
+            ),
+            React.createElement(
+              "th",
+              { className: "mdl-data-table__cell--non-numericm" },
+              "Packagetype"
+            ),
+            React.createElement(
+              "th",
+              { className: "mdl-data-table__cell--non-numericm" },
+              "Architecture"
+            ),
+            React.createElement(
+              "th",
+              { className: "mdl-data-table__cell--non-numericm" },
+              "Downloads"
+            ),
+            React.createElement(
+              "th",
+              { className: "mdl-data-table__cell--non-numericm" },
+              "Date"
+            ),
+            React.createElement(
+              "th",
+              { className: "mdl-data-table__cell--non-numericm" },
+              "Filesize"
+            ),
+            React.createElement(
+              "th",
+              { className: "mdl-data-table__cell--non-numericm" },
+              "DL"
+            ),
+            React.createElement(
+              "th",
+              { className: "mdl-data-table__cell--non-numericm" },
+              "OCS-Install"
+            )
+          )
+        ),
+        filesDisplay
+      )
     );
   }
 }
@@ -1861,22 +2130,20 @@ class App extends React.Component {
     // product (single)
     if (window.product) {
       store.dispatch(setProduct(product));
-      // store.dispatch(setProductFiles(filesJson));
+      store.dispatch(setProductFiles(filesJson));
       store.dispatch(setProductUpdates(updatesJson));
       store.dispatch(setProductRatings(ratingsJson));
       store.dispatch(setProductLikes(likeJson));
       store.dispatch(setProductPlings(projectplingsJson));
       store.dispatch(setProductUserRatings(ratingOfUserJson));
       store.dispatch(setProductGallery(galleryPicturesJson));
-      console.log(store.getState());
-      console.log(filesCntJson);
-      console.log(commentsJson);
-      console.log(originsJson);
-      console.log(relatedJson);
-      console.log(moreProductsJson);
-      console.log(moreProductsOfOtherUsrJson);
-      console.log(tagsuserJson);
-      console.log(tagssystemJson);
+      store.dispatch(setProductComments(commentsJson));
+      store.dispatch(setProductOrigins(originsJson));
+      store.dispatch(setProductRelated(relatedJson));
+      store.dispatch(setProductMoreProducts(moreProductsJson));
+      store.dispatch(setProductMoreProductsOtherUsers(moreProductsOfOtherUsrJson));
+      store.dispatch(setProductTags(tagsuserJson, tagssystemJson));
+      console.log(store.getState().product);
     }
 
     // pagination

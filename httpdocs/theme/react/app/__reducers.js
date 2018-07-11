@@ -28,11 +28,9 @@ const reducer = Redux.combineReducers({
     if (action.type === 'SET_PRODUCT'){
       return action.product;
     } else if (action.type === 'SET_PRODUCT_FILES'){
-      console.log(action.files);
       const s = Object.assign({},state,{
         r_files:action.files
       });
-      console.log(s);
       return s;
     } else if (action.type === 'SET_PRODUCT_UPDATES'){
       const s = Object.assign({},state,{
@@ -62,6 +60,37 @@ const reducer = Redux.combineReducers({
     } else if (action.type === 'SET_PRODUCT_GALLERY'){
       const s = Object.assign({},state,{
         r_gallery:action.gallery
+      });
+      return s;
+    } else if (action.type === 'SET_PRODUCT_COMMENTS'){
+      const s = Object.assign({},state,{
+        r_comments:action.comments
+      });
+      return s;
+    } else if (action.type === 'SET_PRODUCT_ORIGINS'){
+      const s = Object.assign({},state,{
+        r_origins:action.origins
+      });
+      return s;
+    } else if (action.type === 'SET_PRODUCT_RELATED'){
+      const s = Object.assign({},state,{
+        r_related:action.related
+      });
+      return s;
+    } else if (action.type === 'SET_PRODUCT_MORE_PRODUCTS'){
+      const s = Object.assign({},state,{
+        r_more_products:action.products
+      });
+      return s;
+    } else if (action.type === 'SET_PRODUCT_MORE_PRODUCTS_OTHER_USERS'){
+      const s = Object.assign({},state,{
+        r_more_products_other_users:action.products
+      });
+      return s;
+    } else if (action.type === 'SET_PRODUCT_TAGS'){
+      const s = Object.assign({},state,{
+        r_tags_user:action.userTags,
+        r_tags_system:action.systemTags
       });
       return s;
     } else {
@@ -194,7 +223,6 @@ const reducer = Redux.combineReducers({
   }
 
   function setProductFiles(files){
-    console.log(files);
     return {
       type:'SET_PRODUCT_FILES',
       files:files
@@ -237,10 +265,52 @@ const reducer = Redux.combineReducers({
   }
 
   function setProductGallery(gallery){
-    console.log('gallery - ' + gallery);
     return {
       type:'SET_PRODUCT_GALLERY',
       gallery:gallery
+    }
+  }
+
+  function setProductComments(comments){
+    return {
+      type:'SET_PRODUCT_COMMENTS',
+      comments:comments
+    }
+  }
+
+  function setProductOrigins(origins){
+    return {
+      type:'SET_PRODUCT_ORIGINS',
+      origins:origins
+    }
+  }
+
+  function setProductRelated(related){
+    return {
+      type:'SET_PRODUCT_RELATED',
+      related:related
+    }
+  }
+
+  function setProductMoreProducts(products){
+    return {
+      type:'SET_PRODUCT_MORE_PRODUCTS',
+      products:products
+    }
+  }
+
+  function setProductMoreProductsOtherUsers(products){
+    return {
+      type:'SET_PRODUCT_MORE_PRODUCTS_OTHER_USERS',
+      products:products
+    }
+  }
+
+  function setProductTags(userTags,systemTags){
+    return {
+      type:'SET_PRODUCT_TAGS',
+      userTags:userTags,
+      systemTags:systemTags
     }
   }
 
