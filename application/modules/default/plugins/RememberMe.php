@@ -35,7 +35,12 @@ class Default_Plugin_RememberMe extends Zend_Controller_Plugin_Abstract
 
     /**
      * @inheritDoc
-     * @param Zend_Controller_Request_Http $request
+     *
+     * @param Zend_Controller_Request_Abstract $request
+     *
+     * @throws Zend_Auth_Storage_Exception
+     * @throws Zend_Exception
+     * @throws Zend_Session_Exception
      */
     public function preDispatch(Zend_Controller_Request_Abstract $request)
     {
@@ -54,11 +59,13 @@ class Default_Plugin_RememberMe extends Zend_Controller_Plugin_Abstract
         if (true === $modelRememberMe->hasValidCookie()) {
             $cookieData = $modelRememberMe->getCookieData();
             $authModel = new Default_Model_Authorization();
-            $authResult = $authModel->authenticateUser($cookieData['member_id'], $cookieData['remember_me_id'], true, Default_Model_Authorization::LOGIN_REMEMBER_ME);
+            $authResult = $authModel->authenticateUser($cookieData['member_id'], $cookieData['remember_me_id'], true,
+                Default_Model_Authorization::LOGIN_REMEMBER_ME);
             if (false === $authResult->isValid()) {
-                Zend_Registry::get('logger')->warn(__METHOD__ . ' - "Remember Me" failed: Can not authenticate user (' . $cookieData['member_id'] . ',' . $cookieData['remember_me_id'] . ')' .
-                    implode('; ', $authResult->getMessages())
-                );
+                $modelRememberMe->deleteCookie();
+                Zend_Registry::get('logger')->warn(__METHOD__ . ' - "Remember Me" failed: Can not authenticate user ('
+                    . $cookieData['member_id'] . ',' . $cookieData['remember_me_id'] . ')' . implode('; ', $authResult->getMessages()))
+                ;
             }
         }
     }

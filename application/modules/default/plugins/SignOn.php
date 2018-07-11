@@ -35,7 +35,12 @@ class Default_Plugin_SignOn extends Zend_Controller_Plugin_Abstract
 
     /**
      * @inheritDoc
-     * @param Zend_Controller_Request_Http $request
+     *
+     * @param Zend_Controller_Request_Abstract $request
+     *
+     * @throws Zend_Auth_Storage_Exception
+     * @throws Zend_Exception
+     * @throws Zend_Session_Exception
      */
     public function preDispatch(Zend_Controller_Request_Abstract $request)
     {
@@ -43,11 +48,6 @@ class Default_Plugin_SignOn extends Zend_Controller_Plugin_Abstract
         if ($this->_auth->hasIdentity()) {
             return;
         }
-
-        // on login page we don't need a remember me check
-//        if ($request->getActionName() == 'login') {
-//            return;
-//        }
 
         if (false === ($token_id = $request->getCookie(Default_Model_SingleSignOnToken::ACTION_LOGIN, false))) {
             return;
@@ -62,11 +62,12 @@ class Default_Plugin_SignOn extends Zend_Controller_Plugin_Abstract
 
         if (isset($token_data['member_id']) AND isset($token_data['auth_result'])) {
             $modelAuth = new Default_Model_Authorization();
-            $authResult = $modelAuth->authenticateUser($token_data['member_id'], null, $token_data['remember_me'], Local_Auth_AdapterFactory::LOGIN_SSO);
+            $authResult = $modelAuth->authenticateUser($token_data['member_id'], null, $token_data['remember_me'],
+                Local_Auth_AdapterFactory::LOGIN_SSO);
             if (false === $authResult->isValid()) {
-                Zend_Registry::get('logger')->warn(__METHOD__ . ' - Sign on with OAuth failed: Can not authenticate user (' . $token_data['member_id'] . ',' . $token_id . ')' .
-                    implode('; ', $authResult->getMessages())
-                );
+                Zend_Registry::get('logger')->warn(__METHOD__ . ' - Sign on with OAuth failed: Can not authenticate user ('
+                    . $token_data['member_id'] . ',' . $token_id . ')' . implode('; ', $authResult->getMessages()))
+                ;
             }
         }
     }
