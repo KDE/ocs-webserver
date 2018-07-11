@@ -115,18 +115,17 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
             m.is_deleted = :deleted AND 
             m.login_method = :login AND 
             m.mail = :mail AND 
-            m.`password` = :PASSWORD";
+            m.`password` = :pwd";
 
         $this->_db->getProfiler()->setEnabled(true);
         $resultSet = $this->_db->fetchAll($sql, array(
-            'active'   => Default_Model_DbTable_Member::MEMBER_ACTIVE,
-            'deleted'  => Default_Model_DbTable_Member::MEMBER_NOT_DELETED,
-            'login'    => Default_Model_DbTable_Member::MEMBER_LOGIN_LOCAL,
-            'mail'     => $this->_identity,
-            'password' => $this->_credential
+            'active'  => Default_Model_DbTable_Member::MEMBER_ACTIVE,
+            'deleted' => Default_Model_DbTable_Member::MEMBER_NOT_DELETED,
+            'login'   => Default_Model_DbTable_Member::MEMBER_LOGIN_LOCAL,
+            'mail'    => $this->_identity,
+            'pwd'     => $this->_credential
         ));
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - sql take seconds: ' . $this->_db->getProfiler()
-                                                                                             ->getLastQueryProfile()
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - sql take seconds: ' . $this->_db->getProfiler()->getLastQueryProfile()
                                                                                              ->getElapsedSecs())
         ;
         $this->_db->getProfiler()->setEnabled(false);
@@ -149,7 +148,7 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
             m.is_deleted = :deleted AND 
             m.login_method = :login AND 
             m.username = :username AND 
-            m.`password` = :PASSWORD";
+            m.`password` = :pwd";
 
         $this->_db->getProfiler()->setEnabled(true);
         $resultSet = $this->_db->fetchAll($sql, array(
@@ -157,10 +156,9 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
             'deleted'  => Default_Model_DbTable_Member::MEMBER_NOT_DELETED,
             'login'    => Default_Model_DbTable_Member::MEMBER_LOGIN_LOCAL,
             'username' => $this->_identity,
-            'password' => $this->_credential
+            'pwd'      => $this->_credential
         ));
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - sql take seconds: ' . $this->_db->getProfiler()
-                                                                                             ->getLastQueryProfile()
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - sql take seconds: ' . $this->_db->getProfiler()->getLastQueryProfile()
                                                                                              ->getElapsedSecs())
         ;
         $this->_db->getProfiler()->setEnabled(false);
