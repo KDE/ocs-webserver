@@ -28,12 +28,10 @@ class Default_Model_DbTable_StatPageViews extends Zend_Db_Table_Abstract
     public function savePageView($project_id, $clientIp, $member_id)
     {
         if (SEARCHBOT_DETECTED) { // we don't save a page view when a search bot was detected
-            Zend_Registry::get('logger')->info(__METHOD__ . ' - search bot detected. Counting page view omitted.');
 
             return;
         }
         if (false == Zend_Registry::get('config')->settings->savePageView) {
-            Zend_Registry::get('logger')->info(__METHOD__ . ' - config savePageView false. Counting page view omitted.');
 
             return;
         }

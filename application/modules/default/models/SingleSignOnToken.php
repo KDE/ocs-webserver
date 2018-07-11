@@ -36,6 +36,8 @@ class Default_Model_SingleSignOnToken
      * @param $data
      *
      * @return string
+     * @throws Zend_Cache_Exception
+     * @throws Zend_Exception
      */
     public function createToken($data)
     {
@@ -51,6 +53,7 @@ class Default_Model_SingleSignOnToken
      * @param $token_id
      *
      * @return bool
+     * @throws Zend_Exception
      */
     public function isValid($token_id)
     {
@@ -61,6 +64,12 @@ class Default_Model_SingleSignOnToken
         return (boolean)$cache->test($token_id);
     }
 
+    /**
+     * @param $token_id
+     *
+     * @return false|mixed
+     * @throws Zend_Exception
+     */
     public function getData($token_id)
     {
         /** @var Zend_Cache_Core $cache */
@@ -69,6 +78,14 @@ class Default_Model_SingleSignOnToken
         return $cache->load($token_id);
     }
 
+    /**
+     * @param $token_id
+     * @param $data
+     *
+     * @return bool
+     * @throws Zend_Cache_Exception
+     * @throws Zend_Exception
+     */
     public function addData($token_id, $data)
     {
         /** @var Zend_Cache_Core $cache */

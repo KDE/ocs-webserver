@@ -80,8 +80,7 @@ class Default_Model_ActivityLog extends Default_Model_DbTable_ActivityLog
     const MEMBER_EMAIL_CONFIRMED = 401;
     const MEMBER_EMAIL_CHANGED = 402;
     const MEMBER_PAYPAL_CHANGED = 410;
-    
-    
+
 
     protected static $referenceType = array(
         0   => 'project',
@@ -142,10 +141,10 @@ class Default_Model_ActivityLog extends Default_Model_DbTable_ActivityLog
     );
 
     /**
-     * @param int         $objectId
-     * @param int         $projectId
-     * @param int         $userId
-     * @param int         $activity_type_id
+     * @param int   $objectId
+     * @param int   $projectId
+     * @param int   $userId
+     * @param int   $activity_type_id
      * @param array $data array with ([type_id], [pid], description, title, image_small)
      *
      * @throws Zend_Exception
@@ -170,15 +169,15 @@ class Default_Model_ActivityLog extends Default_Model_DbTable_ActivityLog
         );
 
         $sql = "
-            INSERT INTO activity_log
-            SET member_id = :member_id, 
-                project_id = :project_id, 
-                object_id = :object_id, 
-                object_ref = :object_ref,
-                object_title = :object_title,
-                object_text = :object_text,
-                object_img = :object_img,
-                activity_type_id = :activity_type
+            INSERT INTO `activity_log`
+            SET `member_id` = :member_id, 
+                `project_id` = :project_id, 
+                `object_id` = :object_id, 
+                `object_ref` = :object_ref,
+                `object_title` = :object_title,
+                `object_text` = :object_text,
+                `object_img` = :object_img,
+                `activity_type_id` = :activity_type
                 ;
         ";
 
@@ -195,6 +194,8 @@ class Default_Model_ActivityLog extends Default_Model_DbTable_ActivityLog
      * @param int         $userId
      * @param int         $activity_type_id
      * @param array|mixed $data
+     *
+     * @throws Zend_Exception
      */
     public function writeActivityLog($objectId, $userId, $activity_type_id, $data)
     {
@@ -205,8 +206,7 @@ class Default_Model_ActivityLog extends Default_Model_DbTable_ActivityLog
             $projectId = $data['pid'];
         }
         $object_text =
-            (strlen($data['description']) < 150) ? $data['description'] : mb_substr($data['description'], 0, 145,
-                    'UTF-8') . ' ... ';
+            (strlen($data['description']) < 150) ? $data['description'] : mb_substr($data['description'], 0, 145, 'UTF-8') . ' ... ';
 
         $newLog = array(
             'member_id'        => $userId,

@@ -32,7 +32,10 @@ class Local_Auth_AdapterFactory
     /**
      * @param null $userIdentity
      * @param null $loginMethod
+     *
      * @return Local_Auth_Adapter_Interface
+     * @throws Zend_Auth_Adapter_Exception
+     * @throws Zend_Exception
      */
     public static function getAuthAdapter($userIdentity = null, $loginMethod = null)
     {
@@ -43,6 +46,11 @@ class Local_Auth_AdapterFactory
         return self::createAuthAdapter($loginMethod);
     }
 
+    /**
+     * @param $identity
+     *
+     * @return string
+     */
     protected static function findAlternativeMethod($identity)
     {
         $modelMember = new Default_Model_Member();
@@ -55,6 +63,13 @@ class Local_Auth_AdapterFactory
         return self::LOGIN_DEFAULT;
     }
 
+    /**
+     * @param $provider
+     *
+     * @return Local_Auth_Adapter_Ocs|Local_Auth_Adapter_RememberMe|Local_Auth_Adapter_SsoToken
+     * @throws Zend_Auth_Adapter_Exception
+     * @throws Zend_Exception
+     */
     protected static function createAuthAdapter($provider)
     {
         switch ($provider) {

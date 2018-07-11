@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -21,7 +22,6 @@
  *
  * Created: 30.05.2018
  */
-
 class Local_Auth_Result extends Zend_Auth_Result
 {
 
@@ -38,12 +38,11 @@ class Local_Auth_Result extends Zend_Auth_Result
      */
     public function __construct($code, $identity, array $messages = array())
     {
-        $code = (int) $code;
+        $code = (int)$code;
 
-        $this->_code     = $code;
+        $this->_code = $code;
         $this->_identity = $identity;
         $this->_messages = $messages;
     }
-
 
 }

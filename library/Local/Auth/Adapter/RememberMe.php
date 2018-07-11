@@ -34,7 +34,8 @@ class Local_Auth_Adapter_RememberMe implements Local_Auth_Adapter_Interface
      * __construct() - Sets configuration options
      *
      * @param  Zend_Db_Adapter_Abstract $dbAdapter If null, default database adapter assumed
-     * @param string $tableName
+     * @param string                    $tableName
+     *
      * @throws Zend_Auth_Adapter_Exception
      */
     public function __construct(Zend_Db_Adapter_Abstract $dbAdapter = null, $tableName = null)
@@ -50,31 +51,35 @@ class Local_Auth_Adapter_RememberMe implements Local_Auth_Adapter_Interface
 
     /**
      * @param string $identity
+     *
      * @return Zend_Auth_Adapter_Interface
+     * @throws Zend_Exception
      */
     public function setIdentity($identity)
     {
         $this->_identity = $identity;
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - ' . print_r($identity, true));
+
         return $this;
     }
 
     /**
      * @param string $credential
+     *
      * @return Zend_Auth_Adapter_Interface
+     * @throws Zend_Exception
      */
     public function setCredential($credential)
     {
         $this->_credential = $credential;
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - ' . print_r($credential, true));
+
         return $this;
     }
 
     /**
      * Performs an authentication attempt
      *
-     * @throws Zend_Auth_Adapter_Exception If authentication cannot be performed
      * @return Zend_Auth_Result
+     * @throws Zend_Exception
      */
     public function authenticate()
     {
@@ -91,45 +96,55 @@ class Local_Auth_Adapter_RememberMe implements Local_Auth_Adapter_Interface
         }
 
         $this->_resultRow = array_shift($resultSet);
-        return $this->createAuthResult(Zend_Auth_Result::SUCCESS, $this->_identity,
-            array('Authentication successful.'));
+
+        return $this->createAuthResult(Zend_Auth_Result::SUCCESS, $this->_identity, array('Authentication successful.'));
     }
 
+    /**
+     * @return array
+     * @throws Zend_Exception
+     */
     private function fetchUserData()
     {
         $sql = "
-            SELECT member.* 
+            SELECT `member`.* 
             FROM `session`
-            JOIN member ON member.member_id = `session`.member_id
-            WHERE member.is_active = :active
-            AND member.is_deleted = :deleted
-            AND member.login_method = :login
-            AND `session`.member_id = :member
-            AND `session`.remember_me_id = :uuid
-            AND `session`.expiry >= NOW()
+            JOIN `member` ON `member`.`member_id` = `session`.`member_id`
+            WHERE `member`.`is_active` = :active
+            AND `member`.`is_deleted` = :deleted
+            AND `member`.`login_method` = :login
+            AND `session`.`member_id` = :member
+            AND `session`.`remember_me_id` = :uuid
+            AND `session`.`expiry` >= NOW()
             ";
 
         $this->_db->getProfiler()->setEnabled(true);
         $resultSet = $this->_db->fetchAll($sql, array(
-            'active' => Default_Model_DbTable_Member::MEMBER_ACTIVE,
+            'active'  => Default_Model_DbTable_Member::MEMBER_ACTIVE,
             'deleted' => Default_Model_DbTable_Member::MEMBER_NOT_DELETED,
-            'login' => Default_Model_DbTable_Member::MEMBER_LOGIN_LOCAL,
-            'member' => $this->_identity,
-            'uuid' => $this->_credential
+            'login'   => Default_Model_DbTable_Member::MEMBER_LOGIN_LOCAL,
+            'member'  => $this->_identity,
+            'uuid'    => $this->_credential
         ));
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - sql take seconds: ' . $this->_db->getProfiler()->getLastQueryProfile()->getElapsedSecs());
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - sql take seconds: ' . $this->_db->getProfiler()
+                                                                                             ->getLastQueryProfile()
+                                                                                             ->getElapsedSecs())
+        ;
         $this->_db->getProfiler()->setEnabled(false);
 
         return $resultSet;
     }
 
+    /**
+     * @param $code
+     * @param $identity
+     * @param $messages
+     *
+     * @return Zend_Auth_Result
+     */
     protected function createAuthResult($code, $identity, $messages)
     {
-        return new Zend_Auth_Result(
-            $code,
-            $identity,
-            $messages
-        );
+        return new Zend_Auth_Result($code, $identity, $messages);
     }
 
     /**
@@ -137,6 +152,7 @@ class Local_Auth_Adapter_RememberMe implements Local_Auth_Adapter_Interface
      *
      * @param  string|array $returnColumns
      * @param  string|array $omitColumns
+     *
      * @return stdClass|boolean
      */
     public function getResultRowObject($returnColumns = null, $omitColumns = null)
@@ -155,9 +171,9 @@ class Local_Auth_Adapter_RememberMe implements Local_Auth_Adapter_Interface
                     $returnObject->{$returnColumn} = $this->_resultRow[$returnColumn];
                 }
             }
-            return $returnObject;
 
-        } elseif (null !== $omitColumns) {
+            return $returnObject;
+        } else if (null !== $omitColumns) {
 
             $omitColumns = (array)$omitColumns;
             foreach ($this->_resultRow as $resultColumn => $resultValue) {
@@ -165,13 +181,14 @@ class Local_Auth_Adapter_RememberMe implements Local_Auth_Adapter_Interface
                     $returnObject->{$resultColumn} = $resultValue;
                 }
             }
-            return $returnObject;
 
+            return $returnObject;
         } else {
 
             foreach ($this->_resultRow as $resultColumn => $resultValue) {
                 $returnObject->{$resultColumn} = $resultValue;
             }
+
             return $returnObject;
         }
     }
