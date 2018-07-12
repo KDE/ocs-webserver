@@ -635,13 +635,15 @@ header div.container.header {
     }
 
     .details-container {
+      width: 100%;
+      position: relative;
 
       .info-row {
         width: 100%;
         float: left;
         margin-bottom: 15px;
 
-        a {
+        > a {
           height: 30px;
           display: block;
           float: left;
@@ -656,7 +658,7 @@ header div.container.header {
           }
         }
 
-        a + a {
+        > a + a {
           margin-left: 10px;
         }
 
@@ -684,6 +686,48 @@ header div.container.header {
 
           span.username {
             display: block;
+          }
+        }
+
+        .product-tags {
+          .mdl-chip {
+            height: 30px !important;
+            line-height: 30px !important;
+            margin: 0;
+            margin-top: 0 !important;
+            margin-left: 10px;
+            float: left;
+            display: block;
+
+            span {
+              font-weight: 500 !important;
+            }
+          }
+        }
+      }
+
+      #product-view-header-right-side {
+        position: absolute;
+        top: 0;
+        right: 0;
+
+        .likes {
+          position: relative;
+
+          i {
+            font-size: 40px;
+            color: #4a85cf;
+          }
+
+          span {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            text-align: center;
+            padding-top: 5px;
+            font-size: 15px;
+            font-weight: 500 !important;
           }
         }
       }

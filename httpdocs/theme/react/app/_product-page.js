@@ -32,12 +32,14 @@ class ProductView extends React.Component {
           <ProductViewHeader
             product={this.props.product}
           />
+          <ProductViewGallery
+            product={this.props.product}
+          />
           <ProductNavBar
             onTabToggle={this.toggleTab}
             tab={this.state.tab}
             product={this.props.product}
           />
-          {galleryDisplay}
           <ProductViewContent
             product={this.props.product}
             tab={this.state.tab}
@@ -81,7 +83,7 @@ class ProductViewHeader extends React.Component {
       const tagsArray = this.props.product.r_tags_user.split(',');
       const tags = tagsArray.map((tag,index) => (
         <span className="mdl-chip" key={index}>
-            <span className="mdl-chip__text">{tag}</span>
+            <span className="mdl-chip__text"><a href={"search/projectSearchText/"+tag+"/f/tags"}>{tag}</a></span>
         </span>
       ));
       productTagsDisplay = (
@@ -106,11 +108,17 @@ class ProductViewHeader extends React.Component {
             <a href={"/browse/cat/" + this.props.product.project_category_id + "/order/latest/"}>
               <span>{this.props.product.cat_title}</span>
             </a>
+            {productTagsDisplay}
           </div>
-          {productTagsDisplay}
           <a href="#" className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">
             Download
           </a>
+          <div id="product-view-header-right-side">
+            <div className="likes">
+              <i className="plingheart fa fa-heart-o heartgrey"></i>
+              <span>{this.props.product.r_likes.length}</span>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -177,16 +185,39 @@ class ProductNavBar extends React.Component {
 }
 
 class ProductViewGallery extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+  }
   render(){
 
     let galleryDisplay;
     if (this.props.product.embed_code.length > 0){
-      galleryDisplay = (
-        <div id="product-view-gallery"
-          dangerouslySetInnerHTML={{__html:this.props.product.embed_code}}>
-        </div>
-      );
+
+      let imageBaseUrl;
+      if (store.getState().env === 'live') {
+        imageBaseUrl = 'http://cn.pling.com';
+      } else {
+        imageBaseUrl = 'http://cn.pling.it';
+      }
+
+      if (this.props.product.r_gallery.length > 0){
+        const moreItems = this.props.product.r_gallery.map((gi,index) => (
+          <div key={index} className="gallery-item">
+            <img src={imageBaseUrl + "/img/" +  gi}/>
+          </div>
+        ));
+        galleryDisplay = (
+          <div id="product-gallery">
+            <div className="gallery-items-wrapper">
+              <div dangerouslySetInnerHTML={{__html:this.props.product.embed_code}} className="gallery-item"></div>
+              {moreItems}
+            </div>
+          </div>
+        );
+      }
     }
+
     return (
       <div className="section" id="product-view-gallery-container">
         {galleryDisplay}

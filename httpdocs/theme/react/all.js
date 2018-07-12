@@ -1743,12 +1743,14 @@ class ProductView extends React.Component {
         React.createElement(ProductViewHeader, {
           product: this.props.product
         }),
+        React.createElement(ProductViewGallery, {
+          product: this.props.product
+        }),
         React.createElement(ProductNavBar, {
           onTabToggle: this.toggleTab,
           tab: this.state.tab,
           product: this.props.product
         }),
-        galleryDisplay,
         React.createElement(ProductViewContent, {
           product: this.props.product,
           tab: this.state.tab
@@ -1792,7 +1794,11 @@ class ProductViewHeader extends React.Component {
         React.createElement(
           "span",
           { className: "mdl-chip__text" },
-          tag
+          React.createElement(
+            "a",
+            { href: "search/projectSearchText/" + tag + "/f/tags" },
+            tag
+          )
         )
       ));
       productTagsDisplay = React.createElement(
@@ -1843,13 +1849,27 @@ class ProductViewHeader extends React.Component {
               null,
               this.props.product.cat_title
             )
-          )
+          ),
+          productTagsDisplay
         ),
-        productTagsDisplay,
         React.createElement(
           "a",
           { href: "#", className: "mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary" },
           "Download"
+        ),
+        React.createElement(
+          "div",
+          { id: "product-view-header-right-side" },
+          React.createElement(
+            "div",
+            { className: "likes" },
+            React.createElement("i", { className: "plingheart fa fa-heart-o heartgrey" }),
+            React.createElement(
+              "span",
+              null,
+              this.props.product.r_likes.length
+            )
+          )
         )
       )
     );
@@ -1940,13 +1960,41 @@ class ProductNavBar extends React.Component {
 }
 
 class ProductViewGallery extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
   render() {
 
     let galleryDisplay;
     if (this.props.product.embed_code.length > 0) {
-      galleryDisplay = React.createElement("div", { id: "product-view-gallery",
-        dangerouslySetInnerHTML: { __html: this.props.product.embed_code } });
+
+      let imageBaseUrl;
+      if (store.getState().env === 'live') {
+        imageBaseUrl = 'http://cn.pling.com';
+      } else {
+        imageBaseUrl = 'http://cn.pling.it';
+      }
+
+      if (this.props.product.r_gallery.length > 0) {
+        const moreItems = this.props.product.r_gallery.map((gi, index) => React.createElement(
+          "div",
+          { key: index, className: "gallery-item" },
+          React.createElement("img", { src: imageBaseUrl + "/img/" + gi })
+        ));
+        galleryDisplay = React.createElement(
+          "div",
+          { id: "product-gallery" },
+          React.createElement(
+            "div",
+            { className: "gallery-items-wrapper" },
+            React.createElement("div", { dangerouslySetInnerHTML: { __html: this.props.product.embed_code }, className: "gallery-item" }),
+            moreItems
+          )
+        );
+      }
     }
+
     return React.createElement(
       "div",
       { className: "section", id: "product-view-gallery-container" },
