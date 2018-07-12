@@ -60,20 +60,7 @@ class Default_Model_DbTable_PploadFiles extends Local_Model_Table
                     and tag_object_id = f.id ) archname
 
                      from ppload.ppload_files f 
-                     where f.collection_id = :collection_id and f.active = 1
-
-                     union 
-
-                     select * 
-                            ,
-                     (select max(tag.tag_fullname) from tag_object, tag where tag_type_id = 3 and tag_group_id = 8 and tag_object.tag_id = tag.tag_id 
-                     and tag_object_id = f.id ) packagename
-                    ,
-                    (select max(tag.tag_fullname) from tag_object, tag where tag_type_id = 3 and tag_group_id = 9 and tag_object.tag_id = tag.tag_id
-                    and tag_object_id = f.id ) archname
-
-                     from ppload.ppload_files f 
-                     where f.collection_id = :collection_id and f.active = 0
+                     where f.collection_id = :collection_id and f.active = 1                     
                    ";        
         $result = $this->_db->query($sql,array('collection_id' => $collection_id))->fetchAll();      
         return $result;
