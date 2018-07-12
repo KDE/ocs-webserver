@@ -1775,13 +1775,33 @@ const ProductViewWrapper = ReactRedux.connect(mapStateToProductPageProps, mapDis
 
 class ProductViewHeader extends React.Component {
   render() {
-    console.log(this.props.product);
+
     let imageBaseUrl;
     if (store.getState().env === 'live') {
       imageBaseUrl = 'cn.pling.com';
     } else {
       imageBaseUrl = 'cn.pling.it';
     }
+
+    let productTagsDisplay;
+    if (this.props.product.r_tags_user) {
+      const tagsArray = this.props.product.r_tags_user.split(',');
+      const tags = tagsArray.map((tag, index) => React.createElement(
+        "span",
+        { className: "mdl-chip", key: index },
+        React.createElement(
+          "span",
+          { className: "mdl-chip__text" },
+          tag
+        )
+      ));
+      productTagsDisplay = React.createElement(
+        "div",
+        { className: "product-tags" },
+        tags
+      );
+    }
+
     return React.createElement(
       "div",
       { className: "section mdl-grid", id: "product-view-header" },
@@ -1825,6 +1845,7 @@ class ProductViewHeader extends React.Component {
             )
           )
         ),
+        productTagsDisplay,
         React.createElement(
           "a",
           { href: "#", className: "mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary" },
@@ -1897,7 +1918,7 @@ class ProductNavBar extends React.Component {
     if (this.props.product.r_comments.length > 0) {
       commentsMenuItem = React.createElement(
         "a",
-        { className: this.props.tab === "fav" ? "item active" : "item", onClick: this.toggleCommentsTab },
+        { className: this.props.tab === "comments" ? "item active" : "item", onClick: this.toggleCommentsTab },
         "Comments"
       );
     }
@@ -1947,6 +1968,24 @@ class ProductViewContent extends React.Component {
       currentTabDisplay = React.createElement(ProductViewFilesTab, {
         files: this.props.product.r_files
       });
+    } else if (this.props.tab === 'ratings') {
+      currentTabDisplay = React.createElement(
+        "p",
+        null,
+        "ratings"
+      );
+    } else if (this.props.tab === 'favs') {
+      currentTabDisplay = React.createElement(
+        "p",
+        null,
+        "favs"
+      );
+    } else if (this.props.tab === 'comments') {
+      currentTabDisplay = React.createElement(
+        "p",
+        null,
+        "comments"
+      );
     }
     return React.createElement(
       "div",

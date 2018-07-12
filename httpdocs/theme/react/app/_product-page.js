@@ -68,13 +68,29 @@ const ProductViewWrapper = ReactRedux.connect(
 
 class ProductViewHeader extends React.Component {
   render(){
-    console.log(this.props.product);
+
     let imageBaseUrl;
     if (store.getState().env === 'live') {
       imageBaseUrl = 'cn.pling.com';
     } else {
       imageBaseUrl = 'cn.pling.it';
     }
+
+    let productTagsDisplay;
+    if (this.props.product.r_tags_user){
+      const tagsArray = this.props.product.r_tags_user.split(',');
+      const tags = tagsArray.map((tag,index) => (
+        <span className="mdl-chip" key={index}>
+            <span className="mdl-chip__text">{tag}</span>
+        </span>
+      ));
+      productTagsDisplay = (
+        <div className="product-tags">
+          {tags}
+        </div>
+      );
+    }
+
     return (
       <div className="section mdl-grid" id="product-view-header">
         <div className="image-container">
@@ -91,6 +107,7 @@ class ProductViewHeader extends React.Component {
               <span>{this.props.product.cat_title}</span>
             </a>
           </div>
+          {productTagsDisplay}
           <a href="#" className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">
             Download
           </a>
@@ -144,7 +161,7 @@ class ProductNavBar extends React.Component {
       favsMenuItem = <a className={this.props.tab === "fav" ? "item active" : "item"} onClick={this.toggleFavTab}>Favs ({this.props.product.r_plings.length})</a>
     }
     if (this.props.product.r_comments.length > 0){
-      commentsMenuItem = <a className={this.props.tab === "fav" ? "item active" : "item"} onClick={this.toggleCommentsTab}>Comments</a>
+      commentsMenuItem = <a className={this.props.tab === "comments" ? "item active" : "item"} onClick={this.toggleCommentsTab}>Comments</a>
     }
 
     return (
@@ -193,6 +210,12 @@ class ProductViewContent extends React.Component {
           files={this.props.product.r_files}
         />
       )
+    } else if (this.props.tab === 'ratings'){
+      currentTabDisplay = <p>ratings</p>
+    } else if (this.props.tab === 'favs'){
+      currentTabDisplay = <p>favs</p>
+    } else if (this.props.tab === 'comments'){
+      currentTabDisplay = <p>comments</p>
     }
     return (
       <div className="section" id="product-view-content-container">
