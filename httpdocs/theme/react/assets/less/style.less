@@ -632,6 +632,21 @@ header div.container.header {
     .image-container {
       position: absolute;
       left: 0;
+      width: 140px;
+
+      img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+      }
+    }
+
+    .image-container:after {
+      content:"";
+      display: block;
+      padding-bottom: 100%;
     }
 
     .details-container {
@@ -712,7 +727,12 @@ header div.container.header {
         right: 0;
 
         .likes {
+          float: right;
+          width: 40px;
+          clear: both;
           position: relative;
+          height: 40px;
+          margin-bottom: 7px;
 
           i {
             font-size: 40px;
@@ -729,6 +749,127 @@ header div.container.header {
             font-size: 15px;
             font-weight: 500 !important;
           }
+        }
+
+        .ratings-bar-container {
+          width: 200px;
+          float: left;
+          clear: both;
+          padding: 0 25px;
+          position: relative;
+
+          .ratings-bar-left {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 25px;
+            background-color: #ccc;
+            border-radius: 5px 0 0 5px;
+            border-bottom: 2px solid #a7a7a7;
+            width: 25px;
+          }
+
+          .ratings-bar-right {
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 25px;
+            background-color: #ccc;
+            border-radius: 0 5px 5px 0;
+            border-bottom: 2px solid #a7a7a7;
+            width: 25px;
+          }
+
+          .ratings-bar-holder {
+            width: 100%;
+            height: 25px;
+
+            .ratings-bar {
+              height: 25px;
+              width: 25%;
+              float: left;
+              background-color: #acc8ac;
+              border-bottom: 2px solid rgb(141, 158, 141);
+            }
+
+            .ratings-bar-empty {
+              width: 75%;
+              height: 25px;
+              float: left;
+              background-color: #efefef;
+              border-bottom: 2px solid #ccc;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  #product-gallery {
+    width: 100%;
+    padding: 0 50px;
+    position: relative;
+    overflow: hidden;
+    height: 500px;
+
+    .gallery-arrow {
+      position: absolute;
+      top: 0;
+      z-index: 100;
+      display: block;
+      height: 100%;
+      cursor: pointer;
+      width: 50px;
+      background-color: rgba(255,255,255,0.5);
+
+      &.arrow-left {
+        position: absolute;
+        left: 0;
+        i {
+          position: absolute;
+          display: block;
+          top: 50%;
+          left: 0;
+          font-size: 45px;
+          margin-top: -25px;
+          margin-left: 10px;
+        }
+      }
+
+      &.arrow-right {
+        position: absolute;
+        right: 0;
+        i {
+          position: absolute;
+          display: block;
+          top: 50%;
+          right: 0;
+          font-size: 45px;
+          margin-top: -25px;
+          margin-right: 5px;
+        }
+      }
+
+    }
+
+    .gallery-items-wrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 500px;
+      .transition();
+
+      .gallery-item {
+        float: left;
+        height: 500px;
+        text-align: center;
+
+        > * {
+          margin: 0 auto;
+          display: table;
+          width: auto;
+          max-width: 100%;
+          max-height: 100%;
         }
       }
     }

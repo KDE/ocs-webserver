@@ -1724,16 +1724,6 @@ class ProductView extends React.Component {
   }
 
   render() {
-    console.log(this.state);
-    let galleryDisplay;
-    /*if (this.props.product.r_gallery .length > 0){
-      galleryDisplay = (
-        <ProductViewGallery
-          product={this.props.product}
-        />
-      );
-    }*/
-
     return React.createElement(
       "div",
       { id: "product-page" },
@@ -1869,9 +1859,160 @@ class ProductViewHeader extends React.Component {
               null,
               this.props.product.r_likes.length
             )
+          ),
+          React.createElement(
+            "div",
+            { className: "ratings-bar-container" },
+            React.createElement(
+              "div",
+              { className: "ratings-bar-left" },
+              React.createElement(
+                "i",
+                { className: "material-icons" },
+                "remove"
+              )
+            ),
+            React.createElement(
+              "div",
+              { className: "ratings-bar-holder" },
+              React.createElement("div", { className: "ratings-bar" }),
+              React.createElement("div", { className: "ratings-bar-empty" })
+            ),
+            React.createElement(
+              "div",
+              { className: "ratings-bar-right" },
+              React.createElement(
+                "i",
+                { className: "material-icons" },
+                "add"
+              )
+            )
           )
         )
       )
+    );
+  }
+}
+
+class ProductViewGallery extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: true,
+      currentItem: 1,
+      galleryWrapperMarginLeft: 0
+    };
+    this.updateDimensions = this.updateDimensions.bind(this);
+    this.onLeftArrowClick = this.onLeftArrowClick.bind(this);
+    this.onRightArrowClick = this.onRightArrowClick.bind(this);
+    this.animateGallerySlider = this.animateGallerySlider.bind(this);
+  }
+
+  componentDidMount() {
+    window.addEventListener("resize", this.updateDimensions);
+    this.updateDimensions();
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.updateDimensions);
+  }
+
+  updateDimensions() {
+    const itemsWidth = document.getElementById('product-gallery').offsetWidth;
+    const itemsTotal = this.props.product.r_gallery.length + 1;
+    this.setState({
+      itemsWidth: itemsWidth,
+      itemsTotal: itemsTotal,
+      loading: false
+    });
+  }
+
+  onLeftArrowClick() {
+    let nextItem;
+    if (this.state.currentItem <= 1) {
+      nextItem = this.state.itemsTotal;
+    } else {
+      nextItem = this.state.currentItem - 1;
+    }
+    console.log(nextItem);
+    const marginLeft = this.state.itemsWidth * this.state.currentItem;
+    this.animateGallerySlider(nextItem, marginLeft);
+  }
+
+  onRightArrowClick() {
+    let nextItem;
+    if (this.state.currentItem === this.state.itemsTotal) {
+      nextItem = 1;
+    } else {
+      nextItem = this.state.currentItem + 1;
+    }
+    console.log(nextItem);
+    const marginLeft = this.state.itemsWidth * this.state.currentItem;
+    this.animateGallerySlider(nextItem, marginLeft);
+  }
+
+  animateGallerySlider(nextItem, marginLeft) {
+    this.setState({ currentItem: nextItem, galleryWrapperMarginLeft: "-" + marginLeft + "px" }, function () {
+      console.log(this.state);
+    });
+  }
+
+  render() {
+
+    let galleryDisplay;
+    if (this.props.product.embed_code.length > 0) {
+
+      let imageBaseUrl;
+      if (store.getState().env === 'live') {
+        imageBaseUrl = 'http://cn.pling.com';
+      } else {
+        imageBaseUrl = 'http://cn.pling.it';
+      }
+
+      if (this.props.product.r_gallery.length > 0) {
+
+        const itemsWidth = this.state.itemsWidth;
+        const moreItems = this.props.product.r_gallery.map((gi, index) => React.createElement(
+          "div",
+          { key: index, style: { "width": itemsWidth + "px" }, className: "gallery-item" },
+          React.createElement("img", { src: imageBaseUrl + "/img/" + gi })
+        ));
+
+        galleryDisplay = React.createElement(
+          "div",
+          { id: "product-gallery" },
+          React.createElement(
+            "a",
+            { className: "gallery-arrow arrow-left", onClick: this.onLeftArrowClick },
+            React.createElement(
+              "i",
+              { className: "material-icons" },
+              "arrow_back_ios"
+            )
+          ),
+          React.createElement(
+            "div",
+            { style: { "width": this.state.itemsWidth * this.state.itemsTotal + "px", "marginLeft": this.state.galleryWrapperMarginLeft }, className: "gallery-items-wrapper" },
+            React.createElement("div", { style: { "width": this.state.itemsWidth + "px" }, dangerouslySetInnerHTML: { __html: this.props.product.embed_code }, className: "gallery-item" }),
+            moreItems
+          ),
+          React.createElement(
+            "a",
+            { className: "gallery-arrow arrow-right", onClick: this.onRightArrowClick },
+            React.createElement(
+              "i",
+              { className: "material-icons" },
+              "arrow_forward_ios"
+            )
+          )
+        );
+      }
+    }
+
+    return React.createElement(
+      "div",
+      { className: "section", id: "product-view-gallery-container" },
+      galleryDisplay
     );
   }
 }
@@ -1955,50 +2096,6 @@ class ProductNavBar extends React.Component {
       ratingsMenuItem,
       favsMenuItem,
       commentsMenuItem
-    );
-  }
-}
-
-class ProductViewGallery extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-  render() {
-
-    let galleryDisplay;
-    if (this.props.product.embed_code.length > 0) {
-
-      let imageBaseUrl;
-      if (store.getState().env === 'live') {
-        imageBaseUrl = 'http://cn.pling.com';
-      } else {
-        imageBaseUrl = 'http://cn.pling.it';
-      }
-
-      if (this.props.product.r_gallery.length > 0) {
-        const moreItems = this.props.product.r_gallery.map((gi, index) => React.createElement(
-          "div",
-          { key: index, className: "gallery-item" },
-          React.createElement("img", { src: imageBaseUrl + "/img/" + gi })
-        ));
-        galleryDisplay = React.createElement(
-          "div",
-          { id: "product-gallery" },
-          React.createElement(
-            "div",
-            { className: "gallery-items-wrapper" },
-            React.createElement("div", { dangerouslySetInnerHTML: { __html: this.props.product.embed_code }, className: "gallery-item" }),
-            moreItems
-          )
-        );
-      }
-    }
-
-    return React.createElement(
-      "div",
-      { className: "section", id: "product-view-gallery-container" },
-      galleryDisplay
     );
   }
 }
