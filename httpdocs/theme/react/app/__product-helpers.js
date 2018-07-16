@@ -56,8 +56,24 @@ window.productHelpers = (function(){
     return pagination;
   }
 
+  function calculateProductRatings(ratings){
+    let pRating;
+    let totalUp = 0,
+        totalDown = 0;
+    ratings.forEach(function(r,index){
+      if (r.user_like === "1"){
+        totalUp += 1;
+      } else if (r.user_dislike === "1"){
+        totalDown += 1;
+      }
+    });
+    pRating = 100 / ratings.length * (totalUp - totalDown);
+    return pRating;
+  }
+
   return {
     getNumberOfProducts,
-    generatePaginationObject
+    generatePaginationObject,
+    calculateProductRatings
   }
 }());

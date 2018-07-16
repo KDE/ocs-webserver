@@ -40,6 +40,28 @@ window.appHelpers = function () {
     return a;
   }
 
+  function getFileSize(size) {
+    if (isNaN(size)) size = 0;
+
+    if (size < 1024) return size + ' Bytes';
+
+    size /= 1024;
+
+    if (size < 1024) return size.toFixed(2) + ' Kb';
+
+    size /= 1024;
+
+    if (size < 1024) return size.toFixed(2) + ' Mb';
+
+    size /= 1024;
+
+    if (size < 1024) return size.toFixed(2) + ' Gb';
+
+    size /= 1024;
+
+    return size.toFixed(2) + ' Tb';
+  }
+
   function generateFilterUrl(location, currentCat) {
     let link = {};
     if (currentCat !== 0) {
@@ -56,6 +78,7 @@ window.appHelpers = function () {
     getDeviceWidth,
     splitByLastDot,
     getTimeAgo,
+    getFileSize,
     generateFilterUrl
   };
 }();
@@ -159,9 +182,25 @@ window.productHelpers = function () {
     return pagination;
   }
 
+  function calculateProductRatings(ratings) {
+    let pRating;
+    let totalUp = 0,
+        totalDown = 0;
+    ratings.forEach(function (r, index) {
+      if (r.user_like === "1") {
+        totalUp += 1;
+      } else if (r.user_dislike === "1") {
+        totalDown += 1;
+      }
+    });
+    pRating = 100 / ratings.length * (totalUp - totalDown);
+    return pRating;
+  }
+
   return {
     getNumberOfProducts,
-    generatePaginationObject
+    generatePaginationObject,
+    calculateProductRatings
   };
 }();
 class ProductGroupScrollWrapper extends React.Component {
@@ -1744,6 +1783,9 @@ class ProductView extends React.Component {
         React.createElement(ProductViewContent, {
           product: this.props.product,
           tab: this.state.tab
+        }),
+        React.createElement(ProductCommentsContainer, {
+          product: this.props.product
         })
       )
     );
@@ -1784,6 +1826,7 @@ class ProductViewHeader extends React.Component {
         React.createElement(
           "span",
           { className: "mdl-chip__text" },
+          React.createElement("span", { className: "glyphicon glyphicon-tag" }),
           React.createElement(
             "a",
             { href: "search/projectSearchText/" + tag + "/f/tags" },
@@ -1860,34 +1903,50 @@ class ProductViewHeader extends React.Component {
               this.props.product.r_likes.length
             )
           ),
-          React.createElement(
-            "div",
-            { className: "ratings-bar-container" },
-            React.createElement(
-              "div",
-              { className: "ratings-bar-left" },
-              React.createElement(
-                "i",
-                { className: "material-icons" },
-                "remove"
-              )
-            ),
-            React.createElement(
-              "div",
-              { className: "ratings-bar-holder" },
-              React.createElement("div", { className: "ratings-bar" }),
-              React.createElement("div", { className: "ratings-bar-empty" })
-            ),
-            React.createElement(
-              "div",
-              { className: "ratings-bar-right" },
-              React.createElement(
-                "i",
-                { className: "material-icons" },
-                "add"
-              )
-            )
-          )
+          React.createElement(ProductViewHeaderRatings, { ratings: this.props.product.r_ratings })
+        )
+      )
+    );
+  }
+}
+
+class ProductViewHeaderRatings extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  componentDidMount() {
+    const productRating = productHelpers.calculateProductRatings(this.props.ratings);
+    this.setState({ productRating: productRating });
+  }
+
+  render() {
+    return React.createElement(
+      "div",
+      { className: "ratings-bar-container" },
+      React.createElement(
+        "div",
+        { className: "ratings-bar-left" },
+        React.createElement(
+          "i",
+          { className: "material-icons" },
+          "remove"
+        )
+      ),
+      React.createElement(
+        "div",
+        { className: "ratings-bar-holder" },
+        React.createElement("div", { className: "ratings-bar", style: { "width": this.state.productRating + "%" } }),
+        React.createElement("div", { className: "ratings-bar-empty", style: { "width": 100 - this.state.productRating + "%" } })
+      ),
+      React.createElement(
+        "div",
+        { className: "ratings-bar-right" },
+        React.createElement(
+          "i",
+          { className: "material-icons" },
+          "add"
         )
       )
     );
@@ -1934,7 +1993,7 @@ class ProductViewGallery extends React.Component {
     } else {
       nextItem = this.state.currentItem - 1;
     }
-    const marginLeft = this.state.itemsWidth * this.state.currentItem;
+    const marginLeft = this.state.itemsWidth * (nextItem - 1);
     this.animateGallerySlider(nextItem, marginLeft);
   }
 
@@ -1945,13 +2004,14 @@ class ProductViewGallery extends React.Component {
     } else {
       nextItem = this.state.currentItem + 1;
     }
-    const marginLeft = this.state.itemsWidth * this.state.currentItem;
+    const marginLeft = this.state.itemsWidth * (nextItem - 1);
     this.animateGallerySlider(nextItem, marginLeft);
   }
 
   animateGallerySlider(nextItem, marginLeft) {
     this.setState({ currentItem: nextItem, galleryWrapperMarginLeft: "-" + marginLeft + "px" }, function () {
-      console.log(this.state);
+      const galleryHeight = $(".active-gallery-item").find(".media-item").height();
+      this.setState({ galleryHeight: galleryHeight });
     });
   }
 
@@ -1970,15 +2030,16 @@ class ProductViewGallery extends React.Component {
       if (this.props.product.r_gallery.length > 0) {
 
         const itemsWidth = this.state.itemsWidth;
+        const currentItem = this.state.currentItem;
         const moreItems = this.props.product.r_gallery.map((gi, index) => React.createElement(
           "div",
-          { key: index, style: { "width": itemsWidth + "px" }, className: "gallery-item" },
-          React.createElement("img", { src: imageBaseUrl + "/img/" + gi })
+          { key: index, className: currentItem === index + 2 ? "active-gallery-item gallery-item" : "gallery-item", style: { "width": itemsWidth + "px" } },
+          React.createElement("img", { className: "media-item", src: imageBaseUrl + "/img/" + gi })
         ));
 
         galleryDisplay = React.createElement(
           "div",
-          { id: "product-gallery" },
+          { id: "product-gallery", style: { "height": this.state.galleryHeight } },
           React.createElement(
             "a",
             { className: "gallery-arrow arrow-left", onClick: this.onLeftArrowClick },
@@ -1991,7 +2052,7 @@ class ProductViewGallery extends React.Component {
           React.createElement(
             "div",
             { style: { "width": this.state.itemsWidth * this.state.itemsTotal + "px", "marginLeft": this.state.galleryWrapperMarginLeft }, className: "gallery-items-wrapper" },
-            React.createElement("div", { style: { "width": this.state.itemsWidth + "px" }, dangerouslySetInnerHTML: { __html: this.props.product.embed_code }, className: "gallery-item" }),
+            React.createElement("div", { style: { "width": this.state.itemsWidth + "px" }, dangerouslySetInnerHTML: { __html: this.props.product.embed_code }, className: this.state.currentItem === 1 ? "active-gallery-item gallery-item" : "gallery-item" }),
             moreItems
           ),
           React.createElement(
@@ -2142,6 +2203,7 @@ class ProductViewFilesTab extends React.Component {
   render() {
 
     let filesDisplay;
+    console.log(this.props.files);
     const files = this.props.files.map((f, index) => React.createElement(
       "tr",
       { key: index },
@@ -2178,17 +2240,25 @@ class ProductViewFilesTab extends React.Component {
       React.createElement(
         "th",
         { className: "mdl-data-table__cell--non-numericm" },
-        f.created_timestamp
+        appHelpers.getTimeAgo(f.created_timestamp)
       ),
       React.createElement(
         "th",
         { className: "mdl-data-table__cell--non-numericm" },
-        f.size
+        appHelpers.getFileSize(f.size)
       ),
       React.createElement(
         "th",
         null,
-        "download icon"
+        React.createElement(
+          "a",
+          { href: "#" },
+          React.createElement(
+            "i",
+            { className: "material-icons" },
+            "cloud_download"
+          )
+        )
       ),
       React.createElement(
         "th",
@@ -2268,6 +2338,114 @@ class ProductViewFilesTab extends React.Component {
         ),
         filesDisplay
       )
+    );
+  }
+}
+
+class ProductCommentsContainer extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  render() {
+    let commentsDisplay;
+    const cArray = categoryHelpers.convertCatChildrenObjectToArray(this.props.product.r_comments);
+    if (cArray.length > 0) {
+      const product = this.props.product;
+      const comments = cArray.map((c, index) => {
+        if (c.level === 1) {
+          return React.createElement(CommentItem, { product: product, comment: c.comment, key: index, level: 1 });
+        }
+      });
+      commentsDisplay = React.createElement(
+        "div",
+        { className: "comment-list" },
+        React.createElement(
+          "h3",
+          null,
+          "Comments"
+        ),
+        comments
+      );
+    }
+    return React.createElement(
+      "div",
+      { className: "product-view-section", id: "product-comments-container" },
+      commentsDisplay
+    );
+  }
+}
+
+class CommentItem extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+    this.filterByCommentLevel = this.filterByCommentLevel.bind(this);
+  }
+
+  filterByCommentLevel(val) {
+    if (val.level > this.props.level && this.props.comment.comment_id === val.comment.comment_parent_id) {
+      console.log();
+      return val;
+    }
+  }
+
+  render() {
+    let commentRepliesContainer;
+    const filteredComments = categoryHelpers.convertCatChildrenObjectToArray(this.props.product.r_comments).filter(this.filterByCommentLevel);
+    if (filteredComments.length > 0) {
+      const product = this.props.product;
+      const comments = filteredComments.map((c, index) => React.createElement(CommentItem, { product: product, comment: c.comment, key: index, level: c.level }));
+      commentRepliesContainer = React.createElement(
+        "div",
+        { className: "comment-item-replies-container" },
+        comments
+      );
+    }
+
+    let displayIsSupporter;
+    if (this.props.comment.issupporter === "1") {
+      displayIsSupporter = React.createElement(
+        "span",
+        { className: "is-supporter-display" },
+        "S"
+      );
+    }
+
+    return React.createElement(
+      "div",
+      { className: "comment-item" },
+      React.createElement(
+        "div",
+        { className: "comment-user-avatar" },
+        React.createElement("img", { src: this.props.comment.profile_image_url }),
+        displayIsSupporter
+      ),
+      React.createElement(
+        "div",
+        { className: "comment-item-content" },
+        React.createElement(
+          "div",
+          { className: "comment-item-header" },
+          React.createElement(
+            "a",
+            { className: "comment-username", href: "/member/" + this.props.comment.member_id },
+            this.props.comment.username
+          ),
+          React.createElement(
+            "span",
+            { className: "comment-created-at" },
+            appHelpers.getTimeAgo(this.props.comment.comment_created_at)
+          )
+        ),
+        React.createElement(
+          "div",
+          { className: "comment-item-text" },
+          this.props.comment.comment_text
+        )
+      ),
+      commentRepliesContainer
     );
   }
 }

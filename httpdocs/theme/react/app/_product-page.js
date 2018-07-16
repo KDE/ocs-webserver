@@ -34,6 +34,9 @@ class ProductView extends React.Component {
             product={this.props.product}
             tab={this.state.tab}
           />
+          <ProductCommentsContainer
+            product={this.props.product}
+          />
         </div>
       </div>
     );
@@ -73,7 +76,7 @@ class ProductViewHeader extends React.Component {
       const tagsArray = this.props.product.r_tags_user.split(',');
       const tags = tagsArray.map((tag,index) => (
         <span className="mdl-chip" key={index}>
-            <span className="mdl-chip__text"><a href={"search/projectSearchText/"+tag+"/f/tags"}>{tag}</a></span>
+            <span className="mdl-chip__text"><span className="glyphicon glyphicon-tag"></span><a href={"search/projectSearchText/"+tag+"/f/tags"}>{tag}</a></span>
         </span>
       ));
       productTagsDisplay = (
@@ -108,22 +111,40 @@ class ProductViewHeader extends React.Component {
               <i className="plingheart fa fa-heart-o heartgrey"></i>
               <span>{this.props.product.r_likes.length}</span>
             </div>
-            <div className="ratings-bar-container">
-              <div className="ratings-bar-left">
-                <i className="material-icons">remove</i>
-              </div>
-              <div className="ratings-bar-holder">
-                <div className="ratings-bar"></div>
-                <div className="ratings-bar-empty"></div>
-              </div>
-              <div className="ratings-bar-right">
-                <i className="material-icons">add</i>
-              </div>
-            </div>
+            <ProductViewHeaderRatings ratings={this.props.product.r_ratings}/>
           </div>
         </div>
       </div>
     );
+  }
+}
+
+class ProductViewHeaderRatings extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+  }
+
+  componentDidMount() {
+    const productRating = productHelpers.calculateProductRatings(this.props.ratings);
+    this.setState({productRating:productRating});
+  }
+
+  render(){
+    return (
+      <div className="ratings-bar-container">
+        <div className="ratings-bar-left">
+          <i className="material-icons">remove</i>
+        </div>
+        <div className="ratings-bar-holder">
+          <div className="ratings-bar" style={{"width":this.state.productRating + "%"}}></div>
+          <div className="ratings-bar-empty" style={{"width":(100 - this.state.productRating) + "%"}}></div>
+        </div>
+        <div className="ratings-bar-right">
+          <i className="material-icons">add</i>
+        </div>
+      </div>
+    )
   }
 }
 
@@ -167,7 +188,7 @@ class ProductViewGallery extends React.Component {
     } else {
       nextItem = this.state.currentItem - 1;
     }
-    const marginLeft = this.state.itemsWidth * (this.state.currentItem);
+    const marginLeft = this.state.itemsWidth * (nextItem - 1);
     this.animateGallerySlider(nextItem,marginLeft);
   }
 
@@ -178,13 +199,14 @@ class ProductViewGallery extends React.Component {
     } else {
       nextItem = this.state.currentItem + 1;
     }
-    const marginLeft = this.state.itemsWidth * (this.state.currentItem);
+    const marginLeft = this.state.itemsWidth * (nextItem - 1);
     this.animateGallerySlider(nextItem,marginLeft);
   }
 
   animateGallerySlider(nextItem,marginLeft){
     this.setState({currentItem:nextItem,galleryWrapperMarginLeft:"-"+marginLeft+"px"},function(){
-      console.log(this.state);
+      const galleryHeight = $(".active-gallery-item").find(".media-item").height();
+      this.setState({galleryHeight:galleryHeight});
     });
   }
 
@@ -203,19 +225,21 @@ class ProductViewGallery extends React.Component {
       if (this.props.product.r_gallery.length > 0){
 
         const itemsWidth = this.state.itemsWidth;
+        const currentItem = this.state.currentItem;
         const moreItems = this.props.product.r_gallery.map((gi,index) => (
-          <div key={index} style={{"width":itemsWidth+"px"}} className="gallery-item">
-            <img src={imageBaseUrl + "/img/" +  gi}/>
+          <div key={index} className={currentItem === (index + 2) ? "active-gallery-item gallery-item" : "gallery-item"} style={{"width":itemsWidth+"px"}}>
+            <img className="media-item" src={imageBaseUrl + "/img/" +  gi}/>
           </div>
         ));
 
         galleryDisplay = (
-          <div id="product-gallery">
+          <div id="product-gallery" style={{"height":this.state.galleryHeight}}>
             <a className="gallery-arrow arrow-left" onClick={this.onLeftArrowClick}>
               <i className="material-icons">arrow_back_ios</i>
             </a>
             <div style={{"width":this.state.itemsWidth * this.state.itemsTotal +"px","marginLeft":this.state.galleryWrapperMarginLeft}} className="gallery-items-wrapper">
-              <div style={{"width":this.state.itemsWidth+"px"}} dangerouslySetInnerHTML={{__html:this.props.product.embed_code}} className="gallery-item"></div>
+              <div style={{"width":this.state.itemsWidth+"px"}} dangerouslySetInnerHTML={{__html:this.props.product.embed_code}} className={this.state.currentItem === 1 ? "active-gallery-item gallery-item" : "gallery-item"}>
+              </div>
               {moreItems}
             </div>
             <a className="gallery-arrow arrow-right" onClick={this.onRightArrowClick}>
@@ -328,6 +352,7 @@ class ProductViewFilesTab extends React.Component {
   render(){
 
     let filesDisplay;
+    console.log(this.props.files);
     const files = this.props.files.map((f,index) => (
       <tr key={index}>
         <th className="mdl-data-table__cell--non-numericm">{f.title}</th>
@@ -336,9 +361,9 @@ class ProductViewFilesTab extends React.Component {
         <th className="mdl-data-table__cell--non-numericm">{f.packagename}</th>
         <th  className="mdl-data-table__cell--non-numericm">{f.archname}</th>
         <th>{f.downloaded_count}</th>
-        <th className="mdl-data-table__cell--non-numericm">{f.created_timestamp}</th>
-        <th className="mdl-data-table__cell--non-numericm">{f.size}</th>
-        <th>download icon</th>
+        <th className="mdl-data-table__cell--non-numericm">{appHelpers.getTimeAgo(f.created_timestamp)}</th>
+        <th className="mdl-data-table__cell--non-numericm">{appHelpers.getFileSize(f.size)}</th>
+        <th><a href="#"><i className="material-icons">cloud_download</i></a></th>
         <th>{f.ocs_compatible}</th>
       </tr>
     ));
@@ -363,6 +388,96 @@ class ProductViewFilesTab extends React.Component {
           </thead>
           {filesDisplay}
         </table>
+      </div>
+    );
+  }
+}
+
+class ProductCommentsContainer extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+  }
+
+  render(){
+    let commentsDisplay;
+    const cArray = categoryHelpers.convertCatChildrenObjectToArray(this.props.product.r_comments);
+    if (cArray.length > 0){
+      const product = this.props.product;
+      const comments = cArray.map((c,index) => {
+        if (c.level === 1){
+          return (
+            <CommentItem product={product} comment={c.comment} key={index} level={1}/>
+          )
+        }
+      });
+      commentsDisplay = (
+        <div className="comment-list">
+          <h3>Comments</h3>
+          {comments}
+        </div>
+      )
+    }
+    return (
+      <div className="product-view-section" id="product-comments-container">
+        {commentsDisplay}
+      </div>
+    )
+  }
+}
+
+class CommentItem extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+    this.filterByCommentLevel = this.filterByCommentLevel.bind(this);
+  }
+
+  filterByCommentLevel(val){
+    if (val.level > this.props.level && this.props.comment.comment_id === val.comment.comment_parent_id){
+      console.log();
+      return val;
+    }
+  }
+
+  render(){
+    let commentRepliesContainer;
+    const filteredComments = categoryHelpers.convertCatChildrenObjectToArray(this.props.product.r_comments).filter(this.filterByCommentLevel);
+    if (filteredComments.length > 0){
+      const product = this.props.product;
+      const comments = filteredComments.map((c,index) => (
+        <CommentItem product={product} comment={c.comment} key={index} level={c.level}/>
+      ));
+      commentRepliesContainer = (
+        <div className="comment-item-replies-container">
+          {comments}
+        </div>
+      );
+    }
+
+    let displayIsSupporter;
+    if (this.props.comment.issupporter === "1"){
+      displayIsSupporter = <span className="is-supporter-display">S</span>
+    }
+
+    return(
+      <div className="comment-item">
+        <div className="comment-user-avatar">
+          <img src={this.props.comment.profile_image_url}/>
+          {displayIsSupporter}
+        </div>
+        <div className="comment-item-content">
+          <div className="comment-item-header">
+            <a className="comment-username" href={"/member/"+this.props.comment.member_id}>{this.props.comment.username}</a>
+            <span className="comment-created-at">
+              {appHelpers.getTimeAgo(this.props.comment.comment_created_at)}
+            </span>
+          </div>
+          <div className="comment-item-text">
+            {this.props.comment.comment_text}
+          </div>
+        </div>
+        {commentRepliesContainer}
       </div>
     );
   }
