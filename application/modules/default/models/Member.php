@@ -723,6 +723,26 @@ class Default_Model_Member extends Default_Model_DbTable_Member
 
         return $result;
     }
+    
+    public function fetchActiveUserByUsername($username)
+    {
+        $sql = 'SELECT DISTINCT member.member_id
+                FROM member
+                JOIN activity_log on activity_log.member_id = member.member_id
+                WHERE username = :username
+                AND is_active = 1 
+                AND member.is_deleted = 0
+                ORDER BY member.changed_at DESC, activity_log.time DESC';
+
+        $result = $this->getAdapter()->query($sql, array('username' => $username))->fetchAll();
+        
+        if($result && count($result)>0) {
+            $member_id = $result[0]['member_id'];
+            return $member_id;
+        }
+
+        return null;
+    }
 
     public function fetchCommentsCount($member_id)
     {

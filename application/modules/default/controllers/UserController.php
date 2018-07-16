@@ -24,11 +24,21 @@ class UserController extends Local_Controller_Action_DomainSwitch
 {
 
     protected $_memberId;
+    protected $_userName;
 
     public function init()
     {
         parent::init();
-        $this->_memberId = (int)$this->getParam('member_id');
+        
+        if($this->hasParam('user_name')) {
+            $this->_userName = $this->getParam('user_name');
+            
+            $modelMember = new Default_Model_Member();
+            $this->_memberId = $modelMember->fetchActiveUserByUsername($this->_userName);
+            
+        } else {
+            $this->_memberId = (int)$this->getParam('member_id');
+        }
     }
 
     public function indexAction()
