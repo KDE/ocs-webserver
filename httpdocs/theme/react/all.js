@@ -1724,16 +1724,6 @@ class ProductView extends React.Component {
   }
 
   render() {
-    console.log(this.state);
-    let galleryDisplay;
-    /*if (this.props.product.r_gallery .length > 0){
-      galleryDisplay = (
-        <ProductViewGallery
-          product={this.props.product}
-        />
-      );
-    }*/
-
     return React.createElement(
       "div",
       { id: "product-page" },
@@ -1743,12 +1733,14 @@ class ProductView extends React.Component {
         React.createElement(ProductViewHeader, {
           product: this.props.product
         }),
+        React.createElement(ProductViewGallery, {
+          product: this.props.product
+        }),
         React.createElement(ProductNavBar, {
           onTabToggle: this.toggleTab,
           tab: this.state.tab,
           product: this.props.product
         }),
-        galleryDisplay,
         React.createElement(ProductViewContent, {
           product: this.props.product,
           tab: this.state.tab
@@ -1775,13 +1767,37 @@ const ProductViewWrapper = ReactRedux.connect(mapStateToProductPageProps, mapDis
 
 class ProductViewHeader extends React.Component {
   render() {
-    console.log(this.props.product);
+
     let imageBaseUrl;
     if (store.getState().env === 'live') {
       imageBaseUrl = 'cn.pling.com';
     } else {
       imageBaseUrl = 'cn.pling.it';
     }
+
+    let productTagsDisplay;
+    if (this.props.product.r_tags_user) {
+      const tagsArray = this.props.product.r_tags_user.split(',');
+      const tags = tagsArray.map((tag, index) => React.createElement(
+        "span",
+        { className: "mdl-chip", key: index },
+        React.createElement(
+          "span",
+          { className: "mdl-chip__text" },
+          React.createElement(
+            "a",
+            { href: "search/projectSearchText/" + tag + "/f/tags" },
+            tag
+          )
+        )
+      ));
+      productTagsDisplay = React.createElement(
+        "div",
+        { className: "product-tags" },
+        tags
+      );
+    }
+
     return React.createElement(
       "div",
       { className: "section mdl-grid", id: "product-view-header" },
@@ -1823,14 +1839,180 @@ class ProductViewHeader extends React.Component {
               null,
               this.props.product.cat_title
             )
-          )
+          ),
+          productTagsDisplay
         ),
         React.createElement(
           "a",
           { href: "#", className: "mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary" },
           "Download"
+        ),
+        React.createElement(
+          "div",
+          { id: "product-view-header-right-side" },
+          React.createElement(
+            "div",
+            { className: "likes" },
+            React.createElement("i", { className: "plingheart fa fa-heart-o heartgrey" }),
+            React.createElement(
+              "span",
+              null,
+              this.props.product.r_likes.length
+            )
+          ),
+          React.createElement(
+            "div",
+            { className: "ratings-bar-container" },
+            React.createElement(
+              "div",
+              { className: "ratings-bar-left" },
+              React.createElement(
+                "i",
+                { className: "material-icons" },
+                "remove"
+              )
+            ),
+            React.createElement(
+              "div",
+              { className: "ratings-bar-holder" },
+              React.createElement("div", { className: "ratings-bar" }),
+              React.createElement("div", { className: "ratings-bar-empty" })
+            ),
+            React.createElement(
+              "div",
+              { className: "ratings-bar-right" },
+              React.createElement(
+                "i",
+                { className: "material-icons" },
+                "add"
+              )
+            )
+          )
         )
       )
+    );
+  }
+}
+
+class ProductViewGallery extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: true,
+      currentItem: 1,
+      galleryWrapperMarginLeft: 0
+    };
+    this.updateDimensions = this.updateDimensions.bind(this);
+    this.onLeftArrowClick = this.onLeftArrowClick.bind(this);
+    this.onRightArrowClick = this.onRightArrowClick.bind(this);
+    this.animateGallerySlider = this.animateGallerySlider.bind(this);
+  }
+
+  componentDidMount() {
+    window.addEventListener("resize", this.updateDimensions);
+    this.updateDimensions();
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.updateDimensions);
+  }
+
+  updateDimensions() {
+    const itemsWidth = document.getElementById('product-gallery').offsetWidth;
+    const itemsTotal = this.props.product.r_gallery.length + 1;
+    this.setState({
+      itemsWidth: itemsWidth,
+      itemsTotal: itemsTotal,
+      loading: false
+    });
+  }
+
+  onLeftArrowClick() {
+    let nextItem;
+    if (this.state.currentItem <= 1) {
+      nextItem = this.state.itemsTotal;
+    } else {
+      nextItem = this.state.currentItem - 1;
+    }
+    console.log(nextItem);
+    const marginLeft = this.state.itemsWidth * this.state.currentItem;
+    this.animateGallerySlider(nextItem, marginLeft);
+  }
+
+  onRightArrowClick() {
+    let nextItem;
+    if (this.state.currentItem === this.state.itemsTotal) {
+      nextItem = 1;
+    } else {
+      nextItem = this.state.currentItem + 1;
+    }
+    console.log(nextItem);
+    const marginLeft = this.state.itemsWidth * this.state.currentItem;
+    this.animateGallerySlider(nextItem, marginLeft);
+  }
+
+  animateGallerySlider(nextItem, marginLeft) {
+    this.setState({ currentItem: nextItem, galleryWrapperMarginLeft: "-" + marginLeft + "px" }, function () {
+      console.log(this.state);
+    });
+  }
+
+  render() {
+
+    let galleryDisplay;
+    if (this.props.product.embed_code.length > 0) {
+
+      let imageBaseUrl;
+      if (store.getState().env === 'live') {
+        imageBaseUrl = 'http://cn.pling.com';
+      } else {
+        imageBaseUrl = 'http://cn.pling.it';
+      }
+
+      if (this.props.product.r_gallery.length > 0) {
+
+        const itemsWidth = this.state.itemsWidth;
+        const moreItems = this.props.product.r_gallery.map((gi, index) => React.createElement(
+          "div",
+          { key: index, style: { "width": itemsWidth + "px" }, className: "gallery-item" },
+          React.createElement("img", { src: imageBaseUrl + "/img/" + gi })
+        ));
+
+        galleryDisplay = React.createElement(
+          "div",
+          { id: "product-gallery" },
+          React.createElement(
+            "a",
+            { className: "gallery-arrow arrow-left", onClick: this.onLeftArrowClick },
+            React.createElement(
+              "i",
+              { className: "material-icons" },
+              "arrow_back_ios"
+            )
+          ),
+          React.createElement(
+            "div",
+            { style: { "width": this.state.itemsWidth * this.state.itemsTotal + "px", "marginLeft": this.state.galleryWrapperMarginLeft }, className: "gallery-items-wrapper" },
+            React.createElement("div", { style: { "width": this.state.itemsWidth + "px" }, dangerouslySetInnerHTML: { __html: this.props.product.embed_code }, className: "gallery-item" }),
+            moreItems
+          ),
+          React.createElement(
+            "a",
+            { className: "gallery-arrow arrow-right", onClick: this.onRightArrowClick },
+            React.createElement(
+              "i",
+              { className: "material-icons" },
+              "arrow_forward_ios"
+            )
+          )
+        );
+      }
+    }
+
+    return React.createElement(
+      "div",
+      { className: "section", id: "product-view-gallery-container" },
+      galleryDisplay
     );
   }
 }
@@ -1897,7 +2079,7 @@ class ProductNavBar extends React.Component {
     if (this.props.product.r_comments.length > 0) {
       commentsMenuItem = React.createElement(
         "a",
-        { className: this.props.tab === "fav" ? "item active" : "item", onClick: this.toggleCommentsTab },
+        { className: this.props.tab === "comments" ? "item active" : "item", onClick: this.toggleCommentsTab },
         "Comments"
       );
     }
@@ -1918,22 +2100,6 @@ class ProductNavBar extends React.Component {
   }
 }
 
-class ProductViewGallery extends React.Component {
-  render() {
-
-    let galleryDisplay;
-    if (this.props.product.embed_code.length > 0) {
-      galleryDisplay = React.createElement("div", { id: "product-view-gallery",
-        dangerouslySetInnerHTML: { __html: this.props.product.embed_code } });
-    }
-    return React.createElement(
-      "div",
-      { className: "section", id: "product-view-gallery-container" },
-      galleryDisplay
-    );
-  }
-}
-
 class ProductViewContent extends React.Component {
   render() {
     let currentTabDisplay;
@@ -1947,6 +2113,24 @@ class ProductViewContent extends React.Component {
       currentTabDisplay = React.createElement(ProductViewFilesTab, {
         files: this.props.product.r_files
       });
+    } else if (this.props.tab === 'ratings') {
+      currentTabDisplay = React.createElement(
+        "p",
+        null,
+        "ratings"
+      );
+    } else if (this.props.tab === 'favs') {
+      currentTabDisplay = React.createElement(
+        "p",
+        null,
+        "favs"
+      );
+    } else if (this.props.tab === 'comments') {
+      currentTabDisplay = React.createElement(
+        "p",
+        null,
+        "comments"
+      );
     }
     return React.createElement(
       "div",

@@ -16,20 +16,13 @@ class ProductView extends React.Component {
   }
 
   render(){
-    console.log(this.state);
-    let galleryDisplay;
-    /*if (this.props.product.r_gallery .length > 0){
-      galleryDisplay = (
-        <ProductViewGallery
-          product={this.props.product}
-        />
-      );
-    }*/
-
     return(
       <div id="product-page">
         <div className="container">
           <ProductViewHeader
+            product={this.props.product}
+          />
+          <ProductViewGallery
             product={this.props.product}
           />
           <ProductNavBar
@@ -37,7 +30,6 @@ class ProductView extends React.Component {
             tab={this.state.tab}
             product={this.props.product}
           />
-          {galleryDisplay}
           <ProductViewContent
             product={this.props.product}
             tab={this.state.tab}
@@ -68,13 +60,29 @@ const ProductViewWrapper = ReactRedux.connect(
 
 class ProductViewHeader extends React.Component {
   render(){
-    console.log(this.props.product);
+
     let imageBaseUrl;
     if (store.getState().env === 'live') {
       imageBaseUrl = 'cn.pling.com';
     } else {
       imageBaseUrl = 'cn.pling.it';
     }
+
+    let productTagsDisplay;
+    if (this.props.product.r_tags_user){
+      const tagsArray = this.props.product.r_tags_user.split(',');
+      const tags = tagsArray.map((tag,index) => (
+        <span className="mdl-chip" key={index}>
+            <span className="mdl-chip__text"><a href={"search/projectSearchText/"+tag+"/f/tags"}>{tag}</a></span>
+        </span>
+      ));
+      productTagsDisplay = (
+        <div className="product-tags">
+          {tags}
+        </div>
+      );
+    }
+
     return (
       <div className="section mdl-grid" id="product-view-header">
         <div className="image-container">
@@ -90,13 +98,142 @@ class ProductViewHeader extends React.Component {
             <a href={"/browse/cat/" + this.props.product.project_category_id + "/order/latest/"}>
               <span>{this.props.product.cat_title}</span>
             </a>
+            {productTagsDisplay}
           </div>
           <a href="#" className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">
             Download
           </a>
+          <div id="product-view-header-right-side">
+            <div className="likes">
+              <i className="plingheart fa fa-heart-o heartgrey"></i>
+              <span>{this.props.product.r_likes.length}</span>
+            </div>
+            <div className="ratings-bar-container">
+              <div className="ratings-bar-left">
+                <i className="material-icons">remove</i>
+              </div>
+              <div className="ratings-bar-holder">
+                <div className="ratings-bar"></div>
+                <div className="ratings-bar-empty"></div>
+              </div>
+              <div className="ratings-bar-right">
+                <i className="material-icons">add</i>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );
+  }
+}
+
+class ProductViewGallery extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {
+      loading:true,
+      currentItem:1,
+      galleryWrapperMarginLeft:0
+    };
+    this.updateDimensions = this.updateDimensions.bind(this);
+    this.onLeftArrowClick = this.onLeftArrowClick.bind(this);
+    this.onRightArrowClick = this.onRightArrowClick.bind(this);
+    this.animateGallerySlider = this.animateGallerySlider.bind(this);
+  }
+
+  componentDidMount() {
+    window.addEventListener("resize", this.updateDimensions);
+    this.updateDimensions();
+  }
+
+  componentWillUnmount(){
+    window.removeEventListener("resize", this.updateDimensions);
+  }
+
+  updateDimensions(){
+    const itemsWidth = document.getElementById('product-gallery').offsetWidth;
+    const itemsTotal = this.props.product.r_gallery.length + 1;
+    this.setState({
+      itemsWidth:itemsWidth,
+      itemsTotal:itemsTotal,
+      loading:false
+    });
+  }
+
+  onLeftArrowClick(){
+    let nextItem;
+    if (this.state.currentItem <= 1){
+      nextItem = this.state.itemsTotal;
+    } else {
+      nextItem = this.state.currentItem - 1;
+    }
+    console.log(nextItem);
+    const marginLeft = this.state.itemsWidth * (this.state.currentItem);
+    this.animateGallerySlider(nextItem,marginLeft);
+  }
+
+  onRightArrowClick(){
+    let nextItem;
+    if (this.state.currentItem === this.state.itemsTotal){
+      nextItem = 1;
+    } else {
+      nextItem = this.state.currentItem + 1;
+    }
+    console.log(nextItem);
+    const marginLeft = this.state.itemsWidth * (this.state.currentItem);
+    this.animateGallerySlider(nextItem,marginLeft);
+  }
+
+  animateGallerySlider(nextItem,marginLeft){
+    this.setState({currentItem:nextItem,galleryWrapperMarginLeft:"-"+marginLeft+"px"},function(){
+      console.log(this.state);
+    });
+  }
+
+  render(){
+
+    let galleryDisplay;
+    if (this.props.product.embed_code.length > 0){
+
+      let imageBaseUrl;
+      if (store.getState().env === 'live') {
+        imageBaseUrl = 'http://cn.pling.com';
+      } else {
+        imageBaseUrl = 'http://cn.pling.it';
+      }
+
+      if (this.props.product.r_gallery.length > 0){
+
+        const itemsWidth = this.state.itemsWidth;
+        const moreItems = this.props.product.r_gallery.map((gi,index) => (
+          <div key={index} style={{"width":itemsWidth+"px"}} className="gallery-item">
+            <img src={imageBaseUrl + "/img/" +  gi}/>
+          </div>
+        ));
+
+        galleryDisplay = (
+          <div id="product-gallery">
+            <a className="gallery-arrow arrow-left" onClick={this.onLeftArrowClick}>
+              <i className="material-icons">arrow_back_ios</i>
+            </a>
+            <div style={{"width":this.state.itemsWidth * this.state.itemsTotal +"px","marginLeft":this.state.galleryWrapperMarginLeft}} className="gallery-items-wrapper">
+              <div style={{"width":this.state.itemsWidth+"px"}} dangerouslySetInnerHTML={{__html:this.props.product.embed_code}} className="gallery-item"></div>
+              {moreItems}
+            </div>
+            <a className="gallery-arrow arrow-right" onClick={this.onRightArrowClick}>
+              <i className="material-icons">arrow_forward_ios</i>
+            </a>
+          </div>
+        );
+
+      }
+    }
+
+    return (
+      <div className="section" id="product-view-gallery-container">
+        {galleryDisplay}
+      </div>
+    )
   }
 }
 
@@ -144,7 +281,7 @@ class ProductNavBar extends React.Component {
       favsMenuItem = <a className={this.props.tab === "fav" ? "item active" : "item"} onClick={this.toggleFavTab}>Favs ({this.props.product.r_plings.length})</a>
     }
     if (this.props.product.r_comments.length > 0){
-      commentsMenuItem = <a className={this.props.tab === "fav" ? "item active" : "item"} onClick={this.toggleCommentsTab}>Comments</a>
+      commentsMenuItem = <a className={this.props.tab === "comments" ? "item active" : "item"} onClick={this.toggleCommentsTab}>Comments</a>
     }
 
     return (
@@ -154,25 +291,6 @@ class ProductNavBar extends React.Component {
         {ratingsMenuItem}
         {favsMenuItem}
         {commentsMenuItem}
-      </div>
-    )
-  }
-}
-
-class ProductViewGallery extends React.Component {
-  render(){
-
-    let galleryDisplay;
-    if (this.props.product.embed_code.length > 0){
-      galleryDisplay = (
-        <div id="product-view-gallery"
-          dangerouslySetInnerHTML={{__html:this.props.product.embed_code}}>
-        </div>
-      );
-    }
-    return (
-      <div className="section" id="product-view-gallery-container">
-        {galleryDisplay}
       </div>
     )
   }
@@ -193,6 +311,12 @@ class ProductViewContent extends React.Component {
           files={this.props.product.r_files}
         />
       )
+    } else if (this.props.tab === 'ratings'){
+      currentTabDisplay = <p>ratings</p>
+    } else if (this.props.tab === 'favs'){
+      currentTabDisplay = <p>favs</p>
+    } else if (this.props.tab === 'comments'){
+      currentTabDisplay = <p>comments</p>
     }
     return (
       <div className="section" id="product-view-content-container">
