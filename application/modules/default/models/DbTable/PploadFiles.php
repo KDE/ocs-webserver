@@ -60,7 +60,8 @@ class Default_Model_DbTable_PploadFiles extends Local_Model_Table
                     and tag_object_id = f.id ) archname
 
                      from ppload.ppload_files f 
-                     where f.collection_id = :collection_id and f.active = 1                     
+                     where f.collection_id = :collection_id     
+                     order by f.created_timestamp desc               
                    ";        
         $result = $this->_db->query($sql,array('collection_id' => $collection_id))->fetchAll();      
         return $result;
