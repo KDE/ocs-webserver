@@ -167,7 +167,6 @@ class ProductViewGallery extends React.Component {
     } else {
       nextItem = this.state.currentItem - 1;
     }
-    console.log(nextItem);
     const marginLeft = this.state.itemsWidth * (this.state.currentItem);
     this.animateGallerySlider(nextItem,marginLeft);
   }
@@ -179,7 +178,6 @@ class ProductViewGallery extends React.Component {
     } else {
       nextItem = this.state.currentItem + 1;
     }
-    console.log(nextItem);
     const marginLeft = this.state.itemsWidth * (this.state.currentItem);
     this.animateGallerySlider(nextItem,marginLeft);
   }
