@@ -136,6 +136,10 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 throw new Zend_Controller_Action_Exception('This page does not exist', 404);
             }
 
+             if(null != $this->_authMember) {
+                $this->view->authMemberJson = Zend_Json::encode( $this->_authMember );
+            }
+
             $helpAddDefaultScheme = new Default_View_Helper_AddDefaultScheme();
             $this->view->product->title = Default_Model_HtmlPurify::purify($this->view->product->title);
             $this->view->product->description = Default_Model_BBCode::renderHtml(Default_Model_HtmlPurify::purify($this->view->product->description));

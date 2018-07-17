@@ -223,8 +223,9 @@ $forum_url_postfix = Zend_Auth::getInstance()->hasIdentity() ? '/session/sso' : 
                 <li><a href="/community" > Community </a> </li>        
                <li><a href="<?=$url_forum?>" target="_blank"> Forum</a> </li>
                <li><a href="<?=$url_blog?>" target="_blank"> Blog</a> </li>
-               <li><a  id="plingList" href="#plings" > What are Plings? </a> </li>             
-               <li> <a id="aboutContent" href="#">About </a>   </li>              
+               <li><a  id="plingList" href="/plings" class="popuppanel"> What are Plings? </a> </li>             
+               <li><a  id="ocsapiContent" href="/partials/ocsapicontent.phtml" class="popuppanel"> OCS-API </a> </li>  
+               <li> <a id="aboutContent" href="/partials/about.phtml" class="popuppanel">About </a>   </li>              
             </ul>
         </div>
 
