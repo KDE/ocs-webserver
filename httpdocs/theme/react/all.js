@@ -197,10 +197,27 @@ window.productHelpers = function () {
     return pRating;
   }
 
+  function getFilesSummary(files) {
+    let summery = {
+      downloads: 0,
+      archived: 0,
+      fileSize: 0,
+      total: 0
+    };
+    files.forEach(function (file, index) {
+      summery.total += 1;
+      summery.fileSize += parseInt(file.size);
+      summery.downloads += parseInt(file.downloaded_count);
+    });
+
+    return summery;
+  }
+
   return {
     getNumberOfProducts,
     generatePaginationObject,
-    calculateProductRatings
+    calculateProductRatings,
+    getFilesSummary
   };
 }();
 class ProductGroupScrollWrapper extends React.Component {
@@ -2203,52 +2220,52 @@ class ProductViewFilesTab extends React.Component {
   render() {
 
     let filesDisplay;
-    console.log(this.props.files);
+
     const files = this.props.files.map((f, index) => React.createElement(
       "tr",
       { key: index },
       React.createElement(
-        "th",
+        "td",
         { className: "mdl-data-table__cell--non-numericm" },
         f.title
       ),
       React.createElement(
-        "th",
+        "td",
         null,
         f.version
       ),
       React.createElement(
-        "th",
+        "td",
         { className: "mdl-data-table__cell--non-numericm" },
         f.description
       ),
       React.createElement(
-        "th",
+        "td",
         { className: "mdl-data-table__cell--non-numericm" },
         f.packagename
       ),
       React.createElement(
-        "th",
+        "td",
         { className: "mdl-data-table__cell--non-numericm" },
         f.archname
       ),
       React.createElement(
-        "th",
+        "td",
         null,
         f.downloaded_count
       ),
       React.createElement(
-        "th",
+        "td",
         { className: "mdl-data-table__cell--non-numericm" },
         appHelpers.getTimeAgo(f.created_timestamp)
       ),
       React.createElement(
-        "th",
+        "td",
         { className: "mdl-data-table__cell--non-numericm" },
         appHelpers.getFileSize(f.size)
       ),
       React.createElement(
-        "th",
+        "td",
         null,
         React.createElement(
           "a",
@@ -2261,15 +2278,45 @@ class ProductViewFilesTab extends React.Component {
         )
       ),
       React.createElement(
-        "th",
+        "td",
         null,
         f.ocs_compatible
       )
     ));
+
+    const summeryRow = productHelpers.getFilesSummary(this.props.files);
+
     filesDisplay = React.createElement(
       "tbody",
       null,
-      files
+      files,
+      React.createElement(
+        "tr",
+        null,
+        React.createElement(
+          "td",
+          null,
+          summeryRow.total,
+          " files (0 archived)"
+        ),
+        React.createElement("td", null),
+        React.createElement("td", null),
+        React.createElement("td", null),
+        React.createElement("td", null),
+        React.createElement(
+          "td",
+          null,
+          summeryRow.downloads
+        ),
+        React.createElement("td", null),
+        React.createElement(
+          "td",
+          null,
+          appHelpers.getFileSize(summeryRow.fileSize)
+        ),
+        React.createElement("td", null),
+        React.createElement("td", null)
+      )
     );
 
     return React.createElement(
@@ -2361,17 +2408,44 @@ class ProductCommentsContainer extends React.Component {
       commentsDisplay = React.createElement(
         "div",
         { className: "comment-list" },
-        React.createElement(
-          "h3",
-          null,
-          "Comments"
-        ),
         comments
       );
     }
     return React.createElement(
       "div",
       { className: "product-view-section", id: "product-comments-container" },
+      React.createElement(
+        "div",
+        { className: "section-header" },
+        React.createElement(
+          "h3",
+          null,
+          "Comments"
+        ),
+        React.createElement(
+          "span",
+          { className: "comments-counter" },
+          cArray.length,
+          " comments"
+        ),
+        React.createElement(
+          "p",
+          null,
+          "Please ",
+          React.createElement(
+            "a",
+            { href: "/login?redirect=ohWn43n4SbmJZWlKUZNl2i1_s5gggiCE" },
+            "login"
+          ),
+          " or ",
+          React.createElement(
+            "a",
+            { href: "/register" },
+            "register"
+          ),
+          " to add a comment"
+        )
+      ),
       commentsDisplay
     );
   }

@@ -352,22 +352,41 @@ class ProductViewFilesTab extends React.Component {
   render(){
 
     let filesDisplay;
-    console.log(this.props.files);
+
     const files = this.props.files.map((f,index) => (
       <tr key={index}>
-        <th className="mdl-data-table__cell--non-numericm">{f.title}</th>
-        <th>{f.version}</th>
-        <th className="mdl-data-table__cell--non-numericm">{f.description}</th>
-        <th className="mdl-data-table__cell--non-numericm">{f.packagename}</th>
-        <th  className="mdl-data-table__cell--non-numericm">{f.archname}</th>
-        <th>{f.downloaded_count}</th>
-        <th className="mdl-data-table__cell--non-numericm">{appHelpers.getTimeAgo(f.created_timestamp)}</th>
-        <th className="mdl-data-table__cell--non-numericm">{appHelpers.getFileSize(f.size)}</th>
-        <th><a href="#"><i className="material-icons">cloud_download</i></a></th>
-        <th>{f.ocs_compatible}</th>
+        <td className="mdl-data-table__cell--non-numericm">{f.title}</td>
+        <td>{f.version}</td>
+        <td className="mdl-data-table__cell--non-numericm">{f.description}</td>
+        <td className="mdl-data-table__cell--non-numericm">{f.packagename}</td>
+        <td  className="mdl-data-table__cell--non-numericm">{f.archname}</td>
+        <td>{f.downloaded_count}</td>
+        <td className="mdl-data-table__cell--non-numericm">{appHelpers.getTimeAgo(f.created_timestamp)}</td>
+        <td className="mdl-data-table__cell--non-numericm">{appHelpers.getFileSize(f.size)}</td>
+        <td><a href="#"><i className="material-icons">cloud_download</i></a></td>
+        <td>{f.ocs_compatible}</td>
       </tr>
     ));
-    filesDisplay = <tbody>{files}</tbody>
+
+    const summeryRow = productHelpers.getFilesSummary(this.props.files);
+
+    filesDisplay = (
+      <tbody>
+        {files}
+        <tr>
+          <td>{summeryRow.total} files (0 archived)</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>{summeryRow.downloads}</td>
+          <td></td>
+          <td>{appHelpers.getFileSize(summeryRow.fileSize)}</td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    );
 
     return (
       <div id="files-tab" className="product-tab">
@@ -413,13 +432,17 @@ class ProductCommentsContainer extends React.Component {
       });
       commentsDisplay = (
         <div className="comment-list">
-          <h3>Comments</h3>
           {comments}
         </div>
       )
     }
     return (
       <div className="product-view-section" id="product-comments-container">
+        <div className="section-header">
+          <h3>Comments</h3>
+          <span className="comments-counter">{cArray.length} comments</span>
+          <p>Please <a href="/login?redirect=ohWn43n4SbmJZWlKUZNl2i1_s5gggiCE">login</a> or <a href="/register">register</a> to add a comment</p>
+        </div>
         {commentsDisplay}
       </div>
     )

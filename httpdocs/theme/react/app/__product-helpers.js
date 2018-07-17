@@ -71,9 +71,26 @@ window.productHelpers = (function(){
     return pRating;
   }
 
+  function getFilesSummary(files){
+    let summery = {
+      downloads:0,
+      archived:0,
+      fileSize:0,
+      total:0,
+    }
+    files.forEach(function(file,index){
+      summery.total += 1;
+      summery.fileSize += parseInt(file.size);
+      summery.downloads += parseInt(file.downloaded_count);
+    });
+
+    return summery;
+  }
+
   return {
     getNumberOfProducts,
     generatePaginationObject,
-    calculateProductRatings
+    calculateProductRatings,
+    getFilesSummary
   }
 }());

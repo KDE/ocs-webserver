@@ -705,6 +705,7 @@ header div.container.header {
         }
 
         .product-tags {
+
           .mdl-chip {
             height: 30px !important;
             line-height: 30px !important;
@@ -713,9 +714,12 @@ header div.container.header {
             margin-left: 10px;
             float: left;
             display: block;
+            box-shadow: 1px 1px 2px rgba(0,0,0,0.5);
 
             span {
               font-weight: 500 !important;
+              color: #2773b0;
+              margin-right: 5px;
             }
           }
         }
@@ -893,6 +897,21 @@ header div.container.header {
   }
 
   #product-comments-container {
+    padding-bottom: 25px;
+    float: left;
+    width: 100%;
+
+    .section-header {
+      position: relative;
+      margin-bottom: 25px;
+
+      .comments-counter {
+        position: absolute;
+        top: 0;
+        right:0;
+      }
+    }
+
     .comment-list {
       height: auto;
       float: left;
