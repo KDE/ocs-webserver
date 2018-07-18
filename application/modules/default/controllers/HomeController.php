@@ -22,8 +22,26 @@
  **/
 class HomeController extends Local_Controller_Action_DomainSwitch
 {
-
     public function indexAction()
+    {
+        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;        
+        if ($storeConfig) {
+            $this->view->package_type = $storeConfig->package_type;
+            if($storeConfig->is_show_home==1)
+            {
+                 $this->_helper->viewRenderer('index-' . $storeConfig->config_id_name);
+                 return;
+            }
+        }
+        $params = array('ord' => 'latest');
+        if ($this->hasParam('domain_store_id')) {
+            $params['domain_store_id'] = $this->getParam('domain_store_id');
+        }
+        $this->forward('index', 'explore', 'default', $params);        
+    }
+
+
+    public function indexAction_()
     {
         $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
         $storePackageTypeIds = null;
@@ -41,8 +59,6 @@ class HomeController extends Local_Controller_Action_DomainSwitch
             $this->_helper->viewRenderer('index-' . $this->getNameForStoreClient());
             return;
         }
-
-
 
         // forward is the faster way, but you have no influence to the url. On redirect the url changes.
         $params = array('ord' => 'latest');
@@ -84,7 +100,13 @@ class HomeController extends Local_Controller_Action_DomainSwitch
 
     protected function setLayout()
     {
-        $this->_helper->layout()->setLayout('home_template');
+        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;      
+        if($storeConfig  && $storeConfig->layout_home)
+        {
+             $this->_helper->layout()->setLayout($storeConfig->layout_home);
+        }else{
+            $this->_helper->layout()->setLayout('home_template');
+        }        
     }
 
 }

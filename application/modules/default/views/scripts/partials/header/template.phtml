@@ -32,9 +32,9 @@ $serverUrl = $this->serverUrl();
 $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
 $sname = Zend_Registry::get('store_host');  
 $store_config = Zend_Registry::get('store_config');
-$store_order = $store_config['order'];
-$store_name = $store_config['name'];
-$is_show_title = $store_config['is_show_title'];
+$store_order = $store_config->order;
+$store_name = $store_config->name;
+$is_show_title = $store_config->is_show_title;
 $last_char_store_order = substr($store_order, -1); 
 
 echo $this->render('partials/header/metaheader.phtml'); ?>

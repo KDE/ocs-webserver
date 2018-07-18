@@ -1321,7 +1321,7 @@ class Ocsv1Controller extends Zend_Controller_Action
             $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
             $storePackageTypeIds = null;
             if ($storeConfig) {
-                $storePackageTypeIds = $storeConfig['package_type'];
+                $storePackageTypeIds = $storeConfig->package_type;
             }
 
             if ($storePackageTypeIds) {
