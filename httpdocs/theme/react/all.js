@@ -2653,6 +2653,7 @@ class ProductViewRatingsTab extends React.Component {
     this.filterLikes = this.filterLikes.bind(this);
     this.filterDislikes = this.filterDislikes.bind(this);
     this.filterActive = this.filterActive.bind(this);
+    this.setFilter = this.setFilter.bind(this);
   }
 
   filterLikes(rating) {
@@ -2671,6 +2672,10 @@ class ProductViewRatingsTab extends React.Component {
     if (rating.rating_active === "1") {
       return rating;
     }
+  }
+
+  setFilter(filter) {
+    this.setState({ filter: filter });
   }
 
   render() {
@@ -2704,7 +2709,8 @@ class ProductViewRatingsTab extends React.Component {
         ratingsItems
       );
     }
-
+    const subMenuItemClassName = " mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect";
+    const subMenuActiveItemClassName = "active mdl-button--colored mdl-color--primary item";
     return React.createElement(
       'div',
       { id: 'ratings-tab', className: 'product-tab' },
@@ -2712,32 +2718,48 @@ class ProductViewRatingsTab extends React.Component {
         'div',
         { className: 'ratings-filters-menu' },
         React.createElement(
-          'a',
-          { className: this.state.filter === "dislikes" ? "active item" : "item", onClick: this.showDislikes },
-          'show dislikes (',
-          ratingsDislikes.length,
-          ')'
+          'span',
+          { className: 'btn-container', onClick: () => this.setFilter("dislikes") },
+          React.createElement(
+            'a',
+            { className: this.state.filter === "dislikes" ? subMenuActiveItemClassName + subMenuItemClassName : subMenuItemClassName, onClick: this.showDislikes },
+            'show dislikes (',
+            ratingsDislikes.length,
+            ')'
+          )
         ),
         React.createElement(
-          'a',
-          { className: this.state.filter === "likes" ? "active item" : "item", onClick: this.showLikes },
-          'show likes (',
-          ratingsLikes.length,
-          ')'
+          'span',
+          { className: 'btn-container', onClick: () => this.setFilter("likes") },
+          React.createElement(
+            'a',
+            { onClick: this.setDislikesFilter, className: this.state.filter === "likes" ? subMenuActiveItemClassName + subMenuItemClassName : subMenuItemClassName, onClick: this.showLikes },
+            'show likes (',
+            ratingsLikes.length,
+            ')'
+          )
         ),
         React.createElement(
-          'a',
-          { className: this.state.filter === "active" ? "active item" : "item", onClick: this.showActive },
-          'show active reviews (',
-          ratingsActive.length,
-          ')'
+          'span',
+          { className: 'btn-container', onClick: () => this.setFilter("active") },
+          React.createElement(
+            'a',
+            { onClick: this.setDislikesFilter, className: this.state.filter === "active" ? subMenuActiveItemClassName + subMenuItemClassName : subMenuItemClassName, onClick: this.showActive },
+            'show active reviews (',
+            ratingsActive.length,
+            ')'
+          )
         ),
         React.createElement(
-          'a',
-          { className: this.state.filter === "all" ? "active item" : "item", onClick: this.showAll },
-          'show all (',
-          this.props.ratings.length,
-          ')'
+          'span',
+          { className: 'btn-container', onClick: () => this.setFilter("all") },
+          React.createElement(
+            'a',
+            { onClick: this.setDislikesFilter, className: this.state.filter === "all" ? subMenuActiveItemClassName + subMenuItemClassName : subMenuItemClassName, onClick: this.showAll },
+            'show all (',
+            this.props.ratings.length,
+            ')'
+          )
         )
       ),
       ratingsDisplay
