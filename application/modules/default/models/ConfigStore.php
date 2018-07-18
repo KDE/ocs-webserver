@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -21,7 +22,6 @@
  *
  * Created: 13.09.2017
  */
-
 class Default_Model_ConfigStore
 {
 
@@ -70,13 +70,19 @@ class Default_Model_ConfigStore
             $this->created_at = $storeConfig['created_at'];
             $this->changed_at = $storeConfig['changed_at'];
             $this->deleted_at = $storeConfig['deleted_at'];
-
         } else {
             Zend_Registry::get('logger')->warn(__METHOD__ . '(' . __LINE__ . ') - ' . $host
-                                               . ' :: no domain config context configured');
+                . ' :: no domain config context configured')
+            ;
         }
     }
 
-    
-    
+    /**
+     * @return bool
+     */
+    public function isShowHomepage()
+    {
+        return $this->is_show_home == 1 ? true : false;
+    }
+
 }

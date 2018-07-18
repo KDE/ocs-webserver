@@ -24,10 +24,11 @@ class HomeController extends Local_Controller_Action_DomainSwitch
 {
     public function indexAction()
     {
-        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;        
+        /** @var Default_Model_ConfigStore $storeConfig */
+        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
         if ($storeConfig) {
             $this->view->package_type = $storeConfig->package_type;
-            if($storeConfig->is_show_home==1)
+            if($storeConfig->isShowHomepage())
             {
                  $this->_helper->viewRenderer('index-' . $storeConfig->config_id_name);
                  return;
