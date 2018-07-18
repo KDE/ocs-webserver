@@ -625,9 +625,20 @@ header div.container.header {
 
 #product-page {
 
+  .container {
+    padding: 0 20%;
+  }
+
   #product-view-header {
-    padding-left: 150px;
-    position: relative;
+    background-color: #f7f7f7;
+    padding-bottom: 15px;
+
+    .container {
+      .section {
+        padding-left: 150px;
+        position: relative;
+      }
+    }
 
     .image-container {
       position: absolute;
@@ -727,16 +738,18 @@ header div.container.header {
 
       #product-view-header-right-side {
         position: absolute;
-        top: 0;
+        top: 39px;
         right: 0;
 
         .likes {
           float: right;
           width: 40px;
           clear: both;
-          position: relative;
+          position: absolute;
           height: 40px;
           margin-bottom: 7px;
+          top: 0;
+          right: 0;
 
           i {
             font-size: 40px;
@@ -760,7 +773,9 @@ header div.container.header {
           float: left;
           clear: both;
           padding: 0 25px;
-          position: relative;
+          position: absolute;
+          top: 62px;
+          right: 0;
 
           .ratings-bar-left {
             position: absolute;
@@ -809,71 +824,240 @@ header div.container.header {
     }
   }
 
-  #product-gallery {
-    width: 100%;
-    padding: 0 50px;
-    position: relative;
-    overflow: hidden;
-    height: 500px;
+  #product-view-gallery-container {
+    #product-gallery {
+      width: 100%;
+      position: relative;
+      height: 200px;
 
-    .gallery-arrow {
+      .section {
+        width: 100%;
+        height: 200px;
+        overflow: hidden;
+        padding: 0;
+        position: relative;
+      }
+
+      .gallery-arrow {
+        z-index: 100;
+        display: block;
+        height: 50px;
+        cursor: pointer;
+        width: 50px;
+        background-color: rgba(255,255,255,0.9);
+        text-align: center;
+        border-radius: 100%;
+        border: 1px solid #c7c7c7;
+        top: 50%;
+        margin-top: -25px;
+
+        &.arrow-left {
+          position: absolute;
+          left: -25px;
+          i {
+            position: absolute;
+            display: block;
+            top: 50%;
+            left: 0;
+            font-size: 50px;
+            margin-top: -25px;
+            margin-left: 0px;
+          }
+        }
+
+        &.arrow-right {
+          position: absolute;
+          right: -25px;
+          i {
+            position: absolute;
+            display: block;
+            top: 50%;
+            left: 0;
+            font-size: 50px;
+            margin-top: -25px;
+            margin-left: 0px;
+          }
+        }
+
+      }
+
+      .gallery-items-wrapper {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 200px;
+        .transition();
+
+        .gallery-item {
+          float: left;
+          height: 200px;
+          width: 300px;
+          text-align: center;
+          padding: 0 10px;
+          cursor: pointer;
+
+          > * {
+            margin: 0 auto;
+            display: table;
+            width: auto;
+            max-width: 100%;
+            max-height: 100%;
+          }
+        }
+      }
+    }
+  }
+
+  #product-gallery-lightbox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.75);
+    z-index: 1000;
+    padding-bottom: 200px;
+
+    #close-lightbox {
       position: absolute;
       top: 0;
-      z-index: 100;
-      display: block;
-      height: 100%;
-      cursor: pointer;
+      right: 0;
       width: 50px;
-      background-color: rgba(255,255,255,0.5);
+      height: 50px;
+      cursor: pointer;
+      z-index: 10000;
 
-      &.arrow-left {
+      i {
+        font-size: 48px;
+        color: white;
+      }
+    }
+
+    #lightbox-gallery-main-view {
+      width: 100%;
+      height: 100%;
+      padding: 0 50px;
+      position: relative;
+
+      .current-gallery-item {
+        height: 100%;
+        width: 100%;
         position: absolute;
+        padding: 50px;
         left: 0;
+        top: 0;
+
+        > div {
+          height: 100%;
+          width: 100%;
+          margin: 0 auto;
+          display: table;
+
+          iframe {
+            width: 100%;
+            height: 100%;
+          }
+        }
+
+        .media-item {
+          max-width: 100%;
+          width: auto;
+          height: 100%;
+          max-height: 100%;
+          margin: 0 auto;
+          display: table;
+        }
+      }
+
+      .gallery-arrow {
+        position: absolute;
+        top: 50%;
+        margin-top: -25px;
+        display: block;
+        height: 50px;
+        cursor: pointer;
+        width: 50px;
+        background-color: rgba(255,255,255,0.9);
+        text-align: center;
+        border-radius: 100%;
+        border: 1px solid #c7c7c7;
+        z-index: 1001;
+
         i {
           position: absolute;
           display: block;
           top: 50%;
           left: 0;
-          font-size: 45px;
+          font-size: 50px;
           margin-top: -25px;
-          margin-left: 10px;
+          margin-left: 0px;
+        }
+
+        &#arrow-left {
+          left: 10px;
+        }
+
+        &#arrow-right {
+          right: 10px;
         }
       }
-
-      &.arrow-right {
-        position: absolute;
-        right: 0;
-        i {
-          position: absolute;
-          display: block;
-          top: 50%;
-          right: 0;
-          font-size: 45px;
-          margin-top: -25px;
-          margin-right: 5px;
-        }
-      }
-
     }
 
-    .gallery-items-wrapper {
+    #lightbox-gallery-thumbnails {
       position: absolute;
-      top: 0;
+      bottom: 0;
       left: 0;
-      height: 500px;
-      .transition();
+      width: 100%;
+      height: 200px;
+      padding: 25px;
+      background-color: rgba(0,0,0,0.5);
 
-      .gallery-item {
+      #gallery-items-wrapper {
+        .transition();
+      }
+
+      .section {
+        width: 100%;
+        height: 150px;
+        overflow: hidden;
+        position: relative;
+        padding: 0;
+      }
+
+      .thumbnail-item {
+        height: 150px;
+        width: 200px;
+        padding: 0 10px;
         float: left;
-        height: 500px;
+        overflow: hidden;
         text-align: center;
+        cursor: pointer;
 
-        > * {
+        > img, iframe {
+          max-width: 150px;
+          max-height: 200px;
           margin: 0 auto;
+          height: 100%;
           display: table;
-          width: auto;
-          max-width: 100%;
-          max-height: 100%;
+          border: 2px solid transparent;
+          .transition();
+        }
+
+        iframe {
+          z-index: -1000;
+          pointer-events: none;
+        }
+
+        &.hover {
+          > img, iframe {
+            border:1px solid #ccc;
+          }
+        }
+
+        &.active {
+          > img, iframe {
+            border:1px solid white;
+          }
         }
       }
     }
@@ -888,7 +1072,7 @@ header div.container.header {
               text-align: left;
               font-size: 13px;
               font-weight: 500;
-              padding: 12px 16px;
+              padding: 12px 8px;
             }
           }
         }
@@ -911,8 +1095,9 @@ header div.container.header {
         right:0;
       }
     }
+  }
 
-    .comment-list {
+  .comment-list {
       height: auto;
       float: left;
       width: 100%;
@@ -985,13 +1170,18 @@ header div.container.header {
         }
       }
     }
-  }
 }
 
 @media (max-width: 1720px) and (min-width:1501px) {
   #app-root {
     .container {
       padding: 0 15%;
+    }
+  }
+
+  #product-page {
+    .container {
+      max-width: 1280px !important;
     }
   }
   .products-showcase {
@@ -1011,6 +1201,11 @@ header div.container.header {
       }
     }
   }
+  #product-page {
+    .container {
+      max-width: 1280px !important;
+    }
+  }
 }
 
 @media (max-width: 1500px) and (min-width: 1251px) {
@@ -1019,6 +1214,11 @@ header div.container.header {
       .square {
         width: 20%;
       }
+    }
+  }
+  #product-page {
+    .container {
+      padding: 0 20%;
     }
   }
   /*.explore-products-container {
@@ -1038,6 +1238,11 @@ header div.container.header {
       .square {
         width: 25%;
       }
+    }
+  }
+  #product-page {
+    .container {
+      padding: 0 20%;
     }
   }
   /*.explore-products-container {
@@ -1067,6 +1272,12 @@ header div.container.header {
 @media (max-width: 999px) and (min-width: 662px) {
   #app-root {
     .container {
+      padding: 0 5%;
+    }
+  }
+  #product-page {
+    .container {
+      max-width: 90%;
       padding: 0 5%;
     }
   }

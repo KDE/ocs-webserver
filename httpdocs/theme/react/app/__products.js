@@ -114,7 +114,7 @@ class ProductGroupItem extends React.Component {
       <div className="product square">
           <div className="content">
             <div className="product-wrapper mdl-shadow--2dp">
-              <a href={"/p/"+this.props.product.project_id}>
+              <a href={"/p/"+this.props.product.project_id + "/new/1"}>
                 <div className="product-image-container">
                   <figure>
                     <img className="very-rounded-corners" src={'https://' + imageBaseUrl + '/cache/200x171/img/' + this.props.product.image_small} />

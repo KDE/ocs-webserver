@@ -1,6 +1,7 @@
 const reducer = Redux.combineReducers({
   products:productsReducer,
   product:productReducer,
+  lightboxGallery:lightboxGalleryReducer,
   pagination:paginationReducer,
   topProducts:topProductsReducer,
   categories:categoriesReducer,
@@ -91,6 +92,23 @@ const reducer = Redux.combineReducers({
       const s = Object.assign({},state,{
         r_tags_user:action.userTags,
         r_tags_system:action.systemTags
+      });
+      return s;
+    } else {
+      return state;
+    }
+  }
+
+  function lightboxGalleryReducer(state = {}, action){
+    if (action.type === 'SHOW_LIGHTBOX'){
+      const s = Object.assign({},state,{
+        show:true,
+        currentItem:action.item
+      });
+      return s;
+    } else if (action.type === 'HIDE_LIGHTBOX'){
+      const s = Object.assign({},state,{
+        show:false
       });
       return s;
     } else {
@@ -311,6 +329,19 @@ const reducer = Redux.combineReducers({
       type:'SET_PRODUCT_TAGS',
       userTags:userTags,
       systemTags:systemTags
+    }
+  }
+
+  function showLightboxGallery(num){
+    return {
+      type:'SHOW_LIGHTBOX',
+      item:num
+    }
+  }
+
+  function hideLightboxGallery(){
+    return {
+      type:'HIDE_LIGHTBOX'
     }
   }
 

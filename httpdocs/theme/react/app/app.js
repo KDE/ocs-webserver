@@ -52,7 +52,6 @@ class App extends React.Component {
       store.dispatch(setProductMoreProducts(moreProductsJson));
       store.dispatch(setProductMoreProductsOtherUsers(moreProductsOfOtherUsrJson));
       store.dispatch(setProductTags(tagsuserJson,tagssystemJson));
-      console.log(store.getState().product);
     }
 
     // pagination
