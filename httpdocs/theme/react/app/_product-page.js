@@ -349,14 +349,25 @@ class ProductGalleryLightbox extends React.Component {
     });
   }
 
-  toggleNextGalleryItem(){
-    const currentItem = this.state.currentItem + 1;
-    this.animateGallerySlider(currentItem);
+  togglePrevGalleryItem(){
+    let nextItem;
+    if (this.state.currentItem <= 1){
+      nextItem = this.state.itemsTotal;
+    } else {
+      nextItem = this.state.currentItem - 1;
+    }
+
+    this.animateGallerySlider(nextItem);
   }
 
-  togglePrevGalleryItem(){
-    const currentItem = this.state.currentItem - 1;
-    this.animateGallerySlider(currentItem);
+  toggleNextGalleryItem(){
+    let nextItem;
+    if (this.state.currentItem === this.state.itemsTotal){
+      nextItem = 1;
+    } else {
+      nextItem = this.state.currentItem + 1;
+    }
+    this.animateGallerySlider(nextItem);
   }
 
   animateGallerySlider(currentItem){
@@ -390,22 +401,6 @@ class ProductGalleryLightbox extends React.Component {
       </div>
     ));
 
-    let arrowLeft, arrowRight;
-    if (this.state.currentItem > 1){
-      arrowLeft = (
-        <a className="gallery-arrow" onClick={this.togglePrevGalleryItem} id="arrow-left">
-          <i className="material-icons">chevron_left</i>
-        </a>
-      );
-    }
-    if (this.state.currentItem < (this.props.product.r_gallery.length + 1)){
-      arrowRight = (
-        <a className="gallery-arrow" onClick={this.toggleNextGalleryItem} id="arrow-right">
-          <i className="material-icons">chevron_right</i>
-        </a>
-      );
-    }
-
     let mainItemDisplay;
     if (currentItem === 1){
       mainItemDisplay = <div dangerouslySetInnerHTML={{__html:this.props.product.embed_code}}></div>
@@ -420,11 +415,15 @@ class ProductGalleryLightbox extends React.Component {
       <div id="product-gallery-lightbox">
         <a id="close-lightbox" onClick={this.hideLightbox}><i className="material-icons">cancel</i></a>
         <div id="lightbox-gallery-main-view">
-          {arrowLeft}
+          <a className="gallery-arrow" onClick={this.togglePrevGalleryItem} id="arrow-left">
+            <i className="material-icons">chevron_left</i>
+          </a>
           <div className="current-gallery-item">
             {mainItemDisplay}
           </div>
-          {arrowRight}
+          <a className="gallery-arrow" onClick={this.toggleNextGalleryItem} id="arrow-right">
+            <i className="material-icons">chevron_right</i>
+          </a>
         </div>
         <div id="lightbox-gallery-thumbnails">
           <div className="section" id="thumbnails-section">
@@ -738,7 +737,7 @@ class ProductViewFilesTabItem extends React.Component {
         <td>{f.downloaded_count}</td>
         <td className="mdl-data-table__cell--non-numericm">{appHelpers.getTimeAgo(f.created_timestamp)}</td>
         <td className="mdl-data-table__cell--non-numericm">{appHelpers.getFileSize(f.size)}</td>
-        <td><a href="#"><i className="material-icons">cloud_download</i></a></td>
+        <td><a href={this.state.downloadLink}><i className="material-icons">cloud_download</i></a></td>
         <td>{f.ocs_compatible}</td>
       </tr>
     )

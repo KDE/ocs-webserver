@@ -2249,14 +2249,25 @@ class ProductGalleryLightbox extends React.Component {
     });
   }
 
-  toggleNextGalleryItem() {
-    const currentItem = this.state.currentItem + 1;
-    this.animateGallerySlider(currentItem);
+  togglePrevGalleryItem() {
+    let nextItem;
+    if (this.state.currentItem <= 1) {
+      nextItem = this.state.itemsTotal;
+    } else {
+      nextItem = this.state.currentItem - 1;
+    }
+
+    this.animateGallerySlider(nextItem);
   }
 
-  togglePrevGalleryItem() {
-    const currentItem = this.state.currentItem - 1;
-    this.animateGallerySlider(currentItem);
+  toggleNextGalleryItem() {
+    let nextItem;
+    if (this.state.currentItem === this.state.itemsTotal) {
+      nextItem = 1;
+    } else {
+      nextItem = this.state.currentItem + 1;
+    }
+    this.animateGallerySlider(nextItem);
   }
 
   animateGallerySlider(currentItem) {
@@ -2290,30 +2301,6 @@ class ProductGalleryLightbox extends React.Component {
       React.createElement('img', { className: 'media-item', src: imageBaseUrl + "/img/" + gi })
     ));
 
-    let arrowLeft, arrowRight;
-    if (this.state.currentItem > 1) {
-      arrowLeft = React.createElement(
-        'a',
-        { className: 'gallery-arrow', onClick: this.togglePrevGalleryItem, id: 'arrow-left' },
-        React.createElement(
-          'i',
-          { className: 'material-icons' },
-          'chevron_left'
-        )
-      );
-    }
-    if (this.state.currentItem < this.props.product.r_gallery.length + 1) {
-      arrowRight = React.createElement(
-        'a',
-        { className: 'gallery-arrow', onClick: this.toggleNextGalleryItem, id: 'arrow-right' },
-        React.createElement(
-          'i',
-          { className: 'material-icons' },
-          'chevron_right'
-        )
-      );
-    }
-
     let mainItemDisplay;
     if (currentItem === 1) {
       mainItemDisplay = React.createElement('div', { dangerouslySetInnerHTML: { __html: this.props.product.embed_code } });
@@ -2337,13 +2324,29 @@ class ProductGalleryLightbox extends React.Component {
       React.createElement(
         'div',
         { id: 'lightbox-gallery-main-view' },
-        arrowLeft,
+        React.createElement(
+          'a',
+          { className: 'gallery-arrow', onClick: this.togglePrevGalleryItem, id: 'arrow-left' },
+          React.createElement(
+            'i',
+            { className: 'material-icons' },
+            'chevron_left'
+          )
+        ),
         React.createElement(
           'div',
           { className: 'current-gallery-item' },
           mainItemDisplay
         ),
-        arrowRight
+        React.createElement(
+          'a',
+          { className: 'gallery-arrow', onClick: this.toggleNextGalleryItem, id: 'arrow-right' },
+          React.createElement(
+            'i',
+            { className: 'material-icons' },
+            'chevron_right'
+          )
+        )
       ),
       React.createElement(
         'div',
@@ -2821,7 +2824,7 @@ class ProductViewFilesTabItem extends React.Component {
         null,
         React.createElement(
           'a',
-          { href: '#' },
+          { href: this.state.downloadLink },
           React.createElement(
             'i',
             { className: 'material-icons' },
