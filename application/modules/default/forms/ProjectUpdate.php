@@ -104,7 +104,7 @@ class Default_Form_ProjectUpdate extends Zend_Form
                     ))
                 ))
             ->addPrefixPath('Local_Validate', 'Local/Validate', Zend_Form_Element::VALIDATE)
-            ->addValidator('SanitizeUrl');
+            ->addValidator('SanitizeUrl', true);
 
         $submit = $this->createElement('button', 'send');
         $submit->setLabel('Save');
