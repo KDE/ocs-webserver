@@ -268,6 +268,69 @@ header div.container.header {
   }
 }
 
+.cards {
+  width: 100%;
+  float: left;
+
+  .user-card-item {
+    width: 16.6666%;
+    padding: 0 5px;
+    float: left;
+
+    .card-content {
+      border: 5px solid #ccc;
+      border-radius: 10px;
+      padding: 5px;
+      font-size: 15px;
+      float: left;
+      height: auto;
+      text-align: center;
+
+      .user-avatar {
+        padding-bottom: 5px;
+        margin-bottom: 5px;
+
+        img {
+          max-width: 100%;
+          height: auto;
+          border-radius: 100%;
+        }
+      }
+
+      span {
+        display: block;
+        width: 100%;
+        float: left;
+
+        i {
+          font-size: 20px;
+        }
+
+        img {
+          width: 23px;
+          height: 23px;
+          display: table;
+          margin: 0 auto;
+          margin-bottom: 4px;
+        }
+      }
+    }
+  }
+}
+
+table {
+  thead, tbody {
+    tr {
+      th, td {
+        text-align: left !important;
+        font-size: 13px !important;
+        font-weight: 500 !important;
+        padding: 12px 8px !important;
+      }
+    }
+  }
+}
+
 #app-root {
   font-family: Source Sans Pro,Source Sans,sans-serif;
   font-size: 13pt;
@@ -624,9 +687,24 @@ header div.container.header {
 }
 
 #product-page {
+  position: relative;
 
   .container {
     padding: 0 20%;
+  }
+
+  #product-download-section {
+    text-align: center;
+    overflow: hidden;
+    height: 0px;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    .transition(0.5s);
+
+    #files-tab {
+      display: table;
+      margin: 20px auto;
+    }
   }
 
   #product-view-header {
@@ -1064,21 +1142,12 @@ header div.container.header {
   }
 
   #product-view-content-container {
-    padding: 0;
+    padding-bottom: 20px;
+    float: left;
+    width: 100%;
 
     #files-tab {
-      table {
-        thead, tbody {
-          tr {
-            th, td {
-              text-align: left;
-              font-size: 13px;
-              font-weight: 500;
-              padding: 12px 8px;
-            }
-          }
-        }
-      }
+
     }
 
     #ratings-tab {
@@ -1142,6 +1211,20 @@ header div.container.header {
             width: 25px;
             height: 25px;
             background-color: #EE6E09;
+            text-align: center;
+            line-height: 25px;
+            border-radius: 100%;
+          }
+
+          .is-creater-display {
+            color: white;
+            position: absolute;
+            bottom: 0;
+            right: 0px;
+            display: block;
+            width: 25px;
+            height: 25px;
+            background-color: blue;
             text-align: center;
             line-height: 25px;
             border-radius: 100%;

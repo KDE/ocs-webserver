@@ -1,8 +1,18 @@
 class ProductView extends React.Component {
   constructor(props){
   	super(props);
-  	this.state = {tab:'product'};
+  	this.state = {
+      tab:'product',
+      showDownloadSection:false
+    };
     this.toggleTab = this.toggleTab.bind(this);
+    this.toggleDownloadSection = this.toggleDownloadSection.bind(this);
+  }
+
+  componentDidMount() {
+    let downloadTableHeight = $('#product-download-section').find('#files-tab').height();
+    downloadTableHeight += 80;
+    this.setState({downloadTableHeight:downloadTableHeight});
   }
 
   componentWillReceiveProps(nextProps) {
@@ -18,6 +28,11 @@ class ProductView extends React.Component {
     this.setState({tab:tab});
   }
 
+  toggleDownloadSection(){
+    let showDownloadSection = this.state.showDownloadSection === true ? false : true;
+    this.setState({showDownloadSection:showDownloadSection});
+  }
+
   render(){
     let productGalleryLightboxDisplay;
     if (this.props.lightboxGallery.show === true){
@@ -27,24 +42,37 @@ class ProductView extends React.Component {
         />
       );
     }
+
+    let downloadSectionDisplayHeight;
+    if (this.state.showDownloadSection === true){
+      downloadSectionDisplayHeight = this.state.downloadTableHeight;
+    }
+
     return(
       <div id="product-page">
-          <ProductViewHeader
+        <div id="product-download-section" style={{"height":downloadSectionDisplayHeight}}>
+          <ProductViewFilesTab
             product={this.props.product}
+            files={this.props.product.r_files}
           />
-          <ProductViewGallery
-            product={this.props.product}
-          />
-          <ProductNavBar
-            onTabToggle={this.toggleTab}
-            tab={this.state.tab}
-            product={this.props.product}
-          />
-          <ProductViewContent
-            product={this.props.product}
-            tab={this.state.tab}
-          />
-          {productGalleryLightboxDisplay}
+        </div>
+        <ProductViewHeader
+          product={this.props.product}
+          onDownloadBtnClick={this.toggleDownloadSection}
+        />
+        <ProductViewGallery
+          product={this.props.product}
+        />
+        <ProductNavBar
+          onTabToggle={this.toggleTab}
+          tab={this.state.tab}
+          product={this.props.product}
+        />
+        <ProductViewContent
+          product={this.props.product}
+          tab={this.state.tab}
+        />
+        {productGalleryLightboxDisplay}
       </div>
     );
   }
@@ -114,7 +142,7 @@ class ProductViewHeader extends React.Component {
                 </a>
                 {productTagsDisplay}
               </div>
-              <a href="#" className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">
+              <a onClick={this.props.onDownloadBtnClick} href="#" className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">
                 Download
               </a>
               <div id="product-view-header-right-side">
@@ -221,8 +249,9 @@ class ProductViewGallery extends React.Component {
   }
 
   render(){
-    console.log(this.state);
+
     let galleryDisplay;
+
     if (this.props.product.embed_code && this.props.product.embed_code.length > 0){
 
       let imageBaseUrl;
@@ -243,25 +272,11 @@ class ProductViewGallery extends React.Component {
           </div>
         ));
 
-        let arrowLeft, arrowRight;
-        if (this.state.currentItem !== 1){
-          arrowLeft = (
+        galleryDisplay = (
+          <div id="product-gallery">
             <a className="gallery-arrow arrow-left" onClick={this.onLeftArrowClick}>
               <i className="material-icons">chevron_left</i>
             </a>
-          );
-        }
-        if (this.state.currentItem < (this.state.itemsTotal - 1)){
-          arrowRight = (
-            <a className="gallery-arrow arrow-right" onClick={this.onRightArrowClick}>
-              <i className="material-icons">chevron_right</i>
-            </a>
-          );
-        }
-
-        galleryDisplay = (
-          <div id="product-gallery">
-            {arrowLeft}
             <div className="section">
               <div style={{"width":this.state.itemsWidth * this.state.itemsTotal +"px","marginLeft":this.state.galleryWrapperMarginLeft}} className="gallery-items-wrapper">
                 <div onClick={() => this.onGalleryItemClick(1)} dangerouslySetInnerHTML={{__html:this.props.product.embed_code}} className={this.state.currentItem === 1 ? "active-gallery-item gallery-item" : "gallery-item"}>
@@ -269,7 +284,9 @@ class ProductViewGallery extends React.Component {
                 {moreItems}
               </div>
             </div>
-            {arrowRight}
+            <a className="gallery-arrow arrow-right" onClick={this.onRightArrowClick}>
+              <i className="material-icons">chevron_right</i>
+            </a>
           </div>
         );
 
@@ -424,62 +441,31 @@ class ProductGalleryLightbox extends React.Component {
 }
 
 class ProductNavBar extends React.Component {
-  constructor(props){
-  	super(props);
-    this.toggleProductTab = this.toggleProductTab.bind(this);
-    this.toggleFilesTab = this.toggleFilesTab.bind(this);
-    this.toggleRatingsTab = this.toggleRatingsTab.bind(this);
-    this.toggleFavTab = this.toggleFavTab.bind(this);
-    this.toggleCommentsTab = this.toggleCommentsTab.bind(this);
-  }
-
-  toggleProductTab(){
-    this.props.onTabToggle('product');
-  }
-
-  toggleFilesTab(){
-    this.props.onTabToggle('files');
-  }
-
-  toggleRatingsTab(){
-    this.props.onTabToggle('ratings');
-  }
-
-  toggleFavTab(){
-    this.props.onTabToggle('fav');
-  }
-
-  toggleCommentsTab(){
-    this.props.onTabToggle('comments');
-  }
-
   render(){
-
     let productNavBarDisplay;
-    let filesMenuItem, ratingsMenuItem, commentsMenuItem, favsMenuItem;
+    let filesMenuItem, ratingsMenuItem, favsMenuItem, plingsMenuItem;
     if (this.props.product.r_files.length > 0 ){
-      filesMenuItem = <a className={this.props.tab === "files" ? "item active" : "item"} onClick={this.toggleFilesTab}>Files ({this.props.product.r_files.length})</a>
+      filesMenuItem = <a className={this.props.tab === "files" ? "item active" : "item"} onClick={() => this.props.onTabToggle('files')}>Files ({this.props.product.r_files.length})</a>
     }
     if (this.props.product.r_ratings.length > 0) {
       const activeRatingsNumber = productHelpers.getActiveRatingsNumber(this.props.product.r_ratings);
-      ratingsMenuItem = <a className={this.props.tab === "ratings" ? "item active" : "item"} onClick={this.toggleRatingsTab}>Ratings & Reviews ({activeRatingsNumber})</a>
+      ratingsMenuItem = <a className={this.props.tab === "ratings" ? "item active" : "item"} onClick={() => this.props.onTabToggle('ratings')}>Ratings & Reviews ({activeRatingsNumber})</a>
     }
-    if (this.props.product.r_plings.length > 0) {
-      favsMenuItem = <a className={this.props.tab === "fav" ? "item active" : "item"} onClick={this.toggleFavTab}>Favs ({this.props.product.r_plings.length})</a>
+    if (this.props.product.r_likes.length > 0) {
+      favsMenuItem = <a className={this.props.tab === "favs" ? "item active" : "item"} onClick={() => this.props.onTabToggle('favs')}>Favs ({this.props.product.r_likes.length})</a>
     }
-    if (this.props.product.r_comments.length > 0){
-      commentsMenuItem = <a className={this.props.tab === "comments" ? "item active" : "item"} onClick={this.toggleCommentsTab}>Comments</a>
+    if (this.props.product.r_plings.length > 0){
+      plingsMenuItem = <a className={this.props.tab === "plings" ? "item active" : "item"} onClick={() => this.props.onTabToggle('plings')}>Plings ({this.props.product.r_plings.length})</a>
     }
-
     return (
       <div className="wrapper">
         <div className="container">
           <div className="explore-top-bar">
-            <a className={this.props.tab === "product" ? "item active" : "item"} onClick={this.toggleProductTab}>Product</a>
+            <a className={this.props.tab === "product" ? "item active" : "item"} onClick={() => this.props.onTabToggle('product')}>Product</a>
             {filesMenuItem}
             {ratingsMenuItem}
             {favsMenuItem}
-            {commentsMenuItem}
+            {plingsMenuItem}
           </div>
         </div>
       </div>
@@ -502,6 +488,7 @@ class ProductViewContent extends React.Component {
     } else if (this.props.tab === 'files'){
       currentTabDisplay = (
         <ProductViewFilesTab
+          product={this.props.product}
           files={this.props.product.r_files}
         />
       )
@@ -512,9 +499,17 @@ class ProductViewContent extends React.Component {
         />
       );
     } else if (this.props.tab === 'favs'){
-      currentTabDisplay = <p>favs</p>
-    } else if (this.props.tab === 'comments'){
-      currentTabDisplay = <p>comments</p>
+      currentTabDisplay = (
+        <ProductViewFavTab
+          likes={this.props.product.r_likes}
+        />
+      );
+    } else if (this.props.tab === 'plings'){
+      currentTabDisplay = (
+        <ProductViewPlingsTab
+          plings={this.props.product.r_plings}
+        />
+      );
     }
     return (
       <div className="wrapper">
@@ -528,28 +523,116 @@ class ProductViewContent extends React.Component {
   }
 }
 
+class ProductCommentsContainer extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+  }
+
+  render(){
+    let commentsDisplay;
+    const cArray = categoryHelpers.convertCatChildrenObjectToArray(this.props.product.r_comments);
+    if (cArray.length > 0){
+      const product = this.props.product;
+      const comments = cArray.map((c,index) => {
+        if (c.level === 1){
+          return (
+            <CommentItem product={product} comment={c.comment} key={index} level={1}/>
+          )
+        }
+      });
+      commentsDisplay = (
+        <div className="comment-list">
+          {comments}
+        </div>
+      )
+    }
+    return (
+      <div className="product-view-section" id="product-comments-container">
+        <div className="section-header">
+          <h3>Comments</h3>
+          <span className="comments-counter">{cArray.length} comments</span>
+          <p>Please <a href="/login?redirect=ohWn43n4SbmJZWlKUZNl2i1_s5gggiCE">login</a> or <a href="/register">register</a> to add a comment</p>
+        </div>
+        {commentsDisplay}
+      </div>
+    )
+  }
+}
+
+class CommentItem extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+    this.filterByCommentLevel = this.filterByCommentLevel.bind(this);
+  }
+
+  filterByCommentLevel(val){
+    if (val.level > this.props.level && this.props.comment.comment_id === val.comment.comment_parent_id){
+      return val;
+    }
+  }
+
+  render(){
+    let commentRepliesContainer;
+    const filteredComments = categoryHelpers.convertCatChildrenObjectToArray(this.props.product.r_comments).filter(this.filterByCommentLevel);
+    if (filteredComments.length > 0){
+      const product = this.props.product;
+      const comments = filteredComments.map((c,index) => (
+        <CommentItem product={product} comment={c.comment} key={index} level={c.level}/>
+      ));
+      commentRepliesContainer = (
+        <div className="comment-item-replies-container">
+          {comments}
+        </div>
+      );
+    }
+
+    let displayIsSupporter;
+    if (this.props.comment.issupporter === "1"){
+      displayIsSupporter = <span className="is-supporter-display">S</span>
+    }
+
+    let displayIsCreater;
+    if (this.props.comment.member_id === this.props.product.member_id){
+      displayIsCreater = <span className="is-creater-display">C</span>
+    }
+
+    return(
+      <div className="comment-item">
+        <div className="comment-user-avatar">
+          <img src={this.props.comment.profile_image_url}/>
+          {displayIsSupporter}
+          {displayIsCreater}
+        </div>
+        <div className="comment-item-content">
+          <div className="comment-item-header">
+            <a className="comment-username" href={"/member/"+this.props.comment.member_id}>{this.props.comment.username}</a>
+            <span className="comment-created-at">
+              {appHelpers.getTimeAgo(this.props.comment.comment_created_at)}
+            </span>
+          </div>
+          <div className="comment-item-text">
+            {this.props.comment.comment_text}
+          </div>
+        </div>
+        {commentRepliesContainer}
+      </div>
+    );
+  }
+}
+
 class ProductViewFilesTab extends React.Component {
   render(){
-
     let filesDisplay;
-
     const files = this.props.files.map((f,index) => (
-      <tr key={index}>
-        <td className="mdl-data-table__cell--non-numericm">{f.title}</td>
-        <td>{f.version}</td>
-        <td className="mdl-data-table__cell--non-numericm">{f.description}</td>
-        <td className="mdl-data-table__cell--non-numericm">{f.packagename}</td>
-        <td  className="mdl-data-table__cell--non-numericm">{f.archname}</td>
-        <td>{f.downloaded_count}</td>
-        <td className="mdl-data-table__cell--non-numericm">{appHelpers.getTimeAgo(f.created_timestamp)}</td>
-        <td className="mdl-data-table__cell--non-numericm">{appHelpers.getFileSize(f.size)}</td>
-        <td><a href="#"><i className="material-icons">cloud_download</i></a></td>
-        <td>{f.ocs_compatible}</td>
-      </tr>
+      <ProductViewFilesTabItem
+        product={this.props.product}
+        key={index}
+        file={f}
+      />
     ));
-
     const summeryRow = productHelpers.getFilesSummary(this.props.files);
-
     filesDisplay = (
       <tbody>
         {files}
@@ -567,7 +650,6 @@ class ProductViewFilesTab extends React.Component {
         </tr>
       </tbody>
     );
-
     return (
       <div id="files-tab" className="product-tab">
         <table className="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
@@ -589,6 +671,77 @@ class ProductViewFilesTab extends React.Component {
         </table>
       </div>
     );
+  }
+}
+
+class ProductViewFilesTabItem extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {downloadLink:""};
+  }
+
+  componentDidMount() {
+    let baseUrl, downloadLinkUrlAttr;
+    if (store.getState().env === 'live') {
+      baseUrl = 'cn.pling.com';
+      downloadLinkUrlAttr = "cc.pling.com/api/";
+    } else {
+      baseUrl = 'cn.pling.it';
+      downloadLinkUrlAttr = "cc.pling.it/api/";
+    }
+
+    const f = this.props.file;
+    const fileDownloadHash = appHelpers.generateFileDownloadHash(f,store.getState().env);
+
+    // var downloadUrl = "https://<?= $_SERVER["SERVER_NAME"]?>/p/<?= $this->product->project_id ?>/startdownload?file_id=" + this.id + "&file_name=" + this.name + "&file_type=" + this.type + "&file_size=" + this.size + "&url=" + encodeURIComponent(pploadApiUri + 'files/downloadfile/id/' + this.id + '/s/' + hash + '/t/' + timetamp + '/u/' + userid + '/' + this.name);
+    // var downloadLink = '<a href="' + downloadUrl + '" id="data-link' + this.id + '">' + this.name + '</a>';
+
+    let downloadLink = "https://"+baseUrl+
+                       "/p/"+this.props.product.project_id+
+                       "/startdownload?file_id="+f.id+
+                       "&file_name="+f.title+
+                       "&file_type="+f.type+
+                       "&file_size="+f.size+
+                       "&url="+downloadLinkUrlAttr+
+                       "files/downloadfile/id/"+f.id+
+                       "/s/"+f.hash+
+                       "/t/"+f.created_timestamp+
+                       "/u/"+this.props.product.member_id+
+                       "/"+f.title;
+
+
+    /*https://david.pling.cc/p/747/startdownload?file_id=1519124607&amp;
+    file_name=1519124607-download-app-old.png&amp;
+    file_type=image/png&amp;
+    file_size=21383&amp;
+    url=https%3A%2F%2Fcc.ppload.com%2Fapi%2Ffiles%2Fdownloadfile%2Fid
+    %2F1519124607%2Fs
+    %2Fd66c71127c9aae29e58e03ddd85de57a%2Ft
+    %2F1532003618%2Fu
+    %2F%2F1519124607-download-app-old.png
+    */
+    console.log(downloadLink);
+    this.setState({downloadLink:downloadLink});
+  }
+
+  render(){
+    const f = this.props.file;
+    return (
+      <tr>
+        <td className="mdl-data-table__cell--non-numericm">
+          <a href={this.state.downloadLink}>{f.title}</a>
+        </td>
+        <td>{f.version}</td>
+        <td className="mdl-data-table__cell--non-numericm">{f.description}</td>
+        <td className="mdl-data-table__cell--non-numericm">{f.packagename}</td>
+        <td  className="mdl-data-table__cell--non-numericm">{f.archname}</td>
+        <td>{f.downloaded_count}</td>
+        <td className="mdl-data-table__cell--non-numericm">{appHelpers.getTimeAgo(f.created_timestamp)}</td>
+        <td className="mdl-data-table__cell--non-numericm">{appHelpers.getFileSize(f.size)}</td>
+        <td><a href="#"><i className="material-icons">cloud_download</i></a></td>
+        <td>{f.ocs_compatible}</td>
+      </tr>
+    )
   }
 }
 
@@ -705,95 +858,97 @@ class RatingItem extends React.Component {
   }
 }
 
-class ProductCommentsContainer extends React.Component {
+class ProductViewFavTab extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {};
   }
-
   render(){
-    let commentsDisplay;
-    const cArray = categoryHelpers.convertCatChildrenObjectToArray(this.props.product.r_comments);
-    if (cArray.length > 0){
-      const product = this.props.product;
-      const comments = cArray.map((c,index) => {
-        if (c.level === 1){
-          return (
-            <CommentItem product={product} comment={c.comment} key={index} level={1}/>
-          )
-        }
-      });
-      commentsDisplay = (
-        <div className="comment-list">
-          {comments}
-        </div>
-      )
+    let favsDisplay;
+    if (this.props.likes){
+      const favs = this.props.likes.map((like,index) => (
+        <UserCardItem
+          key={index}
+          like={like}
+        />
+      ));
+      favsDisplay = (
+        <div className="favs-list cards">{favs}</div>
+      );
     }
     return (
-      <div className="product-view-section" id="product-comments-container">
-        <div className="section-header">
-          <h3>Comments</h3>
-          <span className="comments-counter">{cArray.length} comments</span>
-          <p>Please <a href="/login?redirect=ohWn43n4SbmJZWlKUZNl2i1_s5gggiCE">login</a> or <a href="/register">register</a> to add a comment</p>
-        </div>
-        {commentsDisplay}
+      <div className="product-tab" id="fav-tab">
+        {favsDisplay}
       </div>
     )
   }
 }
 
-class CommentItem extends React.Component {
+class ProductViewPlingsTab extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {};
-    this.filterByCommentLevel = this.filterByCommentLevel.bind(this);
   }
-
-  filterByCommentLevel(val){
-    if (val.level > this.props.level && this.props.comment.comment_id === val.comment.comment_parent_id){
-      return val;
-    }
-  }
-
   render(){
-    let commentRepliesContainer;
-    const filteredComments = categoryHelpers.convertCatChildrenObjectToArray(this.props.product.r_comments).filter(this.filterByCommentLevel);
-    if (filteredComments.length > 0){
-      const product = this.props.product;
-      const comments = filteredComments.map((c,index) => (
-        <CommentItem product={product} comment={c.comment} key={index} level={c.level}/>
+    let plingsDisplay;
+    if (this.props.plings){
+      const plings = this.props.plings.map((pling,index) => (
+        <UserCardItem
+          key={index}
+          pling={pling}
+        />
       ));
-      commentRepliesContainer = (
-        <div className="comment-item-replies-container">
-          {comments}
-        </div>
+      plingsDisplay = (
+        <div className="plings-list cards">{plings}</div>
+      );
+    }
+    return (
+      <div className="product-tab" id="plings-tab">
+        {plingsDisplay}
+      </div>
+    )
+  }
+}
+
+class UserCardItem extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+  }
+  render(){
+    let item;
+    if (this.props.like){
+      item = this.props.like;
+    } else if (this.props.pling){
+      item = this.props.pling;
+    }
+
+    let cardTypeDisplay;
+    if (this.props.like){
+      cardTypeDisplay = (
+        <i className="fa fa-heart myfav" aria-hidden="true"></i>
+      );
+    } else if (this.props.pling){
+      cardTypeDisplay = (
+        <img src="/images/system/pling-btn-active.png"/>
       );
     }
 
-    let displayIsSupporter;
-    if (this.props.comment.issupporter === "1"){
-      displayIsSupporter = <span className="is-supporter-display">S</span>
-    }
-
-    return(
-      <div className="comment-item">
-        <div className="comment-user-avatar">
-          <img src={this.props.comment.profile_image_url}/>
-          {displayIsSupporter}
-        </div>
-        <div className="comment-item-content">
-          <div className="comment-item-header">
-            <a className="comment-username" href={"/member/"+this.props.comment.member_id}>{this.props.comment.username}</a>
-            <span className="comment-created-at">
-              {appHelpers.getTimeAgo(this.props.comment.comment_created_at)}
-            </span>
+    return (
+      <div className="user-card-item">
+        <div className="card-content">
+          <div className="user-avatar">
+            <img src={item.profile_image_url}/>
           </div>
-          <div className="comment-item-text">
-            {this.props.comment.comment_text}
-          </div>
+          <span className="username"><a href={"/member/"+item.member_id}>{item.username}</a></span>
+          <span className="card-type-holder">
+            {cardTypeDisplay}
+          </span>
+          <span className="created-at">
+            {appHelpers.getTimeAgo(item.created_at)}
+          </span>
         </div>
-        {commentRepliesContainer}
       </div>
-    );
+    )
   }
 }
