@@ -527,7 +527,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
         $storePackageTypeIds = null;
         if ($storeConfig) {
-            $storePackageTypeIds = $storeConfig['package_type'];
+            $storePackageTypeIds = $storeConfig->package_type;
         }
 
         if ($storePackageTypeIds) {
@@ -612,7 +612,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
         $storePackageTypeIds = null;
         if ($storeConfig) {
-            $storePackageTypeIds = $storeConfig['package_type'];
+            $storePackageTypeIds = $storeConfig->package_type;
         }
 
         if ($storePackageTypeIds) {
@@ -829,7 +829,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         } else {
             $store_config = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
         }
-        $storePackageTypeIds = (false === empty($store_config['package_type'])) ? $store_config['package_type'] : null;
+        $storePackageTypeIds = (false === empty($store_config->package_type)) ? $store_config->package_type : null;
 
         $cacheName = __FUNCTION__ . '_' . md5(serialize($idCategory) . $withSubCat . serialize($storePackageTypeIds));
         /** @var Zend_Cache_Core $cache */
@@ -1314,7 +1314,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
         $storePackageTypeIds = null;
         if ($storeConfig) {
-            $storePackageTypeIds = $storeConfig['package_type'];
+            $storePackageTypeIds = $storeConfig->package_type;
         }
 
         $sql = '

@@ -119,7 +119,7 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
         $storePackageTypeIds = null;
         if ($storeConfig) {
-            $this->view->package_type = $filter['package_type'] = $storeConfig['package_type'];
+            $this->view->package_type = $filter['package_type'] = $storeConfig->package_type;
         }
         // Filter-Parameter
         $inputCatId = (int)$this->getParam('cat', null);

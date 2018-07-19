@@ -76,7 +76,7 @@ echo $this->render('partials/propagateLogout.phtml');
     $domainconfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
     if($domainconfig)
     {
-        $googleid = $domainconfig['google_id'];
+        $googleid = $domainconfig->google_id;
     }
     ?>
     <script>
@@ -105,7 +105,7 @@ echo $this->render('partials/propagateLogout.phtml');
     $piwikid ='1';
     if($domainconfig)
     {
-        $piwikid = $domainconfig['piwik_id'];
+        $piwikid = $domainconfig->piwik_id;
     }
     ?>
     <script type="text/javascript">
