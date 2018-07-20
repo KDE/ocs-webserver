@@ -20,28 +20,15 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-  $helperBuildExploreUrl = new Default_View_Helper_BuildExploreUrl();
+
   $modelInfo = new Default_Model_Info();
-  $modelCategory = new Default_Model_DbTable_ProjectCategory();
-  $this->dataCategory = $modelCategory->findSingleRow($this->cat_id);
-  $this->countSupporters = $modelInfo->getCountActiveSupporters();
+  
   $this->supporters = $modelInfo->getNewActiveSupporters(7);
 
-  $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
-  $this->headLink()->appendStylesheet('/theme/react/lib/mdl/material.min.css');
-  $this->headLink()->appendStylesheet('https://fonts.googleapis.com/icon?family=Material+Icons');
-  $this->headLink()->appendStylesheet('https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,500');
-  $this->headLink()->appendStylesheet('/theme/react/assets/css/style.css');
 ?>
 
 <main id="explore-content"></main>
 
-<script type="text/javascript" src="/theme/react/lib/react/react.js"></script>
-<script type="text/javascript" src="/theme/react/lib/react-dom/react-dom.js"></script>
-<script type="text/javascript" src="/theme/react/lib/redux/redux.min.js"></script>
-<script type="text/javascript" src="/theme/react/lib/redux/react-redux.min.js"></script>
-<script type="text/javascript" src="/theme/react/lib/mdl/material.min.js"></script>
-<script type="text/javascript" src="/theme/react/lib/timeago/timeago.min.js"></script>
 
 <script type="text/javascript">
   var categories = <?php echo $this->categoriesJson ?>;

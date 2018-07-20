@@ -86,7 +86,7 @@ class ProductGroup extends React.Component {
         <div className="section-header">
           <h3 className="mdl-color-text--primary">{this.props.title}</h3>
           <div className="actions">
-            <a href={this.props.link + "?new=1"} className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">see more</a>
+            <a href={this.props.link } className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">see more</a>
           </div>
         </div>
       );
@@ -114,7 +114,7 @@ class ProductGroupItem extends React.Component {
       <div className="product square">
           <div className="content">
             <div className="product-wrapper mdl-shadow--2dp">
-              <a href={"/p/"+this.props.product.project_id + "/new/1"}>
+              <a href={"/p/"+this.props.product.project_id }>
                 <div className="product-image-container">
                   <figure>
                     <img className="very-rounded-corners" src={'https://' + imageBaseUrl + '/cache/200x171/img/' + this.props.product.image_small} />

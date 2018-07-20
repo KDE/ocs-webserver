@@ -98,6 +98,7 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         return $result;
     }
 
+
     /**
      * @throws Zend_Cache_Exception
      * @throws Zend_Db_Select_Exception
@@ -106,11 +107,7 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
      * @throws Zend_Paginator_Exception
      */
     public function indexAction()
-    {
-        
-        if ($this->hasParam('new') && $this->getParam("new") == 1) {            
-            $this->_helper->viewRenderer('index-new');
-        }
+    {           
         
         $filter = array();
         $storeCatIds = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
@@ -148,7 +145,10 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         }
         
         $requestedElements = $this->fetchRequestedElements($filter, $pageLimit, ($page - 1) * $pageLimit);        
-        if ($this->hasParam('new') && $this->getParam("new") == 1) {                             
+       
+        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
+        if($storeConfig->isRenderReact()){           
+                
             $this->view->productsJson =Zend_Json::encode($requestedElements['elements']);           
             $this->view->filtersJson = Zend_Json::encode($filter);
             $this->view->cat_idJson = Zend_Json::encode($inputCatId);
@@ -158,10 +158,11 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
             $comments = $modelInfo->getLatestComments(5, $inputCatId,$this->view->package_type);
             $this->view->commentsJson = Zend_Json::encode($comments);
             $modelCategory = new Default_Model_ProjectCategory();            
-            $this->view->categoriesJson = Zend_Json::encode($modelCategory->fetchTreeForView());
-
+            $this->view->categoriesJson = Zend_Json::encode($modelCategory->fetchTreeForView());   
+            $this->_helper->viewRenderer('index-react');              
+          
         }
-
+        
         $paginator = Local_Paginator::factory($requestedElements['elements']);
         $paginator->setItemCountPerPage($pageLimit);
         $paginator->setCurrentPageNumber($page);

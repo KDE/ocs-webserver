@@ -47,21 +47,19 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,500" rel="stylesheet">
     <link href="/theme/react/assets/css/style.css" rel="stylesheet">
-
+    <script src="/theme/flatui/js/lib/jquery-3.2.1.min.js" ></script>
     <script type="text/javascript" src="/theme/react/lib/react/react.js"></script>
     <script type="text/javascript" src="/theme/react/lib/react-dom/react-dom.js"></script>
     <script type="text/javascript" src="/theme/react/lib/redux/redux.min.js"></script>
     <script type="text/javascript" src="/theme/react/lib/redux/react-redux.min.js"></script>
     <script type="text/javascript" src="/theme/react/lib/mdl/material.min.js"></script>
     <script type="text/javascript" src="/theme/react/lib/timeago/timeago.min.js"></script>
+    <script type="text/javascript" src="/theme/react/lib/md5/md5.js"></script>
 
 
 </head>
 <body>
-<div>
-  This is new layout_appimagehub_home
-</div>
-<?php echo $this->render('partials/header/template.phtml'); ?>
+<?php echo $this->render('partials/header/template_react.phtml'); ?>
 <?php echo $this->render('partials/flashMessage.phtml'); ?>
 <?php echo $this->layout()->content; ?>
 <?php echo $this->render('partials/footer/template.phtml'); ?>
@@ -71,7 +69,7 @@
     <div id="error"></div>
 </div>
 
-<script src="/theme/flatui/js/lib/jquery-3.2.1.min.js" ></script>
+
 
 <?php
 echo $this->render('partials/propagateLogin.phtml');
