@@ -862,8 +862,18 @@ table {
             height: 25px;
             background-color: #ccc;
             border-radius: 5px 0 0 5px;
-            border-bottom: 2px solid #a7a7a7;
+            border-color: #a7a7a7;
+            border-style: solid;
+            border-width: 0 0 2px 0;
             width: 25px;
+            cursor: pointer;
+            .transition();
+
+            &:active {
+              border-color: white;
+              border-style: inset;
+              border-width: 1px 0 0 1px;
+            }
           }
 
           .ratings-bar-right {
@@ -873,8 +883,18 @@ table {
             height: 25px;
             background-color: #ccc;
             border-radius: 0 5px 5px 0;
-            border-bottom: 2px solid #a7a7a7;
+            border-color: #a7a7a7;
+            border-style: solid;
+            border-width: 0 0 2px 0;
             width: 25px;
+            cursor: pointer;
+            .transition();
+
+            &:active {
+              border-style: inset;
+              border-width: 1px 1px 0 0;
+              border-color: white;
+            }
           }
 
           .ratings-bar-holder {

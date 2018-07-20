@@ -81,12 +81,13 @@ window.appHelpers = (function(){
   function generateFileDownloadHash(file,env){
     const timestamp = Date.now() + 3600;
     const hash = md5(/*salt+*/file.collection_id+timestamp);
-    console.log(hash);
     return hash;
-    /*$salt = PPLOAD_DOWNLOAD_SECRET;
-            $collectionID = $productInfo->ppload_collection_id;
-            $timestamp = time() + 3600; // one hour valid
-            $hash = md5($salt . $collectionID . $timestamp);*/
+    /*
+    $salt = PPLOAD_DOWNLOAD_SECRET;
+    $collectionID = $productInfo->ppload_collection_id;
+    $timestamp = time() + 3600; // one hour valid
+    $hash = md5($salt . $collectionID . $timestamp);
+    */
   }
 
   return {

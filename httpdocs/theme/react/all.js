@@ -76,12 +76,13 @@ window.appHelpers = function () {
   function generateFileDownloadHash(file, env) {
     const timestamp = Date.now() + 3600;
     const hash = md5( /*salt+*/file.collection_id + timestamp);
-    console.log(hash);
     return hash;
-    /*$salt = PPLOAD_DOWNLOAD_SECRET;
-            $collectionID = $productInfo->ppload_collection_id;
-            $timestamp = time() + 3600; // one hour valid
-            $hash = md5($salt . $collectionID . $timestamp);*/
+    /*
+    $salt = PPLOAD_DOWNLOAD_SECRET;
+    $collectionID = $productInfo->ppload_collection_id;
+    $timestamp = time() + 3600; // one hour valid
+    $hash = md5($salt . $collectionID . $timestamp);
+    */
   }
 
   return {
@@ -2766,7 +2767,6 @@ class ProductViewFilesTabItem extends React.Component {
     %2F1532003618%2Fu
     %2F%2F1519124607-download-app-old.png
     */
-    console.log(downloadLink);
     this.setState({ downloadLink: downloadLink });
   }
 
@@ -3221,7 +3221,7 @@ class App extends React.Component {
   }
 
   render() {
-    console.log(store.getState());
+
     let displayView = React.createElement(HomePageWrapper, null);
     if (store.getState().view === 'explore') {
       displayView = React.createElement(ExplorePageWrapper, null);

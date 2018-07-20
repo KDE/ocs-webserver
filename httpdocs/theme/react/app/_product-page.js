@@ -719,7 +719,6 @@ class ProductViewFilesTabItem extends React.Component {
     %2F1532003618%2Fu
     %2F%2F1519124607-download-app-old.png
     */
-    console.log(downloadLink);
     this.setState({downloadLink:downloadLink});
   }
 
