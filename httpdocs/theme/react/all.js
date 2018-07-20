@@ -322,10 +322,12 @@ class ProductGroup extends React.Component {
         const limit = productHelpers.getNumberOfProducts(this.props.device, this.props.numRows);
         productsArray = productsArray.slice(0, limit);
       }
-      products = productsArray.map((product, index) => React.createElement(ProductGroupItem, {
-        key: index,
-        product: product
-      }));
+      products = productsArray.map(function (product, index) {
+        return React.createElement(ProductGroupItem, {
+          key: index,
+          product: product
+        });
+      });
     }
 
     let sectionHeader;
@@ -343,7 +345,7 @@ class ProductGroup extends React.Component {
           { className: "actions" },
           React.createElement(
             "a",
-            { href: this.props.link + "?new=1", className: "mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary" },
+            { href: this.props.link, className: "mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary" },
             "see more"
           )
         )
@@ -381,7 +383,7 @@ class ProductGroupItem extends React.Component {
           { className: "product-wrapper mdl-shadow--2dp" },
           React.createElement(
             "a",
-            { href: "/p/" + this.props.product.project_id + "/new/1" },
+            { href: "/p/" + this.props.product.project_id },
             React.createElement(
               "div",
               { className: "product-image-container" },
@@ -965,7 +967,7 @@ class ExplorePage extends React.Component {
   }
 }
 
-const mapStateToExploreProps = state => {
+const mapStateToExploreProps = function (state) {
   const device = state.device;
   const products = state.products;
   const categories = state.categories;
@@ -976,7 +978,7 @@ const mapStateToExploreProps = state => {
   };
 };
 
-const mapDispatchToExploreProps = dispatch => {
+const mapDispatchToExploreProps = function (dispatch) {
   return {
     dispatch
   };
@@ -1021,7 +1023,7 @@ class ExploreTopBar extends React.Component {
   }
 }
 
-const mapStateToExploreTopBarProps = state => {
+const mapStateToExploreTopBarProps = function (state) {
   const filters = state.filters;
   const categories = state.categories;
   return {
@@ -1030,7 +1032,7 @@ const mapStateToExploreTopBarProps = state => {
   };
 };
 
-const mapDispatchToExploreTopBarProps = dispatch => {
+const mapDispatchToExploreTopBarProps = function (dispatch) {
   return {
     dispatch
   };
@@ -1052,10 +1054,12 @@ class ExploreLeftSideBar extends React.Component {
   render() {
     let categoryTree;
     if (this.props.categories) {
-      categoryTree = this.props.categories.items.map((cat, index) => React.createElement(ExploreSideBarItem, {
-        key: index,
-        category: cat
-      }));
+      categoryTree = this.props.categories.items.map(function (cat, index) {
+        return React.createElement(ExploreSideBarItem, {
+          key: index,
+          category: cat
+        });
+      });
     }
 
     return React.createElement(
@@ -1083,7 +1087,7 @@ class ExploreLeftSideBar extends React.Component {
   }
 }
 
-const mapStateToExploreLeftSideBarProps = state => {
+const mapStateToExploreLeftSideBarProps = function (state) {
   const categories = state.categories;
   const filters = state.filters;
   return {
@@ -1091,7 +1095,7 @@ const mapStateToExploreLeftSideBarProps = state => {
   };
 };
 
-const mapDispatchToExploreLeftSideBarProps = dispatch => {
+const mapDispatchToExploreLeftSideBarProps = function (dispatch) {
   return {
     dispatch
   };
@@ -1123,10 +1127,12 @@ class ExploreSideBarItem extends React.Component {
     let subcatMenu;
     if (this.props.category.has_children === true && active) {
       const cArray = categoryHelpers.convertCatChildrenObjectToArray(this.props.category.children);
-      const subcategories = cArray.map((cat, index) => React.createElement(ExploreSideBarItem, {
-        key: index,
-        category: cat
-      }));
+      const subcategories = cArray.map(function (cat, index) {
+        return React.createElement(ExploreSideBarItem, {
+          key: index,
+          category: cat
+        });
+      });
       subcatMenu = React.createElement(
         "ul",
         null,
@@ -1170,9 +1176,11 @@ class Pagination extends React.Component {
   }
 
   render() {
+    var _this = this;
+
     let paginationDisplay;
     if (this.state.pagination && this.props.pagination.totalcount > 1000) {
-      const pagination = this.state.pagination.map((pi, index) => {
+      const pagination = this.state.pagination.map(function (pi, index) {
 
         let numberDisplay;
         if (pi.number === 'previous') {
@@ -1210,7 +1218,7 @@ class Pagination extends React.Component {
         }
 
         let cssClass;
-        if (pi.number === this.props.pagination.page) {
+        if (pi.number === _this.props.pagination.page) {
           cssClass = "active";
         }
 
@@ -1242,7 +1250,7 @@ class Pagination extends React.Component {
   }
 }
 
-const mapStateToPaginationProps = state => {
+const mapStateToPaginationProps = function (state) {
   const pagination = state.pagination;
   const filters = state.filters;
   const currentCategoy = state.categories.current;
@@ -1253,7 +1261,7 @@ const mapStateToPaginationProps = state => {
   };
 };
 
-const mapDispatchToPaginationProps = dispatch => {
+const mapDispatchToPaginationProps = function (dispatch) {
   return {
     dispatch
   };
@@ -1318,7 +1326,7 @@ class ExploreRightSideBar extends React.Component {
   }
 }
 
-const mapStateToExploreRightSideBarProps = state => {
+const mapStateToExploreRightSideBarProps = function (state) {
   const categories = state.categories;
   const filters = state.filters;
   return {
@@ -1326,7 +1334,7 @@ const mapStateToExploreRightSideBarProps = state => {
   };
 };
 
-const mapDispatchToExploreRightSideBarProps = dispatch => {
+const mapDispatchToExploreRightSideBarProps = function (dispatch) {
   return {
     dispatch
   };
@@ -1344,15 +1352,17 @@ class ExploreSupportersContainer extends React.Component {
     let supportersContainer;
     if (this.props.supporters) {
       const cArray = categoryHelpers.convertCatChildrenObjectToArray(this.props.supporters);
-      const supporters = cArray.map((sp, index) => React.createElement(
-        "div",
-        { className: "supporter-item", key: index },
-        React.createElement(
-          "a",
-          { href: "/member/" + sp.member_id, className: "item" },
-          React.createElement("img", { src: sp.profile_image_url })
-        )
-      ));
+      const supporters = cArray.map(function (sp, index) {
+        return React.createElement(
+          "div",
+          { className: "supporter-item", key: index },
+          React.createElement(
+            "a",
+            { href: "/member/" + sp.member_id, className: "item" },
+            React.createElement("img", { src: sp.profile_image_url })
+          )
+        );
+      });
       supportersContainer = React.createElement(
         "div",
         { className: "supporter-list-wrapper" },
@@ -1374,14 +1384,14 @@ class ExploreSupportersContainer extends React.Component {
   }
 }
 
-const mapStateToExploreSupportersContainerProps = state => {
+const mapStateToExploreSupportersContainerProps = function (state) {
   const supporters = state.supporters;
   return {
     supporters
   };
 };
 
-const mapDispatchToExploreSupportersContainerProps = dispatch => {
+const mapDispatchToExploreSupportersContainerProps = function (dispatch) {
   return {
     dispatch
   };
@@ -1406,34 +1416,36 @@ class RssNewsContainer extends React.Component {
     let feedItemsContainer;
     if (this.state.items) {
 
-      const feedItems = this.state.items.slice(0, 3).map((fi, index) => React.createElement(
-        "li",
-        { key: index },
-        React.createElement(
-          "a",
-          { className: "title", href: fi.url },
+      const feedItems = this.state.items.slice(0, 3).map(function (fi, index) {
+        return React.createElement(
+          "li",
+          { key: index },
           React.createElement(
-            "span",
-            null,
-            fi.title
-          )
-        ),
-        React.createElement(
-          "span",
-          { className: "info-row" },
-          React.createElement(
-            "span",
-            { className: "date" },
-            appHelpers.getTimeAgo(fi.date)
+            "a",
+            { className: "title", href: fi.url },
+            React.createElement(
+              "span",
+              null,
+              fi.title
+            )
           ),
           React.createElement(
             "span",
-            { className: "comment-counter" },
-            fi.comment_count,
-            " comments"
+            { className: "info-row" },
+            React.createElement(
+              "span",
+              { className: "date" },
+              appHelpers.getTimeAgo(fi.date)
+            ),
+            React.createElement(
+              "span",
+              { className: "comment-counter" },
+              fi.comment_count,
+              " comments"
+            )
           )
-        )
-      ));
+        );
+      });
 
       feedItemsContainer = React.createElement(
         "ul",
@@ -1476,34 +1488,36 @@ class BlogFeedContainer extends React.Component {
     let feedItemsContainer;
     if (this.state.items) {
 
-      const feedItems = this.state.items.map((fi, index) => React.createElement(
-        "li",
-        { key: index },
-        React.createElement(
-          "a",
-          { className: "title", href: "https://forum.opendesktop.org//t/" + fi.id },
+      const feedItems = this.state.items.map(function (fi, index) {
+        return React.createElement(
+          "li",
+          { key: index },
           React.createElement(
-            "span",
-            null,
-            fi.title
-          )
-        ),
-        React.createElement(
-          "span",
-          { className: "info-row" },
-          React.createElement(
-            "span",
-            { className: "date" },
-            appHelpers.getTimeAgo(fi.created_at)
+            "a",
+            { className: "title", href: "https://forum.opendesktop.org//t/" + fi.id },
+            React.createElement(
+              "span",
+              null,
+              fi.title
+            )
           ),
           React.createElement(
             "span",
-            { className: "comment-counter" },
-            fi.reply_count,
-            " replies"
+            { className: "info-row" },
+            React.createElement(
+              "span",
+              { className: "date" },
+              appHelpers.getTimeAgo(fi.created_at)
+            ),
+            React.createElement(
+              "span",
+              { className: "comment-counter" },
+              fi.reply_count,
+              " replies"
+            )
           )
-        )
-      ));
+        );
+      });
 
       feedItemsContainer = React.createElement(
         "ul",
@@ -1533,51 +1547,53 @@ class ExploreCommentsContainer extends React.Component {
   render() {
     let commentsContainer;
     if (this.props.comments) {
-      const comments = this.props.comments.map((cm, index) => React.createElement(
-        "li",
-        { key: index },
-        React.createElement(
-          "div",
-          { className: "cm-content" },
+      const comments = this.props.comments.map(function (cm, index) {
+        return React.createElement(
+          "li",
+          { key: index },
           React.createElement(
-            "span",
-            { className: "cm-userinfo" },
-            React.createElement("img", { src: cm.profile_image_url }),
+            "div",
+            { className: "cm-content" },
             React.createElement(
               "span",
-              { className: "username" },
+              { className: "cm-userinfo" },
+              React.createElement("img", { src: cm.profile_image_url }),
               React.createElement(
-                "a",
-                { href: "/p/" + cm.comment_target_id },
-                cm.username
+                "span",
+                { className: "username" },
+                React.createElement(
+                  "a",
+                  { href: "/p/" + cm.comment_target_id },
+                  cm.username
+                )
+              )
+            ),
+            React.createElement(
+              "a",
+              { className: "title", href: "/member/" + cm.member_id },
+              React.createElement(
+                "span",
+                null,
+                cm.title
+              )
+            ),
+            React.createElement(
+              "span",
+              { className: "content" },
+              cm.comment_text
+            ),
+            React.createElement(
+              "span",
+              { className: "info-row" },
+              React.createElement(
+                "span",
+                { className: "date" },
+                appHelpers.getTimeAgo(cm.comment_created_at)
               )
             )
-          ),
-          React.createElement(
-            "a",
-            { className: "title", href: "/member/" + cm.member_id },
-            React.createElement(
-              "span",
-              null,
-              cm.title
-            )
-          ),
-          React.createElement(
-            "span",
-            { className: "content" },
-            cm.comment_text
-          ),
-          React.createElement(
-            "span",
-            { className: "info-row" },
-            React.createElement(
-              "span",
-              { className: "date" },
-              appHelpers.getTimeAgo(cm.comment_created_at)
-            )
           )
-        )
-      ));
+        );
+      });
       commentsContainer = React.createElement(
         "ul",
         null,
@@ -1597,14 +1613,14 @@ class ExploreCommentsContainer extends React.Component {
   }
 }
 
-const mapStateToExploreCommentsContainerProps = state => {
+const mapStateToExploreCommentsContainerProps = function (state) {
   const comments = state.comments;
   return {
     comments
   };
 };
 
-const mapDispatchToExploreCommentsContainerProps = dispatch => {
+const mapDispatchToExploreCommentsContainerProps = function (dispatch) {
   return {
     dispatch
   };
@@ -1629,21 +1645,23 @@ class ExploreTopProducts extends React.Component {
         imageBaseUrl = 'cn.pling.it';
       }
 
-      const topProducts = this.props.topProducts.map((tp, index) => React.createElement(
-        "li",
-        { key: index },
-        React.createElement("img", { src: "https://" + imageBaseUrl + "/cache/40x40/img/" + tp.image_small }),
-        React.createElement(
-          "a",
-          { href: "/p/" + tp.project_id },
-          tp.title
-        ),
-        React.createElement(
-          "span",
-          { className: "cat-name" },
-          tp.cat_title
-        )
-      ));
+      const topProducts = this.props.topProducts.map(function (tp, index) {
+        return React.createElement(
+          "li",
+          { key: index },
+          React.createElement("img", { src: "https://" + imageBaseUrl + "/cache/40x40/img/" + tp.image_small }),
+          React.createElement(
+            "a",
+            { href: "/p/" + tp.project_id },
+            tp.title
+          ),
+          React.createElement(
+            "span",
+            { className: "cat-name" },
+            tp.cat_title
+          )
+        );
+      });
 
       topProductsContainer = React.createElement(
         "ol",
@@ -1669,14 +1687,14 @@ class ExploreTopProducts extends React.Component {
   }
 }
 
-const mapStateToExploreTopProductsProps = state => {
+const mapStateToExploreTopProductsProps = function (state) {
   const topProducts = state.topProducts;
   return {
     topProducts
   };
 };
 
-const mapDispatchToExploreTopProductsProps = dispatch => {
+const mapDispatchToExploreTopProductsProps = function (dispatch) {
   return {
     dispatch
   };
@@ -1761,7 +1779,7 @@ class HomePage extends React.Component {
   }
 }
 
-const mapStateToHomePageProps = state => {
+const mapStateToHomePageProps = function (state) {
   const device = state.device;
   const products = state.products;
   return {
@@ -1770,7 +1788,7 @@ const mapStateToHomePageProps = state => {
   };
 };
 
-const mapDispatchToHomePageProps = dispatch => {
+const mapDispatchToHomePageProps = function (dispatch) {
   return {
     dispatch
   };
@@ -1899,7 +1917,7 @@ class ProductView extends React.Component {
   }
 }
 
-const mapStateToProductPageProps = state => {
+const mapStateToProductPageProps = function (state) {
   const product = state.product;
   const lightboxGallery = state.lightboxGallery;
   return {
@@ -1908,7 +1926,7 @@ const mapStateToProductPageProps = state => {
   };
 };
 
-const mapDispatchToProductPageProps = dispatch => {
+const mapDispatchToProductPageProps = function (dispatch) {
   return {
     dispatch
   };
@@ -1929,20 +1947,22 @@ class ProductViewHeader extends React.Component {
     let productTagsDisplay;
     if (this.props.product.r_tags_user) {
       const tagsArray = this.props.product.r_tags_user.split(',');
-      const tags = tagsArray.map((tag, index) => React.createElement(
-        'span',
-        { className: 'mdl-chip', key: index },
-        React.createElement(
+      const tags = tagsArray.map(function (tag, index) {
+        return React.createElement(
           'span',
-          { className: 'mdl-chip__text' },
-          React.createElement('span', { className: 'glyphicon glyphicon-tag' }),
+          { className: 'mdl-chip', key: index },
           React.createElement(
-            'a',
-            { href: "search/projectSearchText/" + tag + "/f/tags" },
-            tag
+            'span',
+            { className: 'mdl-chip__text' },
+            React.createElement('span', { className: 'glyphicon glyphicon-tag' }),
+            React.createElement(
+              'a',
+              { href: "search/projectSearchText/" + tag + "/f/tags" },
+              tag
+            )
           )
-        )
-      ));
+        );
+      });
       productTagsDisplay = React.createElement(
         'div',
         { className: 'product-tags' },
@@ -2130,6 +2150,7 @@ class ProductViewGallery extends React.Component {
   }
 
   render() {
+    var _this = this;
 
     let galleryDisplay;
 
@@ -2147,11 +2168,15 @@ class ProductViewGallery extends React.Component {
         const itemsWidth = this.state.itemsWidth;
         const currentItem = this.state.currentItem;
         const self = this;
-        const moreItems = this.props.product.r_gallery.map((gi, index) => React.createElement(
-          'div',
-          { key: index, onClick: () => this.onGalleryItemClick(index + 2), className: currentItem === index + 2 ? "active-gallery-item gallery-item" : "gallery-item" },
-          React.createElement('img', { className: 'media-item', src: imageBaseUrl + "/img/" + gi })
-        ));
+        const moreItems = this.props.product.r_gallery.map(function (gi, index) {
+          return React.createElement(
+            'div',
+            { key: index, onClick: function () {
+                return _this.onGalleryItemClick(index + 2);
+              }, className: currentItem === index + 2 ? "active-gallery-item gallery-item" : "gallery-item" },
+            React.createElement('img', { className: 'media-item', src: imageBaseUrl + "/img/" + gi })
+          );
+        });
 
         galleryDisplay = React.createElement(
           'div',
@@ -2171,7 +2196,9 @@ class ProductViewGallery extends React.Component {
             React.createElement(
               'div',
               { style: { "width": this.state.itemsWidth * this.state.itemsTotal + "px", "marginLeft": this.state.galleryWrapperMarginLeft }, className: 'gallery-items-wrapper' },
-              React.createElement('div', { onClick: () => this.onGalleryItemClick(1), dangerouslySetInnerHTML: { __html: this.props.product.embed_code }, className: this.state.currentItem === 1 ? "active-gallery-item gallery-item" : "gallery-item" }),
+              React.createElement('div', { onClick: function () {
+                  return _this.onGalleryItemClick(1);
+                }, dangerouslySetInnerHTML: { __html: this.props.product.embed_code }, className: this.state.currentItem === 1 ? "active-gallery-item gallery-item" : "gallery-item" }),
               moreItems
             )
           ),
@@ -2286,6 +2313,7 @@ class ProductGalleryLightbox extends React.Component {
   }
 
   render() {
+    var _this2 = this;
 
     let imageBaseUrl;
     if (store.getState().env === 'live') {
@@ -2296,11 +2324,15 @@ class ProductGalleryLightbox extends React.Component {
 
     const currentItem = this.state.currentItem;
     const self = this;
-    const thumbnails = this.props.product.r_gallery.map((gi, index) => React.createElement(
-      'div',
-      { key: index, onClick: () => self.onThumbnailClick(index + 2), className: self.state.currentItem === index + 2 ? "active thumbnail-item" : "thumbnail-item" },
-      React.createElement('img', { className: 'media-item', src: imageBaseUrl + "/img/" + gi })
-    ));
+    const thumbnails = this.props.product.r_gallery.map(function (gi, index) {
+      return React.createElement(
+        'div',
+        { key: index, onClick: function () {
+            return self.onThumbnailClick(index + 2);
+          }, className: self.state.currentItem === index + 2 ? "active thumbnail-item" : "thumbnail-item" },
+        React.createElement('img', { className: 'media-item', src: imageBaseUrl + "/img/" + gi })
+      );
+    });
 
     let mainItemDisplay;
     if (currentItem === 1) {
@@ -2358,7 +2390,9 @@ class ProductGalleryLightbox extends React.Component {
           React.createElement(
             'div',
             { id: 'gallery-items-wrapper', style: { "width": this.state.itemsTotal * this.state.itemsWidth + "px", "marginLeft": this.state.thumbnailsMarginLeft + "px" } },
-            React.createElement('div', { onClick: () => this.onThumbnailClick(1), dangerouslySetInnerHTML: { __html: this.props.product.embed_code }, className: this.state.currentItem === 1 ? "active thumbnail-item" : "thumbnail-item" }),
+            React.createElement('div', { onClick: function () {
+                return _this2.onThumbnailClick(1);
+              }, dangerouslySetInnerHTML: { __html: this.props.product.embed_code }, className: this.state.currentItem === 1 ? "active thumbnail-item" : "thumbnail-item" }),
             thumbnails
           )
         )
@@ -2369,12 +2403,16 @@ class ProductGalleryLightbox extends React.Component {
 
 class ProductNavBar extends React.Component {
   render() {
+    var _this3 = this;
+
     let productNavBarDisplay;
     let filesMenuItem, ratingsMenuItem, favsMenuItem, plingsMenuItem;
     if (this.props.product.r_files.length > 0) {
       filesMenuItem = React.createElement(
         'a',
-        { className: this.props.tab === "files" ? "item active" : "item", onClick: () => this.props.onTabToggle('files') },
+        { className: this.props.tab === "files" ? "item active" : "item", onClick: function () {
+            return _this3.props.onTabToggle('files');
+          } },
         'Files (',
         this.props.product.r_files.length,
         ')'
@@ -2384,7 +2422,9 @@ class ProductNavBar extends React.Component {
       const activeRatingsNumber = productHelpers.getActiveRatingsNumber(this.props.product.r_ratings);
       ratingsMenuItem = React.createElement(
         'a',
-        { className: this.props.tab === "ratings" ? "item active" : "item", onClick: () => this.props.onTabToggle('ratings') },
+        { className: this.props.tab === "ratings" ? "item active" : "item", onClick: function () {
+            return _this3.props.onTabToggle('ratings');
+          } },
         'Ratings & Reviews (',
         activeRatingsNumber,
         ')'
@@ -2393,7 +2433,9 @@ class ProductNavBar extends React.Component {
     if (this.props.product.r_likes.length > 0) {
       favsMenuItem = React.createElement(
         'a',
-        { className: this.props.tab === "favs" ? "item active" : "item", onClick: () => this.props.onTabToggle('favs') },
+        { className: this.props.tab === "favs" ? "item active" : "item", onClick: function () {
+            return _this3.props.onTabToggle('favs');
+          } },
         'Favs (',
         this.props.product.r_likes.length,
         ')'
@@ -2402,7 +2444,9 @@ class ProductNavBar extends React.Component {
     if (this.props.product.r_plings.length > 0) {
       plingsMenuItem = React.createElement(
         'a',
-        { className: this.props.tab === "plings" ? "item active" : "item", onClick: () => this.props.onTabToggle('plings') },
+        { className: this.props.tab === "plings" ? "item active" : "item", onClick: function () {
+            return _this3.props.onTabToggle('plings');
+          } },
         'Plings (',
         this.props.product.r_plings.length,
         ')'
@@ -2419,7 +2463,9 @@ class ProductNavBar extends React.Component {
           { className: 'explore-top-bar' },
           React.createElement(
             'a',
-            { className: this.props.tab === "product" ? "item active" : "item", onClick: () => this.props.onTabToggle('product') },
+            { className: this.props.tab === "product" ? "item active" : "item", onClick: function () {
+                return _this3.props.onTabToggle('product');
+              } },
             'Product'
           ),
           filesMenuItem,
@@ -2489,7 +2535,7 @@ class ProductCommentsContainer extends React.Component {
     const cArray = categoryHelpers.convertCatChildrenObjectToArray(this.props.product.r_comments);
     if (cArray.length > 0) {
       const product = this.props.product;
-      const comments = cArray.map((c, index) => {
+      const comments = cArray.map(function (c, index) {
         if (c.level === 1) {
           return React.createElement(CommentItem, { product: product, comment: c.comment, key: index, level: 1 });
         }
@@ -2558,7 +2604,9 @@ class CommentItem extends React.Component {
     const filteredComments = categoryHelpers.convertCatChildrenObjectToArray(this.props.product.r_comments).filter(this.filterByCommentLevel);
     if (filteredComments.length > 0) {
       const product = this.props.product;
-      const comments = filteredComments.map((c, index) => React.createElement(CommentItem, { product: product, comment: c.comment, key: index, level: c.level }));
+      const comments = filteredComments.map(function (c, index) {
+        return React.createElement(CommentItem, { product: product, comment: c.comment, key: index, level: c.level });
+      });
       commentRepliesContainer = React.createElement(
         'div',
         { className: 'comment-item-replies-container' },
@@ -2624,12 +2672,16 @@ class CommentItem extends React.Component {
 
 class ProductViewFilesTab extends React.Component {
   render() {
+    var _this4 = this;
+
     let filesDisplay;
-    const files = this.props.files.map((f, index) => React.createElement(ProductViewFilesTabItem, {
-      product: this.props.product,
-      key: index,
-      file: f
-    }));
+    const files = this.props.files.map(function (f, index) {
+      return React.createElement(ProductViewFilesTabItem, {
+        product: _this4.props.product,
+        key: index,
+        file: f
+      });
+    });
     const summeryRow = productHelpers.getFilesSummary(this.props.files);
     filesDisplay = React.createElement(
       'tbody',
@@ -2876,6 +2928,7 @@ class ProductViewRatingsTab extends React.Component {
   }
 
   render() {
+    var _this5 = this;
 
     const ratingsLikes = this.props.ratings.filter(this.filterLikes);
     const ratingsDislikes = this.props.ratings.filter(this.filterDislikes);
@@ -2895,10 +2948,12 @@ class ProductViewRatingsTab extends React.Component {
         ratings = ratingsLikes;
       }
 
-      const ratingsItems = ratings.map((r, index) => React.createElement(RatingItem, {
-        key: index,
-        rating: r
-      }));
+      const ratingsItems = ratings.map(function (r, index) {
+        return React.createElement(RatingItem, {
+          key: index,
+          rating: r
+        });
+      });
 
       ratingsDisplay = React.createElement(
         'div',
@@ -2916,7 +2971,9 @@ class ProductViewRatingsTab extends React.Component {
         { className: 'ratings-filters-menu' },
         React.createElement(
           'span',
-          { className: 'btn-container', onClick: () => this.setFilter("dislikes") },
+          { className: 'btn-container', onClick: function () {
+              return _this5.setFilter("dislikes");
+            } },
           React.createElement(
             'a',
             { className: this.state.filter === "dislikes" ? subMenuActiveItemClassName + subMenuItemClassName : subMenuItemClassName, onClick: this.showDislikes },
@@ -2927,7 +2984,9 @@ class ProductViewRatingsTab extends React.Component {
         ),
         React.createElement(
           'span',
-          { className: 'btn-container', onClick: () => this.setFilter("likes") },
+          { className: 'btn-container', onClick: function () {
+              return _this5.setFilter("likes");
+            } },
           React.createElement(
             'a',
             { onClick: this.setDislikesFilter, className: this.state.filter === "likes" ? subMenuActiveItemClassName + subMenuItemClassName : subMenuItemClassName, onClick: this.showLikes },
@@ -2938,7 +2997,9 @@ class ProductViewRatingsTab extends React.Component {
         ),
         React.createElement(
           'span',
-          { className: 'btn-container', onClick: () => this.setFilter("active") },
+          { className: 'btn-container', onClick: function () {
+              return _this5.setFilter("active");
+            } },
           React.createElement(
             'a',
             { onClick: this.setDislikesFilter, className: this.state.filter === "active" ? subMenuActiveItemClassName + subMenuItemClassName : subMenuItemClassName, onClick: this.showActive },
@@ -2949,7 +3010,9 @@ class ProductViewRatingsTab extends React.Component {
         ),
         React.createElement(
           'span',
-          { className: 'btn-container', onClick: () => this.setFilter("all") },
+          { className: 'btn-container', onClick: function () {
+              return _this5.setFilter("all");
+            } },
           React.createElement(
             'a',
             { onClick: this.setDislikesFilter, className: this.state.filter === "all" ? subMenuActiveItemClassName + subMenuItemClassName : subMenuItemClassName, onClick: this.showAll },
@@ -3014,10 +3077,12 @@ class ProductViewFavTab extends React.Component {
   render() {
     let favsDisplay;
     if (this.props.likes) {
-      const favs = this.props.likes.map((like, index) => React.createElement(UserCardItem, {
-        key: index,
-        like: like
-      }));
+      const favs = this.props.likes.map(function (like, index) {
+        return React.createElement(UserCardItem, {
+          key: index,
+          like: like
+        });
+      });
       favsDisplay = React.createElement(
         'div',
         { className: 'favs-list cards' },
@@ -3040,10 +3105,12 @@ class ProductViewPlingsTab extends React.Component {
   render() {
     let plingsDisplay;
     if (this.props.plings) {
-      const plings = this.props.plings.map((pling, index) => React.createElement(UserCardItem, {
-        key: index,
-        pling: pling
-      }));
+      const plings = this.props.plings.map(function (pling, index) {
+        return React.createElement(UserCardItem, {
+          key: index,
+          pling: pling
+        });
+      });
       plingsDisplay = React.createElement(
         'div',
         { className: 'plings-list cards' },

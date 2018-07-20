@@ -21,50 +21,10 @@
  **/
 
   $modelInfo = new Default_Model_Info();
-  /**
-        $this->comments = $modelInfo->getLatestComments(16);
-        $this->users = $modelInfo->getNewActiveMembers(12);
-        $this->supporters = $modelInfo->getNewActiveSupporters(12);
-        //$this->plingproducts = $modelInfo->getNewActivePlingProduct(9);
-
-        $this->productsThemesGTK = $modelInfo->getLastProductsForHostStores(6);
-        $this->productsThemesPlasma = $modelInfo->getLastProductsForHostStores(6);
-        $this->productsWindowmanager = $modelInfo->getLastProductsForHostStores(6);
-        $this->productsIconsCursors= $modelInfo->getLastProductsForHostStores(6);
-        $this->productsScreenshots= $modelInfo->getLastProductsForHostStores(6);
-        $this->productsApps = $modelInfo->getLastProductsForHostStores(6);
-        $this->productsAddons = $modelInfo->getLastProductsForHostStores(6);
-        $this->productsWallpapers = $modelInfo->getLastProductsForHostStores(6);
-        $this->countSupporters = $modelInfo->getCountActiveSupporters();
-
-
-
-        $topProducts = new Default_View_Helper_FetchTopProductsForStore();
-        $this->topProducts = $topProducts->fetchTopProducts();
-
-        $featuredProducts = $modelInfo->getFeaturedProductsForHostStores(100);
-        if ($featuredProducts->getTotalItemCount()) {
-            $request = Zend_Controller_Front::getInstance()->getRequest();
-            $offset = (int)$request->getParam('page');
-            $irandom = rand(1,$featuredProducts->getTotalItemCount());
-            $featuredProducts->setItemCountPerPage(1);
-            $featuredProducts->setCurrentPageNumber($irandom);
-            $this->featureProducts = $featuredProducts;
-        }
-
-        $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
-        $helperImage = new Default_View_Helper_Image();
-        $helpPrintDate = new Default_View_Helper_PrintDate();
-   *
-   *
-   */
-
   $host = $_SERVER['SERVER_NAME'];
   $package_type = $this->package_type;
 
-  echo "<!-- PackageType: " . $package_type . " -->";
-
-  if(strpos ( $host , ".cc" ) > 0) {
+  if(strpos ( $host , ".cc" ) > 0 || strpos ( $host , ".local" ) > 0) {
     $this->LatestProducts = $modelInfo->getLastProductsForHostStores(6,"33,112",$package_type);
     $this->topGames = $modelInfo->getTopProductsForHostStores(6,"112",$package_type);
     $this->topApps = $modelInfo->getTopProductsForHostStores(6,"33",$package_type);
@@ -74,23 +34,9 @@
     $this->topApps = $modelInfo->getTopProductsForHostStores(6,"234,239,243,244,245,388,391,392,450,481,492",$package_type);
   }
 
-  $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
-  $this->headLink()->appendStylesheet('/theme/react/lib/mdl/material.min.css');
-  $this->headLink()->appendStylesheet('https://fonts.googleapis.com/icon?family=Material+Icons');
-  $this->headLink()->appendStylesheet('https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,500');
-  $this->headLink()->appendStylesheet('/theme/react/assets/css/style.css');
-
 ?>
 
 <main id="explore-content"></main>
-
-<script type="text/javascript" src="/theme/react/lib/react/react.js"></script>
-<script type="text/javascript" src="/theme/react/lib/react-dom/react-dom.js"></script>
-<script type="text/javascript" src="/theme/react/lib/redux/redux.min.js"></script>
-<script type="text/javascript" src="/theme/react/lib/redux/react-redux.min.js"></script>
-<script type="text/javascript" src="/theme/react/lib/mdl/material.min.js"></script>
-<script type="text/javascript" src="/theme/react/lib/timeago/timeago.min.js"></script>
-
 <script type="text/javascript">
 
   <?php
@@ -109,4 +55,3 @@
 
 </script>
 
-<script type="text/javascript" src="/theme/react/all.js"></script>

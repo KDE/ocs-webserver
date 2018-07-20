@@ -79,56 +79,56 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->_helper->viewRenderer('/partials/pploadajax');
     }
 
-    public function indexNewAction(){
-        // for David react ================ page detail ============== 
-            if (!empty($this->_collectionId)) {
-                $modelProduct = new Default_Model_Project();
-                $productInfo = $modelProduct->fetchProductForCollectionId($this->_collectionId);
-                $this->_projectId = $productInfo->project_id;
-            }
+    // public function indexNewAction(){
+    //     // for David react ================ page detail ============== 
+    //         if (!empty($this->_collectionId)) {
+    //             $modelProduct = new Default_Model_Project();
+    //             $productInfo = $modelProduct->fetchProductForCollectionId($this->_collectionId);
+    //             $this->_projectId = $productInfo->project_id;
+    //         }
 
 
-            if (empty($this->_projectId)) {
-                $this->redirect('/explore');
-            }
+    //         if (empty($this->_projectId)) {
+    //             $this->redirect('/explore');
+    //         }
 
-            $this->view->paramPageId = (int)$this->getParam('page');
-            $this->view->member_id = null;
-            if(null != $this->_authMember && null != $this->_authMember->member_id) {
-                $this->view->member_id = $this->_authMember->member_id;
-            }
+    //         $this->view->paramPageId = (int)$this->getParam('page');
+    //         $this->view->member_id = null;
+    //         if(null != $this->_authMember && null != $this->_authMember->member_id) {
+    //             $this->view->member_id = $this->_authMember->member_id;
+    //         }
 
-            $this->initJsonForProduct();
-            //        $this->fetchDataForIndexView();            
+    //         $this->initJsonForReact();
+    //         //        $this->fetchDataForIndexView();            
 
-            $this->view->cat_id = $this->view->product->project_category_id;
+    //         $this->view->cat_id = $this->view->product->project_category_id;
 
-            //create ppload download hash: secret + collection_id + expire-timestamp
-            $salt = PPLOAD_DOWNLOAD_SECRET;
-            $collectionID = $this->view->product->ppload_collection_id;
-            $timestamp = time() + 3600; // one hour valid
-            $hash = md5($salt . $collectionID . $timestamp); // order isn't important at all... just do the same when verifying
+    //         //create ppload download hash: secret + collection_id + expire-timestamp
+    //         $salt = PPLOAD_DOWNLOAD_SECRET;
+    //         $collectionID = $this->view->product->ppload_collection_id;
+    //         $timestamp = time() + 3600; // one hour valid
+    //         $hash = md5($salt . $collectionID . $timestamp); // order isn't important at all... just do the same when verifying
 
-            $this->view->download_hash = $hash;
-            $this->view->download_timestamp = $timestamp;
+    //         $this->view->download_hash = $hash;
+    //         $this->view->download_timestamp = $timestamp;
 
-            $helperUserIsOwner = new Default_View_Helper_UserIsOwner();
-            $helperIsProjectActive = new Default_View_Helper_IsProjectActive();
-            if ((false === $helperIsProjectActive->isProjectActive($this->view->product->project_status))
-                AND (false === $helperUserIsOwner->UserIsOwner($this->view->product->member_id))
-            ) {
-                throw new Zend_Controller_Action_Exception('This page does not exist', 404);
-            }
+    //         $helperUserIsOwner = new Default_View_Helper_UserIsOwner();
+    //         $helperIsProjectActive = new Default_View_Helper_IsProjectActive();
+    //         if ((false === $helperIsProjectActive->isProjectActive($this->view->product->project_status))
+    //             AND (false === $helperUserIsOwner->UserIsOwner($this->view->product->member_id))
+    //         ) {
+    //             throw new Zend_Controller_Action_Exception('This page does not exist', 404);
+    //         }
 
-            if (APPLICATION_ENV != 'searchbotenv') {
-                $tablePageViews = new Default_Model_DbTable_StatPageViews();
-                $tablePageViews->savePageView($this->_projectId, $this->getRequest()->getClientIp(),
-                    $this->_authMember->member_id);
-            }
+    //         if (APPLICATION_ENV != 'searchbotenv') {
+    //             $tablePageViews = new Default_Model_DbTable_StatPageViews();
+    //             $tablePageViews->savePageView($this->_projectId, $this->getRequest()->getClientIp(),
+    //                 $this->_authMember->member_id);
+    //         }
 
-    }
+    // }
     
-    public function initJsonForProduct(){
+    public function initJsonForReact(){
             $modelProduct = new Default_Model_Project();
             $productInfo = $modelProduct->fetchProductInfo($this->_projectId);
             $this->view->product = $productInfo;
@@ -233,10 +233,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->view->member_id = null;
         if(null != $this->_authMember && null != $this->_authMember->member_id) {
             $this->view->member_id = $this->_authMember->member_id;
-        }
-
+        }        
         //        $this->fetchDataForIndexView();
-
         $modelProduct = new Default_Model_Project();
         $productInfo = $modelProduct->fetchProductInfo($this->_projectId);
         $this->view->product = $productInfo;
@@ -267,6 +265,13 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $tablePageViews->savePageView($this->_projectId, $this->getRequest()->getClientIp(),
                 $this->_authMember->member_id);
         }
+
+        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
+        if($storeConfig->isRenderReact()){           
+            $this->initJsonForReact();           
+            $this->_helper->viewRenderer('index-react');              
+        }
+
     }
 
     public function showAction()

@@ -20,58 +20,22 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-$helpAddDefaultScheme = new Default_View_Helper_AddDefaultScheme();
-$helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
-$helpEncryptUrl = new Default_View_Helper_EncryptUrl();
-$helpImage = new Default_View_Helper_Image();
-$helpTruncate = new Default_View_Helper_Truncate();
-$helpProductUrl = new Default_View_Helper_BuildProductUrl();
-$helpBBCode = new Default_View_Helper_Bbcode2html();
-
-$identity = Zend_Auth::getInstance()->getStorage()->read();
-
-$loginUrl = '/login?redirect=' . $helpEncryptUrl->encryptUrl(Zend_Controller_Front::getInstance()->getRequest()
-        ->getRequestUri(), true);
-$viewSidebar = 'product/partials/productAboutSidebar.phtml';
-$viewClaimBox = false;
-if ($this->product->claimable == 1) {
-    $viewClaimBox = 'product/partials/productClaimTopHeader.phtml';
-}
-
-
 $this->headTitle($this->product->title . ' - ' . $_SERVER['HTTP_HOST'], 'SET');
 $this->doctype(Zend_View_Helper_Doctype::XHTML1_RDFA);
-
 $this->headMeta()->setName('description',
-    $helpTruncate->truncate($this->product->description, 200, '...', false, true));
+$this->truncate($this->product->description, 200, '...', false, true));
 $this->headMeta()->setName('title',
-    $helpTruncate->truncate($this->product->title, 200, '...', false, true));
-$this->headMeta()->appendProperty('og:url', $helpProductUrl->buildProductUrl($this->product->project_id, '', null, true));
+$this->truncate($this->product->title, 200, '...', false, true));
+$this->headMeta()->appendProperty('og:url', $this->buildProductUrl($this->product->project_id, '', null, true));
 $this->headMeta()->appendProperty('og:type', 'website');
 $this->headMeta()->appendProperty('og:title', $this->product->title);
 $this->headMeta()->appendProperty('og:description',
-    $helpTruncate->truncate($this->product->description, 200, '...', false, true));
+$this->truncate($this->product->description, 200, '...', false, true));
 $this->headMeta()->appendProperty('og:image',
-    $helpImage->Image($this->product->image_small, array('width' => 400, 'height' => 400)));
-
-$this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
-$this->headLink()->appendStylesheet('/theme/react/lib/mdl/material.min.css');
-$this->headLink()->appendStylesheet('https://fonts.googleapis.com/icon?family=Material+Icons');
-$this->headLink()->appendStylesheet('https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,500');
-$this->headLink()->appendStylesheet('/theme/react/assets/css/style.css');
-
+$this->Image($this->product->image_small, array('width' => 400, 'height' => 400)));
 ?>
 
 <main id="explore-content"></main>
-
-<script type="text/javascript" src="/theme/react/lib/react/react.js"></script>
-<script type="text/javascript" src="/theme/react/lib/react-dom/react-dom.js"></script>
-<script type="text/javascript" src="/theme/react/lib/redux/redux.min.js"></script>
-<script type="text/javascript" src="/theme/react/lib/redux/react-redux.min.js"></script>
-<script type="text/javascript" src="/theme/react/lib/mdl/material.min.js"></script>
-<script type="text/javascript" src="/theme/react/lib/timeago/timeago.min.js"></script>
-<script type="text/javascript" src="/theme/react/lib/md5/md5.js"></script>
-
 <script type="text/javascript">
 var view = "product";
 var product = <?php echo $this->productJson ?>;  // product info. title, category, image ...

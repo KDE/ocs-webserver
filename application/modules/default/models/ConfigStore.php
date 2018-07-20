@@ -43,6 +43,7 @@ class Default_Model_ConfigStore
     public $is_show_home;
     public $layout_home;
     public $layout;
+    public $render_view_postfix;
     public $created_at;
     public $changed_at;
     public $deleted_at;
@@ -67,6 +68,7 @@ class Default_Model_ConfigStore
             $this->is_show_home = $storeConfig['is_show_home'];
             $this->layout_home = $storeConfig['layout_home'];
             $this->layout = $storeConfig['layout'];
+            $this->render_view_postfix = $storeConfig['render_view_postfix'];
             $this->created_at = $storeConfig['created_at'];
             $this->changed_at = $storeConfig['changed_at'];
             $this->deleted_at = $storeConfig['deleted_at'];
@@ -83,6 +85,14 @@ class Default_Model_ConfigStore
     public function isShowHomepage()
     {
         return $this->is_show_home == 1 ? true : false;
+    }
+
+       /**
+     * @return bool
+     */
+    public function isRenderReact()
+    {
+        return $this->render_view_postfix == 'react' ? true : false;
     }
 
 }

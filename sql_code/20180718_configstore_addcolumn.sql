@@ -9,3 +9,9 @@ ALTER TABLE `config_store`
   ALTER TABLE `config_store`
   ADD COLUMN `layout` VARCHAR(45)
   AFTER `layout_home`;
+
+
+  ALTER TABLE `config_store`
+  ADD COLUMN `render_view_postfix` VARCHAR(45)
+  AFTER `layout`;
+ 

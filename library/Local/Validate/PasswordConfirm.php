@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -19,7 +20,6 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-
 class Local_Validate_PasswordConfirm extends Zend_Validate_Abstract
 {
     const NOT_MATCH = 'notmatch';
@@ -35,15 +35,15 @@ class Local_Validate_PasswordConfirm extends Zend_Validate_Abstract
 
         if (is_array($context)) {
             if (isset($context['password2'])
-                && ($value == $context['password2'])
-            ) {
+                && ($value == $context['password2'])) {
                 return true;
             }
-        } elseif (is_string($context) && ($value == $context)) {
+        } else if (is_string($context) && ($value == $context)) {
             return true;
         }
 
         $this->_error(self::NOT_MATCH);
+
         return false;
     }
 

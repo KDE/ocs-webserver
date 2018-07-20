@@ -460,8 +460,11 @@ class Default_Form_Product extends Zend_Form
      * Validate the form
      *
      * @param  array $data
-     * @throws Zend_Form_Exception
+     * @param null   $project_id
+     *
      * @return bool
+     * @throws Zend_Exception
+     * @throws Zend_Form_Exception
      */
     public function isValid($data, $project_id = null)
     {
