@@ -49,7 +49,7 @@ class Default_Form_Register extends Zend_Form
                       ->setDecorators(array('ViewHelper', 'Errors'))
                       ->setRequired(true)
                       ->addFilter(new Zend_Filter_StringTrim())
-                      ->addFilter(new Zend_Filter_StripNewLines())
+                      ->addFilter(new Zend_Filter_StripNewlines())
                       ->addValidator($userEmptyCheck, true)
                       ->addValidator($userNameLength, true)
                       ->addValidator($usernameValidChars, true)
