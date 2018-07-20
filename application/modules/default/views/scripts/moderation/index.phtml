@@ -1,0 +1,146 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Created: 31.05.2017
+ */
+?>
+<main id="explore-content">
+    <section class="wrapper" id="products-wrapper">
+        <div class="container-fluid">
+            <div class="row">
+              <div class="sidebar-left col-md-1"></div>
+               <div class="content col-md-8">
+            <h1>
+                Get hot new stuff excluded
+            </h1>
+            </div>
+            </div>
+            <div class="row">
+                <div class="sidebar-left col-md-1"></div>
+                <div class="content col-md-9">
+                    <?php
+                    $helperPrintDate = new Default_View_Helper_PrintDate();
+                    $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
+                    $helperImage = new Default_View_Helper_Image();
+                    $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
+
+                    $this->rownum = (1 + (($this->page - 1) * 10));
+                    $pageLimit = 10;
+
+                    $info = new Default_Model_Info();
+                    $candidateProducts = $info->getGhnsExcludedProjects();
+          
+
+                    $paginator = Zend_Paginator::factory($candidateProducts);
+                    $paginator->setItemCountPerPage($pageLimit);
+                    $paginator->setCurrentPageNumber($this->page);
+                    //$paginator->setTotalItemCount(count($candidateProducts));
+
+                    $this->products = $paginator;
+
+
+                    if ($paginator->count() == 0) {
+                        echo '<div class="alert alert-success" role="alert"><p class="text-success">Congratulations. No more Ghns-excluded in sight. (For the moment)</p></div>';
+                    }
+                    foreach ($this->products as $this->product) {                        
+                        $updateTime = $helperPrintDate->printDate($this->product['project_changed_at']);
+                        ?>
+                        <div class="explore-product col-lg-12 col-md-12 col-sm-12 col-xs-12"
+                             style="border-top: 1px solid #ccc;font-size: 12px;padding: 10px 0;">
+                            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                                <div class="rownum">
+                                    <?= intval($this->rownum) ?>.
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 explore-product-imgcolumn">
+                                <figure>
+                                    <a href="<?= $helperBuildProductUrl->buildProductUrl($this->product['project_id'],
+                                        ''); ?>">
+                                        <div class="text-center">
+                                            <img src="<?php echo $helperImage->Image($this->product['image_small'],
+                                                array('width' => 167, 'height' => 167)); ?>"
+                                                 class="explore-product-image" style="max-width:95%;"/>
+                                        </div>
+                                    </a>
+                                </figure>
+                            </div>
+                            <div class="explore-product-details col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                <h3>
+                                    <?php
+                                    $version = Default_Model_HtmlPurify::purify($this->product['version']);
+                                    ?>
+                                    <a href="<?= $helperBuildProductUrl->buildProductUrl($this->product['project_id'],
+                                        ''); ?>"><?php echo $this->product['title']; ?> <span
+                                                style="font-size: smaller; padding-left: 20px"><?php echo $version ?> </span></a>
+                                </h3>
+
+                                <b style="display: block; margin-bottom: 5px"><?php echo $this->product['cat_title'] ?></b>
+                                <b style="display: block; margin-bottom: 5px" class="small">by <a
+                                            href="<?php echo $helpMemberUrl->buildMemberUrl($this->product['member_id']) ?>"><?php echo $this->product['username'] ?></a></b>
+                              
+
+                                <div class="productInfo">
+                                    <?php                             
+                                    $count_comments = $this->product['count_comments'];                         
+                                    echo ($count_comments > 0 ? '<span class="cntComments">' . $count_comments
+                                            . ' comment' : '') . ($count_comments > 1 ? 's' : '') . ($count_comments > 0
+                                            ? '</span>' : '');
+                                    ?>
+                                </div>
+                            </div>
+                            <div class="explore-product-plings col-lg-1">
+                                <!-- RATING -->
+                                <?php
+                                $this->widgetRating = new stdClass();
+                                $this->widgetRating->project_id = $this->product['project_id'];
+                                $this->widgetRating->laplace_score = $this->product['laplace_score'];
+                                $this->widgetRating->count_likes = $this->product['count_likes'];
+                                $this->widgetRating->count_dislikes = $this->product['count_dislikes'];
+                                // it is a trial
+                                include APPLICATION_PATH . '/modules/default/views/scripts/partials/widgetRating.phtml';
+                                //echo $this->render('partials/widgetRating.phtml'); ?>
+                                <!-- /RATING -->
+
+                                <div class="collected">
+                                    <span><?php echo $updateTime ?></span>
+                                </div>
+
+                            </div>
+                            <div class="col-lg-2">
+                                 excluded by <?=$this->product['exclude_member_name']?> at <?= $helperPrintDate->printDate($this->product['project_changed_at']);?>
+                            </div>
+                        </div><!-- END .explore-product -->
+                        
+                        <?php
+                        $this->rownum++;
+                    }
+                    ?>
+                </div>
+                <div class="sidebar-right col-md-2"></div>
+            </div>
+            <section class="explore-footer text-center">
+                <?php echo $this->paginationControl($this->products, 'Sliding',
+                    'partials/paginationControlWithoutAjax.phtml',
+                    array('params' => $this->filters, 'dom_target' => 'section#products-wrapper')); ?>
+            </section>
+        </div>
+    </section>
+</main>
