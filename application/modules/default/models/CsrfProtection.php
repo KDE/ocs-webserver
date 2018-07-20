@@ -58,11 +58,11 @@ class Default_Model_CsrfProtection
     {
         $session = new Zend_Session_Namespace();
 
-//        if (false === function_exists("hash_equals")) {
+        if (false === function_exists("hash_equals")) {
             $valid = self::hash_equals($session->crsf_token, $hash);
 
             return $valid;
-//        }
+        }
 
         $valid = hash_equals($session->crsf_token, $hash);
 
