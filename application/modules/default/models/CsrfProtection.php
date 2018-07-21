@@ -57,11 +57,37 @@ class Default_Model_CsrfProtection
     public static function validateCsrfToken($hash)
     {
         $session = new Zend_Session_Namespace();
-        if (hash_equals($session->crsf_token, $hash)) {
-            return true;
-        } else {
-            return false;
+
+        if (false === function_exists("hash_equals")) {
+            $valid = self::hash_equals($session->crsf_token, $hash);
+            Zend_Registry::get('logger')->debug(__METHOD__ . ' - session csrf token: ' . print_r($session->crsf_token, true));
+            Zend_Registry::get('logger')->debug(__METHOD__ . ' - form csrf token: ' . print_r($hash, true));
+            Zend_Registry::get('logger')->debug(__METHOD__ . ' - crsf validation result: ' . print_r($valid, true));
+
+            return $valid;
         }
+
+        $valid = hash_equals($session->crsf_token, $hash);
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - session csrf token: ' . print_r($session->crsf_token, true));
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - form csrf token: ' . print_r($hash, true));
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - crsf validation result: ' . print_r($valid, true));
+
+        return $valid;
+    }
+
+    /**
+     * @param $a
+     * @param $b
+     *
+     * @return bool
+     * @author http://php.net/manual/en/function.hash-equals.php#usernotes  Cedric Van Bockhaven
+     */
+    private static function hash_equals($a, $b)
+    {
+        $ret = strlen($a) ^ strlen($b);
+        $ret |= array_sum(unpack("C*", $a ^ $b));
+
+        return !$ret;
     }
 
     /**
