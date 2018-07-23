@@ -99,6 +99,77 @@ const ProductViewWrapper = ReactRedux.connect(
 )(ProductView);
 
 class ProductViewHeader extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+  }
+
+  onUserLike(){
+    /*var PartialsButtonHeartDetail = (function () {
+        return {
+            setup: function () {
+                $('body').on('click', '.partialbuttonfollowproject', function (event) {
+                    event.preventDefault();
+                    var url = $(this).attr("data-href");
+                    // data-href - /p/1249209/followproject/
+                    var target = $(this).attr("data-target");
+                    var auth = $(this).attr("data-auth");
+                    var toggle = $(this).data('toggle');
+                    var pageFragment = $(this).attr("data-fragment");
+
+                    if (!auth) {
+                        $('#like-product-modal').modal('show');
+                        return;
+                    }
+
+                    // product owner not allow to heart copy from voting....
+                    var loginuser = $('#like-product-modal').find('#loginuser').val();
+                    var productcreator = $('#like-product-modal').find('#productcreator').val();
+                    if (loginuser == productcreator) {
+                        // ignore
+                        $('#like-product-modal').find('#votelabel').text('Project owner not allowed');
+                        $('#like-product-modal').find('.modal-body').empty();
+                        $('#like-product-modal').modal('show');
+                        return;
+                    }
+
+                  var spin = $('<span class="glyphicon glyphicon-refresh spinning" style="opacity: 0.6; z-index:1000;position: absolute; left:24px;top: 4px;"></span>');
+                     $(target).prepend(spin);
+
+                    $.ajax({
+                              url: url,
+                              cache: false
+                            })
+                          .done(function( response ) {
+                            $(target).find('.spinning').remove();
+                            if(response.status =='error'){
+                                 $(target).html( response.msg );
+                            }else{
+                                if(response.action=='delete'){
+                                    //$(target).find('.likelabel').html(response.cnt +' Likes');
+                                    $(target).find('.plingtext').html(response.cnt);
+                                    $(target).find('.plingtext').addClass('heartnumberpurple');
+                                     $(target).find('.plingheart').removeClass('heartproject').addClass('heartgrey');
+                                     $(target).find('.plingheart').removeClass('fa-heart').addClass('fa-heart-o');
+
+
+                                }else{
+                                    //$(target).find('.likelabel').html(response.cnt +' Likes');
+                                    $(target).find('.plingtext').html(response.cnt);
+                                    //$(target).find('.plingtext').html(response.cnt+' Fans');
+                                    $(target).find('.plingtext').removeClass('heartnumberpurple');
+                                    $(target).find('.plingheart').removeClass('heartgrey').addClass('heartproject');
+                                    $(target).find('.plingheart').removeClass('fa-heart-o').addClass('fa-heart');
+                                }
+                            }
+                          });
+                    return false;
+                });
+            }
+        }
+    })();*/
+  }
+
   render(){
 
     let imageBaseUrl;
@@ -527,6 +598,106 @@ class ProductCommentsContainer extends React.Component {
   	super(props);
   	this.state = {};
   }
+
+  /*
+  var PartialCommentReviewForm = (function () {
+      return {
+          setup: function () {
+              this.initForm();
+          },
+          initForm: function () {
+              $('body').on("submit", 'form.product-add-comment-review', function (event) {
+                  event.preventDefault();
+                  event.stopImmediatePropagation();
+                  var c = $.trim($('#commenttext').val());
+                  if(c.length<1)
+                  {
+                          if($('#review-product-modal').find('#votelabel').find('.warning').length==0)
+                          {
+                              $('#review-product-modal').find('#votelabel').append("</br><span class='warning' style='color:red'> Please give a comment, thanks!</span>");
+                          }
+                          return;
+                  }
+
+                  $(this).find(':submit').attr("disabled", "disabled");
+                  $(this).find(':submit').css("white-space", "normal");
+                  var spin = $('<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>');
+                  $(this).find(':submit').append(spin);
+
+                  jQuery.ajax({
+                      data: $(this).serialize(),
+                      url: this.action,
+                      type: this.method,
+                      error: function (jqXHR, textStatus, errorThrown) {
+                          $('#review-product-modal').modal('hide');
+                          var msgBox = $('#generic-dialog');
+                          msgBox.modal('hide');
+                          msgBox.find('.modal-header-text').empty().append('Please try later.');
+                          msgBox.find('.modal-body').empty().append("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+                          setTimeout(function () {
+                              msgBox.modal('show');
+                          }, 900);
+                      },
+                      success: function (results) {
+                          $('#review-product-modal').modal('hide');
+                          location.reload();
+                      }
+                  });
+                  return false;
+              });
+          }
+      }
+  })();
+
+
+  var AjaxForm = (function () {
+      return {
+          setup: function (idElement, idTargetElement) {
+              var target = $(idTargetElement);
+              $('body').on("submit", 'form.product-add-comment', function (event) {
+                  event.preventDefault();
+                  event.stopImmediatePropagation();
+                  $(this).find('button').attr("disabled", "disabled");
+                  $(this).find('.glyphicon.glyphicon-send').removeClass('glyphicon-send').addClass('glyphicon-refresh spinning');
+
+                  jQuery.ajax({
+                      data: $(this).serialize(),
+                      url: this.action,
+                      type: this.method,
+                      dataType: "json",
+
+                      error: function (jqXHR, textStatus, errorThrown) {
+                          var results = JSON && JSON.parse(jqXHR.responseText) || $.parseJSON(jqXHR.responseText);
+                          var msgBox = $('#generic-dialog');
+                          msgBox.modal('hide');
+                          msgBox.find('.modal-header-text').empty().append(results.title);
+                          msgBox.find('.modal-body').empty().append(results.message);
+                          setTimeout(function () {
+                              msgBox.modal('show');
+                          }, 900);
+                      },
+                      success: function (results) {
+                          if (results.status == 'ok') {
+                              $(target).empty().html(results.data);
+                          }
+                          if (results.status == 'error') {
+                              if (results.message != '') {
+                                  alert(results.message);
+                              } else {
+                                  alert('Service is temporarily unavailable.');
+                              }
+                          }
+                      }
+                  });
+
+                  return false;
+              });
+          }
+      }
+  })();
+
+
+   */
 
   render(){
     let commentsDisplay;
