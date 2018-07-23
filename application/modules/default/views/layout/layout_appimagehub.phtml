@@ -25,58 +25,102 @@
     <meta charset="utf-8">
     <?php echo $this->render('partials/htmlheader.phtml'); ?>
 
-    <link rel="SHORTCUT ICON" href="<?=$this->template['favicon']?>"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="alternate" type="application/rss+xml" title="Latest Products" href="/content.rdf"/>
 
-      <link rel="stylesheet" type="text/css" href="/theme/flatui/js/lib/tooltipster/dist/css/tooltipster.bundle.min.css" />
+    <link rel="stylesheet" type="text/css" href="/theme/flatui/js/lib/tooltipster/dist/css/tooltipster.bundle.min.css" />
     <link rel="stylesheet" type="text/css" href="/theme/flatui/js/lib/tooltipster/dist/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-light.min.css" />
     <link rel="stylesheet" type="text/css" href="/theme/flatui/css/tooltipster-light-customized.css" />
     
     <!-- Loading Bootstrap -->
     <link rel="stylesheet" href="/theme/flatui/css/bootstrap/bootstrap.min.css" type="text/css"  crossorigin="anonymous">
     <link rel="stylesheet" href="/tools/fancybox2.1.4/jquery.fancybox.css?v=2.1.4" type="text/css" media="screen" />    
-    <link rel="stylesheet" type="text/css" href="/theme/flatui/js/lib/tooltipster/dist/css/tooltipster.bundle.min.css" />
-    <link rel="stylesheet" type="text/css" href="/theme/flatui/js/lib/tooltipster/dist/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-light.min.css" />
-    <link rel="stylesheet" type="text/css" href="/theme/flatui/css/tooltipster-light-customized.css" />
-    <!-- custom styles -->   
+    <link rel="stylesheet" href="/theme/flatui/css/fontawsome/font-awesome.min.css"  crossorigin="anonymous">
+    
+    <!-- custom styles -->
+    <link href="/theme/flatui/css/flex-layout.css" rel="stylesheet">
     <link href="/theme/flatui/css/style.css" rel="stylesheet">
     <link href="/theme/flatui/css/stylesheet.css?<?= APPLICATION_VERSION ?>" rel="stylesheet">
-    <link href="/theme/flatui/css/explore_index.css" rel="stylesheet">
-    <link href="/theme/flatui/css/startpage.css" rel="stylesheet">
 
 
+    <link href="/theme/flatui/css/jquery.step.css" rel="stylesheet">
     
-    <link rel="alternate" type="application/rss+xml" title="Latest Products" href="/content.rdf"/>    
-    <link href="/theme/flatui/css/explore_index.css" rel="stylesheet">
+
+    <link rel="SHORTCUT ICON" href="<?=$this->template['favicon']?>"/>
+
     <link href="/theme/react/lib/mdl/material.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,500" rel="stylesheet">
     <link href="/theme/react/assets/css/style.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
+    <!--[if lt IE 9]>
+    <script src="/theme/flatui/js/lib/html5shiv.js"></script>
+    <![endif]-->
+
     <script src="/theme/flatui/js/lib/jquery-3.2.1.min.js" ></script>
     <script src="/theme/flatui/js/lib/bootstrap.min.js" ></script>    
     <script type="text/javascript" src="/theme/flatui/js/lib/tooltipster/dist/js/tooltipster.bundle.min.js"></script>
-    <script type="text/javascript" src="/theme/react/lib/react/react.js"></script>
+
+     <script type="text/javascript" src="/theme/react/lib/react/react.js"></script>
     <script type="text/javascript" src="/theme/react/lib/react-dom/react-dom.js"></script>
     <script type="text/javascript" src="/theme/react/lib/redux/redux.min.js"></script>
     <script type="text/javascript" src="/theme/react/lib/redux/react-redux.min.js"></script>
     <script type="text/javascript" src="/theme/react/lib/mdl/material.min.js"></script>
     <script type="text/javascript" src="/theme/react/lib/timeago/timeago.min.js"></script>
     <script type="text/javascript" src="/theme/react/lib/md5/md5.js"></script>
-
-
 </head>
 <body>
+
 <?php echo $this->render('partials/header/template_react.phtml'); ?>
 <?php echo $this->render('partials/flashMessage.phtml'); ?>
 <?php echo $this->layout()->content; ?>
 <?php echo $this->render('partials/footer/template.phtml'); ?>
 
+
+<div id="overlays" class="" tabindex="-1" role="dialog"><?php if (isset($this->overlay)) {
+        echo $this->overlay;
+    } ?></div>
 <div id="modal-dialog" class="modal hide fade" tabindex="-1" role="dialog">
     <div class="modal-body"></div>
     <div id="error"></div>
 </div>
 
+<div id="generic-dialog" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header row">
+                <div class="modal-header-text col-md-11">Put the headline here</div>
+                <button type="button" class="close col-md-1" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer hidden">
+                <button type="button" class="btn btn-native" data-dismiss="modal" style="padding: 5px 10px;">Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
+<?php echo $this->render('partials/genericModalConfirmation.phtml'); ?>
+
+
+<script src="/theme/flatui/js/lib/jquery.colorbox-min.js"></script>
+<script src="/theme/flatui/js/lib/jquery.placeholder.min.js"></script>
+<script src="/theme/flatui/js/lib/jquery.jscrollpane.min.js"></script>
+<script src="/theme/flatui/js/lib/jquery.zclip.min.js"></script>
+<script src="/theme/flatui/js/lib/jquery.mousewheel.min.js"></script>
+<script src="/theme/flatui/js/lib/jquery.crypt.js"></script>
+<script src="/theme/flatui/js/lib/bootstrap-dialog.min.js"></script>
+
+<script src="/theme/flatui/js/lib/jquery.form.min.js"></script>
+<script src="/theme/flatui/js/lib/jquery.validate.min.js"></script>
+<script src="/theme/flatui/js/lib/additional-methods.min.js"></script>
+<script src="/tools/md5.js"></script>
+<script src="/theme/flatui/js/lib/jquery.steps.min.js"></script>
+<script src="/theme/flatui/js/lib/jquery-ui.min.js"></script>
+<script src="/theme/flatui/js/lib/moment.min.js"></script>
+<script type="text/javascript" src="/tools/fancybox2.1.4/jquery.fancybox.pack.js?v=2.1.4"></script>
+<script src="/theme/flatui/js/script.js?<?= APPLICATION_VERSION ?>"></script>
 
 <?php
 echo $this->render('partials/propagateLogin.phtml');
@@ -84,9 +128,6 @@ echo $this->render('partials/propagateLogout.phtml');
 ?>
 
 <?=$this->inlineScript() ?>
-
-<script type="text/javascript" src="/theme/react/all.js"></script>
-
 
 <?php if (APPLICATION_ENV != 'development') { ?>
     <?php
