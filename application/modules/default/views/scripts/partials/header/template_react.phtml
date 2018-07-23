@@ -39,8 +39,7 @@ $last_char_store_order = substr($store_order, -1);
 
 echo $this->render('partials/header/metaheader.phtml');
 ?>
-<header id="page_header" xmlns="http://www.w3.org/1999/html">
-    <div class="container header" style="position: relative;">
+<header id="main-header" xmlns="http://www.w3.org/1999/html">
 
         <?php if (false === $auth->hasIdentity() && empty($member->username)) {
             $helperEncryptUrl = new Default_View_Helper_EncryptUrl();
@@ -57,68 +56,61 @@ echo $this->render('partials/header/metaheader.phtml');
             </ul>
         <?php } ?>
 
-        <section class="container">
-            <section class="wrapper">
-                <section>
+        <figure class="logo-header">
+          <a href="http://<?php echo $last_char_store_order=='1'?$sname:$baseurl.'/s/'.$store_name ?>">
+            <img width="<?= $this->template['header-logo']['width'] ?>" border="0"
+                 src="<?= $this->template['header-logo']['image-src'] ?>">
+          </a>
+        </figure>
+        <nav id="nav-top">
+            <div class="pull-left col-lg-5 col-md-5 col-sm-5 col-xs-5">
+            </div>
+            <div id="nav-left" class="pull-right col-lg-7 col-md-7 col-sm-7 col-xs-7">
+                <?php if ($auth->hasIdentity() && !empty($member->username)) { ?>
+                    <ul class="menu pull-right">
+                        <li class="link relative profile-menu-container">
+                            <a rel="profile-menu" class="menu-trigger">
+                                <div class="absolute header-profile-image">
+                                            <img
+                                            src="<?= $helperImage->Image($member->profile_image_url,
+                                                array('width' => 30, 'height' => 30)) ?>"/>
 
-                    <figure class="logo-header">
-                      <a href="http://<?php echo $last_char_store_order=='1'?$sname:$baseurl.'/s/'.$store_name ?>">
-                        <img width="<?= $this->template['header-logo']['width'] ?>" border="0"
-                             src="<?= $this->template['header-logo']['image-src'] ?>">
-                      </a>
-                    </figure>
-                    <nav id="nav-top">
-                        <div class="pull-left col-lg-5 col-md-5 col-sm-5 col-xs-5">
-                        </div>
-                        <div class="pull-right col-lg-7 col-md-7 col-sm-7 col-xs-7">
-                            <?php if ($auth->hasIdentity() && !empty($member->username)) { ?>
-                                <ul class="menu pull-right">
-                                    <li class="link relative profile-menu-container">
-                                        <a rel="profile-menu" class="menu-trigger">
-                                            <div class="absolute header-profile-image">
-                                                        <img
-                                                        src="<?= $helperImage->Image($member->profile_image_url,
-                                                            array('width' => 30, 'height' => 30)) ?>"/>
+                                </div>
+                                <span><?= $member->username ?></span>
+                            </a>
+                            <ul class="profile-menu menu-dropdown">
+                                <div class="dropdown-header"></div>
+                                <li class="link first">
+                                    <a href="/product/add/"><?= $this->translate('Add Product') ?></a>
+                                </li>
+                                <li class="link">
+                                    <a href="<?= $helperBuildMemberUrl->buildMemberUrl($member->member_id, 'products') ?>"><?= $this->translate('Products') ?></a>
+                                </li>
+                                <li class="link">
+                                    <a href="<?= $helperBuildMemberUrl->buildMemberUrl($member->member_id, 'plings') ?>"><?= $this->translate('Plings') ?></a>
+                                </li>
+                                <li class="link">
+                                    <a href="/settings/"><?= $this->translate('Settings') ?></a>
+                                </li>
+                                <li class="link">
+                                    <a href="<?=$serverUrl?>/logout/"><?= $this->translate('Logout') ?></a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                <?php } else { ?>
+                <?php } ?>
+                <form id="search" class="pull-right" action="/search">
+                    <input type="text" name="projectSearchText" class="content-search">
 
-                                            </div>
-                                            <span><?= $member->username ?></span>
-                                        </a>
-                                        <ul class="profile-menu menu-dropdown">
-                                            <div class="dropdown-header"></div>
-                                            <li class="link first">
-                                                <a href="/product/add/"><?= $this->translate('Add Product') ?></a>
-                                            </li>
-                                            <li class="link">
-                                                <a href="<?= $helperBuildMemberUrl->buildMemberUrl($member->member_id, 'products') ?>"><?= $this->translate('Products') ?></a>
-                                            </li>
-                                            <li class="link">
-                                                <a href="<?= $helperBuildMemberUrl->buildMemberUrl($member->member_id, 'plings') ?>"><?= $this->translate('Plings') ?></a>
-                                            </li>
-                                            <li class="link">
-                                                <a href="/settings/"><?= $this->translate('Settings') ?></a>
-                                            </li>
-                                            <li class="link">
-                                                <a href="<?=$serverUrl?>/logout/"><?= $this->translate('Logout') ?></a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            <?php } else { ?>
-                            <?php } ?>
-                            <form id="search" class="pull-right" action="/search">
-                                <input type="text" name="projectSearchText" class="content-search">
-
-                                <div class="icon-search-input absolute cursor-hand"
-                                     onclick="$('#search').submit()"></div>
-                            </form>
-                        </div>
-                    </nav>
-
-                </section>
-            </section>
-        </section>
+                    <div class="icon-search-input absolute cursor-hand"
+                         onclick="$('#search').submit()"></div>
+                </form>
+            </div>
+        </nav>
 
         <?php if($is_show_title==1): ?>
+
         <section class="container">
             <section class="wrapper">
                 <span class="header_cat_link" id="header_cat_link">
@@ -129,8 +121,8 @@ echo $this->render('partials/header/metaheader.phtml');
                 </span>
             </section>
         </section>
-    <?php endif; ?>
-    </div>
+
+      <?php endif; ?>
 </header>
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
