@@ -8,7 +8,7 @@
             <div class="panel-body">
                 Please check your mail account or click the button below to request a new validation mail.<br>
                 <form style="margin-top: 15px;" method="post" action="/verify/resend">
-                    <?=Default_Model_CsrfProtection::getFormCrsf(); ?>
+                    <?=Default_Model_CsrfProtection::getFormCsrf(); ?>
                     <button class="btn btn-native btn-min-width" type="submit">Resend</button>
                 </form>
             </div>

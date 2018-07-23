@@ -203,11 +203,17 @@ class PasswordController extends Local_Controller_Action_DomainSwitch
 
         $model_member = new Default_Model_DbTable_Member();
         $member_data = $model_member->fetchRow(array('member_id = ?' => $payload['member_id']));
-        $member_data->password =
-            Local_Auth_Adapter_Ocs::getEncryptedPassword($filterInput->getEscaped('password1'), $member_data->source_id);
+        $member_data->password = Local_Auth_Adapter_Ocs::getEncryptedPassword($filterInput->getEscaped('password1'), $member_data->source_id);
         $member_data->save();
 
         Zend_Registry::get('cache')->remove(sha1($secret));
+
+        try {
+            $id_server = new Default_Model_OcsOpenId();
+            $id_server->updatePasswordForUser($member_data->password);
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err($e->getTraceAsString());
+        }
 
         $this->_helper->flashMessenger->addMessage('<p class="text-error">Your password is changed.</p>');
         $this->forward('login', 'authorization');

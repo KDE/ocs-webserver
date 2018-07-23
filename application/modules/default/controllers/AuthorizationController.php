@@ -218,11 +218,21 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         }
 
         $formLogin = new Default_Form_Login();
-        //Default_Model_CsrfProtection::createCSRF($formLogin, 'login', 'csrfLogin');
 
         if ($this->_request->isGet()) { // not a POST request
             $this->view->formLogin = $formLogin->populate(array('redirect' => $this->view->redirect));
             $this->view->error = 0;
+
+            return;
+        }
+
+        if (false === Default_Model_CsrfProtection::validateCsrfToken($_POST['login_csrf'])) {
+            $this->view->error = 0;
+            $this->view->formLogin = $formLogin;
+            if ($this->_request->isXmlHttpRequest()) {
+                $viewLoginForm = $this->view->render('authorization/partials/loginForm.phtml');
+                $this->_helper->json(array('status' => 'ok', 'message' => $viewLoginForm));
+            }
 
             return;
         }

@@ -38,7 +38,7 @@ class VerifyController extends Local_Controller_Action_DomainSwitch
         }
 
         $crsf_token = $this->getParam('crsf_token');
-        if (false == Default_Model_CsrfProtection::validateCrsfToken($crsf_token)) {
+        if (false == Default_Model_CsrfProtection::validateCsrfToken($crsf_token)) {
             return;
         }
 

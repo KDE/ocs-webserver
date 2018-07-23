@@ -31,15 +31,18 @@ class Default_Model_CsrfProtection
      *
      * @return Zend_Form_Element
      * @throws Zend_Form_Exception
+     * @throws Zend_Session_Exception
      */
-    public static function createCSRF($form, $csrf_salt_name, $field_name = "csrf")
+    public static function createCsrf($form, $csrf_salt_name, $field_name = "csrf")
     {
+        /** @var Zend_Form_Element_Hash $element */
         $element = $form->createElement('hash', $field_name, array(
             'salt' => $csrf_salt_name
         ));
         //Create unique ID if you need to use some Javascript on the CSRF Element
         $element->setAttrib('id', $form->getName() . '_' . $element->getId());
         $element->setDecorators(array('ViewHelper'));
+        $element->setSession(new Zend_Session_Namespace('login_csrf'));
         $form->addElement($element);
 
         return $element;
@@ -51,14 +54,40 @@ class Default_Model_CsrfProtection
      * @return bool
      * @throws Zend_Session_Exception
      */
-    public static function validateCrsfToken($hash)
+    public static function validateCsrfToken($hash)
     {
         $session = new Zend_Session_Namespace();
-        if (hash_equals($session->crsf_token, $hash)) {
-            return true;
-        } else {
-            return false;
+
+        if (false === function_exists("hash_equals")) {
+            $valid = self::hash_equals($session->crsf_token, $hash);
+            Zend_Registry::get('logger')->debug(__METHOD__ . ' - session csrf token: ' . print_r($session->crsf_token, true));
+            Zend_Registry::get('logger')->debug(__METHOD__ . ' - form csrf token: ' . print_r($hash, true));
+            Zend_Registry::get('logger')->debug(__METHOD__ . ' - crsf validation result: ' . print_r($valid, true));
+
+            return $valid;
         }
+
+        $valid = hash_equals($session->crsf_token, $hash);
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - session csrf token: ' . print_r($session->crsf_token, true));
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - form csrf token: ' . print_r($hash, true));
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - crsf validation result: ' . print_r($valid, true));
+
+        return $valid;
+    }
+
+    /**
+     * @param $a
+     * @param $b
+     *
+     * @return bool
+     * @author http://php.net/manual/en/function.hash-equals.php#usernotes  Cedric Van Bockhaven
+     */
+    private static function hash_equals($a, $b)
+    {
+        $ret = strlen($a) ^ strlen($b);
+        $ret |= array_sum(unpack("C*", $a ^ $b));
+
+        return !$ret;
     }
 
     /**
@@ -66,13 +95,13 @@ class Default_Model_CsrfProtection
      * @throws Zend_Form_Exception
      * @throws Zend_Session_Exception
      */
-    public static function getFormCrsf()
+    public static function getFormCsrf($name = 'crsf_token')
     {
-        $form_crsf = new Zend_Form_Element_Hidden('crsf_token');
+        $form_crsf = new Zend_Form_Element_Hidden($name);
         $form_crsf->setFilters(array('StringTrim'));
         $form_crsf->setRequired(true);
         $form_crsf->setDecorators(array('ViewHelper'));
-        $form_crsf->setValue(self::getCrsfToken());
+        $form_crsf->setValue(self::getCsrfToken());
 
         return $form_crsf;
     }
@@ -81,10 +110,10 @@ class Default_Model_CsrfProtection
      * @return mixed|string
      * @throws Zend_Session_Exception
      */
-    public static function getCrsfToken()
+    public static function getCsrfToken()
     {
         $session = new Zend_Session_Namespace();
-        if ($session->crsf_token AND $session->crsf_expire AND ($session->crsf_expire < microtime(true))) {
+        if ($session->crsf_token AND $session->crsf_expire AND ($session->crsf_expire > microtime(true))) {
             return $session->crsf_token;
         }
         $session->crsf_expire = microtime(true) + self::validity;
