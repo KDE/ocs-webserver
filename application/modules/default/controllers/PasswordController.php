@@ -210,7 +210,7 @@ class PasswordController extends Local_Controller_Action_DomainSwitch
 
         try {
             $id_server = new Default_Model_OcsOpenId();
-            $id_server->updatePasswordForUser($member_data->password);
+            $id_server->updatePasswordForUser($member_data->member_id);
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err($e->getTraceAsString());
         }
