@@ -39,6 +39,14 @@ class Default_Model_OcsOpenId
         }
     }
 
+    /**
+     * @param $member_id
+     *
+     * @return bool
+     * @throws Zend_Cache_Exception
+     * @throws Zend_Exception
+     * @throws Zend_Http_Client_Exception
+     */
     public function createUser($member_id)
     {
         if (empty($member_id)) {
@@ -100,6 +108,14 @@ class Default_Model_OcsOpenId
         return $member;
     }
 
+    /**
+     * @param $member_id
+     *
+     * @return bool
+     * @throws Zend_Cache_Exception
+     * @throws Zend_Exception
+     * @throws Zend_Http_Client_Exception
+     */
     public function updateMailForUser($member_id)
     {
         if (empty($member_id)) {
@@ -109,6 +125,14 @@ class Default_Model_OcsOpenId
         return $this->updateUser($member_id);
     }
 
+    /**
+     * @param $member_id
+     *
+     * @return bool
+     * @throws Zend_Cache_Exception
+     * @throws Zend_Exception
+     * @throws Zend_Http_Client_Exception
+     */
     public function updateUser($member_id)
     {
         if (empty($member_id)) {
@@ -122,6 +146,14 @@ class Default_Model_OcsOpenId
         return $this->id_server->pushHttpUserData($data, $options);
     }
 
+    /**
+     * @param $member_id
+     *
+     * @return bool
+     * @throws Zend_Cache_Exception
+     * @throws Zend_Exception
+     * @throws Zend_Http_Client_Exception
+     */
     public function updatePasswordForUser($member_id)
     {
         if (empty($member_id)) {
@@ -131,6 +163,14 @@ class Default_Model_OcsOpenId
         return $this->updateUser($member_id);
     }
 
+    /**
+     * @param $member_id
+     *
+     * @return bool
+     * @throws Zend_Cache_Exception
+     * @throws Zend_Exception
+     * @throws Zend_Http_Client_Exception
+     */
     public function deactivateLoginForUser($member_id)
     {
         if (empty($member_id)) {
