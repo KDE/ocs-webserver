@@ -73,6 +73,8 @@ class OAuthController extends Zend_Controller_Action
      * @param $data
      *
      * @return string
+     * @throws Zend_Cache_Exception
+     * @throws Zend_Exception
      */
     protected function createAToken($data)
     {
