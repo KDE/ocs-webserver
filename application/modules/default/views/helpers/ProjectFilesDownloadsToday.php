@@ -30,7 +30,6 @@ class Default_View_Helper_ProjectFilesDownloadsToday extends Zend_View_Helper_Ab
      */
     public function projectFilesDownloadsToday($ppload_collection_id)
     {
-        // require_once 'Ppload/Api.php';
         $pploadApi = new Ppload_Api(array(
             'apiUri'   => PPLOAD_API_URI,
             'clientId' => PPLOAD_CLIENT_ID,

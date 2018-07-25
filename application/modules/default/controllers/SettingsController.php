@@ -777,7 +777,6 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
      */
     protected function _updatePploadProfile()
     {
-        // require_once 'Ppload/Api.php';
         $pploadApi = new Ppload_Api(array(
             'apiUri'   => PPLOAD_API_URI,
             'clientId' => PPLOAD_CLIENT_ID,
@@ -1248,7 +1247,6 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
 
         // ppload
         // Delete owner and related data
-        // require_once 'Ppload/Api.php';
         $pploadApi = new Ppload_Api(array(
             'apiUri'   => PPLOAD_API_URI,
             'clientId' => PPLOAD_CLIENT_ID,

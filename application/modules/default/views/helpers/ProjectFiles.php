@@ -31,7 +31,6 @@ class Default_View_Helper_ProjectFiles extends Zend_View_Helper_Abstract
     public function projectFiles($ppload_collection_id)
     {
         $filesInfos = array();
-        // require_once 'Ppload/Api.php';
         $pploadApi = new Ppload_Api(array(
             'apiUri'   => PPLOAD_API_URI,
             'clientId' => PPLOAD_CLIENT_ID,

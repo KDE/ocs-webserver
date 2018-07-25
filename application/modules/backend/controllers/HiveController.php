@@ -890,7 +890,6 @@ class Backend_HiveController extends Local_Controller_Action_Backend
         $info = '';
 
         //Clean up old collection data
-        // require_once 'Ppload/Api.php';
         $pploadApi = new Ppload_Api(array(
             'apiUri'   => PPLOAD_API_URI,
             'clientId' => PPLOAD_CLIENT_ID,
@@ -1051,7 +1050,6 @@ class Backend_HiveController extends Local_Controller_Action_Backend
             }
         }
 
-        // require_once 'Ppload/Api.php';
         $pploadApi = new Ppload_Api(array(
             'apiUri'   => PPLOAD_API_URI,
             'clientId' => PPLOAD_CLIENT_ID,
@@ -1168,7 +1166,6 @@ class Backend_HiveController extends Local_Controller_Action_Backend
             return false;
         }
 
-        // require_once 'Ppload/Api.php';
         $pploadApi = new Ppload_Api(array(
             'apiUri'   => "https://dl.opendesktop.org/api/",
             'clientId' => "1387085484",
@@ -1512,7 +1509,6 @@ class Backend_HiveController extends Local_Controller_Action_Backend
             return false;
         }
 
-        // require_once 'Ppload/Api.php';
         $pploadApi = new Ppload_Api(array(
             'apiUri'   => PPLOAD_API_URI,
             'clientId' => PPLOAD_CLIENT_ID,
