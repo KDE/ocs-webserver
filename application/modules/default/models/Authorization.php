@@ -46,6 +46,7 @@ class Default_Model_Authorization
 
     /**
      * @throws Zend_Session_Exception
+     * @throws Zend_Exception
      */
     public function logout()
     {
@@ -96,9 +97,11 @@ class Default_Model_Authorization
      *
      * @return Zend_Auth_Result
      * @throws Zend_Auth_Adapter_Exception
+     * @throws Zend_Exception
      */
     protected function authenticateCredentials($identity, $credential, $loginMethod = null)
     {
+        /** @var Local_Auth_Adapter_Ocs $authAdapter */
         $authAdapter = Local_Auth_AdapterFactory::getAuthAdapter($identity, $loginMethod);
         $authAdapter->setIdentity($identity);
         $authAdapter->setCredential($credential);
@@ -113,6 +116,9 @@ class Default_Model_Authorization
 
     /**
      * @param bool $setRememberMe
+     *
+     * @throws Zend_Db_Statement_Exception
+     * @throws Zend_Exception
      */
     public function updateRememberMe($setRememberMe = false)
     {
@@ -328,6 +334,7 @@ class Default_Model_Authorization
      *
      * @return mixed
      * @throws Zend_Auth_Adapter_Exception
+     * @throws Zend_Exception
      */
     public function getAuthDataFromApi($identity, $credential, $loginMethod = null)
     {
