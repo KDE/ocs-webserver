@@ -1854,6 +1854,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $projectTable = new Default_Model_DbTable_Project();
         $projectData = $projectTable->find($this->_projectId)->current();
 
+        $error_text = '';
+
         // Add file to ppload collection
         if (!empty($_FILES['file_upload']['tmp_name'])
             && $_FILES['file_upload']['error'] == UPLOAD_ERR_OK
@@ -1883,8 +1885,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $log->debug(__CLASS__ . '::' . __FUNCTION__ . '::' . print_r($fileResponse, true) . "\n");
 
             unlink($tmpFilename);
-
-            $error_text = '';
 
             if (!empty($fileResponse->file->collection_id)) {
                 if (!$projectData->ppload_collection_id) {
@@ -1961,13 +1961,15 @@ class ProductController extends Local_Controller_Action_DomainSwitch
     public function updatepploadfileAction()
     {
         $this->_helper->layout()->disableLayout();
+        $log = Zend_Registry::get('logger');
+        $log->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . '**********' . "\n");
 
         $projectTable = new Default_Model_DbTable_Project();
         $projectData = $projectTable->find($this->_projectId)->current();
 
-        $error_text = "";
+        $error_text = '';
 
-        // Update a file information in ppload collection
+        // Update a file in ppload collection
         if (!empty($_POST['file_id'])) {
             $pploadApi = new Ppload_Api(array(
                 'apiUri'   => PPLOAD_API_URI,
@@ -1980,6 +1982,15 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 && $fileResponse->file->collection_id == $projectData->ppload_collection_id
             ) {
                 $fileRequest = array();
+                $tmpFilename = '';
+                if (!empty($_FILES['file_upload']['tmp_name'])
+                    && $_FILES['file_upload']['error'] == UPLOAD_ERR_OK
+                ) {
+                    $tmpFilename = dirname($_FILES['file_upload']['tmp_name']) . '/' . basename($_FILES['file_upload']['name']);
+                    $log->debug(__CLASS__ . '::' . __FUNCTION__ . '::' . print_r($tmpFilename, true) . "\n");
+                    move_uploaded_file($_FILES['file_upload']['tmp_name'], $tmpFilename);
+                    $fileRequest['file'] = $tmpFilename;
+                }
                 if (isset($_POST['file_description'])) {
                     $fileRequest['description'] = mb_substr($_POST['file_description'], 0, 140);
                 }
@@ -1995,7 +2006,14 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 if (isset($_POST['file_version'])) {
                     $fileRequest['version'] = $_POST['file_version'];
                 }
+
                 $fileResponse = $pploadApi->putFile($_POST['file_id'], $fileRequest);
+                $log->debug(__CLASS__ . '::' . __FUNCTION__ . '::' . print_r($fileResponse, true) . "\n");
+
+                if ($tmpFilename) {
+                    unlink($tmpFilename);
+                }
+
                 if (isset($fileResponse->status)
                     && $fileResponse->status == 'success'
                 ) {
@@ -2019,6 +2037,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 . ', FileId: ' . $_POST['file_id'];
         }
 
+        $log->debug('********** END ' . __CLASS__ . '::' . __FUNCTION__ . '**********' . "\n");
         $this->_helper->json(array('status' => 'error', 'error_text' => $error_text));
     }
 
@@ -2026,7 +2045,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
     {
         $this->_helper->layout()->disableLayout();
 
-        $error_text = "";
+        $error_text = '';
 
         // Update a file information in ppload collection
         if (!empty($_POST['file_id'])) {
@@ -2034,7 +2053,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             if (isset($_POST['package_type_id'])) {
                 $typeId = $_POST['package_type_id'];
             }
-
 
             //set architecture
             $modelTags = new Default_Model_Tags();
@@ -2056,7 +2074,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
     {
         $this->_helper->layout()->disableLayout();
 
-        $error_text = "";
+        $error_text = '';
 
         // Update a file information in ppload collection
         if (!empty($_POST['file_id'])) {
@@ -2082,7 +2100,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
     {
         $this->_helper->layout()->disableLayout();
 
-        $error_text = "";
+        $error_text = '';
 
         // Update a file information in ppload collection
         if (!empty($_POST['file_id'])) {
@@ -2090,7 +2108,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             if (isset($_POST['architecture_id'])) {
                 $architectureId = $_POST['architecture_id'];
             }
-
 
             //set architecture
             $modelTags = new Default_Model_Tags();
@@ -2111,7 +2128,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
     {
         $this->_helper->layout()->disableLayout();
 
-        $error_text = "";
+        $error_text = '';
 
         // Update a file information in ppload collection
         if (!empty($_POST['file_id'])) {
@@ -2119,7 +2136,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             if (isset($_POST['is_compatible'])) {
                 $is_compatible = $_POST['is_compatible'];
             }
-
 
             return;
         } else {
