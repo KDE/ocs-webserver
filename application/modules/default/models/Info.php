@@ -1029,37 +1029,4 @@ class Default_Model_Info
          return $result['amount'];
     }
 
-  /**
-       * @return array
-       */
-      public function getGhnsExcludedProjects()
-      {
-          $sql = "
-                SELECT 
-                p.project_id
-                , p.title
-                , p.count_comments
-                , p.count_dislikes
-                ,p.count_likes
-                ,laplace_score(count_likes, count_dislikes) AS laplace_score
-                ,p.image_small
-                ,p.version
-                ,p.member_id
-                ,(select username from member mb where p.member_id = mb.member_id) as username
-                ,p.created_at  as project_created_at
-                ,p.changed_at as project_changed_at
-                ,c.title as cat_title
-                , l.member_id AS exclude_member_id, l.time AS exclude_time, m.username AS exclude_member_name 
-                FROM project p
-                JOIN project_category c ON p.project_category_id = c.project_category_id
-                JOIN activity_log l ON l.project_id = p.project_id AND l.activity_type_id = 314
-                INNER JOIN member m ON m.member_id = l.member_id
-                WHERE p.ghns_excluded = 1               
-                order by exclude_time desc                                        
-          ";
-        $result = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
-        
-          return $result;
-      }
-
 }

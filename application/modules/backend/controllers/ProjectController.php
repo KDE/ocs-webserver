@@ -275,6 +275,7 @@ class Backend_ProjectController extends Local_Controller_Action_Backend
         $tableTags = new Default_Model_Tags();
         $tableTags->saveGhnsExcludedTagForProject($projectId, $ghns_excluded);
 
+
         /** ronald 20180611 now as tag
         $sql = "UPDATE project SET ghns_excluded = :ghns_excluded WHERE project_id = :project_id";
         $this->_model->getAdapter()->query($sql, array('ghns_excluded' => $ghns_excluded, 'project_id' => $projectId));
@@ -284,6 +285,18 @@ class Backend_ProjectController extends Local_Controller_Action_Backend
         $identity = $auth->getIdentity();
         Default_Model_ActivityLog::logActivity($projectId, $projectId, $identity->member_id,
             Default_Model_ActivityLog::BACKEND_PROJECT_GHNS_EXCLUDED, $product); 
+
+
+        $moderationModel = new Default_Model_ProjectModeration();
+        
+        $moderationModel->updateInsertModeration($projectId
+                                                    ,Default_Model_ProjectModeration::M_TYPE_GET_HOT_NEW_STUFF_EXCLUDED
+                                                    ,$ghns_excluded
+                                                    ,$identity->member_id
+                                                    ,''
+                                                    ,null
+                                                    ,null
+                                                    );
 
         $jTableResult = array();
         $jTableResult['Result'] = self::RESULT_OK;
