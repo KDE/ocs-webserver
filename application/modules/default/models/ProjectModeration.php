@@ -81,8 +81,11 @@ class Default_Model_ProjectModeration extends Default_Model_DbTable_ProjectModer
                 }
                 $this->_db->insert($this->_name, $insertValues);
             }else
-            {               
-                 $this->insertModeration($project_moderation_type_id,$project_id, $userid,$note);             
+            {            
+                if($is_set==1)
+                {
+                    $this->insertModeration($project_moderation_type_id,$project_id, $userid,$note);             
+                 }   
             }                         
     }
 
