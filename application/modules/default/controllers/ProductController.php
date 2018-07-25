@@ -2054,7 +2054,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 $typeId = $_POST['package_type_id'];
             }
 
-
             //set architecture
             $modelTags = new Default_Model_Tags();
             $modelTags->savePackagetypeTagForProject($this->_projectId, $_POST['file_id'], $typeId);
@@ -2109,7 +2108,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             if (isset($_POST['architecture_id'])) {
                 $architectureId = $_POST['architecture_id'];
             }
-
 
             //set architecture
             $modelTags = new Default_Model_Tags();
