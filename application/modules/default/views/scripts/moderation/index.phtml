@@ -26,8 +26,8 @@
     <section class="wrapper" id="products-wrapper">
         <div class="container-fluid">
             <div class="row">
-              <div class="sidebar-left col-md-1"></div>
-               <div class="content col-md-8">
+             
+               <div class="content col-lg-10 col-md-10">
             <h1>
                 Get hot new stuff excluded
             </h1>
@@ -35,8 +35,8 @@
             </div>
 
             <div class="row">
-                <div class="sidebar-left col-md-1"></div>
-                <div class="content col-md-9">
+              
+                 <div class="content col-lg-10 col-md-10">
                     <?php
                     $helperPrintDate = new Default_View_Helper_PrintDate();
                     $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
@@ -108,7 +108,7 @@
                                             href="<?php echo $helpMemberUrl->buildMemberUrl($this->product['member_id']) ?>"><?php echo $this->product['username'] ?></a></b>
                               
                                 <!-- RATING -->
-                                <div style="width: 100px">
+                                <div style="width: 100px; padding-top: 10px">
                                 <?php
                                 $this->widgetRating = new stdClass();
                                 $this->widgetRating->project_id = $this->product['project_id'];
