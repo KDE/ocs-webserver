@@ -22,6 +22,11 @@
  * Created: 31.05.2017
  */
 ?>
+<div class="tooltip_templates" style="display: none">
+    <span id="tooltip_content">
+        <i class="fa fa-spinner"></i>
+    </span>
+</div>
 <main id="explore-content">
     <section class="wrapper" id="products-wrapper">
         <div class="container-fluid">
@@ -133,7 +138,7 @@
                                  <?= $helperPrintDate->printDate($this->product['created_at']);?>
                             </div>
                              <div class="col-lg-3">
-                                 <?=$this->product['exclude_member_name']?>
+                                 <a  href="<?php echo $helpMemberUrl->buildMemberUrl($this->product['created_by']) ?>" class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="<?=$this->product['created_by']?>" ><?=$this->product['exclude_member_name']?></a>
                                  <br>
                                  <?=$this->product['note']?>
                             </div>
@@ -154,3 +159,8 @@
         </div>
     </section>
 </main>
+<?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){                                             
+                TooltipUser.setup("tooltipuser","right");                            
+            });
+        ');
