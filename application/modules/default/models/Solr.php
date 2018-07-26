@@ -146,7 +146,7 @@ class Default_Model_Solr
     {
         $currentStoreConfig = Zend_Registry::get('store_config');
       
-        if (substr($currentStoreConfig['order'], -1) <> 1) {
+        if (substr($currentStoreConfig->order, -1) <> 1) {
             return $params;
         }
         //$params['fq'] = array('stores:(' . $currentStoreConfig['store_id'] . ')');
