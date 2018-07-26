@@ -714,7 +714,7 @@ $this->inlineScript()->appendScript('
                             if (data.status != 'success') {
                                 return;
                             }
-                            var deletePploadFileBtn = '<a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-deletepploadfile-btn=""><span class="glyphicon glyphicon-trash"></span></a>';;
+                            var deletePploadFileBtn = '<a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-deletepploadfile-btn=""><span class="glyphicon glyphicon-trash"></span></a>';
                             var deletePploadFileBtnPerFile = '';
 
                             var myArray = $.map(data.files, function(entry) {
@@ -919,28 +919,30 @@ $this->inlineScript()->appendScript('
                     });
                 }
 
-                function postPploadFiles(files) {
-                    if (files) {
-                        $.each(files, function () {
-                            var uploadId = 'file-upload-' + Math.floor(Math.random() * 1000) + '-' + new Date().getTime();
-                            ajaxUploads.queue[uploadId] = this;
-                            $modalPpload.find('table[data-file-upload] tbody').append(
-                                '<tr data-file-upload-id="' + uploadId + '">'
-                                + '<td>' + this.name + ' (' + humanFileSize(this.size) + ')</td>'
-                                + '<td>'
-                                + '<progress max="100" value="0" data-file-upload-progress=""></progress>'
-                                + '<br>'
-                                + '<span'
-                                + ' data-file-upload-progress=""'
-                                + ' data-file-upload-loaded="0"'
-                                + ' data-file-upload-time="0"></span>'
-                                + '</td>'
-                                + '<td><a href="#" data-file-upload-cancel-btn="">×</a></td>'
-                                + '</tr>'
-                            );
-                        });
-                    }
+                function addFileUploadQueue(fileId, fileUpload) {
+                    var uploadId = 'file-upload-' + Math.floor(Math.random() * 1000) + '-' + new Date().getTime();
+                    ajaxUploads.queue[uploadId] = {
+                        fileId: fileId,
+                        fileUpload: fileUpload
+                    };
 
+                    $modalPpload.find('table[data-file-upload] tbody').append(
+                        '<tr data-file-upload-id="' + uploadId + '">'
+                        + '<td>' + this.name + ' (' + humanFileSize(this.size) + ')</td>'
+                        + '<td>'
+                        + '<progress max="100" value="0" data-file-upload-progress=""></progress>'
+                        + '<br>'
+                        + '<span'
+                        + ' data-file-upload-progress=""'
+                        + ' data-file-upload-loaded="0"'
+                        + ' data-file-upload-time="0"></span>'
+                        + '</td>'
+                        + '<td><a href="#" data-file-upload-cancel-btn="">×</a></td>'
+                        + '</tr>'
+                    );
+                }
+
+                function startPostPploadFiles() {
                     if ($.isEmptyObject(ajaxUploads.queue) || ajaxUploads.uploading) {
                         return;
                     }
@@ -950,7 +952,10 @@ $this->inlineScript()->appendScript('
                     var formData = new FormData();
                     $.each(ajaxUploads.queue, function (key, value) {
                         uploadId = key;
-                        formData.append('file_upload', value);
+                        if (value.fileId) {
+                            formData.append('file_id', value.fileId);
+                        }
+                        formData.append('file_upload', value.fileUpload);
                         return false;
                     });
                     var $uploadContainer = $modalPpload.find('tr[data-file-upload-id="' + uploadId + '"]');
@@ -962,10 +967,17 @@ $this->inlineScript()->appendScript('
 
                     ajaxUploads.currentUploadId = uploadId;
 
-
-                    var url = ($modalPpload.attr('data-addpploadfile-uri')).replace(/@@project_id@@/i, ProductForm.project_id);
-                    if (typeof ProductForm.project_id == 'undefined' || ProductForm.project_id == '' || ProductForm.project_id == '0') {
-                        url = ($modalPpload.attr('data-addpploadfile-uri')).replace(/@@project_id@@/i, <?= (isset($this->project_id))?$this->project_id:0  ?>);
+                    var url = '';
+                    if (formData.has('file_id')) {
+                        url = ($modalPpload.attr('data-updatepploadfile-uri')).replace(/@@project_id@@/i, ProductForm.project_id);
+                        if (typeof ProductForm.project_id == 'undefined' || ProductForm.project_id == '' || ProductForm.project_id == '0') {
+                            url = ($modalPpload.attr('data-updatepploadfile-uri')).replace(/@@project_id@@/i, <?= (isset($this->project_id))?$this->project_id:0  ?>);
+                        }
+                    } else {
+                        url = ($modalPpload.attr('data-addpploadfile-uri')).replace(/@@project_id@@/i, ProductForm.project_id);
+                        if (typeof ProductForm.project_id == 'undefined' || ProductForm.project_id == '' || ProductForm.project_id == '0') {
+                            url = ($modalPpload.attr('data-addpploadfile-uri')).replace(/@@project_id@@/i, <?= (isset($this->project_id))?$this->project_id:0  ?>);
+                        }
                     }
 
                     ajaxUploads.uploading = $.ajax({
@@ -993,7 +1005,7 @@ $this->inlineScript()->appendScript('
                                 ajaxUploads.uploading = null;
                                 $uploadContainer.remove();
                                 $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
-                                postPploadFiles();
+                                startPostPploadFiles();
                             }, false);
                             return xhr;
                         },
@@ -1097,7 +1109,7 @@ $this->inlineScript()->appendScript('
                             UserTags.activateSelect(data.file.id, '');
 
                             $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
-                            postPploadFiles();
+                            startPostPploadFiles();
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
                             alert("Error: " + textStatus + ", " + errorThrown);
@@ -1107,15 +1119,15 @@ $this->inlineScript()->appendScript('
                 }
 
                 function updatePploadFile(fileId, fileDescription, fileCategory, fileTags) {
-                    var $url = ($modalPpload.attr('data-updatepploadfile-uri')).replace(/@@project_id@@/i, ProductForm.project_id);
+                    var url = ($modalPpload.attr('data-updatepploadfile-uri')).replace(/@@project_id@@/i, ProductForm.project_id);
                     if (typeof ProductForm.project_id == 'undefined' || ProductForm.project_id == '' || ProductForm.project_id == '0') {
-                        $url = ($modalPpload.attr('data-updatepploadfile-uri')).replace(/@@project_id@@/i, <?= (isset($this->project_id))?$this->project_id:0  ?>);
+                        url = ($modalPpload.attr('data-updatepploadfile-uri')).replace(/@@project_id@@/i, <?= (isset($this->project_id))?$this->project_id:0  ?>);
                     }
                     fileDescription = fileDescription.replace(/<\/?[^>]+(>|$)/g, "");
 
 
                     $.ajax({
-                        url: $url,
+                        url: url,
                         type: 'POST',
                         data: {
                             file_id: fileId,
@@ -1137,13 +1149,13 @@ $this->inlineScript()->appendScript('
                 }
 
                 function updatePackageType(fileId, packagetypeId) {
-                    var $url = ($modalPpload.attr('data-updatepackagetype-uri')).replace(/@@project_id@@/i, ProductForm.project_id);
+                    var url = ($modalPpload.attr('data-updatepackagetype-uri')).replace(/@@project_id@@/i, ProductForm.project_id);
                     if (typeof ProductForm.project_id == 'undefined' || ProductForm.project_id == '' || ProductForm.project_id == '0') {
-                        $url = ($modalPpload.attr('data-updatepackagetype-uri')).replace(/@@project_id@@/i, <?= (isset($this->project_id))?$this->project_id:0  ?>);
+                        url = ($modalPpload.attr('data-updatepackagetype-uri')).replace(/@@project_id@@/i, <?= (isset($this->project_id))?$this->project_id:0  ?>);
                     }
 
                     $.ajax({
-                        url: $url,
+                        url: url,
                         type: 'POST',
                         data: {
                             file_id: fileId,
@@ -1165,13 +1177,13 @@ $this->inlineScript()->appendScript('
 
 
                 function updateArchitecture(fileId, architectureId) {
-                    var $url = ($modalPpload.attr('data-updatearchitecture-uri')).replace(/@@project_id@@/i, ProductForm.project_id);
+                    var url = ($modalPpload.attr('data-updatearchitecture-uri')).replace(/@@project_id@@/i, ProductForm.project_id);
                     if (typeof ProductForm.project_id == 'undefined' || ProductForm.project_id == '' || ProductForm.project_id == '0') {
-                        $url = ($modalPpload.attr('data-updatearchitecture-uri')).replace(/@@project_id@@/i, <?= (isset($this->project_id))?$this->project_id:0  ?>);
+                        url = ($modalPpload.attr('data-updatearchitecture-uri')).replace(/@@project_id@@/i, <?= (isset($this->project_id))?$this->project_id:0  ?>);
                     }
 
                     $.ajax({
-                        url: $url,
+                        url: url,
                         type: 'POST',
                         data: {
                             file_id: fileId,
@@ -1192,14 +1204,14 @@ $this->inlineScript()->appendScript('
                 }
 
                 function updatePploadFileVersion(fileId, version) {
-                    var $url = ($modalPpload.attr('data-updatepploadfile-uri')).replace(/@@project_id@@/i, ProductForm.project_id);
+                    var url = ($modalPpload.attr('data-updatepploadfile-uri')).replace(/@@project_id@@/i, ProductForm.project_id);
                     if (typeof ProductForm.project_id == 'undefined' || ProductForm.project_id == '' || ProductForm.project_id == '0') {
-                        $url = ($modalPpload.attr('data-updatepploadfile-uri')).replace(/@@project_id@@/i, <?= (isset($this->project_id))?$this->project_id:0  ?>);
+                        url = ($modalPpload.attr('data-updatepploadfile-uri')).replace(/@@project_id@@/i, <?= (isset($this->project_id))?$this->project_id:0  ?>);
                     }
                     version = version.replace(/<\/?[^>]+(>|$)/g, "");
 
                     $.ajax({
-                        url: $url,
+                        url: url,
                         type: 'POST',
                         data: {
                             file_id: fileId,
@@ -1220,13 +1232,13 @@ $this->inlineScript()->appendScript('
                 }
 
                 function updatePploadFileTags(fileId, fileTags) {
-                    var $url = ($modalPpload.attr('data-updatepploadfile-uri')).replace(/@@project_id@@/i, ProductForm.project_id);
+                    var url = ($modalPpload.attr('data-updatepploadfile-uri')).replace(/@@project_id@@/i, ProductForm.project_id);
                     if (typeof ProductForm.project_id == 'undefined' || ProductForm.project_id == '' || ProductForm.project_id == '0') {
-                        $url = ($modalPpload.attr('data-updatepploadfile-uri')).replace(/@@project_id@@/i, <?= (isset($this->project_id))?$this->project_id:0  ?>);
+                        url = ($modalPpload.attr('data-updatepploadfile-uri')).replace(/@@project_id@@/i, <?= (isset($this->project_id))?$this->project_id:0  ?>);
                     }
 
                     $.ajax({
-                        url: $url,
+                        url: url,
                         type: 'POST',
                         data: {
                             file_id: fileId,
@@ -1247,13 +1259,13 @@ $this->inlineScript()->appendScript('
                 }
 
                 function deletePploadFile(fileId) {
-                    var $url = ($modalPpload.attr('data-deletepploadfile-uri')).replace(/@@project_id@@/i, ProductForm.project_id);
+                    var url = ($modalPpload.attr('data-deletepploadfile-uri')).replace(/@@project_id@@/i, ProductForm.project_id);
                     if (typeof ProductForm.project_id == 'undefined' || ProductForm.project_id == '' || ProductForm.project_id == '0') {
-                        $url = ($modalPpload.attr('data-deletepploadfile-uri')).replace(/@@project_id@@/i, <?= (isset($this->project_id))?$this->project_id:0  ?>);
+                        url = ($modalPpload.attr('data-deletepploadfile-uri')).replace(/@@project_id@@/i, <?= (isset($this->project_id))?$this->project_id:0  ?>);
                     }
 
                     $.ajax({
-                        url: $url,
+                        url: url,
                         type: 'POST',
                         data: {file_id: fileId},
                         dataType: 'json',
@@ -1288,12 +1300,12 @@ $this->inlineScript()->appendScript('
                 }
 
                 function deletePploadFiles() {
-                    var $url = ($modalPpload.attr('data-deletepploadfiles-uri')).replace(/@@project_id@@/i, ProductForm.project_id);
+                    var url = ($modalPpload.attr('data-deletepploadfiles-uri')).replace(/@@project_id@@/i, ProductForm.project_id);
                     if (typeof ProductForm.project_id == 'undefined' || ProductForm.project_id == '' || ProductForm.project_id == '0') {
-                        $url = ($modalPpload.attr('data-deletepploadfiles-uri')).replace(/@@project_id@@/i, <?= (isset($this->project_id))?$this->project_id:0  ?>);
+                        url = ($modalPpload.attr('data-deletepploadfiles-uri')).replace(/@@project_id@@/i, <?= (isset($this->project_id))?$this->project_id:0  ?>);
                     }
                     $.ajax({
-                        url: $url,
+                        url: url,
                         type: 'POST',
                         data: {},
                         dataType: 'json',
@@ -1386,12 +1398,18 @@ $this->inlineScript()->appendScript('
 
                 $modalPpload.on('drop', 'div[data-file-upload]', function (event) {
                     event.preventDefault();
-                    postPploadFiles(event.originalEvent.dataTransfer.files);
+                    $.each(event.originalEvent.dataTransfer.files, function () {
+                        addFileUploadQueue('', this);
+                    });
+                    startPostPploadFiles();
                     $(this).css('border-color', '#cccccc');
                 });
 
                 $modalPpload.on('change', 'input[data-file-upload]', function (event) {
-                    postPploadFiles(this.files);
+                    $.each(this.files, function () {
+                        addFileUploadQueue('', this);
+                    });
+                    startPostPploadFiles();
                 });
 
                 $modalPpload.on('click', 'button[data-addpploadfile-btn]', function (event) {
