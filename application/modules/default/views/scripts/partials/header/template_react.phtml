@@ -45,15 +45,17 @@ echo $this->render('partials/header/metaheader.phtml');
             $helperEncryptUrl = new Default_View_Helper_EncryptUrl();
             $redirectString = '/redirect/' . $helperEncryptUrl->EncryptUrl(Zend_Controller_Front::getInstance()->getRequest()->getScheme() . '://' . Zend_Controller_Front::getInstance()->getRequest()->getHttpHost().$_SERVER["REQUEST_URI"]);
             ?>
-            <ul class="menu-nav-tabs absolute-right" style="position: absolute;bottom: 0px;">
-                <li role="presentation"
-                    class="<?php echo(strpos($_SERVER["REQUEST_URI"], 'register') ? 'active' : '') ?>">
-                    <a href="<?=$serverUrl?>/register" rel="nofollow">Register</a></li>
-                <li role="presentation"
-                    class="<?php echo(strpos($_SERVER["REQUEST_URI"], 'login') ? 'active' : '') ?>">
-                    <a href="<?=$serverUrl?>/login<?php echo strpos($_SERVER["REQUEST_URI"], 'login') ? '' : $redirectString ?>" rel="nofollow">Login</a>
-                </li>
-            </ul>
+            <div class="user-menu-container">
+              <ul>
+                  <li role="presentation"
+                      class="<?php echo(strpos($_SERVER["REQUEST_URI"], 'register') ? 'active' : '') ?>">
+                      <a href="<?=$serverUrl?>/register" rel="nofollow">Register</a></li>
+                  <li role="presentation"
+                      class="<?php echo(strpos($_SERVER["REQUEST_URI"], 'login') ? 'active' : '') ?>">
+                      <a href="<?=$serverUrl?>/login<?php echo strpos($_SERVER["REQUEST_URI"], 'login') ? '' : $redirectString ?>" rel="nofollow">Login</a>
+                  </li>
+              </ul>
+            </div>
         <?php } ?>
 
         <figure class="logo-header">

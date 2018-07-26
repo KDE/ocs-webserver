@@ -79,7 +79,6 @@ class App extends React.Component {
         store.dispatch(setCurrentCategory(currentCategories.category));
         store.dispatch(setCurrentSubCategory(currentCategories.subcategory));
         store.dispatch(setCurrentSecondSubCategory(currentCategories.secondSubCategory));
-
       }
     }
 
@@ -92,6 +91,9 @@ class App extends React.Component {
     if (window.comments) {
       store.dispatch(setComments(comments));
     }
+
+    // user
+    if (window.user) store.dispatch(setUser(user));
 
     // finish loading
     this.setState({loading:false});
@@ -108,7 +110,7 @@ class App extends React.Component {
   }
 
   render(){
-
+    console.log(this.state);
     let displayView = <HomePageWrapper/>;
     if (store.getState().view === 'explore'){ displayView = <ExplorePageWrapper/>; }
     else if (store.getState().view === 'product'){ displayView = <ProductViewWrapper/>}

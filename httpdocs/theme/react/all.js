@@ -420,6 +420,7 @@ const reducer = Redux.combineReducers({
   categories: categoriesReducer,
   comments: commentsReducer,
   users: usersReducer,
+  user: userReducer,
   supporters: supportersReducer,
   domain: domainReducer,
   env: envReducer,
@@ -582,6 +583,14 @@ function commentsReducer(state = {}, action) {
 function usersReducer(state = {}, action) {
   if (action.type === 'SET_USERS') {
     return action.users;
+  } else {
+    return state;
+  }
+}
+
+function userReducer(state = {}, action) {
+  if (action.type === 'SET_USER') {
+    return action.user;
   } else {
     return state;
   }
@@ -811,6 +820,13 @@ function setUsers(users) {
   return {
     type: 'SET_USERS',
     users: users
+  };
+}
+
+function setUser(user) {
+  return {
+    type: 'SET_USER',
+    user: user
   };
 }
 
@@ -1920,9 +1936,17 @@ class ProductViewHeader extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
+    this.onUserLike = this.onUserLike.bind(this);
   }
 
   onUserLike() {
+    console.log(this.props);
+    const url = "/p/" + this.props.product.project_id + "/followproject/";
+    console.log(url);
+    $.ajax({ url: url, cache: false }).done(function (response) {
+      console.log(response);
+      console.log(response.status);
+    });
     /*var PartialsButtonHeartDetail = (function () {
         return {
             setup: function () {
@@ -2079,7 +2103,7 @@ class ProductViewHeader extends React.Component {
                 React.createElement('i', { className: 'plingheart fa fa-heart-o heartgrey' }),
                 React.createElement(
                   'span',
-                  null,
+                  { onClick: this.onUserLike },
                   this.props.product.r_likes.length
                 )
               ),
@@ -3362,6 +3386,9 @@ class App extends React.Component {
       store.dispatch(setComments(comments));
     }
 
+    // user
+    if (window.user) store.dispatch(setUser(user));
+
     // finish loading
     this.setState({ loading: false });
   }
@@ -3377,7 +3404,7 @@ class App extends React.Component {
   }
 
   render() {
-
+    console.log(this.state);
     let displayView = React.createElement(HomePageWrapper, null);
     if (store.getState().view === 'explore') {
       displayView = React.createElement(ExplorePageWrapper, null);

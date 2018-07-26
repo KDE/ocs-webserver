@@ -102,9 +102,17 @@ class ProductViewHeader extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {};
+    this.onUserLike = this.onUserLike.bind(this);
   }
 
   onUserLike(){
+    console.log(this.props);
+    const url = "/p/"+this.props.product.project_id+"/followproject/";
+    console.log(url);
+    $.ajax({url: url,cache: false}).done(function(response){
+      console.log(response);
+      console.log(response.status);
+    });
     /*var PartialsButtonHeartDetail = (function () {
         return {
             setup: function () {
@@ -219,7 +227,7 @@ class ProductViewHeader extends React.Component {
               <div id="product-view-header-right-side">
                 <div className="likes">
                   <i className="plingheart fa fa-heart-o heartgrey"></i>
-                  <span>{this.props.product.r_likes.length}</span>
+                  <span onClick={this.onUserLike}>{this.props.product.r_likes.length}</span>
                 </div>
                 <ProductViewHeaderRatings product={this.props.product}/>
               </div>

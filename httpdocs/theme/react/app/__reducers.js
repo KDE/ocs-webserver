@@ -7,6 +7,7 @@ const reducer = Redux.combineReducers({
   categories:categoriesReducer,
   comments:commentsReducer,
   users:usersReducer,
+  user:userReducer,
   supporters:supportersReducer,
   domain:domainReducer,
   env:envReducer,
@@ -169,6 +170,14 @@ const reducer = Redux.combineReducers({
   function usersReducer(state = {},action){
     if (action.type === 'SET_USERS'){
       return action.users;
+    } else {
+      return state;
+    }
+  }
+
+  function userReducer(state = {}, action){
+    if (action.type === 'SET_USER'){
+      return action.user;
     } else {
       return state;
     }
@@ -398,6 +407,13 @@ const reducer = Redux.combineReducers({
     return {
       type:'SET_USERS',
       users:users
+    }
+  }
+
+  function setUser(user){
+    return {
+      type:'SET_USER',
+      user:user
     }
   }
 
