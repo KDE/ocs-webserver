@@ -43,7 +43,7 @@ $this->inlineScript()->appendFile('/theme/flatui/js/lib/chosen.jquery.min.js');
 $this->inlineScript()->appendScript('
                                     $(document).ready(function(){
                                         $("select.chosen").chosen({
-                                        width: "100%", 
+                                        width: "100%",
                                         max_selected_options: "5",
                                         disable_search: "false",
                                         disable_search_threshold: "5"
@@ -230,24 +230,24 @@ $this->inlineScript()->appendScript('
                                 <?php //$this->form->image_big_upload ?>
                                 <?= $this->form->gallery ?>
                                 <?= $this->form->embed_code ?>
-                                
+
                                 <?= $this->form->source_url ?>
                                 <?= $this->form->license_tag_id ?>
-                                 <?php 
+                                 <?php
                                     if($this->project_id)
                                     {
-                                                $tagmodel = new Default_Model_Tags();            
-                                                $tagscat = $tagmodel->getTagsCategory($this->project_id, Default_Model_Tags::TAG_TYPE_PROJECT);  
+                                                $tagmodel = new Default_Model_Tags();
+                                                $tagscat = $tagmodel->getTagsCategory($this->project_id, Default_Model_Tags::TAG_TYPE_PROJECT);
                                                 if(strlen($tagscat)>0)
                                                 {
                                         ?>
                                     <div class="form-group">
                                         <div class="col-sm-12 margin-top-15">
-                                            <label class="form-label"> System Auto Tags</label>    
+                                            <label class="form-label"> System Auto Tags</label>
                                         </div>
                                         <div class="col-sm-12">
-                                          <?php 
-                                                
+                                          <?php
+
                                                 echo $tagscat ;
                                           ?>
                                         </div>
@@ -257,13 +257,13 @@ $this->inlineScript()->appendScript('
                                     ?>
 
                                 <?= $this->form->tagsuser ?>
-                                
-                                
+
+
                                 <?= $this->form->link_1 ?>
                                 <?= $this->form->facebook_code ?>
                                 <?= $this->form->twitter_code ?>
                                 <?= $this->form->google_code ?>
-                                
+
                             </section>
 
                             <h3>Files</h3>
@@ -296,7 +296,7 @@ $this->inlineScript()->appendScript('
                                                         <tr>
                                                             <th><?= $this->translate('Filename') ?></th>
                                                             <th><?= $this->translate('Version') ?></th>
-                                                            <th><?= $this->translate('Description') ?></th>                                                            
+                                                            <th><?= $this->translate('Description') ?></th>
                                                             <!--<th><?= $this->translate('License') ?></th>-->
                                                             <!--<th><?= $this->translate('Filetype') ?></th>-->
                                                             <th><?= $this->translate('Packagetype') ?></th>
@@ -722,7 +722,7 @@ $this->inlineScript()->appendScript('
                             });
                             myArray.sort(keysrt('created_timestamp'), false);
 
-                     
+
                             $.each(myArray, function () {
 
                                 var fileDescription = '';
@@ -845,7 +845,7 @@ $this->inlineScript()->appendScript('
                                         ?>
                                     + '</select>'
                                     + '</td>'
-                                    
+
                                     + '<td>'
                                     + '<select class="form-control input-sm" id="data-select-architecture' + this.id + '" data-architecture-id="" name="architecture">'
                                     + '    <option value=""></option>'
@@ -861,7 +861,7 @@ $this->inlineScript()->appendScript('
                                         ?>
                                     + '</select>'
                                     + '</td>'
-                                    
+
                                     + '<td>' + this.created_timestamp + '</td>'
                                     + '<td style="text-align: right">' + humanFileSize(this.size) + '</td>'
                                     + '<td>' + deletePploadFileBtnPerFile + '</td>'
@@ -870,9 +870,9 @@ $this->inlineScript()->appendScript('
 
                                 //$("#data-select-license" + this.id + " option[value='"+licenseId+"']").attr('selected', 'selected');
                                 $("#data-select-packagetype" + this.id + " option[value='"+packagetypeId+"']").attr('selected', 'selected');
-                                
+
                                 $("#data-select-architecture" + this.id + " option[value='"+architectureId+"']").attr('selected', 'selected');
-                                
+
                                 /*
                                 $licenseSelect = $modalPpload.find('#data-select-license' + this.id);
                                 if(this.active == '0') {
@@ -884,12 +884,12 @@ $this->inlineScript()->appendScript('
                                 if(this.active == '0') {
                                     $packagetypeSelect.prop('disabled', 'disabled');
                                 }
-                                
+
                                 $architectureSelect = $modalPpload.find('#data-select-architecture' + this.id);
                                 if(this.active == '0') {
                                     $architectureSelect.prop('disabled', 'disabled');
                                 }
-                                
+
 
                                 if ((typeof link != 'undefined') && (link != "")) {
                                     //$("#data-link" + this.id).attr('href', decodeURIComponent(link));
@@ -1014,9 +1014,14 @@ $this->inlineScript()->appendScript('
                             $('a[href="#modal-ppload"][data-product-id="' + $modalPpload.attr('data-product-id') + '"]')
                                 .attr('data-ppload-collection-id', data.file.collection_id);
                             $modalPpload.attr('data-ppload-collection-id', data.file.collection_id);
+
+                            var versionText;
+                            if(data.file.version==null) {versionText = '';} else{versionText = data.file.version;}
+                            versionText = versionText.replace(/<\/?[^>]+(>|$)/g, "");
+
                             var version = '<input data-ppload-file-version="" class="form-control input-sm"'
                                 + ' type="text" maxlength="140" placeholder="File version"'
-                                + ' value="">';
+                                + ' value="' + versionText + '">';
 
                             var fileDescription = '';
                             if (data.file.description) {
@@ -1031,7 +1036,7 @@ $this->inlineScript()->appendScript('
                                 fileTags = data.file.tags;
                             }
 
-                        
+
                             $modalPpload.find('table[data-ppload-files] tbody').append(
                                 '<tr data-ppload-file-id="' + data.file.id + '" data-ppload-file-category="' + fileCategory + '" data-ppload-file-tags="' + fileTags + '">'
                                 + '<td><a href="' + pploadApiUri + 'files/download/'
@@ -1047,7 +1052,7 @@ $this->inlineScript()->appendScript('
                                 + '</select>'
                                 + '</td>'
                                 */
-                                
+
                                 /*
                                 + '<td>' + data.file.type + '</td>'
                                 */
@@ -1066,7 +1071,7 @@ $this->inlineScript()->appendScript('
                                     ?>
                                 + '</select>'
                                 + '</td>'
-                                
+
                                 + '<td>'
                                 + '<select class="form-control input-sm" id="data-select-architecture' + data.file.id + '" data-architecture-id="" name="architecture">'
                                 + '    <option value=""></option>'
@@ -1082,7 +1087,7 @@ $this->inlineScript()->appendScript('
                                     ?>
                                 + '</select>'
                                 + '</td>'
-                        
+
                                 + '<td>' + data.file.created_timestamp + '</td>'
                                 + '<td style="text-align: right">' + humanFileSize(data.file.size) + '</td>'
                                 + '<td><a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-deletepploadfile-btn=""><span class="glyphicon glyphicon-trash"></span></a></td>'
@@ -1157,9 +1162,9 @@ $this->inlineScript()->appendScript('
                         }
                     });
                 }
-                
-                
-                function updateArchitecture(fileId, architectureId) { 
+
+
+                function updateArchitecture(fileId, architectureId) {
                     var $url = ($modalPpload.attr('data-updatearchitecture-uri')).replace(/@@project_id@@/i, ProductForm.project_id);
                     if (typeof ProductForm.project_id == 'undefined' || ProductForm.project_id == '' || ProductForm.project_id == '0') {
                         $url = ($modalPpload.attr('data-updatearchitecture-uri')).replace(/@@project_id@@/i, <?= (isset($this->project_id))?$this->project_id:0  ?>);
@@ -1185,7 +1190,7 @@ $this->inlineScript()->appendScript('
                         }
                     });
                 }
-                
+
                 function updatePploadFileVersion(fileId, version) {
                     var $url = ($modalPpload.attr('data-updatepploadfile-uri')).replace(/@@project_id@@/i, ProductForm.project_id);
                     if (typeof ProductForm.project_id == 'undefined' || ProductForm.project_id == '' || ProductForm.project_id == '0') {
@@ -1557,7 +1562,7 @@ $this->inlineScript()->appendScript('
                     updatePploadFileTags(fileId, newFileTags);
                     $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags',newFileTags);
                 });
-                
+
                 */
 
                 $modalPpload.on('change', 'select[id*=data-select-packagetype]', function(event) {
@@ -1583,7 +1588,7 @@ $this->inlineScript()->appendScript('
                     $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags',newFileTags);
                     updatePackageType(fileId, packagetypeId);
                 });
-                
+
                 $modalPpload.on('change', 'select[id*=data-select-architecture]', function(event) {
                     event.preventDefault();
                     var fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
@@ -1610,7 +1615,7 @@ $this->inlineScript()->appendScript('
 
         });
 
-        
+
 
         var LogCollection=function()
         {
@@ -1647,7 +1652,7 @@ $this->inlineScript()->appendScript('
               });
               $(this).empty().append(my_options);
           }
-          
+
           function setSourceNeededForCategoryInfo(element_id, cat_id) {
             $('.cat_source_info').remove();
             jQuery.ajax({
@@ -1656,15 +1661,15 @@ $this->inlineScript()->appendScript('
                 type: 'get',
                 success: function (results) {
                     var isSourceRequired = results.source_required;
-                    
+
                     if(isSourceRequired == 1) {
                         $('#wrapper_cat_id').append('<div class="cat_source_info" id="' + element_id + '_cat_source_info">*for this category a Source-Code Repository is needed for plings</div>');
                     }
                 }
             });
           }
-          
-          
+
+
 
           ProductForm = {
 
@@ -1694,21 +1699,21 @@ $this->inlineScript()->appendScript('
                           new_html_element += '<option value="' + form_select_option + '" ' + attr_selected + '>' + this.cat_id_data[form_elem_name][form_select_option] + '</option>';
                       }
                       new_html_element += '</select>';
-                      
+
                       $('#wrapper_cat_id').append(new_html_element);
                       this.sortOptionByValue(form_elem_name);
-                      
+
                       var size = <?=count($categories)?>;
                       if((size-1) == level) {
                             this.setSourceNeededForCategoryInfo(form_elem_name, this.cat_id_path[level]);
                       }
-                      
+
                       level++;
                   }
               },
-                  
+
               setSourceNeededForCategoryInfo: function(element_id, cat_id) {
-                  
+
                 jQuery.ajax({
                     data: {'cat_id': cat_id},
                     url: '/productcategory/fetchsourceneeded/',
@@ -1772,7 +1777,7 @@ $this->inlineScript()->appendScript('
 
                                   $('#wrapper_cat_id').append(new_html_element);
                              } else {
-                                var name_elem = name_old_elem; 
+                                var name_elem = name_old_elem;
                                 setSourceNeededForCategoryInfo(name_elem, cat_id);
                              }
                         }
