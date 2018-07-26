@@ -1292,7 +1292,6 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
         $info = '';
 
         //Clean up old collection data
-        // require_once 'Ppload/Api.php';
         $pploadApi = new Ppload_Api(array(
             'apiUri'   => PPLOAD_API_URI,
             'clientId' => PPLOAD_CLIENT_ID,
@@ -1455,7 +1454,6 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
             }
         }
 
-        // require_once 'Ppload/Api.php';
         $pploadApi = new Ppload_Api(array(
             'apiUri'   => PPLOAD_API_URI,
             'clientId' => PPLOAD_CLIENT_ID,
@@ -1572,7 +1570,6 @@ class Backend_HiveCliController extends Local_Controller_Action_CliAbstract
             return false;
         }
 
-        // require_once 'Ppload/Api.php';
         $pploadApi = new Ppload_Api(array(
             'apiUri'   => PPLOAD_API_URI,
             'clientId' => PPLOAD_CLIENT_ID,

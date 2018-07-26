@@ -22,15 +22,34 @@
  **/
 class HomeController extends Local_Controller_Action_DomainSwitch
 {
-
     public function indexAction()
+    {
+        /** @var Default_Model_ConfigStore $storeConfig */
+        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
+        if ($storeConfig) {
+            $this->view->package_type = $storeConfig->package_type;
+            if($storeConfig->isShowHomepage())
+            {
+                 $this->_helper->viewRenderer('index-' . $storeConfig->config_id_name);
+                 return;
+            }
+        }
+        $params = array('ord' => 'latest');
+        if ($this->hasParam('domain_store_id')) {
+            $params['domain_store_id'] = $this->getParam('domain_store_id');
+        }
+        $this->forward('index', 'explore', 'default', $params);        
+    }
+
+
+    public function indexAction_()
     {
         $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
         $storePackageTypeIds = null;
         if ($storeConfig) {
             $this->view->package_type = $filter['package_type'] = $storeConfig['package_type'];
         }
-        
+
         Zend_Registry::get('logger')->debug('*** SHOW_HOME_PAGE: ' . getenv('SHOW_HOME_PAGE'));
         /**
          *  The SHOW_HOME_PAGE environment var will be set in apache .htaccess for some specific host names
@@ -41,8 +60,6 @@ class HomeController extends Local_Controller_Action_DomainSwitch
             $this->_helper->viewRenderer('index-' . $this->getNameForStoreClient());
             return;
         }
-        
-        
 
         // forward is the faster way, but you have no influence to the url. On redirect the url changes.
         $params = array('ord' => 'latest');
@@ -51,7 +68,7 @@ class HomeController extends Local_Controller_Action_DomainSwitch
         }
         $this->forward('index', 'explore', 'default', $params);
 
-     
+
     }
 
 
@@ -61,9 +78,9 @@ class HomeController extends Local_Controller_Action_DomainSwitch
         $modelInfo = new Default_Model_Info();
          $page = (int)$this->getParam('page');
          if($page==0){
-                $featureProducts = $modelInfo->getRandProduct();  
+                $featureProducts = $modelInfo->getRandProduct();
                 $featureProducts->setItemCountPerPage(1);
-                $featureProducts->setCurrentPageNumber(1);  
+                $featureProducts->setCurrentPageNumber(1);
             }else{
                 $featureProducts = $modelInfo->getFeaturedProductsForHostStores(100);
                 if($featureProducts->getTotalItemCount() > 0){
@@ -73,9 +90,9 @@ class HomeController extends Local_Controller_Action_DomainSwitch
                     $featureProducts->setCurrentPageNumber($irandom);
                 }
             }
-        
 
-        if ($featureProducts->getTotalItemCount() > 0) {           
+
+        if ($featureProducts->getTotalItemCount() > 0) {
             $this->view->featureProducts = $featureProducts;
             $this->_helper->viewRenderer('/partials/featuredProducts');
             // $this->_helper->json($featureProducts);
@@ -84,7 +101,13 @@ class HomeController extends Local_Controller_Action_DomainSwitch
 
     protected function setLayout()
     {
-        $this->_helper->layout()->setLayout('home_template');
+        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;      
+        if($storeConfig  && $storeConfig->layout_home)
+        {
+             $this->_helper->layout()->setLayout($storeConfig->layout_home);
+        }else{
+            $this->_helper->layout()->setLayout('home_template');
+        }        
     }
 
 }

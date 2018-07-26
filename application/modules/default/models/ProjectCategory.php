@@ -62,8 +62,8 @@ class Default_Model_ProjectCategory
 
         if (empty($store_id)) {
             $store_config = Zend_Registry::get('store_config');
-            $store_id = $store_config['store_id'];
-            $package_type = $store_config['package_type'];
+            $store_id = $store_config->store_id;
+            $package_type = $store_config->package_type;
         }
 
         /** @var Zend_Cache_Core $cache */
@@ -204,7 +204,7 @@ class Default_Model_ProjectCategory
     {
         if (empty($store_id)) {
             $store_config = Zend_Registry::get('store_config');
-            $store_id = $store_config['store_id'];
+            $store_id = $store_config->store_id;
         }
 
         /** @var Zend_Cache_Core $cache */
@@ -273,13 +273,16 @@ class Default_Model_ProjectCategory
 
     private function fetchProductCount($cat_id, $store_id = null)
     {
-        if (isset($store_id)) {
-            $configurations = Zend_Registry::get('application_store_config_id_list');
-            $store_config = isset($configurations[$store_id]) ? $configurations[$store_id] : null;
-        } else {
-            $store_config = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
+       
+        $store_config = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
+        if($store_config)
+        {
+             $storePackageTypeIds = (false === empty($store_config->package_type)) ? $store_config->package_type : null;     
+        }else
+        {
+            $storePackageTypeIds = null;
         }
-        $storePackageTypeIds = (false === empty($store_config['package_type'])) ? $store_config['package_type'] : null;
+       
 
         if ($storePackageTypeIds) {
             $sql =
@@ -307,7 +310,7 @@ class Default_Model_ProjectCategory
     public function fetchCategoryTreeCurrentStore($clearCache = false)
     {
         $store_config = Zend_Registry::get('store_config');
-        $store_id = $store_config['store_id'];
+        $store_id = $store_config->store_id;
 
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');

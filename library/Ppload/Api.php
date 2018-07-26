@@ -128,8 +128,6 @@ class Ppload_Api
 
     public function postFile(array $params)
     {
-        $log = Zend_Registry::get('logger');
-        $log->debug(__CLASS__ . '::' . __FUNCTION__ . '::' . print_r($this->_config, true) . "\n");
         return $this->_request('POST', 'files/file', array(
             'client_id' => $this->_config['clientId'],
             'secret' => $this->_config['secret']

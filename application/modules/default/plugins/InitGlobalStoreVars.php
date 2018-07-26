@@ -212,17 +212,15 @@ class Default_Plugin_InitGlobalStoreVars extends Zend_Controller_Plugin_Abstract
      */
     private function getStoreConfig($storeHostName)
     {
-        $storeConfig = array();
-
-        $storeConfigArray = Zend_Registry::get('application_store_config_list');
-
-        if (isset($storeConfigArray[$storeHostName])) {
-            $storeConfig = $storeConfigArray[$storeHostName];
-        } else {
-            Zend_Registry::get('logger')->warn(__METHOD__ . '(' . __LINE__ . ') - ' . $storeHostName
-                                               . ' :: no domain config context configured');
-        }
-
+        // $storeConfig = array();
+        // $storeConfigArray = Zend_Registry::get('application_store_config_list');
+        // if (isset($storeConfigArray[$storeHostName])) {
+        //     $storeConfig = $storeConfigArray[$storeHostName];
+        // } else {
+        //     Zend_Registry::get('logger')->warn(__METHOD__ . '(' . __LINE__ . ') - ' . $storeHostName
+        //                                        . ' :: no domain config context configured');
+        // }
+        $storeConfig = new Default_Model_ConfigStore($storeHostName);       
         return $storeConfig;
     }
 

@@ -2,7 +2,9 @@ window.productHelpers = (function(){
 
   function getNumberOfProducts(device,numRows){
     let num;
-    if (device === "huge"){
+    if (device === "very-huge"){
+      num = 7;
+    } else if (device === "huge"){
       num = 6;
     } else if (device === "full"){
       num = 5;
@@ -19,7 +21,89 @@ window.productHelpers = (function(){
     return num;
   }
 
+  function generatePaginationObject(numPages,pathname,currentCategoy,order,page){
+    let pagination = [];
+
+    let baseHref = "/browse";
+    if (pathname.indexOf('cat') > -1){
+      baseHref += "/cat/" + currentCategoy;
+    }
+
+    if (page > 1){
+      const prev = {
+        number:'previous',
+        link:baseHref + "/page/" + parseInt(page - 1) + "/ord/" + order
+      }
+      pagination.push(prev);
+    }
+
+    for (var i = 0; i < numPages; i++){
+      const p = {
+        number:parseInt(i + 1),
+        link:baseHref + "/page/" + parseInt(i + 1) + "/ord/" + order
+      }
+      pagination.push(p);
+    }
+
+    if (page < numPages){
+      const next = {
+        number:'next',
+        link:baseHref + "/page/" + parseInt(page + 1) + "/ord/" + order
+      }
+      pagination.push(next);
+    }
+
+    return pagination;
+  }
+
+  function calculateProductRatings(ratings){
+    let pRating;
+    let totalUp = 0,
+        totalDown = 0;
+    ratings.forEach(function(r,index){
+      if (r.rating_active === "1"){
+        if (r.user_like === "1"){
+          totalUp += 1;
+        } else if (r.user_dislike === "1"){
+          totalDown += 1;
+        }
+      }
+    });
+    pRating = 100 / ratings.length * (totalUp - totalDown);
+    return pRating;
+  }
+
+  function getActiveRatingsNumber(ratings){
+    let activeRatingsNumber = 0;
+    ratings.forEach(function(r,index){
+      if (r.rating_active === "1"){
+        activeRatingsNumber += 1;
+      }
+    });
+    return activeRatingsNumber;
+  }
+
+  function getFilesSummary(files){
+    let summery = {
+      downloads:0,
+      archived:0,
+      fileSize:0,
+      total:0,
+    }
+    files.forEach(function(file,index){
+      summery.total += 1;
+      summery.fileSize += parseInt(file.size);
+      summery.downloads += parseInt(file.downloaded_count);
+    });
+
+    return summery;
+  }
+
   return {
-    getNumberOfProducts
+    getNumberOfProducts,
+    generatePaginationObject,
+    calculateProductRatings,
+    getActiveRatingsNumber,
+    getFilesSummary
   }
 }());

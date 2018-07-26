@@ -466,6 +466,18 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 )
             )
         );
+        
+        $router->addRoute(
+            'store_user_name',
+            new Zend_Controller_Router_Route(
+                '/s/:domain_store_id/u/:user_name/:action/*',
+                array(
+                    'module'     => 'default',
+                    'controller' => 'user',
+                    'action'     => 'index'
+                )
+            )
+        );
 
 
         /** general routing rules */
@@ -654,7 +666,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                     'action'       => 'show'
                 )
             )
-        );
+        );        
         
         $router->addRoute(
             'product_collectionid_url',
@@ -724,6 +736,18 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             'user_show',
             new Zend_Controller_Router_Route(
                 '/member/:member_id/:action/*',
+                array(
+                    'module'     => 'default',
+                    'controller' => 'user',
+                    'action'     => 'index'
+                )
+            )
+        );
+        
+        $router->addRoute(
+            'user_show_with_name',
+            new Zend_Controller_Router_Route(
+                '/u/:user_name/:action/*',
                 array(
                     'module'     => 'default',
                     'controller' => 'user',

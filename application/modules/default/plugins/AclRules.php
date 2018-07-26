@@ -71,6 +71,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addResource(new Zend_Acl_Resource ('default_file'));
         $this->addResource(new Zend_Acl_Resource ('default_plings'));
         $this->addResource(new Zend_Acl_Resource ('default_spam'));
+        $this->addResource(new Zend_Acl_Resource ('default_moderation'));
         $this->addResource(new Zend_Acl_Resource ('default_misuse'));
         $this->addResource(new Zend_Acl_Resource ('default_credits'));
         $this->addResource(new Zend_Acl_Resource ('default_ads'));
@@ -209,7 +210,7 @@ class Default_Plugin_AclRules extends Zend_Acl
 
         // resource default_product
         $this->allow(self::ROLENAME_SYSUSER, 'default_product',
-            array('index', 'show', 'getupdatesajax', 'updates', 'follows', 'fetch', 'search', 'startdownload','ppload'));
+            array('index',   'show', 'getupdatesajax', 'updates', 'follows', 'fetch', 'search', 'startdownload','ppload'));
 
         $this->allow(self::ROLENAME_COOKIEUSER, 'default_product',
             array(
@@ -234,6 +235,12 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->allow(self::ROLENAME_MODERATOR, 'backend_project',
             array(
                 'doghnsexclude'
+            )
+        );
+
+        $this->allow(self::ROLENAME_MODERATOR, 'default_moderation',
+            array(
+                'index'
             )
         );
 

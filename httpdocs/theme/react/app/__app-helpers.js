@@ -12,7 +12,9 @@ window.appHelpers = (function(){
 
   function getDeviceWidth(width){
     let device;
-    if (width > 1500){
+    if (width > 1720){
+      device = "very-huge";
+    } else if (width < 1720 && width > 1500){
       device = "huge";
     } else if (width < 1500 && width > 1250){
       device = "full";
@@ -38,11 +40,64 @@ window.appHelpers = (function(){
     return a;
   }
 
+  function getFileSize(size) {
+    if (isNaN(size))
+    	size = 0;
+
+    if (size < 1024)
+    	return size + ' Bytes';
+
+    size /= 1024;
+
+    if (size < 1024)
+    	return size.toFixed(2) + ' Kb';
+
+    size /= 1024;
+
+    if (size < 1024)
+    	return size.toFixed(2) + ' Mb';
+
+    size /= 1024;
+
+    if (size < 1024)
+    	return size.toFixed(2) + ' Gb';
+
+    size /= 1024;
+
+    return size.toFixed(2) + ' Tb';
+	}
+
+  function generateFilterUrl(location,currentCat){
+    let link = {}
+    if (currentCat !== 0){
+      link.base = "/browse/cat/" + currentCat + "/ord/";
+    } else {
+      link.base = "/browse/ord/";
+    }
+    if (location.search) link.search = location.search;
+    return link;
+  }
+
+  function generateFileDownloadHash(file,env){
+    const timestamp = Date.now() + 3600;
+    const hash = md5(/*salt+*/file.collection_id+timestamp);
+    return hash;
+    /*
+    $salt = PPLOAD_DOWNLOAD_SECRET;
+    $collectionID = $productInfo->ppload_collection_id;
+    $timestamp = time() + 3600; // one hour valid
+    $hash = md5($salt . $collectionID . $timestamp);
+    */
+  }
+
   return {
     getEnv,
     getDeviceWidth,
     splitByLastDot,
-    getTimeAgo
+    getTimeAgo,
+    getFileSize,
+    generateFilterUrl,
+    generateFileDownloadHash
   }
 
 }());

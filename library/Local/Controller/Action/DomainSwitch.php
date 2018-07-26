@@ -124,8 +124,13 @@ class Local_Controller_Action_DomainSwitch extends Zend_Controller_Action
     protected function setLayout()
     {
         $layoutName = 'flat_ui_template';
-
-        $this->_helper->layout()->setLayout($layoutName);
+        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;      
+        if($storeConfig  && $storeConfig->layout)
+        {
+             $this->_helper->layout()->setLayout($storeConfig->layout);
+        }else{
+            $this->_helper->layout()->setLayout($layoutName);
+        }              
     }
 
     protected function _initResponseHeader()

@@ -1029,5 +1029,4 @@ class Default_Model_Info
          return $result['amount'];
     }
 
-
 }

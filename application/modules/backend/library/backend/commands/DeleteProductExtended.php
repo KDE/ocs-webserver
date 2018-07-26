@@ -67,7 +67,6 @@ class Backend_Commands_DeleteProductExtended implements Local_Queue_CommandInter
         // ppload
         // Delete collection
         if ($this->product->ppload_collection_id) {
-            // require_once 'Ppload/Api.php';
             $pploadApi = new Ppload_Api(array(
                 'apiUri'   => PPLOAD_API_URI,
                 'clientId' => PPLOAD_CLIENT_ID,

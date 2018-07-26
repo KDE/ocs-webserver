@@ -33,7 +33,7 @@ class Default_View_Helper_FetchTopProductsForStore
         
         $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
         if ($storeConfig) {
-            $filter['package_type'] = $storeConfig['package_type'];
+            $filter['package_type'] = $storeConfig->package_type;
         }
         $modelProject = new Default_Model_Project();
         $requestedElements = $modelProject->fetchProjectsByFilter($filter, $pageLimit, 0);
