@@ -1537,7 +1537,66 @@ var ProductDetailBtnGetItClick  = (function () {
     }
 })();
 
+var GhnsExcludedClick  = (function () {
+    return {
+        setup: function (projectid) {           
+           $('body').on('click', '#ghns_excluded-this-checkbox', function (event) {                 
+                        event.stopPropagation();
+                        var status = 1;
+                        var title = '';
+                        var btntxt = '';
+                        if (this.checked) {
+                            status = 1;
+                            title = 'Please specify why this product should be excluded (min 5 chars) :';
+                            btntxt=' ghns exclude';
+                        } else {
+                            status = 0;
+                            title = 'Please specify why this product should be included (min 5 chars) :';
+                            btntxt=' ghns include';
+                        }
+                    
+                        var msgBox = $('#generic-dialog');                    
+                        msgBox.modal('show');                    
+                        msgBox.find('.modal-header-text').empty().append('GHNS ');
+                        msgBox.find('.modal-body').empty().append(title+
+                                    '<p> <textarea class="" id="ghns-excluded-text" name="t" cols="50" rows="3"></textarea> <p><button id="btn-ghns-excluded" data-projectid='+projectid+'  data-status = '+status+' class="btn-ghns-excluded">'+btntxt+'</button>');   
 
+                        $('body').on("click", "#btn-ghns-excluded", function(){                              
+                                var txt = $('#ghns-excluded-text').val();    
+                                var project_id = $(this).attr('data-projectid');
+                                var status = $(this).attr('data-status');
+                                var target = "/backend/project/doghnsexclude";
+                                 $.ajax({
+                                       url: target,
+                                       method:'POST',
+                                       data:{'project_id':project_id,'ghns_excluded':status,'msg':txt},
+                                       success: function (results) {
+                                           var msgBox = $('#generic-dialog');       
+                                           if (status == 0) {                                                                                                                               
+                                                 msgBox.find('.modal-body').empty().append('Project is successfully included into GHNS');            
+                                                $('#ghns_excluded-this-checkbox').prop("checked", false);
+
+                                           } else {                                                                                     
+                                                 msgBox.find('.modal-body').empty().append('Project is successfully excluded into GHNS');            
+                                               $('#ghns_excluded-this-checkbox').prop("checked", true);                
+                                           }    
+
+                                           setTimeout(function () {
+                                               msgBox.modal('hide');
+                                           }, 1000);           
+                                       },
+                                       error: function () {
+                                           alert('Service is temporarily unavailable.');
+                                       }
+                                   });
+                        });
+
+                    return false;           
+           });
+
+        }
+    }
+})();
 
 var AboutMeMyProjectsPaging = (function () {
   return {

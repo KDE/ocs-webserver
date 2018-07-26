@@ -30,6 +30,7 @@ class Backend_ProjectController extends Local_Controller_Action_Backend
     const PARAM_FEATURED = 'featured';
     const PARAM_APPROVED = 'ghns_excluded';
     const PARAM_PLING_EXCLUDED = 'pling_excluded';
+    const PARAM_MSG ='msg';
     /** @var Default_Model_Project */
     protected $_model;
 
@@ -289,11 +290,12 @@ class Backend_ProjectController extends Local_Controller_Action_Backend
 
         $moderationModel = new Default_Model_ProjectModeration();
         
+         $note =$this->getParam(self::PARAM_MSG, null);
         $moderationModel->updateInsertModeration($projectId
                                                     ,Default_Model_ProjectModeration::M_TYPE_GET_HOT_NEW_STUFF_EXCLUDED
                                                     ,$ghns_excluded
                                                     ,$identity->member_id
-                                                    ,''
+                                                    ,$note
                                                     ,null
                                                     ,null
                                                     );
