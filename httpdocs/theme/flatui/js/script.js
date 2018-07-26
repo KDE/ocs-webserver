@@ -1563,6 +1563,10 @@ var GhnsExcludedClick  = (function () {
 
                         $('body').on("click", "#btn-ghns-excluded", function(){                              
                                 var txt = $('#ghns-excluded-text').val();    
+                                if(txt.length<5) {
+                                    alert('min 5 chars');
+                                    return false;
+                                }
                                 var project_id = $(this).attr('data-projectid');
                                 var status = $(this).attr('data-status');
                                 var target = "/backend/project/doghnsexclude";
