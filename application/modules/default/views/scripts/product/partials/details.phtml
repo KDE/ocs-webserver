@@ -245,39 +245,41 @@ if(isset($tagsArray) && (count($tagsArray) == 1)) {
 
             });
 
-            $('#ghns_excluded-this-checkbox').on('click', function (event) {
-                event.stopPropagation();
-                var status = 1;
-                if (this.checked) {
-                    status = 1;
-                } else {
-                    status = 0;
-                }
+           
 
-                var target = "/backend/project/doghnsexclude?project_id=<?= $this->product->project_id ?>&ghns_excluded=" + status;
-                $.ajax({
-                    url: target,
-                    success: function (results) {
-                        if (status == 0) {
-                            alert('Project is successfully included into GHNS');
-                            $('#ghns_excluded-this-checkbox').prop("checked", false);
+            // $('#ghns_excluded-this-checkbox').on('click', function (event) {
+            //     event.stopPropagation();
+            //     var status = 1;
+            //     if (this.checked) {
+            //         status = 1;
+            //     } else {
+            //         status = 0;
+            //     }
 
-                        } else {
-                            alert('Project is successfully excluded from GHNS');
-                            $('#ghns_excluded-this-checkbox').prop("checked", true);
+            //     var target = "/backend/project/doghnsexclude?project_id=<?= $this->product->project_id ?>&ghns_excluded=" + status;
+            //     $.ajax({
+            //         url: target,
+            //         success: function (results) {
+            //             if (status == 0) {
+            //                 alert('Project is successfully included into GHNS');
+            //                 $('#ghns_excluded-this-checkbox').prop("checked", false);
 
-                        }
+            //             } else {
+            //                 alert('Project is successfully excluded from GHNS');
+            //                 $('#ghns_excluded-this-checkbox').prop("checked", true);
 
-                    },
-                    error: function () {
-                        alert('Service is temporarily unavailable.');
-                    }
-                });
+            //             }
 
-                return false;
-            });
+            //         },
+            //         error: function () {
+            //             alert('Service is temporarily unavailable.');
+            //         }
+            //     });
+
+            //     return false;
+            // });
             
-            
+          
             $('#pling-excluded-checkbox').on('click', function (event) {
                 event.stopPropagation();
                 var status = 0;
@@ -337,41 +339,46 @@ if(isset($tagsArray) && (count($tagsArray) == 1)) {
         </script>
 
     <?php elseif (Default_Model_DbTable_MemberRole::ROLE_NAME_MODERATOR == $userRoleName) : ?>
+
         <span class="page-views " style="color: red;">
             <input type="checkbox" id="ghns_excluded-this-checkbox" <?php echo $this->product->ghns_excluded == 1 ? ' checked=\'checked\' ' : ''; ?> />  ghns-excluded
         </span>
         <script>
-            $('#ghns_excluded-this-checkbox').on('click', function (event) {
-                event.stopPropagation();
-                var status = 1;
-                if (this.checked) {
-                    status = 1;
-                } else {
-                    status = 0;
-                }
+          
+            // $('#ghns_excluded-this-checkbox').on('click', function (event) {
+            //     event.stopPropagation();
+            //     var status = 1;
+            //     var title = '';
+            //     if (this.checked) {
+            //         status = 1;
+                
+            //     } else {
+            //         status = 0;
+                  
+            //     }
 
-                var target = "/backend/project/doghnsexclude?project_id=<?= $this->product->project_id ?>&ghns_excluded=" + status;
-                $.ajax({
-                    url: target,
-                    success: function (results) {
-                        if (status == 0) {
-                            alert('Project is successfully included into GHNS');
-                            $('#ghns_excluded-this-checkbox').prop("checked", false);
+            //     var target = "/backend/project/doghnsexclude?project_id=<?= $this->product->project_id ?>&ghns_excluded=" + status;
+            //     $.ajax({
+            //         url: target,
+            //         success: function (results) {
+            //             if (status == 0) {
+            //                 alert('Project is successfully included into GHNS');
+            //                 $('#ghns_excluded-this-checkbox').prop("checked", false);
 
-                        } else {
-                            alert('Project is successfully excluded from GHNS');
-                            $('#ghns_excluded-this-checkbox').prop("checked", true);
+            //             } else {
+            //                 alert('Project is successfully excluded from GHNS');
+            //                 $('#ghns_excluded-this-checkbox').prop("checked", true);
 
-                        }
+            //             }
 
-                    },
-                    error: function () {
-                        alert('Service is temporarily unavailable.');
-                    }
-                });
+            //         },
+            //         error: function () {
+            //             alert('Service is temporarily unavailable.');
+            //         }
+            //     });
 
-                return false;
-            });
+            //     return false;
+            // });
         </script>
     <?php endif; ?>
         
@@ -407,3 +414,14 @@ if(isset($tagsArray) && (count($tagsArray) == 1)) {
         }(<?=$this->product->ppload_collection_id?>));
     </script>
 </div>
+
+<?php 
+if(Default_Model_DbTable_MemberRole::ROLE_NAME_MODERATOR == $userRoleName ||
+    Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName
+    ){
+            $this->inlineScript()->appendScript(
+                '    $(document).ready(function(){       
+                        GhnsExcludedClick.setup('.$this->product->project_id.');                           
+                    });
+                ');
+}

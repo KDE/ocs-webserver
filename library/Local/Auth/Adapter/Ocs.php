@@ -86,7 +86,7 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
                 array('More than one record matches the supplied identity.'));
         }
 
-        if ($resultSet[0]['mail_checked'] == 0) {
+        if (empty($resultSet[0]['email_checked'])) {
             return $this->createAuthResult(Local_Auth_Result::MAIL_ADDRESS_NOT_VALIDATED, $resultSet[0]['member_id'],
                 array('Mail address not validated.'));
         }
