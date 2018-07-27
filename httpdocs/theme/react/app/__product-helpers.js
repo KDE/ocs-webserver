@@ -99,11 +99,22 @@ window.productHelpers = (function(){
     return summery;
   }
 
+  function checkIfLikedByUser(user,likes){
+    let likedByUser = false;
+    likes.forEach(function(like,index){
+      if (user.member_id === like.member_id){
+        likedByUser = true;
+      }
+    });
+    return likedByUser;
+  }
+
   return {
     getNumberOfProducts,
     generatePaginationObject,
     calculateProductRatings,
     getActiveRatingsNumber,
-    getFilesSummary
+    getFilesSummary,
+    checkIfLikedByUser
   }
 }());

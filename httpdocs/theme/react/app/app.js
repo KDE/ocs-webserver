@@ -93,7 +93,10 @@ class App extends React.Component {
     }
 
     // user
-    if (window.user) store.dispatch(setUser(user));
+    if (window.user){
+      console.log(window.user);
+      store.dispatch(setUser(user));
+    }
 
     // finish loading
     this.setState({loading:false});

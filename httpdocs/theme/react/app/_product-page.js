@@ -102,80 +102,6 @@ class ProductViewHeader extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {};
-    this.onUserLike = this.onUserLike.bind(this);
-  }
-
-  onUserLike(){
-    console.log(this.props);
-    const url = "/p/"+this.props.product.project_id+"/followproject/";
-    console.log(url);
-    $.ajax({url: url,cache: false}).done(function(response){
-      console.log(response);
-      console.log(response.status);
-    });
-    /*var PartialsButtonHeartDetail = (function () {
-        return {
-            setup: function () {
-                $('body').on('click', '.partialbuttonfollowproject', function (event) {
-                    event.preventDefault();
-                    var url = $(this).attr("data-href");
-                    // data-href - /p/1249209/followproject/
-                    var target = $(this).attr("data-target");
-                    var auth = $(this).attr("data-auth");
-                    var toggle = $(this).data('toggle');
-                    var pageFragment = $(this).attr("data-fragment");
-
-                    if (!auth) {
-                        $('#like-product-modal').modal('show');
-                        return;
-                    }
-
-                    // product owner not allow to heart copy from voting....
-                    var loginuser = $('#like-product-modal').find('#loginuser').val();
-                    var productcreator = $('#like-product-modal').find('#productcreator').val();
-                    if (loginuser == productcreator) {
-                        // ignore
-                        $('#like-product-modal').find('#votelabel').text('Project owner not allowed');
-                        $('#like-product-modal').find('.modal-body').empty();
-                        $('#like-product-modal').modal('show');
-                        return;
-                    }
-
-                  var spin = $('<span class="glyphicon glyphicon-refresh spinning" style="opacity: 0.6; z-index:1000;position: absolute; left:24px;top: 4px;"></span>');
-                     $(target).prepend(spin);
-
-                    $.ajax({
-                              url: url,
-                              cache: false
-                            })
-                          .done(function( response ) {
-                            $(target).find('.spinning').remove();
-                            if(response.status =='error'){
-                                 $(target).html( response.msg );
-                            }else{
-                                if(response.action=='delete'){
-                                    //$(target).find('.likelabel').html(response.cnt +' Likes');
-                                    $(target).find('.plingtext').html(response.cnt);
-                                    $(target).find('.plingtext').addClass('heartnumberpurple');
-                                     $(target).find('.plingheart').removeClass('heartproject').addClass('heartgrey');
-                                     $(target).find('.plingheart').removeClass('fa-heart').addClass('fa-heart-o');
-
-
-                                }else{
-                                    //$(target).find('.likelabel').html(response.cnt +' Likes');
-                                    $(target).find('.plingtext').html(response.cnt);
-                                    //$(target).find('.plingtext').html(response.cnt+' Fans');
-                                    $(target).find('.plingtext').removeClass('heartnumberpurple');
-                                    $(target).find('.plingheart').removeClass('heartgrey').addClass('heartproject');
-                                    $(target).find('.plingheart').removeClass('fa-heart-o').addClass('fa-heart');
-                                }
-                            }
-                          });
-                    return false;
-                });
-            }
-        }
-    })();*/
   }
 
   render(){
@@ -225,15 +151,70 @@ class ProductViewHeader extends React.Component {
                 Download
               </a>
               <div id="product-view-header-right-side">
-                <div className="likes">
-                  <i className="plingheart fa fa-heart-o heartgrey"></i>
-                  <span onClick={this.onUserLike}>{this.props.product.r_likes.length}</span>
-                </div>
+                <ProductViewHeaderLikes
+                  product={this.props.product}
+                />
                 <ProductViewHeaderRatings product={this.props.product}/>
               </div>
             </div>
           </div>
         </div>
+      </div>
+    );
+  }
+}
+
+class ProductViewHeaderLikes extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+    this.onUserLike = this.onUserLike.bind(this);
+  }
+
+  componentDidMount() {
+    const user = store.getState().user;
+    const likedByUser = productHelpers.checkIfLikedByUser(user,this.props.product.r_likes);
+    this.setState({likesTotal:this.props.product.r_likes.length,likedByUser:likedByUser});
+  }
+
+  onUserLike(){
+    const url = "/p/"+this.props.product.project_id+"/followproject/";
+    const self = this;
+    $.ajax({url: url,cache: false}).done(function(response){
+      // error
+      if (response.status === "error"){
+        self.setState({msg:response.msg});
+      } else {
+        // delete
+        if (response.action === "delete"){
+          const likesTotal = self.state.likesTotal - 1;
+          self.setState({likesTotal:likesTotal,likedByUser:false});
+        }
+        // insert
+        else {
+          const likesTotal = self.state.likesTotal + 1;
+          self.setState({likesTotal:likesTotal,likedByUser:true});
+        }
+      }
+    });
+  }
+
+  render(){
+    let cssContainerClass, cssHeartClass;
+    if (this.state.likedByUser === true){
+      cssContainerClass = "liked-by-user";
+      cssHeartClass = "plingheart fa heartproject fa-heart";
+    } else {
+      cssHeartClass = "plingheart fa fa-heart-o heartgrey";
+    }
+
+    return (
+      <div className={cssContainerClass} id="likes-container">
+        <div className="likes">
+          <i className={cssHeartClass}></i>
+          <span onClick={this.onUserLike}>{this.state.likesTotal}</span>
+        </div>
+        <div className="likes-label-container">{this.state.msg}</div>
       </div>
     );
   }
