@@ -26,9 +26,9 @@ class Default_Model_ProjectModeration extends Default_Model_DbTable_ProjectModer
 
     const M_TYPE_GET_HOT_NEW_STUFF_EXCLUDED = 1;
 
+
     public function updateInsertModeration($project_id,$project_moderation_type_id, $is_set, $userid,$note,$is_deleted,$is_valid)
-    {
-              
+    {              
             $sql = '
                               SELECT
                                 p.*
@@ -89,7 +89,7 @@ class Default_Model_ProjectModeration extends Default_Model_DbTable_ProjectModer
             }                         
     }
 
-     public function getList()
+     public function getList($member_id=null, $orderby=' created_at desc')
     {            
             $sql = "
                         SELECT 
@@ -112,10 +112,16 @@ class Default_Model_ProjectModeration extends Default_Model_DbTable_ProjectModer
                        ,(select username from member mm where mm.member_id = m.updated_by) as updated_by_username
                        FROM project_moderation m
                        join project_moderation_type t on m.project_moderation_type_id = t.project_moderation_type_id
-                       join stat_projects p on m.project_id = p.project_id
-                       where m.is_deleted= 0
-                       order by created_at desc             
+                       join stat_projects p on m.project_id = p.project_id and p.status=100
+                       where m.is_deleted= 0                      
              ";
+
+             if(isset($member_id)){
+                $sql = $sql.' and m.created_by = '.$member_id;
+             }
+             if(isset($orderby)){
+                $sql = $sql.'  order by '.$orderby;
+             }
             $resultSet = $this->getAdapter()->fetchAll($sql);
             //return$this->generateRowClass($resultSet);;        
             return $resultSet;

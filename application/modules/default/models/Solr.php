@@ -146,13 +146,14 @@ class Default_Model_Solr
     {
         $currentStoreConfig = Zend_Registry::get('store_config');
       
-        if (substr($currentStoreConfig['order'], -1) <> 1) {
+        if (substr($currentStoreConfig->order, -1) <> 1) {
             return $params;
         }
-        $params['fq'] = array('stores:(' . $currentStoreConfig['store_id'] . ')');
+        //$params['fq'] = array('stores:(' . $currentStoreConfig['store_id'] . ')');
+        $params['fq'] = array('stores:(' . $currentStoreConfig->store_id . ')');
         
-        if(isset($currentStoreConfig['package_type'])){            
-            $pid = $currentStoreConfig['package_type'];
+        if(isset($currentStoreConfig->package_type)){            
+            $pid = $currentStoreConfig->package_type;
             $t = new Default_Model_DbTable_Tags();
             $tag = $t->fetchRow($t->select()->where('tag_id='.$pid));           
             $params['fq'] = array_merge($params['fq'], array('package_names:' . $tag['tag_name']));   
