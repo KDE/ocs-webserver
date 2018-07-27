@@ -942,7 +942,7 @@ $this->inlineScript()->appendScript('
                     );
                 }
 
-                function startPostPploadFiles() {
+                function startUploadPploadFiles() {
                     if ($.isEmptyObject(ajaxUploads.queue) || ajaxUploads.uploading) {
                         return;
                     }
@@ -1005,7 +1005,7 @@ $this->inlineScript()->appendScript('
                                 ajaxUploads.uploading = null;
                                 $uploadContainer.remove();
                                 $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
-                                startPostPploadFiles();
+                                startUploadPploadFiles();
                             }, false);
                             return xhr;
                         },
@@ -1109,7 +1109,7 @@ $this->inlineScript()->appendScript('
                             UserTags.activateSelect(data.file.id, '');
 
                             $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
-                            startPostPploadFiles();
+                            startUploadPploadFiles();
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
                             alert("Error: " + textStatus + ", " + errorThrown);
@@ -1401,7 +1401,7 @@ $this->inlineScript()->appendScript('
                     $.each(event.originalEvent.dataTransfer.files, function () {
                         addFileUploadQueue('', this);
                     });
-                    startPostPploadFiles();
+                    startUploadPploadFiles();
                     $(this).css('border-color', '#cccccc');
                 });
 
@@ -1409,7 +1409,7 @@ $this->inlineScript()->appendScript('
                     $.each(this.files, function () {
                         addFileUploadQueue('', this);
                     });
-                    startPostPploadFiles();
+                    startUploadPploadFiles();
                 });
 
                 $modalPpload.on('click', 'button[data-addpploadfile-btn]', function (event) {
