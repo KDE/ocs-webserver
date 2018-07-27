@@ -830,7 +830,7 @@ $this->inlineScript()->appendScript(
             });
         }
 
-        function addFileUploadQueue(fileId, fileUpload) {
+        function addFileToPploadUploadQueue(fileId, fileUpload) {
             var uploadId = 'file-upload-' + Math.floor(Math.random() * 1000) + '-' + new Date().getTime();
             pploadUploads.queue[uploadId] = {
                 fileId: fileId,
@@ -1293,7 +1293,7 @@ $this->inlineScript()->appendScript(
         $modalPpload.on('drop', 'div[data-file-upload]', function (event) {
             event.preventDefault();
             $.each(event.originalEvent.dataTransfer.files, function () {
-                addFileUploadQueue('', this);
+                addFileToPploadUploadQueue('', this);
             });
             startUploadPploadFiles();
             $(this).css('border-color', '#cccccc');
@@ -1301,7 +1301,7 @@ $this->inlineScript()->appendScript(
 
         $modalPpload.on('change', 'input[data-file-upload]', function (event) {
             $.each(this.files, function () {
-                addFileUploadQueue('', this);
+                addFileToPploadUploadQueue('', this);
             });
             startUploadPploadFiles();
         });
