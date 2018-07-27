@@ -1293,7 +1293,7 @@ $this->inlineScript()->appendScript(
         $modalPpload.on('drop', 'div[data-file-upload]', function (event) {
             event.preventDefault();
             $.each(event.originalEvent.dataTransfer.files, function () {
-                addFileToPploadUploadQueue('', this);
+                addFileToPploadUploadQueue(null, this);
             });
             startUploadPploadFiles();
             $(this).css('border-color', '#cccccc');
@@ -1301,7 +1301,7 @@ $this->inlineScript()->appendScript(
 
         $modalPpload.on('change', 'input[data-file-upload]', function (event) {
             $.each(this.files, function () {
-                addFileToPploadUploadQueue('', this);
+                addFileToPploadUploadQueue(null, this);
             });
             startUploadPploadFiles();
         });
@@ -1312,14 +1312,10 @@ $this->inlineScript()->appendScript(
         });
 
         $modalPpload.on('click', 'input[data-accept-checkbox]', function (event) {
-
             if ($modalPpload.find('input[data-accept-checkbox]').is(':checked')) {
-
-                //event.preventDefault();
                 $modalPpload.find('button[data-addpploadfile-btn]').removeAttr('disabled');
                 $modalPpload.find('#github_picker').removeAttr('disabled');
             } else {
-                //event.preventDefault();
                 $modalPpload.find('button[data-addpploadfile-btn]').attr('disabled', 'disabled');
                 $modalPpload.find('#github_picker').attr('disabled', 'disabled');
             }
