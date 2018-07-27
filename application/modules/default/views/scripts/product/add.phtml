@@ -599,8 +599,10 @@ $this->inlineScript()->appendScript('
 
                 var $modalPpload = $('#modal-ppload');
                 var $modalChanglog = $('#modal-changlog');
+
                 var pploadApiUri = $modalPpload.attr('data-ppload-api-uri');
-                var ajaxUploads = {
+
+                var pploadUploads = {
                     queue: {},
                     currentUploadId: null,
                     uploading: null
@@ -921,7 +923,7 @@ $this->inlineScript()->appendScript('
 
                 function addFileUploadQueue(fileId, fileUpload) {
                     var uploadId = 'file-upload-' + Math.floor(Math.random() * 1000) + '-' + new Date().getTime();
-                    ajaxUploads.queue[uploadId] = {
+                    pploadUploads.queue[uploadId] = {
                         fileId: fileId,
                         fileUpload: fileUpload
                     };
@@ -943,14 +945,14 @@ $this->inlineScript()->appendScript('
                 }
 
                 function startUploadPploadFiles() {
-                    if ($.isEmptyObject(ajaxUploads.queue) || ajaxUploads.uploading) {
+                    if ($.isEmptyObject(pploadUploads.queue) || pploadUploads.uploading) {
                         return;
                     }
 
                     //var productId = $modalPpload.attr('data-product-id');
                     var uploadId = null;
                     var formData = new FormData();
-                    $.each(ajaxUploads.queue, function (key, value) {
+                    $.each(pploadUploads.queue, function (key, value) {
                         uploadId = key;
                         if (value.fileId) {
                             formData.append('file_id', value.fileId);
@@ -965,7 +967,7 @@ $this->inlineScript()->appendScript('
 
                     $modalPpload.find('button[data-file-upload-cancel-btn]').removeAttr('disabled');
 
-                    ajaxUploads.currentUploadId = uploadId;
+                    pploadUploads.currentUploadId = uploadId;
 
                     var url = '';
                     if (formData.has('file_id')) {
@@ -980,7 +982,7 @@ $this->inlineScript()->appendScript('
                         }
                     }
 
-                    ajaxUploads.uploading = $.ajax({
+                    pploadUploads.uploading = $.ajax({
                         xhr: function () {
                             var xhr = $.ajaxSettings.xhr();
                             if (xhr.upload) {
@@ -1000,9 +1002,9 @@ $this->inlineScript()->appendScript('
                                 }, false);
                             }
                             xhr.addEventListener('abort', function (event) {
-                                delete ajaxUploads.queue[uploadId];
-                                ajaxUploads.currentUploadId = null;
-                                ajaxUploads.uploading = null;
+                                delete pploadUploads.queue[uploadId];
+                                pploadUploads.currentUploadId = null;
+                                pploadUploads.uploading = null;
                                 $uploadContainer.remove();
                                 $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
                                 startUploadPploadFiles();
@@ -1019,9 +1021,9 @@ $this->inlineScript()->appendScript('
                             if (data.status != 'ok') {
                                 return;
                             }
-                            delete ajaxUploads.queue[uploadId];
-                            ajaxUploads.currentUploadId = null;
-                            ajaxUploads.uploading = null;
+                            delete pploadUploads.queue[uploadId];
+                            pploadUploads.currentUploadId = null;
+                            pploadUploads.uploading = null;
                             $uploadContainer.remove();
                             $('a[href="#modal-ppload"][data-product-id="' + $modalPpload.attr('data-product-id') + '"]')
                                 .attr('data-ppload-collection-id', data.file.collection_id);
@@ -1437,19 +1439,19 @@ $this->inlineScript()->appendScript('
 
                 $modalPpload.on('click', 'button[data-file-upload-cancel-btn]', function (event) {
                     event.preventDefault();
-                    ajaxUploads.uploading.abort();
-                    ajaxUploads.queue = {};
+                    pploadUploads.uploading.abort();
+                    pploadUploads.queue = {};
                     $modalPpload.find('table[data-file-upload] tbody').html('');
                 });
 
                 $modalPpload.on('click', 'tr[data-file-upload-id] a[data-file-upload-cancel-btn]', function (event) {
                     event.preventDefault();
                     var uploadId = $(this).closest('tr[data-file-upload-id]').attr('data-file-upload-id');
-                    if (uploadId == ajaxUploads.currentUploadId) {
-                        ajaxUploads.uploading.abort();
+                    if (uploadId == pploadUploads.currentUploadId) {
+                        pploadUploads.uploading.abort();
                     }
                     else {
-                        delete ajaxUploads.queue[uploadId];
+                        delete pploadUploads.queue[uploadId];
                         $modalPpload.find('tr[data-file-upload-id="' + uploadId + '"]').remove();
                     }
                 });
