@@ -379,6 +379,64 @@ header div.container.header {
   }
 }
 
+.modal {
+  .modal-dialog {
+    .modal-content {
+      .modal-header {
+        height: 70px;
+
+        .action-icon-container {
+          position: absolute;
+          left: 15px;
+          top: 15px;
+          height: 40px;
+          width: 40px;
+          text-align: center;
+          font-size: 40px;
+          line-height: 35px;
+          border:1px solid;
+          border-radius: 5px;
+
+          &.minus {
+            color: #fff;
+            background-color: #c9302c;
+            border-color: #ac2925;
+          }
+
+          &.plus {
+            color: #fff;
+            background-color: #449d44;
+            border-color: #398439;
+            line-height: 40px;
+          }
+        }
+
+        .modal-title {
+          text-transform: initial;
+          padding-left: 50px;
+          height: 40px;
+          line-height: 32px;
+        }
+
+        .close {
+          position: absolute;
+          top: 15px;
+          right: 15px;
+        }
+      }
+      .modal-footer {
+        text-align: center;
+
+        .glyphicon {
+          display: table;
+          margin: 0 auto;
+          float: none;
+        }
+      }
+    }
+  }
+}
+
 table {
   thead, tbody {
     tr {
@@ -890,6 +948,17 @@ table {
         right: 0;
 
         #likes-container {
+          height: 63px;
+
+          .likes-label-container {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 120px;
+            font-size: 15px;
+            text-align: right;
+            font-weight: 500;
+          }
 
           &.liked-by-user {
             .likes {
@@ -960,10 +1029,17 @@ table {
             cursor: pointer;
             .transition();
 
+            &:hover {
+              background-color: #c9302c;
+              color:white;
+            }
+
             &:active {
+              color:white;
               border-color: white;
               border-style: inset;
               border-width: 1px 0 0 1px;
+              background-color: #c9302c;
             }
           }
 
@@ -981,10 +1057,17 @@ table {
             cursor: pointer;
             .transition();
 
+            &:hover {
+              background-color: #449d44;
+              color:white;
+            }
+
             &:active {
+              color:white;
               border-style: inset;
               border-width: 1px 1px 0 0;
               border-color: white;
+              background-color:  #449d44;
             }
           }
 
@@ -998,6 +1081,10 @@ table {
               float: left;
               background-color: #acc8ac;
               border-bottom: 2px solid rgb(141, 158, 141);
+
+              &.red {
+                background-color: #c9302c;
+              }
             }
 
             .ratings-bar-empty {
@@ -1286,6 +1373,23 @@ table {
         right:0;
       }
     }
+
+    .comment-form-container {
+
+      textarea {
+        margin-bottom: 10px;
+      }
+
+      button[type="button"]{
+        float: right;
+        margin: 10px 0;
+
+        span.glyphicon {
+          margin-right: 10px;
+        }
+      }
+    }
+
   }
 
   .comment-list {

@@ -109,12 +109,27 @@ window.productHelpers = (function(){
     return likedByUser;
   }
 
+  function getLoggedUserRatingOnProduct(user,ratings){
+    let userRating = -1;
+    ratings.forEach(function(r,index){
+      if (r.member_id === user.member_id){
+        if (r.user_like === "1"){
+          userRating = 1;
+        } else {
+          userRating = 0
+        }
+      }
+    });
+    return userRating;
+  }
+
   return {
     getNumberOfProducts,
     generatePaginationObject,
     calculateProductRatings,
     getActiveRatingsNumber,
     getFilesSummary,
-    checkIfLikedByUser
+    checkIfLikedByUser,
+    getLoggedUserRatingOnProduct
   }
 }());

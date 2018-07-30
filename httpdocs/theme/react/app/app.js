@@ -93,8 +93,9 @@ class App extends React.Component {
     }
 
     // user
+    console.log(window.user);
     if (window.user){
-      console.log(window.user);
+      console.log(user);
       store.dispatch(setUser(user));
     }
 

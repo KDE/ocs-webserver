@@ -58,6 +58,7 @@ class ProductView extends React.Component {
         </div>
         <ProductViewHeader
           product={this.props.product}
+          user={this.props.user}
           onDownloadBtnClick={this.toggleDownloadSection}
         />
         <ProductViewGallery
@@ -70,6 +71,7 @@ class ProductView extends React.Component {
         />
         <ProductViewContent
           product={this.props.product}
+          user={this.props.user}
           tab={this.state.tab}
         />
         {productGalleryLightboxDisplay}
@@ -80,9 +82,11 @@ class ProductView extends React.Component {
 
 const mapStateToProductPageProps = (state) => {
   const product = state.product;
+  const user = state.user;
   const lightboxGallery = state.lightboxGallery;
   return {
     product,
+    user,
     lightboxGallery
   }
 }
@@ -127,7 +131,7 @@ class ProductViewHeader extends React.Component {
         </div>
       );
     }
-
+    console.log(this.props);
     return (
       <div className="wrapper" id="product-view-header">
         <div className="container">
@@ -153,8 +157,12 @@ class ProductViewHeader extends React.Component {
               <div id="product-view-header-right-side">
                 <ProductViewHeaderLikes
                   product={this.props.product}
+                  user={this.props.user}
                 />
-                <ProductViewHeaderRatings product={this.props.product}/>
+                <ProductViewHeaderRatings
+                  product={this.props.product}
+                  user={this.props.user}
+                />
               </div>
             </div>
           </div>
@@ -178,25 +186,29 @@ class ProductViewHeaderLikes extends React.Component {
   }
 
   onUserLike(){
-    const url = "/p/"+this.props.product.project_id+"/followproject/";
-    const self = this;
-    $.ajax({url: url,cache: false}).done(function(response){
-      // error
-      if (response.status === "error"){
-        self.setState({msg:response.msg});
-      } else {
-        // delete
-        if (response.action === "delete"){
-          const likesTotal = self.state.likesTotal - 1;
-          self.setState({likesTotal:likesTotal,likedByUser:false});
+    if (this.props.user){
+      const url = "/p/"+this.props.product.project_id+"/followproject/";
+      const self = this;
+      $.ajax({url: url,cache: false}).done(function(response){
+        // error
+        if (response.status === "error"){
+          self.setState({msg:response.msg});
+        } else {
+          // delete
+          if (response.action === "delete"){
+            const likesTotal = self.state.likesTotal - 1;
+            self.setState({likesTotal:likesTotal,likedByUser:false});
+          }
+          // insert
+          else {
+            const likesTotal = self.state.likesTotal + 1;
+            self.setState({likesTotal:likesTotal,likedByUser:true});
+          }
         }
-        // insert
-        else {
-          const likesTotal = self.state.likesTotal + 1;
-          self.setState({likesTotal:likesTotal,likedByUser:true});
-        }
-      }
-    });
+      });
+    } else {
+      this.setState({msg:'please login to like'});
+    }
   }
 
   render(){
@@ -223,21 +235,195 @@ class ProductViewHeaderLikes extends React.Component {
 class ProductViewHeaderRatings extends React.Component {
   constructor(props){
   	super(props);
-  	this.state = {};
+  	this.state = {
+      userIsOwner:'',
+      action:'',
+      laplace_score:this.props.product.laplace_score
+    };
+    this.onRatingFormResponse = this.onRatingFormResponse.bind(this);
+  }
+
+  componentDidMount() {
+    let userIsOwner = false;
+    if (this.props.user && this.props.user.member_id === this.props.product.member_id){
+      userIsOwner = true;
+    }
+    let userRating = -1;
+    if (userIsOwner === false){
+      userRating = productHelpers.getLoggedUserRatingOnProduct(this.props.user,this.props.product.r_ratings);
+    }
+    this.setState({userIsOwner:userIsOwner,userRating:userRating});
+  }
+
+  onRatingBtnClick(action){
+    this.setState({showModal:false},function(){
+      this.setState({action:action,showModal:true},function(){
+        $('#ratings-form-modal').modal('show');
+      });
+    });
+  }
+
+  onRatingFormResponse(response,val){
+    console.log('need to calculate laplace_score now');
+    $('#ratings-form-modal').modal('hide');
   }
 
   render(){
+
+    let ratingsFormModalDisplay;
+    if (this.state.showModal === true){
+      ratingsFormModalDisplay = (
+        <RatingsFormModal
+          user={this.props.user}
+          userIsOwner={this.state.userIsOwner}
+          userRating={this.state.userRating}
+          action={this.state.action}
+          product={this.props.product}
+          onRatingFormResponse={this.onRatingFormResponse}
+        />
+      );
+    }
+
+    let ratingsBarCss;
+    if (this.props.product.laplace_score < 50){
+      ratingsBarCss = 'red';
+    }
+
+
     return (
       <div className="ratings-bar-container">
-        <div className="ratings-bar-left">
+        <div className="ratings-bar-left" onClick={() => this.onRatingBtnClick('minus')}>
           <i className="material-icons">remove</i>
         </div>
         <div className="ratings-bar-holder">
-          <div className="ratings-bar" style={{"width":this.props.product.laplace_score + "%"}}></div>
-          <div className="ratings-bar-empty" style={{"width":(100 - this.props.product.laplace_score) + "%"}}></div>
+          <div className={ratingsBarCss + " ratings-bar"} style={{"width":this.state.laplace_score + "%"}}></div>
+          <div className="ratings-bar-empty" style={{"width":(100 - this.state.laplace_score) + "%"}}></div>
         </div>
-        <div className="ratings-bar-right">
+        <div className="ratings-bar-right" onClick={() => this.onRatingBtnClick('plus')}>
           <i className="material-icons">add</i>
+        </div>
+        {ratingsFormModalDisplay}
+      </div>
+    )
+  }
+}
+
+class RatingsFormModal extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {
+      action:this.props.action
+    };
+    this.submitRatingForm = this.submitRatingForm.bind(this);
+  }
+
+  componentDidMount() {
+    let actionIcon;
+    if (this.props.action === 'plus'){
+      actionIcon = '+';
+    } else if (this.props.action === 'minus') {
+      actionIcon = '-';
+    }
+    this.setState({action:this.props.action,actionIcon:actionIcon,text:actionIcon},function(){
+      this.forceUpdate();
+    });
+  }
+
+  submitRatingForm(){
+    this.setState({loading:true},function(){
+      const self = this;
+      let v;
+      if (this.state.action === 'plus'){
+        v = '1';
+      } else {
+        v = '2';
+      }
+
+      jQuery.ajax({
+        data:{
+          p:this.props.product.project_id,
+          m:this.props.user.member_id,
+          v:v,
+          pm:this.props.product.member_id,
+          otxt:this.state.text,
+          userrate:this.props.userRating,
+          msg:this.state.text
+        },
+        url:'/productcomment/addreplyreview/',
+        method:'post',
+        error: function(){
+          const msg = "Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.";
+          this.setState({msg:msg});
+        },
+        success: function(response){
+          self.props.onRatingFormResponse(response,v);
+        }
+      });
+    });
+  }
+
+  render(){
+    let textAreaDisplay, modalBtnDisplay;
+    if (!this.props.user){
+      textAreaDisplay = (
+        <p>Please login to comment</p>
+      );
+      modalBtnDisplay = (
+        <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+      );
+    } else {
+      if (this.props.userIsOwner){
+        textAreaDisplay = (
+          <p>Project owner not allowed</p>
+        );
+        modalBtnDisplay = (
+          <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+        );
+      } else if (this.state.text) {
+        textAreaDisplay = (
+          <textarea defaultValue={this.state.text} className="form-control"></textarea>
+        );
+        if (this.state.loading !== true){
+
+          if (this.state.msg){
+            modalBtnDisplay = (
+              <p>{this.state.msg}</p>
+            )
+          } else {
+            modalBtnDisplay = (
+              <button onClick={this.submitRatingForm} type="button" className="btn btn-primary">Rate Now</button>
+            );
+          }
+
+        } else {
+          modalBtnDisplay = (
+            <span className="glyphicon glyphicon-refresh spinning"></span>
+          );
+        }
+
+      }
+    }
+
+    return (
+      <div className="modal" id="ratings-form-modal" tabIndex="-1" role="dialog">
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <div className={this.props.action + " action-icon-container"}>
+                {this.state.actionIcon}
+              </div>
+              <h5 className="modal-title">Add Comment (min. 1 char):</h5>
+              <button type="button" id="review-modal-close" className="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div className="modal-body">
+              {textAreaDisplay}
+            </div>
+            <div className="modal-footer">
+              {modalBtnDisplay}
+            </div>
+          </div>
         </div>
       </div>
     )
@@ -541,6 +727,7 @@ class ProductViewContent extends React.Component {
           <p dangerouslySetInnerHTML={{__html:this.props.product.description}}></p>
           <ProductCommentsContainer
             product={this.props.product}
+            user={this.props.user}
           />
         </div>
       );
@@ -585,59 +772,42 @@ class ProductViewContent extends React.Component {
 class ProductCommentsContainer extends React.Component {
   constructor(props){
   	super(props);
-  	this.state = {};
+  	this.state = {
+      text:'',
+      errorMsg:'',
+      errorTitle:''
+    };
+    this.updateCommentText = this.updateCommentText.bind(this);
+    this.submitComment = this.submitComment.bind(this);
+  }
+
+  updateCommentText(e){
+    this.setState({text:e.target.value});
+  }
+
+  submitComment(){
+    console.log(this.state.text);
+    const self = this;
+    jQuery.ajax({
+      data:{
+        p:this.props.product.project_id,
+        m:this.props.user.member_id,
+        msg:this.state.text
+      },
+      url:'/productcomment/addreply/',
+      type:'post',
+      dataType:'json',
+      error:function(jqXHR,textStatus,errorThrown){
+        const results = JSON && JSON.parse(jqXHR.responseText) || $.parseJSON(jqXHR.responseText);
+        self.setState({errorMsg:results.message,errorTitle:results.title,login_url:results.login_url,status:'error'})
+      },
+      success:function(results){
+        console.log(results);
+      }
+    })
   }
 
   /*
-  var PartialCommentReviewForm = (function () {
-      return {
-          setup: function () {
-              this.initForm();
-          },
-          initForm: function () {
-              $('body').on("submit", 'form.product-add-comment-review', function (event) {
-                  event.preventDefault();
-                  event.stopImmediatePropagation();
-                  var c = $.trim($('#commenttext').val());
-                  if(c.length<1)
-                  {
-                          if($('#review-product-modal').find('#votelabel').find('.warning').length==0)
-                          {
-                              $('#review-product-modal').find('#votelabel').append("</br><span class='warning' style='color:red'> Please give a comment, thanks!</span>");
-                          }
-                          return;
-                  }
-
-                  $(this).find(':submit').attr("disabled", "disabled");
-                  $(this).find(':submit').css("white-space", "normal");
-                  var spin = $('<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>');
-                  $(this).find(':submit').append(spin);
-
-                  jQuery.ajax({
-                      data: $(this).serialize(),
-                      url: this.action,
-                      type: this.method,
-                      error: function (jqXHR, textStatus, errorThrown) {
-                          $('#review-product-modal').modal('hide');
-                          var msgBox = $('#generic-dialog');
-                          msgBox.modal('hide');
-                          msgBox.find('.modal-header-text').empty().append('Please try later.');
-                          msgBox.find('.modal-body').empty().append("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
-                          setTimeout(function () {
-                              msgBox.modal('show');
-                          }, 900);
-                      },
-                      success: function (results) {
-                          $('#review-product-modal').modal('hide');
-                          location.reload();
-                      }
-                  });
-                  return false;
-              });
-          }
-      }
-  })();
-
 
   var AjaxForm = (function () {
       return {
@@ -706,13 +876,58 @@ class ProductCommentsContainer extends React.Component {
         </div>
       )
     }
+
+    let commentTextArea;
+    if (this.props.user){
+
+      let submitBtnDisplay;
+      if (this.state.text.length === 0){
+        submitBtnDisplay = (
+          <button disabled="disabled" type="button" className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary">
+            send
+          </button>
+        );
+      } else {
+        submitBtnDisplay = (
+          <button onClick={this.submitComment} type="button" className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary">
+            <span className="glyphicon glyphicon-send"></span>
+            send
+          </button>
+        );
+      }
+
+      let errorDisplay;
+      if (this.state.status === 'error'){
+        errorDisplay = (
+          <div className="comment-form-error-display-container">
+            <div dangerouslySetInnerHTML={{__html:this.state.errorTitle}}></div>
+            <div dangerouslySetInnerHTML={{__html:this.state.errorMsg}}></div>
+          </div>
+        )
+      }
+      console.log(this.state.status);
+
+      commentTextArea = (
+        <div className="comment-form-container">
+          <span>Add Comment</span>
+          <textarea className="form-control" onChange={this.updateCommentText} defaultValue={this.state.text}></textarea>
+          {errorDisplay}
+          {submitBtnDisplay}
+        </div>
+      );
+    } else {
+      commentTextArea = (
+        <p>Please <a href="/login?redirect=ohWn43n4SbmJZWlKUZNl2i1_s5gggiCE">login</a> or <a href="/register">register</a> to add a comment</p>
+      );
+    }
+
     return (
       <div className="product-view-section" id="product-comments-container">
         <div className="section-header">
           <h3>Comments</h3>
           <span className="comments-counter">{cArray.length} comments</span>
-          <p>Please <a href="/login?redirect=ohWn43n4SbmJZWlKUZNl2i1_s5gggiCE">login</a> or <a href="/register">register</a> to add a comment</p>
         </div>
+        {commentTextArea}
         {commentsDisplay}
       </div>
     )
