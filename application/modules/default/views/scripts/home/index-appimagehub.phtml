@@ -25,13 +25,13 @@
   $package_type = $this->package_type;
 
   if(strpos ( $host , ".cc" ) > 0 || strpos ( $host , ".local" ) > 0) {
-    $this->LatestProducts = $modelInfo->getLastProductsForHostStores(6,"33,112",$package_type);
-    $this->topGames = $modelInfo->getTopProductsForHostStores(6,"112",$package_type);
-    $this->topApps = $modelInfo->getTopProductsForHostStores(6,"33",$package_type);
+    $this->LatestProducts = $modelInfo->getLastProductsForHostStores(7,"33,112",$package_type);
+    $this->topGames = $modelInfo->getTopProductsForHostStores(7,"112",$package_type);
+    $this->topApps = $modelInfo->getTopProductsForHostStores(7,"33",$package_type);
   } else {
-    $this->LatestProducts = $modelInfo->getLastProductsForHostStores(6,"6,234,239,243,244,245,388,391,392,450,481,492",$package_type);
-    $this->topGames = $modelInfo->getTopProductsForHostStores(6,"6",$package_type);
-    $this->topApps = $modelInfo->getTopProductsForHostStores(6,"234,239,243,244,245,388,391,392,450,481,492",$package_type);
+    $this->LatestProducts = $modelInfo->getLastProductsForHostStores(7,"6,234,239,243,244,245,388,391,392,450,481,492",$package_type);
+    $this->topGames = $modelInfo->getTopProductsForHostStores(7,"6",$package_type);
+    $this->topApps = $modelInfo->getTopProductsForHostStores(7,"234,239,243,244,245,388,391,392,450,481,492",$package_type);
   }
 
 ?>
@@ -54,4 +54,3 @@
   var view = "home";
 
 </script>
-

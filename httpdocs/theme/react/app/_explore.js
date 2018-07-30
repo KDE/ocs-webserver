@@ -120,10 +120,15 @@ class ExploreTopBar extends React.Component {
     if (categories.currentSecondSub){ currentId = categories.currentSecondSub.id; }
 
     const link = appHelpers.generateFilterUrl(window.location,currentId);
+    let linkSearch = "";
+    if (link.search) {
+      linkSearch = link.search;
+    }
+
     return (
       <div className="explore-top-bar">
-        <a href={link.base + "latest" + link.search} className={this.props.filters.order === "latest" ? "item active" : "item"}>Latest</a>
-        <a href={link.base + "top" + link.search} className={this.props.filters.order === "top" ? "item active" : "item"}>Top</a>
+        <a href={link.base + "latest" + linkSearch} className={this.props.filters.order === "latest" ? "item active" : "item"}>Latest</a>
+        <a href={link.base + "top" + linkSearch} className={this.props.filters.order === "top" ? "item active" : "item"}>Top</a>
       </div>
     )
   }

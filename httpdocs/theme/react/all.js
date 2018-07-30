@@ -346,6 +346,8 @@ class ProductGroup extends React.Component {
       let productsArray = this.props.products;
       if (this.props.numRows) {
         const limit = productHelpers.getNumberOfProducts(this.props.device, this.props.numRows);
+        console.log(productsArray);
+        console.log(limit);
         productsArray = productsArray.slice(0, limit);
       }
       products = productsArray.map((product, index) => React.createElement(ProductGroupItem, {
@@ -1046,17 +1048,22 @@ class ExploreTopBar extends React.Component {
     }
 
     const link = appHelpers.generateFilterUrl(window.location, currentId);
+    let linkSearch = "";
+    if (link.search) {
+      linkSearch = link.search;
+    }
+
     return React.createElement(
       "div",
       { className: "explore-top-bar" },
       React.createElement(
         "a",
-        { href: link.base + "latest" + link.search, className: this.props.filters.order === "latest" ? "item active" : "item" },
+        { href: link.base + "latest" + linkSearch, className: this.props.filters.order === "latest" ? "item active" : "item" },
         "Latest"
       ),
       React.createElement(
         "a",
-        { href: link.base + "top" + link.search, className: this.props.filters.order === "top" ? "item active" : "item" },
+        { href: link.base + "top" + linkSearch, className: this.props.filters.order === "top" ? "item active" : "item" },
         "Top"
       )
     );
