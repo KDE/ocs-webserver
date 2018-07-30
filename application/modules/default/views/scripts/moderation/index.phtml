@@ -21,147 +21,302 @@
  *
  * Created: 31.05.2017
  */
+
+$helperPrintDate = new Default_View_Helper_PrintDate();
+$helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
+$helperImage = new Default_View_Helper_Image();
+$helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
+
 ?>
 
+<link href="/theme/backend/lib/jquery-ui/themes/smoothness/jquery-ui.min.css" rel="stylesheet">
+<link href="/theme/backend/lib/jtable/themes/jqueryui/jtable_jqueryui.min.css" rel="stylesheet">
+<script src="/theme/backend/lib/jquery-ui/jquery-ui.min.js"></script>
+<script src="/theme/backend/lib/jtable/jquery.jtable.min.js"></script>
+
+<style type="text/css">
+        img.pimage{
+            float: left;            
+        }
+        div.ptitle{
+            margin-left: 140px; 
+            font-size: 13px;
+            font-weight: bold;     
+        }
+        div.jtable-main-container table.jtable tbody > tr > td{
+            vertical-align: top;
+            border-left:0px;
+            border-right:0px;
+            font-size: small;
+        }
+        div.jtable-main-container table.jtable{
+            border: 0px;
+        }
+        div.jtable-main-container table.jtable th{
+            border: 0px;
+            background: none;
+            font-weight: bold;
+        }
+        
+        #products-wrapper{
+            padding-bottom: 20px;
+        }
+
+
+        #explore-content .ui-state-default
+        {
+            background: none;
+            border: 0px;
+
+        }
+
+
+        #explore-content div.jtable-main-container table.jtable .rating{
+            width:80px; 
+            margin-left:140px;
+            padding-top:20px;
+        }
+
+       
+
+</style>
 <main id="explore-content">
-    <section class="wrapper" id="products-wrapper">
-        <div class="container-fluid">
-            <div class="row">
-             
-               <div class="content col-lg-10 col-md-10">
-            <h1>
-                Get hot new stuff excluded  
-            </h1>
-            </div>
-            </div>
+  <section class="wrapper" id="products-wrapper" >
+<h1>
+    Get hot new stuff excluded  
+</h1>
 
-            <div class="row">
-              
-                 <div class="content col-lg-10 col-md-10">
+     <form style="margin-top: 20px; margin-bottom: 20px">
+       
+            Member :
+            <?php
+                  $md = new  Default_Model_ProjectModeration();
+                   $mlist =  $md->getMembers(); 
+                            
+                ?>
+                <select name = "filter_member_id" id="filter_member_id" >
                     <?php
-                    $helperPrintDate = new Default_View_Helper_PrintDate();
-                    $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
-                    $helperImage = new Default_View_Helper_Image();
-                    $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
-
-                    $this->rownum = (1 + (($this->page - 1) * 10));
-                    $pageLimit = 10;
-
-                    $m = new Default_Model_ProjectModeration();
-                    $candidateProducts = $m->getList();
-          
-
-                    $paginator = Zend_Paginator::factory($candidateProducts);
-                    $paginator->setItemCountPerPage($pageLimit);
-                    $paginator->setCurrentPageNumber($this->page);
-                    //$paginator->setTotalItemCount(count($candidateProducts));
-
-                    $this->products = $paginator;
-
-
-                    if ($paginator->count() == 0) {
-                        echo '<div class="alert alert-success" role="alert"><p class="text-success">Congratulations. No more Ghns-excluded in sight. (For the moment)</p></div>';
-                    }
-                    
-                    // header
-                    echo '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><div class="col-lg-6"></div>'.
-                            '<div class="col-lg-1"> created at</div>'.
-                            '<div class="col-lg-1"> updated at</div>'.
-                            '<div class="col-lg-1"> excluded at</div>'.
-                            '<div class="col-lg-3">excluded by</div>'.
-                            '</div>';
-                                   
-                  
-                    foreach ($this->products as $this->product) {                        
-                        $updateTime = $helperPrintDate->printDate($this->product['project_changed_at']);
-                        ?>
-                        <div class="explore-product col-lg-12 col-md-12 col-sm-12 col-xs-12"
-                             style="border-top: 1px solid #ccc;font-size: 12px;padding: 10px 0;">
-                            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-                                <div class="rownum">
-                                    <?= intval($this->rownum) ?>.
-                                </div>
-                            </div>
-                            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 explore-product-imgcolumn">
-                                <figure>
-                                    <a href="<?= $helperBuildProductUrl->buildProductUrl($this->product['project_id'],
-                                        ''); ?>">
-                                        <div class="text-center">
-                                            <img src="<?php echo $helperImage->Image($this->product['image_small'],
-                                                array('width' => 167, 'height' => 167)); ?>"
-                                                 class="explore-product-image" style="max-width:95%;"/>
-                                        </div>
-                                    </a>
-                                </figure>
-                            </div>
-                            <div class="explore-product-details col-lg-3 col-md-3 col-sm-3 col-xs-3">
-                                <h3>
-                                    <?php
-                                    $version = Default_Model_HtmlPurify::purify($this->product['version']);
-                                    ?>
-                                    <a href="<?= $helperBuildProductUrl->buildProductUrl($this->product['project_id'],
-                                        ''); ?>"><?php echo $this->product['title']; ?> <span style="font-size: smaller; padding-left: 20px"><?php echo $version ?> </span></a>
-                                </h3>
-
-                                <b style="display: block; margin-bottom: 5px"><?php echo $this->product['cat_title'] ?></b>
-                                <b style="display: block; margin-bottom: 5px" class="small">by <a
-                                            href="<?php echo $helpMemberUrl->buildMemberUrl($this->product['member_id']) ?>"><?php echo $this->product['username'] ?></a></b>
-                              
-                                <!-- RATING -->
-                                <div style="width: 100px; padding-top: 10px">
-                                <?php
-                                $this->widgetRating = new stdClass();
-                                $this->widgetRating->project_id = $this->product['project_id'];
-                                $this->widgetRating->laplace_score = $this->product['laplace_score'];
-                                $this->widgetRating->count_likes = $this->product['count_likes'];
-                                $this->widgetRating->count_dislikes = $this->product['count_dislikes'];
-                                // it is a trial
-                                include APPLICATION_PATH . '/modules/default/views/scripts/partials/widgetRating.phtml';
-                                //echo $this->render('partials/widgetRating.phtml'); ?>
-                                <!-- /RATING -->
-                                </div>
-                              
-                               
-                            </div>
-                            <div class="col-lg-1">
-                                    <span>  <?= $helperPrintDate->printDate($this->product['project_created_at']);?></span>
-                                </div>
-                              <div class="col-lg-1">
-                                    <span><?php echo $updateTime ?></span>
-                                </div>
-                           
-                             <div class="col-lg-1">
-                                 <?= $helperPrintDate->printDate($this->product['created_at']);?>
-                            </div>
-                             <div class="col-lg-3">
-                                 <a  href="<?php echo $helpMemberUrl->buildMemberUrl($this->product['created_by']) ?>" class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="<?=$this->product['created_by']?>" ><?=$this->product['exclude_member_name']?></a>
-                                 <br>
-                                 <?=$this->product['note']?>
-                            </div>
-                        </div><!-- END .explore-product -->
-                        
-                        <?php
-                        $this->rownum++;
-                    }
+                        echo '<option value=""></option>';
+                        foreach ($mlist as $m) {
+                            echo '<option value="'.$m['member_id'].'"">'.$m['username'].'</option>';        
+                        }
                     ?>
-                </div>
-                <div class="sidebar-right col-md-2"></div>
-            </div>
-            <section class="explore-footer text-center">
-                <?php echo $this->paginationControl($this->products, 'Sliding',
-                    'partials/paginationControlWithoutAjax.phtml',
-                    array('params' => $this->filters, 'dom_target' => 'section#products-wrapper')); ?>
-            </section>
-        </div>
+                </select>
+          
+         
+                <button type="submit" id="LoadRecordsButton"><?= $this->translate('Load records'); ?></button>
+               
+          
+        </form>
+    </div>
+    <div id="TableContainer"></div>    
     </section>
 </main>
-<div class="tooltip_templates" style="display: none">
-    <span id="tooltip_content">
-        <i class="fa fa-spinner"></i>
-    </span>
-</div>
-<?php $this->inlineScript()->appendScript(
-    '    $(document).ready(function(){                                             
-                TooltipUser.setup("tooltipuser","right");                            
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#dialog-form").dialog({
+            autoOpen: false,
+            //height: 350,
+            width: 600,
+            modal: true,
+            buttons: {
+                Close: function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+
+        $('#TableContainer').jtable({
+            jqueryuiTheme: true,
+            paging: true,
+            sorting: true,                     
+            actions: {
+                listAction: '/moderation/list' ,
+                updateAction: '/moderation/update'
+            },
+            fields: {
+                 project_id: {
+                                     title: 'project_id',
+                                     key: true,
+                                     create: false,
+                                     edit: false,
+                                     list: false                   
+                                 },
+                    title: {
+                        title: 'Project ',                         
+                        create: false,
+                        edit: false,
+                        list: true,    
+                        width:'15%',                    
+                        display: function (data) {
+                            if (data.record.image_small) {
+                                var html =   ' <a href="/p/' + data.record.project_id + '/" target="_blank"><img  class="pimage" src='+data.record.image_small+' /></a><div class="ptitle">'+data.record.title+'</div>' ;
+                                var red = 200;
+                                var blue = 200;
+                                var d = 200;
+                                var green =200;
+                                var sc = data.record.laplace_score;
+                                if(sc == 0) sc = 50;
+                               
+
+                                if(sc>50) {
+                                    red=(d-((sc-50)*4)).toString(16);
+                                    green=(d).toString(16);
+                                    blue=(d-((sc-50)*4)).toString(16);
+                                }else if(sc<51) {
+                                    red=(d).toString(16);
+                                    green=(d-((50-sc)*4)).toString(16);
+                                    blue=(d-((50-sc)*4)).toString(16);
+                                }
+                                
+                                
+                                var color = red+green+blue;                                            
+                                 var t= '<div class="rating" >'+
+                                        '<div class="rating-text">'+
+                                        '<small class="center-block text-center">Score '+data.record.laplace_score+'%'+
+                                        '</small>'+
+                                    '</div>'+
+                                    '<div class="progress" style="margin-bottom: 0;height:12px;background-color: transparent; box-shadow: none; padding:2px;">'+
+                                        '<div class="progress-bar" style="background-color: #'+color+';width: '+data.record.laplace_score+'%;">'+                                            
+                                        '</div>'+
+                                        '<div class="progress-bar" style="background-color:#eeeeee;width: '+(100 -data.record.laplace_score)+'%;">'+                                          
+                                        '</div>'+
+                                    '</div>'+
+                                '</div>';
+                                html = html+t;
+                              
+                                return html;
+                            }
+                        }
+                    },
+
+                    cat_title:{
+                         title: 'Category',
+                         width:'5%', 
+                         list:true,
+                         edit: false
+                    },
+                    username:{
+                         title: 'Creator',
+                          width:'5%', 
+                         list:true,
+                        edit: false
+                    },
+                    project_created_at: {
+                        title: 'Created at',                       
+                        type: 'date', 
+                         width:'5%',                       
+                        edit: false,
+                        list: true
+                    },  
+                    project_changed_at: {
+                        title: 'Changed at',                       
+                        type: 'date',    
+                         width:'5%',                    
+                          edit: false,
+                        list: true
+                    },   
+                    created_at: {
+                        title: 'Excluded at',                       
+                        type: 'date',    
+                         width:'5%',
+                          edit: false,                    
+                        list: true
+                    },
+                    exclude_member_name: {
+                        title: 'Excluded by',    
+                         width:'5%',
+                          edit: false,                                                
+                        list: true
+                    },    
+                     note: {
+                        title: 'Reason',                                                   
+                        type: 'textarea',
+                        list: true
+                    },   
+                    value: {
+                        title: '',      
+                        type:'checkbox',                                             
+                        list: false,
+                        values: {'1': 'ghns excluded', '0': 'insert to ghns'}
+                    }
+            }
+        });
+
+        $('body').on("click", 'a.toggle-status', function (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            if (!confirm('This will toggle the active option for this product. Do you wish to proceed?')) {
+                return;
+            }
+
+            var elementRecord = $(this).data("record");
+
+            jQuery.ajax({
+                data: {'project_id': elementRecord},
+                url: '/backend/project/togglestatus/',
+                type: 'post',
+                error: function () {
+                    alert("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+                    return false;
+                },
+                success: function (results) {
+                    $('#TableContainer').jtable('reload');
+                    return false;
+                }
             });
-        ');
+
+            return false;
+        });
+
+        $('body').on("click", 'a.member-info', function (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            var elementRecord = $(this).data("record");
+
+            jQuery.ajax({
+                data: {'member_id': elementRecord},
+                url: '/backend/user/memberinfo/',
+                type: 'post',
+                error: function () {
+                    alert("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+                    return false;
+                },
+                success: function (results) {
+                    $('#dialog-form').html(results.ViewRecord).dialog('open');
+                    return false;
+                }
+            });
+
+            return false;
+        });
+
+
+        //Re-load records when user click 'load records' button.
+        $('#LoadRecordsButton').click(function (e) {
+            e.preventDefault();
+            $('#TableContainer').jtable('load', {
+                filter_member_id: $('#filter_member_id').val(),              
+
+            });
+        });
+
+        //Re-load records when user click 'remove filter' button.
+        $('#RemoveFilterButton').click(function (e) {
+            e.preventDefault();            
+          $("#filter_member_id option[value='']").attr('selected', true)      
+            $('#TableContainer').jtable('load', {            
+                filter_member_id: null,              
+            });
+        });
+
+        $('#TableContainer').jtable('load', {           
+            filter_member_id: $('#filter_member_id').val()            
+        });
+    });
+</script>
