@@ -287,6 +287,7 @@ $this->inlineScript()->appendScript('
                                             </div>
                                             <div class="modal-body">
                                                 <input type="file" style="display: none;" data-file-upload="" multiple>
+                                                <input type="file" style="display: none;" data-file-upload-update="" data-ppload-file-id="">
 
                                                 <p data-file-upload-msg=""><?= $this->translate('Drop file(s) here') ?>:</p>
 
@@ -302,8 +303,8 @@ $this->inlineScript()->appendScript('
                                                             <th><?= $this->translate('Packagetype') ?></th>
                                                             <th><?= $this->translate('Architecture') ?></th>
                                                             <th><?= $this->translate('Date added') ?></th>
-
                                                             <th style="text-align: right"><?= $this->translate('Filesize') ?></th>
+                                                            <th></th>
                                                             <th></th>
                                                         </tr>
                                                         </thead>
@@ -1002,6 +1003,9 @@ $this->inlineScript()->appendScript('
                                 }, false);
                             }
                             xhr.addEventListener('abort', function (event) {
+                                if (pploadUploads.queue[uploadId].fileId) {
+                                    $modalPpload.find('tr[data-ppload-file-id="' + pploadUploads.queue[uploadId].fileId + '"]').show();
+                                }
                                 delete pploadUploads.queue[uploadId];
                                 pploadUploads.currentUploadId = null;
                                 pploadUploads.uploading = null;
@@ -1020,6 +1024,10 @@ $this->inlineScript()->appendScript('
                         success: function (data, textStatus, jqXHR) {
                             if (data.status != 'ok') {
                                 return;
+                            }
+
+                            if (pploadUploads.queue[uploadId].fileId) {
+                                $modalPpload.find('tr[data-ppload-file-id="' + pploadUploads.queue[uploadId].fileId + '"]').remove();
                             }
                             delete pploadUploads.queue[uploadId];
                             pploadUploads.currentUploadId = null;
@@ -1101,9 +1109,9 @@ $this->inlineScript()->appendScript('
                                     ?>
                                 + '</select>'
                                 + '</td>'
-
                                 + '<td>' + data.file.created_timestamp + '</td>'
                                 + '<td style="text-align: right">' + humanFileSize(data.file.size) + '</td>'
+                                + '<td><a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-updatepploadfile-btn="">Update</a></td>'
                                 + '<td><a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-deletepploadfile-btn=""><span class="glyphicon glyphicon-trash"></span></a></td>'
                                 + '</tr>'
                             );
@@ -1415,6 +1423,22 @@ $this->inlineScript()->appendScript('
                 $modalPpload.on('click', 'button[data-addpploadfile-btn]', function (event) {
                     event.preventDefault();
                     $modalPpload.find('input[data-file-upload]').click();
+                });
+
+                $modalPpload.on('change', 'input[data-file-upload-update]', function (event) {
+                    if ($(this).attr('data-ppload-file-id')) {
+                        var fileId = $(this).attr('data-ppload-file-id');
+                        $modalPpload.find('tr[data-ppload-file-id="' + fileId + '"]').hide();
+                        addFileToPploadUploadQueue(fileId, this.files[0]);
+                        startUploadPploadFiles();
+                    }
+                });
+
+                $modalPpload.on('click', 'tr[data-ppload-file-id] a[data-updatepploadfile-btn]', function (event) {
+                    event.preventDefault();
+                    var $inputForm = $modalPpload.find('input[data-file-upload-update]');
+                    $inputForm.attr('data-ppload-file-id', $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id'));
+                    $inputForm.click();
                 });
 
                 $modalPpload.on('click', 'input[data-accept-checkbox]', function (event) {

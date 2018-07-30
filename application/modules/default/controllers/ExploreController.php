@@ -347,4 +347,16 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         return $requestedElements;
     }
 
+    protected function setLayout()
+    {
+        $layoutName = 'flat_ui_template';
+        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;      
+        if($storeConfig  && $storeConfig->layout_explore)
+        {
+             $this->_helper->layout()->setLayout($storeConfig->layout_explore);
+        }else{
+            $this->_helper->layout()->setLayout($layoutName);
+        }        
+    }
+
 }

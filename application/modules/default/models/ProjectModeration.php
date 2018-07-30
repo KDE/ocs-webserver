@@ -26,17 +26,16 @@ class Default_Model_ProjectModeration extends Default_Model_DbTable_ProjectModer
 
     const M_TYPE_GET_HOT_NEW_STUFF_EXCLUDED = 1;
 
-
-    public function updateInsertModeration($project_id,$project_moderation_type_id, $is_set, $userid,$note,$is_deleted,$is_valid)
+    public function createModeration($project_id,$project_moderation_type_id, $is_set, $userid,$note)
     {              
             $sql = '
                               SELECT
-                                p.*
+                              p.*
                               FROM project_moderation AS p
                               WHERE 
-                                p.project_id = :project_id
-                                AND p.is_deleted = :is_deleted
-                                and p.project_moderation_type_id = :project_moderation_type_id
+                              p.project_id = :project_id
+                              AND p.is_deleted = :is_deleted                             
+                              and p.project_moderation_type_id = :project_moderation_type_id
                       ';
             $row = $this->_db->fetchRow($sql, array(
                 'project_id'  => $project_id,
@@ -50,46 +49,39 @@ class Default_Model_ProjectModeration extends Default_Model_DbTable_ProjectModer
                  $updateValues = array(
                       'is_deleted'     =>1                                      
                   );
-                $this->update($updateValues,  'project_moderation_id=' . $row->project_moderation_id);
+               
+                $this->update($updateValues,  ' project_id=' . $row->project_id .' and project_moderation_type_id='.$row->project_moderation_type_id);
 
                  $insertValues = array(
                     'project_moderation_type_id' =>$row->project_moderation_type_id,
-                    'project_id' => $row->project_id,
-                    
-                    'created_by' => $row->updated_by!=null ? $row->updated_by : $row->created_by,
-                    'created_at' => $row->updated_at!=null ? $row->updated_at : $row->created_at,
-
-                    'updated_by' =>$userid,
-                    'updated_at' => new Zend_Db_Expr('Now()'),
-                    'note' => $note                  
+                    'project_id' => $row->project_id,                    
+                    'value' => $is_set,
+                    'created_by' =>$userid,                                     
+                    'note' => $note                                      
                 );                
 
-               if($is_set==1)
-               {
-                  $insertValues['is_deleted'] = 0;
-               }else{
-                  $insertValues['is_deleted'] = 1;
-               }
-
-                if($is_deleted)
-                {
-                    $insertValues['is_deleted'] = $is_deleted;
-                }
-                if($is_valid)
-                {
-                    $insertValues['is_valid'] = $is_valid;
-                }
                 $this->_db->insert($this->_name, $insertValues);
             }else
-            {            
-                if($is_set==1)
-                {
-                    $this->insertModeration($project_moderation_type_id,$project_id, $userid,$note);             
-                 }   
+            {                            
+                  $this->insertModeration($project_moderation_type_id,$project_id, $is_set,$userid,$note);                             
             }                         
     }
 
-     public function getList($member_id=null, $orderby=' created_at desc')
+  
+
+    public function getTotalCount()
+    {
+        $sql = "select count(1)  as cnt
+                    FROM project_moderation m
+                    join project_moderation_type t on m.project_moderation_type_id = t.project_moderation_type_id
+                    join stat_projects p on m.project_id = p.project_id and p.status=100
+                    where m.is_deleted= 0  and m.value = 1             
+        ";
+        $result = $this->getAdapter()->query($sql, array())->fetchAll();      
+        return  $result[0]['cnt'];
+    }
+
+     public function getList($member_id=null, $orderby='created_at desc',$limit = null, $offset  = null)
     {            
             $sql = "
                         SELECT 
@@ -108,24 +100,60 @@ class Default_Model_ProjectModeration extends Default_Model_DbTable_ProjectModer
                        ,p.created_at  as project_created_at
                        ,p.changed_at as project_changed_at
                        ,p.cat_title
-                       ,(select username from member mm where mm.member_id = m.created_by) as exclude_member_name
-                       ,(select username from member mm where mm.member_id = m.updated_by) as updated_by_username
+                       ,(select username from member mm where mm.member_id = m.created_by) as exclude_member_name                       
                        FROM project_moderation m
                        join project_moderation_type t on m.project_moderation_type_id = t.project_moderation_type_id
                        join stat_projects p on m.project_id = p.project_id and p.status=100
-                       where m.is_deleted= 0                      
+                       where m.is_deleted= 0  and m.value = 1                   
              ";
 
-             if(isset($member_id)){
+             if(isset($member_id) && $member_id!=''){
                 $sql = $sql.' and m.created_by = '.$member_id;
              }
+
+            
+
              if(isset($orderby)){
                 $sql = $sql.'  order by '.$orderby;
              }
+
+             if (isset($limit)) {
+                 $sql .= ' limit ' . (int)$limit;
+             }
+
+             if (isset($offset)) {
+                 $sql .= ' offset ' . (int)$offset;
+             }
+             
+
             $resultSet = $this->getAdapter()->fetchAll($sql);
+
+            $image = new Default_View_Helper_Image();
+            foreach ($resultSet as &$value) {
+               $value['image_small']= $image->image($value['image_small'],array('height' => 120, 'width' => 120));              
+            }
             //return$this->generateRowClass($resultSet);;        
             return $resultSet;
     }  
+
+     public function getMembers()
+    {            
+            $sql = "
+                       SELECT 
+                           distinct m.created_by as member_id                    
+                          ,(select username from member mm where mm.member_id = m.created_by) as username
+                          FROM project_moderation m                       
+                          join stat_projects p on m.project_id = p.project_id and p.status=100
+                          where m.is_deleted= 0   and m.value = 1                                                            
+             ";
+
+            
+            $resultSet = $this->getAdapter()->fetchAll($sql);
+
+         
+            //return$this->generateRowClass($resultSet);;        
+            return $resultSet;
+    }
 
     
      /**

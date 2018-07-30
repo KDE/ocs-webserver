@@ -291,13 +291,13 @@ class Backend_ProjectController extends Local_Controller_Action_Backend
         $moderationModel = new Default_Model_ProjectModeration();
         
          $note =$this->getParam(self::PARAM_MSG, null);
-        $moderationModel->updateInsertModeration($projectId
+
+   
+        $moderationModel->createModeration($projectId
                                                     ,Default_Model_ProjectModeration::M_TYPE_GET_HOT_NEW_STUFF_EXCLUDED
                                                     ,$ghns_excluded
                                                     ,$identity->member_id
-                                                    ,$note
-                                                    ,null
-                                                    ,null
+                                                    ,$note                                                   
                                                     );
 
         $jTableResult = array();

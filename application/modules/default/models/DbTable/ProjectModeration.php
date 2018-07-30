@@ -34,12 +34,11 @@ class Default_Model_DbTable_ProjectModeration extends Local_Model_Table
         'project_moderation_type_id'  => null,
         'project_id'  => null,        
         'created_by'  => null,       
-        'updated_by' => null,
+        'value' => null,
         'note' => null,
         'is_deleted'  => null,
         'is_valid'   => null,
-        'created_at'  => null,
-        'updated_at'  => null        
+        'created_at'  => null        
     );
  
     public function setDelete($project_moderation_id)
@@ -60,25 +59,15 @@ class Default_Model_DbTable_ProjectModeration extends Local_Model_Table
         $this->update($updateValues, 'project_moderation_id=' . $project_moderation_id);
     }
 
-/*
-$select = $content->select()->where('id = ?',$id);
-$row = $content->fetchRow($select);
-$row->name = 'John'
-$row->birthdate = 1980-11-04;
-$row->save();
 
- */
-//     public function insertOrUpdateModeration($values)
-//     {
 
-//     }
-
-    public function insertModeration($project_moderation_type_id,$project_id, $created_by,$note)
+    public function insertModeration($project_moderation_type_id,$project_id, $value,$created_by,$note)
     {
          $insertValues = array(
             'project_moderation_type_id' => $project_moderation_type_id,
             'project_id' => $project_id,
-            'created_by' => $created_by,           
+            'value' => $value,           
+            'created_by' => $created_by,    
             'note' => $note
         );
         $this->_db->insert($this->_name, $insertValues);
@@ -86,16 +75,14 @@ $row->save();
         return $resultIds;
     }
 
-    public function updateModeration($project_moderation_id,$updated_by,$note)
-    {                
-                   
-         $updateValues = array(
-            'updated_by' => $updated_by,          
-            'updated_at' =>  new Zend_Db_Expr('Now()'),
-            'note' => $note        
-        );      
-        $this->update($updateValues, 'project_moderation_id=' . $project_moderation_id);        
-    }
+    // public function deleteModeration($project_moderation_id,$note)
+    // {                                
+    //      $updateValues = array(            
+    //         'is_deleted' =>  1,
+    //         'note' => $note        
+    //     );      
+    //     $this->update($updateValues, 'project_moderation_id=' . $project_moderation_id);        
+    // }
 
 
 
