@@ -25,8 +25,78 @@
 class ModerationController extends Local_Controller_Action_DomainSwitch
 {
 
+    /** @var Default_Model_Project */
+    protected $_model;
+    const DATA_ID_NAME = 'project_id';
+    const DATA_NOTE = 'note';
+    const DATA_VALUE = 'value';
+    protected $_modelName = 'Default_Model_ProjectModeration';
+    protected $_pageTitle = 'Moderate GHNS excluded';
+    const RESULT_OK = "OK";
+    const RESULT_ERROR = "ERROR";
+    public function init()
+    {
+        $this->_model = new $this->_modelName();
+        $this->view->pageTitle = $this->_pageTitle;
+        parent::init();
+    }
+
+
     public function indexAction()
     {
         $this->view->page = (int)$this->getParam('page', 1);        
     }
+
+    public function listAction()
+    {
+    	$startIndex = (int)$this->getParam('jtStartIndex');
+    	$pageSize = (int)$this->getParam('jtPageSize');
+    	$sorting = $this->getParam('jtSorting');
+    	if($sorting==null)
+    	{
+    		$sorting = 'created_at desc';
+    	}
+    	$filter['member_id'] = $this->getParam('filter_member_id');
+
+    	$mod = new Default_Model_ProjectModeration();    
+    	$reports = $mod->getList($filter['member_id'],$sorting,(int)$pageSize,$startIndex);
+    	//$reports = $mod->getList();
+
+    	$totalRecordCount = $mod->getTotalCount();
+    	
+    	$jTableResult = array();
+    	$jTableResult['Result'] = self::RESULT_OK;
+    	$jTableResult['Records'] = $reports;
+    	$jTableResult['TotalRecordCount'] = $totalRecordCount;
+
+    	$this->_helper->json($jTableResult);
+    }
+
+    public function updateAction()
+    {
+    	$dataId = (int)$this->getParam(self::DATA_ID_NAME, null);
+    	$note = $this->getParam(self::DATA_NOTE, null);
+    	$value = $this->getParam(self::DATA_VALUE, null);
+    	if($value==null)
+    	{
+    		$value = 0;
+    	}
+    	if($value==0)
+    	{
+		$tableTags = new Default_Model_Tags();
+		$tableTags->saveGhnsExcludedTagForProject($dataId, 0);
+    	}
+
+    	$auth = Zend_Auth::getInstance();
+        	$identity = $auth->getIdentity();
+    	$mod = new Default_Model_ProjectModeration();   
+    	//createModeration($project_id,$project_moderation_type_id, $is_set, $userid,$note)
+    	$mod->createModeration($dataId,Default_Model_ProjectModeration::M_TYPE_GET_HOT_NEW_STUFF_EXCLUDED, $value, $identity->member_id,$note);
+    	$jTableResult = array();
+        	$jTableResult['Result'] = self::RESULT_OK;                		
+        	$this->_helper->json($jTableResult);
+    }
+
+      
+
 }
