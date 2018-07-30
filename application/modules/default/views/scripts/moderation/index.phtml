@@ -77,6 +77,10 @@ $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
             padding-top:20px;
         }
 
+        a.imghistory{
+
+        }
+
        
 
 </style>
@@ -236,6 +240,11 @@ $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
                         title: 'Reason',                                                   
                         type: 'textarea',
                         list: true
+                        /*,
+                        display:function(data){
+                             return data.record.note+'<a class="imghistory" data-projectid="'+data.record.project_id+'"> &nbsp;<i class="fa fa-history"></i></a>';
+                        }
+                        */
                     },   
                     value: {
                         title: '',      
@@ -318,5 +327,16 @@ $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
         $('#TableContainer').jtable('load', {           
             filter_member_id: $('#filter_member_id').val()            
         });
+
+        $('body').on("click", 'a.imghistory', function (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            console.log(this);
+            console.log($(this).attr('data-projectid'));
+
+            return false;
+        });
+
+    
     });
 </script>

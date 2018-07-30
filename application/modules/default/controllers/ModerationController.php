@@ -52,7 +52,10 @@ class ModerationController extends Local_Controller_Action_DomainSwitch
     	$startIndex = (int)$this->getParam('jtStartIndex');
     	$pageSize = (int)$this->getParam('jtPageSize');
     	$sorting = $this->getParam('jtSorting');
-    
+    	if($sorting==null)
+    	{
+    		$sorting = 'created_at desc';
+    	}
     	$filter['member_id'] = $this->getParam('filter_member_id');
 
     	$mod = new Default_Model_ProjectModeration();    

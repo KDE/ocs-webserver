@@ -67,68 +67,7 @@ class Default_Model_ProjectModeration extends Default_Model_DbTable_ProjectModer
             }                         
     }
 
-    public function updateInsertModeration_($project_id,$project_moderation_type_id, $is_set, $userid,$note,$is_deleted,$is_valid)
-    {              
-            $sql = '
-                              SELECT
-                                p.*
-                              FROM project_moderation AS p
-                              WHERE 
-                                p.project_id = :project_id
-                                AND p.is_deleted = :is_deleted
-
-                                and p.project_moderation_type_id = :project_moderation_type_id
-                      ';
-            $row = $this->_db->fetchRow($sql, array(
-                'project_id'  => $project_id,
-                'is_deleted' => 0,
-                'project_moderation_type_id'        => $project_moderation_type_id
-            ));
-
-            if($row!=null)
-            {                
-                 $row = $this->generateRowClass($row);
-                 $updateValues = array(
-                      'is_deleted'     =>1                                      
-                  );
-                $this->update($updateValues,  'project_moderation_id=' . $row->project_moderation_id);
-
-                 $insertValues = array(
-                    'project_moderation_type_id' =>$row->project_moderation_type_id,
-                    'project_id' => $row->project_id,
-                    
-                    'created_by' => $row->updated_by!=null ? $row->updated_by : $row->created_by,
-                    'created_at' => $row->updated_at!=null ? $row->updated_at : $row->created_at,
-
-                    'updated_by' =>$userid,
-                    'updated_at' => new Zend_Db_Expr('Now()'),
-                    'note' => $note                  
-                );                
-
-               if($is_set==1)
-               {
-                  $insertValues['is_deleted'] = 0;
-               }else{
-                  $insertValues['is_deleted'] = 1;
-               }
-
-                if($is_deleted)
-                {
-                    $insertValues['is_deleted'] = $is_deleted;
-                }
-                if($is_valid)
-                {
-                    $insertValues['is_valid'] = $is_valid;
-                }
-                $this->_db->insert($this->_name, $insertValues);
-            }else
-            {            
-                if($is_set==1)
-                {
-                    $this->insertModeration($project_moderation_type_id,$project_id, $userid,$note);             
-                 }   
-            }                         
-    }
+  
 
     public function getTotalCount()
     {
@@ -142,7 +81,7 @@ class Default_Model_ProjectModeration extends Default_Model_DbTable_ProjectModer
         return  $result[0]['cnt'];
     }
 
-     public function getList($member_id=null, $orderby=' updated_at desc, created_at desc',$limit = null, $offset  = null)
+     public function getList($member_id=null, $orderby='created_at desc',$limit = null, $offset  = null)
     {            
             $sql = "
                         SELECT 
