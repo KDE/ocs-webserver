@@ -64,7 +64,8 @@ window.appHelpers = function () {
 
   function generateFilterUrl(location, currentCat) {
     let link = {};
-    if (currentCat !== 0) {
+    console.log(currentCat);
+    if (currentCat && currentCat !== 0) {
       link.base = "/browse/cat/" + currentCat + "/ord/";
     } else {
       link.base = "/browse/ord/";
@@ -1052,6 +1053,8 @@ class ExploreTopBar extends React.Component {
     if (link.search) {
       linkSearch = link.search;
     }
+
+    console.log(link.base);
 
     return React.createElement(
       "div",
