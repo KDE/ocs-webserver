@@ -1,0 +1,53 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<div id="login-form-box" class="well">
+    <h3><?= $this->translate('Please change your password') ?></h3>
+
+    <div id="help-block" class="help-block">
+        <?= $this->translate('Please set a new password:') ?>
+    </div>
+    <div id="error" class="center text-error help-block">
+        <?php if ($this->error && isset($this->errorText)): ?>
+            <p class="errors">
+                <?= $this->translate($this->errorText) ?>
+            </p>
+            <p class="errors">
+                <?php echo $this->formErrors(); ?>
+            </p>
+
+        <?php endif; ?>
+    </div>
+    <form class="standard-form row-fluid center partialjson" action="<?= $this->form->getAction(); ?>"
+          method="<?= $this->form->getMethod(); ?>" data-target="#register-box">
+        <?php
+        if ($this->error) {
+            $this->form->mail->class = $this->form->mail->class . ' has-error';
+        }
+        ?>
+        <div class="form-group has-feedback"><?= $this->form->pass1 ?></div>
+        <div class="form-group has-feedback"><?= $this->form->pass2 ?></div>
+        <?= $this->form->send ?>
+    </form>
+
+</div>
+

@@ -80,7 +80,7 @@ class Default_Model_OcsOpenId
             'avatarUrl'      => $user['profile_image_url'],
             'biography'      => empty($user['biography']) ? '' : $user['biography'],
             'admin'          => $user['roleId'] == 100 ? 'true' : 'false',
-            'is_hive'        => empty($user['source_id']) ? 'false' : 'true',
+            'is_hive'        => $user['password_type'] == 0 ? 'false' : 'true',
             'is_active'      => $user['is_active'],
             'is_deleted'     => $user['is_deleted']
         );

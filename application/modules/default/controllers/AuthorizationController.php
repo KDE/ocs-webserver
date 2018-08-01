@@ -136,6 +136,18 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
 
         return $decodeFilter->filter($string);
     }
+    
+    /**
+     * @param string $string
+     *
+     * @return string
+     */
+    protected function encodeString($string)
+    {
+        $encodeFilter = new Local_Filter_Url_Encrypt();
+
+        return $encodeFilter->filter($string);
+    }
 
     /**
      * @throws Zend_Auth_Storage_Exception
@@ -302,11 +314,28 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
 
         $auth = Zend_Auth::getInstance();
         $userId = $auth->getStorage()->read()->member_id;
+        
+        
+        
+        //If the user is a hive user, he must chage his password for ldap
+        $userTabel = new Default_Model_Member();
+        $user = $userTabel->fetchMember($userId);
+        if($user->password_type = Default_Model_Member::PASSWORD_TYPE_HIVE) {
+            //Rewrite redir param to show ChangePasswordForm
+            $redirUrl = '/member/' . $userId . '/changepass/';
+            
+            $redir = $this->encodeString($redirUrl);
+            $this->view->redirect = $redir;
+            
+        }
+        
+        
 
         $modelToken = new Default_Model_SingleSignOnToken();
         $data = array(
             'remember_me' => $values['remember_me'],
-            'redirect'    => $this->getParam('redirect'),
+            //'redirect'    => $this->getParam('redirect'),
+            'redirect'    => $this->view->redirect,
             'action'      => Default_Model_SingleSignOnToken::ACTION_LOGIN,
             'member_id'   => $userId
         );
@@ -314,6 +343,11 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         setcookie(Default_Model_SingleSignOnToken::ACTION_LOGIN, $token_id, time() + 120, '/',
             Local_Tools_ParseDomain::get_domain($this->getRequest()->getHttpHost()), null, true);
 
+        
+        
+        
+        
+        
         // handle redirect
         $this->handleRedirect($userId);
     }

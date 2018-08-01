@@ -44,7 +44,7 @@ class Local_Validate_OldPasswordConfirm extends Zend_Validate_Abstract
         $memberModel = new Default_Model_Member();
         $user = $memberModel->fetchMemberData(Zend_Auth::getInstance()->getIdentity()->member_id);
 
-        if (Local_Auth_Adapter_Ocs::getEncryptedPassword($value, $user->source_id) == $user->password) {
+        if (Local_Auth_Adapter_Ocs::getEncryptedPassword($value, $user->password_type) == $user->password) {
             return true;
         }
 

@@ -25,6 +25,8 @@ class UserController extends Local_Controller_Action_DomainSwitch
 
     protected $_memberId;
     protected $_userName;
+    /** @var  Zend_Db_Table_Row */
+    protected $_memberSettings;
 
     public function init()
     {
@@ -48,6 +50,132 @@ class UserController extends Local_Controller_Action_DomainSwitch
        $this->aboutmeAction();
        
     }
+    
+    /**
+     * @return Default_Form_Settings
+     * @throws Zend_Form_Exception
+     */
+    private function formPassword()
+    {
+        $form = new Default_Form_Settings();
+        $form->setMethod("POST")->setAttrib("id", "settingsPasswordForm")->setAction('/member/'.$this->_memberId.'/changepass');
+
+        $passOld = $form->createElement('password', 'passwordOld')->setLabel('Enter old Password:')->setRequired(true)
+                        ->removeDecorator('HtmlTag')->addValidator(new Local_Validate_OldPasswordConfirm())->setDecorators(array(
+                'ViewHelper',
+                'Label',
+                'Errors',
+                array(
+                    'ViewScript',
+                    array(
+                        'viewScript' => 'settings/viewscripts/flatui_input.phtml',
+                        'placement'  => false
+                    )
+                )
+            ))
+        ;
+
+        $pass1 = $form->createElement('password', 'password1')->setLabel('Enter new Password:')->setRequired(true)
+                      ->addValidator(new Zend_Validate_NotEmpty(Zend_Validate_NotEmpty::STRING))->removeDecorator('HtmlTag')
+                      ->setDecorators(array(
+                          'ViewHelper',
+                          'Label',
+                          'Errors',
+                          array(
+                              'ViewScript',
+                              array(
+                                  'viewScript' => 'settings/viewscripts/flatui_input.phtml',
+                                  'placement'  => false
+                              )
+                          )
+                      ))
+        ;
+
+        $pass2 = $form->createElement('password', 'password2')->setLabel('Re-enter new Password:')->setRequired(true)
+                      ->addValidator(new Zend_Validate_NotEmpty(Zend_Validate_NotEmpty::STRING))->removeDecorator('HtmlTag')
+                      ->setDecorators(array(
+                          'ViewHelper',
+                          'Label',
+                          'Errors',
+                          array(
+                              'ViewScript',
+                              array(
+                                  'viewScript' => 'settings/viewscripts/flatui_input.phtml',
+                                  'placement'  => false
+                              )
+                          )
+                      ))
+        ;
+
+        $passValid = new Local_Validate_PasswordConfirm($pass2->getValue());
+        $pass1->addValidator($passValid);
+
+        $form->addElement($passOld)->addElement($pass1)->addElement($pass2);
+
+        return $form;
+    }
+    
+    
+    public function changepassAction()
+    {
+
+        $userTabel = new Default_Model_Member();
+        $showMember = $userTabel->fetchMember($this->_memberId);
+        $this->view->member = $showMember;
+        $this->_memberSettings = $showMember;
+        
+        if($showMember->password_type == Default_Model_Member::PASSWORD_TYPE_OCS) {
+            $this->redirect('/');
+        }
+        
+        if ($this->_request->isPost()) {
+            $form = $this->formPassword();
+
+            if ($form->isValid($_POST)) {
+                $values = $form->getValues();
+
+                if ($this->_memberSettings->password != Local_Auth_Adapter_Ocs::getEncryptedPassword($values['passwordOld'],
+                        $this->_memberSettings->password_type)) {
+                    $form->addErrorMessage('Your old Password is wrong!');
+                    $this->view->passwordform = $form;
+                    $this->view->error = 1;
+                } else {
+                    //20180801 ronald: If a Hive User changes his password, we change the password type to our Default
+                    if($this->_memberSettings->password_type == Default_Model_Member::PASSWORD_TYPE_HIVE) {
+                        $this->_memberSettings->password_type = Default_Model_Member::PASSWORD_TYPE_OCS;
+                    }
+                    
+                    $this->_memberSettings->password =
+                        Local_Auth_Adapter_Ocs::getEncryptedPassword($values['password1'], $this->_memberSettings->password_type);
+                    $this->_memberSettings->save();
+                    $this->view->passwordform = $this->formPassword();
+                    $this->view->save = 1;
+
+                    try {
+                        $id_server = new Default_Model_OcsOpenId();
+                        $id_server->updatePasswordForUser($this->_memberSettings->member_id);
+
+                        //$opencode_server = new Default_Model_OcsOpenCode();
+                        //$opencode_server->updateUser($this->_memberSettings->member_id);
+
+                    } catch (Exception $e) {
+                        Zend_Registry::get('logger')->err($e->getTraceAsString());
+                    }
+                    $this->redirect('/');
+                    
+                }
+            } else {
+                $this->view->passwordform = $form;
+                $this->view->error = 1;
+            }
+        } else {
+            $form = $this->formPassword();
+
+            $this->view->passwordform = $form;
+        }
+       
+    }
+    
 
     public function aboutAction()
     {
