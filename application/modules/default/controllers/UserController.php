@@ -154,13 +154,16 @@ class UserController extends Local_Controller_Action_DomainSwitch
                     try {
                         $id_server = new Default_Model_OcsOpenId();
                         $id_server->updatePasswordForUser($this->_memberSettings->member_id);
-
-                        //$opencode_server = new Default_Model_OcsOpenCode();
-                        //$opencode_server->updateUser($this->_memberSettings->member_id);
-
                     } catch (Exception $e) {
-                        Zend_Registry::get('logger')->err($e->getTraceAsString());
+                        Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
                     }
+                    try {
+                        $ldap_server = new Default_Model_OcsIdent();
+                        $ldap_server->updatePassword($this->_memberSettings->member_id);
+                    } catch (Exception $e) {
+                        Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+                    }
+
                     $this->redirect('/');
                     
                 }

@@ -930,11 +930,8 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                 try {
                     $id_server = new Default_Model_OcsOpenId();
                     $id_server->updateUser($this->_memberSettings->member_id);
-
-                    //$opencode_server = new Default_Model_OcsOpenCode();
-                    //$opencode_server->updateUser($this->_memberSettings->member_id);
                 } catch (Exception $e) {
-                    Zend_Registry::get('logger')->err($e->getTraceAsString());
+                    Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
                 }
 
                 $this->view->save = 1;
@@ -1065,12 +1062,14 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                     try {
                         $id_server = new Default_Model_OcsOpenId();
                         $id_server->updatePasswordForUser($this->_memberSettings->member_id);
-
-                        //$opencode_server = new Default_Model_OcsOpenCode();
-                        //$opencode_server->updateUser($this->_memberSettings->member_id);
-
                     } catch (Exception $e) {
-                        Zend_Registry::get('logger')->err($e->getTraceAsString());
+                        Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+                    }
+                    try {
+                        $opencode_server = new Default_Model_OcsIdent();
+                        $opencode_server->updatePassword($this->_memberSettings->member_id);
+                    } catch (Exception $e) {
+                        Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
                     }
                 }
             } else {
@@ -1398,11 +1397,14 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
             try {
                 $id_server = new Default_Model_OcsOpenId();
                 $id_server->updateMailForUser($this->_authMember->member_id);
-
-                $opencode_server = new Default_Model_OcsOpenCode();
-                $opencode_server->updateUserMail($this->_memberSettings->member_id);
             } catch (Exception $e) {
-                Zend_Registry::get('logger')->err($e->getTraceAsString());
+                Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+            }
+            try {
+                $ldap_server = new Default_Model_OcsIdent();
+                $ldap_server->updateMail($this->_authMember->member_id);
+            } catch (Exception $e) {
+                Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
             }
         }
     }
