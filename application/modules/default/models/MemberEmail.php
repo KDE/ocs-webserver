@@ -163,6 +163,7 @@ class Default_Model_MemberEmail
         $data = array();
         $data['email_member_id'] = $user_id;
         $data['email_address'] = $user_mail;
+        $data['email_hash'] = MD5($user_mail);
         $data['email_verification_value'] =
             empty($user_verification) ? Default_Model_MemberEmail::getVerificationValue($user_id, $user_mail) : $user_verification;
 
@@ -200,6 +201,7 @@ class Default_Model_MemberEmail
         $data = array();
         $data['email_member_id'] = $user_id;
         $data['email_address'] = $user_mail;
+        $data['email_hash'] = MD5($user_mail);
         $data['email_checked'] = $user_mail_checked == 1 ? new Zend_Db_Expr('Now()') : new Zend_Db_Expr('NULL');
         $data['email_verification_value'] =
             empty($user_verification) ? Default_Model_MemberEmail::getVerificationValue($user_id, $user_mail) : $user_verification;
