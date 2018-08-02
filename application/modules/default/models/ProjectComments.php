@@ -99,6 +99,7 @@ class Default_Model_ProjectComments
                 SELECT comment_id, comment_target_id, comment_parent_id, comment_text, comment_created_at, comment_active, comment_type, member_id, username, profile_image_url 
                 ,(SELECT (DATE_ADD(max(active_time), INTERVAL 1 YEAR) > now())  from support  where support.status_id = 2  AND support.member_id = comments.comment_member_id)  AS issupporter    
                 ,(select user_like from project_rating where project_rating.comment_id = comments.comment_id ) as rating               
+                ,member.roleid
                 FROM comments 
                 STRAIGHT_JOIN member ON comments.comment_member_id = member.member_id                 
                 WHERE comment_active = :status_active AND comment_type = :type_id AND comment_target_id = :project_id AND comment_parent_id = 0 
@@ -113,7 +114,8 @@ class Default_Model_ProjectComments
         $sql = "
                 SELECT comment_id, comment_target_id, comment_parent_id, comment_text, comment_created_at, comment_active, comment_type, member_id, username, profile_image_url 
                 ,(SELECT (DATE_ADD(max(active_time), INTERVAL 1 YEAR) > now())  from support  where support.status_id = 2  AND support.member_id = comments.comment_member_id)  AS issupporter     
-               ,(select user_like from project_rating where project_rating.comment_id = comments.comment_id ) as rating               
+               ,(select user_like from project_rating where project_rating.comment_id = comments.comment_id ) as rating          
+               ,member.roleid     
                 FROM comments 
                 STRAIGHT_JOIN member ON comments.comment_member_id = member.member_id 
                 WHERE comment_active = :status_active AND comment_type = :type_id AND comment_target_id = :project_id AND comment_parent_id <> 0 
