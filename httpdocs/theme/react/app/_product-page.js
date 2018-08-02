@@ -772,91 +772,8 @@ class ProductViewContent extends React.Component {
 class ProductCommentsContainer extends React.Component {
   constructor(props){
   	super(props);
-  	this.state = {
-      text:'',
-      errorMsg:'',
-      errorTitle:''
-    };
-    this.updateCommentText = this.updateCommentText.bind(this);
-    this.submitComment = this.submitComment.bind(this);
+    this.state = {}
   }
-
-  updateCommentText(e){
-    this.setState({text:e.target.value});
-  }
-
-  submitComment(){
-    console.log(this.state.text);
-    const self = this;
-    jQuery.ajax({
-      data:{
-        p:this.props.product.project_id,
-        m:this.props.user.member_id,
-        msg:this.state.text
-      },
-      url:'/productcomment/addreply/',
-      type:'post',
-      dataType:'json',
-      error:function(jqXHR,textStatus,errorThrown){
-        const results = JSON && JSON.parse(jqXHR.responseText) || $.parseJSON(jqXHR.responseText);
-        self.setState({errorMsg:results.message,errorTitle:results.title,login_url:results.login_url,status:'error'})
-      },
-      success:function(results){
-        console.log(results);
-      }
-    })
-  }
-
-  /*
-
-  var AjaxForm = (function () {
-      return {
-          setup: function (idElement, idTargetElement) {
-              var target = $(idTargetElement);
-              $('body').on("submit", 'form.product-add-comment', function (event) {
-                  event.preventDefault();
-                  event.stopImmediatePropagation();
-                  $(this).find('button').attr("disabled", "disabled");
-                  $(this).find('.glyphicon.glyphicon-send').removeClass('glyphicon-send').addClass('glyphicon-refresh spinning');
-
-                  jQuery.ajax({
-                      data: $(this).serialize(),
-                      url: this.action,
-                      type: this.method,
-                      dataType: "json",
-
-                      error: function (jqXHR, textStatus, errorThrown) {
-                          var results = JSON && JSON.parse(jqXHR.responseText) || $.parseJSON(jqXHR.responseText);
-                          var msgBox = $('#generic-dialog');
-                          msgBox.modal('hide');
-                          msgBox.find('.modal-header-text').empty().append(results.title);
-                          msgBox.find('.modal-body').empty().append(results.message);
-                          setTimeout(function () {
-                              msgBox.modal('show');
-                          }, 900);
-                      },
-                      success: function (results) {
-                          if (results.status == 'ok') {
-                              $(target).empty().html(results.data);
-                          }
-                          if (results.status == 'error') {
-                              if (results.message != '') {
-                                  alert(results.message);
-                              } else {
-                                  alert('Service is temporarily unavailable.');
-                              }
-                          }
-                      }
-                  });
-
-                  return false;
-              });
-          }
-      }
-  })();
-
-
-   */
 
   render(){
     let commentsDisplay;
@@ -877,7 +794,75 @@ class ProductCommentsContainer extends React.Component {
       )
     }
 
-    let commentTextArea;
+    return (
+      <div className="product-view-section" id="product-comments-container">
+        <div className="section-header">
+          <h3>Comments</h3>
+          <span className="comments-counter">{cArray.length} comments</span>
+        </div>
+        <CommentForm
+          user={this.props.user}
+          product={this.props.product}
+        />
+        {commentsDisplay}
+      </div>
+    )
+  }
+}
+
+class CommentForm extends React.Component {
+  constructor(props){
+  	super(props);
+    this.state = {
+      text:'',
+      errorMsg:'',
+      errorTitle:''
+    };
+    this.updateCommentText = this.updateCommentText.bind(this);
+    this.submitComment = this.submitComment.bind(this);
+  }
+
+  updateCommentText(e){
+    this.setState({text:e.target.value});
+  }
+
+  submitComment(){
+    const msg = this.state.text;
+    console.log(this.state.text);
+    const self = this;
+    jQuery.ajax({
+      data:{
+        p:this.props.product.project_id,
+        m:this.props.user.member_id,
+        msg:this.state.text
+      },
+      url:'/productcomment/addreply/',
+      type:'post',
+      dataType:'json',
+      error:function(jqXHR,textStatus,errorThrown){
+        const results = JSON && JSON.parse(jqXHR.responseText) || $.parseJSON(jqXHR.responseText);
+        self.setState(
+          {
+            errorMsg:results.message,
+            errorTitle:results.title,
+            login_url:results.login_url,
+            status:'error'
+          }
+        );
+      },
+      success:function(results){
+        self.setState({
+          text:''
+        },function(){
+          console.log(results.data);
+        });
+      }
+    })
+  }
+
+  render(){
+
+    let commentFormDisplay;
     if (this.props.user){
 
       let submitBtnDisplay;
@@ -905,9 +890,8 @@ class ProductCommentsContainer extends React.Component {
           </div>
         )
       }
-      console.log(this.state.status);
 
-      commentTextArea = (
+      commentFormDisplay = (
         <div className="comment-form-container">
           <span>Add Comment</span>
           <textarea className="form-control" onChange={this.updateCommentText} defaultValue={this.state.text}></textarea>
@@ -916,19 +900,15 @@ class ProductCommentsContainer extends React.Component {
         </div>
       );
     } else {
-      commentTextArea = (
+      commentFormDisplay = (
         <p>Please <a href="/login?redirect=ohWn43n4SbmJZWlKUZNl2i1_s5gggiCE">login</a> or <a href="/register">register</a> to add a comment</p>
       );
     }
 
+
     return (
-      <div className="product-view-section" id="product-comments-container">
-        <div className="section-header">
-          <h3>Comments</h3>
-          <span className="comments-counter">{cArray.length} comments</span>
-        </div>
-        {commentTextArea}
-        {commentsDisplay}
+      <div id="product-page-comment-form-container">
+        {commentFormDisplay}
       </div>
     )
   }

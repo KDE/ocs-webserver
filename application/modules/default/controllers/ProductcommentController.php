@@ -33,6 +33,17 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
         $this->auth = Zend_Auth::getInstance();
     }
 
+    public function indexAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $project_id = (int)$this->getParam('p');
+        $cmodel = new Default_Model_ProjectComments();
+        $list = $cmodel->getCommentTreeForProjectList($project_id);          
+        $this->_helper->json($list);
+    }
+    
+    
+
     public function addreplyAction()
     {
         $this->_helper->layout->disableLayout();
