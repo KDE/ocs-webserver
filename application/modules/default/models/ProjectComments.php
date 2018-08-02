@@ -87,12 +87,12 @@ class Default_Model_ProjectComments
         return $rowset;
     }
 
-    /**
+ /**
      * @param $project_id
      *
      * @return Zend_Paginator
      */
-    public function getCommentTreeForProject($project_id)
+    public function getCommentTreeForProjectList($project_id)
     {
 
         $sql = "
@@ -140,6 +140,19 @@ class Default_Model_ProjectComments
         /* create the final sorted array */
         $list = array();
         $this->sort_child_nodes(0, 1, $list);
+
+        return $list;
+    }
+
+    /**
+     * @param $project_id
+     *
+     * @return Zend_Paginator
+     */
+    public function getCommentTreeForProject($project_id)
+    {
+
+        $list = $this->getCommentTreeForProjectList($project_id);
 
         return new Zend_Paginator(new Zend_Paginator_Adapter_Array($list));
     }
