@@ -194,7 +194,17 @@ class UserController extends Local_Controller_Action_DomainSwitch
             $member = $memberTable->fetchRow("mail = '".$email."' AND is_active = 1 AND is_deleted = 0");
             if($member) {
                 $helperImage = new Default_View_Helper_Image();
-                $imgUrl = $helperImage->Image($member->profile_image_url,array('width' => 30, 'height' => 30));
+                $imgUrl = $helperImage->Image($member->profile_image_url,array('width' => 200, 'height' => 200));
+                $this->view->avatar = $imgUrl;
+            } else {
+                $this->view->avatar = "";
+            }
+        }
+        if($emailHash) {
+            $member = $memberTable->fetchRow("MD5(mail) = '".$emailHash."' AND is_active = 1 AND is_deleted = 0");
+            if($member) {
+                $helperImage = new Default_View_Helper_Image();
+                $imgUrl = $helperImage->Image($member->profile_image_url,array('width' => 200, 'height' => 200));
                 $this->view->avatar = $imgUrl;
             } else {
                 $this->view->avatar = "";
