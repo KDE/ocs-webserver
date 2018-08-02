@@ -21,13 +21,13 @@
  **/
 
 $file_out = $this->avatar; // The image to return
+$size = $this->size;
+
+//$hash = md5("rvs75@email.de");
+//var_dump($hash);
+//sdie;
 
 $helperImage = new Default_View_Helper_Image();
-
-$size = 100;
-if(isset($_GET['s'])) {
-    $size = $_GET['s'];
-}
 
 $imgUrl = $helperImage->Image($file_out,array('width' => $size, 'height' => $size));
 

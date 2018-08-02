@@ -181,30 +181,23 @@ class UserController extends Local_Controller_Action_DomainSwitch
     {
         $this->_helper->layout->disableLayout();
         
-        $email = null;
-        if(null != ($this->getParam("email"))) {
-            $email = $this->getParam("email");
+        $size = 200;
+        if(null != ($this->getParam("size"))) {
+            $size = $this->getParam("size");
         }
+        $this->view->size = $size;
+        
+        
         $emailHash = null;
-        if(null != ($this->getParam("hash"))) {
-            $emailHash = $this->getParam("hash");
+        if(null != ($this->getParam("emailhash"))) {
+            $emailHash = $this->getParam("emailhash");
         }
         $memberTable = new Default_Model_DbTable_Member();
-        if($email) {
-            $member = $memberTable->fetchRow("mail = '".$email."' AND is_active = 1 AND is_deleted = 0");
-            if($member) {
-                $helperImage = new Default_View_Helper_Image();
-                $imgUrl = $helperImage->Image($member->profile_image_url,array('width' => 200, 'height' => 200));
-                $this->view->avatar = $imgUrl;
-            } else {
-                $this->view->avatar = "";
-            }
-        }
         if($emailHash) {
             $member = $memberTable->fetchRow("MD5(mail) = '".$emailHash."' AND is_active = 1 AND is_deleted = 0");
             if($member) {
                 $helperImage = new Default_View_Helper_Image();
-                $imgUrl = $helperImage->Image($member->profile_image_url,array('width' => 200, 'height' => 200));
+                $imgUrl = $helperImage->Image($member->profile_image_url,array('width' => $size, 'height' => $size));
                 $this->view->avatar = $imgUrl;
             } else {
                 $this->view->avatar = "";
