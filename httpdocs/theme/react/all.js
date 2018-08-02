@@ -2809,85 +2809,8 @@ class ProductViewContent extends React.Component {
 class ProductCommentsContainer extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      text: '',
-      errorMsg: '',
-      errorTitle: ''
-    };
-    this.updateCommentText = this.updateCommentText.bind(this);
-    this.submitComment = this.submitComment.bind(this);
+    this.state = {};
   }
-
-  updateCommentText(e) {
-    this.setState({ text: e.target.value });
-  }
-
-  submitComment() {
-    console.log(this.state.text);
-    const self = this;
-    jQuery.ajax({
-      data: {
-        p: this.props.product.project_id,
-        m: this.props.user.member_id,
-        msg: this.state.text
-      },
-      url: '/productcomment/addreply/',
-      type: 'post',
-      dataType: 'json',
-      error: function (jqXHR, textStatus, errorThrown) {
-        const results = JSON && JSON.parse(jqXHR.responseText) || $.parseJSON(jqXHR.responseText);
-        self.setState({ errorMsg: results.message, errorTitle: results.title, login_url: results.login_url, status: 'error' });
-      },
-      success: function (results) {
-        console.log(results);
-      }
-    });
-  }
-
-  /*
-   var AjaxForm = (function () {
-      return {
-          setup: function (idElement, idTargetElement) {
-              var target = $(idTargetElement);
-              $('body').on("submit", 'form.product-add-comment', function (event) {
-                  event.preventDefault();
-                  event.stopImmediatePropagation();
-                  $(this).find('button').attr("disabled", "disabled");
-                  $(this).find('.glyphicon.glyphicon-send').removeClass('glyphicon-send').addClass('glyphicon-refresh spinning');
-                   jQuery.ajax({
-                      data: $(this).serialize(),
-                      url: this.action,
-                      type: this.method,
-                      dataType: "json",
-                       error: function (jqXHR, textStatus, errorThrown) {
-                          var results = JSON && JSON.parse(jqXHR.responseText) || $.parseJSON(jqXHR.responseText);
-                          var msgBox = $('#generic-dialog');
-                          msgBox.modal('hide');
-                          msgBox.find('.modal-header-text').empty().append(results.title);
-                          msgBox.find('.modal-body').empty().append(results.message);
-                          setTimeout(function () {
-                              msgBox.modal('show');
-                          }, 900);
-                      },
-                      success: function (results) {
-                          if (results.status == 'ok') {
-                              $(target).empty().html(results.data);
-                          }
-                          if (results.status == 'error') {
-                              if (results.message != '') {
-                                  alert(results.message);
-                              } else {
-                                  alert('Service is temporarily unavailable.');
-                              }
-                          }
-                      }
-                  });
-                   return false;
-              });
-          }
-      }
-  })();
-     */
 
   render() {
     let commentsDisplay;
@@ -2906,7 +2829,84 @@ class ProductCommentsContainer extends React.Component {
       );
     }
 
-    let commentTextArea;
+    return React.createElement(
+      'div',
+      { className: 'product-view-section', id: 'product-comments-container' },
+      React.createElement(
+        'div',
+        { className: 'section-header' },
+        React.createElement(
+          'h3',
+          null,
+          'Comments'
+        ),
+        React.createElement(
+          'span',
+          { className: 'comments-counter' },
+          cArray.length,
+          ' comments'
+        )
+      ),
+      React.createElement(CommentForm, {
+        user: this.props.user,
+        product: this.props.product
+      }),
+      commentsDisplay
+    );
+  }
+}
+
+class CommentForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      text: '',
+      errorMsg: '',
+      errorTitle: ''
+    };
+    this.updateCommentText = this.updateCommentText.bind(this);
+    this.submitComment = this.submitComment.bind(this);
+  }
+
+  updateCommentText(e) {
+    this.setState({ text: e.target.value });
+  }
+
+  submitComment() {
+    const msg = this.state.text;
+    console.log(this.state.text);
+    const self = this;
+    jQuery.ajax({
+      data: {
+        p: this.props.product.project_id,
+        m: this.props.user.member_id,
+        msg: this.state.text
+      },
+      url: '/productcomment/addreply/',
+      type: 'post',
+      dataType: 'json',
+      error: function (jqXHR, textStatus, errorThrown) {
+        const results = JSON && JSON.parse(jqXHR.responseText) || $.parseJSON(jqXHR.responseText);
+        self.setState({
+          errorMsg: results.message,
+          errorTitle: results.title,
+          login_url: results.login_url,
+          status: 'error'
+        });
+      },
+      success: function (results) {
+        self.setState({
+          text: ''
+        }, function () {
+          console.log(results.data);
+        });
+      }
+    });
+  }
+
+  render() {
+
+    let commentFormDisplay;
     if (this.props.user) {
 
       let submitBtnDisplay;
@@ -2934,9 +2934,8 @@ class ProductCommentsContainer extends React.Component {
           React.createElement('div', { dangerouslySetInnerHTML: { __html: this.state.errorMsg } })
         );
       }
-      console.log(this.state.status);
 
-      commentTextArea = React.createElement(
+      commentFormDisplay = React.createElement(
         'div',
         { className: 'comment-form-container' },
         React.createElement(
@@ -2949,7 +2948,7 @@ class ProductCommentsContainer extends React.Component {
         submitBtnDisplay
       );
     } else {
-      commentTextArea = React.createElement(
+      commentFormDisplay = React.createElement(
         'p',
         null,
         'Please ',
@@ -2970,24 +2969,8 @@ class ProductCommentsContainer extends React.Component {
 
     return React.createElement(
       'div',
-      { className: 'product-view-section', id: 'product-comments-container' },
-      React.createElement(
-        'div',
-        { className: 'section-header' },
-        React.createElement(
-          'h3',
-          null,
-          'Comments'
-        ),
-        React.createElement(
-          'span',
-          { className: 'comments-counter' },
-          cArray.length,
-          ' comments'
-        )
-      ),
-      commentTextArea,
-      commentsDisplay
+      { id: 'product-page-comment-form-container' },
+      commentFormDisplay
     );
   }
 }
