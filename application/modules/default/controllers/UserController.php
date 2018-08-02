@@ -49,6 +49,33 @@ class UserController extends Local_Controller_Action_DomainSwitch
        
     }
 
+    
+    public function avatarAction()
+    {
+        $this->_helper->layout->disableLayout();
+        
+        $email = null;
+        if(null != ($this->getParam("email"))) {
+            $email = $this->getParam("email");
+        }
+        $emailHash = null;
+        if(null != ($this->getParam("hash"))) {
+            $emailHash = $this->getParam("hash");
+        }
+        $memberTable = new Default_Model_DbTable_Member();
+        if($email) {
+            $member = $memberTable->fetchRow("mail = '".$email."' AND is_active = 1 AND is_deleted = 0");
+            if($member) {
+                $helperImage = new Default_View_Helper_Image();
+                $imgUrl = $helperImage->Image($member->profile_image_url,array('width' => 30, 'height' => 30));
+                $this->view->avatar = $imgUrl;
+            } else {
+                $this->view->avatar = "";
+            }
+        }
+    }
+    
+
     public function aboutAction()
     {
         $modelMember = new Default_Model_Member();
