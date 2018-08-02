@@ -1,0 +1,67 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$file_out = $this->avatar; // The image to return
+$size = $this->size;
+
+//$hash = md5("rvs75@email.de");
+//var_dump($hash);
+//sdie;
+
+$helperImage = new Default_View_Helper_Image();
+
+$imgUrl = $helperImage->Image($file_out,array('width' => $size, 'height' => $size));
+
+$sizeString = '/'.$size.'x'.$size.'-2/';
+
+if (!strpos($imgUrl, $sizeString)) {
+    $imgUrl = str_replace('/200x200-2/', $sizeString, $imgUrl);
+}
+
+$ext = substr($imgUrl, -3);
+switch ($ext) {
+    case 'jpg':
+        $mime = 'image/jpeg';
+        break;
+    case 'gif':
+        $mime = 'image/gif';
+        break;
+    case 'png':
+        $mime = 'image/png';
+        break;
+    default:
+        $mime = false;
+}
+
+if ($mime) {
+    header('Content-type: '.$mime);
+    //header('Content-length: '.filesize($file_out));
+    
+    try {
+        $file = file_get_contents($imgUrl); 
+    } catch (Exception $exc) {
+        echo $exc->getTraceAsString();
+    }
+
+    echo $file;
+}
+

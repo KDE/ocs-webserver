@@ -194,9 +194,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
             $modelComments = new Default_Model_ProjectComments();            
             $offset = 0;
-            $testComments = $modelComments->getCommentTreeForProject($this->_projectId);
-            $testComments->setItemCountPerPage(25);
-            $testComments->setCurrentPageNumber($offset);
+            $testComments = $modelComments->getCommentTreeForProjectList($this->_projectId);            
             $this->view->commentsJson = Zend_Json::encode($testComments);
 
             $modelClone = new Default_Model_ProjectClone();

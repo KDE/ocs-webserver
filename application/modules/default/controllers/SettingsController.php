@@ -1046,13 +1046,18 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                 $values = $form->getValues();
 
                 if ($this->_memberSettings->password != Local_Auth_Adapter_Ocs::getEncryptedPassword($values['passwordOld'],
-                        $this->_memberSettings->source_id)) {
+                        $this->_memberSettings->password_type)) {
                     $form->addErrorMessage('Your old Password is wrong!');
                     $this->view->passwordform = $form;
                     $this->view->error = 1;
                 } else {
+                    //20180801 ronald: If a Hive User changes his password, we change the password type to our Default
+                    if($this->_memberSettings->password_type == Default_Model_Member::PASSWORD_TYPE_HIVE) {
+                        $this->_memberSettings->password_type = Default_Model_Member::PASSWORD_TYPE_OCS;
+                    }
+                    
                     $this->_memberSettings->password =
-                        Local_Auth_Adapter_Ocs::getEncryptedPassword($values['password1'], $this->_memberSettings->source_id);
+                        Local_Auth_Adapter_Ocs::getEncryptedPassword($values['password1'], $this->_memberSettings->password_type);
                     $this->_memberSettings->save();
                     $this->view->passwordform = $this->formPassword();
                     $this->view->save = 1;

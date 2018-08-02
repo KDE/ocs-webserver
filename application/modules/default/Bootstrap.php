@@ -744,6 +744,19 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             )
         );
         
+        
+        $router->addRoute(
+            'user_avatar',
+            new Zend_Controller_Router_Route(
+                '/member/avatar/:emailhash/:size',
+                array(
+                    'module'     => 'default',
+                    'controller' => 'user',
+                    'action'     => 'avatar'
+                )
+            )
+        );
+        
         $router->addRoute(
             'user_show_with_name',
             new Zend_Controller_Router_Route(

@@ -42,6 +42,8 @@ class Default_Model_DbTable_Member extends Local_Model_Table
     const PROFILE_IMG_SRC_LOCAL = 'local';
     const SOURCE_LOCAL = 0;
     const SOURCE_HIVE = 1;
+    const PASSWORD_TYPE_OCS = 0;
+    const PASSWORD_TYPE_HIVE = 1;
 
     protected $_keyColumnsForRow = array('member_id');
 

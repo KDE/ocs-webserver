@@ -1,0 +1,83 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<style>
+    .about-me {
+        padding-top: 130px;
+        width: 800px;
+    }
+    
+    .errors {
+        text-align: left;
+        padding-left: 20px;
+    }
+    
+</style>
+
+<div class="container page-container">
+    <div class="row-fluid about-me">
+        <div class="span8 about-me-details">
+            <h3 class="about-me-heading"><?= $this->translate('Please change your password') ?></h3>
+            
+            
+            <p>
+                For technical reasons it is necessary to change your password.
+            </p>
+            
+            <form class="standard-form well partial" action="<?= $this->passwordform->getAction(); ?>"
+                method="<?= $this->passwordform->getMethod(); ?>" data-target="#form-password"
+                data-trigger="#password-trigger">
+                <div class="row">
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
+                        <div class="col-md-9 col-lg-9 col-sm-9 col-xs-9" style="padding-bottom: 15px;">
+                            <?= $this->passwordform->passwordOld->setAttrib('tabindex', 1) ?>
+                        </div>
+                        <div class="col-md-9 col-lg-9 col-sm-9 col-xs-9" style="padding-bottom: 15px;">
+                            <?= $this->passwordform->password1->setAttrib('tabindex', 2) ?>
+                        </div>
+                        <div class="col-md-9 col-lg-9 col-sm-9 col-xs-9" style="padding-bottom: 15px;">
+                            <?= $this->passwordform->password2->setAttrib('tabindex', 3) ?>
+                        </div>
+                      
+                    </div>
+                  
+                </div>
+              <hr>
+              <div class="row">
+                  <div
+                      class="box pull-left margin-left-15"  style="padding-left: 15px;"><?= $this->formResult($this->passwordform, $this->save); ?></div>
+                  <button type="submit" class="btn btn-native pull-right"
+                          tabindex="18"><?= $this->translate('Save') ?></button>
+              </div>
+          </form>
+            
+        </div>
+        <!-- /.about-me-details -->
+
+        <div class="span4 about-me-sidebar">
+            
+        </div>
+        <!-- /.about-me-sidebar -->
+    </div>
+    <!-- /.about-me -->
+</div> <!-- /.container -->
+
