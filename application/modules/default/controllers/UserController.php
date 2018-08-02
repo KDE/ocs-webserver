@@ -58,7 +58,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
         if(null != ($this->getParam("size"))) {
             $size = $this->getParam("size");
         }
-        $this->view->size = $size;
+        $this->view->size = (int)$size/2;
         
         
         $emailHash = null;
