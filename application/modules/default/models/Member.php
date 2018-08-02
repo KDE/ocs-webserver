@@ -697,6 +697,31 @@ class Default_Model_Member extends Default_Model_DbTable_Member
 
         return $this->createRow();
     }
+    
+    
+    /**
+     * @param string $value
+     *
+     * @return mixed
+     */
+    public function findMemberForMailHash($value)
+    {
+        $sql = "
+            SELECT m.* FROM member_email me
+            JOIN member m ON m.member_id = me.email_member_id
+            WHERE m.is_active = 1
+            AND m.is_deleted = 0
+            AND me.email_hash = :email_hash
+        ";
+
+        $result = $this->getAdapter()->fetchAll($sql, array('email_hash' => $value));
+        
+        if($result && count($result)>0) {
+            $member = $result[0];
+            return $member;
+        }
+    }
+    
 
     /**
      * @param Zend_Db_Table_Row_Abstract $memberData
