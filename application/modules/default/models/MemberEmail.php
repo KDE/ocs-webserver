@@ -163,7 +163,7 @@ class Default_Model_MemberEmail
         $data = array();
         $data['email_member_id'] = $user_id;
         $data['email_address'] = $user_mail;
-        $data['email_hash'] = MD5($user_mail);
+        $data['email_hash'] = md5($user_mail);
         $data['email_verification_value'] =
             empty($user_verification) ? Default_Model_MemberEmail::getVerificationValue($user_id, $user_mail) : $user_verification;
 
