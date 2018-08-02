@@ -21,8 +21,23 @@
  **/
 
 $file_out = $this->avatar; // The image to return
+$size = $this->size;
 
-$ext = substr($file_out, -3);
+//$hash = md5("rvs75@email.de");
+//var_dump($hash);
+//sdie;
+
+$helperImage = new Default_View_Helper_Image();
+
+$imgUrl = $helperImage->Image($file_out,array('width' => $size, 'height' => $size));
+
+$sizeString = '/'.$size.'x'.$size.'-2/';
+
+if (!strpos($imgUrl, $sizeString)) {
+    $imgUrl = str_replace('/200x200-2/', $sizeString, $imgUrl);
+}
+
+$ext = substr($imgUrl, -3);
 switch ($ext) {
     case 'jpg':
         $mime = 'image/jpeg';
@@ -42,7 +57,7 @@ if ($mime) {
     //header('Content-length: '.filesize($file_out));
     
     try {
-        $file = file_get_contents($file_out); 
+        $file = file_get_contents($imgUrl); 
     } catch (Exception $exc) {
         echo $exc->getTraceAsString();
     }
