@@ -87,7 +87,7 @@ window.appHelpers = (function(){
       salt = "Kcn6cv7&dmvkS40Hna§4ffcvl=021nfMs2sdlPs123MChf4s0K";
     }
 
-    const timestamp = Date.now() + 3600;
+    const timestamp =  Math.floor((new Date().getTime() / 1000)+3600)
     const hash = md5(salt,file.collection_id+timestamp);
     return hash;
     /*

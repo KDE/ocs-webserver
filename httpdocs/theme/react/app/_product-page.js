@@ -820,6 +820,7 @@ class CommentForm extends React.Component {
     };
     this.updateCommentText = this.updateCommentText.bind(this);
     this.submitComment = this.submitComment.bind(this);
+    this.updateComments = this.updateComments.bind(this);
   }
 
   updateCommentText(e){
@@ -828,7 +829,6 @@ class CommentForm extends React.Component {
 
   submitComment(){
     const msg = this.state.text;
-    console.log(this.state.text);
     const self = this;
     jQuery.ajax({
       data:{
@@ -851,15 +851,23 @@ class CommentForm extends React.Component {
         );
       },
       success:function(results){
-        self.setState({
-          text:''
-        },function(){
-          jQuery.ajax({data:{},url:'/productcomment?p='+self.props.product.project_id},function(response){
-            console.log(response);
-          });
+        let baseUrl;
+        if (store.getState().env === 'live') {
+          baseUrl = 'cn.pling.com';
+        } else {
+          baseUrl = 'cn.pling.it';
+        }
+
+        $.ajax({url: '/productcomment?p='+self.props.product.project_id,cache: false}).done(function(response){
+          self.updateComments(response);
         });
       }
     })
+  }
+
+  updateComments(response){
+    store.dispatch(setProductComments(response));
+    this.setState({text:''});
   }
 
   render(){
@@ -896,7 +904,7 @@ class CommentForm extends React.Component {
       commentFormDisplay = (
         <div className="comment-form-container">
           <span>Add Comment</span>
-          <textarea className="form-control" onChange={this.updateCommentText} defaultValue={this.state.text}></textarea>
+          <textarea className="form-control" onChange={this.updateCommentText} value={this.state.text}></textarea>
           {errorDisplay}
           {submitBtnDisplay}
         </div>
@@ -1039,19 +1047,16 @@ class ProductViewFilesTabItem extends React.Component {
   componentDidMount() {
     let baseUrl, downloadLinkUrlAttr;
     if (store.getState().env === 'live') {
-      baseUrl = 'cn.pling.com';
-      downloadLinkUrlAttr = "cc.pling.com/api/";
+      baseUrl = 'opendesktop.org';
+      downloadLinkUrlAttr = "https%3A%2F%dl.opendesktop.org%2Fapi%2F";
     } else {
-      baseUrl = 'cn.pling.it';
-      downloadLinkUrlAttr = "cc.pling.it/api/";
+      baseUrl = 'pling.cc';
+      downloadLinkUrlAttr = "https%3A%2F%2Fcc.ppload.com%2Fapi%2F";
     }
 
     const f = this.props.file;
+    const timestamp =  Math.floor((new Date().getTime() / 1000)+3600)
     const fileDownloadHash = appHelpers.generateFileDownloadHash(f,store.getState().env);
-    console.log(fileDownloadHash);
-    // var downloadUrl = "https://<?= $_SERVER["SERVER_NAME"]?>/p/<?= $this->product->project_id ?>/startdownload?file_id=" + this.id + "&file_name=" + this.name + "&file_type=" + this.type + "&file_size=" + this.size + "&url=" + encodeURIComponent(pploadApiUri + 'files/downloadfile/id/' + this.id + '/s/' + hash + '/t/' + timetamp + '/u/' + userid + '/' + this.name);
-    // var downloadLink = '<a href="' + downloadUrl + '" id="data-link' + this.id + '">' + this.name + '</a>';
-
     let downloadLink = "https://"+baseUrl+
                        "/p/"+this.props.product.project_id+
                        "/startdownload?file_id="+f.id+
@@ -1059,11 +1064,11 @@ class ProductViewFilesTabItem extends React.Component {
                        "&file_type="+f.type+
                        "&file_size="+f.size+
                        "&url="+downloadLinkUrlAttr+
-                       "files/downloadfile/id/"+f.id+
-                       "/s/"+fileDownloadHash+
-                       "/t/"+f.created_timestamp+
-                       "/u/"+this.props.product.member_id+
-                       "/"+f.title;
+                       "files%2Fdownloadfile%2Fid%2F"+f.id+
+                       "%2Fs%2F"+fileDownloadHash+
+                       "%2Ft%2F"+timestamp+
+                       "%2Fu%2F"+this.props.product.member_id+
+                       "%2F"+f.title;
 
 
     /*https://david.pling.cc/p/747/startdownload?file_id=1519124607&amp;
