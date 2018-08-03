@@ -204,13 +204,13 @@ class Default_Plugin_AclRules extends Zend_Acl
 
         // resource default_product
         $this->allow(self::ROLENAME_GUEST, 'default_product',
-            array('index', 'show', 'getupdatesajax', 'updates', 'follows', 'fetch', 'search', 'startdownload','ppload'));
+            array('index', 'show', 'getupdatesajax', 'updates', 'follows', 'fetch', 'search', 'startdownload','ppload','loadratings'));
 
 
 
         // resource default_product
         $this->allow(self::ROLENAME_SYSUSER, 'default_product',
-            array('index',   'show', 'getupdatesajax', 'updates', 'follows', 'fetch', 'search', 'startdownload','ppload'));
+            array('index',   'show', 'getupdatesajax', 'updates', 'follows', 'fetch', 'search', 'startdownload','ppload','loadratings'));
 
         $this->allow(self::ROLENAME_COOKIEUSER, 'default_product',
             array(

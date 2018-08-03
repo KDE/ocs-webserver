@@ -60,6 +60,13 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $modelRating->rateForProject($this->_projectId, $this->_authMember->member_id, $userRating);
     }
 
+    public function loadratingsAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $tableProjectRatings = new Default_Model_DbTable_ProjectRating();            
+        $ratings = $tableProjectRatings->fetchRating($this->_projectId);
+        $this->_helper->json($ratings);
+    }
 
     public function pploadAction()
     {
