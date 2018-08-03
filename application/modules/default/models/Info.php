@@ -141,7 +141,8 @@ class Default_Model_Info
                        ,member.username
                        ,comment_target_id
                        ,title
-                       ,stat_projects.project_id                                    
+                       ,stat_projects.project_id  
+                       ,cat_title as catTitle                                  
                    FROM comments
                    STRAIGHT_JOIN member ON comments.comment_member_id = member.member_id
                    inner JOIN stat_projects ON comments.comment_target_id = stat_projects.project_id ';      
