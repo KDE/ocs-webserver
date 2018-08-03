@@ -854,7 +854,9 @@ class CommentForm extends React.Component {
         self.setState({
           text:''
         },function(){
-          console.log(results.data);
+          jQuery.ajax({data:{},url:'/productcomment?p='+self.props.product.project_id},function(response){
+            console.log(response);
+          });
         });
       }
     })
@@ -1046,7 +1048,7 @@ class ProductViewFilesTabItem extends React.Component {
 
     const f = this.props.file;
     const fileDownloadHash = appHelpers.generateFileDownloadHash(f,store.getState().env);
-
+    console.log(fileDownloadHash);
     // var downloadUrl = "https://<?= $_SERVER["SERVER_NAME"]?>/p/<?= $this->product->project_id ?>/startdownload?file_id=" + this.id + "&file_name=" + this.name + "&file_type=" + this.type + "&file_size=" + this.size + "&url=" + encodeURIComponent(pploadApiUri + 'files/downloadfile/id/' + this.id + '/s/' + hash + '/t/' + timetamp + '/u/' + userid + '/' + this.name);
     // var downloadLink = '<a href="' + downloadUrl + '" id="data-link' + this.id + '">' + this.name + '</a>';
 
@@ -1058,7 +1060,7 @@ class ProductViewFilesTabItem extends React.Component {
                        "&file_size="+f.size+
                        "&url="+downloadLinkUrlAttr+
                        "files/downloadfile/id/"+f.id+
-                       "/s/"+f.hash+
+                       "/s/"+fileDownloadHash+
                        "/t/"+f.created_timestamp+
                        "/u/"+this.props.product.member_id+
                        "/"+f.title;
