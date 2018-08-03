@@ -625,20 +625,18 @@ class Default_Model_Info
 
         $sql = '
             SELECT 
-                p.*
-                ,laplace_score(p.count_likes, p.count_dislikes) AS laplace_score
+                p.*              
                 ,m.profile_image_url
                 ,m.username
             FROM
-                project AS p
+                stat_projects AS p
             JOIN 
                 member AS m ON m.member_id = p.member_id
             WHERE
                 p.status = 100
                 AND p.type_id = 1
                 AND p.featured = 1
-                AND p.project_category_id IN ('. implode(',', $activeCategories).')
-                ORDER BY p.changed_at DESC
+                AND p.project_category_id IN ('. implode(',', $activeCategories).')                
             ';
         if (isset($limit)) {
             $sql .= ' limit ' . (int)$limit;
