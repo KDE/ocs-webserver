@@ -147,7 +147,7 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         $requestedElements = $this->fetchRequestedElements($filter, $pageLimit, ($page - 1) * $pageLimit);        
        
         $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
-        if($storeConfig->isRenderReact()){           
+        if($storeConfig->layout_explore && $storeConfig->isRenderReact()){           
                 
             $this->view->productsJson =Zend_Json::encode($requestedElements['elements']);           
             $this->view->filtersJson = Zend_Json::encode($filter);
