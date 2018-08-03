@@ -264,11 +264,12 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 $this->_authMember->member_id);
         }
 
-        // $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
-        // if($storeConfig->isRenderReact()){           
-        //     $this->initJsonForReact();           
-        //     $this->_helper->viewRenderer('index-react');              
-        // }
+        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;        
+      
+        if($storeConfig->layout_pagedetail && $storeConfig->isRenderReact()){           
+            $this->initJsonForReact();           
+            $this->_helper->viewRenderer('index-react');              
+        }
 
     }
 
