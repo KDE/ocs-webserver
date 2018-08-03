@@ -79,4 +79,4 @@ httpdocs/images_sys/superstore/*
 node_modules/*
 .ftpconfig
 appimagehub-bu/*
-/nbproject/*
+/nbproject/

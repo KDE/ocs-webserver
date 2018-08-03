@@ -212,7 +212,13 @@ class PasswordController extends Local_Controller_Action_DomainSwitch
             $id_server = new Default_Model_OcsOpenId();
             $id_server->updatePasswordForUser($member_data->member_id);
         } catch (Exception $e) {
-            Zend_Registry::get('logger')->err($e->getTraceAsString());
+            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+        }
+        try {
+            $ldap_server = new Default_Model_OcsIdent();
+            $ldap_server->updatePassword($member_data->member_id);
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }
 
         $this->_helper->flashMessenger->addMessage('<p class="text-error">Your password is changed.</p>');

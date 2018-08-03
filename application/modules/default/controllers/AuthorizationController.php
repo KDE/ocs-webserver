@@ -600,8 +600,12 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         try {
             $id_server = new Default_Model_OcsOpenId();
             $id_server->createUser($authUser->member_id);
-            $opencode_server = new Default_Model_OcsOpenCode();
-            $opencode_server->createUser($authUser->member_id);
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+        }
+        try {
+            $ldap_server = new Default_Model_OcsIdent();
+            $ldap_server->createUser($authUser->member_id);
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }
