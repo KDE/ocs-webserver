@@ -1019,7 +1019,8 @@ $this->inlineScript()->appendScript(
                         + '<td>' + data.file.created_timestamp + '</td>'
                         + '<td style="text-align: right">' + humanFileSize(data.file.size) + '</td>'
                         + '<td style="text-align: right">0</td>'
-                        + '<td><a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-updatepploadfile-btn="">Update</a></td>'
+                        // "Update" button is hidden currently
+                        + '<td><a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-updatepploadfile-btn="" style="display: none;">Update</a></td>'
                         + '<td><a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-deletepploadfile-btn=""><span class="glyphicon glyphicon-trash"></span></a></td>'
                         + '</tr>'
                     );
