@@ -784,7 +784,7 @@ class Ocsv1Controller extends Zend_Controller_Action
 
     public function contentcategoriesAction()
     {
-        
+
         if (!$this->_authenticateUser()) {
             //    $this->_sendErrorResponse(999, '');
         }
@@ -859,7 +859,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                 );
             } else {
                 $name = (false === empty($element['name_legacy'])) ? $element['name_legacy'] : $element['title'];
-                
+
                 //set parent name to name, if neeed
                 if(isset($element['parent_id'])) {
                     $parent = $modelCategory->find($element['parent_id'])->current();
@@ -867,7 +867,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                         $name = $parent['title'] . "/ " . $name;
                     }
                 }
-                
+
                 $result[] = array(
                     'id'           => array('@text' => $element['id']),
                     'name'         => array('@text' => $name),
@@ -875,7 +875,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                     'parent_id'    => array('@text' => (false === empty($element['parent_id'])) ? $element['parent_id'] : ''),
                     'xdg_type'     => array('@text' => (false === empty($element['xdg_type'])) ? $element['xdg_type'] : '')
                 );
-                
+
             }
             if ($element['has_children']) {
                 $sub_tree = $this->buildResponseTree($element['children']);
@@ -888,17 +888,17 @@ class Ocsv1Controller extends Zend_Controller_Action
 
     public function contentdataAction()
     {
-        
+
         $uri = $this->view->url();
-        
+
         $params = $this->getRequest()->getParams();
         $params['domain_store_id'] = $this->_getNameForStoreClient();
-        
+
         $result = $this->_request('GET', $uri, $params);
         $this->_sendResponse($result, $this->_format);
-        
+
         /*
-        
+
         if (!$this->_authenticateUser()) {
             //    $this->_sendErrorResponse(999, '');
         }
@@ -931,7 +931,7 @@ class Ocsv1Controller extends Zend_Controller_Action
 
             $this->_sendResponse($response, $this->_format);
         }
-         * 
+         *
          */
     }
 
@@ -994,7 +994,7 @@ class Ocsv1Controller extends Zend_Controller_Action
 
         $downloads = $project->count_downloads_hive;
         list($downloadItems, $downloads) = $this->getPPLoadInfo($project, $pploadApi, $downloads, $tags);
-        
+
         if ($this->_format == 'json') {
             $response = array(
                 'status'     => 'ok',
@@ -1199,7 +1199,7 @@ class Ocsv1Controller extends Zend_Controller_Action
             'tags'              => $tags,
             'perpage'           => 1000
         );
-        
+
         $filesResponse = $pploadApi->getFiles($filesRequest);
 
         if (isset($filesResponse->status) && $filesResponse->status == 'success') {
@@ -1213,7 +1213,7 @@ class Ocsv1Controller extends Zend_Controller_Action
 
                 $downloads += (int)$file->downloaded_count;
                 $tags = $this->_parseFileTags($file->tags);
-                $downloadLink = PPLOAD_API_URI . 'files/downloadfile/id/' . $file->id . '/s/' . $hash . '/t/' . $timestamp . '/o/1/' . $file->name;
+                $downloadLink = PPLOAD_API_URI . 'files/download/id/' . $file->id . '/s/' . $hash . '/t/' . $timestamp . '/o/1/' . $file->name;
                 $downloadItems['downloadway' . $i] = 1;
                 $downloadItems['downloadtype' . $i] = '';
                 $downloadItems['downloadprice' . $i] = '0';
@@ -1331,16 +1331,16 @@ class Ocsv1Controller extends Zend_Controller_Action
                 ), 'project.project_id = package_type.project_id', array());
             }
         }
-        
+
         if (!empty($this->_params['tags'])) {
             // package_types parameter: values separated by ","
             $tagList = explode(',', $this->_params['tags']);
-            
+
             foreach ($tagList as $tag) {
                 $tagKeyValue = explode('-', $tag);
                 $tagName = $tagKeyValue[0];
                 $tagValue = $tagKeyValue[1];
-                
+
                 if($tagName == 'architectureid') {
                     $tableProjectSelect->join(array(
                         $tagName => new Zend_Db_Expr('(SELECT DISTINCT tag_parent_object_id as project_id FROM tag_object WHERE  is_deleted = 0 and '
@@ -1355,9 +1355,9 @@ class Ocsv1Controller extends Zend_Controller_Action
                     ), 'project.project_id = '.$tagName. '.project_id', array());
                 }
             }
-            
+
         }
-        
+
         $hasSearchPart = false;
         if (!empty($this->_params['search'])) {
             foreach (explode(' ', $this->_params['search']) as $keyword) {
@@ -1419,7 +1419,7 @@ class Ocsv1Controller extends Zend_Controller_Action
         }
 
         $tableProjectSelect->limit($limit, $offset);
-        
+
         $projects = $tableProject->fetchAll($tableProjectSelect);
         $count = $tableProject->getAdapter()->fetchRow('select FOUND_ROWS() AS counter');
 
@@ -1460,7 +1460,7 @@ class Ocsv1Controller extends Zend_Controller_Action
 
         if (false == $contentsList) {
             $contentsList = $this->_buildContentList($previewPicSize, $smallPreviewPicSize, $pploadApi, $projects, $tags);
-            
+
             if (!count($contentsList)) {
                 if ($this->_format == 'json') {
                     $response = array(
@@ -1485,7 +1485,7 @@ class Ocsv1Controller extends Zend_Controller_Action
                 }
                 return $response;
             }
-            
+
             if (false === $hasSearchPart) {
                 $cache->save($contentsList, $cacheName, array(), 1800);
             }
@@ -1531,7 +1531,7 @@ class Ocsv1Controller extends Zend_Controller_Action
 
             $downloads = $project->count_downloads_hive;
             list($downloadItems, $downloads) = $this->getPPLoadInfo($project, $pploadApi, $downloads, $tags);
-            
+
             if(count($downloadItems)>0) {
                 if ($this->_format == 'json') {
                     $contentsList[] = array(
@@ -1599,17 +1599,17 @@ class Ocsv1Controller extends Zend_Controller_Action
 
     public function contentdownloadAction()
     {
-        
+
         $uri = $this->view->url();
-        
+
         $params = $this->getRequest()->getParams();
         $params['domain_store_id'] = $this->_getNameForStoreClient();
-        
+
         $result = $this->_request('GET', $uri, $params);
         $this->_sendResponse($result, $this->_format);
-        
+
         /*
-        
+
         if (!$this->_authenticateUser()) {
             //$this->_sendErrorResponse(999, '');
         }
@@ -1666,7 +1666,7 @@ class Ocsv1Controller extends Zend_Controller_Action
         $hash = md5($salt . $collectionID . $timestamp);
 
         $tags = $this->_parseFileTags($file->tags);
-        $downloadLink = PPLOAD_API_URI . 'files/downloadfile/id/' . $file->id . '/s/' . $hash . '/t/' . $timestamp . '/o/1/' . $file->name;
+        $downloadLink = PPLOAD_API_URI . 'files/download/id/' . $file->id . '/s/' . $hash . '/t/' . $timestamp . '/o/1/' . $file->name;
 
         if ($this->_format == 'json') {
             $response = array(
@@ -1717,23 +1717,23 @@ class Ocsv1Controller extends Zend_Controller_Action
         }
 
         $this->_sendResponse($response, $this->_format);
-         * 
+         *
          */
     }
 
     public function contentpreviewpicAction()
     {
-        
+
         $uri = $this->view->url();
-        
+
         $params = $this->getRequest()->getParams();
         $params['domain_store_id'] = $this->_getNameForStoreClient();
-        
+
         $result = $this->_request('GET', $uri, $params);
         $this->_sendResponse($result, $this->_format);
-        
-        
-        
+
+
+
         /*
         if (!$this->_authenticateUser()) {
             //$this->_sendErrorResponse(999, '');
@@ -1772,7 +1772,7 @@ class Ocsv1Controller extends Zend_Controller_Action
 
         header('Location: ' . $previewPicUri);
         exit;
-         * 
+         *
          */
     }
 
@@ -1853,13 +1853,13 @@ class Ocsv1Controller extends Zend_Controller_Action
     public function commentsAction()
     {
         $uri = $this->view->url();
-        
+
         $params = $this->getRequest()->getParams();
         $params['domain_store_id'] = $this->_getNameForStoreClient();
-        
+
         $result = $this->_request('GET', $uri, $params);
         $this->_sendResponse($result, $this->_format);
-        
+
         /*
         if ($this->_format == 'json') {
             $response = array(
@@ -1914,7 +1914,7 @@ class Ocsv1Controller extends Zend_Controller_Action
         $cache->save($response, $cacheName, array(), 1800);
 
         $this->_sendResponse($response, $this->_format);
-         * 
+         *
          */
     }
 
@@ -1959,16 +1959,16 @@ class Ocsv1Controller extends Zend_Controller_Action
 
         return $commentList;
     }
-    
-    
+
+
     protected function _request($method, $uri = '', array $params = null)
     {
-        
+
         $config = Zend_Registry::get('config');
         $static_config = $config->settings->ocs_server;
-        
+
         $ocsServer = $static_config->apiUri;
-        
+
         $timeout = 60;
         $postFields = array();
         if ($params) {
@@ -1983,10 +1983,10 @@ class Ocsv1Controller extends Zend_Controller_Action
         else {
             $postFields = http_build_query($postFields, '', '&');
         }
-        
+
         //var_dump($ocsServer . $uri . '?' . $postFields);
-        
-        
+
+
         $curl = curl_init();
         curl_setopt_array($curl, array(
             CURLOPT_URL => $ocsServer . $uri,
@@ -1996,7 +1996,7 @@ class Ocsv1Controller extends Zend_Controller_Action
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_TIMEOUT => $timeout
         ));
-        
+
         $response = curl_exec($curl);
         curl_close($curl);
 
