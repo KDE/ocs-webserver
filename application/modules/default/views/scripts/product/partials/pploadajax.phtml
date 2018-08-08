@@ -28,27 +28,27 @@
   .pploadajax td{
     padding: 3px;
   }
-  
+
 </style>
 
   <!-- ppload -->
          <?php if ($this->product->ppload_collection_id): ?>
              <?php
              $helperCatXdgType = new Default_View_Helper_CatXdgType();
-             $xdgType = $helperCatXdgType->catXdgType($this->product->project_category_id);           
+             $xdgType = $helperCatXdgType->catXdgType($this->product->project_category_id);
              ?>
 
              <article>
                 <div style="border: 1px solid #ddd; height: 300px; width: 100%; display: flex; align-items: center;">
                       <h1 style="flex:1; text-align: center;   ">  Welcome to download !</h1>
-                </div>                 
+                </div>
              </article>
 
-                 <article style="font-size: smaller;" class="pploadajax">                  
+                 <article style="font-size: smaller;" class="pploadajax">
                      <div data-ppload-api-uri="<?= PPLOAD_API_URI ?>"
                           data-ppload-collection-id="<?= $this->product->ppload_collection_id ?>"
                           data-xdg-type="<?= $xdgType ?>">
-                
+
                          <!--table-bordered-->
                          <table class="table table-ocs-file" data-ppload-files-ajax="" style="width: 1200px; ">
                              <thead>
@@ -56,19 +56,19 @@
                                  <th><?= $this->translate('File (click to download)'); ?></th>
                                  <th><?= $this->translate('Version'); ?></th>
                                  <th><?= $this->translate('Description'); ?></th>
-                            
+
                                  <th><?= $this->translate('Packagetype'); ?></th>
-                             
+
                                  <th style="text-align: right"><?= $this->translate('Downloads'); ?></th>
                                  <th><?= $this->translate('Date'); ?></th>
 
                                  <th style="text-align: right"><?= $this->translate('Filesize'); ?></th>
-                                
+
                                  <th style="text-align: right">DL</th>
                                   <th style="text-align: right;white-space:nowrap"><?= $this->translate('OCS-Install'); ?>
                                      <a href="#modal-installation-instructions" role="button" data-toggle="modal"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></a>
                                  </th>
-                               
+
                              </tr>
                              </thead>
                              <tbody></tbody>
@@ -81,7 +81,7 @@
                  </article>
 
 
-             
+
 
 
              <script type="text/javascript">
@@ -89,7 +89,7 @@
                  $(function () {
                      var Base64={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",encode:function(e){var t="";var n,r,i,s,o,u,a;var f=0;e=Base64._utf8_encode(e);while(f<e.length){n=e.charCodeAt(f++);r=e.charCodeAt(f++);i=e.charCodeAt(f++);s=n>>2;o=(n&3)<<4|r>>4;u=(r&15)<<2|i>>6;a=i&63;if(isNaN(r)){u=a=64}else if(isNaN(i)){a=64}t=t+this._keyStr.charAt(s)+this._keyStr.charAt(o)+this._keyStr.charAt(u)+this._keyStr.charAt(a)}return t},decode:function(e){var t="";var n,r,i;var s,o,u,a;var f=0;e=e.replace(/[^A-Za-z0-9\+\/\=]/g,"");while(f<e.length){s=this._keyStr.indexOf(e.charAt(f++));o=this._keyStr.indexOf(e.charAt(f++));u=this._keyStr.indexOf(e.charAt(f++));a=this._keyStr.indexOf(e.charAt(f++));n=s<<2|o>>4;r=(o&15)<<4|u>>2;i=(u&3)<<6|a;t=t+String.fromCharCode(n);if(u!=64){t=t+String.fromCharCode(r)}if(a!=64){t=t+String.fromCharCode(i)}}t=Base64._utf8_decode(t);return t},_utf8_encode:function(e){e=e.replace(/\r\n/g,"\n");var t="";for(var n=0;n<e.length;n++){var r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r)}else if(r>127&&r<2048){t+=String.fromCharCode(r>>6|192);t+=String.fromCharCode(r&63|128)}else{t+=String.fromCharCode(r>>12|224);t+=String.fromCharCode(r>>6&63|128);t+=String.fromCharCode(r&63|128)}}return t},_utf8_decode:function(e){var t="";var n=0;var r=c1=c2=0;while(n<e.length){r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r);n++}else if(r>191&&r<224){c2=e.charCodeAt(n+1);t+=String.fromCharCode((r&31)<<6|c2&63);n+=2}else{c2=e.charCodeAt(n+1);c3=e.charCodeAt(n+2);t+=String.fromCharCode((r&15)<<12|(c2&63)<<6|c3&63);n+=3}}return t}};
 
-                     var $pploadCollection = $('div[data-ppload-collection-id]');                     
+                     var $pploadCollection = $('div[data-ppload-collection-id]');
                      var pploadApiUri = $pploadCollection.attr('data-ppload-api-uri');
                      var hasFilesPanelOpened = false;
 
@@ -109,11 +109,11 @@
                          }
                     }
 
-                 
+
 
 
                      function getPploadFiles(page) {
-                          
+
                          var collectionId = $pploadCollection.attr('data-ppload-collection-id');
                          if (!page) {
                              page = 1;
@@ -130,7 +130,7 @@
                                  page: page
                              },
                              dataType: 'json',
-                             success: function (data, textStatus, jqXHR) {                                 
+                             success: function (data, textStatus, jqXHR) {
                                  var isPlayable = false;
                                  var fileSizeSum = 0;
 
@@ -173,12 +173,12 @@
                                     count_downloads = this.downloaded_count || 0;
                                     downloaded_count_total = downloaded_count_total+parseInt(count_downloads);
 
-                                    //downloadlink is now: domain/api/files/downloadfile/id/ID/s/TOKEN/t/TIMESTAMP/u/USERID/FILE_NAME
+                                    //downloadlink is now: domain/api/files/download/id/ID/s/TOKEN/t/TIMESTAMP/u/USERID/FILE_NAME
                                     var hash = '<?= $this->download_hash ?>';
                                     var timetamp = '<?= $this->download_timestamp ?>';
                                     var userid = '<?= $this->product->member_id?>';
 
-                                    var downloadUrl = "https://<?= $_SERVER["SERVER_NAME"]?>/p/<?= $this->product->project_id ?>/startdownload?file_id=" + this.id + "&file_name=" + this.name + "&file_type=" + this.type + "&file_size=" + this.size + "&url=" + encodeURIComponent(pploadApiUri + 'files/downloadfile/id/' + this.id + '/s/' + hash + '/t/' + timetamp + '/u/' + userid + '/' + this.name);
+                                    var downloadUrl = "https://<?= $_SERVER["SERVER_NAME"]?>/p/<?= $this->product->project_id ?>/startdownload?file_id=" + this.id + "&file_name=" + this.name + "&file_type=" + this.type + "&file_size=" + this.size + "&url=" + encodeURIComponent(pploadApiUri + 'files/download/id/' + this.id + '/s/' + hash + '/t/' + timetamp + '/u/' + userid + '/' + this.name);
                                     var downloadLink = '<a href="' + downloadUrl + '" id="data-link-ajax' + this.id + '">' + this.name + '</a>';
 
                                     /*
@@ -223,7 +223,7 @@
                                                   packagetypeId = tagStr[1];
                                               }
                                              }
-                                          
+
                                          });
                                      }
 
@@ -282,7 +282,7 @@
                                             '<tr data-ppload-file-id="' + this.id + '"' + greyText + '>'
                                             + '<td>' + downloadLink + '</td>'
                                             + '<td>' + version + '</td>'
-                                            + '<td>' + fileDescription + '</td>'                                            
+                                            + '<td>' + fileDescription + '</td>'
                                             + '<td>'
                                             + '<select id="data-select-packagetype-ajax' + this.id + '" data-packagetype-id="" name="packagetype" class="form-control input-sm" style="width: 200px;">'
                                             + '<option value=\"\"></option>'
@@ -305,12 +305,12 @@
                                             + '<td>' +mnt.format('YYYY-MM-DD') + '</td>'
                                             + '<td style="text-align: right">' + humanFileSize(this.size,false) + '</td>'
                                             + '<td style="text-align: right; ">' + downloadButton+ '</td>'
-                                            + '<td style="text-align: right; ">' + installButton + '</td>'                                            
-                                           
+                                            + '<td style="text-align: right; ">' + installButton + '</td>'
+
                                             + '</tr>'
                                         );
 
-                                    
+
 
                                         if ((typeof osId != 'undefined') && (osId != "")) {
                                             $("#data-updatepploadfile" + this.id + " option[value='" + osId + "']").attr('selected', 'selected');
@@ -338,7 +338,7 @@
                                         if ((typeof packagetypeId != 'undefined') && (packagetypeId != "")) {
                                             $("#data-select-packagetype-ajax" + this.id + " option[value='" + packagetypeId + "']").attr('selected', 'selected');
                                             $packagetypeIdText = $("#data-select-packagetype-ajax" + this.id + " option[value='" + packagetypeId + "']").text();
-                                            $("#data-select-packagetype-ajax" + this.id).hide();                                         
+                                            $("#data-select-packagetype-ajax" + this.id).hide();
                                             $("#file-tag-packagetype-ajax" + this.id).text($packagetypeIdText);
 
                                         } else {
@@ -392,7 +392,7 @@
                                             $compatibleCheckbox.prop('disabled', 'disabled');
                                         }
 
-                                     
+
 
                                         //fileSizeSum += parseInt(this.size);
                                         if(parseInt(this.size)>0) {
@@ -507,7 +507,7 @@
                                                 + '<option value=\"4\">Windows executable</option>'
                                                 + '</select><span id="file-tag-packagetype-ajax'+this.id+'">'
                                                 + '</td>'
-                                            
+
                                             + '<td style="text-align: right"><span id="download_counter_' + this.id + '">' + cout_downloads + '</td>'
                                             + '<td>' +mnt.format('YYYY-MM-DD')  + '</td>'
                                             + '<td style="text-align: right">' + humanFileSize(this.size,false) + '</td>'
@@ -578,7 +578,7 @@
 
                                  });
 
- 
+
                                  //add old download counter
                                  downloaded_count_total += parseInt(<?= $this->product->count_downloads_hive?>);
 
@@ -608,7 +608,7 @@
                                      pploadApiUri + 'collections/download/id/' + collectionId
                                  );
 
-                        
+
 
 
                                  if (data.pagination.next) {
@@ -618,7 +618,7 @@
                              },
                              error: function (jqXHR, textStatus, errorThrown) {
 
-                                 
+
 
                              }
                          });
@@ -638,7 +638,7 @@
                      }
 
 
-                   
+
 
                     function shortFilename(filename) {
                         var returnString = filename;
@@ -703,7 +703,7 @@
                          {
                              var size = '';
                              size = (bytes / 1048576).toFixed(2);
-                             
+
 
                              if(size == '0.00')
                              {
