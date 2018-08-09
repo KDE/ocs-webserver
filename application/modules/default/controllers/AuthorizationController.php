@@ -223,19 +223,9 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
             ->setHeader('Content-type', 'application/json')
         ;
-        $this->_helper->json(array('status' => 'ok', 'message' => 'User is OK.'));
-        
-        return;
-        
-        
         $formLogin = new Default_Form_Login();
 
-        if ($this->_request->isGet()) { // not a POST request
-            $this->_helper->json(array('status' => 'error', 'message' => 'unknown method'));
-            return;
-        }
-        
-        if (false === $formLogin->isValid($_POST)) { // form not valid
+        if (false === $formLogin->isValid($_GET)) { // form not valid
             $this->_helper->json(array('status' => 'error', 'message' => 'not valid'));
             return;
         }
