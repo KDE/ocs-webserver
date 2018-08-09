@@ -243,21 +243,48 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         $auth = Zend_Auth::getInstance();
         $userId = $auth->getStorage()->read()->member_id;
         
-        //If the user is a hive user, he must chage his password for ldap
-        /*
-        $userTabel = new Default_Model_Member();
-        $user = $userTabel->fetchMember($userId);
-        if($user->password_type == Default_Model_Member::PASSWORD_TYPE_HIVE) {
-            //Set new password
-            $user->password_type = Default_Model_Member::PASSWORD_TYPE_OCS;
-            $user->password = Default_Model_Member::PASSWORD_TYPE_OCS;
-            
-            $user->save();
-            
-        }
-        */
+        //If the user is a hive user, we have to update his password
+        $this->changePasswordIfNeeded($userId, $values['password']);
         
         $this->_helper->json(array('status' => 'ok', 'message' => 'User is OK.'));
+    }
+    
+    private function changePasswordIfNeeded($member_id, $password) {
+        $userTabel = new Default_Model_Member();
+        $showMember = $userTabel->fetchMember($this->_memberId);
+        $memberSettings = $showMember;
+
+        //User with OCS Password
+        if($showMember->password_type == Default_Model_Member::PASSWORD_TYPE_OCS) {
+            return;
+        }
+        
+        //Hive User
+        if($memberSettings->password_type == Default_Model_Member::PASSWORD_TYPE_HIVE) {
+            //Save old data
+            $memberSettings->password_old = $memberSettings->password;
+            $memberSettings->password_type_old = Default_Model_Member::PASSWORD_TYPE_HIVE;
+            
+            //Change type and password
+            $memberSettings->password_type = Default_Model_Member::PASSWORD_TYPE_OCS;
+            $memberSettings->password = Local_Auth_Adapter_Ocs::getEncryptedPassword($password, $memberSettings->password_type);
+            $this->_memberSettings->save();
+
+            //Update Auth-Services
+            try {
+                $id_server = new Default_Model_OcsOpenId();
+                $id_server->updatePasswordForUser($memberSettings->member_id);
+            } catch (Exception $e) {
+                Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+            }
+            try {
+                $ldap_server = new Default_Model_OcsIdent();
+                $ldap_server->updatePassword($memberSettings->member_id);
+            } catch (Exception $e) {
+                Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+            }
+        }
+        return;
     }
     
 
@@ -368,17 +395,8 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         
         
         
-        //If the user is a hive user, he must chage his password for ldap
-        $userTabel = new Default_Model_Member();
-        $user = $userTabel->fetchMember($userId);
-        if($user->password_type = Default_Model_Member::PASSWORD_TYPE_HIVE) {
-            //Rewrite redir param to show ChangePasswordForm
-            $redirUrl = '/member/' . $userId . '/changepass/';
-            
-            $redir = $this->encodeString($redirUrl);
-            $this->view->redirect = $redir;
-            
-        }
+        //If the user is a hive user, we have to update his password
+        $this->changePasswordIfNeeded($userId, $values['password']);
         
         
 

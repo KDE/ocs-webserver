@@ -288,7 +288,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->allow(self::ROLENAME_GUEST, 'default_user', array('index', 'aboutme', 'share', 'report', 'about','tooltip', 'avatar'));
 
         $this->allow(self::ROLENAME_COOKIEUSER, 'default_user',
-            array('follow', 'unfollow', 'settings', 'products', 'news', 'activities', 'payments', 'income', 'payout', 'plings', 'downloadhistory','likes', 'changepass'));
+            array('follow', 'unfollow', 'settings', 'products', 'news', 'activities', 'payments', 'income', 'payout', 'plings', 'downloadhistory','likes'));
 
         $this->allow(self::ROLENAME_COOKIEUSER, 'default_tag',
             array('filter', 'add', 'del', 'assign', 'remove'));
