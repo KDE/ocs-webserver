@@ -268,7 +268,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             //Change type and password
             $memberSettings->password_type = Default_Model_Member::PASSWORD_TYPE_OCS;
             $memberSettings->password = Local_Auth_Adapter_Ocs::getEncryptedPassword($password, $memberSettings->password_type);
-            $this->_memberSettings->save();
+            $memberSettings->save();
 
             //Update Auth-Services
             try {
