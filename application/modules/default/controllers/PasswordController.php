@@ -204,7 +204,7 @@ class PasswordController extends Local_Controller_Action_DomainSwitch
         $model_member = new Default_Model_DbTable_Member();
         $member_data = $model_member->fetchRow(array('member_id = ?' => $payload['member_id']));
         
-        if($memberSettings->password_type == Default_Model_Member::PASSWORD_TYPE_HIVE) {
+        if($member_data->password_type == Default_Model_Member::PASSWORD_TYPE_HIVE) {
             //Save old data
             $member_data->password_old = $memberSettings->password;
             $member_data->password_type_old = Default_Model_Member::PASSWORD_TYPE_HIVE;
