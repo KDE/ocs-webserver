@@ -251,7 +251,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
     
     private function changePasswordIfNeeded($member_id, $password) {
         $userTabel = new Default_Model_Member();
-        $showMember = $userTabel->fetchMember($this->_memberId);
+        $showMember = $userTabel->fetchMember($member_id);
         $memberSettings = $showMember;
 
         //User with OCS Password
