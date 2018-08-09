@@ -217,7 +217,6 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         $this->_helper->viewRenderer->setNoRender(true);
         
         $this->getResponse()->setHeader('Access-Control-Allow-Origin', 'https://gitlab.pling.cc')
-            ->setHeader('Access-Control-Allow-Origin', 'https://gitlab.opencode.net')
             ->setHeader('Access-Control-Allow-Credentials', 'true')
             ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
             ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
