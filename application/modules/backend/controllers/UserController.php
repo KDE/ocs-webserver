@@ -111,7 +111,7 @@ class Backend_UserController extends Local_Controller_Action_Backend
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }
         try {
-            $ldap_server = new Default_Model_OcsIdent();
+            $ldap_server = new Default_Model_Ocs_Ident();
             $ldap_server->deleteUser($identity->member_id);
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());

@@ -115,6 +115,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
         return $form;
     }
     
+
     public function avatarAction()
     {
         $this->_helper->layout->disableLayout();

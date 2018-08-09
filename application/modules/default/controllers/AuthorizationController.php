@@ -667,13 +667,13 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         Zend_Registry::get('logger')->info(__METHOD__ . ' - user activated. member_id: ' . print_r($authUser->member_id, true));
 
         try {
-            $id_server = new Default_Model_OcsOpenId();
+            $id_server = new Default_Model_Ocs_OpenId();
             $id_server->createUser($authUser->member_id);
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }
         try {
-            $ldap_server = new Default_Model_OcsIdent();
+            $ldap_server = new Default_Model_Ocs_Ident();
             $ldap_server->createUser($authUser->member_id);
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());

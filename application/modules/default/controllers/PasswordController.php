@@ -225,7 +225,7 @@ class PasswordController extends Local_Controller_Action_DomainSwitch
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }
         try {
-            $ldap_server = new Default_Model_OcsIdent();
+            $ldap_server = new Default_Model_Ocs_Ident();
             $ldap_server->updatePassword($member_data->member_id);
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());

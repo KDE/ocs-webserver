@@ -1,6 +1,6 @@
 <?php
 
-class Default_Model_Id_OcsServer
+class Default_Model_Ocs_IdServer
 {
 
     private $_config;

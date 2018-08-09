@@ -1066,7 +1066,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                         Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
                     }
                     try {
-                        $opencode_server = new Default_Model_OcsIdent();
+                        $opencode_server = new Default_Model_Ocs_Ident();
                         $opencode_server->updatePassword($this->_memberSettings->member_id);
                     } catch (Exception $e) {
                         Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
@@ -1401,7 +1401,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                 Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
             }
             try {
-                $ldap_server = new Default_Model_OcsIdent();
+                $ldap_server = new Default_Model_Ocs_Ident();
                 $ldap_server->updateMail($this->_authMember->member_id);
             } catch (Exception $e) {
                 Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());

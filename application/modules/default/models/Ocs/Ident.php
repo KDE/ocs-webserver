@@ -22,12 +22,14 @@
  *
  * Created: 01.08.2018
  */
-class Default_Model_OcsIdent
+class Default_Model_Ocs_Ident
 {
     /** @var string */
     protected $baseDn;
     /** @var Zend_Config */
     protected $config;
+    protected $errMessages;
+    protected $errCode;
     /** @var Zend_Ldap */
     private $identServer;
 
@@ -39,9 +41,11 @@ class Default_Model_OcsIdent
         if (isset($server)) {
             $this->identServer = $server;
         } else {
-            $this->config = Zend_Registry::get('config')->settings->ident;
+            $this->config = Zend_Registry::get('config')->settings->server->ldap;
         }
-        $this->baseDn = Zend_Registry::get('config')->settings->ident->baseDn;
+        $this->baseDn = Zend_Registry::get('config')->settings->server->ldap->baseDn;
+        $this->errMessages = array();
+        $this->errCode = 0;
     }
 
     /**
@@ -116,7 +120,7 @@ class Default_Model_OcsIdent
         Zend_Ldap_Attribute::setAttribute($entry, 'uid', $username);
         Zend_Ldap_Attribute::setAttribute($entry, 'uid', $member['email_address'], true);
         Zend_Ldap_Attribute::setAttribute($entry, 'userPassword', $password);
-        Zend_Ldap_Attribute::setAttribute($entry, 'cn', $member['username']);
+        Zend_Ldap_Attribute::setAttribute($entry, 'cn', $username);
         Zend_Ldap_Attribute::setAttribute($entry, 'email', $member['email_address']);
         Zend_Ldap_Attribute::setAttribute($entry, 'uidNumber', $member['member_id']);
         Zend_Ldap_Attribute::setAttribute($entry, 'gidNumber', $member['roleId']);
@@ -220,6 +224,48 @@ class Default_Model_OcsIdent
             return false;
         }
         $connection->delete("cn={$username},{$this->baseDn}");
+    }
+
+    /**
+     * @param $member_data
+     *
+     * @return array
+     * @throws Zend_Ldap_Exception
+     */
+    public function exportUserToLdap($member_data)
+    {
+        $entry = $this->createIdentEntry($member_data);
+        $connection = $this->getServerConnection();
+        $username = strtolower($member_data['username']);
+        $dn = "cn={$username},{$this->baseDn}";
+        if (false === $connection->exists($dn)) {
+            $connection->add($dn, $entry);
+        } else {
+            $connection->update($dn, $entry);
+        }
+        $connection->getLastError($this->errCode, $this->errMessages);
+
+        return $entry;
+    }
+
+    /**
+     * @return array
+     */
+    public function getErrMessages()
+    {
+        return $this->errMessages;
+    }
+
+    /**
+     * @param array $errMessages
+     *
+     * @return Default_Model_Ocs_Ident
+     */
+    public function setErrMessages($errMessages)
+    {
+        $this->errMessages = $errMessages;
+
+        return $this;
     }
 
 }

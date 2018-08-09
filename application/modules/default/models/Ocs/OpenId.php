@@ -22,7 +22,7 @@
  *
  * Created: 19.06.2018
  */
-class Default_Model_OcsOpenId
+class Default_Model_Ocs_OpenId
 {
     private $id_server;
 
@@ -34,8 +34,8 @@ class Default_Model_OcsOpenId
         if (isset($id_server)) {
             $this->id_server = $id_server;
         } else {
-            $config = Zend_Registry::get('config')->settings->id_server;
-            $this->id_server = new Default_Model_Id_OcsServer($config);
+            $config = Zend_Registry::get('config')->settings->server->oauth;
+            $this->id_server = new Default_Model_Ocs_IdServer($config);
         }
     }
 
