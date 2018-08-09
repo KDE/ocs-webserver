@@ -434,7 +434,8 @@ class Ocsv1Controller extends Zend_Controller_Action
                 'data'       => array(
                     array(
                         'details'  => 'check',
-                        'personid' => $this->_authData->username
+                        'personid' => $this->_authData->username,
+                        'ptype'    => $this->_authData->password_type
                     )
                 )
             );
@@ -448,7 +449,8 @@ class Ocsv1Controller extends Zend_Controller_Action
                 'data' => array(
                     'person' => array(
                         'details'  => 'check',
-                        'personid' => array('@text' => $this->_authData->username)
+                        'personid' => array('@text' => $this->_authData->username),
+                        'ptype' => array('@text' => $this->_authData->password_type)
                     )
                 )
             );

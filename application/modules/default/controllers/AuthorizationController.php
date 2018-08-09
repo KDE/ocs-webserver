@@ -209,6 +209,61 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             $this->_helper->json(array('status' => 'fail', 'message' => 'Login failed.'));
         }
     }
+    
+    
+    public function checkuserAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        
+        header('Access-Control-Allow-Origin: https://gitlab.pling.cc');
+        header('Access-Control-Allow-Origin: https://gitlab.opencode.net');
+        header('Access-Control-Allow-Credentials: true');
+        header('Access-Control-Max-Age: 604800');
+        header("Content-type: application/json");
+        
+        $formLogin = new Default_Form_Login();
+
+        if ($this->_request->isGet()) { // not a POST request
+            $this->_helper->json(array('status' => 'error', 'message' => 'unknown method'));
+            return;
+        }
+        
+        if (false === $formLogin->isValid($_POST)) { // form not valid
+            $this->_helper->json(array('status' => 'error', 'message' => 'not valid'));
+            return;
+        }
+
+        $values = $formLogin->getValues();
+        $authModel = new Default_Model_Authorization();
+        $authResult = $authModel->authenticateUser($values['mail'], $values['password'], $values['remember_me']);
+
+        if (false == $authResult->isValid()) { // authentication fail
+            $this->_helper->json(array('status' => 'error', 'message' => 'not valid'));
+            return;
+        }
+        
+        
+        $auth = Zend_Auth::getInstance();
+        $userId = $auth->getStorage()->read()->member_id;
+        
+        //If the user is a hive user, he must chage his password for ldap
+        /*
+        $userTabel = new Default_Model_Member();
+        $user = $userTabel->fetchMember($userId);
+        if($user->password_type == Default_Model_Member::PASSWORD_TYPE_HIVE) {
+            //Set new password
+            $user->password_type = Default_Model_Member::PASSWORD_TYPE_OCS;
+            $user->password = Default_Model_Member::PASSWORD_TYPE_OCS;
+            
+            $user->save();
+            
+        }
+        */
+        
+        $this->_helper->json(array('status' => 'ok', 'message' => 'User is OK.'));
+    }
+    
 
     /**
      * @throws Zend_Auth_Storage_Exception
