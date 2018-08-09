@@ -210,7 +210,7 @@ class PasswordController extends Local_Controller_Action_DomainSwitch
             $member_data->password_type_old = Default_Model_Member::PASSWORD_TYPE_HIVE;
             
             //Change type and password
-            $memberSettings->password_type = Default_Model_Member::PASSWORD_TYPE_OCS;
+            $member_data->password_type = Default_Model_Member::PASSWORD_TYPE_OCS;
         }
         
         $member_data->password = Local_Auth_Adapter_Ocs::getEncryptedPassword($filterInput->getEscaped('password1'), Default_Model_Member::PASSWORD_TYPE_OCS);
