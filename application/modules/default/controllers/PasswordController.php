@@ -206,7 +206,7 @@ class PasswordController extends Local_Controller_Action_DomainSwitch
         
         if($member_data->password_type == Default_Model_Member::PASSWORD_TYPE_HIVE) {
             //Save old data
-            $member_data->password_old = $memberSettings->password;
+            $member_data->password_old = $member_data->password;
             $member_data->password_type_old = Default_Model_Member::PASSWORD_TYPE_HIVE;
             
             //Change type and password
