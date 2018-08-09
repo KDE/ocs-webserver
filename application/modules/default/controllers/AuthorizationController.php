@@ -216,11 +216,11 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         $this->_helper->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
         
-        header('Access-Control-Allow-Origin: https://gitlab.pling.cc');
-        header('Access-Control-Allow-Origin: https://gitlab.opencode.net');
-        header('Access-Control-Allow-Credentials: true');
-        header('Access-Control-Max-Age: 604800');
-        header("Content-type: application/json");
+        $this->getResponse()->setHeader('Access-Control-Allow-Origin', $this->getParam('origin'))
+            ->setHeader('Access-Control-Allow-Credentials', 'true')
+            ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+            ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
+        ;
         
         $formLogin = new Default_Form_Login();
 
