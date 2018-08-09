@@ -224,8 +224,6 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         ;
         $this->_helper->json(array('status' => 'ok', 'message' => 'User is OK.'));
         
-        $this->getResponse()->setHttpResponseCode(200);
-        
         return;
         
         
