@@ -220,7 +220,11 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             ->setHeader('Access-Control-Allow-Credentials', 'true')
             ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
             ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
+            ->setHeader('Content-type', 'application/json')
         ;
+        $this->_helper->json(array('status' => 'ok', 'message' => 'User is OK.'));
+        return;
+        
         
         $formLogin = new Default_Form_Login();
 
