@@ -272,13 +272,13 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
 
             //Update Auth-Services
             try {
-                $id_server = new Default_Model_OcsOpenId();
+                $id_server = new Default_Model_Ocs_OpenId();
                 $id_server->updatePasswordForUser($memberSettings->member_id);
             } catch (Exception $e) {
                 Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
             }
             try {
-                $ldap_server = new Default_Model_OcsIdent();
+                $ldap_server = new Default_Model_Ocs_Ident();
                 $ldap_server->updatePassword($memberSettings->member_id);
             } catch (Exception $e) {
                 Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
