@@ -703,12 +703,12 @@ $this->inlineScript()->appendScript(
                             });
                         }
 
-                        //downloadlink is now: domain/api/files/downloadfile/id/ID/s/TOKEN/t/TIMESTAMP/u/USERID/FILE_NAME
+                        //downloadlink is now: domain/api/files/download/id/ID/s/TOKEN/t/TIMESTAMP/u/USERID/FILE_NAME
                         var hash = '<?= $this->download_hash ?>';
                         var timetamp = '<?= $this->download_timestamp ?>';
                         var userid = '<?= $this->member_id?>';
 
-                        var downloadUrl = pploadApiUri + 'files/downloadfile/id/' + this.id + '/o/1/s/' + hash + '/t/' + timetamp + '/u/' + userid + '/' + this.name;
+                        var downloadUrl = pploadApiUri + 'files/download/id/' + this.id + '/o/1/s/' + hash + '/t/' + timetamp + '/u/' + userid + '/' + this.name;
                         var downloadLinkFilename = link ? this.name + ' (External Link)' : this.name;
                         var downloadLink = '<a href="' + downloadUrl + '" id="data-link' + this.id + '">' + downloadLinkFilename + '</a>';
 
@@ -1019,7 +1019,8 @@ $this->inlineScript()->appendScript(
                         + '<td>' + data.file.created_timestamp + '</td>'
                         + '<td style="text-align: right">' + humanFileSize(data.file.size) + '</td>'
                         + '<td style="text-align: right">0</td>'
-                        + '<td><a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-updatepploadfile-btn="">Update</a></td>'
+                        // "Update" button is hidden currently
+                        + '<td><a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-updatepploadfile-btn="" style="display: none;">Update</a></td>'
                         + '<td><a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-deletepploadfile-btn=""><span class="glyphicon glyphicon-trash"></span></a></td>'
                         + '</tr>'
                     );

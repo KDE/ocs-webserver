@@ -840,6 +840,18 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 )
             )
         );
+        
+        $router->addRoute(
+            'checkuser',
+            new Zend_Controller_Router_Route_Static(
+                '/checkuser',
+                array(
+                    'module'     => 'default',
+                    'controller' => 'authorization',
+                    'action'     => 'checkuser'
+                )
+            )
+        );
 
         $router->addRoute(
             'login',

@@ -209,6 +209,84 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             $this->_helper->json(array('status' => 'fail', 'message' => 'Login failed.'));
         }
     }
+    
+    
+    public function checkuserAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        
+        $this->getResponse()->setHeader('Access-Control-Allow-Origin', 'https://gitlab.pling.cc')
+            ->setHeader('Access-Control-Allow-Credentials', 'true')
+            ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+            ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
+        ;
+        
+        
+        $formLogin = new Default_Form_Login();
+
+        if (false === $formLogin->isValid($_GET)) { // form not valid
+            $this->_helper->json(array('status' => 'error', 'message' => 'not valid'));
+            return;
+        }
+
+        $values = $formLogin->getValues();
+        $authModel = new Default_Model_Authorization();
+        $authResult = $authModel->authenticateUser($values['mail'], $values['password'], $values['remember_me']);
+
+        if (false == $authResult->isValid()) { // authentication fail
+            $this->_helper->json(array('status' => 'error', 'message' => 'not valid'));
+            return;
+        }
+        
+        
+        $auth = Zend_Auth::getInstance();
+        $userId = $auth->getStorage()->read()->member_id;
+        
+        //If the user is a hive user, we have to update his password
+        $this->changePasswordIfNeeded($userId, $values['password']);
+        
+        $this->_helper->json(array('status' => 'ok', 'message' => 'User is OK.'));
+    }
+    
+    private function changePasswordIfNeeded($member_id, $password) {
+        $userTabel = new Default_Model_Member();
+        $showMember = $userTabel->fetchMember($member_id);
+        $memberSettings = $showMember;
+
+        //User with OCS Password
+        if($showMember->password_type == Default_Model_Member::PASSWORD_TYPE_OCS) {
+            return;
+        }
+        
+        //Hive User
+        if($memberSettings->password_type == Default_Model_Member::PASSWORD_TYPE_HIVE) {
+            //Save old data
+            $memberSettings->password_old = $memberSettings->password;
+            $memberSettings->password_type_old = Default_Model_Member::PASSWORD_TYPE_HIVE;
+            
+            //Change type and password
+            $memberSettings->password_type = Default_Model_Member::PASSWORD_TYPE_OCS;
+            $memberSettings->password = Local_Auth_Adapter_Ocs::getEncryptedPassword($password, $memberSettings->password_type);
+            $memberSettings->save();
+
+            //Update Auth-Services
+            try {
+                $id_server = new Default_Model_Ocs_OpenId();
+                $id_server->updatePasswordForUser($memberSettings->member_id);
+            } catch (Exception $e) {
+                Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+            }
+            try {
+                $ldap_server = new Default_Model_Ocs_Ident();
+                $ldap_server->updatePassword($memberSettings->member_id);
+            } catch (Exception $e) {
+                Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+            }
+        }
+        return;
+    }
+    
 
     /**
      * @throws Zend_Auth_Storage_Exception
@@ -317,17 +395,8 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         
         
         
-        //If the user is a hive user, he must chage his password for ldap
-        $userTabel = new Default_Model_Member();
-        $user = $userTabel->fetchMember($userId);
-        if($user->password_type = Default_Model_Member::PASSWORD_TYPE_HIVE) {
-            //Rewrite redir param to show ChangePasswordForm
-            $redirUrl = '/member/' . $userId . '/changepass/';
-            
-            $redir = $this->encodeString($redirUrl);
-            $this->view->redirect = $redir;
-            
-        }
+        //If the user is a hive user, we have to update his password
+        $this->changePasswordIfNeeded($userId, $values['password']);
         
         
 
@@ -598,13 +667,13 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         Zend_Registry::get('logger')->info(__METHOD__ . ' - user activated. member_id: ' . print_r($authUser->member_id, true));
 
         try {
-            $id_server = new Default_Model_OcsOpenId();
+            $id_server = new Default_Model_Ocs_OpenId();
             $id_server->createUser($authUser->member_id);
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }
         try {
-            $ldap_server = new Default_Model_OcsIdent();
+            $ldap_server = new Default_Model_Ocs_Ident();
             $ldap_server->createUser($authUser->member_id);
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());

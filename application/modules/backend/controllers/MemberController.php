@@ -140,7 +140,7 @@ class Backend_MemberController extends Zend_Controller_Action
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }
         try {
-            $ldap_server = new Default_Model_OcsIdent();
+            $ldap_server = new Default_Model_Ocs_Ident();
             $ldap_server->deleteUser($member_id);
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
