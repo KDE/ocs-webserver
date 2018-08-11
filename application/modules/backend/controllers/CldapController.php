@@ -22,7 +22,7 @@
  *
  * Created: 08.05.2017
  */
-class Backend_LdapController extends Local_Controller_Action_CliAbstract
+class Backend_CldapController extends Local_Controller_Action_CliAbstract
 {
 
     const filename = "members.ldif";

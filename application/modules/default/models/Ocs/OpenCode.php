@@ -58,6 +58,12 @@ class Default_Model_Ocs_OpenCode
 
         $data = $this->mapUserData($member_data);
 
+        $userid = $this->userExists($data);
+
+        if (false !== $userid) {
+            return $this->httpUserUpdate($data, $userid);
+        }
+
         return $this->httpUserCreate($data);
     }
 
@@ -71,7 +77,8 @@ class Default_Model_Ocs_OpenCode
         $data = array(
             'email'             => $user['email_address'],
             'username'          => $user['username'],
-            'name'              => (false == empty($user['lastname'])) ? trim($user['firstname'] . ' ' . $user['lastname']) : $user['username'],
+            'name'              => (false == empty($user['lastname'])) ? trim($user['firstname'] . ' ' . $user['lastname'])
+                : $user['username'],
             'password'          => $user['password'],
             'extern_uid'        => $user['external_id'],
             'provider'          => 'all',
@@ -84,6 +91,27 @@ class Default_Model_Ocs_OpenCode
         return $data;
     }
 
+    private function userExists($data)
+    {
+        $this->httpClient->resetParameters();
+        $uri = $this->config->host . '/api/v4/users?username=' . $data['username'];
+        $this->httpClient->setUri($uri);
+        $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
+        $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
+        $this->httpClient->setHeaders('User-Agent', $this->config->user_agent);
+        $this->httpClient->setMethod(Zend_Http_Client::GET);
+
+        $response = $this->httpClient->request();
+
+        $body = Zend_Json::decode($response->getRawBody());
+
+        if (count($body) == 0) {
+            false;
+        }
+
+        return $body[0]['id'];
+    }
+
     /**
      * @param $data
      *
@@ -94,8 +122,8 @@ class Default_Model_Ocs_OpenCode
     private function httpUserCreate($data)
     {
         $this->httpClient->resetParameters();
-        //$uri = $this->config->host . $this->config->url->user_create;
-        //$this->httpClient->setUri($uri);
+        $uri = $this->config->host . $this->config->url->user_create;
+        $this->httpClient->setUri($uri);
         $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
         $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
         $this->httpClient->setHeaders('User-Agent', $this->config->user_agent);
@@ -128,6 +156,14 @@ class Default_Model_Ocs_OpenCode
     }
 
     /**
+     * @return array|null
+     */
+    public function getMessages()
+    {
+        return $this->messages;
+    }
+
+    /**
      * @param $member_id
      *
      * @return array
@@ -148,11 +184,46 @@ class Default_Model_Ocs_OpenCode
     }
 
     /**
-     * @return array|null
+     * @param $data
+     *
+     * @return bool
+     * @throws Zend_Exception
+     * @throws Zend_Http_Client_Exception
      */
-    public function getMessages()
+    private function httpUserUpdate($data, $id)
     {
-        return $this->messages;
+        $this->httpClient->resetParameters();
+        $uri = $this->config->host . $this->config->url->user_create . '/' . $id;
+        $this->httpClient->setUri($uri);
+        $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
+        $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
+        $this->httpClient->setHeaders('User-Agent', $this->config->user_agent);
+        $this->httpClient->setMethod(Zend_Http_Client::PUT);
+        $this->httpClient->setParameterPost($data);
+
+        $response = $this->httpClient->request();
+
+        $transfer_encoding = $response->getHeader('Transfer-encoding');
+        $body = $response->getRawBody();
+        if ('chunked' == trim(strtolower($transfer_encoding))) {
+            $body = Zend_Http_Response::decodeChunkedBody($response->getRawBody());
+        }
+        $content_encoding = $response->getHeader('Content-encoding');
+        if ('gzip' == trim(strtolower($content_encoding))) {
+            $body = Zend_Http_Response::decodeGzip($body);
+        }
+
+        //Zend_Registry::get('logger')->debug("----------\n" . __METHOD__ . " - request:\n" . $this->httpClient->getLastRequest());
+        //Zend_Registry::get('logger')->debug("----------\n" . __METHOD__ . " - response:\n" . $response->asString());
+        //Zend_Registry::get('logger')->debug("----------\n" . __METHOD__ . " - body:\n" . $response->getBody());
+
+        $this->messages[0] = $body;
+
+        if ($response->getStatus() < 200 AND $response->getStatus() >= 300) {
+            throw new Zend_Exception('push user data failed. OCS OpenCode server send message: ' . $body);
+        }
+
+        return true;
     }
 
 }

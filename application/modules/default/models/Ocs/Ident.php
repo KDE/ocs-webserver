@@ -36,14 +36,14 @@ class Default_Model_Ocs_Ident
     /**
      * @inheritDoc
      */
-    public function __construct($server = null)
+    public function __construct($config = null)
     {
-        if (isset($server)) {
-            $this->identServer = $server;
+        if (isset($config)) {
+            $this->config = $config;
         } else {
             $this->config = Zend_Registry::get('config')->settings->server->ldap;
         }
-        $this->baseDn = Zend_Registry::get('config')->settings->server->ldap->baseDn;
+        $this->baseDn = $this->config->baseDn;
         $this->errMessages = array();
         $this->errCode = 0;
     }
