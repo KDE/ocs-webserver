@@ -80,6 +80,14 @@ class Default_Plugin_Acl extends Zend_Controller_Plugin_Abstract
 
         $resource = $module . '_' . $controller;
 
+        $logMsg = '' . PHP_EOL;
+        $logMsg .= "Controller : {$controller}" . PHP_EOL;
+        $logMsg .= "Action     : {$action}" . PHP_EOL;
+        $logMsg .= "Module     : {$module}" . PHP_EOL;
+        $logMsg .= "Resource   : {$resource}" . PHP_EOL;
+        $logMsg .= "Role       : {$role}" . PHP_EOL;
+
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - ' . $logMsg . ' ---------- ' . PHP_EOL);
 
         if (false == $this->_acl->has($resource)) {
             Zend_Registry::get('logger')->warn(__METHOD__ . ' - No ACL rule found for ' . print_r($resource,
@@ -94,6 +102,7 @@ class Default_Plugin_Acl extends Zend_Controller_Plugin_Abstract
         }
 
         if (false === $this->_acl->isAllowed($role, $resource, $action)) {
+            Zend_Registry::get('logger')->info(__METHOD__ . ' - resource not allowed');
             $urlHelper = new Zend_View_Helper_Url();
             $url = $urlHelper->url($this->_request->getParams(), null, true);
             $helperEncryptUrl = new Local_Filter_Url_Encrypt();

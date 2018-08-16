@@ -1849,7 +1849,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
     {
         $this->_helper->layout()->disableLayout();
         $log = Zend_Registry::get('logger');
-        $log->debug('**********' . __CLASS__ . '::' . __FUNCTION__ . '**********' . "\n");
 
         $projectTable = new Default_Model_DbTable_Project();
         $projectData = $projectTable->find($this->_projectId)->current();
@@ -1861,7 +1860,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             && $_FILES['file_upload']['error'] == UPLOAD_ERR_OK
         ) {
             $tmpFilename = dirname($_FILES['file_upload']['tmp_name']) . '/' . basename($_FILES['file_upload']['name']);
-            $log->debug(__CLASS__ . '::' . __FUNCTION__ . '::' . print_r($tmpFilename, true) . "\n");
+            $log->info(__METHOD__ . ' - ' . print_r($tmpFilename, true) . "\n");
             move_uploaded_file($_FILES['file_upload']['tmp_name'], $tmpFilename);
 
             $pploadApi = new Ppload_Api(array(
@@ -1882,7 +1881,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             //	$fileRequest['description'] = mb_substr($_POST['file_description'], 0, 140);
             //}
             $fileResponse = $pploadApi->postFile($fileRequest);
-            $log->debug(__CLASS__ . '::' . __FUNCTION__ . '::' . print_r($fileResponse, true) . "\n");
+            $log->info(__METHOD__ . ' - ' . print_r($fileResponse, true) . "\n");
 
             unlink($tmpFilename);
 
@@ -1951,7 +1950,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             }
         }
 
-        $log->debug('********** END ' . __CLASS__ . '::' . __FUNCTION__ . '**********' . "\n");
+        $log->info(__METHOD__ . ' - status : error; error_text: ' . $error_text);
         $this->_helper->json(array('status' => 'error', 'error_text' => $error_text));
     }
 
