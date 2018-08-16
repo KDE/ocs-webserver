@@ -108,11 +108,12 @@ class Backend_CexportController extends Local_Controller_Action_CliAbstract
     /**
      * @param $member
      *
+     * @throws Zend_Exception
      */
     private function exportMember($member)
     {
-        //$this->export2OpenCode($member);
-        //$this->export2Ldap($member);
+        $this->export2OpenCode($member);
+        $this->export2Ldap($member);
         $this->export2OpenId($member);
     }
 

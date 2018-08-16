@@ -60,7 +60,7 @@ class Default_Model_Ocs_OpenCode
 
         $userid = $this->userExists($data);
 
-        if (false !== $userid) {
+        if (false === empty($userid)) {
             return $this->httpUserUpdate($data, $userid);
         }
 
