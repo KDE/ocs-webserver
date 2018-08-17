@@ -102,46 +102,16 @@ class Default_Model_ProjectCategory
             return array();
         }
 
-        $wherePackageType = empty($package_type) ? "scpc.package_type_id is null" : $this->_dataTable->getAdapter()
-                                                                                                     ->quoteInto("scpc.package_type_id = ?",
-                                                                                                         $package_type)
-        ;
+        if (empty($package_type)) {
+            $statement = $this->_dataTable->getAdapter()->query("CALL fetchCatTreeForStore(:store_id)", array("store_id" => $store_id));
+        } else {
+            $statement = $this->_dataTable->getAdapter()->query("CALL fetchCatTreeWithPackage(:store_id,:package_type)", array("store_id"=>$store_id, "package_type" => $package_type));
+        }
 
-        $sql = "
-            SET @store_id := {$store_id};
-            
-            DROP TABLE IF EXISTS tmp_store_cat;
-            CREATE TEMPORARY TABLE tmp_store_cat
-            (INDEX `idx_cat_id` (project_category_id) )
-            ENGINE MEMORY
-             AS
-                SELECT csc.store_id, csc.project_category_id, csc.`order`, pc.title, pc.lft, pc.rgt
-                FROM config_store_category as csc
-                JOIN project_category as pc ON pc.project_category_id = csc.project_category_id
-                WHERE csc.store_id = @store_id
-                GROUP BY csc.store_category_id
-                ORDER BY csc.`order`, pc.title
-            ;
-        
-            SELECT @NEW_ORDER := 0;
-        
-            UPDATE tmp_store_cat SET `order` = (@NEW_ORDER := @NEW_ORDER + 10);";
-
-        $result = $this->_dataTable->getAdapter()->prepare($sql)->execute();
-
-        $sql = "
-            SELECT sct.lft, sct.rgt, sct.project_category_id as id, sct.title, scpc.count_product as product_count, sct.xdg_type, sct.name_legacy, if(sct.rgt-sct.lft = 1, 0, 1) AS has_children, (SELECT project_category_id FROM stat_cat_tree as sct2 WHERE sct2.lft < sct.lft AND sct2.rgt > sct.rgt ORDER BY sct2.rgt - sct.rgt limit 1) as parent_id 
-            FROM tmp_store_cat as cfc
-            JOIN stat_cat_tree as sct ON find_in_set(cfc.project_category_id, sct.ancestor_id_path)
-            JOIN stat_cat_prod_count AS scpc ON sct.project_category_id = scpc.project_category_id AND {$wherePackageType}
-            WHERE cfc.store_id = @store_id
-            ORDER BY cfc.`order`, sct.lft
-        ;";
-
-        $result = $this->_dataTable->getAdapter()->fetchAll($sql);
+        $result = $statement->fetchAll();
 
         if (count($result) == 0) {
-            throw new Zend_Exception('no Categories could be found for store id: ' . $store_id);
+            throw new Zend_Exception('no categories could be found for store id: ' . $store_id);
         }
 
         return $result;

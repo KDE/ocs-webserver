@@ -717,6 +717,9 @@ $this->inlineScript()->appendScript('
                             if (data.status != 'success') {
                                 return;
                             }
+
+                            var updatePploadFileBtn = '<a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-updatepploadfile-btn="">Update</a>';
+                            var updatePploadFileBtnPerFile = '';
                             var deletePploadFileBtn = '<a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-deletepploadfile-btn=""><span class="glyphicon glyphicon-trash"></span></a>';
                             var deletePploadFileBtnPerFile = '';
 
@@ -813,8 +816,10 @@ $this->inlineScript()->appendScript('
                                 var downloadLink = '<a href="' + downloadUrl + '" id="data-link' + this.id + '">' + downloadLinkFilename + '</a>';
 
                                 if(this.active == '1') {
+                                    updatePploadFileBtnPerFile = updatePploadFileBtn;
                                     deletePploadFileBtnPerFile = deletePploadFileBtn;
                                 } else {
+                                    updatePploadFileBtnPerFile = '';
                                     deletePploadFileBtnPerFile = '';
                                 }
 
@@ -867,6 +872,7 @@ $this->inlineScript()->appendScript('
 
                                     + '<td>' + this.created_timestamp + '</td>'
                                     + '<td style="text-align: right">' + humanFileSize(this.size) + '</td>'
+                                    + '<td>' + updatePploadFileBtnPerFile + '</td>'
                                     + '<td>' + deletePploadFileBtnPerFile + '</td>'
                                     + '</tr>'
                                 );
@@ -931,7 +937,7 @@ $this->inlineScript()->appendScript('
 
                     $modalPpload.find('table[data-file-upload] tbody').append(
                         '<tr data-file-upload-id="' + uploadId + '">'
-                        + '<td>' + this.name + ' (' + humanFileSize(this.size) + ')</td>'
+                        + '<td>' + fileUpload.name + ' (' + humanFileSize(fileUpload.size) + ')</td>'
                         + '<td>'
                         + '<progress max="100" value="0" data-file-upload-progress=""></progress>'
                         + '<br>'
@@ -1111,8 +1117,7 @@ $this->inlineScript()->appendScript('
                                 + '</td>'
                                 + '<td>' + data.file.created_timestamp + '</td>'
                                 + '<td style="text-align: right">' + humanFileSize(data.file.size) + '</td>'
-                                // "Update" button is hidden currently
-                                + '<td><a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-updatepploadfile-btn="" style="display: none;">Update</a></td>'
+                                + '<td><a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-updatepploadfile-btn="">Update</a></td>'
                                 + '<td><a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-deletepploadfile-btn=""><span class="glyphicon glyphicon-trash"></span></a></td>'
                                 + '</tr>'
                             );

@@ -28,10 +28,17 @@ class Backend_CpasswordController extends Local_Controller_Action_CliAbstract
     public function runAction()
     {
         $password = $this->getParam("p");
-        $type = $this->getParam("t", Default_Model_DbTable_Member::PASSWORD_TYPE_OCS);
-        $encrypted = Local_Auth_Adapter_Ocs::getEncryptedPassword($password, $type);
+        echo "--- OCS password type ---\n";
+        $encrypted = Local_Auth_Adapter_Ocs::getEncryptedPassword($password, Default_Model_DbTable_Member::PASSWORD_TYPE_OCS);
         $packed = base64_encode(pack("H*", $encrypted));
-        echo Local_Auth_Adapter_Ocs::getEncryptedPassword($encrypted, $type);
+        echo $encrypted;
+        echo "\n";
+        echo $packed;
+        echo "\n";
+        echo "--- HIVE password type ---\n";
+        $encrypted = Local_Auth_Adapter_Ocs::getEncryptedPassword($password, Default_Model_DbTable_Member::PASSWORD_TYPE_HIVE);
+        $packed = base64_encode(pack("H*", $encrypted));
+        echo $encrypted;
         echo "\n";
         echo $packed;
         echo "\n";

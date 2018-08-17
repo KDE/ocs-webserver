@@ -807,7 +807,11 @@ class Default_Model_Info
         }
 
         $sql = '
-                SELECT *
+                SELECT 
+                member_id,
+                profile_image_url,
+                username,
+                created_at
                 FROM member
                 WHERE `is_active` = :activeVal
                 AND `type` = :typeVal     
