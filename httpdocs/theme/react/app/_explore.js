@@ -125,8 +125,6 @@ class ExploreTopBar extends React.Component {
       linkSearch = link.search;
     }
 
-    console.log(link.base);
-
     return (
       <div className="explore-top-bar">
         <a href={link.base + "latest" + linkSearch} className={this.props.filters.order === "latest" ? "item active" : "item"}>Latest</a>

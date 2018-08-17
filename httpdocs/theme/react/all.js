@@ -64,7 +64,6 @@ window.appHelpers = function () {
 
   function generateFilterUrl(location, currentCat) {
     let link = {};
-    console.log(currentCat);
     if (currentCat && currentCat !== 0) {
       link.base = "/browse/cat/" + currentCat + "/ord/";
     } else {
@@ -354,8 +353,6 @@ class ProductGroup extends React.Component {
       let productsArray = this.props.products;
       if (this.props.numRows) {
         const limit = productHelpers.getNumberOfProducts(this.props.device, this.props.numRows);
-        console.log(productsArray);
-        console.log(limit);
         productsArray = productsArray.slice(0, limit);
       }
       products = productsArray.map((product, index) => React.createElement(ProductGroupItem, {
@@ -1060,8 +1057,6 @@ class ExploreTopBar extends React.Component {
     if (link.search) {
       linkSearch = link.search;
     }
-
-    console.log(link.base);
 
     return React.createElement(
       "div",
@@ -1896,7 +1891,6 @@ class ProductView extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
     if (nextProps.product !== this.props.product) {
       this.forceUpdate();
     }
@@ -2018,7 +2012,7 @@ class ProductViewHeader extends React.Component {
         tags
       );
     }
-    console.log(this.props);
+
     return React.createElement(
       'div',
       { className: 'wrapper', id: 'product-view-header' },
@@ -2175,8 +2169,7 @@ class ProductViewHeaderRatings extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.props.product.r_ratings);
-    console.log(this.props.product.laplace_score);
+
     let userIsOwner = false;
     if (this.props.user && this.props.user.member_id === this.props.product.member_id) {
       userIsOwner = true;
@@ -2197,16 +2190,14 @@ class ProductViewHeaderRatings extends React.Component {
   }
 
   onRatingFormResponse(response, val) {
-    console.log(response, val);
-
+    const self = this;
     jQuery.ajax({
       data: {},
       url: '/p/' + this.props.product.project_id + '/loadratings/',
       method: 'get',
       error: function (jqXHR, textStatus, errorThrown) {
-        console.log(jqXHR);
-        console.log(textStatus);
-        console.log(errorThrown);
+        self.setState({ errorMsg: textStatus + " " + errorThrown });
+        $('#ratings-form-modal').modal('hide');
       },
       success: function (response) {
         store.dispatch(setProductRatings(response));
@@ -2261,7 +2252,8 @@ class ProductViewHeaderRatings extends React.Component {
           'add'
         )
       ),
-      ratingsFormModalDisplay
+      ratingsFormModalDisplay,
+      this.state.errorMsg
     );
   }
 }
@@ -3673,9 +3665,7 @@ class App extends React.Component {
     }
 
     // user
-    console.log(window.user);
     if (window.user) {
-      console.log(user);
       store.dispatch(setUser(user));
     }
 
@@ -3694,7 +3684,6 @@ class App extends React.Component {
   }
 
   render() {
-    console.log(this.state);
     let displayView = React.createElement(HomePageWrapper, null);
     if (store.getState().view === 'explore') {
       displayView = React.createElement(ExplorePageWrapper, null);

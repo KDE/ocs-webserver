@@ -70,8 +70,6 @@ class ProductGroup extends React.Component {
       let productsArray = this.props.products;
       if (this.props.numRows){
         const limit = productHelpers.getNumberOfProducts(this.props.device,this.props.numRows);
-        console.log(productsArray);
-        console.log(limit);
         productsArray = productsArray.slice(0,limit)
       }
       products = productsArray.map((product,index) => (

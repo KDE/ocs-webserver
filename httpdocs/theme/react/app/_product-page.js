@@ -16,7 +16,6 @@ class ProductView extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
     if (nextProps.product !== this.props.product){
       this.forceUpdate();
     }
@@ -132,7 +131,7 @@ class ProductViewHeader extends React.Component {
         </div>
       );
     }
-    console.log(this.props);
+
     return (
       <div className="wrapper" id="product-view-header">
         <div className="container">
@@ -245,8 +244,7 @@ class ProductViewHeaderRatings extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.props.product.r_ratings);
-    console.log(this.props.product.laplace_score);
+
     let userIsOwner = false;
     if (this.props.user && this.props.user.member_id === this.props.product.member_id){
       userIsOwner = true;
@@ -267,24 +265,20 @@ class ProductViewHeaderRatings extends React.Component {
   }
 
   onRatingFormResponse(response,val){
-    console.log(response,val);
-
-
+    const self = this;
     jQuery.ajax({
       data:{},
       url:'/p/'+this.props.product.project_id+'/loadratings/',
       method:'get',
       error:function(jqXHR,textStatus,errorThrown){
-        console.log(jqXHR);
-        console.log(textStatus);
-        console.log(errorThrown);
+        self.setState({errorMsg:textStatus + " " + errorThrown});
+        $('#ratings-form-modal').modal('hide');
       },
       success: function(response){
         store.dispatch(setProductRatings(response));
         $('#ratings-form-modal').modal('hide');
       }
     });
-
   }
 
   render(){
@@ -322,6 +316,7 @@ class ProductViewHeaderRatings extends React.Component {
           <i className="material-icons">add</i>
         </div>
         {ratingsFormModalDisplay}
+        {this.state.errorMsg}
       </div>
     )
   }

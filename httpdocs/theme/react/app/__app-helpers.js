@@ -69,7 +69,6 @@ window.appHelpers = (function(){
 
   function generateFilterUrl(location,currentCat){
     let link = {}
-    console.log(currentCat);
     if (currentCat && currentCat !== 0){
       link.base = "/browse/cat/" + currentCat + "/ord/";
     } else {
