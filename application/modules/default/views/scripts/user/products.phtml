@@ -845,7 +845,7 @@ $this->inlineScript()->appendScript(
 
             $modalPpload.find('table[data-file-upload] tbody').append(
                 '<tr data-file-upload-id="' + uploadId + '">'
-                + '<td>' + this.name + ' (' + humanFileSize(this.size) + ')</td>'
+                + '<td>' + fileUpload.name + ' (' + humanFileSize(fileUpload.size) + ')</td>'
                 + '<td>'
                 + '<progress max="100" value="0" data-file-upload-progress=""></progress>'
                 + '<br>'
