@@ -60,15 +60,9 @@ $profile_image_url = $loginMember->profile_image_url;
 
             echo '<ul class="nav nav-pills meta-nav-top left">';
             $i = 0;
-<<<<<<< HEAD
 
-            echo '<li class="" style="background-color:#eee; -moz-border-radius: 5px; border-radius: 5px; "><a href="http://'.$baseurl.'"><img src="/images/system/ocs-logo-rounded-16x16.png" class="logo"/> openDesktop.org :</a> </li>';
+            echo '<li>test</li><li class="" style="background-color:#eee; -moz-border-radius: 5px; border-radius: 5px; "><a href="http://'.$baseurl.'"><img src="/images/system/ocs-logo-rounded-16x16.png" class="logo"/> openDesktop.org :</a> </li>';
 
-=======
-                        
-            echo '<li>test</li><li class="" style="background-color:#eee; -moz-border-radius: 5px; border-radius: 5px; "><a href="http://'.$baseurl.'"><img src="/images/system/ocs-logo-rounded-16x16.png" class="logo"/> openDesktop.org :</a> </li>';                             
-           
->>>>>>> f117a207927e68fa1a171798245bb5fd269b57a3
             $preOrder = 0;
             $curOrder = 0;
             foreach ($this->domainobjects as $obj) {
@@ -136,12 +130,12 @@ $profile_image_url = $loginMember->profile_image_url;
                 ?>
 
             <ul class="nav nav-pills meta-nav-top right" style="margin-right: 30px;">
-               <li><a href="/community" > Community </a> </li>
+                <li><a href="/community" > Community </a> </li>
                <li><a href="<?=$url_forum?>" target="_blank"> Forum</a> </li>
                <li><a href="<?=$url_blog?>" target="_blank"> Blog</a> </li>
-               <li><a id="plingList" href="/plings" class="popuppanel"> What are Plings? </a> </li>
-               <li><a id="ocsapiContent" href="/partials/ocsapicontent.phtml" class="popuppanel"> API </a></li>
-               <li><a id="aboutContent" href="/partials/about.phtml" class="popuppanel">About </a></li>
+               <li><a  id="plingList" href="/plings" class="popuppanel"> What are Plings? </a> </li>
+               <li><a  id="ocsapiContent" href="/partials/ocsapicontent.phtml" class="popuppanel"> API </a> </li>
+               <li> <a id="aboutContent" href="/partials/about.phtml" class="popuppanel">About </a>   </li>
                <li id="user-dropdown-container">
                  <div class="dropdown" id="user-dropdown">
                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
