@@ -25,6 +25,9 @@
 $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
 $url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
 $url_blog = Zend_Registry::get('config')->settings->client->default->url_blog;
+$loginMember = $this->getAuthUser();
+$username = $loginMember->username;
+$profile_image_url = $loginMember->profile_image_url;
 
 ?>
     <style>
@@ -58,7 +61,7 @@ $url_blog = Zend_Registry::get('config')->settings->client->default->url_blog;
             echo '<ul class="nav nav-pills meta-nav-top left">';
             $i = 0;
                         
-            echo '<li class="" style="background-color:#eee; -moz-border-radius: 5px; border-radius: 5px; "><a href="http://'.$baseurl.'"><img src="/images/system/ocs-logo-rounded-16x16.png" class="logo"/> openDesktop.org :</a> </li>';                             
+            echo '<li>test</li><li class="" style="background-color:#eee; -moz-border-radius: 5px; border-radius: 5px; "><a href="http://'.$baseurl.'"><img src="/images/system/ocs-logo-rounded-16x16.png" class="logo"/> openDesktop.org :</a> </li>';                             
            
             $preOrder = 0;
             $curOrder = 0;
