@@ -2,8 +2,53 @@ out: ../css/style.css, sourcemap: true, compress: true
 
 @import "elements.less";
 
-header div.container.header {
-  height: 110px;
+header {
+
+  div.container.header {
+    height: 110px;
+  }
+}
+
+#user-dropdown {
+
+  .dropdown-menu {
+    width: 300px;
+    padding-top: 0;
+    overflow: hidden;
+
+    #user-info-section {
+      height: 100px;
+      padding: 10px 20px;
+      background: #f8f8f8;
+
+      .user-avatar {
+        width: 40%;
+        height: 80px;
+        width: 80px;
+        float: left;
+
+        .no-avatar-user-letter {
+          border-radius: 100%;
+          height: 100%;
+          width: 100%;
+          background-color: #c1c1c1;
+          text-align: center;
+          line-height: 80px;
+          font-size: 50px;
+          color: white;
+        }
+      }
+      .user-details {
+        width: 175px;
+        padding-left: 20px;
+        float: left;
+      }
+    }
+
+    #main-seperator {
+      margin-top: 0;
+    }
+  }
 }
 
 #main-header {
