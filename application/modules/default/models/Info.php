@@ -953,6 +953,46 @@ class Default_Model_Info
         return $totalcnt;
     }
 
+    public function getModeratorsList()
+    {
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cacheName = __FUNCTION__;
+
+        if (false !== ($newMembers = $cache->load($cacheName))) {
+            return $newMembers;
+        }
+
+        $sql = '
+                SELECT 
+                member_id,
+                profile_image_url,
+                username,
+                created_at
+                FROM member
+                WHERE `is_active` = :activeVal
+                AND `type` = :typeVal     
+                and `roleid` = :roleid
+                ORDER BY created_at DESC             
+            ';
+
+        if (isset($limit)) {
+            $sql .= ' limit ' . (int)$limit;
+        }
+
+        $resultMembers = Zend_Db_Table::getDefaultAdapter()->query($sql, array(
+            'activeVal' => Default_Model_Member::MEMBER_ACTIVE,
+            'typeVal'   => Default_Model_Member::MEMBER_TYPE_PERSON,
+            'roleid'   => Default_Model_DbTable_Member::ROLE_ID_MODERATOR
+        ))->fetchAll()
+        ;
+
+        $cache->save($resultMembers, $cacheName, array(), 300);
+
+        return $resultMembers;
+
+    }
+
 
      public function getCountMembers()
     {

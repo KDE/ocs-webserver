@@ -81,6 +81,26 @@ $this->supporters = $modelInfo->getNewActiveSupporters(9);
                 ?>
             </div>          
             <?php } ?>
+
+            <?php
+                $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
+                if($storeConfig->config_id_name=='kde-store' || $storeConfig->config_id_name=='kde' )
+                {
+                        $this->moderators = $modelInfo->getModeratorsList();
+                       ?>
+                       <span class="newsTitle"> Moderators  </span>
+                       <div class="prod-widget-box right bgwhite" >
+                            <?php 
+                                 foreach ($this->moderators as $mod) {
+                            ?>
+                            <a href="<?php echo $this->buildMemberUrl($mod['member_id']); ?>" class="tooltipuserleft" data-tooltip-content="#tooltip_content" data-user="<?=$mod['member_id']?>">                   
+                                <img height="25" width="25" src="<?php echo $this->Image($mod['profile_image_url'], array('width' => '25', 'height' => '25', 'crop' => 2)); ?>" class="supporterx" />                   
+                           </a>
+                            <?php }?>
+                       </div>
+                       <?php 
+                }
+            ?>
         </div>
 
 <?php $this->inlineScript()->appendScript(
