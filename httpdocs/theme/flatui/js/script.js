@@ -1182,7 +1182,7 @@ var PartialCommentReviewForm = (function () {
                     {
                             if($('#review-product-modal').find('#votelabel').find('.warning').length==0)
                             {
-                                $('#review-product-modal').find('#votelabel').append("</br><span class='warning' style='color:red'> Please give a comment min.5 chars, thanks!</span>");
+                                $('#review-product-modal').find('#votelabel').append("</br><span class='warning' style='color:red'> Please give a comment, thanks!</span>");
                             }
                             return;
                     }    
