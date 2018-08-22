@@ -891,7 +891,7 @@ var PartialsReview = (function () {
                     } else {
                         $('#review-product-modal').find('input#voteup').val(2);
                         $('#review-product-modal').find('#votelabel').empty()
-                            .append('<a class="btn btn-danger active" style="line-height: 10px;"><span class="fa fa-minus"></span></a> Add Comment (min. 1 char): ');
+                            .append('<a class="btn btn-danger active" style="line-height: 10px;"><span class="fa fa-minus"></span></a> Add Comment (min. 5 char): ');
                         $('#review-product-modal').find('#commenttext').val('-');
                         $('#review-product-modal').find('#commenttext').removeAttr("disabled");
                         $('#review-product-modal').find(':submit').removeAttr("disabled").css("display", "block");
@@ -948,7 +948,7 @@ var PartialsReviewDownloadHistory = (function () {
                     } else {
                         $('#review-product-modal').find('input#voteup').val(2);
                         $('#review-product-modal').find('#votelabel').empty()
-                            .append('<a class="btn btn-danger active" style="line-height: 10px;"><span class="fa fa-minus"></span></a> Add Comment (min. 1 chars): ');
+                            .append('<a class="btn btn-danger active" style="line-height: 10px;"><span class="fa fa-minus"></span></a> Add Comment (min. 5 chars): ');
                         $('#review-product-modal').find('#commenttext').val('-');
                         $('#review-product-modal').find('#commenttext').removeAttr("disabled");
                         $('#review-product-modal').find(':submit').removeAttr("disabled").css("display", "block");
@@ -1172,8 +1172,22 @@ var PartialCommentReviewForm = (function () {
         initForm: function () {
             $('body').on("submit", 'form.product-add-comment-review', function (event) {
                 event.preventDefault();
-                event.stopImmediatePropagation();            
-                var c = $.trim($('#commenttext').val());                
+
+                event.stopImmediatePropagation();
+                var c = $.trim($('#commenttext').val());
+                var v = $('#voteup').val();
+                if(v==2) {
+                    // votedown
+                    if(c.length<5)
+                    {
+                            if($('#review-product-modal').find('#votelabel').find('.warning').length==0)
+                            {
+                                $('#review-product-modal').find('#votelabel').append("</br><span class='warning' style='color:red'> Please give a comment min.5 chars, thanks!</span>");
+                            }
+                            return;
+                    }    
+                }
+
                 if(c.length<1)
                 {
                         if($('#review-product-modal').find('#votelabel').find('.warning').length==0)
