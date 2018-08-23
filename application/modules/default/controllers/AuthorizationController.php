@@ -226,7 +226,20 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             return;
         }
 
+        Zend_Registry::get('logger')->info(__METHOD__
+            . PHP_EOL . ' - authentication attempt on host: ' . Zend_Registry::get('store_host')
+            . PHP_EOL . ' - param redirect: ' . $this->getParam('redirect')
+            . PHP_EOL . ' - from ip: ' . $this->_request->getClientIp()
+        );
+
         if (false === Default_Model_CsrfProtection::validateCsrfToken($_POST['login_csrf'])) {
+            Zend_Registry::get('logger')->info(__METHOD__
+                . PHP_EOL . ' - ip: ' . $this->_request->getClientIp()
+                . PHP_EOL . ' - validate CSRF token failed:'
+                . PHP_EOL . ' - received token: ' . $_POST['login_csrf']
+                . PHP_EOL . ' - stored token: ' . Default_Model_CsrfProtection::getCsrfToken()
+            );
+
             $this->view->error = 0;
             $this->view->formLogin = $formLogin;
             if ($this->_request->isXmlHttpRequest()) {
@@ -236,12 +249,6 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
 
             return;
         }
-
-        Zend_Registry::get('logger')->info(__METHOD__
-            . PHP_EOL . ' - authentication attempt on host: ' . Zend_Registry::get('store_host')
-            . PHP_EOL . ' - param redirect: ' . $this->getParam('redirect')
-            . PHP_EOL . ' - from ip: ' . $this->_request->getClientIp()
-        );
 
         if (false === $formLogin->isValid($_POST)) { // form not valid
             Zend_Registry::get('logger')->info(__METHOD__
@@ -267,6 +274,8 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
 
         if (false == $authResult->isValid()) { // authentication fail
             Zend_Registry::get('logger')->info(__METHOD__
+                . PHP_EOL . ' - user: ' . $values['mail']
+                . PHP_EOL . ' - remember_me: ' . $values['remember_me']
                 . PHP_EOL . ' - ip: ' . $this->_request->getClientIp()
                 . PHP_EOL . ' - authentication fail: '
                 . PHP_EOL . print_r($authResult->getMessages(), true)
