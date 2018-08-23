@@ -85,7 +85,8 @@ class Default_Model_Ocs_OpenCode
             'bio'               => empty($user['biography']) ? '' : $user['biography'],
             'admin'             => $user['roleId'] == 100 ? 'true' : 'false',
             'can_create_group'  => 'true',
-            'skip_confirmation' => 'true'
+            'skip_confirmation' => 'true',
+            'skip_reconfirmation' => 'true'
         );
 
         return $data;
@@ -106,7 +107,14 @@ class Default_Model_Ocs_OpenCode
         $body = Zend_Json::decode($response->getRawBody());
 
         if (count($body) == 0) {
-            false;
+            return false;
+        }
+
+        if (array_key_exists("message", $body)) {
+            $result_code = substr(trim($body["message"]), 0, 3);
+            if ((int) $result_code >= 300) {
+                throw new Zend_Exception($body["message"]);
+            }
         }
 
         return $body[0]['id'];
@@ -146,7 +154,7 @@ class Default_Model_Ocs_OpenCode
         //Zend_Registry::get('logger')->debug("----------\n" . __METHOD__ . " - response:\n" . $response->asString());
         //Zend_Registry::get('logger')->debug("----------\n" . __METHOD__ . " - body:\n" . $response->getBody());
 
-        $this->messages[0] = $body;
+        $this->messages[0] = 'response for creation request: ' . $body;
 
         if ($response->getStatus() < 200 AND $response->getStatus() >= 300) {
             throw new Zend_Exception('push user data failed. OCS OpenCode server send message: ' . $body);
@@ -217,7 +225,7 @@ class Default_Model_Ocs_OpenCode
         //Zend_Registry::get('logger')->debug("----------\n" . __METHOD__ . " - response:\n" . $response->asString());
         //Zend_Registry::get('logger')->debug("----------\n" . __METHOD__ . " - body:\n" . $response->getBody());
 
-        $this->messages[0] = $body;
+        $this->messages[0] = 'response for update request: ' . $body;
 
         if ($response->getStatus() < 200 AND $response->getStatus() >= 300) {
             throw new Zend_Exception('push user data failed. OCS OpenCode server send message: ' . $body);
