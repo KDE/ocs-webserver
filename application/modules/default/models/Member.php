@@ -664,6 +664,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
 
     /**
      * Finds an active user by given username or email ($identity)
+     * Returns an empty rowset when no user found.
      *
      * @param string $identity could be the username or users mail address
      * @param bool   $withLoginLocal
