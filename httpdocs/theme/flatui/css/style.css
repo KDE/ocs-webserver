@@ -1058,6 +1058,11 @@ span.packagetypeos
     padding: 2px 5px;
     font-size: 9px;
 }
+.comments-list .mod-badge-1{
+    text-align: center;
+    font-size: 12px;   
+    font-weight: bold;
+}
 
 .glyphicon.spinning {
     animation: spin 1s infinite linear;

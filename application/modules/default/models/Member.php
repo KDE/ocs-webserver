@@ -734,7 +734,12 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         if (empty($memberData)) {
             return false;
         }
-        if ($memberData->source_id == self::SOURCE_HIVE) {
+        //20180801 ronald: If a hive user change his password, he gets the ocs password type and we do 
+        //have to check against the old hive password style
+        //if ($memberData->source_id == self::SOURCE_HIVE) {
+        //    return true;
+        //}
+        if ($memberData->password_type == self::PASSWORD_TYPE_HIVE) {
             return true;
         }
 

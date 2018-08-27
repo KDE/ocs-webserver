@@ -136,12 +136,14 @@ class Backend_MemberController extends Zend_Controller_Action
 
             $id_server = new Default_Model_OcsOpenId();
             $id_server->deactivateLoginForUser($member_id);
-
-            $opencode_server = new Default_Model_OcsOpenCode();
-            $opencode_server->deactivateLoginForUser($member_id);
-
         } catch (Exception $e) {
-            Zend_Registry::get('logger')->err($e->getTraceAsString());
+            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+        }
+        try {
+            $ldap_server = new Default_Model_Ocs_Ident();
+            $ldap_server->deleteUser($member_id);
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }
 
         $this->_helper->json(true);

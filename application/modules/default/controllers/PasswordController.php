@@ -215,23 +215,33 @@ class PasswordController extends Local_Controller_Action_DomainSwitch
 
         $model_member = new Default_Model_DbTable_Member();
         $member_data = $model_member->fetchRow(array('member_id = ?' => $payload['member_id']));
-        $encryptedPass = Local_Auth_Adapter_Ocs::getEncryptedPassword($password1, $member_data->source_id);
-        $debugMsg .= ' - encrypted password: ' . $encryptedPass . PHP_EOL;
-        $member_data->password = $encryptedPass;
-        try {
-            $member_data->save();
-        } catch (Exception $e) {
-            Zend_Registry::get('logger')->debug($debugMsg);
-            throw new Zend_Controller_Action_Exception($e->getMessage());
+        
+        if($member_data->password_type == Default_Model_Member::PASSWORD_TYPE_HIVE) {
+            //Save old data
+            $member_data->password_old = $member_data->password;
+            $member_data->password_type_old = Default_Model_Member::PASSWORD_TYPE_HIVE;
+            
+            //Change type and password
+            $member_data->password_type = Default_Model_Member::PASSWORD_TYPE_OCS;
         }
+        
+        $member_data->password = Local_Auth_Adapter_Ocs::getEncryptedPassword($password1, Default_Model_Member::PASSWORD_TYPE_OCS);
+        $member_data->save();
 
         Zend_Registry::get('cache')->remove(sha1($secret));
 
+        //Update Auth-Services
         try {
-            $id_server = new Default_Model_OcsOpenId();
+            $id_server = new Default_Model_Ocs_OpenId();
             $id_server->updatePasswordForUser($member_data->member_id);
         } catch (Exception $e) {
-            Zend_Registry::get('logger')->err($e->getTraceAsString());
+            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+        }
+        try {
+            $ldap_server = new Default_Model_Ocs_Ident();
+            $ldap_server->updatePassword($member_data->member_id);
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }
 
         $debugMsg .= '- password changed' . PHP_EOL;

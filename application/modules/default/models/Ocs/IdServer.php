@@ -1,6 +1,26 @@
 <?php
 
-class Default_Model_Id_OcsServer
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+class Default_Model_Ocs_IdServer
 {
 
     private $_config;
@@ -103,7 +123,7 @@ class Default_Model_Id_OcsServer
      */
     protected function getAccessToken()
     {
-        $cache_name = 'id_server_token';
+        $cache_name = 'id_server_token'.$this->_config->client_id;
         $token = $this->_cache->load($cache_name);
         if (false === $token) {
             $token = $this->requestHttpAccessToken();
@@ -128,6 +148,9 @@ class Default_Model_Id_OcsServer
     protected function requestHttpAccessToken()
     {
         $httpClient = new Zend_Http_Client($this->_config->token_url);
+        //$adapter = new Zend_Http_Client_Adapter_Socket();
+        //$adapter->setStreamContext(array('ssl' => array('verify_peer' => false,'allow_self_signed' => true,'capture_peer_cert' => false)));
+        //$httpClient->setAdapter($adapter);
         $httpClient->setMethod(Zend_Http_Client::POST);
         $httpClient->setHeaders('Content-Type', 'application/x-www-form-urlencoded');
         $httpClient->setHeaders('Accept', 'application/json');

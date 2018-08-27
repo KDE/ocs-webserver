@@ -20,8 +20,10 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-$helperFetchCategory = new Default_View_Helper_CatTitle();
-$helperFetchCatParent = new Default_View_Helper_CatParent();
+$baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
+$sname = Zend_Registry::get('store_host');
+$store_config = Zend_Registry::get('store_config');
+
 $getAuthUser = new Default_View_Helper_GetAuthUser();
 $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $helperImage = new Default_View_Helper_Image();
@@ -29,17 +31,109 @@ $auth = Zend_Auth::getInstance();
 $member = $getAuthUser->getAuthUser();
 $serverUrl = $this->serverUrl();
 
-$baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
-$sname = Zend_Registry::get('store_host');
-$store_config = Zend_Registry::get('store_config');
 $store_order = $store_config->order;
 $store_name = $store_config->name;
 $is_show_title = $store_config->is_show_title;
 $last_char_store_order = substr($store_order, -1);
 
-echo $this->render('partials/header/metaheader.phtml');
+$helperFetchCategory = new Default_View_Helper_CatTitle();
+$cat_title = $helperFetchCategory->catTitle($this->cat_id);
+$cat_title_length = strlen($cat_title);
+//check logo-width:
+$logoWidth = (int)$this->template['header-logo']['width'];
+$cat_title_left = $logoWidth+60;
+$tabs_left = (int)$this->template['header-nav-tabs']['absolute-left'];
+$tabs_left += $cat_title_length*10;
+
+
 ?>
+<?php 
+    echo $this->render('partials/header/metaheader_react.phtml');
+?>
+
+  <style>
+
+        header a {
+            color:  <?=$this->template['header-nav-tabs']['link']['color']?>;
+        }
+
+        header div.container.header {
+            background-image: <?=$this->template['header']['background-image']?>;
+            background-color: <?=$this->template['header']['background-color']?>;
+            color: <?=$this->template['header']['color']?>;
+            height: <?=$this->template['header']['height']?>;
+        }
+
+        header .logo-header {
+            background-image: <?=$this->template['header-logo']['background-image']?>;
+            display: block;
+            height: <?=$this->template['header-logo']['height']?>;
+            left: <?=$this->template['header-logo']['left']?>;
+            position: absolute;
+            top: <?=$this->template['header-logo']['top']?>;
+            width: <?=$this->template['header-logo']['width']?>;
+            z-index: 999;
+            overflow: hidden;
+        }
+
+        header ul li:active {
+            background: <?=$this->template['header-nav-tabs']['background-color-active']?> none repeat scroll 0 0;
+        }
+        header ul li:hover {
+            background: <?=$this->template['header-nav-tabs']['background-color-hover']?> none repeat scroll 0 0;
+        }
+
+        header ul li ul li:active {
+            background: <?=$this->template['header-nav-tabs']['background-color-active']?> none repeat scroll 0 0;
+        }
+
+        header ul li ul li:hover {
+            background: <?=$this->template['header-nav-tabs']['background-color-hover']?> none repeat scroll 0 0;
+        }
+        header ul li:active > a {
+            color: <?=$this->template['header-nav-tabs']['link']['color-active']?>;
+        }
+        header ul li:hover > a {
+            color: <?=$this->template['header-nav-tabs']['link']['color-hover']?>;
+        }
+        header ul li ul li:hover a {
+            color: <?=$this->template['header-nav-tabs']['link']['color-hover']?>;
+        }
+
+        ul.menu-nav-tabs li {
+            background-color: <?=$this->template['header-nav-tabs']['background-color']?>;
+            border-color: <?=$this->template['header-nav-tabs']['border-color']?>;
+            border-image: none;
+            border-radius: <?=$this->template['header-nav-tabs']['border-radius']?>;
+            border-style: <?=$this->template['header-nav-tabs']['border-style']?>;
+            border-width: <?=$this->template['header-nav-tabs']['border-with']?>;
+            height: <?=$this->template['header-nav-tabs']['height']?>;
+            line-height: 24px;
+            margin-right: <?=$this->template['header-nav-tabs']['margin-right']?>;
+        }
+    
+        
+        ul.menu-nav-tabs li.active {
+            background: <?=$this->template['header-nav-tabs']['background-color-active']?> none repeat scroll 0 0;
+        }
+
+        .absolute-left {
+            left: <?=$tabs_left?>px;
+        }
+
+        .absolute-right {
+            right: <?=$this->template['header-nav-tabs']['absolute-right']?>;
+        }
+
+        .header_cat_link {
+              bottom: 0; position: absolute; color: blue; font-size: 18pt; left: <?= $cat_title_left ?>px;
+        } 
+    
+       
+    </style>
+
 <header id="main-header" xmlns="http://www.w3.org/1999/html">
+
 
         <?php if (false === $auth->hasIdentity() && empty($member->username)) {
             $helperEncryptUrl = new Default_View_Helper_EncryptUrl();

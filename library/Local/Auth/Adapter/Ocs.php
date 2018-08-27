@@ -55,9 +55,9 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
         $this->_tableName = $tableName;
     }
 
-    public static function getEncryptedPassword($password, $userSource)
+    public static function getEncryptedPassword($password, $passwordType)
     {
-        return $userSource == Default_Model_DbTable_Member::SOURCE_HIVE ? sha1((self::PASSWORDSALT . $password . self::PASSWORDSALT))
+        return $passwordType == Default_Model_DbTable_Member::PASSWORD_TYPE_HIVE ? sha1((self::PASSWORDSALT . $password . self::PASSWORDSALT))
             : md5($password);
     }
 

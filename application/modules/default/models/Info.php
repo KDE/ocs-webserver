@@ -141,7 +141,8 @@ class Default_Model_Info
                        ,member.username
                        ,comment_target_id
                        ,title
-                       ,stat_projects.project_id                                    
+                       ,stat_projects.project_id  
+                       ,cat_title as catTitle                                  
                    FROM comments
                    STRAIGHT_JOIN member ON comments.comment_member_id = member.member_id
                    inner JOIN stat_projects ON comments.comment_target_id = stat_projects.project_id ';      
@@ -625,20 +626,18 @@ class Default_Model_Info
 
         $sql = '
             SELECT 
-                p.*
-                ,laplace_score(p.count_likes, p.count_dislikes) AS laplace_score
+                p.*              
                 ,m.profile_image_url
                 ,m.username
             FROM
-                project AS p
+                stat_projects AS p
             JOIN 
                 member AS m ON m.member_id = p.member_id
             WHERE
                 p.status = 100
                 AND p.type_id = 1
                 AND p.featured = 1
-                AND p.project_category_id IN ('. implode(',', $activeCategories).')
-                ORDER BY p.changed_at DESC
+                AND p.project_category_id IN ('. implode(',', $activeCategories).')                
             ';
         if (isset($limit)) {
             $sql .= ' limit ' . (int)$limit;
@@ -808,7 +807,11 @@ class Default_Model_Info
         }
 
         $sql = '
-                SELECT *
+                SELECT 
+                member_id,
+                profile_image_url,
+                username,
+                created_at
                 FROM member
                 WHERE `is_active` = :activeVal
                 AND `type` = :typeVal     
@@ -948,6 +951,46 @@ class Default_Model_Info
         $totalcnt = $result[0]['total_count'];
         $cache->save($totalcnt, $cacheName,array() , 300);
         return $totalcnt;
+    }
+
+    public function getModeratorsList()
+    {
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');
+        $cacheName = __FUNCTION__;
+
+        if (false !== ($newMembers = $cache->load($cacheName))) {
+            return $newMembers;
+        }
+
+        $sql = '
+                SELECT 
+                member_id,
+                profile_image_url,
+                username,
+                created_at
+                FROM member
+                WHERE `is_active` = :activeVal
+                AND `type` = :typeVal     
+                and `roleid` = :roleid
+                ORDER BY created_at DESC             
+            ';
+
+        if (isset($limit)) {
+            $sql .= ' limit ' . (int)$limit;
+        }
+
+        $resultMembers = Zend_Db_Table::getDefaultAdapter()->query($sql, array(
+            'activeVal' => Default_Model_Member::MEMBER_ACTIVE,
+            'typeVal'   => Default_Model_Member::MEMBER_TYPE_PERSON,
+            'roleid'   => Default_Model_DbTable_Member::ROLE_ID_MODERATOR
+        ))->fetchAll()
+        ;
+
+        $cache->save($resultMembers, $cacheName, array(), 300);
+
+        return $resultMembers;
+
     }
 
 

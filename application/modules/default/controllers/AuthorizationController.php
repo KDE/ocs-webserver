@@ -198,6 +198,83 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         }
     }
 
+    public function checkuserAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        $this->getResponse()->setHeader('Access-Control-Allow-Origin', 'https://gitlab.pling.cc')
+             ->setHeader('Access-Control-Allow-Credentials', 'true')->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+             ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
+        ;
+
+        $formLogin = new Default_Form_Login();
+
+        if (false === $formLogin->isValid($_GET)) { // form not valid
+            $this->_helper->json(array('status' => 'error', 'message' => 'not valid'));
+
+            return;
+        }
+
+        $values = $formLogin->getValues();
+        $authModel = new Default_Model_Authorization();
+        $authResult = $authModel->authenticateUser($values['mail'], $values['password'], $values['remember_me']);
+
+        if (false == $authResult->isValid()) { // authentication fail
+            $this->_helper->json(array('status' => 'error', 'message' => 'not valid'));
+
+            return;
+        }
+
+        $auth = Zend_Auth::getInstance();
+        $userId = $auth->getStorage()->read()->member_id;
+
+        //If the user is a hive user, we have to update his password
+        $this->changePasswordIfNeeded($userId, $values['password']);
+
+        $this->_helper->json(array('status' => 'ok', 'message' => 'User is OK.'));
+    }
+
+    private function changePasswordIfNeeded($member_id, $password)
+    {
+        $userTabel = new Default_Model_Member();
+        $showMember = $userTabel->fetchMember($member_id);
+        $memberSettings = $showMember;
+
+        //User with OCS Password
+        if ($showMember->password_type == Default_Model_Member::PASSWORD_TYPE_OCS) {
+            return;
+        }
+
+        //Hive User
+        if ($memberSettings->password_type == Default_Model_Member::PASSWORD_TYPE_HIVE) {
+            //Save old data
+            $memberSettings->password_old = $memberSettings->password;
+            $memberSettings->password_type_old = Default_Model_Member::PASSWORD_TYPE_HIVE;
+
+            //Change type and password
+            $memberSettings->password_type = Default_Model_Member::PASSWORD_TYPE_OCS;
+            $memberSettings->password = Local_Auth_Adapter_Ocs::getEncryptedPassword($password, $memberSettings->password_type);
+            $memberSettings->save();
+
+            //Update Auth-Services
+            try {
+                $id_server = new Default_Model_Ocs_OpenId();
+                $id_server->updatePasswordForUser($memberSettings->member_id);
+            } catch (Exception $e) {
+                Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+            }
+            try {
+                $ldap_server = new Default_Model_Ocs_Ident();
+                $ldap_server->updatePassword($memberSettings->member_id);
+            } catch (Exception $e) {
+                Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+            }
+        }
+
+        return;
+    }
+
     /**
      * @throws Zend_Auth_Storage_Exception
      * @throws Zend_Exception
@@ -312,10 +389,14 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         $auth = Zend_Auth::getInstance();
         $userId = $auth->getStorage()->read()->member_id;
 
+        //If the user is a hive user, we have to update his password
+        $this->changePasswordIfNeeded($userId, $values['password']);
+
         $modelToken = new Default_Model_SingleSignOnToken();
         $data = array(
             'remember_me' => $values['remember_me'],
-            'redirect'    => $this->getParam('redirect'),
+            //'redirect'    => $this->getParam('redirect'),
+            'redirect'    => $this->view->redirect,
             'action'      => Default_Model_SingleSignOnToken::ACTION_LOGIN,
             'member_id'   => $userId
         );
@@ -463,6 +544,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
 
     /**
      * @throws Zend_Controller_Action_Exception
+     * @throws Zend_Exception
      * @throws Zend_Session_Exception
      */
     public function propagatelogoutAction()
@@ -573,10 +655,14 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         Zend_Registry::get('logger')->info(__METHOD__ . ' - user activated. member_id: ' . print_r($authUser->member_id, true));
 
         try {
-            $id_server = new Default_Model_OcsOpenId();
+            $id_server = new Default_Model_Ocs_OpenId();
             $id_server->createUser($authUser->member_id);
-            $opencode_server = new Default_Model_OcsOpenCode();
-            $opencode_server->createUser($authUser->member_id);
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+        }
+        try {
+            $ldap_server = new Default_Model_Ocs_Ident();
+            $ldap_server->createUser($authUser->member_id);
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }
@@ -673,6 +759,19 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         $result = $formRegister->getElement($name)->isValid($value);
 
         $this->_helper->json(array('status' => $result, $name => $formRegister->getElement($name)->getMessages()));
+    }
+
+    /**
+     * @param string $string
+     *
+     * @return string
+     * @throws Zend_Filter_Exception
+     */
+    protected function encodeString($string)
+    {
+        $encodeFilter = new Local_Filter_Url_Encrypt();
+
+        return $encodeFilter->filter($string);
     }
 
     /**

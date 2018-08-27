@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -29,7 +30,9 @@ class Default_Plugin_ErrorHandler extends Zend_Controller_Plugin_ErrorHandler
      * request against its routes.
      *
      * @todo Remove when ZF addeds an ability to set a custom errorHandler
+     *
      * @param Zend_Controller_Request_Abstract $request
+     *
      * @return void
      */
     public function routeStartup(Zend_Controller_Request_Abstract $request)
@@ -45,6 +48,7 @@ class Default_Plugin_ErrorHandler extends Zend_Controller_Plugin_ErrorHandler
 
     /**
      * @param Zend_Controller_Request_Abstract $request
+     *
      * @throws mixed
      */
     protected function _handleError(Zend_Controller_Request_Abstract $request)
@@ -109,10 +113,11 @@ class Default_Plugin_ErrorHandler extends Zend_Controller_Plugin_ErrorHandler
 
             // Forward to the error handler
             $request->setParam('error_handler', $error)
-                ->setModuleName($this->getErrorHandlerModule())
-                ->setControllerName($this->getErrorHandlerController())
-                ->setActionName($this->getErrorHandlerAction())
-                ->setDispatched(false);
+                    ->setModuleName($this->getErrorHandlerModule())
+                    ->setControllerName($this->getErrorHandlerController())
+                    ->setActionName($this->getErrorHandlerAction())
+                    ->setDispatched(false)
+            ;
         }
     }
 

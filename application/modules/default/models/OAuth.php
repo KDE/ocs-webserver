@@ -48,7 +48,7 @@ class Default_Model_OAuth
                 $authAdapter = new Default_Model_OAuth_Ocs(
                     Zend_Registry::get('db'),
                     'member',
-                    Zend_Registry::get('config')->settings->id_server);
+                    Zend_Registry::get('config')->settings->server->oauth);
                 break;
 
             default:

@@ -57,12 +57,17 @@ $isSupporter = $this->stat['donationIssupporter'];
                             <div class="about-title">
                                 <figure class="relative inline profile-image-container">
                                     <?php if( $isSupporter) { ?><span class="supporter-badge">S</span>                                                  
-                                    <?php }?>
+                                    <?php }?>                                                                        
                                     <img src="<?php echo $helperImage->Image($this->member->profile_image_url,array('width' => 110, 'height' => 110, 'crop' => 2)); ?>"
                                          alt="profile-image"
                                          width="110"
                                          height="110">
+
+                                     <?php if( $this->member->roleId==Default_Model_DbTable_Member::ROLE_ID_MODERATOR) { ?>
+                                            <div class="mod-badge">MODERATOR</div>                                                  
+                                    <?php }?>
                                 </figure>
+                                
                                 <h1><span class="lightblue"><?php echo $this->member->username; ?></span></h1>
                                 <?php if($this->member->firstname ) :?>
                                 <span class="glyphicon glyphicon-user"></span>

@@ -25,6 +25,8 @@ class UserController extends Local_Controller_Action_DomainSwitch
 
     protected $_memberId;
     protected $_userName;
+    /** @var  Zend_Db_Table_Row */
+    protected $_memberSettings;
 
     public function init()
     {
@@ -48,8 +50,72 @@ class UserController extends Local_Controller_Action_DomainSwitch
        $this->aboutmeAction();
        
     }
-
     
+    /**
+     * @return Default_Form_Settings
+     * @throws Zend_Form_Exception
+     */
+    private function formPassword()
+    {
+        $form = new Default_Form_Settings();
+        $form->setMethod("POST")->setAttrib("id", "settingsPasswordForm")->setAction('/member/'.$this->_memberId.'/changepass');
+
+        $passOld = $form->createElement('password', 'passwordOld')->setLabel('Enter old Password:')->setRequired(true)
+                        ->removeDecorator('HtmlTag')->addValidator(new Local_Validate_OldPasswordConfirm())->setDecorators(array(
+                'ViewHelper',
+                'Label',
+                'Errors',
+                array(
+                    'ViewScript',
+                    array(
+                        'viewScript' => 'settings/viewscripts/flatui_input.phtml',
+                        'placement'  => false
+                    )
+                )
+            ))
+        ;
+
+        $pass1 = $form->createElement('password', 'password1')->setLabel('Enter new Password:')->setRequired(true)
+                      ->addValidator(new Zend_Validate_NotEmpty(Zend_Validate_NotEmpty::STRING))->removeDecorator('HtmlTag')
+                      ->setDecorators(array(
+                          'ViewHelper',
+                          'Label',
+                          'Errors',
+                          array(
+                              'ViewScript',
+                              array(
+                                  'viewScript' => 'settings/viewscripts/flatui_input.phtml',
+                                  'placement'  => false
+                              )
+                          )
+                      ))
+        ;
+
+        $pass2 = $form->createElement('password', 'password2')->setLabel('Re-enter new Password:')->setRequired(true)
+                      ->addValidator(new Zend_Validate_NotEmpty(Zend_Validate_NotEmpty::STRING))->removeDecorator('HtmlTag')
+                      ->setDecorators(array(
+                          'ViewHelper',
+                          'Label',
+                          'Errors',
+                          array(
+                              'ViewScript',
+                              array(
+                                  'viewScript' => 'settings/viewscripts/flatui_input.phtml',
+                                  'placement'  => false
+                              )
+                          )
+                      ))
+        ;
+
+        $passValid = new Local_Validate_PasswordConfirm($pass2->getValue());
+        $pass1->addValidator($passValid);
+
+        $form->addElement($passOld)->addElement($pass1)->addElement($pass2);
+
+        return $form;
+    }
+    
+
     public function avatarAction()
     {
         $this->_helper->layout->disableLayout();

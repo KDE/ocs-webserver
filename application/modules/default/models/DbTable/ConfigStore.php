@@ -219,6 +219,8 @@ class Default_Model_DbTable_ConfigStore extends Local_Model_Table
      * @param bool $clearCache
      *
      * @return array
+     * @throws Zend_Cache_Exception
+     * @throws Zend_Exception
      */
     public function fetchAllStoresConfigArray($clearCache = false)
     {

@@ -110,11 +110,8 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addResource(new Zend_Acl_Resource ('backend_user'));
         $this->addResource(new Zend_Acl_Resource ('backend_tags'));
         $this->addResource(new Zend_Acl_Resource ('backend_ghnsexcluded'));
-        
 
         $this->addResource(new Zend_Acl_Resource ('statistics_data'));
-
-
 
         $this->allow(self::ROLENAME_GUEST, array(
             'statistics_data'
@@ -134,7 +131,7 @@ class Default_Plugin_AclRules extends Zend_Acl
             'default_home',
             'default_ocsv1', // OCS API
             'default_embedv1', // embed API
-            'default_productcategory',            
+            'default_productcategory',
             'default_rss',
             'default_supporterbox',
             'default_plingbox',
@@ -146,7 +143,7 @@ class Default_Plugin_AclRules extends Zend_Acl
             'default_verify'
         ));
 
-         $this->allow(self::ROLENAME_SYSUSER, array(
+        $this->allow(self::ROLENAME_SYSUSER, array(
             'default_authorization',
             'default_button',
             'default_categories',
@@ -172,77 +169,86 @@ class Default_Plugin_AclRules extends Zend_Acl
             'default_password'
         ));
 
-
         $this->allow(self::ROLENAME_COOKIEUSER, array(
-                'default_logout',
-                'default_productcomment',
-                'default_settings',
-                'default_support',
-                'default_tag'
-            )
-        );
+            'default_logout',
+            'default_productcomment',
+            'default_settings',
+            'default_support',
+            'default_tag'
+        ));
 
         $this->allow(self::ROLENAME_STAFF, array(
-                'backend_index',
-                'backend_categories',
-                'backend_categorytag',
-                'backend_claim',
-                'backend_comments',
-                'backend_content',
-                'backend_store',
-                'backend_storecategories',
-                'backend_operatingsystem',
-                'backend_reportcomments',
-                'backend_reportproducts',
-                'backend_search',
-            )
-        );
+            'backend_index',
+            'backend_categories',
+            'backend_categorytag',
+            'backend_claim',
+            'backend_comments',
+            'backend_content',
+            'backend_store',
+            'backend_storecategories',
+            'backend_operatingsystem',
+            'backend_reportcomments',
+            'backend_reportproducts',
+            'backend_search',
+        ));
 
         $this->allow(self::ROLENAME_ADMIN);
 
         // resource access rights in detail
 
         // resource default_product
-        $this->allow(self::ROLENAME_GUEST, 'default_product',
-            array('index', 'show', 'getupdatesajax', 'updates', 'follows', 'fetch', 'search', 'startdownload','ppload'));
-
-
+        $this->allow(self::ROLENAME_GUEST, 'default_product', array(
+            'index',
+            'show',
+            'getupdatesajax',
+            'updates',
+            'follows',
+            'fetch',
+            'search',
+            'startdownload',
+            'ppload',
+            'loadratings'
+        ));
 
         // resource default_product
-        $this->allow(self::ROLENAME_SYSUSER, 'default_product',
-            array('index',   'show', 'getupdatesajax', 'updates', 'follows', 'fetch', 'search', 'startdownload','ppload'));
+        $this->allow(self::ROLENAME_SYSUSER, 'default_product', array(
+            'index',
+            'show',
+            'getupdatesajax',
+            'updates',
+            'follows',
+            'fetch',
+            'search',
+            'startdownload',
+            'ppload',
+            'loadratings'
+        ));
 
-        $this->allow(self::ROLENAME_COOKIEUSER, 'default_product',
-            array(
-                'add',
-                'rating',
-                'follow',
-                'unfollow',            
-                'plingproject',
-                'followproject',
-                'unplingproject',
-                'add',
-                'pling',
-                'pay',
-                'dwolla',
-                'paymentok',
-                'paymentcancel',
-                'saveproduct',
-                'claim'
-            )
-        );
+        $this->allow(self::ROLENAME_COOKIEUSER, 'default_product', array(
+            'add',
+            'rating',
+            'follow',
+            'unfollow',
+            'plingproject',
+            'followproject',
+            'unplingproject',
+            'add',
+            'pling',
+            'pay',
+            'dwolla',
+            'paymentok',
+            'paymentcancel',
+            'saveproduct',
+            'claim'
+        ));
 
-        $this->allow(self::ROLENAME_MODERATOR, 'backend_project',
-            array(
-                'doghnsexclude'
-            )
-        );
+        $this->allow(self::ROLENAME_MODERATOR, 'backend_project', array(
+            'doghnsexclude'
+        ));
 
-        $this->allow(self::ROLENAME_MODERATOR, 'default_moderation',
-            array(
-                'index'
-            )
-        );
+        $this->allow(self::ROLENAME_MODERATOR, 'default_moderation', array(
+            'index'
+        ));
 
         $this->allow(self::ROLENAME_COOKIEUSER, 'default_product', array(
             'edit',
@@ -261,37 +267,44 @@ class Default_Plugin_AclRules extends Zend_Acl
             'deletepploadfiles',
             'updatepackagetype',
             'updatearchitecture',
-            
+
         ), new Default_Plugin_Acl_IsProjectOwnerAssertion());
 
         // resource default_support
-        $this->allow(self::ROLENAME_COOKIEUSER, 'default_support',
-            array('index','pay', 'paymentok', 'paymentcancel'));
+        $this->allow(self::ROLENAME_COOKIEUSER, 'default_support', array('index', 'pay', 'paymentok', 'paymentcancel'));
 
         // resource default_support
-        $this->allow(self::ROLENAME_COOKIEUSER, 'default_report',
-            array('comment','product', 'productfraud', 'productclone'));
-
+        $this->allow(self::ROLENAME_COOKIEUSER, 'default_report', array('comment', 'product', 'productfraud', 'productclone'));
 
         // resource default_widget
         $this->allow(self::ROLENAME_GUEST, 'default_widget', array('index', 'render'));
-        $this->allow(self::ROLENAME_COOKIEUSER, 'default_widget',
-            array('save', 'savedefault', 'config'),
-            new Default_Plugin_Acl_IsProjectOwnerAssertion()
-        );
+        $this->allow(self::ROLENAME_COOKIEUSER, 'default_widget', array('save', 'savedefault', 'config'),
+            new Default_Plugin_Acl_IsProjectOwnerAssertion());
 
         $this->allow(self::ROLENAME_COOKIEUSER, 'default_file', array(
-            'gitlink','link',
+            'gitlink',
+            'link',
         ), new Default_Plugin_Acl_IsProjectOwnerAssertion());
 
         // resource default_user
-        $this->allow(self::ROLENAME_GUEST, 'default_user', array('index', 'aboutme', 'share', 'report', 'about','tooltip', 'avatar'));
+        $this->allow(self::ROLENAME_GUEST, 'default_user', array('index', 'aboutme', 'share', 'report', 'about', 'tooltip', 'avatar'));
 
-        $this->allow(self::ROLENAME_COOKIEUSER, 'default_user',
-            array('follow', 'unfollow', 'settings', 'products', 'news', 'activities', 'payments', 'income', 'payout', 'plings', 'downloadhistory','likes'));
+        $this->allow(self::ROLENAME_COOKIEUSER, 'default_user', array(
+            'follow',
+            'unfollow',
+            'settings',
+            'products',
+            'news',
+            'activities',
+            'payments',
+            'income',
+            'payout',
+            'plings',
+            'downloadhistory',
+            'likes'
+        ));
 
-        $this->allow(self::ROLENAME_COOKIEUSER, 'default_tag',
-            array('filter', 'add', 'del', 'assign', 'remove'));
+        $this->allow(self::ROLENAME_COOKIEUSER, 'default_tag', array('filter', 'add', 'del', 'assign', 'remove'));
     }
 
 }
