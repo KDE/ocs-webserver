@@ -10,6 +10,12 @@ header {
 }
 
 #user-dropdown {
+  margin-bottom: 2px;
+
+  .dropdown-toggle {
+    padding: 0 5px;
+    .transition();
+  }
 
   .dropdown-menu {
     width: 300px;
@@ -47,6 +53,59 @@ header {
 
     #main-seperator {
       margin-top: 0;
+    }
+  }
+}
+
+#user-context-dropdown-container {
+  margin-bottom: 2px;
+
+  .dropdown-toggle {
+    padding: 0 5px;
+    .transition();    
+  }
+
+  .dropdown-menu {
+    column-count: 3;
+    padding: 5px;
+
+    li {
+      height: 90px;
+      padding: 5px;
+
+      a {
+        display: block;
+        width:100%;
+        height: 100%;
+      }
+
+      &#opendesktop-link-item {
+
+        a {
+          background-size: 414px 73px;
+          background-image: url(https://www.opendesktop.org/images_sys/store_opendesktop/logo.png);
+          background-repeat: no-repeat;
+          background-position-y: 5px;
+        }
+      }
+
+      &#discourse-link-item {
+
+        a {
+          background-size: cover;
+          background-image: url('../img/logo-discourse.png');
+        }
+      }
+
+      &#gitlab-link-item {
+
+        a {
+          background-size: 76px;
+          background-image: url(../img/logo-gitlab.png);
+          background-repeat: no-repeat;
+          background-position-y: 5px;
+        }
+      }
     }
   }
 }

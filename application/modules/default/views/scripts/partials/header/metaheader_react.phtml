@@ -136,10 +136,23 @@ $profile_image_url = $loginMember->profile_image_url;
                <li><a  id="plingList" href="/plings" class="popuppanel"> What are Plings? </a> </li>
                <li><a  id="ocsapiContent" href="/partials/ocsapicontent.phtml" class="popuppanel"> API </a> </li>
                <li> <a id="aboutContent" href="/partials/about.phtml" class="popuppanel">About </a>   </li>
+               <li id="user-context-dropdown-container">
+                 <div class="dropdown" id="user-dropdown">
+                   <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                     <span class="glyphicon glyphicon-th"></span>
+                     <span class="caret"></span>
+                   </button>
+                   <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu2">
+                     <li id="opendesktop-link-item"><a href="http://www.opendesktop.org"></a></li>
+                     <li id="discourse-link-item"><a href="#"></a></li>
+                     <li id="gitlab-link-item"><a href="#"></a></li>
+                   </ul>
+                 </div>
+               </li>
                <li id="user-dropdown-container">
                  <div class="dropdown" id="user-dropdown">
                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                     User
+                     <span class="glyphicon glyphicon-user"></span>
                      <span class="caret"></span>
                    </button>
                    <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
