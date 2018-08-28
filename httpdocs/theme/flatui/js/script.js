@@ -891,7 +891,7 @@ var PartialsReview = (function () {
                     } else {
                         $('#review-product-modal').find('input#voteup').val(2);
                         $('#review-product-modal').find('#votelabel').empty()
-                            .append('<a class="btn btn-danger active" style="line-height: 10px;"><span class="fa fa-minus"></span></a> Add Comment (min. 5 char): ');
+                            .append('<a class="btn btn-danger active" style="line-height: 10px;"><span class="fa fa-minus"></span></a> Add Comment (min. 5 char) <span style="font-size:10px; display:block"> Please explain the reason for downvote to help the creator to make it better </span> ');
                         $('#review-product-modal').find('#commenttext').val('-');
                         $('#review-product-modal').find('#commenttext').removeAttr("disabled");
                         $('#review-product-modal').find(':submit').removeAttr("disabled").css("display", "block");
