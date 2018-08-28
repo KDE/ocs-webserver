@@ -1217,15 +1217,19 @@ class Pagination extends React.Component {
   }
 
   componentDidMount() {
-    const itemsPerPage = 1000;
+    console.log('paginstion - component did mount');
+    console.log(store.getState());
+    const itemsPerPage = 50;
     const numPages = Math.ceil(this.props.pagination.totalcount / itemsPerPage);
     const pagination = productHelpers.generatePaginationObject(numPages, window.location.pathname, this.props.currentCategoy, this.props.filters.order, this.props.pagination.page);
-    this.setState({ pagination: pagination });
+    this.setState({ pagination: pagination }, function () {
+      console.log(pagination);
+    });
   }
 
   render() {
     let paginationDisplay;
-    if (this.state.pagination && this.props.pagination.totalcount > 1000) {
+    if (this.state.pagination && this.props.pagination.totalcount > 50) {
       const pagination = this.state.pagination.map((pi, index) => {
 
         let numberDisplay;
