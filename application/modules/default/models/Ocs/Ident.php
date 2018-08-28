@@ -180,6 +180,9 @@ class Default_Model_Ocs_Ident
         $connection = $this->getServerConnection();
         $member_data = $this->getMemberData($member_id);
         $entry = $this->getEntry($member_data, $connection);
+        if (empty($entry)) {
+            throw new Zend_Exception('member does not exist');
+        }
         $password = '{MD5}' . base64_encode(pack("H*", $member_data['password']));
         Zend_Ldap_Attribute::setAttribute($entry, 'userPassword', $password);
         //Zend_Ldap_Attribute::setPassword($entry,

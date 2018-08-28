@@ -68,6 +68,8 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
             LEFT JOIN `member_email` AS `me` ON `me`.`email_member_id` = `m`.`member_id` AND `me`.`email_primary` = 1
             LEFT JOIN `member_external_id` AS `mei` ON `mei`.`member_id` = `m`.`member_id`
             WHERE `m`.`is_active` = 1 AND `m`.`is_deleted` = 0 AND `me`.`email_checked` IS NOT NULL AND `me`.`email_deleted` = 0 # AND (me.email_address like '%opayq%' OR m.username like '%rvs%')
+            #  AND `me`.`email_address` = 'info@dschinnweb.de'
+            # AND `m`.`member_id` > 464086 
             ORDER BY `m`.`member_id` ASC
             # LIMIT 200
         ";
@@ -88,6 +90,7 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
     {
         // only usernames which are valid in github/gitlab
         $usernameValidChars = new Zend_Validate_Regex('/^(?=.{3,40}$)(?![-_.])(?!.*[-_.]{2})[a-zA-Z0-9._-]+(?<![-_.])$/');
+        $emailValidate = new Zend_Validate_EmailAddress();
         $modelOpenCode = new Default_Model_Ocs_OpenCode(Zend_Registry::get('config')->settings->server->opencode);
 
         while ($member = $members->fetch()) {
@@ -95,14 +98,19 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
                 file_put_contents($this->errorlogfile, print_r($member, true) . "user name validation error". "\n\n" , FILE_APPEND);
                 continue;
             }
-            file_put_contents($this->logfile, print_r($member, true), FILE_APPEND);
+            if (false === $emailValidate->isValid($member["email_address"])) {
+                file_put_contents($this->errorlogfile, print_r($member, true) . "email validation error". "\n\n" , FILE_APPEND);
+                continue;
+            }
+            file_put_contents($this->logfile, Zend_Json::encode($member) . "\n", FILE_APPEND);
             try {
                 $modelOpenCode->exportUser($member);
             } catch (Exception $e) {
                 Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
             }
-            $messages = $modelOpenCode->getMessages();
-            file_put_contents($this->logfile, print_r($messages, true), FILE_APPEND);
+            foreach ($modelOpenCode->getMessages() as $message) {
+                file_put_contents($this->logfile, $message . "\n", FILE_APPEND);
+            }
         }
 
         return true;

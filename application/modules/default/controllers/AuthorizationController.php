@@ -72,14 +72,17 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             return;
         }
 
-        Zend_Registry::get('logger')->info(__METHOD__ . PHP_EOL . ' - authentication attempt on host: '
-            . Zend_Registry::get('store_host') . PHP_EOL . ' - param redirect: ' . $this->getParam('redirect') . PHP_EOL
-            . ' - from ip: ' . $this->_request->getClientIp())
-        ;
+        Zend_Registry::get('logger')->info(__METHOD__
+            . PHP_EOL . ' - authentication attempt on host: ' . Zend_Registry::get('store_host')
+            . PHP_EOL . ' - param redirect: ' . $this->getParam('redirect')
+            . PHP_EOL . ' - from ip: ' . $this->_request->getClientIp()
+        );
 
         if (false === $formLogin->isValid($_POST)) { // form not valid
-            Zend_Registry::get('logger')->info(__METHOD__ . PHP_EOL . ' - ip: ' . $this->_request->getClientIp() . PHP_EOL
-                . ' - form not valid:' . PHP_EOL . print_r($formLogin->getMessages(), true))
+            Zend_Registry::get('logger')->info(__METHOD__
+                . PHP_EOL . ' - ip: ' . $this->_request->getClientIp()
+                . PHP_EOL . ' - form not valid:'
+                . PHP_EOL . print_r($formLogin->getMessages(), true))
             ;
 
             $this->view->form = $formLogin;
@@ -94,9 +97,11 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         $authResult = $authModel->authenticateUser($values['mail'], $values['password'], $values['remember_me']);
 
         if (false == $authResult->isValid()) { // authentication fail
-            Zend_Registry::get('logger')->info(__METHOD__ . PHP_EOL . ' - ip: ' . $this->_request->getClientIp() . PHP_EOL
-                . ' - authentication fail: ' . PHP_EOL . print_r($authResult->getMessages(), true))
-            ;
+            Zend_Registry::get('logger')->info(__METHOD__
+                . PHP_EOL . ' - ip: ' . $this->_request->getClientIp()
+                . PHP_EOL . ' - authentication fail: '
+                . PHP_EOL . print_r($authResult->getMessages(), true)
+            );
             $this->view->errorText = 'index.login.error.auth';
             $this->view->form = $formLogin;
             $this->view->error = 1;
@@ -147,16 +152,20 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             $this->_helper->json(array('status' => 'ok', 'message' => 'Already logged in.'));
         }
 
-        Zend_Registry::get('logger')->info(__METHOD__ . PHP_EOL . ' - token: ' . $this->getParam('token') . PHP_EOL . ' - host: '
-            . Zend_Registry::get('store_host') . PHP_EOL . ' - ip: ' . $this->_request->getClientIp())
-        ;
+        Zend_Registry::get('logger')->info(__METHOD__
+            . PHP_EOL . ' - token: ' . $this->getParam('token')
+            . PHP_EOL . ' - host: ' . Zend_Registry::get('store_host')
+            . PHP_EOL . ' - ip: ' . $this->_request->getClientIp()
+        );
 
         $modelAuthToken = new Default_Model_SingleSignOnToken();
         $token_data = $modelAuthToken->getData($this->getParam('token'));
         if (false === $token_data) {
-            Zend_Registry::get('logger')->warn(__METHOD__ . PHP_EOL . ' - Login failed: no token exists' . PHP_EOL . ' - host: '
-                . Zend_Registry::get('store_host') . PHP_EOL . ' - ip: ' . $this->_request->getClientIp())
-            ;
+            Zend_Registry::get('logger')->warn(__METHOD__
+                . PHP_EOL . ' - Login failed: no token exists'
+                . PHP_EOL . ' - host: ' . Zend_Registry::get('store_host')
+                . PHP_EOL . ' - ip: ' . $this->_request->getClientIp()
+            );
             $this->_helper->json(array('status' => 'fail', 'message' => 'Login failed.'));
         }
         $remember_me = isset($token_data['remember_me']) ? (boolean)$token_data['remember_me'] : false;
@@ -166,9 +175,11 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         $authResult = $modelAuth->authenticateUser($member_id, null, $remember_me, Local_Auth_AdapterFactory::LOGIN_SSO);
 
         if ($authResult->isValid()) {
-            Zend_Registry::get('logger')->info(__METHOD__ . PHP_EOL . ' - authentication successful: ' . PHP_EOL . ' - host: '
-                . Zend_Registry::get('store_host') . PHP_EOL . ' - ip: ' . $this->_request->getClientIp())
-            ;
+            Zend_Registry::get('logger')->info(__METHOD__
+                . PHP_EOL . ' - authentication successful: '
+                . PHP_EOL . ' - host: ' . Zend_Registry::get('store_host')
+                . PHP_EOL . ' - ip: ' . $this->_request->getClientIp()
+            );
             $this->getResponse()->setHeader('Access-Control-Allow-Origin', $this->getParam('origin'))
                  ->setHeader('Access-Control-Allow-Credentials', 'true')
                  ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
@@ -177,10 +188,12 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
 
             $this->_helper->json(array('status' => 'ok', 'message' => 'Login successful.'));
         } else {
-            Zend_Registry::get('logger')->info(__METHOD__ . PHP_EOL . ' - authentication fail: ' . PHP_EOL . ' - host: '
-                . Zend_Registry::get('store_host') . PHP_EOL . ' - ip: ' . $this->_request->getClientIp() . PHP_EOL
-                . print_r($authResult->getMessages(), true))
-            ;
+            Zend_Registry::get('logger')->info(__METHOD__
+                . PHP_EOL . ' - authentication fail: '
+                . PHP_EOL . ' - host: ' . Zend_Registry::get('store_host')
+                . PHP_EOL . ' - ip: ' . $this->_request->getClientIp()
+                . PHP_EOL . print_r($authResult->getMessages(), true)
+            );
             $this->_helper->json(array('status' => 'fail', 'message' => 'Login failed.'));
         }
     }
@@ -290,7 +303,20 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             return;
         }
 
+        Zend_Registry::get('logger')->info(__METHOD__
+            . PHP_EOL . ' - authentication attempt on host: ' . Zend_Registry::get('store_host')
+            . PHP_EOL . ' - param redirect: ' . $this->getParam('redirect')
+            . PHP_EOL . ' - from ip: ' . $this->_request->getClientIp()
+        );
+
         if (false === Default_Model_CsrfProtection::validateCsrfToken($_POST['login_csrf'])) {
+            Zend_Registry::get('logger')->info(__METHOD__
+                . PHP_EOL . ' - ip: ' . $this->_request->getClientIp()
+                . PHP_EOL . ' - validate CSRF token failed:'
+                . PHP_EOL . ' - received token: ' . $_POST['login_csrf']
+                . PHP_EOL . ' - stored token: ' . Default_Model_CsrfProtection::getCsrfToken()
+            );
+
             $this->view->error = 0;
             $this->view->formLogin = $formLogin;
             if ($this->_request->isXmlHttpRequest()) {
@@ -301,15 +327,12 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             return;
         }
 
-        Zend_Registry::get('logger')->info(__METHOD__ . PHP_EOL . ' - authentication attempt on host: '
-            . Zend_Registry::get('store_host') . PHP_EOL . ' - param redirect: ' . $this->getParam('redirect') . PHP_EOL
-            . ' - from ip: ' . $this->_request->getClientIp())
-        ;
-
         if (false === $formLogin->isValid($_POST)) { // form not valid
-            Zend_Registry::get('logger')->info(__METHOD__ . PHP_EOL . ' - ip: ' . $this->_request->getClientIp() . PHP_EOL
-                . ' - form not valid:' . PHP_EOL . print_r($formLogin->getMessages(), true))
-            ;
+            Zend_Registry::get('logger')->info(__METHOD__
+                . PHP_EOL . ' - ip: ' . $this->_request->getClientIp()
+                . PHP_EOL . ' - form not valid:'
+                . PHP_EOL . print_r($formLogin->getMessages(), true)
+            );
             $this->view->formLogin = $formLogin;
             $this->view->errorText = 'index.login.error.auth';
             $this->view->error = 1;
@@ -327,9 +350,13 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         $authResult = $authModel->authenticateUser($values['mail'], $values['password'], $values['remember_me']);
 
         if (false == $authResult->isValid()) { // authentication fail
-            Zend_Registry::get('logger')->info(__METHOD__ . PHP_EOL . ' - ip: ' . $this->_request->getClientIp() . PHP_EOL
-                . ' - authentication fail: ' . PHP_EOL . print_r($authResult->getMessages(), true))
-            ;
+            Zend_Registry::get('logger')->info(__METHOD__
+                . PHP_EOL . ' - user: ' . $values['mail']
+                . PHP_EOL . ' - remember_me: ' . $values['remember_me']
+                . PHP_EOL . ' - ip: ' . $this->_request->getClientIp()
+                . PHP_EOL . ' - authentication fail: '
+                . PHP_EOL . print_r($authResult->getMessages(), true)
+            );
 
             if ($authResult->getCode() == Local_Auth_Result::MAIL_ADDRESS_NOT_VALIDATED) {
                 $session = new Zend_Session_Namespace();
@@ -353,9 +380,11 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             return;
         }
 
-        Zend_Registry::get('logger')->info(__METHOD__ . PHP_EOL . ' - authentication successful.' . PHP_EOL . ' - auth_user: '
-            . print_r($values['mail'], true) . PHP_EOL . ' - ip: ' . $this->_request->getClientIp())
-        ;
+        Zend_Registry::get('logger')->info(__METHOD__
+            . PHP_EOL . ' - authentication successful.'
+            . PHP_EOL . ' - auth_user: ' . print_r($values['mail'], true)
+            . PHP_EOL . ' - ip: ' . $this->_request->getClientIp()
+        );
 
         $auth = Zend_Auth::getInstance();
         $userId = $auth->getStorage()->read()->member_id;
