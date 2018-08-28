@@ -138,17 +138,11 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         $filter['order'] = preg_replace('/[^-a-zA-Z0-9_]/', '', $this->getParam('ord', self::DEFAULT_ORDER));
 
         $page = (int)$this->getParam('page', 1);
-        if ($this->hasParam('new') && $this->getParam("new") == 1) {                 
-            $pageLimit = 1000;    
-        }else{
-            $pageLimit = 10;    
-        }
-        
-        $requestedElements = $this->fetchRequestedElements($filter, $pageLimit, ($page - 1) * $pageLimit);        
-       
-        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
-        if($storeConfig->layout_explore && $storeConfig->isRenderReact()){           
                 
+        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
+        if($storeConfig->layout_explore && $storeConfig->isRenderReact()){     
+            $pageLimit = 50;         
+            $requestedElements = $this->fetchRequestedElements($filter, $pageLimit, ($page - 1) * $pageLimit);                       
             $this->view->productsJson =Zend_Json::encode($requestedElements['elements']);           
             $this->view->filtersJson = Zend_Json::encode($filter);
             $this->view->cat_idJson = Zend_Json::encode($inputCatId);
@@ -159,8 +153,10 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
             $this->view->commentsJson = Zend_Json::encode($comments);
             $modelCategory = new Default_Model_ProjectCategory();            
             $this->view->categoriesJson = Zend_Json::encode($modelCategory->fetchTreeForView());   
-            $this->_helper->viewRenderer('index-react');              
-          
+            $this->_helper->viewRenderer('index-react');                        
+        }else{
+            $pageLimit = 10;    
+            $requestedElements = $this->fetchRequestedElements($filter, $pageLimit, ($page - 1) * $pageLimit);       
         }
         
         $paginator = Local_Paginator::factory($requestedElements['elements']);
