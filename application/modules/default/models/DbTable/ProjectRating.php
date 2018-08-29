@@ -112,7 +112,7 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
      * @param int|null $msg comment    
      */
     public function rateForProject($projectId, $member_id, $userRating, $msg )
-    {
+    {        
         $userLikeIt = $userRating == 1 ? 1 : 0;
         $userDislikeIt = $userRating == 2 ? 1 : 0;        
         $sql = 'select rating_id,comment_id from project_rating where project_id='.$projectId.'  and rating_active=1 and user_like='.$userLikeIt.' and user_dislike='.$userDislikeIt.' and member_id='.$member_id;      
@@ -121,6 +121,7 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
         $is_exist = (($result!=null) && ($result['rating_id']!=null))?true:false;
         $modelComments = new Default_Model_ProjectComments();
     
+        // Zend_Registry::get('logger')->info($msg);
         if($is_exist){
             // this do cancel old rating .  remove rating & deactive 
             $rating_id = $result['rating_id'];
@@ -179,6 +180,7 @@ class Default_Model_DbTable_ProjectRating extends Local_Model_Table
             
         }
 
+       
     }
 
     private function rateUpdateProject($projectId,$action)
