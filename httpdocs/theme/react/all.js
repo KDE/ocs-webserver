@@ -2195,18 +2195,22 @@ class ProductViewHeaderRatings extends React.Component {
 
   onRatingFormResponse(response, val) {
     const self = this;
-    jQuery.ajax({
-      data: {},
-      url: '/p/' + this.props.product.project_id + '/loadratings/',
-      method: 'get',
-      error: function (jqXHR, textStatus, errorThrown) {
-        self.setState({ errorMsg: textStatus + " " + errorThrown });
-        $('#ratings-form-modal').modal('hide');
-      },
-      success: function (response) {
-        store.dispatch(setProductRatings(response));
-        $('#ratings-form-modal').modal('hide');
-      }
+    const modalResponse = response;
+    this.setState({ errorMsg: '' }, function () {
+      jQuery.ajax({
+        data: {},
+        url: '/p/' + this.props.product.project_id + '/loadratings/',
+        method: 'get',
+        error: function (jqXHR, textStatus, errorThrown) {
+          self.setState({ errorMsg: textStatus + " " + errorThrown });
+          $('#ratings-form-modal').modal('hide');
+        },
+        success: function (response) {
+          store.dispatch(setProductRatings(response));
+          if (modalResponse.status !== "ok") self.setState({ errorMsg: modalResponse.status + " - " + modalResponse.message });
+          $('#ratings-form-modal').modal('hide');
+        }
+      });
     });
   }
 
@@ -2257,7 +2261,11 @@ class ProductViewHeaderRatings extends React.Component {
         )
       ),
       ratingsFormModalDisplay,
-      this.state.errorMsg
+      React.createElement(
+        'p',
+        { className: 'ratings-bar-error-msg-container' },
+        this.state.errorMsg
+      )
     );
   }
 }
@@ -2269,6 +2277,7 @@ class RatingsFormModal extends React.Component {
       action: this.props.action
     };
     this.submitRatingForm = this.submitRatingForm.bind(this);
+    this.onTextAreaInputChange = this.onTextAreaInputChange.bind(this);
   }
 
   componentDidMount() {
@@ -2283,6 +2292,10 @@ class RatingsFormModal extends React.Component {
     });
   }
 
+  onTextAreaInputChange(e) {
+    this.setState({ text: e.target.value });
+  }
+
   submitRatingForm() {
     this.setState({ loading: true }, function () {
       const self = this;
@@ -2292,6 +2305,8 @@ class RatingsFormModal extends React.Component {
       } else {
         v = '2';
       }
+
+      console.log(this.state.text);
 
       jQuery.ajax({
         data: {
@@ -2310,7 +2325,6 @@ class RatingsFormModal extends React.Component {
           self.setState({ msg: msg });
         },
         success: function (response) {
-          console.log(response);
           self.props.onRatingFormResponse(response, v);
         }
       });
@@ -2343,7 +2357,7 @@ class RatingsFormModal extends React.Component {
           'Close'
         );
       } else if (this.state.text) {
-        textAreaDisplay = React.createElement('textarea', { defaultValue: this.state.text, className: 'form-control' });
+        textAreaDisplay = React.createElement('textarea', { onChange: this.onTextAreaInputChange, defaultValue: this.state.text, className: 'form-control' });
         if (this.state.loading !== true) {
 
           if (this.state.msg) {
