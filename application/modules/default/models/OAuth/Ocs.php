@@ -53,8 +53,9 @@ class Default_Model_OAuth_Ocs implements Default_Model_OAuth_Interface
      * Default_Model_Oauth_Ocs constructor.
      *
      * @param Zend_Db_Adapter_Abstract|null $dbAdapter
-     * @param null $tableName
-     * @param Zend_Config $config
+     * @param null                          $tableName
+     * @param Zend_Config                   $config
+     *
      * @throws Zend_Exception
      * @throws Zend_Session_Exception
      */
@@ -75,7 +76,7 @@ class Default_Model_OAuth_Ocs implements Default_Model_OAuth_Interface
             throw new Zend_Exception('No config present');
         }
 
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - config: ' . print_r($this->config->toArray(), true));
+        // Zend_Registry::get('logger')->debug(__METHOD__ . ' - config: ' . print_r($this->config->toArray(), true));
 
         $this->uri_auth = $this->config->authorize_url;
         $this->uri_token = $this->config->token_url;
@@ -89,6 +90,7 @@ class Default_Model_OAuth_Ocs implements Default_Model_OAuth_Interface
 
     /**
      * @param null $redirectUrlAfterSuccess
+     *
      * @throws Zend_Cache_Exception
      * @throws Zend_Exception
      */
@@ -97,7 +99,8 @@ class Default_Model_OAuth_Ocs implements Default_Model_OAuth_Interface
         $state_token = $this->generateToken('auth');
         $this->saveStateData($state_token, $redirectUrlAfterSuccess);
 
-        $requestUrl = $this->uri_auth . "?client_id={$this->client_id}&redirect_uri=" . urlencode($this->uri_callback) . "&scope=profile&state={$state_token}";
+        $requestUrl = $this->uri_auth . "?client_id={$this->client_id}&redirect_uri=" . urlencode($this->uri_callback)
+            . "&scope=profile&state={$state_token}";
 
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - redirectUrl: ' . print_r($requestUrl, true));
 
@@ -108,6 +111,7 @@ class Default_Model_OAuth_Ocs implements Default_Model_OAuth_Interface
 
     /**
      * @param $prefix_state
+     *
      * @return string
      */
     private function generateToken($prefix_state)
@@ -116,12 +120,14 @@ class Default_Model_OAuth_Ocs implements Default_Model_OAuth_Interface
         if (false == empty($prefix_state)) {
             $prefix = $prefix_state . self::PREFIX_SEPARATOR;
         }
+
         return $prefix . Local_Tools_UUID::generateUUID();
     }
 
     /**
-     * @param $token
+     * @param      $token
      * @param null $redirect
+     *
      * @return bool
      * @throws Zend_Cache_Exception
      * @throws Zend_Exception
@@ -130,11 +136,13 @@ class Default_Model_OAuth_Ocs implements Default_Model_OAuth_Interface
     {
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
+
         return $cache->save(array('redirect' => $redirect), $token, array('auth', 'github'), 120);
     }
 
     /**
      * @param array $http_params
+     *
      * @return null|string
      * @throws Zend_Exception
      */
@@ -151,6 +159,7 @@ class Default_Model_OAuth_Ocs implements Default_Model_OAuth_Interface
         $result = $this->isValidStateCode($session_state_token);
         if ($result === false) {
             $this->connected = false;
+
             return false;
         }
 
@@ -161,13 +170,15 @@ class Default_Model_OAuth_Ocs implements Default_Model_OAuth_Interface
         }
 
         $this->redirect = $this->getRedirectFromState($session_state_token);
-//        $this->clearStateToken($session_state_token);
+
+        //        $this->clearStateToken($session_state_token);
 
         return $this->access_token;
     }
 
     /**
      * @param $session_state
+     *
      * @return bool
      * @throws Zend_Exception
      */
@@ -180,15 +191,20 @@ class Default_Model_OAuth_Ocs implements Default_Model_OAuth_Interface
         /** @var Zend_Cache_Backend_Apc $cache */
         $cache = Zend_Registry::get('cache');
         if (false == $cache->test($session_state)) {
-            Zend_Registry::get('logger')->err(__METHOD__ . ' - Authentication failed. OAuth provider send a token that does not match.');
+            Zend_Registry::get('logger')->err(__METHOD__
+                . ' - Authentication failed. OAuth provider send a token that does not match.')
+            ;
+
             return false;
         }
+
         return true;
     }
 
     /**
      * @param string $code
-     * @param $state_token
+     * @param        $state_token
+     *
      * @return null|string
      * @throws Zend_Exception
      */
@@ -197,11 +213,11 @@ class Default_Model_OAuth_Ocs implements Default_Model_OAuth_Interface
         $response = $this->requestHttpAccessToken($code, $state_token);
         $data = $this->parseResponse($response);
 
-        Zend_Registry::getInstance()->get('logger')->debug(__METHOD__ . ' - response for post request\n' . print_r($data,
-                true));
+        Zend_Registry::getInstance()->get('logger')->debug(__METHOD__ . ' - response for post request\n' . print_r($data, true));
 
         if ($response->getStatus() != 200) {
-            throw new Zend_Exception('Authentication failed. OAuth provider send error message: ' . $data['error'] . ' : ' . $data['error_description']);
+            throw new Zend_Exception('Authentication failed. OAuth provider send error message: ' . $data['error'] . ' : '
+                . $data['error_description']);
         }
 
         return (array_key_exists('access_token', $data)) ? $data['access_token'] : null;
@@ -210,6 +226,7 @@ class Default_Model_OAuth_Ocs implements Default_Model_OAuth_Interface
     /**
      * @param $request_code
      * @param $state_token
+     *
      * @return Zend_Http_Response
      * @throws Zend_Exception
      * @throws Zend_Http_Client_Exception
@@ -220,35 +237,40 @@ class Default_Model_OAuth_Ocs implements Default_Model_OAuth_Interface
         $httpClient->setMethod(Zend_Http_Client::POST);
         $httpClient->setHeaders('Accept', 'application/json');
         $httpClient->setParameterPost(array(
-            'client_id' => $this->client_id,
+            'client_id'     => $this->client_id,
             'client_secret' => $this->client_secret,
-            'code' => $request_code,
-            'redirect_uri' => $this->uri_callback,
-            'state' => $state_token,
-            'grant_type' => 'authorization_code'
+            'code'          => $request_code,
+            'redirect_uri'  => $this->uri_callback,
+            'state'         => $state_token,
+            'grant_type'    => 'authorization_code'
         ));
 
         $response = $httpClient->request();
 
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - request: \n' . $httpClient->getLastRequest());
-        Zend_Registry::getInstance()->get('logger')->debug(__METHOD__ . ' - response for post request\n' . $response->getHeadersAsString());
+        Zend_Registry::getInstance()->get('logger')->debug(__METHOD__ . ' - response for post request\n'
+            . $response->getHeadersAsString())
+        ;
 
         return $response;
     }
 
     /**
      * @param Zend_Http_Response $response
+     *
      * @return mixed
      * @throws Zend_Json_Exception
      */
     protected function parseResponse(Zend_Http_Response $response)
     {
         $data = Zend_Json::decode($response->getBody());
+
         return $data;
     }
 
     /**
      * @param $session_state_token
+     *
      * @return mixed|null
      * @throws Zend_Exception
      */
@@ -257,6 +279,7 @@ class Default_Model_OAuth_Ocs implements Default_Model_OAuth_Interface
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
         $data = $cache->load($session_state_token);
+
         return (is_array($data) AND array_key_exists('redirect', $data)) ? $data['redirect'] : null;
     }
 
@@ -278,6 +301,7 @@ class Default_Model_OAuth_Ocs implements Default_Model_OAuth_Interface
             $authModel->storeAuthSessionDataByIdentity($this->memberData['member_id']);
             $authModel->updateRememberMe(true);
             $authModel->updateUserLastOnline('member_id', $this->memberData['member_id']);
+
             return $authResult;
         }
 
@@ -286,8 +310,10 @@ class Default_Model_OAuth_Ocs implements Default_Model_OAuth_Interface
                 array('A record with the supplied identity could not be found.'));
         }
 
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - error while authenticate user from oauth provider: ' .
-            implode(",\n", $authResult->getMessages()));
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - error while authenticate user from oauth provider: ' . implode(",\n",
+                $authResult->getMessages()))
+        ;
+
         return $authResult;
     }
 
@@ -304,21 +330,26 @@ class Default_Model_OAuth_Ocs implements Default_Model_OAuth_Interface
         $httpClient->setHeaders('Accept', 'application/json');
         $response = $httpClient->request();
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - last request: \n' . $httpClient->getLastRequest());
-        Zend_Registry::getInstance()->get('logger')->debug(__METHOD__ . ' - response from post request\n' . $response->getHeadersAsString());
+        Zend_Registry::getInstance()->get('logger')->debug(__METHOD__ . ' - response from post request\n'
+            . $response->getHeadersAsString())
+        ;
         $data = $this->parseResponse($response);
         Zend_Registry::getInstance()->get('logger')->debug(__METHOD__ . ' - parsed response from post request\n' . print_r($data,
-                true));
+                true))
+        ;
         if ($response->getStatus() > 200) {
             throw new Zend_Exception('error while request users data');
         }
         if (isset($data['email'])) {
             return $data['email'];
         }
+
         return '';
     }
 
     /**
      * @param $userEmail
+     *
      * @return Zend_Auth_Result
      * @throws Zend_Exception
      */
@@ -344,12 +375,13 @@ class Default_Model_OAuth_Ocs implements Default_Model_OAuth_Interface
         }
         $this->memberData = array_shift($resultSet);
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - this->memberData: ' . print_r($this->memberData, true));
-        return $this->createAuthResult(Zend_Auth_Result::SUCCESS, $userEmail,
-            array('Authentication successful.'));
+
+        return $this->createAuthResult(Zend_Auth_Result::SUCCESS, $userEmail, array('Authentication successful.'));
     }
 
     /**
      * @param $userEmail
+     *
      * @return array
      * @throws Zend_Exception
      */
@@ -366,13 +398,15 @@ class Default_Model_OAuth_Ocs implements Default_Model_OAuth_Interface
 
         $this->_db->getProfiler()->setEnabled(true);
         $resultSet = $this->_db->fetchAll($sql, array(
-            'active' => Default_Model_DbTable_Member::MEMBER_ACTIVE,
+            'active'  => Default_Model_DbTable_Member::MEMBER_ACTIVE,
             'deleted' => Default_Model_DbTable_Member::MEMBER_NOT_DELETED,
-            'login' => Default_Model_DbTable_Member::MEMBER_LOGIN_LOCAL,
-            'mail' => $userEmail
+            'login'   => Default_Model_DbTable_Member::MEMBER_LOGIN_LOCAL,
+            'mail'    => $userEmail
         ));
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - ResultSet: ' . print_r($resultSet,true));
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - sql take seconds: ' . $this->_db->getProfiler()->getLastQueryProfile()->getElapsedSecs());
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - ResultSet: ' . print_r($resultSet, true));
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - sql take seconds: ' . $this->_db->getProfiler()->getLastQueryProfile()
+                                                                                            ->getElapsedSecs())
+        ;
         $this->_db->getProfiler()->setEnabled(false);
 
         return $resultSet;
@@ -380,6 +414,7 @@ class Default_Model_OAuth_Ocs implements Default_Model_OAuth_Interface
 
     /**
      * @param $userEmail
+     *
      * @return array
      * @throws Zend_Exception
      */
@@ -396,12 +431,14 @@ class Default_Model_OAuth_Ocs implements Default_Model_OAuth_Interface
 
         $this->_db->getProfiler()->setEnabled(true);
         $resultSet = $this->_db->fetchAll($sql, array(
-            'active' => Default_Model_DbTable_Member::MEMBER_ACTIVE,
-            'deleted' => Default_Model_DbTable_Member::MEMBER_NOT_DELETED,
-            'login' => Default_Model_DbTable_Member::MEMBER_LOGIN_LOCAL,
+            'active'   => Default_Model_DbTable_Member::MEMBER_ACTIVE,
+            'deleted'  => Default_Model_DbTable_Member::MEMBER_NOT_DELETED,
+            'login'    => Default_Model_DbTable_Member::MEMBER_LOGIN_LOCAL,
             'username' => $userEmail
         ));
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - sql take seconds: ' . $this->_db->getProfiler()->getLastQueryProfile()->getElapsedSecs());
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - sql take seconds: ' . $this->_db->getProfiler()->getLastQueryProfile()
+                                                                                            ->getElapsedSecs())
+        ;
         $this->_db->getProfiler()->setEnabled(false);
 
         return $resultSet;
@@ -411,19 +448,17 @@ class Default_Model_OAuth_Ocs implements Default_Model_OAuth_Interface
      * @param $code
      * @param $identity
      * @param $messages
+     *
      * @return Zend_Auth_Result
      */
     protected function createAuthResult($code, $identity, $messages)
     {
-        return new Zend_Auth_Result(
-            $code,
-            $identity,
-            $messages
-        );
+        return new Zend_Auth_Result($code, $identity, $messages);
     }
 
     /**
      * @param $email
+     *
      * @return bool|Zend_Db_Table_Row_Abstract
      */
     public function findActiveMemberByEmail($email)
@@ -433,12 +468,14 @@ class Default_Model_OAuth_Ocs implements Default_Model_OAuth_Interface
         if (empty($member->member_id)) {
             return false;
         }
+
         return $member;
     }
 
     /**
-     * @param $access_token
+     * @param      $access_token
      * @param null $username
+     *
      * @return mixed
      * @throws Exception
      */
@@ -448,11 +485,12 @@ class Default_Model_OAuth_Ocs implements Default_Model_OAuth_Interface
 
         $modelToken = new Default_Model_DbTable_MemberToken();
         $rowToken = $modelToken->save(array(
-            'token_member_id' => $member_id,
-            'token_provider_name' => 'ocs_login',
-            'token_value' => $access_token,
+            'token_member_id'         => $member_id,
+            'token_provider_name'     => 'ocs_login',
+            'token_value'             => $access_token,
             'token_provider_username' => $username
         ));
+
         return $rowToken;
     }
 
@@ -465,19 +503,23 @@ class Default_Model_OAuth_Ocs implements Default_Model_OAuth_Interface
             $filterRedirect = new Local_Filter_Url_Decrypt();
             $redirect = $filterRedirect->filter($this->redirect);
             $this->redirect = null;
+
             return $redirect;
         }
+
         return false;
     }
 
     /**
      * @param $token_id
+     *
      * @return string
      * @throws Zend_Exception
      */
     public function authStartWithToken($token_id)
     {
-        $requestUrl = $this->uri_auth . "?client_id={$this->client_id}&redirect_uri=" . urlencode($this->uri_callback) . "&scope=profile&state={$token_id}&response_type=code";
+        $requestUrl = $this->uri_auth . "?client_id={$this->client_id}&redirect_uri=" . urlencode($this->uri_callback)
+            . "&scope=profile&state={$token_id}&response_type=code";
 
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - redirectUrl: ' . print_r($requestUrl, true));
 
@@ -494,6 +536,7 @@ class Default_Model_OAuth_Ocs implements Default_Model_OAuth_Interface
 
     /**
      * @param $token
+     *
      * @return bool
      * @throws Zend_Exception
      */
@@ -501,6 +544,7 @@ class Default_Model_OAuth_Ocs implements Default_Model_OAuth_Interface
     {
         /** @var Zend_Cache_Core $cache */
         $cache = Zend_Registry::get('cache');
+
         return $cache->remove($token);
     }
 
