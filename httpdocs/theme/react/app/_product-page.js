@@ -367,7 +367,7 @@ class RatingsFormModal extends React.Component {
         method:'post',
         error: function(){
           const msg = "Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.";
-          this.setState({msg:msg});
+          self.setState({msg:msg});
         },
         success: function(response){
           self.props.onRatingFormResponse(response,v);
