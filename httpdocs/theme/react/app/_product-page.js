@@ -264,9 +264,8 @@ class ProductViewHeaderRatings extends React.Component {
     });
   }
 
-  onRatingFormResponse(response,val){
+  onRatingFormResponse(modalResponse,val){
     const self = this;
-    const modalResponse = response;
     this.setState({errorMsg:''},function(){
       jQuery.ajax({
         data:{},
@@ -277,10 +276,14 @@ class ProductViewHeaderRatings extends React.Component {
           $('#ratings-form-modal').modal('hide');
         },
         success: function(response){
+          console.log('on rating form response');
           console.log(response);
           // const laplace_score = productHelpers.calculateProductLaplaceScore(response);
           store.dispatch(setProductRatings(response));
           if (modalResponse.status !== "ok") self.setState({errorMsg:modalResponse.status + " - " + modalResponse.message});
+          self.setState({laplace_score:modalResponse.laplace_score},function(){
+            console.log(this.state.laplace_score);
+          });
           $('#ratings-form-modal').modal('hide');
         }
       });
@@ -303,11 +306,8 @@ class ProductViewHeaderRatings extends React.Component {
       );
     }
 
-    let ratingsBarCss;
-    if (this.props.product.laplace_score < 50){
-      ratingsBarCss = 'red';
-    }
 
+    console.log(this.state.laplace_score);
 
     return (
       <div className="ratings-bar-container">
@@ -315,7 +315,7 @@ class ProductViewHeaderRatings extends React.Component {
           <i className="material-icons">remove</i>
         </div>
         <div className="ratings-bar-holder">
-          <div className={ratingsBarCss + " ratings-bar"} style={{"width":this.state.laplace_score + "%"}}></div>
+          <div className="green ratings-bar" style={{"width":this.state.laplace_score + "%"}}></div>
           <div className="ratings-bar-empty" style={{"width":(100 - this.state.laplace_score) + "%"}}></div>
         </div>
         <div className="ratings-bar-right" onClick={() => this.onRatingBtnClick('plus')}>
@@ -383,7 +383,6 @@ class RatingsFormModal extends React.Component {
           self.setState({msg:msg});
         },
         success: function(response){
-          console.log(response);
           self.props.onRatingFormResponse(response,v);
         }
       });
@@ -768,7 +767,7 @@ class ProductViewContent extends React.Component {
       )
     } else if (this.props.tab === 'ratings'){
       currentTabDisplay = (
-        <ProductViewRatingsTab
+        <ProductViewRatingsTabWrapper
           ratings={this.props.product.r_ratings}
         />
       );
@@ -1168,7 +1167,7 @@ class ProductViewRatingsTab extends React.Component {
   }
 
   render(){
-
+    console.log(this.props);
     const ratingsLikes = this.props.ratings.filter(this.filterLikes);
     const ratingsDislikes = this.props.ratings.filter(this.filterDislikes);
     const ratingsActive = this.props.ratings.filter(this.filterActive);
@@ -1219,6 +1218,24 @@ class ProductViewRatingsTab extends React.Component {
     )
   }
 }
+
+const mapStateToProductViewRatingsTabProps = (state) => {
+  const ratings = state.product.r_ratings;
+  return {
+    ratings
+  }
+}
+
+const mapDispatchToProductViewRatingsTabProps = (dispatch) => {
+  return {
+    dispatch
+  }
+}
+
+const ProductViewRatingsTabWrapper = ReactRedux.connect(
+  mapStateToProductViewRatingsTabProps,
+  mapDispatchToProductViewRatingsTabProps
+)(ProductViewRatingsTab);
 
 class RatingItem extends React.Component {
   constructor(props){
