@@ -123,6 +123,26 @@ window.productHelpers = (function(){
     return userRating;
   }
 
+  function calculateProductLaplaceScore(ratings){
+    let laplace_score = 0;
+    let upvotes = 0;
+    let downvotes = 0;
+    ratings.forEach(function(rating,index){
+      console.log(rating.active);
+      if (rating.rating_active === "1"){
+        console.log(rating.user_like);
+        if (rating.user_like === "1"){
+          upvotes += 1;
+        } else if (rating.user_like === "0") {
+          downvotes += 1;
+        }
+      }
+    });
+    laplace_score = (Math.round(((upvotes + 6) / ((upvotes + downvotes) + 12)),2) * 100);
+    console.log(laplace_score);
+    return laplace_score;
+  }
+
   return {
     getNumberOfProducts,
     generatePaginationObject,
@@ -130,6 +150,7 @@ window.productHelpers = (function(){
     getActiveRatingsNumber,
     getFilesSummary,
     checkIfLikedByUser,
-    getLoggedUserRatingOnProduct
+    getLoggedUserRatingOnProduct,
+    calculateProductLaplaceScore
   }
 }());

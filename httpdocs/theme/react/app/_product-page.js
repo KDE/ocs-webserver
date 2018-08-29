@@ -277,6 +277,8 @@ class ProductViewHeaderRatings extends React.Component {
           $('#ratings-form-modal').modal('hide');
         },
         success: function(response){
+          console.log(response);
+          // const laplace_score = productHelpers.calculateProductLaplaceScore(response);
           store.dispatch(setProductRatings(response));
           if (modalResponse.status !== "ok") self.setState({errorMsg:modalResponse.status + " - " + modalResponse.message});
           $('#ratings-form-modal').modal('hide');
