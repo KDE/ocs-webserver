@@ -177,13 +177,11 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
             if ($msg != '' && strlen($msg)>0) {
 
                 
-                $data = array();
-                $data['comment_target_id'] = (int)$this->getParam('p');
-                $data['comment_parent_id'] = (int)$this->getParam('i');
-                $data['comment_member_id'] = (int)$this->_authMember->member_id;
-                $data['comment_text'] = Default_Model_HtmlPurify::purify($this->getParam('msg'));
-        
-
+                // $data = array();
+                // $data['comment_target_id'] = (int)$this->getParam('p');
+                // $data['comment_parent_id'] = (int)$this->getParam('i');
+                // $data['comment_member_id'] = (int)$this->_authMember->member_id;
+                // $data['comment_text'] = Default_Model_HtmlPurify::purify($this->getParam('msg'));
              
                 $voteup = (int)$this->getParam('v');
 
@@ -202,13 +200,13 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
 
                 if($this->view->product){                    
                     //Send a notification to the owner
-                    $this->sendNotificationToOwner($this->view->product, $data['comment_text']);
+                    $this->sendNotificationToOwner($this->view->product, Default_Model_HtmlPurify::purify($this->getParam('msg')));
                    
                 }
             } 
            
 
-            $this->_helper->json(array('status' => $status, 'message' => $message, 'data' => ''));
+            $this->_helper->json(array('status' => $status, 'message' => $message, 'data' => '','laplace_score' =>$this->view->product->laplace_score));
         } else {
             $this->_helper->json(array('status' => 'error', 'message' => 'Only registered members with an active supporting can vote!', 'data' => ''));
         }
