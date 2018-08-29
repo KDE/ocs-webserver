@@ -33,14 +33,18 @@ class Backend_CpasswordController extends Local_Controller_Action_CliAbstract
         $packed = base64_encode(pack("H*", $encrypted));
         echo $encrypted;
         echo "\n";
+        echo "--- OCS => LDAP password type ---\n";
         echo $packed;
+        echo "\n";
         echo "\n";
         echo "--- HIVE password type ---\n";
         $encrypted = Local_Auth_Adapter_Ocs::getEncryptedPassword($password, Default_Model_DbTable_Member::PASSWORD_TYPE_HIVE);
-        $packed = base64_encode(pack("H*", $encrypted));
         echo $encrypted;
         echo "\n";
+        echo "--- HIVE => LDAP password type ---\n";
+        $packed = base64_encode(pack("H*", $encrypted));
         echo $packed;
+        echo "\n";
         echo "\n";
     }
 

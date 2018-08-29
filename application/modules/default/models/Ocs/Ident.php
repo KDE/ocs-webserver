@@ -181,7 +181,9 @@ class Default_Model_Ocs_Ident
         $member_data = $this->getMemberData($member_id);
         $entry = $this->getEntry($member_data, $connection);
         if (empty($entry)) {
-            throw new Zend_Exception('member does not exist');
+            Zend_Registry::get('logger')->info(__METHOD__ . ' - ldap entry for member does not exists. Going to create it.');
+            $this->createUser($member_id);
+            return;
         }
         $password = '{MD5}' . base64_encode(pack("H*", $member_data['password']));
         Zend_Ldap_Attribute::setAttribute($entry, 'userPassword', $password);
