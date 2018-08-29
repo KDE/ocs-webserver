@@ -2310,6 +2310,7 @@ class RatingsFormModal extends React.Component {
           self.setState({ msg: msg });
         },
         success: function (response) {
+          console.log(response);
           self.props.onRatingFormResponse(response, v);
         }
       });
