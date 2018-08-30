@@ -33,6 +33,17 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
         $this->auth = Zend_Auth::getInstance();
     }
 
+    public function indexAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $project_id = (int)$this->getParam('p');
+        $cmodel = new Default_Model_ProjectComments();
+        $list = $cmodel->getCommentTreeForProjectList($project_id);          
+        $this->_helper->json($list);
+    }
+    
+    
+
     public function addreplyAction()
     {
         $this->_helper->layout->disableLayout();
@@ -175,6 +186,13 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
 
              
                 $voteup = (int)$this->getParam('v');
+
+                // negative voting msg length > 5 
+                if($voteup ==2 && strlen($msg) < 5)
+                {
+                    $this->_helper->json(array('status' => 'error', 'message' => ' At least 5 chars. ', 'data' => ''));
+                    return;
+                }
                 $modelRating = new Default_Model_DbTable_ProjectRating();                
                 $modelRating->rateForProject($project_id, $this->_authMember->member_id, $voteup, $msg);
 
@@ -188,12 +206,7 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
                    
                 }
             } 
-            // 14.05.18 not allowed anymore
-            // else {
-            //     $voteup = (int)$this->getParam('v');
-            //     $modelRating = new Default_Model_DbTable_ProjectRating();
-            //     $modelRating->rateForProject($project_id, $this->_authMember->member_id, $voteup);
-            // }
+           
 
             $this->_helper->json(array('status' => $status, 'message' => $message, 'data' => ''));
         } else {

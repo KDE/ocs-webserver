@@ -22,7 +22,7 @@
 $helpProductUrl = new Default_View_Helper_BuildProductUrl();
 $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $helpImage = new Default_View_Helper_Image();
-$helpCategories = new Default_View_Helper_FetchCategoriesForProductAsString();
+//$helpCategories = new Default_View_Helper_FetchCategoriesForProductAsString();
 $helpTruncate = new Default_View_Helper_Truncate();
 $helpPrintDate = new Default_View_Helper_PrintDate();
 ?>
@@ -30,7 +30,7 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
 	<div class="row" style="margin-left: 0;margin-right: 0; ">
 		<?= Default_Model_HtmlPurify::purify($this->comment['title']) ?>
 		<span
-			style="display: block;" class="small"><?php echo $helpCategories->fetchCategoriesForProductAsString($this->comment['project_id']) ?></span>
+			style="display: block;" class="small"><?= $this->comment['catTitle'] ?></span>
 	</div>
 	<div class="row" style="margin-left: 0;margin-right: 0;">
 		<div class="userinfo">

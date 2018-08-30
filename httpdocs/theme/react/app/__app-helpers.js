@@ -69,7 +69,7 @@ window.appHelpers = (function(){
 
   function generateFilterUrl(location,currentCat){
     let link = {}
-    if (currentCat !== 0){
+    if (currentCat && currentCat !== 0){
       link.base = "/browse/cat/" + currentCat + "/ord/";
     } else {
       link.base = "/browse/ord/";
@@ -79,8 +79,15 @@ window.appHelpers = (function(){
   }
 
   function generateFileDownloadHash(file,env){
-    const timestamp = Date.now() + 3600;
-    const hash = md5(/*salt+*/file.collection_id+timestamp);
+    let salt;
+    if (env === "test"){
+      salt = "vBHnf7bbdhz120bhNsd530LsA2mkMvh6sDsCm4jKlm23D186Fj";
+    } else {
+      salt = "Kcn6cv7&dmvkS40Hna§4ffcvl=021nfMs2sdlPs123MChf4s0K";
+    }
+
+    const timestamp =  Math.floor((new Date().getTime() / 1000)+3600)
+    const hash = md5(salt,file.collection_id+timestamp);
     return hash;
     /*
     $salt = PPLOAD_DOWNLOAD_SECRET;

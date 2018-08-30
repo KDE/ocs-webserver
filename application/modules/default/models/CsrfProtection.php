@@ -52,6 +52,7 @@ class Default_Model_CsrfProtection
      * @param $hash
      *
      * @return bool
+     * @throws Zend_Exception
      * @throws Zend_Session_Exception
      */
     public static function validateCsrfToken($hash)
@@ -60,17 +61,19 @@ class Default_Model_CsrfProtection
 
         if (false === function_exists("hash_equals")) {
             $valid = self::hash_equals($session->crsf_token, $hash);
-            Zend_Registry::get('logger')->debug(__METHOD__ . ' - session csrf token: ' . print_r($session->crsf_token, true));
-            Zend_Registry::get('logger')->debug(__METHOD__ . ' - form csrf token: ' . print_r($hash, true));
-            Zend_Registry::get('logger')->debug(__METHOD__ . ' - crsf validation result: ' . print_r($valid, true));
+            Zend_Registry::get('logger')->debug(__METHOD__
+                . PHP_EOL . ' - session csrf token: ' . print_r($session->crsf_token, true)
+                . PHP_EOL . ' - form csrf token: ' . print_r($hash, true)
+                . PHP_EOL . ' - crsf validation result: ' . (($valid === true) ? 'true' : 'false'));
 
             return $valid;
         }
 
         $valid = hash_equals($session->crsf_token, $hash);
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - session csrf token: ' . print_r($session->crsf_token, true));
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - form csrf token: ' . print_r($hash, true));
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - crsf validation result: ' . print_r($valid, true));
+        Zend_Registry::get('logger')->debug(__METHOD__
+                . PHP_EOL . ' - session csrf token: ' . print_r($session->crsf_token, true)
+                . PHP_EOL . ' - form csrf token: ' . print_r($hash, true)
+                . PHP_EOL . ' - crsf validation result: ' . (($valid === true) ? 'true' : 'false'));
 
         return $valid;
     }

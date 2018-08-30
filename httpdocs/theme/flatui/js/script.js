@@ -237,7 +237,7 @@ var ImagePreview = {
         $('#profile-picture-background-preview').attr('src', $('#profile_image_url_bg').attr('value'));
         $(imageTarget).show();
         $('button#add-profile-picture-background').text('CHANGE PICTURE');
-        
+
     }
 };
 
@@ -559,7 +559,7 @@ var PlingsRedirect = (function () {
 
 })();
 
-   
+
 
 /** PRODUCT PAGE **/
 // tool tips
@@ -612,36 +612,36 @@ var OpendownloadfileWerbung= (function () {
             var timer;
             $('body').on('click', 'a.opendownloadfile', function (event) {
                 event.preventDefault();
-                var url = $(this).attr("href");                      
-                var username = $(this).attr("data-username");    
+                var url = $(this).attr("href");
+                var username = $(this).attr("data-username");
                 $.fancybox({
                     'hideOnContentClick': true,
-                    'autoScale': true,                    
-                    'scrolling' : 'no',            
+                    'autoScale': true,
+                    'scrolling' : 'no',
                     'cyclic': 'true',
                     'transitionIn': 'elastic',
                     'transitionOut': 'elastic',
                     'type': 'iframe',
                     'width':'1140',
-                    'iframe': {'scrolling': 'no'},            
-                    'autoSize':false,        
+                    'iframe': {'scrolling': 'no'},
+                    'autoSize':false,
                     helpers: {
                         overlay: {
                             locked: false
                         }
-                    },                    
+                    },
                     autoSize: true,
-                    href:'/ads?u='+username,                    
+                    href:'/ads?u='+username,
                     afterLoad:function(){
                         timer = window.setTimeout(function(){
                              window.location.href = url;
-                             //$.fancybox.close();        
-                        },10000);                      
+                             //$.fancybox.close();
+                        },10000);
                     },
-                    afterClose:function(){                           
+                    afterClose:function(){
                         window.clearTimeout(timer);
                     }
-                    
+
                 });
                 return false;
             });
@@ -698,12 +698,12 @@ var PartialsButtonHeartDetail = (function () {
                 var auth = $(this).attr("data-auth");
                 var toggle = $(this).data('toggle');
                 var pageFragment = $(this).attr("data-fragment");
-                
+
                 if (!auth) {
                     $('#like-product-modal').modal('show');
                     return;
                 }
-                
+
                 // product owner not allow to heart copy from voting....
                 var loginuser = $('#like-product-modal').find('#loginuser').val();
                 var productcreator = $('#like-product-modal').find('#productcreator').val();
@@ -716,35 +716,35 @@ var PartialsButtonHeartDetail = (function () {
                 }
 
               var spin = $('<span class="glyphicon glyphicon-refresh spinning" style="opacity: 0.6; z-index:1000;position: absolute; left:24px;top: 4px;"></span>');
-                 $(target).prepend(spin);              
+                 $(target).prepend(spin);
 
                 $.ajax({
                           url: url,
                           cache: false
                         })
-                      .done(function( response ) {                        
+                      .done(function( response ) {
                         $(target).find('.spinning').remove();
                         if(response.status =='error'){
                              $(target).html( response.msg );
                         }else{
-                            if(response.action=='delete'){             
-                                //$(target).find('.likelabel').html(response.cnt +' Likes');                   
+                            if(response.action=='delete'){
+                                //$(target).find('.likelabel').html(response.cnt +' Likes');
                                 $(target).find('.plingtext').html(response.cnt);
-                                $(target).find('.plingtext').addClass('heartnumberpurple'); 
-                                 $(target).find('.plingheart').removeClass('heartproject').addClass('heartgrey');       
-                                 $(target).find('.plingheart').removeClass('fa-heart').addClass('fa-heart-o');      
+                                $(target).find('.plingtext').addClass('heartnumberpurple');
+                                 $(target).find('.plingheart').removeClass('heartproject').addClass('heartgrey');
+                                 $(target).find('.plingheart').removeClass('fa-heart').addClass('fa-heart-o');
 
-                                                                                                                                                
-                            }else{                                
-                                //$(target).find('.likelabel').html(response.cnt +' Likes');       
-                                $(target).find('.plingtext').html(response.cnt);      
-                                //$(target).find('.plingtext').html(response.cnt+' Fans'); 
-                                $(target).find('.plingtext').removeClass('heartnumberpurple'); 
-                                $(target).find('.plingheart').removeClass('heartgrey').addClass('heartproject');        
-                                $(target).find('.plingheart').removeClass('fa-heart-o').addClass('fa-heart');                                                                                       
-                            }                                
+
+                            }else{
+                                //$(target).find('.likelabel').html(response.cnt +' Likes');
+                                $(target).find('.plingtext').html(response.cnt);
+                                //$(target).find('.plingtext').html(response.cnt+' Fans');
+                                $(target).find('.plingtext').removeClass('heartnumberpurple');
+                                $(target).find('.plingheart').removeClass('heartgrey').addClass('heartproject');
+                                $(target).find('.plingheart').removeClass('fa-heart-o').addClass('fa-heart');
+                            }
                         }
-                      }); 
+                      });
                 return false;
             });
         }
@@ -763,24 +763,24 @@ var PartialsButtonPlingProject = (function () {
 
             $('body').on('click', '.partialbuttonplingproject', function (event) {
                 event.preventDefault();
-                var url = $(this).attr("data-href");               
+                var url = $(this).attr("data-href");
                 var target = $(this).attr("data-target");
                 var auth = $(this).attr("data-auth");
                 var issupporter = $(this).attr("data-issupporter");
                 var toggle = $(this).data('toggle');
                 var pageFragment = $(this).attr("data-fragment");
-                
-                if (!auth) {                    
+
+                if (!auth) {
                     $('#like-product-modal').modal('show');
                     return;
                 }
-                
+
                 // product owner not allow to heart copy from voting....
                 var loginuser = $('#like-product-modal').find('#loginuser').val();
                 var productcreator = $('#like-product-modal').find('#productcreator').val();
                 if (loginuser == productcreator) {
                     // ignore
-                    
+
                     $('#like-product-modal').find('#votelabel').text('Project owner not allowed');
                     $('#like-product-modal').find('.modal-body').empty();
                     $('#like-product-modal').modal('show');
@@ -789,17 +789,17 @@ var PartialsButtonPlingProject = (function () {
 
                 if (!issupporter) {
                     // ignore
-                    $('#like-product-modal').find('#votelabel').html('<div style="width:420px;text-align:center">To pling a product and help the artist please consider becoming a supporter. Thanks!</br></br><a href="/support">Become a supporter</a></div>');                   
+                    $('#like-product-modal').find('#votelabel').html('<div style="width:420px;text-align:center">To pling a product and help the artist please consider becoming a supporter. Thanks!</br></br><a href="/support">Become a supporter</a></div>');
                     $('#like-product-modal').modal('show');
                     return;
-                }               
-                $(target).find('.plingnum').html('<span class="glyphicon glyphicon-refresh spinning"/>');    
+                }
+                $(target).find('.plingnum').html('<span class="glyphicon glyphicon-refresh spinning"/>');
                 $.ajax({
                           url: url,
                           cache: false
                         })
                       .done(function( response ) {
-                        
+
                         //$(target).find('.spinning').remove();
                         if(response.status =='error'){
                              $(target).html( response.msg );
@@ -808,24 +808,24 @@ var PartialsButtonPlingProject = (function () {
                                 //pling deleted
                                 if(response.cnt==0)
                                 {
-                                    $(target).find('.plingnum').html('Pling me');                               
+                                    $(target).find('.plingnum').html('Pling me');
                                 }else
                                 {
-                                    $(target).find('.plingnum').html(response.cnt+ ' Plings');                           
+                                    $(target).find('.plingnum').html(response.cnt+ ' Plings');
                                 }
-                                
+
                                 $(target).find('#plingbtn').attr('src','/images/system/pling-btn-normal.png');
                                 $(target).find('#plingbtn').attr('data-src','/images/system/pling-btn-normal.png');
-                                                                                             
+
                             }else{
                                 //pling inserted
-                                $(target).find('.plingnum').html(response.cnt+ ' Plings');                           
-                                $(target).find('#plingbtn').attr('src','/images/system/pling-btn-active.png');                                
-                                $(target).find('#plingbtn').attr('data-src','/images/system/pling-btn-active.png');                                
+                                $(target).find('.plingnum').html(response.cnt+ ' Plings');
+                                $(target).find('#plingbtn').attr('src','/images/system/pling-btn-active.png');
+                                $(target).find('#plingbtn').attr('data-src','/images/system/pling-btn-active.png');
                             }
-                                
+
                         }
-                      });                            
+                      });
                 return false;
             });
         }
@@ -855,7 +855,7 @@ var PartialsReview = (function () {
                 }
 
                 var userrate = $('#review-product-modal').find('#userrate').val();
-                // -1 = no rate yet. 0= dislike  1=like                                
+                // -1 = no rate yet. 0= dislike  1=like
 
                 if ($(this).hasClass("voteup")) {
                     if (userrate == 1) {
@@ -865,13 +865,13 @@ var PartialsReview = (function () {
                         //$('#review-product-modal').find(':submit').attr("disabled", "disabled").css("display", "none");
                         //$('#review-product-modal').find('#commenttext').attr("disabled", "disabled");
                         $('#review-product-modal').find(':submit').text("Remove Rating");
-                        
+
                     } else {
                         $('#review-product-modal').find('input#voteup').val(1);
                         $('#review-product-modal').find('#votelabel').empty()
                             .append('<a class="btn btn-success active" style="line-height: 10px;"><span class="fa fa-plus"></span></a> Add Comment (min. 1 char):');
                         $('#review-product-modal').find('#commenttext').val('+');
-                        
+
                         $('#review-product-modal').find(':submit').text("Rate Now");
                         $('#review-product-modal').find('#commenttext').removeAttr("disabled");
                         $('#review-product-modal').find(':submit').css("display", "block").removeAttr("disabled");
@@ -891,7 +891,7 @@ var PartialsReview = (function () {
                     } else {
                         $('#review-product-modal').find('input#voteup').val(2);
                         $('#review-product-modal').find('#votelabel').empty()
-                            .append('<a class="btn btn-danger active" style="line-height: 10px;"><span class="fa fa-minus"></span></a> Add Comment (min. 1 char): ');
+                            .append('<a class="btn btn-danger active" style="line-height: 10px;"><span class="fa fa-minus"></span></a> Add Comment (min. 5 char): ');
                         $('#review-product-modal').find('#commenttext').val('-');
                         $('#review-product-modal').find('#commenttext').removeAttr("disabled");
                         $('#review-product-modal').find(':submit').removeAttr("disabled").css("display", "block");
@@ -911,7 +911,6 @@ var PartialsReview = (function () {
     }
 })();
 
-
 var PartialsReviewDownloadHistory = (function () {
     return {
         setup: function () {
@@ -919,7 +918,7 @@ var PartialsReviewDownloadHistory = (function () {
                 event.preventDefault();
 
                 var userrate = $(this).attr("data-userrate");
-                // -1 = no rate yet. 0= dislike  1=like                                                                
+                // -1 = no rate yet. 0= dislike  1=like
                 $('#review-product-modal').find('#commenttext').val($(this).attr("data-comment"));
                 $('#review-product-modal').find('#form_p').val($(this).attr("data-project"));
 
@@ -948,7 +947,7 @@ var PartialsReviewDownloadHistory = (function () {
                     } else {
                         $('#review-product-modal').find('input#voteup').val(2);
                         $('#review-product-modal').find('#votelabel').empty()
-                            .append('<a class="btn btn-danger active" style="line-height: 10px;"><span class="fa fa-minus"></span></a> Add Comment (min. 1 chars): ');
+                            .append('<a class="btn btn-danger active" style="line-height: 10px;"><span class="fa fa-minus"></span></a> Add Comment (min. 5 chars): ');
                         $('#review-product-modal').find('#commenttext').val('-');
                         $('#review-product-modal').find('#commenttext').removeAttr("disabled");
                         $('#review-product-modal').find(':submit').removeAttr("disabled").css("display", "block");
@@ -1172,16 +1171,28 @@ var PartialCommentReviewForm = (function () {
         initForm: function () {
             $('body').on("submit", 'form.product-add-comment-review', function (event) {
                 event.preventDefault();
-                event.stopImmediatePropagation();            
-                var c = $.trim($('#commenttext').val());                
+                event.stopImmediatePropagation();
+                var c = $.trim($('#commenttext').val());
+                var v = $('#voteup').val();
+                if(v==2) {
+                    // votedown
+                    if(c.length<5)
+                    {
+                            if($('#review-product-modal').find('#votelabel').find('.warning').length==0)
+                            {
+                                $('#review-product-modal').find('#votelabel').append("</br><span class='warning' style='color:red'> Please give a comment, thanks!</span>");
+                            }
+                            return;
+                    }    
+                }
                 if(c.length<1)
                 {
                         if($('#review-product-modal').find('#votelabel').find('.warning').length==0)
                         {
-                            $('#review-product-modal').find('#votelabel').append("</br><span class='warning' style='color:red'> Please give a comment, thanks!</span>");                   
-                        }                        
+                            $('#review-product-modal').find('#votelabel').append("</br><span class='warning' style='color:red'> Please give a comment, thanks!</span>");
+                        }
                         return;
-                }                
+                }
 
                 $(this).find(':submit').attr("disabled", "disabled");
                 $(this).find(':submit').css("white-space", "normal");
@@ -1320,11 +1331,11 @@ var PartialFormsAjaxMemberBg = (function () {
 
 var AjaxForm = (function () {
     return {
-        setup: function (idElement, idTargetElement) {          
+        setup: function (idElement, idTargetElement) {
             var target = $(idTargetElement);
             $('body').on("submit", 'form.product-add-comment', function (event) {
                 event.preventDefault();
-                event.stopImmediatePropagation();               
+                event.stopImmediatePropagation();
                 $(this).find('button').attr("disabled", "disabled");
                 $(this).find('.glyphicon.glyphicon-send').removeClass('glyphicon-send').addClass('glyphicon-refresh spinning');
 
@@ -1418,8 +1429,8 @@ var RssNews = (function () {
                         return false;
                     }
                     var m = moment(item.date);
-                    crss += '<div class="commentstore"><a href="' + item.url + '"><span class="title">' + item.title + '</span></a><div class="newsrow">'                        
-                        + '<span class="date">' + m.format('MMM DD YYYY') + '</span><span class="newscomments">'+ item.comments.length 
+                    crss += '<div class="commentstore"><a href="' + item.url + '"><span class="title">' + item.title + '</span></a><div class="newsrow">'
+                        + '<span class="date">' + m.format('MMM DD YYYY') + '</span><span class="newscomments">'+ item.comments.length
                         +' Comment'+(item.comments.length>1?'s':'')
                         +'</span></div></div>';
                 });
@@ -1435,19 +1446,19 @@ var RssNews = (function () {
 
 var BlogJson = (function () {
     return {
-        setup: function () {          
-            var urlforum = 'https://forum.opendesktop.org/';            
+        setup: function () {
+            var urlforum = 'https://forum.opendesktop.org/';
             var json_url =urlforum+'latest.json';
-            $.ajax(json_url).then(function (result) { 
-              var topics = result.topic_list.topics; 
-              var crss = '';            
-              var count =3;      
-              topics.sort(function(a,b){                  
+            $.ajax(json_url).then(function (result) {
+              var topics = result.topic_list.topics;
+              var crss = '';
+              var count =3;
+              topics.sort(function(a,b){
                   return new Date(b.last_posted_at) - new Date(a.last_posted_at);
                 });
 
              $.each(topics, function (i, item) {
-                 if(!item.pinned){                   
+                 if(!item.pinned){
                      var m = moment(item.last_posted_at);
                      var r = 'Reply';
                      var t = item.posts_count -1;
@@ -1458,14 +1469,14 @@ var BlogJson = (function () {
                      }else{
                         r = 'Replies';
                      }
-                     crss += '<div class="commentstore"><a href="' + urlforum+'/t/'+item.id + '"><span class="title">' + item.title + '</span></a><div class="newsrow">'                        
-                         + '<span class="date">' + m.fromNow() + '</span><span class="newscomments">'+ t +' '+ r                         
-                         +'</span></div></div>';    
+                     crss += '<div class="commentstore"><a href="' + urlforum+'/t/'+item.id + '"><span class="title">' + item.title + '</span></a><div class="newsrow">'
+                         + '<span class="date">' + m.fromNow() + '</span><span class="newscomments">'+ t +' '+ r
+                         +'</span></div></div>';
                     count--;
                  }
                  if(count==0) return false;
-                 
-             });            
+
+             });
              $("#blogJson").html(crss);
             });
         }
@@ -1494,10 +1505,10 @@ var ProductDetailCarousel = (function () {
 
 var AppimagequestionOnClick = (function () {
     return {
-        setup: function (projectid) {           
-           $('body').on('click', 'i.appimagequestion', function (event) {         
-                    var msgBox = $('#generic-dialog');                    
-                    msgBox.modal('show');                    
+        setup: function (projectid) {
+           $('body').on('click', 'i.appimagequestion', function (event) {
+                    var msgBox = $('#generic-dialog');
+                    msgBox.modal('show');
                     msgBox.find('.modal-header-text').empty().append('AppImage Info');
                     msgBox.find('.modal-body').empty().append("<div class='info' >For easy appimage use, install appimage launcher :"
                         +"<p><a target='_blank' href='https://www.opendesktop.org/p/1228228'>www.opendesktop.org/p/1228228</a><p>More info: <br/><a target='_blank' href='https://www.linuxuprising.com/2018/04/easily-run-and-integrate-appimage-files.html'>www.linuxuprising.com/2018/04/easily-run-and-integrate-appimage-files.html  </a>  </div>");
@@ -1510,16 +1521,16 @@ var AppimagequestionOnClick = (function () {
 
 var ProductDetailBtnGetItClick  = (function () {
     return {
-        setup: function (projectid) {           
-           $('body').on('click', 'button#project_btn_download', function (event) {                 
-             
+        setup: function (projectid) {
+           $('body').on('click', 'button#project_btn_download', function (event) {
+
                     $.fancybox({
                         'hideOnContentClick': true,
                         'autoScale': true,
                         'cyclic': 'true',
                         'transitionIn': 'elastic',
                         'transitionOut': 'elastic',
-                        'type': 'ajax',                      
+                        'type': 'ajax',
                         helpers: {
                             overlay: {
                                 locked: false
@@ -1527,8 +1538,8 @@ var ProductDetailBtnGetItClick  = (function () {
                         },
                         autoSize: true,
                         href:'/p/'+projectid+'/ppload'
-                      
-                    });        
+
+                    });
 
 
            });
@@ -1539,8 +1550,8 @@ var ProductDetailBtnGetItClick  = (function () {
 
 var GhnsExcludedClick  = (function () {
     return {
-        setup: function (projectid) {           
-           $('body').on('click', '#ghns_excluded-this-checkbox', function (event) {                 
+        setup: function (projectid) {
+           $('body').on('click', '#ghns_excluded-this-checkbox', function (event) {
                         event.stopPropagation();
                         var status = 1;
                         var title = '';
@@ -1554,15 +1565,15 @@ var GhnsExcludedClick  = (function () {
                             title = 'Please specify why this product should be included (min 5 chars) :';
                             btntxt=' ghns include';
                         }
-                    
-                        var msgBox = $('#generic-dialog');                    
-                        msgBox.modal('show');                    
+
+                        var msgBox = $('#generic-dialog');
+                        msgBox.modal('show');
                         msgBox.find('.modal-header-text').empty().append('GHNS ');
                         msgBox.find('.modal-body').empty().append(title+
-                                    '<p> <textarea class="" id="ghns-excluded-text" name="t" cols="50" rows="3"></textarea> <p><button id="btn-ghns-excluded" data-projectid='+projectid+'  data-status = '+status+' class="btn-ghns-excluded">'+btntxt+'</button>');   
+                                    '<p> <textarea class="" id="ghns-excluded-text" name="t" cols="50" rows="3"></textarea> <p><button id="btn-ghns-excluded" data-projectid='+projectid+'  data-status = '+status+' class="btn-ghns-excluded">'+btntxt+'</button>');
 
-                        $('body').on("click", "#btn-ghns-excluded", function(){                              
-                                var txt = $('#ghns-excluded-text').val();    
+                        $('body').on("click", "#btn-ghns-excluded", function(){
+                                var txt = $('#ghns-excluded-text').val();
                                 if(txt.length<5) {
                                     alert('min 5 chars');
                                     return false;
@@ -1575,19 +1586,19 @@ var GhnsExcludedClick  = (function () {
                                        method:'POST',
                                        data:{'project_id':project_id,'ghns_excluded':status,'msg':txt},
                                        success: function (results) {
-                                           var msgBox = $('#generic-dialog');       
-                                           if (status == 0) {                                                                                                                               
-                                                 msgBox.find('.modal-body').empty().append('Project is successfully included into GHNS');            
+                                           var msgBox = $('#generic-dialog');
+                                           if (status == 0) {
+                                                 msgBox.find('.modal-body').empty().append('Project is successfully included into GHNS');
                                                 $('#ghns_excluded-this-checkbox').prop("checked", false);
 
-                                           } else {                                                                                     
-                                                 msgBox.find('.modal-body').empty().append('Project is successfully excluded into GHNS');            
-                                               $('#ghns_excluded-this-checkbox').prop("checked", true);                
-                                           }    
+                                           } else {
+                                                 msgBox.find('.modal-body').empty().append('Project is successfully excluded into GHNS');
+                                               $('#ghns_excluded-this-checkbox').prop("checked", true);
+                                           }
 
                                            setTimeout(function () {
                                                msgBox.modal('hide');
-                                           }, 1000);           
+                                           }, 1000);
                                        },
                                        error: function () {
                                            alert('Service is temporarily unavailable.');
@@ -1595,7 +1606,7 @@ var GhnsExcludedClick  = (function () {
                                    });
                         });
 
-                    return false;           
+                    return false;
            });
 
         }
@@ -1604,18 +1615,18 @@ var GhnsExcludedClick  = (function () {
 
 var AboutMeMyProjectsPaging = (function () {
   return {
-      setup: function () {                
+      setup: function () {
         $(window).scroll(function() {
-            
-            var end = $("footer").offset().top;             
-            var viewEnd = $(window).scrollTop() + $(window).height(); 
-            var distance = end - viewEnd; 
+
+            var end = $("footer").offset().top;
+            var viewEnd = $(window).scrollTop() + $(window).height();
+            var distance = end - viewEnd;
             if (distance < 300){
             // }
             // if($(window).scrollTop() == $(document).height() - $(window).height()) {
-                    if(!$('button#btnshowmoreproducts').length) return;                        
-                    let indicator = '<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>';  
-                    let nextpage = $('button#btnshowmoreproducts').attr('data-page');     
+                    if(!$('button#btnshowmoreproducts').length) return;
+                    let indicator = '<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>';
+                    let nextpage = $('button#btnshowmoreproducts').attr('data-page');
                     $('button#btnshowmoreproducts').remove();
                     $url = window.location.href;
                     target = '#my-products-list';
@@ -1634,9 +1645,9 @@ var AboutMeMyProjectsPaging = (function () {
                                 } else {
                                     $(target).empty().html('Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.');
                                 }
-                            }                      
+                            }
                         });
-                    $('#my-products-list').append(container);      
+                    $('#my-products-list').append(container);
             }
         });
 
@@ -1647,10 +1658,10 @@ var AboutMeMyProjectsPaging = (function () {
 
 var AboutMeMyProjectsPagingButton = (function () {
   return {
-      setup: function () {        
-        let indicator = '<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>';               
-        $('body').on('click', 'button#btnshowmoreproducts', function (event) {                                                        
-                let nextpage = $(this).attr('data-page');                                            
+      setup: function () {
+        let indicator = '<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>';
+        $('body').on('click', 'button#btnshowmoreproducts', function (event) {
+                let nextpage = $(this).attr('data-page');
                 $(this).remove();
                 $url = window.location.href;
                 target = '#my-products-list';
@@ -1669,9 +1680,9 @@ var AboutMeMyProjectsPagingButton = (function () {
                             } else {
                                 $(target).empty().html('Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.');
                             }
-                        }                      
+                        }
                     });
-                $('#my-products-list').append(container);                
+                $('#my-products-list').append(container);
         });
 
 
@@ -1746,20 +1757,20 @@ var TooltipUserPlings = (function () {
                         var userid = origin.attr('data-user');
                         if (origin.data('loaded') !== true) {
                             $.get('/plings/tooltip/id/'+userid, function (data) {
-                                
+
                                 var tmp = '<div class="tooltipuserplingscontainer">';
                                 $.each(data.data, function( index, value ) {
                                     if(index>10) return false;
                                     if(value.profile_image_url.indexOf('http')<0)
                                     {
-                                         value.profile_image_url = "https://cn.pling.com/cache/40x40-2/img/"+value.profile_image_url ;                                           
+                                         value.profile_image_url = "https://cn.pling.com/cache/40x40-2/img/"+value.profile_image_url ;
                                     }
                                     if(value.profile_image_url.indexOf('.gif')>0)
                                     {
-                                         value.profile_image_url = "https://cn.pling.com/img/"+value.profile_image_url ;                                           
+                                         value.profile_image_url = "https://cn.pling.com/img/"+value.profile_image_url ;
                                     }
                                     tmp = tmp+'<div class="user"><a href="/member/'+value.member_id+'"><img src="'+value.profile_image_url+'" /></a><span class="caption">'+value.username+'</span></div>';
-                                });    
+                                });
                                 tmp = tmp + '</div>';
                                 instance.content(tmp);
                                 origin.data('loaded', true);
@@ -1824,41 +1835,41 @@ var TagingProductSelect2 = (function () {
                             tags: true,
                             tokenSeparators: [",", " "],
                             minimumInputLength: 3,
-                            maximumSelectionLength: 5,        
-                            width: 'resolve',                
+                            maximumSelectionLength: 5,
+                            width: 'resolve',
                             ajax: {
                                     url: '/tag/filter',
                                     dataType: 'json',
                                     type: "GET",
-                                    delay: 500, // wait 250 milliseconds before triggering the request  
-                                    processResults: function (data) {                                                                                    
+                                    delay: 500, // wait 250 milliseconds before triggering the request
+                                    processResults: function (data) {
                                           return {
-                                             results : data.data.tags        
+                                             results : data.data.tags
                                           };
-                                        }                               
-                                    
+                                        }
+
                                 }
                         });
 
                         // Bind an event
-                        t.on('select2:select', function (e) { 
-                                      var data = e.params.data;                                                                             
-                                      var projectid = $("#tagsuserselect").attr('data-pid');                                        
+                        t.on('select2:select', function (e) {
+                                      var data = e.params.data;
+                                      var projectid = $("#tagsuserselect").attr('data-pid');
                                       var lis = t.parent().find('ul.select2-selection__rendered').find('li.select2-selection__choice').length;
-                                      if(lis>5){                                                
-                                           t.find("option[value='"+data.id+"']").remove(); 
-                                           return;                                            
-                                      }                                                
+                                      if(lis>5){
+                                           t.find("option[value='"+data.id+"']").remove();
+                                           return;
+                                      }
                                       var regexp=new RegExp("^[0-9A-Za-z_.-]+$");
                                       if(!(regexp.test(data.text))){
-                                           t.find("option[value='"+data.id+"']").remove();                                             
+                                           t.find("option[value='"+data.id+"']").remove();
                                            alert('Must be letter or number and can include hyphens');
                                       }
-                                      if(data.text.length>10){                                            
-                                            t.find("option[value='"+data.id+"']").remove();                                             
+                                      if(data.text.length>10){
+                                            t.find("option[value='"+data.id+"']").remove();
                                            alert('Max. length 45 chars');
                                       }
-                                       
+
                         });
         }
     }
@@ -1869,21 +1880,21 @@ var TagingProductDetail = (function () {
                             setup: function () {
                                            TagingProductDetailSelect2.setup();
                                            $('body').on('click', 'button.topic-tags-btn', function (event) {
-                                                $(this).toggleClass('Done');                                                                                                                                            
+                                                $(this).toggleClass('Done');
                                                 $('.product_category').find('.usertagslabel').remove();
                                                 $('.tagsuserselectpanel').toggle();
                                                 if($(this).text() == 'Done'){
                                                         $(this).text('Manage tags');
                                                         var newhtml = '';
-                                                        var lis = $('li.select2-selection__choice');                                                        
+                                                        var lis = $('li.select2-selection__choice');
                                                         $.each(lis, function( index, value ) {
                                                             newhtml=newhtml+'<a rel="nofollow" href="/search/projectSearchText/'+value.title+'/t/'+value.title+'/f/tags" '
                                                                                           +'class="topic-tag topic-tag-link usertagslabel">'+value.title+'</a>';
-                                                        });                                                                                                                                                               
-                                                         $('.product_category').find('.topicslink').html(newhtml);                                                        
+                                                        });
+                                                         $('.product_category').find('.topicslink').html(newhtml);
                                                 }else{
-                                                    $(this).text('Done');                                                    
-                                                }                                               
+                                                    $(this).text('Done');
+                                                }
                                            });
                             }
                         }
@@ -1915,46 +1926,46 @@ var TagingProductDetailSelect2 = (function () {
                                     url: '/tag/filter',
                                     dataType: 'json',
                                     type: "GET",
-                                    delay: 500, // wait 250 milliseconds before triggering the request                                      
-                                    processResults: function (data) {                                          
+                                    delay: 500, // wait 250 milliseconds before triggering the request
+                                    processResults: function (data) {
                                           return {
-                                                results : data.data.tags                                          
+                                                results : data.data.tags
                                           };
-                                        }                                                                   
+                                        }
                                     }
-                        });                      
+                        });
 
                         // Bind an event
-                        t.on('select2:select', function (e) { 
-                                        var data = e.params.data;     
-                                        var projectid = $("#tagsuserselect").attr('data-pid');                                                    
+                        t.on('select2:select', function (e) {
+                                        var data = e.params.data;
+                                        var projectid = $("#tagsuserselect").attr('data-pid');
                                             $.post( "/tag/add", { p: projectid, t: data.id })
                                                  .done(function( data ) {
-                                                           
+
                                                            if(data.status=='error'){
-                                                               $('span.topic-tags-saved').css({ color: "red" }).html(data.message).show().delay(2000).fadeOut();                                                                   
-                                                                t.find("option[value='"+data.data.tag+"']").last().remove();   
-                                                                //t.find("option[value="+data.data.tag+"]").last().remove();                                                               
+                                                               $('span.topic-tags-saved').css({ color: "red" }).html(data.message).show().delay(2000).fadeOut();
+                                                                t.find("option[value='"+data.data.tag+"']").last().remove();
+                                                                //t.find("option[value="+data.data.tag+"]").last().remove();
                                                            }
                                                            else
                                                            {
-                                                               $('span.topic-tags-saved').css({ color: "green" }).html('<i class="fa fa-check"></i> Saved').show().delay(1000).fadeOut();                                                        
-                                                           }                                                           
-                                                 });                                                                          
-                                       
+                                                               $('span.topic-tags-saved').css({ color: "green" }).html('<i class="fa fa-check"></i> Saved').show().delay(1000).fadeOut();
+                                                           }
+                                                 });
+
                         });
-                       
+
                         // Unbind the event
                         t.on('select2:unselect', function(e){
-                                var data = e.params.data;     
+                                var data = e.params.data;
                                 var projectid = $("#tagsuserselect").attr('data-pid');
                                 $.post( "/tag/del", { p: projectid, t: data.id })
                                   .done(function( data ) {
-                                            console.log(data);    
-                                             $('span.topic-tags-saved').css({ color: "green" }).html('<i class="fa fa-trash"></i>'+data.message).show().delay(1000).fadeOut();  
+                                            console.log(data);
+                                             $('span.topic-tags-saved').css({ color: "green" }).html('<i class="fa fa-trash"></i>'+data.message).show().delay(1000).fadeOut();
                                             //$('span.topic-tags-saved').show().delay(1000).fadeOut();
                                   });
-                                
+
                         });
         }
     }
@@ -1967,22 +1978,22 @@ var TagingLoopMyProducts = (function () {
                             setup: function () {
                                            TagingLoopMyProductsSelect2.setup();
                                            $('body').on('click', 'button.topic-tags-btn', function (event) {
-                                                $(this).toggleClass('Done');     
-                                                $(this).parent().find('.topicsuser').html('');                                                                                                                                       
-                                                
+                                                $(this).toggleClass('Done');
+                                                $(this).parent().find('.topicsuser').html('');
+
                                                 $(this).parent().find('.tagsuserselectpanel').toggle();
                                                 if($(this).text() == 'Done'){
                                                         $(this).text('Manage tags');
                                                         var newhtml = '';
-                                                        var lis =  $(this).parent().find('li.select2-selection__choice');                                                        
+                                                        var lis =  $(this).parent().find('li.select2-selection__choice');
                                                         $.each(lis, function( index, value ) {
                                                             newhtml=newhtml+'<a rel="nofollow" href="/search/projectSearchText/'+value.title+'/t/'+value.title+'/f/tags" '
                                                                                           +'class="topic-tag topic-tag-link usertagslabel">'+value.title+'</a>';
-                                                        });                                                                                                                                                               
-                                                        $(this).parent().find('.topicsuser').html(newhtml);                                                        
+                                                        });
+                                                        $(this).parent().find('.topicsuser').html(newhtml);
                                                 }else{
-                                                    $(this).text('Done');                                                    
-                                                }                                               
+                                                    $(this).text('Done');
+                                                }
                                            });
                             }
                         }
@@ -2004,7 +2015,7 @@ var TagingLoopMyProductsSelect2 = (function () {
                         }, null, true);
 
                         //var t = $("#tagsuserselect").select2({
-                        var t = $(".taggingSelect2").select2({                            
+                        var t = $(".taggingSelect2").select2({
                             placeholder: "Input tags please...", //placeholder
                             tags: true,
                             minimumInputLength: 3,
@@ -2015,44 +2026,44 @@ var TagingLoopMyProductsSelect2 = (function () {
                                     url: '/tag/filter',
                                     dataType: 'json',
                                     type: "GET",
-                                    delay: 500, // wait 250 milliseconds before triggering the request                                      
-                                    processResults: function (data) {                                          
+                                    delay: 500, // wait 250 milliseconds before triggering the request
+                                    processResults: function (data) {
                                           return {
-                                                results : data.data.tags                                          
+                                                results : data.data.tags
                                           };
-                                        }                                                                   
+                                        }
                                     }
-                        });                      
+                        });
 
                         // Bind an event
-                        t.on('select2:select', function (e) { 
-                                        var data = e.params.data;    
-                                        var projectid  = $(this).attr('id').replace('tagsuserselect','');                                   
-                                        //var projectid = $("#tagsuserselect").attr('data-pid');                                                    
+                        t.on('select2:select', function (e) {
+                                        var data = e.params.data;
+                                        var projectid  = $(this).attr('id').replace('tagsuserselect','');
+                                        //var projectid = $("#tagsuserselect").attr('data-pid');
                                             $.post( "/tag/add", { p: projectid, t: data.id })
-                                                 .done(function( data ) {                                                           
+                                                 .done(function( data ) {
                                                            if(data.status=='error'){
-                                                                $('#topic-tags-saved'+projectid).css({ color: "red" }).html(data.message).show().delay(2000).fadeOut();                                                                   
-                                                                t.find("option[value='"+data.data.tag+"']").last().remove();                                                                                                                       
+                                                                $('#topic-tags-saved'+projectid).css({ color: "red" }).html(data.message).show().delay(2000).fadeOut();
+                                                                t.find("option[value='"+data.data.tag+"']").last().remove();
                                                            }
                                                            else
                                                            {
-                                                                $('#topic-tags-saved'+projectid).css({ color: "green" }).html('<i class="fa fa-check"></i> Saved').show().delay(1000).fadeOut();                                                        
-                                                           }                                                           
-                                                 });                                                                          
-                                       
+                                                                $('#topic-tags-saved'+projectid).css({ color: "green" }).html('<i class="fa fa-check"></i> Saved').show().delay(1000).fadeOut();
+                                                           }
+                                                 });
+
                         });
-                       
+
                         // Unbind the event
                         t.on('select2:unselect', function(e){
-                                var data = e.params.data;     
+                                var data = e.params.data;
                                 //var projectid = $("#tagsuserselect").attr('data-pid');
                                 var projectid  = $(this).attr('id').replace('tagsuserselect','');
                                 $.post( "/tag/del", { p: projectid, t: data.id })
-                                  .done(function( data ) {                                           
-                                             $('#topic-tags-saved'+projectid).css({ color: "green" }).html('<i class="fa fa-trash"></i>'+data.message).show().delay(1000).fadeOut();                                            
+                                  .done(function( data ) {
+                                             $('#topic-tags-saved'+projectid).css({ color: "green" }).html('<i class="fa fa-trash"></i>'+data.message).show().delay(1000).fadeOut();
                                   });
-                                
+
                         });
         }
     }

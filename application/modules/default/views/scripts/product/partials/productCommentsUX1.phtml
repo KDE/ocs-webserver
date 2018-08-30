@@ -113,7 +113,11 @@ $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountP
                        <?php }?>
 
                         <img src="<?= $helperImage->Image($comment['profile_image_url'], array('width' => 60, 'height' => 60)) ?>" class="img<?=$elementComment['level']?>">
+                                               
                         </div>
+                         <?php if( $comment['roleid'] ==Default_Model_DbTable_Member::ROLE_ID_MODERATOR) { ?>
+                                <div class="mod-badge-1">MOD</div>                                                  
+                        <?php }?>
                     </a>
                     <div class="media-body">
                         <h4 class="media-heading user_name">

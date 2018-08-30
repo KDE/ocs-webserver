@@ -214,9 +214,10 @@ $credits = $model->fetchCredits();
 
                             <div class="col-lg-1 col-md-1 col-sm-1">
                                 <figure>                                   
-                                            <img class="reporterimage tooltipuser" data-tooltip-content="#tooltip_content" data-user="<?=$this->product->reported_by?>" 
+                                        <a href="<?=$helpMemberUrl->buildMemberUrl($this->product->reported_by)?>">    <img class="reporterimage tooltipuser" data-tooltip-content="#tooltip_content" data-user="<?=$this->product->reported_by?>" 
                                                     src="<?php echo $this->Image($this->product->reporter_profile_image_url,array('width' => 50, 'height' => 50)); ?>" 
                                                 />                                       
+                                        </a>
                                 </figure>
                                 <span><?=$this->product->reporter_username?></span>
                             </div>    

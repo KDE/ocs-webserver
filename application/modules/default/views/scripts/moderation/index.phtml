@@ -76,7 +76,11 @@ $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
             margin-left:140px;
             padding-top:20px;
         }
-
+        #explore-content div.jtable-main-container table.jtable .tooltipuser{
+            color: #2673b0;
+            cursor: pointer;
+        }
+        
         a.imghistory{
 
         }
@@ -115,8 +119,13 @@ $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
     </div>
     <div id="TableContainer"></div>    
     </section>
-</main>
 
+</main>
+<div class="tooltip_templates" style="display: none">
+    <span id="tooltip_content">
+        <i class="fa fa-spinner"></i>
+    </span>
+</div>
 <script type="text/javascript">
     $(document).ready(function () {
 
@@ -207,7 +216,11 @@ $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
                          title: 'Creator',
                           width:'5%', 
                          list:true,
-                        edit: false
+                         edit: false,
+                         display:function(data){                        
+                            var html = '<a  class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="'+data.record.member_id+'" >'+data.record.username+'</a>';
+                             return html;
+                        }
                     },
                     project_created_at: {
                         title: 'Created at',                       
@@ -234,7 +247,11 @@ $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
                         title: 'Excluded by',    
                          width:'5%',
                           edit: false,                                                
-                        list: true
+                        list: true,
+                        display:function(data){                        
+                            var html = '<a  class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="'+data.record.created_by+'" >'+data.record.exclude_member_name+'</a>';
+                             return html;
+                        }
                     },    
                      note: {
                         title: 'Reason',                                                   
@@ -311,7 +328,8 @@ $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
             e.preventDefault();
             $('#TableContainer').jtable('load', {
                 filter_member_id: $('#filter_member_id').val(),              
-
+            },function(){
+              TooltipUser.setup("tooltipuser","right");        
             });
         });
 
@@ -324,8 +342,14 @@ $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
             });
         });
 
-        $('#TableContainer').jtable('load', {           
+        // $('#TableContainer').jtable('load', {           
+        //     filter_member_id: $('#filter_member_id').val()            
+        // });
+
+          $('#TableContainer').jtable('load', {           
             filter_member_id: $('#filter_member_id').val()            
+        },function(){
+              TooltipUser.setup("tooltipuser","right");        
         });
 
         $('body').on("click", 'a.imghistory', function (event) {
@@ -337,6 +361,11 @@ $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
             return false;
         });
 
+      
+
+                
     
     });
 </script>
+
+     

@@ -64,7 +64,7 @@ window.appHelpers = function () {
 
   function generateFilterUrl(location, currentCat) {
     let link = {};
-    if (currentCat !== 0) {
+    if (currentCat && currentCat !== 0) {
       link.base = "/browse/cat/" + currentCat + "/ord/";
     } else {
       link.base = "/browse/ord/";
@@ -74,8 +74,15 @@ window.appHelpers = function () {
   }
 
   function generateFileDownloadHash(file, env) {
-    const timestamp = Date.now() + 3600;
-    const hash = md5( /*salt+*/file.collection_id + timestamp);
+    let salt;
+    if (env === "test") {
+      salt = "vBHnf7bbdhz120bhNsd530LsA2mkMvh6sDsCm4jKlm23D186Fj";
+    } else {
+      salt = "Kcn6cv7&dmvkS40Hna§4ffcvl=021nfMs2sdlPs123MChf4s0K";
+    }
+
+    const timestamp = Math.floor(new Date().getTime() / 1000 + 3600);
+    const hash = md5(salt, file.collection_id + timestamp);
     return hash;
     /*
     $salt = PPLOAD_DOWNLOAD_SECRET;
@@ -238,12 +245,38 @@ window.productHelpers = function () {
     return summery;
   }
 
+  function checkIfLikedByUser(user, likes) {
+    let likedByUser = false;
+    likes.forEach(function (like, index) {
+      if (user.member_id === like.member_id) {
+        likedByUser = true;
+      }
+    });
+    return likedByUser;
+  }
+
+  function getLoggedUserRatingOnProduct(user, ratings) {
+    let userRating = -1;
+    ratings.forEach(function (r, index) {
+      if (r.member_id === user.member_id) {
+        if (r.user_like === "1") {
+          userRating = 1;
+        } else {
+          userRating = 0;
+        }
+      }
+    });
+    return userRating;
+  }
+
   return {
     getNumberOfProducts,
     generatePaginationObject,
     calculateProductRatings,
     getActiveRatingsNumber,
-    getFilesSummary
+    getFilesSummary,
+    checkIfLikedByUser,
+    getLoggedUserRatingOnProduct
   };
 }();
 class ProductGroupScrollWrapper extends React.Component {
@@ -1020,17 +1053,22 @@ class ExploreTopBar extends React.Component {
     }
 
     const link = appHelpers.generateFilterUrl(window.location, currentId);
+    let linkSearch = "";
+    if (link.search) {
+      linkSearch = link.search;
+    }
+
     return React.createElement(
       "div",
       { className: "explore-top-bar" },
       React.createElement(
         "a",
-        { href: link.base + "latest" + link.search, className: this.props.filters.order === "latest" ? "item active" : "item" },
+        { href: link.base + "latest" + linkSearch, className: this.props.filters.order === "latest" ? "item active" : "item" },
         "Latest"
       ),
       React.createElement(
         "a",
-        { href: link.base + "top" + link.search, className: this.props.filters.order === "top" ? "item active" : "item" },
+        { href: link.base + "top" + linkSearch, className: this.props.filters.order === "top" ? "item active" : "item" },
         "Top"
       )
     );
@@ -1896,6 +1934,7 @@ class ProductView extends React.Component {
       ),
       React.createElement(ProductViewHeader, {
         product: this.props.product,
+        user: this.props.user,
         onDownloadBtnClick: this.toggleDownloadSection
       }),
       React.createElement(ProductViewGallery, {
@@ -1908,6 +1947,7 @@ class ProductView extends React.Component {
       }),
       React.createElement(ProductViewContent, {
         product: this.props.product,
+        user: this.props.user,
         tab: this.state.tab
       }),
       productGalleryLightboxDisplay
@@ -1917,9 +1957,11 @@ class ProductView extends React.Component {
 
 const mapStateToProductPageProps = state => {
   const product = state.product;
+  const user = state.user;
   const lightboxGallery = state.lightboxGallery;
   return {
     product,
+    user,
     lightboxGallery
   };
 };
@@ -1936,74 +1978,6 @@ class ProductViewHeader extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
-    this.onUserLike = this.onUserLike.bind(this);
-  }
-
-  onUserLike() {
-    console.log(this.props);
-    const url = "/p/" + this.props.product.project_id + "/followproject/";
-    console.log(url);
-    $.ajax({ url: url, cache: false }).done(function (response) {
-      console.log(response);
-      console.log(response.status);
-    });
-    /*var PartialsButtonHeartDetail = (function () {
-        return {
-            setup: function () {
-                $('body').on('click', '.partialbuttonfollowproject', function (event) {
-                    event.preventDefault();
-                    var url = $(this).attr("data-href");
-                    // data-href - /p/1249209/followproject/
-                    var target = $(this).attr("data-target");
-                    var auth = $(this).attr("data-auth");
-                    var toggle = $(this).data('toggle');
-                    var pageFragment = $(this).attr("data-fragment");
-                     if (!auth) {
-                        $('#like-product-modal').modal('show');
-                        return;
-                    }
-                     // product owner not allow to heart copy from voting....
-                    var loginuser = $('#like-product-modal').find('#loginuser').val();
-                    var productcreator = $('#like-product-modal').find('#productcreator').val();
-                    if (loginuser == productcreator) {
-                        // ignore
-                        $('#like-product-modal').find('#votelabel').text('Project owner not allowed');
-                        $('#like-product-modal').find('.modal-body').empty();
-                        $('#like-product-modal').modal('show');
-                        return;
-                    }
-                   var spin = $('<span class="glyphicon glyphicon-refresh spinning" style="opacity: 0.6; z-index:1000;position: absolute; left:24px;top: 4px;"></span>');
-                     $(target).prepend(spin);
-                     $.ajax({
-                              url: url,
-                              cache: false
-                            })
-                          .done(function( response ) {
-                            $(target).find('.spinning').remove();
-                            if(response.status =='error'){
-                                 $(target).html( response.msg );
-                            }else{
-                                if(response.action=='delete'){
-                                    //$(target).find('.likelabel').html(response.cnt +' Likes');
-                                    $(target).find('.plingtext').html(response.cnt);
-                                    $(target).find('.plingtext').addClass('heartnumberpurple');
-                                     $(target).find('.plingheart').removeClass('heartproject').addClass('heartgrey');
-                                     $(target).find('.plingheart').removeClass('fa-heart').addClass('fa-heart-o');
-                                  }else{
-                                    //$(target).find('.likelabel').html(response.cnt +' Likes');
-                                    $(target).find('.plingtext').html(response.cnt);
-                                    //$(target).find('.plingtext').html(response.cnt+' Fans');
-                                    $(target).find('.plingtext').removeClass('heartnumberpurple');
-                                    $(target).find('.plingheart').removeClass('heartgrey').addClass('heartproject');
-                                    $(target).find('.plingheart').removeClass('fa-heart-o').addClass('fa-heart');
-                                }
-                            }
-                          });
-                    return false;
-                });
-            }
-        }
-    })();*/
   }
 
   render() {
@@ -2097,17 +2071,14 @@ class ProductViewHeader extends React.Component {
             React.createElement(
               'div',
               { id: 'product-view-header-right-side' },
-              React.createElement(
-                'div',
-                { className: 'likes' },
-                React.createElement('i', { className: 'plingheart fa fa-heart-o heartgrey' }),
-                React.createElement(
-                  'span',
-                  { onClick: this.onUserLike },
-                  this.props.product.r_likes.length
-                )
-              ),
-              React.createElement(ProductViewHeaderRatings, { product: this.props.product })
+              React.createElement(ProductViewHeaderLikes, {
+                product: this.props.product,
+                user: this.props.user
+              }),
+              React.createElement(ProductViewHeaderRatings, {
+                product: this.props.product,
+                user: this.props.user
+              })
             )
           )
         )
@@ -2116,19 +2087,150 @@ class ProductViewHeader extends React.Component {
   }
 }
 
-class ProductViewHeaderRatings extends React.Component {
+class ProductViewHeaderLikes extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
+    this.onUserLike = this.onUserLike.bind(this);
+  }
+
+  componentDidMount() {
+    const user = store.getState().user;
+    const likedByUser = productHelpers.checkIfLikedByUser(user, this.props.product.r_likes);
+    this.setState({ likesTotal: this.props.product.r_likes.length, likedByUser: likedByUser });
+  }
+
+  onUserLike() {
+    if (this.props.user) {
+      const url = "/p/" + this.props.product.project_id + "/followproject/";
+      const self = this;
+      $.ajax({ url: url, cache: false }).done(function (response) {
+        // error
+        if (response.status === "error") {
+          self.setState({ msg: response.msg });
+        } else {
+          // delete
+          if (response.action === "delete") {
+            const likesTotal = self.state.likesTotal - 1;
+            self.setState({ likesTotal: likesTotal, likedByUser: false });
+          }
+          // insert
+          else {
+              const likesTotal = self.state.likesTotal + 1;
+              self.setState({ likesTotal: likesTotal, likedByUser: true });
+            }
+        }
+      });
+    } else {
+      this.setState({ msg: 'please login to like' });
+    }
   }
 
   render() {
+    let cssContainerClass, cssHeartClass;
+    if (this.state.likedByUser === true) {
+      cssContainerClass = "liked-by-user";
+      cssHeartClass = "plingheart fa heartproject fa-heart";
+    } else {
+      cssHeartClass = "plingheart fa fa-heart-o heartgrey";
+    }
+
+    return React.createElement(
+      'div',
+      { className: cssContainerClass, id: 'likes-container' },
+      React.createElement(
+        'div',
+        { className: 'likes' },
+        React.createElement('i', { className: cssHeartClass }),
+        React.createElement(
+          'span',
+          { onClick: this.onUserLike },
+          this.state.likesTotal
+        )
+      ),
+      React.createElement(
+        'div',
+        { className: 'likes-label-container' },
+        this.state.msg
+      )
+    );
+  }
+}
+
+class ProductViewHeaderRatings extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      userIsOwner: '',
+      action: '',
+      laplace_score: this.props.product.laplace_score
+    };
+    this.onRatingFormResponse = this.onRatingFormResponse.bind(this);
+  }
+
+  componentDidMount() {
+
+    let userIsOwner = false;
+    if (this.props.user && this.props.user.member_id === this.props.product.member_id) {
+      userIsOwner = true;
+    }
+    let userRating = -1;
+    if (userIsOwner === false) {
+      userRating = productHelpers.getLoggedUserRatingOnProduct(this.props.user, this.props.product.r_ratings);
+    }
+    this.setState({ userIsOwner: userIsOwner, userRating: userRating });
+  }
+
+  onRatingBtnClick(action) {
+    this.setState({ showModal: false }, function () {
+      this.setState({ action: action, showModal: true }, function () {
+        $('#ratings-form-modal').modal('show');
+      });
+    });
+  }
+
+  onRatingFormResponse(response, val) {
+    const self = this;
+    jQuery.ajax({
+      data: {},
+      url: '/p/' + this.props.product.project_id + '/loadratings/',
+      method: 'get',
+      error: function (jqXHR, textStatus, errorThrown) {
+        self.setState({ errorMsg: textStatus + " " + errorThrown });
+        $('#ratings-form-modal').modal('hide');
+      },
+      success: function (response) {
+        store.dispatch(setProductRatings(response));
+        $('#ratings-form-modal').modal('hide');
+      }
+    });
+  }
+
+  render() {
+
+    let ratingsFormModalDisplay;
+    if (this.state.showModal === true) {
+      ratingsFormModalDisplay = React.createElement(RatingsFormModal, {
+        user: this.props.user,
+        userIsOwner: this.state.userIsOwner,
+        userRating: this.state.userRating,
+        action: this.state.action,
+        product: this.props.product,
+        onRatingFormResponse: this.onRatingFormResponse
+      });
+    }
+
+    let ratingsBarCss;
+    if (this.props.product.laplace_score < 50) {
+      ratingsBarCss = 'red';
+    }
+
     return React.createElement(
       'div',
       { className: 'ratings-bar-container' },
       React.createElement(
         'div',
-        { className: 'ratings-bar-left' },
+        { className: 'ratings-bar-left', onClick: () => this.onRatingBtnClick('minus') },
         React.createElement(
           'i',
           { className: 'material-icons' },
@@ -2138,16 +2240,168 @@ class ProductViewHeaderRatings extends React.Component {
       React.createElement(
         'div',
         { className: 'ratings-bar-holder' },
-        React.createElement('div', { className: 'ratings-bar', style: { "width": this.props.product.laplace_score + "%" } }),
-        React.createElement('div', { className: 'ratings-bar-empty', style: { "width": 100 - this.props.product.laplace_score + "%" } })
+        React.createElement('div', { className: ratingsBarCss + " ratings-bar", style: { "width": this.state.laplace_score + "%" } }),
+        React.createElement('div', { className: 'ratings-bar-empty', style: { "width": 100 - this.state.laplace_score + "%" } })
       ),
       React.createElement(
         'div',
-        { className: 'ratings-bar-right' },
+        { className: 'ratings-bar-right', onClick: () => this.onRatingBtnClick('plus') },
         React.createElement(
           'i',
           { className: 'material-icons' },
           'add'
+        )
+      ),
+      ratingsFormModalDisplay,
+      this.state.errorMsg
+    );
+  }
+}
+
+class RatingsFormModal extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      action: this.props.action
+    };
+    this.submitRatingForm = this.submitRatingForm.bind(this);
+  }
+
+  componentDidMount() {
+    let actionIcon;
+    if (this.props.action === 'plus') {
+      actionIcon = '+';
+    } else if (this.props.action === 'minus') {
+      actionIcon = '-';
+    }
+    this.setState({ action: this.props.action, actionIcon: actionIcon, text: actionIcon }, function () {
+      this.forceUpdate();
+    });
+  }
+
+  submitRatingForm() {
+    this.setState({ loading: true }, function () {
+      const self = this;
+      let v;
+      if (this.state.action === 'plus') {
+        v = '1';
+      } else {
+        v = '2';
+      }
+
+      jQuery.ajax({
+        data: {
+          p: this.props.product.project_id,
+          m: this.props.user.member_id,
+          v: v,
+          pm: this.props.product.member_id,
+          otxt: this.state.text,
+          userrate: this.props.userRating,
+          msg: this.state.text
+        },
+        url: '/productcomment/addreplyreview/',
+        method: 'post',
+        error: function () {
+          const msg = "Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.";
+          this.setState({ msg: msg });
+        },
+        success: function (response) {
+          self.props.onRatingFormResponse(response, v);
+        }
+      });
+    });
+  }
+
+  render() {
+    let textAreaDisplay, modalBtnDisplay;
+    if (!this.props.user) {
+      textAreaDisplay = React.createElement(
+        'p',
+        null,
+        'Please login to comment'
+      );
+      modalBtnDisplay = React.createElement(
+        'button',
+        { type: 'button', className: 'btn btn-secondary', 'data-dismiss': 'modal' },
+        'Close'
+      );
+    } else {
+      if (this.props.userIsOwner) {
+        textAreaDisplay = React.createElement(
+          'p',
+          null,
+          'Project owner not allowed'
+        );
+        modalBtnDisplay = React.createElement(
+          'button',
+          { type: 'button', className: 'btn btn-secondary', 'data-dismiss': 'modal' },
+          'Close'
+        );
+      } else if (this.state.text) {
+        textAreaDisplay = React.createElement('textarea', { defaultValue: this.state.text, className: 'form-control' });
+        if (this.state.loading !== true) {
+
+          if (this.state.msg) {
+            modalBtnDisplay = React.createElement(
+              'p',
+              null,
+              this.state.msg
+            );
+          } else {
+            modalBtnDisplay = React.createElement(
+              'button',
+              { onClick: this.submitRatingForm, type: 'button', className: 'btn btn-primary' },
+              'Rate Now'
+            );
+          }
+        } else {
+          modalBtnDisplay = React.createElement('span', { className: 'glyphicon glyphicon-refresh spinning' });
+        }
+      }
+    }
+
+    return React.createElement(
+      'div',
+      { className: 'modal', id: 'ratings-form-modal', tabIndex: '-1', role: 'dialog' },
+      React.createElement(
+        'div',
+        { className: 'modal-dialog', role: 'document' },
+        React.createElement(
+          'div',
+          { className: 'modal-content' },
+          React.createElement(
+            'div',
+            { className: 'modal-header' },
+            React.createElement(
+              'div',
+              { className: this.props.action + " action-icon-container" },
+              this.state.actionIcon
+            ),
+            React.createElement(
+              'h5',
+              { className: 'modal-title' },
+              'Add Comment (min. 1 char):'
+            ),
+            React.createElement(
+              'button',
+              { type: 'button', id: 'review-modal-close', className: 'close', 'data-dismiss': 'modal', 'aria-label': 'Close' },
+              React.createElement(
+                'span',
+                { 'aria-hidden': 'true' },
+                '\xD7'
+              )
+            )
+          ),
+          React.createElement(
+            'div',
+            { className: 'modal-body' },
+            textAreaDisplay
+          ),
+          React.createElement(
+            'div',
+            { className: 'modal-footer' },
+            modalBtnDisplay
+          )
         )
       )
     );
@@ -2530,7 +2784,8 @@ class ProductViewContent extends React.Component {
         { className: 'product-tab', id: 'product-tab' },
         React.createElement('p', { dangerouslySetInnerHTML: { __html: this.props.product.description } }),
         React.createElement(ProductCommentsContainer, {
-          product: this.props.product
+          product: this.props.product,
+          user: this.props.user
         })
       );
     } else if (this.props.tab === 'files') {
@@ -2573,97 +2828,6 @@ class ProductCommentsContainer extends React.Component {
     this.state = {};
   }
 
-  /*
-  var PartialCommentReviewForm = (function () {
-      return {
-          setup: function () {
-              this.initForm();
-          },
-          initForm: function () {
-              $('body').on("submit", 'form.product-add-comment-review', function (event) {
-                  event.preventDefault();
-                  event.stopImmediatePropagation();
-                  var c = $.trim($('#commenttext').val());
-                  if(c.length<1)
-                  {
-                          if($('#review-product-modal').find('#votelabel').find('.warning').length==0)
-                          {
-                              $('#review-product-modal').find('#votelabel').append("</br><span class='warning' style='color:red'> Please give a comment, thanks!</span>");
-                          }
-                          return;
-                  }
-                   $(this).find(':submit').attr("disabled", "disabled");
-                  $(this).find(':submit').css("white-space", "normal");
-                  var spin = $('<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>');
-                  $(this).find(':submit').append(spin);
-                   jQuery.ajax({
-                      data: $(this).serialize(),
-                      url: this.action,
-                      type: this.method,
-                      error: function (jqXHR, textStatus, errorThrown) {
-                          $('#review-product-modal').modal('hide');
-                          var msgBox = $('#generic-dialog');
-                          msgBox.modal('hide');
-                          msgBox.find('.modal-header-text').empty().append('Please try later.');
-                          msgBox.find('.modal-body').empty().append("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
-                          setTimeout(function () {
-                              msgBox.modal('show');
-                          }, 900);
-                      },
-                      success: function (results) {
-                          $('#review-product-modal').modal('hide');
-                          location.reload();
-                      }
-                  });
-                  return false;
-              });
-          }
-      }
-  })();
-    var AjaxForm = (function () {
-      return {
-          setup: function (idElement, idTargetElement) {
-              var target = $(idTargetElement);
-              $('body').on("submit", 'form.product-add-comment', function (event) {
-                  event.preventDefault();
-                  event.stopImmediatePropagation();
-                  $(this).find('button').attr("disabled", "disabled");
-                  $(this).find('.glyphicon.glyphicon-send').removeClass('glyphicon-send').addClass('glyphicon-refresh spinning');
-                   jQuery.ajax({
-                      data: $(this).serialize(),
-                      url: this.action,
-                      type: this.method,
-                      dataType: "json",
-                       error: function (jqXHR, textStatus, errorThrown) {
-                          var results = JSON && JSON.parse(jqXHR.responseText) || $.parseJSON(jqXHR.responseText);
-                          var msgBox = $('#generic-dialog');
-                          msgBox.modal('hide');
-                          msgBox.find('.modal-header-text').empty().append(results.title);
-                          msgBox.find('.modal-body').empty().append(results.message);
-                          setTimeout(function () {
-                              msgBox.modal('show');
-                          }, 900);
-                      },
-                      success: function (results) {
-                          if (results.status == 'ok') {
-                              $(target).empty().html(results.data);
-                          }
-                          if (results.status == 'error') {
-                              if (results.message != '') {
-                                  alert(results.message);
-                              } else {
-                                  alert('Service is temporarily unavailable.');
-                              }
-                          }
-                      }
-                  });
-                   return false;
-              });
-          }
-      }
-  })();
-     */
-
   render() {
     let commentsDisplay;
     const cArray = categoryHelpers.convertCatChildrenObjectToArray(this.props.product.r_comments);
@@ -2680,6 +2844,7 @@ class ProductCommentsContainer extends React.Component {
         comments
       );
     }
+
     return React.createElement(
       'div',
       { className: 'product-view-section', id: 'product-comments-container' },
@@ -2696,26 +2861,142 @@ class ProductCommentsContainer extends React.Component {
           { className: 'comments-counter' },
           cArray.length,
           ' comments'
-        ),
-        React.createElement(
-          'p',
-          null,
-          'Please ',
-          React.createElement(
-            'a',
-            { href: '/login?redirect=ohWn43n4SbmJZWlKUZNl2i1_s5gggiCE' },
-            'login'
-          ),
-          ' or ',
-          React.createElement(
-            'a',
-            { href: '/register' },
-            'register'
-          ),
-          ' to add a comment'
         )
       ),
+      React.createElement(CommentForm, {
+        user: this.props.user,
+        product: this.props.product
+      }),
       commentsDisplay
+    );
+  }
+}
+
+class CommentForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      text: '',
+      errorMsg: '',
+      errorTitle: ''
+    };
+    this.updateCommentText = this.updateCommentText.bind(this);
+    this.submitComment = this.submitComment.bind(this);
+    this.updateComments = this.updateComments.bind(this);
+  }
+
+  updateCommentText(e) {
+    this.setState({ text: e.target.value });
+  }
+
+  submitComment() {
+    const msg = this.state.text;
+    const self = this;
+    jQuery.ajax({
+      data: {
+        p: this.props.product.project_id,
+        m: this.props.user.member_id,
+        msg: this.state.text
+      },
+      url: '/productcomment/addreply/',
+      type: 'post',
+      dataType: 'json',
+      error: function (jqXHR, textStatus, errorThrown) {
+        const results = JSON && JSON.parse(jqXHR.responseText) || $.parseJSON(jqXHR.responseText);
+        self.setState({
+          errorMsg: results.message,
+          errorTitle: results.title,
+          login_url: results.login_url,
+          status: 'error'
+        });
+      },
+      success: function (results) {
+        let baseUrl;
+        if (store.getState().env === 'live') {
+          baseUrl = 'cn.pling.com';
+        } else {
+          baseUrl = 'cn.pling.it';
+        }
+
+        $.ajax({ url: '/productcomment?p=' + self.props.product.project_id, cache: false }).done(function (response) {
+          self.updateComments(response);
+        });
+      }
+    });
+  }
+
+  updateComments(response) {
+    store.dispatch(setProductComments(response));
+    this.setState({ text: '' });
+  }
+
+  render() {
+
+    let commentFormDisplay;
+    if (this.props.user) {
+
+      let submitBtnDisplay;
+      if (this.state.text.length === 0) {
+        submitBtnDisplay = React.createElement(
+          'button',
+          { disabled: 'disabled', type: 'button', className: 'mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary' },
+          'send'
+        );
+      } else {
+        submitBtnDisplay = React.createElement(
+          'button',
+          { onClick: this.submitComment, type: 'button', className: 'mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary' },
+          React.createElement('span', { className: 'glyphicon glyphicon-send' }),
+          'send'
+        );
+      }
+
+      let errorDisplay;
+      if (this.state.status === 'error') {
+        errorDisplay = React.createElement(
+          'div',
+          { className: 'comment-form-error-display-container' },
+          React.createElement('div', { dangerouslySetInnerHTML: { __html: this.state.errorTitle } }),
+          React.createElement('div', { dangerouslySetInnerHTML: { __html: this.state.errorMsg } })
+        );
+      }
+
+      commentFormDisplay = React.createElement(
+        'div',
+        { className: 'comment-form-container' },
+        React.createElement(
+          'span',
+          null,
+          'Add Comment'
+        ),
+        React.createElement('textarea', { className: 'form-control', onChange: this.updateCommentText, value: this.state.text }),
+        errorDisplay,
+        submitBtnDisplay
+      );
+    } else {
+      commentFormDisplay = React.createElement(
+        'p',
+        null,
+        'Please ',
+        React.createElement(
+          'a',
+          { href: '/login?redirect=ohWn43n4SbmJZWlKUZNl2i1_s5gggiCE' },
+          'login'
+        ),
+        ' or ',
+        React.createElement(
+          'a',
+          { href: '/register' },
+          'register'
+        ),
+        ' to add a comment'
+      );
+    }
+
+    return React.createElement(
+      'div',
+      { id: 'product-page-comment-form-container' },
+      commentFormDisplay
     );
   }
 }
@@ -2922,20 +3203,17 @@ class ProductViewFilesTabItem extends React.Component {
   componentDidMount() {
     let baseUrl, downloadLinkUrlAttr;
     if (store.getState().env === 'live') {
-      baseUrl = 'cn.pling.com';
-      downloadLinkUrlAttr = "cc.pling.com/api/";
+      baseUrl = 'opendesktop.org';
+      downloadLinkUrlAttr = "https%3A%2F%dl.opendesktop.org%2Fapi%2F";
     } else {
-      baseUrl = 'cn.pling.it';
-      downloadLinkUrlAttr = "cc.pling.it/api/";
+      baseUrl = 'pling.cc';
+      downloadLinkUrlAttr = "https%3A%2F%2Fcc.ppload.com%2Fapi%2F";
     }
 
     const f = this.props.file;
+    const timestamp = Math.floor(new Date().getTime() / 1000 + 3600);
     const fileDownloadHash = appHelpers.generateFileDownloadHash(f, store.getState().env);
-
-    // var downloadUrl = "https://<?= $_SERVER["SERVER_NAME"]?>/p/<?= $this->product->project_id ?>/startdownload?file_id=" + this.id + "&file_name=" + this.name + "&file_type=" + this.type + "&file_size=" + this.size + "&url=" + encodeURIComponent(pploadApiUri + 'files/downloadfile/id/' + this.id + '/s/' + hash + '/t/' + timetamp + '/u/' + userid + '/' + this.name);
-    // var downloadLink = '<a href="' + downloadUrl + '" id="data-link' + this.id + '">' + this.name + '</a>';
-
-    let downloadLink = "https://" + baseUrl + "/p/" + this.props.product.project_id + "/startdownload?file_id=" + f.id + "&file_name=" + f.title + "&file_type=" + f.type + "&file_size=" + f.size + "&url=" + downloadLinkUrlAttr + "files/downloadfile/id/" + f.id + "/s/" + f.hash + "/t/" + f.created_timestamp + "/u/" + this.props.product.member_id + "/" + f.title;
+    let downloadLink = "https://" + baseUrl + "/p/" + this.props.product.project_id + "/startdownload?file_id=" + f.id + "&file_name=" + f.title + "&file_type=" + f.type + "&file_size=" + f.size + "&url=" + downloadLinkUrlAttr + "files%2Fdownloadfile%2Fid%2F" + f.id + "%2Fs%2F" + fileDownloadHash + "%2Ft%2F" + timestamp + "%2Fu%2F" + this.props.product.member_id + "%2F" + f.title;
 
     /*https://david.pling.cc/p/747/startdownload?file_id=1519124607&amp;
     file_name=1519124607-download-app-old.png&amp;
@@ -3387,7 +3665,9 @@ class App extends React.Component {
     }
 
     // user
-    if (window.user) store.dispatch(setUser(user));
+    if (window.user) {
+      store.dispatch(setUser(user));
+    }
 
     // finish loading
     this.setState({ loading: false });
@@ -3404,7 +3684,6 @@ class App extends React.Component {
   }
 
   render() {
-    console.log(this.state);
     let displayView = React.createElement(HomePageWrapper, null);
     if (store.getState().view === 'explore') {
       displayView = React.createElement(ExplorePageWrapper, null);

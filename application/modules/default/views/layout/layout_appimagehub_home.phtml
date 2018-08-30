@@ -61,11 +61,11 @@
     <script type="text/javascript" src="/theme/react/lib/mdl/material.min.js"></script>
     <script type="text/javascript" src="/theme/react/lib/timeago/timeago.min.js"></script>
     <script type="text/javascript" src="/theme/react/lib/md5/md5.js"></script>
-
+    <script src="/theme/flatui/js/script.js?<?= APPLICATION_VERSION ?>"></script>
 
 </head>
 <body>
-<?php echo $this->render('partials/header/template_react.phtml'); ?>
+<?php echo $this->render('partials/header/template.phtml'); ?>
 <?php echo $this->render('partials/flashMessage.phtml'); ?>
 <?php echo $this->layout()->content; ?>
 <?php echo $this->render('partials/footer/template.phtml'); ?>

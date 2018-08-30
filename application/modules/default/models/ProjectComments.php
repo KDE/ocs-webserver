@@ -87,18 +87,19 @@ class Default_Model_ProjectComments
         return $rowset;
     }
 
-    /**
+ /**
      * @param $project_id
      *
      * @return Zend_Paginator
      */
-    public function getCommentTreeForProject($project_id)
+    public function getCommentTreeForProjectList($project_id)
     {
 
         $sql = "
                 SELECT comment_id, comment_target_id, comment_parent_id, comment_text, comment_created_at, comment_active, comment_type, member_id, username, profile_image_url 
                 ,(SELECT (DATE_ADD(max(active_time), INTERVAL 1 YEAR) > now())  from support  where support.status_id = 2  AND support.member_id = comments.comment_member_id)  AS issupporter    
                 ,(select user_like from project_rating where project_rating.comment_id = comments.comment_id ) as rating               
+                ,member.roleid
                 FROM comments 
                 STRAIGHT_JOIN member ON comments.comment_member_id = member.member_id                 
                 WHERE comment_active = :status_active AND comment_type = :type_id AND comment_target_id = :project_id AND comment_parent_id = 0 
@@ -113,7 +114,8 @@ class Default_Model_ProjectComments
         $sql = "
                 SELECT comment_id, comment_target_id, comment_parent_id, comment_text, comment_created_at, comment_active, comment_type, member_id, username, profile_image_url 
                 ,(SELECT (DATE_ADD(max(active_time), INTERVAL 1 YEAR) > now())  from support  where support.status_id = 2  AND support.member_id = comments.comment_member_id)  AS issupporter     
-               ,(select user_like from project_rating where project_rating.comment_id = comments.comment_id ) as rating               
+               ,(select user_like from project_rating where project_rating.comment_id = comments.comment_id ) as rating          
+               ,member.roleid     
                 FROM comments 
                 STRAIGHT_JOIN member ON comments.comment_member_id = member.member_id 
                 WHERE comment_active = :status_active AND comment_type = :type_id AND comment_target_id = :project_id AND comment_parent_id <> 0 
@@ -138,6 +140,19 @@ class Default_Model_ProjectComments
         /* create the final sorted array */
         $list = array();
         $this->sort_child_nodes(0, 1, $list);
+
+        return $list;
+    }
+
+    /**
+     * @param $project_id
+     *
+     * @return Zend_Paginator
+     */
+    public function getCommentTreeForProject($project_id)
+    {
+
+        $list = $this->getCommentTreeForProjectList($project_id);
 
         return new Zend_Paginator(new Zend_Paginator_Adapter_Array($list));
     }

@@ -63,8 +63,8 @@ class PasswordController extends Local_Controller_Action_DomainSwitch
         $modelMember = new Default_Model_Member();
         $member = $modelMember->findActiveMemberByIdentity($email);
 
-        if (count($member->toArray()) == 0) {
-            Zend_Registry::get('logger')->debug(__METHOD__ . ' - not active member found');
+        if (empty($member->member_id)) {
+            Zend_Registry::get('logger')->debug(__METHOD__ . ' - no active member found');
 
             return;
         }
@@ -77,7 +77,7 @@ class PasswordController extends Local_Controller_Action_DomainSwitch
 
     private function generateUrl($member)
     {
-        $filter = $this->getEncryptFilter();
+        $encrypt = $this->getEncryptFilter();
 
         $duration = self::C; // in seconds
 
@@ -89,7 +89,7 @@ class PasswordController extends Local_Controller_Action_DomainSwitch
         /** @var Zend_Controller_Request_Http $request */
         $request = Zend_Controller_Front::getInstance()->getRequest();
 
-        $secret =  $this->base64url_encode($filter->filter(json_encode($payload)));
+        $secret =  $this->base64url_encode($encrypt->filter(json_encode($payload)));
 
         $url = $request->getScheme() . '://' . $request->getHttpHost() . '/password/change?' . $secret;
 
@@ -145,28 +145,35 @@ class PasswordController extends Local_Controller_Action_DomainSwitch
     public function changeAction()
     {
 
+        $debugMsg = '' . __METHOD__ . PHP_EOL;
         $uri_part = explode("?", $this->_request->getRequestUri());
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - $uri_part = ' . print_r($uri_part, true));
+        $debugMsg .= ' - $uri_part = ' . print_r($uri_part, true) . PHP_EOL;
         $secret = preg_replace('/[^-a-zA-Z0-9_=\/]/', '', array_pop($uri_part));
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - $secret = ' . print_r($secret, true));
+        $debugMsg .= ' - $secret = ' . print_r($secret, true) . PHP_EOL;
 
-        $filter = $this->getDecryptFilter();
+        $decrypt = $this->getDecryptFilter();
         $step1 = $this->base64url_decode($secret);
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - $step1 = ' . print_r($step1, true));
-        $step2 = $filter->filter($step1);
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - $step2 = ' . print_r($step2, true));
+        $debugMsg .= ' - $step1 = ' . print_r($step1, true) . PHP_EOL;
+        $step2 = $decrypt->filter($step1);
+        $debugMsg .= ' - $step2 = ' . print_r($step2, true) . PHP_EOL;
         $payload = json_decode(trim($step2), true);
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - $payload = ' . print_r($payload, true));
+        $debugMsg .= ' - $payload = ' . print_r($payload, true) . PHP_EOL;
 
         if (false == Zend_Registry::get('cache')->load(sha1($secret))) {
+            $debugMsg .= '- unknown request url' . PHP_EOL;
+            Zend_Registry::get('logger')->debug($debugMsg);
             throw new Zend_Controller_Action_Exception('Unknown request url for password change');
         }
 
         if (empty($payload) OR (false == is_array($payload))) {
+            $debugMsg .= '- wrong request url' . PHP_EOL;
+            Zend_Registry::get('logger')->debug($debugMsg);
             throw new Zend_Controller_Action_Exception('Wrong request url for password change');
         }
 
-        if ($payload['expire'] < time()) {
+        if (time() > $payload['expire']) {
+            $debugMsg .= '- password change request expired' . PHP_EOL;
+            Zend_Registry::get('logger')->debug($debugMsg);
             $this->_helper->flashMessenger->addMessage('<p class="text-error">Your password change request is expired.</p>');
             $this->forward('login', 'authorization');
         }
@@ -174,6 +181,8 @@ class PasswordController extends Local_Controller_Action_DomainSwitch
         $this->view->assign('action', '/password/change?' . $secret);
 
         if ($this->_request->isGet()) {
+            $debugMsg .= '- show password change form' . PHP_EOL;
+            Zend_Registry::get('logger')->debug($debugMsg);
             return;
         }
 
@@ -196,24 +205,47 @@ class PasswordController extends Local_Controller_Action_DomainSwitch
             return;
         }
 
-        if ($filterInput->getEscaped('password1') != $filterInput->getEscaped('password2')) {
+        $password1 = $filterInput->getUnescaped('password1');
+        $password2 = $filterInput->getUnescaped('password2');
+
+        if ($password1 != $password2) {
             $this->_helper->flashMessenger->addMessage('<p class="text-error">Your passwords are not identical.</p>');
             return;
         }
 
         $model_member = new Default_Model_DbTable_Member();
         $member_data = $model_member->fetchRow(array('member_id = ?' => $payload['member_id']));
-        $member_data->password = Local_Auth_Adapter_Ocs::getEncryptedPassword($filterInput->getEscaped('password1'), $member_data->source_id);
+        
+        if($member_data->password_type == Default_Model_Member::PASSWORD_TYPE_HIVE) {
+            //Save old data
+            $member_data->password_old = $member_data->password;
+            $member_data->password_type_old = Default_Model_Member::PASSWORD_TYPE_HIVE;
+            
+            //Change type and password
+            $member_data->password_type = Default_Model_Member::PASSWORD_TYPE_OCS;
+        }
+        
+        $member_data->password = Local_Auth_Adapter_Ocs::getEncryptedPassword($password1, Default_Model_Member::PASSWORD_TYPE_OCS);
         $member_data->save();
 
         Zend_Registry::get('cache')->remove(sha1($secret));
 
+        //Update Auth-Services
         try {
-            $id_server = new Default_Model_OcsOpenId();
+            $id_server = new Default_Model_Ocs_OpenId();
             $id_server->updatePasswordForUser($member_data->member_id);
         } catch (Exception $e) {
-            Zend_Registry::get('logger')->err($e->getTraceAsString());
+            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }
+        try {
+            $ldap_server = new Default_Model_Ocs_Ident();
+            $ldap_server->updatePassword($member_data->member_id);
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+        }
+
+        $debugMsg .= '- password changed' . PHP_EOL;
+        Zend_Registry::get('logger')->debug($debugMsg);
 
         $this->_helper->flashMessenger->addMessage('<p class="text-error">Your password is changed.</p>');
         $this->forward('login', 'authorization');

@@ -71,15 +71,15 @@ $packagetypeListHelper = new Default_View_Helper_FetchPackagetypeTags();
                                  <th><?= $this->translate('File (click to download)'); ?></th>
                                  <th><?= $this->translate('Version'); ?></th>
                                  <th><?= $this->translate('Description'); ?></th>
-                            
+
                                  <th><?= $this->translate('Packagetype'); ?></th>
                                  <th><?= $this->translate('Architecture'); ?></th>
-                             
+
                                  <th style="text-align: right"><?= $this->translate('Downloads'); ?></th>
                                  <th><?= $this->translate('Date'); ?></th>
 
                                  <th style="text-align: right"><?= $this->translate('Filesize'); ?></th>
-                                
+
                                  <th style="text-align: right">DL</th>
                                   <th style="text-align: right;white-space:nowrap"><?= $this->translate('OCS-Install'); ?>
                                      <a href="#modal-installation-instructions" role="button" data-toggle="modal"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></a>
@@ -150,7 +150,7 @@ $packagetypeListHelper = new Default_View_Helper_FetchPackagetypeTags();
 
                      function getPploadFiles(page) {
                           activeCarouselFirstImg();
-                          
+
                          var collectionId = $pploadCollection.attr('data-ppload-collection-id');
                          if (!page) {
                              page = 1;
@@ -215,12 +215,12 @@ $packagetypeListHelper = new Default_View_Helper_FetchPackagetypeTags();
                                     count_downloads = this.downloaded_count || 0;
                                     downloaded_count_total = downloaded_count_total+parseInt(count_downloads);
 
-                                    //downloadlink is now: domain/api/files/downloadfile/id/ID/s/TOKEN/t/TIMESTAMP/u/USERID/FILE_NAME
+                                    //downloadlink is now: domain/api/files/download/id/ID/s/TOKEN/t/TIMESTAMP/u/USERID/FILE_NAME
                                     var hash = '<?= $this->download_hash ?>';
                                     var timetamp = '<?= $this->download_timestamp ?>';
                                     var userid = '<?= $this->member_id?>';
 
-                                    var downloadUrl = "https://<?= $_SERVER["SERVER_NAME"]?>/p/<?= $this->product->project_id ?>/startdownload?file_id=" + this.id + "&file_name=" + this.name + "&file_type=" + this.type + "&file_size=" + this.size + "&url=" + encodeURIComponent(pploadApiUri + 'files/downloadfile/id/' + this.id + '/s/' + hash + '/t/' + timetamp + '/u/' + userid + '/' + this.name);
+                                    var downloadUrl = "https://<?= $_SERVER["SERVER_NAME"]?>/p/<?= $this->product->project_id ?>/startdownload?file_id=" + this.id + "&file_name=" + this.name + "&file_type=" + this.type + "&file_size=" + this.size + "&url=" + encodeURIComponent(pploadApiUri + 'files/download/id/' + this.id + '/s/' + hash + '/t/' + timetamp + '/u/' + userid + '/' + this.name);
                                     var downloadLink = '<a href="' + downloadUrl + '" id="data-link' + this.id + '">' + this.name + '</a>';
 
                                     /*
@@ -337,7 +337,7 @@ $packagetypeListHelper = new Default_View_Helper_FetchPackagetypeTags();
                                             '<tr data-ppload-file-id="' + this.id + '"' + greyText + '>'
                                             + '<td>' + downloadLink + '</td>'
                                             + '<td>' + version + '</td>'
-                                            + '<td>' + fileDescription + '</td>'                                            
+                                            + '<td>' + fileDescription + '</td>'
                                             + '<td>'
                                             + '<select id="data-select-packagetype' + this.id + '" data-packagetype-id="" name="packagetype" class="form-control input-sm" style="width: 200px;">'
                                             + '<option value=\"\"></option>'
@@ -372,7 +372,7 @@ $packagetypeListHelper = new Default_View_Helper_FetchPackagetypeTags();
                                             + '<td>' +mnt.format('YYYY-MM-DD') + '</td>'
                                             + '<td style="text-align: right">' + humanFileSize(this.size,false) + '</td>'
                                             + '<td style="text-align: right; ">' + downloadButton+ '</td>'
-                                            + '<td style="text-align: right; ">' + installButton + '</td>'                                            
+                                            + '<td style="text-align: right; ">' + installButton + '</td>'
                                             <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
                                             + '<td style="text-align: center; "><input type="checkbox" id="data-checkbox-compatible-'+this.id+'" data-is-compatible="" ></td>'
                                             <?php endif; ?>
@@ -382,7 +382,7 @@ $packagetypeListHelper = new Default_View_Helper_FetchPackagetypeTags();
                                         <?php /*  download/install dropdown btn  */
                                         ?>
                                         var username = '<?= $this->product->username?>';
-                                        $('#dropdown_downloads').append(                                       
+                                        $('#dropdown_downloads').append(
                                             '<li><a data-username="' + username + '" href="' + downloadBtnLink + '" style="white-space: normal; color: #23527c;" class="opendownloadfile" id="data-link-dl' + this.id + '"><span id="download-link-filename' + this.id + '" style="white-space: normal; color: #23527c;">' + downloadLinkFilename + '</span><span class="right">&nbsp;' + humanFileSize(this.size,false) + '&nbsp;</span></a></li>'
                                         );
                                         $('#dropdown_downloads').addClass("active");
@@ -406,7 +406,7 @@ $packagetypeListHelper = new Default_View_Helper_FetchPackagetypeTags();
 
                                             );
                                         }
-                                      
+
 
                                         if ((typeof osId != 'undefined') && (osId != "")) {
                                             $("#data-updatepploadfile" + this.id + " option[value='" + osId + "']").attr('selected', 'selected');
@@ -445,7 +445,7 @@ $packagetypeListHelper = new Default_View_Helper_FetchPackagetypeTags();
                                         }
 
                                         $("#data-select-packagetype" + this.id).hide();
-                                        
+
                                         if ((typeof architectureId != 'undefined') && (architectureId != "")) {
                                             $("#data-select-architecture" + this.id + " option[value='" + architectureId + "']").attr('selected', 'selected');
                                             $architectureIdText = $("#data-select-architecture" + this.id + " option[value='" + architectureId + "']").text();
@@ -456,7 +456,7 @@ $packagetypeListHelper = new Default_View_Helper_FetchPackagetypeTags();
                                         }
 
                                         $("#data-select-architecture" + this.id).hide();
-                                        
+
                                         if ((typeof this.ocs_compatible != 'undefined') && (this.ocs_compatible != "") && this.ocs_compatible == 1) {
                                             $("#data-checkbox-compatible-" + this.id).attr('checked', 'checked');
                                         }
@@ -547,7 +547,7 @@ $packagetypeListHelper = new Default_View_Helper_FetchPackagetypeTags();
                                     var hash = '<?= $this->download_hash ?>';
                                     var timetamp = '<?= $this->download_timestamp ?>';
                                     var userid = '<?= $this->product->member_id?>';
-                                    var downloadUrl = "https://<?= $_SERVER["SERVER_NAME"]?>/p/<?= $this->product->project_id ?>/startdownload?file_id=" + this.id + "&file_name=" + this.name + "&file_type=" + this.type + "&file_size=" + this.size + "&url=" + encodeURIComponent(pploadApiUri + 'files/downloadfile/id/' + this.id + '/s/' + hash + '/t/' + timetamp + '/u/' + userid + '/' + this.name);
+                                    var downloadUrl = "https://<?= $_SERVER["SERVER_NAME"]?>/p/<?= $this->product->project_id ?>/startdownload?file_id=" + this.id + "&file_name=" + this.name + "&file_type=" + this.type + "&file_size=" + this.size + "&url=" + encodeURIComponent(pploadApiUri + 'files/download/id/' + this.id + '/s/' + hash + '/t/' + timetamp + '/u/' + userid + '/' + this.name);
                                     var downloadLink = '<a class="inactiverows" style="color: #ccc; display:none;"" href="' + downloadUrl + '" id="data-link' + this.id + '">' + this.name + '</a>';
 
 
@@ -560,9 +560,9 @@ $packagetypeListHelper = new Default_View_Helper_FetchPackagetypeTags();
                                      var license = '';
                                      var architectureId = '';
                                      var packagetypeId = '';
-                                     
-                                     
-                                     
+
+
+
                                      if (this.tags) {
                                          fileTags = this.tags;
                                          $.each(fileTags.split(','), function () {
@@ -746,7 +746,7 @@ $packagetypeListHelper = new Default_View_Helper_FetchPackagetypeTags();
 
                                  });
 
- 
+
                                  //add old download counter
                                  downloaded_count_total += parseInt(<?= $this->product->count_downloads_hive?>);
 
@@ -776,7 +776,7 @@ $packagetypeListHelper = new Default_View_Helper_FetchPackagetypeTags();
                                      pploadApiUri + 'collections/download/id/' + collectionId
                                  );
 
-                                 
+
                                  /*
                                  var b= false;
                                  if (isPlayable && !$plingMusic.attr('src')) {
@@ -792,7 +792,7 @@ $packagetypeListHelper = new Default_View_Helper_FetchPackagetypeTags();
                                  $('.carousel-indicators > li').first().addClass('active');
                                     b = true;
                                  }
-                                 
+
                                  if(!b){
                                    activeCarouselFirstImg();
                                  }
@@ -964,7 +964,7 @@ $packagetypeListHelper = new Default_View_Helper_FetchPackagetypeTags();
 
                     $('#modal-installation-instructions').on('show.bs.modal', function (e) {
                               var framehtml = '<iframe src="https://opendesktop.github.io/ocs-url/opendesktoporg-help.html" width="100%" height="500" frameborder="0" seamless id="iframeInstallInstruction"></iframe>';
-                              $('#modal-installation-instructions').find('.modal-body').html(framehtml);                              
+                              $('#modal-installation-instructions').find('.modal-body').html(framehtml);
                         });
 
                 });

@@ -194,9 +194,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
             $modelComments = new Default_Model_ProjectComments();
             $offset = 0;
-            $testComments = $modelComments->getCommentTreeForProject($this->_projectId);
-            $testComments->setItemCountPerPage(25);
-            $testComments->setCurrentPageNumber($offset);
+            $testComments = $modelComments->getCommentTreeForProjectList($this->_projectId);            
             $this->view->commentsJson = Zend_Json::encode($testComments);
 
             $modelClone = new Default_Model_ProjectClone();
@@ -266,10 +264,11 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 $this->_authMember->member_id);
         }
 
-        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
-        if($storeConfig->isRenderReact()){
-            $this->initJsonForReact();
-            $this->_helper->viewRenderer('index-react');
+        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;        
+      
+        if($storeConfig->layout_pagedetail && $storeConfig->isRenderReact()){           
+            $this->initJsonForReact();           
+            $this->_helper->viewRenderer('index-react');              
         }
 
     }
@@ -2521,4 +2520,16 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         return $viewArray;
     }
 
+
+    protected function setLayout()
+    {
+        $layoutName = 'flat_ui_template';
+        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;      
+        if($storeConfig  && $storeConfig->layout_pagedetail)
+        {
+             $this->_helper->layout()->setLayout($storeConfig->layout_pagedetail);
+        }else{
+            $this->_helper->layout()->setLayout($layoutName);
+        }        
+    }
 }

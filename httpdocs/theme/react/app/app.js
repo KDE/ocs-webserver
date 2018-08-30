@@ -93,7 +93,9 @@ class App extends React.Component {
     }
 
     // user
-    if (window.user) store.dispatch(setUser(user));
+    if (window.user){
+      store.dispatch(setUser(user));
+    }
 
     // finish loading
     this.setState({loading:false});
@@ -110,7 +112,6 @@ class App extends React.Component {
   }
 
   render(){
-    console.log(this.state);
     let displayView = <HomePageWrapper/>;
     if (store.getState().view === 'explore'){ displayView = <ExplorePageWrapper/>; }
     else if (store.getState().view === 'product'){ displayView = <ProductViewWrapper/>}
