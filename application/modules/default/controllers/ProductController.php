@@ -1834,6 +1834,18 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 'file'     => $tmpFilename,
                 'owner_id' => $this->_authMember->member_id
             );
+            
+            //Admins can upload files for users
+            $helperUserRole = new Backend_View_Helper_UserRole();
+            $userRoleName = $helperUserRole->userRole();
+            if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+                $member_id = $projectData->member_id;
+                $fileRequest = array(
+                    'file'     => $tmpFilename,
+                    'owner_id' => $member_id
+                );
+            }
+            
             if ($projectData->ppload_collection_id) {
                 // Append to existing collection
                 $fileRequest['collection_id'] = $projectData->ppload_collection_id;
