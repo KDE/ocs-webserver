@@ -36,7 +36,7 @@ class Default_Model_Ocs_OpenCode
         if (isset($config)) {
             $this->config = $config;
         } else {
-            $this->config = Zend_Registry::get('config')->settings->opencode;
+            $this->config = Zend_Registry::get('config')->settings->server->opencode;
         }
         $uri = $this->config->host . $this->config->url->user_create;
         $this->httpClient = new Zend_Http_Client($uri, array('keepalice' => true, 'strictredirects' => true));
@@ -46,9 +46,9 @@ class Default_Model_Ocs_OpenCode
      * @param $member_data
      *
      * @return bool
-     * @throws Zend_Cache_Exception
      * @throws Zend_Exception
      * @throws Zend_Http_Client_Exception
+     * @throws Zend_Json_Exception
      */
     public function exportUser($member_data)
     {
@@ -58,7 +58,7 @@ class Default_Model_Ocs_OpenCode
 
         $data = $this->mapUserData($member_data);
 
-        $userid = $this->userExists($data);
+        $userid = $this->userExists($data['username']);
 
         if (false === empty($userid)) {
             return $this->httpUserUpdate($data, $userid);
@@ -92,10 +92,18 @@ class Default_Model_Ocs_OpenCode
         return $data;
     }
 
-    private function userExists($data)
+    /**
+     * @param string $username
+     *
+     * @return bool
+     * @throws Zend_Exception
+     * @throws Zend_Http_Client_Exception
+     * @throws Zend_Json_Exception
+     */
+    public function userExists($username)
     {
         $this->httpClient->resetParameters();
-        $uri = $this->config->host . '/api/v4/users?username=' . $data['username'];
+        $uri = $this->config->host . '/api/v4/users?username=' . $username;
         $this->httpClient->setUri($uri);
         $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
         $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
@@ -232,6 +240,46 @@ class Default_Model_Ocs_OpenCode
         }
 
         return true;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return bool
+     * @throws Zend_Exception
+     * @throws Zend_Http_Client_Exception
+     * @throws Zend_Json_Exception
+     */
+    public function groupExists($name)
+    {
+        $this->httpClient->resetParameters();
+        $uri = $this->config->host . '/api/v4/groups?search=' . $name;
+        $this->httpClient->setUri($uri);
+        $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
+        $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
+        $this->httpClient->setHeaders('User-Agent', $this->config->user_agent);
+        $this->httpClient->setMethod(Zend_Http_Client::GET);
+
+        $response = $this->httpClient->request();
+
+        $body = Zend_Json::decode($response->getRawBody());
+
+        if (count($body) > 0) {
+            return true;
+        }
+
+        if (array_key_exists("message", $body)) {
+            $result_code = substr(trim($body["message"]), 0, 3);
+            if ((int) $result_code >= 300) {
+                throw new Zend_Exception($body["message"]);
+            }
+        }
+
+        if (array_key_exists("error_description", $body)) {
+           throw new Zend_Exception($body["error_description"]);
+        }
+
+        return false;
     }
 
 }

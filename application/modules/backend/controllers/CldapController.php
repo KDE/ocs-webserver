@@ -59,7 +59,19 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
         $this->errorlogfile = realpath(APPLICATION_DATA . "/logs") . DIRECTORY_SEPARATOR . $fileDomainId . '_' . self::filename_errors;
         $this->initFiles($this->logfile, $this->errorlogfile);
         $members = $this->getMemberList();
-        $this->exportMembers($members);
+        $method = $this->getParam('method', 'create');
+
+        file_put_contents($this->logfile, "METHOD: {$method}\n--------------\n", FILE_APPEND);
+        file_put_contents($this->errorlogfile, "METHOD: {$method}\n--------------\n", FILE_APPEND);
+
+        if ('create' == $method) {
+            $this->exportMembers($members);
+            return;
+        }
+        if ('update' == $method) {
+            $this->updateMembers($members);
+            return;
+        }
     }
 
     /**
@@ -115,18 +127,49 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
                 file_put_contents($this->errorlogfile, print_r($member, true), FILE_APPEND);
                 continue;
             }
-            file_put_contents($this->logfile, print_r($member, true),FILE_APPEND);
+            file_put_contents($this->logfile, print_r($member, true), FILE_APPEND);
             try {
-                $modelOcsIdent->exportUserToLdap($member);
+                $modelOcsIdent->createUserInLdap($member);
             } catch (Zend_Ldap_Exception $e) {
                 Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
             }
             $errors = $modelOcsIdent->getErrMessages();
             Zend_Registry::get('logger')->info(print_r($errors, true));
         }
-        return true;
 
+        return true;
     }
+
+    /**
+     * @param $members
+     *
+     * @return bool
+     * @throws Zend_Exception
+     * @throws Zend_Validate_Exception
+     */
+    private function updateMembers($members)
+    {
+        $usernameValidChars = new Zend_Validate_Regex('/^(?=.{3,40}$)(?![-_.])(?!.*[-_.]{2})[a-zA-Z0-9._-]+(?<![-_.])$/');
+        $modelOcsIdent = new Default_Model_Ocs_Ident();
+
+        while ($member = $members->fetch()) {
+            if (false === $usernameValidChars->isValid($member['username'])) {
+                file_put_contents($this->errorlogfile, print_r($member, true), FILE_APPEND);
+                continue;
+            }
+            file_put_contents($this->logfile, print_r($member, true), FILE_APPEND);
+            try {
+                $modelOcsIdent->updateUserInLdap($member);
+            } catch (Zend_Ldap_Exception $e) {
+                Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+            }
+            $errors = $modelOcsIdent->getErrMessages();
+            Zend_Registry::get('logger')->info(print_r($errors, true));
+        }
+
+        return true;
+    }
+
 
     /**
      * @param Zend_Db_Statement_Interface $members

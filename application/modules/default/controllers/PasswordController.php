@@ -248,7 +248,7 @@ class PasswordController extends Local_Controller_Action_DomainSwitch
         Zend_Registry::get('logger')->debug($debugMsg);
 
         $this->_helper->flashMessenger->addMessage('<p class="text-error">Your password is changed.</p>');
-        $this->forward('login', 'authorization');
+        $this->redirect($this->_helper->url('login', 'authorization'));
     }
 
     /**
