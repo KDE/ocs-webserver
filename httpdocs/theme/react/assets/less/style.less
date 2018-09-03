@@ -12,15 +12,25 @@ header {
 #user-dropdown {
   margin-bottom: 2px;
 
-  .dropdown-toggle {
+  > .dropdown-toggle {
     padding: 0 5px;
     .transition();
+    background-color: white;
+    color: #6a7686;
   }
 
   .dropdown-menu {
     width: 300px;
     padding-top: 0;
     overflow: hidden;
+
+    ::before {
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 0 5px 8.7px 5px;
+      border-color: transparent transparent #ffffff transparent;
+    }
 
     #user-info-section {
       height: 100px;
@@ -42,6 +52,11 @@ header {
           line-height: 80px;
           font-size: 50px;
           color: white;
+          overflow: hidden;
+
+          img {
+            width: 100%;
+          }
         }
       }
       .user-details {
@@ -54,6 +69,10 @@ header {
     #main-seperator {
       margin-top: 0;
     }
+
+    li.buttons {
+      padding: 0 10px 5px 10px;
+    }
   }
 }
 
@@ -62,7 +81,7 @@ header {
 
   .dropdown-toggle {
     padding: 0 5px;
-    .transition();    
+    .transition();
   }
 
   .dropdown-menu {
