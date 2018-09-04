@@ -217,3 +217,7 @@ $profile_image_url = $loginMember->profile_image_url;
 
 
     <div id="metaheader"></div>
+    <script>
+      var profileImageUrl = <?php json_encode($profile_image_url); ?>
+    </script>
+    <script type="text/javascript" src="/theme/react/metaheader.js"></script>
