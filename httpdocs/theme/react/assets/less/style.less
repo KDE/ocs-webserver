@@ -122,6 +122,8 @@ header {
           height: 96px;
           width: 96px;
           float: left;
+          border-radius: 100%;
+          overflow: hidden;
 
           .no-avatar-user-letter {
             border-radius: 100%;
@@ -147,9 +149,10 @@ header {
               height: 26px;
               left: 0;
               background-color: rgba(0,0,0,0.4);
-              line-height: 3;
+              line-height: 21px;
               color: white;
               cursor: pointer;
+              font-weight: bold;
             }
           }
         }
@@ -212,7 +215,15 @@ header {
           border: 1px solid #c6c6c6;
 
           &:hover {
-            box-shadow: 0 1px 1px rgba(0,0,0,0.2);
+            -webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+            border-color: #c6c6c6;
+            color: #222;
+            background-color: #fff;
+            background-image: -webkit-gradient(linear,left top,left bottom,from(#fff),to(#f8f8f8));
+            background-image: -webkit-linear-gradient(top,#fff,#f8f8f8);
+            background-image: -webkit-linear-gradient(top,#fff,#f8f8f8);
+            background-image: linear-gradient(top,#fff,#f8f8f8);
           }
         }
       }
@@ -253,6 +264,10 @@ header {
             text-align: center;
             display: block;
             color:rgba(0,0,0,0.87);
+          }
+
+          &:active {
+            background-color: white;
           }
         }
 
@@ -296,6 +311,13 @@ header {
           }
         }
 
+        &:active {
+
+          a {
+            background-color: white;
+          }
+        }
+
       }
     }
   }
@@ -304,8 +326,8 @@ header {
     padding-top: 6px;
 
     .btn-blue {
+      padding: 0;
       border-radius: 2px;
-      padding: 0 12px;
       font-size: 12px;
       height: 30px;
       background: #4d90fe;
@@ -314,6 +336,15 @@ header {
       background: -webkit-linear-gradient(top,#4387fd,#4683ea);
 
       &:hover {
+        color: white;
+      }
+
+      a {
+        font-size: 13px;
+        padding: 0 12px;
+        display: block;
+        height: 30px;
+        line-height: 30px;
         color: white;
       }
     }
