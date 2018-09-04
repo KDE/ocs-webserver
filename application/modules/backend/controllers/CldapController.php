@@ -58,8 +58,17 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
         $this->logfile = realpath(APPLICATION_DATA . "/logs") . DIRECTORY_SEPARATOR . $fileDomainId . '_' . self::filename;
         $this->errorlogfile = realpath(APPLICATION_DATA . "/logs") . DIRECTORY_SEPARATOR . $fileDomainId . '_' . self::filename_errors;
         $this->initFiles($this->logfile, $this->errorlogfile);
-        $members = $this->getMemberList();
         $method = $this->getParam('method', 'create');
+        
+        
+        if(isset($this->getParam('member_id'))) {
+            $memberId = $this->getParam('member_id');
+            $filter = " AND `m`.`member_id` = ".$memberId;
+            $members = $this->getMemberList($filter);
+            
+        } else {
+            $members = $this->getMemberList();
+        }
 
         file_put_contents($this->logfile, "METHOD: {$method}\n--------------\n", FILE_APPEND);
         file_put_contents($this->errorlogfile, "METHOD: {$method}\n--------------\n", FILE_APPEND);
@@ -93,7 +102,7 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
     /**
      * @return Zend_Db_Statement_Interface
      */
-    private function getMemberList()
+    private function getMemberList($filter = "")
     {
         $sql = "
             SELECT `mei`.`external_id`,`m`.`member_id`, `m`.`username`, `me`.`email_address`, `m`.`password`, `m`.`roleId`, `m`.`firstname`, `m`.`lastname`, `m`.`profile_image_url`, `m`.`created_at`, `m`.`changed_at`, `m`.`source_id`
@@ -101,6 +110,7 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
             LEFT JOIN `member_email` AS `me` ON `me`.`email_member_id` = `m`.`member_id` AND `me`.`email_primary` = 1
             LEFT JOIN `member_external_id` AS `mei` ON `mei`.`member_id` = `m`.`member_id`
             WHERE `m`.`is_active` = 1 AND `m`.`is_deleted` = 0 AND `me`.`email_checked` IS NOT NULL AND `me`.`email_deleted` = 0 # AND (me.email_address like '%opayq%' OR m.username like '%rvs%')
+            " . $filter . "
             ORDER BY `m`.`member_id` ASC
             # LIMIT 200
         ";
