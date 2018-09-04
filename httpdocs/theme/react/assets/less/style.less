@@ -63,8 +63,9 @@ header {
     }
 
     .dropdown-menu {
+      border-radius: 0;
       padding: 0;
-      width: 330px;
+      width: 320px;
       top: 50px;
       background: #fff;
       border: 1px solid #ccc;
@@ -75,13 +76,20 @@ header {
 
       .btn-blue {
         border-radius: 2px;
-        padding: 0 20px;
+        padding: 0 15px;
         font-size: 12px;
-        height: 25px;
-        line-height: 25px;
+        height: 27px;
+        line-height: 26px;
         background: #4d90fe;
         font-weight: bold;
         border: 1px solid #3079ed;
+
+        &:hover {
+          background: #357ae8;
+          border-color: #2f5bb7;
+          color: white;
+          box-shadow: 0 1px 1px rgba(0,0,0,0.2);
+        }
       }
 
 
@@ -102,13 +110,13 @@ header {
 
       #user-info-section {
         height: auto;
-        padding: 10px 20px;
+        padding: 20px;
         background: white;
         float: left;
 
         .user-avatar {
-          height: 110px;
-          width: 110px;
+          height: 96px;
+          width: 96px;
           float: left;
 
           .no-avatar-user-letter {
@@ -121,9 +129,23 @@ header {
             font-size: 50px;
             color: white;
             overflow: hidden;
+            position: relative;
 
             img {
               width: 100%;
+            }
+
+            .change-profile-pic {
+              width: 100%;
+              position: absolute;
+              bottom: 0;
+              font-size: 9px;
+              height: 26px;
+              left: 0;
+              background-color: rgba(0,0,0,0.4);
+              line-height: 3;
+              color: white;
+              cursor: pointer;
             }
           }
         }
@@ -143,11 +165,21 @@ header {
               width: 100%;
               float: left;
               height: auto;
-              line-height: 18px;
-              font-size: 12px;
+              line-height: 15px;
+              font-size: 13px;
+              min-height: 8px;
+              color: #6a7686;
+
+              a {
+                color: #36c;
+              }
+
+              b {
+                color: black;
+              }
 
               button {
-                margin-top: 9px;
+                margin-top: 19px;
               }
             }
           }
@@ -157,19 +189,26 @@ header {
       #main-seperator {
         margin-top: 0;
         margin-bottom: 0;
+        background-color: #ccc;
       }
 
       li.buttons {
-        padding: 5px 10px;
+        padding: 10px;
         background-color: #f5f5f5;
 
         .btn {
           border-radius: 2px;
-          padding: 0 20px;
+          padding: 0 16px;
           font-size: 12px;
-          height: 25px;
-          line-height: 25px;
-          font-weight: bold;
+          height: 30px;
+          font-weight: normal;
+          color: #666;
+          background: #f8f8f8;
+          border: 1px solid #c6c6c6;
+
+          &:hover {
+            box-shadow: 0 1px 1px rgba(0,0,0,0.2);
+          }
         }
       }
     }
@@ -178,45 +217,81 @@ header {
 
   &#user-context-dropdown-container {
     .dropdown-menu  {
-      padding: 14px;
-      li {
-          height: 100px;
-          width: 100px;
-          padding: 5px;
+      padding: 23px 28px;
 
-          a {
-            display: block;
-            width:100%;
-            height: 100%;
-            background-size: 80px;
+      li {
+        height: auto;
+        width: 87px;
+        border: 1px solid white;
+        margin: 5px 0;
+
+
+        a {
+          display: block;
+          width: 100%;
+          padding: 0;
+          height: auto;
+          float: left;
+
+          .icon {
+            width: 55px;
+            height: 55px;
+            margin: 10px auto;
+            background-size: contain;
             background-position: center center;
             background-repeat: no-repeat;
           }
 
-          &#opendesktop-link-item {
-            a {
+          span {
+            float: left;
+            width: 100%;
+            text-align: center;
+            display: block;
+            color:rgba(0,0,0,0.87);
+          }
+        }
+
+        &#opendesktop-link-item {
+          a {
+            .icon {
               background-image: url('../img/logo-opendesktop.png');
             }
           }
+        }
 
-          &#discourse-link-item {
-            a {
+        &#discourse-link-item {
+          a {
+            .icon {
               background-image: url('../img/logo-discourse.png');
             }
           }
+        }
 
-          &#gitlab-link-item {
-            a {
+        &#gitlab-link-item {
+          a {
+            .icon {
               background-image: url(../img/logo-gitlab.png);
             }
           }
+        }
 
-          &#opencode-link-item {
-            a {
+        &#opencode-link-item {
+          a {
+            .icon {
               background-image: url(../img/logo-opencode.png);
             }
           }
         }
+
+        &:hover {
+          border:1px solid #e5e5e5;
+
+          a {
+            background-color: white;
+          }
+        }
+
+      }
     }
   }
 }

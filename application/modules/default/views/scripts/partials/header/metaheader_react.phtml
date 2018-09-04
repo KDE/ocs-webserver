@@ -141,10 +141,30 @@ $profile_image_url = $loginMember->profile_image_url;
                          <span class="glyphicon glyphicon-th"></span>
                        </button>
                        <ul class="dropdown-menu three-column dropdown-menu-right" aria-labelledby="dropdownMenu2">
-                         <li id="opendesktop-link-item"><a href="http://www.opendesktop.org"></a></li>
-                         <li id="discourse-link-item"><a href="http://discourse.opendesktop.org/"></a></li>
-                         <li id="gitlab-link-item"><a href="https://about.gitlab.com/"></a></li>
-                         <li id="opencode-link-item"><a href="https://about.gitlab.com/"></a></li>
+                         <li id="opendesktop-link-item">
+                           <a href="http://www.opendesktop.org">
+                             <div class="icon"></div>
+                             <span>OpenDesktop</span>
+                           </a>
+                         </li>
+                         <li id="discourse-link-item">
+                           <a href="http://discourse.opendesktop.org/">
+                             <div class="icon"></div>
+                             <span>Discourse</span>
+                           </a>
+                         </li>
+                         <li id="gitlab-link-item">
+                           <a href="https://about.gitlab.com/">
+                             <div class="icon"></div>
+                             <span>Gitlab</span>
+                           </a>
+                         </li>
+                         <li id="opencode-link-item">
+                           <a href="https://www.opencode.net/">
+                             <div class="icon"></div>
+                             <span>OpenCode</span>
+                           </a>
+                         </li>
                        </ul>
                      </div>
                    </li>
@@ -157,12 +177,18 @@ $profile_image_url = $loginMember->profile_image_url;
                          <li id="user-info-menu-item">
                            <div id="user-info-section">
                              <div class="user-avatar">
-                               <div class="no-avatar-user-letter"><img src="<?=$profile_image_url?>"/></div>
+                               <div class="no-avatar-user-letter">
+                                 <img src="<?=$profile_image_url?>"/>
+                                 <a class="change-profile-pic">
+                                   Change
+                                 </a>
+                               </div>
                              </div>
                              <div class="user-details">
                                <ul>
                                  <li><b><?=$username?></b></li>
-                                 <li><a><?=$loginMember->mail?></a></li>
+                                 <li><?=$loginMember->mail?></li>
+                                 <li></li>
                                  <li><a>Profile</a> - <a>Privacy</a></li>
                                  <li><button class="btn btn-default btn-blue">Acount</button></li>
                                </ul>
