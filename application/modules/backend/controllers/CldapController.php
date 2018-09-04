@@ -60,6 +60,10 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
         $this->initFiles($this->logfile, $this->errorlogfile);
         $method = $this->getParam('method', 'create');
         
+
+        file_put_contents($this->logfile, "METHOD: {$method}\n--------------\n", FILE_APPEND);
+        file_put_contents($this->errorlogfile, "METHOD: {$method}\n--------------\n", FILE_APPEND);
+
         
         if($this->hasParam('member_id')) {
             $memberId = $this->getParam('member_id');
@@ -69,9 +73,6 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
         } else {
             $members = $this->getMemberList();
         }
-
-        file_put_contents($this->logfile, "METHOD: {$method}\n--------------\n", FILE_APPEND);
-        file_put_contents($this->errorlogfile, "METHOD: {$method}\n--------------\n", FILE_APPEND);
 
         if ('create' == $method) {
             $this->exportMembers($members);
@@ -109,13 +110,16 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
             FROM `member` AS `m`
             LEFT JOIN `member_email` AS `me` ON `me`.`email_member_id` = `m`.`member_id` AND `me`.`email_primary` = 1
             LEFT JOIN `member_external_id` AS `mei` ON `mei`.`member_id` = `m`.`member_id`
-            WHERE `m`.`is_active` = 1 AND `m`.`is_deleted` = 0 AND `me`.`email_checked` IS NOT NULL AND `me`.`email_deleted` = 0 # AND (me.email_address like '%opayq%' OR m.username like '%rvs%')
+            WHERE `m`.`is_active` = 1 AND `m`.`is_deleted` = 0 AND `me`.`email_checked` IS NOT NULL AND `me`.`email_deleted` = 0 
+            # AND (me.email_address like '%opayq%' OR m.username like '%rvs%')
             " . $filter . "
             ORDER BY `m`.`member_id` ASC
             # LIMIT 200
         ";
 
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql);
+        
+        file_put_contents($this->logfile, "Load : " . count($result) . " members...\n", FILE_APPEND);
 
         return $result;
     }
@@ -132,7 +136,10 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
         $usernameValidChars = new Zend_Validate_Regex('/^(?=.{3,40}$)(?![-_.])(?!.*[-_.]{2})[a-zA-Z0-9._-]+(?<![-_.])$/');
         $modelOcsIdent = new Default_Model_Ocs_Ident();
 
+        file_put_contents($this->logfile, "Start exportMembers with " . count($members) . " members...\n", FILE_APPEND);
+        
         while ($member = $members->fetch()) {
+            file_put_contents($this->logfile, "Member " . $member['username'] . "\n", FILE_APPEND);
             if (false === $usernameValidChars->isValid($member['username'])) {
                 file_put_contents($this->errorlogfile, print_r($member, true), FILE_APPEND);
                 continue;
@@ -144,6 +151,7 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
                 Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
             }
             $errors = $modelOcsIdent->getErrMessages();
+            file_put_contents($this->errorlogfile, print_r($errors, true), FILE_APPEND);
             Zend_Registry::get('logger')->info(print_r($errors, true));
         }
 
