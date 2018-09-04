@@ -61,7 +61,7 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
         $method = $this->getParam('method', 'create');
         
         
-        if(isset($this->getParam('member_id'))) {
+        if($this->hasParam('member_id')) {
             $memberId = $this->getParam('member_id');
             $filter = " AND `m`.`member_id` = ".$memberId;
             $members = $this->getMemberList($filter);
