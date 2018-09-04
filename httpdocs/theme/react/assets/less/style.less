@@ -70,7 +70,7 @@ header {
     .dropdown-menu {
       border-radius: 0;
       padding: 0;
-      width: 317px;
+      width: 320px;
       top: 50px;
       background: #fff;
       border: 1px solid #ccc;
@@ -149,7 +149,7 @@ header {
               height: 26px;
               left: 0;
               background-color: rgba(0,0,0,0.4);
-              line-height: 21px;
+              line-height: 30px;
               color: white;
               cursor: pointer;
               font-weight: bold;
@@ -234,6 +234,12 @@ header {
   &#user-context-dropdown-container {
     .dropdown-menu  {
       padding: 23px 28px;
+      right: -42px;
+
+      &::before {
+        right: 49px;
+      }
+
 
       li {
         height: auto;
@@ -253,7 +259,7 @@ header {
             width: 55px;
             height: 55px;
             margin: 10px auto;
-            background-size: contain;
+            background-size: 50px;
             background-position: center center;
             background-repeat: no-repeat;
           }
@@ -325,27 +331,28 @@ header {
   &#user-signin-button {
     padding-top: 6px;
 
-    .btn-blue {
-      padding: 0;
-      border-radius: 2px;
-      font-size: 12px;
-      height: 30px;
-      background: #4d90fe;
-      font-weight: bold;
-      border: 1px solid #3079ed;
-      background: -webkit-linear-gradient(top,#4387fd,#4683ea);
-
-      &:hover {
-        color: white;
-      }
-
       a {
+        padding: 0;
         font-size: 13px;
-        padding: 0 12px;
         display: block;
         height: 30px;
         line-height: 30px;
         color: white;
+
+        .btn-blue {
+          padding: 0 12px;
+          border-radius: 2px;
+          font-size: 12px;
+          height: 30px;
+          background: #4d90fe;
+          font-weight: bold;
+          border: 1px solid #3079ed;
+          background: -webkit-linear-gradient(top,#4387fd,#4683ea);
+
+          &:hover {
+            color: white;
+          }
+
       }
     }
   }
