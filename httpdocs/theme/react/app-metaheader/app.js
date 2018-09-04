@@ -1,5 +1,5 @@
 const { Provider, connect } = ReactRedux;
-const store = Redux.createStore(reducer);
+const store = Redux.createStore(metaHeaderReducer);
 
 class App extends React.Component {
   constructor(props){
@@ -9,6 +9,7 @@ class App extends React.Component {
 
   render(){
     return (
+      <div store="store">
       <ul className="nav nav-pills meta-nav-top right" style="margin-right: 30px;">
          <li><a href="/community" > Community </a> </li>
          <li><a href="<?=$url_forum?>" target="_blank"> Forum</a> </li>
@@ -53,21 +54,12 @@ class App extends React.Component {
            </div>
          </li>
       </ul>
-    )
-  }
-}
-
-class AppWrapper extends React.Component {
-  render(){
-    return (
-      <Provider store={store}>
-        <App/>
-      </Provider>
+    </div>
     )
   }
 }
 
 ReactDOM.render(
-    <AppWrapper />,
-    document.getElementById('meta-header')
+    <App />,
+    document.getElementById('metaheader')
 );
