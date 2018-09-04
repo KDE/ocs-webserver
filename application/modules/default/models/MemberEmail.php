@@ -112,7 +112,7 @@ class Default_Model_MemberEmail
      */
     public function fetchMemberPrimaryMail($member_id)
     {
-        $sql = "select * from {$this->_dataTable->info('name')} where email_member_id = :member_id and email_primary = 1";
+        $sql = "SELECT * FROM {$this->_dataTable->info('name')} WHERE email_member_id = :member_id AND email_primary = 1";
         $dataEmail = $this->_dataTable->getAdapter()->fetchRow($sql, array('member_id' => $member_id));
 
         return $dataEmail;
@@ -198,6 +198,10 @@ class Default_Model_MemberEmail
      */
     public function saveEmailAsPrimary($user_id, $user_mail, $user_mail_checked = 0, $user_verification = null)
     {
+        if (empty($user_id) OR empty($user_mail)) {
+            return false;
+        }
+
         $data = array();
         $data['email_member_id'] = $user_id;
         $data['email_address'] = $user_mail;
@@ -208,6 +212,8 @@ class Default_Model_MemberEmail
         $data['email_primary'] = Default_Model_DbTable_MemberEmail::EMAIL_PRIMARY;
 
         $result = $this->_dataTable->save($data);
+
+        $this->resetOtherPrimaryEmail($user_id, $user_mail);
 
         $this->updateMemberPrimaryMail($user_id);
 
@@ -234,24 +240,66 @@ class Default_Model_MemberEmail
 
     /**
      * @param string $value
-     * @param int    $param
+     * @param int    $test_case_sensitive
+     *
+     * @param array  $omitMember
      *
      * @return mixed
      */
-    public function findMailAddress($value, $param)
+    public function findMailAddress($value, $test_case_sensitive = self::CASE_INSENSITIVE, $omitMember = array())
     {
         $sql = "
             SELECT *
             FROM `member_email`
             WHERE `member_email`.`email_deleted` = 0
         ";
-        if ($param == self::CASE_INSENSITIVE) {
+        if ($test_case_sensitive == self::CASE_INSENSITIVE) {
             $sql .= "AND LCASE(member_email.email_address) = LCASE(:mail_address)";
         } else {
             $sql .= "AND member_email.email_address = :mail_address";
         }
 
+        if (count($omitMember) > 0) {
+            $sql .= " AND member_email.email_member_id NOT IN (" . implode(',', $omitMember) . ")";
+        }
+
         return $this->_dataTable->getAdapter()->fetchAll($sql, array('mail_address' => $value));
+    }
+
+    public function sendConfirmationMail($val, $verificationVal)
+    {
+        $confirmMail = new Default_Plugin_SendMail('tpl_verify_user');
+        $confirmMail->setTemplateVar('servername', $this->getServerName());
+        $confirmMail->setTemplateVar('username', $val['username']);
+        $confirmMail->setTemplateVar('verificationlinktext',
+            '<a href="https://' . $this->getServerName() . '/verification/' . $verificationVal
+            . '">Click here to verify your email address</a>');
+        $confirmMail->setTemplateVar('verificationlink',
+            '<a href="https://' . $this->getServerName() . '/verification/' . $verificationVal . '">https://' . $this->getServerName()
+            . '/verification/' . $verificationVal . '</a>');
+        $confirmMail->setTemplateVar('verificationurl', 'https://' . $this->getServerName() . '/verification/' . $verificationVal);
+        $confirmMail->setReceiverMail($val['mail']);
+        $confirmMail->setFromMail('registration@opendesktop.org');
+        $confirmMail->send();
+    }
+
+    private function getServerName()
+    {
+        /** @var Zend_Controller_Request_Http $request */
+        $request = Zend_Controller_Front::getInstance()->getRequest();
+
+        return $request->getHttpHost();
+    }
+
+    private function resetOtherPrimaryEmail($user_id, $user_mail)
+    {
+        $sql = "
+                UPDATE `member_email`
+                SET `email_primary` = 0
+                WHERE `email_member_id` = :user_id AND `email_address` <> :user_mail; 
+                ";
+        $result = $this->_dataTable->getAdapter()->query($sql, array('user_id' => $user_id, 'user_mail' => $user_mail));
+
     }
 
 }

@@ -968,9 +968,11 @@ class Default_Model_Member extends Default_Model_DbTable_Member
      * @param string $value
      * @param int    $test_case_sensitive
      *
+     * @param array  $omitMember
+     *
      * @return array
      */
-    public function findUsername($value, $test_case_sensitive = self::CASE_INSENSITIVE)
+    public function findUsername($value, $test_case_sensitive = self::CASE_INSENSITIVE, $omitMember = array())
     {
         $sql = "
             SELECT *
@@ -980,6 +982,10 @@ class Default_Model_Member extends Default_Model_DbTable_Member
             $sql .= "WHERE LCASE(member.username) = LCASE(:username)";
         } else {
             $sql .= "WHERE member.username = :username";
+        }
+
+        if (count($omitMember) > 0) {
+            $sql .= " AND member.member_id NOT IN (" . implode(',', $omitMember) . ")";
         }
 
         return $this->_db->fetchAll($sql, array('username' => $value));

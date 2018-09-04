@@ -310,9 +310,10 @@ class Default_Model_OAuth_Ocs implements Default_Model_OAuth_Interface
                 array('A record with the supplied identity could not be found.'));
         }
 
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - error while authenticate user from oauth provider: ' . implode(",\n",
-                $authResult->getMessages()))
-        ;
+        Zend_Registry::get('logger')->info(__METHOD__ . "\n"
+            . ' - authentication error : user=>'.$userEmail.': ' . "\n"
+            . ' - messages : ' . implode(",\n",$authResult->getMessages())
+        );
 
         return $authResult;
     }

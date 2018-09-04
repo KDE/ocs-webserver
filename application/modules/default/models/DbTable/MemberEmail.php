@@ -37,16 +37,18 @@ class Default_Model_DbTable_MemberEmail extends Local_Model_Table
 
     protected $_defaultValues = array(
         'email_member_id' => 0,
-        'email_address' => null,
-        'email_primary' => 0,
-        'email_deleted' => 0,
-        'email_created' => null,
-        'email_checked' => null
+        'email_address'   => null,
+        'email_primary'   => 0,
+        'email_deleted'   => 0,
+        'email_created'   => null,
+        'email_checked'   => null
     );
 
     /**
      * @param int $identifer
+     *
      * @return int
+     * @throws Zend_Db_Statement_Exception
      */
     public function setDeleted($identifer)
     {
@@ -55,37 +57,57 @@ class Default_Model_DbTable_MemberEmail extends Local_Model_Table
 
     /**
      * @param int $email_id
+     *
      * @return int|void
+     * @throws Zend_Db_Statement_Exception
      */
     public function delete($email_id)
     {
         $sql = "UPDATE `{$this->_name}` SET `email_deleted` = 1 WHERE `{$this->_key}` = :emailId";
         $stmnt = $this->_db->query($sql, array('emailId' => $email_id));
+
         return $stmnt->rowCount();
     }
 
     /**
      * @param int $email_id
+     *
      * @return int
+     * @throws Zend_Db_Statement_Exception
      */
     public function setChecked($email_id)
     {
         $sql = "UPDATE `{$this->_name}` SET `email_checked` = NOW() WHERE `{$this->_key}` = :emailId";
         $stmnt = $this->_db->query($sql, array('emailId' => $email_id));
+
         return $stmnt->rowCount();
     }
 
+    /**
+     * @param $email_id
+     *
+     * @return int
+     * @throws Zend_Db_Statement_Exception
+     */
     public function setPrimary($email_id)
     {
         $sql = "UPDATE `{$this->_name}` SET `email_primary` = 1 WHERE `{$this->_key}` = :emailId";
         $stmnt = $this->_db->query($sql, array('emailId' => $email_id));
+
         return $stmnt->rowCount();
     }
 
+    /**
+     * @param $member_id
+     *
+     * @return int
+     * @throws Zend_Db_Statement_Exception
+     */
     public function setDeletedByMember($member_id)
     {
         $sql = "UPDATE `{$this->_name}` SET `email_deleted` = 1 WHERE `email_member_id` = :memberId";
         $stmnt = $this->_db->query($sql, array('memberId' => $member_id));
+
         return $stmnt->rowCount();
     }
 

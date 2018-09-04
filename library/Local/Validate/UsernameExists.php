@@ -33,7 +33,7 @@ class Local_Validate_UsernameExists extends Zend_Validate_Abstract
         $value = (string)$value;
         $this->_setValue($value);
 
-        return $this->checkUsernameExist($value);
+        return $this->checkUsernameExist($value, $context);
     }
 
     /**
@@ -41,10 +41,13 @@ class Local_Validate_UsernameExists extends Zend_Validate_Abstract
      *
      * @return bool
      */
-    private function checkUsernameExist($value)
+    private function checkUsernameExist($value, $context)
     {
+        if (isset($context['omitMember'])) {
+            $omitMember = $context['omitMember'];
+        }
         $modelMember = new Default_Model_Member();
-        $resultSet = $modelMember->findUsername($value, Default_Model_Member::CASE_INSENSITIVE);
+        $resultSet = $modelMember->findUsername($value, Default_Model_Member::CASE_INSENSITIVE, $omitMember);
         if (count($resultSet) > 0) {
             return false;
         }
