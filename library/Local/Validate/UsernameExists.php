@@ -43,6 +43,7 @@ class Local_Validate_UsernameExists extends Zend_Validate_Abstract
      */
     private function checkUsernameExist($value, $context)
     {
+        $omitMember = null;
         if (isset($context['omitMember'])) {
             $omitMember = $context['omitMember'];
         }
