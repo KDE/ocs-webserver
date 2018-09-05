@@ -39,11 +39,13 @@ class Default_Model_Ocs_OpenCode
             $this->config = Zend_Registry::get('config')->settings->server->opencode;
         }
         $uri = $this->config->host . $this->config->url->user_create;
-        $this->httpClient = new Zend_Http_Client($uri, array('keepalice' => true, 'strictredirects' => true));
+        $this->httpClient = new Zend_Http_Client($uri, array('keepalive' => true, 'strictredirects' => true));
     }
 
     /**
-     * @param $member_data
+     * @param      $member_data
+     *
+     * @param bool $force
      *
      * @return bool
      * @throws Zend_Exception
@@ -58,18 +60,47 @@ class Default_Model_Ocs_OpenCode
 
         $data = $this->mapUserData($member_data);
 
-        $userid = $this->userExists($data['username']);
+        $userId = $this->getUser($data['extern_uid']);
 
-        if (false === empty($userid)) {
-            if($force === true) {
-                return $this->httpUserUpdate($data, $userid);
-            } else {
-                $this->messages[0] = 'User exsistst and we not force an update';
-                return true;
-            }
+        if (empty($userId)) {
+            $data['skip_confirmation'] = 'true';
+
+            return $this->httpUserCreate($data);
         }
 
-        return $this->httpUserCreate($data);
+        if ($force === true) {
+            $data['skip_reconfirmation'] = 'true';
+            unset($data['password']);
+            return $this->httpUserUpdate($data, $userId);
+        }
+
+        $this->messages[0] = 'User exists and we do not update. Use the force parameter instead.';
+
+        return false;
+    }
+
+    /**
+     * @param array $member_data
+     *
+     * @return bool
+     * @throws Zend_Exception
+     * @throws Zend_Http_Client_Exception
+     * @throws Zend_Http_Exception
+     * @throws Zend_Json_Exception
+     */
+    public function deleteUser($member_data)
+    {
+        if (empty($member_data)) {
+            return false;
+        }
+
+        $userId = $this->getUser($member_data['external_id']);
+
+        if (empty($userId)) {
+            return false;
+        }
+
+        return $this->httpUserDelete($userId);
     }
 
     /**
@@ -79,20 +110,26 @@ class Default_Model_Ocs_OpenCode
      */
     protected function mapUserData($user)
     {
+        $paramEmail = '';
+        if (isset($user['email_address'])) {
+            $paramEmail = $user['email_address'];
+        } elseif (isset($user['mail'])) {
+            $paramEmail = $user['mail'];
+        }
+
         $data = array(
-            'email'             => $user['email_address'],
+            'email'             => $paramEmail,
             'username'          => $user['username'],
-            'name'              => (false == empty($user['lastname'])) ? trim($user['firstname'] . ' ' . $user['lastname'])
-                : $user['username'],
+            'name'              => (false == empty($user['lastname'])) ? trim($user['firstname'] . ' ' . $user['lastname']) : $user['username'],
             'password'          => $user['password'],
-            'extern_uid'        => $user['external_id'],
             'provider'          => 'all',
+            'extern_uid'        => $user['external_id'],
             'bio'               => empty($user['biography']) ? '' : $user['biography'],
             'admin'             => $user['roleId'] == 100 ? 'true' : 'false',
-            'can_create_group'  => 'true',
-            'skip_confirmation' => 'true',
-            'skip_reconfirmation' => 'true',
-            'confirm'           => 'no'
+            'can_create_group'  => 'true'
+            //'skip_confirmation' => 'true',
+            //'skip_reconfirmation' => 'true',
+            //'confirm'           => 'no'
         );
 
         return $data;
@@ -131,6 +168,46 @@ class Default_Model_Ocs_OpenCode
             }
         }
 
+        Zend_Registry::get('logger')->debug("----------\n" . __METHOD__ . " - body:\n" . $response->getRawBody());
+
+        return $body[0]['id'];
+    }
+
+    /**
+     * @param string $username
+     *
+     * @return bool
+     * @throws Zend_Exception
+     * @throws Zend_Http_Client_Exception
+     * @throws Zend_Json_Exception
+     */
+    public function getUser($extern_uid)
+    {
+        $this->httpClient->resetParameters();
+        $uri = $this->config->host . "/api/v4/users?extern_uid={$extern_uid}&provider=all";
+        $this->httpClient->setUri($uri);
+        $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
+        $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
+        $this->httpClient->setHeaders('User-Agent', $this->config->user_agent);
+        $this->httpClient->setMethod(Zend_Http_Client::GET);
+
+        $response = $this->httpClient->request();
+
+        $body = Zend_Json::decode($response->getRawBody());
+
+        if (count($body) == 0) {
+            return false;
+        }
+
+        if (array_key_exists("message", $body)) {
+            $result_code = substr(trim($body["message"]), 0, 3);
+            if ((int) $result_code >= 300) {
+                throw new Zend_Exception($body["message"]);
+            }
+        }
+
+        Zend_Registry::get('logger')->debug("----------\n" . __METHOD__ . " - body:\n" . $response->getRawBody());
+
         return $body[0]['id'];
     }
 
@@ -168,10 +245,15 @@ class Default_Model_Ocs_OpenCode
         //Zend_Registry::get('logger')->debug("----------\n" . __METHOD__ . " - response:\n" . $response->asString());
         //Zend_Registry::get('logger')->debug("----------\n" . __METHOD__ . " - body:\n" . $response->getBody());
 
-        $this->messages[0] = 'response for creation request: ' . $body;
+        $this->messages[0] = ' - response for creation request: ' . $body . PHP_EOL . " - userdata: " . implode(";", $data);
 
         if ($response->getStatus() < 200 AND $response->getStatus() >= 300) {
-            throw new Zend_Exception('push user data failed. OCS OpenCode server send message: ' . $body);
+            throw new Default_Model_Ocs_Exception('push user data failed. OCS OpenCode server send message: ' . $body);
+        }
+
+        $body = Zend_Json::decode($response->getRawBody());
+        if (array_key_exists("message", $body)) {
+            throw new Default_Model_Ocs_Exception($body["message"]);
         }
 
         return true;
@@ -208,9 +290,12 @@ class Default_Model_Ocs_OpenCode
     /**
      * @param $data
      *
+     * @param $id
+     *
      * @return bool
      * @throws Zend_Exception
      * @throws Zend_Http_Client_Exception
+     * @throws Zend_Http_Exception
      */
     private function httpUserUpdate($data, $id)
     {
@@ -235,14 +320,19 @@ class Default_Model_Ocs_OpenCode
             $body = Zend_Http_Response::decodeGzip($body);
         }
 
-        //Zend_Registry::get('logger')->debug("----------\n" . __METHOD__ . " - request:\n" . $this->httpClient->getLastRequest());
+        Zend_Registry::get('logger')->debug("----------\n" . __METHOD__ . " - request:\n" . $this->httpClient->getLastRequest());
         //Zend_Registry::get('logger')->debug("----------\n" . __METHOD__ . " - response:\n" . $response->asString());
         //Zend_Registry::get('logger')->debug("----------\n" . __METHOD__ . " - body:\n" . $response->getBody());
 
-        $this->messages[0] = 'response for update request: ' . $body;
+        $this->messages[0] = ' - response for update request: ' . $body . PHP_EOL . " - userdata: " . implode(';', $data) . PHP_EOL . " - opencode id: " . $id;
 
         if ($response->getStatus() < 200 AND $response->getStatus() >= 300) {
             throw new Zend_Exception('push user data failed. OCS OpenCode server send message: ' . $body);
+        }
+
+        $body = Zend_Json::decode($response->getRawBody());
+        if (array_key_exists("message", $body)) {
+            throw new Default_Model_Ocs_Exception($body["message"]);
         }
 
         return true;
@@ -286,6 +376,50 @@ class Default_Model_Ocs_OpenCode
         }
 
         return false;
+    }
+
+
+    /**
+     * @param $id
+     *
+     * @return bool
+     * @throws Zend_Exception
+     * @throws Zend_Http_Client_Exception
+     * @throws Zend_Http_Exception
+     */
+    private function httpUserDelete($id)
+    {
+        $this->httpClient->resetParameters();
+        $uri = $this->config->host . '/api/v4/users/' . $id;
+        $this->httpClient->setUri($uri);
+        $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
+        $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
+        $this->httpClient->setHeaders('User-Agent', $this->config->user_agent);
+        $this->httpClient->setMethod(Zend_Http_Client::DELETE);
+
+        $response = $this->httpClient->request();
+
+        $transfer_encoding = $response->getHeader('Transfer-encoding');
+        $body = $response->getRawBody();
+        if ('chunked' == trim(strtolower($transfer_encoding))) {
+            $body = Zend_Http_Response::decodeChunkedBody($response->getRawBody());
+        }
+        $content_encoding = $response->getHeader('Content-encoding');
+        if ('gzip' == trim(strtolower($content_encoding))) {
+            $body = Zend_Http_Response::decodeGzip($body);
+        }
+
+        //Zend_Registry::get('logger')->debug("----------\n" . __METHOD__ . " - request:\n" . $this->httpClient->getLastRequest());
+        //Zend_Registry::get('logger')->debug("----------\n" . __METHOD__ . " - response:\n" . $response->asString());
+        //Zend_Registry::get('logger')->debug("----------\n" . __METHOD__ . " - body:\n" . $response->getBody());
+
+        $this->messages[0] = ' - response for delete request: ' . $body . PHP_EOL .  " - OpenCode user id: {$id}" . PHP_EOL;
+
+        if ($response->getStatus() < 200 AND $response->getStatus() >= 300) {
+            throw new Zend_Exception('delete user failed. OCS OpenCode server send message: ' . $body . PHP_EOL . " - OpenCode user id: {$id}");
+        }
+
+        return true;
     }
 
 }

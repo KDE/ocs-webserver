@@ -38,6 +38,24 @@
     </form>
 </div>
 <div id="TableContainer"></div>
+<div id="dialog-form" title=""></div>
+<script type="text/javascript">
+    $("#dialog-form").dialog({
+        autoOpen: false,
+        //height: 350,
+        width: 600,
+        modal: true,
+        buttons: {
+            Close: function () {
+                $(this).dialog("close");
+            },
+            Save: function () {
+                $('#dialog-form form').submit();
+                $(this).dialog("close");
+            }
+        }
+    });
+</script>
 <script type="text/javascript">
     $(document).ready(function () {
         $('#TableContainer').jtable({
@@ -272,6 +290,19 @@
                 validated: {
                     title: 'validated',
                     list: false
+                },
+                exportUser: {
+                    title: '',
+                    width: '1%',
+                    sorting: false,
+                    create: false,
+                    edit: false,
+                    list: true,
+                    display: function (data) {
+                        if (data.record) {
+                            return '<a role="button" title="export user data" class="btn btn-primary btn-xs export-user" style="color:white;" data-record="' + data.record.member_id + '"><span class="glyphicon glyphicon-export" aria-hidden="true"></span></a>';
+                        }
+                    }
                 }
             }
         });
@@ -298,6 +329,29 @@
                 filter_username: null,
                 filter_mail: null
             });
+        });
+
+        $('body').on("click", 'a.export-user', function (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            var elementRecord = $(this).data("record");
+
+            jQuery.ajax({
+                data: {'c': elementRecord},
+                url: '/backend/user/export/',
+                type: 'post',
+                error: function () {
+                    alert("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+                    return false;
+                },
+                success: function (results) {
+                    $('#dialog-form').empty().html(results.Message).dialog('open');
+                    return false;
+                }
+            });
+
+            return false;
         });
 
         $('#TableContainer').jtable('load');
