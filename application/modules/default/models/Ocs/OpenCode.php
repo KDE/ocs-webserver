@@ -64,7 +64,7 @@ class Default_Model_Ocs_OpenCode
             if($force === true) {
                 return $this->httpUserUpdate($data, $userid);
             } else {
-                $this->messages[0] = 'User existst and we not force an update';
+                $this->messages[0] = 'User exsistst and we not force an update';
                 return true;
             }
         }
