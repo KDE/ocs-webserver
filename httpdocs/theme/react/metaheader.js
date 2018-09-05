@@ -21,9 +21,14 @@ class MetaHeader extends React.Component {
       baseUrl: baseUrl,
       blogUrl: blogUrl,
       domains: domains,
+      user: user,
       sName: sName,
       loading: false
     };
+  }
+
+  componentDidMount() {
+    console.log(this.state.user);
   }
 
   render() {
@@ -137,7 +142,9 @@ class UserMenu extends React.Component {
   render() {
     let userDropdownDisplay;
     if (this.props.user) {
-      userDropdownDisplay = React.createElement(UserLoginMenuContainer, null);
+      userDropdownDisplay = React.createElement(UserLoginMenuContainer, {
+        user: this.props.user
+      });
     } else {
       userDropdownDisplay = React.createElement(
         "li",
@@ -291,101 +298,111 @@ class UserLoginMenuContainer extends React.Component {
 
   render() {
     return React.createElement(
-      "div",
-      { id: "user-dropdown" },
+      "li",
+      { id: "user-login-menu-container" },
       React.createElement(
-        "button",
-        { className: "btn btn-default dropdown-toggle", type: "button", id: "dropdownMenu1", "data-toggle": "dropdown", "aria-haspopup": "true", "aria-expanded": "true" },
-        React.createElement("img", { src: "<?=$profile_image_url?>" })
-      ),
-      React.createElement(
-        "ul",
-        { className: "dropdown-menu dropdown-menu-right", "aria-labelledby": "dropdownMenu1" },
+        "div",
+        { className: "user-dropdown" },
         React.createElement(
-          "li",
-          { id: "user-info-menu-item" },
+          "button",
+          {
+            className: "btn btn-default dropdown-toggle",
+            type: "button",
+            id: "userLoginDropdown",
+            "data-toggle": "dropdown",
+            "aria-haspopup": "true",
+            "aria-expanded": "true" },
+          React.createElement("img", { src: this.props.user.profile_image_url })
+        ),
+        React.createElement(
+          "ul",
+          { className: "dropdown-menu dropdown-menu-right", "aria-labelledby": "userLoginDropdown" },
           React.createElement(
-            "div",
-            { id: "user-info-section" },
+            "li",
+            { id: "user-info-menu-item" },
             React.createElement(
               "div",
-              { className: "user-avatar" },
+              { id: "user-info-section" },
               React.createElement(
                 "div",
-                { className: "no-avatar-user-letter" },
-                React.createElement("img", { src: "<?=$profile_image_url?>" }),
+                { className: "user-avatar" },
                 React.createElement(
-                  "a",
-                  { className: "change-profile-pic" },
-                  "Change"
+                  "div",
+                  { className: "no-avatar-user-letter" },
+                  React.createElement("img", { src: this.props.user.profile_image_url }),
+                  React.createElement(
+                    "a",
+                    { className: "change-profile-pic" },
+                    "Change"
+                  )
                 )
-              )
-            ),
-            React.createElement(
-              "div",
-              { className: "user-details" },
+              ),
               React.createElement(
-                "ul",
-                null,
+                "div",
+                { className: "user-details" },
                 React.createElement(
-                  "li",
+                  "ul",
                   null,
                   React.createElement(
-                    "b",
+                    "li",
                     null,
-                    "\"username\""
-                  )
-                ),
-                React.createElement(
-                  "li",
-                  null,
-                  "loginMember->mail"
-                ),
-                React.createElement("li", null),
-                React.createElement(
-                  "li",
-                  null,
-                  React.createElement(
-                    "a",
-                    null,
-                    "Profile"
+                    React.createElement(
+                      "b",
+                      null,
+                      this.props.user.username
+                    )
                   ),
-                  " - ",
                   React.createElement(
-                    "a",
+                    "li",
                     null,
-                    "Privacy"
-                  )
-                ),
-                React.createElement(
-                  "li",
-                  null,
+                    this.props.user.mail
+                  ),
+                  React.createElement("li", null),
                   React.createElement(
-                    "button",
-                    { className: "btn btn-default btn-blue" },
-                    "Account"
+                    "li",
+                    null,
+                    React.createElement(
+                      "a",
+                      null,
+                      "Profile"
+                    ),
+                    " - ",
+                    React.createElement(
+                      "a",
+                      null,
+                      "Privacy"
+                    )
+                  ),
+                  React.createElement(
+                    "li",
+                    null,
+                    React.createElement(
+                      "button",
+                      { className: "btn btn-default btn-metaheader" },
+                      "Account"
+                    )
                   )
                 )
               )
             )
-          )
-        ),
-        React.createElement("li", { id: "main-seperator", role: "separator", className: "divider" }),
-        React.createElement(
-          "li",
-          { className: "buttons" },
-          React.createElement(
-            "button",
-            { className: "btn btn-default btn-metaheader" },
-            "Add Account"
           ),
+          React.createElement("li", { id: "main-seperator", role: "separator", className: "divider" }),
           React.createElement(
-            "button",
-            { className: "btn btn-default pull-right btn-metaheader" },
+            "li",
+            { className: "buttons" },
             React.createElement(
-              "a",
-              { href: "/register" },
-              "Sign Up"
+              "button",
+              { className: "btn btn-default btn-metaheader" },
+              "Add Account"
+            ),
+            React.createElement(
+              "button",
+              { className: "btn btn-default pull-right btn-metaheader" },
+              React.createElement(
+                "a",
+                { href: "/register" },
+                "Sign Up"
+              )
             )
           )
         )
