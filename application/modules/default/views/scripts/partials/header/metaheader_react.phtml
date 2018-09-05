@@ -31,7 +31,6 @@ $profile_image_url = $loginMember->profile_image_url;
 $domainshelper = new Default_View_Helper_FetchDomains();
 $this->domainobjects = $domainshelper->fetchDomainObjects();
 $sname = Zend_Registry::get('store_host');
-
 $json_menu = $this->fetchMetaheaderMenuJson();
 ?>
     <style>
@@ -58,8 +57,8 @@ $json_menu = $this->fetchMetaheaderMenuJson();
 
     <div class="small metamenu" >
         <?php
-       
-            
+
+
             echo '<ul class="nav nav-pills meta-nav-top left">';
             $i = 0;
             echo '<li class="" style="background-color:#eee; -moz-border-radius: 5px; border-radius: 5px; "><a href="http://'.$baseurl.'"><img src="/images/system/ocs-logo-rounded-16x16.png" class="logo"/> openDesktop.org :</a> </li>';
@@ -215,7 +214,8 @@ $json_menu = $this->fetchMetaheaderMenuJson();
 
     <div id="metaheader"></div>
     <script>
-      var json_menu=<?=$json_menu?>;
-      var profileImageUrl = <?php json_encode($profile_image_url); ?>
+      var domains = <?=$json_menu?>;
+      var baseUrl = "<?=$baseurl?>";
+      var blogUrl = "<?=$url_blog?>";
     </script>
     <script type="text/javascript" src="/theme/react/metaheader.js"></script>

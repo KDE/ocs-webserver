@@ -32,7 +32,7 @@ out: ../css/style.css, sourcemap: true, compress: true
         float: left;
         padding: 9px 5px;
 
-        a {
+        > a {
           color: #6a7686;
           border-radius: 5px;
           padding: 5px;
@@ -42,13 +42,25 @@ out: ../css/style.css, sourcemap: true, compress: true
             background-color: #eee;
           }
         }
+
+        &.active {
+
+          > a {
+            background-color: #eee;
+
+            img {
+              margin-right: 5px;
+            }
+          }
+        }
       }
 
       &#domains-menu {
         margin-left: 20px;
-        
-        > li {
 
+        > li {
+          padding-left: 0;
+          
           > a {
             margin: 0 10px 0 5px;
           }
@@ -62,6 +74,14 @@ out: ../css/style.css, sourcemap: true, compress: true
 
             &::after {
               content: "";
+            }
+          }
+
+          &.dropdown {
+
+            ul.dropdown-menu {
+              margin-left: 0;
+              margin-top: -9px;
             }
           }
         }

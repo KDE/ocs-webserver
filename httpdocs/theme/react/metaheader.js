@@ -1,21 +1,57 @@
+window.appHelpers = function () {
+
+  function generateMenuGroupsArray(domains) {
+    let menuGroups = [];
+    domains.forEach(function (domain, index) {
+      if (menuGroups.indexOf(domain.menugroup) === -1) {
+        menuGroups.push(domain.menugroup);
+      } else {
+        console.log(domain.menugroup);
+      }
+    });
+    console.log(menuGroups);
+    return menuGroups;
+  }
+
+  return {
+    generateMenuGroupsArray
+  };
+}();
 class MetaHeader extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { loading: true };
   }
 
   componentDidMount() {
-    console.log('component did mount');
+    this.setState({
+      baseUrl: baseUrl,
+      blogUrl: blogUrl,
+      domains: domains,
+      loading: false
+    });
   }
 
   render() {
+    let navDisplay;
+    if (!this.state.loading) {
+      navDisplay = React.createElement(
+        "div",
+        { className: "metamenu" },
+        React.createElement(DomainsMenu, {
+          domains: this.state.domains,
+          baseUrl: this.state.baseUrl
+        }),
+        React.createElement(UserMenu, {
+          user: this.state.user,
+          blogUrl: this.state.blogUrl
+        })
+      );
+    }
     return React.createElement(
       "nav",
-      { id: "metaheader-nav" },
-      React.createElement(DomainsMenu, null),
-      React.createElement(UserMenu, {
-        user: this.state.user
-      })
+      { id: "metaheader-nav", className: "metaheader" },
+      navDisplay
     );
   }
 }
@@ -26,63 +62,76 @@ class DomainsMenu extends React.Component {
     this.state = {};
   }
 
+  componentDidMount() {
+    const menuGroups = appHelpers.generateMenuGroupsArray(this.props.domains);
+    this.setState({ menuGroups: menuGroups });
+  }
+
   render() {
+    let menuGroupsDisplay;
+    if (this.state.menuGroups) {
+      menuGroupsDisplay = this.state.menuGroups.map((mg, i) => React.createElement(DomainsMenuGroup, {
+        key: i,
+        domains: this.props.domains,
+        menuGroup: mg
+      }));
+    }
     return React.createElement(
       "ul",
       { className: "metaheader-menu left", id: "domains-menu" },
       React.createElement(
         "li",
-        null,
+        { className: "active" },
         React.createElement(
           "a",
-          { href: "#" },
-          "test"
+          { href: "http://" + this.props.baseUrl },
+          React.createElement("img", { src: "/images/system/ocs-logo-rounded-16x16.png", className: "logo" }),
+          "openDesktop.org :"
         )
       ),
+      menuGroupsDisplay
+    );
+  }
+}
+
+class DomainsMenuGroup extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+    this.filterDomainsByMenuGroup = this.filterDomainsByMenuGroup.bind(this);
+  }
+
+  filterDomainsByMenuGroup(domain) {
+    if (domain.menugroup === this.props.menuGroup) {
+      return domain;
+    }
+  }
+
+  render() {
+    const domainsDisplay = this.props.domains.filter(this.filterDomainsByMenuGroup).map((domain, index) => React.createElement(
+      "li",
+      { key: index },
       React.createElement(
-        "li",
-        null,
-        React.createElement(
-          "a",
-          { href: "#" },
-          "test"
-        )
+        "a",
+        { href: domain.menuhref },
+        domain.name
+      )
+    ));
+
+    console.log(domainsDisplay);
+
+    return React.createElement(
+      "li",
+      { className: "dropdown" },
+      React.createElement(
+        "a",
+        { href: "#" },
+        this.props.menuGroup
       ),
       React.createElement(
-        "li",
-        null,
-        React.createElement(
-          "a",
-          { href: "#" },
-          "test"
-        )
-      ),
-      React.createElement(
-        "li",
-        null,
-        React.createElement(
-          "a",
-          { href: "#" },
-          "test"
-        )
-      ),
-      React.createElement(
-        "li",
-        null,
-        React.createElement(
-          "a",
-          { href: "#" },
-          "test"
-        )
-      ),
-      React.createElement(
-        "li",
-        null,
-        React.createElement(
-          "a",
-          { href: "#" },
-          "test"
-        )
+        "ul",
+        { className: "dropdown-menu" },
+        domainsDisplay
       )
     );
   }
@@ -132,7 +181,7 @@ class UserMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { href: "<?=$url_blog?>", target: "_blank" },
+            { href: this.props.blogUrl, target: "_blank" },
             "Blog"
           )
         ),
