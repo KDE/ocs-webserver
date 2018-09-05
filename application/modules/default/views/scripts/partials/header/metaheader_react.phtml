@@ -28,7 +28,11 @@ $url_blog = Zend_Registry::get('config')->settings->client->default->url_blog;
 $loginMember = $this->getAuthUser();
 $username = $loginMember->username;
 $profile_image_url = $loginMember->profile_image_url;
+$domainshelper = new Default_View_Helper_FetchDomains();
+$this->domainobjects = $domainshelper->fetchDomainObjects();
+$sname = Zend_Registry::get('store_host');
 
+$json_menu = $this->fetchMetaheaderMenuJson();
 ?>
     <style>
 
@@ -54,13 +58,11 @@ $profile_image_url = $loginMember->profile_image_url;
 
     <div class="small metamenu" >
         <?php
-            $domainshelper = new Default_View_Helper_FetchDomains();
-            $this->domainobjects = $domainshelper->fetchDomainObjects();
-            $sname = Zend_Registry::get('store_host');
+       
+            
             echo '<ul class="nav nav-pills meta-nav-top left">';
             $i = 0;
-
-            echo '<li>test</li><li class="" style="background-color:#eee; -moz-border-radius: 5px; border-radius: 5px; "><a href="http://'.$baseurl.'"><img src="/images/system/ocs-logo-rounded-16x16.png" class="logo"/> openDesktop.org :</a> </li>';
+            echo '<li class="" style="background-color:#eee; -moz-border-radius: 5px; border-radius: 5px; "><a href="http://'.$baseurl.'"><img src="/images/system/ocs-logo-rounded-16x16.png" class="logo"/> openDesktop.org :</a> </li>';
 
             $preOrder = 0;
             $curOrder = 0;
@@ -216,8 +218,10 @@ $profile_image_url = $loginMember->profile_image_url;
         </div>
 
 
+
     <div id="metaheader"></div>
     <script>
+      var json_menu=<?=$json_menu?>;
       var profileImageUrl = <?php json_encode($profile_image_url); ?>
     </script>
     <script type="text/javascript" src="/theme/react/metaheader.js"></script>
