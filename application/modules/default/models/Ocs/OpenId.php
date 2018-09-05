@@ -69,7 +69,7 @@ class Default_Model_Ocs_OpenId
     protected function getUserData($member_id)
     {
         $modelMember = new Default_Model_Member();
-        $member = $modelMember->fetchMemberData($member_id)->toArray();
+        $member = $modelMember->fetchMemberData($member_id, false)->toArray();
 
         if (empty($member)) {
             throw new Default_Model_Ocs_Exception('member with id ' . $member_id . ' could not found.');

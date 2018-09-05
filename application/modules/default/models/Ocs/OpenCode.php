@@ -194,7 +194,7 @@ class Default_Model_Ocs_OpenCode
     protected function getUserData($member_id)
     {
         $modelMember = new Default_Model_Member();
-        $member = $modelMember->fetchMemberData($member_id)->toArray();
+        $member = $modelMember->fetchMemberData($member_id, false)->toArray();
 
         $modelExternalId = new Default_Model_DbTable_MemberExternalId();
         $externalId = $modelExternalId->fetchRow(array("member_id = ?" => $member['member_id']));

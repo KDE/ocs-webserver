@@ -272,12 +272,14 @@ class Default_Model_Member extends Default_Model_DbTable_Member
     }
 
     /**
-     * @param int $member_id
+     * @param int  $member_id
+     *
+     * @param bool $onlyNotDeleted
      *
      * @return Zend_Db_Table_Row
      * @throws Zend_Db_Statement_Exception
      */
-    public function fetchMemberData($member_id)
+    public function fetchMemberData($member_id, $onlyNotDeleted = true)
     {
         if (null === $member_id) {
             return null;
@@ -288,10 +290,14 @@ class Default_Model_Member extends Default_Model_DbTable_Member
                 FROM `member` AS `m`
                 JOIN `member_email` ON `m`.`member_id` = `member_email`.`email_member_id` AND `member_email`.`email_primary` = 1
                 WHERE
-                    (m.member_id = :memberId) AND (m.is_deleted = :deletedVal)
+                    (m.member_id = :memberId)
         ';
 
-        $result = $this->getAdapter()->query($sql, array('memberId' => $member_id, 'deletedVal' => self::MEMBER_NOT_DELETED))->fetch();
+        if ($onlyNotDeleted) {
+            $sql .= " AND (m.is_deleted = " . self::MEMBER_NOT_DELETED . ")";
+        }
+
+        $result = $this->getAdapter()->query($sql, array('memberId' => $member_id))->fetch();
 
         $classRow = $this->getRowClass();
 
@@ -300,20 +306,28 @@ class Default_Model_Member extends Default_Model_DbTable_Member
 
     /**
      * @param      $member_id
-     * @param bool $active
-     * @param bool $deleted
+     * @param bool $onlyActive
      *
      * @return null|Zend_Db_Table_Row_Abstract
      * @throws Zend_Db_Statement_Exception
      */
-    public function fetchMember($member_id, $active = true, $deleted = false)
+    public function fetchMember($member_id, $onlyActive = true)
     {
         if (empty($member_id)) {
             return null;
         }
 
-        $sql = 'SELECT * FROM `member` WHERE `is_deleted` = :deleted AND `is_active` = :active AND `member`.`member_id` = :memberId';
-        $stmnt = $this->_db->query($sql, array('deleted' => $deleted, 'active' => $active, 'memberId' => $member_id));
+        $sql = "
+                SELECT `m`.*, `member_email`.`email_address` AS `mail`, IF(ISNULL(`member_email`.`email_checked`),0,1) AS `mail_checked`
+                FROM `member` AS `m`
+                JOIN `member_email` ON `m`.`member_id` = `member_email`.`email_member_id` AND `member_email`.`email_primary` = 1
+                WHERE `m`.`member_id` = :memberId";
+
+        if ($onlyActive) {
+            $sql .= " AND `m`.`is_deleted` = " . self::MEMBER_NOT_DELETED . " AND `m`.`is_active` = " . self::MEMBER_ACTIVE;
+        }
+
+        $stmnt = $this->_db->query($sql, array('memberId' => $member_id));
 
         if ($stmnt->rowCount() == 0) {
             return null;

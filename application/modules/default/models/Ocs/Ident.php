@@ -88,14 +88,19 @@ class Default_Model_Ocs_Ident
      * @return array
      * @throws Zend_Exception
      */
-    private function getMemberData($member_id)
+    private function getMemberData($member_id, $onlyActive = true)
     {
+
+        $onlyActiveFilter = '';
+        if ($onlyActive) {
+            $onlyActiveFilter = " AND `m`.`is_active` = 1 AND `m`.`is_deleted` = 0 AND `me`.`email_checked` IS NOT NULL AND `me`.`email_deleted` = 0";
+        }
         $sql = "
             SELECT `mei`.`external_id`,`m`.`member_id`, `m`.`username`, `me`.`email_address`, `m`.`password`, `m`.`roleId`, `m`.`firstname`, `m`.`lastname`, `m`.`profile_image_url`, `m`.`created_at`, `m`.`changed_at`, `m`.`source_id`
             FROM `member` AS `m`
             LEFT JOIN `member_email` AS `me` ON `me`.`email_member_id` = `m`.`member_id` AND `me`.`email_primary` = 1
             LEFT JOIN `member_external_id` AS `mei` ON `mei`.`member_id` = `m`.`member_id`
-            WHERE `m`.`is_active` = 1 AND `m`.`is_deleted` = 0 AND `me`.`email_checked` IS NOT NULL AND `me`.`email_deleted` = 0 AND `m`.`member_id` = :memberId
+            WHERE `m`.`member_id` = :memberId {$onlyActiveFilter}
             ORDER BY `m`.`member_id` DESC
         ";
 

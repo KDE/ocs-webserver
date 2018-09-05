@@ -96,22 +96,23 @@ class Default_Model_Ocs_HttpTransport_OpenIdServer
             $map_user_data['options'] = $options;
         }
 
+        $jsonUserData = Zend_Json::encode($map_user_data);
         $httpClient = new Zend_Http_Client($this->_config->create_user_url);
         $httpClient->setMethod(Zend_Http_Client::POST);
         $httpClient->setHeaders('Authorization', 'Bearer ' . $access_token);
         $httpClient->setHeaders('Content-Type', 'application/json');
         $httpClient->setHeaders('Accept', 'application/json');
-        $httpClient->setRawData(Zend_Json::encode($map_user_data), 'application/json');
+        $httpClient->setRawData($jsonUserData, 'application/json');
 
         $response = $httpClient->request();
 
         //Zend_Registry::get('logger')->debug("----------\n".__METHOD__ . " - request:\n" . $httpClient->getLastRequest());
         //Zend_Registry::get('logger')->debug("----------\n".__METHOD__ . " - response:\n" . $response->asString());
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - request: ' . Zend_Json::encode($map_user_data));
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - request: ' . $jsonUserData);
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - response: ' . $response->getBody());
 
         if ($response->getStatus() != 200) {
-            throw new Zend_Exception('push user data failed. OCS ID server send message: ' . $response->getBody());
+            throw new Zend_Exception('push user data failed. OCS ID server send message: ' . $response->getBody() . PHP_EOL . $jsonUserData . PHP_EOL);
         }
 
         return true;
@@ -216,7 +217,7 @@ class Default_Model_Ocs_HttpTransport_OpenIdServer
         Zend_Registry::get('logger')->debug("----------\n".__METHOD__ . " - response:\n" . $response->asString());
 
         if ($response->getStatus() != 200) {
-            throw new Zend_Exception('request access token failed. OCS ID server send message: ' . $response->getBody());
+            throw new Zend_Exception('request refresh token failed. OCS ID server send message: ' . $response->getBody());
         }
 
         $data = $this->parseResponse($response);
