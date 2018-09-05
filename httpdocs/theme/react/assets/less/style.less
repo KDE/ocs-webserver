@@ -60,7 +60,7 @@ out: ../css/style.css, sourcemap: true, compress: true
 
         > li {
           padding-left: 0;
-          
+
           > a {
             margin: 0 10px 0 5px;
           }
@@ -98,8 +98,153 @@ out: ../css/style.css, sourcemap: true, compress: true
         }
       }
     }
-  }
 
+    .user-dropdown {
+      position: relative;
+
+      .dropdown-toggle {
+        padding: 0;
+        background-color: white;
+        color: #6a7686;
+
+        .glyphicon {
+          font-size: 16px;
+          top: 1px;
+          font-style: normal;
+          font-weight: 100;
+          margin: 0 5px;
+        }
+      }
+
+      .dropdown-menu {
+        border-radius: 0;
+        padding: 0;
+        width: 320px;
+        top: 50px;
+        background: #fff;
+        border: 1px solid #ccc;
+        border-color: rgba(0,0,0,0.2);
+        color: #000;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+
+        &::before {
+          content: "";
+          position: absolute;
+          right: 6px;
+          top: -8px;
+          width: 0;
+          height: 0;
+          border-style: solid;
+          border-width: 0 8.5px 8.5px;
+          border-color: transparent transparent #b7bcc4 transparent;
+          border-bottom-color: #fff;
+          border-style: dashed dashed solid;
+          z-index: 1;
+        }
+
+        li {
+          float: left;
+        }
+      }
+    }
+
+    #user-context-menu-container {
+
+      .user-dropdown {
+
+        .dropdown-menu  {
+          padding: 23px 28px;
+          right: -42px;
+
+          &::before {
+            right: 49px;
+          }
+
+          li {
+            height: auto;
+            width: 86px;
+            border: 1px solid white;
+            margin: 5px 0;
+
+            a {
+              display: block;
+              width: 100%;
+              padding: 0;
+              height: auto;
+              float: left;
+
+              .icon {
+                width: 55px;
+                height: 55px;
+                margin: 10px auto;
+                background-size: 50px;
+                background-position: center center;
+                background-repeat: no-repeat;
+              }
+
+              span {
+                float: left;
+                width: 100%;
+                text-align: center;
+                display: block;
+                color:rgba(0,0,0,0.87);
+                font-size: 11px;
+              }
+
+              &:active {
+                background-color: white;
+              }
+            }
+
+            &#opendesktop-link-item {
+              a {
+                .icon {
+                  background-image: url('../img/logo-opendesktop.png');
+                }
+              }
+            }
+
+            &#discourse-link-item {
+              a {
+                .icon {
+                  background-image: url('../img/logo-discourse.png');
+                }
+              }
+            }
+
+            &#gitlab-link-item {
+              a {
+                .icon {
+                  background-image: url(../img/logo-gitlab.png);
+                }
+              }
+            }
+
+            &#opencode-link-item {
+              a {
+                .icon {
+                  background-image: url(../img/logo-opencode.png);
+                }
+              }
+            }
+
+            &:hover {
+              border:1px solid #e5e5e5;
+              a {
+                background-color: white;
+              }
+            }
+
+            &:active {
+              a {
+                background-color: white;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
 header {
@@ -332,100 +477,7 @@ header {
   }
 
   &#user-context-dropdown-container {
-    .dropdown-menu  {
-      padding: 23px 28px;
-      right: -42px;
 
-      &::before {
-        right: 49px;
-      }
-
-
-      li {
-        height: auto;
-        width: 86px;
-        border: 1px solid white;
-        margin: 5px 0;
-
-
-        a {
-          display: block;
-          width: 100%;
-          padding: 0;
-          height: auto;
-          float: left;
-
-          .icon {
-            width: 55px;
-            height: 55px;
-            margin: 10px auto;
-            background-size: 50px;
-            background-position: center center;
-            background-repeat: no-repeat;
-          }
-
-          span {
-            float: left;
-            width: 100%;
-            text-align: center;
-            display: block;
-            color:rgba(0,0,0,0.87);
-          }
-
-          &:active {
-            background-color: white;
-          }
-        }
-
-        &#opendesktop-link-item {
-          a {
-            .icon {
-              background-image: url('../img/logo-opendesktop.png');
-            }
-          }
-        }
-
-        &#discourse-link-item {
-          a {
-            .icon {
-              background-image: url('../img/logo-discourse.png');
-            }
-          }
-        }
-
-        &#gitlab-link-item {
-          a {
-            .icon {
-              background-image: url(../img/logo-gitlab.png);
-            }
-          }
-        }
-
-        &#opencode-link-item {
-          a {
-            .icon {
-              background-image: url(../img/logo-opencode.png);
-            }
-          }
-        }
-
-        &:hover {
-          border:1px solid #e5e5e5;
-
-          a {
-            background-color: white;
-          }
-        }
-
-        &:active {
-
-          a {
-            background-color: white;
-          }
-        }
-
-      }
-    }
   }
 
   &#user-signin-button {

@@ -93,8 +93,6 @@ class DomainsMenuGroup extends React.Component {
       </li>
     ));
 
-    console.log(domainsDisplay);
-
     return (
       <li className="dropdown">
         <a href="#">{this.props.menuGroup}</a>
@@ -111,6 +109,7 @@ class UserMenu extends React.Component {
   	super(props);
   	this.state = {};
   }
+
   render(){
     let userDropdownDisplay;
     if (this.props.user){
@@ -119,21 +118,67 @@ class UserMenu extends React.Component {
       );
     } else {
       userDropdownDisplay = (
-        <li id="user-login-container"><a className="btn btn-metaheader">Login</a></li>
+        <li id="user-login-container"><a href="/login" className="btn btn-metaheader">Login</a></li>
       )
     }
+
     return (
       <div id="user-menu-container" className="right">
-        <ul className="metaheader-menu right" id="user-menu">
+        <ul className="metaheader-menu" id="user-menu">
           <li><a href="/community">Community</a></li>
           <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
           <li><a id="plingList" className="popuppanel" href="/plings">What are Plings?</a></li>
           <li><a id="ocsapiContent" className="popuppanel" href="/partials/ocsapicontent.phtml">API</a></li>
           <li><a id="aboutContent" className="popuppanel" href="/partials/about.phtml" >About</a></li>
-          <li><span className="glyphicon glyphicon-th"></span></li>
+          <UserContextMenuContainer/>
           {userDropdownDisplay}
         </ul>
       </div>
+    )
+  }
+}
+
+class UserContextMenuContainer extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+  }
+
+  render(){
+    return (
+      <li id="user-context-menu-container">
+        <div className="user-dropdown">
+          <button
+            className="btn btn-default dropdown-toggle"
+            type="button"
+            id="dropdownMenu2"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="true">
+            <span className="glyphicon glyphicon-th"></span>
+          </button>
+          <ul className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu2">
+            <li id="opendesktop-link-item">
+              <a href="http://www.opendesktop.org">
+                <div className="icon"></div>
+                <span>Themes & Apps</span>
+              </a>
+            </li>
+            <li id="discourse-link-item">
+              <a href="http://discourse.opendesktop.org/">
+                <div className="icon"></div>
+                <span>Discussion Boards</span>
+              </a>
+            </li>
+            <li id="opencode-link-item">
+              <a href="https://www.opencode.net/">
+                <div className="icon"></div>
+                <span>Coding Tools</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </li>
     )
   }
 }

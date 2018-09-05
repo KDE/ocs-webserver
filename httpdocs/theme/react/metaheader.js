@@ -5,11 +5,8 @@ window.appHelpers = function () {
     domains.forEach(function (domain, index) {
       if (menuGroups.indexOf(domain.menugroup) === -1) {
         menuGroups.push(domain.menugroup);
-      } else {
-        console.log(domain.menugroup);
       }
     });
-    console.log(menuGroups);
     return menuGroups;
   }
 
@@ -118,8 +115,6 @@ class DomainsMenuGroup extends React.Component {
       )
     ));
 
-    console.log(domainsDisplay);
-
     return React.createElement(
       "li",
       { className: "dropdown" },
@@ -142,6 +137,7 @@ class UserMenu extends React.Component {
     super(props);
     this.state = {};
   }
+
   render() {
     let userDropdownDisplay;
     if (this.props.user) {
@@ -156,17 +152,18 @@ class UserMenu extends React.Component {
         { id: "user-login-container" },
         React.createElement(
           "a",
-          { className: "btn btn-metaheader" },
+          { href: "/login", className: "btn btn-metaheader" },
           "Login"
         )
       );
     }
+
     return React.createElement(
       "div",
       { id: "user-menu-container", className: "right" },
       React.createElement(
         "ul",
-        { className: "metaheader-menu right", id: "user-menu" },
+        { className: "metaheader-menu", id: "user-menu" },
         React.createElement(
           "li",
           null,
@@ -212,12 +209,83 @@ class UserMenu extends React.Component {
             "About"
           )
         ),
+        React.createElement(UserContextMenuContainer, null),
+        userDropdownDisplay
+      )
+    );
+  }
+}
+
+class UserContextMenuContainer extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  render() {
+    return React.createElement(
+      "li",
+      { id: "user-context-menu-container" },
+      React.createElement(
+        "div",
+        { className: "user-dropdown" },
         React.createElement(
-          "li",
-          null,
+          "button",
+          {
+            className: "btn btn-default dropdown-toggle",
+            type: "button",
+            id: "dropdownMenu2",
+            "data-toggle": "dropdown",
+            "aria-haspopup": "true",
+            "aria-expanded": "true" },
           React.createElement("span", { className: "glyphicon glyphicon-th" })
         ),
-        userDropdownDisplay
+        React.createElement(
+          "ul",
+          { className: "dropdown-menu dropdown-menu-right", "aria-labelledby": "dropdownMenu2" },
+          React.createElement(
+            "li",
+            { id: "opendesktop-link-item" },
+            React.createElement(
+              "a",
+              { href: "http://www.opendesktop.org" },
+              React.createElement("div", { className: "icon" }),
+              React.createElement(
+                "span",
+                null,
+                "Themes & Apps"
+              )
+            )
+          ),
+          React.createElement(
+            "li",
+            { id: "discourse-link-item" },
+            React.createElement(
+              "a",
+              { href: "http://discourse.opendesktop.org/" },
+              React.createElement("div", { className: "icon" }),
+              React.createElement(
+                "span",
+                null,
+                "Discussion Boards"
+              )
+            )
+          ),
+          React.createElement(
+            "li",
+            { id: "opencode-link-item" },
+            React.createElement(
+              "a",
+              { href: "https://www.opencode.net/" },
+              React.createElement("div", { className: "icon" }),
+              React.createElement(
+                "span",
+                null,
+                "Coding Tools"
+              )
+            )
+          )
+        )
       )
     );
   }
