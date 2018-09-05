@@ -13,7 +13,9 @@ class MetaHeader extends React.Component {
       "nav",
       { id: "metaheader-nav" },
       React.createElement(DomainsMenu, null),
-      React.createElement(UserMenu, null)
+      React.createElement(UserMenu, {
+        user: this.state.user
+      })
     );
   }
 }
@@ -25,7 +27,64 @@ class DomainsMenu extends React.Component {
   }
 
   render() {
-    return React.createElement("ul", { className: "metaheader-menu left", id: "domains-menu" });
+    return React.createElement(
+      "ul",
+      { className: "metaheader-menu left", id: "domains-menu" },
+      React.createElement(
+        "li",
+        null,
+        React.createElement(
+          "a",
+          { href: "#" },
+          "test"
+        )
+      ),
+      React.createElement(
+        "li",
+        null,
+        React.createElement(
+          "a",
+          { href: "#" },
+          "test"
+        )
+      ),
+      React.createElement(
+        "li",
+        null,
+        React.createElement(
+          "a",
+          { href: "#" },
+          "test"
+        )
+      ),
+      React.createElement(
+        "li",
+        null,
+        React.createElement(
+          "a",
+          { href: "#" },
+          "test"
+        )
+      ),
+      React.createElement(
+        "li",
+        null,
+        React.createElement(
+          "a",
+          { href: "#" },
+          "test"
+        )
+      ),
+      React.createElement(
+        "li",
+        null,
+        React.createElement(
+          "a",
+          { href: "#" },
+          "test"
+        )
+      )
+    );
   }
 }
 
@@ -35,53 +94,81 @@ class UserMenu extends React.Component {
     this.state = {};
   }
   render() {
+    let userDropdownDisplay;
+    if (this.props.user) {
+      userDropdownDisplay = React.createElement(
+        "li",
+        null,
+        "User"
+      );
+    } else {
+      userDropdownDisplay = React.createElement(
+        "li",
+        { id: "user-login-container" },
+        React.createElement(
+          "a",
+          { className: "btn btn-metaheader" },
+          "Login"
+        )
+      );
+    }
     return React.createElement(
-      "ul",
-      { className: "metaheader-menu right", id: "user-menu" },
+      "div",
+      { id: "user-menu-container", className: "right" },
       React.createElement(
-        "li",
-        null,
+        "ul",
+        { className: "metaheader-menu right", id: "user-menu" },
         React.createElement(
-          "a",
-          { href: "/community" },
-          "Community"
-        )
-      ),
-      React.createElement(
-        "li",
-        null,
+          "li",
+          null,
+          React.createElement(
+            "a",
+            { href: "/community" },
+            "Community"
+          )
+        ),
         React.createElement(
-          "a",
-          { href: "<?=$url_blog?>", target: "_blank" },
-          "Blog"
-        )
-      ),
-      React.createElement(
-        "li",
-        null,
+          "li",
+          null,
+          React.createElement(
+            "a",
+            { href: "<?=$url_blog?>", target: "_blank" },
+            "Blog"
+          )
+        ),
         React.createElement(
-          "a",
-          { id: "plingList", className: "popuppanel", href: "/plings" },
-          "What are Plings?"
-        )
-      ),
-      React.createElement(
-        "li",
-        null,
+          "li",
+          null,
+          React.createElement(
+            "a",
+            { id: "plingList", className: "popuppanel", href: "/plings" },
+            "What are Plings?"
+          )
+        ),
         React.createElement(
-          "a",
-          { id: "ocsapiContent", className: "popuppanel", href: "/partials/ocsapicontent.phtml" },
-          "API"
-        )
-      ),
-      React.createElement(
-        "li",
-        null,
+          "li",
+          null,
+          React.createElement(
+            "a",
+            { id: "ocsapiContent", className: "popuppanel", href: "/partials/ocsapicontent.phtml" },
+            "API"
+          )
+        ),
         React.createElement(
-          "a",
-          { id: "aboutContent", className: "popuppanel", href: "/partials/about.phtml" },
-          "About"
-        )
+          "li",
+          null,
+          React.createElement(
+            "a",
+            { id: "aboutContent", className: "popuppanel", href: "/partials/about.phtml" },
+            "About"
+          )
+        ),
+        React.createElement(
+          "li",
+          null,
+          React.createElement("span", { className: "glyphicon glyphicon-th" })
+        ),
+        userDropdownDisplay
       )
     );
   }

@@ -2,6 +2,86 @@ out: ../css/style.css, sourcemap: true, compress: true
 
 @import "elements.less";
 
+#metaheader {
+  float: left;
+  width: 100%;
+  height: 42px;
+
+  #metaheader-nav {
+    width: 100%;
+    float: left;
+
+    .btn-metaheader {
+      padding: 0 12px !important;
+      border-radius: 2px !important;
+      color: white !important;
+      font-size: 12px !important;
+      height: 30px !important;
+      line-height: 30px !important;
+      font-weight: bold;
+      border: 1px solid #3079ed;
+      background: -webkit-linear-gradient(top, #4387fd, #4683ea);
+    }
+
+    ul.metaheader-menu {
+      padding: 0;
+      margin: 0;
+      list-style-type: none;
+
+      > li {
+        float: left;
+        padding: 9px 5px;
+
+        a {
+          color: #6a7686;
+          border-radius: 5px;
+          padding: 5px;
+
+          &:active,
+          &:hover {
+            background-color: #eee;
+          }
+        }
+      }
+
+      &#domains-menu {
+        margin-left: 20px;
+        
+        > li {
+
+          > a {
+            margin: 0 10px 0 5px;
+          }
+
+          &::after {
+            content: "•";
+            color: #E2E2E2;
+          }
+
+          &:last-of-type {
+
+            &::after {
+              content: "";
+            }
+          }
+        }
+      }
+
+      &#user-menu {
+        margin-right: 20px;
+
+        > li {
+
+          &#user-login-container {
+            padding: 5px;
+          }
+        }
+      }
+    }
+  }
+
+}
+
 header {
 
   div.container.header {
