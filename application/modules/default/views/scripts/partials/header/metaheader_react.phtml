@@ -25,13 +25,23 @@
 $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
 $url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
 $url_blog = Zend_Registry::get('config')->settings->client->default->url_blog;
-$loginMember = $this->getAuthUser();
-$username = $loginMember->username;
-$profile_image_url = $loginMember->profile_image_url;
 $domainshelper = new Default_View_Helper_FetchDomains();
 $this->domainobjects = $domainshelper->fetchDomainObjects();
 $sname = Zend_Registry::get('store_host');
 $json_menu = $this->fetchMetaheaderMenuJson();
+
+$loginMember = $this->getAuthUser();
+if($loginMember->member_id)
+{
+    $json_user = Zend_Json::encode($loginMember);  
+    $username = $loginMember->username;
+    $profile_image_url = $loginMember->profile_image_url;
+}else{
+  $json_user = Zend_Json::encode(null);  
+  $username = null;
+  $profile_image_url = null;
+}
+
 ?>
     <style>
 
@@ -215,6 +225,7 @@ $json_menu = $this->fetchMetaheaderMenuJson();
     <div id="metaheader"></div>
     <script>
       var domains = <?=$json_menu?>;
+      var user = <?= $json_user ?>;
       var baseUrl = "<?=$baseurl?>";
       var blogUrl = "<?=$url_blog?>";
       var sName = "<?=$sname?>";
