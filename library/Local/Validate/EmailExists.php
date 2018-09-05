@@ -33,7 +33,7 @@ class Local_Validate_EmailExists extends Zend_Validate_Abstract
         $value = (string)$value;
         $this->_setValue($value);
 
-        return $this->checkMailExist($value);
+        return $this->checkMailExist($value, $context);
     }
 
     /**
@@ -41,10 +41,14 @@ class Local_Validate_EmailExists extends Zend_Validate_Abstract
      *
      * @return bool
      */
-    private function checkMailExist($value)
+    private function checkMailExist($value, $context)
     {
+        $omitMember = null;
+        if (isset($context['omitMember'])) {
+            $omitMember = $context['omitMember'];
+        }
         $modelMember = new Default_Model_MemberEmail();
-        $resultSet = $modelMember->findMailAddress($value, Default_Model_MemberEmail::CASE_INSENSITIVE);
+        $resultSet = $modelMember->findMailAddress($value, Default_Model_MemberEmail::CASE_INSENSITIVE, $omitMember);
         if (count($resultSet) > 0) {
             return false;
         }

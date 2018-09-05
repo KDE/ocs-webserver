@@ -770,6 +770,18 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         );
 
         $router->addRoute(
+            'user_recification',
+            new Zend_Controller_Router_Route(
+                '/r/:action/*',
+                array(
+                    'module'     => 'default',
+                    'controller' => 'rectification',
+                    'action'     => 'index'
+                )
+            )
+        );
+
+        $router->addRoute(
             'user_show_short',
             new Zend_Controller_Router_Route(
                 '/me/:member_id/:action/*',

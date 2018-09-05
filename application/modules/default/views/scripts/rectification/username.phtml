@@ -1,0 +1,163 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+$users = $this->newUsers($limit = 216,'created_at','DESC');
+$buildMemberUrl = new Default_View_Helper_BuildMemberUrl();
+$helperImage = new Default_View_Helper_Image();
+$this->inlineScript()->appendFile('/theme/flatui/js/lib/bootstrap-validator.min.js');
+?>
+
+    <!-- new code -->
+    <main id="reg-page">
+
+        <section class="wrapper" id="register-wrap">
+            <div id="register" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 clearfix">
+                <div id="register-box" >
+
+                    <div id="login-form-box" class="well" style="width:100%;">
+                        <h3><?= $this->translate('Please change your username.') ?></h3>
+
+                        <div id="help-block" class="help-block">
+                            <?= $this->translate('For technical reasons, we have to ask you to change your username. Please enter a new username, which may consist of English letters, numbers, hyphen, underscore and period.') ?>
+                        </div>
+                        <div id="error" class="center text-error help-block">
+                            <?php if ($this->error && isset($this->errorText)): ?>
+                                <p class="errors">
+                                    <?= $this->translate($this->errorText) ?>
+                                </p>
+                            <?php endif; ?>
+                        </div>
+                        <form id="usernameForm" class="standard-form row-fluid center" action="<?=$this->action?>" method="post" role="form" data-toggle="validator">
+                            <?php
+                            if ($this->error) {
+                                $this->form->mail->class = $this->form->mail->class . ' has-error';
+                            }
+                            ?>
+
+                            <div class="form-group has-feedback">
+                                <input name="username" id="username" value="" type="text" placeholder="Username" data-minlength="4" class="form-control" required data-minlength-error="Minimum of 4 characters" data-maxlength="40" data-maxlength-error="Maximum of 40 characters"><div class="help-block with-errors"></div>
+                            </div>
+
+                            <button name="change_it" id="change_it" type="submit" class="btn btn-min-width btn-native">Change Username <i id="load-state" class="fa fa-spinner fa-pulse hidden" aria-hidden="true"></i></button>
+
+                        </form>
+
+                    </div>
+
+                </div>
+                <!-- END #login-box -->
+            </div>
+        </section>
+
+        <section id="thumbs">
+
+            <?php foreach ($users as $key => $user) { ?>
+
+                <div class="thumb">
+                    <a href="<?php echo $buildMemberUrl->buildMemberUrl($user['member_id']); ?>">
+                        <span></span>
+                        <img src="<?php echo $helperImage->Image($user['profile_image_url'],array('width' => 110, 'height' => 110, 'crop' => 2)); ?>"/>
+                    </a>
+                </div>
+
+            <?php } ?>
+
+        </section>
+
+    </main>
+    <!-- /new code -->
+
+    <script>
+        $('document').ready(function(){
+
+            var ValidateAjax = {
+                isClean: {},
+                initialize: function (formid, endpoint) {
+                    end_url = endpoint;
+                    form_id = '#'+formid;
+
+                    $(form_id +' input[id=username]').
+                    blur(function () {
+                        var formElementID = $(this).attr('id');
+                        var formElementValue = $(this).val();
+                        ValidateAjax.doValidate(formElementID, formElementValue);
+                        return false;
+                    });
+                    $(form_id).on('submit', function(e){
+                        var target = $(this).attr("data-target");
+                        var loadState = $(this).attr('data-load-state');
+
+                        $(target).find(loadState).prop('disabled', true);
+                        $(target).find(loadState).find('i').removeClass('hidden');
+
+                        var validateValues = ValidateAjax.isClean;
+                        for (var k in validateValues){
+                            if (validateValues.hasOwnProperty(k)) {
+                                if (!validateValues[k]) {
+                                    e.preventDefault();
+                                    return false;
+                                }
+                            }
+                        }
+                        return true;
+                    });
+                },
+
+                doValidate: function (id, value) {
+                    var url = end_url;
+                    var data = {'name' : id, 'value': value};
+                    $.post(url, data, function (response) {
+                        $('#'+id).parent().find('.form-control-feedback').remove();
+                        $('#'+id).parent().removeClass('has-error');
+                        if (!response['status']) {
+                            ValidateAjax.isClean[id] = false;
+                            $('#'+id).parent().addClass('has-error');
+                            if (response[id]) {
+                                $('#'+id).parent().append('<i class="glyphicon glyphicon-remove form-control-feedback"></i>');
+                            }
+                        } else {
+                            ValidateAjax.isClean[id] = true;
+                            $('#'+id).parent().addClass('has-success');
+                            $('#'+id).parent().append('<i class="glyphicon glyphicon-ok form-control-feedback"></i>');
+                        }
+                    },'json');
+
+                },
+                getHTML: function (errArray) {
+                    var o = '<ul class="errors">';
+                    $.each(errArray,function(key,value){
+                        o += '<li>'+ value+'</li>';
+                    });
+                    o+='</ul>';
+
+                    return o;
+                }
+            };
+
+            ValidateAjax.initialize('usernameForm', '/register/validate');
+        });
+    </script>
+
+<?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){
+          
+        });
+    ');

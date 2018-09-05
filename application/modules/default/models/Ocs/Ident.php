@@ -223,9 +223,33 @@ class Default_Model_Ocs_Ident
      */
     public function deleteUser($member_id)
     {
+        if (empty($member_id)) {
+            return false;
+        }
         $connection = $this->getServerConnection();
         $member_data = $this->getMemberData($member_id);
         $username = strtolower($member_data['username']);
+        if (false === $connection->exists("cn={$username},{$this->baseDn}")) {
+            return false;
+        }
+        $connection->delete("cn={$username},{$this->baseDn}");
+        return true;
+    }
+
+    /**
+     * @param int $member_id
+     *
+     * @return bool
+     * @throws Zend_Exception
+     * @throws Zend_Ldap_Exception
+     */
+    public function deleteByUsername($username)
+    {
+        if (empty($username)) {
+            return false;
+        }
+        $connection = $this->getServerConnection();
+        $username = strtolower($username);
         if (false === $connection->exists("cn={$username},{$this->baseDn}")) {
             return false;
         }

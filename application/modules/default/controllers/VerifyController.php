@@ -50,13 +50,19 @@ class VerifyController extends Local_Controller_Action_DomainSwitch
         }
 
         $modelEmail = new Default_Model_MemberEmail();
-        $mailValidationValue = $modelEmail->getValidationValue($member_id);
+        $primaryEmail = $modelEmail->fetchMemberPrimaryMail($member_id);
+        $mailValidationValue = $primaryEmail['email_verification_value'];
+        $memberEmail = $primaryEmail['email_address'];
 
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - resend of verification mail requested by user id: ' . $memberData->member_id);
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - resend of verification mail requested by user id: '
+            . $memberData->member_id)
+        ;
 
-        $this->resendVerificationMail($memberData, $mailValidationValue);
+        $this->resendVerificationMail($memberData, $memberEmail, $mailValidationValue);
 
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - verification mail successfully transmitted to mail server for user id: ' . $memberData->member_id);
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - verification mail successfully transmitted to mail server for user id: '
+            . $memberData->member_id)
+        ;
 
         $session->mail_verify_member_id = null;
 
@@ -66,21 +72,28 @@ class VerifyController extends Local_Controller_Action_DomainSwitch
 
     /**
      * @param Zend_Db_Table_Row $memberData
-     * @param string $verificationVal
+     * @param                   $memberEmail
+     * @param string            $verificationVal
+     *
+     * @throws Zend_Exception
      */
-    private function resendVerificationMail($memberData, $verificationVal)
+    private function resendVerificationMail($memberData, $memberEmail, $verificationVal)
     {
+        $config = Zend_Registry::get('config');
+        $fromEmailAddress = $config->resources->mail->defaultFrom->email;
+
         $confirmMail = new Default_Plugin_SendMail('tpl_verify_user');
         $confirmMail->setTemplateVar('servername', $this->getServerName());
         $confirmMail->setTemplateVar('username', $memberData->username);
         $confirmMail->setTemplateVar('verificationlinktext',
-            '<a href="https://' . $this->getServerName() . '/verification/' . $verificationVal . '">Click here to verify your email address</a>');
+            '<a href="https://' . $this->getServerName() . '/verification/' . $verificationVal
+            . '">Click here to verify your email address</a>');
         $confirmMail->setTemplateVar('verificationlink',
-            '<a href="https://' . $this->getServerName() . '/verification/' . $verificationVal . '">https://' . $this->getServerName() . '/verification/' . $verificationVal . '</a>');
-        $confirmMail->setTemplateVar('verificationurl',
-            'https://' . $this->getServerName() . '/verification/' . $verificationVal);
-        $confirmMail->setReceiverMail($memberData->mail);
-        $confirmMail->setFromMail('registration@opendesktop.org');
+            '<a href="https://' . $this->getServerName() . '/verification/' . $verificationVal . '">https://' . $this->getServerName()
+            . '/verification/' . $verificationVal . '</a>');
+        $confirmMail->setTemplateVar('verificationurl', 'https://' . $this->getServerName() . '/verification/' . $verificationVal);
+        $confirmMail->setReceiverMail($memberEmail);
+        $confirmMail->setFromMail($fromEmailAddress);
         $confirmMail->send();
     }
 
@@ -91,6 +104,7 @@ class VerifyController extends Local_Controller_Action_DomainSwitch
     {
         /** @var Zend_Controller_Request_Http $request */
         $request = $this->getRequest();
+
         return $request->getHttpHost();
     }
 

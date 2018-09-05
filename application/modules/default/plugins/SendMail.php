@@ -650,4 +650,14 @@ EOT;
         $this->_subject = $subject;
     }
 
+    /**
+     * @param Zend_Mail_Transport_Abstract $transport
+     *
+     * @return string
+     */
+    public static function generateEmailFilename($transport)
+    {
+        return 'mail_' . time() . '_' . $transport->recipients  . '.eml';
+    }
+
 }

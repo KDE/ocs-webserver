@@ -141,13 +141,13 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
     {
         $sql = "
             SELECT `m`.*, `member_email`.`email_verification_value`, `member_email`.`email_checked` 
-            FROM {$this->_tableName} AS m
-            JOIN member_email ON m.member_id = member_email.email_member_id AND member_email.email_primary = 1
+            FROM `member` AS m
+            JOIN `member_email` ON m.member_id = member_email.email_member_id AND member_email.email_primary = 1
             WHERE  
-            m.is_active = :active AND 
-            m.is_deleted = :deleted AND 
-            m.login_method = :login AND 
-            m.username = :username AND 
+            m.`is_active` = :active AND 
+            m.`is_deleted` = :deleted AND 
+            m.`login_method` = :login AND 
+            m.`username` = :username AND 
             m.`password` = :pwd";
 
         $this->_db->getProfiler()->setEnabled(true);

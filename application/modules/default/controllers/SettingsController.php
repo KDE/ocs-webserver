@@ -1347,6 +1347,9 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
      */
     protected function sendConfirmationMail($data)
     {
+        $config = Zend_Registry::get('config');
+        $defaultFrom = $config->resources->mail->defaultFrom->email;
+
         $confirmMail = new Default_Plugin_SendMail('tpl_verify_email');
         $confirmMail->setTemplateVar('servername', $this->getServerName());
         $confirmMail->setTemplateVar('username', $this->_authMember->username);
@@ -1360,7 +1363,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $confirmMail->setTemplateVar('verificationurl',
             'https://' . $this->getServerName() . '/settings/verification/v/' . $data['email_verification_value']);
         $confirmMail->setReceiverMail($data['email_address']);
-        $confirmMail->setFromMail('registration@opendesktop.org');
+        $confirmMail->setFromMail($defaultFrom);
         $confirmMail->send();
     }
 
