@@ -137,11 +137,7 @@ class UserMenu extends React.Component {
   render() {
     let userDropdownDisplay;
     if (this.props.user) {
-      userDropdownDisplay = React.createElement(
-        "li",
-        null,
-        "User"
-      );
+      userDropdownDisplay = React.createElement(UserLoginMenuContainer, null);
     } else {
       userDropdownDisplay = React.createElement(
         "li",
@@ -279,6 +275,117 @@ class UserContextMenuContainer extends React.Component {
                 null,
                 "Coding Tools"
               )
+            )
+          )
+        )
+      )
+    );
+  }
+}
+
+class UserLoginMenuContainer extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  render() {
+    return React.createElement(
+      "div",
+      { id: "user-dropdown" },
+      React.createElement(
+        "button",
+        { className: "btn btn-default dropdown-toggle", type: "button", id: "dropdownMenu1", "data-toggle": "dropdown", "aria-haspopup": "true", "aria-expanded": "true" },
+        React.createElement("img", { src: "<?=$profile_image_url?>" })
+      ),
+      React.createElement(
+        "ul",
+        { className: "dropdown-menu dropdown-menu-right", "aria-labelledby": "dropdownMenu1" },
+        React.createElement(
+          "li",
+          { id: "user-info-menu-item" },
+          React.createElement(
+            "div",
+            { id: "user-info-section" },
+            React.createElement(
+              "div",
+              { className: "user-avatar" },
+              React.createElement(
+                "div",
+                { className: "no-avatar-user-letter" },
+                React.createElement("img", { src: "<?=$profile_image_url?>" }),
+                React.createElement(
+                  "a",
+                  { className: "change-profile-pic" },
+                  "Change"
+                )
+              )
+            ),
+            React.createElement(
+              "div",
+              { className: "user-details" },
+              React.createElement(
+                "ul",
+                null,
+                React.createElement(
+                  "li",
+                  null,
+                  React.createElement(
+                    "b",
+                    null,
+                    "\"username\""
+                  )
+                ),
+                React.createElement(
+                  "li",
+                  null,
+                  "loginMember->mail"
+                ),
+                React.createElement("li", null),
+                React.createElement(
+                  "li",
+                  null,
+                  React.createElement(
+                    "a",
+                    null,
+                    "Profile"
+                  ),
+                  " - ",
+                  React.createElement(
+                    "a",
+                    null,
+                    "Privacy"
+                  )
+                ),
+                React.createElement(
+                  "li",
+                  null,
+                  React.createElement(
+                    "button",
+                    { className: "btn btn-default btn-blue" },
+                    "Account"
+                  )
+                )
+              )
+            )
+          )
+        ),
+        React.createElement("li", { id: "main-seperator", role: "separator", className: "divider" }),
+        React.createElement(
+          "li",
+          { className: "buttons" },
+          React.createElement(
+            "button",
+            { className: "btn btn-default btn-metaheader" },
+            "Add Account"
+          ),
+          React.createElement(
+            "button",
+            { className: "btn btn-default pull-right btn-metaheader" },
+            React.createElement(
+              "a",
+              { href: "/register" },
+              "Sign Up"
             )
           )
         )

@@ -108,7 +108,7 @@ class UserMenu extends React.Component {
     let userDropdownDisplay;
     if (this.props.user){
       userDropdownDisplay = (
-        <li>User</li>
+        <UserLoginMenuContainer/>
       );
     } else {
       userDropdownDisplay = (
@@ -173,6 +173,51 @@ class UserContextMenuContainer extends React.Component {
           </ul>
         </div>
       </li>
+    )
+  }
+}
+
+class UserLoginMenuContainer extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+  }
+
+  render(){
+    return (
+      <div id="user-dropdown">
+        <button className="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          <img src="<?=$profile_image_url?>"/>
+        </button>
+        <ul className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
+          <li id="user-info-menu-item">
+            <div id="user-info-section">
+              <div className="user-avatar">
+                <div className="no-avatar-user-letter">
+                  <img src="<?=$profile_image_url?>"/>
+                  <a className="change-profile-pic">
+                    Change
+                  </a>
+                </div>
+              </div>
+              <div className="user-details">
+                <ul>
+                  <li><b>"username"</b></li>
+                  <li>loginMember->mail</li>
+                  <li></li>
+                  <li><a>Profile</a> - <a>Privacy</a></li>
+                  <li><button className="btn btn-default btn-blue">Account</button></li>
+                </ul>
+              </div>
+            </div>
+          </li>
+          <li id="main-seperator" role="separator" className="divider"></li>
+          <li className="buttons">
+            <button className="btn btn-default btn-metaheader">Add Account</button>
+            <button className="btn btn-default pull-right btn-metaheader"><a href="/register">Sign Up</a></button>
+          </li>
+        </ul>
+      </div>
     )
   }
 }
