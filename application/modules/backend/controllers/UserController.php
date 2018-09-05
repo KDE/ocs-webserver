@@ -102,17 +102,7 @@ class Backend_UserController extends Local_Controller_Action_Backend
         $identity = Zend_Auth::getInstance()->getIdentity();
 
         try {
-            Default_Model_ActivityLog::logActivity($dataId, null, $identity->member_id, Default_Model_ActivityLog::BACKEND_USER_DELETE,
-                null);
-
-            $id_server = new Default_Model_Ocs_OpenId();
-            $id_server->deactivateLoginForUser($identity->member_id);
-        } catch (Exception $e) {
-            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
-        }
-        try {
-            $ldap_server = new Default_Model_Ocs_Ident();
-            $ldap_server->deleteUser($identity->member_id);
+            Default_Model_ActivityLog::logActivity($dataId, null, $identity->member_id, Default_Model_ActivityLog::BACKEND_USER_DELETE,null);
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }

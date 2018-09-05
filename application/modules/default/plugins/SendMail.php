@@ -96,8 +96,7 @@ class Default_Plugin_SendMail extends Zend_Controller_Plugin_Abstract
             $mail->setSubject($this->getSubject());
             $mail->send();
         } catch (Exception $e) {
-            Zend_Registry::get('logger')->err(__METHOD__ . " - " . print_r($e, true) . PHP_EOL);
-            #$this->render('error');
+            Zend_Registry::get('logger')->err(__METHOD__ . " - " . $e->getMessage() . PHP_EOL);
         }
     }
 
