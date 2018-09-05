@@ -1,37 +1,30 @@
 class MetaHeader extends React.Component {
   constructor(props){
   	super(props);
-  	this.state = {loading:true};
-  }
-
-  componentDidMount() {
-    this.setState({
+  	this.state = {
       baseUrl:baseUrl,
       blogUrl:blogUrl,
       domains:domains,
+      sName:sName,
       loading:false
-    });
+    };
   }
 
   render(){
-    let navDisplay;
-    if (!this.state.loading){
-      navDisplay = (
+
+    return (
+      <nav id="metaheader-nav" className="metaheader">
         <div className="metamenu">
           <DomainsMenu
             domains={this.state.domains}
             baseUrl={this.state.baseUrl}
+            sName={this.state.sName}
           />
           <UserMenu
             user={this.state.user}
             blogUrl={this.state.blogUrl}
           />
         </div>
-      );
-    }
-    return (
-      <nav id="metaheader-nav" className="metaheader">
-        {navDisplay}
       </nav>
     )
   }
@@ -56,6 +49,7 @@ class DomainsMenu extends React.Component {
           key={i}
           domains={this.props.domains}
           menuGroup={mg}
+          sName={this.props.sName}
         />
       ));
     }

@@ -17,38 +17,33 @@ window.appHelpers = function () {
 class MetaHeader extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { loading: true };
-  }
-
-  componentDidMount() {
-    this.setState({
+    this.state = {
       baseUrl: baseUrl,
       blogUrl: blogUrl,
       domains: domains,
+      sName: sName,
       loading: false
-    });
+    };
   }
 
   render() {
-    let navDisplay;
-    if (!this.state.loading) {
-      navDisplay = React.createElement(
+
+    return React.createElement(
+      "nav",
+      { id: "metaheader-nav", className: "metaheader" },
+      React.createElement(
         "div",
         { className: "metamenu" },
         React.createElement(DomainsMenu, {
           domains: this.state.domains,
-          baseUrl: this.state.baseUrl
+          baseUrl: this.state.baseUrl,
+          sName: this.state.sName
         }),
         React.createElement(UserMenu, {
           user: this.state.user,
           blogUrl: this.state.blogUrl
         })
-      );
-    }
-    return React.createElement(
-      "nav",
-      { id: "metaheader-nav", className: "metaheader" },
-      navDisplay
+      )
     );
   }
 }
@@ -70,7 +65,8 @@ class DomainsMenu extends React.Component {
       menuGroupsDisplay = this.state.menuGroups.map((mg, i) => React.createElement(DomainsMenuGroup, {
         key: i,
         domains: this.props.domains,
-        menuGroup: mg
+        menuGroup: mg,
+        sName: this.props.sName
       }));
     }
     return React.createElement(
