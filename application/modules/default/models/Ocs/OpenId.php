@@ -35,7 +35,7 @@ class Default_Model_Ocs_OpenId
             $this->id_server = $id_server;
         } else {
             $config = Zend_Registry::get('config')->settings->server->oauth;
-            $this->id_server = new Default_Model_Ocs_IdServer($config);
+            $this->id_server = new Default_Model_Ocs_HttpTransport_OpenIdServer($config);
         }
     }
 
@@ -63,12 +63,17 @@ class Default_Model_Ocs_OpenId
      * @param $member_id
      *
      * @return array
+     * @throws Default_Model_Ocs_Exception
      * @throws Zend_Db_Statement_Exception
      */
     protected function getUserData($member_id)
     {
         $modelMember = new Default_Model_Member();
         $member = $modelMember->fetchMemberData($member_id)->toArray();
+
+        if (empty($member)) {
+            throw new Default_Model_Ocs_Exception('member with id ' . $member_id . ' could not found.');
+        }
 
         $modelExternalId = new Default_Model_DbTable_MemberExternalId();
         $externalId = $modelExternalId->fetchRow(array("member_id = ?" => $member['member_id']));
@@ -120,7 +125,30 @@ class Default_Model_Ocs_OpenId
             return false;
         }
 
-        return $this->updateUser($member_id);
+        $user = $this->getUserData($member_id);
+
+        return $this->updateUser($user);
+    }
+
+    /**
+     * @param array $member
+     *
+     * @return bool
+     * @throws Zend_Cache_Exception
+     * @throws Zend_Exception
+     * @throws Zend_Http_Client_Exception
+     */
+    public function updateUser($member)
+    {
+        if (empty($member)) {
+            return false;
+        }
+
+        $data = $this->mapUserData($member);
+
+        $options = array('bypassEmailCheck' => 'true', 'bypassUsernameCheck' => 'true', 'update' => 'true');
+
+        return $this->id_server->pushHttpUserData($data, $options);
     }
 
     /**
@@ -131,18 +159,15 @@ class Default_Model_Ocs_OpenId
      * @throws Zend_Exception
      * @throws Zend_Http_Client_Exception
      */
-    public function updateUser($member_id)
+    public function updateAvatarForUser($member_id)
     {
         if (empty($member_id)) {
             return false;
         }
 
         $user = $this->getUserData($member_id);
-        $data = $this->mapUserData($user);
 
-        $options = array('bypassEmailCheck' => 'true', 'bypassUsernameCheck' => 'true', 'update' => 'true');
-
-        return $this->id_server->pushHttpUserData($data, $options);
+        return $this->updateUser($user);
     }
 
     /**
@@ -159,7 +184,9 @@ class Default_Model_Ocs_OpenId
             return false;
         }
 
-        return $this->updateUser($member_id);
+        $user = $this->getUserData($member_id);
+
+        return $this->updateUser($user);
     }
 
     /**
@@ -176,7 +203,9 @@ class Default_Model_Ocs_OpenId
             return false;
         }
 
-        return $this->updateUser($member_id);
+        $user = $this->getUserData($member_id);
+
+        return $this->updateUser($user);
     }
 
     /**

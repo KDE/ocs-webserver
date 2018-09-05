@@ -101,7 +101,7 @@ class Default_Model_Ocs_Ident
 
         $result = Zend_Db_Table::getDefaultAdapter()->fetchRow($sql, array('memberId' => $member_id));
         if (count($result) == 0) {
-            throw new Zend_Exception('member with id ' . $member_id . ' could not found.');
+            throw new Default_Model_Ocs_Exception('member with id ' . $member_id . ' could not found.');
         }
 
         return $result;
@@ -146,6 +146,7 @@ class Default_Model_Ocs_Ident
         //        Zend_Ldap_Attribute::PASSWORD_HASH_MD5);
         $username = strtolower($member_data['username']);
         $connection->update("cn={$username},{$this->baseDn}", $entry);
+        $connection->getLastError($this->errCode, $this->errMessages);
     }
 
     /**
@@ -161,6 +162,7 @@ class Default_Model_Ocs_Ident
         $entry = $this->createIdentEntry($member_data);
         $username = strtolower($member_data['username']);
         $connection->add("cn={$username},{$this->baseDn}", $entry);
+        $connection->getLastError($this->errCode, $this->errMessages);
     }
 
     /**
@@ -212,6 +214,7 @@ class Default_Model_Ocs_Ident
         }
         $entry = $this->createIdentEntry($member_data);
         $connection->update("cn={$username},{$this->baseDn}", $entry);
+        $connection->getLastError($this->errCode, $this->errMessages);
     }
 
     /**
@@ -233,27 +236,31 @@ class Default_Model_Ocs_Ident
             return false;
         }
         $connection->delete("cn={$username},{$this->baseDn}");
+        $connection->getLastError($this->errCode, $this->errMessages);
+
         return true;
     }
 
     /**
-     * @param int $member_id
+     * @param string $username
      *
-     * @return bool
      * @throws Zend_Exception
      * @throws Zend_Ldap_Exception
      */
     public function deleteByUsername($username)
     {
         if (empty($username)) {
-            return false;
+            throw new Default_Model_Ocs_Exception('given username is empty.');
         }
         $connection = $this->getServerConnection();
         $username = strtolower($username);
         if (false === $connection->exists("cn={$username},{$this->baseDn}")) {
-            return false;
+            $this->errCode = 999;
+            $this->errMessages[] = 'user not found.';
+            return;
         }
         $connection->delete("cn={$username},{$this->baseDn}");
+        $connection->getLastError($this->errCode, $this->errMessages);
     }
 
     /**

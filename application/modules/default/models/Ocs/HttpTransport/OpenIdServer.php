@@ -20,7 +20,7 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-class Default_Model_Ocs_IdServer
+class Default_Model_Ocs_HttpTransport_OpenIdServer
 {
 
     private $_config;
@@ -88,7 +88,7 @@ class Default_Model_Ocs_IdServer
                 'admin'          => $userdata['admin'],
             )
         );
-        if ((false == $userdata['is_active']) AND (true == $userdata['is_deleted'])) {
+        if ((false == $userdata['is_active']) OR (true == $userdata['is_deleted'])) {
             $map_user_data['user']['disabledReason'] = 'user account disabled';
         }
 

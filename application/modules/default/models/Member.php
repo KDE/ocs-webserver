@@ -178,7 +178,6 @@ class Default_Model_Member extends Default_Model_DbTable_Member
             'is_deleted' => 1,
             'deleted_at' => new Zend_Db_Expr('Now()'),
         );
-
         $this->update($updateValues, $this->_db->quoteInto('member_id=?', $member_id, 'INTEGER'));
 
         $this->setMemberProjectsDeleted($member_id);
@@ -189,6 +188,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         //$this->setMemberPlingsDeleted($member_id);
         //$this->removeMemberProjectsFromSearch($member_id);
         $this->setDeletedInMaterializedView($member_id);
+        $this->setDeletedInSubSystems($member_id);
     }
 
     private function setMemberProjectsDeleted($member_id)
@@ -284,12 +284,11 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         }
 
         $sql = '
-                SELECT 
-                    `member`.*
-                FROM
-                    `member`
+                SELECT m.*, `member_email`.`email_address` AS `mail`, IF(ISNULL(`member_email`.`email_checked`),0,1) AS `mail_checked`
+                FROM `member` AS `m`
+                JOIN `member_email` ON `m`.`member_id` = `member_email`.`email_member_id` AND `member_email`.`email_primary` = 1
                 WHERE
-                    (member_id = :memberId) AND (is_deleted = :deletedVal)
+                    (m.member_id = :memberId) AND (m.is_deleted = :deletedVal)
         ';
 
         $result = $this->getAdapter()->query($sql, array('memberId' => $member_id, 'deletedVal' => self::MEMBER_NOT_DELETED))->fetch();
@@ -673,7 +672,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
      */
     public function findActiveMemberByIdentity($identity, $withLoginLocal = false)
     {
-        $sqlName = "SELECT * FROM member WHERE is_active = :active AND is_deleted = :deleted AND username = :identity";
+        $sqlName = "SELECT * FROM `member` WHERE `is_active` = :active AND `is_deleted` = :deleted AND `username` = :identity";
         $sqlMail = "SELECT * FROM `member` WHERE `is_active` = :active AND `is_deleted` = :deleted AND `mail` = :identity";
         if ($withLoginLocal) {
             $sqlName .= " AND login_method = '" . self::MEMBER_LOGIN_LOCAL . "'";
@@ -708,17 +707,18 @@ class Default_Model_Member extends Default_Model_DbTable_Member
     public function findMemberForMailHash($value)
     {
         $sql = "
-            SELECT m.* FROM member_email me
-            JOIN member m ON m.member_id = me.email_member_id
-            WHERE m.is_active = 1
-            AND m.is_deleted = 0
-            AND me.email_hash = :email_hash
+            SELECT `m`.* FROM `member_email` `me`
+            JOIN `member` `m` ON `m`.`member_id` = `me`.`email_member_id`
+            WHERE `m`.`is_active` = 1
+            AND `m`.`is_deleted` = 0
+            AND `me`.`email_hash` = :email_hash
         ";
 
         $result = $this->getAdapter()->fetchAll($sql, array('email_hash' => $value));
-        
-        if($result && count($result)>0) {
+
+        if ($result && count($result) > 0) {
             $member = $result[0];
+
             return $member;
         }
     }
@@ -1020,6 +1020,47 @@ class Default_Model_Member extends Default_Model_DbTable_Member
             $product['project_id'] = $memberProject->project_id;
             $product['project_category_id'] = $memberProject->project_category_id;
             $modelSearch->deleteDocument($product);
+        }
+    }
+
+    /**
+     * @param string $identity
+     *
+     * @return Zend_Db_Table_Row_Abstract
+     */
+    public function findActiveMemberByMail($identity)
+    {
+        $sqlMail = "
+                    SELECT `m`.*, `member_email`.`email_address` AS `mail`, IF(ISNULL(`member_email`.`email_checked`),0,1) AS `mail_checked`
+                    FROM `member` AS `m`
+                    JOIN `member_email` AS `me` ON `me`.`email_member_id` = `m`.`member_id` AND `me`.`email_primary` = 1
+                    WHERE `is_active` = :active AND `is_deleted` = :deleted AND `member_email`.`email_address` = :identity
+        ";
+
+        // test identity as mail
+        $resultMail = $this->getAdapter()->fetchRow($sqlMail,
+            array('active' => self::MEMBER_ACTIVE, 'deleted' => self::MEMBER_NOT_DELETED, 'identity' => $identity))
+        ;
+        if ((false !== $resultMail) AND (count($resultMail) > 0)) {
+            return $this->generateRowClass($resultMail);
+        }
+
+        return $this->createRow();
+    }
+
+    private function setDeletedInSubSystems($member_id)
+    {
+        try {
+            $id_server = new Default_Model_Ocs_OpenId();
+            $id_server->deactivateLoginForUser($member_id);
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+        }
+        try {
+            $ldap_server = new Default_Model_Ocs_Ident();
+            $ldap_server->deleteUser($member_id);
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }
     }
 
