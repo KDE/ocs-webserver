@@ -46,8 +46,7 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
         } else {
             $members = $this->getMemberList();
         }
-        
-        $members = $this->getMemberList();
+
         $this->exportMembers($members);
     }
 
@@ -86,6 +85,8 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
         ";
 
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql);
+        
+        file_put_contents($this->logfile, "Select " . count($result) . "Members.\nSql: ".$sql."\n", FILE_APPEND);
 
         return $result;
     }
@@ -115,7 +116,8 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
             }
             file_put_contents($this->logfile, Zend_Json::encode($member) . "\n", FILE_APPEND);
             try {
-                $modelOpenCode->exportUser($member);
+                //Export User, if he not existetd
+                $modelOpenCode->exportUser($member, false);
             } catch (Exception $e) {
                 Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
             }

@@ -50,7 +50,7 @@ class Default_Model_Ocs_OpenCode
      * @throws Zend_Http_Client_Exception
      * @throws Zend_Json_Exception
      */
-    public function exportUser($member_data)
+    public function exportUser($member_data, $force = false)
     {
         if (empty($member_data)) {
             return false;
@@ -61,7 +61,12 @@ class Default_Model_Ocs_OpenCode
         $userid = $this->userExists($data['username']);
 
         if (false === empty($userid)) {
-            return $this->httpUserUpdate($data, $userid);
+            if($force === true) {
+                return $this->httpUserUpdate($data, $userid);
+            } else {
+                $this->messages[0] = 'User existst and we not force an update';
+                return true;
+            }
         }
 
         return $this->httpUserCreate($data);
@@ -86,7 +91,8 @@ class Default_Model_Ocs_OpenCode
             'admin'             => $user['roleId'] == 100 ? 'true' : 'false',
             'can_create_group'  => 'true',
             'skip_confirmation' => 'true',
-            'skip_reconfirmation' => 'true'
+            'skip_reconfirmation' => 'true',
+            'confirm'           => 'no'
         );
 
         return $data;
