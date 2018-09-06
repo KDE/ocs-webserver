@@ -165,16 +165,14 @@ class Default_Model_Ocs_HttpTransport_OpenIdServer
 
         $response = $httpClient->request();
 
-        Zend_Registry::get('logger')->debug("----------\n".__METHOD__ . " - request:\n" . $httpClient->getLastRequest());
-        Zend_Registry::get('logger')->debug("----------\n".__METHOD__ . " - response:\n" . $response->asString());
+        Zend_Registry::get('logger')->debug(__METHOD__ . " - request: " . $httpClient->getUri(true));
+        Zend_Registry::get('logger')->debug(__METHOD__ . " - response: " . $response->getRawBody());
 
         if ($response->getStatus() != 200) {
-            throw new Zend_Exception('request access token failed. OCS ID server send message: ' . $response->getBody());
+            throw new Zend_Exception('request access token failed. OCS ID server send message: ' . $response->getRawBody());
         }
 
         $data = $this->parseResponse($response);
-
-        Zend_Registry::get('logger')->debug("----------\n".__METHOD__ . " - parsed response:\n" . print_r($data, true));
 
         return $data;
     }
@@ -213,16 +211,14 @@ class Default_Model_Ocs_HttpTransport_OpenIdServer
 
         $response = $httpClient->request();
 
-        Zend_Registry::get('logger')->debug("----------\n".__METHOD__ . " - request:\n" . $httpClient->getLastRequest());
-        Zend_Registry::get('logger')->debug("----------\n".__METHOD__ . " - response:\n" . $response->asString());
+        Zend_Registry::get('logger')->debug(__METHOD__ . " - request: " . $httpClient->getUri(true));
+        Zend_Registry::get('logger')->debug(__METHOD__ . " - response: " . $response->getRawBody());
 
         if ($response->getStatus() != 200) {
             throw new Zend_Exception('request refresh token failed. OCS ID server send message: ' . $response->getBody());
         }
 
         $data = $this->parseResponse($response);
-
-        Zend_Registry::get('logger')->debug("----------\n".__METHOD__ . " - parsed response:\n" . print_r($data, true));
 
         return $data;
     }

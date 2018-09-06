@@ -1068,18 +1068,21 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         try {
             $id_server = new Default_Model_Ocs_OpenId();
             $id_server->deleteUser($member_id);
+            //Zend_Registry::get('logger')->debug(__METHOD__ . ' - : ' . implode(PHP_EOL." - ", $id_server->getMessages()));
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }
         try {
             $ldap_server = new Default_Model_Ocs_Ident();
             $ldap_server->deleteUser($member_id);
+            Zend_Registry::get('logger')->debug(__METHOD__ . ' - ldap : ' . implode(PHP_EOL." - ", $ldap_server->getMessages()));
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }
         try {
-            $ldap_server = new Default_Model_Ocs_OpenCode();
-            $ldap_server->deleteUser($member_id);
+            $openCode = new Default_Model_Ocs_OpenCode();
+            $openCode->deleteUser($member_id);
+            Zend_Registry::get('logger')->debug(__METHOD__ . ' - opencode : ' . implode(PHP_EOL." - ", $openCode->getMessages()));
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }

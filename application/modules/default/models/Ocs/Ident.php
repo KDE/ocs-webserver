@@ -93,7 +93,8 @@ class Default_Model_Ocs_Ident
 
         $onlyActiveFilter = '';
         if ($onlyActive) {
-            $onlyActiveFilter = " AND `m`.`is_active` = 1 AND `m`.`is_deleted` = 0 AND `me`.`email_checked` IS NOT NULL AND `me`.`email_deleted` = 0";
+            $onlyActiveFilter =
+                " AND `m`.`is_active` = 1 AND `m`.`is_deleted` = 0 AND `me`.`email_checked` IS NOT NULL AND `me`.`email_deleted` = 0";
         }
         $sql = "
             SELECT `mei`.`external_id`,`m`.`member_id`, `m`.`username`, `me`.`email_address`, `m`.`password`, `m`.`roleId`, `m`.`firstname`, `m`.`lastname`, `m`.`profile_image_url`, `m`.`created_at`, `m`.`changed_at`, `m`.`source_id`
@@ -215,6 +216,7 @@ class Default_Model_Ocs_Ident
         $member_data = $this->getMemberData($member_id);
         $username = strtolower($member_data['username']);
         if (false === $connection->exists("cn={$username},{$this->baseDn}")) {
+            $connection->getLastError($this->errCode, $this->errMessages);
             return false;
         }
         $entry = $this->createIdentEntry($member_data);
@@ -239,6 +241,7 @@ class Default_Model_Ocs_Ident
         $username = strtolower($member_data['username']);
         if (false === $connection->exists("cn={$username},{$this->baseDn}")) {
             $connection->getLastError($this->errCode, $this->errMessages);
+
             return false;
         }
         $connection->delete("cn={$username},{$this->baseDn}");
@@ -261,8 +264,8 @@ class Default_Model_Ocs_Ident
         $connection = $this->getServerConnection();
         $username = strtolower($username);
         if (false === $connection->exists("cn={$username},{$this->baseDn}")) {
-            $this->errCode = 999;
-            $this->errMessages[] = 'user not found.';
+            $connection->getLastError($this->errCode, $this->errMessages);
+
             return;
         }
         $connection->delete("cn={$username},{$this->baseDn}");
@@ -282,8 +285,7 @@ class Default_Model_Ocs_Ident
         $username = strtolower($member_data['username']);
         $dn = "cn={$username},{$this->baseDn}";
         if ($connection->exists($dn)) {
-            $this->errCode = 999;
-            $this->errMessages[] = "user {$member_data['username']} already exists";
+            $connection->getLastError($this->errCode, $this->errMessages);
 
             return array();
         }
@@ -306,8 +308,7 @@ class Default_Model_Ocs_Ident
         $username = strtolower($member_data['username']);
         $dn = "cn={$username},{$this->baseDn}";
         if (false == $connection->exists($dn)) {
-            $this->errCode = 998;
-            $this->errMessages[] = "user {$member_data['username']} does not exists";
+            $connection->getLastError($this->errCode, $this->errMessages);
 
             return array();
         }
@@ -320,7 +321,7 @@ class Default_Model_Ocs_Ident
     /**
      * @return array
      */
-    public function getErrMessages()
+    public function getMessages()
     {
         return $this->errMessages;
     }

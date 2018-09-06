@@ -146,7 +146,7 @@ class Default_Model_Ocs_OpenCode
             }
         }
 
-        Zend_Registry::get('logger')->debug("----------\n" . __METHOD__ . " - body:\n" . $response->getRawBody());
+        Zend_Registry::get('logger')->debug(__METHOD__ . " - body: " . $response->getRawBody());
 
         return $body[0]['id'];
     }
@@ -170,31 +170,21 @@ class Default_Model_Ocs_OpenCode
         $this->httpClient->setParameterPost($data);
 
         $response = $this->httpClient->request();
-
-        $transfer_encoding = $response->getHeader('Transfer-encoding');
-        $body = $response->getRawBody();
-        if ('chunked' == trim(strtolower($transfer_encoding))) {
-            $body = Zend_Http_Response::decodeChunkedBody($response->getRawBody());
-        }
-        $content_encoding = $response->getHeader('Content-encoding');
-        if ('gzip' == trim(strtolower($content_encoding))) {
-            $body = Zend_Http_Response::decodeGzip($body);
-        }
-
-        //Zend_Registry::get('logger')->debug("----------\n" . __METHOD__ . " - request:\n" . $this->httpClient->getLastRequest());
-        //Zend_Registry::get('logger')->debug("----------\n" . __METHOD__ . " - response:\n" . $response->asString());
-        //Zend_Registry::get('logger')->debug("----------\n" . __METHOD__ . " - body:\n" . $response->getBody());
-
-        $this->messages[0] = ' - response for creation request: ' . $body . PHP_EOL . " - userdata: " . implode(";", $data);
-
         if ($response->getStatus() < 200 AND $response->getStatus() >= 300) {
-            throw new Default_Model_Ocs_Exception('push user data failed. OCS OpenCode server send message: ' . $body);
+            throw new Default_Model_Ocs_Exception('push user data failed. OCS OpenCode server send message: '
+                . $response->getRawBody());
         }
 
         $body = Zend_Json::decode($response->getRawBody());
         if (array_key_exists("message", $body)) {
             throw new Default_Model_Ocs_Exception($body["message"]);
         }
+
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - request: ' . $uri);
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - response: ' . $response->getRawBody());
+
+        $this->messages[0] =
+            ' - response for creation request: ' . $response->getRawBody() . PHP_EOL . " - userdata: " . implode(";", $data);
 
         return true;
     }
@@ -221,33 +211,22 @@ class Default_Model_Ocs_OpenCode
         $this->httpClient->setParameterPost($data);
 
         $response = $this->httpClient->request();
-
-        $transfer_encoding = $response->getHeader('Transfer-encoding');
-        $body = $response->getRawBody();
-        if ('chunked' == trim(strtolower($transfer_encoding))) {
-            $body = Zend_Http_Response::decodeChunkedBody($response->getRawBody());
-        }
-        $content_encoding = $response->getHeader('Content-encoding');
-        if ('gzip' == trim(strtolower($content_encoding))) {
-            $body = Zend_Http_Response::decodeGzip($body);
-        }
-
-        Zend_Registry::get('logger')->debug("----------\n" . __METHOD__ . " - request:\n" . $this->httpClient->getLastRequest());
-        //Zend_Registry::get('logger')->debug("----------\n" . __METHOD__ . " - response:\n" . $response->asString());
-        //Zend_Registry::get('logger')->debug("----------\n" . __METHOD__ . " - body:\n" . $response->getBody());
-
-        $this->messages[0] =
-            ' - response for update request: ' . $body . PHP_EOL . " - userdata: " . implode(';', $data) . PHP_EOL . " - opencode id: "
-            . $id;
-
         if ($response->getStatus() < 200 AND $response->getStatus() >= 300) {
-            throw new Zend_Exception('push user data failed. OCS OpenCode server send message: ' . $body);
+            throw new Default_Model_Ocs_Exception('update user data failed. OCS OpenCode server send message: '
+                . $response->getRawBody());
         }
 
         $body = Zend_Json::decode($response->getRawBody());
         if (array_key_exists("message", $body)) {
             throw new Default_Model_Ocs_Exception($body["message"]);
         }
+
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - request: ' . $uri);
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - response: ' . $response->getRawBody());
+
+        $this->messages[0] =
+            ' - response for update request: ' . $response->getRawBody() . PHP_EOL . " - userdata: " . implode(';', $data) . PHP_EOL
+            . " - opencode id: " . $id;
 
         return true;
     }
@@ -273,10 +252,43 @@ class Default_Model_Ocs_OpenCode
         $userId = $this->getUser($data['extern_uid']);
 
         if (empty($userId)) {
+            $this->messages[0] = 'Not deleted. User not exists. ';
+
             return false;
         }
 
         return $this->httpUserDelete($userId);
+    }
+
+    /**
+     * @param int $member_id
+     *
+     * @return array
+     * @throws Zend_Exception
+     */
+    private function getMemberData($member_id, $onlyActive = true)
+    {
+
+        $onlyActiveFilter = '';
+        if ($onlyActive) {
+            $onlyActiveFilter =
+                " AND `m`.`is_active` = 1 AND `m`.`is_deleted` = 0 AND `me`.`email_checked` IS NOT NULL AND `me`.`email_deleted` = 0";
+        }
+        $sql = "
+            SELECT `mei`.`external_id`,`m`.`member_id`, `m`.`username`, `me`.`email_address`, `m`.`password`, `m`.`roleId`, `m`.`firstname`, `m`.`lastname`, `m`.`profile_image_url`, `m`.`biography`, `m`.`created_at`, `m`.`changed_at`, `m`.`source_id`
+            FROM `member` AS `m`
+            LEFT JOIN `member_email` AS `me` ON `me`.`email_member_id` = `m`.`member_id` AND `me`.`email_primary` = 1
+            LEFT JOIN `member_external_id` AS `mei` ON `mei`.`member_id` = `m`.`member_id`
+            WHERE `m`.`member_id` = :memberId {$onlyActiveFilter}
+            ORDER BY `m`.`member_id` DESC
+        ";
+
+        $result = Zend_Db_Table::getDefaultAdapter()->fetchRow($sql, array('memberId' => $member_id));
+        if (count($result) == 0) {
+            throw new Default_Model_Ocs_Exception('member with id ' . $member_id . ' could not found.');
+        }
+
+        return $result;
     }
 
     /**
@@ -299,31 +311,26 @@ class Default_Model_Ocs_OpenCode
 
         $response = $this->httpClient->request();
 
-        $transfer_encoding = $response->getHeader('Transfer-encoding');
-        $body = $response->getRawBody();
-        if ('chunked' == trim(strtolower($transfer_encoding))) {
-            $body = Zend_Http_Response::decodeChunkedBody($response->getRawBody());
-        }
-        $content_encoding = $response->getHeader('Content-encoding');
-        if ('gzip' == trim(strtolower($content_encoding))) {
-            $body = Zend_Http_Response::decodeGzip($body);
-        }
+        if (204 == $response->getStatus()) {
+            $this->messages[0] = ' - response : ' . $response->getRawBody() . " - user id: {$id}";
 
-        //Zend_Registry::get('logger')->debug("----------\n" . __METHOD__ . " - request:\n" . $this->httpClient->getLastRequest());
-        //Zend_Registry::get('logger')->debug("----------\n" . __METHOD__ . " - response:\n" . $response->asString());
-        //Zend_Registry::get('logger')->debug("----------\n" . __METHOD__ . " - body:\n" . $response->getBody());
-
-        $this->messages[0] = ' - response for delete request: ' . $body . PHP_EOL . " - OpenCode user id: {$id}" . PHP_EOL;
+            return true;
+        }
 
         if ($response->getStatus() < 200 AND $response->getStatus() >= 300) {
-            throw new Zend_Exception('delete user failed. OCS OpenCode server send message: ' . $body . PHP_EOL
-                . " - OpenCode user id: {$id}");
+            throw new Default_Model_Ocs_Exception('delete user failed. OCS OpenCode server send message: ' . $response->getRawBody()
+                . PHP_EOL . " - OpenCode user id: {$id}");
         }
 
         $body = Zend_Json::decode($response->getRawBody());
         if (array_key_exists("message", $body)) {
             throw new Default_Model_Ocs_Exception($body["message"]);
         }
+
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - request: ' . $uri);
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - response: ' . $response->getRawBody());
+
+        $this->messages[0] = ' - response : ' . $response->getRawBody() . " - user id: {$id}";
 
         return true;
     }
@@ -349,19 +356,24 @@ class Default_Model_Ocs_OpenCode
         $response = $this->httpClient->request();
 
         $body = Zend_Json::decode($response->getRawBody());
+        if (array_key_exists("message", $body)) {
+            throw new Default_Model_Ocs_Exception($body["message"]);
+        }
 
         if (count($body) == 0) {
             return false;
         }
 
-        if (array_key_exists("message", $body)) {
-            $result_code = substr(trim($body["message"]), 0, 3);
-            if ((int)$result_code >= 300) {
-                throw new Zend_Exception($body["message"]);
-            }
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - request: ' . $uri);
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - response: ' . $response->getBody());
+
+        if ($response->getStatus() < 200 AND $response->getStatus() >= 300) {
+            throw new Zend_Exception('exists user failed. OCS OpenCode server send message: ' . $response->getBody() . PHP_EOL
+                . " - OpenCode user id: {$username}");
         }
 
-        Zend_Registry::get('logger')->debug("----------\n" . __METHOD__ . " - body:\n" . $response->getRawBody());
+        $this->messages[0] =
+            ' - response for user exists request: ' . $response->getBody() . PHP_EOL . " - OpenCode user id: {$username}" . PHP_EOL;
 
         return $body[0]['id'];
     }
@@ -402,37 +414,6 @@ class Default_Model_Ocs_OpenCode
         $this->messages[0] = 'User exists and we do not update. Use the force parameter instead.';
 
         return false;
-    }
-
-    /**
-     * @param int $member_id
-     *
-     * @return array
-     * @throws Zend_Exception
-     */
-    private function getMemberData($member_id, $onlyActive = true)
-    {
-
-        $onlyActiveFilter = '';
-        if ($onlyActive) {
-            $onlyActiveFilter =
-                " AND `m`.`is_active` = 1 AND `m`.`is_deleted` = 0 AND `me`.`email_checked` IS NOT NULL AND `me`.`email_deleted` = 0";
-        }
-        $sql = "
-            SELECT `mei`.`external_id`,`m`.`member_id`, `m`.`username`, `me`.`email_address`, `m`.`password`, `m`.`roleId`, `m`.`firstname`, `m`.`lastname`, `m`.`profile_image_url`, `m`.`biography`, `m`.`created_at`, `m`.`changed_at`, `m`.`source_id`
-            FROM `member` AS `m`
-            LEFT JOIN `member_email` AS `me` ON `me`.`email_member_id` = `m`.`member_id` AND `me`.`email_primary` = 1
-            LEFT JOIN `member_external_id` AS `mei` ON `mei`.`member_id` = `m`.`member_id`
-            WHERE `m`.`member_id` = :memberId {$onlyActiveFilter}
-            ORDER BY `m`.`member_id` DESC
-        ";
-
-        $result = Zend_Db_Table::getDefaultAdapter()->fetchRow($sql, array('memberId' => $member_id));
-        if (count($result) == 0) {
-            throw new Default_Model_Ocs_Exception('member with id ' . $member_id . ' could not found.');
-        }
-
-        return $result;
     }
 
     /**

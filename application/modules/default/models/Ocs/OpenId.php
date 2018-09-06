@@ -75,12 +75,6 @@ class Default_Model_Ocs_OpenId
             throw new Default_Model_Ocs_Exception('member with id ' . $member_id . ' could not found.');
         }
 
-        $modelExternalId = new Default_Model_DbTable_MemberExternalId();
-        $externalId = $modelExternalId->fetchRow(array("member_id = ?" => $member['member_id']));
-        if (count($externalId->toArray()) > 0) {
-            $member['external_id'] = $externalId->external_id;
-        }
-
         return $member;
     }
 
