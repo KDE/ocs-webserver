@@ -20,6 +20,7 @@ class MetaHeader extends React.Component {
     this.state = {
       baseUrl: baseUrl,
       blogUrl: blogUrl,
+      loginUrl: loginUrl,
       domains: domains,
       user: user,
       sName: sName,
@@ -28,7 +29,7 @@ class MetaHeader extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.state.user);
+    console.log(this.state);
   }
 
   render() {
@@ -46,7 +47,8 @@ class MetaHeader extends React.Component {
         }),
         React.createElement(UserMenu, {
           user: this.state.user,
-          blogUrl: this.state.blogUrl
+          blogUrl: this.state.blogUrl,
+          loginUrl: this.state.loginUrl
         })
       )
     );
@@ -151,7 +153,7 @@ class UserMenu extends React.Component {
         { id: "user-login-container" },
         React.createElement(
           "a",
-          { href: "/login", className: "btn btn-metaheader" },
+          { href: this.props.loginUrl, className: "btn btn-metaheader" },
           "Login"
         )
       );
@@ -252,7 +254,9 @@ class UserContextMenuContainer extends React.Component {
               React.createElement(
                 "span",
                 null,
-                "Themes & Apps"
+                "Themes ",
+                React.createElement("br", null),
+                " & Apps"
               )
             )
           ),
@@ -266,7 +270,9 @@ class UserContextMenuContainer extends React.Component {
               React.createElement(
                 "span",
                 null,
-                "Discussion Boards"
+                "Discussion ",
+                React.createElement("br", null),
+                " Boards"
               )
             )
           ),
@@ -280,7 +286,9 @@ class UserContextMenuContainer extends React.Component {
               React.createElement(
                 "span",
                 null,
-                "Coding Tools"
+                "Coding ",
+                React.createElement("br", null),
+                " Tools"
               )
             )
           )

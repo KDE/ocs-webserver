@@ -42,7 +42,7 @@ if($loginMember->member_id)
     $serverUrl = $this->serverUrl();
     $helperEncryptUrl = new Default_View_Helper_EncryptUrl();
     $redirectString = '/redirect/' . $helperEncryptUrl->EncryptUrl(Zend_Controller_Front::getInstance()->getRequest()->getScheme() . '://' . Zend_Controller_Front::getInstance()->getRequest()->getHttpHost().$_SERVER["REQUEST_URI"]);
-    $loginUrl = $serverUrl.'/login'.(strpos($_SERVER["REQUEST_URI"], 'login')?'':$redirectString);        
+    $loginUrl = $serverUrl.'/login'.(strpos($_SERVER["REQUEST_URI"], 'login')?'':$redirectString);
 }
 
 ?>
@@ -61,10 +61,10 @@ if($loginMember->member_id)
     <script>
       var domains = <?=$json_menu?>;
       var user = <?= $json_user ?>;
-      var loginUrl = "<?=$loginUrl?>";
       var baseUrl = "<?=$baseurl?>";
       var blogUrl = "<?=$url_blog?>";
+      var loginUrl = "<?=$loginUrl?>";
       var sName = "<?=$sname?>";
     </script>
-    
+
     <script type="text/javascript" src="/theme/react/metaheader.js"></script>

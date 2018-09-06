@@ -4,6 +4,7 @@ class MetaHeader extends React.Component {
   	this.state = {
       baseUrl:baseUrl,
       blogUrl:blogUrl,
+      loginUrl:loginUrl,
       domains:domains,
       user:user,
       sName:sName,
@@ -12,7 +13,7 @@ class MetaHeader extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.state.user);
+    console.log(this.state);
   }
 
   render(){
@@ -28,6 +29,7 @@ class MetaHeader extends React.Component {
           <UserMenu
             user={this.state.user}
             blogUrl={this.state.blogUrl}
+            loginUrl={this.state.loginUrl}
           />
         </div>
       </nav>
@@ -119,7 +121,7 @@ class UserMenu extends React.Component {
       );
     } else {
       userDropdownDisplay = (
-        <li id="user-login-container"><a href="/login" className="btn btn-metaheader">Login</a></li>
+        <li id="user-login-container"><a href={this.props.loginUrl} className="btn btn-metaheader">Login</a></li>
       )
     }
 
@@ -162,19 +164,19 @@ class UserContextMenuContainer extends React.Component {
             <li id="opendesktop-link-item">
               <a href="http://www.opendesktop.org">
                 <div className="icon"></div>
-                <span>Themes & Apps</span>
+                <span>Themes <br/> & Apps</span>
               </a>
             </li>
             <li id="discourse-link-item">
               <a href="http://discourse.opendesktop.org/">
                 <div className="icon"></div>
-                <span>Discussion Boards</span>
+                <span>Discussion <br/> Boards</span>
               </a>
             </li>
             <li id="opencode-link-item">
               <a href="https://www.opencode.net/">
                 <div className="icon"></div>
-                <span>Coding Tools</span>
+                <span>Coding <br/> Tools</span>
               </a>
             </li>
           </ul>
