@@ -267,7 +267,7 @@ class Default_Model_Ocs_OpenCode
             return false;
         }
 
-        $member_data = $this->getMemberData($member_id);
+        $member_data = $this->getMemberData($member_id, false);
         $data = $this->mapUserData($member_data);
 
         $userId = $this->getUser($data['extern_uid']);
