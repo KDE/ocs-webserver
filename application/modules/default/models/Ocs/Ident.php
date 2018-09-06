@@ -235,9 +235,10 @@ class Default_Model_Ocs_Ident
             return false;
         }
         $connection = $this->getServerConnection();
-        $member_data = $this->getMemberData($member_id);
+        $member_data = $this->getMemberData($member_id, false);
         $username = strtolower($member_data['username']);
         if (false === $connection->exists("cn={$username},{$this->baseDn}")) {
+            $connection->getLastError($this->errCode, $this->errMessages);
             return false;
         }
         $connection->delete("cn={$username},{$this->baseDn}");
