@@ -197,7 +197,7 @@ class Default_Model_Ocs_OpenId
      * @throws Zend_Exception
      * @throws Zend_Http_Client_Exception
      */
-    public function deactivateLoginForUser($member_id)
+    public function deleteUser($member_id)
     {
         if (empty($member_id)) {
             return false;

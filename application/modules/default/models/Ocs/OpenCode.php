@@ -253,7 +253,7 @@ class Default_Model_Ocs_OpenCode
     }
 
     /**
-     * @param array $member_data
+     * @param  int $member_id
      *
      * @return bool
      * @throws Zend_Exception
@@ -261,13 +261,16 @@ class Default_Model_Ocs_OpenCode
      * @throws Zend_Http_Exception
      * @throws Zend_Json_Exception
      */
-    public function deleteUser($member_data)
+    public function deleteUser($member_id)
     {
-        if (empty($member_data)) {
+        if (empty($member_id)) {
             return false;
         }
 
-        $userId = $this->getUser($member_data['external_id']);
+        $member_data = $this->getMemberData($member_id);
+        $data = $this->mapUserData($member_data);
+
+        $userId = $this->getUser($data['extern_uid']);
 
         if (empty($userId)) {
             return false;
@@ -366,6 +369,14 @@ class Default_Model_Ocs_OpenCode
         return $this->messages;
     }
 
+    /**
+     * @param int $member_id
+     *
+     * @return bool
+     * @throws Zend_Exception
+     * @throws Zend_Http_Client_Exception
+     * @throws Zend_Json_Exception
+     */
     public function createUser($member_id)
     {
         if (empty($member_id)) {
