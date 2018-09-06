@@ -116,7 +116,7 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
             }
             file_put_contents($this->logfile, Zend_Json::encode($member) . "\n", FILE_APPEND);
             try {
-                //Export User, if he not existetd
+                //Export User, if he not exists
                 $modelOpenCode->exportUser($member, false);
             } catch (Exception $e) {
                 Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
