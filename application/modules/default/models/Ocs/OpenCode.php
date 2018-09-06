@@ -320,6 +320,11 @@ class Default_Model_Ocs_OpenCode
                 . " - OpenCode user id: {$id}");
         }
 
+        $body = Zend_Json::decode($response->getRawBody());
+        if (array_key_exists("message", $body)) {
+            throw new Default_Model_Ocs_Exception($body["message"]);
+        }
+
         return true;
     }
 
