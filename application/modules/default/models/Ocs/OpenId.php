@@ -69,7 +69,7 @@ class Default_Model_Ocs_OpenId
     protected function getUserData($member_id)
     {
         $modelMember = new Default_Model_Member();
-        $member = $modelMember->fetchMemberData($member_id)->toArray();
+        $member = $modelMember->fetchMemberData($member_id, false)->toArray();
 
         if (empty($member)) {
             throw new Default_Model_Ocs_Exception('member with id ' . $member_id . ' could not found.');
@@ -197,7 +197,7 @@ class Default_Model_Ocs_OpenId
      * @throws Zend_Exception
      * @throws Zend_Http_Client_Exception
      */
-    public function deactivateLoginForUser($member_id)
+    public function deleteUser($member_id)
     {
         if (empty($member_id)) {
             return false;
