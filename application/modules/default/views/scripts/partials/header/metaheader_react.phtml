@@ -25,21 +25,24 @@
 $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
 $url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
 $url_blog = Zend_Registry::get('config')->settings->client->default->url_blog;
-$domainshelper = new Default_View_Helper_FetchDomains();
-$this->domainobjects = $domainshelper->fetchDomainObjects();
+
 $sname = Zend_Registry::get('store_host');
 $json_menu = $this->fetchMetaheaderMenuJson();
-
 $loginMember = $this->getAuthUser();
 if($loginMember->member_id)
 {
     $json_user = Zend_Json::encode($loginMember);
     $username = $loginMember->username;
     $profile_image_url = $loginMember->profile_image_url;
+    $loginUrl = null;
 }else{
-  $json_user = Zend_Json::encode(null);
-  $username = null;
-  $profile_image_url = null;
+    $json_user = Zend_Json::encode(null);
+    $username = null;
+    $profile_image_url = null;
+    $serverUrl = $this->serverUrl();
+    $helperEncryptUrl = new Default_View_Helper_EncryptUrl();
+    $redirectString = '/redirect/' . $helperEncryptUrl->EncryptUrl(Zend_Controller_Front::getInstance()->getRequest()->getScheme() . '://' . Zend_Controller_Front::getInstance()->getRequest()->getHttpHost().$_SERVER["REQUEST_URI"]);
+    $loginUrl = $serverUrl.'/login'.(strpos($_SERVER["REQUEST_URI"], 'login')?'':$redirectString);        
 }
 
 ?>
@@ -58,6 +61,7 @@ if($loginMember->member_id)
     <script>
       var domains = <?=$json_menu?>;
       var user = <?= $json_user ?>;
+      var loginUrl = "<?=$loginUrl?>";
       var baseUrl = "<?=$baseurl?>";
       var blogUrl = "<?=$url_blog?>";
       var sName = "<?=$sname?>";
