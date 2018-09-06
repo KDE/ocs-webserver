@@ -71,36 +71,13 @@ class Default_Model_Ocs_OpenCode
         if ($force === true) {
             $data['skip_reconfirmation'] = 'true';
             unset($data['password']);
+
             return $this->httpUserUpdate($data, $userId);
         }
 
         $this->messages[0] = 'User exists and we do not update. Use the force parameter instead.';
 
         return false;
-    }
-
-    /**
-     * @param array $member_data
-     *
-     * @return bool
-     * @throws Zend_Exception
-     * @throws Zend_Http_Client_Exception
-     * @throws Zend_Http_Exception
-     * @throws Zend_Json_Exception
-     */
-    public function deleteUser($member_data)
-    {
-        if (empty($member_data)) {
-            return false;
-        }
-
-        $userId = $this->getUser($member_data['external_id']);
-
-        if (empty($userId)) {
-            return false;
-        }
-
-        return $this->httpUserDelete($userId);
     }
 
     /**
@@ -113,64 +90,27 @@ class Default_Model_Ocs_OpenCode
         $paramEmail = '';
         if (isset($user['email_address'])) {
             $paramEmail = $user['email_address'];
-        } elseif (isset($user['mail'])) {
+        } else if (isset($user['mail'])) {
             $paramEmail = $user['mail'];
         }
 
         $data = array(
-            'email'             => $paramEmail,
-            'username'          => $user['username'],
-            'name'              => (false == empty($user['lastname'])) ? trim($user['firstname'] . ' ' . $user['lastname']) : $user['username'],
-            'password'          => $user['password'],
-            'provider'          => 'all',
-            'extern_uid'        => $user['external_id'],
-            'bio'               => empty($user['biography']) ? '' : $user['biography'],
-            'admin'             => $user['roleId'] == 100 ? 'true' : 'false',
-            'can_create_group'  => 'true'
+            'email'            => $paramEmail,
+            'username'         => $user['username'],
+            'name'             => (false == empty($user['lastname'])) ? trim($user['firstname'] . ' ' . $user['lastname'])
+                : $user['username'],
+            'password'         => $user['password'],
+            'provider'         => 'all',
+            'extern_uid'       => $user['external_id'],
+            'bio'              => empty($user['biography']) ? '' : $user['biography'],
+            'admin'            => $user['roleId'] == 100 ? 'true' : 'false',
+            'can_create_group' => 'true'
             //'skip_confirmation' => 'true',
             //'skip_reconfirmation' => 'true',
             //'confirm'           => 'no'
         );
 
         return $data;
-    }
-
-    /**
-     * @param string $username
-     *
-     * @return bool
-     * @throws Zend_Exception
-     * @throws Zend_Http_Client_Exception
-     * @throws Zend_Json_Exception
-     */
-    public function userExists($username)
-    {
-        $this->httpClient->resetParameters();
-        $uri = $this->config->host . '/api/v4/users?username=' . $username;
-        $this->httpClient->setUri($uri);
-        $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
-        $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
-        $this->httpClient->setHeaders('User-Agent', $this->config->user_agent);
-        $this->httpClient->setMethod(Zend_Http_Client::GET);
-
-        $response = $this->httpClient->request();
-
-        $body = Zend_Json::decode($response->getRawBody());
-
-        if (count($body) == 0) {
-            return false;
-        }
-
-        if (array_key_exists("message", $body)) {
-            $result_code = substr(trim($body["message"]), 0, 3);
-            if ((int) $result_code >= 300) {
-                throw new Zend_Exception($body["message"]);
-            }
-        }
-
-        Zend_Registry::get('logger')->debug("----------\n" . __METHOD__ . " - body:\n" . $response->getRawBody());
-
-        return $body[0]['id'];
     }
 
     /**
@@ -201,7 +141,7 @@ class Default_Model_Ocs_OpenCode
 
         if (array_key_exists("message", $body)) {
             $result_code = substr(trim($body["message"]), 0, 3);
-            if ((int) $result_code >= 300) {
+            if ((int)$result_code >= 300) {
                 throw new Zend_Exception($body["message"]);
             }
         }
@@ -260,34 +200,6 @@ class Default_Model_Ocs_OpenCode
     }
 
     /**
-     * @return array|null
-     */
-    public function getMessages()
-    {
-        return $this->messages;
-    }
-
-    /**
-     * @param $member_id
-     *
-     * @return array
-     * @throws Zend_Db_Statement_Exception
-     */
-    protected function getUserData($member_id)
-    {
-        $modelMember = new Default_Model_Member();
-        $member = $modelMember->fetchMemberData($member_id, false)->toArray();
-
-        $modelExternalId = new Default_Model_DbTable_MemberExternalId();
-        $externalId = $modelExternalId->fetchRow(array("member_id = ?" => $member['member_id']));
-        if (count($externalId->toArray()) > 0) {
-            $member['external_id'] = $externalId->external_id;
-        }
-
-        return $member;
-    }
-
-    /**
      * @param $data
      *
      * @param $id
@@ -324,7 +236,9 @@ class Default_Model_Ocs_OpenCode
         //Zend_Registry::get('logger')->debug("----------\n" . __METHOD__ . " - response:\n" . $response->asString());
         //Zend_Registry::get('logger')->debug("----------\n" . __METHOD__ . " - body:\n" . $response->getBody());
 
-        $this->messages[0] = ' - response for update request: ' . $body . PHP_EOL . " - userdata: " . implode(';', $data) . PHP_EOL . " - opencode id: " . $id;
+        $this->messages[0] =
+            ' - response for update request: ' . $body . PHP_EOL . " - userdata: " . implode(';', $data) . PHP_EOL . " - opencode id: "
+            . $id;
 
         if ($response->getStatus() < 200 AND $response->getStatus() >= 300) {
             throw new Zend_Exception('push user data failed. OCS OpenCode server send message: ' . $body);
@@ -339,45 +253,28 @@ class Default_Model_Ocs_OpenCode
     }
 
     /**
-     * @param string $name
+     * @param array $member_data
      *
      * @return bool
      * @throws Zend_Exception
      * @throws Zend_Http_Client_Exception
+     * @throws Zend_Http_Exception
      * @throws Zend_Json_Exception
      */
-    public function groupExists($name)
+    public function deleteUser($member_data)
     {
-        $this->httpClient->resetParameters();
-        $uri = $this->config->host . '/api/v4/groups?search=' . $name;
-        $this->httpClient->setUri($uri);
-        $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
-        $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
-        $this->httpClient->setHeaders('User-Agent', $this->config->user_agent);
-        $this->httpClient->setMethod(Zend_Http_Client::GET);
-
-        $response = $this->httpClient->request();
-
-        $body = Zend_Json::decode($response->getRawBody());
-
-        if (count($body) > 0) {
-            return true;
+        if (empty($member_data)) {
+            return false;
         }
 
-        if (array_key_exists("message", $body)) {
-            $result_code = substr(trim($body["message"]), 0, 3);
-            if ((int) $result_code >= 300) {
-                throw new Zend_Exception($body["message"]);
-            }
+        $userId = $this->getUser($member_data['external_id']);
+
+        if (empty($userId)) {
+            return false;
         }
 
-        if (array_key_exists("error_description", $body)) {
-           throw new Zend_Exception($body["error_description"]);
-        }
-
-        return false;
+        return $this->httpUserDelete($userId);
     }
-
 
     /**
      * @param $id
@@ -413,13 +310,173 @@ class Default_Model_Ocs_OpenCode
         //Zend_Registry::get('logger')->debug("----------\n" . __METHOD__ . " - response:\n" . $response->asString());
         //Zend_Registry::get('logger')->debug("----------\n" . __METHOD__ . " - body:\n" . $response->getBody());
 
-        $this->messages[0] = ' - response for delete request: ' . $body . PHP_EOL .  " - OpenCode user id: {$id}" . PHP_EOL;
+        $this->messages[0] = ' - response for delete request: ' . $body . PHP_EOL . " - OpenCode user id: {$id}" . PHP_EOL;
 
         if ($response->getStatus() < 200 AND $response->getStatus() >= 300) {
-            throw new Zend_Exception('delete user failed. OCS OpenCode server send message: ' . $body . PHP_EOL . " - OpenCode user id: {$id}");
+            throw new Zend_Exception('delete user failed. OCS OpenCode server send message: ' . $body . PHP_EOL
+                . " - OpenCode user id: {$id}");
         }
 
         return true;
+    }
+
+    /**
+     * @param string $username
+     *
+     * @return bool
+     * @throws Zend_Exception
+     * @throws Zend_Http_Client_Exception
+     * @throws Zend_Json_Exception
+     */
+    public function userExists($username)
+    {
+        $this->httpClient->resetParameters();
+        $uri = $this->config->host . '/api/v4/users?username=' . $username;
+        $this->httpClient->setUri($uri);
+        $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
+        $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
+        $this->httpClient->setHeaders('User-Agent', $this->config->user_agent);
+        $this->httpClient->setMethod(Zend_Http_Client::GET);
+
+        $response = $this->httpClient->request();
+
+        $body = Zend_Json::decode($response->getRawBody());
+
+        if (count($body) == 0) {
+            return false;
+        }
+
+        if (array_key_exists("message", $body)) {
+            $result_code = substr(trim($body["message"]), 0, 3);
+            if ((int)$result_code >= 300) {
+                throw new Zend_Exception($body["message"]);
+            }
+        }
+
+        Zend_Registry::get('logger')->debug("----------\n" . __METHOD__ . " - body:\n" . $response->getRawBody());
+
+        return $body[0]['id'];
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getMessages()
+    {
+        return $this->messages;
+    }
+
+    public function createUser($member_id)
+    {
+        if (empty($member_id)) {
+            return false;
+        }
+
+        $member_data = $this->getMemberData($member_id);
+        $data = $this->mapUserData($member_data);
+
+        $userId = $this->getUser($data['extern_uid']);
+
+        if (empty($userId)) {
+            $data['skip_confirmation'] = 'true';
+
+            return $this->httpUserCreate($data);
+        }
+
+        $this->messages[0] = 'User exists and we do not update. Use the force parameter instead.';
+
+        return false;
+    }
+
+    /**
+     * @param int $member_id
+     *
+     * @return array
+     * @throws Zend_Exception
+     */
+    private function getMemberData($member_id, $onlyActive = true)
+    {
+
+        $onlyActiveFilter = '';
+        if ($onlyActive) {
+            $onlyActiveFilter =
+                " AND `m`.`is_active` = 1 AND `m`.`is_deleted` = 0 AND `me`.`email_checked` IS NOT NULL AND `me`.`email_deleted` = 0";
+        }
+        $sql = "
+            SELECT `mei`.`external_id`,`m`.`member_id`, `m`.`username`, `me`.`email_address`, `m`.`password`, `m`.`roleId`, `m`.`firstname`, `m`.`lastname`, `m`.`profile_image_url`, `m`.`biography`, `m`.`created_at`, `m`.`changed_at`, `m`.`source_id`
+            FROM `member` AS `m`
+            LEFT JOIN `member_email` AS `me` ON `me`.`email_member_id` = `m`.`member_id` AND `me`.`email_primary` = 1
+            LEFT JOIN `member_external_id` AS `mei` ON `mei`.`member_id` = `m`.`member_id`
+            WHERE `m`.`member_id` = :memberId {$onlyActiveFilter}
+            ORDER BY `m`.`member_id` DESC
+        ";
+
+        $result = Zend_Db_Table::getDefaultAdapter()->fetchRow($sql, array('memberId' => $member_id));
+        if (count($result) == 0) {
+            throw new Default_Model_Ocs_Exception('member with id ' . $member_id . ' could not found.');
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return bool
+     * @throws Zend_Exception
+     * @throws Zend_Http_Client_Exception
+     * @throws Zend_Json_Exception
+     */
+    public function groupExists($name)
+    {
+        $this->httpClient->resetParameters();
+        $uri = $this->config->host . '/api/v4/groups?search=' . $name;
+        $this->httpClient->setUri($uri);
+        $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
+        $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
+        $this->httpClient->setHeaders('User-Agent', $this->config->user_agent);
+        $this->httpClient->setMethod(Zend_Http_Client::GET);
+
+        $response = $this->httpClient->request();
+
+        $body = Zend_Json::decode($response->getRawBody());
+
+        if (count($body) > 0) {
+            return true;
+        }
+
+        if (array_key_exists("message", $body)) {
+            $result_code = substr(trim($body["message"]), 0, 3);
+            if ((int)$result_code >= 300) {
+                throw new Zend_Exception($body["message"]);
+            }
+        }
+
+        if (array_key_exists("error_description", $body)) {
+            throw new Zend_Exception($body["error_description"]);
+        }
+
+        return false;
+    }
+
+    /**
+     * @param $member_id
+     *
+     * @return array
+     * @throws Zend_Db_Statement_Exception
+     */
+    protected function getUserData($member_id)
+    {
+        $modelMember = new Default_Model_Member();
+        $member = $modelMember->fetchMemberData($member_id, false)->toArray();
+
+        $modelExternalId = new Default_Model_DbTable_MemberExternalId();
+        $externalId = $modelExternalId->fetchRow(array("member_id = ?" => $member['member_id']));
+        if (count($externalId->toArray()) > 0) {
+            $member['external_id'] = $externalId->external_id;
+        }
+
+        return $member;
     }
 
 }
