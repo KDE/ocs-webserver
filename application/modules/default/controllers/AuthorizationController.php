@@ -228,6 +228,15 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
 
         $auth = Zend_Auth::getInstance();
         $userId = $auth->getStorage()->read()->member_id;
+        
+        
+        //Send user to LDAP
+        try {
+            $ldap_server = new Default_Model_Ocs_Ident();
+            $ldap_server->createUser($userId);
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+        }
 
         //If the user is a hive user, we have to update his password
         $this->changePasswordIfNeeded($userId, $values['password']);
