@@ -34,7 +34,7 @@ class Default_Model_OAuth_Ocs implements Default_Model_OAuth_Interface
     protected $config;
     /** @var Zend_Session_Namespace $session */
     protected $session;
-    /** @var  Zend_Db_Table_Row_Abstract */
+    /** @var  array */
     protected $memberData;
     /** @var  string */
     protected $access_token;
@@ -405,7 +405,7 @@ class Default_Model_OAuth_Ocs implements Default_Model_OAuth_Interface
             'mail'    => $userEmail
         ));
         Zend_Registry::get('logger')->info(__METHOD__ . ' - ResultSet: ' . print_r($resultSet, true));
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - sql take seconds: ' . $this->_db->getProfiler()->getLastQueryProfile()
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - seconds: ' . $this->_db->getProfiler()->getLastQueryProfile()
                                                                                             ->getElapsedSecs())
         ;
         $this->_db->getProfiler()->setEnabled(false);

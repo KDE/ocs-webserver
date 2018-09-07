@@ -114,14 +114,6 @@ class Default_Form_Register extends Zend_Form
         $passValid = new Local_Validate_PasswordConfirm($pass2->getValue());
         $pass1->addValidator($passValid, true);
 
-        $this->addPrefixPath('Cgsmith\\Form\\Element', APPLICATION_LIB . '/Cgsmith/Form/Element', Zend_Form::ELEMENT);
-        $this->addElementPrefixPath('Cgsmith\\Validate\\', APPLICATION_LIB . '/Cgsmith/Validate/', Zend_Form_Element::VALIDATE);
-
-        $captcha = $this->createElement('recaptcha', 'g-recaptcha-response', array(
-            'siteKey'   => Zend_Registry::get('config')->recaptcha->sitekey,
-            'secretKey' => Zend_Registry::get('config')->recaptcha->secretkey,
-        ));
-
         $submit = $this->createElement('button', 'login');
         $submit->setLabel('Register');
         $submit->setDecorators(array('ViewHelper'));
@@ -132,9 +124,21 @@ class Default_Form_Register extends Zend_Form
              ->addElement($mail)
              ->addElement($pass1)
              ->addElement($pass2)
-             ->addElement($captcha)
              ->addElement($submit)
         ;
+
+        if (APPLICATION_ENV == 'development') {
+            return;
+        }
+
+        $this->addPrefixPath('Cgsmith\\Form\\Element', APPLICATION_LIB . '/Cgsmith/Form/Element', Zend_Form::ELEMENT);
+        $this->addElementPrefixPath('Cgsmith\\Validate\\', APPLICATION_LIB . '/Cgsmith/Validate/', Zend_Form_Element::VALIDATE);
+        $captcha = $this->createElement('recaptcha', 'g-recaptcha-response', array(
+            'siteKey'   => Zend_Registry::get('config')->recaptcha->sitekey,
+            'secretKey' => Zend_Registry::get('config')->recaptcha->secretkey,
+        ));
+
+        $this->addElement($captcha);
     }
 
 }

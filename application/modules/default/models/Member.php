@@ -1021,6 +1021,26 @@ class Default_Model_Member extends Default_Model_DbTable_Member
 
     /**
      * @param int $member_id
+     * @param string $email
+     *
+     * @return bool
+     * @throws Zend_Db_Statement_Exception
+     */
+    public function setActive($member_id, $email)
+    {
+        $sql = "
+            UPDATE `member`
+              STRAIGHT_JOIN `member_email` ON `member`.`member_id` = `member_email`.`email_member_id` AND `member_email`.`email_checked` IS NULL AND `member`.`is_deleted` = 0 AND `member_email`.`email_deleted` = 0
+            SET `member`.`mail_checked` = 1, `member`.`is_active` = 1, `member`.`changed_at` = NOW(), `member_email`.`email_checked` = NOW()
+            WHERE `member`.`member_id` = :memberId AND `member_email`.`email_address` = :mailAddress;
+        ";
+        $stmnt = $this->_db->query($sql, array('memberId' => $member_id, 'mailAddress' => $email));
+
+        return $stmnt->rowCount() > 0 ? true : false;
+    }
+
+    /**
+     * @param int $member_id
      *
      * @throws Exception
      * @deprecated since we're using solr server for searching
