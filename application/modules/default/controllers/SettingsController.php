@@ -1074,6 +1074,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                     try {
                         $ldap_server = new Default_Model_Ocs_Ident();
                         $ldap_server->updatePassword($this->_memberSettings->member_id);
+                        Zend_Registry::get('logger')->debug(__METHOD__ . ' - ldap : ' . implode(PHP_EOL." - ", $ldap_server->getMessages()));
                     } catch (Exception $e) {
                         Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
                     }

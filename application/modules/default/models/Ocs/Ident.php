@@ -165,10 +165,15 @@ class Default_Model_Ocs_Ident
     {
         $connection = $this->getServerConnection();
         $member_data = $this->getMemberData($member_id);
-        $entry = $this->createIdentEntry($member_data);
-        $username = strtolower($member_data['username']);
-        $connection->add("cn={$username},{$this->baseDn}", $entry);
-        $connection->getLastError($this->errCode, $this->errMessages);
+
+        //Only create, if user do not exisits
+        $entry = $this->getEntry($member_data, $connection);
+        if (empty($entry)) {
+            $entry = $this->createIdentEntry($member_data);
+            $username = strtolower($member_data['username']);
+            $connection->add("cn={$username},{$this->baseDn}", $entry);
+            $connection->getLastError($this->errCode, $this->errMessages);
+        }
     }
 
     /**
