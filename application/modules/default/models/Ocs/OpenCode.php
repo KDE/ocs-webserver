@@ -60,9 +60,9 @@ class Default_Model_Ocs_OpenCode
 
         $data = $this->mapUserData($member_data);
 
-        $userId = $this->getUser($data['extern_uid']);
+        $user = $this->getUser($data['extern_uid']);
 
-        if (empty($userId)) {
+        if (empty($user)) {
             $data['skip_confirmation'] = 'true';
 
             return $this->httpUserCreate($data);
@@ -72,7 +72,7 @@ class Default_Model_Ocs_OpenCode
             $data['skip_reconfirmation'] = 'true';
             unset($data['password']);
 
-            return $this->httpUserUpdate($data, $userId);
+            return $this->httpUserUpdate($data, $user['id']);
         }
 
         $this->messages[0] = 'User exists and we do not update. Use the force parameter instead.';
@@ -114,9 +114,10 @@ class Default_Model_Ocs_OpenCode
     }
 
     /**
-     * @param string $username
+     * @param string $extern_uid
      *
-     * @return bool
+     * @return array
+     * @throws Default_Model_Ocs_Exception
      * @throws Zend_Exception
      * @throws Zend_Http_Client_Exception
      * @throws Zend_Json_Exception
@@ -136,19 +137,19 @@ class Default_Model_Ocs_OpenCode
         $body = Zend_Json::decode($response->getRawBody());
 
         if (count($body) == 0) {
-            return false;
+            return array();
         }
 
         if (array_key_exists("message", $body)) {
             $result_code = substr(trim($body["message"]), 0, 3);
             if ((int)$result_code >= 300) {
-                throw new Zend_Exception($body["message"]);
+                throw new Default_Model_Ocs_Exception($body["message"]);
             }
         }
 
         Zend_Registry::get('logger')->debug(__METHOD__ . " - body: " . $response->getRawBody());
 
-        return $body[0]['id'];
+        return $body[0];
     }
 
     /**
@@ -225,7 +226,8 @@ class Default_Model_Ocs_OpenCode
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - response: ' . $response->getRawBody());
 
         $this->messages[0] =
-            ' - response for update request: ' . $response->getRawBody() . PHP_EOL . " - userdata: " . implode(';', $data) . PHP_EOL
+            ' - response for update request: ' . $response->getRawBody() . PHP_EOL
+            . " - userdata: " . implode(';', $data) . PHP_EOL
             . " - opencode id: " . $id;
 
         return true;
@@ -249,15 +251,15 @@ class Default_Model_Ocs_OpenCode
         $member_data = $this->getMemberData($member_id, false);
         $data = $this->mapUserData($member_data);
 
-        $userId = $this->getUser($data['extern_uid']);
+        $user = $this->getUser($data['extern_uid']);
 
-        if (empty($userId)) {
+        if (empty($user)) {
             $this->messages[0] = 'Not deleted. User not exists. ';
 
             return false;
         }
 
-        return $this->httpUserDelete($userId);
+        return $this->httpUserDelete($user['id']);
     }
 
     /**
@@ -459,21 +461,35 @@ class Default_Model_Ocs_OpenCode
     /**
      * @param $member_id
      *
-     * @return array
-     * @throws Zend_Db_Statement_Exception
+     * @return bool
+     * @throws Default_Model_Ocs_Exception
+     * @throws Zend_Exception
+     * @throws Zend_Http_Client_Exception
+     * @throws Zend_Http_Exception
+     * @throws Zend_Json_Exception
      */
-    protected function getUserData($member_id)
+    public function updateMail($member_id)
     {
-        $modelMember = new Default_Model_Member();
-        $member = $modelMember->fetchMemberData($member_id, false)->toArray();
-
-        $modelExternalId = new Default_Model_DbTable_MemberExternalId();
-        $externalId = $modelExternalId->fetchRow(array("member_id = ?" => $member['member_id']));
-        if (count($externalId->toArray()) > 0) {
-            $member['external_id'] = $externalId->external_id;
+        if (empty($member_id)) {
+            throw new Default_Model_Ocs_Exception('given member_id is empty');
         }
 
-        return $member;
+        $member_data = $this->getMemberData($member_id, false);
+        $entry = $this->getUser($member_data['external_id']);
+
+        if (empty($entry)) {
+            $this->messages[] = "Failed. User not found;";
+
+            return false;
+        }
+
+        $entry['skip_reconfirmation'] = 'true';
+        $entry['email'] = $member_data['email_address'];
+        unset($entry['password']);
+        $this->httpUserUpdate($entry, $entry['id']);
+        $this->messages[] = "Success";
+
+        return true;
     }
 
 }

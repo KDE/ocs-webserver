@@ -212,16 +212,17 @@ class Backend_UserController extends Local_Controller_Action_Backend
             $modelOpenCode = new Default_Model_Ocs_OpenCode();
             $modelOpenCode->exportUser($record->toArray(), true);
 
+            $modelIdent = new Default_Model_Ocs_Ident();
+            $modelIdent->updateMail($record->member_id);
+
             $jTableResult = array();
             $jTableResult['Result'] = self::RESULT_OK;
             //$jTableResult['Record'] = $record->toArray();
-            $translate = Zend_Registry::get('Zend_Translate');
-            $jTableResult['Message'] = $translate->_('Export Successful.');
+            $jTableResult['Message'] = implode("<br>".PHP_EOL, $modelIdent->getMessages());
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err(__METHOD__ . ' - (Line ' . $e->getLine() . ') ' . $e->getMessage());
-            $translate = Zend_Registry::get('Zend_Translate');
             $jTableResult['Result'] = self::RESULT_ERROR;
-            $jTableResult['Message'] = $translate->_($e->getMessage());
+            $jTableResult['Message'] = $e->getMessage();
         }
 
         $this->_helper->json($jTableResult);
