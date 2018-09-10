@@ -60,9 +60,9 @@ class Default_Model_Ocs_OpenCode
 
         $data = $this->mapUserData($member_data);
 
-        $userId = $this->getUser($data['extern_uid']);
+        $user = $this->getUser($data['extern_uid']);
 
-        if (empty($userId)) {
+        if (empty($user)) {
             $data['skip_confirmation'] = 'true';
 
             return $this->httpUserCreate($data);
@@ -72,7 +72,7 @@ class Default_Model_Ocs_OpenCode
             $data['skip_reconfirmation'] = 'true';
             unset($data['password']);
 
-            return $this->httpUserUpdate($data, $userId);
+            return $this->httpUserUpdate($data, $user['id']);
         }
 
         $this->messages[0] = 'User exists and we do not update. Use the force parameter instead.';
@@ -250,15 +250,15 @@ class Default_Model_Ocs_OpenCode
         $member_data = $this->getMemberData($member_id, false);
         $data = $this->mapUserData($member_data);
 
-        $userId = $this->getUser($data['extern_uid']);
+        $user = $this->getUser($data['extern_uid']);
 
-        if (empty($userId)) {
+        if (empty($user)) {
             $this->messages[0] = 'Not deleted. User not exists. ';
 
             return false;
         }
 
-        return $this->httpUserDelete($userId);
+        return $this->httpUserDelete($user['id']);
     }
 
     /**
