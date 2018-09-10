@@ -483,30 +483,12 @@ class Default_Model_Ocs_OpenCode
         }
 
         $entry['skip_reconfirmation'] = 'true';
+        $entry['email'] = $member_data['email_address'];
+        unset($entry['password']);
         $this->httpUserUpdate($entry, $entry['id']);
         $this->messages[] = "Success";
 
         return true;
-    }
-
-    /**
-     * @param $member_id
-     *
-     * @return array
-     * @throws Zend_Db_Statement_Exception
-     */
-    protected function getUserData($member_id)
-    {
-        $modelMember = new Default_Model_Member();
-        $member = $modelMember->fetchMemberData($member_id, false)->toArray();
-
-        $modelExternalId = new Default_Model_DbTable_MemberExternalId();
-        $externalId = $modelExternalId->fetchRow(array("member_id = ?" => $member['member_id']));
-        if (count($externalId->toArray()) > 0) {
-            $member['external_id'] = $externalId->external_id;
-        }
-
-        return $member;
     }
 
 }

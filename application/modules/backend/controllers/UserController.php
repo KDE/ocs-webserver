@@ -209,8 +209,8 @@ class Backend_UserController extends Local_Controller_Action_Backend
             $modelMember = new  Default_Model_Member();
             $record = $modelMember->fetchMemberData($memberId, false);
 
-            //$modelOpenCode = new Default_Model_Ocs_OpenCode();
-            //$modelOpenCode->exportUser($record->toArray(), true);
+            $modelOpenCode = new Default_Model_Ocs_OpenCode();
+            $modelOpenCode->exportUser($record->toArray(), true);
 
             $modelIdent = new Default_Model_Ocs_Ident();
             $modelIdent->updateMail($record->member_id);
