@@ -22,6 +22,16 @@
 
 $file_out = $this->avatar; // The image to return
 $size = $this->size;
+$request = Zend_Controller_Front::getInstance()->getRequest();
+$debugMe = 0;
+if(null != $request->getParam('debug')) {
+    $debugMe = $request->getParam('debug', 0);
+
+    if($debugMe == 1) {
+        var_dump($file_out);
+        die;
+    }
+}
 
 //$hash = md5("rvs75@email.de");
 //var_dump($hash);
@@ -40,6 +50,9 @@ if (!strpos($imgUrl, $sizeString)) {
 $ext = substr($imgUrl, -3);
 switch ($ext) {
     case 'jpg':
+        $mime = 'image/jpeg';
+        break;
+    case 'jpeg':
         $mime = 'image/jpeg';
         break;
     case 'gif':
