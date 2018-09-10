@@ -79,11 +79,30 @@ out: ../css/style.css, sourcemap: true, compress: true
 
           &.dropdown {
 
-            ul.dropdown-menu {
+            > ul.dropdown-menu {
               margin-left: 0;
               margin-top: -9px;
             }
           }
+
+          &#domains-dropdown-menu {
+            > ul {
+              > li {
+                > ul {
+                  display: none;
+                }
+                &:hover {
+                  > ul {
+                    display: block;
+                    top: -6px;
+                    left: 100%;
+                    margin: 0;
+                  }
+                }
+              }
+            }
+          }
+
         }
       }
 

@@ -89,7 +89,20 @@ class DomainsMenu extends React.Component {
           "openDesktop.org :"
         )
       ),
-      menuGroupsDisplay
+      React.createElement(
+        "li",
+        { className: "dropdown", id: "domains-dropdown-menu" },
+        React.createElement(
+          "a",
+          null,
+          "Themes & Apps"
+        ),
+        React.createElement(
+          "ul",
+          { className: "dropdown-menu" },
+          menuGroupsDisplay
+        )
+      )
     );
   }
 }
@@ -128,7 +141,7 @@ class DomainsMenuGroup extends React.Component {
       ),
       React.createElement(
         "ul",
-        { className: "dropdown-menu" },
+        { className: "dropdown-menu dropdown-menu-right" },
         domainsDisplay
       )
     );
