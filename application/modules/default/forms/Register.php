@@ -38,7 +38,7 @@ class Default_Form_Register extends Zend_Form
         $redir = $this->createElement('hidden', 'redirect')->setDecorators(array('ViewHelper'));
         $this->addElement($redir);
 
-        $usernameValidChars = new Zend_Validate_Regex('/^(?=.{4,40}$)(?![-_.])(?!.*[-_.]{2})[a-zA-Z0-9._-]+(?<![-_.])$/');
+        $usernameValidChars = new Zend_Validate_Regex('/^(?=.{4,40}$)(?![-])(?!.*[-]{2})[a-zA-Z0-9-]+(?<![-])$/');
         $userExistCheck = new Local_Validate_UsernameExists();
         $userExistCheck->setMessage('This username already exists.', Local_Validate_UsernameExists::EXISTS);
         $userEmptyCheck = new Zend_Validate_NotEmpty();
