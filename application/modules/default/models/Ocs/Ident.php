@@ -51,6 +51,7 @@ class Default_Model_Ocs_Ident
     /**
      * @param int $member_id
      *
+     * @return bool
      * @throws Zend_Exception
      * @throws Zend_Ldap_Exception
      */
@@ -58,13 +59,32 @@ class Default_Model_Ocs_Ident
     {
         $connection = $this->getServerConnection();
         $member_data = $this->getMemberData($member_id);
-        $username = strtolower($member_data['username']);
-        $entry = $this->getEntry($member_data, $connection);
+
+        try {
+            $entry = $this->getEntry($member_data, $connection);
+        } catch (Exception $e) {
+            $this->errMessages[] = "Failed.";
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . $e->getMessage());
+
+            return false;
+        }
+        if (empty($entry)) {
+            $this->errMessages[] = "Failed.";
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ldap entry for member does not exists. Going to create it.');
+
+            return false;
+        }
+
         $oldUidAttribute = Zend_Ldap_Attribute::getAttribute($entry, 'email');
-        Zend_Ldap_Attribute::removeFromAttribute($entry, 'uid', $oldUidAttribute[0]);
+        Zend_Ldap_Attribute::removeFromAttribute($entry, 'uid', $oldUidAttribute);
+        Zend_Ldap_Attribute::removeFromAttribute($entry, 'email', $oldUidAttribute);
         Zend_Ldap_Attribute::setAttribute($entry, 'email', $member_data['email_address']);
         Zend_Ldap_Attribute::setAttribute($entry, 'uid', $member_data['email_address'], true);
-        $connection->update("cn={$username},{$this->baseDn}", $entry);
+        $dn = $entry['dn'];
+        $connection->update($dn, $entry);
+        $connection->getLastError($this->errCode, $this->errMessages);
+
+        return true;
     }
 
     /**
@@ -115,12 +135,41 @@ class Default_Model_Ocs_Ident
 
     /**
      * @param array     $member_data
+     *
+     * @param Zend_Ldap $ldap
+     *
+     * @return array
+     * @throws Default_Model_Ocs_Exception
+     * @throws Zend_Ldap_Exception
+     */
+    public function getEntry($member_data, $ldap)
+    {
+        if (empty($member_data)) {
+            throw new Default_Model_Ocs_Exception('given member_data empty');
+        }
+
+        $filter = "(uidNumber={$member_data['member_id']})";
+        $entries = $ldap->searchEntries($filter, $this->baseDn);
+
+        if (count($entries) > 1) {
+            throw new Default_Model_Ocs_Exception('found member_id more than once. member_id: ' . $member_data['member_id']);
+        }
+
+        if (count($entries) == 1) {
+            return $entries[0];
+        }
+
+        return array();
+    }
+
+    /**
+     * @param array     $member_data
      * @param Zend_Ldap $ldap
      *
      * @return mixed
      * @throws Zend_Ldap_Exception
      */
-    private function getEntry($member_data, $ldap)
+    public function getEntryByDN($member_data, $ldap)
     {
         $username = strtolower($member_data['username']);
         $entry = $ldap->getEntry("cn={$username},{$this->baseDn}");
@@ -131,6 +180,7 @@ class Default_Model_Ocs_Ident
     /**
      * @param int $member_id
      *
+     * @return bool
      * @throws Zend_Exception
      * @throws Zend_Ldap_Exception
      */
@@ -138,26 +188,73 @@ class Default_Model_Ocs_Ident
     {
         $connection = $this->getServerConnection();
         $member_data = $this->getMemberData($member_id);
-        $entry = $this->getEntry($member_data, $connection);
-        if (empty($entry)) {
-            Zend_Registry::get('logger')->info(__METHOD__ . ' - ldap entry for member does not exists. Going to create it.');
-            $this->createUser($member_id);
+        try {
+            $entry = $this->getEntry($member_data, $connection);
+        } catch (Exception $e) {
+            $this->errMessages[] = "Failed.";
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . $e->getMessage());
 
-            return;
+            return false;
         }
+
+        if (empty($entry)) {
+            $this->errMessages[] = "Failed.";
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ldap entry for member does not exists. member_id:' . $member_id);
+
+            return false;
+        }
+        Zend_Ldap_Attribute::removeFromAttribute($entry, 'userPassword', Zend_Ldap_Attribute::getAttribute($entry, 'userPassword'));
         $password = '{MD5}' . base64_encode(pack("H*", $member_data['password']));
         Zend_Ldap_Attribute::setAttribute($entry, 'userPassword', $password);
-        //Zend_Ldap_Attribute::setPassword($entry,
-        //        'newPa$$w0rd',
-        //        Zend_Ldap_Attribute::PASSWORD_HASH_MD5);
-        $username = strtolower($member_data['username']);
-        $connection->update("cn={$username},{$this->baseDn}", $entry);
+
+        $connection->update($entry['dn'], $entry);
         $connection->getLastError($this->errCode, $this->errMessages);
+
+        return true;
     }
 
     /**
      * @param int $member_id
      *
+     * @return bool
+     * @throws Zend_Exception
+     * @throws Zend_Ldap_Exception
+     */
+    public function updateUser($member_id)
+    {
+        $connection = $this->getServerConnection();
+        $member_data = $this->getMemberData($member_id);
+        try {
+            $oldEntry = $this->getEntry($member_data, $connection);
+        } catch (Exception $e) {
+            $this->errMessages[] = "Failed.";
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . $e->getMessage());
+
+            return false;
+        }
+        if (empty($oldEntry)) {
+            $this->errMessages[] = "user missing. Going to create one.";
+            Zend_Registry::get('logger')->info(__METHOD__ . ' - ldap entry for member does not exists. Going to create it.');
+
+            return $this->createUser($member_id);
+        }
+        if (strtolower($member_data['username']) != Zend_Ldap_Attribute::getAttribute($oldEntry, 'cn')) {
+            $this->errMessages[] = "Fail. username changed. user should be deleted first and than user create.";
+
+            return false;
+        }
+
+        $entry = $this->updateIdentEntry($member_data, $oldEntry);
+        $connection->update($oldEntry['dn'], $entry);
+        $connection->getLastError($this->errCode, $this->errMessages);
+
+        return true;
+    }
+
+    /**
+     * @param int $member_id
+     *
+     * @return bool
      * @throws Zend_Ldap_Exception
      * @throws Zend_Exception
      */
@@ -167,13 +264,27 @@ class Default_Model_Ocs_Ident
         $member_data = $this->getMemberData($member_id);
 
         //Only create, if user do not exisits
-        $entry = $this->getEntry($member_data, $connection);
-        if (empty($entry)) {
-            $entry = $this->createIdentEntry($member_data);
-            $username = strtolower($member_data['username']);
-            $connection->add("cn={$username},{$this->baseDn}", $entry);
-            $connection->getLastError($this->errCode, $this->errMessages);
+        try {
+            $entry = $this->getEntry($member_data, $connection);
+        } catch (Exception $e) {
+            $this->errMessages[] = "Failed.";
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . $e->getMessage());
+
+            return false;
         }
+        if (false === empty($entry)) {
+            $this->errMessages[] = "user already exists.";
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ldap entry for member does not exists. Going to create it.');
+
+            return false;
+        }
+
+        $entry = $this->createIdentEntry($member_data);
+        $username = strtolower($member_data['username']);
+        $connection->add("cn={$username},{$this->baseDn}", $entry);
+        $connection->getLastError($this->errCode, $this->errMessages);
+
+        return true;
     }
 
     /**
@@ -208,25 +319,44 @@ class Default_Model_Ocs_Ident
         return $entry;
     }
 
-    /**
-     * @param int $member_id
-     *
-     * @return bool
-     * @throws Zend_Exception
-     * @throws Zend_Ldap_Exception
-     */
-    public function updateUser($member_id)
+    private function updateIdentEntry($member_data, $oldEntry)
     {
-        $connection = $this->getServerConnection();
-        $member_data = $this->getMemberData($member_id);
-        $username = strtolower($member_data['username']);
-        if (false === $connection->exists("cn={$username},{$this->baseDn}")) {
-            $connection->getLastError($this->errCode, $this->errMessages);
-            return false;
+        $entry = $oldEntry;
+        Zend_Ldap_Attribute::removeFromAttribute($entry, 'uidNumber', Zend_Ldap_Attribute::getAttribute($oldEntry, 'uidNumber'));
+        Zend_Ldap_Attribute::setAttribute($entry, 'uidNumber', $member_data['member_id']);
+
+        Zend_Ldap_Attribute::removeFromAttribute($entry, 'memberUid', Zend_Ldap_Attribute::getAttribute($oldEntry, 'memberUid'));
+        Zend_Ldap_Attribute::setAttribute($entry, 'memberUid', $member_data['external_id']);
+
+        Zend_Ldap_Attribute::removeFromAttribute($entry, 'gidNumber', Zend_Ldap_Attribute::getAttribute($oldEntry, 'gidNumber'));
+        Zend_Ldap_Attribute::setAttribute($entry, 'gidNumber', $member_data['role_id']);
+
+        Zend_Ldap_Attribute::removeFromAttribute($entry, 'email', Zend_Ldap_Attribute::getAttribute($oldEntry, 'email'));
+        Zend_Ldap_Attribute::setAttribute($entry, 'email', $member_data['email_address']);
+
+        Zend_Ldap_Attribute::removeFromAttribute($entry, 'cn', Zend_Ldap_Attribute::getAttribute($oldEntry, 'cn'));
+        Zend_Ldap_Attribute::setAttribute($entry, 'cn', $member_data['username']);
+
+        Zend_Ldap_Attribute::removeFromAttribute($entry, 'uid', Zend_Ldap_Attribute::getAttribute($oldEntry, 'uid'));
+        Zend_Ldap_Attribute::setAttribute($entry, 'uid', $member_data['username']);
+
+        Zend_Ldap_Attribute::removeFromAttribute($entry, 'uid', Zend_Ldap_Attribute::getAttribute($oldEntry, 'uid'));
+        Zend_Ldap_Attribute::setAttribute($entry, 'uid', $member_data['email']);
+
+        Zend_Ldap_Attribute::removeFromAttribute($entry, 'userPassword', Zend_Ldap_Attribute::getAttribute($oldEntry, 'userPassword'));
+        $password = '{MD5}' . base64_encode(pack("H*", $member_data['password']));
+        Zend_Ldap_Attribute::setAttribute($entry, 'userPassword', $password);
+
+        if (false === empty(trim($member_data['firstname']))) {
+            Zend_Ldap_Attribute::removeFromAttribute($entry, 'gn', Zend_Ldap_Attribute::getAttribute($oldEntry, 'gn'));
+            Zend_Ldap_Attribute::setAttribute($entry, 'gn', $member_data['firstname']);
         }
-        $entry = $this->createIdentEntry($member_data);
-        $connection->update("cn={$username},{$this->baseDn}", $entry);
-        $connection->getLastError($this->errCode, $this->errMessages);
+        if (false === empty(trim($member_data['lastname']))) {
+            Zend_Ldap_Attribute::removeFromAttribute($entry, 'sn', Zend_Ldap_Attribute::getAttribute($oldEntry, 'sn'));
+            Zend_Ldap_Attribute::setAttribute($entry, 'sn', $member_data['lastname']);
+        }
+
+        return $entry;
     }
 
     /**
@@ -243,13 +373,15 @@ class Default_Model_Ocs_Ident
         }
         $connection = $this->getServerConnection();
         $member_data = $this->getMemberData($member_id, false);
-        $username = strtolower($member_data['username']);
-        if (false === $connection->exists("cn={$username},{$this->baseDn}")) {
-            $connection->getLastError($this->errCode, $this->errMessages);
+        try {
+            $entry = $this->getEntry($member_data, $connection);
+        } catch (Exception $e) {
+            $this->errMessages[] = "Failed.";
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . $e->getMessage());
 
             return false;
         }
-        $connection->delete("cn={$username},{$this->baseDn}");
+        $connection->delete($entry['dn']);
         $connection->getLastError($this->errCode, $this->errMessages);
 
         return true;
@@ -282,6 +414,7 @@ class Default_Model_Ocs_Ident
      *
      * @return array
      * @throws Zend_Ldap_Exception
+     * @throws Default_Model_Ocs_Exception
      */
     public function createUserInLdap($member_data)
     {
@@ -289,11 +422,16 @@ class Default_Model_Ocs_Ident
         $connection = $this->getServerConnection();
         $username = strtolower($member_data['username']);
         $dn = "cn={$username},{$this->baseDn}";
-        if ($connection->exists($dn)) {
+        if ($this->userExists($member_data['member_id'])) {
             $connection->getLastError($this->errCode, $this->errMessages);
+            if (empty($this->errCode)) {
+                $this->errCode = 999;
+                $this->errMessages[] = "user already exists.";
+            }
 
             return array();
         }
+
         $connection->add($dn, $entry);
         $connection->getLastError($this->errCode, $this->errMessages);
 
@@ -301,23 +439,54 @@ class Default_Model_Ocs_Ident
     }
 
     /**
+     * @param int $member_id
+     *
+     * @return mixed
+     * @throws Default_Model_Ocs_Exception
+     * @throws Zend_Ldap_Exception
+     */
+    public function userExists($member_id)
+    {
+        if (empty($member_id)) {
+            throw new Default_Model_Ocs_Exception('given $member_id empty');
+        }
+
+        $ldap = $this->getServerConnection();
+        $filter = "(uidNumber={$member_id})";
+        $entries = $ldap->searchEntries($filter, $this->baseDn);
+
+        if (count($entries) > 1) {
+            throw new Default_Model_Ocs_Exception('found member_id more than once');
+        }
+
+        if (count($entries) == 1) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * @param array $member_data
      *
      * @return array
+     * @throws Zend_Exception
      * @throws Zend_Ldap_Exception
      */
     public function updateUserInLdap($member_data)
     {
-        $entry = $this->createIdentEntry($member_data);
+        $newEntry = $this->createIdentEntry($member_data);
         $connection = $this->getServerConnection();
-        $username = strtolower($member_data['username']);
-        $dn = "cn={$username},{$this->baseDn}";
-        if (false == $connection->exists($dn)) {
-            $connection->getLastError($this->errCode, $this->errMessages);
+        try {
+            $entry = $this->getEntry($member_data, $connection);
+        } catch (Exception $e) {
+            $this->errMessages[] = "Failed.";
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . $e->getMessage());
 
-            return array();
+            return false;
         }
-        $connection->update($dn, $entry);
+        $dn = $entry['dn'];
+        $connection->update($dn, $newEntry);
         $connection->getLastError($this->errCode, $this->errMessages);
 
         return $entry;

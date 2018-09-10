@@ -341,8 +341,17 @@
                 data: {'c': elementRecord},
                 url: '/backend/user/export/',
                 type: 'post',
-                error: function () {
-                    alert("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(jqXHR);
+                    console.log("-------");
+                    console.log(textStatus);
+                    console.log("-------");
+                    console.log(errorThrown);
+                    if (jqXHR.responseText) {
+                        $('#dialog-form').empty().html(jqXHR.responseText).dialog('open');
+                    } else {
+                        alert("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+                    }
                     return false;
                 },
                 success: function (results) {

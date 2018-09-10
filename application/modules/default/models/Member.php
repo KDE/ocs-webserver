@@ -286,7 +286,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         }
 
         $sql = '
-                SELECT m.*, `member_email`.`email_address` AS `mail`, IF(ISNULL(`member_email`.`email_checked`),0,1) AS `mail_checked`, `mei`.`external_id`
+                SELECT m.*, `member_email`.`email_address` AS `mail`, IF(ISNULL(`member_email`.`email_checked`),0,1) AS `mail_checked`, `member_email`.`email_address`, `mei`.`external_id`
                 FROM `member` AS `m`
                 JOIN `member_email` ON `m`.`member_id` = `member_email`.`email_member_id` AND `member_email`.`email_primary` = 1
                 LEFT JOIN `member_external_id` AS `mei` ON `mei`.`member_id` = `m`.`member_id`
@@ -319,9 +319,10 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         }
 
         $sql = "
-                SELECT `m`.*, `member_email`.`email_address` AS `mail`, IF(ISNULL(`member_email`.`email_checked`),0,1) AS `mail_checked`
+                SELECT `m`.*, `member_email`.`email_address` AS `mail`, IF(ISNULL(`member_email`.`email_checked`),0,1) AS `mail_checked`, `member_email`.`email_address`, `mei`.`external_id`
                 FROM `member` AS `m`
                 JOIN `member_email` ON `m`.`member_id` = `member_email`.`email_member_id` AND `member_email`.`email_primary` = 1
+                LEFT JOIN `member_external_id` AS `mei` ON `mei`.`member_id` = `m`.`member_id`
                 WHERE `m`.`member_id` = :memberId";
 
         if ($onlyActive) {
