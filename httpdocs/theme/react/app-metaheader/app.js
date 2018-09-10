@@ -95,7 +95,7 @@ class DomainsMenuGroup extends React.Component {
   render(){
     const domainsDisplay = this.props.domains.filter(this.filterDomainsByMenuGroup).map((domain,index) => (
       <li key={index}>
-        <a href={domain.menuhref}>{domain.name}</a>
+        <a href={"http://" + domain.menuhref}>{domain.name}</a>
       </li>
     ));
 

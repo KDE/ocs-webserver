@@ -126,7 +126,7 @@ class DomainsMenuGroup extends React.Component {
       { key: index },
       React.createElement(
         "a",
-        { href: domain.menuhref },
+        { href: "http://" + domain.menuhref },
         domain.name
       )
     ));
