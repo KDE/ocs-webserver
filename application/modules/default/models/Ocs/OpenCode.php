@@ -447,12 +447,12 @@ class Default_Model_Ocs_OpenCode
         if (array_key_exists("message", $body)) {
             $result_code = substr(trim($body["message"]), 0, 3);
             if ((int)$result_code >= 300) {
-                throw new Zend_Exception($body["message"]);
+                throw new Default_Model_Ocs_Exception($body["message"]);
             }
         }
 
         if (array_key_exists("error_description", $body)) {
-            throw new Zend_Exception($body["error_description"]);
+            throw new Default_Model_Ocs_Exception($body["error_description"]);
         }
 
         return false;
