@@ -49,9 +49,17 @@ class DomainsMenu extends React.Component {
   }
 
   render(){
-    let menuGroupsDisplay;
+    let menuGroupsDisplayLeft, menuGroupsDisplayRight;
     if (this.state.menuGroups){
-      menuGroupsDisplay = this.state.menuGroups.map((mg,i) => (
+      menuGroupsDisplayLeft = this.state.menuGroups.slice(0,2).map((mg,i) => (
+        <DomainsMenuGroup
+          key={i}
+          domains={this.props.domains}
+          menuGroup={mg}
+          sName={this.props.sName}
+        />
+      ));
+      menuGroupsDisplayRight = this.state.menuGroups.slice(2).map((mg,i) => (
         <DomainsMenuGroup
           key={i}
           domains={this.props.domains}
@@ -68,13 +76,22 @@ class DomainsMenu extends React.Component {
             openDesktop.org :
           </a>
         </li>
-        <li id="domains-dropdown-menu">
+        <li id="domains-dropdown-menu" className="dropdown">
           <a id="dropdownMenu3"
           data-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="true">Themes & Apps</a>
           <ul className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu3">
-            {menuGroupsDisplay}
+            <li className="submenu-container">
+              <ul>
+                {menuGroupsDisplayLeft}
+              </ul>
+            </li>
+            <li className="submenu-container">
+              <ul>
+                {menuGroupsDisplayRight}
+              </ul>
+            </li>
           </ul>
         </li>
       </ul>

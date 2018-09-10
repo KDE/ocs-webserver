@@ -67,9 +67,15 @@ class DomainsMenu extends React.Component {
   }
 
   render() {
-    let menuGroupsDisplay;
+    let menuGroupsDisplayLeft, menuGroupsDisplayRight;
     if (this.state.menuGroups) {
-      menuGroupsDisplay = this.state.menuGroups.map((mg, i) => React.createElement(DomainsMenuGroup, {
+      menuGroupsDisplayLeft = this.state.menuGroups.slice(0, 2).map((mg, i) => React.createElement(DomainsMenuGroup, {
+        key: i,
+        domains: this.props.domains,
+        menuGroup: mg,
+        sName: this.props.sName
+      }));
+      menuGroupsDisplayRight = this.state.menuGroups.slice(2).map((mg, i) => React.createElement(DomainsMenuGroup, {
         key: i,
         domains: this.props.domains,
         menuGroup: mg,
@@ -91,7 +97,7 @@ class DomainsMenu extends React.Component {
       ),
       React.createElement(
         "li",
-        { id: "domains-dropdown-menu" },
+        { id: "domains-dropdown-menu", className: "dropdown" },
         React.createElement(
           "a",
           { id: "dropdownMenu3",
@@ -103,7 +109,24 @@ class DomainsMenu extends React.Component {
         React.createElement(
           "ul",
           { className: "dropdown-menu dropdown-menu-right", "aria-labelledby": "dropdownMenu3" },
-          menuGroupsDisplay
+          React.createElement(
+            "li",
+            { className: "submenu-container" },
+            React.createElement(
+              "ul",
+              null,
+              menuGroupsDisplayLeft
+            )
+          ),
+          React.createElement(
+            "li",
+            { className: "submenu-container" },
+            React.createElement(
+              "ul",
+              null,
+              menuGroupsDisplayRight
+            )
+          )
         )
       )
     );
