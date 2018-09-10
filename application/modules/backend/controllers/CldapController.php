@@ -58,8 +58,30 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
         $this->logfile = realpath(APPLICATION_DATA . "/logs") . DIRECTORY_SEPARATOR . $fileDomainId . '_' . self::filename;
         $this->errorlogfile = realpath(APPLICATION_DATA . "/logs") . DIRECTORY_SEPARATOR . $fileDomainId . '_' . self::filename_errors;
         $this->initFiles($this->logfile, $this->errorlogfile);
-        $members = $this->getMemberList();
-        $this->exportMembers($members);
+        $method = $this->getParam('method', 'create');
+        
+
+        file_put_contents($this->logfile, "METHOD: {$method}\n--------------\n", FILE_APPEND);
+        file_put_contents($this->errorlogfile, "METHOD: {$method}\n--------------\n", FILE_APPEND);
+
+        
+        if($this->hasParam('member_id')) {
+            $memberId = $this->getParam('member_id');
+            $filter = " AND `m`.`member_id` = ".$memberId;
+            $members = $this->getMemberList($filter);
+            
+        } else {
+            $members = $this->getMemberList();
+        }
+
+        if ('create' == $method) {
+            $this->exportMembers($members);
+            return;
+        }
+        if ('update' == $method) {
+            $this->updateMembers($members);
+            return;
+        }
     }
 
     /**
@@ -81,19 +103,23 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
     /**
      * @return Zend_Db_Statement_Interface
      */
-    private function getMemberList()
+    private function getMemberList($filter = "")
     {
         $sql = "
             SELECT `mei`.`external_id`,`m`.`member_id`, `m`.`username`, `me`.`email_address`, `m`.`password`, `m`.`roleId`, `m`.`firstname`, `m`.`lastname`, `m`.`profile_image_url`, `m`.`created_at`, `m`.`changed_at`, `m`.`source_id`
             FROM `member` AS `m`
             LEFT JOIN `member_email` AS `me` ON `me`.`email_member_id` = `m`.`member_id` AND `me`.`email_primary` = 1
             LEFT JOIN `member_external_id` AS `mei` ON `mei`.`member_id` = `m`.`member_id`
-            WHERE `m`.`is_active` = 1 AND `m`.`is_deleted` = 0 AND `me`.`email_checked` IS NOT NULL AND `me`.`email_deleted` = 0 # AND (me.email_address like '%opayq%' OR m.username like '%rvs%')
+            WHERE `m`.`is_active` = 1 AND `m`.`is_deleted` = 0 AND `me`.`email_checked` IS NOT NULL AND `me`.`email_deleted` = 0 
+            # AND (me.email_address like '%opayq%' OR m.username like '%rvs%')
+            " . $filter . "
             ORDER BY `m`.`member_id` ASC
             # LIMIT 200
         ";
 
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql);
+        
+        file_put_contents($this->logfile, "Load : " . count($result) . " members...\n", FILE_APPEND);
 
         return $result;
     }
@@ -110,23 +136,58 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
         $usernameValidChars = new Zend_Validate_Regex('/^(?=.{3,40}$)(?![-_.])(?!.*[-_.]{2})[a-zA-Z0-9._-]+(?<![-_.])$/');
         $modelOcsIdent = new Default_Model_Ocs_Ident();
 
+        file_put_contents($this->logfile, "Start exportMembers with " . count($members) . " members...\n", FILE_APPEND);
+        
+        while ($member = $members->fetch()) {
+            file_put_contents($this->logfile, "Member " . $member['username'] . "\n", FILE_APPEND);
+            if (false === $usernameValidChars->isValid($member['username'])) {
+                file_put_contents($this->errorlogfile, print_r($member, true), FILE_APPEND);
+                continue;
+            }
+            file_put_contents($this->logfile, print_r($member, true), FILE_APPEND);
+            try {
+                $modelOcsIdent->createUserInLdap($member);
+            } catch (Zend_Ldap_Exception $e) {
+                Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+            }
+            $errors = $modelOcsIdent->getErrMessages();
+            file_put_contents($this->errorlogfile, print_r($errors, true), FILE_APPEND);
+            Zend_Registry::get('logger')->info(print_r($errors, true));
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $members
+     *
+     * @return bool
+     * @throws Zend_Exception
+     * @throws Zend_Validate_Exception
+     */
+    private function updateMembers($members)
+    {
+        $usernameValidChars = new Zend_Validate_Regex('/^(?=.{3,40}$)(?![-_.])(?!.*[-_.]{2})[a-zA-Z0-9._-]+(?<![-_.])$/');
+        $modelOcsIdent = new Default_Model_Ocs_Ident();
+
         while ($member = $members->fetch()) {
             if (false === $usernameValidChars->isValid($member['username'])) {
                 file_put_contents($this->errorlogfile, print_r($member, true), FILE_APPEND);
                 continue;
             }
-            file_put_contents($this->logfile, print_r($member, true),FILE_APPEND);
+            file_put_contents($this->logfile, print_r($member, true), FILE_APPEND);
             try {
-                $modelOcsIdent->exportUserToLdap($member);
+                $modelOcsIdent->updateUserInLdap($member);
             } catch (Zend_Ldap_Exception $e) {
                 Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
             }
             $errors = $modelOcsIdent->getErrMessages();
             Zend_Registry::get('logger')->info(print_r($errors, true));
         }
-        return true;
 
+        return true;
     }
+
 
     /**
      * @param Zend_Db_Statement_Interface $members

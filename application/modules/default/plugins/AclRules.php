@@ -62,6 +62,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addResource(new Zend_Acl_Resource ('default_productcomment'));
         $this->addResource(new Zend_Acl_Resource ('default_product'));
         $this->addResource(new Zend_Acl_Resource ('default_report'));
+        $this->addResource(new Zend_Acl_Resource ('default_rectification'));
         $this->addResource(new Zend_Acl_Resource ('default_rss'));
         $this->addResource(new Zend_Acl_Resource ('default_settings'));
         $this->addResource(new Zend_Acl_Resource ('default_supporterbox'));
@@ -174,7 +175,8 @@ class Default_Plugin_AclRules extends Zend_Acl
             'default_productcomment',
             'default_settings',
             'default_support',
-            'default_tag'
+            'default_tag',
+            'default_rectification'
         ));
 
         $this->allow(self::ROLENAME_STAFF, array(

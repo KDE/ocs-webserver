@@ -228,6 +228,16 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
 
         $auth = Zend_Auth::getInstance();
         $userId = $auth->getStorage()->read()->member_id;
+        
+        
+        //Send user to LDAP
+        try {
+            $ldap_server = new Default_Model_Ocs_Ident();
+            $ldap_server->createUser($userId);
+            Zend_Registry::get('logger')->debug(__METHOD__ . ' - ldap : ' . implode(PHP_EOL." - ", $ldap_server->getMessages()));
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+        }
 
         //If the user is a hive user, we have to update his password
         $this->changePasswordIfNeeded($userId, $values['password']);
@@ -403,6 +413,21 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         $token_id = $modelToken->createToken($data);
         setcookie(Default_Model_SingleSignOnToken::ACTION_LOGIN, $token_id, time() + 120, '/',
             Local_Tools_ParseDomain::get_domain($this->getRequest()->getHttpHost()), null, true);
+
+        //$modelReviewProfile = new Default_Model_ReviewProfileData();
+        //if (false === $modelReviewProfile->hasValidProfile($auth->getStorage()->read())) {
+        //    if ($this->_request->isXmlHttpRequest()) {
+        //        $redirect = $this->getParam('redirect') ? '/redirect/' . $this->getParam('redirect') : '';
+        //        $this->_helper->json(array('status'   => 'ok',
+        //                                   'redirect' => '/r/change/e/' . $modelReviewProfile->getErrorCode() . $redirect
+        //        ));
+        //    } else {
+        //        $this->getRequest()->setParam('member_id', $userId);
+        //        $this->redirect("/r/change/e/" . $modelReviewProfile->getErrorCode(), $this->getAllParams());
+        //    }
+        //
+        //    return;
+        //}
 
         // handle redirect
         $this->handleRedirect($userId);
@@ -663,6 +688,14 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         try {
             $ldap_server = new Default_Model_Ocs_Ident();
             $ldap_server->createUser($authUser->member_id);
+            Zend_Registry::get('logger')->debug(__METHOD__ . ' - ldap : ' . implode(PHP_EOL." - ", $ldap_server->getMessages()));
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+        }
+        try {
+            $openCode = new Default_Model_Ocs_OpenCode();
+            $openCode->createUser($authUser->member_id);
+            Zend_Registry::get('logger')->debug(__METHOD__ . ' - opencode : ' . implode(PHP_EOL." - ", $openCode->getMessages()));
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }

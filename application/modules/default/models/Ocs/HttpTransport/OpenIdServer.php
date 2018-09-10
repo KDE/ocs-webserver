@@ -20,7 +20,7 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-class Default_Model_Ocs_IdServer
+class Default_Model_Ocs_HttpTransport_OpenIdServer
 {
 
     private $_config;
@@ -88,7 +88,7 @@ class Default_Model_Ocs_IdServer
                 'admin'          => $userdata['admin'],
             )
         );
-        if ((false == $userdata['is_active']) AND (true == $userdata['is_deleted'])) {
+        if ((false == $userdata['is_active']) OR (true == $userdata['is_deleted'])) {
             $map_user_data['user']['disabledReason'] = 'user account disabled';
         }
 
@@ -96,20 +96,23 @@ class Default_Model_Ocs_IdServer
             $map_user_data['options'] = $options;
         }
 
+        $jsonUserData = Zend_Json::encode($map_user_data);
         $httpClient = new Zend_Http_Client($this->_config->create_user_url);
         $httpClient->setMethod(Zend_Http_Client::POST);
         $httpClient->setHeaders('Authorization', 'Bearer ' . $access_token);
         $httpClient->setHeaders('Content-Type', 'application/json');
         $httpClient->setHeaders('Accept', 'application/json');
-        $httpClient->setRawData(Zend_Json::encode($map_user_data), 'application/json');
+        $httpClient->setRawData($jsonUserData, 'application/json');
 
         $response = $httpClient->request();
 
-        Zend_Registry::get('logger')->debug("----------\n".__METHOD__ . " - request:\n" . $httpClient->getLastRequest());
-        Zend_Registry::get('logger')->debug("----------\n".__METHOD__ . " - response:\n" . $response->asString());
+        //Zend_Registry::get('logger')->debug("----------\n".__METHOD__ . " - request:\n" . $httpClient->getLastRequest());
+        //Zend_Registry::get('logger')->debug("----------\n".__METHOD__ . " - response:\n" . $response->asString());
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - request: ' . $jsonUserData);
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - response: ' . $response->getBody());
 
         if ($response->getStatus() != 200) {
-            throw new Zend_Exception('push user data failed. OCS ID server send message: ' . $response->getBody());
+            throw new Zend_Exception('push user data failed. OCS ID server send message: ' . $response->getBody() . PHP_EOL . $jsonUserData . PHP_EOL);
         }
 
         return true;
@@ -130,7 +133,7 @@ class Default_Model_Ocs_IdServer
             $token->expire_at = microtime(true) + $token->expires_in;
             $this->_cache->save($token, $cache_name, array(), false);
         }
-        Zend_Registry::get('logger')->debug("----------\n".__METHOD__ . " - microtime:" . microtime(true)."\n expire_at: " . print_r($token->expire_at, true));
+        Zend_Registry::get('logger')->debug(__METHOD__ . " - microtime:" . microtime(true)." expire_at: " . print_r($token->expire_at, true));
         if (isset($token) AND (microtime(true) > $token->expire_at)) {
             $token = $this->requestHttRefreshToken($token->refresh_token);
             $token->expire_at = microtime(true) + $token->expires_in;
@@ -162,16 +165,14 @@ class Default_Model_Ocs_IdServer
 
         $response = $httpClient->request();
 
-        Zend_Registry::get('logger')->debug("----------\n".__METHOD__ . " - request:\n" . $httpClient->getLastRequest());
-        Zend_Registry::get('logger')->debug("----------\n".__METHOD__ . " - response:\n" . $response->asString());
+        Zend_Registry::get('logger')->debug(__METHOD__ . " - request: " . $httpClient->getUri(true));
+        Zend_Registry::get('logger')->debug(__METHOD__ . " - response: " . $response->getRawBody());
 
         if ($response->getStatus() != 200) {
-            throw new Zend_Exception('request access token failed. OCS ID server send message: ' . $response->getBody());
+            throw new Zend_Exception('request access token failed. OCS ID server send message: ' . $response->getRawBody());
         }
 
         $data = $this->parseResponse($response);
-
-        Zend_Registry::get('logger')->debug("----------\n".__METHOD__ . " - parsed response:\n" . print_r($data, true));
 
         return $data;
     }
@@ -210,16 +211,14 @@ class Default_Model_Ocs_IdServer
 
         $response = $httpClient->request();
 
-        Zend_Registry::get('logger')->debug("----------\n".__METHOD__ . " - request:\n" . $httpClient->getLastRequest());
-        Zend_Registry::get('logger')->debug("----------\n".__METHOD__ . " - response:\n" . $response->asString());
+        Zend_Registry::get('logger')->debug(__METHOD__ . " - request: " . $httpClient->getUri(true));
+        Zend_Registry::get('logger')->debug(__METHOD__ . " - response: " . $response->getRawBody());
 
         if ($response->getStatus() != 200) {
-            throw new Zend_Exception('request access token failed. OCS ID server send message: ' . $response->getBody());
+            throw new Zend_Exception('request refresh token failed. OCS ID server send message: ' . $response->getBody());
         }
 
         $data = $this->parseResponse($response);
-
-        Zend_Registry::get('logger')->debug("----------\n".__METHOD__ . " - parsed response:\n" . print_r($data, true));
 
         return $data;
     }

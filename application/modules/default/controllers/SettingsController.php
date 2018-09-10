@@ -929,7 +929,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
 
                 try {
                     $id_server = new Default_Model_Ocs_OpenId();
-                    $id_server->updateUser($this->_memberSettings->member_id);
+                    $id_server->updateAvatarForUser($this->_memberSettings->member_id);
                 } catch (Exception $e) {
                     Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
                 }
@@ -1074,6 +1074,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                     try {
                         $ldap_server = new Default_Model_Ocs_Ident();
                         $ldap_server->updatePassword($this->_memberSettings->member_id);
+                        Zend_Registry::get('logger')->debug(__METHOD__ . ' - ldap : ' . implode(PHP_EOL." - ", $ldap_server->getMessages()));
                     } catch (Exception $e) {
                         Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
                     }
@@ -1347,6 +1348,9 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
      */
     protected function sendConfirmationMail($data)
     {
+        $config = Zend_Registry::get('config');
+        $defaultFrom = $config->resources->mail->defaultFrom->email;
+
         $confirmMail = new Default_Plugin_SendMail('tpl_verify_email');
         $confirmMail->setTemplateVar('servername', $this->getServerName());
         $confirmMail->setTemplateVar('username', $this->_authMember->username);
@@ -1360,7 +1364,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $confirmMail->setTemplateVar('verificationurl',
             'https://' . $this->getServerName() . '/settings/verification/v/' . $data['email_verification_value']);
         $confirmMail->setReceiverMail($data['email_address']);
-        $confirmMail->setFromMail('registration@opendesktop.org');
+        $confirmMail->setFromMail($defaultFrom);
         $confirmMail->send();
     }
 

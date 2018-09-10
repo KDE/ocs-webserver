@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -55,20 +56,21 @@ class Default_Model_DbTable_Member extends Local_Model_Table
 
     protected $_referenceMap = array(
         'Owner' => array(
-            'columns' => 'member_id',
+            'columns'       => 'member_id',
             'refTableClass' => 'Default_Model_Project',
-            'refColumns' => 'member_id'
+            'refColumns'    => 'member_id'
         ),
         'Email' => array(
-            'columns' => 'member_id',
+            'columns'       => 'member_id',
             'refTableClass' => 'Default_Model_DbTable_MemberEmail',
-            'refColums' => 'email_member_id'
+            'refColums'     => 'email_member_id'
         )
     );
 
 
     /**
      * @param array|string $member_id
+     *
      * @return int|void
      * @throws Exception
      */

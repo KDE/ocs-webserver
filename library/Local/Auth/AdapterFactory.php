@@ -37,10 +37,10 @@ class Local_Auth_AdapterFactory
      * @throws Zend_Auth_Adapter_Exception
      * @throws Zend_Exception
      */
-    public static function getAuthAdapter($userIdentity = null, $loginMethod = null)
+    public static function getAuthAdapter($userIdentity = null, $credential = null, $loginMethod = null)
     {
         if (empty($loginMethod)) {
-            $loginMethod = self::findAlternativeMethod($userIdentity);
+            $loginMethod = self::detectHashMethod($userIdentity, $credential);
         }
 
         return self::createAuthAdapter($loginMethod);
@@ -51,14 +51,33 @@ class Local_Auth_AdapterFactory
      *
      * @return string
      */
-    protected static function findAlternativeMethod($identity)
+    protected static function detectHashMethod($identity, $credential)
     {
-        $modelMember = new Default_Model_Member();
-        $memberData = $modelMember->findActiveMemberByIdentity($identity);
+        //$modelMember = new Default_Model_Member();
+        //$memberData = $modelMember->findActiveMemberByIdentity($identity, $credential);
+        $validator = new Zend_Validate_EmailAddress();
+        if ($validator->isValid($identity)) {
+            $sql = "SELECT * FROM member AS m WHERE mail = :identity AND (`password` = :passHive OR `password` = :passOcs)";
+        } else {
+            $sql = "SELECT * FROM member AS m WHERE username = :identity AND (`password` = :passHive OR `password` = :passOcs)";
+        }
 
-        if ($modelMember->isHiveUser($memberData)) {
+        $memberData = Zend_Db_Table::getDefaultAdapter()->fetchRow($sql, array('identity' => $identity,
+                                                                               'passHive' => Local_Auth_Adapter_Ocs::getEncryptedPassword($credential, Default_Model_DbTable_Member::PASSWORD_TYPE_HIVE),
+                                                                               'passOcs' => Local_Auth_Adapter_Ocs::getEncryptedPassword($credential, Default_Model_DbTable_Member::PASSWORD_TYPE_OCS)
+            )
+        );
+
+        if (count($memberData) == 0) {
+            return self::LOGIN_DEFAULT;
+        }
+
+        if (Default_Model_Member::PASSWORD_TYPE_HIVE == $memberData['password_type']) {
             return self::LOGIN_HIVE;
         }
+        //if ($modelMember->isHiveUser($memberData)) {
+        //    return self::LOGIN_HIVE;
+        //}
 
         return self::LOGIN_DEFAULT;
     }

@@ -279,9 +279,10 @@ class Default_Model_OAuth_Github implements Default_Model_OAuth_Interface
         $authResult = $this->authenticateUserEmail($userEmail);
 
         if (false === $authResult->isValid()) {
-            Zend_Registry::get('logger')->info(__METHOD__ . ' - error while authenticate user from oauth provider: ' . implode(",\n",
-                    $authResult->getMessages()))
-            ;
+            Zend_Registry::get('logger')->info(__METHOD__ . "\n"
+                                              . ' - authentication error : user=>'.$userEmail.': ' . "\n"
+                                              . ' - messages : ' . implode(",\n",$authResult->getMessages())
+            );
 
             return $authResult;
         }

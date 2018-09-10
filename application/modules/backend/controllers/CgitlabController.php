@@ -37,7 +37,16 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
         $this->logfile = realpath(APPLICATION_DATA . "/logs") . DIRECTORY_SEPARATOR . $logFileName . '_' . self::filename;
         $this->errorlogfile = realpath(APPLICATION_DATA . "/logs") . DIRECTORY_SEPARATOR . $logFileName . '_' . self::filename_errors;
         $this->initFiles($this->logfile, $this->errorlogfile);
-        $members = $this->getMemberList();
+        
+        if($this->hasParam('member_id')) {
+            $memberId = $this->getParam('member_id');
+            $filter = " AND `m`.`member_id` = ".$memberId;
+            $members = $this->getMemberList($filter);
+            
+        } else {
+            $members = $this->getMemberList();
+        }
+
         $this->exportMembers($members);
     }
 
@@ -60,7 +69,7 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
     /**
      * @return Zend_Db_Statement_Interface
      */
-    private function getMemberList()
+    private function getMemberList($filter = "")
     {
         $sql = "
             SELECT `mei`.`external_id`,`m`.`member_id`, `m`.`username`, `me`.`email_address`, `m`.`password`, `m`.`roleId`, `m`.`firstname`, `m`.`lastname`, `m`.`profile_image_url`, `m`.`created_at`, `m`.`changed_at`, `m`.`source_id`, `m`.`biography`
@@ -70,11 +79,14 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
             WHERE `m`.`is_active` = 1 AND `m`.`is_deleted` = 0 AND `me`.`email_checked` IS NOT NULL AND `me`.`email_deleted` = 0 # AND (me.email_address like '%opayq%' OR m.username like '%rvs%')
             #  AND `me`.`email_address` = 'info@dschinnweb.de'
             # AND `m`.`member_id` > 464086 
+            ". $filter ."
             ORDER BY `m`.`member_id` ASC
             # LIMIT 200
         ";
 
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql);
+        
+        file_put_contents($this->logfile, "Select " . count($result) . "Members.\nSql: ".$sql."\n", FILE_APPEND);
 
         return $result;
     }
@@ -104,7 +116,8 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
             }
             file_put_contents($this->logfile, Zend_Json::encode($member) . "\n", FILE_APPEND);
             try {
-                $modelOpenCode->exportUser($member);
+                //Export User, if he not exists
+                $modelOpenCode->exportUser($member, false);
             } catch (Exception $e) {
                 Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
             }

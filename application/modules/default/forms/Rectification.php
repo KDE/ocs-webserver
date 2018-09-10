@@ -20,7 +20,7 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-class Default_Form_Register extends Zend_Form
+class Default_Form_Rectification extends Zend_Form
 {
 
     /**
@@ -30,15 +30,9 @@ class Default_Form_Register extends Zend_Form
      */
     public function init()
     {
-        $this->setMethod('POST');
-        $this->setAction('/register/');
         $this->addElementPrefixPath('Local', 'Local/');
-        $this->setAttrib('id', 'registerForm');
-        $this->setAttrib('class', 'standard-form row-fluid center');
-        $redir = $this->createElement('hidden', 'redirect')->setDecorators(array('ViewHelper'));
-        $this->addElement($redir);
 
-        $usernameValidChars = new Zend_Validate_Regex('/^(?=.{4,40}$)(?![-])(?!.*[-]{2})[a-zA-Z0-9-]+(?<![-])$/');
+        $usernameValidChars = new Zend_Validate_Regex('/^(?=.{4,40}$)(?![-])(?!.*[-]{2})[a-zA-Z0-9.]+(?<![-])$/');
         $userExistCheck = new Local_Validate_UsernameExists();
         $userExistCheck->setMessage('This username already exists.', Local_Validate_UsernameExists::EXISTS);
         $userEmptyCheck = new Zend_Validate_NotEmpty();
@@ -48,7 +42,6 @@ class Default_Form_Register extends Zend_Form
 
         $fname = $this->createElement('text', 'username')
                       ->setDecorators(array('ViewHelper', 'Errors'))
-                      ->setRequired(true)
                       ->addFilter(new Zend_Filter_StringTrim())
                       ->addFilter(new Zend_Filter_StripNewlines())
                       ->addValidator($userEmptyCheck, true)
@@ -56,8 +49,6 @@ class Default_Form_Register extends Zend_Form
                       ->addValidator($usernameValidChars, true)
                       ->addValidator($userExistCheck, true)
                       ->addValidator($groupNameExists, true)
-                      ->setAttrib('placeholder', 'Username (4 chars minimum)')
-                      ->setAttrib('class', 'form-control')
         ;
 
         $mailValidCheck = new Zend_Validate_EmailAddress();
@@ -79,62 +70,26 @@ class Default_Form_Register extends Zend_Form
         $mailValidatorChain = new Zend_Validate();
         $mailValidatorChain->addValidator($mailEmpty, true)
                            ->addValidator($mailValidCheck, true)
-                           ->addValidator($mailExistCheck, true)
-        ;
+                           ->addValidator($mailExistCheck, true);
 
         $mail = $this->createElement('text', 'mail')
                      ->setLabel('RegisterFormEmailLabel')
                      ->addValidator($mailEmpty, true)
                      ->addValidator($mailValidCheck, true)
                      ->addValidator($mailExistCheck, true)
-                     ->setDecorators(array('ViewHelper', 'Errors'))
-                     ->setRequired(true)
-                     ->setAttrib('placeholder', 'Email')
-                     ->setAttrib('class', 'form-control')
+                     ->setDecorators(array(
+                'ViewHelper',
+                'Errors'
+            ))
         ;
 
-        $pass1 = $this->createElement('password', 'password1')
-                      ->setLabel('RegisterFormPasswordLabel')
-                      ->setRequired(true)//->addErrorMessage('RegisterFormPasswordErr')
-                      ->setDecorators(array('ViewHelper', 'Errors'))
-                      ->setAttrib('placeholder', 'Password')
-                      ->addValidator('stringLength', true, array(6, 200))
-                      ->setAttrib('class', 'form-control')
-        ;
-
-        $pass2 = $this->createElement('password', 'password2')
-                      ->setLabel('RegisterFormPassword2Label')
-                      ->setRequired(true)
-                      ->addErrorMessage('RegisterFormPassword2Err')
-                      ->setDecorators(array('ViewHelper', 'Errors'))
-                      ->setAttrib('placeholder', 'Confirm Password')
-                      ->setAttrib('class', 'form-control')
-        ;
-
-        $passValid = new Local_Validate_PasswordConfirm($pass2->getValue());
-        $pass1->addValidator($passValid, true);
-
-        $this->addPrefixPath('Cgsmith\\Form\\Element', APPLICATION_LIB . '/Cgsmith/Form/Element', Zend_Form::ELEMENT);
-        $this->addElementPrefixPath('Cgsmith\\Validate\\', APPLICATION_LIB . '/Cgsmith/Validate/', Zend_Form_Element::VALIDATE);
-
-        $captcha = $this->createElement('recaptcha', 'g-recaptcha-response', array(
-            'siteKey'   => Zend_Registry::get('config')->recaptcha->sitekey,
-            'secretKey' => Zend_Registry::get('config')->recaptcha->secretkey,
-        ));
-
-        $submit = $this->createElement('button', 'login');
-        $submit->setLabel('Register');
+        $submit = $this->createElement('button', 'save');
+        $submit->setLabel('Save');
         $submit->setDecorators(array('ViewHelper'));
-        $submit->setAttrib('class', 'btn btn-native btn-min-width');
-        $submit->setAttrib('type', 'submit');
 
         $this->addElement($fname)
              ->addElement($mail)
-             ->addElement($pass1)
-             ->addElement($pass2)
-             ->addElement($captcha)
-             ->addElement($submit)
-        ;
+             ->addElement($submit);
     }
 
 }
