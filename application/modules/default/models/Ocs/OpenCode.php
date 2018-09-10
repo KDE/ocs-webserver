@@ -226,7 +226,8 @@ class Default_Model_Ocs_OpenCode
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - response: ' . $response->getRawBody());
 
         $this->messages[0] =
-            ' - response for update request: ' . $response->getRawBody() . PHP_EOL . " - userdata: " . implode(';', $data) . PHP_EOL
+            ' - response for update request: ' . $response->getRawBody() . PHP_EOL
+            . " - userdata: " . implode(';', $data) . PHP_EOL
             . " - opencode id: " . $id;
 
         return true;
