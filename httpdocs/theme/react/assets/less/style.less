@@ -86,20 +86,47 @@ out: ../css/style.css, sourcemap: true, compress: true
           }
 
           &#domains-dropdown-menu {
-            > ul {
-              > li {
-                > ul {
-                  display: none;
+            position: relative;
+
+            ul.dropdown-menu {
+              column-count: 2;
+              width: 350px;
+              top: 47px;
+              right: -200px;
+
+              &::before {
+                content: "";
+                position: absolute;
+                right: 306px;
+                top: -8px;
+                width: 0;
+                height: 0;
+                border-style: solid;
+                border-width: 0 8.5px 8.5px;
+                border-color: transparent transparent #b7bcc4 transparent;
+                border-bottom-color: #fff;
+                border-style: dashed dashed solid;
+                z-index: 1;
+              }
+
+              li {
+
+                a {
+                  padding: 3px 10px;
                 }
-                &:hover {
-                  > ul {
-                    display: block;
-                    top: -6px;
-                    left: 100%;
-                    margin: 0;
+                ul {
+                  list-style-type: none;
+                  padding: 0;
+                  li {
+                    a {
+                      padding: 3px 20px;
+                      font-size: 12px;
+                      color: black;
+                    }
                   }
                 }
               }
+
             }
           }
 

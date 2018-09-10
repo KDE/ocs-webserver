@@ -91,15 +91,18 @@ class DomainsMenu extends React.Component {
       ),
       React.createElement(
         "li",
-        { className: "dropdown", id: "domains-dropdown-menu" },
+        { id: "domains-dropdown-menu" },
         React.createElement(
           "a",
-          null,
+          { id: "dropdownMenu3",
+            "data-toggle": "dropdown",
+            "aria-haspopup": "true",
+            "aria-expanded": "true" },
           "Themes & Apps"
         ),
         React.createElement(
           "ul",
-          { className: "dropdown-menu" },
+          { className: "dropdown-menu dropdown-menu-right", "aria-labelledby": "dropdownMenu3" },
           menuGroupsDisplay
         )
       )
@@ -133,15 +136,19 @@ class DomainsMenuGroup extends React.Component {
 
     return React.createElement(
       "li",
-      { className: "dropdown" },
+      null,
       React.createElement(
         "a",
         { href: "#" },
-        this.props.menuGroup
+        React.createElement(
+          "b",
+          null,
+          this.props.menuGroup
+        )
       ),
       React.createElement(
         "ul",
-        { className: "dropdown-menu dropdown-menu-right" },
+        { className: "domains-sub-menu" },
         domainsDisplay
       )
     );

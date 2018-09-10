@@ -68,9 +68,12 @@ class DomainsMenu extends React.Component {
             openDesktop.org :
           </a>
         </li>
-        <li className="dropdown" id="domains-dropdown-menu">
-          <a>Themes & Apps</a>
-          <ul className="dropdown-menu">
+        <li id="domains-dropdown-menu">
+          <a id="dropdownMenu3"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="true">Themes & Apps</a>
+          <ul className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu3">
             {menuGroupsDisplay}
           </ul>
         </li>
@@ -100,9 +103,9 @@ class DomainsMenuGroup extends React.Component {
     ));
 
     return (
-      <li className="dropdown">
-        <a href="#">{this.props.menuGroup}</a>
-        <ul className="dropdown-menu dropdown-menu-right">
+      <li>
+        <a href="#"><b>{this.props.menuGroup}</b></a>
+        <ul className="domains-sub-menu">
           {domainsDisplay}
         </ul>
       </li>
