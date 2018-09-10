@@ -1416,6 +1416,12 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
             } catch (Exception $e) {
                 Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
             }
+            try {
+                $ldap_server = new Default_Model_Ocs_OpenCode();
+                $ldap_server->updateMail($this->_authMember->member_id);
+            } catch (Exception $e) {
+                Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+            }
         }
     }
 

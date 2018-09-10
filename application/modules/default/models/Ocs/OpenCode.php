@@ -114,9 +114,10 @@ class Default_Model_Ocs_OpenCode
     }
 
     /**
-     * @param string $username
+     * @param string $extern_uid
      *
-     * @return bool
+     * @return array
+     * @throws Default_Model_Ocs_Exception
      * @throws Zend_Exception
      * @throws Zend_Http_Client_Exception
      * @throws Zend_Json_Exception
@@ -136,19 +137,19 @@ class Default_Model_Ocs_OpenCode
         $body = Zend_Json::decode($response->getRawBody());
 
         if (count($body) == 0) {
-            return false;
+            return array();
         }
 
         if (array_key_exists("message", $body)) {
             $result_code = substr(trim($body["message"]), 0, 3);
             if ((int)$result_code >= 300) {
-                throw new Zend_Exception($body["message"]);
+                throw new Default_Model_Ocs_Exception($body["message"]);
             }
         }
 
         Zend_Registry::get('logger')->debug(__METHOD__ . " - body: " . $response->getRawBody());
 
-        return $body[0]['id'];
+        return $body[0];
     }
 
     /**
@@ -454,6 +455,38 @@ class Default_Model_Ocs_OpenCode
         }
 
         return false;
+    }
+
+    /**
+     * @param $member_id
+     *
+     * @return bool
+     * @throws Default_Model_Ocs_Exception
+     * @throws Zend_Exception
+     * @throws Zend_Http_Client_Exception
+     * @throws Zend_Http_Exception
+     * @throws Zend_Json_Exception
+     */
+    public function updateMail($member_id)
+    {
+        if (empty($member_id)) {
+            throw new Default_Model_Ocs_Exception('given member_id is empty');
+        }
+
+        $member_data = $this->getMemberData($member_id, false);
+        $entry = $this->getUser($member_data['external_id']);
+
+        if (empty($entry)) {
+            $this->messages[] = "Failed. User not found;";
+
+            return false;
+        }
+
+        $entry['skip_reconfirmation'] = 'true';
+        $this->httpUserUpdate($entry, $entry['id']);
+        $this->messages[] = "Success";
+
+        return true;
     }
 
     /**
