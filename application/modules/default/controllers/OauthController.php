@@ -121,6 +121,13 @@ class OAuthController extends Zend_Controller_Action
                     $this->forward('index', 'explore', 'default');
 
                     return;
+                } else {
+                    $this->_helper->flashMessenger->addMessage('Your account was created. Please set a password.');
+                    //New Github-User was created, now let him set a password
+                    $this->forward('password', 'setpassword', 'default');
+                    
+                    return;
+                    
                 }
                 Zend_Registry::get('logger')->info(__METHOD__ . ' - registration from social provider successful - member_id: '
                     . Zend_Auth::getInstance()->getIdentity()->member_id)
