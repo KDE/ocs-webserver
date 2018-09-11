@@ -53,6 +53,23 @@ out: ../css/style.css, sourcemap: true, compress: true
             }
           }
         }
+
+        .dropdown-menu {
+          &::before {
+            content: "";
+            position: absolute;
+            right: 356px;
+            top: -8px;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 0 8.5px 8.5px;
+            border-color: transparent transparent #b7bcc4 transparent;
+            border-bottom-color: #fff;
+            border-style: dashed dashed solid;
+            z-index: 1;
+          }
+        }
       }
 
       &#domains-menu {
@@ -103,18 +120,7 @@ out: ../css/style.css, sourcemap: true, compress: true
               right: -250px;
 
               &::before {
-                content: "";
-                position: absolute;
                 right: 356px;
-                top: -8px;
-                width: 0;
-                height: 0;
-                border-style: solid;
-                border-width: 0 8.5px 8.5px;
-                border-color: transparent transparent #b7bcc4 transparent;
-                border-bottom-color: #fff;
-                border-style: dashed dashed solid;
-                z-index: 1;
               }
 
               .submenu-container {
@@ -145,6 +151,23 @@ out: ../css/style.css, sourcemap: true, compress: true
                     }
                   }
                 }
+              }
+            }
+          }
+
+          &#discussion-boards {
+            position: relative;
+            cursor: pointer;
+            height: 60px;
+            z-index: 1000;
+
+            .dropdown-menu {
+              width: 200px;
+              top: 60px;
+              right: -43px;
+
+              &::before {
+                right: 156px;
               }
             }
           }
