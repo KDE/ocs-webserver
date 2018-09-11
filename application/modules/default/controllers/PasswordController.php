@@ -291,7 +291,9 @@ class PasswordController extends Local_Controller_Action_DomainSwitch
         }
 
         $model_member = new Default_Model_DbTable_Member();
-        $member_data = $model_member->fetchRow(array('member_id = ?' => $payload['member_id']));
+        $auth = Zend_Auth::getInstance();
+        $memberId = $auth->getStorage()->read()->member_id;
+        $member_data = $model_member->fetchRow(array('member_id = ?' => $memberId));
         
         $member_data->password = Local_Auth_Adapter_Ocs::getEncryptedPassword($password1, Default_Model_Member::PASSWORD_TYPE_OCS);
         $member_data->save();
