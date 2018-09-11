@@ -62,25 +62,15 @@ $this->supporters = $modelInfo->getNewActiveSupporters(9);
 
         <div  class="row sidebar-right-info" >       
             
-            <span class="newsTitle"> News </span>
-            <div class="prod-widget-box right bgwhite " id="rss-feeds"> </div>                  
-
-        
-            <span class="newsTitle"> Forum </span>
-            <div class="prod-widget-box right bgwhite " id="blogJson"> </div>     
-           
-            
-            <?php  if (count($this->comments) > 0) {
+             <?php
+                if ($this->catabout) {
                 ?>
-            <span class="newsTitle"> Comments </span>
-            <div class="prod-widget-box right bgwhite" id="lastcomments">
+                    <div class="prod-widget-box right catabout" id="catcontent">
+                        <?php include $this->catabout; ?>
+                    </div>
                 <?php
-                foreach ($this->comments as $this->comment) {
-                    echo $this->render('explore/partials/comment.phtml');
                 }
                 ?>
-            </div>          
-            <?php } ?>
 
             <?php
                 $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
@@ -101,6 +91,28 @@ $this->supporters = $modelInfo->getNewActiveSupporters(9);
                        <?php 
                 }
             ?>
+            
+            <span class="newsTitle"> News </span>
+            <div class="prod-widget-box right bgwhite " id="rss-feeds"> </div>                  
+
+        
+            <span class="newsTitle"> Forum </span>
+            <div class="prod-widget-box right bgwhite " id="blogJson"> </div>     
+           
+            
+            <?php  if (count($this->comments) > 0) {
+                ?>
+            <span class="newsTitle"> Comments </span>
+            <div class="prod-widget-box right bgwhite" id="lastcomments">
+                <?php
+                foreach ($this->comments as $this->comment) {
+                    echo $this->render('explore/partials/comment.phtml');
+                }
+                ?>
+            </div>          
+            <?php } ?>
+
+            
         </div>
 
 <?php $this->inlineScript()->appendScript(
