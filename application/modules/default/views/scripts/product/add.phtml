@@ -1891,6 +1891,11 @@ $this->inlineScript()->appendScript('
                               $(this).find('.icon-cross').hide();
                           }
                       }, '.product-image');
+
+                      if ($('.product-image').length>= 6) {
+                              $('.upload-image-container').hide();
+                      }
+
                       $('body').on('click', '.icon-cross', function () {
                           $(this).closest('.product-image').remove();
                           ProductGallery.incImageCount();
@@ -1918,12 +1923,19 @@ $this->inlineScript()->appendScript('
                               '<div class="absolute icon-cross"></div>' +
                               '<div class="image" style="background-image: url(' + _image.target.result + ');"></div>'
                           );
-                          $('.product-image').last().after('<div class="product-image relative">' +
+                                   
+                         $('.product-image').last().after('<div class="product-image relative">' +
                               '<input type="file" name="upload_picture[]" class="gallery-picture" onchange="ProductGallery.previewImage(this);"></div>'
-                          );
+                             );               
+                         
+                          if ($('.product-image').length>= 6) {
+                                  $('.upload-image-container').hide();
+                          }
+                          /*
                           if (maxImageCount <= 0) {
                               $('.upload-image-container').hide();
                           }
+                          */
 
                           image.src = _image.target.result;              // url.createObjectURL(file);
                           image.onload = function () {

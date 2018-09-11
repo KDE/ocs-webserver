@@ -28,8 +28,7 @@ if(null != $request->getParam('debug')) {
     $debugMe = $request->getParam('debug', 0);
 
     if($debugMe == 1) {
-        var_dump($file_out);
-        die;
+        print_r('ImgUrl1: ' . $file_out);
     }
 }
 
@@ -41,10 +40,19 @@ $helperImage = new Default_View_Helper_Image();
 
 $imgUrl = $helperImage->Image($file_out,array('width' => $size, 'height' => $size));
 
+if($debugMe == 1) {
+    print_r('ImgUrl2: ' . $imgUrl);
+}
+
+
 $sizeString = '/'.$size.'x'.$size.'-2/';
 
 if (!strpos($imgUrl, $sizeString)) {
     $imgUrl = str_replace('/200x200-2/', $sizeString, $imgUrl);
+}
+
+if($debugMe == 1) {
+    print_r('ImgUrl3: ' . $imgUrl);
 }
 
 $ext = substr($imgUrl, -3);
@@ -52,7 +60,7 @@ switch ($ext) {
     case 'jpg':
         $mime = 'image/jpeg';
         break;
-    case 'jpeg':
+    case 'peg':
         $mime = 'image/jpeg';
         break;
     case 'gif':
@@ -62,7 +70,12 @@ switch ($ext) {
         $mime = 'image/png';
         break;
     default:
-        $mime = false;
+        $mime = 'image/png';
+}
+
+if($debugMe == 1) {
+    print_r('Mime: ' . $mime);
+    die;
 }
 
 if ($mime) {
