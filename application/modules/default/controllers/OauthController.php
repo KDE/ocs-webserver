@@ -124,7 +124,7 @@ class OAuthController extends Zend_Controller_Action
                 } else {
                     $this->_helper->flashMessenger->addMessage('Your account was created. Please set a password.');
                     //New Github-User was created, now let him set a password
-                    $this->forward('password', 'setpassword', 'default');
+                    $this->redirect('/password/setpassword');
                     
                     return;
                     
