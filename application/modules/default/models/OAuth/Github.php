@@ -496,6 +496,29 @@ class Default_Model_OAuth_Github implements Default_Model_OAuth_Interface
             return $this->createAuthResult(Zend_Auth_Result::FAILURE, $member['mail'],
                 array('A user with given data could not registered.'));
         }
+        
+        //Send user to subsystems
+        try {
+            $id_server = new Default_Model_Ocs_OpenId();
+            $id_server->createUser($member['member_id']);
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+        }
+        try {
+            $ldap_server = new Default_Model_Ocs_Ident();
+            $ldap_server->createUser($member['member_id']);
+            Zend_Registry::get('logger')->debug(__METHOD__ . ' - ldap : ' . implode(PHP_EOL." - ", $ldap_server->getMessages()));
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+        }
+        try {
+            $openCode = new Default_Model_Ocs_OpenCode();
+            $openCode->createUser($member['member_id']);
+            Zend_Registry::get('logger')->debug(__METHOD__ . ' - opencode : ' . implode(PHP_EOL." - ", $openCode->getMessages()));
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+        }
+        
 
         Default_Model_ActivityLog::logActivity($member['main_project_id'], null, $member['member_id'],
             Default_Model_ActivityLog::MEMBER_JOINED, array());
