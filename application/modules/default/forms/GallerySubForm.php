@@ -224,13 +224,17 @@ class Default_Form_GallerySubForm extends Zend_Form_SubForm
     {
         $valid = parent::isValid($data);
         //Validates, if the number of pictures exceed the specified number
-        //Minus one because one of the uploaded elements is always null
-        if (count($this->online_picture->getElements()) + count($this->upload->upload_picture->getValue()) > $this->getMaxGalleryPics()) {
+        //Minus one because one of the uploaded elements is always null       
+        
+        $cntOnlinePicture = 0;
+        foreach ($this->online_picture->getElements() as $el) {
+            if($el->getValue()) $cntOnlinePicture++;
+        }        
+        if ($cntOnlinePicture + count($this->upload->upload_picture->getValue()) > $this->getMaxGalleryPics()) {
             $this->markAsError();
             $this->addErrorMessage('projects.edit.gallery.max_number_files_exceeded');
             $valid = false;
         }
-
         return $valid;
 
     }
