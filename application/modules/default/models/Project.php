@@ -249,6 +249,8 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         return $this->generateRowSet($q->query()->fetchAll());
     }
 
+  
+
     /**
      * @param array $data
      *
@@ -928,6 +930,17 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         return (int)$result['count_active_members'];
     }
 
+    public function isProjectFeatured($project_id)
+    {
+            $sql_object= "SELECT project_id FROM project where project_id= :project_id and  status = 100 and type_id = 1 and featured = 1";
+            $r = $this->getAdapter()->fetchRow($sql_object, array('project_id' => $project_id));
+             if($r){
+                return true;
+            }else
+            {
+                return false;
+            }
+    }
     /**
      * @return mixed
      */
@@ -1447,6 +1460,47 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             return null;
         }
     }
+
+    public function fetchAllFeaturedProjectsForMember($member_id, $limit = null, $offset = null)
+    {
+           // for member me page
+          $sql = "
+                          SELECT
+                          p.project_id,
+                          p.title,
+                          p.created_at  as project_created_at,
+                          p.changed_at as project_changed_at,
+                          p.count_likes,
+                          p.count_dislikes,
+                          p.laplace_score,
+                          p.member_id,
+                          p.cat_title as catTitle,
+                          p.image_small,
+                          (select count(1) from project_plings l where p.project_id = l.project_id and l.is_deleted = 0 and l.is_active = 1 ) countplings
+                          FROM stat_projects p
+                          where p.status =100
+                          and featured = 1
+                          and p.member_id = :member_id        
+                          order by p.changed_at DESC
+          ";
+
+          if (isset($limit)) {
+              $sql = $sql.' limit '.$limit;            
+          }
+
+          if (isset($offset)) {
+              $sql = $sql.' offset '.$offset;            
+          }
+        
+          $result = $this->_db->fetchAll($sql, array('member_id' => $member_id));
+            if ($result) {
+              return $this->generateRowClass($result);
+          } else {
+              return null;
+          }
+    }
+
+
 
     
 
