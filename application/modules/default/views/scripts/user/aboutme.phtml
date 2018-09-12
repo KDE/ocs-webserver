@@ -252,6 +252,11 @@ $isSupporter = $this->stat['donationIssupporter'];
                                     Products<?=($this->stat['cntProducts']>0?' ('.$this->stat['cntProducts'].') ':'')?>
                                 </a>
                             </li>
+                            <li role="presentation">
+                                <a href="#user-featuredproducts" data-toggle="tab" role="tab"  aria-controls="user-featuredproducts" >
+                                    Featured<?=($this->stat['cntFProducts']>0?' ('.$this->stat['cntFProducts'].') ':'')?>
+                                </a>
+                            </li>
                               <?php /*
                               <li>
                                 <a href="#user-donations" data-toggle="tab" role="tab"  aria-controls="user-donations">
@@ -317,6 +322,19 @@ $isSupporter = $this->stat['donationIssupporter'];
 
                             <div role="tabpanel" class="tab-pane active" id="user-aboutme">
                                 <?php if ($this->userProducts) { ?>                                
+                                     <div class="my-products-list" id="my-products-list">                                                                       
+                                        <?php echo $this->render('user/partials/aboutme-products.phtml'); ?>                                       
+                                    </div>
+                                <?php } ?>
+                            </div>
+
+                            <div role="tabpanel" class="tab-pane active" id="user-featuredproducts">
+                                <?php 
+                                        if($this->userFeaturedProducts)
+                                        {
+                                                $this->userProducts = $this->userFeaturedProducts;
+                                        }
+                                    if ($this->userProducts) { ?>                                
                                      <div class="my-products-list" id="my-products-list">                                                                       
                                         <?php echo $this->render('user/partials/aboutme-products.phtml'); ?>                                       
                                     </div>
