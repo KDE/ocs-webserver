@@ -255,7 +255,7 @@ $isSupporter = $this->stat['donationIssupporter'];
                             <?php if($this->stat['cntFProducts']>0){ ?>
                             <li role="presentation">
                                 <a href="#user-featuredproducts" data-toggle="tab" role="tab"  aria-controls="user-featuredproducts" >
-                                    Featured<?=$this->stat['cntFProducts']?>
+                                    Featured<?=' ('.$this->stat['cntFProducts'].') '?>
                                 </a>
                             </li>
                             <?php }?>
@@ -329,7 +329,7 @@ $isSupporter = $this->stat['donationIssupporter'];
                                     </div>
                                 <?php } ?>
                             </div>
-                            
+
                             <?php if($this->stat['cntFProducts']>0){ ?>
                                 <div role="tabpanel" class="tab-pane active" id="user-featuredproducts">
                                     <?php 
