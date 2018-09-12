@@ -252,11 +252,13 @@ $isSupporter = $this->stat['donationIssupporter'];
                                     Products<?=($this->stat['cntProducts']>0?' ('.$this->stat['cntProducts'].') ':'')?>
                                 </a>
                             </li>
+                            <?php if($this->stat['cntFProducts']>0){ ?>
                             <li role="presentation">
                                 <a href="#user-featuredproducts" data-toggle="tab" role="tab"  aria-controls="user-featuredproducts" >
-                                    Featured<?=($this->stat['cntFProducts']>0?' ('.$this->stat['cntFProducts'].') ':'')?>
+                                    Featured<?=$this->stat['cntFProducts']?>
                                 </a>
                             </li>
+                            <?php }?>
                               <?php /*
                               <li>
                                 <a href="#user-donations" data-toggle="tab" role="tab"  aria-controls="user-donations">
@@ -327,19 +329,18 @@ $isSupporter = $this->stat['donationIssupporter'];
                                     </div>
                                 <?php } ?>
                             </div>
-
-                            <div role="tabpanel" class="tab-pane active" id="user-featuredproducts">
-                                <?php 
-                                        if($this->userFeaturedProducts)
-                                        {
-                                                $this->userProducts = $this->userFeaturedProducts;
-                                        }
-                                    if ($this->userProducts) { ?>                                
-                                     <div class="my-products-list" id="my-products-list">                                                                       
-                                        <?php echo $this->render('user/partials/aboutme-products.phtml'); ?>                                       
-                                    </div>
-                                <?php } ?>
-                            </div>
+                            
+                            <?php if($this->stat['cntFProducts']>0){ ?>
+                                <div role="tabpanel" class="tab-pane active" id="user-featuredproducts">
+                                    <?php 
+                                           $this->userProducts = $this->userFeaturedProducts;
+                                        if ($this->userProducts) { ?>                                
+                                         <div class="my-products-list" id="my-products-list">                                                                       
+                                            <?php echo $this->render('user/partials/aboutme-products.phtml'); ?>                                       
+                                        </div>
+                                    <?php } ?>
+                                </div>
+                             <?php } ?>
     <?php /*
                             <div role="tabpanel" class="tab-pane " id="user-supports">
 
