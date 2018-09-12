@@ -54,7 +54,7 @@ $helpBuildProductUrl = new Default_View_Helper_BuildProductUrl();
                         <a
                             href="<?= $helpBuildProductUrl->buildProductUrl($product->project_id) ?>"
                             title="<?= $product->title ?>">
-                            <img src="<?= $helpImage->Image($product->image_small, array('width' => 80, 'height' => 80)); ?>"
+                            <img src="<?= $helpImage->Image($product->image_small, array('width' => 200, 'height' => 200)); ?>"
                                  alt="product">
                         </a>
                         <!-- /product thumbnail -->
@@ -66,3 +66,4 @@ $helpBuildProductUrl = new Default_View_Helper_BuildProductUrl();
     </div>
 
 </div>
+

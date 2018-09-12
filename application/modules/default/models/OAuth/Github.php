@@ -498,7 +498,7 @@ class Default_Model_OAuth_Github implements Default_Model_OAuth_Interface
      */
     public function registerLocal()
     {
-        $userInfo = $this->getUserInfo();
+        $userInfo = $this->getUserInfo(); 
         $usermail = $this->getUserEmail();
         $userInfo['email'] = $usermail['email'];
         $userInfo['verified'] = $usermail['verified'] ? 1 : 0;

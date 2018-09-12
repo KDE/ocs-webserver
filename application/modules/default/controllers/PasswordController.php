@@ -250,8 +250,9 @@ class PasswordController extends Local_Controller_Action_DomainSwitch
         $this->_helper->flashMessenger->addMessage('<p class="text-error">Your password is changed.</p>');
         $this->redirect($this->_helper->url('login', 'authorization'));
     }
-
-    public function setpasswordAction()
+    
+    
+    public function setpasswordAction() 
     {
         $debugMsg = "";
         $this->view->assign('action', '/password/setpassword');

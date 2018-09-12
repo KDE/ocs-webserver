@@ -126,7 +126,7 @@ class OAuthController extends Zend_Controller_Action
                     //New Github-User was created, now let him set a password
                     $this->redirect('/password/setpassword');
                     
-                    return;
+                    return; 
                     
                 }
                 Zend_Registry::get('logger')->info(__METHOD__ . ' - registration from social provider successful - member_id: '

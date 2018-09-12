@@ -54,6 +54,8 @@
     <script src="/theme/flatui/js/lib/jquery-3.2.1.min.js" ></script>
     <script src="/theme/flatui/js/lib/bootstrap.min.js" ></script>    
     <script type="text/javascript" src="/theme/flatui/js/lib/tooltipster/dist/js/tooltipster.bundle.min.js"></script>
+    <script src="/theme/flatui/js/lib/moment.min.js"></script>
+    <script type="text/javascript" src="/tools/fancybox2.1.4/jquery.fancybox.pack.js?v=2.1.4"></script>
     <script type="text/javascript" src="/theme/react/lib/react/react.js"></script>
     <script type="text/javascript" src="/theme/react/lib/react-dom/react-dom.js"></script>
     <script type="text/javascript" src="/theme/react/lib/redux/redux.min.js"></script>
@@ -65,7 +67,7 @@
 
 </head>
 <body>
-<?php echo $this->render('partials/header/template.phtml'); ?>
+<?php echo $this->render('partials/header/template_react.phtml'); ?>
 <?php echo $this->render('partials/flashMessage.phtml'); ?>
 <?php echo $this->layout()->content; ?>
 <?php echo $this->render('partials/footer/template.phtml'); ?>

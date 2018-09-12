@@ -85,6 +85,8 @@ $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->proje
 
 $projectplings = new Default_Model_ProjectPlings();
 $this->projectplings = $projectplings->fetchPlingsForProject($this->product->project_id);
+
+$tagmodel = new Default_Model_Tags();
 ?>
 
     <!-- facebook -->
@@ -277,7 +279,8 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
                                       array('width' => 85, 'height' => 85, 'crop' => 'crop')); ?>"/>
                                 </div>
                                 <div style="margin-left: 95px">
-                                    <p style="margin-bottom: 0px">
+                                    
+                                    <div>
                                     <?php if (false === empty($this->product->link_1)): ?><a
                                         href="<?php echo $this->product->link_1; ?>"
                                         target="_NEW"
@@ -287,6 +290,18 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
                                     <?php else : ?>
                                         <?= $this->product->title; ?>
                                     <?php endif; ?>
+
+                                    <?php                                                  
+                                                if($this->product->featured=='1'){
+                                        ?>
+                                            <span class=" label label-info right" style="font-size: 13px;padding: .2em .6em .3em;"> Featured</span>
+                                    <?php }?>
+
+                                    <?php if($this->isProjectOriginal($this->product->project_id)){?>
+                                    <span class=" label label-info right" style="font-size: 13px;padding: .2em .6em .3em;"> Original</span>
+                                    <?php }?>               
+                                                         
+                                    </div>
                                     
                                     
                                     <p class="product_category" style="margin-bottom: 5px">                                                
@@ -296,7 +311,7 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
 
                                     <?php
                                     echo '<span class="topics">';
-                                    $tagmodel = new Default_Model_Tags();
+                                    
                                     $tagsuser = $tagmodel->getTagsUser($this->product->project_id, Default_Model_Tags::TAG_TYPE_PROJECT);                                                             
                                     echo '<span class="topicslink">';
                                     if(false === empty($tagsuser))
@@ -837,7 +852,7 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
 
                         <div>
                             <?php
-                            $this->moreProducts = $tableProject->fetchMoreProjects($this->product, 8);
+                            $this->moreProducts = $tableProject->fetchMoreProjects($this->product, 6);
                             $this->moreProductsTitle = 'More ' . $this->product->cat_title . ' from ' . $this->product->username;
 
                             if (count($this->moreProducts) > 0) {
@@ -847,7 +862,7 @@ $this->projectplings = $projectplings->fetchPlingsForProject($this->product->pro
 
                         <div>
                             <?php
-                            $this->moreProducts = $tableProject->fetchMoreProjectsOfOtherUsr($this->product, 8);
+                            $this->moreProducts = $tableProject->fetchMoreProjectsOfOtherUsr($this->product, 6);
                             $this->moreProductsTitle = 'Other ' . $this->product->cat_title;
 
                             if (count($this->moreProducts) > 0) {

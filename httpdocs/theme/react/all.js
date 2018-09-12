@@ -269,6 +269,26 @@ window.productHelpers = function () {
     return userRating;
   }
 
+  function calculateProductLaplaceScore(ratings) {
+    let laplace_score = 0;
+    let upvotes = 0;
+    let downvotes = 0;
+    ratings.forEach(function (rating, index) {
+      console.log(rating.active);
+      if (rating.rating_active === "1") {
+        console.log(rating.user_like);
+        if (rating.user_like === "1") {
+          upvotes += 1;
+        } else if (rating.user_like === "0") {
+          downvotes += 1;
+        }
+      }
+    });
+    laplace_score = Math.round((upvotes + 6) / (upvotes + downvotes + 12), 2) * 100;
+    console.log(laplace_score);
+    return laplace_score;
+  }
+
   return {
     getNumberOfProducts,
     generatePaginationObject,
@@ -276,7 +296,8 @@ window.productHelpers = function () {
     getActiveRatingsNumber,
     getFilesSummary,
     checkIfLikedByUser,
-    getLoggedUserRatingOnProduct
+    getLoggedUserRatingOnProduct,
+    calculateProductLaplaceScore
   };
 }();
 class ProductGroupScrollWrapper extends React.Component {
@@ -1217,15 +1238,19 @@ class Pagination extends React.Component {
   }
 
   componentDidMount() {
-    const itemsPerPage = 1000;
+    console.log('paginstion - component did mount');
+    console.log(store.getState());
+    const itemsPerPage = 50;
     const numPages = Math.ceil(this.props.pagination.totalcount / itemsPerPage);
     const pagination = productHelpers.generatePaginationObject(numPages, window.location.pathname, this.props.currentCategoy, this.props.filters.order, this.props.pagination.page);
-    this.setState({ pagination: pagination });
+    this.setState({ pagination: pagination }, function () {
+      console.log(pagination);
+    });
   }
 
   render() {
     let paginationDisplay;
-    if (this.state.pagination && this.props.pagination.totalcount > 1000) {
+    if (this.state.pagination && this.props.pagination.totalcount > 50) {
       const pagination = this.state.pagination.map((pi, index) => {
 
         let numberDisplay;
@@ -2189,20 +2214,29 @@ class ProductViewHeaderRatings extends React.Component {
     });
   }
 
-  onRatingFormResponse(response, val) {
+  onRatingFormResponse(modalResponse, val) {
     const self = this;
-    jQuery.ajax({
-      data: {},
-      url: '/p/' + this.props.product.project_id + '/loadratings/',
-      method: 'get',
-      error: function (jqXHR, textStatus, errorThrown) {
-        self.setState({ errorMsg: textStatus + " " + errorThrown });
-        $('#ratings-form-modal').modal('hide');
-      },
-      success: function (response) {
-        store.dispatch(setProductRatings(response));
-        $('#ratings-form-modal').modal('hide');
-      }
+    this.setState({ errorMsg: '' }, function () {
+      jQuery.ajax({
+        data: {},
+        url: '/p/' + this.props.product.project_id + '/loadratings/',
+        method: 'get',
+        error: function (jqXHR, textStatus, errorThrown) {
+          self.setState({ errorMsg: textStatus + " " + errorThrown });
+          $('#ratings-form-modal').modal('hide');
+        },
+        success: function (response) {
+          console.log('on rating form response');
+          console.log(response);
+          // const laplace_score = productHelpers.calculateProductLaplaceScore(response);
+          store.dispatch(setProductRatings(response));
+          if (modalResponse.status !== "ok") self.setState({ errorMsg: modalResponse.status + " - " + modalResponse.message });
+          self.setState({ laplace_score: modalResponse.laplace_score }, function () {
+            console.log(this.state.laplace_score);
+          });
+          $('#ratings-form-modal').modal('hide');
+        }
+      });
     });
   }
 
@@ -2220,10 +2254,7 @@ class ProductViewHeaderRatings extends React.Component {
       });
     }
 
-    let ratingsBarCss;
-    if (this.props.product.laplace_score < 50) {
-      ratingsBarCss = 'red';
-    }
+    console.log(this.state.laplace_score);
 
     return React.createElement(
       'div',
@@ -2240,7 +2271,7 @@ class ProductViewHeaderRatings extends React.Component {
       React.createElement(
         'div',
         { className: 'ratings-bar-holder' },
-        React.createElement('div', { className: ratingsBarCss + " ratings-bar", style: { "width": this.state.laplace_score + "%" } }),
+        React.createElement('div', { className: 'green ratings-bar', style: { "width": this.state.laplace_score + "%" } }),
         React.createElement('div', { className: 'ratings-bar-empty', style: { "width": 100 - this.state.laplace_score + "%" } })
       ),
       React.createElement(
@@ -2253,7 +2284,11 @@ class ProductViewHeaderRatings extends React.Component {
         )
       ),
       ratingsFormModalDisplay,
-      this.state.errorMsg
+      React.createElement(
+        'p',
+        { className: 'ratings-bar-error-msg-container' },
+        this.state.errorMsg
+      )
     );
   }
 }
@@ -2265,6 +2300,7 @@ class RatingsFormModal extends React.Component {
       action: this.props.action
     };
     this.submitRatingForm = this.submitRatingForm.bind(this);
+    this.onTextAreaInputChange = this.onTextAreaInputChange.bind(this);
   }
 
   componentDidMount() {
@@ -2279,6 +2315,10 @@ class RatingsFormModal extends React.Component {
     });
   }
 
+  onTextAreaInputChange(e) {
+    this.setState({ text: e.target.value });
+  }
+
   submitRatingForm() {
     this.setState({ loading: true }, function () {
       const self = this;
@@ -2288,6 +2328,8 @@ class RatingsFormModal extends React.Component {
       } else {
         v = '2';
       }
+
+      console.log(this.state.text);
 
       jQuery.ajax({
         data: {
@@ -2303,7 +2345,7 @@ class RatingsFormModal extends React.Component {
         method: 'post',
         error: function () {
           const msg = "Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.";
-          this.setState({ msg: msg });
+          self.setState({ msg: msg });
         },
         success: function (response) {
           self.props.onRatingFormResponse(response, v);
@@ -2338,7 +2380,7 @@ class RatingsFormModal extends React.Component {
           'Close'
         );
       } else if (this.state.text) {
-        textAreaDisplay = React.createElement('textarea', { defaultValue: this.state.text, className: 'form-control' });
+        textAreaDisplay = React.createElement('textarea', { onChange: this.onTextAreaInputChange, defaultValue: this.state.text, className: 'form-control' });
         if (this.state.loading !== true) {
 
           if (this.state.msg) {
@@ -2794,7 +2836,7 @@ class ProductViewContent extends React.Component {
         files: this.props.product.r_files
       });
     } else if (this.props.tab === 'ratings') {
-      currentTabDisplay = React.createElement(ProductViewRatingsTab, {
+      currentTabDisplay = React.createElement(ProductViewRatingsTabWrapper, {
         ratings: this.props.product.r_ratings
       });
     } else if (this.props.tab === 'favs') {
@@ -3334,7 +3376,7 @@ class ProductViewRatingsTab extends React.Component {
   }
 
   render() {
-
+    console.log(this.props);
     const ratingsLikes = this.props.ratings.filter(this.filterLikes);
     const ratingsDislikes = this.props.ratings.filter(this.filterDislikes);
     const ratingsActive = this.props.ratings.filter(this.filterActive);
@@ -3421,6 +3463,21 @@ class ProductViewRatingsTab extends React.Component {
     );
   }
 }
+
+const mapStateToProductViewRatingsTabProps = state => {
+  const ratings = state.product.r_ratings;
+  return {
+    ratings
+  };
+};
+
+const mapDispatchToProductViewRatingsTabProps = dispatch => {
+  return {
+    dispatch
+  };
+};
+
+const ProductViewRatingsTabWrapper = ReactRedux.connect(mapStateToProductViewRatingsTabProps, mapDispatchToProductViewRatingsTabProps)(ProductViewRatingsTab);
 
 class RatingItem extends React.Component {
   constructor(props) {

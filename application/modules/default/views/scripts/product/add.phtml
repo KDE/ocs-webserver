@@ -123,6 +123,12 @@ $this->inlineScript()->appendScript('
         section.body {
             width: 100% !important;
         }
+
+        #is_original-element
+        {
+            width: 25px;
+            float: left;
+        }
     </style>
     <main class="user-admin-page">
 
@@ -224,14 +230,15 @@ $this->inlineScript()->appendScript('
                                 <?= $this->form->project_sub_subcategory_id ?>
                                 <?= $this->form->description ?>
                                 <?= $this->form->version ?>
-                                <?= $this->form->image_small ?>
-                                <?= $this->form->image_small_upload ?>
-                                <?php //$this->form->image_big ?>
-                                <?php //$this->form->image_big_upload ?>
-                                <?= $this->form->gallery ?>
-                                <?= $this->form->embed_code ?>
 
                                 <?= $this->form->source_url ?>
+
+                                <div class="form-group">
+                                <div class="col-sm-12 margin-top-15">
+                                 <?= $this->form->is_original ?>  Check this box, if this is your own original work and not based on something else      
+                                </div>
+                                </div>                               
+                                
                                 <?= $this->form->license_tag_id ?>
                                  <?php
                                     if($this->project_id)
@@ -246,18 +253,23 @@ $this->inlineScript()->appendScript('
                                             <label class="form-label"> System Auto Tags</label>
                                         </div>
                                         <div class="col-sm-12">
-                                          <?php
-
-                                                echo $tagscat ;
-                                          ?>
+                                          <?php echo $tagscat ; ?>
                                         </div>
                                     </div>
                                     <?php
-                                    }}
-                                    ?>
+                                        }
+                                    }
+                                ?>
 
                                 <?= $this->form->tagsuser ?>
 
+
+                                <?= $this->form->image_small ?>
+                                <?= $this->form->image_small_upload ?>
+                                <?php //$this->form->image_big ?>
+                                <?php //$this->form->image_big_upload ?>
+                                <?= $this->form->gallery ?>
+                                <?= $this->form->embed_code ?>                               
 
                                 <?= $this->form->link_1 ?>
                                 <?= $this->form->facebook_code ?>

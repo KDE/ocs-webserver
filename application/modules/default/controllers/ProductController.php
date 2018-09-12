@@ -79,54 +79,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->_helper->viewRenderer('/partials/pploadajax');
     }
 
-    // public function indexNewAction(){
-    //     // for David react ================ page detail ==============
-    //         if (!empty($this->_collectionId)) {
-    //             $modelProduct = new Default_Model_Project();
-    //             $productInfo = $modelProduct->fetchProductForCollectionId($this->_collectionId);
-    //             $this->_projectId = $productInfo->project_id;
-    //         }
-
-
-    //         if (empty($this->_projectId)) {
-    //             $this->redirect('/explore');
-    //         }
-
-    //         $this->view->paramPageId = (int)$this->getParam('page');
-    //         $this->view->member_id = null;
-    //         if(null != $this->_authMember && null != $this->_authMember->member_id) {
-    //             $this->view->member_id = $this->_authMember->member_id;
-    //         }
-
-    //         $this->initJsonForReact();
-    //         //        $this->fetchDataForIndexView();
-
-    //         $this->view->cat_id = $this->view->product->project_category_id;
-
-    //         //create ppload download hash: secret + collection_id + expire-timestamp
-    //         $salt = PPLOAD_DOWNLOAD_SECRET;
-    //         $collectionID = $this->view->product->ppload_collection_id;
-    //         $timestamp = time() + 3600; // one hour valid
-    //         $hash = md5($salt . $collectionID . $timestamp); // order isn't important at all... just do the same when verifying
-
-    //         $this->view->download_hash = $hash;
-    //         $this->view->download_timestamp = $timestamp;
-
-    //         $helperUserIsOwner = new Default_View_Helper_UserIsOwner();
-    //         $helperIsProjectActive = new Default_View_Helper_IsProjectActive();
-    //         if ((false === $helperIsProjectActive->isProjectActive($this->view->product->project_status))
-    //             AND (false === $helperUserIsOwner->UserIsOwner($this->view->product->member_id))
-    //         ) {
-    //             throw new Zend_Controller_Action_Exception('This page does not exist', 404);
-    //         }
-
-    //         if (APPLICATION_ENV != 'searchbotenv') {
-    //             $tablePageViews = new Default_Model_DbTable_StatPageViews();
-    //             $tablePageViews->savePageView($this->_projectId, $this->getRequest()->getClientIp(),
-    //                 $this->_authMember->member_id);
-    //         }
-
-    // }
+    
 
     public function initJsonForReact(){
             $modelProduct = new Default_Model_Project();
@@ -371,6 +324,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $modelTags->processTagsUser($newProject->project_id, null, Default_Model_Tags::TAG_TYPE_PROJECT);
         }
 
+        if($values['is_original']){
+                 $modelTags->processTagProductOriginal($newProject->project_id,$values['is_original']);
+        }
 
         //set license, if needed
         $licenseTag = $form->getElement('license_tag_id')->getValue();
@@ -563,6 +519,11 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             }
             $form->getElement('license_tag_id')->setValue($licenseTag);
 
+            $is_original = $modelTags->isProuductOriginal($projectData->project_id);
+            if($is_original){
+                $form->getElement('is_original')->checked= true;                
+            }
+ 
             $this->view->form = $form;
 
             return;
@@ -626,6 +587,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         // if ($values['tags']) {
         //     $modelTags->processTags($this->_projectId, implode(',',$values['tags']), Default_Model_Tags::TAG_TYPE_PROJECT);
         // }
+
+        
+        $modelTags->processTagProductOriginal($this->_projectId,$values['is_original']);
 
         if($values['tagsuser']) {
             $modelTags->processTagsUser($this->_projectId,implode(',',$values['tagsuser']), Default_Model_Tags::TAG_TYPE_PROJECT);
@@ -1367,6 +1331,14 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         }
 
         $this->forward('products', 'user', 'default');
+    }
+
+   public function loadratingsAction()
+   {
+        $this->_helper->layout->disableLayout();
+        $tableProjectRatings = new Default_Model_DbTable_ProjectRating();            
+        $ratings = $tableProjectRatings->fetchRating($this->_projectId);
+        $this->_helper->json($ratings);
     }
 
     public function followAction()

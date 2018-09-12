@@ -91,9 +91,6 @@ class UserController extends Local_Controller_Action_DomainSwitch
 
         $this->view->followedProducts = $tableMember->fetchFollowedProjects($this->_memberId, null);
         $this->view->hits = $tableMember->fetchProjectsSupported($this->_memberId);
-
-
-
         */
         // ajax load more products
         if ($this->getParam('projectpage', null)) {
@@ -119,6 +116,10 @@ class UserController extends Local_Controller_Action_DomainSwitch
             //$this->view->userProducts = $tableProject->fetchAllProjectsForMember($this->_memberId, $pageLimit, ($projectpage - 1) * $pageLimit,true);
             $this->view->userProducts =
                 $tableProject->getUserActiveProjects($this->_memberId, $pageLimit, ($projectpage - 1) * $pageLimit);
+
+            $this->view->userFeaturedProducts =
+                    $tableProject->fetchAllFeaturedProjectsForMember($this->_memberId);
+
 
             $paginationComments = $tableMember->fetchComments($this->_memberId);
             if ($paginationComments) {
@@ -159,6 +160,18 @@ class UserController extends Local_Controller_Action_DomainSwitch
 
             $stat = array();
             $stat['cntProducts'] = $total_records;
+            if($this->view->userFeaturedProducts)
+            {                
+                $cnt = 0;
+                foreach ($this->view->userFeaturedProducts as $tmp) {
+                    $cnt++;
+                }
+                $stat['cntFProducts'] = $cnt;
+            }else
+            {
+                $stat['cntFProducts'] = 0;
+            }
+
             $stat['cntComments'] = $paginationComments->getTotalItemCount();
 
             // $cntpv = 0;
