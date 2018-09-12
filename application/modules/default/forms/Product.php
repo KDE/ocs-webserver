@@ -72,6 +72,8 @@ class Default_Form_Product extends Zend_Form
             ->addElement($this->getSubmitElement())
             ->addElement($this->getCancelElement())
             ->addElement($this->getLicenseIdElement())
+            ->addElement($this->getIsOriginal())            
+
             //->addElement($this->getCCAttribution())
             //->addElement($this->getCCComercial())
             //->addElement($this->getCCDerivateWorks())
@@ -574,6 +576,19 @@ class Default_Form_Product extends Zend_Form
     private function getCCLicense()
     {
         return $this->createElement('checkbox', 'cc_license');
+    }
+
+ 
+    private function getIsOriginal()
+    {
+        $element = new Zend_Form_Element_Checkbox('is_original');
+        return $element
+               ->setOptions(array(
+               'label' =>' Product original ',
+               'use_hidden_element' => false,
+               'checked_value' => 1,
+               'unchecked_value' => 0
+               ));       
     }
 
     private function getTagElement()

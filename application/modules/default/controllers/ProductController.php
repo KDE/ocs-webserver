@@ -324,6 +324,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $modelTags->processTagsUser($newProject->project_id, null, Default_Model_Tags::TAG_TYPE_PROJECT);
         }
 
+        if($values['is_original']){
+                 $modelTags->processTagProductOriginal($newProject->project_id,$values['is_original']);
+        }
 
         //set license, if needed
         $licenseTag = $form->getElement('license_tag_id')->getValue();
@@ -516,6 +519,11 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             }
             $form->getElement('license_tag_id')->setValue($licenseTag);
 
+            $is_original = $modelTags->isProuductOriginal($projectData->project_id);
+            if($is_original){
+                $form->getElement('is_original')->checked= true;                
+            }
+ 
             $this->view->form = $form;
 
             return;
@@ -579,6 +587,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         // if ($values['tags']) {
         //     $modelTags->processTags($this->_projectId, implode(',',$values['tags']), Default_Model_Tags::TAG_TYPE_PROJECT);
         // }
+
+        
+        $modelTags->processTagProductOriginal($this->_projectId,$values['is_original']);
 
         if($values['tagsuser']) {
             $modelTags->processTagsUser($this->_projectId,implode(',',$values['tagsuser']), Default_Model_Tags::TAG_TYPE_PROJECT);
