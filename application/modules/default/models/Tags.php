@@ -36,6 +36,9 @@ class Default_Model_Tags
     const TAG_ARCHITECTURE_GROUPID = 9;
     const TAG_GHNS_EXCLUDED_GROUPID = 10;
 
+    const TAG_PRODUCT_ORIGINAL_GROUPID = 11;
+    const TAG_PRODUCT_ORIGINAL_ID = 2451;
+
     /**
      * Default_Model_Tags constructor.
      */
@@ -393,6 +396,52 @@ class Default_Model_Tags
         $this->deassignTagsUser($object_id, $tags, $tag_type);
     }
 
+    public function isProuductOriginal($project_id)
+    {
+            $sql_object= "select tag_item_id  from tag_object WHERE tag_id = :tag_id and tag_object_id=:tag_object_id and tag_group_id=:tag_group_id  
+                                    and tag_type_id = :tag_type_id and is_deleted = 0";
+            $r = $this->getAdapter()->fetchRow($sql_object, array('tag_id' => self::TAG_PRODUCT_ORIGINAL_ID, 
+                                                                                                    'tag_object_id' =>$project_id, 
+                                                                                                    'tag_group_id' => self::TAG_PRODUCT_ORIGINAL_GROUPID, 
+                                                                                                    'tag_type_id' => self::TAG_TYPE_PROJECT 
+                                                                                                    ));
+            if($r){
+                return true;
+            }else
+            {
+                return false;
+            }
+    }
+
+    /**
+        * @param int    $object_id
+        * @param string $value        
+        */
+       public function processTagProductOriginal($object_id, $is_original)
+       {
+            $sql_object= "select tag_item_id  from tag_object WHERE tag_id = :tag_id and tag_object_id=:tag_object_id and tag_group_id=:tag_group_id  
+                                    and tag_type_id = :tag_type_id and is_deleted = 0";
+            $r = $this->getAdapter()->fetchRow($sql_object, array('tag_id' => self::TAG_PRODUCT_ORIGINAL_ID, 
+                                                                                                    'tag_object_id' =>$object_id, 
+                                                                                                    'tag_group_id' => self::TAG_PRODUCT_ORIGINAL_GROUPID, 
+                                                                                                    'tag_type_id' => self::TAG_TYPE_PROJECT 
+                                                                                                    ));
+           
+           if($is_original=='1')
+           {            
+                if(!$r){
+                    $sql = "INSERT IGNORE INTO tag_object (tag_id, tag_type_id, tag_object_id, tag_group_id) VALUES (:tag_id, :tag_type_id, :tag_object_id, :tag_group_id)";
+                    $this->getAdapter()->query($sql, array('tag_id' =>  self::TAG_PRODUCT_ORIGINAL_ID, 'tag_type_id' => self::TAG_TYPE_PROJECT , 'tag_object_id' => $object_id, 'tag_group_id' => self::TAG_PRODUCT_ORIGINAL_GROUPID));                    
+                }
+           }else{
+
+                if($r){
+                        $sql = "UPDATE tag_object set tag_changed = NOW() , is_deleted = 1  WHERE tag_item_id = :tagItemId";
+                        $this->getAdapter()->query($sql, array('tagItemId' => $r['tag_item_id']));
+                }
+           }
+           
+       }
 
     /**
      * @param int    $object_id
