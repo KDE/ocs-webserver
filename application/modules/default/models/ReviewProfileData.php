@@ -159,7 +159,7 @@ class Default_Model_ReviewProfileData
      */
     private function isUsernameValid($member_data)
     {
-        $usernameValidChars = new Zend_Validate_Regex('/^(?=.{3,40}$)(?![-_.])(?!.*[-_.]{2})[a-zA-Z0-9._-]+(?<![-_.])$/');
+        $usernameValidChars = new Zend_Validate_Regex('/^(?=.{4,40}$)(?![-])(?!.*[-]{2})[a-z0-9-]+(?<![-])$/');
 
         if (false == $usernameValidChars->isValid($member_data->username)) {
             $this->message['username'][] = $usernameValidChars->getMessages();

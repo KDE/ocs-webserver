@@ -504,7 +504,7 @@ class Default_Model_OAuth_Github implements Default_Model_OAuth_Interface
         $userInfo['verified'] = $usermail['verified'] ? 1 : 0;
 
         $newUserValues = array(
-            'username'          => $userInfo['login'],
+            'username'          => strtolower($userInfo['login']),
             'password'          => $this->generateNewPassword(),
             'lastname'          => $userInfo['name'],
             'mail'              => $userInfo['email'],
