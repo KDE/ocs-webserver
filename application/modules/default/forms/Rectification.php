@@ -32,7 +32,7 @@ class Default_Form_Rectification extends Zend_Form
     {
         $this->addElementPrefixPath('Local', 'Local/');
 
-        $usernameValidChars = new Zend_Validate_Regex('/^(?=.{4,40}$)(?![-])(?!.*[-]{2})[a-zA-Z0-9.]+(?<![-])$/');
+        $usernameValidChars = new Zend_Validate_Regex('/^(?=.{4,40}$)(?![-])(?!.*[-]{2})[a-z0-9-]+(?<![-])$/');
         $userExistCheck = new Local_Validate_UsernameExists();
         $userExistCheck->setMessage('This username already exists.', Local_Validate_UsernameExists::EXISTS);
         $userEmptyCheck = new Zend_Validate_NotEmpty();

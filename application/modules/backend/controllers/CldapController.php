@@ -133,7 +133,7 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
      */
     private function exportMembers($members)
     {
-        $usernameValidChars = new Zend_Validate_Regex('/^(?=.{3,40}$)(?![-_.])(?!.*[-_.]{2})[a-zA-Z0-9._-]+(?<![-_.])$/');
+        $usernameValidChars = new Zend_Validate_Regex('/^(?=.{4,40}$)(?![-])(?!.*[-]{2})[a-z0-9-]+(?<![-])$/');
         $modelOcsIdent = new Default_Model_Ocs_Ident();
 
         file_put_contents($this->logfile, "Start exportMembers with " . count($members) . " members...\n", FILE_APPEND);
@@ -167,7 +167,7 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
      */
     private function updateMembers($members)
     {
-        $usernameValidChars = new Zend_Validate_Regex('/^(?=.{3,40}$)(?![-_.])(?!.*[-_.]{2})[a-zA-Z0-9._-]+(?<![-_.])$/');
+        $usernameValidChars = new Zend_Validate_Regex('/^(?=.{4,40}$)(?![-])(?!.*[-]{2})[a-z0-9-]+(?<![-])$/');
         $modelOcsIdent = new Default_Model_Ocs_Ident();
 
         while ($member = $members->fetch()) {
@@ -202,7 +202,7 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
      */
     private function renderLdif($members, $file, $errorfile)
     {
-        $usernameValidChars = new Zend_Validate_Regex('/^(?=.{3,40}$)(?![-_.])(?!.*[-_.]{2})[a-zA-Z0-9._-]+(?<![-_.])$/');
+        $usernameValidChars = new Zend_Validate_Regex('/^(?=.{4,40}$)(?![-])(?!.*[-]{2})[a-z0-9-]+(?<![-])$/');
 
         while ($member = $members->fetch()) {
             $ldif = $this->renderElement($member);

@@ -101,7 +101,7 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
     private function exportMembers($members)
     {
         // only usernames which are valid in github/gitlab
-        $usernameValidChars = new Zend_Validate_Regex('/^(?=.{3,40}$)(?![-_.])(?!.*[-_.]{2})[a-zA-Z0-9._-]+(?<![-_.])$/');
+        $usernameValidChars = new Zend_Validate_Regex('/^(?=.{4,40}$)(?![-])(?!.*[-]{2})[a-z0-9-]+(?<![-])$/');
         $emailValidate = new Zend_Validate_EmailAddress();
         $modelOpenCode = new Default_Model_Ocs_OpenCode(Zend_Registry::get('config')->settings->server->opencode);
 
