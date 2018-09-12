@@ -41,7 +41,7 @@ class Default_Model_OAuth_Github implements Default_Model_OAuth_Interface
     protected $config;
     /** @var Zend_Session_Namespace $session */
     protected $session;
-    /** @var  Zend_Db_Table_Row_Abstract */
+    /** @var  array */
     protected $memberData;
     /** @var  string */
     protected $access_token;
@@ -231,10 +231,8 @@ class Default_Model_OAuth_Github implements Default_Model_OAuth_Interface
 
         $response = $httpClient->request();
 
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - request: \n' . $httpClient->getLastRequest());
-        Zend_Registry::getInstance()->get('logger')->debug(__METHOD__ . ' - response for post request\n'
-            . $response->getHeadersAsString())
-        ;
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - request : \n' . $httpClient->getLastRequest());
+        Zend_Registry::getInstance()->get('logger')->debug(__METHOD__ . ' - response : \n' . $response->getHeadersAsString());
 
         return $response;
     }
@@ -276,16 +274,17 @@ class Default_Model_OAuth_Github implements Default_Model_OAuth_Interface
     {
         $userEmail = $this->getUserEmail();
 
-        $authResult = $this->authenticateUserEmail($userEmail);
+        $authResult = $this->authenticateUserEmail($userEmail['email']);
 
         if (false === $authResult->isValid()) {
-            Zend_Registry::get('logger')->info(__METHOD__ . "\n"
-                                              . ' - authentication error : user=>'.$userEmail.': ' . "\n"
-                                              . ' - messages : ' . implode(",\n",$authResult->getMessages())
-            );
+            Zend_Registry::get('logger')->info(__METHOD__ . "\n" . ' - authentication error : user=>' . $userEmail . ': ' . "\n"
+                . ' - messages : ' . implode(",\n", $authResult->getMessages()))
+            ;
 
             return $authResult;
         }
+
+        $this->syncMemberData($userEmail);
 
         $authModel = new Default_Model_Authorization();
         $authModel->storeAuthSessionDataByIdentity($this->memberData['member_id']);
@@ -296,7 +295,7 @@ class Default_Model_OAuth_Github implements Default_Model_OAuth_Interface
     }
 
     /**
-     * @return string
+     * @return array
      * @throws Zend_Exception
      * @throws Zend_Http_Client_Exception
      * @throws Zend_Json_Exception
@@ -307,22 +306,23 @@ class Default_Model_OAuth_Github implements Default_Model_OAuth_Interface
         $httpClient->setHeaders('Authorization', 'token ' . $this->access_token);
         $httpClient->setHeaders('Accept', 'application/json');
         $response = $httpClient->request();
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - last request: \n' . $httpClient->getLastRequest());
-        Zend_Registry::getInstance()->get('logger')->debug(__METHOD__ . ' - response from post request\n'
-            . $response->getHeadersAsString())
-        ;
-        $data = $this->parseResponse($response);
-        Zend_Registry::getInstance()->get('logger')->debug(__METHOD__ . ' - response from post request\n' . print_r($data, true));
-        if ($response->getStatus() > 200) {
-            throw new Zend_Exception('error while request user data');
+
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - last request : \n' . $httpClient->getLastRequest());
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - response header : ' . $response->getHeadersAsString());
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - response : ' . $response->getRawBody());
+
+        if ($response->getStatus() < 200 OR $response->getStatus() >= 300) {
+            throw new Zend_Exception('error while request user data : ' . $response->getRawBody());
         }
+
+        $data = $this->parseResponse($response);
         foreach ($data as $element) {
             if ($element['primary']) {
-                return $element['email'];
+                return $element;
             }
         }
 
-        return '';
+        return array();
     }
 
     /**
@@ -337,7 +337,7 @@ class Default_Model_OAuth_Github implements Default_Model_OAuth_Interface
         if ($validator->isValid($userEmail)) {
             $resultSet = $this->fetchUserByEmail($userEmail);
         } else {
-            $resultSet = $this->fetchUserByUsername($userEmail);
+            throw new Zend_Exception('no valid email address from github given.');
         }
 
         if (count($resultSet) == 0) {
@@ -349,8 +349,14 @@ class Default_Model_OAuth_Github implements Default_Model_OAuth_Interface
             return $this->createAuthResult(Zend_Auth_Result::FAILURE_IDENTITY_AMBIGUOUS, $userEmail,
                 array('More than one record matches the supplied identity.'));
         }
+
         $this->memberData = array_shift($resultSet);
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - this->memberData: ' . print_r($this->memberData, true));
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - this->memberData: ' . Zend_Json::encode($this->memberData));
+
+        if ($this->memberData['is_deleted'] == 1) {
+            return $this->createAuthResult(Zend_Auth_Result::FAILURE, $userEmail,
+                array('User is deleted.'));
+        }
 
         return $this->createAuthResult(Zend_Auth_Result::SUCCESS, $userEmail, array('Authentication successful.'));
     }
@@ -367,52 +373,14 @@ class Default_Model_OAuth_Github implements Default_Model_OAuth_Interface
             SELECT * 
             FROM {$this->_tableName} 
             WHERE 
-            is_active = :active AND 
-            is_deleted = :deleted AND 
-            login_method = :login AND 
-            mail = :mail";
+            LOWER(mail) = LOWER(:mail)";
 
         $this->_db->getProfiler()->setEnabled(true);
         $resultSet = $this->_db->fetchAll($sql, array(
-            'active'  => Default_Model_DbTable_Member::MEMBER_ACTIVE,
-            'deleted' => Default_Model_DbTable_Member::MEMBER_NOT_DELETED,
-            'login'   => Default_Model_DbTable_Member::MEMBER_LOGIN_LOCAL,
             'mail'    => $userEmail
         ));
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - sql take seconds: ' . $this->_db->getProfiler()->getLastQueryProfile()
-                                                                                            ->getElapsedSecs())
-        ;
-        $this->_db->getProfiler()->setEnabled(false);
-
-        return $resultSet;
-    }
-
-    /**
-     * @param string $userEmail
-     *
-     * @return array
-     * @throws Zend_Exception
-     */
-    private function fetchUserByUsername($userEmail)
-    {
-        $sql = "
-            SELECT * 
-            FROM {$this->_tableName} 
-            WHERE 
-            is_active = :active AND 
-            is_deleted = :deleted AND 
-            login_method = :login AND 
-            username = :username";
-
-        $this->_db->getProfiler()->setEnabled(true);
-        $resultSet = $this->_db->fetchAll($sql, array(
-            'active'   => Default_Model_DbTable_Member::MEMBER_ACTIVE,
-            'deleted'  => Default_Model_DbTable_Member::MEMBER_NOT_DELETED,
-            'login'    => Default_Model_DbTable_Member::MEMBER_LOGIN_LOCAL,
-            'username' => $userEmail
-        ));
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - sql take seconds: ' . $this->_db->getProfiler()->getLastQueryProfile()
-                                                                                            ->getElapsedSecs())
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - seconds: ' . $this->_db->getProfiler()->getLastQueryProfile()
+                                                                                   ->getElapsedSecs())
         ;
         $this->_db->getProfiler()->setEnabled(false);
 
@@ -429,6 +397,82 @@ class Default_Model_OAuth_Github implements Default_Model_OAuth_Interface
     protected function createAuthResult($code, $identity, $messages)
     {
         return new Zend_Auth_Result($code, $identity, $messages);
+    }
+
+    /**
+     * @param $userEmail
+     *
+     * @return bool
+     * @throws Zend_Db_Statement_Exception
+     * @throws Zend_Exception
+     * @throws Zend_Http_Client_Exception
+     * @throws Zend_Json_Exception
+     */
+    private function syncMemberData($userEmail)
+    {
+        if (empty($this->memberData)) {
+            return false;
+        }
+
+        $modelMember = new Default_Model_Member();
+        $member = $modelMember->fetchMemberData($this->memberData['member_id'], false);
+
+        $userInfo = $this->getUserInfo();
+
+        $updated = false;
+
+        if ($member->social_username != $userInfo['login']) {
+            $member->social_username = $userInfo['login'];
+            $updated = $updated && true;
+        }
+        if ($member->social_user_id != $userInfo['id']) {
+            $member->social_user_id = $userInfo['id'];
+            $updated = $updated && true;
+        }
+        if ($member->link_github != $userInfo['login']) {
+            $member->link_github = $userInfo['login'];
+            $updated = $updated && true;
+        }
+        $verified = $userEmail['verified'] ? 1 : 0;
+        if ($member->mail_checked != $verified) {
+            $member->mail_checked = $verified;
+
+            $updated = $updated && true;
+        }
+
+        if ($updated) {
+            $member->save();
+        }
+
+        if ($member->is_active == Default_Model_Member::MEMBER_INACTIVE) {
+            $modelMember->setActive($member->member_id, $userEmail['email']);
+        }
+
+    }
+
+    /**
+     * @return mixed
+     * @throws Zend_Exception
+     * @throws Zend_Http_Client_Exception
+     * @throws Zend_Json_Exception
+     */
+    public function getUserInfo()
+    {
+        $httpClient = new Zend_Http_Client(self::URI_USER);
+        $httpClient->setHeaders('Authorization', 'token ' . $this->access_token);
+        $httpClient->setHeaders('Accept', 'application/json');
+        $response = $httpClient->request();
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - last request: \n' . $httpClient->getLastRequest());
+        Zend_Registry::getInstance()->get('logger')->debug(__METHOD__ . ' - response from post request\n'
+            . $response->getHeadersAsString())
+        ;
+        $data = $this->parseResponse($response);
+        Zend_Registry::getInstance()->get('logger')->debug(__METHOD__ . ' - response from post request\n' . print_r($data, true));
+        if ($response->getStatus() > 200) {
+            throw new Zend_Exception('error while request users data');
+        }
+
+        return $data;
     }
 
     /**
@@ -455,7 +499,9 @@ class Default_Model_OAuth_Github implements Default_Model_OAuth_Interface
     public function registerLocal()
     {
         $userInfo = $this->getUserInfo();
-        $userInfo['email'] = $this->getUserEmail();
+        $usermail = $this->getUserEmail();
+        $userInfo['email'] = $usermail['email'];
+        $userInfo['verified'] = $usermail['verified'] ? 1 : 0;
 
         $newUserValues = array(
             'username'          => $userInfo['login'],
@@ -464,7 +510,7 @@ class Default_Model_OAuth_Github implements Default_Model_OAuth_Interface
             'mail'              => $userInfo['email'],
             'roleId'            => Default_Model_DbTable_Member::ROLE_ID_DEFAULT,
             'is_active'         => 1,
-            'mail_checked'      => 1,
+            'mail_checked'      => $userInfo['verified'],
             'agb'               => 1,
             'login_method'      => Default_Model_Member::MEMBER_LOGIN_LOCAL,
             'profile_img_src'   => 'local',
@@ -492,7 +538,7 @@ class Default_Model_OAuth_Github implements Default_Model_OAuth_Interface
         }
         $member = $modelMember->createNewUser($newUserValues);
 
-        if(empty($member)) {
+        if (empty($member)) {
             return $this->createAuthResult(Zend_Auth_Result::FAILURE, $member['mail'],
                 array('A user with given data could not registered.'));
         }
@@ -533,31 +579,6 @@ class Default_Model_OAuth_Github implements Default_Model_OAuth_Interface
         }
 
         return $this->createAuthResult(Zend_Auth_Result::SUCCESS, $member['mail'], array('Authentication successful.'));
-    }
-
-    /**
-     * @return mixed
-     * @throws Zend_Exception
-     * @throws Zend_Http_Client_Exception
-     * @throws Zend_Json_Exception
-     */
-    public function getUserInfo()
-    {
-        $httpClient = new Zend_Http_Client(self::URI_USER);
-        $httpClient->setHeaders('Authorization', 'token ' . $this->access_token);
-        $httpClient->setHeaders('Accept', 'application/json');
-        $response = $httpClient->request();
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - last request: \n' . $httpClient->getLastRequest());
-        Zend_Registry::getInstance()->get('logger')->debug(__METHOD__ . ' - response from post request\n'
-            . $response->getHeadersAsString())
-        ;
-        $data = $this->parseResponse($response);
-        Zend_Registry::getInstance()->get('logger')->debug(__METHOD__ . ' - response from post request\n' . print_r($data, true));
-        if ($response->getStatus() > 200) {
-            throw new Zend_Exception('error while request users data');
-        }
-
-        return $data;
     }
 
     /**
@@ -660,6 +681,34 @@ class Default_Model_OAuth_Github implements Default_Model_OAuth_Interface
         $cache = Zend_Registry::get('cache');
 
         return $cache->remove($token);
+    }
+
+    /**
+     * @param string $userEmail
+     *
+     * @return array
+     * @throws Zend_Exception
+     */
+    private function fetchUserByUsername($userEmail)
+    {
+        $sql = "
+            SELECT * 
+            FROM {$this->_tableName} 
+            WHERE 
+            is_deleted = :deleted AND 
+            username = :username";
+
+        $this->_db->getProfiler()->setEnabled(true);
+        $resultSet = $this->_db->fetchAll($sql, array(
+            'deleted'  => Default_Model_DbTable_Member::MEMBER_NOT_DELETED,
+            'username' => $userEmail
+        ));
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - seconds: ' . $this->_db->getProfiler()->getLastQueryProfile()
+                                                                                   ->getElapsedSecs())
+        ;
+        $this->_db->getProfiler()->setEnabled(false);
+
+        return $resultSet;
     }
 
 }

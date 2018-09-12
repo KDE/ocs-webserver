@@ -251,6 +251,75 @@ class PasswordController extends Local_Controller_Action_DomainSwitch
         $this->redirect($this->_helper->url('login', 'authorization'));
     }
 
+    public function setpasswordAction()
+    {
+        $debugMsg = "";
+        $this->view->assign('action', '/password/setpassword');
+
+        if ($this->_request->isGet()) {
+            $debugMsg .= '- show password change form' . PHP_EOL;
+            Zend_Registry::get('logger')->debug($debugMsg);
+            return;
+        }
+
+        $filterInput = new Zend_Filter_Input(array('*' => 'StringTrim'), array(
+            'password1' => array(
+                new Zend_Validate_StringLength(array('min' => 6, 'max' => 200)),
+                'presence' => 'required'
+            ),
+            'password2' => array(
+                new Zend_Validate_StringLength(array('min' => 6, 'max' => 200)),
+                'presence' => 'required'
+            ),
+        ), $this->getAllParams());
+
+        if (false === $filterInput->isValid()) {
+            foreach ($filterInput->getMessages() as $message) {
+                $this->_helper->flashMessenger->addMessage('<p class="text-error">' . $message . '</p>');
+            }
+
+            return;
+        }
+
+        $password1 = $filterInput->getUnescaped('password1');
+        $password2 = $filterInput->getUnescaped('password2');
+
+        if ($password1 != $password2) {
+            $this->_helper->flashMessenger->addMessage('<p class="text-error">Your passwords are not identical.</p>');
+            return;
+        }
+
+        $model_member = new Default_Model_DbTable_Member();
+        $auth = Zend_Auth::getInstance();
+        $memberId = $auth->getStorage()->read()->member_id;
+        $member_data = $model_member->fetchRow(array('member_id = ?' => $memberId));
+        
+        $member_data->password = Local_Auth_Adapter_Ocs::getEncryptedPassword($password1, Default_Model_Member::PASSWORD_TYPE_OCS);
+        $member_data->save();
+
+        //Update Auth-Services
+        try {
+            $id_server = new Default_Model_Ocs_OpenId();
+            $id_server->updatePasswordForUser($member_data->member_id);
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+        }
+        try {
+            $ldap_server = new Default_Model_Ocs_Ident();
+            $ldap_server->updatePassword($member_data->member_id);
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+        }
+
+        $debugMsg .= '- password for Github User changed' . PHP_EOL;
+        Zend_Registry::get('logger')->debug($debugMsg);
+
+        $this->_helper->flashMessenger->addMessage('<p class="text-error">Your password was set.</p>');
+        $this->redirect($this->_helper->url('login', 'authorization'));
+    }
+    
+    
+
     /**
      * @return Zend_Filter_Encrypt
      */
