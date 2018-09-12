@@ -161,12 +161,16 @@ class Backend_TagsController extends Local_Controller_Action_Backend
         $jTableResult = array();
         try {
             $groupItemId = (int)$this->getParam('tag_group_item_id');
-            $tagId = (int)$this->getParam('tag_id');
+            //$tagId = (int)$this->getParam('tag_id');
             $tagName = $this->getParam('tag_name');
 
             $tagFullname = $this->getParam('tag_fullname');            
             $tagDescription = $this->getParam('tag_description');
             $modelTagGroup = new Default_Model_TagGroup();
+            //load tag
+            $record = $modelTagGroup->fetchOneGroupItem($groupItemId);
+            $tagId = $record['tag_id'];
+            
             $modelTagGroup->updateGroupTag($tagId, $tagName,$tagFullname,$tagDescription);
             $record = $modelTagGroup->fetchOneGroupItem($groupItemId);
 
