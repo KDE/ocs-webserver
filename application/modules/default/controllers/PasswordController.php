@@ -252,7 +252,7 @@ class PasswordController extends Local_Controller_Action_DomainSwitch
     }
     
     
-    public function setpasswordAction()
+    public function setpasswordAction() 
     {
         $debugMsg = "";
         $this->view->assign('action', '/password/setpassword');
