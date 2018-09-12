@@ -128,6 +128,49 @@ class DomainsMenu extends React.Component {
             )
           )
         )
+      ),
+      React.createElement(
+        "li",
+        { id: "discussion-boards", className: "dropdown" },
+        React.createElement(
+          "a",
+          { id: "dropdownMenu4",
+            "data-toggle": "dropdown",
+            "aria-haspopup": "true",
+            "aria-expanded": "true" },
+          "Discussion Boards"
+        ),
+        React.createElement(
+          "ul",
+          { className: "dropdown-menu dropdown-menu-right", "aria-labelledby": "dropdownMenu4" },
+          React.createElement(
+            "li",
+            null,
+            React.createElement(
+              "a",
+              { href: "https://forum.opendesktop.org/c/general" },
+              "General"
+            )
+          ),
+          React.createElement(
+            "li",
+            null,
+            React.createElement(
+              "a",
+              { href: "https://forum.opendesktop.org/c/themes-and-apps" },
+              "Themes & Apps"
+            )
+          ),
+          React.createElement(
+            "li",
+            null,
+            React.createElement(
+              "a",
+              null,
+              "Coding"
+            )
+          )
+        )
       )
     );
   }

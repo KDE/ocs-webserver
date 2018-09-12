@@ -94,6 +94,17 @@ class DomainsMenu extends React.Component {
             </li>
           </ul>
         </li>
+        <li id="discussion-boards" className="dropdown">
+          <a id="dropdownMenu4"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="true">Discussion Boards</a>
+          <ul className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu4">
+            <li><a href="https://forum.opendesktop.org/c/general">General</a></li>
+            <li><a href="https://forum.opendesktop.org/c/themes-and-apps">Themes & Apps</a></li>
+            <li><a>Coding</a></li>
+          </ul>
+        </li>        
       </ul>
     )
   }
