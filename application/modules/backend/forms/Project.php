@@ -126,7 +126,7 @@ class Backend_Form_Project extends Zend_Form
 
         $productPicture = $this->createElement('file', 'image_small_upload')
             ->setDisableLoadDefaultDecorators(true)
-            ->setLabel('Product Logo (min. 20x20, max. 1000x1000, max. 2MB)')
+            ->setLabel('Product Logo (min. 20x20, max. 2000x2000, max. 2MB)')
             //->setDescription('(min. 50x50, max. 1000x1000, 2MB)')
             ->setRequired(true)
             ->setAttrib('class', 'product-picture')
@@ -139,8 +139,8 @@ class Backend_Form_Project extends Zend_Form
             ->addValidator('ImageSize', false,
                 array('minwidth'  => 20,
                       'minheight' => 20,
-                	  'maxwidth'  => 1000,
-                      'maxheight' => 1000
+                	  'maxwidth'  => 2000,
+                      'maxheight' => 2000
                 ))
             ->addValidator('MimeType', false, $imageTable->getAllowedMimeTypes());
 
