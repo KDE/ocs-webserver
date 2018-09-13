@@ -119,6 +119,15 @@ $('document').ready(function(){
         },
 
         doValidate: function (id, value) {
+            $.fn.capitalize = function () {
+                $.each(this, function () {
+                    var caps = this.value;
+                    caps = caps.charAt(0).toUpperCase() + caps.slice(1);
+                    this.value = caps;
+                });
+                return this;
+            };
+            
             var url = end_url;
             var data = {'name' : id, 'value': value};
             $.post(url, data, function (response) {
@@ -136,8 +145,13 @@ $('document').ready(function(){
                         $msgString += '<ul class="errors" style="text-align: left;">';
 
                         $.each($msgArray, function( key, value ) {
+                            if(key == 'regexNotMatch') {
+                                $msgString += '<li class="errors">Username may only contain alphanumeric characters or single hyphens, and cannot begin or end with a hyphen</li>';
+                            } else {
+                                $msgString += '<li class="errors">' + value + '</li>';
+                            }
 
-                            $msgString += '<li class="errors">' + value + '</li>';
+                            
                         });
                         $msgString += '</ul>';
                         $('#'+id).parent().append($msgString);
