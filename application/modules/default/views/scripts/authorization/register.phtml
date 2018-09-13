@@ -133,8 +133,11 @@ $('document').ready(function(){
             $.post(url, data, function (response) {
                 $('#'+id).parent().find('.form-control-feedback').remove();
                 $('#'+id).parent().removeClass('has-error');
+                
                 if (!response['status']) {
                     ValidateAjax.isClean[id] = false;
+                    $('#login').attr("disabled","disabled");
+                    
                     $('#'+id).parent().addClass('has-error');
                     if (response[id]) {
                         $('#'+id).parent().append('<i class="glyphicon glyphicon-remove form-control-feedback"></i>');
@@ -163,6 +166,7 @@ $('document').ready(function(){
                     }
                 } else {
                     ValidateAjax.isClean[id] = true;
+                    $('#login').removeAttr("disabled");
                     $('#'+id).parent().addClass('has-success');
                     $('#'+id).parent().append('<i class="glyphicon glyphicon-ok form-control-feedback"></i>');
                 }
