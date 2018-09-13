@@ -143,19 +143,20 @@ $('document').ready(function(){
                         $msgArray = response[id];
                         $msgString = "";
                         $msgString += '<ul class="errors" style="text-align: left;">';
-
-                        $.each($msgArray, function( key, value ) {
-                            if(key == 'regexNotMatch') {
-                                $msgString += '<li class="errors">Username may only contain alphanumeric characters or single hyphens, and cannot begin or end with a hyphen</li>';
-                            } else {
-                                $msgString += '<li class="errors">' + value + '</li>';
-                            }
-
+                        if(id == 'mail') {
+                            $msgString += '<li class="errors">Email is invalid or already taken</li>';
+                        } else {
+                            $.each($msgArray, function( key, value ) {
+                                if(key == 'regexNotMatch') {
+                                    $msgString += '<li class="errors">Username may only contain alphanumeric characters or single hyphens, and cannot begin or end with a hyphen</li>';
+                                } else {
+                                    $msgString += '<li class="errors">' + value + '</li>';
+                                }
+                            });
                             
-                        });
+                        }
                         $msgString += '</ul>';
-                        $('#'+id).parent().append($msgString);
-                        
+                            $('#'+id).parent().append($msgString);
                         if($msgString == '<ul class="errors" style="text-align: left;"></ul>') {
                             $('#'+id).parent().append('<ul class="errors" style="text-align: left;"><li>'+id+' is already taken</li></ul>');
                         }
