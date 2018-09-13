@@ -41,10 +41,18 @@
           data-load-state="#<?= $this->formRegister->login->getId() ?>"
     >
         <?= $this->formRegister->csrfRegister ?>
-        <div class="form-group has-feedback"><?= $this->formRegister->username ?></div>
-        <div class="form-group has-feedback"><?= $this->formRegister->mail ?></div>
-        <div class="form-group has-feedback"><?= $this->formRegister->password1 ?></div>
-        <div class="form-group has-feedback"><?= $this->formRegister->password2 ?></div>
+        <div class="form-group has-feedback"><?= $this->formRegister->username ?>
+            <ul class="errors" style="visibility: hidden;"><li></li></ul>
+        </div>
+        <div class="form-group has-feedback"><?= $this->formRegister->mail ?>
+            <ul class="errors" style="visibility: hidden;"><li></li></ul>
+        </div>
+        <div class="form-group has-feedback"><?= $this->formRegister->password1 ?>
+            <ul class="errors" style="visibility: hidden;"><li></li></ul>
+        </div>
+        <div class="form-group has-feedback"><?= $this->formRegister->password2 ?>
+            <ul class="errors" style="visibility: hidden;"><li></li></ul>
+        </div>
         <div class="form-group has-feedback"><?= $this->formRegister->grecaptcharesponse?></div>
 
         <button name="<?= $this->formRegister->login->getName() ?>" id="<?= $this->formRegister->login->getId() ?>" type="submit" class="btn btn-min-width btn-native"><?= $this->formRegister->login->getLabel() ?> <i id="load-state" class="fa fa-spinner fa-pulse hidden" aria-hidden="true"></i></button>
