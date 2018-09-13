@@ -151,7 +151,7 @@ $('document').ready(function(){
                         } else {
                             $.each($msgArray, function( key, value ) {
                                 if(key == 'regexNotMatch') {
-                                    $msgString += '<li class="errors">Username may only contain alphanumeric characters or single hyphens, and cannot begin or end with a hyphen</li>';
+                                    $msgString += '<li class="errors">Username may only contain lower case alphanumeric characters or single hyphens, and cannot begin or end with a hyphen</li>';
                                 } else {
                                     $msgString += '<li class="errors">' + value + '</li>';
                                 }
