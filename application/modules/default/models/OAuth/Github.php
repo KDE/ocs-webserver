@@ -527,10 +527,10 @@ class Default_Model_OAuth_Github implements Default_Model_OAuth_Interface
 
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - new user data: ' . print_r($newUserValues, true));
         $modelMember = new Default_Model_Member();
-        $result = $modelMember->findUsername($userInfo['login']);
+        $result = $modelMember->findUsername(strtolower($userInfo['login']));
         $flagUsernameChanged = false;
         if (count($result) > 0) {
-            $newUserValues['username'] = $modelMember->generateUniqueUsername($userInfo['login']);
+            $newUserValues['username'] = $modelMember->generateUniqueUsername(strtolower($userInfo['login']));
             $flagUsernameChanged = true;
             Zend_Registry::get('logger')->info(__METHOD__ . ' - username already in use. new generated username: '
                 . $userInfo['username'])
