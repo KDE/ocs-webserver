@@ -161,7 +161,7 @@ $('document').ready(function(){
                         $msgString += '</ul>';
                             $('#'+id).parent().append($msgString);
                         if($msgString == '<ul class="errors" style="text-align: left;"></ul>') {
-                            $('#'+id).parent().append('<ul class="errors" style="text-align: left;"><li>This '+id+' is already taken</li></ul>');
+                            $('#'+id).parent().append('<ul class="errors" style="text-align: left;"><li class="errors">This '+id+' is already taken</li></ul>');
                         }
                     }
                 } else {
@@ -169,6 +169,8 @@ $('document').ready(function(){
                     $('#login').removeAttr("disabled");
                     $('#'+id).parent().addClass('has-success');
                     $('#'+id).parent().append('<i class="glyphicon glyphicon-ok form-control-feedback"></i>');
+                    $('#'+id).parent().find('.errors').remove();
+                    $('#'+id).parent().append('<ul class="errors" style="visibility: hidden;"><li></li></ul>');
                 }
             },'json');
 
