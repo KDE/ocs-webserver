@@ -129,6 +129,8 @@ $('document').ready(function(){
                     $('#'+id).parent().addClass('has-error');
                     if (response[id]) {
                         $('#'+id).parent().append('<i class="glyphicon glyphicon-remove form-control-feedback"></i>');
+                        $('#'+id).parent().find('.errors').remove();
+                        $('#'+id).parent().append('<ul class="errors" style="text-align: left;"><li>Not valid</li></ul>');
                     }
                 } else {
                     ValidateAjax.isClean[id] = true;
