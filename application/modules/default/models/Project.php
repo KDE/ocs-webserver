@@ -369,7 +369,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
                   m.dwolla_id,
                   laplace_score(p.count_likes,p.count_dislikes) AS laplace_score,
                  `view_reported_projects`.`amount_reports` AS `amount_reports`,
-                (select tag.tag_fullname from tag_object, tag where tag_object.tag_id=tag.tag_id and tag_object_id = p.project_id and tag_object.is_deleted=0 and tag_group_id = :tag_licence_gid and tag_type_id = :tag_type_id )
+                (select tag.tag_fullname from tag_object, tag where tag_object.tag_id=tag.tag_id and tag_object_id = p.project_id and tag_object.is_deleted=0 and tag_group_id = :tag_licence_gid and tag_type_id = :tag_type_id  order by tag_object.tag_created desc limit 1)
                                 AS project_license_title
                 FROM project AS p
                   JOIN member AS m ON p.member_id = m.member_id AND m.is_active = 1 AND m.is_deleted = 0
