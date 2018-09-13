@@ -158,7 +158,7 @@ $('document').ready(function(){
                         $msgString += '</ul>';
                             $('#'+id).parent().append($msgString);
                         if($msgString == '<ul class="errors" style="text-align: left;"></ul>') {
-                            $('#'+id).parent().append('<ul class="errors" style="text-align: left;"><li>'+id+' is already taken</li></ul>');
+                            $('#'+id).parent().append('<ul class="errors" style="text-align: left;"><li>This '+id+' is already taken</li></ul>');
                         }
                     }
                 } else {
