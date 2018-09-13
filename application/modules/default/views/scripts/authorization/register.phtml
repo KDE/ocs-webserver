@@ -130,7 +130,21 @@ $('document').ready(function(){
                     if (response[id]) {
                         $('#'+id).parent().append('<i class="glyphicon glyphicon-remove form-control-feedback"></i>');
                         $('#'+id).parent().find('.errors').remove();
-                        $('#'+id).parent().append('<ul class="errors" style="text-align: left;"><li>Not valid</li></ul>');
+                        
+                        $msgArray = response[id];
+                        $msgString = "";
+                        $msgString += '<ul class="errors" style="text-align: left;">';
+
+                        $.each($msgArray, function( key, value ) {
+
+                            $msgString += '<li class="errors">' + value + '</li>';
+                        });
+                        $msgString += '</ul>';
+                        $('#'+id).parent().append($msgString);
+                        
+                        if($msgString == '<ul class="errors" style="text-align: left;"></ul>') {
+                            $('#'+id).parent().append('<ul class="errors" style="text-align: left;"><li>'+id+' is already taken</li></ul>');
+                        }
                     }
                 } else {
                     ValidateAjax.isClean[id] = true;
