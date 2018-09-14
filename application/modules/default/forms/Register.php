@@ -41,6 +41,7 @@ class Default_Form_Register extends Zend_Form
         $usernameValidChars = new Zend_Validate_Regex('/^(?=.{4,40}$)(?![-])(?!.*[-]{2})[a-z0-9-]+(?<![-])$/');
         $userExistCheck = new Local_Validate_UsernameExists();
         $userExistCheck->setMessage('This username already exists.', Local_Validate_UsernameExists::EXISTS);
+        $userExistCheck->setMessage('This username already exists.');
         $userEmptyCheck = new Zend_Validate_NotEmpty();
         $userEmptyCheck->setMessage('RegisterFormUsernameErr', Zend_Validate_NotEmpty::IS_EMPTY);
         $userNameLength = new Zend_Validate_StringLength(array('min' => 4, 'max' => 40));
@@ -99,6 +100,7 @@ class Default_Form_Register extends Zend_Form
                       ->setDecorators(array('ViewHelper', 'Errors'))
                       ->setAttrib('placeholder', 'Password')
                       ->addValidator('stringLength', true, array(6, 200))
+                      ->setAttrib('placeholder', 'Password (6 chars minimum)')
                       ->setAttrib('class', 'form-control')
         ;
 

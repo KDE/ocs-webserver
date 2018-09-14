@@ -119,21 +119,58 @@ $('document').ready(function(){
         },
 
         doValidate: function (id, value) {
+            $.fn.capitalize = function () {
+                $.each(this, function () {
+                    var caps = this.value;
+                    caps = caps.charAt(0).toUpperCase() + caps.slice(1);
+                    this.value = caps;
+                });
+                return this;
+            };
+            
             var url = end_url;
             var data = {'name' : id, 'value': value};
             $.post(url, data, function (response) {
                 $('#'+id).parent().find('.form-control-feedback').remove();
                 $('#'+id).parent().removeClass('has-error');
+                
                 if (!response['status']) {
                     ValidateAjax.isClean[id] = false;
+                    $('#login').attr("disabled","disabled");
+                    
                     $('#'+id).parent().addClass('has-error');
                     if (response[id]) {
                         $('#'+id).parent().append('<i class="glyphicon glyphicon-remove form-control-feedback"></i>');
+                        $('#'+id).parent().find('.errors').remove();
+                        
+                        $msgArray = response[id];
+                        $msgString = "";
+                        $msgString += '<ul class="errors" style="text-align: left;">';
+                        if(id == 'mail') {
+                            $msgString += '<li class="errors">Email is invalid or already taken</li>';
+                        } else {
+                            $.each($msgArray, function( key, value ) {
+                                if(key == 'regexNotMatch') {
+                                    $msgString += '<li class="errors">Username may only contain lower case alphanumeric characters or single hyphens, and cannot begin or end with a hyphen</li>';
+                                } else {
+                                    $msgString += '<li class="errors">' + value + '</li>';
+                                }
+                            });
+                            
+                        }
+                        $msgString += '</ul>';
+                            $('#'+id).parent().append($msgString);
+                        if($msgString == '<ul class="errors" style="text-align: left;"></ul>') {
+                            $('#'+id).parent().append('<ul class="errors" style="text-align: left;"><li class="errors">This '+id+' is already taken</li></ul>');
+                        }
                     }
                 } else {
                     ValidateAjax.isClean[id] = true;
+                    $('#login').removeAttr("disabled");
                     $('#'+id).parent().addClass('has-success');
                     $('#'+id).parent().append('<i class="glyphicon glyphicon-ok form-control-feedback"></i>');
+                    $('#'+id).parent().find('.errors').remove();
+                    $('#'+id).parent().append('<ul class="errors" style="visibility: hidden;"><li></li></ul>');
                 }
             },'json');
 
