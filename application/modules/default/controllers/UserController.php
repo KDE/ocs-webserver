@@ -20,6 +20,8 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
+use YoHang88\LetterAvatar\LetterAvatar;        
+
 class UserController extends Local_Controller_Action_DomainSwitch
 {
 
@@ -586,6 +588,35 @@ class UserController extends Local_Controller_Action_DomainSwitch
         $form->addElement($passOld)->addElement($pass1)->addElement($pass2);
 
         return $form;
+    }
+
+
+
+public function initletteravartarAction()
+    {
+         $this->_helper->layout->disableLayout();
+         $this->_helper->viewRenderer->setNoRender(true);
+         require_once 'vendor/autoload.php';
+
+         $profile_image_url = 'hive/user-pics/nopic.png';  // live          
+         $sql = '
+                        select member_id,username
+                        from tmp_member_hive_nopic m
+                        where avatar = 0                                                        
+                        order by member_id desc
+                        limit 1000 
+                    ';
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql)->fetchAll();
+        foreach ($result as $m) {
+            $name = substr($m['username'],0,1).' '.substr($m['username'],1);
+            $avatar = new LetterAvatar($name,'square', 100);   
+            $tmpImagePath = IMAGES_UPLOAD_PATH . 'tmp/la/'.$m['member_id'].'.png';
+            $avatar->saveAs($tmpImagePath, LetterAvatar::MIME_TYPE_PNG);        
+
+            $sql = 'update tmp_member_hive_nopic set avatar = 1 where member_id = '.$m['member_id'];
+            Zend_Db_Table::getDefaultAdapter()->query($sql);
+        }
+        echo 'done!';
     }
 
 }
