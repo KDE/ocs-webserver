@@ -592,8 +592,8 @@ class Default_Model_Tags
         
         $tableTags = new Default_Model_DbTable_Tags();
         
-        $tags = $tableTags->fetchLicenseTagsForProject($object_id);
-        if(count($tags) == 1) {
+        $tags = $tableTags->fetchLicenseTagsForProject($object_id);        
+        if(count($tags) >= 1) {
             $tag = $tags[0];
             
             //remove tag license
