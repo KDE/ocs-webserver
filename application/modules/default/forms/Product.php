@@ -158,9 +158,9 @@ class Default_Form_Product extends Zend_Form
             ->addValidator('ImageSize', false,
                 array(
                     'minwidth' => 20,
-                    'maxwidth' => 1000,
+                    'maxwidth' => 2000,
                     'minheight' => 20,
-                    'maxheight' => 1000
+                    'maxheight' => 2000
                 ))
             ->addValidator('MimeType', false, $modelImage->getAllowedMimeTypes())
             ->setDecorators(

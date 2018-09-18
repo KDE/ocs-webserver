@@ -1,0 +1,2 @@
+ALTER TABLE `tag`
+  ADD COLUMN `is_active` INT(1) NOT NULL DEFAULT 1;

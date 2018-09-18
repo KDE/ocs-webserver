@@ -133,7 +133,7 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
      */
     private function exportMembers($members)
     {
-        $usernameValidChars = new Zend_Validate_Regex('/^(?=.{4,40}$)(?![-])(?!.*[-]{2})[a-z0-9-]+(?<![-])$/');
+        $usernameValidChars = new Zend_Validate_Regex('/^(?=.{3,40}$)(?![-])(?!.*[-]{2})[a-z0-9-]+(?<![-])$/');
         $modelOcsIdent = new Default_Model_Ocs_Ident();
 
         file_put_contents($this->logfile, "Start exportMembers with " . count($members) . " members...\n", FILE_APPEND);
@@ -150,7 +150,7 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
             } catch (Zend_Ldap_Exception $e) {
                 Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
             }
-            $errors = $modelOcsIdent->getErrMessages();
+            $errors = $modelOcsIdent->getMessages();
             file_put_contents($this->errorlogfile, print_r($errors, true), FILE_APPEND);
             Zend_Registry::get('logger')->info(print_r($errors, true));
         }
