@@ -57,7 +57,7 @@ class Default_Model_StatDownload
                         LEFT JOIN
                     member_payout ON member_payout.member_id = member_dl_plings.member_id
                         AND member_payout.yearmonth = member_dl_plings.yearmonth
-                    LEFT JOIN tag_object ON tag_object.tag_type_id = 1 AND tag_object.tag_group_id = 7 AND tag_object.tag_object_id = project.project_id
+                    LEFT JOIN tag_object ON tag_object.tag_type_id = 1 AND tag_object.tag_group_id = 7 AND tag_object.is_deleted = 0 AND tag_object.tag_object_id = project.project_id
                 WHERE
                     member_dl_plings.member_id = :member_id
                     
