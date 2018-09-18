@@ -44,8 +44,6 @@ class Default_Model_DbTable_Tags extends Local_Model_Table
     const TAG_GROUP_PACKAGETYPE = 8;
     const TAG_GROUP_ARCHITECTURE = 9;
     const TAG_GROUP_GHNS_EXCLUDED = 10;
-    const TAG_GROUP_DELETED = 12;
-
 
     /**
      * @inheritDoc
@@ -185,6 +183,7 @@ class Default_Model_DbTable_Tags extends Local_Model_Table
                 SELECT t.* FROM tag t
                 JOIN tag_group_item g on g.tag_id = t.tag_id
                 WHERE g.tag_group_id IN ($inQuery)
+                and is_active = 1
                 ORDER BY t.tag_fullname
                 ";
 
@@ -257,8 +256,8 @@ class Default_Model_DbTable_Tags extends Local_Model_Table
     {
         return $this->fetchTagsForProject($projectId, $this::TAG_GROUP_LICENSE);
     }
-    
-    
+        
+
     /**
      * @param int $projectId
      * @return array
@@ -302,31 +301,6 @@ class Default_Model_DbTable_Tags extends Local_Model_Table
             return $tags;
     }
 
-    
-    /**
-     * @param int $projectId Description
-     * @param int|array $groupId
-     * @return array
-     */
-    public function fetchTagsForProjectInkGroupDeleted($projectId, $groupId)
-    {
-        $typeId = $this::TAG_TYPE_PROJECT;
-        $groupDeleted = $this::TAG_GROUP_DELETED;
-
-        $sql = "
-            SELECT `to`.*, t.tag_fullname FROM tag_object `to`
-            JOIN tag t on t.tag_id = to.tag_id
-            JOIN tag_group_item g on g.tag_id = t.tag_id 
-            WHERE g.tag_group_id in ($groupId,$groupDeleted) 
-            and `to`.is_deleted = 0
-            and `to`.tag_type_id = $typeId 
-            and `to`.tag_object_id = $projectId
-            ";
-        
-        $tagsList = $this->_db->query($sql)->fetchAll();
-        $tags = $tagsList;
-        return $tags;
-    }
     
     
 

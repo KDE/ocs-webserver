@@ -105,6 +105,14 @@
                                             width: '30%',
                                             type: 'textarea'
                                         }
+                                         ,
+                                        is_active: {
+                                            title: 'Is active',
+                                            width: '30%',
+                                            type: 'checkbox',
+                                            values: { '0': 'No', '1': 'Yes' },
+                                            defaultValue: '1',
+                                        }
                                     }
                                 }, function (data) { //opened handler
                                     data.childTable.jtable('load');
