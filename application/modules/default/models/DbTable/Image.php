@@ -47,9 +47,13 @@ class Default_Model_DbTable_Image extends Zend_Db_Table_Abstract
         'png',
         'gif'
     );
-    protected $_maxsize = array(
-        'width'  => 1024,
-        'height' => 768
+    // protected $_maxsize = array(
+    //     'width'  => 1024,
+    //     'height' => 768
+    // );
+     protected $_maxsize = array(
+        'width'  => 2000,
+        'height' => 2000
     );
     protected $_errorMsg = null;
 
