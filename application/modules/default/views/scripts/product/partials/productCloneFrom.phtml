@@ -29,8 +29,8 @@ $helpBuildProductUrl = new Default_View_Helper_BuildProductUrl();
         <div class="">
             <div class="row product-row" >
                 <?php
-                foreach ($this->moreProducts as $product):
-
+                foreach ($this->moreProducts as $product):                    
+                    $product->title = Default_Model_HtmlPurify::purify($product->title);
                     if($product->project_id==0 || is_null($product->project_id)) {
                         continue;
                     }
