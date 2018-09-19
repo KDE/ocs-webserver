@@ -19,6 +19,9 @@
  *
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *   https://github.com/yohang88/letter-avatar
+ * 
  * */
 
 use YoHang88\LetterAvatar\LetterAvatar;        
@@ -26,10 +29,12 @@ class Backend_MemberLetterAvatarCliController extends Local_Controller_Action_Cl
 {
 
     /**
-     * Run php code as cronjob.
+     * run the following composer to download libs put in /library/  
+     * composer require yohang88/letter-avatar
+     * Run php code
      * I.e.:
-     * /usr/bin/php /var/www/pling.it/pling/scripts/cron.php -a /backend/member-payout-cli/run/action/payout/context/all >> /var/www/ocs-www/logs/masspay.log $
-     *
+     * /usr/bin/php /var/www/ocs-webserver/scripts/cron.php -a /backend/member-letter-avatar-cli/run/action
+     * ubuntu@ip-10-171-104-73:/var/www/pling.it/pling$ sudo -u www-data php /var/www/pling.it/pling/scripts/cron.php -a /backend/member-letter-avatar-cli/run/action        
      * @see Local_Controller_Action_CliInterface::runAction()
      */
     public function runAction()
