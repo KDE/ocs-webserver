@@ -134,6 +134,8 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
     }
 
     /**
+     * Fetches a user by username, username ist not case sensitve
+     * 
      * @return array
      * @throws Zend_Exception
      */
@@ -147,7 +149,7 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
             m.`is_active` = :active AND 
             m.`is_deleted` = :deleted AND 
             m.`login_method` = :login AND 
-            m.`username` = :username AND 
+            LOWER(m.`username`) = LOWER(:username) AND 
             m.`password` = :pwd";
 
         $this->_db->getProfiler()->setEnabled(true);
