@@ -83,7 +83,7 @@ var ImagePreview = {
 
                     image_element.parent().parent().find('div.bg-danger').remove();
 
-                    if (w > 1024 || w < 20 || h > 1024 || h < 20) {
+                    if (w > 2000 || w < 20 || h > 2000 || h < 20) {
                         //image_element.attr('src', '').hide().parent().append('<div class="bg-danger">Wrong image dimensions</div>');
                         image_element.parent().parent().append('<div class="bg-danger">Wrong image dimensions</div>');
                         //input.val(null);
@@ -91,6 +91,7 @@ var ImagePreview = {
                         $($(input).closest('form')[0]).trigger('reset');
                         ImagePreview.hasError = true;
                     }
+                   
                     if (s > 2000) {
                         //image_element.attr('src', '').hide().parent().append('<div class="bg-danger">File too large</div>');
                         image_element.parent().parent().append('<div class="bg-danger">File too large</div>');
