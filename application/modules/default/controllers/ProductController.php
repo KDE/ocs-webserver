@@ -217,8 +217,11 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 $this->_authMember->member_id);
         }
 
-        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;        
-      
+        $fmodel =new  Default_Model_DbTable_PploadFiles();
+        $files = $fmodel->fetchFilesForProject($this->view->product->ppload_collection_id);
+        $this->view->filesJson = Zend_Json::encode($files);
+
+        $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;              
         if($storeConfig->layout_pagedetail && $storeConfig->isRenderReact()){           
             $this->initJsonForReact();           
             $this->_helper->viewRenderer('index-react');              

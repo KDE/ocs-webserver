@@ -87,6 +87,10 @@ $projectplings = new Default_Model_ProjectPlings();
 $this->projectplings = $projectplings->fetchPlingsForProject($this->product->project_id);
 
 $tagmodel = new Default_Model_Tags();
+
+$helperUserRole = new Backend_View_Helper_UserRole();
+$userRoleName = $helperUserRole->userRole();
+
 ?>
 
     <!-- facebook -->
@@ -780,6 +784,13 @@ $tagmodel = new Default_Model_Tags();
                                     <ul class="dropdown-menu hide" id="dropdown_installs" style="min-width: 270px;">
                                     </ul>
                                 </div> 
+
+                             
+                                <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                                    <div class="btn-group dropleft " style="width: 100%; padding-top: 10px;">
+                                    <button style="width: 100%" id="project_btn_getit" class="btn dropdown-toggle active btn-primary  " type="button" >Get it</button>
+                                     </div> 
+                               <?php endif; ?>
                             </div>
                         </div>
                        
