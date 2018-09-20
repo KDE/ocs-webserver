@@ -261,79 +261,34 @@ window.productHelpers = function () {
 class GetIt extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
-    this.onGetItButtonClick = this.onGetItButtonClick.bind(this);
-  }
-
-  componentDidMount() {
-    console.log('bla bla');
-  }
-
-  onGetItButtonClick() {
-    console.log('on get it button click');
+    this.state = {
+      files: window.filesJson
+    };
   }
 
   render() {
     return React.createElement(
-      'div',
-      { id: 'get-it' },
+      "div",
+      { id: "get-it" },
       React.createElement(
-        'button',
+        "button",
         {
-          'data-toggle': 'modal',
-          'data-target': '#myModal',
+          "data-toggle": "modal",
+          "data-target": "#myModal",
           style: { "width": "100%" },
-          id: 'project_btn_getit', className: 'btn dropdown-toggle active btn-primary  ',
-          type: 'button' },
-        'Get it'
+          id: "project_btn_getit", className: "btn dropdown-toggle active btn-primary  ",
+          type: "button" },
+        "Get it"
       ),
       React.createElement(
-        'div',
-        { className: 'modal fade', id: 'myModal', tabIndex: '-1', role: 'dialog', 'aria-labelledby': 'myModalLabel' },
+        "div",
+        { className: "modal fade", id: "myModal", tabIndex: "-1", role: "dialog", "aria-labelledby": "myModalLabel" },
         React.createElement(
-          'div',
-          { className: 'modal-dialog', role: 'document' },
-          React.createElement(
-            'div',
-            { className: 'modal-content' },
-            React.createElement(
-              'div',
-              { className: 'modal-header' },
-              React.createElement(
-                'button',
-                { type: 'button', className: 'close', 'data-dismiss': 'modal', 'aria-label': 'Close' },
-                React.createElement(
-                  'span',
-                  { 'aria-hidden': 'true' },
-                  '\xD7'
-                )
-              ),
-              React.createElement(
-                'h4',
-                { className: 'modal-title', id: 'myModalLabel' },
-                'Modal title'
-              )
-            ),
-            React.createElement(
-              'div',
-              { className: 'modal-body' },
-              '...'
-            ),
-            React.createElement(
-              'div',
-              { className: 'modal-footer' },
-              React.createElement(
-                'button',
-                { type: 'button', className: 'btn btn-default', 'data-dismiss': 'modal' },
-                'Close'
-              ),
-              React.createElement(
-                'button',
-                { type: 'button', className: 'btn btn-primary' },
-                'Save changes'
-              )
-            )
-          )
+          "div",
+          { className: "modal-dialog", role: "document" },
+          React.createElement(GetItFilesList, {
+            files: this.state.files
+          })
         )
       )
     );
@@ -350,98 +305,98 @@ class GetItFilesList extends React.Component {
     }));
     const summeryRow = productHelpers.getFilesSummary(this.props.files);
     filesDisplay = React.createElement(
-      'tbody',
+      "tbody",
       null,
       files,
       React.createElement(
-        'tr',
+        "tr",
         null,
         React.createElement(
-          'td',
+          "td",
           null,
           summeryRow.total,
-          ' files (0 archived)'
+          " files (0 archived)"
         ),
-        React.createElement('td', null),
-        React.createElement('td', null),
-        React.createElement('td', null),
-        React.createElement('td', null),
+        React.createElement("td", null),
+        React.createElement("td", null),
+        React.createElement("td", null),
+        React.createElement("td", null),
         React.createElement(
-          'td',
+          "td",
           null,
           summeryRow.downloads
         ),
-        React.createElement('td', null),
+        React.createElement("td", null),
         React.createElement(
-          'td',
+          "td",
           null,
           appHelpers.getFileSize(summeryRow.fileSize)
         ),
-        React.createElement('td', null),
-        React.createElement('td', null)
+        React.createElement("td", null),
+        React.createElement("td", null)
       )
     );
     return React.createElement(
-      'div',
-      { id: 'files-tab', className: 'product-tab' },
+      "div",
+      { id: "files-tab", className: "product-tab" },
       React.createElement(
-        'table',
-        { className: 'mdl-data-table mdl-js-data-table mdl-shadow--2dp' },
+        "table",
+        { className: "mdl-data-table mdl-js-data-table mdl-shadow--2dp" },
         React.createElement(
-          'thead',
+          "thead",
           null,
           React.createElement(
-            'tr',
+            "tr",
             null,
             React.createElement(
-              'th',
-              { className: 'mdl-data-table__cell--non-numericm' },
-              'File'
+              "th",
+              { className: "mdl-data-table__cell--non-numericm" },
+              "File"
             ),
             React.createElement(
-              'th',
-              { className: 'mdl-data-table__cell--non-numericm' },
-              'Version'
+              "th",
+              { className: "mdl-data-table__cell--non-numericm" },
+              "Version"
             ),
             React.createElement(
-              'th',
-              { className: 'mdl-data-table__cell--non-numericm' },
-              'Description'
+              "th",
+              { className: "mdl-data-table__cell--non-numericm" },
+              "Description"
             ),
             React.createElement(
-              'th',
-              { className: 'mdl-data-table__cell--non-numericm' },
-              'Packagetype'
+              "th",
+              { className: "mdl-data-table__cell--non-numericm" },
+              "Packagetype"
             ),
             React.createElement(
-              'th',
-              { className: 'mdl-data-table__cell--non-numericm' },
-              'Architecture'
+              "th",
+              { className: "mdl-data-table__cell--non-numericm" },
+              "Architecture"
             ),
             React.createElement(
-              'th',
-              { className: 'mdl-data-table__cell--non-numericm' },
-              'Downloads'
+              "th",
+              { className: "mdl-data-table__cell--non-numericm" },
+              "Downloads"
             ),
             React.createElement(
-              'th',
-              { className: 'mdl-data-table__cell--non-numericm' },
-              'Date'
+              "th",
+              { className: "mdl-data-table__cell--non-numericm" },
+              "Date"
             ),
             React.createElement(
-              'th',
-              { className: 'mdl-data-table__cell--non-numericm' },
-              'Filesize'
+              "th",
+              { className: "mdl-data-table__cell--non-numericm" },
+              "Filesize"
             ),
             React.createElement(
-              'th',
-              { className: 'mdl-data-table__cell--non-numericm' },
-              'DL'
+              "th",
+              { className: "mdl-data-table__cell--non-numericm" },
+              "DL"
             ),
             React.createElement(
-              'th',
-              { className: 'mdl-data-table__cell--non-numericm' },
-              'OCS-Install'
+              "th",
+              { className: "mdl-data-table__cell--non-numericm" },
+              "OCS-Install"
             )
           )
         ),
@@ -459,13 +414,13 @@ class GetItFilesListItem extends React.Component {
 
   componentDidMount() {
     let baseUrl, downloadLinkUrlAttr;
-    if (store.getState().env === 'live') {
-      baseUrl = 'opendesktop.org';
-      downloadLinkUrlAttr = "https%3A%2F%dl.opendesktop.org%2Fapi%2F";
-    } else {
-      baseUrl = 'pling.cc';
-      downloadLinkUrlAttr = "https%3A%2F%2Fcc.ppload.com%2Fapi%2F";
-    }
+    // if (store.getState().env === 'live') {
+    baseUrl = 'opendesktop.org';
+    downloadLinkUrlAttr = "https%3A%2F%dl.opendesktop.org%2Fapi%2F";
+    // } else {
+    // baseUrl = 'pling.cc';
+    // downloadLinkUrlAttr = "https%3A%2F%2Fcc.ppload.com%2Fapi%2F";
+    // }
 
     const f = this.props.file;
     const timestamp = Math.floor(new Date().getTime() / 1000 + 3600);
@@ -477,67 +432,67 @@ class GetItFilesListItem extends React.Component {
   render() {
     const f = this.props.file;
     return React.createElement(
-      'tr',
+      "tr",
       null,
       React.createElement(
-        'td',
-        { className: 'mdl-data-table__cell--non-numericm' },
+        "td",
+        { className: "mdl-data-table__cell--non-numericm" },
         React.createElement(
-          'a',
+          "a",
           { href: this.state.downloadLink },
           f.title
         )
       ),
       React.createElement(
-        'td',
+        "td",
         null,
         f.version
       ),
       React.createElement(
-        'td',
-        { className: 'mdl-data-table__cell--non-numericm' },
+        "td",
+        { className: "mdl-data-table__cell--non-numericm" },
         f.description
       ),
       React.createElement(
-        'td',
-        { className: 'mdl-data-table__cell--non-numericm' },
+        "td",
+        { className: "mdl-data-table__cell--non-numericm" },
         f.packagename
       ),
       React.createElement(
-        'td',
-        { className: 'mdl-data-table__cell--non-numericm' },
+        "td",
+        { className: "mdl-data-table__cell--non-numericm" },
         f.archname
       ),
       React.createElement(
-        'td',
+        "td",
         null,
         f.downloaded_count
       ),
       React.createElement(
-        'td',
-        { className: 'mdl-data-table__cell--non-numericm' },
+        "td",
+        { className: "mdl-data-table__cell--non-numericm" },
         appHelpers.getTimeAgo(f.created_timestamp)
       ),
       React.createElement(
-        'td',
-        { className: 'mdl-data-table__cell--non-numericm' },
+        "td",
+        { className: "mdl-data-table__cell--non-numericm" },
         appHelpers.getFileSize(f.size)
       ),
       React.createElement(
-        'td',
+        "td",
         null,
         React.createElement(
-          'a',
+          "a",
           { href: this.state.downloadLink },
           React.createElement(
-            'i',
-            { className: 'material-icons' },
-            'cloud_download'
+            "i",
+            { className: "material-icons" },
+            "cloud_download"
           )
         )
       ),
       React.createElement(
-        'td',
+        "td",
         null,
         f.ocs_compatible
       )

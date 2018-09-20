@@ -1,43 +1,27 @@
 class GetIt extends React.Component {
   constructor(props){
   	super(props);
-  	this.state = {};
-    this.onGetItButtonClick = this.onGetItButtonClick.bind(this);
+  	this.state = {
+      files:window.filesJson
+    };
   }
-
-  componentDidMount() {
-    console.log('bla bla');
-  }
-
-  onGetItButtonClick(){
-    console.log('on get it button click');
-  }
-
 
   render(){
     return (
       <div id="get-it">
         <button
-          data-toggle="modal"
-          data-target="#myModal"
-          style={{"width":"100%"}}
-          id="project_btn_getit" className="btn dropdown-toggle active btn-primary  "
-          type="button">Get it</button>
+            data-toggle="modal"
+            data-target="#myModal"
+            style={{"width":"100%"}}
+            id="project_btn_getit" className="btn dropdown-toggle active btn-primary  "
+            type="button">
+            Get it
+          </button>
           <div className="modal fade" id="myModal" tabIndex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div className="modal-dialog" role="document">
-              <div className="modal-content">
-                <div className="modal-header">
-                  <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                  <h4 className="modal-title" id="myModalLabel">Modal title</h4>
-                </div>
-                <div className="modal-body">
-                  ...
-                </div>
-                <div className="modal-footer">
-                  <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
-                  <button type="button" className="btn btn-primary">Save changes</button>
-                </div>
-              </div>
+              <GetItFilesList
+                files={this.state.files}
+              />
             </div>
           </div>
       </div>
@@ -105,13 +89,13 @@ class GetItFilesListItem extends React.Component {
 
   componentDidMount() {
     let baseUrl, downloadLinkUrlAttr;
-    if (store.getState().env === 'live') {
+    // if (store.getState().env === 'live') {
       baseUrl = 'opendesktop.org';
       downloadLinkUrlAttr = "https%3A%2F%dl.opendesktop.org%2Fapi%2F";
-    } else {
-      baseUrl = 'pling.cc';
-      downloadLinkUrlAttr = "https%3A%2F%2Fcc.ppload.com%2Fapi%2F";
-    }
+    // } else {
+      // baseUrl = 'pling.cc';
+      // downloadLinkUrlAttr = "https%3A%2F%2Fcc.ppload.com%2Fapi%2F";
+    // }
 
     const f = this.props.file;
     const timestamp =  Math.floor((new Date().getTime() / 1000)+3600)
