@@ -41,7 +41,7 @@ $this->inlineScript()->appendFile('/theme/flatui/js/lib/bootstrap-validator.min.
                                 if($errCode == Default_Model_ReviewProfileData::INVALID_USERNAME_NOT_ALLOWED) {
                                     print_r("Some characters in your username are no longer supported. Please correct it or choose another one.");
                                 } else if($errCode == Default_Model_ReviewProfileData::INVALID_USERNAME_NOT_UNIQUE) {
-                                    print_r("Due to a switch to LDAP, there is a username conflict. Please choose another one.");
+                                    print_r("Due to a switch to LDAP, there is a rare username conflict. Please make your username unique to continue.");
                                 }
                             ?>
                         </div>
