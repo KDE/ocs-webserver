@@ -91,6 +91,9 @@ $tagmodel = new Default_Model_Tags();
 $helperUserRole = new Backend_View_Helper_UserRole();
 $userRoleName = $helperUserRole->userRole();
 
+
+ $productJson = Zend_Json::encode($this->product);
+ $filesJson = $this->filesJson;
 ?>
 
     <!-- facebook -->
@@ -956,6 +959,13 @@ $userRoleName = $helperUserRole->userRole();
         $(this).popover('hide');
     });
 </script>
+
+
+<script type="text/javascript">
+var product = <?php echo $productJson ?>; 
+var filesJson  = <?php echo $filesJson ?>;  
+</script>
+
 
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
