@@ -2,7 +2,9 @@ class GetIt extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {
-      files:window.filesJson
+      product:window.product,
+      files:window.filesJson,
+      env:'test'
     };
   }
 
@@ -18,9 +20,11 @@ class GetIt extends React.Component {
             Get it
           </button>
           <div className="modal fade" id="myModal" tabIndex="-1" role="dialog" aria-labelledby="myModalLabel">
-            <div className="modal-dialog" role="document">
+            <div id="get-it-modal" className="modal-dialog" role="document">
               <GetItFilesList
                 files={this.state.files}
+                product={this.state.product}
+                env={this.state.env}
               />
             </div>
           </div>
@@ -35,6 +39,7 @@ class GetItFilesList extends React.Component {
     const files = this.props.files.map((f,index) => (
       <GetItFilesListItem
         product={this.props.product}
+        env={this.props.env}
         key={index}
         file={f}
       />
@@ -89,17 +94,17 @@ class GetItFilesListItem extends React.Component {
 
   componentDidMount() {
     let baseUrl, downloadLinkUrlAttr;
-    // if (store.getState().env === 'live') {
+    if (this.props.env === 'live') {
       baseUrl = 'opendesktop.org';
       downloadLinkUrlAttr = "https%3A%2F%dl.opendesktop.org%2Fapi%2F";
-    // } else {
-      // baseUrl = 'pling.cc';
-      // downloadLinkUrlAttr = "https%3A%2F%2Fcc.ppload.com%2Fapi%2F";
-    // }
+    } else {
+      baseUrl = 'pling.cc';
+      downloadLinkUrlAttr = "https%3A%2F%2Fcc.ppload.com%2Fapi%2F";
+    }
 
     const f = this.props.file;
     const timestamp =  Math.floor((new Date().getTime() / 1000)+3600)
-    const fileDownloadHash = appHelpers.generateFileDownloadHash(f,store.getState().env);
+    const fileDownloadHash = appHelpers.generateFileDownloadHash(f,this.props.env);
     let downloadLink = "https://"+baseUrl+
                        "/p/"+this.props.product.project_id+
                        "/startdownload?file_id="+f.id+

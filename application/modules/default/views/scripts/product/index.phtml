@@ -96,6 +96,10 @@ $userRoleName = $helperUserRole->userRole();
  $filesJson = $this->filesJson;
 ?>
 
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="/theme/react/lib/mdl/material.min.css" type="text/css" rel="stylesheet"/>
+    <link href="/theme/react/assets/css/get-it.css" type="text/css" rel="stylesheet"/>
+
     <!-- facebook -->
     <div id="fb-root"></div>
     <?php if (Zend_Auth::getInstance()->hasIdentity()) {
@@ -906,10 +910,6 @@ $userRoleName = $helperUserRole->userRole();
             </span>
         </div>
     </main>
-    <script>
-      var filesJson  = <?php echo $this->filesJson ?>;  // Tab files      
-    </script>
-    <script type="text/javascript" src="/theme/react/getit.js"></script>
 
     <script>(function (d, s, id) {
             var js, fjs = d.getElementsByTagName(s)[0];
@@ -962,10 +962,10 @@ $userRoleName = $helperUserRole->userRole();
 
 
 <script type="text/javascript">
-var product = <?php echo $productJson ?>; 
-var filesJson  = <?php echo $filesJson ?>;  
+  var product = <?php echo $productJson ?>;
+  var filesJson  = <?php echo $filesJson ?>;
 </script>
-
+<script type="text/javascript" src="/theme/react/getit.js"></script>
 
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
