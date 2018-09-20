@@ -125,7 +125,15 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
             'mail'    => $this->_identity,
             'pwd'     => $this->_credential
         ));
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - sql take seconds: ' . $this->_db->getProfiler()->getLastQueryProfile()
+        
+        $sql = str_replace(':active', Default_Model_DbTable_Member::MEMBER_ACTIVE, $sql);
+        $sql = str_replace(':deleted', Default_Model_DbTable_Member::MEMBER_NOT_DELETED, $sql);
+        $sql = str_replace(':login',"'". Default_Model_DbTable_Member::MEMBER_LOGIN_LOCAL . "'", $sql);
+        $sql = str_replace(':mail', "'". $this->_identity . "'", $sql);
+        $sql = str_replace(':pwd', "'". $this->_credential . "'", $sql);
+        
+        
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - SQL: ' . $sql . ' - sql take seconds: ' . $this->_db->getProfiler()->getLastQueryProfile()
                                                                                              ->getElapsedSecs())
         ;
         $this->_db->getProfiler()->setEnabled(false);
@@ -134,6 +142,8 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
     }
 
     /**
+     * Fetches a user by username, username ist not case sensitve
+     * 
      * @return array
      * @throws Zend_Exception
      */
@@ -147,7 +157,7 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
             m.`is_active` = :active AND 
             m.`is_deleted` = :deleted AND 
             m.`login_method` = :login AND 
-            m.`username` = :username AND 
+            LOWER(m.`username`) = LOWER(:username) AND 
             m.`password` = :pwd";
 
         $this->_db->getProfiler()->setEnabled(true);
@@ -158,7 +168,14 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
             'username' => $this->_identity,
             'pwd'      => $this->_credential
         ));
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - sql take seconds: ' . $this->_db->getProfiler()->getLastQueryProfile()
+        
+        $sql = str_replace(':active', Default_Model_DbTable_Member::MEMBER_ACTIVE, $sql);
+        $sql = str_replace(':deleted', Default_Model_DbTable_Member::MEMBER_NOT_DELETED, $sql);
+        $sql = str_replace(':login',"'". Default_Model_DbTable_Member::MEMBER_LOGIN_LOCAL . "'", $sql);
+        $sql = str_replace(':username', "'". $this->_identity . "'", $sql);
+        $sql = str_replace(':pwd', "'". $this->_credential . "'", $sql);
+        
+        Zend_Registry::get('logger')->debug(__METHOD__. ' - SQL: ' . $sql . ' - sql take seconds: ' . $this->_db->getProfiler()->getLastQueryProfile()
                                                                                              ->getElapsedSecs())
         ;
         $this->_db->getProfiler()->setEnabled(false);
