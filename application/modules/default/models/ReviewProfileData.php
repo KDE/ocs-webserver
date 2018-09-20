@@ -27,6 +27,10 @@ class Default_Model_ReviewProfileData
 
     const INVALID_USERNAME = 1;
     const INVALID_EMAIL = 2;
+    
+    const INVALID_USERNAME_NOT_ALLOWED = 11;
+    const INVALID_USERNAME_NOT_UNIQUE = 12;
+    
 
     protected $message;
     protected $errorCode;
@@ -49,10 +53,12 @@ class Default_Model_ReviewProfileData
         if (false == $result) {
             return false;
         }
+        /*
         $result = $this->hasValidEmail($member_data);
         if (false == $result) {
             return false;
         }
+        */
 
         return true;
     }
@@ -68,7 +74,7 @@ class Default_Model_ReviewProfileData
         foreach ($this->usernameValidationChain as $validator) {
             $result = $this->$validator($member_data);
             if (false == $result) {
-                $this->errorCode |= self::INVALID_USERNAME;
+                //$this->errorCode |= self::INVALID_USERNAME;
                 return false;
             }
         }
@@ -82,7 +88,7 @@ class Default_Model_ReviewProfileData
         foreach ($this->emailValidationChain as $validator) {
             $result = $this->$validator($member_data);
             if (false == $result) {
-                $this->errorCode |= self::INVALID_EMAIL;
+                //$this->errorCode |= self::INVALID_EMAIL;
                 return false;
             }
         }
@@ -159,10 +165,11 @@ class Default_Model_ReviewProfileData
      */
     private function isUsernameValid($member_data)
     {
-        $usernameValidChars = new Zend_Validate_Regex('/^(?=.{4,40}$)(?![-])(?!.*[-]{2})[a-z0-9-]+(?<![-])$/');
+        $usernameValidChars = new Zend_Validate_Regex('/^(?=.{3,40}$)(?![-])(?!.*[-]{2})[a-zA-Z0-9-]+(?<![-])$/');
 
         if (false == $usernameValidChars->isValid($member_data->username)) {
             $this->message['username'][] = $usernameValidChars->getMessages();
+            $this->errorCode = $this::INVALID_USERNAME_NOT_ALLOWED;
 
             return false;
         }
@@ -190,7 +197,7 @@ class Default_Model_ReviewProfileData
 
         if (is_array($result) AND count($result) > 0) {
             $this->message['username'][] = array('username is not unique');
-
+            $this->errorCode = $this::INVALID_USERNAME_NOT_UNIQUE;
             return false;
         }
 
