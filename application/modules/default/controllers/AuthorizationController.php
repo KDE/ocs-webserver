@@ -416,7 +416,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
 
         
         //user has to correct his data?
-        
+        /*
         $modelReviewProfile = new Default_Model_ReviewProfileData();
         if (false === $modelReviewProfile->hasValidProfile($auth->getStorage()->read())) {
             if ($this->_request->isXmlHttpRequest()) {
@@ -431,6 +431,8 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         
             return;
         }
+         * 
+         */
 
         // handle redirect
         $this->handleRedirect($userId);
