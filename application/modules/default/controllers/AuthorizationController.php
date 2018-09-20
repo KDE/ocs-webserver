@@ -414,20 +414,23 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         setcookie(Default_Model_SingleSignOnToken::ACTION_LOGIN, $token_id, time() + 120, '/',
             Local_Tools_ParseDomain::get_domain($this->getRequest()->getHttpHost()), null, true);
 
-        //$modelReviewProfile = new Default_Model_ReviewProfileData();
-        //if (false === $modelReviewProfile->hasValidProfile($auth->getStorage()->read())) {
-        //    if ($this->_request->isXmlHttpRequest()) {
-        //        $redirect = $this->getParam('redirect') ? '/redirect/' . $this->getParam('redirect') : '';
-        //        $this->_helper->json(array('status'   => 'ok',
-        //                                   'redirect' => '/r/change/e/' . $modelReviewProfile->getErrorCode() . $redirect
-        //        ));
-        //    } else {
-        //        $this->getRequest()->setParam('member_id', $userId);
-        //        $this->redirect("/r/change/e/" . $modelReviewProfile->getErrorCode(), $this->getAllParams());
-        //    }
-        //
-        //    return;
-        //}
+        
+        //user has to correct his data?
+        
+        $modelReviewProfile = new Default_Model_ReviewProfileData();
+        if (false === $modelReviewProfile->hasValidProfile($auth->getStorage()->read())) {
+            if ($this->_request->isXmlHttpRequest()) {
+                $redirect = $this->getParam('redirect') ? '/redirect/' . $this->getParam('redirect') : '';
+                $this->_helper->json(array('status'   => 'ok',
+                                           'redirect' => '/r/change/e/' . $modelReviewProfile->getErrorCode() . $redirect
+                ));
+            } else {
+                $this->getRequest()->setParam('member_id', $userId);
+                $this->redirect("/r/change/e/" . $modelReviewProfile->getErrorCode(), $this->getAllParams());
+            }
+        
+            return;
+        }
 
         // handle redirect
         $this->handleRedirect($userId);

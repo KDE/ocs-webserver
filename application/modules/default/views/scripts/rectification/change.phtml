@@ -36,7 +36,14 @@ $this->inlineScript()->appendFile('/theme/flatui/js/lib/bootstrap-validator.min.
                         <h3><?= $this->translate('Please change your profile.') ?></h3>
 
                         <div id="help-block" class="help-block">
-                            <?= $this->translate('For technical reasons, we have to ask you to change your profile information. ') ?>
+                            <?php
+                                $errCode = $this->errorCode;
+                                if($errCode == Default_Model_ReviewProfileData::INVALID_USERNAME_NOT_ALLOWED) {
+                                    print_r("Your username contains invalid characters. Please correct it.");
+                                } else if($errCode == Default_Model_ReviewProfileData::INVALID_USERNAME_NOT_UNIQUE) {
+                                    print_r("Your username is also being used by another user. Please change it.");
+                                }
+                            ?>
                         </div>
                         <div id="error" class="center text-error help-block">
                             <?php if ($this->error && isset($this->errorText)): ?>
@@ -52,13 +59,14 @@ $this->inlineScript()->appendFile('/theme/flatui/js/lib/bootstrap-validator.min.
                             }
                             ?>
 
-                            <?php if ($this->errorCode & Default_Model_ReviewProfileData::INVALID_USERNAME) : ?>
+                            <?php if (($this->errorCode == Default_Model_ReviewProfileData::INVALID_USERNAME_NOT_ALLOWED || $this->errorCode == Default_Model_ReviewProfileData::INVALID_USERNAME_NOT_UNIQUE) ) : ?>
                             <div class="form-group has-feedback">
-                                <label for="username" class="control-label">Please enter a new username, which may consist of lowercase english letters, numbers, hyphen, underscore and/or period.</label>
+                                <label for="username" class="control-label">The username has to be unique and may only contain lower case alphanumeric characters or single hyphens, and cannot begin or end with a hyphen</label>
                                 <input name="username" id="username" value="" type="text" placeholder="Username" data-minlength="4" class="form-control" required data-minlength-error="Minimum of 4 characters" data-maxlength="40" data-maxlength-error="Maximum of 40 characters"><div class="help-block with-errors"></div>
                             </div>
                             <?php endif ?>
-                            <?php if ($this->errorCode & Default_Model_ReviewProfileData::INVALID_EMAIL) : ?>
+                            
+                            <?php if ($this->errorCode == Default_Model_ReviewProfileData::INVALID_EMAIL) : ?>
                             <div class="form-group has-feedback">
                                 <label for="email" class="control-label">Please enter a valid email address.</label>
                                 <input type="email" class="form-control" placeholder="Email" value="" id="mail" name="mail" required><div class="help-block with-errors"></div>

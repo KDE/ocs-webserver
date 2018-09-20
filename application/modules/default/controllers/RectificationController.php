@@ -66,11 +66,16 @@ class RectificationController extends Local_Controller_Action_DomainSwitch
         if (isset($values['username']) AND ($member->username != $values['username'])) {
             $oldUsername = $member->username;
             $member->username = $values['username'];
+            $member->username_old = $oldUsername;
             $member->save();
             $this->_authMember->username = $values['username'];
         }
         if (isset($values['mail'])) {
             $this->_authMember->mail = $values['mail'];
+            
+            $member->mail_old = $member->mail;
+            $member->save();
+            
             $modelEmail = new Default_Model_MemberEmail();
             $dataMail = $modelEmail->saveEmailAsPrimary($this->_authMember->member_id, $values['mail']);
             $modelEmail->sendConfirmationMail((array)$this->_authMember, $dataMail->email_verification_value);
