@@ -488,12 +488,8 @@ class GetItFilesListItem extends React.Component {
         null,
         React.createElement(
           "a",
-          { href: this.state.downloadLink },
-          React.createElement(
-            "i",
-            { className: "material-icons" },
-            "cloud_download"
-          )
+          { href: this.state.downloadLink, className: "btn btn-native" },
+          React.createElement("img", { src: "/images/system/download.svg", alt: "download", style: { width: "20px", height: "20px" } })
         )
       ),
       React.createElement(

@@ -134,7 +134,7 @@ class GetItFilesListItem extends React.Component {
         <td>{f.downloaded_count}</td>
         <td className="mdl-data-table__cell--non-numericm">{appHelpers.getTimeAgo(f.created_timestamp)}</td>
         <td className="mdl-data-table__cell--non-numericm">{appHelpers.getFileSize(f.size)}</td>
-        <td><a href={this.state.downloadLink}><i className="material-icons">cloud_download</i></a></td>
+        <td><a href={this.state.downloadLink} className="btn btn-native"><img src="/images/system/download.svg" alt="download" style={{width:"20px",height:"20px"}}/></a></td>
         <td>{f.ocs_compatible}</td>
       </tr>
     )
