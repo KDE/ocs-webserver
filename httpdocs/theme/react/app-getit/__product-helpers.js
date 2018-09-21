@@ -207,6 +207,8 @@ window.productHelpers = (function(){
     function generateOcsUrl(url, type, filename) {
       if (!url || !type) { return ''; }
       if (!filename) { filename = url.split('/').pop().split('?').shift(); }
+      console.log(url);
+      console.log(encodeURIComponent(url));
       return 'ocs://install' + '?url=' + encodeURIComponent(url) + '&type=' + encodeURIComponent(type) + '&filename=' + encodeURIComponent(filename);
     }
 

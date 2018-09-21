@@ -5,7 +5,7 @@ class GetIt extends React.Component {
       product:window.product,
       files:window.filesJson,
       xdgType:window.xdgTypeJson,
-      env:'test'
+      env:appHelpers.getEnv(window.location.hostname)
     };
   }
 
@@ -48,6 +48,10 @@ class GetItFilesList extends React.Component {
 
   toggleActiveTab(tab){
     this.setState({activeTab:tab});
+  }
+
+  componentDidMount() {
+
   }
 
   render(){
@@ -96,8 +100,7 @@ class GetItFilesList extends React.Component {
           <th className="mdl-data-table__cell--non-numericm">Downloads</th>
           <th className="mdl-data-table__cell--non-numericm">Date</th>
           <th className="mdl-data-table__cell--non-numericm">Filesize</th>
-          <th className="mdl-data-table__cell--non-numericm">DL</th>
-          <th className="mdl-data-table__cell--non-numericm">OCS-Install</th>
+          <th className="mdl-data-table__cell--non-numericm">Action</th>
         </tr>
       </thead>
     );
@@ -139,7 +142,7 @@ class GetItFilesList extends React.Component {
            </ul>
         </div>
         <div id="files-tab" className="product-tab">
-          <table id="active-files-table" className="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+          <table id="files-table" className="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
             {tableHeader}
             {tableFilesDisplay}
           </table>
@@ -156,15 +159,13 @@ class GetItFilesListItem extends React.Component {
   }
 
   componentDidMount() {
-    let baseUrl, downloadLinkUrlAttr;
+    let downloadLinkUrlAttr;
     if (this.props.env === 'live') {
-      baseUrl = 'opendesktop.org';
       downloadLinkUrlAttr = "https%3A%2F%dl.opendesktop.org%2Fapi%2F";
     } else {
-      baseUrl = 'pling.cc';
       downloadLinkUrlAttr = "https%3A%2F%2Fcc.ppload.com%2Fapi%2F";
     }
-
+    const baseUrl = window.location.host;
     const f = this.props.file;
     const timestamp =  Math.floor((new Date().getTime() / 1000)+3600)
     const fileDownloadHash = appHelpers.generateFileDownloadHash(f,this.props.env);
@@ -175,7 +176,7 @@ class GetItFilesListItem extends React.Component {
                        "&file_type="+f.type+
                        "&file_size="+f.size+
                        "&url="+downloadLinkUrlAttr+
-                       "files%2Fdownloadfile%2Fid%2F"+f.id+
+                       "files%2Fdownload%2Fid%2F"+f.id+
                        "%2Fs%2F"+fileDownloadHash+
                        "%2Ft%2F"+timestamp+
                        "%2Fu%2F"+this.props.product.member_id+
@@ -200,7 +201,10 @@ class GetItFilesListItem extends React.Component {
     let ocsInstallLinkDisplay;
     if (this.state.ocsInstallLink){
       ocsInstallLinkDisplay = (
-        <a className="btn btn-native download-button" href={this.state.ocsInstallLink}>Install</a>
+        <span>
+           &nbsp; - or - &nbsp;
+           <a href={this.state.ocsInstallLink}>Install</a>           
+        </span>
       )
     }
 
@@ -217,11 +221,9 @@ class GetItFilesListItem extends React.Component {
         <td className="mdl-data-table__cell--non-numericm">{appHelpers.getTimeAgo(f.created_timestamp)}</td>
         <td className="mdl-data-table__cell--non-numericm">{appHelpers.getFileSize(f.size)}</td>
         <td>
-          <a href={this.state.downloadLink} className="btn btn-native download-button">
-            <img src="/images/system/download.svg" alt="download" style={{width:"20px",height:"20px"}}/>
-          </a>
+          <a href={this.state.downloadLink}>Download</a>
+          {ocsInstallLinkDisplay}
         </td>
-        <td>{ocsInstallLinkDisplay}</td>
       </tr>
     )
   }

@@ -57,20 +57,39 @@ out: ../css/get-it.css, sourcemap: true, compress: true
   .mdl-data-table {
     width: 100%;
     border: 0;
+
     thead,tbody {
       tr {
         td,th {
           text-align: left;
           padding: 5px !important;
+
           .download-button {
             color: white;
             padding: 3px 5px;
           }
         }
         th {
+          height: 35px;
           color:#4e4e4e !important;
         }
       }
     }
+
+    thead {
+      tr {
+        height: 35px;
+      }
+    }
+
+    tbody {
+      tr {
+        height: 45px;
+        td {
+          height: 45px;
+        }
+      }
+    }
+
   }
 }

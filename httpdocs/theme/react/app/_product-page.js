@@ -1091,7 +1091,7 @@ class ProductViewFilesTabItem extends React.Component {
                        "&file_type="+f.type+
                        "&file_size="+f.size+
                        "&url="+downloadLinkUrlAttr+
-                       "files%2Fdownloadfile%2Fid%2F"+f.id+
+                       "files%2Fdownload%2Fid%2F"+f.id+
                        "%2Fs%2F"+fileDownloadHash+
                        "%2Ft%2F"+timestamp+
                        "%2Fu%2F"+this.props.product.member_id+

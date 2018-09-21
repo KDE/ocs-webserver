@@ -313,6 +313,8 @@ window.productHelpers = function () {
       if (!filename) {
         filename = url.split('/').pop().split('?').shift();
       }
+      console.log(url);
+      console.log(encodeURIComponent(url));
       return 'ocs://install' + '?url=' + encodeURIComponent(url) + '&type=' + encodeURIComponent(type) + '&filename=' + encodeURIComponent(filename);
     }
 
@@ -338,7 +340,7 @@ class GetIt extends React.Component {
       product: window.product,
       files: window.filesJson,
       xdgType: window.xdgTypeJson,
-      env: 'test'
+      env: appHelpers.getEnv(window.location.hostname)
     };
   }
 
@@ -387,6 +389,8 @@ class GetItFilesList extends React.Component {
   toggleActiveTab(tab) {
     this.setState({ activeTab: tab });
   }
+
+  componentDidMount() {}
 
   render() {
 
@@ -483,12 +487,7 @@ class GetItFilesList extends React.Component {
         React.createElement(
           "th",
           { className: "mdl-data-table__cell--non-numericm" },
-          "DL"
-        ),
-        React.createElement(
-          "th",
-          { className: "mdl-data-table__cell--non-numericm" },
-          "OCS-Install"
+          "Action"
         )
       )
     );
@@ -566,7 +565,7 @@ class GetItFilesList extends React.Component {
         { id: "files-tab", className: "product-tab" },
         React.createElement(
           "table",
-          { id: "active-files-table", className: "mdl-data-table mdl-js-data-table mdl-shadow--2dp" },
+          { id: "files-table", className: "mdl-data-table mdl-js-data-table mdl-shadow--2dp" },
           tableHeader,
           tableFilesDisplay
         )
@@ -582,19 +581,17 @@ class GetItFilesListItem extends React.Component {
   }
 
   componentDidMount() {
-    let baseUrl, downloadLinkUrlAttr;
+    let downloadLinkUrlAttr;
     if (this.props.env === 'live') {
-      baseUrl = 'opendesktop.org';
       downloadLinkUrlAttr = "https%3A%2F%dl.opendesktop.org%2Fapi%2F";
     } else {
-      baseUrl = 'pling.cc';
       downloadLinkUrlAttr = "https%3A%2F%2Fcc.ppload.com%2Fapi%2F";
     }
-
+    const baseUrl = window.location.host;
     const f = this.props.file;
     const timestamp = Math.floor(new Date().getTime() / 1000 + 3600);
     const fileDownloadHash = appHelpers.generateFileDownloadHash(f, this.props.env);
-    const downloadLink = "https://" + baseUrl + "/p/" + this.props.product.project_id + "/startdownload?file_id=" + f.id + "&file_name=" + f.title + "&file_type=" + f.type + "&file_size=" + f.size + "&url=" + downloadLinkUrlAttr + "files%2Fdownloadfile%2Fid%2F" + f.id + "%2Fs%2F" + fileDownloadHash + "%2Ft%2F" + timestamp + "%2Fu%2F" + this.props.product.member_id + "%2F" + f.title;
+    const downloadLink = "https://" + baseUrl + "/p/" + this.props.product.project_id + "/startdownload?file_id=" + f.id + "&file_name=" + f.title + "&file_type=" + f.type + "&file_size=" + f.size + "&url=" + downloadLinkUrlAttr + "files%2Fdownload%2Fid%2F" + f.id + "%2Fs%2F" + fileDownloadHash + "%2Ft%2F" + timestamp + "%2Fu%2F" + this.props.product.member_id + "%2F" + f.title;
 
     const ocsInstallLink = productHelpers.generateOcsInstallLink(f, this.props.xdgType, downloadLink);
     this.setState({
@@ -615,9 +612,14 @@ class GetItFilesListItem extends React.Component {
     let ocsInstallLinkDisplay;
     if (this.state.ocsInstallLink) {
       ocsInstallLinkDisplay = React.createElement(
-        "a",
-        { className: "btn btn-native download-button", href: this.state.ocsInstallLink },
-        "Install"
+        "span",
+        null,
+        "\xA0 - or - \xA0",
+        React.createElement(
+          "a",
+          { href: this.state.ocsInstallLink },
+          "Install"
+        )
       );
     }
 
@@ -673,13 +675,9 @@ class GetItFilesListItem extends React.Component {
         null,
         React.createElement(
           "a",
-          { href: this.state.downloadLink, className: "btn btn-native download-button" },
-          React.createElement("img", { src: "/images/system/download.svg", alt: "download", style: { width: "20px", height: "20px" } })
-        )
-      ),
-      React.createElement(
-        "td",
-        null,
+          { href: this.state.downloadLink },
+          "Download"
+        ),
         ocsInstallLinkDisplay
       )
     );
