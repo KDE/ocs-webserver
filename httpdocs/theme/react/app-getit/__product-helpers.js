@@ -148,8 +148,8 @@ window.productHelpers = (function(){
     return laplace_score;
   }
 
-  function generateOcsInstallLink(f){
-    let ocsInstallLink,
+  function generateOcsInstallLink(f,xdgType,downloadUrl){
+    let ocsUrl,
         osId = '',
         link = '',
         licenseId = '',
@@ -195,78 +195,21 @@ window.productHelpers = (function(){
          }
         }
       });
-
-      if (typeof link !== 'undefined' && link) {
-          ocsUrl = generateOcsUrl(
-            decodeURIComponent(link),
-            $pploadCollection.attr('data-xdg-type')
-          );
-      } else if (!link) {
-          ocsUrl = generateOcsUrl(
-            downloadUrl,
-            $pploadCollection.attr('data-xdg-type'),
-            this.name
-          );
-      }
-
-      console.log(fileTags);
     }
 
-    /*
-    var fileDescription = '';
-                                    if (this.description) {
-                                        fileDescription = this.description;
-                                    }
-                                    var licenseId = '';
-                                    var license = '';
-                                    var packagetypeId = '';
-                                    var architectureId = '';
-                                    if (this.tags) {
-                                         fileTags = this.tags;
+    if (typeof link !== 'undefined' && link) {
+        ocsUrl = generateOcsUrl(decodeURIComponent(link),xdgType);
+    } else if (!link) {
+        ocsUrl = generateOcsUrl(downloadUrl,xdgType,f.name);
+    }
 
-                                         $.each(fileTags.split(','), function () {
-
-                                             if(this.indexOf("##")==-1) {
-                                              var tagStr = this.split('-');
-                                              if (tagStr.length == 2 && tagStr[0] == 'os') {
-                                                  osId = tagStr[1];
-                                              } else if (tagStr.length == 2 && tagStr[0] == 'licensetype') {
-                                                  licenseId = tagStr[1];
-                                              } else if (tagStr.length == 2 && tagStr[0] == 'packagetypeid') {
-                                                  packagetypeId = tagStr[1];
-                                              } else if (tagStr.length == 2 && tagStr[0] == 'architectureid') {
-                                                  architectureId = tagStr[1];
-                                              }
-                                             } else {
-                                              var tagStr = this.split('##');
-                                              if (tagStr.length == 2 && tagStr[0] == 'link') {
-                                                  link = tagStr[1];
-                                              } else if (tagStr.length == 2 && tagStr[0] == 'license') {
-                                                  license = tagStr[1];
-                                                  license = Base64.decode(license);
-                                              } else if (tagStr.length == 2 && tagStr[0] == 'packagetypeid') {
-                                                  packagetypeId = tagStr[1];
-                                              } else if (tagStr.length == 2 && tagStr[0] == 'architectureid') {
-                                                  architectureId = tagStr[1];
-                                              }
-                                             }
-                                             /*else if (tagStr.length == 2 && tagStr[0] == 'package') {
-                                              packageId = tagStr[1];
-                                              }
-                                              else if (tagStr.length == 2 && tagStr[0] == 'arch') {
-                                              archId = tagStr[1];
-                                              }
-                                              else if (tagStr.length == 2 && tagStr[0] == 'device') {
-                                              deviceId = tagStr[1];
-                                              }
-                                         });
-                                     }
-
-                                     var ocsUrl = '';
-
-    function generateOcsUrl(url, type, filename) { if (!url || !type) { return ''; } if (!filename) { filename = url.split('/').pop().split('?').shift(); } return 'ocs://install' + '?url=' + encodeURIComponent(url) + '&type=' + encodeURIComponent(type) + '&filename=' + encodeURIComponent(filename); }
-    */
-    return ocsInstallLink;
+    function generateOcsUrl(url, type, filename) {
+      if (!url || !type) { return ''; }
+      if (!filename) { filename = url.split('/').pop().split('?').shift(); }
+      return 'ocs://install' + '?url=' + encodeURIComponent(url) + '&type=' + encodeURIComponent(type) + '&filename=' + encodeURIComponent(filename);
+    }
+    console.log(ocsUrl);
+    return ocsUrl;
   }
 
   return {

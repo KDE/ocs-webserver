@@ -252,8 +252,8 @@ window.productHelpers = function () {
     return laplace_score;
   }
 
-  function generateOcsInstallLink(f) {
-    let ocsInstallLink,
+  function generateOcsInstallLink(f, xdgType, downloadUrl) {
+    let ocsUrl,
         osId = '',
         link = '',
         licenseId = '',
@@ -298,67 +298,25 @@ window.productHelpers = function () {
           }
         }
       });
-
-      if (typeof link !== 'undefined' && link) {
-        ocsUrl = generateOcsUrl(decodeURIComponent(link), $pploadCollection.attr('data-xdg-type'));
-      } else if (!link) {
-        ocsUrl = generateOcsUrl(downloadUrl, $pploadCollection.attr('data-xdg-type'), this.name);
-      }
-
-      console.log(fileTags);
     }
 
-    /*
-    var fileDescription = '';
-                                    if (this.description) {
-                                        fileDescription = this.description;
-                                    }
-                                    var licenseId = '';
-                                    var license = '';
-                                    var packagetypeId = '';
-                                    var architectureId = '';
-                                    if (this.tags) {
-                                         fileTags = this.tags;
-                                          $.each(fileTags.split(','), function () {
-                                              if(this.indexOf("##")==-1) {
-                                              var tagStr = this.split('-');
-                                              if (tagStr.length == 2 && tagStr[0] == 'os') {
-                                                  osId = tagStr[1];
-                                              } else if (tagStr.length == 2 && tagStr[0] == 'licensetype') {
-                                                  licenseId = tagStr[1];
-                                              } else if (tagStr.length == 2 && tagStr[0] == 'packagetypeid') {
-                                                  packagetypeId = tagStr[1];
-                                              } else if (tagStr.length == 2 && tagStr[0] == 'architectureid') {
-                                                  architectureId = tagStr[1];
-                                              }
-                                             } else {
-                                              var tagStr = this.split('##');
-                                              if (tagStr.length == 2 && tagStr[0] == 'link') {
-                                                  link = tagStr[1];
-                                              } else if (tagStr.length == 2 && tagStr[0] == 'license') {
-                                                  license = tagStr[1];
-                                                  license = Base64.decode(license);
-                                              } else if (tagStr.length == 2 && tagStr[0] == 'packagetypeid') {
-                                                  packagetypeId = tagStr[1];
-                                              } else if (tagStr.length == 2 && tagStr[0] == 'architectureid') {
-                                                  architectureId = tagStr[1];
-                                              }
-                                             }
-                                             /*else if (tagStr.length == 2 && tagStr[0] == 'package') {
-                                              packageId = tagStr[1];
-                                              }
-                                              else if (tagStr.length == 2 && tagStr[0] == 'arch') {
-                                              archId = tagStr[1];
-                                              }
-                                              else if (tagStr.length == 2 && tagStr[0] == 'device') {
-                                              deviceId = tagStr[1];
-                                              }
-                                         });
-                                     }
-                                      var ocsUrl = '';
-     function generateOcsUrl(url, type, filename) { if (!url || !type) { return ''; } if (!filename) { filename = url.split('/').pop().split('?').shift(); } return 'ocs://install' + '?url=' + encodeURIComponent(url) + '&type=' + encodeURIComponent(type) + '&filename=' + encodeURIComponent(filename); }
-    */
-    return ocsInstallLink;
+    if (typeof link !== 'undefined' && link) {
+      ocsUrl = generateOcsUrl(decodeURIComponent(link), xdgType);
+    } else if (!link) {
+      ocsUrl = generateOcsUrl(downloadUrl, xdgType, f.name);
+    }
+
+    function generateOcsUrl(url, type, filename) {
+      if (!url || !type) {
+        return '';
+      }
+      if (!filename) {
+        filename = url.split('/').pop().split('?').shift();
+      }
+      return 'ocs://install' + '?url=' + encodeURIComponent(url) + '&type=' + encodeURIComponent(type) + '&filename=' + encodeURIComponent(filename);
+    }
+    console.log(ocsUrl);
+    return ocsUrl;
   }
 
   return {
@@ -379,13 +337,13 @@ class GetIt extends React.Component {
     this.state = {
       product: window.product,
       files: window.filesJson,
-      xdgType: xdgTypeJson,
+      xdgType: window.xdgTypeJson,
       env: 'test'
     };
   }
 
   render() {
-    console.log(this.state.files);
+    console.log(this.state);
     return React.createElement(
       "div",
       { id: "get-it" },
@@ -408,7 +366,8 @@ class GetIt extends React.Component {
           React.createElement(GetItFilesList, {
             files: this.state.files,
             product: this.state.product,
-            env: this.state.env
+            env: this.state.env,
+            xdgType: this.state.xdgType
           })
         )
       )
@@ -433,12 +392,14 @@ class GetItFilesList extends React.Component {
 
     const activeFiles = this.props.files.filter(file => file.active == "1").map((f, index) => React.createElement(GetItFilesListItem, {
       product: this.props.product,
+      xdgType: this.props.xdgType,
       env: this.props.env,
       key: index,
       file: f
     }));
     const archivedFiles = this.props.files.filter(file => file.active == "0").map((f, index) => React.createElement(GetItFilesListItem, {
       product: this.props.product,
+      xdgType: this.props.xdgType,
       env: this.props.env,
       key: index,
       file: f
@@ -635,7 +596,7 @@ class GetItFilesListItem extends React.Component {
     const fileDownloadHash = appHelpers.generateFileDownloadHash(f, this.props.env);
     const downloadLink = "https://" + baseUrl + "/p/" + this.props.product.project_id + "/startdownload?file_id=" + f.id + "&file_name=" + f.title + "&file_type=" + f.type + "&file_size=" + f.size + "&url=" + downloadLinkUrlAttr + "files%2Fdownloadfile%2Fid%2F" + f.id + "%2Fs%2F" + fileDownloadHash + "%2Ft%2F" + timestamp + "%2Fu%2F" + this.props.product.member_id + "%2F" + f.title;
 
-    const ocsInstallLink = productHelpers.generateOcsInstallLink(f);
+    const ocsInstallLink = productHelpers.generateOcsInstallLink(f, this.props.xdgType, downloadLink);
     this.setState({ downloadLink: downloadLink });
   }
 

@@ -4,13 +4,13 @@ class GetIt extends React.Component {
   	this.state = {
       product:window.product,
       files:window.filesJson,
-      xdgType:xdgTypeJson,
+      xdgType:window.xdgTypeJson,
       env:'test'
     };
   }
 
   render(){
-    console.log(this.state.files);
+    console.log(this.state);
     return (
       <div id="get-it">
         <button
@@ -28,6 +28,7 @@ class GetIt extends React.Component {
                 files={this.state.files}
                 product={this.state.product}
                 env={this.state.env}
+                xdgType={this.state.xdgType}
               />
             </div>
           </div>
@@ -54,6 +55,7 @@ class GetItFilesList extends React.Component {
     const activeFiles = this.props.files.filter(file => file.active == "1").map((f,index) => (
       <GetItFilesListItem
         product={this.props.product}
+        xdgType={this.props.xdgType}
         env={this.props.env}
         key={index}
         file={f}
@@ -62,6 +64,7 @@ class GetItFilesList extends React.Component {
     const archivedFiles = this.props.files.filter(file => file.active == "0").map((f,index) => (
       <GetItFilesListItem
         product={this.props.product}
+        xdgType={this.props.xdgType}
         env={this.props.env}
         key={index}
         file={f}
@@ -178,7 +181,7 @@ class GetItFilesListItem extends React.Component {
                        "%2Fu%2F"+this.props.product.member_id+
                        "%2F"+f.title;
 
-    const ocsInstallLink = productHelpers.generateOcsInstallLink(f);
+    const ocsInstallLink = productHelpers.generateOcsInstallLink(f,this.props.xdgType,downloadLink);
     this.setState({downloadLink:downloadLink});
   }
 
