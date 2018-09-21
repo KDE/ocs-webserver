@@ -182,7 +182,10 @@ class GetItFilesListItem extends React.Component {
                        "%2F"+f.title;
 
     const ocsInstallLink = productHelpers.generateOcsInstallLink(f,this.props.xdgType,downloadLink);
-    this.setState({downloadLink:downloadLink});
+    this.setState({
+      downloadLink:downloadLink,
+      ocsInstallLink:ocsInstallLink
+    });
   }
 
   render(){
@@ -193,6 +196,14 @@ class GetItFilesListItem extends React.Component {
     } else {
       title = f.title;
     }
+
+    let ocsInstallLinkDisplay;
+    if (this.state.ocsInstallLink){
+      ocsInstallLinkDisplay = (
+        <a className="btn btn-native download-button" href={this.state.ocsInstallLink}>Install</a>
+      )
+    }
+
     return (
       <tr>
         <td className="mdl-data-table__cell--non-numericm">
@@ -205,8 +216,12 @@ class GetItFilesListItem extends React.Component {
         <td>{f.downloaded_count}</td>
         <td className="mdl-data-table__cell--non-numericm">{appHelpers.getTimeAgo(f.created_timestamp)}</td>
         <td className="mdl-data-table__cell--non-numericm">{appHelpers.getFileSize(f.size)}</td>
-        <td><a href={this.state.downloadLink} className="btn btn-native download-button"><img src="/images/system/download.svg" alt="download" style={{width:"20px",height:"20px"}}/></a></td>
-        <td>{f.ocs_compatible}</td>
+        <td>
+          <a href={this.state.downloadLink} className="btn btn-native download-button">
+            <img src="/images/system/download.svg" alt="download" style={{width:"20px",height:"20px"}}/>
+          </a>
+        </td>
+        <td>{ocsInstallLinkDisplay}</td>
       </tr>
     )
   }

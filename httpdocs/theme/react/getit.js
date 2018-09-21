@@ -307,12 +307,6 @@ window.productHelpers = function () {
     }
 
     function generateOcsUrl(url, type, filename) {
-
-      console.log('link: ' + link);
-      console.log('url: ' + url);
-      console.log('type: ' + type);
-      console.log('filename: ' + filename);
-
       if (!url || !type) {
         return '';
       }
@@ -321,7 +315,7 @@ window.productHelpers = function () {
       }
       return 'ocs://install' + '?url=' + encodeURIComponent(url) + '&type=' + encodeURIComponent(type) + '&filename=' + encodeURIComponent(filename);
     }
-    console.log(ocsUrl);
+
     return ocsUrl;
   }
 
@@ -603,7 +597,10 @@ class GetItFilesListItem extends React.Component {
     const downloadLink = "https://" + baseUrl + "/p/" + this.props.product.project_id + "/startdownload?file_id=" + f.id + "&file_name=" + f.title + "&file_type=" + f.type + "&file_size=" + f.size + "&url=" + downloadLinkUrlAttr + "files%2Fdownloadfile%2Fid%2F" + f.id + "%2Fs%2F" + fileDownloadHash + "%2Ft%2F" + timestamp + "%2Fu%2F" + this.props.product.member_id + "%2F" + f.title;
 
     const ocsInstallLink = productHelpers.generateOcsInstallLink(f, this.props.xdgType, downloadLink);
-    this.setState({ downloadLink: downloadLink });
+    this.setState({
+      downloadLink: downloadLink,
+      ocsInstallLink: ocsInstallLink
+    });
   }
 
   render() {
@@ -614,6 +611,16 @@ class GetItFilesListItem extends React.Component {
     } else {
       title = f.title;
     }
+
+    let ocsInstallLinkDisplay;
+    if (this.state.ocsInstallLink) {
+      ocsInstallLinkDisplay = React.createElement(
+        "a",
+        { className: "btn btn-native download-button", href: this.state.ocsInstallLink },
+        "Install"
+      );
+    }
+
     return React.createElement(
       "tr",
       null,
@@ -673,7 +680,7 @@ class GetItFilesListItem extends React.Component {
       React.createElement(
         "td",
         null,
-        f.ocs_compatible
+        ocsInstallLinkDisplay
       )
     );
   }
