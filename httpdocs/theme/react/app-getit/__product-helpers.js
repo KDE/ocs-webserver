@@ -149,20 +149,70 @@ window.productHelpers = (function(){
   }
 
   function generateOcsInstallLink(f){
-    console.log(f);
-
     let ocsInstallLink,
-        fileDescription
-    if (f.description){
-      fileDescription = f.description
-    }
+        osId = '',
+        link = '',
+        licenseId = '',
+        license = '',
+        packagetypeId = '',
+        architectureId = '',
+        filesTags,
+        fileDescription = '';
 
-    /*let
+    if (f.description){
+      fileDescription = f.description;
+    }
 
     if (f.tags){
+      fileTags = f.tags.split(',');
+      fileTags.forEach(function(tag,index){
+        let tagStr;
+        if (tag.length > 0){
+          if (tag.indexOf("##")==-1){
+            tagStr = tag.split('-');
+            if (tagStr.length == 2 && tagStr[0] == 'os') {
+              osId = tagStr[1];
+            } else if (tagStr.length == 2 && tagStr[0] == 'licensetype') {
+              licenseId = tagStr[1];
+            } else if (tagStr.length == 2 && tagStr[0] == 'packagetypeid') {
+              packagetypeId = tagStr[1];
+            } else if (tagStr.length == 2 && tagStr[0] == 'architectureid') {
+              architectureId = tagStr[1];
+            }
+          }
+          else {
+            tagStr = tag.split('##');
+             if (tagStr.length == 2 && tagStr[0] == 'link') {
+                link = tagStr[1];
+             } else if (tagStr.length == 2 && tagStr[0] == 'license') {
+                license = tagStr[1];
+                license = Base64.decode(license);
+             } else if (tagStr.length == 2 && tagStr[0] == 'packagetypeid') {
+                packagetypeId = tagStr[1];
+             } else if (tagStr.length == 2 && tagStr[0] == 'architectureid') {
+                architectureId = tagStr[1];
+             }
+         }
+        }
+      });
 
+      if (typeof link !== 'undefined' && link) {
+          ocsUrl = generateOcsUrl(
+            decodeURIComponent(link),
+            $pploadCollection.attr('data-xdg-type')
+          );
+      } else if (!link) {
+          ocsUrl = generateOcsUrl(
+            downloadUrl,
+            $pploadCollection.attr('data-xdg-type'),
+            this.name
+          );
+      }
+
+      console.log(fileTags);
     }
 
+    /*
     var fileDescription = '';
                                     if (this.description) {
                                         fileDescription = this.description;
@@ -213,18 +263,7 @@ window.productHelpers = (function(){
                                      }
 
                                      var ocsUrl = '';
-                                     if (typeof link !== 'undefined' && link) {
-                                         ocsUrl = generateOcsUrl(
-                                             decodeURIComponent(link),
-                                             $pploadCollection.attr('data-xdg-type')
-                                         );
-                                     } else if (!link) {
-                                         ocsUrl = generateOcsUrl(
-                                             downloadUrl,
-                                             $pploadCollection.attr('data-xdg-type'),
-                                             this.name
-                                         );
-                                     }
+
     function generateOcsUrl(url, type, filename) { if (!url || !type) { return ''; } if (!filename) { filename = url.split('/').pop().split('?').shift(); } return 'ocs://install' + '?url=' + encodeURIComponent(url) + '&type=' + encodeURIComponent(type) + '&filename=' + encodeURIComponent(filename); }
     */
     return ocsInstallLink;
