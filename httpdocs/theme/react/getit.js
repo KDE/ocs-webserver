@@ -192,10 +192,15 @@ window.productHelpers = function () {
       downloads: 0,
       archived: 0,
       fileSize: 0,
-      total: 0
+      total: 0,
+      archived: 0
     };
     files.forEach(function (file, index) {
-      summery.total += 1;
+      if (file.active === "1") {
+        summery.total += 1;
+      } else {
+        summery.archived += 1;
+      }
       summery.fileSize += parseInt(file.size);
       summery.downloads += parseInt(file.downloaded_count);
     });
@@ -269,6 +274,7 @@ class GetIt extends React.Component {
   }
 
   render() {
+    console.log(this.state.files);
     return React.createElement(
       "div",
       { id: "get-it" },
@@ -300,112 +306,194 @@ class GetIt extends React.Component {
 }
 
 class GetItFilesList extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      activeTab: 'active'
+    };
+    this.toggleActiveTab = this.toggleActiveTab.bind(this);
+  }
+
+  toggleActiveTab(tab) {
+    this.setState({ activeTab: tab });
+  }
+
   render() {
-    let filesDisplay;
-    const files = this.props.files.map((f, index) => React.createElement(GetItFilesListItem, {
+
+    const activeFiles = this.props.files.filter(file => file.active == "1").map((f, index) => React.createElement(GetItFilesListItem, {
+      product: this.props.product,
+      env: this.props.env,
+      key: index,
+      file: f
+    }));
+    const archivedFiles = this.props.files.filter(file => file.active == "0").map((f, index) => React.createElement(GetItFilesListItem, {
       product: this.props.product,
       env: this.props.env,
       key: index,
       file: f
     }));
     const summeryRow = productHelpers.getFilesSummary(this.props.files);
-    filesDisplay = React.createElement(
-      "tbody",
+    const summeryRowDisplay = React.createElement(
+      "tr",
       null,
-      files,
+      React.createElement(
+        "td",
+        null,
+        summeryRow.total,
+        " files (",
+        summeryRow.archived,
+        " archived)"
+      ),
+      React.createElement("td", null),
+      React.createElement("td", null),
+      React.createElement("td", null),
+      React.createElement("td", null),
+      React.createElement(
+        "td",
+        null,
+        summeryRow.downloads
+      ),
+      React.createElement("td", null),
+      React.createElement(
+        "td",
+        null,
+        appHelpers.getFileSize(summeryRow.fileSize)
+      ),
+      React.createElement("td", null),
+      React.createElement("td", null)
+    );
+    const tableHeader = React.createElement(
+      "thead",
+      null,
       React.createElement(
         "tr",
         null,
         React.createElement(
-          "td",
-          null,
-          summeryRow.total,
-          " files (0 archived)"
+          "th",
+          { className: "mdl-data-table__cell--non-numericm" },
+          "File"
         ),
-        React.createElement("td", null),
-        React.createElement("td", null),
-        React.createElement("td", null),
-        React.createElement("td", null),
         React.createElement(
-          "td",
-          null,
-          summeryRow.downloads
+          "th",
+          { className: "mdl-data-table__cell--non-numericm" },
+          "Version"
         ),
-        React.createElement("td", null),
         React.createElement(
-          "td",
-          null,
-          appHelpers.getFileSize(summeryRow.fileSize)
+          "th",
+          { className: "mdl-data-table__cell--non-numericm" },
+          "Description"
         ),
-        React.createElement("td", null),
-        React.createElement("td", null)
+        React.createElement(
+          "th",
+          { className: "mdl-data-table__cell--non-numericm" },
+          "Packagetype"
+        ),
+        React.createElement(
+          "th",
+          { className: "mdl-data-table__cell--non-numericm" },
+          "Architecture"
+        ),
+        React.createElement(
+          "th",
+          { className: "mdl-data-table__cell--non-numericm" },
+          "Downloads"
+        ),
+        React.createElement(
+          "th",
+          { className: "mdl-data-table__cell--non-numericm" },
+          "Date"
+        ),
+        React.createElement(
+          "th",
+          { className: "mdl-data-table__cell--non-numericm" },
+          "Filesize"
+        ),
+        React.createElement(
+          "th",
+          { className: "mdl-data-table__cell--non-numericm" },
+          "DL"
+        ),
+        React.createElement(
+          "th",
+          { className: "mdl-data-table__cell--non-numericm" },
+          "OCS-Install"
+        )
       )
     );
+
+    let tableFilesDisplay;
+    if (this.state.activeTab === "active") {
+      tableFilesDisplay = React.createElement(
+        "tbody",
+        null,
+        activeFiles,
+        summeryRowDisplay
+      );
+    } else if (this.state.activeTab === "archived") {
+      tableFilesDisplay = React.createElement(
+        "tbody",
+        null,
+        archivedFiles,
+        summeryRowDisplay
+      );
+    }
+
     return React.createElement(
       "div",
-      { id: "files-tab", className: "product-tab" },
+      { id: "files-tabs-container" },
       React.createElement(
-        "table",
-        { className: "mdl-data-table mdl-js-data-table mdl-shadow--2dp" },
+        "button",
+        { type: "button", className: "close", "data-dismiss": "modal", "aria-label": "Close" },
         React.createElement(
-          "thead",
+          "span",
+          { "aria-hidden": "true" },
+          "\xD7"
+        )
+      ),
+      React.createElement(
+        "div",
+        { className: "files-tabs-header" },
+        React.createElement(
+          "h2",
           null,
+          "Thanks for your support!"
+        )
+      ),
+      React.createElement(
+        "div",
+        { className: "tabs-menu" },
+        React.createElement(
+          "ul",
+          { className: "nav nav-tabs", role: "tablist" },
           React.createElement(
-            "tr",
-            null,
+            "li",
+            { role: "presentation", className: this.state.activeTab === "active" ? "active" : "" },
             React.createElement(
-              "th",
-              { className: "mdl-data-table__cell--non-numericm" },
-              "File"
-            ),
+              "a",
+              { onClick: () => this.toggleActiveTab('active') },
+              "Files"
+            )
+          ),
+          React.createElement(
+            "li",
+            { role: "presentation", className: this.state.activeTab === "archived" ? "active pull-right" : "pull-right" },
             React.createElement(
-              "th",
-              { className: "mdl-data-table__cell--non-numericm" },
-              "Version"
-            ),
-            React.createElement(
-              "th",
-              { className: "mdl-data-table__cell--non-numericm" },
-              "Description"
-            ),
-            React.createElement(
-              "th",
-              { className: "mdl-data-table__cell--non-numericm" },
-              "Packagetype"
-            ),
-            React.createElement(
-              "th",
-              { className: "mdl-data-table__cell--non-numericm" },
-              "Architecture"
-            ),
-            React.createElement(
-              "th",
-              { className: "mdl-data-table__cell--non-numericm" },
-              "Downloads"
-            ),
-            React.createElement(
-              "th",
-              { className: "mdl-data-table__cell--non-numericm" },
-              "Date"
-            ),
-            React.createElement(
-              "th",
-              { className: "mdl-data-table__cell--non-numericm" },
-              "Filesize"
-            ),
-            React.createElement(
-              "th",
-              { className: "mdl-data-table__cell--non-numericm" },
-              "DL"
-            ),
-            React.createElement(
-              "th",
-              { className: "mdl-data-table__cell--non-numericm" },
-              "OCS-Install"
+              "a",
+              { onClick: () => this.toggleActiveTab('archived') },
+              "Archive"
             )
           )
-        ),
-        filesDisplay
+        )
+      ),
+      React.createElement(
+        "div",
+        { id: "files-tab", className: "product-tab" },
+        React.createElement(
+          "table",
+          { id: "active-files-table", className: "mdl-data-table mdl-js-data-table mdl-shadow--2dp" },
+          tableHeader,
+          tableFilesDisplay
+        )
       )
     );
   }
@@ -436,6 +524,12 @@ class GetItFilesListItem extends React.Component {
 
   render() {
     const f = this.props.file;
+    let title;
+    if (f.title.length > 30) {
+      title = f.title.substring(0, 30) + "...";
+    } else {
+      title = f.title;
+    }
     return React.createElement(
       "tr",
       null,
@@ -445,7 +539,7 @@ class GetItFilesListItem extends React.Component {
         React.createElement(
           "a",
           { href: this.state.downloadLink },
-          f.title
+          title
         )
       ),
       React.createElement(

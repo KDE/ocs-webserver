@@ -9,6 +9,7 @@ class GetIt extends React.Component {
   }
 
   render(){
+    console.log(this.state.files);
     return (
       <div id="get-it">
         <button
@@ -21,6 +22,7 @@ class GetIt extends React.Component {
           </button>
           <div className="modal fade" id="myModal" tabIndex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div id="get-it-modal" className="modal-dialog" role="document">
+
               <GetItFilesList
                 files={this.state.files}
                 product={this.state.product}
@@ -34,9 +36,29 @@ class GetIt extends React.Component {
 }
 
 class GetItFilesList extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {
+      activeTab:'active'
+    };
+    this.toggleActiveTab = this.toggleActiveTab.bind(this);
+  }
+
+  toggleActiveTab(tab){
+    this.setState({activeTab:tab});
+  }
+
   render(){
-    let filesDisplay;
-    const files = this.props.files.map((f,index) => (
+
+    const activeFiles = this.props.files.filter(file => file.active == "1").map((f,index) => (
+      <GetItFilesListItem
+        product={this.props.product}
+        env={this.props.env}
+        key={index}
+        file={f}
+      />
+    ));
+    const archivedFiles = this.props.files.filter(file => file.active == "0").map((f,index) => (
       <GetItFilesListItem
         product={this.props.product}
         env={this.props.env}
@@ -45,42 +67,79 @@ class GetItFilesList extends React.Component {
       />
     ));
     const summeryRow = productHelpers.getFilesSummary(this.props.files);
-    filesDisplay = (
-      <tbody>
-        {files}
-        <tr>
-          <td>{summeryRow.total} files (0 archived)</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td>{summeryRow.downloads}</td>
-          <td></td>
-          <td>{appHelpers.getFileSize(summeryRow.fileSize)}</td>
-          <td></td>
-          <td></td>
-        </tr>
-      </tbody>
+    const summeryRowDisplay = (
+      <tr>
+        <td>{summeryRow.total} files ({summeryRow.archived} archived)</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>{summeryRow.downloads}</td>
+        <td></td>
+        <td>{appHelpers.getFileSize(summeryRow.fileSize)}</td>
+        <td></td>
+        <td></td>
+      </tr>
     );
+    const tableHeader = (
+      <thead>
+        <tr>
+          <th className="mdl-data-table__cell--non-numericm">File</th>
+          <th className="mdl-data-table__cell--non-numericm">Version</th>
+          <th className="mdl-data-table__cell--non-numericm">Description</th>
+          <th className="mdl-data-table__cell--non-numericm">Packagetype</th>
+          <th className="mdl-data-table__cell--non-numericm">Architecture</th>
+          <th className="mdl-data-table__cell--non-numericm">Downloads</th>
+          <th className="mdl-data-table__cell--non-numericm">Date</th>
+          <th className="mdl-data-table__cell--non-numericm">Filesize</th>
+          <th className="mdl-data-table__cell--non-numericm">DL</th>
+          <th className="mdl-data-table__cell--non-numericm">OCS-Install</th>
+        </tr>
+      </thead>
+    );
+
+    let tableFilesDisplay;
+    if (this.state.activeTab === "active"){
+      tableFilesDisplay = (
+        <tbody>
+          {activeFiles}
+          {summeryRowDisplay}
+        </tbody>
+      )
+    } else if (this.state.activeTab === "archived"){
+      tableFilesDisplay = (
+        <tbody>
+          {archivedFiles}
+          {summeryRowDisplay}
+        </tbody>
+      )
+    }
+
     return (
-      <div id="files-tab" className="product-tab">
-        <table className="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
-          <thead>
-            <tr>
-              <th className="mdl-data-table__cell--non-numericm">File</th>
-              <th className="mdl-data-table__cell--non-numericm">Version</th>
-              <th className="mdl-data-table__cell--non-numericm">Description</th>
-              <th className="mdl-data-table__cell--non-numericm">Packagetype</th>
-              <th className="mdl-data-table__cell--non-numericm">Architecture</th>
-              <th className="mdl-data-table__cell--non-numericm">Downloads</th>
-              <th className="mdl-data-table__cell--non-numericm">Date</th>
-              <th className="mdl-data-table__cell--non-numericm">Filesize</th>
-              <th className="mdl-data-table__cell--non-numericm">DL</th>
-              <th className="mdl-data-table__cell--non-numericm">OCS-Install</th>
-            </tr>
-          </thead>
-          {filesDisplay}
-        </table>
+      <div id="files-tabs-container">
+        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+
+        <div className="files-tabs-header">
+          <h2>Thanks for your support!</h2>
+        </div>
+        <div className="tabs-menu">
+          <ul className="nav nav-tabs" role="tablist">
+             <li role="presentation" className={this.state.activeTab === "active" ? "active" : ""}>
+               <a  onClick={() => this.toggleActiveTab('active')}>Files</a>
+             </li>
+             <li role="presentation" className={this.state.activeTab === "archived" ? "active pull-right" : "pull-right"}>
+               <a  onClick={() => this.toggleActiveTab('archived')}>Archive</a>
+             </li>
+           </ul>
+        </div>
+        <div id="files-tab" className="product-tab">
+          <table id="active-files-table" className="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+            {tableHeader}
+            {tableFilesDisplay}
+          </table>
+        </div>
       </div>
     );
   }
@@ -122,10 +181,16 @@ class GetItFilesListItem extends React.Component {
 
   render(){
     const f = this.props.file;
+    let title;
+    if (f.title.length > 30){
+      title = f.title.substring(0,30) + "...";
+    } else {
+      title = f.title;
+    }
     return (
       <tr>
         <td className="mdl-data-table__cell--non-numericm">
-          <a href={this.state.downloadLink}>{f.title}</a>
+          <a href={this.state.downloadLink}>{title}</a>
         </td>
         <td>{f.version}</td>
         <td className="mdl-data-table__cell--non-numericm">{f.description}</td>

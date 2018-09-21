@@ -89,9 +89,14 @@ window.productHelpers = (function(){
       archived:0,
       fileSize:0,
       total:0,
+      archived:0
     }
     files.forEach(function(file,index){
-      summery.total += 1;
+      if (file.active === "1"){
+        summery.total += 1;
+      } else {
+        summery.archived += 1;
+      }
       summery.fileSize += parseInt(file.size);
       summery.downloads += parseInt(file.downloaded_count);
     });
