@@ -315,7 +315,7 @@ window.productHelpers = function () {
       }
       return 'ocs://install' + '?url=' + encodeURIComponent(url) + '&type=' + encodeURIComponent(type) + '&filename=' + encodeURIComponent(filename);
     }
-    console.log(ocsUrl);
+
     return ocsUrl;
   }
 
