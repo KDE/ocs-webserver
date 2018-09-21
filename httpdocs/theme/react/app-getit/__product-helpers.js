@@ -197,6 +197,7 @@ window.productHelpers = (function(){
       });
     }
 
+
     if (typeof link !== 'undefined' && link) {
         ocsUrl = generateOcsUrl(decodeURIComponent(link),xdgType);
     } else if (!link) {
@@ -204,11 +205,17 @@ window.productHelpers = (function(){
     }
 
     function generateOcsUrl(url, type, filename) {
+
+      console.log('link: ' + link);
+      console.log('url: ' + url);
+      console.log('type: ' + type);
+      console.log('filename: ' +filename);
+
       if (!url || !type) { return ''; }
       if (!filename) { filename = url.split('/').pop().split('?').shift(); }
       return 'ocs://install' + '?url=' + encodeURIComponent(url) + '&type=' + encodeURIComponent(type) + '&filename=' + encodeURIComponent(filename);
     }
-
+    console.log(ocsUrl);
     return ocsUrl;
   }
 
