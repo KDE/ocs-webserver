@@ -252,6 +252,88 @@ window.productHelpers = function () {
     return laplace_score;
   }
 
+  function generateOcsInstallLink(f) {
+    console.log(f);
+
+    let ocsInstallLink;
+
+    let fileDescription;
+    if (f.description) {
+      fileDescription = f.description;
+    }
+
+    let licenseId = '',
+        license = '',
+        packagetypeId = '',
+        architectureId = '';
+
+    if (f.tags) {}
+
+    /*
+    var fileDescription = '';
+                                    if (this.description) {
+                                        fileDescription = this.description;
+                                    }
+                                    var licenseId = '';
+                                    var license = '';
+                                    var packagetypeId = '';
+                                    var architectureId = '';
+                                    if (this.tags) {
+                                         fileTags = this.tags;
+                                          $.each(fileTags.split(','), function () {
+                                              if(this.indexOf("##")==-1) {
+                                              var tagStr = this.split('-');
+                                              if (tagStr.length == 2 && tagStr[0] == 'os') {
+                                                  osId = tagStr[1];
+                                              } else if (tagStr.length == 2 && tagStr[0] == 'licensetype') {
+                                                  licenseId = tagStr[1];
+                                              } else if (tagStr.length == 2 && tagStr[0] == 'packagetypeid') {
+                                                  packagetypeId = tagStr[1];
+                                              } else if (tagStr.length == 2 && tagStr[0] == 'architectureid') {
+                                                  architectureId = tagStr[1];
+                                              }
+                                             } else {
+                                              var tagStr = this.split('##');
+                                              if (tagStr.length == 2 && tagStr[0] == 'link') {
+                                                  link = tagStr[1];
+                                              } else if (tagStr.length == 2 && tagStr[0] == 'license') {
+                                                  license = tagStr[1];
+                                                  license = Base64.decode(license);
+                                              } else if (tagStr.length == 2 && tagStr[0] == 'packagetypeid') {
+                                                  packagetypeId = tagStr[1];
+                                              } else if (tagStr.length == 2 && tagStr[0] == 'architectureid') {
+                                                  architectureId = tagStr[1];
+                                              }
+                                             }
+                                             /*else if (tagStr.length == 2 && tagStr[0] == 'package') {
+                                              packageId = tagStr[1];
+                                              }
+                                              else if (tagStr.length == 2 && tagStr[0] == 'arch') {
+                                              archId = tagStr[1];
+                                              }
+                                              else if (tagStr.length == 2 && tagStr[0] == 'device') {
+                                              deviceId = tagStr[1];
+                                              }
+                                         });
+                                     }
+                                      var ocsUrl = '';
+                                     if (typeof link !== 'undefined' && link) {
+                                         ocsUrl = generateOcsUrl(
+                                             decodeURIComponent(link),
+                                             $pploadCollection.attr('data-xdg-type')
+                                         );
+                                     } else if (!link) {
+                                         ocsUrl = generateOcsUrl(
+                                             downloadUrl,
+                                             $pploadCollection.attr('data-xdg-type'),
+                                             this.name
+                                         );
+                                     }
+    function generateOcsUrl(url, type, filename) { if (!url || !type) { return ''; } if (!filename) { filename = url.split('/').pop().split('?').shift(); } return 'ocs://install' + '?url=' + encodeURIComponent(url) + '&type=' + encodeURIComponent(type) + '&filename=' + encodeURIComponent(filename); }
+    */
+    return ocsInstallLink;
+  }
+
   return {
     getNumberOfProducts,
     generatePaginationObject,
@@ -260,7 +342,8 @@ window.productHelpers = function () {
     getFilesSummary,
     checkIfLikedByUser,
     getLoggedUserRatingOnProduct,
-    calculateProductLaplaceScore
+    calculateProductLaplaceScore,
+    generateOcsInstallLink
   };
 }();
 class GetIt extends React.Component {
@@ -269,6 +352,7 @@ class GetIt extends React.Component {
     this.state = {
       product: window.product,
       files: window.filesJson,
+      xdgType: xdgTypeJson,
       env: 'test'
     };
   }
@@ -290,7 +374,7 @@ class GetIt extends React.Component {
       ),
       React.createElement(
         "div",
-        { className: "modal fade", id: "myModal", tabIndex: "-1", role: "dialog", "aria-labelledby": "myModalLabel" },
+        { className: "modal fade", id: "get-it-modal-window", tabIndex: "-1", role: "dialog", "aria-labelledby": "myModalLabel" },
         React.createElement(
           "div",
           { id: "get-it-modal", className: "modal-dialog", role: "document" },
@@ -471,7 +555,9 @@ class GetItFilesList extends React.Component {
             React.createElement(
               "a",
               { onClick: () => this.toggleActiveTab('active') },
-              "Files"
+              "Files (",
+              summeryRow.total,
+              ")"
             )
           ),
           React.createElement(
@@ -480,7 +566,9 @@ class GetItFilesList extends React.Component {
             React.createElement(
               "a",
               { onClick: () => this.toggleActiveTab('archived') },
-              "Archive"
+              "Archive (",
+              summeryRow.archived,
+              ")"
             )
           )
         )
@@ -518,7 +606,9 @@ class GetItFilesListItem extends React.Component {
     const f = this.props.file;
     const timestamp = Math.floor(new Date().getTime() / 1000 + 3600);
     const fileDownloadHash = appHelpers.generateFileDownloadHash(f, this.props.env);
-    let downloadLink = "https://" + baseUrl + "/p/" + this.props.product.project_id + "/startdownload?file_id=" + f.id + "&file_name=" + f.title + "&file_type=" + f.type + "&file_size=" + f.size + "&url=" + downloadLinkUrlAttr + "files%2Fdownloadfile%2Fid%2F" + f.id + "%2Fs%2F" + fileDownloadHash + "%2Ft%2F" + timestamp + "%2Fu%2F" + this.props.product.member_id + "%2F" + f.title;
+    const downloadLink = "https://" + baseUrl + "/p/" + this.props.product.project_id + "/startdownload?file_id=" + f.id + "&file_name=" + f.title + "&file_type=" + f.type + "&file_size=" + f.size + "&url=" + downloadLinkUrlAttr + "files%2Fdownloadfile%2Fid%2F" + f.id + "%2Fs%2F" + fileDownloadHash + "%2Ft%2F" + timestamp + "%2Fu%2F" + this.props.product.member_id + "%2F" + f.title;
+
+    const ocsInstallLink = productHelpers.generateOcsInstallLink(f);
     this.setState({ downloadLink: downloadLink });
   }
 

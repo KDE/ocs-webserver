@@ -4,6 +4,7 @@ class GetIt extends React.Component {
   	this.state = {
       product:window.product,
       files:window.filesJson,
+      xdgType:xdgTypeJson,
       env:'test'
     };
   }
@@ -20,7 +21,7 @@ class GetIt extends React.Component {
             type="button">
             Get it
           </button>
-          <div className="modal fade" id="myModal" tabIndex="-1" role="dialog" aria-labelledby="myModalLabel">
+          <div className="modal fade" id="get-it-modal-window" tabIndex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div id="get-it-modal" className="modal-dialog" role="document">
 
               <GetItFilesList
@@ -127,10 +128,10 @@ class GetItFilesList extends React.Component {
         <div className="tabs-menu">
           <ul className="nav nav-tabs" role="tablist">
              <li role="presentation" className={this.state.activeTab === "active" ? "active" : ""}>
-               <a  onClick={() => this.toggleActiveTab('active')}>Files</a>
+               <a  onClick={() => this.toggleActiveTab('active')}>Files ({summeryRow.total})</a>
              </li>
              <li role="presentation" className={this.state.activeTab === "archived" ? "active pull-right" : "pull-right"}>
-               <a  onClick={() => this.toggleActiveTab('archived')}>Archive</a>
+               <a  onClick={() => this.toggleActiveTab('archived')}>Archive ({summeryRow.archived})</a>
              </li>
            </ul>
         </div>
@@ -164,7 +165,7 @@ class GetItFilesListItem extends React.Component {
     const f = this.props.file;
     const timestamp =  Math.floor((new Date().getTime() / 1000)+3600)
     const fileDownloadHash = appHelpers.generateFileDownloadHash(f,this.props.env);
-    let downloadLink = "https://"+baseUrl+
+    const downloadLink = "https://"+baseUrl+
                        "/p/"+this.props.product.project_id+
                        "/startdownload?file_id="+f.id+
                        "&file_name="+f.title+
@@ -176,6 +177,8 @@ class GetItFilesListItem extends React.Component {
                        "%2Ft%2F"+timestamp+
                        "%2Fu%2F"+this.props.product.member_id+
                        "%2F"+f.title;
+
+    const ocsInstallLink = productHelpers.generateOcsInstallLink(f);
     this.setState({downloadLink:downloadLink});
   }
 
