@@ -133,9 +133,7 @@ window.productHelpers = (function(){
     let upvotes = 0;
     let downvotes = 0;
     ratings.forEach(function(rating,index){
-      console.log(rating.active);
       if (rating.rating_active === "1"){
-        console.log(rating.user_like);
         if (rating.user_like === "1"){
           upvotes += 1;
         } else if (rating.user_like === "0") {
@@ -144,7 +142,6 @@ window.productHelpers = (function(){
       }
     });
     laplace_score = (Math.round(((upvotes + 6) / ((upvotes + downvotes) + 12)),2) * 100);
-    console.log(laplace_score);
     return laplace_score;
   }
 
@@ -207,8 +204,6 @@ window.productHelpers = (function(){
     function generateOcsUrl(url, type, filename) {
       if (!url || !type) { return ''; }
       if (!filename) { filename = url.split('/').pop().split('?').shift(); }
-      console.log(url);
-      console.log(encodeURIComponent(url));
       return 'ocs://install' + '?url=' + encodeURIComponent(url) + '&type=' + encodeURIComponent(type) + '&filename=' + encodeURIComponent(filename);
     }
 

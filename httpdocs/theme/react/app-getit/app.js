@@ -10,7 +10,7 @@ class GetIt extends React.Component {
   }
 
   render(){
-    console.log(this.state);
+
     return (
       <div id="get-it">
         <button
@@ -203,7 +203,7 @@ class GetItFilesListItem extends React.Component {
       ocsInstallLinkDisplay = (
         <span>
            &nbsp; - or - &nbsp;
-           <a href={this.state.ocsInstallLink}>Install</a>           
+           <a href={this.state.ocsInstallLink}>Install</a>
         </span>
       )
     }
