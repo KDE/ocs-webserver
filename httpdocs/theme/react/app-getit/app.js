@@ -15,7 +15,7 @@ class GetIt extends React.Component {
       <div id="get-it">
         <button
             data-toggle="modal"
-            data-target="#myModal"
+            data-target="#get-it-modal-window"
             style={{"width":"100%"}}
             id="project_btn_getit" className="btn dropdown-toggle active btn-primary  "
             type="button">

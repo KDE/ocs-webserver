@@ -255,22 +255,15 @@ window.productHelpers = function () {
   function generateOcsInstallLink(f) {
     console.log(f);
 
-    let ocsInstallLink;
-
-    let fileDescription;
+    let ocsInstallLink, fileDescription;
     if (f.description) {
       fileDescription = f.description;
     }
 
-    let licenseId = '',
-        license = '',
-        packagetypeId = '',
-        architectureId = '';
-
-    if (f.tags) {}
-
-    /*
-    var fileDescription = '';
+    /*let
+     if (f.tags){
+     }
+     var fileDescription = '';
                                     if (this.description) {
                                         fileDescription = this.description;
                                     }
@@ -366,7 +359,7 @@ class GetIt extends React.Component {
         "button",
         {
           "data-toggle": "modal",
-          "data-target": "#myModal",
+          "data-target": "#get-it-modal-window",
           style: { "width": "100%" },
           id: "project_btn_getit", className: "btn dropdown-toggle active btn-primary  ",
           type: "button" },

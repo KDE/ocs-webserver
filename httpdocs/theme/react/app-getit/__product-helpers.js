@@ -151,23 +151,18 @@ window.productHelpers = (function(){
   function generateOcsInstallLink(f){
     console.log(f);
 
-    let ocsInstallLink;
-
-    let fileDescription;
+    let ocsInstallLink,
+        fileDescription
     if (f.description){
       fileDescription = f.description
     }
 
-    let licenseId = '',
-        license = '',
-        packagetypeId = '',
-        architectureId = '';
+    /*let
 
     if (f.tags){
 
     }
 
-    /*
     var fileDescription = '';
                                     if (this.description) {
                                         fileDescription = this.description;
