@@ -94,6 +94,9 @@ $userRoleName = $helperUserRole->userRole();
 
  $productJson = Zend_Json::encode($this->product);
  $filesJson = $this->filesJson;
+$helperCatXdgType = new Default_View_Helper_CatXdgType();
+$xdgTypeJson = Zend_Json::encode($helperCatXdgType->catXdgType($this->product->project_category_id));
+
 ?>
 
     <link href="/theme/react/assets/css/get-it.css" type="text/css" rel="stylesheet"/>
@@ -962,6 +965,7 @@ $userRoleName = $helperUserRole->userRole();
 <script type="text/javascript">
   var product = <?php echo $productJson ?>;
   var filesJson  = <?php echo $filesJson ?>;
+  var xdgTypeJson = <?php echo $xdgTypeJson ?>;
 </script>
 <script type="text/javascript" src="/theme/react/getit.js"></script>
 
