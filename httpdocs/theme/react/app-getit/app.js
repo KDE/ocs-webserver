@@ -56,6 +56,22 @@ class GetItFilesList extends React.Component {
 
   render(){
 
+    const tableHeader = (
+      <thead>
+        <tr>
+          <th>File</th>
+          <th>Version</th>
+          <th>Description</th>
+          <th>Packagetype</th>
+          <th>Architecture</th>
+          <th>Downloads</th>
+          <th>Date</th>
+          <th>Filesize</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+    );
+
     const activeFiles = this.props.files.filter(file => file.active == "1").map((f,index) => (
       <GetItFilesListItem
         product={this.props.product}
@@ -65,6 +81,7 @@ class GetItFilesList extends React.Component {
         file={f}
       />
     ));
+
     const archivedFiles = this.props.files.filter(file => file.active == "0").map((f,index) => (
       <GetItFilesListItem
         product={this.props.product}
@@ -74,6 +91,7 @@ class GetItFilesList extends React.Component {
         file={f}
       />
     ));
+
     const summeryRow = productHelpers.getFilesSummary(this.props.files);
     const summeryRowDisplay = (
       <tr>
@@ -88,21 +106,6 @@ class GetItFilesList extends React.Component {
         <td></td>
         <td></td>
       </tr>
-    );
-    const tableHeader = (
-      <thead>
-        <tr>
-          <th className="mdl-data-table__cell--non-numericm">File</th>
-          <th className="mdl-data-table__cell--non-numericm">Version</th>
-          <th className="mdl-data-table__cell--non-numericm">Description</th>
-          <th className="mdl-data-table__cell--non-numericm">Packagetype</th>
-          <th className="mdl-data-table__cell--non-numericm">Architecture</th>
-          <th className="mdl-data-table__cell--non-numericm">Downloads</th>
-          <th className="mdl-data-table__cell--non-numericm">Date</th>
-          <th className="mdl-data-table__cell--non-numericm">Filesize</th>
-          <th className="mdl-data-table__cell--non-numericm">Action</th>
-        </tr>
-      </thead>
     );
 
     let tableFilesDisplay;
@@ -127,7 +130,6 @@ class GetItFilesList extends React.Component {
         <button type="button" className="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-
         <div className="files-tabs-header">
           <h2>Thanks for your support!</h2>
         </div>
@@ -142,7 +144,7 @@ class GetItFilesList extends React.Component {
            </ul>
         </div>
         <div id="files-tab" className="product-tab">
-          <table id="files-table" className="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+          <table id="files-table">
             {tableHeader}
             {tableFilesDisplay}
           </table>
@@ -191,12 +193,6 @@ class GetItFilesListItem extends React.Component {
 
   render(){
     const f = this.props.file;
-    let title;
-    if (f.title.length > 30){
-      title = f.title.substring(0,30) + "...";
-    } else {
-      title = f.title;
-    }
 
     let ocsInstallLinkDisplay;
     if (this.state.ocsInstallLink){
@@ -210,16 +206,16 @@ class GetItFilesListItem extends React.Component {
 
     return (
       <tr>
-        <td className="mdl-data-table__cell--non-numericm">
-          <a href={this.state.downloadLink}>{title}</a>
+        <td>
+          <a href={this.state.downloadLink}>{f.title}</a>
         </td>
         <td>{f.version}</td>
-        <td className="mdl-data-table__cell--non-numericm">{f.description}</td>
-        <td className="mdl-data-table__cell--non-numericm">{f.packagename}</td>
-        <td  className="mdl-data-table__cell--non-numericm">{f.archname}</td>
+        <td>{f.description}</td>
+        <td>{f.packagename}</td>
+        <td>{f.archname}</td>
         <td>{f.downloaded_count}</td>
-        <td className="mdl-data-table__cell--non-numericm">{appHelpers.getTimeAgo(f.created_timestamp)}</td>
-        <td className="mdl-data-table__cell--non-numericm">{appHelpers.getFileSize(f.size)}</td>
+        <td>{appHelpers.getTimeAgo(f.created_timestamp)}</td>
+        <td>{appHelpers.getFileSize(f.size)}</td>
         <td>
           <a href={this.state.downloadLink}>Download</a>
           {ocsInstallLinkDisplay}

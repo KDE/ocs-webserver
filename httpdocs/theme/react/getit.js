@@ -84,12 +84,6 @@ window.appHelpers = function () {
     const timestamp = Math.floor(new Date().getTime() / 1000 + 3600);
     const hash = md5(salt, file.collection_id + timestamp);
     return hash;
-    /*
-    $salt = PPLOAD_DOWNLOAD_SECRET;
-    $collectionID = $productInfo->ppload_collection_id;
-    $timestamp = time() + 3600; // one hour valid
-    $hash = md5($salt . $collectionID . $timestamp);
-    */
   }
 
   return {
@@ -316,6 +310,18 @@ window.productHelpers = function () {
     return ocsUrl;
   }
 
+  function getFileWithLongestTitle(files) {
+    let longestTitleFile;
+    let maxTitleLength = 0;
+    files.forEach(function (file, index) {
+      if (file.title.length > maxTitleLength) {
+        longestTitleFile = file;
+        maxTitleLength = file.title.length;
+      }
+    });
+    return longestTitleFile;
+  }
+
   return {
     getNumberOfProducts,
     generatePaginationObject,
@@ -325,7 +331,8 @@ window.productHelpers = function () {
     checkIfLikedByUser,
     getLoggedUserRatingOnProduct,
     calculateProductLaplaceScore,
-    generateOcsInstallLink
+    generateOcsInstallLink,
+    getFileWithLongestTitle
   };
 }();
 class GetIt extends React.Component {
@@ -389,6 +396,60 @@ class GetItFilesList extends React.Component {
 
   render() {
 
+    const tableHeader = React.createElement(
+      "thead",
+      null,
+      React.createElement(
+        "tr",
+        null,
+        React.createElement(
+          "th",
+          null,
+          "File"
+        ),
+        React.createElement(
+          "th",
+          null,
+          "Version"
+        ),
+        React.createElement(
+          "th",
+          null,
+          "Description"
+        ),
+        React.createElement(
+          "th",
+          null,
+          "Packagetype"
+        ),
+        React.createElement(
+          "th",
+          null,
+          "Architecture"
+        ),
+        React.createElement(
+          "th",
+          null,
+          "Downloads"
+        ),
+        React.createElement(
+          "th",
+          null,
+          "Date"
+        ),
+        React.createElement(
+          "th",
+          null,
+          "Filesize"
+        ),
+        React.createElement(
+          "th",
+          null,
+          "Action"
+        )
+      )
+    );
+
     const activeFiles = this.props.files.filter(file => file.active == "1").map((f, index) => React.createElement(GetItFilesListItem, {
       product: this.props.product,
       xdgType: this.props.xdgType,
@@ -396,6 +457,7 @@ class GetItFilesList extends React.Component {
       key: index,
       file: f
     }));
+
     const archivedFiles = this.props.files.filter(file => file.active == "0").map((f, index) => React.createElement(GetItFilesListItem, {
       product: this.props.product,
       xdgType: this.props.xdgType,
@@ -403,6 +465,7 @@ class GetItFilesList extends React.Component {
       key: index,
       file: f
     }));
+
     const summeryRow = productHelpers.getFilesSummary(this.props.files);
     const summeryRowDisplay = React.createElement(
       "tr",
@@ -432,59 +495,6 @@ class GetItFilesList extends React.Component {
       ),
       React.createElement("td", null),
       React.createElement("td", null)
-    );
-    const tableHeader = React.createElement(
-      "thead",
-      null,
-      React.createElement(
-        "tr",
-        null,
-        React.createElement(
-          "th",
-          { className: "mdl-data-table__cell--non-numericm" },
-          "File"
-        ),
-        React.createElement(
-          "th",
-          { className: "mdl-data-table__cell--non-numericm" },
-          "Version"
-        ),
-        React.createElement(
-          "th",
-          { className: "mdl-data-table__cell--non-numericm" },
-          "Description"
-        ),
-        React.createElement(
-          "th",
-          { className: "mdl-data-table__cell--non-numericm" },
-          "Packagetype"
-        ),
-        React.createElement(
-          "th",
-          { className: "mdl-data-table__cell--non-numericm" },
-          "Architecture"
-        ),
-        React.createElement(
-          "th",
-          { className: "mdl-data-table__cell--non-numericm" },
-          "Downloads"
-        ),
-        React.createElement(
-          "th",
-          { className: "mdl-data-table__cell--non-numericm" },
-          "Date"
-        ),
-        React.createElement(
-          "th",
-          { className: "mdl-data-table__cell--non-numericm" },
-          "Filesize"
-        ),
-        React.createElement(
-          "th",
-          { className: "mdl-data-table__cell--non-numericm" },
-          "Action"
-        )
-      )
     );
 
     let tableFilesDisplay;
@@ -560,7 +570,7 @@ class GetItFilesList extends React.Component {
         { id: "files-tab", className: "product-tab" },
         React.createElement(
           "table",
-          { id: "files-table", className: "mdl-data-table mdl-js-data-table mdl-shadow--2dp" },
+          { id: "files-table" },
           tableHeader,
           tableFilesDisplay
         )
@@ -597,12 +607,6 @@ class GetItFilesListItem extends React.Component {
 
   render() {
     const f = this.props.file;
-    let title;
-    if (f.title.length > 30) {
-      title = f.title.substring(0, 30) + "...";
-    } else {
-      title = f.title;
-    }
 
     let ocsInstallLinkDisplay;
     if (this.state.ocsInstallLink) {
@@ -623,11 +627,11 @@ class GetItFilesListItem extends React.Component {
       null,
       React.createElement(
         "td",
-        { className: "mdl-data-table__cell--non-numericm" },
+        null,
         React.createElement(
           "a",
           { href: this.state.downloadLink },
-          title
+          f.title
         )
       ),
       React.createElement(
@@ -637,17 +641,17 @@ class GetItFilesListItem extends React.Component {
       ),
       React.createElement(
         "td",
-        { className: "mdl-data-table__cell--non-numericm" },
+        null,
         f.description
       ),
       React.createElement(
         "td",
-        { className: "mdl-data-table__cell--non-numericm" },
+        null,
         f.packagename
       ),
       React.createElement(
         "td",
-        { className: "mdl-data-table__cell--non-numericm" },
+        null,
         f.archname
       ),
       React.createElement(
@@ -657,12 +661,12 @@ class GetItFilesListItem extends React.Component {
       ),
       React.createElement(
         "td",
-        { className: "mdl-data-table__cell--non-numericm" },
+        null,
         appHelpers.getTimeAgo(f.created_timestamp)
       ),
       React.createElement(
         "td",
-        { className: "mdl-data-table__cell--non-numericm" },
+        null,
         appHelpers.getFileSize(f.size)
       ),
       React.createElement(

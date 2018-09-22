@@ -1,7 +1,6 @@
 out: ../css/get-it.css, sourcemap: true, compress: true
 
 @import "elements.less";
-@import "get-it-lib.less";
 
 #get-it-modal-window {
   padding-right: 0 !important;
@@ -22,8 +21,8 @@ out: ../css/get-it.css, sourcemap: true, compress: true
   #files-tabs-container {
     padding-top: 50px;
     background-color: white;
-    max-height: 100%;
-    overflow: auto;
+    height: 500px;
+    overflow: hidden;
     max-width: 100%;
 
     .files-tabs-header {
@@ -50,13 +49,27 @@ out: ../css/get-it.css, sourcemap: true, compress: true
 
   #files-tab {
     max-width: 100%;
-    max-height: 300px;
-    overflow-x: hidden;
+    height: 337px;
   }
 
-  .mdl-data-table {
+  #files-table {
     width: 100%;
     border: 0;
+    height: 337px;
+    position: relative;
+
+    thead, tbody, tr, td, th { display: block; }
+
+    tr {
+      border-bottom: 1px solid #ccc;
+    }
+
+    tr:after {
+        content: ' ';
+        display: block;
+        visibility: hidden;
+        clear: both;
+    }
 
     thead,tbody {
       tr {
@@ -83,12 +96,49 @@ out: ../css/get-it.css, sourcemap: true, compress: true
     }
 
     tbody {
+      height: 258px;
+      overflow-y: auto;
+
       tr {
         height: 45px;
         td {
           height: 45px;
         }
+
+        &:last-child {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          border-top: 1px solid #ccc;
+          border-bottom: 0;
+        }
       }
+    }
+
+    tbody td, thead th {
+        width: 11.11%;
+        float: left;
+
+        &:nth-child(1){
+          width: 31.14%;
+        }
+
+        &:nth-child(2),
+        &:nth-child(3),
+        &:nth-child(6){
+          width: 6.66%;
+        }
+
+        &:nth-child(4),
+        &:nth-child(5),
+        &:nth-child(8){
+          width: 7.77%;
+        }
+
+        &:nth-child(9){
+          width: 14.44%;
+        }
     }
 
   }

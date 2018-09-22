@@ -210,6 +210,18 @@ window.productHelpers = (function(){
     return ocsUrl;
   }
 
+  function getFileWithLongestTitle(files){
+    let longestTitleFile;
+    let maxTitleLength = 0;
+    files.forEach(function(file,index){
+      if (file.title.length > maxTitleLength){
+        longestTitleFile = file;
+        maxTitleLength = file.title.length;
+      }
+    });
+    return longestTitleFile;
+  }
+
   return {
     getNumberOfProducts,
     generatePaginationObject,
@@ -219,6 +231,7 @@ window.productHelpers = (function(){
     checkIfLikedByUser,
     getLoggedUserRatingOnProduct,
     calculateProductLaplaceScore,
-    generateOcsInstallLink
+    generateOcsInstallLink,
+    getFileWithLongestTitle
   }
 }());
