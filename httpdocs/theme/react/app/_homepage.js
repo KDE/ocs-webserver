@@ -20,9 +20,7 @@ class HomePage extends React.Component {
     return (
       <div id="homepage">
         <div className="hp-wrapper">
-          <Introduction
-            device={this.state.device}
-          />
+          <HpIntroSectionWrapper />
           <div className="section">
             <div className="container">
               <ProductGroup
@@ -104,3 +102,49 @@ class Introduction extends React.Component {
     )
   }
 }
+
+class HpIntroSection extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+  }
+  render(){
+    return (
+      <div id="homepage-search-container" className="section intro">
+        <div className="container">
+          <article>
+            <p>Search thousands of snaps used by millions of people across 50 Linux distributions</p>
+          </article>
+          <form className="ui form">
+            <div className="field">
+
+            </div>
+            <select className="ui fluid dropdown">
+              <option>categories</option>
+            </select>
+            <input type="text"/>
+            <button className="ui button">search</button>
+          </form>
+        </div>
+      </div>
+    )
+  }
+}
+
+const mapStateToHpIntroSectionProps = (state) => {
+  const categories = state.categories;
+  return {
+    categories
+  }
+}
+
+const mapDispatchToHpIntroSectionProps = (dispatch) => {
+  return {
+    dispatch
+  }
+}
+
+const HpIntroSectionWrapper = ReactRedux.connect(
+  mapStateToHpIntroSectionProps,
+  mapDispatchToHpIntroSectionProps
+)(HpIntroSection);

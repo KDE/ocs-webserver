@@ -2,7 +2,7 @@ window.appHelpers = function () {
 
   function getEnv(domain) {
     let env;
-    if (this.splitByLastDot(domain) === 'com') {
+    if (this.splitByLastDot(domain) === 'com' || 'org') {
       env = 'live';
     } else {
       env = 'test';
@@ -1787,9 +1787,7 @@ class HomePage extends React.Component {
       React.createElement(
         "div",
         { className: "hp-wrapper" },
-        React.createElement(Introduction, {
-          device: this.state.device
-        }),
+        React.createElement(HpIntroSectionWrapper, null),
         React.createElement(
           "div",
           { className: "section" },
@@ -1898,6 +1896,67 @@ class Introduction extends React.Component {
     );
   }
 }
+
+class HpIntroSection extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+  render() {
+    return React.createElement(
+      "div",
+      { id: "homepage-search-container", className: "section intro" },
+      React.createElement(
+        "div",
+        { className: "container" },
+        React.createElement(
+          "article",
+          null,
+          React.createElement(
+            "p",
+            null,
+            "Search thousands of snaps used by millions of people across 50 Linux distributions"
+          )
+        ),
+        React.createElement(
+          "form",
+          { className: "ui form" },
+          React.createElement("div", { className: "field" }),
+          React.createElement(
+            "select",
+            { className: "ui fluid dropdown" },
+            React.createElement(
+              "option",
+              null,
+              "categories"
+            )
+          ),
+          React.createElement("input", { type: "text" }),
+          React.createElement(
+            "button",
+            { className: "ui button" },
+            "search"
+          )
+        )
+      )
+    );
+  }
+}
+
+const mapStateToHpIntroSectionProps = state => {
+  const categories = state.categories;
+  return {
+    categories
+  };
+};
+
+const mapDispatchToHpIntroSectionProps = dispatch => {
+  return {
+    dispatch
+  };
+};
+
+const HpIntroSectionWrapper = ReactRedux.connect(mapStateToHpIntroSectionProps, mapDispatchToHpIntroSectionProps)(HpIntroSection);
 class ProductView extends React.Component {
   constructor(props) {
     super(props);
@@ -3255,7 +3314,7 @@ class ProductViewFilesTabItem extends React.Component {
     const f = this.props.file;
     const timestamp = Math.floor(new Date().getTime() / 1000 + 3600);
     const fileDownloadHash = appHelpers.generateFileDownloadHash(f, store.getState().env);
-    let downloadLink = "https://" + baseUrl + "/p/" + this.props.product.project_id + "/startdownload?file_id=" + f.id + "&file_name=" + f.title + "&file_type=" + f.type + "&file_size=" + f.size + "&url=" + downloadLinkUrlAttr + "files%2Fdownloadfile%2Fid%2F" + f.id + "%2Fs%2F" + fileDownloadHash + "%2Ft%2F" + timestamp + "%2Fu%2F" + this.props.product.member_id + "%2F" + f.title;
+    let downloadLink = "https://" + baseUrl + "/p/" + this.props.product.project_id + "/startdownload?file_id=" + f.id + "&file_name=" + f.title + "&file_type=" + f.type + "&file_size=" + f.size + "&url=" + downloadLinkUrlAttr + "files%2Fdownload%2Fid%2F" + f.id + "%2Fs%2F" + fileDownloadHash + "%2Ft%2F" + timestamp + "%2Fu%2F" + this.props.product.member_id + "%2F" + f.title;
 
     /*https://david.pling.cc/p/747/startdownload?file_id=1519124607&amp;
     file_name=1519124607-download-app-old.png&amp;
@@ -3741,6 +3800,7 @@ class App extends React.Component {
   }
 
   render() {
+    console.log(store.getState());
     let displayView = React.createElement(HomePageWrapper, null);
     if (store.getState().view === 'explore') {
       displayView = React.createElement(ExplorePageWrapper, null);
