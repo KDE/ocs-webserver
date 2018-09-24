@@ -408,7 +408,7 @@ class Default_Model_OAuth_Ocs implements Default_Model_OAuth_Interface
         Zend_Registry::get('logger')->info(__METHOD__ . ' - seconds: ' . $this->_db->getProfiler()->getLastQueryProfile()
                                                                                             ->getElapsedSecs())
         ;
-        $this->_db->getProfiler()->setEnabled(false);
+        $this->_db->getProfiler()->setEnabled(false); 
 
         return $resultSet;
     }
