@@ -26,6 +26,7 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
     const MD5 = 'enc01';
     const SHA = 'enc02';
     const PASSWORDSALT = 'ghdfklsdfgjkldfghdklgioerjgiogkldfgndfohgfhhgfhgfhgfhgfhfghfgnndf';
+    const USER_DEAVIVATED = '_deactivated';
 
     protected $_db;
     protected $_tableName;
@@ -157,22 +158,27 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
             m.`is_active` = :active AND 
             m.`is_deleted` = :deleted AND 
             m.`login_method` = :login AND 
-            LOWER(m.`username`) = LOWER(:username) AND 
+            (LOWER(m.`username`) = LOWER(:username) OR
+            LOWER(m.`username`) = CONCAT(LOWER(:username),:user_deactivated)
+            ) 
+            AND 
             m.`password` = :pwd";
 
         $this->_db->getProfiler()->setEnabled(true);
         $resultSet = $this->_db->fetchAll($sql, array(
-            'active'   => Default_Model_DbTable_Member::MEMBER_ACTIVE,
-            'deleted'  => Default_Model_DbTable_Member::MEMBER_NOT_DELETED,
-            'login'    => Default_Model_DbTable_Member::MEMBER_LOGIN_LOCAL,
-            'username' => $this->_identity,
-            'pwd'      => $this->_credential
+            'active'            => Default_Model_DbTable_Member::MEMBER_ACTIVE,
+            'deleted'           => Default_Model_DbTable_Member::MEMBER_NOT_DELETED,
+            'login'             => Default_Model_DbTable_Member::MEMBER_LOGIN_LOCAL,
+            'username'          => $this->_identity,
+            'user_deactivated'  => $this::USER_DEAVIVATED,
+            'pwd'               => $this->_credential
         ));
         
         $sql = str_replace(':active', Default_Model_DbTable_Member::MEMBER_ACTIVE, $sql);
         $sql = str_replace(':deleted', Default_Model_DbTable_Member::MEMBER_NOT_DELETED, $sql);
         $sql = str_replace(':login',"'". Default_Model_DbTable_Member::MEMBER_LOGIN_LOCAL . "'", $sql);
         $sql = str_replace(':username', "'". $this->_identity . "'", $sql);
+        $sql = str_replace(':user_deactivated', "'". $this::USER_DEAVIVATED . "'", $sql);
         $sql = str_replace(':pwd', "'". $this->_credential . "'", $sql);
         
         Zend_Registry::get('logger')->debug(__METHOD__. ' - SQL: ' . $sql . ' - sql take seconds: ' . $this->_db->getProfiler()->getLastQueryProfile()

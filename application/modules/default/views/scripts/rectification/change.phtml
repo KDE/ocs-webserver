@@ -38,7 +38,9 @@ $this->inlineScript()->appendFile('/theme/flatui/js/lib/bootstrap-validator.min.
                         <div id="help-block" class="help-block">
                             <?php
                                 $errCode = $this->errorCode;
-                                if($errCode == Default_Model_ReviewProfileData::INVALID_USERNAME_NOT_ALLOWED) {
+                                if($errCode == Default_Model_ReviewProfileData::INVALID_USERNAME_DEACTIVATED) {
+                                    print_r("Due to a switch to LDAP, there is a rare username conflict and your account was deactivated. Please make your username unique to continue.");
+                                } else if($errCode == Default_Model_ReviewProfileData::INVALID_USERNAME_NOT_ALLOWED) {
                                     print_r("Some characters in your username are no longer supported. Please correct it or choose another one.");
                                 } else if($errCode == Default_Model_ReviewProfileData::INVALID_USERNAME_NOT_UNIQUE) {
                                     print_r("Due to a switch to LDAP, there is a rare username conflict. Please make your username unique to continue.");
@@ -59,7 +61,7 @@ $this->inlineScript()->appendFile('/theme/flatui/js/lib/bootstrap-validator.min.
                             }
                             ?>
 
-                            <?php if (($this->errorCode == Default_Model_ReviewProfileData::INVALID_USERNAME_NOT_ALLOWED || $this->errorCode == Default_Model_ReviewProfileData::INVALID_USERNAME_NOT_UNIQUE) ) : ?>
+                            <?php if (($this->errorCode == Default_Model_ReviewProfileData::INVALID_USERNAME_DEACTIVATED || $this->errorCode == Default_Model_ReviewProfileData::INVALID_USERNAME_NOT_ALLOWED || $this->errorCode == Default_Model_ReviewProfileData::INVALID_USERNAME_NOT_UNIQUE) ) : ?>
                             <div class="form-group has-feedback">
                                 <label for="username" class="control-label">The username has to be unique and may only contain lower case alphanumeric characters or single hyphens, and cannot begin or end with a hyphen</label>
                                 <input name="username" id="username" value="" type="text" placeholder="Username" data-minlength="4" class="form-control" required data-minlength-error="Minimum of 4 characters" data-maxlength="40" data-maxlength-error="Maximum of 40 characters"><div class="help-block with-errors"></div>

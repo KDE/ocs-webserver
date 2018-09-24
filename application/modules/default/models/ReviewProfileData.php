@@ -28,14 +28,17 @@ class Default_Model_ReviewProfileData
     const INVALID_USERNAME = 1;
     const INVALID_EMAIL = 2;
     
+    const INVALID_USERNAME_DEACTIVATED = 10;
     const INVALID_USERNAME_NOT_ALLOWED = 11;
     const INVALID_USERNAME_NOT_UNIQUE = 12;
+    
+    const USERNAME_DEACTIVATED_TEXT = "_deactivated";
     
 
     protected $message;
     protected $errorCode;
 
-    private $usernameValidationChain = array('isUsernameValid', 'isUsernameUnique');
+    private $usernameValidationChain = array('isUsernameDeactivated', 'isUsernameValid', 'isUsernameUnique');
     private $emailValidationChain = array('isEmailValid', 'isEmailUnique');
 
     /**
@@ -150,6 +153,24 @@ class Default_Model_ReviewProfileData
 
         if ((false === empty($result)) AND $result['amount'] > 1) {
             $this->message['email'][] = array('email is not unique');
+
+            return false;
+        }
+
+        return true;
+    }
+    
+    /**
+     * @param $member_data
+     *
+     * @return bool
+     * @throws Zend_Validate_Exception
+     */
+    private function isUsernameDeactivated($member_data)
+    {
+        if (strpos($member_data->username, $this::USERNAME_DEACTIVATED_TEXT) > 0) {
+            $this->message['username'][] = 'User is deactivated';
+            $this->errorCode = $this::INVALID_USERNAME_DEACTIVATED;
 
             return false;
         }
