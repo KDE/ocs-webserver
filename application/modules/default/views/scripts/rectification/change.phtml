@@ -39,7 +39,7 @@ $this->inlineScript()->appendFile('/theme/flatui/js/lib/bootstrap-validator.min.
                             <?php
                                 $errCode = $this->errorCode;
                                 if($errCode == Default_Model_ReviewProfileData::INVALID_USERNAME_DEACTIVATED) {
-                                    print_r("Due to a switch to LDAP, there is a rare username conflict and your account was deactivated. Please make your username unique to continue.");
+                                    print_r("Due to a rare username conflict your account has been temp. deactivated. To activate again please choose a new valid username.");
                                 } else if($errCode == Default_Model_ReviewProfileData::INVALID_USERNAME_NOT_ALLOWED) {
                                     print_r("Some characters in your username are no longer supported. Please correct it or choose another one.");
                                 } else if($errCode == Default_Model_ReviewProfileData::INVALID_USERNAME_NOT_UNIQUE) {

@@ -50,6 +50,10 @@ class Local_Validate_UsernameExists extends Zend_Validate_Abstract
         $modelMember = new Default_Model_Member();
         $resultSet = $modelMember->findUsername($value, Default_Model_Member::CASE_INSENSITIVE, $omitMember);
         if (count($resultSet) > 0) {
+            
+            Zend_Registry::get('logger')->info(__METHOD__ . ' User Exists: ' . $value)
+        ;
+            
             return false;
         }
 

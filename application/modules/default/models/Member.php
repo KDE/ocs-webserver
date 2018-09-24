@@ -1003,6 +1003,9 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         if (count($omitMember) > 0) {
             $sql .= " AND member.member_id NOT IN (" . implode(',', $omitMember) . ")";
         }
+        
+        Zend_Registry::get('logger')->debug(__METHOD__. ' - SQL: ' . $sql)
+        ;
 
         return $this->_db->fetchAll($sql, array('username' => $value));
     }
