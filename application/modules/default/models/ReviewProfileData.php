@@ -168,7 +168,7 @@ class Default_Model_ReviewProfileData
      */
     private function isUsernameDeactivated($member_data)
     {
-        if (strpos($member_data->username, $this::USERNAME_DEACTIVATED_TEXT) > 0) {
+        if (strpos($member_data->username, $this::USERNAME_DEACTIVATED_TEXT) > 0) { 
             $this->message['username'][] = 'User is deactivated';
             $this->errorCode = $this::INVALID_USERNAME_DEACTIVATED;
 

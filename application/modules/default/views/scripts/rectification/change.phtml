@@ -60,7 +60,7 @@ $this->inlineScript()->appendFile('/theme/flatui/js/lib/bootstrap-validator.min.
                                 $this->form->mail->class = $this->form->mail->class . ' has-error';
                             }
                             ?>
-
+ 
                             <?php if (($this->errorCode == Default_Model_ReviewProfileData::INVALID_USERNAME_DEACTIVATED || $this->errorCode == Default_Model_ReviewProfileData::INVALID_USERNAME_NOT_ALLOWED || $this->errorCode == Default_Model_ReviewProfileData::INVALID_USERNAME_NOT_UNIQUE) ) : ?>
                             <div class="form-group has-feedback">
                                 <label for="username" class="control-label">The username has to be unique and may only contain lower case alphanumeric characters or single hyphens, and cannot begin or end with a hyphen</label>
