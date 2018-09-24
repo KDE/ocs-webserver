@@ -56,7 +56,7 @@ class Default_Form_Register extends Zend_Form
                       ->addValidator($userNameLength, true)
                       ->addValidator($usernameValidChars, true)
                       ->addValidator($userExistCheck, true)
-                      ->addValidator($groupNameExists, true)
+                      //->addValidator($groupNameExists, true)
                       ->setAttrib('placeholder', 'Username (4 chars minimum)')
                       ->setAttrib('class', 'form-control')
         ;

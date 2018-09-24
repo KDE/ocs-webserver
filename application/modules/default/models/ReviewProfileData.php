@@ -38,7 +38,7 @@ class Default_Model_ReviewProfileData
     protected $message;
     protected $errorCode;
 
-    private $usernameValidationChain = array('isUsernameValid', 'isUsernameUnique');
+    private $usernameValidationChain = array('isUsernameDeactivated', 'isUsernameValid', 'isUsernameUnique');
     private $emailValidationChain = array('isEmailValid', 'isEmailUnique');
 
     /**
