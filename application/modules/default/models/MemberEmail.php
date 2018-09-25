@@ -251,7 +251,7 @@ class Default_Model_MemberEmail
         $sql = "
             SELECT *
             FROM `member_email`
-            WHERE `member_email`.`email_deleted` = 0
+            WHERE
         ";
         if ($test_case_sensitive == self::CASE_INSENSITIVE) {
             $sql .= "AND LCASE(member_email.email_address) = LCASE(:mail_address)";
