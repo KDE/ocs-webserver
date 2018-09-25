@@ -599,9 +599,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         }
 
 
+
         $activityLog = new Default_Model_ActivityLog();
-        $activityLog->writeActivityLog($this->_projectId, $projectData->member_id,
-            Default_Model_ActivityLog::PROJECT_EDITED, $projectData->toArray());
+        $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id, Default_Model_ActivityLog::PROJECT_EDITED, $projectData->toArray());
 
         // ppload
         $this->processPploadId($projectData);
@@ -818,7 +818,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $activityLogValues = $projectUpdateRow->toArray();
         $activityLogValues['image_small'] = $product->image_small;
         $activityLog = new Default_Model_ActivityLog();
-        $activityLog->writeActivityLog($lastId, $projectUpdateRow->member_id, $activityLogType, $activityLogValues);
+        //$activityLog->writeActivityLog($lastId, $projectUpdateRow->member_id, $activityLogType, $activityLogValues);
+        $activityLog->writeActivityLog($lastId, $this->_authMember->member_id, $activityLogType, $activityLogValues);
 
         $helperBuildProductUrl = new Default_View_Helper_BuildProductUrl();
         $urlProjectShow = $helperBuildProductUrl->buildProductUrl($this->_projectId);
@@ -1229,7 +1230,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         }
 
         $activityLog = new Default_Model_ActivityLog();
-        $activityLog->writeActivityLog($this->_projectId, $memberId, Default_Model_ActivityLog::PROJECT_DELETED,
+        $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id, Default_Model_ActivityLog::PROJECT_DELETED,
             $product->toArray());
 
         $this->forward('products', 'user', 'default');
@@ -1258,7 +1259,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         }
 
         $activityLog = new Default_Model_ActivityLog();
-        $activityLog->writeActivityLog($this->_projectId, $memberId, Default_Model_ActivityLog::PROJECT_UNPUBLISHED,
+        $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id, Default_Model_ActivityLog::PROJECT_UNPUBLISHED,
             $product->toArray());
 
         // remove unpublished project from search index
@@ -1307,7 +1308,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         }
 
         $activityLog = new Default_Model_ActivityLog();
-        $activityLog->writeActivityLog($this->_projectId, $memberId, Default_Model_ActivityLog::PROJECT_PUBLISHED,
+        $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id, Default_Model_ActivityLog::PROJECT_PUBLISHED,
             $product->toArray());
 
         // add published project to search index
