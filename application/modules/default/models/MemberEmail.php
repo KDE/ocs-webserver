@@ -251,12 +251,12 @@ class Default_Model_MemberEmail
         $sql = "
             SELECT *
             FROM `member_email`
-            WHERE `member_email`.`email_deleted` = 0
+            WHERE
         ";
         if ($test_case_sensitive == self::CASE_INSENSITIVE) {
-            $sql .= "AND LCASE(member_email.email_address) = LCASE(:mail_address)";
+            $sql .= " LCASE(member_email.email_address) = LCASE(:mail_address)";
         } else {
-            $sql .= "AND member_email.email_address = :mail_address";
+            $sql .= " member_email.email_address = :mail_address";
         }
 
         if (count($omitMember) > 0) {

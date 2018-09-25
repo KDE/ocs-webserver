@@ -19,7 +19,10 @@
  *
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+ use YoHang88\LetterAvatar\LetterAvatar; 
  **/
+
 class Default_Model_Member extends Default_Model_DbTable_Member
 {
     const CASE_INSENSITIVE = 1;
@@ -524,7 +527,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
      * @return string
      * @throws Exception
      */
-    protected function generateIdentIcon($userData, $uuidMember)
+    protected function generateIdentIcon_old($userData, $uuidMember)
     {
         $identIcon = new Local_Tools_Identicon();
         $tmpImagePath = IMAGES_UPLOAD_PATH . 'tmp/' . $uuidMember . '.png';
@@ -533,6 +536,25 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         $imageService = new Default_Model_DbTable_Image();
         $imageFilename = $imageService->saveImageOnMediaServer($tmpImagePath);
 
+        return $imageFilename;
+    }
+
+    /**
+     * @param $userData
+     * @param $uuidMember
+     *
+     * @return string
+     * @throws Exception
+     */
+    protected function generateIdentIcon($userData, $uuidMember)
+    {
+        require_once 'vendor/autoload.php';
+        $name = substr($userData['username'],0,1).' '.substr($userData['username'],1);        
+        $avatar = new YoHang88_LetterAvatar_LetterAvatar($name,'square', 100);   
+        $tmpImagePath = IMAGES_UPLOAD_PATH . 'tmp/' . $uuidMember . '.png';
+        $avatar->saveAs($tmpImagePath, LetterAvatar::MIME_TYPE_PNG);        
+        $imageService = new Default_Model_DbTable_Image();
+        $imageFilename = $imageService->saveImageOnMediaServer($tmpImagePath);
         return $imageFilename;
     }
 
@@ -1003,9 +1025,6 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         if (count($omitMember) > 0) {
             $sql .= " AND member.member_id NOT IN (" . implode(',', $omitMember) . ")";
         }
-        
-        Zend_Registry::get('logger')->debug(__METHOD__. ' - SQL: ' . $sql)
-        ;
 
         return $this->_db->fetchAll($sql, array('username' => $value));
     }
