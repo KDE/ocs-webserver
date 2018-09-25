@@ -20,9 +20,9 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
- use YoHang88\LetterAvatar\LetterAvatar; 
+ 
  **/
-
+use YoHang88\LetterAvatar\LetterAvatar; 
 class Default_Model_Member extends Default_Model_DbTable_Member
 {
     const CASE_INSENSITIVE = 1;
@@ -550,7 +550,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
     {
         require_once 'vendor/autoload.php';
         $name = substr($userData['username'],0,1).' '.substr($userData['username'],1);        
-        $avatar = new YoHang88_LetterAvatar_LetterAvatar($name,'square', 100);   
+        $avatar = new LetterAvatar($name,'square', 100);   
         $tmpImagePath = IMAGES_UPLOAD_PATH . 'tmp/' . $uuidMember . '.png';
         $avatar->saveAs($tmpImagePath, LetterAvatar::MIME_TYPE_PNG);        
         $imageService = new Default_Model_DbTable_Image();
