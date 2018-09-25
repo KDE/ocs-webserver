@@ -1070,8 +1070,24 @@ table {
   border-bottom: 1px solid #eaeaea;
 
   .product-carousel-header {
+    height: auto;
+    overflow: auto;
+
     h2 {
       font-size: 25px !important;
+      float: left;
+      display: block;
+      width: auto;
+      padding-right: 20px;
+      position: relative;
+      width: auto !important;
+
+      i {
+        display: inline-block;
+        position: absolute;
+        top: 13px;
+        right: 0;
+      }
     }
   }
 
@@ -1116,6 +1132,10 @@ table {
         left: 50%;
         margin-left: -12px;
         margin-top: -12px;
+      }
+
+      &:active {
+        background-color: darken(white,10%);
       }
     }
 
@@ -1168,6 +1188,12 @@ table {
           &.product-info-title {
             color: #007aa6;
             font-weight: 400 !important;
+            text-overflow: ellipsis;
+            word-break: break-word;
+            display: block;
+            overflow: hidden;
+            white-space: nowrap;
+            padding-right: 20px;
           }
 
           &.product-info-user {
@@ -1553,7 +1579,7 @@ table {
   position: relative;
 
   .container {
-    padding: 0 20%;
+    padding: 0 10%;
   }
 
   #product-download-section {
@@ -2262,7 +2288,7 @@ table {
   }
   #product-page {
     .container {
-      padding: 0 20%;
+      padding: 0 10%;
     }
   }
   /*.explore-products-container {
@@ -2286,7 +2312,7 @@ table {
   }
   #product-page {
     .container {
-      padding: 0 20%;
+      padding: 0 10%;
     }
   }
   /*.explore-products-container {
