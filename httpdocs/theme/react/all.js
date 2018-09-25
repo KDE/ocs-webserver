@@ -2215,6 +2215,9 @@ class ProductView extends React.Component {
       React.createElement(ProductViewGallery, {
         product: this.props.product
       }),
+      React.createElement(ProductDescription, {
+        product: this.props.product
+      }),
       React.createElement(ProductNavBar, {
         onTabToggle: this.toggleTab,
         tab: this.state.tab,
@@ -2299,61 +2302,73 @@ class ProductViewHeader extends React.Component {
           { className: 'section mdl-grid' },
           React.createElement(
             'div',
-            { className: 'image-container' },
-            React.createElement('img', { src: 'https://' + imageBaseUrl + '/cache/140x140/img/' + this.props.product.image_small })
+            { className: 'product-view-header-left' },
+            React.createElement(
+              'figure',
+              { className: 'image-container' },
+              React.createElement('img', { src: 'https://' + imageBaseUrl + '/cache/140x140/img/' + this.props.product.image_small })
+            ),
+            React.createElement(
+              'div',
+              { className: 'product-info' },
+              React.createElement(
+                'h1',
+                null,
+                this.props.product.title
+              ),
+              React.createElement(
+                'div',
+                { className: 'info-row' },
+                React.createElement(
+                  'a',
+                  { className: 'user', href: "/member/" + this.props.product.member_id },
+                  React.createElement(
+                    'span',
+                    { className: 'avatar' },
+                    React.createElement('img', { src: this.props.product.profile_image_url })
+                  ),
+                  React.createElement(
+                    'span',
+                    { className: 'username' },
+                    this.props.product.username
+                  )
+                ),
+                React.createElement(
+                  'a',
+                  { href: "/browse/cat/" + this.props.product.project_category_id + "/order/latest?new=1" },
+                  React.createElement(
+                    'span',
+                    null,
+                    this.props.product.cat_title
+                  )
+                ),
+                productTagsDisplay
+              )
+            )
           ),
           React.createElement(
             'div',
-            { className: 'details-container' },
-            React.createElement(
-              'h1',
-              null,
-              this.props.product.title
-            ),
+            { className: 'product-view-header-right' },
             React.createElement(
               'div',
-              { className: 'info-row' },
+              { className: 'details-container' },
               React.createElement(
                 'a',
-                { className: 'user', href: "/member/" + this.props.product.member_id },
-                React.createElement(
-                  'span',
-                  { className: 'avatar' },
-                  React.createElement('img', { src: this.props.product.profile_image_url })
-                ),
-                React.createElement(
-                  'span',
-                  { className: 'username' },
-                  this.props.product.username
-                )
+                { onClick: this.props.onDownloadBtnClick, href: '#', className: 'mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary' },
+                'Download'
               ),
-              React.createElement(
-                'a',
-                { href: "/browse/cat/" + this.props.product.project_category_id + "/order/latest?new=1" },
-                React.createElement(
-                  'span',
-                  null,
-                  this.props.product.cat_title
-                )
-              ),
-              productTagsDisplay
-            ),
-            React.createElement(
-              'a',
-              { onClick: this.props.onDownloadBtnClick, href: '#', className: 'mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary' },
-              'Download'
-            ),
-            React.createElement(
-              'div',
-              { id: 'product-view-header-right-side' },
               React.createElement(ProductViewHeaderLikes, {
                 product: this.props.product,
                 user: this.props.user
               }),
-              React.createElement(ProductViewHeaderRatings, {
-                product: this.props.product,
-                user: this.props.user
-              })
+              React.createElement(
+                'div',
+                { id: 'product-view-header-right-side' },
+                React.createElement(ProductViewHeaderRatings, {
+                  product: this.props.product,
+                  user: this.props.user
+                })
+              )
             )
           )
         )
@@ -3002,6 +3017,72 @@ class ProductGalleryLightbox extends React.Component {
   }
 }
 
+class ProductDescription extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+  render() {
+    return React.createElement(
+      'div',
+      { id: 'product-description', className: 'section' },
+      React.createElement(
+        'div',
+        { className: 'container' },
+        React.createElement(
+          'div',
+          { className: 'main-content' },
+          React.createElement(
+            'article',
+            null,
+            React.createElement('p', { dangerouslySetInnerHTML: { __html: this.props.product.description } })
+          ),
+          React.createElement(
+            'aside',
+            null,
+            React.createElement(
+              'ul',
+              null,
+              React.createElement(
+                'li',
+                null,
+                React.createElement(
+                  'span',
+                  { className: 'key' },
+                  'License'
+                ),
+                React.createElement(
+                  'span',
+                  { className: 'val' },
+                  this.props.product.project_license_title
+                )
+              ),
+              React.createElement(
+                'li',
+                null,
+                React.createElement(
+                  'span',
+                  { className: 'key' },
+                  'Last Update'
+                ),
+                React.createElement(
+                  'span',
+                  { className: 'val' },
+                  this.props.product.changed_at
+                )
+              )
+            )
+          )
+        ),
+        React.createElement(ProductCommentsContainer, {
+          product: this.props.product,
+          user: this.props.user
+        })
+      )
+    );
+  }
+}
+
 class ProductNavBar extends React.Component {
   render() {
     let productNavBarDisplay;
@@ -3069,6 +3150,7 @@ class ProductNavBar extends React.Component {
 
 class ProductViewContent extends React.Component {
   render() {
+    console.log(this.props);
     let currentTabDisplay;
     if (this.props.tab === 'product') {
       currentTabDisplay = React.createElement(

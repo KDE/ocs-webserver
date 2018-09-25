@@ -1067,7 +1067,7 @@ table {
 
 .product-carousel {
   padding-bottom: 10px;
-  border-bottom: 1px solid #eaeaea;
+  border-bottom: 1px solid #ccc;
 
   .product-carousel-header {
     height: auto;
@@ -1081,6 +1081,7 @@ table {
       padding-right: 20px;
       position: relative;
       width: auto !important;
+      margin-bottom: 20px;
 
       i {
         display: inline-block;
@@ -1203,6 +1204,7 @@ table {
       }
     }
   }
+
 }
 
 #app-root {
@@ -1219,6 +1221,7 @@ table {
 
   .container {
     width: 100% !important;
+    max-width: 1240px !important;
     padding: 0 10%;
   }
 
@@ -1308,8 +1311,9 @@ table {
     }
 
     #introduction {
-      padding-top: 60px;
-      margin-bottom: 30px;
+      background-color: #f7f7f7;
+      padding-bottom: 30px;
+      margin-bottom: 10px;
 
       p {
         max-width: 700px;
@@ -1328,6 +1332,24 @@ table {
       }
     }
 
+  }
+}
+
+#homepage {
+  .hp-wrapper {
+    .section {
+      &:last-of-type {
+        .container {
+          .product-carousel {
+            border-bottom: 0;
+          }
+        }
+      }
+    }
+
+    .section + .section {
+      padding-top: 0;
+    }
   }
 }
 
@@ -1601,35 +1623,33 @@ table {
     padding-bottom: 15px;
 
     .container {
-      .section {
-        padding-left: 150px;
-        position: relative;
+      .product-view-header-left,
+      .product-view-header-right {
+        width: 50%;
+        float: left;
       }
     }
 
     .image-container {
-      position: absolute;
-      left: 0;
-      width: 140px;
+      float: left;
+      width: 100%;
+      height: 60px;
+      margin-bottom: 20px;
 
       img {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 100%;
-        width: 100%;
+        width: 60px;
+        height: 60px;
+        float: left;
       }
     }
 
-    .image-container:after {
-      content:"";
-      display: block;
-      padding-bottom: 100%;
-    }
-
-    .details-container {
+    .product-info {
       width: 100%;
-      position: relative;
+      float: left;
+
+      h1 {
+        font-size: 30px !important;
+      }
 
       .info-row {
         width: 100%;
@@ -1703,32 +1723,23 @@ table {
         }
       }
 
-      #product-view-header-right-side {
-        position: absolute;
-        top: 39px;
-        right: 0;
+    }
 
-        #likes-container {
-          height: 63px;
+    .details-container {
+      width: 100%;
+      position: relative;
+      padding-top: 80px;
 
-          .likes-label-container {
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            width: 120px;
-            font-size: 15px;
-            text-align: right;
-            font-weight: 500;
-          }
+      .mdl-button {
+        float: right;
+        margin-left: 10px;
+      }
 
-          &.liked-by-user {
-            .likes {
-              span {
-                color: white;
-              }
-            }
-          }
-        }
+      #likes-container {
+        height: 38px;
+        width: 40px;
+        float: right;
+        position: relative;
 
         .likes {
           float: right;
@@ -1767,94 +1778,112 @@ table {
           }
         }
 
-        .ratings-bar-container {
-          width: 200px;
-          float: left;
-          clear: both;
-          padding: 0 25px;
+        .likes-label-container {
           position: absolute;
-          top: 62px;
+          bottom: 0;
           right: 0;
+          width: 120px;
+          font-size: 15px;
+          text-align: right;
+          font-weight: 500;
+        }
 
-          .ratings-bar-left {
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 25px;
-            background-color: #ccc;
-            border-radius: 5px 0 0 5px;
-            border-color: #a7a7a7;
-            border-style: solid;
-            border-width: 0 0 2px 0;
-            width: 25px;
-            cursor: pointer;
-            .transition();
-
-            &:hover {
-              background-color: #c9302c;
-              color:white;
+        &.liked-by-user {
+          .likes {
+            span {
+              color: white;
             }
+          }
+        }
+      }
 
-            &:active {
-              color:white;
-              border-color: white;
-              border-style: inset;
-              border-width: 1px 0 0 1px;
+      .ratings-bar-container {
+        width: 200px;
+        float: left;
+        clear: both;
+        padding: 0 25px;
+        position: absolute;
+        top: 140px;
+        right: 0;
+
+        .ratings-bar-left {
+          position: absolute;
+          left: 0;
+          top: 0;
+          height: 25px;
+          background-color: #ccc;
+          border-radius: 5px 0 0 5px;
+          border-color: #a7a7a7;
+          border-style: solid;
+          border-width: 0 0 2px 0;
+          width: 25px;
+          cursor: pointer;
+          .transition();
+
+          &:hover {
+            background-color: #c9302c;
+            color:white;
+          }
+
+          &:active {
+            color:white;
+            border-color: white;
+            border-style: inset;
+            border-width: 1px 0 0 1px;
+            background-color: #c9302c;
+          }
+        }
+
+        .ratings-bar-right {
+          position: absolute;
+          top: 0;
+          right: 0;
+          height: 25px;
+          background-color: #ccc;
+          border-radius: 0 5px 5px 0;
+          border-color: #a7a7a7;
+          border-style: solid;
+          border-width: 0 0 2px 0;
+          width: 25px;
+          cursor: pointer;
+          .transition();
+
+          &:hover {
+            background-color: #449d44;
+            color:white;
+          }
+
+          &:active {
+            color:white;
+            border-style: inset;
+            border-width: 1px 1px 0 0;
+            border-color: white;
+            background-color:  #449d44;
+          }
+        }
+
+        .ratings-bar-holder {
+          width: 100%;
+          height: 25px;
+
+          .ratings-bar {
+            height: 25px;
+            width: 25%;
+            float: left;
+            background-color: #acc8ac;
+            border-bottom: 2px solid rgb(141, 158, 141);
+
+            &.red {
               background-color: #c9302c;
             }
           }
 
-          .ratings-bar-right {
-            position: absolute;
-            top: 0;
-            right: 0;
+          .ratings-bar-empty {
+            width: 75%;
             height: 25px;
-            background-color: #ccc;
-            border-radius: 0 5px 5px 0;
-            border-color: #a7a7a7;
-            border-style: solid;
-            border-width: 0 0 2px 0;
-            width: 25px;
-            cursor: pointer;
-            .transition();
-
-            &:hover {
-              background-color: #449d44;
-              color:white;
-            }
-
-            &:active {
-              color:white;
-              border-style: inset;
-              border-width: 1px 1px 0 0;
-              border-color: white;
-              background-color:  #449d44;
-            }
-          }
-
-          .ratings-bar-holder {
-            width: 100%;
-            height: 25px;
-
-            .ratings-bar {
-              height: 25px;
-              width: 25%;
-              float: left;
-              background-color: #acc8ac;
-              border-bottom: 2px solid rgb(141, 158, 141);
-
-              &.red {
-                background-color: #c9302c;
-              }
-            }
-
-            .ratings-bar-empty {
-              width: 75%;
-              height: 25px;
-              float: left;
-              background-color: #efefef;
-              border-bottom: 2px solid #ccc;
-            }
+            float: left;
+            background-color: #efefef;
+            border-bottom: 2px solid #ccc;
           }
         }
       }
@@ -1862,6 +1891,12 @@ table {
   }
 
   #product-view-gallery-container {
+    > .container {
+      > .section {
+        border-bottom: 1px solid #ccc;
+      }
+    }
+
     #product-gallery {
       width: 100%;
       position: relative;
@@ -2094,6 +2129,57 @@ table {
         &.active {
           > img, iframe {
             border:1px solid white;
+          }
+        }
+      }
+    }
+  }
+
+  #product-description {
+    article {
+      float: left;
+      width: 70%;
+
+      p {
+        font-size: 17px;
+      }
+    }
+
+    aside {
+      float: right;
+      width: 30%;
+
+      ul {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+
+        li {
+          float: left;
+          width: 100%;
+          height: 30px;
+          line-height: 30px;
+
+          span {
+            float: left;
+            width: 50%;
+            display: block;
+            font-size: 17px;
+          }
+
+          .key {
+            text-align: right;
+            padding-right: 10px;
+            color: #666;
+          }
+
+          .val {
+            text-align: left;
+            padding-left: 10px;
+          }
+
+          &:last-of-type {
+            border-top: 1px dotted #cdcdcd;
           }
         }
       }

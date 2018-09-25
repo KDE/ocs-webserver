@@ -64,6 +64,9 @@ class ProductView extends React.Component {
         <ProductViewGallery
           product={this.props.product}
         />
+        <ProductDescription
+          product={this.props.product}
+        />
         <ProductNavBar
           onTabToggle={this.toggleTab}
           tab={this.state.tab}
@@ -136,33 +139,39 @@ class ProductViewHeader extends React.Component {
       <div className="wrapper" id="product-view-header">
         <div className="container">
           <div className="section mdl-grid" >
-            <div className="image-container">
-              <img src={'https://' + imageBaseUrl + '/cache/140x140/img/' + this.props.product.image_small} />
-            </div>
-            <div className="details-container">
-              <h1>{this.props.product.title}</h1>
-              <div className="info-row">
-                <a className="user" href={"/member/" + this.props.product.member_id }>
-                  <span className="avatar"><img src={this.props.product.profile_image_url}/></span>
-                  <span className="username">{this.props.product.username}</span>
-                </a>
-                <a href={"/browse/cat/" + this.props.product.project_category_id + "/order/latest?new=1"}>
-                  <span>{this.props.product.cat_title}</span>
-                </a>
-                {productTagsDisplay}
+            <div className="product-view-header-left">
+              <figure className="image-container">
+                <img src={'https://' + imageBaseUrl + '/cache/140x140/img/' + this.props.product.image_small} />
+              </figure>
+              <div className="product-info">
+                <h1>{this.props.product.title}</h1>
+                <div className="info-row">
+                  <a className="user" href={"/member/" + this.props.product.member_id }>
+                    <span className="avatar"><img src={this.props.product.profile_image_url}/></span>
+                    <span className="username">{this.props.product.username}</span>
+                  </a>
+                  <a href={"/browse/cat/" + this.props.product.project_category_id + "/order/latest?new=1"}>
+                    <span>{this.props.product.cat_title}</span>
+                  </a>
+                  {productTagsDisplay}
+                </div>
               </div>
-              <a onClick={this.props.onDownloadBtnClick} href="#" className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">
-                Download
-              </a>
-              <div id="product-view-header-right-side">
+            </div>
+            <div className="product-view-header-right">
+              <div className="details-container">
+                <a onClick={this.props.onDownloadBtnClick} href="#" className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">
+                  Download
+                </a>
                 <ProductViewHeaderLikes
                   product={this.props.product}
                   user={this.props.user}
                 />
-                <ProductViewHeaderRatings
-                  product={this.props.product}
-                  user={this.props.user}
-                />
+                <div id="product-view-header-right-side">
+                  <ProductViewHeaderRatings
+                    product={this.props.product}
+                    user={this.props.user}
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -712,6 +721,36 @@ class ProductGalleryLightbox extends React.Component {
   }
 }
 
+class ProductDescription extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+  }
+  render(){
+    return (
+      <div id="product-description" className="section">
+        <div className="container">
+          <div className="main-content">
+            <article>
+              <p dangerouslySetInnerHTML={{__html:this.props.product.description}}></p>
+            </article>
+            <aside>
+              <ul>
+                <li><span className="key">License</span><span className="val">{this.props.product.project_license_title}</span></li>
+                <li><span className="key">Last Update</span><span className="val">{this.props.product.changed_at}</span></li>
+              </ul>
+            </aside>
+          </div>
+          <ProductCommentsContainer
+            product={this.props.product}
+            user={this.props.user}
+          />
+        </div>
+      </div>
+    )
+  }
+}
+
 class ProductNavBar extends React.Component {
   render(){
     let productNavBarDisplay;
@@ -747,6 +786,7 @@ class ProductNavBar extends React.Component {
 
 class ProductViewContent extends React.Component {
   render(){
+    console.log(this.props);
     let currentTabDisplay;
     if (this.props.tab === 'product'){
       currentTabDisplay = (
