@@ -70,7 +70,8 @@ var aItemData = [
             id: "user",
             itemdata: [
                 {text: "Users", url: "/backend/user"},
-                {text: "Config Paypal-Valid-Stati", url: "/backend/paypalvalidstatus"}
+                {text: "Config Paypal-Valid-Stati", url: "/backend/paypalvalidstatus"},
+                {text: "Generate Letter Avatar", url: "/backend/letteravatar"}
             ]
         }
     },
