@@ -549,7 +549,8 @@ class Default_Model_Member extends Default_Model_DbTable_Member
     protected function generateIdentIcon($userData, $uuidMember)
     {
         require_once 'vendor/autoload.php';
-        $name = substr($userData['username'],0,1).' '.substr($userData['username'],1);        
+        // $name = substr($userData['username'],0,1).' '.substr($userData['username'],1);        
+        $name = $userData['username'].'  ';        
         $avatar = new LetterAvatar($name,'square', 100);   
         $tmpImagePath = IMAGES_UPLOAD_PATH . 'tmp/' . $uuidMember . '.png';
         $avatar->saveAs($tmpImagePath, LetterAvatar::MIME_TYPE_PNG);        
