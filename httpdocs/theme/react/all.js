@@ -2152,7 +2152,7 @@ class ProductView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      tab: 'product',
+      tab: 'comments',
       showDownloadSection: false
     };
     this.toggleTab = this.toggleTab.bind(this);
@@ -2184,6 +2184,14 @@ class ProductView extends React.Component {
   }
 
   render() {
+
+    let productGalleryDisplay;
+    if (this.props.product.r_gallery.length > 0) {
+      productGalleryDisplay = React.createElement(ProductViewGallery, {
+        product: this.props.product
+      });
+    }
+
     let productGalleryLightboxDisplay;
     if (this.props.lightboxGallery.show === true) {
       productGalleryLightboxDisplay = React.createElement(ProductGalleryLightbox, {
@@ -2212,9 +2220,7 @@ class ProductView extends React.Component {
         user: this.props.user,
         onDownloadBtnClick: this.toggleDownloadSection
       }),
-      React.createElement(ProductViewGallery, {
-        product: this.props.product
-      }),
+      productGalleryDisplay,
       React.createElement(ProductDescription, {
         product: this.props.product
       }),
@@ -2391,10 +2397,11 @@ class ProductViewHeaderLikes extends React.Component {
   }
 
   onUserLike() {
-    if (this.props.user) {
+    if (this.props.user.username) {
       const url = "/p/" + this.props.product.project_id + "/followproject/";
       const self = this;
       $.ajax({ url: url, cache: false }).done(function (response) {
+        console.log(response);
         // error
         if (response.status === "error") {
           self.setState({ msg: response.msg });
@@ -2491,8 +2498,6 @@ class ProductViewHeaderRatings extends React.Component {
           $('#ratings-form-modal').modal('hide');
         },
         success: function (response) {
-          console.log('on rating form response');
-          console.log(response);
           // const laplace_score = productHelpers.calculateProductLaplaceScore(response);
           store.dispatch(setProductRatings(response));
           if (modalResponse.status !== "ok") self.setState({ errorMsg: modalResponse.status + " - " + modalResponse.message });
@@ -2518,8 +2523,6 @@ class ProductViewHeaderRatings extends React.Component {
         onRatingFormResponse: this.onRatingFormResponse
       });
     }
-
-    console.log(this.state.laplace_score);
 
     return React.createElement(
       'div',
@@ -2593,8 +2596,6 @@ class RatingsFormModal extends React.Component {
       } else {
         v = '2';
       }
-
-      console.log(this.state.text);
 
       jQuery.ajax({
         data: {
@@ -3068,16 +3069,12 @@ class ProductDescription extends React.Component {
                 React.createElement(
                   'span',
                   { className: 'val' },
-                  this.props.product.changed_at
+                  this.props.product.changed_at.split(' ')[0]
                 )
               )
             )
           )
-        ),
-        React.createElement(ProductCommentsContainer, {
-          product: this.props.product,
-          user: this.props.user
-        })
+        )
       )
     );
   }
@@ -3135,8 +3132,8 @@ class ProductNavBar extends React.Component {
           { className: 'explore-top-bar' },
           React.createElement(
             'a',
-            { className: this.props.tab === "product" ? "item active" : "item", onClick: () => this.props.onTabToggle('product') },
-            'Product'
+            { className: this.props.tab === "comments" ? "item active" : "item", onClick: () => this.props.onTabToggle('comments') },
+            'Comments'
           ),
           filesMenuItem,
           ratingsMenuItem,
@@ -3150,13 +3147,12 @@ class ProductNavBar extends React.Component {
 
 class ProductViewContent extends React.Component {
   render() {
-    console.log(this.props);
+
     let currentTabDisplay;
-    if (this.props.tab === 'product') {
+    if (this.props.tab === 'comments') {
       currentTabDisplay = React.createElement(
         'div',
-        { className: 'product-tab', id: 'product-tab' },
-        React.createElement('p', { dangerouslySetInnerHTML: { __html: this.props.product.description } }),
+        { className: 'product-tab', id: 'comments-tab' },
         React.createElement(ProductCommentsContainer, {
           product: this.props.product,
           user: this.props.user
@@ -3708,7 +3704,7 @@ class ProductViewRatingsTab extends React.Component {
   }
 
   render() {
-    console.log(this.props);
+
     const ratingsLikes = this.props.ratings.filter(this.filterLikes);
     const ratingsDislikes = this.props.ratings.filter(this.filterDislikes);
     const ratingsActive = this.props.ratings.filter(this.filterActive);

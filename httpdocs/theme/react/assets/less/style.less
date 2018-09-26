@@ -1221,7 +1221,7 @@ table {
 
   .container {
     width: 100% !important;
-    max-width: 1240px !important;
+    max-width: 1300px !important;
     padding: 0 10%;
   }
 
@@ -1600,9 +1600,6 @@ table {
 #product-page {
   position: relative;
 
-  .container {
-    padding: 0 10%;
-  }
 
   #product-download-section {
     text-align: center;
@@ -1780,7 +1777,7 @@ table {
 
         .likes-label-container {
           position: absolute;
-          bottom: 0;
+          bottom: -21px;
           right: 0;
           width: 120px;
           font-size: 15px;
@@ -2136,6 +2133,13 @@ table {
   }
 
   #product-description {
+
+    .main-content {
+      width: 100%;
+      float: left;
+      margin-bottom: 20px;
+    }
+
     article {
       float: left;
       width: 70%;
@@ -2192,7 +2196,9 @@ table {
     width: 100%;
 
     #files-tab {
-
+      table {
+        width: 100%;
+      }
     }
 
     #ratings-tab {
@@ -2329,17 +2335,6 @@ table {
 }
 
 @media (max-width: 1720px) and (min-width:1501px) {
-  #app-root {
-    .container {
-      padding: 0 15%;
-    }
-  }
-
-  #product-page {
-    .container {
-      max-width: 1280px !important;
-    }
-  }
   .products-showcase {
     .products-container {
       .square {
@@ -2357,11 +2352,6 @@ table {
       }
     }
   }
-  #product-page {
-    .container {
-      max-width: 1280px !important;
-    }
-  }
 }
 
 @media (max-width: 1500px) and (min-width: 1251px) {
@@ -2370,11 +2360,6 @@ table {
       .square {
         width: 20%;
       }
-    }
-  }
-  #product-page {
-    .container {
-      padding: 0 10%;
     }
   }
   /*.explore-products-container {
@@ -2394,11 +2379,6 @@ table {
       .square {
         width: 25%;
       }
-    }
-  }
-  #product-page {
-    .container {
-      padding: 0 10%;
     }
   }
   /*.explore-products-container {
@@ -2428,12 +2408,6 @@ table {
 @media (max-width: 999px) and (min-width: 662px) {
   #app-root {
     .container {
-      padding: 0 5%;
-    }
-  }
-  #product-page {
-    .container {
-      max-width: 90%;
       padding: 0 5%;
     }
   }
