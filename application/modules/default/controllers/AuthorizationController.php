@@ -419,6 +419,11 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         
         $modelReviewProfile = new Default_Model_ReviewProfileData();
         if (false === $modelReviewProfile->hasValidProfile($auth->getStorage()->read())) {
+            Zend_Registry::get('logger')->info(__METHOD__
+                . PHP_EOL . ' - User has to change userdata!'
+                . PHP_EOL . ' - error code: ' . print_r($modelReviewProfile->getErrorCode(), true)
+            );
+            
             if ($this->_request->isXmlHttpRequest()) {
                 $redirect = $this->getParam('redirect') ? '/redirect/' . $this->getParam('redirect') : '';
                 $this->_helper->json(array('status'   => 'ok',
