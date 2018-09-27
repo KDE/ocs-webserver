@@ -2,11 +2,12 @@ window.appHelpers = function () {
 
   function getEnv(domain) {
     let env;
-    if (this.splitByLastDot(domain) === 'com') {
+    if (this.splitByLastDot(domain) === 'com' || this.splitByLastDot(domain) === 'org') {
       env = 'live';
     } else {
       env = 'test';
     }
+    console.log(env);
     return env;
   }
 
@@ -1781,6 +1782,7 @@ class HomePage extends React.Component {
   }
 
   render() {
+
     return React.createElement(
       "div",
       { id: "homepage" },
@@ -1796,10 +1798,9 @@ class HomePage extends React.Component {
           React.createElement(
             "div",
             { className: "container" },
-            React.createElement(ProductGroup, {
+            React.createElement(ProductCarousel, {
               products: this.state.products.LatestProducts,
               device: this.state.device,
-              numRows: 1,
               title: 'New',
               link: '/browse/ord/latest/'
             })
@@ -1811,10 +1812,9 @@ class HomePage extends React.Component {
           React.createElement(
             "div",
             { className: "container" },
-            React.createElement(ProductGroup, {
+            React.createElement(ProductCarousel, {
               products: this.state.products.TopApps,
               device: this.state.device,
-              numRows: 1,
               title: 'Top Apps',
               link: '/browse/ord/top/'
             })
@@ -1826,10 +1826,9 @@ class HomePage extends React.Component {
           React.createElement(
             "div",
             { className: "container" },
-            React.createElement(ProductGroup, {
+            React.createElement(ProductCarousel, {
               products: this.state.products.TopGames,
               device: this.state.device,
-              numRows: 1,
               title: 'Top Games',
               link: '/browse/cat/6/ord/top/'
             })
@@ -1898,11 +1897,262 @@ class Introduction extends React.Component {
     );
   }
 }
+
+class HpIntroSection extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+  render() {
+    return React.createElement(
+      "div",
+      { id: "homepage-search-container", className: "section intro" },
+      React.createElement(
+        "div",
+        { className: "container" },
+        React.createElement(
+          "article",
+          null,
+          React.createElement(
+            "p",
+            null,
+            "Search thousands of snaps used by millions of people across 50 Linux distributions"
+          )
+        ),
+        React.createElement(
+          "div",
+          { id: "hp-search-form-container" },
+          React.createElement(
+            "select",
+            { className: "mdl-selectfield__select" },
+            React.createElement(
+              "option",
+              null,
+              "categories"
+            )
+          ),
+          React.createElement("input", { type: "text" }),
+          React.createElement(
+            "button",
+            null,
+            "search"
+          )
+        )
+      )
+    );
+  }
+}
+
+const mapStateToHpIntroSectionProps = state => {
+  const categories = state.categories;
+  return {
+    categories
+  };
+};
+
+const mapDispatchToHpIntroSectionProps = dispatch => {
+  return {
+    dispatch
+  };
+};
+
+const HpIntroSectionWrapper = ReactRedux.connect(mapStateToHpIntroSectionProps, mapDispatchToHpIntroSectionProps)(HpIntroSection);
+
+class ProductCarousel extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showRightArrow: true,
+      showLeftArrow: false
+    };
+    this.updateDimensions = this.updateDimensions.bind(this);
+    this.animateProductCarousel = this.animateProductCarousel.bind(this);
+  }
+
+  componentWillMount() {
+    window.addEventListener("resize", this.updateDimensions);
+  }
+
+  componentDidMount() {
+    this.updateDimensions();
+  }
+
+  updateDimensions() {
+    const containerWidth = $('#introduction').find('.container').width();
+    const sliderWidth = containerWidth * 4;
+    const itemWidth = containerWidth / 5;
+    this.setState({
+      sliderPosition: 0,
+      containerWidth: containerWidth,
+      sliderWidth: sliderWidth,
+      itemWidth: itemWidth
+    });
+  }
+
+  animateProductCarousel(dir) {
+
+    let newSliderPosition = this.state.sliderPosition;
+    if (dir === 'left') {
+      newSliderPosition = this.state.sliderPosition - this.state.containerWidth;
+    } else {
+      newSliderPosition = this.state.sliderPosition + this.state.containerWidth;
+    }
+
+    this.setState({ sliderPosition: newSliderPosition }, function () {
+
+      let showLeftArrow = true,
+          showRightArrow = true;
+      const endPoint = this.state.sliderWidth - this.state.containerWidth;
+      if (this.state.sliderPosition <= 0) {
+        showLeftArrow = false;
+      }
+      if (this.state.sliderPosition >= endPoint) {
+        showRightArrow = false;
+      }
+
+      this.setState({
+        showLeftArrow: showLeftArrow,
+        showRightArrow: showRightArrow
+      });
+    });
+  }
+
+  render() {
+
+    let carouselItemsDisplay;
+    if (this.props.products && this.props.products.length > 0) {
+
+      // DUPLICATE
+      let productsArray = this.props.products.concat(this.props.products);
+      productsArray = productsArray.concat(this.props.products);
+      // DUPLICATE
+
+      carouselItemsDisplay = productsArray.map((product, index) => React.createElement(ProductCarouselItem, {
+        key: index,
+        product: product,
+        itemWidth: this.state.itemWidth
+      }));
+    }
+
+    let rightArrowDisplay, leftArrowDisplay;
+    if (this.state.showLeftArrow) {
+      leftArrowDisplay = React.createElement(
+        "div",
+        { className: "product-carousel-left" },
+        React.createElement(
+          "a",
+          { onClick: () => this.animateProductCarousel('left'), className: "carousel-arrow arrow-left" },
+          React.createElement(
+            "i",
+            { className: "material-icons" },
+            "chevron_left"
+          )
+        )
+      );
+    }
+    if (this.state.showRightArrow) {
+      rightArrowDisplay = React.createElement(
+        "div",
+        { className: "product-carousel-right" },
+        React.createElement(
+          "a",
+          { onClick: () => this.animateProductCarousel('right'), className: "carousel-arrow arrow-right" },
+          React.createElement(
+            "i",
+            { className: "material-icons" },
+            "chevron_right"
+          )
+        )
+      );
+    }
+
+    return React.createElement(
+      "div",
+      { className: "product-carousel" },
+      React.createElement(
+        "div",
+        { className: "product-carousel-header" },
+        React.createElement(
+          "h2",
+          null,
+          React.createElement(
+            "a",
+            { href: this.props.link },
+            this.props.title,
+            React.createElement(
+              "i",
+              { className: "material-icons" },
+              "chevron_right"
+            )
+          )
+        )
+      ),
+      React.createElement(
+        "div",
+        { className: "product-carousel-wrapper" },
+        leftArrowDisplay,
+        React.createElement(
+          "div",
+          { className: "product-carousel-container" },
+          React.createElement(
+            "div",
+            { className: "product-carousel-slider", style: { "width": this.state.sliderWidth, "left": "-" + this.state.sliderPosition + "px" } },
+            carouselItemsDisplay
+          )
+        ),
+        rightArrowDisplay
+      )
+    );
+  }
+}
+
+class ProductCarouselItem extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  render() {
+    let imageBaseUrl;
+    if (store.getState().env === 'live') {
+      imageBaseUrl = 'cn.pling.com';
+    } else {
+      imageBaseUrl = 'cn.pling.it';
+    }
+    return React.createElement(
+      "div",
+      { className: "product-carousel-item", style: { "width": this.props.itemWidth } },
+      React.createElement(
+        "a",
+        { href: "/p/" + this.props.product.project_id },
+        React.createElement(
+          "figure",
+          null,
+          React.createElement("img", { className: "very-rounded-corners", src: 'https://' + imageBaseUrl + '/cache/200x171/img/' + this.props.product.image_small })
+        ),
+        React.createElement(
+          "div",
+          { className: "product-info" },
+          React.createElement(
+            "span",
+            { className: "product-info-title" },
+            this.props.product.title
+          ),
+          React.createElement(
+            "span",
+            { className: "product-info-user" },
+            this.props.product.username
+          )
+        )
+      )
+    );
+  }
+}
 class ProductView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      tab: 'product',
+      tab: 'comments',
       showDownloadSection: false
     };
     this.toggleTab = this.toggleTab.bind(this);
@@ -1934,6 +2184,14 @@ class ProductView extends React.Component {
   }
 
   render() {
+
+    let productGalleryDisplay;
+    if (this.props.product.r_gallery.length > 0) {
+      productGalleryDisplay = React.createElement(ProductViewGallery, {
+        product: this.props.product
+      });
+    }
+
     let productGalleryLightboxDisplay;
     if (this.props.lightboxGallery.show === true) {
       productGalleryLightboxDisplay = React.createElement(ProductGalleryLightbox, {
@@ -1962,7 +2220,8 @@ class ProductView extends React.Component {
         user: this.props.user,
         onDownloadBtnClick: this.toggleDownloadSection
       }),
-      React.createElement(ProductViewGallery, {
+      productGalleryDisplay,
+      React.createElement(ProductDescription, {
         product: this.props.product
       }),
       React.createElement(ProductNavBar, {
@@ -2049,61 +2308,73 @@ class ProductViewHeader extends React.Component {
           { className: 'section mdl-grid' },
           React.createElement(
             'div',
-            { className: 'image-container' },
-            React.createElement('img', { src: 'https://' + imageBaseUrl + '/cache/140x140/img/' + this.props.product.image_small })
+            { className: 'product-view-header-left' },
+            React.createElement(
+              'figure',
+              { className: 'image-container' },
+              React.createElement('img', { src: 'https://' + imageBaseUrl + '/cache/140x140/img/' + this.props.product.image_small })
+            ),
+            React.createElement(
+              'div',
+              { className: 'product-info' },
+              React.createElement(
+                'h1',
+                null,
+                this.props.product.title
+              ),
+              React.createElement(
+                'div',
+                { className: 'info-row' },
+                React.createElement(
+                  'a',
+                  { className: 'user', href: "/member/" + this.props.product.member_id },
+                  React.createElement(
+                    'span',
+                    { className: 'avatar' },
+                    React.createElement('img', { src: this.props.product.profile_image_url })
+                  ),
+                  React.createElement(
+                    'span',
+                    { className: 'username' },
+                    this.props.product.username
+                  )
+                ),
+                React.createElement(
+                  'a',
+                  { href: "/browse/cat/" + this.props.product.project_category_id + "/order/latest?new=1" },
+                  React.createElement(
+                    'span',
+                    null,
+                    this.props.product.cat_title
+                  )
+                ),
+                productTagsDisplay
+              )
+            )
           ),
           React.createElement(
             'div',
-            { className: 'details-container' },
-            React.createElement(
-              'h1',
-              null,
-              this.props.product.title
-            ),
+            { className: 'product-view-header-right' },
             React.createElement(
               'div',
-              { className: 'info-row' },
+              { className: 'details-container' },
               React.createElement(
                 'a',
-                { className: 'user', href: "/member/" + this.props.product.member_id },
-                React.createElement(
-                  'span',
-                  { className: 'avatar' },
-                  React.createElement('img', { src: this.props.product.profile_image_url })
-                ),
-                React.createElement(
-                  'span',
-                  { className: 'username' },
-                  this.props.product.username
-                )
+                { onClick: this.props.onDownloadBtnClick, href: '#', className: 'mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary' },
+                'Download'
               ),
-              React.createElement(
-                'a',
-                { href: "/browse/cat/" + this.props.product.project_category_id + "/order/latest?new=1" },
-                React.createElement(
-                  'span',
-                  null,
-                  this.props.product.cat_title
-                )
-              ),
-              productTagsDisplay
-            ),
-            React.createElement(
-              'a',
-              { onClick: this.props.onDownloadBtnClick, href: '#', className: 'mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary' },
-              'Download'
-            ),
-            React.createElement(
-              'div',
-              { id: 'product-view-header-right-side' },
               React.createElement(ProductViewHeaderLikes, {
                 product: this.props.product,
                 user: this.props.user
               }),
-              React.createElement(ProductViewHeaderRatings, {
-                product: this.props.product,
-                user: this.props.user
-              })
+              React.createElement(
+                'div',
+                { id: 'product-view-header-right-side' },
+                React.createElement(ProductViewHeaderRatings, {
+                  product: this.props.product,
+                  user: this.props.user
+                })
+              )
             )
           )
         )
@@ -2126,10 +2397,11 @@ class ProductViewHeaderLikes extends React.Component {
   }
 
   onUserLike() {
-    if (this.props.user) {
+    if (this.props.user.username) {
       const url = "/p/" + this.props.product.project_id + "/followproject/";
       const self = this;
       $.ajax({ url: url, cache: false }).done(function (response) {
+        console.log(response);
         // error
         if (response.status === "error") {
           self.setState({ msg: response.msg });
@@ -2226,8 +2498,6 @@ class ProductViewHeaderRatings extends React.Component {
           $('#ratings-form-modal').modal('hide');
         },
         success: function (response) {
-          console.log('on rating form response');
-          console.log(response);
           // const laplace_score = productHelpers.calculateProductLaplaceScore(response);
           store.dispatch(setProductRatings(response));
           if (modalResponse.status !== "ok") self.setState({ errorMsg: modalResponse.status + " - " + modalResponse.message });
@@ -2253,8 +2523,6 @@ class ProductViewHeaderRatings extends React.Component {
         onRatingFormResponse: this.onRatingFormResponse
       });
     }
-
-    console.log(this.state.laplace_score);
 
     return React.createElement(
       'div',
@@ -2328,8 +2596,6 @@ class RatingsFormModal extends React.Component {
       } else {
         v = '2';
       }
-
-      console.log(this.state.text);
 
       jQuery.ajax({
         data: {
@@ -2752,6 +3018,68 @@ class ProductGalleryLightbox extends React.Component {
   }
 }
 
+class ProductDescription extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+  render() {
+    return React.createElement(
+      'div',
+      { id: 'product-description', className: 'section' },
+      React.createElement(
+        'div',
+        { className: 'container' },
+        React.createElement(
+          'div',
+          { className: 'main-content' },
+          React.createElement(
+            'article',
+            null,
+            React.createElement('p', { dangerouslySetInnerHTML: { __html: this.props.product.description } })
+          ),
+          React.createElement(
+            'aside',
+            null,
+            React.createElement(
+              'ul',
+              null,
+              React.createElement(
+                'li',
+                null,
+                React.createElement(
+                  'span',
+                  { className: 'key' },
+                  'License'
+                ),
+                React.createElement(
+                  'span',
+                  { className: 'val' },
+                  this.props.product.project_license_title
+                )
+              ),
+              React.createElement(
+                'li',
+                null,
+                React.createElement(
+                  'span',
+                  { className: 'key' },
+                  'Last Update'
+                ),
+                React.createElement(
+                  'span',
+                  { className: 'val' },
+                  this.props.product.changed_at.split(' ')[0]
+                )
+              )
+            )
+          )
+        )
+      )
+    );
+  }
+}
+
 class ProductNavBar extends React.Component {
   render() {
     let productNavBarDisplay;
@@ -2804,8 +3132,8 @@ class ProductNavBar extends React.Component {
           { className: 'explore-top-bar' },
           React.createElement(
             'a',
-            { className: this.props.tab === "product" ? "item active" : "item", onClick: () => this.props.onTabToggle('product') },
-            'Product'
+            { className: this.props.tab === "comments" ? "item active" : "item", onClick: () => this.props.onTabToggle('comments') },
+            'Comments'
           ),
           filesMenuItem,
           ratingsMenuItem,
@@ -2819,12 +3147,12 @@ class ProductNavBar extends React.Component {
 
 class ProductViewContent extends React.Component {
   render() {
+
     let currentTabDisplay;
-    if (this.props.tab === 'product') {
+    if (this.props.tab === 'comments') {
       currentTabDisplay = React.createElement(
         'div',
-        { className: 'product-tab', id: 'product-tab' },
-        React.createElement('p', { dangerouslySetInnerHTML: { __html: this.props.product.description } }),
+        { className: 'product-tab', id: 'comments-tab' },
         React.createElement(ProductCommentsContainer, {
           product: this.props.product,
           user: this.props.user
@@ -3255,7 +3583,7 @@ class ProductViewFilesTabItem extends React.Component {
     const f = this.props.file;
     const timestamp = Math.floor(new Date().getTime() / 1000 + 3600);
     const fileDownloadHash = appHelpers.generateFileDownloadHash(f, store.getState().env);
-    let downloadLink = "https://" + baseUrl + "/p/" + this.props.product.project_id + "/startdownload?file_id=" + f.id + "&file_name=" + f.title + "&file_type=" + f.type + "&file_size=" + f.size + "&url=" + downloadLinkUrlAttr + "files%2Fdownloadfile%2Fid%2F" + f.id + "%2Fs%2F" + fileDownloadHash + "%2Ft%2F" + timestamp + "%2Fu%2F" + this.props.product.member_id + "%2F" + f.title;
+    let downloadLink = "https://" + baseUrl + "/p/" + this.props.product.project_id + "/startdownload?file_id=" + f.id + "&file_name=" + f.title + "&file_type=" + f.type + "&file_size=" + f.size + "&url=" + downloadLinkUrlAttr + "files%2Fdownload%2Fid%2F" + f.id + "%2Fs%2F" + fileDownloadHash + "%2Ft%2F" + timestamp + "%2Fu%2F" + this.props.product.member_id + "%2F" + f.title;
 
     /*https://david.pling.cc/p/747/startdownload?file_id=1519124607&amp;
     file_name=1519124607-download-app-old.png&amp;
@@ -3376,7 +3704,7 @@ class ProductViewRatingsTab extends React.Component {
   }
 
   render() {
-    console.log(this.props);
+
     const ratingsLikes = this.props.ratings.filter(this.filterLikes);
     const ratingsDislikes = this.props.ratings.filter(this.filterDislikes);
     const ratingsActive = this.props.ratings.filter(this.filterActive);
@@ -3741,6 +4069,7 @@ class App extends React.Component {
   }
 
   render() {
+    console.log(store.getState());
     let displayView = React.createElement(HomePageWrapper, null);
     if (store.getState().view === 'explore') {
       displayView = React.createElement(ExplorePageWrapper, null);

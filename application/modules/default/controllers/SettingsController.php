@@ -920,6 +920,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                     $this->_auth->getIdentity()->profile_image_url = IMAGES_MEDIA_SERVER . '/cache/200x200-2/img/' . $newImageName;
                     $this->_memberSettings->avatar = $newImageName;
                     $this->_memberSettings->profile_image_url = IMAGES_MEDIA_SERVER . '/cache/200x200-2/img/' . $newImageName;
+                    $this->_memberSettings->avatar_type_id = Default_Model_DbTable_Member::MEMBER_AVATAR_TYPE_USERUPDATED;
                 }
                 $this->_memberSettings->profile_img_src = $values['profile_img_src'];
 

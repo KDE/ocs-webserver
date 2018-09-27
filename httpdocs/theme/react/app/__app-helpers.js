@@ -2,11 +2,12 @@ window.appHelpers = (function(){
 
   function getEnv(domain){
     let env;
-    if (this.splitByLastDot(domain) === 'com'){
+    if (this.splitByLastDot(domain) === 'com' || this.splitByLastDot(domain) === 'org'){
       env = 'live';
     } else {
       env = 'test';
     }
+    console.log(env);
     return env;
   }
 

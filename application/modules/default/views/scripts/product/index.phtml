@@ -72,13 +72,13 @@ $this->updates = $tableProjectUpdates->fetchProjectUpdates($this->product->proje
 $tableProjectRatings = new Default_Model_DbTable_ProjectRating();
 $this->ratings = $tableProjectRatings->fetchRating($this->product->project_id);
 $cntRatingsActive = 0;
- foreach ($this->ratings as $p) { 
+ foreach ($this->ratings as $p) {
     if($p['rating_active']==1) $cntRatingsActive =$cntRatingsActive+1;
  }
 
 if (Zend_Auth::getInstance()->hasIdentity()){
-    $this->ratingOfUser = $tableProjectRatings->getProjectRateForUser($this->product->project_id,$identity->member_id);  
-} 
+    $this->ratingOfUser = $tableProjectRatings->getProjectRateForUser($this->product->project_id,$identity->member_id);
+}
 
 $tableProjectFollower = new Default_Model_DbTable_ProjectFollower();
 $this->likes = $tableProjectFollower->fetchLikesForProject($this->product->project_id);
@@ -87,12 +87,24 @@ $projectplings = new Default_Model_ProjectPlings();
 $this->projectplings = $projectplings->fetchPlingsForProject($this->product->project_id);
 
 $tagmodel = new Default_Model_Tags();
+
+$helperUserRole = new Backend_View_Helper_UserRole();
+$userRoleName = $helperUserRole->userRole();
+
+
+ $productJson = Zend_Json::encode($this->product);
+ $filesJson = $this->filesJson;
+$helperCatXdgType = new Default_View_Helper_CatXdgType();
+$xdgTypeJson = Zend_Json::encode($helperCatXdgType->catXdgType($this->product->project_category_id));
+
 ?>
+
+    <link href="/theme/react/assets/css/get-it.css" type="text/css" rel="stylesheet"/>
 
     <!-- facebook -->
     <div id="fb-root"></div>
-    <?php if (Zend_Auth::getInstance()->hasIdentity()) {       
-        ?>    
+    <?php if (Zend_Auth::getInstance()->hasIdentity()) {
+        ?>
     <div id="report-product-<?= $this->product->project_id ?>" class="modal report-product" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
@@ -128,8 +140,8 @@ $tagmodel = new Default_Model_Tags();
                       data-target="#report-product-fraud-<?= $this->product->project_id ?>-message" >
                     <input type="hidden" name="p" value="<?= $this->product->project_id ?>">
                     <div id="report-product-fraud-<?= $this->product->project_id ?>-message" class="message" style="padding: 20px">
-                        <div>Please specify why this product is misused (min 5 chars): 
-                           <textarea class="" id="report-text" name="t" cols="50" rows="3"></textarea>                                                     
+                        <div>Please specify why this product is misused (min 5 chars):
+                           <textarea class="" id="report-text" name="t" cols="50" rows="3"></textarea>
                         </div>
                         <div class="modal-footer">
                             <button type="submit" class="small">
@@ -155,7 +167,7 @@ $tagmodel = new Default_Model_Tags();
                       data-target="#report-product-clone-<?= $this->product->project_id ?>-message">
                     <input type="hidden" name="p" value="<?= $this->product->project_id ?>">
                     <div id="report-product-clone-<?= $this->product->project_id ?>-message" class="message" style="padding: 20px">
-                        <div>                            
+                        <div>
                             <label class="form-label">Original product ID on opendesktop:  </label><br/>
                             <input name="pc" onkeyup="this.value=this.value.replace(/[^\d]/,'')"/><br/><br/>
                             <label class="form-label">External link to original product: </label><br/>
@@ -163,7 +175,7 @@ $tagmodel = new Default_Model_Tags();
                             <br/><br/>
                             <label class="form-label">Additional message: </label>
                             <br/>
-                           <textarea class="" id="report-text" name="t"  rows="3" style="width: 440px;"></textarea>                                                     
+                           <textarea class="" id="report-text" name="t"  rows="3" style="width: 440px;"></textarea>
                         </div>
                         <div class="modal-footer">
                             <button type="submit" class="small">
@@ -175,14 +187,14 @@ $tagmodel = new Default_Model_Tags();
             </div>
         </div>
     </div>
-    
+
     <?php } ?>
 
-     
 
 
-    <?php if (Zend_Auth::getInstance()->hasIdentity()) {       
-        ?>    
+
+    <?php if (Zend_Auth::getInstance()->hasIdentity()) {
+        ?>
     <div id="like-product-modal" class="modal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content" style="padding-bottom: 20px">
@@ -201,20 +213,20 @@ $tagmodel = new Default_Model_Tags();
             </div>
         </div>
     </div>
-    
-    <?php 
+
+    <?php
     } else { ?>
-    
+
     <div id="like-product-modal" class="modal fade noid" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-sm" role="document">
            <div class="modal-content" style="min-height: 100px; ">
                <span style="text-align: center; display: block; padding-top: 30px">Please login. <br/><a href="<?=$loginUrl?>">Login</a></span>
            </div>
-         </div>          
+         </div>
     </div>
-    
+
     <?php } ?>
-    
+
     <?php if (Zend_Auth::getInstance()->hasIdentity()) { ?>
     <div id="review-product-modal" class="modal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-sm" role="document">
@@ -231,7 +243,7 @@ $tagmodel = new Default_Model_Tags();
                             <input type="hidden" name="v" value="1" id="voteup"/>
                             <input type="hidden" name="pm" value="<?=$this->product->member_id?>" id="productcreator"/>
                             <input type="hidden" name="otxt" value="<?=$this->ratingOfUser!=null?$this->ratingOfUser['comment_text']:''?>" id="otxt"/>
-                            <input type="hidden" name="userrate" value="<?=$this->ratingOfUser==null?-1:$this->ratingOfUser['user_like']?>" id="userrate"/>                            
+                            <input type="hidden" name="userrate" value="<?=$this->ratingOfUser==null?-1:$this->ratingOfUser['user_like']?>" id="userrate"/>
                             <textarea name="msg" class="full-width" id="commenttext"><?=$this->ratingOfUser!=null?$this->ratingOfUser['comment_text']:''?></textarea>
                             <button type="submit" class="small pull-right">Rate Now</button>
                 </form>
@@ -239,7 +251,7 @@ $tagmodel = new Default_Model_Tags();
             </div>
         </div>
     </div>
-    
+
     <?php } else {?>
         <div id="review-product-modal" class="modal fade noid" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-sm" role="document">
@@ -250,23 +262,23 @@ $tagmodel = new Default_Model_Tags();
                     <a href="<?=$loginUrl?>"> Login </a>
                    <?php /*
                     Only registered members with an active supporting can vote<br/>to limit spam and fraud voting.<br/>
-                    <a href="/support">Become a supporter</a> 
-                    <br/><br/>You can still 'Like' a product, but that doesn't affect its score. 
+                    <a href="/support">Become a supporter</a>
+                    <br/><br/>You can still 'Like' a product, but that doesn't affect its score.
                         */
                     ?>
                     </span>
                </div>
-             </div>          
+             </div>
         </div>
-        
+
     <?php } ?>
-    
-    
+
+
 
     <main id="product-page-content">
         <div class="flex-column">
             <div class="flex-item-4 sidebar-left" style="">
-                <?php  echo $this->render('explore/partials/filter.phtml'); ?>          
+                <?php  echo $this->render('explore/partials/filter.phtml'); ?>
             </div>
 
             <div class="flex-item-16 " id="product-main">
@@ -279,7 +291,7 @@ $tagmodel = new Default_Model_Tags();
                                       array('width' => 85, 'height' => 85, 'crop' => 'crop')); ?>"/>
                                 </div>
                                 <div style="margin-left: 95px">
-                                    
+
                                     <div>
                                     <?php if (false === empty($this->product->link_1)): ?><a
                                         href="<?php echo $this->product->link_1; ?>"
@@ -291,7 +303,7 @@ $tagmodel = new Default_Model_Tags();
                                         <?= $this->product->title; ?>
                                     <?php endif; ?>
 
-                                    <?php                                                  
+                                    <?php
                                                 if($this->product->featured=='1'){
                                         ?>
                                             <span class=" label label-info right" style="font-size: 13px;padding: .2em .6em .3em;"> Featured</span>
@@ -299,29 +311,29 @@ $tagmodel = new Default_Model_Tags();
 
                                     <?php if($this->isProjectOriginal($this->product->project_id)){?>
                                     <span class=" label label-info right" style="font-size: 13px;padding: .2em .6em .3em;"> Original</span>
-                                    <?php }?>               
-                                                         
+                                    <?php }?>
+
                                     </div>
-                                    
-                                    
-                                    <p class="product_category" style="margin-bottom: 5px">                                                
+
+
+                                    <p class="product_category" style="margin-bottom: 5px">
                                     <?php
                                     echo '<a href="/browse/cat/' . $this->product->project_category_id . '/order/latest">' . $this->product->cat_title . ' </a>';
-                                    ?>                        
+                                    ?>
 
                                     <?php
                                     echo '<span class="topics">';
-                                    
-                                    $tagsuser = $tagmodel->getTagsUser($this->product->project_id, Default_Model_Tags::TAG_TYPE_PROJECT);                                                             
+
+                                    $tagsuser = $tagmodel->getTagsUser($this->product->project_id, Default_Model_Tags::TAG_TYPE_PROJECT);
                                     echo '<span class="topicslink">';
                                     if(false === empty($tagsuser))
-                                    {                                       
-                                        foreach (explode(',',$tagsuser) as $tag) { 
+                                    {
+                                        foreach (explode(',',$tagsuser) as $tag) {
                                     ?>
                                     <a rel="nofollow" href="/search/projectSearchText/<?=$tag?>/f/tags" class="topic-tag topic-tag-link usertagslabel"><?=$tag?></a>
-                                     <?php 
-                                        }                                       
-                                     }                                   
+                                     <?php
+                                        }
+                                     }
                                      echo '</span><!--end of topicslink-->';
                                      if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->product->member_id){
                                             $this->headLink()->appendStylesheet('/theme/flatui/css/select2.min.css');
@@ -329,10 +341,10 @@ $tagmodel = new Default_Model_Tags();
                                             $this->inlineScript()->appendFile('/theme/flatui/js/lib/select2.min.js');
                                         ?>
                                         <span class="tagsuserselectpanel" style="display: none">
-                                            <select   
-                                                    id="tagsuserselect"                                           
-                                                    name="tagsuser"                
-                                                    multiple="true"                                                                                                                        
+                                            <select
+                                                    id="tagsuserselect"
+                                                    name="tagsuser"
+                                                    multiple="true"
                                                     class="taggingSelect2"
                                                     data-pid="<?php echo $this->product->project_id?>"
                                                     >
@@ -341,9 +353,9 @@ $tagmodel = new Default_Model_Tags();
                                                 $element_value =$tagsuser;
                                                 $value = empty($element_value) ? array() : explode(',',$element_value);
                                                 foreach ($value as $v) {
-                                                    echo '<option value="'.$v.'" selected="selected">'.$v.'</option>';                
+                                                    echo '<option value="'.$v.'" selected="selected">'.$v.'</option>';
                                                 }
-                                                ?>         
+                                                ?>
                                             </select>
                                         </span>
 
@@ -351,14 +363,14 @@ $tagmodel = new Default_Model_Tags();
                                         <span class="topic-tags-saved"><i class="fa fa-check"></i> Saved </span>
                                     <?php
                                             $this->inlineScript()->appendScript(
-                                                '    $(document).ready(function(){       
-                                                        TagingProductDetail.setup();            
+                                                '    $(document).ready(function(){
+                                                        TagingProductDetail.setup();
                                                     });
                                                 ');
                                          }
-                                    echo '</span>';                                    
+                                    echo '</span>';
                                      ?>
-                                    
+
                                     <p class="light small">
                                     <span class="source">Source (required if based on other people's work): </span>
                                     <?php if (false === empty($this->product->source_url)):
@@ -366,30 +378,30 @@ $tagmodel = new Default_Model_Tags();
                                             . ' <span class="fa fa-external-link"></span></a>';
                                     endif;
                                     ?>
-                                    
-                                 
+
+
                                 </div>
                             </div>
-                          
+
                             <div class="product-title-right" >
 
-                                                 
+
                                 <div class="projectdtailHeart">
-                                        <div id="container-follow<?=$this->product->project_id?>" class="container-pling">     
-                                        <?php                                 
+                                        <div id="container-follow<?=$this->product->project_id?>" class="container-pling">
+                                        <?php
                                             echo $this->partial(
                                                 '/product/partials/projectlike.phtml',
                                                 array(
                                                     "authMember"  => $identity,
                                                     "project_id" => $this->product->project_id
                                                 )
-                                            );                                
-                                        ?>                                
-                                        </div>                                                        
+                                            );
+                                        ?>
+                                        </div>
                                 </div>
-                                          
-         
-                                    
+
+
+
                                 <div class="projectdetailRating" style="clear: right">
                                         <?php echo $this->render('partials/sidebarRating.phtml'); ?>
                                 </div>
@@ -405,13 +417,13 @@ $tagmodel = new Default_Model_Tags();
                                     if ((null != $this->product->embed_code) && trim($this->product->embed_code)!=''): ?>
                                          <li data-target="#myCarousel" data-slide-to="<?php echo $cnt ?>"
                                                 class="active"></li>
-                                    <?php 
+                                    <?php
                                       $cnt = 2;
                                     endif; ?>
 
                                     <?php
                                     $this->galleryPictures = $tableProject->getGalleryPictureSources($this->product->project_id);
-                                    if (count($this->galleryPictures) > 0) {                                        
+                                    if (count($this->galleryPictures) > 0) {
                                         foreach ($this->galleryPictures as $picture): ?>
                                             <li data-target="#myCarousel" data-slide-to="<?php echo $cnt ?>"
                                                 class="<?php if (!$this->product->ppload_collection_id && $cnt == 1) {
@@ -430,15 +442,15 @@ $tagmodel = new Default_Model_Tags();
                                     <?php // media embed code
                                       $cnt = 1;
                                     if ((null != $this->product->embed_code) && (trim($this->product->embed_code)!='')): ?>
-                                        <div class="item active" style="text-align:center">                                                              
-                                                <?= $this->product->embed_code ?>                                               
+                                        <div class="item active" style="text-align:center">
+                                                <?= $this->product->embed_code ?>
                                         </div>
-                                    <?php 
+                                    <?php
                                       $cnt = 2;
                                     endif; ?>
 
                                     <?php
-                                  
+
                                     foreach ($this->galleryPictures as $picture): ?>
                                         <div class="item <?php if (!$this->product->ppload_collection_id && $cnt == 1) {
                                             echo 'active';
@@ -462,7 +474,7 @@ $tagmodel = new Default_Model_Tags();
                             </div><!-- End Carousel -->
                         </div>
 
-                        
+
                     </div>
                 </div>
 
@@ -518,7 +530,7 @@ $tagmodel = new Default_Model_Tags();
                                     </article>
 
 
-                                    
+
                                         <?php
                                         if (count($this->updates) > 0) {
                                             $this->productUpdate = $this->updates[0];
@@ -529,7 +541,7 @@ $tagmodel = new Default_Model_Tags();
                                             <?= $this->render('product/partials/productUpdatesV1.phtml'); ?>
                                             </article>
                                         <?php } ?>
-                                    
+
 
                                     <!-- comments -->
                                     <div id="product-discussion">
@@ -576,7 +588,7 @@ $tagmodel = new Default_Model_Tags();
                         <div class="tab-pane" id="updates-panel">
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                             <article>
-                                <?php 
+                                <?php
                                     foreach ($this->updates as $this->productUpdate) {
                                        echo $this->render('product/partials/productUpdatesV1.phtml');
                                     }
@@ -592,8 +604,8 @@ $tagmodel = new Default_Model_Tags();
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                             <article>
                                 <div id="productRatingContainer">
-                                <?php                                    
-                                       echo $this->render('product/partials/productRating.phtml');                                   
+                                <?php
+                                       echo $this->render('product/partials/productRating.phtml');
                                   ?>
                                   </div>
                             </article>
@@ -607,8 +619,8 @@ $tagmodel = new Default_Model_Tags();
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                             <article>
                                 <div id="productLikesContainer">
-                                <?php                                    
-                                       echo $this->render('product/partials/productLikes.phtml');                                   
+                                <?php
+                                       echo $this->render('product/partials/productLikes.phtml');
                                   ?>
                                   </div>
                             </article>
@@ -622,19 +634,19 @@ $tagmodel = new Default_Model_Tags();
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                             <article>
                                 <div id="productPlingsContainer">
-                                <?php                                    
-                                       echo $this->render('product/partials/productPlings.phtml');                                   
+                                <?php
+                                       echo $this->render('product/partials/productPlings.phtml');
                                   ?>
                                   </div>
                             </article>
                             </div>
                         </div>
                         <?php } ?>
-                        
+
                         <div class="tab-pane" id="files-panel">
                             <div class="col-lg-12">
-                                <?php                             
-                                        echo $this->render('product/partials/ppload.phtml');                              
+                                <?php
+                                        echo $this->render('product/partials/ppload.phtml');
                                 ?>
                             </div>
                         </div>
@@ -652,7 +664,7 @@ $tagmodel = new Default_Model_Tags();
             <div class="flex-item-4 flex-right" id="product-maker">
                 <div>
                     <div class="project-share-new col-lg-12 col-md-12 col-sm-12 col-xs-12">
-      
+
                           <script type="text/javascript">
                             function fbs_click(a) {
                                 u = location.href;
@@ -692,8 +704,8 @@ $tagmodel = new Default_Model_Tags();
                         </script>
                         <script src="https://apis.google.com/js/platform.js" async defer></script>
 
-                        
-                        
+
+
 
 
 
@@ -704,11 +716,11 @@ $tagmodel = new Default_Model_Tags();
                                         <div class="product-maker-thumbnail relative">
                                             <a href="<?php echo $helpMemberUrl->buildMemberUrl($this->product->member_id); ?>"
                                                title="<?= $this->product->username ?>"  class="tooltipuserleft" data-tooltip-content="#tooltip_content" data-user="<?=$this->product->member_id?>">
-                                               <?php 
+                                               <?php
                                                     if($this->isSupporter($this->product->member_id)) {
                                                 ?>
-                                                    <span class="supporter-badge" >S</span> 
-                                                <?php } ?>                                               
+                                                    <span class="supporter-badge" >S</span>
+                                                <?php } ?>
                                                 <img src="<?= $helpImage->Image($this->product->profile_image_url,
                                                     array('width' => 80, 'height' => 80)) ?>"
                                                      alt="product-maker" width="15" height="15"
@@ -729,12 +741,12 @@ $tagmodel = new Default_Model_Tags();
                         <?php } ?>
 
                         <div class="prod-widget-box right ">
-                            
-                                <div class="projectdtailHeart">
-                                    
 
-                                    <div id="container-pling<?=$this->product->project_id?>" class="container-pling" >     
-                                    <?php                                 
+                                <div class="projectdtailHeart">
+
+
+                                    <div id="container-pling<?=$this->product->project_id?>" class="container-pling" >
+                                    <?php
                                         echo $this->partial(
                                             '/product/partials/projectplings.phtml',
                                             array(
@@ -743,13 +755,13 @@ $tagmodel = new Default_Model_Tags();
                                                 "ppload_collection_id" => $this->product->ppload_collection_id,
                                                 "project_category_id" => $this->product->project_category_id
                                             )
-                                        );                                
-                                    ?>                                
-                                    </div>                                                  
+                                        );
+                                    ?>
+                                    </div>
                                 </div>
                         </div>
 
-                        
+
 
                         <?php /* echo $this->render('partials/sidebarRating.phtml');  */ ?>
                           <?php /*
@@ -757,12 +769,12 @@ $tagmodel = new Default_Model_Tags();
                             <div class="prod-widget-box right">
                                 <div  class="btn-group dropleft" style="width: 100%">
                                     <button style="width: 100%" id="project_btn_download" class="btn btn-primary active" type="button">
-                                    Get it                                 
-                                    </button>                                                               
-                                </div>                                                               
+                                    Get it
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                            */ 
+                            */
                         ?>
 
                         <div>
@@ -772,17 +784,23 @@ $tagmodel = new Default_Model_Tags();
                                     <span class="caret"></span></button>
                                     <ul class="dropdown-menu hide" id="dropdown_downloads" style="min-width: 270px;">
                                     </ul>
-                                </div> 
-                                
+                                </div>
+
                                 <div id="project_btn_grp_install" class="btn-group dropleft hide" style="width: 100%; padding-top: 10px;">
                                     <button style="width: 100%" id="project_btn_install" class="btn btn-primary dropdown-toggle disabled hide" type="button" data-toggle="dropdown">Install
                                     <span class="caret"></span></button>
                                     <ul class="dropdown-menu hide" id="dropdown_installs" style="min-width: 270px;">
                                     </ul>
-                                </div> 
+                                </div>
+
+
+                                <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                                    <div id="get-it-container" class="btn-group dropleft " style="width: 100%; padding-top: 10px;">
+                                     </div>
+                               <?php endif; ?>
                             </div>
                         </div>
-                       
+
 
                        <!-- origins-->
                        <div>
@@ -812,9 +830,9 @@ $tagmodel = new Default_Model_Tags();
                                        echo $this->render('product/partials/productCloneFrom.phtml');
 
                                } ?>
-                              
 
-                               <?php                     
+
+                               <?php
                               $relatednew=array();
                               $related =  $modelClone->fetchRelatedProducts($this->product->project_id);
                               $bflag = false;
@@ -835,9 +853,9 @@ $tagmodel = new Default_Model_Tags();
                               }
 
                               $this->moreProducts = $relatednew;
-                 
+
                               $this->moreProductsTitle = 'Variants';
-                              if (count($this->moreProducts) > 0) {                                
+                              if (count($this->moreProducts) > 0) {
                                       echo $this->render('product/partials/productCloneFrom.phtml');
 
                               } ?>
@@ -845,7 +863,7 @@ $tagmodel = new Default_Model_Tags();
                            </div>
                        </div>
 
-                  
+
 
 
                         <!-- MORE PRODUCTS -->
@@ -893,8 +911,6 @@ $tagmodel = new Default_Model_Tags();
             </span>
         </div>
     </main>
-
-                    
 
     <script>(function (d, s, id) {
             var js, fjs = d.getElementsByTagName(s)[0];
@@ -945,15 +961,24 @@ $tagmodel = new Default_Model_Tags();
     });
 </script>
 
+
+<script type="text/javascript">
+  var product = <?php echo $productJson ?>;
+  var filesJson  = <?php echo $filesJson ?>;
+  var xdgTypeJson = <?php echo $xdgTypeJson ?>;
+</script>
+
+<script type="text/javascript" src="/theme/react/getit.js"></script>
+
 <?php $this->inlineScript()->appendScript(
-    '    $(document).ready(function(){       
+    '    $(document).ready(function(){
             PartialJson.setup();
             PartialJsonFraud.setup();
-            ProductDetailCarousel.setup();          
+            ProductDetailCarousel.setup();
             PartialCommentReviewForm.setup();
-            PartialsButtonHeartDetail.setup();    
-            PartialsButtonPlingProject.setup();       
-            TooltipUser.setup("tooltipuserleft","left");           
-            AppimagequestionOnClick.setup();   
+            PartialsButtonHeartDetail.setup();
+            PartialsButtonPlingProject.setup();
+            TooltipUser.setup("tooltipuserleft","left");
+            AppimagequestionOnClick.setup();
         });
     ');

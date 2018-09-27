@@ -2,7 +2,7 @@ class ProductView extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {
-      tab:'product',
+      tab:'comments',
       showDownloadSection:false
     };
     this.toggleTab = this.toggleTab.bind(this);
@@ -34,6 +34,16 @@ class ProductView extends React.Component {
   }
 
   render(){
+
+    let productGalleryDisplay;
+    if (this.props.product.r_gallery.length > 0){
+      productGalleryDisplay = (
+        <ProductViewGallery
+          product={this.props.product}
+        />
+      );
+    }
+
     let productGalleryLightboxDisplay;
     if (this.props.lightboxGallery.show === true){
       productGalleryLightboxDisplay = (
@@ -61,7 +71,8 @@ class ProductView extends React.Component {
           user={this.props.user}
           onDownloadBtnClick={this.toggleDownloadSection}
         />
-        <ProductViewGallery
+        {productGalleryDisplay}
+        <ProductDescription
           product={this.props.product}
         />
         <ProductNavBar
@@ -136,33 +147,39 @@ class ProductViewHeader extends React.Component {
       <div className="wrapper" id="product-view-header">
         <div className="container">
           <div className="section mdl-grid" >
-            <div className="image-container">
-              <img src={'https://' + imageBaseUrl + '/cache/140x140/img/' + this.props.product.image_small} />
-            </div>
-            <div className="details-container">
-              <h1>{this.props.product.title}</h1>
-              <div className="info-row">
-                <a className="user" href={"/member/" + this.props.product.member_id }>
-                  <span className="avatar"><img src={this.props.product.profile_image_url}/></span>
-                  <span className="username">{this.props.product.username}</span>
-                </a>
-                <a href={"/browse/cat/" + this.props.product.project_category_id + "/order/latest?new=1"}>
-                  <span>{this.props.product.cat_title}</span>
-                </a>
-                {productTagsDisplay}
+            <div className="product-view-header-left">
+              <figure className="image-container">
+                <img src={'https://' + imageBaseUrl + '/cache/140x140/img/' + this.props.product.image_small} />
+              </figure>
+              <div className="product-info">
+                <h1>{this.props.product.title}</h1>
+                <div className="info-row">
+                  <a className="user" href={"/member/" + this.props.product.member_id }>
+                    <span className="avatar"><img src={this.props.product.profile_image_url}/></span>
+                    <span className="username">{this.props.product.username}</span>
+                  </a>
+                  <a href={"/browse/cat/" + this.props.product.project_category_id + "/order/latest?new=1"}>
+                    <span>{this.props.product.cat_title}</span>
+                  </a>
+                  {productTagsDisplay}
+                </div>
               </div>
-              <a onClick={this.props.onDownloadBtnClick} href="#" className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">
-                Download
-              </a>
-              <div id="product-view-header-right-side">
+            </div>
+            <div className="product-view-header-right">
+              <div className="details-container">
+                <a onClick={this.props.onDownloadBtnClick} href="#" className="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-color--primary">
+                  Download
+                </a>
                 <ProductViewHeaderLikes
                   product={this.props.product}
                   user={this.props.user}
                 />
-                <ProductViewHeaderRatings
-                  product={this.props.product}
-                  user={this.props.user}
-                />
+                <div id="product-view-header-right-side">
+                  <ProductViewHeaderRatings
+                    product={this.props.product}
+                    user={this.props.user}
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -186,10 +203,11 @@ class ProductViewHeaderLikes extends React.Component {
   }
 
   onUserLike(){
-    if (this.props.user){
+    if (this.props.user.username){
       const url = "/p/"+this.props.product.project_id+"/followproject/";
       const self = this;
       $.ajax({url: url,cache: false}).done(function(response){
+        console.log(response);
         // error
         if (response.status === "error"){
           self.setState({msg:response.msg});
@@ -276,8 +294,6 @@ class ProductViewHeaderRatings extends React.Component {
           $('#ratings-form-modal').modal('hide');
         },
         success: function(response){
-          console.log('on rating form response');
-          console.log(response);
           // const laplace_score = productHelpers.calculateProductLaplaceScore(response);
           store.dispatch(setProductRatings(response));
           if (modalResponse.status !== "ok") self.setState({errorMsg:modalResponse.status + " - " + modalResponse.message});
@@ -305,9 +321,6 @@ class ProductViewHeaderRatings extends React.Component {
         />
       );
     }
-
-
-    console.log(this.state.laplace_score);
 
     return (
       <div className="ratings-bar-container">
@@ -363,8 +376,6 @@ class RatingsFormModal extends React.Component {
       } else {
         v = '2';
       }
-
-      console.log(this.state.text);
 
       jQuery.ajax({
         data:{
@@ -712,6 +723,32 @@ class ProductGalleryLightbox extends React.Component {
   }
 }
 
+class ProductDescription extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+  }
+  render(){
+    return (
+      <div id="product-description" className="section">
+        <div className="container">
+          <div className="main-content">
+            <article>
+              <p dangerouslySetInnerHTML={{__html:this.props.product.description}}></p>
+            </article>
+            <aside>
+              <ul>
+                <li><span className="key">License</span><span className="val">{this.props.product.project_license_title}</span></li>
+                <li><span className="key">Last Update</span><span className="val">{this.props.product.changed_at.split(' ')[0]}</span></li>
+              </ul>
+            </aside>
+          </div>
+        </div>
+      </div>
+    )
+  }
+}
+
 class ProductNavBar extends React.Component {
   render(){
     let productNavBarDisplay;
@@ -733,7 +770,7 @@ class ProductNavBar extends React.Component {
       <div className="wrapper">
         <div className="container">
           <div className="explore-top-bar">
-            <a className={this.props.tab === "product" ? "item active" : "item"} onClick={() => this.props.onTabToggle('product')}>Product</a>
+            <a className={this.props.tab === "comments" ? "item active" : "item"} onClick={() => this.props.onTabToggle('comments')}>Comments</a>
             {filesMenuItem}
             {ratingsMenuItem}
             {favsMenuItem}
@@ -747,11 +784,11 @@ class ProductNavBar extends React.Component {
 
 class ProductViewContent extends React.Component {
   render(){
+
     let currentTabDisplay;
-    if (this.props.tab === 'product'){
+    if (this.props.tab === 'comments'){
       currentTabDisplay = (
-        <div className="product-tab" id="product-tab">
-          <p dangerouslySetInnerHTML={{__html:this.props.product.description}}></p>
+        <div className="product-tab" id="comments-tab">
           <ProductCommentsContainer
             product={this.props.product}
             user={this.props.user}
@@ -1091,7 +1128,7 @@ class ProductViewFilesTabItem extends React.Component {
                        "&file_type="+f.type+
                        "&file_size="+f.size+
                        "&url="+downloadLinkUrlAttr+
-                       "files%2Fdownloadfile%2Fid%2F"+f.id+
+                       "files%2Fdownload%2Fid%2F"+f.id+
                        "%2Fs%2F"+fileDownloadHash+
                        "%2Ft%2F"+timestamp+
                        "%2Fu%2F"+this.props.product.member_id+
@@ -1167,7 +1204,7 @@ class ProductViewRatingsTab extends React.Component {
   }
 
   render(){
-    console.log(this.props);
+
     const ratingsLikes = this.props.ratings.filter(this.filterLikes);
     const ratingsDislikes = this.props.ratings.filter(this.filterDislikes);
     const ratingsActive = this.props.ratings.filter(this.filterActive);

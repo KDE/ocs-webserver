@@ -111,6 +111,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addResource(new Zend_Acl_Resource ('backend_user'));
         $this->addResource(new Zend_Acl_Resource ('backend_tags'));
         $this->addResource(new Zend_Acl_Resource ('backend_ghnsexcluded'));
+        $this->addResource(new Zend_Acl_Resource ('backend_letteravatar'));
 
         $this->addResource(new Zend_Acl_Resource ('statistics_data'));
 
