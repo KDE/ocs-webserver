@@ -503,6 +503,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         $formRegisterValues['password'] = $formRegisterValues['password1'];
 
         $formRegisterValues['username'] = Default_Model_HtmlPurify::purify($formRegisterValues['username']);
+        $formRegisterValues['mail'] = strtolower($formRegisterValues['mail']);
 
         $newUserData = $this->createNewUser($formRegisterValues);
 
