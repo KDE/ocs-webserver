@@ -45,7 +45,7 @@ class Default_Model_DbTable_Member extends Local_Model_Table
     const SOURCE_HIVE = 1;
     const PASSWORD_TYPE_OCS = 0;
     const PASSWORD_TYPE_HIVE = 1;
-
+    const MEMBER_AVATAR_TYPE_USERUPDATED = 2;
     protected $_keyColumnsForRow = array('member_id');
 
     protected $_key = 'member_id';
