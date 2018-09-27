@@ -551,7 +551,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         require_once 'vendor/autoload.php';
         // $name = substr($userData['username'],0,1).' '.substr($userData['username'],1);        
         $name = $userData['username'].'  ';        
-        $avatar = new LetterAvatar($name,'square', 100);   
+        $avatar = new LetterAvatar($name,'square', 400);   
         $tmpImagePath = IMAGES_UPLOAD_PATH . 'tmp/' . $uuidMember . '.png';
         $avatar->saveAs($tmpImagePath, LetterAvatar::MIME_TYPE_PNG);        
         $imageService = new Default_Model_DbTable_Image();
