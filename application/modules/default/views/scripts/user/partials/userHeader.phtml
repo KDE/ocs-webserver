@@ -39,35 +39,35 @@ $helperMember = new Default_View_Helper_BuildMemberUrl();
     </li>
     
     <li class="<?php echo $this->tab == 'products' ? 'active' : ''; ?>">
-        <a href="<?php echo $helperMember->buildMemberUrl($this->member->member_id, 'products'); ?>">
+        <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'products'); ?>">
             <span class="glyphicon glyphicon-th-list"></span>
             <?= $this->translate('Products') ?>
         </a>
     </li>
 
     <li class="header-menu-left-item <?php echo $this->tab == 'plings' ? 'active' : ''; ?>">
-        <a href="<?php echo $helperMember->buildMemberUrl($this->member->member_id, 'plings'); ?>">
+        <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'plings'); ?>">
             <span class="glyphicon glyphicon-usd"></span>
             <?= $this->translate('Plings') ?>
         </a>
     </li>
 
     <li class="<?php echo $this->tab == 'downloadhistory' ? 'active' : ''; ?>">
-        <a href="<?php echo $helperMember->buildMemberUrl($this->member->member_id, 'downloadhistory'); ?>">
+        <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'downloadhistory'); ?>">
             <span class="glyphicon glyphicon-star"></span>
             <?= $this->translate('Download History') ?>
         </a>
     </li>
 
     <li class="<?php echo $this->tab == 'likes' ? 'active' : ''; ?>">
-        <a href="<?php echo $helperMember->buildMemberUrl($this->member->member_id, 'likes'); ?>">
+        <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'likes'); ?>">
             <i class="fa fa-heart" aria-hidden="true"></i>
             <?= $this->translate('Favs') ?>
         </a>
     </li>
     
     <li class="<?php echo $this->tab == 'activities' ? 'active' : ''; ?>">
-        <a href="<?php echo $helperMember->buildMemberUrl($this->member->member_id, 'activities'); ?>">
+        <a href="<?php echo $helperMember->buildMemberUrl($this->member->username, 'activities'); ?>">
             <span class="glyphicon glyphicon-align-justify"></span>
             <?= $this->translate('Activities') ?>
         </a>

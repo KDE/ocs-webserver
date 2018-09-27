@@ -109,7 +109,7 @@ $membersCount = new Default_View_Helper_FetchTotalMembersCount();
 
                         <div class="user">
                             <div class="u-wrap">
-                                <a href="<?php echo $buildMemberUrl->buildMemberUrl($user['member_id']); ?>">
+                                <a href="<?php echo $buildMemberUrl->buildMemberUrl($user['username']); ?>">
                                     <figure >
                                         <img class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="<?=$user['member_id']?>" src="<?php echo $helperImage->Image($user['profile_image_url'], array('width' => '200', 'height' => '200', 'crop' => 2)); ?>"/>
                                     </figure>
@@ -135,7 +135,7 @@ $membersCount = new Default_View_Helper_FetchTotalMembersCount();
                             ?>
                             <div class="user ">
                                 <div class="u-wrap" >
-                                    <a href="<?php echo $buildMemberUrl->buildMemberUrl($user['member_id']); ?>">
+                                    <a href="<?php echo $buildMemberUrl->buildMemberUrl($user['username']); ?>">
                                         <figure >
                                             <img class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="<?=$user['member_id']?>" src="<?php echo $helperImage->Image($user['profile_image_url'], array('width' => '200', 'height' => '200', 'crop' => 2)); ?>"/>
                                         </figure>
@@ -158,7 +158,7 @@ $membersCount = new Default_View_Helper_FetchTotalMembersCount();
                                            ?>
                                            <div class="user ">
                                                <div class="u-wrap" >
-                                                   <a href="<?php echo $buildMemberUrl->buildMemberUrl($user['member_id']); ?>">
+                                                   <a href="<?php echo $buildMemberUrl->buildMemberUrl($user['username']); ?>">
                                                        <figure >
                                                            <img class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="<?=$user['member_id']?>"  src="<?php echo $helperImage->Image($user['profile_image_url'], array('width' => '200', 'height' => '200', 'crop' => 2)); ?>"/>
                                                        </figure>

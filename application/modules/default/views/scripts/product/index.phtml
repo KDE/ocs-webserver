@@ -714,7 +714,7 @@ $xdgTypeJson = Zend_Json::encode($helperCatXdgType->catXdgType($this->product->p
                                 <div class="sidebar-content">
                                     <div class="product-maker-sidebar">
                                         <div class="product-maker-thumbnail relative">
-                                            <a href="<?php echo $helpMemberUrl->buildMemberUrl($this->product->member_id); ?>"
+                                            <a href="<?php echo $helpMemberUrl->buildMemberUrl($this->product->username); ?>"
                                                title="<?= $this->product->username ?>"  class="tooltipuserleft" data-tooltip-content="#tooltip_content" data-user="<?=$this->product->member_id?>">
                                                <?php
                                                     if($this->isSupporter($this->product->member_id)) {
@@ -729,7 +729,7 @@ $xdgTypeJson = Zend_Json::encode($helperCatXdgType->catXdgType($this->product->p
                                         </div>
                                         <div class="product-maker-summary">
                                             <h5>
-                                                <a href="<?php echo $helpMemberUrl->buildMemberUrl($this->product->member_id); ?>" class="tooltipuserleft" data-tooltip-content="#tooltip_content" data-user="<?=$this->product->member_id?>">
+                                                <a href="<?php echo $helpMemberUrl->buildMemberUrl($this->product->username); ?>" class="tooltipuserleft" data-tooltip-content="#tooltip_content" data-user="<?=$this->product->member_id?>">
                                                     <?= $this->product->username; ?>
                                                 </a>
                                             </h5>

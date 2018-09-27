@@ -42,7 +42,7 @@ $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
 
       <div class="col-lg-3 text-center">
          <div class="userinfo" style="overflow: hidden">
-            <a href="<?php echo $helpMemberUrl->buildMemberUrl($this->comment['member_id']) ?>">
+            <a href="<?php echo $helpMemberUrl->buildMemberUrl($this->comment['username']) ?>">
             <img src="<?= $this->Image($this->comment['profile_image_url'],
                         array('width' => 120, 'height' => 120)) ?>"  style="margin:10px; width: 40px; height:40px; border-radius: 50%"/>
                 <span style="display: block"><?= $this->comment['username'] ?></span>
