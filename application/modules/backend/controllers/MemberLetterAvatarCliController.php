@@ -41,17 +41,21 @@ class Backend_MemberLetterAvatarCliController extends Local_Controller_Action_Cl
     {
         require_once 'vendor/autoload.php';
         echo "Start runAction\n";                
-         $sql = '
-                        select member_id,username
-                        from tmp_member_hive_nopic m
-                        where avatar = 0                                                        
-                        order by member_id desc          
-                    ';
+         // $sql = '
+         //                select member_id,username
+         //                from tmp_member_hive_nopic m
+         //                where avatar = 0                                                        
+         //                order by member_id desc          
+         //            ';
+        $sql = '
+            select member_id,username from tmp_member_avatar_unknow where is_auto_generated = 1 
+        ';
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql)->fetchAll();
         foreach ($result as $m) {
-            $name = substr($m['username'],0,1).' '.substr($m['username'],1);
-            $avatar = new LetterAvatar($name,'square', 100);   
-            $tmpImagePath = IMAGES_UPLOAD_PATH . 'tmp/la/'.$m['member_id'].'.png';
+            // $name = substr($m['username'],0,1).' '.substr($m['username'],1);  // hive nopic user has two chars
+            $name = $m['username'].'  ';   
+            $avatar = new LetterAvatar($name,'square', 400);   
+            $tmpImagePath = IMAGES_UPLOAD_PATH . 'tmp/la_new/'.$m['member_id'].'.png';
             $avatar->saveAs($tmpImagePath, LetterAvatar::MIME_TYPE_PNG);        
 
             $sql = 'update tmp_member_hive_nopic set avatar = 1 where member_id = '.$m['member_id'];
@@ -66,20 +70,25 @@ class Backend_MemberLetterAvatarCliController extends Local_Controller_Action_Cl
     {
         
         echo "Start runupdateAction\n";                
-         $sql = '
-                        select * from tmp_member_avatar_unknow m                            
-                    ';
+        $sql = "select * from tmp_member_avatar_unknow where width >0 and filetype is null";
+         // $sql = '
+         //                select * from tmp_member_avatar_unknow where width=0 limit 2011
+         //            ';
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql)->fetchAll();
         foreach ($result as $m) {                        
             //$file = 'https://cn.pling.it/img/'.$m['avatar'];                    // cc  
             $file = 'https://cn.pling.com/img/'.$m['avatar'];                      //live
+                        
+            // echo "\n";     
              try {                     
-                 list($width, $height, $type) = getimagesize($file);
+                 list($width, $height, $type) = getimagesize($file);                
                  $sql = 'update tmp_member_avatar_unknow set width='.$width.', height='.$height.', filetype='.$type.' where member_id = '.$m['member_id'];                        
                  Zend_Db_Table::getDefaultAdapter()->query($sql);
-                 echo $m['member_id']."\n";              
+               
              }
              catch (Exception $e) {               
+                 $sql = 'update tmp_member_avatar_unknow set width=-1 where member_id = '.$m['member_id'];                        
+                 Zend_Db_Table::getDefaultAdapter()->query($sql);
              }
         }
         echo 'done!';
