@@ -61,4 +61,28 @@ class Backend_MemberLetterAvatarCliController extends Local_Controller_Action_Cl
         echo 'done!';
     }
 
+
+    public function runupdateAction()
+    {
+        
+        echo "Start runupdateAction\n";                
+         $sql = '
+                        select * from tmp_member_avatar_unknow m                            
+                    ';
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql)->fetchAll();
+        foreach ($result as $m) {                        
+            //$file = 'https://cn.pling.it/img/'.$m['avatar'];                    // cc  
+            $file = 'https://cn.pling.com/img/'.$m['avatar'];                      //live
+             try {                     
+                 list($width, $height, $type) = getimagesize($file);
+                 $sql = 'update tmp_member_avatar_unknow set width='.$width.', height='.$height.', filetype='.$type.' where member_id = '.$m['member_id'];                        
+                 Zend_Db_Table::getDefaultAdapter()->query($sql);
+                 echo $m['member_id']."\n";              
+             }
+             catch (Exception $e) {               
+             }
+        }
+        echo 'done!';
+    }
+
 }
