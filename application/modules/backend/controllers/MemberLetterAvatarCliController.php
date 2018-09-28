@@ -41,26 +41,27 @@ class Backend_MemberLetterAvatarCliController extends Local_Controller_Action_Cl
     {
         require_once 'vendor/autoload.php';
         echo "Start runAction\n";                
-         // $sql = '
-         //                select member_id,username
-         //                from tmp_member_hive_nopic m
-         //                where avatar = 0                                                        
-         //                order by member_id desc          
-         //            ';
-        $sql = '
-            select member_id,username from tmp_member_avatar_unknow where is_auto_generated = 1 
-        ';
+         $sql = '
+                        select member_id,username
+                        from tmp_member_hive_nopic m                        
+                    ';
+        // $sql = '
+        //     select member_id,username from tmp_member_avatar_unknow where is_auto_generated = 1 
+        // ';
+        // $sql = '
+        //     select member_id,username from tmp_member_avatar_unknow where member_id in (512473,512808)
+        // ';
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql)->fetchAll();
         foreach ($result as $m) {
-            // $name = substr($m['username'],0,1).' '.substr($m['username'],1);  // hive nopic user has two chars
-            $name = $m['username'].'  ';   
+            $name = substr($m['username'],0,1).' '.substr($m['username'],1);  // hive nopic user has two chars
+            // $name = $m['username'].'  ';   
             $avatar = new LetterAvatar($name,'square', 400);   
-            $tmpImagePath = IMAGES_UPLOAD_PATH . 'tmp/la_new/'.$m['member_id'].'.png';
+            $tmpImagePath = IMAGES_UPLOAD_PATH . 'tmp/la/'.$m['member_id'].'.png';
             $avatar->saveAs($tmpImagePath, LetterAvatar::MIME_TYPE_PNG);        
 
-            $sql = 'update tmp_member_hive_nopic set avatar = 1 where member_id = '.$m['member_id'];
-            Zend_Db_Table::getDefaultAdapter()->query($sql);
-            echo $m['member_id']."\n";
+            // $sql = 'update tmp_member_hive_nopic set avatar = 1 where member_id = '.$m['member_id'];
+            // Zend_Db_Table::getDefaultAdapter()->query($sql);
+            // echo $m['member_id']."\n";
         }
         echo 'done!';
     }
@@ -70,10 +71,10 @@ class Backend_MemberLetterAvatarCliController extends Local_Controller_Action_Cl
     {
         
         echo "Start runupdateAction\n";                
-        $sql = "select * from tmp_member_avatar_unknow where width >0 and filetype is null";
-         // $sql = '
-         //                select * from tmp_member_avatar_unknow where width=0 limit 2011
-         //            ';
+        // $sql = "select * from tmp_member_avatar_unknow where width >0 and filetype is null";
+         $sql = '
+                        select * from tmp_member_avatar_unknow where width=0 
+                    ';
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql)->fetchAll();
         foreach ($result as $m) {                        
             //$file = 'https://cn.pling.it/img/'.$m['avatar'];                    // cc  
