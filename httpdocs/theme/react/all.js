@@ -2514,14 +2514,56 @@ class ProductViewHeaderRatings extends React.Component {
 
     let ratingsFormModalDisplay;
     if (this.state.showModal === true) {
-      ratingsFormModalDisplay = React.createElement(RatingsFormModal, {
-        user: this.props.user,
-        userIsOwner: this.state.userIsOwner,
-        userRating: this.state.userRating,
-        action: this.state.action,
-        product: this.props.product,
-        onRatingFormResponse: this.onRatingFormResponse
-      });
+      if (this.props.user.username) {
+        ratingsFormModalDisplay = React.createElement(RatingsFormModal, {
+          user: this.props.user,
+          userIsOwner: this.state.userIsOwner,
+          userRating: this.state.userRating,
+          action: this.state.action,
+          product: this.props.product,
+          onRatingFormResponse: this.onRatingFormResponse
+        });
+      } else {
+        ratingsFormModalDisplay = React.createElement(
+          'div',
+          { className: 'modal please-login', id: 'ratings-form-modal', tabIndex: '-1', role: 'dialog' },
+          React.createElement(
+            'div',
+            { className: 'modal-dialog', role: 'document' },
+            React.createElement(
+              'div',
+              { className: 'modal-content' },
+              React.createElement(
+                'div',
+                { className: 'modal-header' },
+                React.createElement(
+                  'h4',
+                  { className: 'modal-title' },
+                  'Please Login'
+                ),
+                React.createElement(
+                  'button',
+                  { type: 'button', id: 'review-modal-close', className: 'close', 'data-dismiss': 'modal', 'aria-label': 'Close' },
+                  React.createElement(
+                    'span',
+                    { 'aria-hidden': 'true' },
+                    '\xD7'
+                  )
+                )
+              ),
+              React.createElement(
+                'div',
+                { className: 'modal-body' },
+                React.createElement(
+                  'a',
+                  { href: '/login/' },
+                  'Login'
+                )
+              )
+            )
+          )
+        );
+      }
     }
 
     return React.createElement(
@@ -3366,6 +3408,8 @@ class CommentItem extends React.Component {
     };
     this.filterByCommentLevel = this.filterByCommentLevel.bind(this);
     this.onToggleReplyForm = this.onToggleReplyForm.bind(this);
+    this.onReportComment = this.onReportComment.bind(this);
+    this.onConfirmReportClick = this.onConfirmReportClick.bind(this);
   }
 
   filterByCommentLevel(val) {
@@ -3378,6 +3422,46 @@ class CommentItem extends React.Component {
     const showCommentReplyForm = this.state.showCommentReplyForm === true ? false : true;
     console.log(showCommentReplyForm);
     this.setState({ showCommentReplyForm: showCommentReplyForm });
+  }
+
+  onReportComment() {
+    $('#report-' + this.props.comment.comment_id).modal('show');
+  }
+
+  onConfirmReportClick(commentId, productId) {
+    console.log(commentId, productId);
+    jQuery.ajax({
+      data: {
+        i: commentId,
+        p: productId
+      },
+      url: "/report/comment/",
+      type: "POST",
+      dataType: "json",
+      error: function (jqXHR, textStatus, errorThrown) {
+        var results = JSON && JSON.parse(jqXHR.responseText) || $.parseJSON(jqXHR.responseText);
+        $("#report-" + commentId).find('.modal-header-text').empty().append(results.title);
+        $("#report-" + commentId).find('.modal-body').empty().append(results.message);
+        setTimeout(function () {
+          $("#report-" + commentId).modal('hide');
+        }, 2000);
+      },
+      success: function (results) {
+        if (results.status == 'ok') {
+          $("#report-" + commentId).find(".comment-report-p").empty().html(results.message.split('</p>')[0].split('<p>')[1]);
+        }
+        if (results.status == 'error') {
+          if (results.message != '') {
+            $("#report-" + commentId).find(".comment-report-p").empty().html(results.message);
+          } else {
+            $("#report-" + commentId).find(".comment-report-p").empty().html('Service is temporarily unavailable.');
+          }
+        }
+        setTimeout(function () {
+          $("#report-" + commentId).modal('hide');
+        }, 2000);
+      }
+    });
   }
 
   render() {
@@ -3479,7 +3563,7 @@ class CommentItem extends React.Component {
             { onClick: this.onToggleReplyForm },
             React.createElement(
               'i',
-              { className: 'material-icons' },
+              { className: 'material-icons reverse' },
               'reply'
             ),
             React.createElement(
@@ -3501,11 +3585,95 @@ class CommentItem extends React.Component {
               null,
               'Report'
             )
-          )
+          ),
+          React.createElement(ReportCommentModal, {
+            comment: this.props.comment,
+            product: this.props.product,
+            user: this.props.user,
+            onConfirmReportClick: this.onConfirmReportClick
+          })
         )
       ),
       commentReplyFormDisplay,
       commentRepliesContainer
+    );
+  }
+}
+
+class ReportCommentModal extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      status: "ready"
+    };
+  }
+
+  onConfirmReportClick(commmentId, productId) {
+    this.setState({ status: "loading" }, function () {
+      this.props.onConfirmReportClick(commmentId, productId);
+    });
+  }
+
+  render() {
+    let confirmActionButtonIconDisplay;
+    if (this.state.status === "ready") {
+      confirmActionButtonIconDisplay = React.createElement(
+        'i',
+        { className: 'material-icons reverse' },
+        'reply'
+      );
+    } else if (this.state.status === "loading") {
+      confirmActionButtonIconDisplay = React.createElement('span', { className: 'glyphicon glyphicon-refresh spinning' });
+    }
+
+    return React.createElement(
+      'div',
+      { className: 'modal report-comment-modal', id: "report-" + this.props.comment.comment_id, tabIndex: '-1', role: 'dialog' },
+      React.createElement(
+        'div',
+        { className: 'modal-dialog', role: 'document' },
+        React.createElement(
+          'div',
+          { className: 'modal-content' },
+          React.createElement(
+            'div',
+            { className: 'modal-header' },
+            React.createElement(
+              'h4',
+              { className: 'modal-title' },
+              'Report Comment'
+            ),
+            React.createElement(
+              'button',
+              { type: 'button', id: 'review-modal-close', className: 'close', 'data-dismiss': 'modal', 'aria-label': 'Close' },
+              React.createElement(
+                'span',
+                { 'aria-hidden': 'true' },
+                '\xD7'
+              )
+            )
+          ),
+          React.createElement(
+            'div',
+            { className: 'modal-body' },
+            React.createElement(
+              'p',
+              { className: 'comment-report-p' },
+              'Do you really want to report this comment?'
+            )
+          ),
+          React.createElement(
+            'div',
+            { className: 'modal-footer' },
+            React.createElement(
+              'a',
+              { onClick: () => this.onConfirmReportClick(this.props.comment.comment_id, this.props.product.project_id) },
+              confirmActionButtonIconDisplay,
+              ' yes'
+            )
+          )
+        )
+      )
     );
   }
 }
