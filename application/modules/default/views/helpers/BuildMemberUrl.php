@@ -24,14 +24,14 @@ class Default_View_Helper_BuildMemberUrl extends Zend_View_Helper_Abstract
 {
 
     /**
-     * @param int    $member_id
+     * @param int|string $member_ident
      * @param string $action
      * @param array  $params
      *
      * @return string
      * @throws Zend_Exception
      */
-    public function buildMemberUrl($member_id, $action = '', $params = null)
+    public function buildMemberUrl($member_ident, $action = '', $params = null)
     {
         /** @var Zend_Controller_Request_Http $request */
         $request = Zend_Controller_Front::getInstance()->getRequest();
@@ -48,8 +48,16 @@ class Default_View_Helper_BuildMemberUrl extends Zend_View_Helper_Abstract
         if ($action != '') {
             $action = $action . '/';
         }
+        
+        $member_ident = strtolower($member_ident);
+        $member_ident = urlencode($member_ident);
+        
+        $memberLink = "u";
+        if(is_int($member_ident)) {
+            $memberLink = "member";
+        }
 
-        return "{$http_scheme}://{$baseurl}/member/{$member_id}/{$action}{$url_param}";
+        return "{$http_scheme}://{$baseurl}/{$memberLink}/{$member_ident}/{$action}{$url_param}";
     }
 
 

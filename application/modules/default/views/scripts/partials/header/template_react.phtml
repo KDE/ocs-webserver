@@ -180,10 +180,10 @@ $tabs_left += $cat_title_length*10;
                                     <a href="/product/add/"><?= $this->translate('Add Product') ?></a>
                                 </li>
                                 <li class="link">
-                                    <a href="<?= $helperBuildMemberUrl->buildMemberUrl($member->member_id, 'products') ?>"><?= $this->translate('Products') ?></a>
+                                    <a href="<?= $helperBuildMemberUrl->buildMemberUrl($member->username, 'products') ?>"><?= $this->translate('Products') ?></a>
                                 </li>
                                 <li class="link">
-                                    <a href="<?= $helperBuildMemberUrl->buildMemberUrl($member->member_id, 'plings') ?>"><?= $this->translate('Plings') ?></a>
+                                    <a href="<?= $helperBuildMemberUrl->buildMemberUrl($member->username, 'plings') ?>"><?= $this->translate('Plings') ?></a>
                                 </li>
                                 <li class="link">
                                     <a href="/settings/"><?= $this->translate('Settings') ?></a>

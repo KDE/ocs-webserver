@@ -34,7 +34,7 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
 	</div>
 	<div class="row" style="margin-left: 0;margin-right: 0;">
 		<div class="userinfo">
-			<a href="<?=$helpMemberUrl->buildMemberUrl($this->comment['member_id'])?>"  class="tooltipuserleft" data-tooltip-content="#tooltip_content" data-user="<?=$this->comment['member_id']?>" >
+			<a href="<?=$helpMemberUrl->buildMemberUrl($this->comment['username'])?>"  class="tooltipuserleft" data-tooltip-content="#tooltip_content" data-user="<?=$this->comment['member_id']?>" >
                 <img src="<?= $helpImage->Image($this->comment['profile_image_url'],array('width' => 40, 'height' => 40)) ?>" />
 				<span style="display: block"><?= $this->comment['username'] ?></span>
 			</a>

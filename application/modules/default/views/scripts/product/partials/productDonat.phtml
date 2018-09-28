@@ -45,7 +45,7 @@ $this->headScript()
                 <span style="padding-top:10px; padding-right:5px;">
                 support <?= $this->member->username ?>  </span>
                   <div class="product-maker-thumbnail relative" style="">
-                    <a href="<?php echo $helperBuildMemberUrl->buildMemberUrl($this->member->member_id); ?>"
+                    <a href="<?php echo $helperBuildMemberUrl->buildMemberUrl($this->member->username); ?>"
                        title="<?= $this->member->username ?>">                  
                         <img src="<?= $helperImage->Image($this->member->profile_image_url, array('width' => 40, 'height' => 40)) ?>"
                              alt="product-maker" width="40" height="40"

@@ -46,7 +46,7 @@ $helpProductUrl = new Default_View_Helper_BuildProductUrl();
 
         <div class="row" id="<?= $loopProductId ?>" style="padding-bottom:10px;">
             <div class="col-lg-3 col-md-2 col-sm-2 col-xs-2 ">
-                <a href="<?= $helpMemberUrl->buildMemberUrl($element->member_id) ?>">
+                <a href="<?= $helpMemberUrl->buildMemberUrl($element->username) ?>">
                 <img src="<?php echo $helperImage->Image($element->profile_image_url,array('width' => 50, 'height' => 50)); ?>"
                          alt="profile-image"                         
                          style="border-radius:50%;  width: 50px; height: 50px; margin-right: 10px"

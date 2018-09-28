@@ -92,6 +92,8 @@ $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
 
 </style>
 <main id="explore-content">
+
+    
   <section class="wrapper" id="products-wrapper" >
 
     <div id="TableContainer"></div>    
@@ -124,8 +126,7 @@ $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
             paging: true,
             sorting: true,                     
             actions: {
-                listAction: '/backend/letteravatar/list' ,
-                updateAction: '/backend/letteravatar/update'
+                listAction: '/backend/letteravatar/list'
             },
             fields: {
                    member_id: {
@@ -147,11 +148,12 @@ $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
                                      edit: false,
                                      list: true                   
                                  },
-                    avatar_type_id: {
-                        title: 'avatar type',                        
-                        options: {'2': 'user uploaded'},
-                        list: false
-                    },
+                    is_auto_generated: {
+                                     title: 'is_auto_generated',                                 
+                                     create: false,
+                                     edit: false,
+                                     list: true                   
+                                 },
                     profile_image_url: {
                         title: 'Profile Image',                         
                         create: false,
@@ -168,6 +170,7 @@ $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
             }
         });
 
+        /*
         $('body').on("click", 'a.profileimagelink', function (event) {
             event.preventDefault();
             event.stopImmediatePropagation();
@@ -190,11 +193,11 @@ $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
             });
             return false;
         });
-      
+      */
           
 
                 
-        $('#TableContainer').jtable('load',{jtPageSize:5});
+        $('#TableContainer').jtable('load',{jtPageSize:10});
     });
 </script>
 

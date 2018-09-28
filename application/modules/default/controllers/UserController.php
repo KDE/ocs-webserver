@@ -36,6 +36,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
 
         if ($this->hasParam('user_name')) {
             $this->_userName = $this->getParam('user_name');
+            $this->_userName = urldecode($this->_userName);
 
             $modelMember = new Default_Model_Member();
             $this->_memberId = $modelMember->fetchActiveUserByUsername($this->_userName);
@@ -395,7 +396,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
         //        $helperBaseUrl = new Default_View_Helper_BaseUrl();
         //        $helperServerUrl = new Zend_View_Helper_ServerUrl();
         $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
-        $this->view->permaLink = $helpMemberUrl->buildMemberUrl($this->_memberId);
+        $this->view->permaLink = $helpMemberUrl->buildMemberUrl($memberInfo->username);
         //        $this->view->permaLink = $helperServerUrl->serverUrl() . $helperBaseUrl->baseUrl() . '/member/' . $this->_memberId . '/';
         if ($this->_request->isGet()) {
             $this->view->form = $form;

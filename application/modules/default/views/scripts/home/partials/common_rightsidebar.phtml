@@ -38,7 +38,7 @@ $this->supporters = $modelInfo->getNewActiveSupporters(9);
                    foreach ($this->supporters as $user) {                                                      
                     if($i++>6) break;
                ?>         
-               <a href="<?php echo $this->buildMemberUrl($user['member_id']); ?>" class="tooltipuserleft" data-tooltip-content="#tooltip_content" data-user="<?=$user['member_id']?>">                   
+               <a href="<?php echo $this->buildMemberUrl($user['username']); ?>" class="tooltipuserleft" data-tooltip-content="#tooltip_content" data-user="<?=$user['member_id']?>">                   
                     <img height="25" width="25" src="<?php echo $this->Image($user['profile_image_url'], array('width' => '25', 'height' => '25', 'crop' => 2)); ?>" class="supporterx" />                   
                </a>
                <?php } ?>
@@ -83,7 +83,7 @@ $this->supporters = $modelInfo->getNewActiveSupporters(9);
                             <?php 
                                  foreach ($this->moderators as $mod) {
                             ?>
-                            <a href="<?php echo $this->buildMemberUrl($mod['member_id']); ?>" class="tooltipuserleft" data-tooltip-content="#tooltip_content" data-user="<?=$mod['member_id']?>">                   
+                            <a href="<?php echo $this->buildMemberUrl($mod['username']); ?>" class="tooltipuserleft" data-tooltip-content="#tooltip_content" data-user="<?=$mod['member_id']?>">                   
                                 <img height="25" width="25" src="<?php echo $this->Image($mod['profile_image_url'], array('width' => '25', 'height' => '25', 'crop' => 2)); ?>" class="supporterx" />                   
                            </a>
                             <?php }?>

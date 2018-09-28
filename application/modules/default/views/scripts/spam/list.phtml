@@ -83,7 +83,7 @@
 
                                 <b style="display: block; margin-bottom: 5px"><?php echo $this->product['cat_title'] ?></b>
                                 <b style="display: block; margin-bottom: 5px" class="small">by <a
-                                            href="<?php echo $helpMemberUrl->buildMemberUrl($this->product['member_id']) ?>"><?php echo $this->product['username'] ?></a></b>
+                                            href="<?php echo $helpMemberUrl->buildMemberUrl($this->product['username']) ?>"><?php echo $this->product['username'] ?></a></b>
                                 <?php
                                 if (false === empty($this->product['package_names'])) {
                                     $list_packages = explode(',', $this->product['package_names']);
