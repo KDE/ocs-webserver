@@ -3133,7 +3133,9 @@ class ProductNavBar extends React.Component {
           React.createElement(
             'a',
             { className: this.props.tab === "comments" ? "item active" : "item", onClick: () => this.props.onTabToggle('comments') },
-            'Comments'
+            'Comments (',
+            this.props.product.r_comments.length,
+            ')'
           ),
           filesMenuItem,
           ratingsMenuItem,
@@ -3205,7 +3207,7 @@ class ProductCommentsContainer extends React.Component {
       const product = this.props.product;
       const comments = cArray.map((c, index) => {
         if (c.level === 1) {
-          return React.createElement(CommentItem, { product: product, comment: c.comment, key: index, level: 1 });
+          return React.createElement(CommentItem, { user: this.props.user, product: product, comment: c.comment, key: index, level: 1 });
         }
       });
       commentsDisplay = React.createElement(
@@ -3218,21 +3220,6 @@ class ProductCommentsContainer extends React.Component {
     return React.createElement(
       'div',
       { className: 'product-view-section', id: 'product-comments-container' },
-      React.createElement(
-        'div',
-        { className: 'section-header' },
-        React.createElement(
-          'h3',
-          null,
-          'Comments'
-        ),
-        React.createElement(
-          'span',
-          { className: 'comments-counter' },
-          cArray.length,
-          ' comments'
-        )
-      ),
       React.createElement(CommentForm, {
         user: this.props.user,
         product: this.props.product
@@ -3374,14 +3361,23 @@ class CommentForm extends React.Component {
 class CommentItem extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      showCommentReplyForm: false
+    };
     this.filterByCommentLevel = this.filterByCommentLevel.bind(this);
+    this.onToggleReplyForm = this.onToggleReplyForm.bind(this);
   }
 
   filterByCommentLevel(val) {
     if (val.level > this.props.level && this.props.comment.comment_id === val.comment.comment_parent_id) {
       return val;
     }
+  }
+
+  onToggleReplyForm() {
+    const showCommentReplyForm = this.state.showCommentReplyForm === true ? false : true;
+    console.log(showCommentReplyForm);
+    this.setState({ showCommentReplyForm: showCommentReplyForm });
   }
 
   render() {
@@ -3400,19 +3396,35 @@ class CommentItem extends React.Component {
     let displayIsSupporter;
     if (this.props.comment.issupporter === "1") {
       displayIsSupporter = React.createElement(
-        'span',
-        { className: 'is-supporter-display' },
-        'S'
+        'li',
+        null,
+        React.createElement(
+          'span',
+          { className: 'is-supporter-display uc-icon' },
+          'S'
+        )
       );
     }
 
     let displayIsCreater;
     if (this.props.comment.member_id === this.props.product.member_id) {
       displayIsCreater = React.createElement(
-        'span',
-        { className: 'is-creater-display' },
-        'C'
+        'li',
+        null,
+        React.createElement(
+          'span',
+          { className: 'is-creater-display uc-icon' },
+          'C'
+        )
       );
+    }
+
+    let commentReplyFormDisplay;
+    if (this.state.showCommentReplyForm) {
+      commentReplyFormDisplay = React.createElement(CommentForm, {
+        user: this.props.user,
+        product: this.props.product
+      });
     }
 
     return React.createElement(
@@ -3421,9 +3433,7 @@ class CommentItem extends React.Component {
       React.createElement(
         'div',
         { className: 'comment-user-avatar' },
-        React.createElement('img', { src: this.props.comment.profile_image_url }),
-        displayIsSupporter,
-        displayIsCreater
+        React.createElement('img', { src: this.props.comment.profile_image_url })
       ),
       React.createElement(
         'div',
@@ -3432,22 +3442,69 @@ class CommentItem extends React.Component {
           'div',
           { className: 'comment-item-header' },
           React.createElement(
-            'a',
-            { className: 'comment-username', href: "/member/" + this.props.comment.member_id },
-            this.props.comment.username
-          ),
-          React.createElement(
-            'span',
-            { className: 'comment-created-at' },
-            appHelpers.getTimeAgo(this.props.comment.comment_created_at)
+            'ul',
+            null,
+            React.createElement(
+              'li',
+              null,
+              React.createElement(
+                'a',
+                { className: 'comment-username', href: "/member/" + this.props.comment.member_id },
+                this.props.comment.username
+              )
+            ),
+            displayIsSupporter,
+            displayIsCreater,
+            React.createElement(
+              'li',
+              null,
+              React.createElement(
+                'span',
+                { className: 'comment-created-at' },
+                appHelpers.getTimeAgo(this.props.comment.comment_created_at)
+              )
+            )
           )
         ),
         React.createElement(
           'div',
           { className: 'comment-item-text' },
           this.props.comment.comment_text
+        ),
+        React.createElement(
+          'div',
+          { className: 'comment-item-actions' },
+          React.createElement(
+            'a',
+            { onClick: this.onToggleReplyForm },
+            React.createElement(
+              'i',
+              { className: 'material-icons' },
+              'reply'
+            ),
+            React.createElement(
+              'span',
+              null,
+              'Reply'
+            )
+          ),
+          React.createElement(
+            'a',
+            { onClick: this.onReportComment },
+            React.createElement(
+              'i',
+              { className: 'material-icons' },
+              'warning'
+            ),
+            React.createElement(
+              'span',
+              null,
+              'Report'
+            )
+          )
         )
       ),
+      commentReplyFormDisplay,
       commentRepliesContainer
     );
   }
@@ -3863,7 +3920,7 @@ class ProductViewFavTab extends React.Component {
       }));
       favsDisplay = React.createElement(
         'div',
-        { className: 'favs-list cards' },
+        { className: 'favs-list supporter-list' },
         favs
       );
     }
@@ -3889,7 +3946,7 @@ class ProductViewPlingsTab extends React.Component {
       }));
       plingsDisplay = React.createElement(
         'div',
-        { className: 'plings-list cards' },
+        { className: 'plings-list supporter-list' },
         plings
       );
     }
@@ -3923,10 +3980,10 @@ class UserCardItem extends React.Component {
 
     return React.createElement(
       'div',
-      { className: 'user-card-item' },
+      { className: 'supporter-list-item' },
       React.createElement(
         'div',
-        { className: 'card-content' },
+        { className: 'item-content' },
         React.createElement(
           'div',
           { className: 'user-avatar' },

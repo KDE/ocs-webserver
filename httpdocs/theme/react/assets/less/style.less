@@ -1083,6 +1083,10 @@ table {
       width: auto !important;
       margin-bottom: 20px;
 
+      a {
+        color: #007aa6;
+      }
+
       i {
         display: inline-block;
         position: absolute;
@@ -1188,17 +1192,18 @@ table {
 
           &.product-info-title {
             color: #007aa6;
-            font-weight: 400 !important;
             text-overflow: ellipsis;
             word-break: break-word;
             display: block;
             overflow: hidden;
             white-space: nowrap;
             padding-right: 20px;
+            font-size: 16px;
           }
 
           &.product-info-user {
             color: #666;
+            font-size: 15px;
           }
         }
       }
@@ -1208,7 +1213,7 @@ table {
 }
 
 #app-root {
-  font-family: Source Sans Pro,Source Sans,sans-serif;
+  font-family: Ubuntu, "times new roman", times, roman, serif;
   font-size: 13pt;
   font-weight: 400;
   line-height: 1.8;
@@ -1221,8 +1226,8 @@ table {
 
   .container {
     width: 100% !important;
-    max-width: 1300px !important;
-    padding: 0 10%;
+    max-width: 1000px !important;
+    padding: 0;
   }
 
   .row {
@@ -1237,8 +1242,7 @@ table {
   .mdl-button {
     text-transform: capitalize !important;
     font-size: 14px !important;
-    font-weight: 500 !important;
-    font-family: Source Sans Pro,Source Sans,sans-serif !important;
+    font-family: Ubuntu, "times new roman", times, roman, serif !important;
 
     &#become-a-supporter {
       width: 100%;
@@ -1600,7 +1604,6 @@ table {
 #product-page {
   position: relative;
 
-
   #product-download-section {
     text-align: center;
     overflow: hidden;
@@ -1664,7 +1667,6 @@ table {
             float: left;
             height: 30px;
             font-size: 15px;
-            font-weight: 500;
           }
         }
 
@@ -2143,9 +2145,10 @@ table {
     article {
       float: left;
       width: 70%;
+      padding-right: 100px;
 
       p {
-        font-size: 17px;
+        font-size: 16px;
       }
     }
 
@@ -2168,7 +2171,7 @@ table {
             float: left;
             width: 50%;
             display: block;
-            font-size: 17px;
+            font-size: 15px;
           }
 
           .key {
@@ -2187,6 +2190,12 @@ table {
           }
         }
       }
+    }
+  }
+
+  #product-files {
+    table {
+      width: 100%;
     }
   }
 
@@ -2267,7 +2276,7 @@ table {
           width: 60px;
           position: absolute;
           left: 0;
-          top: 0;
+          top: 5px;
           height: 60px;
 
           .is-supporter-display {
@@ -2311,27 +2320,134 @@ table {
           min-height: 60px;
           margin-bottom: 10px;
 
-          .comment-item-header, .comment-item-text {
+          .comment-item-header, .comment-item-text, .comment-item-actions {
             width: 100%;
+            float: left;
+            margin-bottom: 10px;
           }
 
           .comment-item-header {
-            border-bottom: 1px dashed #ccc;
+            float: left;
+            ul {
+              list-style-type: none;
+              margin: 0;
+              padding: 0;
+              float: left;
+
+              li {
+                float: left;
+                margin-left: 5px;
+                &::before {
+                  content: "•";
+                  color: #E2E2E2;
+                  margin-right: 5px;
+                }
+
+                span {
+
+                  &.uc-icon {
+                    width: 20px;
+                    height: 20px;
+                    display: block;
+                    text-align: center;
+                    float: right;
+                    line-height: 20px;
+                    font-size: 12px;
+                    color: white;
+                    margin-top: 2px;
+                    text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+                    border-radius: 5px;
+                  }
+
+                  &.is-supporter-display {
+                    background: #EE6E09;
+                  }
+
+                  &.is-creater-display {
+                    background-color: rgb(74, 134, 207);
+                  }
+                }
+
+                &:first-of-type {
+                  margin-left: 0;
+                  &::before {
+                    content:"";
+                    margin: 0;
+                  }
+                }
+              }
+            }
 
             a.comment-username {
               font-weight: 500;
             }
 
-            span.comment-created-at {
-              position: absolute;
+          }
+
+          .comment-item-actions {
+            a {
+              cursor: pointer;
               display: block;
-              right: 0;
-              top:0;
+              margin-right: 15px;
+              position: relative;
+              padding-left: 20px;
+              float: left;
+
+              i {
+                font-size: 16px;
+                position: absolute;
+                left: 2px;
+                top: 2px;
+              }
             }
           }
+
+        }
+
+        .comment-item-replies-container {
+          margin-left: -30px;
         }
       }
     }
+
+  .product-ratings-list {
+    .rating-item-header {
+      a {
+        font-weight: 500 !important;
+        margin-right: 10px;
+      }
+    }
+  }
+
+  .supporter-list {
+
+    .supporter-list-item {
+      float: left;
+      width: 20%;
+      margin-bottom: 20px;
+      font-size: 14px;
+
+      .user-avatar {
+        img {
+          width: 60px;
+          height: 60px;
+          margin-bottom: 10px;
+        }
+      }
+
+      .card-type-holder {
+        img {
+          height: 20px;
+          width: 20px;
+          margin-top: -4px;
+        }
+      }
+
+      span {
+        margin-right: 5px;
+      }
+    }
+  }
 }
 
 @media (max-width: 1720px) and (min-width:1501px) {
@@ -2408,7 +2524,7 @@ table {
 @media (max-width: 999px) and (min-width: 662px) {
   #app-root {
     .container {
-      padding: 0 5%;
+      padding: 0 20px !important;
     }
   }
   .products-showcase {
@@ -2445,7 +2561,7 @@ table {
 @media (max-width: 661px) {
   #app-root {
     .container {
-      padding: 0 5%;
+      padding: 0 20px !important;
     }
   }
   .products-showcase {
@@ -2482,7 +2598,7 @@ table {
 @media (max-width: 401px) {
   #app-root {
     .container {
-      padding: 0 5%;
+      padding: 0 20px !important;
     }
   }
   .products-showcase {
