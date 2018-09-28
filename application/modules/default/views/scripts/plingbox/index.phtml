@@ -46,11 +46,11 @@ $totalcnt = $this->supporters->getTotalItemCount();
                                 <div class="supporter-box-top">
                                     
                                         <div class="title">
-                                            <a target="_blank" href="<?php echo $this->buildMemberUrl($this->member->member_id); ?>"
+                                            <a target="_blank" href="<?php echo $this->buildMemberUrl($this->member->username); ?>"
                                                title="<?php echo $this->member->username; ?>"><?php echo $this->member->username; ?></a>
                                         </div>
                                         <figure>
-                                            <a target="_blank" href="<?php echo $this->buildMemberUrl($this->member->member_id); ?>"
+                                            <a target="_blank" href="<?php echo $this->buildMemberUrl($this->member->username); ?>"
                                                title="<?php echo $this->member->username; ?>">
                                                 <img
                                                     class="profileimage"                                                    
@@ -79,7 +79,7 @@ $totalcnt = $this->supporters->getTotalItemCount();
                                             foreach ($this->supporters as $supporter) { ?>
                                                 <figure>
                                                     <a target="_blank"
-                                                       href="<?php echo $helperBuildMemberUrl->buildMemberUrl($supporter['member_id']); ?>"
+                                                       href="<?php echo $helperBuildMemberUrl->buildMemberUrl($supporter['username']); ?>"
                                                        title="<?php echo $supporter['username']; ?>">
                                                         <img src="<?php echo $supporter['profile_image_url']; ?>"
                                                              alt="<?php echo $supporter['username']; ?>">

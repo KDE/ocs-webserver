@@ -29,7 +29,7 @@ $helpProductUrl = new Default_View_Helper_BuildProductUrl();
     </div>
     <!-- /.supporter-thumbnail -->
     <div class="span9 friend-activity-summary">
-        <a href="<?= $helpMemberUrl->buildMemberUrl($this->member_id) ?>"><?php echo $this->username; ?></a><?php echo $this->translate('User' . $this->type_text); ?>
+        <a href="<?= $helpMemberUrl->buildMemberUrl($this->username) ?>"><?php echo $this->username; ?></a><?php echo $this->translate('User' . $this->type_text); ?>
         <a href="<?= $helpProductUrl->buildProductUrl($this->prj_project_id); ?>"><?= $this->obj_title ?></a>
     </div>
     <!-- /.friend-activity-summary -->

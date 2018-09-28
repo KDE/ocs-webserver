@@ -23,9 +23,9 @@ $helperImage = new Default_View_Helper_Image();
 $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
 ?><div class="supporter-image alignleft">
     <div class="image-overlay-64">
-        <a href="<?php echo $helpMemberUrl->buildMemberUrl($this->member_id); ?>"><img src="/images/system/user-profile-image-overlay-white-64-bg.png"></a>
+        <a href="<?php echo $helpMemberUrl->buildMemberUrl($this->username); ?>"><img src="/images/system/user-profile-image-overlay-white-64-bg.png"></a>
     </div>
-    <a href="<?php echo $helpMemberUrl->buildMemberUrl($this->member_id); ?>">
+    <a href="<?php echo $helpMemberUrl->buildMemberUrl($this->username); ?>">
         <img src="<?php echo $helperImage->Image($this->profile_image_url,array('width' => 64, 'height' => 64, 'crop' => 2)); ?>"
               alt="supporter image"
               title="<?php echo $this->username; ?>"

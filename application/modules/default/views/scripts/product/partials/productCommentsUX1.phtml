@@ -98,7 +98,7 @@ $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountP
                     <?php if ($comment['comment_type'] == Default_Model_DbTable_Comments::COMMENT_TYPE_PLING) : ?>
                         <p class="pull-right history" style="display:inline-block"><span class="glyphicon glyphicon-usd"></span></p>
                     <?php endif ?>
-                    <a class="media-left" href="<?= $helperBuildMemberUrl->buildMemberUrl($comment['member_id']) ?>">
+                    <a class="media-left" href="<?= $helperBuildMemberUrl->buildMemberUrl($comment['username']) ?>">
                         <div class="profileimage" style="position:relative;display:inline-block;">
                        <?php                       
                         if($this->product->member_id == $comment['member_id']){
@@ -122,7 +122,7 @@ $pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountP
                     <div class="media-body">
                         <h4 class="media-heading user_name">
                               
-                                  <a  class="tooltipuser"  data-tooltip-content="#tooltip_content" role="button" data-user="<?=$comment['member_id'] ?>" href="<?= $helperBuildMemberUrl->buildMemberUrl($comment['member_id']) ?>"> <?= $comment['username'] ?> </a>                              
+                                  <a  class="tooltipuser"  data-tooltip-content="#tooltip_content" role="button" data-user="<?=$comment['member_id'] ?>" href="<?= $helperBuildMemberUrl->buildMemberUrl($comment['username']) ?>"> <?= $comment['username'] ?> </a>                              
 
                                 <p class="pull-right history" >
                                     <?php if ($age['age'] > 0) { ?>

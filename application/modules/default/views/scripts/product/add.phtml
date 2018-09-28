@@ -150,7 +150,7 @@ $this->inlineScript()->appendScript('
                                 Hi <span class="lightblue"><?= $this->member->username; ?></span><?= $this->translate(', welcome to your personal start page!') ?>
                             </div>
                             <div class="small lightgrey">
-                                <a href="<?= $helpMemberUrl->buildMemberUrl($this->member->member_id); ?>">
+                                <a href="<?= $helpMemberUrl->buildMemberUrl($this->member->username); ?>">
                                     <?= $this->translate('Click here to go to your About Me page.') ?>
                                 </a>
                             </div>

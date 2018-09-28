@@ -173,7 +173,7 @@ $helperImage = new Default_View_Helper_Image();
             <?php foreach ($users as $key => $user) { ?>
 
                 <div class="thumb">
-                    <a href="<?php echo $buildMemberUrl->buildMemberUrl($user['member_id']); ?>">
+                    <a href="<?php echo $buildMemberUrl->buildMemberUrl($user['username']); ?>">
                         <span></span>
                         <img src="<?php echo $helperImage->Image($user['profile_image_url'],array('width' => 110, 'height' => 110, 'crop' => 2)); ?>"/>
                     </a>

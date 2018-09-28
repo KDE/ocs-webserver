@@ -53,7 +53,7 @@ $auth = Zend_Auth::getInstance();
                          ?>
 
                         <div class="supporter" style="width: 35px;height: 35px;float: left;padding: 2px;clear: none;border-bottom: 0px none;">
-                            <a href="<?php echo $helperBuildMemberUrl->buildMemberUrl($sup->member_id); ?>">
+                            <a href="<?php echo $helperBuildMemberUrl->buildMemberUrl($sup->username); ?>">
                                 <img width="30px" height="30px" src="<?= $helperImage->Image($sup->profile_image_url,array('width' => 30, 'height' => 30, 'crop' => 2)); ?>"/>
                             </a>
                         </div>

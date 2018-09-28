@@ -610,7 +610,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->processPploadId($projectData);
 
         $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
-        $this->redirect($helperBuildMemberUrl->buildMemberUrl($this->_authMember->member_id, 'products'));
+        $this->redirect($helperBuildMemberUrl->buildMemberUrl($this->_authMember->username, 'products'));
     }
 
     public function getupdatesajaxAction()
