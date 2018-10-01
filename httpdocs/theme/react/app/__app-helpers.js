@@ -87,8 +87,13 @@ window.appHelpers = (function(){
       salt = "Kcn6cv7&dmvkS40Hna§4ffcvl=021nfMs2sdlPs123MChf4s0K";
     }
 
-    const timestamp =  Math.floor((new Date().getTime() / 1000)+3600)
-    const hash = md5(salt,file.collection_id+timestamp);
+    const timestamp =  Math.floor((new Date().getTime() / 1000)+3600);
+    console.log(salt);
+    console.log(file.collection_id);
+    console.log(timestamp);
+    // const timestamp =  Math.floor(new Date().getTime()+3600);
+    const hash = md5(salt + file.collection_id + timestamp);
+    console.log(hash);
     return hash;
     /*
     $salt = PPLOAD_DOWNLOAD_SECRET;

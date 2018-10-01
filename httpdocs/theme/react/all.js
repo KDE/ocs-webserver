@@ -83,7 +83,12 @@ window.appHelpers = function () {
     }
 
     const timestamp = Math.floor(new Date().getTime() / 1000 + 3600);
-    const hash = md5(salt, file.collection_id + timestamp);
+    console.log(salt);
+    console.log(file.collection_id);
+    console.log(timestamp);
+    // const timestamp =  Math.floor(new Date().getTime()+3600);
+    const hash = md5(salt + file.collection_id + timestamp);
+    console.log(hash);
     return hash;
     /*
     $salt = PPLOAD_DOWNLOAD_SECRET;
@@ -3820,6 +3825,7 @@ class ProductViewFilesTabItem extends React.Component {
     %2F1532003618%2Fu
     %2F%2F1519124607-download-app-old.png
     */
+    console.log(fileDownloadHash);
     this.setState({ downloadLink: downloadLink });
   }
 
