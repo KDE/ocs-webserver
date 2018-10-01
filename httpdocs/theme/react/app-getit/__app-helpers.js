@@ -2,7 +2,7 @@ window.appHelpers = (function(){
 
   function getEnv(domain){
     let env;
-    if (this.splitByLastDot(domain) === 'com'){
+    if (this.splitByLastDot(domain) === 'com' || this.splitByLastDot(domain) === 'org'){
       env = 'live';
     } else {
       env = 'test';
@@ -87,7 +87,7 @@ window.appHelpers = (function(){
     }
 
     const timestamp =  Math.floor((new Date().getTime() / 1000)+3600)
-    const hash = md5(salt,file.collection_id+timestamp);
+    const hash = md5(salt+file.collection_id+timestamp);
     return hash;
   }
 

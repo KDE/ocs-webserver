@@ -896,7 +896,8 @@ class CommentForm extends React.Component {
     this.state = {
       text:'',
       errorMsg:'',
-      errorTitle:''
+      errorTitle:'',
+      loading:false
     };
     this.updateCommentText = this.updateCommentText.bind(this);
     this.submitComment = this.submitComment.bind(this);
@@ -908,87 +909,96 @@ class CommentForm extends React.Component {
   }
 
   submitComment(){
-    const msg = this.state.text;
-    const self = this;
-    jQuery.ajax({
-      data:{
+    this.setState({loading:true},function(){
+      const msg = this.state.text;
+      const self = this;
+      let data = {
         p:this.props.product.project_id,
         m:this.props.user.member_id,
         msg:this.state.text
-      },
-      url:'/productcomment/addreply/',
-      type:'post',
-      dataType:'json',
-      error:function(jqXHR,textStatus,errorThrown){
-        const results = JSON && JSON.parse(jqXHR.responseText) || $.parseJSON(jqXHR.responseText);
-        self.setState(
-          {
-            errorMsg:results.message,
-            errorTitle:results.title,
-            login_url:results.login_url,
-            status:'error'
-          }
-        );
-      },
-      success:function(results){
-        let baseUrl;
-        if (store.getState().env === 'live') {
-          baseUrl = 'cn.pling.com';
-        } else {
-          baseUrl = 'cn.pling.it';
-        }
-
-        $.ajax({url: '/productcomment?p='+self.props.product.project_id,cache: false}).done(function(response){
-          self.updateComments(response);
-        });
       }
-    })
+      if (this.props.comment){
+        data.i = this.props.comment.comment_id;
+      }
+      jQuery.ajax({
+        data:data,
+        url:'/productcomment/addreply/',
+        type:'post',
+        dataType:'json',
+        error:function(jqXHR,textStatus,errorThrown){
+          const results = JSON && JSON.parse(jqXHR.responseText) || $.parseJSON(jqXHR.responseText);
+          self.setState({
+              errorMsg:results.message,
+              errorTitle:results.title,
+              login_url:results.login_url,
+              status:'error'});
+        },
+        success:function(results){
+          let baseUrl;
+          if (store.getState().env === 'live') {
+            baseUrl = 'cn.pling.com';
+          } else {
+            baseUrl = 'cn.pling.it';
+          }
+          $.ajax({url: '/productcomment?p='+self.props.product.project_id,cache: false}).done(function(response){
+            self.updateComments(response);
+          });
+        }
+      });
+    });
   }
 
   updateComments(response){
     store.dispatch(setProductComments(response));
-    this.setState({text:''});
+    this.setState({text:'',loading:false});
   }
 
   render(){
 
     let commentFormDisplay;
-    if (this.props.user){
-
-      let submitBtnDisplay;
-      if (this.state.text.length === 0){
-        submitBtnDisplay = (
-          <button disabled="disabled" type="button" className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary">
-            send
-          </button>
+    if (this.props.user.username){
+      if (this.state.loading){
+        commentFormDisplay = (
+          <div className="comment-form-container">
+            <p><span className="glyphicon glyphicon-refresh spinning"></span> posting comment</p>
+          </div>
         );
       } else {
-        submitBtnDisplay = (
-          <button onClick={this.submitComment} type="button" className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary">
-            <span className="glyphicon glyphicon-send"></span>
-            send
-          </button>
+        let submitBtnDisplay;
+        if (this.state.text.length === 0){
+          submitBtnDisplay = (
+            <button disabled="disabled" type="button" className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary">
+              send
+            </button>
+          );
+        } else {
+          submitBtnDisplay = (
+            <button onClick={this.submitComment} type="button" className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary">
+              <span className="glyphicon glyphicon-send"></span>
+              send
+            </button>
+          );
+        }
+
+        let errorDisplay;
+        if (this.state.status === 'error'){
+          errorDisplay = (
+            <div className="comment-form-error-display-container">
+              <div dangerouslySetInnerHTML={{__html:this.state.errorTitle}}></div>
+              <div dangerouslySetInnerHTML={{__html:this.state.errorMsg}}></div>
+            </div>
+          )
+        }
+
+        commentFormDisplay = (
+          <div className="comment-form-container">
+            <span>Add Comment</span>
+            <textarea className="form-control" onChange={this.updateCommentText} value={this.state.text}></textarea>
+            {errorDisplay}
+            {submitBtnDisplay}
+          </div>
         );
       }
-
-      let errorDisplay;
-      if (this.state.status === 'error'){
-        errorDisplay = (
-          <div className="comment-form-error-display-container">
-            <div dangerouslySetInnerHTML={{__html:this.state.errorTitle}}></div>
-            <div dangerouslySetInnerHTML={{__html:this.state.errorMsg}}></div>
-          </div>
-        )
-      }
-
-      commentFormDisplay = (
-        <div className="comment-form-container">
-          <span>Add Comment</span>
-          <textarea className="form-control" onChange={this.updateCommentText} value={this.state.text}></textarea>
-          {errorDisplay}
-          {submitBtnDisplay}
-        </div>
-      );
     } else {
       commentFormDisplay = (
         <p>Please <a href="/login?redirect=ohWn43n4SbmJZWlKUZNl2i1_s5gggiCE">login</a> or <a href="/register">register</a> to add a comment</p>
@@ -1024,7 +1034,6 @@ class CommentItem extends React.Component {
 
   onToggleReplyForm(){
     const showCommentReplyForm = this.state.showCommentReplyForm === true ? false : true;
-    console.log(showCommentReplyForm);
     this.setState({showCommentReplyForm:showCommentReplyForm});
   }
 
@@ -1069,6 +1078,7 @@ class CommentItem extends React.Component {
   }
 
   render(){
+    console.log(this.props.comment);
     let commentRepliesContainer;
     const filteredComments = categoryHelpers.convertCatChildrenObjectToArray(this.props.product.r_comments).filter(this.filterByCommentLevel);
     if (filteredComments.length > 0){
@@ -1105,6 +1115,7 @@ class CommentItem extends React.Component {
     if (this.state.showCommentReplyForm){
       commentReplyFormDisplay = (
         <CommentForm
+          comment={this.props.comment}
           user={this.props.user}
           product={this.props.product}
         />
@@ -1289,17 +1300,6 @@ class ProductViewFilesTabItem extends React.Component {
                        "%2Fu%2F"+this.props.product.member_id+
                        "%2F"+f.title;
 
-
-    /*https://david.pling.cc/p/747/startdownload?file_id=1519124607&amp;
-    file_name=1519124607-download-app-old.png&amp;
-    file_type=image/png&amp;
-    file_size=21383&amp;
-    url=https%3A%2F%2Fcc.ppload.com%2Fapi%2Ffiles%2Fdownloadfile%2Fid
-    %2F1519124607%2Fs
-    %2Fd66c71127c9aae29e58e03ddd85de57a%2Ft
-    %2F1532003618%2Fu
-    %2F%2F1519124607-download-app-old.png
-    */
     console.log(fileDownloadHash);
     this.setState({downloadLink:downloadLink});
   }
