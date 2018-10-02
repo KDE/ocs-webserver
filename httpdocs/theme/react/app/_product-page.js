@@ -950,7 +950,11 @@ class CommentForm extends React.Component {
 
   updateComments(response){
     store.dispatch(setProductComments(response));
-    this.setState({text:'',loading:false});
+    this.setState({text:'',loading:false},function(){
+      if (this.props.hideReplyForm){
+        this.props.hideReplyForm();
+      }
+    });
   }
 
   render(){
@@ -1083,8 +1087,9 @@ class CommentItem extends React.Component {
     const filteredComments = categoryHelpers.convertCatChildrenObjectToArray(this.props.product.r_comments).filter(this.filterByCommentLevel);
     if (filteredComments.length > 0){
       const product = this.props.product;
+      const user = this.props.user;
       const comments = filteredComments.map((c,index) => (
-        <CommentItem product={product} comment={c.comment} key={index} level={c.level}/>
+        <CommentItem user={user} product={product} comment={c.comment} key={index} level={c.level}/>
       ));
       commentRepliesContainer = (
         <div className="comment-item-replies-container">
@@ -1118,6 +1123,7 @@ class CommentItem extends React.Component {
           comment={this.props.comment}
           user={this.props.user}
           product={this.props.product}
+          hideReplyForm={this.onToggleReplyForm}
         />
       );
     }
