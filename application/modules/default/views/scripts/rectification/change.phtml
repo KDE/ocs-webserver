@@ -44,6 +44,8 @@ $this->inlineScript()->appendFile('/theme/flatui/js/lib/bootstrap-validator.min.
                                     print_r("Some characters in your username are no longer supported. Please correct it or choose another one.");
                                 } else if($errCode == Default_Model_ReviewProfileData::INVALID_USERNAME_NOT_UNIQUE) {
                                     print_r("Due to a switch to LDAP, there is a rare username conflict. Please make your username unique to continue.");
+                                } else if($errCode == Default_Model_ReviewProfileData::INVALID_EMAIL_DEACTIVATED) {
+                                    print_r("Due to a rare email conflict your account has been temp. deactivated. To activate again please choose a new valid email address.");
                                 }
                             ?>
                         </div>
@@ -68,7 +70,7 @@ $this->inlineScript()->appendFile('/theme/flatui/js/lib/bootstrap-validator.min.
                             </div>
                             <?php endif ?>
                             
-                            <?php if ($this->errorCode == Default_Model_ReviewProfileData::INVALID_EMAIL) : ?>
+                            <?php if ($this->errorCode == Default_Model_ReviewProfileData::INVALID_EMAIL_DEACTIVATED || $this->errorCode == Default_Model_ReviewProfileData::INVALID_EMAIL) : ?>
                             <div class="form-group has-feedback">
                                 <label for="email" class="control-label">Please enter a valid email address.</label>
                                 <input type="email" class="form-control" placeholder="Email" value="" id="mail" name="mail" required><div class="help-block with-errors"></div>

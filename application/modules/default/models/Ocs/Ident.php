@@ -115,15 +115,28 @@ class Default_Model_Ocs_Ident
             return false;
         }
 
-        Zend_Ldap_Attribute::removeFromAttribute($entry, 'userPassword', Zend_Ldap_Attribute::getAttribute($entry, 'jpegPhoto'));
+        Zend_Ldap_Attribute::removeFromAttribute($entry, 'jpegPhoto', Zend_Ldap_Attribute::getAttribute($entry, 'jpegPhoto'));
         //$avatar = file_get_contents($member_data['profile_image_url']);
         //$avatarBase64 = base64_decode($avatar);
         //Zend_Ldap_Attribute::setAttribute($entry, 'jpegPhoto', $avatarBase64);
         $avatar = $member_data['profile_image_url'];
-        $avatarJpeg = imagejpeg(imagecreatefromstring(file_get_contents($avatar)), 'avatra.jpeg');
-        $avatarBase64 = base64_decode($avatarJpeg);
+        $avatarJpeg = imagejpeg(file_get_contents($avatar), 'avatra.jpeg');
+        //$avatarBase64 = base64_decode($avatarJpeg);
         
-        Zend_Ldap_Attribute::setAttribute($entry, 'jpegPhoto', $avatarBase64);
+        
+        $image = imagecreatefrompng($avatar);
+        $bg = imagecreatetruecolor(imagesx($image), imagesy($image));
+        imagefill($bg, 0, 0, imagecolorallocate($bg, 255, 255, 255));
+        imagealphablending($bg, TRUE);
+        imagecopy($bg, $image, 0, 0, 0, 0, imagesx($image), imagesy($image));
+        imagedestroy($image);
+        $quality = 50; // 0 = worst / smaller file, 100 = better / bigger file 
+        imagejpeg($bg, "/tmp/avatar.jpg", $quality);
+        imagedestroy($bg);
+        
+        
+        Zend_Ldap_Attribute::setAttribute($entry, 'jpegPhoto', (file_get_contents("/tmp/avatar.jpg")));
+        
         
         $dn = $entry['dn'];
         $connection->update($dn, $entry);
