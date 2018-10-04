@@ -14,7 +14,7 @@ COLLATE='latin1_swedish_ci'
 
 
 
-USE `pling-import`;
+USE `pling`;
 
 DROP PROCEDURE `merge_members`;
 
@@ -27,12 +27,19 @@ CREATE PROCEDURE `merge_members`(
 COMMENT 'Merge of 2 members into 1'
 BEGIN
 
+	DECLARE exit handler for sqlexception
+	  BEGIN
+	    -- ERROR
+	  ROLLBACK;
+	END;
+
+	START TRANSACTION;
 
 	#Update table member
 	UPDATE member m
 	SET m.is_active = 0
-	AND m.is_deleted = 1
-	AND m.deleted_at = NOW()
+	,m.is_deleted = 1
+	,m.deleted_at = NOW()
 	WHERE m.member_id = from_member_id;
 	
 	#Update table member_email
@@ -43,7 +50,7 @@ BEGIN
 	#Update table project
 	INSERT INTO merge_member_log
 	(
-	    SELECT null, 'project', project_id, member_id, to_member_id 
+	    SELECT null,'project', project_id, member_id, to_member_id 
 	    FROM project p WHERE p.member_id = from_member_id AND p.type_id = 1
 	);
 	
@@ -77,7 +84,7 @@ BEGIN
 	#Update table project_rating
 	INSERT INTO merge_member_log
 	(
-	    SELECT null, 'project_rating', project_rating_id, member_id, to_member_id 
+	    SELECT null, 'project_rating', rating_id, member_id, to_member_id 
 	    FROM project_rating r WHERE r.member_id = from_member_id
 	);
 	
@@ -98,57 +105,72 @@ BEGIN
 	
 	
 	#Update ppload
-	#Update ppload_collections
-	INSERT INTO merge_member_log
-	(
-	    SELECT null, 'ppload_collections', pc.id, pc.owner_id, to_member_id 
-	    FROM ppload_collections pc WHERE pc.owner_id = from_member_id
-	);
 	
-	UPDATE ppload.ppload_collections pc
-	SET pc.owner_id = to_member_id
-	WHERE pc.owner_id = from_member_id;
-	
-	#Update ppload_files
-	INSERT INTO merge_member_log
-	(
-	    SELECT null, 'ppload_files', pc.id, pc.owner_id, to_member_id 
-	    FROM ppload_files pc WHERE pc.owner_id = from_member_id
-	);
-	
-	UPDATE ppload.ppload_files pf
-	SET pf.owner_id = to_member_id
-	WHERE pf.owner_id = from_member_id;
+	IF (SELECT count(1) FROM ppload.ppload_collections pc WHERE pc.owner_id = from_member_id) > 0
 
-	#Update ppload_files_downloaded?
-	INSERT INTO merge_member_log
-	(
-	    SELECT null, 'ppload_files_downloaded', pc.id, pc.owner_id, to_member_id 
-	    FROM ppload_files_downloaded pc WHERE pc.owner_id = from_member_id
-	);
-	
-	UPDATE ppload.ppload_files_downloaded pfd
-	SET pfd.owner_id = to_member_id
-	WHERE pfd.owner_id = from_member_id;
+    THEN
 
-	#Update ppload_profiles
-	INSERT INTO merge_member_log
-	(
-	    SELECT null, 'ppload_profiles', pc.id, pc.owner_id, to_member_id 
-	    FROM ppload_profiles pc WHERE pc.owner_id = from_member_id
-	);
+    	#Update ppload_collections
+		INSERT INTO merge_member_log
+		(
+		    SELECT null, 'ppload_collections', pc.id, pc.owner_id, to_member_id 
+		    FROM ppload.ppload_collections pc WHERE pc.owner_id = from_member_id
+		);
+		
+		UPDATE ppload.ppload_collections pc
+		SET pc.owner_id = to_member_id
+		WHERE pc.owner_id = from_member_id;
+		
+		#Update ppload_files
+		INSERT INTO merge_member_log
+		(
+		    SELECT null, 'ppload_files', pc.id, pc.owner_id, to_member_id 
+		    FROM ppload.ppload_files pc WHERE pc.owner_id = from_member_id
+		);
+		
+		UPDATE ppload.ppload_files pf
+		SET pf.owner_id = to_member_id
+		WHERE pf.owner_id = from_member_id;
 	
-	UPDATE ppload.ppload_profiles pp
-	SET pp.owner_id = to_member_id
-	WHERE pp.owner_id = from_member_id;
+		#Update ppload_files_downloaded?
+		/*INSERT INTO merge_member_log
+		(
+		    SELECT null, 'ppload_files_downloaded', pc.id, pc.owner_id, to_member_id 
+		    FROM ppload.ppload_files_downloaded pc WHERE pc.owner_id = from_member_id
+		);*/
+		
+		UPDATE ppload.ppload_files_downloaded pfd
+		SET pfd.owner_id = to_member_id
+		WHERE pfd.owner_id = from_member_id;
+	
+		/**
+		#Update ppload_profiles
+		INSERT INTO merge_member_log
+		(
+		    SELECT null, 'ppload_profiles', pc.id, pc.owner_id, to_member_id 
+		    FROM ppload_profiles pc WHERE pc.owner_id = from_member_id
+		);
+		
+		UPDATE ppload.ppload_profiles pp
+		SET pp.owner_id = to_member_id
+		WHERE pp.owner_id = from_member_id;
+		**/  	
+
+    END IF;
+	
+	
 	
 	
 	#Write a log entry
 	INSERT INTO `activity_log` (`member_id`, `object_id`, `object_ref`, `object_title`, `object_text`, `activity_type_id`, `time`) VALUES ('22', from_member_id, 'member', 'call merge_members', CONCAT('merge member ', from_member_id,' into member ',to_member_id), '321', NOW());
 	
+	
+	COMMIT;
 
 END //
 DELIMITER ;
+
+
 
 
 
