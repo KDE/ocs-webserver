@@ -116,7 +116,7 @@ class Default_Model_Ocs_Ident
         }
 
         Zend_Ldap_Attribute::removeFromAttribute($entry, 'userPassword', Zend_Ldap_Attribute::getAttribute($entry, 'jpegPhoto'));
-        $avatar = file_get_contents($member_data['profile_img_url']);
+        $avatar = file_get_contents($member_data['profile_image_url']);
         $avatarBase64 = base64_decode($avatar);
         Zend_Ldap_Attribute::setAttribute($entry, 'jpegPhoto', $avatarBase64);
         
