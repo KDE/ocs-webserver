@@ -72,8 +72,9 @@ class RectificationController extends Local_Controller_Action_DomainSwitch
         }
         if (isset($values['mail'])) {
             $this->_authMember->mail = $values['mail'];
-            
+            $member->mail = $values['mail'];
             $member->mail_old = $member->mail;
+            
             $member->save();
             
             $modelEmail = new Default_Model_MemberEmail();
