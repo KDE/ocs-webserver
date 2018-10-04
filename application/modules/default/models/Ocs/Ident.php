@@ -86,6 +86,45 @@ class Default_Model_Ocs_Ident
 
         return true;
     }
+    
+    
+    /**
+     * @param int $member_id
+     *
+     * @return bool
+     * @throws Zend_Exception
+     * @throws Zend_Ldap_Exception
+     */
+    public function updateAvatar($member_id)
+    {
+        $connection = $this->getServerConnection();
+        $member_data = $this->getMemberData($member_id);
+
+        try {
+            $entry = $this->getEntry($member_data, $connection);
+        } catch (Exception $e) {
+            $this->errMessages[] = "Failed.";
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . $e->getMessage());
+
+            return false;
+        }
+        if (empty($entry)) {
+            $this->errMessages[] = "Failed.";
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ldap entry for member does not exists. Going to create it.');
+
+            return false;
+        }
+
+        Zend_Ldap_Attribute::removeFromAttribute($entry, 'userPassword', Zend_Ldap_Attribute::getAttribute($entry, 'jpegPhoto'));
+        $avatar = $member_data['profile_img_url'];
+        Zend_Ldap_Attribute::setAttribute($entry, 'jpegPhoto', $avatar);
+        
+        $dn = $entry['dn'];
+        $connection->update($dn, $entry);
+        $connection->getLastError($this->errCode, $this->errMessages);
+
+        return true;
+    }
 
     /**
      * @return null|Zend_Ldap

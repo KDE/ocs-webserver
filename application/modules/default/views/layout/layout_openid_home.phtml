@@ -61,8 +61,11 @@
 </head>
 <body>
 <?php echo $this->render('partials/header/template_react.phtml'); ?>
+    
 <?php echo $this->render('partials/flashMessage.phtml'); ?>
+    
 <?php echo $this->layout()->content; ?>
+    
 <?php echo $this->render('partials/footer/template.phtml'); ?>
 
 <div id="modal-dialog" class="modal hide fade" tabindex="-1" role="dialog">
@@ -80,6 +83,14 @@ echo $this->render('partials/propagateLogout.phtml');
 <?=$this->inlineScript() ?>
 
 
+    
+    <div>
+        
+        Inhalt
+        
+    </div>
+    
+    
 
     <!-- Piwik -->
     <?php
