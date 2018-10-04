@@ -116,8 +116,9 @@ class Default_Model_Ocs_Ident
         }
 
         Zend_Ldap_Attribute::removeFromAttribute($entry, 'userPassword', Zend_Ldap_Attribute::getAttribute($entry, 'jpegPhoto'));
-        $avatar = $member_data['profile_img_url'];
-        Zend_Ldap_Attribute::setAttribute($entry, 'jpegPhoto', $avatar);
+        $avatar = file_get_contents($member_data['profile_img_url']);
+        $avatarBase64 = base64_decode($avatar);
+        Zend_Ldap_Attribute::setAttribute($entry, 'jpegPhoto', $avatarBase64);
         
         $dn = $entry['dn'];
         $connection->update($dn, $entry);
