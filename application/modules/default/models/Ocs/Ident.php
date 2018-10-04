@@ -120,7 +120,10 @@ class Default_Model_Ocs_Ident
         //$avatarBase64 = base64_decode($avatar);
         //Zend_Ldap_Attribute::setAttribute($entry, 'jpegPhoto', $avatarBase64);
         $avatar = $member_data['profile_image_url'];
-        Zend_Ldap_Attribute::setAttribute($entry, 'jpegPhoto', $avatar);
+        $avatarJpeg = imagejpeg(imagecreatefromstring(file_get_contents($avatar)));
+        $avatarBase64 = base64_decode($avatarJpeg);
+        
+        Zend_Ldap_Attribute::setAttribute($entry, 'jpegPhoto', $avatarBase64);
         
         $dn = $entry['dn'];
         $connection->update($dn, $entry);
