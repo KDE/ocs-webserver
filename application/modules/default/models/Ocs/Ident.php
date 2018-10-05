@@ -95,7 +95,7 @@ class Default_Model_Ocs_Ident
      * @throws Zend_Exception
      * @throws Zend_Ldap_Exception
      */
-    public function updateAvatar($member_id, $img_path)
+    public function updateAvatar($member_id)
     {
 
         $member_data = $this->getMemberData($member_id);
@@ -111,8 +111,9 @@ class Default_Model_Ocs_Ident
         $avatarJpeg = $imgTempPath;
         
         //$avatarJpeg = imagecreatetrucolor(file_get_contents($avatar), $imgTempPath);
-        $avatarBase64 = base64_decode(file_get_contents($avatarJpeg));
-        Zend_Registry::get('logger')->info(__METHOD__ . ' copy file from ' . $img_path . ' to ' . $imgTempPath);
+        //$avatarBase64 = base64_decode(file_get_contents($avatarJpeg));
+        $avatarBase64 = file_get_contents($avatarJpeg);
+
 
         $connection = $this->getServerConnection();
 
@@ -138,34 +139,12 @@ class Default_Model_Ocs_Ident
         $dn = $entry['dn'];
         $connection->update($dn, $entry);
         $connection->getLastError($this->errCode, $this->errMessages);
+        
+        unlink($imgTempPath);
 
         return true;
     }
     
-    
-    private function convertImage($originalImage, $outputImage, $quality = 90)
-    {
-        // jpg, png, gif or bmp?
-        $exploded = explode('.',$originalImage);
-        $ext = $exploded[count($exploded) - 1]; 
-
-        if (preg_match('/jpg|jpeg/i',$ext))
-            $imageTmp=imagecreatefromjpeg($originalImage);
-        else if (preg_match('/png/i',$ext))
-            $imageTmp=imagecreatefrompng($originalImage);
-        else if (preg_match('/gif/i',$ext))
-            $imageTmp=imagecreatefromgif($originalImage);
-        else if (preg_match('/bmp/i',$ext))
-            $imageTmp=imagecreatefrombmp($originalImage);
-        else
-            return 0;
-
-        // quality is a value from 0 (worst) to 100 (best)
-        imagejpeg($imageTmp, $outputImage, $quality);
-        imagedestroy($imageTmp);
-
-        return 1;
-    }
 
     /**
      * @return null|Zend_Ldap
