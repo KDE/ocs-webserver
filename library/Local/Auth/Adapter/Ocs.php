@@ -117,7 +117,7 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
             m.login_method = :login AND 
             (LOWER(m.mail) = LOWER(:mail) OR
             LOWER(m.mail) = CONCAT(LOWER(:mail),:user_deactivated)
-            ) 
+            ) AND
             m.`password` = :pwd";
 
         $this->_db->getProfiler()->setEnabled(true);
