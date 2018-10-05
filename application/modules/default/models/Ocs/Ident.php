@@ -111,9 +111,6 @@ class Default_Model_Ocs_Ident
         $im->destroy(); 
         
         $avatarJpeg = $imgTempPath;
-        
-        //$avatarJpeg = imagecreatetrucolor(file_get_contents($avatar), $imgTempPath);
-        //$avatarBase64 = base64_decode(file_get_contents($avatarJpeg));
         $avatarBase64 = file_get_contents($avatarJpeg);
 
 
@@ -142,7 +139,7 @@ class Default_Model_Ocs_Ident
         $connection->update($dn, $entry);
         $connection->getLastError($this->errCode, $this->errMessages);
         
-        //unlink($imgTempPath);
+        unlink($imgTempPath);
 
         return true;
     }
@@ -376,6 +373,22 @@ class Default_Model_Ocs_Ident
         if (false === empty(trim($member['lastname']))) {
             Zend_Ldap_Attribute::setAttribute($entry, 'sn', $member['lastname']);
         }
+        //Avatar
+        $imgTempPath = 'img/data/'.$member['member_id']."_avatar.jpg";
+        $im = new imagick($member['profile_image_url']);
+        $im = $im->flattenImages();
+        
+        // convert to jpeg
+        $im->setImageFormat('jpeg');
+        //write image on server
+        $im->writeImage($imgTempPath);
+        $im->clear();
+        $im->destroy(); 
+        $avatarJpeg = $imgTempPath;
+        $avatarFileData = file_get_contents($avatarJpeg);
+        Zend_Ldap_Attribute::setAttribute($entry, 'jpegPhoto', $avatarFileData);
+        
+        Zend_Ldap_Attribute::setAttribute($entry, 'memberUid', $member['external_id']);
 
         return $entry;
     }
@@ -416,6 +429,22 @@ class Default_Model_Ocs_Ident
             Zend_Ldap_Attribute::removeFromAttribute($entry, 'sn', Zend_Ldap_Attribute::getAttribute($oldEntry, 'sn'));
             Zend_Ldap_Attribute::setAttribute($entry, 'sn', $member_data['lastname']);
         }
+        
+        //Avatar
+        $imgTempPath = 'img/data/'.$member_data['member_id']."_avatar.jpg";
+        $im = new imagick($member_data['profile_image_url']);
+        $im = $im->flattenImages();
+        
+        // convert to jpeg
+        $im->setImageFormat('jpeg');
+        //write image on server
+        $im->writeImage($imgTempPath);
+        $im->clear();
+        $im->destroy(); 
+        $avatarJpeg = $imgTempPath;
+        $avatarFileData = file_get_contents($avatarJpeg);
+        Zend_Ldap_Attribute::removeFromAttribute($entry, 'jpegPhoto', Zend_Ldap_Attribute::getAttribute($entry, 'jpegPhoto'));
+        Zend_Ldap_Attribute::setAttribute($entry, 'jpegPhoto', $avatarFileData);
 
         return $entry;
     }
