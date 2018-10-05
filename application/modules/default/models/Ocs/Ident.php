@@ -100,7 +100,11 @@ class Default_Model_Ocs_Ident
 
         $member_data = $this->getMemberData($member_id);
         $imgTempPath = 'img/data/'.$member_id."_avatar.jpg";
+        
+        $image->setbackgroundcolor('green');
         $im = new imagick($member_data['profile_image_url']);
+        
+        $im = $im->flattenImages();
         // convert to jpeg
         $im->setImageFormat('jpeg');
         //write image on server
