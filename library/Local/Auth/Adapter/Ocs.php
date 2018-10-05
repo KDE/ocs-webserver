@@ -115,7 +115,9 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
             m.is_active = :active AND
             m.is_deleted = :deleted AND 
             m.login_method = :login AND 
-            m.mail = :mail AND 
+            (LOWER(m.mail) = LOWER(:mail) OR
+            LOWER(m.mail) = CONCAT(LOWER(:mail),:user_deactivated)
+            ) AND
             m.`password` = :pwd";
 
         $this->_db->getProfiler()->setEnabled(true);
@@ -124,6 +126,7 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
             'deleted' => Default_Model_DbTable_Member::MEMBER_NOT_DELETED,
             'login'   => Default_Model_DbTable_Member::MEMBER_LOGIN_LOCAL,
             'mail'    => $this->_identity,
+            'user_deactivated'  => $this::USER_DEAVIVATED,
             'pwd'     => $this->_credential
         ));
         

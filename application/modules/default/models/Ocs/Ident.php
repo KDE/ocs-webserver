@@ -86,6 +86,65 @@ class Default_Model_Ocs_Ident
 
         return true;
     }
+    
+    
+    /**
+     * @param int $member_id
+     *
+     * @return bool
+     * @throws Zend_Exception
+     * @throws Zend_Ldap_Exception
+     */
+    public function updateAvatar($member_id)
+    {
+
+        $member_data = $this->getMemberData($member_id);
+        $imgTempPath = 'img/data/'.$member_id."_avatar.jpg";
+        $im = new imagick($member_data['profile_image_url']);
+        // convert to jpeg
+        $im->setImageFormat('jpeg');
+        //write image on server
+        $im->writeImage($imgTempPath);
+        $im->clear();
+        $im->destroy(); 
+        
+        $avatarJpeg = $imgTempPath;
+        
+        //$avatarJpeg = imagecreatetrucolor(file_get_contents($avatar), $imgTempPath);
+        //$avatarBase64 = base64_decode(file_get_contents($avatarJpeg));
+        $avatarBase64 = file_get_contents($avatarJpeg);
+
+
+        $connection = $this->getServerConnection();
+
+        try {
+            $entry = $this->getEntry($member_data, $connection);
+        } catch (Exception $e) {
+            $this->errMessages[] = "Failed.";
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . $e->getMessage());
+
+            return false;
+        }
+        if (empty($entry)) {
+            $this->errMessages[] = "Failed.";
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ldap entry for member does not exists. Going to create it.');
+
+            return false;
+        }
+
+        Zend_Ldap_Attribute::removeFromAttribute($entry, 'jpegPhoto', Zend_Ldap_Attribute::getAttribute($entry, 'jpegPhoto'));
+        
+        Zend_Ldap_Attribute::setAttribute($entry, 'jpegPhoto', $avatarBase64);
+        
+        $dn = $entry['dn'];
+        $connection->update($dn, $entry);
+        $connection->getLastError($this->errCode, $this->errMessages);
+        
+        unlink($imgTempPath);
+
+        return true;
+    }
+    
 
     /**
      * @return null|Zend_Ldap

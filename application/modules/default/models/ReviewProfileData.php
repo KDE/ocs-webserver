@@ -27,19 +27,21 @@ class Default_Model_ReviewProfileData
 
     const INVALID_USERNAME = 1;
     const INVALID_EMAIL = 2;
+    const INVALID_EMAIL_DEACTIVATED = 20;
     
     const INVALID_USERNAME_DEACTIVATED = 10;
     const INVALID_USERNAME_NOT_ALLOWED = 11;
     const INVALID_USERNAME_NOT_UNIQUE = 12;
     
     const USERNAME_DEACTIVATED_TEXT = "_deactivated";
+    const EMAIL_DEACTIVATED_TEXT = "_deactivated";
     
 
     protected $message;
     protected $errorCode;
 
     private $usernameValidationChain = array('isUsernameDeactivated', 'isUsernameValid', 'isUsernameUnique');
-    private $emailValidationChain = array('isEmailValid', 'isEmailUnique');
+    private $emailValidationChain = array('isEmailDeactivated', 'isEmailValid', 'isEmailUnique');
 
     /**
      * @inheritDoc
@@ -56,13 +58,12 @@ class Default_Model_ReviewProfileData
         if (false == $result) {
             return false;
         }
-        /*
+        
         $result = $this->hasValidEmail($member_data);
         if (false == $result) {
             return false;
         }
-        */
-
+        
         return true;
     }
 
@@ -144,7 +145,8 @@ class Default_Model_ReviewProfileData
         $sql = "
         SELECT `mail`, COUNT(*) AS `amount`
         FROM `member` AS `m`
-        WHERE `m`.`is_active` = 1 AND `m`.`is_deleted` = 0 AND lower(`mail`) = lower(:mail)
+        WHERE `m`.`is_active` = 1 AND `m`.`is_deleted` = 0 
+        AND lower(`mail`) = lower(:mail)
         GROUP BY lower(`mail`)
         HAVING COUNT(*) > 1
         ";
@@ -153,6 +155,24 @@ class Default_Model_ReviewProfileData
 
         if ((false === empty($result)) AND $result['amount'] > 1) {
             $this->message['email'][] = array('email is not unique');
+
+            return false;
+        }
+
+        return true;
+    }
+    
+    /**
+     * @param $member_data
+     *
+     * @return bool
+     * @throws Zend_Validate_Exception
+     */
+    private function isEmailDeactivated($member_data)
+    {
+        if (strpos($member_data->mail, $this::EMAIL_DEACTIVATED_TEXT) > 0) { 
+            $this->message['email'][] = 'Email is deactivated';
+            $this->errorCode = $this::INVALID_EMAIL_DEACTIVATED;
 
             return false;
         }
