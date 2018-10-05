@@ -111,7 +111,7 @@ class Default_Model_Ocs_Ident
         $avatarJpeg = $imgTempPath;
         
         //$avatarJpeg = imagecreatetrucolor(file_get_contents($avatar), $imgTempPath);
-        $avatarBase64 = base64_decode($avatarJpeg);
+        $avatarBase64 = base64_decode(file_get_contents($avatarJpeg));
         Zend_Registry::get('logger')->info(__METHOD__ . ' copy file from ' . $img_path . ' to ' . $imgTempPath);
 
         $connection = $this->getServerConnection();
