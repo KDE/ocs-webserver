@@ -340,6 +340,8 @@ class Default_Model_Ocs_Ident
         $entry = $this->createIdentEntry($member_data);
         $username = strtolower($member_data['username']);
         $connection->add("cn={$username},{$this->baseDn}", $entry);
+        //set avatar
+        $this->updateAvatar($member_id);
         $connection->getLastError($this->errCode, $this->errMessages);
 
         return true;
@@ -373,20 +375,6 @@ class Default_Model_Ocs_Ident
         if (false === empty(trim($member['lastname']))) {
             Zend_Ldap_Attribute::setAttribute($entry, 'sn', $member['lastname']);
         }
-        //Avatar
-        $imgTempPath = 'img/data/'.$member['member_id']."_avatar.jpg";
-        $im = new imagick($member['profile_image_url']);
-        $im = $im->flattenImages();
-        
-        // convert to jpeg
-        $im->setImageFormat('jpeg');
-        //write image on server
-        $im->writeImage($imgTempPath);
-        $im->clear();
-        $im->destroy(); 
-        $avatarJpeg = $imgTempPath;
-        $avatarFileData = file_get_contents($avatarJpeg);
-        Zend_Ldap_Attribute::setAttribute($entry, 'jpegPhoto', $avatarFileData);
         
         Zend_Ldap_Attribute::setAttribute($entry, 'memberUid', $member['external_id']);
 
