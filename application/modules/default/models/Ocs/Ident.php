@@ -95,10 +95,26 @@ class Default_Model_Ocs_Ident
      * @throws Zend_Exception
      * @throws Zend_Ldap_Exception
      */
-    public function updateAvatar($member_id)
+    public function updateAvatar($member_id, $img_path)
     {
-        $connection = $this->getServerConnection();
+
         $member_data = $this->getMemberData($member_id);
+        $imgTempPath = 'img/data/'.$member_id."_avatar.jpg";
+        $im = new imagick($member_data['profile_image_url']);
+        // convert to jpeg
+        $im->setImageFormat('jpeg');
+        //write image on server
+        $im->writeImage($imgTempPath);
+        $im->clear();
+        $im->destroy(); 
+        
+        $avatarJpeg = $imgTempPath;
+        
+        //$avatarJpeg = imagecreatetrucolor(file_get_contents($avatar), $imgTempPath);
+        $avatarBase64 = base64_decode($avatarJpeg);
+        Zend_Registry::get('logger')->info(__METHOD__ . ' copy file from ' . $img_path . ' to ' . $imgTempPath);
+
+        $connection = $this->getServerConnection();
 
         try {
             $entry = $this->getEntry($member_data, $connection);
@@ -116,33 +132,39 @@ class Default_Model_Ocs_Ident
         }
 
         Zend_Ldap_Attribute::removeFromAttribute($entry, 'jpegPhoto', Zend_Ldap_Attribute::getAttribute($entry, 'jpegPhoto'));
-        //$avatar = file_get_contents($member_data['profile_image_url']);
-        //$avatarBase64 = base64_decode($avatar);
-        //Zend_Ldap_Attribute::setAttribute($entry, 'jpegPhoto', $avatarBase64);
-        $avatar = $member_data['profile_image_url'];
-        $avatarJpeg = imagejpeg(file_get_contents($avatar), 'avatra.jpeg');
-        //$avatarBase64 = base64_decode($avatarJpeg);
         
-        
-        $image = imagecreatefrompng($avatar);
-        $bg = imagecreatetruecolor(imagesx($image), imagesy($image));
-        imagefill($bg, 0, 0, imagecolorallocate($bg, 255, 255, 255));
-        imagealphablending($bg, TRUE);
-        imagecopy($bg, $image, 0, 0, 0, 0, imagesx($image), imagesy($image));
-        imagedestroy($image);
-        $quality = 50; // 0 = worst / smaller file, 100 = better / bigger file 
-        imagejpeg($bg, "/tmp/avatar.jpg", $quality);
-        imagedestroy($bg);
-        
-        
-        Zend_Ldap_Attribute::setAttribute($entry, 'jpegPhoto', (file_get_contents("/tmp/avatar.jpg")));
-        
+        Zend_Ldap_Attribute::setAttribute($entry, 'jpegPhoto', $avatarBase64);
         
         $dn = $entry['dn'];
         $connection->update($dn, $entry);
         $connection->getLastError($this->errCode, $this->errMessages);
 
         return true;
+    }
+    
+    
+    private function convertImage($originalImage, $outputImage, $quality = 90)
+    {
+        // jpg, png, gif or bmp?
+        $exploded = explode('.',$originalImage);
+        $ext = $exploded[count($exploded) - 1]; 
+
+        if (preg_match('/jpg|jpeg/i',$ext))
+            $imageTmp=imagecreatefromjpeg($originalImage);
+        else if (preg_match('/png/i',$ext))
+            $imageTmp=imagecreatefrompng($originalImage);
+        else if (preg_match('/gif/i',$ext))
+            $imageTmp=imagecreatefromgif($originalImage);
+        else if (preg_match('/bmp/i',$ext))
+            $imageTmp=imagecreatefrombmp($originalImage);
+        else
+            return 0;
+
+        // quality is a value from 0 (worst) to 100 (best)
+        imagejpeg($imageTmp, $outputImage, $quality);
+        imagedestroy($imageTmp);
+
+        return 1;
     }
 
     /**

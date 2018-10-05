@@ -71,11 +71,11 @@ class RectificationController extends Local_Controller_Action_DomainSwitch
             $this->_authMember->username = $values['username'];
         }
         if (isset($values['mail'])) {
-            $this->_authMember->mail = $values['mail'];
-            $member->mail = $values['mail'];
             $member->mail_old = $member->mail;
+            $member->mail = $values['mail'];
             
             $member->save();
+            $this->_authMember->mail = $values['mail'];
             
             $modelEmail = new Default_Model_MemberEmail();
             $dataMail = $modelEmail->saveEmailAsPrimary($this->_authMember->member_id, $values['mail']);
