@@ -100,20 +100,8 @@ class Default_Model_Ocs_Ident
 
         $member_data = $this->getMemberData($member_id);
         $imgTempPath = 'img/data/'.$member_id."_avatar.jpg";
-        $im = new \Imagick();
-        //$im = new imagick($member_data['profile_image_url']);
-        
-        //set the background to white
-        $im->setImageBackgroundColor('white');
-        
-        $im->readimage($member_data['profile_image_url']);
-
-        //flatten the image
-        $im->mergeImageLayers(\Imagick::LAYERMETHOD_FLATTEN);
-
-        //do the rest of the image operations
-        $im->setResolution( 181, 181 );
-        $im->setCompressionQuality(100);
+        $im = new imagick($member_data['profile_image_url']);
+        $im = $im->flattenImages();
         
         // convert to jpeg
         $im->setImageFormat('jpeg');
@@ -154,7 +142,7 @@ class Default_Model_Ocs_Ident
         $connection->update($dn, $entry);
         $connection->getLastError($this->errCode, $this->errMessages);
         
-        unlink($imgTempPath);
+        //unlink($imgTempPath);
 
         return true;
     }
