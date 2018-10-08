@@ -322,11 +322,10 @@ class MetaHeader extends React.Component {
       error: function (response) {
         console.log('error');
         const user = JSON.parse(response.responseText);
-        console.log(response);
-        console.log(response.responseText);
-        console.log(typeof user);
-        if (Object.keys(user).length === 0 && user.constructor === Object) {
+        if (user.member_id) {
           self.setUser(user);
+        } else {
+          self.setState({ loading: false });
         }
       },
       success: function (response) {
