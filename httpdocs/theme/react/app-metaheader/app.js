@@ -23,11 +23,9 @@ class MetaHeader extends React.Component {
       url:'https://www.opendesktop.cc/user/userdataajax',
       method:'get',
       dataType: 'jsonp',
-      error: function(response){
-        console.log(response);
-      },
-      success: function(response){
-        this.setState({user:response,loading:false});
+      done: function(response){
+        const user = JSON.parse(response.responseText);
+        this.setState({user:user,loading:false});
       }
     });
   }
