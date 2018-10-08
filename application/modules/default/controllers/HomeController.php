@@ -139,6 +139,34 @@ class HomeController extends Local_Controller_Action_DomainSwitch
         $this->_helper->json($resultArray);
     }
     
+    
+    public function storenameajaxAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        $resultArray = array();
+        
+        $sname = Zend_Registry::get('store_host');  
+
+        $resultArray['store_name'] = $sname;
+        
+        $this->_helper->json($resultArray);
+    }
+    
+    public function domainsajaxAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        $resultArray = array();
+        
+        $domainshelper = new Default_View_Helper_FetchDomains();
+        $this->domainobjects = $domainshelper->fetchDomainObjects();  
+
+        $resultArray['domains'] = $domainshelper;
+        
+        $this->_helper->json($resultArray);
+    }
+    
 
     protected function setLayout()
     {
