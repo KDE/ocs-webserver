@@ -302,11 +302,13 @@ class MetaHeader extends React.Component {
       loading: false
     };
     this.getData = this.getData.bind(this);
+    this.getUrls = this.getUrls.bind(this);
     this.setUser = this.setUser.bind(this);
   }
 
   componentDidMount() {
     this.getData();
+    this.getUrls();
   }
 
   getData() {
@@ -318,18 +320,19 @@ class MetaHeader extends React.Component {
       dataType: 'jsonp',
       done: function (response) {
         console.log('done');
-        const user = JSON.parse(response.responseText);
-        self.setUser(user);
       },
       error: function (response) {
         console.log('error');
         const user = JSON.parse(response.responseText);
-        self.setUser(user);
+        console.log(response);
+        console.log(response.responseText);
+        console.log(typeof user);
+        if (typeof user === "object") {
+          self.setUser(user);
+        }
       },
       success: function (response) {
         console.log('success');
-        const user = JSON.parse(response.responseText);
-        self.setUser(user);
       }
     });
   }
