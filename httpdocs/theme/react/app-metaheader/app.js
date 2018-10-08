@@ -300,7 +300,7 @@ class UserLoginMenuContainer extends React.Component {
             data-toggle="dropdown"
             aria-haspopup="true"
             aria-expanded="true">
-            <img src={this.props.user.profile_image_url}/>
+            <img src={this.props.user.avatar}/>
           </button>
           <ul className="dropdown-menu dropdown-menu-right" aria-labelledby="userLoginDropdown">
             <li id="user-info-menu-item">

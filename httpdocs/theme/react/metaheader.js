@@ -583,7 +583,7 @@ class UserLoginMenuContainer extends React.Component {
             "data-toggle": "dropdown",
             "aria-haspopup": "true",
             "aria-expanded": "true" },
-          React.createElement("img", { src: this.props.user.profile_image_url })
+          React.createElement("img", { src: this.props.user.avatar })
         ),
         React.createElement(
           "ul",
