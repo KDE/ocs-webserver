@@ -7,6 +7,104 @@
 <script type="text/javascript" src="https://www.opendesktop.cc/theme/react/lib/react-dom/react-dom.js"></script>
 
 
+<style>
+
+    header a {
+        color:  <?=$this->template['header-nav-tabs']['link']['color']?>;
+    }
+
+    header div.container.header {
+        background-image: <?=$this->template['header']['background-image']?>;
+        background-color: <?=$this->template['header']['background-color']?>;
+        color: <?=$this->template['header']['color']?>;
+        height: <?=$this->template['header']['height']?>;
+    }
+
+    header .logo-header {
+        background-image: <?=$this->template['header-logo']['background-image']?>;
+        display: block;
+        height: <?=$this->template['header-logo']['height']?>;
+        left: <?=$this->template['header-logo']['left']?>;
+        position: absolute;
+        top: <?=$this->template['header-logo']['top']?>;
+        width: <?=$this->template['header-logo']['width']?>;
+        z-index: 999;
+        overflow: hidden;
+    }
+
+    header ul li:active {
+        background: <?=$this->template['header-nav-tabs']['background-color-active']?> none repeat scroll 0 0;
+    }
+    header ul li:hover {
+        background: <?=$this->template['header-nav-tabs']['background-color-hover']?> none repeat scroll 0 0;
+    }
+
+    header ul li ul li:active {
+        background: <?=$this->template['header-nav-tabs']['background-color-active']?> none repeat scroll 0 0;
+    }
+
+    header ul li ul li:hover {
+        background: <?=$this->template['header-nav-tabs']['background-color-hover']?> none repeat scroll 0 0;
+    }
+    header ul li:active > a {
+        color: <?=$this->template['header-nav-tabs']['link']['color-active']?>;
+    }
+    header ul li:hover > a {
+        color: <?=$this->template['header-nav-tabs']['link']['color-hover']?>;
+    }
+    header ul li ul li:hover a {
+        color: <?=$this->template['header-nav-tabs']['link']['color-hover']?>;
+    }
+
+    ul.menu-nav-tabs li {
+        background-color: <?=$this->template['header-nav-tabs']['background-color']?>;
+        border-color: <?=$this->template['header-nav-tabs']['border-color']?>;
+        border-image: none;
+        border-radius: <?=$this->template['header-nav-tabs']['border-radius']?>;
+        border-style: <?=$this->template['header-nav-tabs']['border-style']?>;
+        border-width: <?=$this->template['header-nav-tabs']['border-with']?>;
+        height: <?=$this->template['header-nav-tabs']['height']?>;
+        line-height: 24px;
+        margin-right: <?=$this->template['header-nav-tabs']['margin-right']?>;
+    }
+
+
+    ul.menu-nav-tabs li.active {
+        background: <?=$this->template['header-nav-tabs']['background-color-active']?> none repeat scroll 0 0;
+    }
+
+    .absolute-left {
+        left: <?=$tabs_left?>px;
+    }
+
+    .absolute-right {
+        right: <?=$this->template['header-nav-tabs']['absolute-right']?>;
+    }
+
+    .header_cat_link {
+          bottom: 0; position: absolute; color: blue; font-size: 18pt; left: <?= $cat_title_left ?>px;
+    } 
+
+    .nav-divider-pling{
+        color:#E2E2E2;
+    }
+    .nav-pills > li + li {
+            margin-left: 10px;
+        }
+        .dropdown-menu > li > a{
+            font-size: 12px;
+        }
+    .metamenu .dropdown:hover .dropdown-menu {
+        margin-left: -16px;
+    }
+    .metamenu .dropdown-menu li{
+        width: 100%;
+    }
+
+    .metamenu ul.dropdown-menu  li span{ color:#999; }
+    .metamenu ul.dropdown-menu  li.active span{ color:#eee; }
+</style>
+
 <div id="metaheader"></div>
 
 <script>
