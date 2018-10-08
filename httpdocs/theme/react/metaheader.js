@@ -302,13 +302,11 @@ class MetaHeader extends React.Component {
       loading: false
     };
     this.getData = this.getData.bind(this);
-    this.getUrls = this.getUrls.bind(this);
     this.setUser = this.setUser.bind(this);
   }
 
   componentDidMount() {
     this.getData();
-    this.getUrls();
   }
 
   getData() {
