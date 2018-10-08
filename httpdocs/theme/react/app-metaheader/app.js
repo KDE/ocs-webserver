@@ -67,7 +67,6 @@ class MetaHeader extends React.Component {
   render(){
     let metaMenuDisplay;
     if (!this.state.loading){
-      console.log('not loading');
       metaMenuDisplay = (
         <div className="metamenu">
           <DomainsMenu
@@ -181,7 +180,6 @@ class DomainsMenuGroup extends React.Component {
     const domainsDisplay = this.props.domains.filter(this.filterDomainsByMenuGroup).map((domain,index) => {
       let domainPrefix = "http://";
       if (domain.menuhref.indexOf('pling.cc') === -1 && domain.menuhref.indexOf('www') === -1){
-        console.log(domain.menuhref.indexOf('www'));
         domainPrefix += "www.";
       }
       return (
