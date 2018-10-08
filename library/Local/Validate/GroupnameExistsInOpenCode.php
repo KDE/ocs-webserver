@@ -60,5 +60,4 @@ class Local_Validate_GroupnameExistsInOpenCode extends Zend_Validate_Abstract
         return $modelOpenCode->groupExists($value) ? false : true;
     }
 
-
 }
