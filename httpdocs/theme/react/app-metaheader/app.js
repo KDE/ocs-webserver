@@ -10,11 +10,12 @@ class MetaHeader extends React.Component {
       loading:false
     };
     this.getData = this.getData.bind(this);
-    this.setUser = this.setUser.bind(this);
+    this.getUrls = this.getUrls.bind(this);
   }
 
   componentDidMount() {
     this.getData();
+    this.getUrls();
   }
 
   getData(){
@@ -31,9 +32,9 @@ class MetaHeader extends React.Component {
         console.log('error');
         const user = JSON.parse(response.responseText);
         if (user.member_id){
-          self.setUser(user);
+          this.setState({user:user,loading:false});
         } else {
-          self.setState({loading:false})
+          self.setState({loading:false});
         }
       },
       success: function(response){
@@ -43,24 +44,49 @@ class MetaHeader extends React.Component {
   }
 
   setUser(user){
-    this.setState({user:user,loading:false},function(){
-      $.ajax({
-        url:'https://www.opendesktop.cc/home/forumurlajax',
-        method:'get',
-        dataType: 'jsonp',
-        done: function(response){
-          console.log('done');
-          console.log(response);
-        },
-        error: function(response){
-          console.log('error');
-          console.log(response);
-        },
-        success: function(response){
-          console.log('success');
-          console.log(response);
+
+  }
+
+  getUrls(){
+    const self = this;
+    $.ajax({
+      url:'https://www.opendesktop.cc/home/forumurlajax',
+      method:'get',
+      dataType: 'jsonp',
+      error: function(response){
+        console.log('error');
+        console.log(response);
+        const forumUrl = JSON.parse(response.responseText);
+        if (forumUrl.url_forum){
+          self.setState({forumUrl:forumUrl.url_forum})
         }
-      });
+        $.ajax({
+          url:'https://www.opendesktop.cc/home/blogurllajax',
+          method:'get',
+          dataType: 'jsonp',
+          error: function(response){
+            console.log('error');
+            console.log(response);
+            const blogUrl = JSON.parse(response.responseText);
+            if (blogUrl.url_blog){
+              self.setState({blogUrl:blogUrl.url_blog})
+            }
+            $.ajax({
+              url:'https://www.opendesktop.cc/home/baseurllajax',
+              method:'get',
+              dataType: 'jsonp',
+              error: function(response){
+                console.log('error');
+                console.log(response);
+                const baseUrl = JSON.parse(response.responseText);
+                if (baseUrl.url_base){
+                  self.setState({baseUrl:baseUrl.url_base})
+                }
+              }
+            });
+          }
+        });
+      }
     });
   }
 
