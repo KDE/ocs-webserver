@@ -20,37 +20,41 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-class Local_Validate_EmailExists extends Zend_Validate_Abstract
+class Local_Validate_UsernameDeactivated extends Zend_Validate_Abstract
 {
-    const EXISTS = 'already_exists';
+
+    const USERNAME_DEACTIVATED_TEXT = "_deactivated";
+    const DEACTIVATED = 'username_deactivated';
 
     protected $_messageTemplates = array(
-        self::EXISTS => 'e-mail already exists.'
+        self::DEACTIVATED => 'Username is deactivated'
     );
 
+    /**
+     * @param mixed $value
+     * @param null  $context
+     *
+     * @return bool
+     * @throws Zend_Exception
+     */
     public function isValid($value, $context = null)
     {
         $value = (string)$value;
         $this->_setValue($value);
 
-        return $this->checkMailExist($value, $context);
+        return $this->isUsernameDeactivated($value, $context);
     }
 
     /**
-     * @param string $value
+     * @param $username
+     * @param $context
      *
      * @return bool
      */
-    private function checkMailExist($value, $context)
+    private function isUsernameDeactivated($username, $context)
     {
-        $omitMember = null;
-        if (isset($context['omitMember'])) {
-            $omitMember = $context['omitMember'];
-        }
-        $modelMember = new Default_Model_MemberEmail();
-        $resultSet = $modelMember->findMailAddress($value, Default_Model_MemberEmail::CASE_INSENSITIVE, $omitMember);
-        if (count($resultSet) > 0) {
-            $this->_error(self::EXISTS, $value);
+        if (strpos($username, $this::USERNAME_DEACTIVATED_TEXT) > 0) {
+            $this->_error(self::DEACTIVATED, $username);
 
             return false;
         }

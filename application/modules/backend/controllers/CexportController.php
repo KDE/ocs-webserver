@@ -77,7 +77,13 @@ class Backend_CexportController extends Local_Controller_Action_CliAbstract
             FROM `member` AS `m`
             LEFT JOIN `member_email` AS `me` ON `me`.`email_member_id` = `m`.`member_id` AND `me`.`email_primary` = 1
             LEFT JOIN `member_external_id` AS `mei` ON `mei`.`member_id` = `m`.`member_id`
-            WHERE `m`.`is_active` = 1 AND `m`.`is_deleted` = 0 AND `me`.`email_checked` IS NOT NULL AND `me`.`email_deleted` = 0 AND `m`.`member_id` = :memberId
+            WHERE `m`.`member_id` = :memberId
+              AND `m`.`is_active` = 1 
+              AND `m`.`is_deleted` = 0 
+              AND `me`.`email_checked` IS NOT NULL 
+              AND `me`.`email_deleted` = 0
+              AND LOCATE('_deactivated', `m`.username) = 0 
+              AND LOCATE('_deactivated', `me`.`email_address`) = 0
             ORDER BY `m`.`member_id` ASC
             # LIMIT 200
         ";
@@ -95,12 +101,12 @@ class Backend_CexportController extends Local_Controller_Action_CliAbstract
      * @param array $member
      *
      * @return bool
-     * @throws Zend_Validate_Exception
+     * @throws Zend_Exception
      */
     private function isValidUsername($member)
     {
         // only usernames which are valid in github/gitlab
-        $usernameValidChars = new Zend_Validate_Regex('/^(?=.{4,40}$)(?![-])(?!.*[-]{2})[a-z0-9-]+(?<![-])$/');
+        $usernameValidChars = new Local_Validate_UsernameValid();
 
         return $usernameValidChars->isValid($member['username']);
     }
@@ -145,7 +151,7 @@ class Backend_CexportController extends Local_Controller_Action_CliAbstract
         } catch (Zend_Exception $e) {
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }
-        $errors = $modelOcsIdent->getErrMessages();
+        $errors = $modelOcsIdent->getMessages();
         Zend_Registry::get('logger')->info(print_r($errors, true));
     }
 
