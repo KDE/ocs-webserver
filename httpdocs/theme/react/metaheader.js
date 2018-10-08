@@ -166,7 +166,9 @@ class MetaHeader extends React.Component {
       method: 'get',
       dataType: 'jsonp',
       done: function (response) {
+        console.log(response.responseText);
         const user = JSON.parse(response.responseText);
+        console.log(user);
         this.setState({ user: user, loading: false });
       }
     });
@@ -175,6 +177,7 @@ class MetaHeader extends React.Component {
   render() {
     let metaMenuDisplay;
     if (!this.state.loading) {
+      console.log('not loading');
       metaMenuDisplay = React.createElement(
         "div",
         { className: "metamenu" },
