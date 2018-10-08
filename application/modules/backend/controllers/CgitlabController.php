@@ -38,7 +38,7 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
         $this->errorlogfile = realpath(APPLICATION_DATA . "/logs") . DIRECTORY_SEPARATOR . $logFileName . '_' . self::filename_errors;
         $this->initFiles($this->logfile, $this->errorlogfile);
 
-        $force = $this->getParam('force', false);
+        $force = (boolean)$this->getParam('force', false);
 
         if ($this->hasParam('member_id')) {
             $memberId = $this->getParam('member_id');
