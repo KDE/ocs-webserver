@@ -7,7 +7,7 @@ class MetaHeader extends React.Component {
       loginUrl:loginUrl,
       user:user,
       sName:sName,
-      loading:true
+      loading:false
     };
     this.getData = this.getData.bind(this);
   }
