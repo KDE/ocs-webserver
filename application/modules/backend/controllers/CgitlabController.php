@@ -37,12 +37,11 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
         $this->logfile = realpath(APPLICATION_DATA . "/logs") . DIRECTORY_SEPARATOR . $logFileName . '_' . self::filename;
         $this->errorlogfile = realpath(APPLICATION_DATA . "/logs") . DIRECTORY_SEPARATOR . $logFileName . '_' . self::filename_errors;
         $this->initFiles($this->logfile, $this->errorlogfile);
-        
-        if($this->hasParam('member_id')) {
+
+        if ($this->hasParam('member_id')) {
             $memberId = $this->getParam('member_id');
-            $filter = " AND `m`.`member_id` = ".$memberId;
+            $filter = " AND `m`.`member_id` = " . $memberId;
             $members = $this->getMemberList($filter);
-            
         } else {
             $members = $this->getMemberList();
         }
@@ -67,6 +66,8 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
     }
 
     /**
+     * @param string $filter
+     *
      * @return Zend_Db_Statement_Interface
      */
     private function getMemberList($filter = "")
@@ -76,17 +77,23 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
             FROM `member` AS `m`
             LEFT JOIN `member_email` AS `me` ON `me`.`email_member_id` = `m`.`member_id` AND `me`.`email_primary` = 1
             LEFT JOIN `member_external_id` AS `mei` ON `mei`.`member_id` = `m`.`member_id`
-            WHERE `m`.`is_active` = 1 AND `m`.`is_deleted` = 0 AND `me`.`email_checked` IS NOT NULL AND `me`.`email_deleted` = 0 # AND (me.email_address like '%opayq%' OR m.username like '%rvs%')
-            #  AND `me`.`email_address` = 'info@dschinnweb.de'
+            WHERE `m`.`is_active` = 1 
+              AND `m`.`is_deleted` = 0 
+              AND `me`.`email_checked` IS NOT NULL 
+              AND `me`.`email_deleted` = 0
+              AND LOCATE('_deactivated', `m`.username) = 0 
+              AND LOCATE('_deactivated', `me`.`email_address`) = 0
+            # AND (me.email_address like '%opayq%' OR m.username like '%rvs%')
+            # AND `me`.`email_address` = 'info@dschinnweb.de'
             # AND `m`.`member_id` > 464086 
-            ". $filter ."
+            " . $filter . "
             ORDER BY `m`.`member_id` ASC
             # LIMIT 200
         ";
 
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql);
-        
-        file_put_contents($this->logfile, "Select " . count($result) . "Members.\nSql: ".$sql."\n", FILE_APPEND);
+
+        file_put_contents($this->logfile, "Select " . count($result) . "Members.\nSql: " . $sql . "\n", FILE_APPEND);
 
         return $result;
     }
@@ -101,17 +108,17 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
     private function exportMembers($members)
     {
         // only usernames which are valid in github/gitlab
-        $usernameValidChars = new Zend_Validate_Regex('/^(?=.{4,40}$)(?![-])(?!.*[-]{2})[a-z0-9-]+(?<![-])$/');
+        $usernameValidChars = new Local_Validate_UsernameValid();
         $emailValidate = new Zend_Validate_EmailAddress();
         $modelOpenCode = new Default_Model_Ocs_OpenCode(Zend_Registry::get('config')->settings->server->opencode);
 
         while ($member = $members->fetch()) {
             if (false === $usernameValidChars->isValid($member['username'])) {
-                file_put_contents($this->errorlogfile, print_r($member, true) . "user name validation error". "\n\n" , FILE_APPEND);
+                file_put_contents($this->errorlogfile, print_r($member, true) . "user name validation error" . "\n\n", FILE_APPEND);
                 continue;
             }
             if (false === $emailValidate->isValid($member["email_address"])) {
-                file_put_contents($this->errorlogfile, print_r($member, true) . "email validation error". "\n\n" , FILE_APPEND);
+                file_put_contents($this->errorlogfile, print_r($member, true) . "email validation error" . "\n\n", FILE_APPEND);
                 continue;
             }
             file_put_contents($this->logfile, Zend_Json::encode($member) . "\n", FILE_APPEND);

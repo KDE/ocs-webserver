@@ -254,6 +254,26 @@ class UserController extends Local_Controller_Action_DomainSwitch
             $tableProject->fetchAllProjectsForMember($this->_memberId, $pageLimit, ($page - 1) * $pageLimit, true);
         $this->_helper->viewRenderer('/partials/aboutmeProducts');
     }
+    
+    public function userdataajaxAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        $resultArray = array();
+        
+        if (Zend_Auth::getInstance()->hasIdentity()) {
+        
+            $auth = Zend_Auth::getInstance();
+            $user = $auth->getStorage()->read();
+
+            $resultArray['member_id'] = $user->member_id;
+            $resultArray['username'] = $user->username;
+            $resultArray['mail'] = $user->mail;
+            $resultArray['avatar'] = $user->profile_image_url;
+        }
+        
+        $this->_helper->json($resultArray);
+    }
 
     public function followsAction()
     {
