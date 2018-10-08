@@ -32,7 +32,7 @@ class MetaHeader extends React.Component {
         console.log('error');
         const user = JSON.parse(response.responseText);
         if (user.member_id){
-          this.setState({user:user,loading:false});
+          self.setState({user:user,loading:false});
         } else {
           self.setState({loading:false});
         }
