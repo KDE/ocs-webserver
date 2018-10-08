@@ -1,2 +1,19 @@
+<link rel="stylesheet" href="www.opendesktop.cc/theme/flatui/css/bootstrap/bootstrap.min.css" type="text/css"  crossorigin="anonymous">
+<link href="www.opendesktop.cc/theme/react/assets/css/metaheader.css" rel="stylesheet">
+
+<script src="www.opendesktop.cc/theme/flatui/js/lib/jquery-3.2.1.min.js" ></script>
+<script src="www.opendesktop.cc/theme/flatui/js/lib/bootstrap.min.js" ></script>
+<script type="text/javascript" src="www.opendesktop.cc/theme/react/lib/react/react.js"></script>
+<script type="text/javascript" src="www.opendesktop.cc/theme/react/lib/react-dom/react-dom.js"></script>
+
+
 <div id="metaheader"></div>
-<script src="https://www.opendesktop.cc/themes/react/metheader.js" type="module"></script>
+<script>
+  var domains = <?=$json_menu?>;
+  var user = <?= $json_user ?>;
+  var baseUrl = "<?=$baseurl?>";
+  var blogUrl = "<?=$url_blog?>";
+  var loginUrl = "<?=$loginUrl?>";
+  var sName = "<?=$sname?>";
+</script>
+<script type="text/javascript" src="www.opendesktop.cc/theme/react/metaheader.js"></script>
