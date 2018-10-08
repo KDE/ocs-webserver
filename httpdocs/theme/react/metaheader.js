@@ -151,18 +151,33 @@ class MetaHeader extends React.Component {
       sName: sName,
       loading: false
     };
+    this.getData = this.getData.bind(this);
   }
 
   componentDidMount() {
-    console.log(this.state);
+    this.getData();
+  }
+
+  getData() {
+    console.log('get data');
+    const self = this;
+    $.ajax({
+      url: 'https://www.opendesktop.cc/user/userdataajax',
+      method: 'get',
+      dataType: 'jsonp',
+      error: function (response) {
+        console.log(response);
+      },
+      success: function (response) {
+        console.log(response);
+      }
+    });
   }
 
   render() {
-
-    return React.createElement(
-      "nav",
-      { id: "metaheader-nav", className: "metaheader" },
-      React.createElement(
+    let metaMenuDisplay;
+    if (!this.state.loading) {
+      metaMenuDisplay = React.createElement(
         "div",
         { className: "metamenu" },
         React.createElement(DomainsMenu, {
@@ -175,7 +190,12 @@ class MetaHeader extends React.Component {
           blogUrl: this.state.blogUrl,
           loginUrl: this.state.loginUrl
         })
-      )
+      );
+    }
+    return React.createElement(
+      "nav",
+      { id: "metaheader-nav", className: "metaheader" },
+      metaMenuDisplay
     );
   }
 }

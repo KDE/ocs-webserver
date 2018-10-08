@@ -9,16 +9,33 @@ class MetaHeader extends React.Component {
       sName:sName,
       loading:false
     };
+    this.getData = this.getData.bind(this);
   }
 
   componentDidMount() {
-    console.log(this.state);
+    this.getData();
+  }
+
+  getData(){
+    console.log('get data');
+    const self = this;
+    $.ajax({
+      url:'https://www.opendesktop.cc/user/userdataajax',
+      method:'get',
+      dataType: 'jsonp',
+      error: function(response){
+        console.log(response);
+      },
+      success: function(response){
+        console.log(response);
+      }
+    });
   }
 
   render(){
-
-    return (
-      <nav id="metaheader-nav" className="metaheader">
+    let metaMenuDisplay;
+    if (!this.state.loading){
+      metaMenuDisplay = (
         <div className="metamenu">
           <DomainsMenu
             domains={appHelpers.getDomainsArray()}
@@ -31,6 +48,11 @@ class MetaHeader extends React.Component {
             loginUrl={this.state.loginUrl}
           />
         </div>
+      );
+    }
+    return (
+      <nav id="metaheader-nav" className="metaheader">
+        {metaMenuDisplay}
       </nav>
     )
   }
