@@ -229,8 +229,10 @@ class UserContextMenuContainer extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {
-      loading:true
+      loading:true,
+      ariaExpanded:false
     };
+    this.toggleDropdown = this.toggleDropdown.bind(this);
   }
 
   componentDidMount() {
@@ -241,20 +243,26 @@ class UserContextMenuContainer extends React.Component {
     });
   }
 
+  toggleDropdown(e){
+    const ariaExpanded = this.state.ariaExpanded === true ? false : true;
+    this.setState({ariaExpanded:ariaExpanded});
+  }
+
   render(){
 
     const messagesLink = "https://forum.opendesktop.org/u/"+this.props.user.username+"/messages";
 
     return (
       <li id="user-context-menu-container">
-        <div className="user-dropdown dropdown">
+        <div className="user-dropdown">
           <button
             className="btn btn-default dropdown-toggle"
             type="button"
             id="dropdownMenu2"
             data-toggle="dropdown"
             aria-haspopup="true"
-            aria-expanded="true">
+            aria-expanded={this.state.ariaExpanded}
+            onClick={this.toggleDropdown}>
             <span className="glyphicon glyphicon-th"></span>
           </button>
           <ul className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu2">
@@ -292,7 +300,7 @@ class UserLoginMenuContainer extends React.Component {
   render(){
     return (
       <li id="user-login-menu-container">
-        <div className="user-dropdown dropdown">
+        <div className="user-dropdown">
           <button
             className="btn btn-default dropdown-toggle"
             type="button"
@@ -307,7 +315,7 @@ class UserLoginMenuContainer extends React.Component {
               <div id="user-info-section">
                 <div className="user-avatar">
                   <div className="no-avatar-user-letter">
-                    <img src={this.props.user.profile_image_url}/>
+                    <img src={this.props.user.avatar}/>
                   </div>
                 </div>
                 <div className="user-details">
@@ -320,8 +328,8 @@ class UserLoginMenuContainer extends React.Component {
             </li>
             <li id="main-seperator" role="separator" className="divider"></li>
             <li className="buttons">
-              <a href="/settings/" className="btn btn-default btn-metaheader">Settings</a>
-              <a href="/logout/" className="btn btn-default pull-right btn-metaheader">Logout</a>
+              <a href="https://www.opendesktop.cc/settings/" className="btn btn-default btn-metaheader">Settings</a>
+              <a href="https://www.opendesktop.cc/logout/" className="btn btn-default pull-right btn-metaheader">Logout</a>
             </li>
           </ul>
         </div>
