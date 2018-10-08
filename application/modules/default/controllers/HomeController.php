@@ -98,6 +98,47 @@ class HomeController extends Local_Controller_Action_DomainSwitch
             // $this->_helper->json($featureProducts);
         }
     }
+    
+    
+    public function baseurlajaxAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        $resultArray = array();
+        
+        $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
+
+        $resultArray['base_url'] = $baseurl;
+        
+        $this->_helper->json($resultArray);
+    }
+    
+    public function forumurlajaxAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        $resultArray = array();
+        
+        $url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
+
+        $resultArray['url_forum'] = $url_forum;
+        
+        $this->_helper->json($resultArray);
+    }
+    
+    public function blogurlajaxAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        $resultArray = array();
+        
+        $url_blog = Zend_Registry::get('config')->settings->client->default->url_blog;
+
+        $resultArray['url_blog'] = $url_blog;
+        
+        $this->_helper->json($resultArray);
+    }
+    
 
     protected function setLayout()
     {
