@@ -77,7 +77,12 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
             FROM `member` AS `m`
             LEFT JOIN `member_email` AS `me` ON `me`.`email_member_id` = `m`.`member_id` AND `me`.`email_primary` = 1
             LEFT JOIN `member_external_id` AS `mei` ON `mei`.`member_id` = `m`.`member_id`
-            WHERE `m`.`is_active` = 1 AND `m`.`is_deleted` = 0 AND `me`.`email_checked` IS NOT NULL AND `me`.`email_deleted` = 0
+            WHERE `m`.`is_active` = 1 
+              AND `m`.`is_deleted` = 0 
+              AND `me`.`email_checked` IS NOT NULL 
+              AND `me`.`email_deleted` = 0
+              AND LOCATE('_deactivated', `m`.username) = 0 
+              AND LOCATE('_deactivated', `me`.`email_address`) = 0
             # AND (me.email_address like '%opayq%' OR m.username like '%rvs%')
             # AND `me`.`email_address` = 'info@dschinnweb.de'
             # AND `m`.`member_id` > 464086 
@@ -103,7 +108,7 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
     private function exportMembers($members)
     {
         // only usernames which are valid in github/gitlab
-        $usernameValidChars = new Zend_Validate_Regex('/^(?=.{4,40}$)(?![-])(?!.*[-]{2})[a-z0-9-]+(?<![-])$/');
+        $usernameValidChars = new Local_Validate_UsernameValid();
         $emailValidate = new Zend_Validate_EmailAddress();
         $modelOpenCode = new Default_Model_Ocs_OpenCode(Zend_Registry::get('config')->settings->server->opencode);
 

@@ -28,6 +28,13 @@ class Local_Validate_UsernameExists extends Zend_Validate_Abstract
         self::EXISTS => 'Username already exists.'
     );
 
+    /**
+     * @param mixed $value
+     * @param null  $context
+     *
+     * @return bool
+     * @throws Zend_Exception
+     */
     public function isValid($value, $context = null)
     {
         $value = (string)$value;
@@ -40,6 +47,7 @@ class Local_Validate_UsernameExists extends Zend_Validate_Abstract
      * @param string $value
      *
      * @return bool
+     * @throws Zend_Exception
      */
     private function checkUsernameExist($value, $context)
     {
@@ -50,10 +58,10 @@ class Local_Validate_UsernameExists extends Zend_Validate_Abstract
         $modelMember = new Default_Model_Member();
         $resultSet = $modelMember->findUsername($value, Default_Model_Member::CASE_INSENSITIVE, $omitMember);
         if (count($resultSet) > 0) {
-            
-            Zend_Registry::get('logger')->info(__METHOD__ . ' User Exists: ' . $value)
-        ;
-            
+
+            Zend_Registry::get('logger')->info(__METHOD__ . ' - username already exists: ' . $value);
+            $this->_error(self::EXISTS, $value);
+
             return false;
         }
 
