@@ -325,7 +325,7 @@ class MetaHeader extends React.Component {
         console.log(response);
         console.log(response.responseText);
         console.log(typeof user);
-        if (typeof user === "object") {
+        if (Object.keys(user).length === 0 && user.constructor === Object) {
           self.setUser(user);
         }
       },
