@@ -113,10 +113,10 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
         $modelOpenCode = new Default_Model_Ocs_OpenCode(Zend_Registry::get('config')->settings->server->opencode);
 
         while ($member = $members->fetch()) {
-            if (false === $usernameValidChars->isValid($member['username'])) {
-                file_put_contents($this->errorlogfile, print_r($member, true) . "user name validation error" . "\n\n", FILE_APPEND);
-                continue;
-            }
+            //if (false === $usernameValidChars->isValid($member['username'])) {
+            //    file_put_contents($this->errorlogfile, print_r($member, true) . "user name validation error" . "\n\n", FILE_APPEND);
+            //    continue;
+            //}
             if (false === $emailValidate->isValid($member["email_address"])) {
                 file_put_contents($this->errorlogfile, print_r($member, true) . "email validation error" . "\n\n", FILE_APPEND);
                 continue;
