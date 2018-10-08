@@ -166,7 +166,7 @@ class DomainsMenu extends React.Component {
             null,
             React.createElement(
               "a",
-              null,
+              { href: "https://www.opencode.net/" },
               "Coding"
             )
           )
@@ -190,22 +190,29 @@ class DomainsMenuGroup extends React.Component {
   }
 
   render() {
-    const domainsDisplay = this.props.domains.filter(this.filterDomainsByMenuGroup).map((domain, index) => React.createElement(
-      "li",
-      { key: index },
-      React.createElement(
-        "a",
-        { href: "http://" + domain.menuhref },
-        domain.name
-      )
-    ));
+    const domainsDisplay = this.props.domains.filter(this.filterDomainsByMenuGroup).map((domain, index) => {
+      let domainPrefix = "http://";
+      if (domain.menuhref.indexOf('pling.cc') === -1 && domain.menuhref.indexOf('www') === -1) {
+        console.log(domain.menuhref.indexOf('www'));
+        domainPrefix += "www.";
+      }
+      return React.createElement(
+        "li",
+        { key: index },
+        React.createElement(
+          "a",
+          { href: domainPrefix + domain.menuhref },
+          domain.name
+        )
+      );
+    });
 
     return React.createElement(
       "li",
       null,
       React.createElement(
         "a",
-        { href: "#" },
+        { className: "groupname" },
         React.createElement(
           "b",
           null,
@@ -228,9 +235,12 @@ class UserMenu extends React.Component {
   }
 
   render() {
-    let userDropdownDisplay;
+    let userDropdownDisplay, userAppsContextDisplay;
     if (this.props.user) {
       userDropdownDisplay = React.createElement(UserLoginMenuContainer, {
+        user: this.props.user
+      });
+      userAppsContextDisplay = React.createElement(UserContextMenuContainer, {
         user: this.props.user
       });
     } else {
@@ -296,7 +306,7 @@ class UserMenu extends React.Component {
             "About"
           )
         ),
-        React.createElement(UserContextMenuContainer, null),
+        userAppsContextDisplay,
         userDropdownDisplay
       )
     );
@@ -306,10 +316,23 @@ class UserMenu extends React.Component {
 class UserContextMenuContainer extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      loading: true
+    };
+  }
+
+  componentDidMount() {
+    const self = this;
+    $.ajax({ url: "https://gitlab.opencode.net/api/v4/users?username=" + this.props.user.username, cache: false }).done(function (response) {
+      const gitlabLink = "https://gitlab.opencode.net/dashboard/issues?assignee_id=" + response[0].id;
+      self.setState({ gitlabLink: gitlabLink, loading: false });
+    });
   }
 
   render() {
+
+    const messagesLink = "https://forum.opendesktop.org/u/" + this.props.user.username + "/messages";
+
     return React.createElement(
       "li",
       { id: "user-context-menu-container" },
@@ -332,49 +355,43 @@ class UserContextMenuContainer extends React.Component {
           { className: "dropdown-menu dropdown-menu-right", "aria-labelledby": "dropdownMenu2" },
           React.createElement(
             "li",
-            { id: "opendesktop-link-item" },
-            React.createElement(
-              "a",
-              { href: "http://www.opendesktop.org" },
-              React.createElement("div", { className: "icon" }),
-              React.createElement(
-                "span",
-                null,
-                "Themes ",
-                React.createElement("br", null),
-                " & Apps"
-              )
-            )
-          ),
-          React.createElement(
-            "li",
-            { id: "discourse-link-item" },
-            React.createElement(
-              "a",
-              { href: "http://discourse.opendesktop.org/" },
-              React.createElement("div", { className: "icon" }),
-              React.createElement(
-                "span",
-                null,
-                "Discussion ",
-                React.createElement("br", null),
-                " Boards"
-              )
-            )
-          ),
-          React.createElement(
-            "li",
             { id: "opencode-link-item" },
             React.createElement(
               "a",
-              { href: "https://www.opencode.net/" },
+              { href: "https://gitlab.opencode.net/dashboard/projects" },
               React.createElement("div", { className: "icon" }),
               React.createElement(
                 "span",
                 null,
-                "Coding ",
-                React.createElement("br", null),
-                " Tools"
+                "Projects"
+              )
+            )
+          ),
+          React.createElement(
+            "li",
+            { id: "issues-link-item" },
+            React.createElement(
+              "a",
+              { href: this.state.gitlabLink },
+              React.createElement("div", { className: "icon" }),
+              React.createElement(
+                "span",
+                null,
+                "Issues"
+              )
+            )
+          ),
+          React.createElement(
+            "li",
+            { id: "messages-link-item" },
+            React.createElement(
+              "a",
+              { href: messagesLink },
+              React.createElement("div", { className: "icon" }),
+              React.createElement(
+                "span",
+                null,
+                "Messages"
               )
             )
           )
@@ -423,12 +440,7 @@ class UserLoginMenuContainer extends React.Component {
                 React.createElement(
                   "div",
                   { className: "no-avatar-user-letter" },
-                  React.createElement("img", { src: this.props.user.profile_image_url }),
-                  React.createElement(
-                    "a",
-                    { className: "change-profile-pic" },
-                    "Change"
-                  )
+                  React.createElement("img", { src: this.props.user.profile_image_url })
                 )
               ),
               React.createElement(
@@ -450,31 +462,6 @@ class UserLoginMenuContainer extends React.Component {
                     "li",
                     null,
                     this.props.user.mail
-                  ),
-                  React.createElement("li", null),
-                  React.createElement(
-                    "li",
-                    null,
-                    React.createElement(
-                      "a",
-                      null,
-                      "Profile"
-                    ),
-                    " - ",
-                    React.createElement(
-                      "a",
-                      null,
-                      "Privacy"
-                    )
-                  ),
-                  React.createElement(
-                    "li",
-                    null,
-                    React.createElement(
-                      "button",
-                      { className: "btn btn-default btn-metaheader" },
-                      "Account"
-                    )
                   )
                 )
               )
@@ -485,18 +472,14 @@ class UserLoginMenuContainer extends React.Component {
             "li",
             { className: "buttons" },
             React.createElement(
-              "button",
-              { className: "btn btn-default btn-metaheader" },
-              "Add Account"
+              "a",
+              { href: "/settings/", className: "btn btn-default btn-metaheader" },
+              "Settings"
             ),
             React.createElement(
-              "button",
-              { className: "btn btn-default pull-right btn-metaheader" },
-              React.createElement(
-                "a",
-                { href: "/register" },
-                "Sign Up"
-              )
+              "a",
+              { href: "/logout/", className: "btn btn-default pull-right btn-metaheader" },
+              "Logout"
             )
           )
         )
