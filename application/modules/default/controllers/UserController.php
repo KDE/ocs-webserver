@@ -262,10 +262,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
         $resultArray = array();
         
         $this->getResponse()
-             ->setHeader('Access-Control-Allow-Origin', 'https://gitlab.opendesktop.cc')
-             ->setHeader('Access-Control-Allow-Origin', 'https://forum.opendesktop.cc')   
-             ->setHeader('Access-Control-Allow-Origin', 'https://gitlab.opendesktop.cc')
-             ->setHeader('Access-Control-Allow-Origin', 'http://david.pling.cc')
+             ->setHeader('Access-Control-Allow-Origin', '*')
              ->setHeader('Access-Control-Allow-Credentials', 'true')
              ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
              ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
