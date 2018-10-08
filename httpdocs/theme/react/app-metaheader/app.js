@@ -4,7 +4,7 @@ class MetaHeader extends React.Component {
   	this.state = {
       baseUrl:"opendesktop.cc",
       blogUrl:"https://blog.opendesktop.org",
-      loginUrl:loginUrl,
+      loginUrl:"https://www.opendesktop.cc/login/redirect/TFVIFZfgicowyCW5clpDz3sfM1rVUJsb_GwOHCL1oRyPOkMMVswIRPd2kvVz5oQW",
       user:user,
       sName:sName,
       loading:false
@@ -31,7 +31,7 @@ class MetaHeader extends React.Component {
         console.log('error');
         const user = JSON.parse(response.responseText);
         if (user.member_id){
-          self.setUser(user);          
+          self.setUser(user);
         } else {
           self.setState({loading:false})
         }
