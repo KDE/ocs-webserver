@@ -96,7 +96,7 @@ class Default_Model_Ocs_OpenCode
 
         $data = array(
             'email'            => $paramEmail,
-            'username'         => $user['username'],
+            'username'         => strtolower($user['username']),
             'name'             => (false == empty($user['lastname'])) ? trim($user['firstname'] . ' ' . $user['lastname'])
                 : $user['username'],
             'password'         => $user['password'],
