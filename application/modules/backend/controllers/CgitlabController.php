@@ -38,6 +38,8 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
         $this->errorlogfile = realpath(APPLICATION_DATA . "/logs") . DIRECTORY_SEPARATOR . $logFileName . '_' . self::filename_errors;
         $this->initFiles($this->logfile, $this->errorlogfile);
 
+        $force = $this->getParam('force', false);
+
         if ($this->hasParam('member_id')) {
             $memberId = $this->getParam('member_id');
             $filter = " AND `m`.`member_id` = " . $memberId;
@@ -46,7 +48,7 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
             $members = $this->getMemberList();
         }
 
-        $this->exportMembers($members);
+        $this->exportMembers($members, $force);
     }
 
     /**
@@ -93,7 +95,7 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
 
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql);
 
-        file_put_contents($this->logfile, "Select " . count($result) . "Members.\nSql: " . $sql . "\n", FILE_APPEND);
+        file_put_contents($this->logfile, "Select " . count($result) . " Members.\nSql: " . $sql . "\n", FILE_APPEND);
 
         return $result;
     }
@@ -101,11 +103,13 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
     /**
      * @param Zend_Db_Statement_Interface $members
      *
+     * @param bool                        $force
+     *
      * @return bool
+     * @throws Zend_Db_Statement_Exception
      * @throws Zend_Exception
-     * @throws Zend_Validate_Exception
      */
-    private function exportMembers($members)
+    private function exportMembers($members, $force = false)
     {
         // only usernames which are valid in github/gitlab
         $usernameValidChars = new Local_Validate_UsernameValid();
@@ -124,7 +128,7 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
             file_put_contents($this->logfile, Zend_Json::encode($member) . "\n", FILE_APPEND);
             try {
                 //Export User, if he not exists
-                $modelOpenCode->exportUser($member, false);
+                $modelOpenCode->exportUser($member, $force);
             } catch (Exception $e) {
                 Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
             }
