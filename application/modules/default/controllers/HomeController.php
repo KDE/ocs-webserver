@@ -98,6 +98,133 @@ class HomeController extends Local_Controller_Action_DomainSwitch
             // $this->_helper->json($featureProducts);
         }
     }
+    
+    
+    public function baseurlajaxAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        
+        $this->getResponse()
+             ->setHeader('Access-Control-Allow-Origin', 'https://gitlab.opendesktop.cc')
+             ->setHeader('Access-Control-Allow-Origin', 'https://forum.opendesktop.cc')   
+             ->setHeader('Access-Control-Allow-Origin', 'https://gitlab.opendesktop.cc')
+             ->setHeader('Access-Control-Allow-Origin', 'http://david.pling.cc')
+             ->setHeader('Access-Control-Allow-Credentials', 'true')
+             ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+             ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
+        ;
+        
+        
+        $resultArray = array();
+        
+        $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
+
+        $resultArray['base_url'] = $baseurl;
+        
+        $this->_helper->json($resultArray);
+    }
+    
+    public function forumurlajaxAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        
+        $this->getResponse()
+             ->setHeader('Access-Control-Allow-Origin', 'https://gitlab.opendesktop.cc')
+             ->setHeader('Access-Control-Allow-Origin', 'https://forum.opendesktop.cc')   
+             ->setHeader('Access-Control-Allow-Origin', 'https://gitlab.opendesktop.cc')
+             ->setHeader('Access-Control-Allow-Origin', 'http://david.pling.cc')
+             ->setHeader('Access-Control-Allow-Credentials', 'true')
+             ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+             ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
+        ;
+        
+        
+        $resultArray = array();
+        
+        $url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
+
+        $resultArray['url_forum'] = $url_forum;
+        
+        $this->_helper->json($resultArray);
+    }
+    
+    public function blogurlajaxAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        
+        $this->getResponse()
+             ->setHeader('Access-Control-Allow-Origin', 'https://gitlab.opendesktop.cc')
+             ->setHeader('Access-Control-Allow-Origin', 'https://forum.opendesktop.cc')   
+             ->setHeader('Access-Control-Allow-Origin', 'https://gitlab.opendesktop.cc')
+             ->setHeader('Access-Control-Allow-Origin', 'http://david.pling.cc')
+             ->setHeader('Access-Control-Allow-Credentials', 'true')
+             ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+             ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
+        ;
+        
+        $resultArray = array();
+        
+        $url_blog = Zend_Registry::get('config')->settings->client->default->url_blog;
+
+        $resultArray['url_blog'] = $url_blog;
+        
+        $this->_helper->json($resultArray);
+    }
+    
+    
+    public function storenameajaxAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        
+        $this->getResponse()
+             ->setHeader('Access-Control-Allow-Origin', 'https://gitlab.opendesktop.cc')
+             ->setHeader('Access-Control-Allow-Origin', 'https://forum.opendesktop.cc')   
+             ->setHeader('Access-Control-Allow-Origin', 'https://gitlab.opendesktop.cc')
+             ->setHeader('Access-Control-Allow-Origin', 'http://david.pling.cc')
+             ->setHeader('Access-Control-Allow-Credentials', 'true')
+             ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+             ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
+        ;
+        
+        $resultArray = array();
+        
+        $sname = Zend_Registry::get('store_host');  
+
+        $resultArray['store_name'] = $sname;
+        
+        $this->_helper->json($resultArray);
+    }
+    
+    public function domainsajaxAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        
+        $this->getResponse()
+             ->setHeader('Access-Control-Allow-Origin', 'https://gitlab.opendesktop.cc')
+             ->setHeader('Access-Control-Allow-Origin', 'https://forum.opendesktop.cc')   
+             ->setHeader('Access-Control-Allow-Origin', 'https://gitlab.opendesktop.cc')
+             ->setHeader('Access-Control-Allow-Origin', 'http://david.pling.cc')
+             ->setHeader('Access-Control-Allow-Credentials', 'true')
+             ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+             ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
+        ;
+        
+        
+        $resultArray = array();
+        
+        $domainshelper = new Default_View_Helper_FetchDomains();
+        $this->domainobjects = $domainshelper->fetchDomainObjects();  
+
+        $resultArray['domains'] = $domainshelper;
+        
+        $this->_helper->json($resultArray);
+    }
+    
 
     protected function setLayout()
     {

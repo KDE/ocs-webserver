@@ -261,6 +261,15 @@ class UserController extends Local_Controller_Action_DomainSwitch
         $this->_helper->viewRenderer->setNoRender(true);
         $resultArray = array();
         
+        header('Access-Control-Allow-Origin: *'); 
+        
+        $this->getResponse()
+             ->setHeader('Access-Control-Allow-Origin', '*')
+             ->setHeader('Access-Control-Allow-Credentials', 'true')
+             ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+             ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
+        ;
+        
         if (Zend_Auth::getInstance()->hasIdentity()) {
         
             $auth = Zend_Auth::getInstance();

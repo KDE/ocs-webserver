@@ -1,19 +1,24 @@
-<link rel="stylesheet" href="https://www.opendesktop.cc/theme/flatui/css/bootstrap/bootstrap.min.css" type="text/css"  crossorigin="anonymous">
 <link href="https://www.opendesktop.cc/theme/react/assets/css/metaheader.css" rel="stylesheet">
 
 <script src="https://www.opendesktop.cc/theme/flatui/js/lib/jquery-3.2.1.min.js" ></script>
 <script src="https://www.opendesktop.cc/theme/flatui/js/lib/bootstrap.min.js" ></script>
 <script type="text/javascript" src="https://www.opendesktop.cc/theme/react/lib/react/react.js"></script>
 <script type="text/javascript" src="https://www.opendesktop.cc/theme/react/lib/react-dom/react-dom.js"></script>
-
-
 <div id="metaheader"></div>
+
 <script>
-  var domains = <?=$json_menu?>;
-  var user = <?= $json_user ?>;
-  var baseUrl = "<?=$baseurl?>";
-  var blogUrl = "<?=$url_blog?>";
-  var loginUrl = "<?=$loginUrl?>";
-  var sName = "<?=$sname?>";
+  var domains = '';
+  var user = '';
+  var baseUrl = "www.opendesktop.cc";
+  var blogUrl = "forum.opendesktop.cc";
+  var loginUrl = "/login";
+  var sName = "";
 </script>
 <script type="text/javascript" src="https://www.opendesktop.cc/theme/react/metaheader.js"></script>
+
+
+
+<?php
+$test = '<link href="https://www.opendesktop.cc/theme/react/assets/css/metaheader.css" rel="stylesheet">\n<script src="https://www.opendesktop.cc/theme/flatui/js/lib/jquery-3.2.1.min.js" ></script>\n<script src="https://www.opendesktop.cc/theme/flatui/js/lib/bootstrap.min.js" ></script>\n<script type="text/javascript" src="https://www.opendesktop.cc/theme/react/lib/react/react.js"></script>\n<script type="text/javascript" src="https://www.opendesktop.cc/theme/react/lib/react-dom/react-dom.js"></script>\n<div id="metaheader"></div>\n<script>\nvar user = "";\nvar loginUrl = "/login";\nvar sName = "";\n</script>\n<script type="text/javascript" src="https://www.opendesktop.cc/theme/react/metaheader.js"></script>';
+
+?>

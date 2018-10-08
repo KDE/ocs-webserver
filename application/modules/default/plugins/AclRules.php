@@ -288,6 +288,9 @@ class Default_Plugin_AclRules extends Zend_Acl
             'gitlink',
             'link',
         ), new Default_Plugin_Acl_IsProjectOwnerAssertion());
+        
+        // resource default_user
+        $this->allow(self::ROLENAME_GUEST, 'default_home', array('baseurlajax','forumurlajax','blogurlajax','storenameajax','domainsajax'));
 
         // resource default_user
         $this->allow(self::ROLENAME_GUEST, 'default_user', array('index', 'aboutme', 'share', 'report', 'about', 'tooltip', 'avatar', 'userdataajax'));
