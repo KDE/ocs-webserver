@@ -28,6 +28,20 @@ class MetaHeader extends React.Component {
         const user = JSON.parse(response.responseText);
         console.log(user);
         this.setState({user:user,loading:false});
+      },
+      error: function(response){
+        console.log('error');
+        console.log(response);
+        const user = JSON.parse(response.responseText);
+        console.log(user);
+        this.setState({user:user,loading:false});
+      },
+      success: function(response){
+        console.log('success');
+        console.log(response);
+        const user = JSON.parse(response.responseText);
+        console.log(user);
+        this.setState({user:user,loading:false});        
       }
     });
   }
