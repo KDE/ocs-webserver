@@ -102,9 +102,9 @@ class DomainsMenu extends React.Component {
           <ul className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu4">
             <li><a href="https://forum.opendesktop.org/c/general">General</a></li>
             <li><a href="https://forum.opendesktop.org/c/themes-and-apps">Themes & Apps</a></li>
-            <li><a>Coding</a></li>
+            <li><a href="https://www.opencode.net/">Coding</a></li>
           </ul>
-        </li>        
+        </li>
       </ul>
     )
   }
@@ -124,15 +124,22 @@ class DomainsMenuGroup extends React.Component {
   }
 
   render(){
-    const domainsDisplay = this.props.domains.filter(this.filterDomainsByMenuGroup).map((domain,index) => (
-      <li key={index}>
-        <a href={"http://" + domain.menuhref}>{domain.name}</a>
-      </li>
-    ));
+    const domainsDisplay = this.props.domains.filter(this.filterDomainsByMenuGroup).map((domain,index) => {
+      let domainPrefix = "http://";
+      if (domain.menuhref.indexOf('pling.cc') === -1 && domain.menuhref.indexOf('www') === -1){
+        console.log(domain.menuhref.indexOf('www'));
+        domainPrefix += "www.";
+      }
+      return (
+        <li key={index}>
+          <a href={domainPrefix + domain.menuhref}>{domain.name}</a>
+        </li>
+      );
+    });
 
     return (
       <li>
-        <a href="#"><b>{this.props.menuGroup}</b></a>
+        <a className="groupname"><b>{this.props.menuGroup}</b></a>
         <ul className="domains-sub-menu">
           {domainsDisplay}
         </ul>
@@ -148,13 +155,18 @@ class UserMenu extends React.Component {
   }
 
   render(){
-    let userDropdownDisplay;
+    let userDropdownDisplay, userAppsContextDisplay;
     if (this.props.user){
       userDropdownDisplay = (
         <UserLoginMenuContainer
           user={this.props.user}
         />
       );
+      userAppsContextDisplay = (
+        <UserContextMenuContainer
+          user={this.props.user}
+        />
+      )
     } else {
       userDropdownDisplay = (
         <li id="user-login-container"><a href={this.props.loginUrl} className="btn btn-metaheader">Login</a></li>
@@ -169,7 +181,7 @@ class UserMenu extends React.Component {
           <li><a id="plingList" className="popuppanel" href="/plings">What are Plings?</a></li>
           <li><a id="ocsapiContent" className="popuppanel" href="/partials/ocsapicontent.phtml">API</a></li>
           <li><a id="aboutContent" className="popuppanel" href="/partials/about.phtml" >About</a></li>
-          <UserContextMenuContainer/>
+          {userAppsContextDisplay}
           {userDropdownDisplay}
         </ul>
       </div>
@@ -180,10 +192,23 @@ class UserMenu extends React.Component {
 class UserContextMenuContainer extends React.Component {
   constructor(props){
   	super(props);
-  	this.state = {};
+  	this.state = {
+      loading:true
+    };
+  }
+
+  componentDidMount() {
+    const self = this;
+    $.ajax({url: "https://gitlab.opencode.net/api/v4/users?username="+this.props.user.username,cache: false}).done(function(response){
+      const gitlabLink = "https://gitlab.opencode.net/dashboard/issues?assignee_id="+response[0].id;
+      self.setState({gitlabLink:gitlabLink,loading:false});
+    });
   }
 
   render(){
+
+    const messagesLink = "https://forum.opendesktop.org/u/"+this.props.user.username+"/messages";
+
     return (
       <li id="user-context-menu-container">
         <div className="user-dropdown">
@@ -197,22 +222,22 @@ class UserContextMenuContainer extends React.Component {
             <span className="glyphicon glyphicon-th"></span>
           </button>
           <ul className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu2">
-            <li id="opendesktop-link-item">
-              <a href="http://www.opendesktop.org">
-                <div className="icon"></div>
-                <span>Themes <br/> & Apps</span>
-              </a>
-            </li>
-            <li id="discourse-link-item">
-              <a href="http://discourse.opendesktop.org/">
-                <div className="icon"></div>
-                <span>Discussion <br/> Boards</span>
-              </a>
-            </li>
             <li id="opencode-link-item">
-              <a href="https://www.opencode.net/">
+              <a href="https://gitlab.opencode.net/dashboard/projects">
                 <div className="icon"></div>
-                <span>Coding <br/> Tools</span>
+                <span>Projects</span>
+              </a>
+            </li>
+            <li id="issues-link-item">
+              <a href={this.state.gitlabLink}>
+                <div className="icon"></div>
+                <span>Issues</span>
+              </a>
+            </li>
+            <li id="messages-link-item">
+              <a href={messagesLink}>
+                <div className="icon"></div>
+                <span>Messages</span>
               </a>
             </li>
           </ul>
@@ -247,26 +272,20 @@ class UserLoginMenuContainer extends React.Component {
                 <div className="user-avatar">
                   <div className="no-avatar-user-letter">
                     <img src={this.props.user.profile_image_url}/>
-                    <a className="change-profile-pic">
-                      Change
-                    </a>
                   </div>
                 </div>
                 <div className="user-details">
                   <ul>
                     <li><b>{this.props.user.username}</b></li>
                     <li>{this.props.user.mail}</li>
-                    <li></li>
-                    <li><a>Profile</a> - <a>Privacy</a></li>
-                    <li><button className="btn btn-default btn-metaheader">Account</button></li>
                   </ul>
                 </div>
               </div>
             </li>
             <li id="main-seperator" role="separator" className="divider"></li>
             <li className="buttons">
-              <button className="btn btn-default btn-metaheader">Add Account</button>
-              <button className="btn btn-default pull-right btn-metaheader"><a href="/register">Sign Up</a></button>
+              <a href="/settings/" className="btn btn-default btn-metaheader">Settings</a>
+              <a href="/logout/" className="btn btn-default pull-right btn-metaheader">Logout</a>
             </li>
           </ul>
         </div>
