@@ -247,7 +247,7 @@ class UserContextMenuContainer extends React.Component {
 
     return (
       <li id="user-context-menu-container">
-        <div className="user-dropdown">
+        <div className="user-dropdown dropdown">
           <button
             className="btn btn-default dropdown-toggle"
             type="button"
@@ -292,7 +292,7 @@ class UserLoginMenuContainer extends React.Component {
   render(){
     return (
       <li id="user-login-menu-container">
-        <div className="user-dropdown">
+        <div className="user-dropdown dropdown">
           <button
             className="btn btn-default dropdown-toggle"
             type="button"
