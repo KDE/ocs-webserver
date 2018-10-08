@@ -94,6 +94,13 @@ class Default_Model_Ocs_OpenCode
             $paramEmail = $user['mail'];
         }
 
+        if (strlen($user['biography']) > 254) {
+            $helperTruncate = new Default_View_Helper_Truncate();
+            $bio = $helperTruncate->truncate($user['biography'], 250);
+        } else {
+            $bio = empty($user['biography']) ? '' : $user['biography'];
+        }
+
         $data = array(
             'email'            => $paramEmail,
             'username'         => strtolower($user['username']),
@@ -101,7 +108,7 @@ class Default_Model_Ocs_OpenCode
             'password'         => $user['password'],
             'provider'         => 'all',
             'extern_uid'       => $user['external_id'],
-            'bio'              => empty($user['biography']) ? '' : $user['biography'],
+            'bio'              => $bio,
             'admin'            => $user['roleId'] == 100 ? 'true' : 'false',
             'can_create_group' => 'true'
             //'skip_confirmation' => 'true',
@@ -227,7 +234,7 @@ class Default_Model_Ocs_OpenCode
 
         $body = Zend_Json::decode($response->getRawBody());
         if (array_key_exists("message", $body)) {
-            throw new Default_Model_Ocs_Exception($body["message"]);
+            throw new Default_Model_Ocs_Exception(Zend_Json::encode($body["message"]));
         }
 
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - request: ' . $uri);
