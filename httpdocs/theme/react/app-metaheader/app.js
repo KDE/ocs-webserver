@@ -2,10 +2,9 @@ class MetaHeader extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {
-      baseUrl:baseUrl,
-      blogUrl:blogUrl,
+      baseUrl:"opendesktop.cc",
+      blogUrl:"https://blog.opendesktop.org",
       loginUrl:loginUrl,
-      domains:domains,
       user:user,
       sName:sName,
       loading:false
@@ -22,7 +21,7 @@ class MetaHeader extends React.Component {
       <nav id="metaheader-nav" className="metaheader">
         <div className="metamenu">
           <DomainsMenu
-            domains={this.state.domains}
+            domains={appHelpers.getDomainsArray()}
             baseUrl={this.state.baseUrl}
             sName={this.state.sName}
           />
