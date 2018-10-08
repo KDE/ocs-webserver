@@ -20,37 +20,50 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-class Local_Validate_EmailExists extends Zend_Validate_Abstract
+class Local_Validate_UsernameUnique extends Zend_Validate_Abstract
 {
     const EXISTS = 'already_exists';
 
     protected $_messageTemplates = array(
-        self::EXISTS => 'e-mail already exists.'
+        self::EXISTS => 'An activated username already exists.'
     );
 
+    /**
+     * @param mixed $value
+     * @param null  $context
+     *
+     * @return bool
+     * @throws Zend_Exception
+     */
     public function isValid($value, $context = null)
     {
         $value = (string)$value;
         $this->_setValue($value);
 
-        return $this->checkMailExist($value, $context);
+        return $this->isUsernameUnique($value, $context);
     }
 
     /**
-     * @param string $value
+     * @param $username
+     * @param $context
      *
      * @return bool
+     * @throws Zend_Db_Statement_Exception
      */
-    private function checkMailExist($value, $context)
+    private function isUsernameUnique($username, $context)
     {
-        $omitMember = null;
-        if (isset($context['omitMember'])) {
-            $omitMember = $context['omitMember'];
-        }
-        $modelMember = new Default_Model_MemberEmail();
-        $resultSet = $modelMember->findMailAddress($value, Default_Model_MemberEmail::CASE_INSENSITIVE, $omitMember);
-        if (count($resultSet) > 0) {
-            $this->_error(self::EXISTS, $value);
+        $sql = "
+        SELECT `username`, `mail`, COUNT(*) AS `amount`
+        FROM `member` AS `m`
+        WHERE `m`.`is_active` = 1 AND `m`.`is_deleted` = 0 AND lower(`username`) = lower(:username)
+        GROUP BY lower(`username`) -- , mail
+        HAVING COUNT(*) > 1
+        ";
+
+        $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('username' => $username))->fetch();
+
+        if (is_array($result) AND count($result) > 0) {
+            $this->_error(self::EXISTS, $username);
 
             return false;
         }

@@ -110,8 +110,15 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
             FROM `member` AS `m`
             LEFT JOIN `member_email` AS `me` ON `me`.`email_member_id` = `m`.`member_id` AND `me`.`email_primary` = 1
             LEFT JOIN `member_external_id` AS `mei` ON `mei`.`member_id` = `m`.`member_id`
-            WHERE `m`.`is_active` = 1 AND `m`.`is_deleted` = 0 AND `me`.`email_checked` IS NOT NULL AND `me`.`email_deleted` = 0 
+            WHERE `m`.`is_active` = 1 
+              AND `m`.`is_deleted` = 0 
+              AND `me`.`email_checked` IS NOT NULL 
+              AND `me`.`email_deleted` = 0
+              AND LOCATE('_deactivated', `m`.username) = 0 
+              AND LOCATE('_deactivated', `me`.`email_address`) = 0
             # AND (me.email_address like '%opayq%' OR m.username like '%rvs%')
+            # AND `me`.`email_address` = 'info@dschinnweb.de'
+            # AND `m`.`member_id` > 464086 
             " . $filter . "
             ORDER BY `m`.`member_id` ASC
             # LIMIT 200
@@ -133,7 +140,8 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
      */
     private function exportMembers($members)
     {
-        $usernameValidChars = new Zend_Validate_Regex('/^(?=.{3,40}$)(?![-])(?!.*[-]{2})[a-zA-Z0-9-]+(?<![-])$/');
+        $usernameValidChars = new Local_Validate_UsernameValid();
+        $mailAddressValid = new Zend_Validate_EmailAddress();
         $modelOcsIdent = new Default_Model_Ocs_Ident();
 
         file_put_contents($this->logfile, "Start exportMembers with " . count($members) . " members...\n", FILE_APPEND);
@@ -141,6 +149,10 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
         while ($member = $members->fetch()) {
             file_put_contents($this->logfile, "Member " . $member['username'] . "\n", FILE_APPEND);
             if (false === $usernameValidChars->isValid($member['username'])) {
+                file_put_contents($this->errorlogfile, print_r($member, true), FILE_APPEND);
+                continue;
+            }
+            if (false === $mailAddressValid->isValid($member['email_address'])) {
                 file_put_contents($this->errorlogfile, print_r($member, true), FILE_APPEND);
                 continue;
             }
@@ -167,7 +179,7 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
      */
     private function updateMembers($members)
     {
-        $usernameValidChars = new Zend_Validate_Regex('/^(?=.{4,40}$)(?![-])(?!.*[-]{2})[a-z0-9-]+(?<![-])$/');
+        $usernameValidChars = new Local_Validate_UsernameValid();
         $modelOcsIdent = new Default_Model_Ocs_Ident();
 
         while ($member = $members->fetch()) {
@@ -198,11 +210,11 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
      *
      * @return string
      * @throws Zend_Db_Statement_Exception
-     * @throws Zend_Validate_Exception
+     * @throws Zend_Exception
      */
     private function renderLdif($members, $file, $errorfile)
     {
-        $usernameValidChars = new Zend_Validate_Regex('/^(?=.{4,40}$)(?![-])(?!.*[-]{2})[a-z0-9-]+(?<![-])$/');
+        $usernameValidChars = new Local_Validate_UsernameValid();
 
         while ($member = $members->fetch()) {
             $ldif = $this->renderElement($member);
@@ -235,8 +247,10 @@ uid: {$username}
 uid: {$member['email_address']}
 userPassword: {MD5}{$password}
 cn: {$member['username']}
-email: {$member['email_address']}\n" . (empty(trim($member['firstname'])) ? "" : "gn: {$member['firstname']}\n")
-            . (empty(trim($member['lastname'])) ? "" : "sn: {$member['lastname']}\n") . "uidNumber: {$member['member_id']}
+email: {$member['email_address']}\n"
+            . (empty(trim($member['firstname'])) ? "" : "gn: {$member['firstname']}\n")
+            . (empty(trim($member['lastname'])) ? "" : "sn: {$member['lastname']}\n")
+            . "uidNumber: {$member['member_id']}
 gidNumber: {$member['roleId']}
 memberUid: {$member['external_id']}
 ";
