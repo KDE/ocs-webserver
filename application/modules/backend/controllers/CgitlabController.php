@@ -39,11 +39,11 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
         $this->initFiles($this->logfile, $this->errorlogfile);
 
         $force = (boolean)$this->getParam('force', false);
+        $method = $this->getParam('method', null);
 
         if ($this->hasParam('member_id')) {
             $memberId = $this->getParam('member_id');
-            $filter = " AND `m`.`member_id` = " . $memberId;
-            $members = $this->getMemberList($filter);
+            $members = $this->getMemberList($memberId, $method);
         } else {
             $members = $this->getMemberList();
         }
@@ -68,12 +68,24 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
     }
 
     /**
-     * @param string $filter
+     * @param null $member_id
+     * @param null $method
      *
      * @return Zend_Db_Statement_Interface
      */
-    private function getMemberList($filter = "")
+    private function getMemberList($member_id = null, $method = "=")
     {
+        $filter = "";
+        if ($method == "gt") {
+            $method = ">";
+        }
+        if ($method == "lt") {
+            $method = "<";
+        }
+        if (isset($member_id)) {
+            $filter = " AND `m`.`member_id` {$method} " . $member_id;
+        }
+
         $sql = "
             SELECT `mei`.`external_id`,`m`.`member_id`, `m`.`username`, `me`.`email_address`, `m`.`password`, `m`.`roleId`, `m`.`firstname`, `m`.`lastname`, `m`.`profile_image_url`, `m`.`created_at`, `m`.`changed_at`, `m`.`source_id`, `m`.`biography`
             FROM `member` AS `m`
@@ -85,12 +97,8 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
               AND `me`.`email_deleted` = 0
               AND LOCATE('_deactivated', `m`.username) = 0 
               AND LOCATE('_deactivated', `me`.`email_address`) = 0
-            # AND (me.email_address like '%opayq%' OR m.username like '%rvs%')
-            # AND `me`.`email_address` = 'info@dschinnweb.de'
-            # AND `m`.`member_id` > 464086 
             " . $filter . "
             ORDER BY `m`.`member_id` ASC
-            # LIMIT 200
         ";
 
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql);

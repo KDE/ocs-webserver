@@ -212,8 +212,10 @@ class Default_Model_Ocs_OpenCode
      * @param $data
      *
      * @return bool
+     * @throws Default_Model_Ocs_Exception
      * @throws Zend_Exception
      * @throws Zend_Http_Client_Exception
+     * @throws Zend_Json_Exception
      */
     private function httpUserCreate($data)
     {
@@ -547,6 +549,16 @@ class Default_Model_Ocs_OpenCode
         return true;
     }
 
+    /**
+     * @param $extern_uid
+     * @param $username
+     *
+     * @return array|null
+     * @throws Default_Model_Ocs_Exception
+     * @throws Zend_Exception
+     * @throws Zend_Http_Client_Exception
+     * @throws Zend_Json_Exception
+     */
     private function getUser($extern_uid, $username)
     {
         $user_by_uid = $this->getUserByExternUid($extern_uid);
