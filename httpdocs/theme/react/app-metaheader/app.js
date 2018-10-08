@@ -10,6 +10,7 @@ class MetaHeader extends React.Component {
       loading:false
     };
     this.getData = this.getData.bind(this);
+    this.setUser = this.setUser.bind(this);
   }
 
   componentDidMount() {
@@ -24,25 +25,42 @@ class MetaHeader extends React.Component {
       method:'get',
       dataType: 'jsonp',
       done: function(response){
-        console.log(response.responseText);
+        console.log('done');
         const user = JSON.parse(response.responseText);
-        console.log(user);
-        self.setState({user:user,loading:false});
+        self.setUser(user);
       },
       error: function(response){
         console.log('error');
-        console.log(response);
         const user = JSON.parse(response.responseText);
-        console.log(user);
-        self.setState({user:user,loading:false});
+        self.setUser(user);
       },
       success: function(response){
         console.log('success');
-        console.log(response);
         const user = JSON.parse(response.responseText);
-        console.log(user);
-        self.setState({user:user,loading:false});
+        self.setUser(user);
       }
+    });
+  }
+
+  setUser(user){
+    this.setState({user:user,loading:false},function(){
+      $.ajax({
+        url:'https://www.opendesktop.cc/user/baseurlajax',
+        method:'get',
+        dataType: 'jsonp',
+        done: function(response){
+          console.log('done');
+          console.log(response);
+        },
+        error: function(response){
+          console.log('error');
+          console.log(response);
+        },
+        success: function(response){
+          console.log('success');
+          console.log(response);
+        }
+      });
     });
   }
 
@@ -212,11 +230,11 @@ class UserMenu extends React.Component {
     return (
       <div id="user-menu-container" className="right">
         <ul className="metaheader-menu" id="user-menu">
-          <li><a href="/community">Community</a></li>
+          <li><a href="https://www.opendesktop.cc/community">Community</a></li>
           <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
-          <li><a id="plingList" className="popuppanel" href="/plings">What are Plings?</a></li>
-          <li><a id="ocsapiContent" className="popuppanel" href="/partials/ocsapicontent.phtml">API</a></li>
-          <li><a id="aboutContent" className="popuppanel" href="/partials/about.phtml" >About</a></li>
+          <li><a id="plingList" className="popuppanel" href="https://www.opendesktop.cc/plings">What are Plings?</a></li>
+          <li><a id="ocsapiContent" className="popuppanel" href="https://www.opendesktop.cc/partials/ocsapicontent.phtml">API</a></li>
+          <li><a id="aboutContent" className="popuppanel" href="https://www.opendesktop.cc/partials/about.phtml" >About</a></li>
           {userAppsContextDisplay}
           {userDropdownDisplay}
         </ul>
