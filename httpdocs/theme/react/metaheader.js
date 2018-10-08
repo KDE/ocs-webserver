@@ -337,7 +337,7 @@ class MetaHeader extends React.Component {
   setUser(user) {
     this.setState({ user: user, loading: false }, function () {
       $.ajax({
-        url: 'https://www.opendesktop.cc/user/baseurlajax',
+        url: 'https://www.opendesktop.cc/home/forumurlajax',
         method: 'get',
         dataType: 'jsonp',
         done: function (response) {
