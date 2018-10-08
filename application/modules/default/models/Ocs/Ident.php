@@ -590,6 +590,10 @@ class Default_Model_Ocs_Ident
         return $this;
     }
 
+    /**
+     * @return string
+     * @throws Zend_Exception
+     */
     public static function getBaseDn()
     {
         try {
@@ -599,4 +603,5 @@ class Default_Model_Ocs_Ident
             return '';
         }
     }
+
 }
