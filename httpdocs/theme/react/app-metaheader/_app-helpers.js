@@ -161,16 +161,15 @@ window.appHelpers = (function(){
     return userQueryUrl;
   }
 
-
-    function getBaseQueryUrl(hostname){
-      let baseQueryUrl;
-      if (hostname === "www.opendesktop.cc"){
-        baseQueryUrl = "https://www.opendesktop.cc/home/baseurlajax";
-      } else if (hostname === "gitlab.pling.cc"){
-        baseQueryUrl = "https://gitlab.pling.cc/external/get_ocs_data.php?url=home/baseurlajax";
-      }
-      return baseQueryUrl;
+  function getBaseQueryUrl(hostname){
+    let baseQueryUrl;
+    if (hostname === "www.opendesktop.cc"){
+      baseQueryUrl = "https://www.opendesktop.cc/home/baseurlajax";
+    } else if (hostname === "gitlab.pling.cc"){
+      baseQueryUrl = "https://gitlab.pling.cc/external/get_ocs_data.php?url=home/baseurlajax";
     }
+    return baseQueryUrl;
+  }
 
   function getForumQueryUrl(hostname){
     let forumQueryUrl;
