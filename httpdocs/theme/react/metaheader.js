@@ -311,7 +311,6 @@ class MetaHeader extends React.Component {
   }
 
   getUser() {
-    console.log('get user');
     const self = this;
     $.ajax({
       url: 'https://www.opendesktop.cc/user/userdataajax',
@@ -322,7 +321,7 @@ class MetaHeader extends React.Component {
         console.log(response);
       },
       error: function (response) {
-        console.log('error');
+        console.log('get user');
         console.log(response);
         const res = JSON.parse(response.responseText);
         if (res.status === "success") {
@@ -346,7 +345,6 @@ class MetaHeader extends React.Component {
       dataType: 'jsonp',
       error: function (response) {
         console.log('get forum');
-        console.log('error');
         console.log(response);
         const res = JSON.parse(response.responseText);
         if (res.status === "success") {
@@ -361,7 +359,6 @@ class MetaHeader extends React.Component {
       dataType: 'jsonp',
       error: function (response) {
         console.log('get blog');
-        console.log('error');
         console.log(response);
         const res = JSON.parse(response.responseText);
         if (res.status === "success") {
@@ -408,7 +405,7 @@ class MetaHeader extends React.Component {
         })
       );
     }
-    console.log(this.state);
+
     return React.createElement(
       "nav",
       { id: "metaheader-nav", className: "metaheader" },
@@ -617,7 +614,6 @@ class UserMenu extends React.Component {
       );
     }
 
-    console.log(window.location);
     let plingListUrl = "https://www.opendesktop.cc/#plingList",
         ocsapiContentUrl = "https://www.opendesktop.cc/#ocsapiContent",
         aboutContentUrl = "https://www.opendesktop.cc/#aboutContent",
