@@ -9,12 +9,13 @@ class MetaHeader extends React.Component {
       sName:sName
     };
     this.getUser = this.getUser.bind(this);
+    this.getLogin = this.getLogin(this);
     this.getDomains = this.getDomains.bind(this);
     this.getUrls = this.getUrls.bind(this);
   }
 
   componentDidMount() {
-    console.log('component did mount');
+    this.getLogin();
     this.getUser();
     this.getDomains();
     this.getUrls();
@@ -34,6 +35,28 @@ class MetaHeader extends React.Component {
         const res = JSON.parse(response.responseText);
         if (res.status === "success"){
           self.setState({user:res.data});
+        } else {
+          this.getLogin();
+        }
+      }
+    });
+  }
+
+  getLogin(){
+    const loginQuery = appHelpers.getUserQueryUrl(window.location.hostname);
+    console.log(loginQuery);
+    const self = this;
+    $.ajax({
+      url:loginQuery.url,
+      method:'get',
+      dataType: loginQuery.dataType,
+      error: function(response){
+        console.log('get login');
+        console.log(response)
+        const res = JSON.parse(response.responseText);
+        if (res.status === "success"){
+          console.log(res);
+          self.setState({loginUrl:res.data.login_url});
         }
       }
     });
@@ -129,7 +152,9 @@ class MetaHeader extends React.Component {
   }
 
   render(){
+
     let domains = this.state.domains;
+    console.log(this.state.domains);
     if (!this.state.domains) {
       domains = appHelpers.getDomainsArray();
     }
@@ -137,7 +162,7 @@ class MetaHeader extends React.Component {
       <nav id="metaheader-nav" className="metaheader">
         <div className="metamenu">
           <DomainsMenu
-            domains={domains}
+            domains={this.state.domains}
             baseUrl={this.state.baseUrl}
             sName={this.state.sName}
           />
@@ -325,9 +350,7 @@ class UserContextMenuContainer extends React.Component {
   	super(props);
   	this.state = {
       loading:true,
-      ariaExpanded:false
     };
-    this.toggleDropdown = this.toggleDropdown.bind(this);
   }
 
   componentDidMount() {
@@ -336,11 +359,6 @@ class UserContextMenuContainer extends React.Component {
       const gitlabLink = "https://gitlab.opencode.net/dashboard/issues?assignee_id="+response[0].id;
       self.setState({gitlabLink:gitlabLink,loading:false});
     });
-  }
-
-  toggleDropdown(e){
-    const ariaExpanded = this.state.ariaExpanded === true ? false : true;
-    this.setState({ariaExpanded:ariaExpanded});
   }
 
   render(){
@@ -356,8 +374,7 @@ class UserContextMenuContainer extends React.Component {
             id="dropdownMenu2"
             data-toggle="dropdown"
             aria-haspopup="true"
-            aria-expanded={this.state.ariaExpanded}
-            onClick={this.toggleDropdown}>
+            aria-expanded="true">
             <span className="th-icon"></span>
           </button>
           <ul id="user-context-dropdown" className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu2">

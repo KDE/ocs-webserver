@@ -285,6 +285,21 @@ window.appHelpers = function () {
     return domains;
   }
 
+  function getLoginQueryUrl(hostname) {
+    let loginQuery = {};
+    if (hostname === "www.opendesktop.cc") {
+      loginQuery.url = "https://www.opendesktop.cc/user/loginurlajax&returnurl=https://www.opendesktop.cc";
+      loginQuery.dataType = "jsonp";
+    } else if (hostname === "gitlab.pling.cc") {
+      loginQuery.url = "https://gitlab.pling.cc/external/get_ocs_data.php?url=home/loginurlajax&returnurl=https://gitlab.pling.cc";
+      loginQuery.dataType = "jsonp";
+    } else if (hostname === "forum.opendesktop.cc") {
+      loginQuery.url = "https://forum.opendesktop.cc:8443/get_ocs_data.php?url=home/loginurlajax&returnurl=https://forum.opendesktop.cc";
+      loginQuery.dataType = "json";
+    }
+    return loginQuery;
+  }
+
   function getUserQueryUrl(hostname) {
     let userQuery = {};
     if (hostname === "www.opendesktop.cc") {
@@ -378,6 +393,7 @@ window.appHelpers = function () {
   return {
     generateMenuGroupsArray,
     getDomainsArray,
+    getLoginQueryUrl,
     getUserQueryUrl,
     getDomainsQueryUrl,
     getForumQueryUrl,
@@ -397,12 +413,13 @@ class MetaHeader extends React.Component {
       sName: sName
     };
     this.getUser = this.getUser.bind(this);
+    this.getLogin = this.getLogin(this);
     this.getDomains = this.getDomains.bind(this);
     this.getUrls = this.getUrls.bind(this);
   }
 
   componentDidMount() {
-    console.log('component did mount');
+    this.getLogin();
     this.getUser();
     this.getDomains();
     this.getUrls();
@@ -422,6 +439,28 @@ class MetaHeader extends React.Component {
         const res = JSON.parse(response.responseText);
         if (res.status === "success") {
           self.setState({ user: res.data });
+        } else {
+          this.getLogin();
+        }
+      }
+    });
+  }
+
+  getLogin() {
+    const loginQuery = appHelpers.getUserQueryUrl(window.location.hostname);
+    console.log(loginQuery);
+    const self = this;
+    $.ajax({
+      url: loginQuery.url,
+      method: 'get',
+      dataType: loginQuery.dataType,
+      error: function (response) {
+        console.log('get login');
+        console.log(response);
+        const res = JSON.parse(response.responseText);
+        if (res.status === "success") {
+          console.log(res);
+          self.setState({ loginUrl: res.data.login_url });
         }
       }
     });
@@ -515,7 +554,9 @@ class MetaHeader extends React.Component {
   }
 
   render() {
+
     let domains = this.state.domains;
+    console.log(this.state.domains);
     if (!this.state.domains) {
       domains = appHelpers.getDomainsArray();
     }
@@ -526,7 +567,7 @@ class MetaHeader extends React.Component {
         "div",
         { className: "metamenu" },
         React.createElement(DomainsMenu, {
-          domains: domains,
+          domains: this.state.domains,
           baseUrl: this.state.baseUrl,
           sName: this.state.sName
         }),
@@ -817,10 +858,8 @@ class UserContextMenuContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: true,
-      ariaExpanded: false
+      loading: true
     };
-    this.toggleDropdown = this.toggleDropdown.bind(this);
   }
 
   componentDidMount() {
@@ -829,11 +868,6 @@ class UserContextMenuContainer extends React.Component {
       const gitlabLink = "https://gitlab.opencode.net/dashboard/issues?assignee_id=" + response[0].id;
       self.setState({ gitlabLink: gitlabLink, loading: false });
     });
-  }
-
-  toggleDropdown(e) {
-    const ariaExpanded = this.state.ariaExpanded === true ? false : true;
-    this.setState({ ariaExpanded: ariaExpanded });
   }
 
   render() {
@@ -854,8 +888,7 @@ class UserContextMenuContainer extends React.Component {
             id: "dropdownMenu2",
             "data-toggle": "dropdown",
             "aria-haspopup": "true",
-            "aria-expanded": this.state.ariaExpanded,
-            onClick: this.toggleDropdown },
+            "aria-expanded": "true" },
           React.createElement("span", { className: "th-icon" })
         ),
         React.createElement(
