@@ -272,18 +272,18 @@ class UserController extends Local_Controller_Action_DomainSwitch
         
         $userid = (int)$this->getParam('id');
         
-        $tableMember = new Default_Model_Member();
-        $user = $tableMember->find($userid)->current();
+        $modelMember = new Default_Model_Member();
+        $user = $modelMember->fetchMember($userid)->toArray();
         
         if ($user) {
         
             $auth = Zend_Auth::getInstance();
             $user = $auth->getStorage()->read();
 
-            $resultArray['member_id'] = $user->member_id;
-            $resultArray['username'] = $user->username;
-            $resultArray['mail'] = $user->mail;
-            $resultArray['avatar'] = $user->profile_image_url;
+            $resultArray['member_id'] = $user['member_id'];
+            $resultArray['username'] = $user['username'];
+            $resultArray['mail'] = $user['mail'];
+            $resultArray['avatar'] = $user['profile_image_url'];
             
             
         } else {
