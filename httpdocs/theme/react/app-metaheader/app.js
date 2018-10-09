@@ -236,7 +236,7 @@ class UserMenu extends React.Component {
 
   render(){
     let userDropdownDisplay, userAppsContextDisplay;
-    if (this.props.user){
+    if (this.props.user.member_id){
       userDropdownDisplay = (
         <UserLoginMenuContainer
           user={this.props.user}
