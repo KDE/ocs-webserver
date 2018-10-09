@@ -50,8 +50,9 @@ class MetaHeader extends React.Component {
   }
 
   getUrls(){
-    const forumQueryUrl = appHelpers.getForumQueryUrl(window.location.hostname);
     const self = this;
+
+    const forumQueryUrl = appHelpers.getForumQueryUrl(window.location.hostname);
     $.ajax({
       url:forumQueryUrl,
       method:'get',
@@ -66,9 +67,9 @@ class MetaHeader extends React.Component {
       }
     });
 
-    const baseQueryUrl = appHelpers.getBaseQueryUrl(window.location.hostname);
+    const blogQueryUrl = appHelpers.getBlogQueryUrl(window.location.hostname);
     $.ajax({
-      url:baseQueryUrl,
+      url:blogQueryUrl,
       method:'get',
       dataType: 'jsonp',
       error: function(response){
@@ -81,9 +82,9 @@ class MetaHeader extends React.Component {
       }
     });
 
-    const blogQueryUrl = appHelpers.getBlogQueryUrl(window.location.hostname);
+    const baseQueryUrl = appHelpers.getBaseQueryUrl(window.location.hostname);
     $.ajax({
-      url:blogQueryUrl,
+      url:baseQueryUrl,
       method:'get',
       dataType: 'jsonp',
       error: function(response){
@@ -97,6 +98,22 @@ class MetaHeader extends React.Component {
             baseUrl = "http://" + res.data.base_url;
           }
           self.setState({baseUrl:baseUrl});
+        }
+      }
+    });
+
+    const storeQueryUrl = appHelpers.getStoreQueryUrl(window.location.hostname);
+    $.ajax({
+      url:storeQueryUrl,
+      method:'get',
+      dataType: 'jsonp',
+      error: function(response){
+        console.log('get store')
+        console.log('error');
+        console.log(response);
+        const res = JSON.parse(response.responseText);
+        if (res.status === "success"){
+          self.setState({sName:res.data.store_name});
         }
       }
     });
