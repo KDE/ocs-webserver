@@ -2,12 +2,58 @@
 
 @import "elements.less";
 
+body {
+  padding-top: 34px;
+
+  .navbar-gitlab {
+    top: 34px;
+  }
+}
+
 #metaheader {
   float: left;
   width: 100%;
   height: 34px;
   font-family: "Helvetica","Arial",sans-serif !important;
   font-size: 14px !important;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1001;
+  background-color: white;
+
+
+  .dropdown-menu {
+    position: absolute;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 160px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    font-size: 14px;
+    text-align: left;
+    list-style: none;
+    background-color: #fff;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: 4px;
+    -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    background-color: white;
+
+
+    li>a:hover,
+    .active>a,
+    .active>a:hover {
+        color: #222;
+        text-decoration: none;
+        background-color: #eee !important;
+    }
+  }
+
 
   #metaheader-nav {
     width: 100%;
@@ -24,6 +70,10 @@
       border: 1px solid #3079ed;
       background: -webkit-linear-gradient(top, #4387fd, #4683ea);
       margin-top: -2px;
+    }
+
+    #user-menu-container {
+      float: right;
     }
 
     ul.metaheader-menu {
@@ -125,6 +175,7 @@
               width: 400px;
               top: 60px;
               right: -250px;
+              min-height: 296px;
 
               &::before {
                 right: 356px;
@@ -139,6 +190,10 @@
                   cursor: default;
                   height: 24px;
                   line-height: 24px;
+
+                  &:hover {
+                    background-color: white !important;
+                  }
                 }
 
                 ul {
@@ -178,6 +233,12 @@
             height: 60px;
             z-index: 1000;
 
+            &:hover {
+              .dropdown-menu {
+                display: block;
+              }
+            }
+
             .dropdown-menu {
               width: 200px;
               top: 60px;
@@ -185,6 +246,19 @@
 
               &::before {
                 right: 156px;
+              }
+
+              li {
+                padding: 0;
+
+                a {
+                  margin: 0;
+                  font-size: 13px;
+                  height: 24px;
+                  line-height: 24px;
+                  padding: 0 20px;
+                  border-radius: 0;                 
+                }
               }
             }
           }
@@ -209,6 +283,12 @@
       height: 40px;
       z-index: 1000;
 
+      &.open {
+
+        .dropdown-menu {
+          display: block;
+        }
+      }
 
       .dropdown-toggle {
         padding: 0;

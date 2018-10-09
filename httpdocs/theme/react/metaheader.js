@@ -301,76 +301,83 @@ class MetaHeader extends React.Component {
       sName: sName,
       loading: false
     };
-    this.getData = this.getData.bind(this);
+    this.getUser = this.getUser.bind(this);
     this.getUrls = this.getUrls.bind(this);
   }
 
   componentDidMount() {
-    this.getData();
+    this.getUser();
     this.getUrls();
   }
 
-  getData() {
-    console.log('get data');
+  getUser() {
+    console.log('get user');
     const self = this;
     $.ajax({
-      url: 'https://www.opendesktop.cc/user/userdataajax',
+      url: 'https://www.opendesktop.cc/home/userdataajax',
       method: 'get',
       dataType: 'jsonp',
       done: function (response) {
         console.log('done');
+        console.log(response);
       },
       error: function (response) {
-        console.log('error');
-        const user = JSON.parse(response.responseText);
-        if (user.member_id) {
-          self.setState({ user: user, loading: false });
+        console.log(response);
+        const res = JSON.parse(response.responseText);
+        if (res.status === "success") {
+          self.setState({ user: res.data, loading: false });
         } else {
           self.setState({ loading: false });
         }
       },
       success: function (response) {
         console.log('success');
+        console.log(response);
       }
     });
   }
 
-  setUser(user) {}
-
   getUrls() {
     const self = this;
+    console.log('get forum');
     $.ajax({
-      url: 'https://www.opendesktop.cc/home/forumurlajax',
+      url: 'https://pling:cappu123.@www.opendesktop.cc/home/forumurlajax',
       method: 'get',
       dataType: 'jsonp',
       error: function (response) {
         console.log('error');
         console.log(response);
-        const forumUrl = JSON.parse(response.responseText);
-        if (forumUrl.url_forum) {
-          self.setState({ forumUrl: forumUrl.url_forum });
+        const res = JSON.parse(response.responseText);
+        if (res.status === "success") {
+          self.setState({ forumUrl: res.data.url_forum });
         }
+        console.log('get blog');
         $.ajax({
-          url: 'https://www.opendesktop.cc/home/blogurlajax',
+          url: 'https://pling:cappu123.@www.opendesktop.cc/home/blogurlajax',
           method: 'get',
           dataType: 'jsonp',
           error: function (response) {
             console.log('error');
             console.log(response);
-            const blogUrl = JSON.parse(response.responseText);
-            if (blogUrl.url_blog) {
-              self.setState({ blogUrl: blogUrl.url_blog });
+            const res = JSON.parse(response.responseText);
+            if (res.status === "success") {
+              self.setState({ blogUrl: res.data.url_blog });
             }
+            console.log('get base');
             $.ajax({
-              url: 'https://www.opendesktop.cc/home/baseurllajax',
+              url: 'https://pling:cappu123.@www.opendesktop.cc/home/baseurlajax',
               method: 'get',
               dataType: 'jsonp',
               error: function (response) {
                 console.log('error');
                 console.log(response);
-                const baseUrl = JSON.parse(response.responseText);
-                if (baseUrl.url_base) {
-                  self.setState({ baseUrl: baseUrl.url_base });
+                const res = JSON.parse(response.responseText);
+                if (res.status === "success") {
+                  let baseUrl = res.data.base_url;
+                  if (res.data.base_url.indexOf('http') === -1) {
+                    baseUrl = "http://" + res.data.base_url;
+                  }
+                  self.setState({ baseUrl: baseUrl });
                 }
               }
             });
@@ -398,6 +405,7 @@ class MetaHeader extends React.Component {
         })
       );
     }
+    console.log(this.state);
     return React.createElement(
       "nav",
       { id: "metaheader-nav", className: "metaheader" },
@@ -442,7 +450,7 @@ class DomainsMenu extends React.Component {
         React.createElement(
           "a",
           { href: "http://" + this.props.baseUrl },
-          React.createElement("img", { src: "/images/system/ocs-logo-rounded-16x16.png", className: "logo" }),
+          React.createElement("img", { src: this.props.baseUrl + "/images/system/ocs-logo-rounded-16x16.png", className: "logo" }),
           "openDesktop.org :"
         )
       ),
@@ -586,7 +594,7 @@ class UserMenu extends React.Component {
 
   render() {
     let userDropdownDisplay, userAppsContextDisplay;
-    if (this.props.user) {
+    if (this.props.user.member_id) {
       userDropdownDisplay = React.createElement(UserLoginMenuContainer, {
         user: this.props.user
       });
