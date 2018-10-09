@@ -314,9 +314,9 @@ class MetaHeader extends React.Component {
     console.log('get user');
     const self = this;
     $.ajax({
-      url: 'https://www.opendesktop.cc/user/userdataajax',
+      url: 'https://cors-anywhere.herokuapp.com/https://www.opendesktop.cc/user/userdataajax',
       method: 'get',
-      dataType: 'jsonp',
+      dataType: 'json',
       done: function (response) {
         console.log('done');
         console.log(response);
@@ -341,7 +341,7 @@ class MetaHeader extends React.Component {
   getUrls() {
     const self = this;
     $.ajax({
-      url: 'https://www.opendesktop.cc/home/forumurlajax',
+      url: 'https://cors-anywhere.herokuapp.com/https://www.opendesktop.cc/home/forumurlajax',
       method: 'get',
       dataType: 'jsonp',
       error: function (response) {
@@ -356,7 +356,7 @@ class MetaHeader extends React.Component {
     });
 
     $.ajax({
-      url: 'https://www.opendesktop.cc/home/blogurlajax',
+      url: 'https://cors-anywhere.herokuapp.com/https://www.opendesktop.cc/home/blogurlajax',
       method: 'get',
       dataType: 'jsonp',
       error: function (response) {
@@ -371,7 +371,7 @@ class MetaHeader extends React.Component {
     });
 
     $.ajax({
-      url: 'https://www.opendesktop.cc/home/baseurlajax',
+      url: 'https://cors-anywhere.herokuapp.com/https://www.opendesktop.cc/home/baseurlajax',
       method: 'get',
       dataType: 'jsonp',
       error: function (response) {
