@@ -447,7 +447,7 @@ class MetaHeader extends React.Component {
   }
 
   getLogin() {
-    const loginQuery = appHelpers.getUserQueryUrl(window.location.hostname);
+    const loginQuery = appHelpers.getLoginQueryUrl(window.location.hostname);
     console.log(loginQuery);
     const self = this;
     $.ajax({
