@@ -6,8 +6,7 @@ class MetaHeader extends React.Component {
       blogUrl:"https://blog.opendesktop.org",
       loginUrl:"https://www.opendesktop.cc/login/redirect/TFVIFZfgicowyCW5clpDz3sfM1rVUJsb_GwOHCL1oRyPOkMMVswIRPd2kvVz5oQW",
       user:user,
-      sName:sName,
-      loading:false
+      sName:sName
     };
     this.getUser = this.getUser.bind(this);
     this.getDomains = this.getDomains.bind(this);
@@ -142,13 +141,12 @@ class MetaHeader extends React.Component {
   }
 
   render(){
-    let metaMenuDisplay;
-    if (!this.state.loading){
-      let domains = this.state.domains;
-      if (!this.state.doamins) {
-        domains = appHelpers.getDomainsArray();
-      }
-      metaMenuDisplay = (
+    let domains = this.state.domains;
+    if (!this.state.domains) {
+      domains = appHelpers.getDomainsArray();
+    }
+    return (
+      <nav id="metaheader-nav" className="metaheader">
         <div className="metamenu">
           <DomainsMenu
             domains={domains}
@@ -161,12 +159,6 @@ class MetaHeader extends React.Component {
             loginUrl={this.state.loginUrl}
           />
         </div>
-      );
-    }
-
-    return (
-      <nav id="metaheader-nav" className="metaheader">
-        {metaMenuDisplay}
       </nav>
     )
   }

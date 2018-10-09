@@ -376,8 +376,7 @@ class MetaHeader extends React.Component {
       blogUrl: "https://blog.opendesktop.org",
       loginUrl: "https://www.opendesktop.cc/login/redirect/TFVIFZfgicowyCW5clpDz3sfM1rVUJsb_GwOHCL1oRyPOkMMVswIRPd2kvVz5oQW",
       user: user,
-      sName: sName,
-      loading: false
+      sName: sName
     };
     this.getUser = this.getUser.bind(this);
     this.getDomains = this.getDomains.bind(this);
@@ -510,13 +509,14 @@ class MetaHeader extends React.Component {
   }
 
   render() {
-    let metaMenuDisplay;
-    if (!this.state.loading) {
-      let domains = this.state.domains;
-      if (!this.state.doamins) {
-        domains = appHelpers.getDomainsArray();
-      }
-      metaMenuDisplay = React.createElement(
+    let domains = this.state.domains;
+    if (!this.state.domains) {
+      domains = appHelpers.getDomainsArray();
+    }
+    return React.createElement(
+      "nav",
+      { id: "metaheader-nav", className: "metaheader" },
+      React.createElement(
         "div",
         { className: "metamenu" },
         React.createElement(DomainsMenu, {
@@ -529,13 +529,7 @@ class MetaHeader extends React.Component {
           blogUrl: this.state.blogUrl,
           loginUrl: this.state.loginUrl
         })
-      );
-    }
-
-    return React.createElement(
-      "nav",
-      { id: "metaheader-nav", className: "metaheader" },
-      metaMenuDisplay
+      )
     );
   }
 }
