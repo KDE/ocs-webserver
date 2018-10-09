@@ -285,9 +285,20 @@ window.appHelpers = function () {
     return domains;
   }
 
+  function getUserQueryUrl(hostname) {
+    let userQueryUrl;
+    if (hostname === "www.opendesktop.cc") {
+      userQueryUrl = "https://www.opendesktop.cc/user/userdataajax";
+    } else if (hostname === "gitlab.pling.cc") {
+      userQueryUrl = "https://gitlab.pling.cc/external/get_ocs_data.php?url=home/storenameajax";
+    }
+    return userQueryUrl;
+  }
+
   return {
     generateMenuGroupsArray,
-    getDomainsArray
+    getDomainsArray,
+    getUserQueryUrl
   };
 }();
 class MetaHeader extends React.Component {
@@ -311,9 +322,11 @@ class MetaHeader extends React.Component {
   }
 
   getUser() {
+    const userQueryUrl = appHelpers.getUserQueryUrl(window.location.hostname);
+    console.log(userQueryUrl);
     const self = this;
     $.ajax({
-      url: 'https://www.opendesktop.cc/user/userdataajax',
+      url: userQueryUrl,
       method: 'get',
       dataType: 'jsonp',
       done: function (response) {

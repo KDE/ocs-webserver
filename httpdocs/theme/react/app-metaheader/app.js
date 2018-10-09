@@ -19,9 +19,11 @@ class MetaHeader extends React.Component {
   }
 
   getUser(){
+    const userQueryUrl = appHelpers.getUserQueryUrl(window.location.hostname);
+    console.log(userQueryUrl);
     const self = this;
     $.ajax({
-      url:'https://www.opendesktop.cc/user/userdataajax',
+      url:userQueryUrl,
       method:'get',
       dataType: 'jsonp',
       done: function(response){
