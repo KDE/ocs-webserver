@@ -309,7 +309,7 @@ window.appHelpers = function () {
       userQuery.url = "https://gitlab.pling.cc/external/get_ocs_data.php?url=user/userdataajax";
       userQuery.dataType = "jsonp";
     } else if (hostname === "forum.opendesktop.cc") {
-      userQuery.url = "https://forum.opendesktop.cc:8443/get_ocs_data.php";
+      userQuery.url = "https://forum.opendesktop.cc:8443/get_ocs_userdata.php";
       userQuery.dataType = "json";
     }
     return userQuery;
@@ -555,7 +555,6 @@ class MetaHeader extends React.Component {
 
   render() {
     const domains = appHelpers.getDomainsArray();
-    console.log(domains);
     return React.createElement(
       "nav",
       { id: "metaheader-nav", className: "metaheader" },
