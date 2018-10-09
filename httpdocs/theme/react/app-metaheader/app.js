@@ -4,21 +4,96 @@ class MetaHeader extends React.Component {
   	this.state = {
       baseUrl:"opendesktop.cc",
       blogUrl:"https://blog.opendesktop.org",
-      loginUrl:loginUrl,
+      loginUrl:"https://www.opendesktop.cc/login/redirect/TFVIFZfgicowyCW5clpDz3sfM1rVUJsb_GwOHCL1oRyPOkMMVswIRPd2kvVz5oQW",
       user:user,
       sName:sName,
       loading:false
     };
+    this.getData = this.getData.bind(this);
+    this.getUrls = this.getUrls.bind(this);
   }
 
   componentDidMount() {
-    console.log(this.state);
+    this.getData();
+    this.getUrls();
+  }
+
+  getData(){
+    console.log('get data');
+    const self = this;
+    $.ajax({
+      url:'https://www.opendesktop.cc/user/userdataajax',
+      method:'get',
+      dataType: 'jsonp',
+      done: function(response){
+        console.log('done');
+      },
+      error: function(response){
+        console.log('error');
+        const user = JSON.parse(response.responseText);
+        if (user.member_id){
+          self.setState({user:user,loading:false});
+        } else {
+          self.setState({loading:false});
+        }
+      },
+      success: function(response){
+        console.log('success');
+      }
+    });
+  }
+
+  setUser(user){
+
+  }
+
+  getUrls(){
+    const self = this;
+    $.ajax({
+      url:'https://www.opendesktop.cc/home/forumurlajax',
+      method:'get',
+      dataType: 'jsonp',
+      error: function(response){
+        console.log('error');
+        console.log(response);
+        const forumUrl = JSON.parse(response.responseText);
+        if (forumUrl.url_forum){
+          self.setState({forumUrl:forumUrl.url_forum})
+        }
+        $.ajax({
+          url:'https://www.opendesktop.cc/home/blogurllajax',
+          method:'get',
+          dataType: 'jsonp',
+          error: function(response){
+            console.log('error');
+            console.log(response);
+            const blogUrl = JSON.parse(response.responseText);
+            if (blogUrl.url_blog){
+              self.setState({blogUrl:blogUrl.url_blog})
+            }
+            $.ajax({
+              url:'https://www.opendesktop.cc/home/baseurllajax',
+              method:'get',
+              dataType: 'jsonp',
+              error: function(response){
+                console.log('error');
+                console.log(response);
+                const baseUrl = JSON.parse(response.responseText);
+                if (baseUrl.url_base){
+                  self.setState({baseUrl:baseUrl.url_base})
+                }
+              }
+            });
+          }
+        });
+      }
+    });
   }
 
   render(){
-
-    return (
-      <nav id="metaheader-nav" className="metaheader">
+    let metaMenuDisplay;
+    if (!this.state.loading){
+      metaMenuDisplay = (
         <div className="metamenu">
           <DomainsMenu
             domains={appHelpers.getDomainsArray()}
@@ -31,6 +106,11 @@ class MetaHeader extends React.Component {
             loginUrl={this.state.loginUrl}
           />
         </div>
+      );
+    }
+    return (
+      <nav id="metaheader-nav" className="metaheader">
+        {metaMenuDisplay}
       </nav>
     )
   }
@@ -126,7 +206,6 @@ class DomainsMenuGroup extends React.Component {
     const domainsDisplay = this.props.domains.filter(this.filterDomainsByMenuGroup).map((domain,index) => {
       let domainPrefix = "http://";
       if (domain.menuhref.indexOf('pling.cc') === -1 && domain.menuhref.indexOf('www') === -1){
-        console.log(domain.menuhref.indexOf('www'));
         domainPrefix += "www.";
       }
       return (
@@ -175,11 +254,11 @@ class UserMenu extends React.Component {
     return (
       <div id="user-menu-container" className="right">
         <ul className="metaheader-menu" id="user-menu">
-          <li><a href="/community">Community</a></li>
+          <li><a href="https://www.opendesktop.cc/community">Community</a></li>
           <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
-          <li><a id="plingList" className="popuppanel" href="/plings">What are Plings?</a></li>
-          <li><a id="ocsapiContent" className="popuppanel" href="/partials/ocsapicontent.phtml">API</a></li>
-          <li><a id="aboutContent" className="popuppanel" href="/partials/about.phtml" >About</a></li>
+          <li><a id="plingList" className="popuppanel" href="https://www.opendesktop.cc/plings">What are Plings?</a></li>
+          <li><a id="ocsapiContent" className="popuppanel" href="https://www.opendesktop.cc/partials/ocsapicontent.phtml">API</a></li>
+          <li><a id="aboutContent" className="popuppanel" href="https://www.opendesktop.cc/partials/about.phtml" >About</a></li>
           {userAppsContextDisplay}
           {userDropdownDisplay}
         </ul>
@@ -192,8 +271,10 @@ class UserContextMenuContainer extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {
-      loading:true
+      loading:true,
+      ariaExpanded:false
     };
+    this.toggleDropdown = this.toggleDropdown.bind(this);
   }
 
   componentDidMount() {
@@ -202,6 +283,11 @@ class UserContextMenuContainer extends React.Component {
       const gitlabLink = "https://gitlab.opencode.net/dashboard/issues?assignee_id="+response[0].id;
       self.setState({gitlabLink:gitlabLink,loading:false});
     });
+  }
+
+  toggleDropdown(e){
+    const ariaExpanded = this.state.ariaExpanded === true ? false : true;
+    this.setState({ariaExpanded:ariaExpanded});
   }
 
   render(){
@@ -217,7 +303,8 @@ class UserContextMenuContainer extends React.Component {
             id="dropdownMenu2"
             data-toggle="dropdown"
             aria-haspopup="true"
-            aria-expanded="true">
+            aria-expanded={this.state.ariaExpanded}
+            onClick={this.toggleDropdown}>
             <span className="glyphicon glyphicon-th"></span>
           </button>
           <ul className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu2">
@@ -263,14 +350,14 @@ class UserLoginMenuContainer extends React.Component {
             data-toggle="dropdown"
             aria-haspopup="true"
             aria-expanded="true">
-            <img src={this.props.user.profile_image_url}/>
+            <img src={this.props.user.avatar}/>
           </button>
           <ul className="dropdown-menu dropdown-menu-right" aria-labelledby="userLoginDropdown">
             <li id="user-info-menu-item">
               <div id="user-info-section">
                 <div className="user-avatar">
                   <div className="no-avatar-user-letter">
-                    <img src={this.props.user.profile_image_url}/>
+                    <img src={this.props.user.avatar}/>
                   </div>
                 </div>
                 <div className="user-details">
@@ -283,8 +370,8 @@ class UserLoginMenuContainer extends React.Component {
             </li>
             <li id="main-seperator" role="separator" className="divider"></li>
             <li className="buttons">
-              <a href="/settings/" className="btn btn-default btn-metaheader">Settings</a>
-              <a href="/logout/" className="btn btn-default pull-right btn-metaheader">Logout</a>
+              <a href="https://www.opendesktop.cc/settings/" className="btn btn-default btn-metaheader">Settings</a>
+              <a href="https://www.opendesktop.cc/logout/" className="btn btn-default pull-right btn-metaheader">Logout</a>
             </li>
           </ul>
         </div>

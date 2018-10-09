@@ -590,4 +590,18 @@ class Default_Model_Ocs_Ident
         return $this;
     }
 
+    /**
+     * @return string
+     * @throws Zend_Exception
+     */
+    public static function getBaseDn()
+    {
+        try {
+            return Zend_Registry::get('config')->settings->server->ldap->baseDn;
+        } catch (Zend_Exception $e) {
+            Zend_Registry::get('logger')->err($e->getMessage());
+            return '';
+        }
+    }
+
 }

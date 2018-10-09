@@ -1,3 +1,153 @@
+/* ========================================================================
+ * Bootstrap: dropdown.js v3.4.0
+ * http://getbootstrap.com/javascript/#dropdowns
+ * ========================================================================
+ * Copyright 2011-2018 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
++function ($) {
+  'use strict';
+
+  // DROPDOWN CLASS DEFINITION
+  // =========================
+
+  var backdrop = '.dropdown-backdrop';
+  var toggle = '[data-toggle="dropdown"]';
+  var Dropdown = function (element) {
+    $(element).on('click.bs.dropdown', this.toggle);
+  };
+
+  Dropdown.VERSION = '3.4.0';
+
+  function getParent($this) {
+    var selector = $this.attr('data-target');
+
+    if (!selector) {
+      selector = $this.attr('href');
+      selector = selector && /#[A-Za-z]/.test(selector) && selector.replace(/.*(?=#[^\s]*$)/, ''); // strip for ie7
+    }
+
+    var $parent = selector && $(document).find(selector);
+
+    return $parent && $parent.length ? $parent : $this.parent();
+  }
+
+  function clearMenus(e) {
+    if (e && e.which === 3) return;
+    $(backdrop).remove();
+    $(toggle).each(function () {
+      var $this = $(this);
+      var $parent = getParent($this);
+      var relatedTarget = { relatedTarget: this };
+
+      if (!$parent.hasClass('open')) return;
+
+      if (e && e.type == 'click' && /input|textarea/i.test(e.target.tagName) && $.contains($parent[0], e.target)) return;
+
+      $parent.trigger(e = $.Event('hide.bs.dropdown', relatedTarget));
+
+      if (e.isDefaultPrevented()) return;
+
+      $this.attr('aria-expanded', 'false');
+      $parent.removeClass('open').trigger($.Event('hidden.bs.dropdown', relatedTarget));
+    });
+  }
+
+  Dropdown.prototype.toggle = function (e) {
+    var $this = $(this);
+
+    if ($this.is('.disabled, :disabled')) return;
+
+    var $parent = getParent($this);
+    var isActive = $parent.hasClass('open');
+
+    clearMenus();
+
+    if (!isActive) {
+      if ('ontouchstart' in document.documentElement && !$parent.closest('.navbar-nav').length) {
+        // if mobile we use a backdrop because click events don't delegate
+        $(document.createElement('div')).addClass('dropdown-backdrop').insertAfter($(this)).on('click', clearMenus);
+      }
+
+      var relatedTarget = { relatedTarget: this };
+      $parent.trigger(e = $.Event('show.bs.dropdown', relatedTarget));
+
+      if (e.isDefaultPrevented()) return;
+
+      $this.trigger('focus').attr('aria-expanded', 'true');
+
+      $parent.toggleClass('open').trigger($.Event('shown.bs.dropdown', relatedTarget));
+    }
+
+    return false;
+  };
+
+  Dropdown.prototype.keydown = function (e) {
+    if (!/(38|40|27|32)/.test(e.which) || /input|textarea/i.test(e.target.tagName)) return;
+
+    var $this = $(this);
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    if ($this.is('.disabled, :disabled')) return;
+
+    var $parent = getParent($this);
+    var isActive = $parent.hasClass('open');
+
+    if (!isActive && e.which != 27 || isActive && e.which == 27) {
+      if (e.which == 27) $parent.find(toggle).trigger('focus');
+      return $this.trigger('click');
+    }
+
+    var desc = ' li:not(.disabled):visible a';
+    var $items = $parent.find('.dropdown-menu' + desc);
+
+    if (!$items.length) return;
+
+    var index = $items.index(e.target);
+
+    if (e.which == 38 && index > 0) index--; // up
+    if (e.which == 40 && index < $items.length - 1) index++; // down
+    if (!~index) index = 0;
+
+    $items.eq(index).trigger('focus');
+  };
+
+  // DROPDOWN PLUGIN DEFINITION
+  // ==========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this = $(this);
+      var data = $this.data('bs.dropdown');
+
+      if (!data) $this.data('bs.dropdown', data = new Dropdown(this));
+      if (typeof option == 'string') data[option].call($this);
+    });
+  }
+
+  var old = $.fn.dropdown;
+
+  $.fn.dropdown = Plugin;
+  $.fn.dropdown.Constructor = Dropdown;
+
+  // DROPDOWN NO CONFLICT
+  // ====================
+
+  $.fn.dropdown.noConflict = function () {
+    $.fn.dropdown = old;
+    return this;
+  };
+
+  // APPLY TO STANDARD DROPDOWN ELEMENTS
+  // ===================================
+
+  $(document).on('click.bs.dropdown.data-api', clearMenus).on('click.bs.dropdown.data-api', '.dropdown form', function (e) {
+    e.stopPropagation();
+  }).on('click.bs.dropdown.data-api', toggle, Dropdown.prototype.toggle).on('keydown.bs.dropdown.data-api', toggle, Dropdown.prototype.keydown).on('keydown.bs.dropdown.data-api', '.dropdown-menu', Dropdown.prototype.keydown);
+}(jQuery);
 window.appHelpers = function () {
 
   function generateMenuGroupsArray(domains) {
@@ -146,23 +296,94 @@ class MetaHeader extends React.Component {
     this.state = {
       baseUrl: "opendesktop.cc",
       blogUrl: "https://blog.opendesktop.org",
-      loginUrl: loginUrl,
+      loginUrl: "https://www.opendesktop.cc/login/redirect/TFVIFZfgicowyCW5clpDz3sfM1rVUJsb_GwOHCL1oRyPOkMMVswIRPd2kvVz5oQW",
       user: user,
       sName: sName,
       loading: false
     };
+    this.getData = this.getData.bind(this);
+    this.getUrls = this.getUrls.bind(this);
   }
 
   componentDidMount() {
-    console.log(this.state);
+    this.getData();
+    this.getUrls();
+  }
+
+  getData() {
+    console.log('get data');
+    const self = this;
+    $.ajax({
+      url: 'https://www.opendesktop.cc/user/userdataajax',
+      method: 'get',
+      dataType: 'jsonp',
+      done: function (response) {
+        console.log('done');
+      },
+      error: function (response) {
+        console.log('error');
+        const user = JSON.parse(response.responseText);
+        if (user.member_id) {
+          self.setState({ user: user, loading: false });
+        } else {
+          self.setState({ loading: false });
+        }
+      },
+      success: function (response) {
+        console.log('success');
+      }
+    });
+  }
+
+  setUser(user) {}
+
+  getUrls() {
+    const self = this;
+    $.ajax({
+      url: 'https://www.opendesktop.cc/home/forumurlajax',
+      method: 'get',
+      dataType: 'jsonp',
+      error: function (response) {
+        console.log('error');
+        console.log(response);
+        const forumUrl = JSON.parse(response.responseText);
+        if (forumUrl.url_forum) {
+          self.setState({ forumUrl: forumUrl.url_forum });
+        }
+        $.ajax({
+          url: 'https://www.opendesktop.cc/home/blogurllajax',
+          method: 'get',
+          dataType: 'jsonp',
+          error: function (response) {
+            console.log('error');
+            console.log(response);
+            const blogUrl = JSON.parse(response.responseText);
+            if (blogUrl.url_blog) {
+              self.setState({ blogUrl: blogUrl.url_blog });
+            }
+            $.ajax({
+              url: 'https://www.opendesktop.cc/home/baseurllajax',
+              method: 'get',
+              dataType: 'jsonp',
+              error: function (response) {
+                console.log('error');
+                console.log(response);
+                const baseUrl = JSON.parse(response.responseText);
+                if (baseUrl.url_base) {
+                  self.setState({ baseUrl: baseUrl.url_base });
+                }
+              }
+            });
+          }
+        });
+      }
+    });
   }
 
   render() {
-
-    return React.createElement(
-      "nav",
-      { id: "metaheader-nav", className: "metaheader" },
-      React.createElement(
+    let metaMenuDisplay;
+    if (!this.state.loading) {
+      metaMenuDisplay = React.createElement(
         "div",
         { className: "metamenu" },
         React.createElement(DomainsMenu, {
@@ -175,7 +396,12 @@ class MetaHeader extends React.Component {
           blogUrl: this.state.blogUrl,
           loginUrl: this.state.loginUrl
         })
-      )
+      );
+    }
+    return React.createElement(
+      "nav",
+      { id: "metaheader-nav", className: "metaheader" },
+      metaMenuDisplay
     );
   }
 }
@@ -318,7 +544,6 @@ class DomainsMenuGroup extends React.Component {
     const domainsDisplay = this.props.domains.filter(this.filterDomainsByMenuGroup).map((domain, index) => {
       let domainPrefix = "http://";
       if (domain.menuhref.indexOf('pling.cc') === -1 && domain.menuhref.indexOf('www') === -1) {
-        console.log(domain.menuhref.indexOf('www'));
         domainPrefix += "www.";
       }
       return React.createElement(
@@ -391,7 +616,7 @@ class UserMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { href: "/community" },
+            { href: "https://www.opendesktop.cc/community" },
             "Community"
           )
         ),
@@ -409,7 +634,7 @@ class UserMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { id: "plingList", className: "popuppanel", href: "/plings" },
+            { id: "plingList", className: "popuppanel", href: "https://www.opendesktop.cc/plings" },
             "What are Plings?"
           )
         ),
@@ -418,7 +643,7 @@ class UserMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { id: "ocsapiContent", className: "popuppanel", href: "/partials/ocsapicontent.phtml" },
+            { id: "ocsapiContent", className: "popuppanel", href: "https://www.opendesktop.cc/partials/ocsapicontent.phtml" },
             "API"
           )
         ),
@@ -427,7 +652,7 @@ class UserMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { id: "aboutContent", className: "popuppanel", href: "/partials/about.phtml" },
+            { id: "aboutContent", className: "popuppanel", href: "https://www.opendesktop.cc/partials/about.phtml" },
             "About"
           )
         ),
@@ -442,8 +667,10 @@ class UserContextMenuContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: true
+      loading: true,
+      ariaExpanded: false
     };
+    this.toggleDropdown = this.toggleDropdown.bind(this);
   }
 
   componentDidMount() {
@@ -452,6 +679,11 @@ class UserContextMenuContainer extends React.Component {
       const gitlabLink = "https://gitlab.opencode.net/dashboard/issues?assignee_id=" + response[0].id;
       self.setState({ gitlabLink: gitlabLink, loading: false });
     });
+  }
+
+  toggleDropdown(e) {
+    const ariaExpanded = this.state.ariaExpanded === true ? false : true;
+    this.setState({ ariaExpanded: ariaExpanded });
   }
 
   render() {
@@ -472,7 +704,8 @@ class UserContextMenuContainer extends React.Component {
             id: "dropdownMenu2",
             "data-toggle": "dropdown",
             "aria-haspopup": "true",
-            "aria-expanded": "true" },
+            "aria-expanded": this.state.ariaExpanded,
+            onClick: this.toggleDropdown },
           React.createElement("span", { className: "glyphicon glyphicon-th" })
         ),
         React.createElement(
@@ -548,7 +781,7 @@ class UserLoginMenuContainer extends React.Component {
             "data-toggle": "dropdown",
             "aria-haspopup": "true",
             "aria-expanded": "true" },
-          React.createElement("img", { src: this.props.user.profile_image_url })
+          React.createElement("img", { src: this.props.user.avatar })
         ),
         React.createElement(
           "ul",
@@ -565,7 +798,7 @@ class UserLoginMenuContainer extends React.Component {
                 React.createElement(
                   "div",
                   { className: "no-avatar-user-letter" },
-                  React.createElement("img", { src: this.props.user.profile_image_url })
+                  React.createElement("img", { src: this.props.user.avatar })
                 )
               ),
               React.createElement(
@@ -598,12 +831,12 @@ class UserLoginMenuContainer extends React.Component {
             { className: "buttons" },
             React.createElement(
               "a",
-              { href: "/settings/", className: "btn btn-default btn-metaheader" },
+              { href: "https://www.opendesktop.cc/settings/", className: "btn btn-default btn-metaheader" },
               "Settings"
             ),
             React.createElement(
               "a",
-              { href: "/logout/", className: "btn btn-default pull-right btn-metaheader" },
+              { href: "https://www.opendesktop.cc/logout/", className: "btn btn-default pull-right btn-metaheader" },
               "Logout"
             )
           )

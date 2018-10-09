@@ -38,15 +38,17 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
         $this->errorlogfile = realpath(APPLICATION_DATA . "/logs") . DIRECTORY_SEPARATOR . $logFileName . '_' . self::filename_errors;
         $this->initFiles($this->logfile, $this->errorlogfile);
 
+        $force = (boolean)$this->getParam('force', false);
+        $method = $this->getParam('method', null);
+
         if ($this->hasParam('member_id')) {
             $memberId = $this->getParam('member_id');
-            $filter = " AND `m`.`member_id` = " . $memberId;
-            $members = $this->getMemberList($filter);
+            $members = $this->getMemberList($memberId, $method);
         } else {
             $members = $this->getMemberList();
         }
 
-        $this->exportMembers($members);
+        $this->exportMembers($members, $force);
     }
 
     /**
@@ -66,12 +68,24 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
     }
 
     /**
-     * @param string $filter
+     * @param null $member_id
+     * @param null $method
      *
      * @return Zend_Db_Statement_Interface
      */
-    private function getMemberList($filter = "")
+    private function getMemberList($member_id = null, $method = "=")
     {
+        $filter = "";
+        if ($method == "gt") {
+            $method = ">";
+        }
+        if ($method == "lt") {
+            $method = "<";
+        }
+        if (isset($member_id)) {
+            $filter = " AND `m`.`member_id` {$method} " . $member_id;
+        }
+
         $sql = "
             SELECT `mei`.`external_id`,`m`.`member_id`, `m`.`username`, `me`.`email_address`, `m`.`password`, `m`.`roleId`, `m`.`firstname`, `m`.`lastname`, `m`.`profile_image_url`, `m`.`created_at`, `m`.`changed_at`, `m`.`source_id`, `m`.`biography`
             FROM `member` AS `m`
@@ -83,17 +97,13 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
               AND `me`.`email_deleted` = 0
               AND LOCATE('_deactivated', `m`.username) = 0 
               AND LOCATE('_deactivated', `me`.`email_address`) = 0
-            # AND (me.email_address like '%opayq%' OR m.username like '%rvs%')
-            # AND `me`.`email_address` = 'info@dschinnweb.de'
-            # AND `m`.`member_id` > 464086 
             " . $filter . "
             ORDER BY `m`.`member_id` ASC
-            # LIMIT 200
         ";
 
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql);
 
-        file_put_contents($this->logfile, "Select " . count($result) . "Members.\nSql: " . $sql . "\n", FILE_APPEND);
+        file_put_contents($this->logfile, "Select " . count($result) . " Members.\nSql: " . $sql . "\n", FILE_APPEND);
 
         return $result;
     }
@@ -101,11 +111,13 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
     /**
      * @param Zend_Db_Statement_Interface $members
      *
+     * @param bool                        $force
+     *
      * @return bool
+     * @throws Zend_Db_Statement_Exception
      * @throws Zend_Exception
-     * @throws Zend_Validate_Exception
      */
-    private function exportMembers($members)
+    private function exportMembers($members, $force = false)
     {
         // only usernames which are valid in github/gitlab
         $usernameValidChars = new Local_Validate_UsernameValid();
@@ -124,7 +136,7 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
             file_put_contents($this->logfile, Zend_Json::encode($member) . "\n", FILE_APPEND);
             try {
                 //Export User, if he not exists
-                $modelOpenCode->exportUser($member, false);
+                $modelOpenCode->exportUser($member, $force);
             } catch (Exception $e) {
                 Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
             }
