@@ -230,7 +230,7 @@ class HomeController extends Local_Controller_Action_DomainSwitch
         $url = $this->getParam('url');
         $filterRedirect = new Local_Filter_Url_Encrypt();
         
-        $loginUrl = '/login?redirect=' . $filterRedirect->encryptUrl($url, false);
+        $loginUrl = '/login?redirect=' . $filterRedirect->filter($url);
         
         $resultArray['login_url'] = $loginUrl;
         
