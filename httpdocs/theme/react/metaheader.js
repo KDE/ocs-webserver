@@ -285,9 +285,20 @@ window.appHelpers = function () {
     return domains;
   }
 
+  function getUserQueryUrl(hostname) {
+    let userQueryUrl;
+    if (hostname === "www.opendesktop.cc") {
+      userQueryUrl = "https://www.opendesktop.cc/user/userdataajax";
+    } else if (hostname === "gitlab.pling.cc") {
+      userQueryUrl = "https://gitlab.pling.cc/external/get_ocs_data.php?url=home/storenameajax";
+    }
+    return userQueryUrl;
+  }
+
   return {
     generateMenuGroupsArray,
-    getDomainsArray
+    getDomainsArray,
+    getUserQueryUrl
   };
 }();
 class MetaHeader extends React.Component {
@@ -311,10 +322,11 @@ class MetaHeader extends React.Component {
   }
 
   getUser() {
-    console.log('get user');
+    const userQueryUrl = appHelpers.getUserQueryUrl(window.location.hostname);
+    console.log(userQueryUrl);
     const self = this;
     $.ajax({
-      url: 'https://www.opendesktop.cc/user/userdataajax',
+      url: userQueryUrl,
       method: 'get',
       dataType: 'jsonp',
       done: function (response) {
@@ -322,7 +334,7 @@ class MetaHeader extends React.Component {
         console.log(response);
       },
       error: function (response) {
-        console.log('error');
+        console.log('get user');
         console.log(response);
         const res = JSON.parse(response.responseText);
         if (res.status === "success") {
@@ -346,7 +358,6 @@ class MetaHeader extends React.Component {
       dataType: 'jsonp',
       error: function (response) {
         console.log('get forum');
-        console.log('error');
         console.log(response);
         const res = JSON.parse(response.responseText);
         if (res.status === "success") {
@@ -361,7 +372,6 @@ class MetaHeader extends React.Component {
       dataType: 'jsonp',
       error: function (response) {
         console.log('get blog');
-        console.log('error');
         console.log(response);
         const res = JSON.parse(response.responseText);
         if (res.status === "success") {
@@ -408,7 +418,7 @@ class MetaHeader extends React.Component {
         })
       );
     }
-    console.log(this.state);
+
     return React.createElement(
       "nav",
       { id: "metaheader-nav", className: "metaheader" },
@@ -617,15 +627,16 @@ class UserMenu extends React.Component {
       );
     }
 
-    console.log(window.location);
     let plingListUrl = "https://www.opendesktop.cc/#plingList",
         ocsapiContentUrl = "https://www.opendesktop.cc/#ocsapiContent",
-        aboutContentUrl = "https://www.opendesktop.cc/#aboutContent";
+        aboutContentUrl = "https://www.opendesktop.cc/#aboutContent",
+        linkTarget = "_blank";
 
     if (window.location.hostname === "www.opendesktop.cc") {
       plingListUrl = "https://www.opendesktop.cc/plings";
       ocsapiContentUrl = "https://www.opendesktop.cc/partials/ocsapicontent.phtml";
       aboutContentUrl = "https://www.opendesktop.cc/partials/about.phtml";
+      linkTarget = "";
     }
 
     return React.createElement(
@@ -657,7 +668,7 @@ class UserMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { id: "plingList", className: "popuppanel", href: plingListUrl },
+            { id: "plingList", className: "popuppanel", target: linkTarget, href: plingListUrl },
             "What are Plings?"
           )
         ),
@@ -666,7 +677,7 @@ class UserMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { id: "ocsapiContent", className: "popuppanel", href: ocsapiContentUrl },
+            { id: "ocsapiContent", className: "popuppanel", target: linkTarget, href: ocsapiContentUrl },
             "API"
           )
         ),
@@ -675,7 +686,7 @@ class UserMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { id: "aboutContent", className: "popuppanel", href: aboutContentUrl },
+            { id: "aboutContent", className: "popuppanel", target: linkTarget, href: aboutContentUrl },
             "About"
           )
         ),

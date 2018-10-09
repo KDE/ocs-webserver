@@ -151,9 +151,20 @@ window.appHelpers = (function(){
     return domains;
   }
 
+  function getUserQueryUrl(hostname){
+    let userQueryUrl;
+    if (hostname === "www.opendesktop.cc"){
+      userQueryUrl = "https://www.opendesktop.cc/user/userdataajax";
+    } else if (hostname === "gitlab.pling.cc"){
+      userQueryUrl = "https://gitlab.pling.cc/external/get_ocs_data.php?url=home/storenameajax";
+    }
+    return userQueryUrl;
+  }
+
   return {
     generateMenuGroupsArray,
-    getDomainsArray
+    getDomainsArray,
+    getUserQueryUrl
   }
 
 }());
