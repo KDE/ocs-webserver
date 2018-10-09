@@ -14,11 +14,13 @@ class MetaHeader extends React.Component {
   }
 
   componentDidMount() {
+    console.log('component did mount');
     this.getUser();
     this.getUrls();
   }
 
   getUser(){
+    console.log('get user');
     const userQueryUrl = appHelpers.getUserQueryUrl(window.location.hostname);
     console.log(userQueryUrl);
     const self = this;
@@ -48,9 +50,10 @@ class MetaHeader extends React.Component {
   }
 
   getUrls(){
+    const forumQueryUrl = appHelpers.getForumQueryUrl(window.location.hostname);
     const self = this;
     $.ajax({
-      url:'https://www.opendesktop.cc/home/forumurlajax',
+      url:forumQueryUrl,
       method:'get',
       dataType: 'jsonp',
       error: function(response){
@@ -63,8 +66,9 @@ class MetaHeader extends React.Component {
       }
     });
 
+    const baseQueryUrl = appHelpers.getBaseQueryUrl(window.location.hostname);
     $.ajax({
-      url:'https://www.opendesktop.cc/home/blogurlajax',
+      url:baseQueryUrl,
       method:'get',
       dataType: 'jsonp',
       error: function(response){
@@ -77,8 +81,9 @@ class MetaHeader extends React.Component {
       }
     });
 
+    const blogQueryUrl = appHelpers.getBlogQueryUrl(window.location.hostname);
     $.ajax({
-      url:'https://www.opendesktop.cc/home/baseurlajax',
+      url:blogQueryUrl,
       method:'get',
       dataType: 'jsonp',
       error: function(response){

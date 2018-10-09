@@ -295,10 +295,43 @@ window.appHelpers = function () {
     return userQueryUrl;
   }
 
+  function getBaseQueryUrl(hostname) {
+    let baseQueryUrl;
+    if (hostname === "www.opendesktop.cc") {
+      baseQueryUrl = "https://www.opendesktop.cc/home/baseurlajax";
+    } else if (hostname === "gitlab.pling.cc") {
+      baseQueryUrl = "https://gitlab.pling.cc/external/get_ocs_data.php?url=home/baseurlajax";
+    }
+    return baseQueryUrl;
+  }
+
+  function getForumQueryUrl(hostname) {
+    let forumQueryUrl;
+    if (hostname === "www.opendesktop.cc") {
+      forumQueryUrl = "https://www.opendesktop.cc/home/forumurlajax";
+    } else if (hostname === "gitlab.pling.cc") {
+      forumQueryUrl = "https://gitlab.pling.cc/external/get_ocs_data.php?url=home/forumurlajax";
+    }
+    return forumQueryUrl;
+  }
+
+  function getBlogQueryUrl(hostname) {
+    let blogQueryUrl;
+    if (hostname === "www.opendesktop.cc") {
+      blogQueryUrl = "https://www.opendesktop.cc/home/blogurlajax";
+    } else if (hostname === "gitlab.pling.cc") {
+      blogQueryUrl = "https://gitlab.pling.cc/external/get_ocs_data.php?url=home/blogurlajax";
+    }
+    return baseQueryUrl;
+  }
+
   return {
     generateMenuGroupsArray,
     getDomainsArray,
-    getUserQueryUrl
+    getUserQueryUrl,
+    getForumQueryUrl,
+    getBaseQueryUrl,
+    getBlogQueryUrl
   };
 }();
 class MetaHeader extends React.Component {
@@ -317,11 +350,13 @@ class MetaHeader extends React.Component {
   }
 
   componentDidMount() {
+    console.log('component did mount');
     this.getUser();
     this.getUrls();
   }
 
   getUser() {
+    console.log('get user');
     const userQueryUrl = appHelpers.getUserQueryUrl(window.location.hostname);
     console.log(userQueryUrl);
     const self = this;
@@ -351,9 +386,10 @@ class MetaHeader extends React.Component {
   }
 
   getUrls() {
+    const forumQueryUrl = appHelpers.getForumQueryUrl(window.location.hostname);
     const self = this;
     $.ajax({
-      url: 'https://www.opendesktop.cc/home/forumurlajax',
+      url: forumQueryUrl,
       method: 'get',
       dataType: 'jsonp',
       error: function (response) {
@@ -366,8 +402,9 @@ class MetaHeader extends React.Component {
       }
     });
 
+    const baseQueryUrl = appHelpers.getBaseQueryUrl(window.location.hostname);
     $.ajax({
-      url: 'https://www.opendesktop.cc/home/blogurlajax',
+      url: baseQueryUrl,
       method: 'get',
       dataType: 'jsonp',
       error: function (response) {
@@ -380,8 +417,9 @@ class MetaHeader extends React.Component {
       }
     });
 
+    const blogQueryUrl = appHelpers.getBlogQueryUrl(window.location.hostname);
     $.ajax({
-      url: 'https://www.opendesktop.cc/home/baseurlajax',
+      url: blogQueryUrl,
       method: 'get',
       dataType: 'jsonp',
       error: function (response) {
