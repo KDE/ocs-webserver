@@ -52,10 +52,9 @@ class MetaHeader extends React.Component {
       dataType: 'jsonp',
       error: function(response){
         console.log('error');
-        console.log(response);
-        const forumUrl = JSON.parse(response.responseText);
-        if (forumUrl.url_forum){
-          self.setState({forumUrl:forumUrl.url_forum})
+        const res = JSON.parse(response.responseText);
+        if (res.status === "success"){
+          self.setState({forumUrl:res.data.url_forum});
         }
         $.ajax({
           url:'https://www.opendesktop.cc/home/blogurlajax',
@@ -63,21 +62,19 @@ class MetaHeader extends React.Component {
           dataType: 'jsonp',
           error: function(response){
             console.log('error');
-            console.log(response);
-            const blogUrl = JSON.parse(response.responseText);
-            if (blogUrl.url_blog){
-              self.setState({blogUrl:blogUrl.url_blog})
+            const res = JSON.parse(response.responseText);
+            if (res.status === "success"){
+              self.setState({blogUrl:res.data.url_blog})
             }
             $.ajax({
-              url:'https://www.opendesktop.cc/home/baseurllajax',
+              url:'https://www.opendesktop.cc/home/baseurlajax',
               method:'get',
               dataType: 'jsonp',
               error: function(response){
                 console.log('error');
-                console.log(response);
-                const baseUrl = JSON.parse(response.responseText);
-                if (baseUrl.url_base){
-                  self.setState({baseUrl:baseUrl.url_base})
+                const res = JSON.parse(response.responseText);
+                if (res.status === "success"){
+                  self.setState({baseUrl:res.data.url_base})
                 }
               }
             });
@@ -105,6 +102,7 @@ class MetaHeader extends React.Component {
         </div>
       );
     }
+    console.log(this.state);
     return (
       <nav id="metaheader-nav" className="metaheader">
         {metaMenuDisplay}
@@ -148,7 +146,7 @@ class DomainsMenu extends React.Component {
       <ul className="metaheader-menu left" id="domains-menu">
         <li className="active">
           <a href={"http://"+this.props.baseUrl}>
-            <img src="/images/system/ocs-logo-rounded-16x16.png" className="logo"/>
+            <img src={this.props.baseUrl + "/images/system/ocs-logo-rounded-16x16.png"} className="logo"/>
             openDesktop.org :
           </a>
         </li>
