@@ -176,6 +176,7 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
                                 <?php if ($auth->hasIdentity() && !empty($member->username)) { ?>
                                 <img src="https://gitlab.pling.cc/external/setcookie.php?id=<?= $member->member_id ?>" height="0" width="0">
                                 <img src="https://forum.opendesktop.cc:8443/setcookie.php?id=<?= $member->member_id ?>" height="0" width="0">
+                                <img src="https://forum.opendesktop.cc:8443/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->member_id ?>&mail=<?= $member->mail ?>" height="0" width="0">
                                     <ul class="menu pull-right">
                                         <li class="link relative profile-menu-container">
                                             <a rel="profile-menu" class="menu-trigger">
