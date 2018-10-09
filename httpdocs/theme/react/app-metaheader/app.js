@@ -10,12 +10,14 @@ class MetaHeader extends React.Component {
       loading:false
     };
     this.getUser = this.getUser.bind(this);
+    this.getDomains = this.getDomains.bind(this);
     this.getUrls = this.getUrls.bind(this);
   }
 
   componentDidMount() {
     console.log('component did mount');
     this.getUser();
+    this.getDomains();
     this.getUrls();
   }
 
@@ -114,6 +116,25 @@ class MetaHeader extends React.Component {
         const res = JSON.parse(response.responseText);
         if (res.status === "success"){
           self.setState({sName:res.data.store_name});
+        }
+      }
+    });
+
+  }
+
+  getDomains(){
+    const self = this;
+    const domainsQueryUrl = appHelpers.getDomainsQueryUrl(window.location.hostname);
+    $.ajax({
+      url:domainsQueryUrl,
+      method:'get',
+      dataType: 'jsonp',
+      error: function(response){
+        console.log('get domains');
+        console.log(response);
+        const res = JSON.parse(response.responseText);
+        if (res.status === "success"){
+          self.setState({domains:res.data});
         }
       }
     });

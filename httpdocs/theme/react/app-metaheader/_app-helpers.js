@@ -163,6 +163,18 @@ window.appHelpers = (function(){
     return userQueryUrl;
   }
 
+  function getDomainsQueryUrl(hostname){
+    let domainsQueryUrl;
+    if (hostname === "www.opendesktop.cc"){
+      domainsQueryUrl = "https://www.opendesktop.cc/home/domainsajax";
+    } else if (hostname === "gitlab.pling.cc"){
+      domainsQueryUrl = "https://gitlab.pling.cc/external/get_ocs_data.php?url=home/domainsajax";
+    } else if (hostname === "forum.opendesktop.cc"){
+      domainsQueryUrl = "https://forum.opendesktop.cc:8443/get_ocs_data.php?url=home/domainsajax";
+    }
+    return domainsQueryUrl;
+  }
+
   function getBaseQueryUrl(hostname){
     let baseQueryUrl;
     if (hostname === "www.opendesktop.cc"){
@@ -215,6 +227,7 @@ window.appHelpers = (function(){
     generateMenuGroupsArray,
     getDomainsArray,
     getUserQueryUrl,
+    getDomainsQueryUrl,
     getForumQueryUrl,
     getBaseQueryUrl,
     getBlogQueryUrl,

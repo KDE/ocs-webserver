@@ -297,6 +297,18 @@ window.appHelpers = function () {
     return userQueryUrl;
   }
 
+  function getDomainsQueryUrl(hostname) {
+    let domainsQueryUrl;
+    if (hostname === "www.opendesktop.cc") {
+      domainsQueryUrl = "https://www.opendesktop.cc/home/domainsajax";
+    } else if (hostname === "gitlab.pling.cc") {
+      domainsQueryUrl = "https://gitlab.pling.cc/external/get_ocs_data.php?url=home/domainsajax";
+    } else if (hostname === "forum.opendesktop.cc") {
+      domainsQueryUrl = "https://forum.opendesktop.cc:8443/get_ocs_data.php?url=home/domainsajax";
+    }
+    return domainsQueryUrl;
+  }
+
   function getBaseQueryUrl(hostname) {
     let baseQueryUrl;
     if (hostname === "www.opendesktop.cc") {
@@ -349,6 +361,7 @@ window.appHelpers = function () {
     generateMenuGroupsArray,
     getDomainsArray,
     getUserQueryUrl,
+    getDomainsQueryUrl,
     getForumQueryUrl,
     getBaseQueryUrl,
     getBlogQueryUrl,
@@ -367,12 +380,14 @@ class MetaHeader extends React.Component {
       loading: false
     };
     this.getUser = this.getUser.bind(this);
+    this.getDomains = this.getDomains.bind(this);
     this.getUrls = this.getUrls.bind(this);
   }
 
   componentDidMount() {
     console.log('component did mount');
     this.getUser();
+    this.getDomains();
     this.getUrls();
   }
 
@@ -471,6 +486,24 @@ class MetaHeader extends React.Component {
         const res = JSON.parse(response.responseText);
         if (res.status === "success") {
           self.setState({ sName: res.data.store_name });
+        }
+      }
+    });
+  }
+
+  getDomains() {
+    const self = this;
+    const domainsQueryUrl = appHelpers.getDomainsQueryUrl(window.location.hostname);
+    $.ajax({
+      url: domainsQueryUrl,
+      method: 'get',
+      dataType: 'jsonp',
+      error: function (response) {
+        console.log('get domains');
+        console.log(response);
+        const res = JSON.parse(response.responseText);
+        if (res.status === "success") {
+          self.setState({ domains: res.data });
         }
       }
     });
