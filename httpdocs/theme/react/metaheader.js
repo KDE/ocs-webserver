@@ -290,7 +290,7 @@ window.appHelpers = function () {
     if (hostname === "www.opendesktop.cc") {
       userQueryUrl = "https://www.opendesktop.cc/user/userdataajax";
     } else if (hostname === "gitlab.pling.cc") {
-      userQueryUrl = "https://gitlab.pling.cc/external/get_ocs_data.php?url=home/storenameajax";
+      userQueryUrl = "";
     }
     return userQueryUrl;
   }
@@ -325,13 +325,24 @@ window.appHelpers = function () {
     return blogQueryUrl;
   }
 
+  function getStoreQueryUrl(hostname) {
+    let storeQueryUrl;
+    if (hostname === "www.opendesktop.cc") {
+      storeQueryUrl = "";
+    } else if (hostname === "gitlab.pling.cc") {
+      storeQueryUrl = "https://gitlab.pling.cc/external/get_ocs_data.php?url=home/storenameajax";
+    }
+    return storeQueryUrl;
+  }
+
   return {
     generateMenuGroupsArray,
     getDomainsArray,
     getUserQueryUrl,
     getForumQueryUrl,
     getBaseQueryUrl,
-    getBlogQueryUrl
+    getBlogQueryUrl,
+    getStoreQueryUrl
   };
 }();
 class MetaHeader extends React.Component {
@@ -434,6 +445,22 @@ class MetaHeader extends React.Component {
             baseUrl = "http://" + res.data.base_url;
           }
           self.setState({ baseUrl: baseUrl });
+        }
+      }
+    });
+
+    const storeQueryUrl = appHelpers.getStoreQueryUrl(window.location.hostname);
+    $.ajax({
+      url: storeQueryUrl,
+      method: 'get',
+      dataType: 'jsonp',
+      error: function (response) {
+        console.log('get store');
+        console.log('error');
+        console.log(response);
+        const res = JSON.parse(response.responseText);
+        if (res.status === "success") {
+          self.setState({ sName: res.data.store_name });
         }
       }
     });

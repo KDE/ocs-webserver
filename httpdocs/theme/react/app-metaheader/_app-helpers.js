@@ -156,7 +156,7 @@ window.appHelpers = (function(){
     if (hostname === "www.opendesktop.cc"){
       userQueryUrl = "https://www.opendesktop.cc/user/userdataajax";
     } else if (hostname === "gitlab.pling.cc"){
-      userQueryUrl = "https://gitlab.pling.cc/external/get_ocs_data.php?url=home/storenameajax";
+      userQueryUrl = "";
     }
     return userQueryUrl;
   }
@@ -191,13 +191,24 @@ window.appHelpers = (function(){
     return blogQueryUrl;
   }
 
+  function getStoreQueryUrl(hostname){
+    let storeQueryUrl;
+    if (hostname === "www.opendesktop.cc"){
+      storeQueryUrl = "";
+    } else if (hostname === "gitlab.pling.cc"){
+      storeQueryUrl = "https://gitlab.pling.cc/external/get_ocs_data.php?url=home/storenameajax";
+    }
+    return storeQueryUrl;
+  }
+
   return {
     generateMenuGroupsArray,
     getDomainsArray,
     getUserQueryUrl,
     getForumQueryUrl,
     getBaseQueryUrl,
-    getBlogQueryUrl
+    getBlogQueryUrl,
+    getStoreQueryUrl
   }
 
 }());
