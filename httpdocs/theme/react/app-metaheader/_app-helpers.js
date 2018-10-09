@@ -152,15 +152,18 @@ window.appHelpers = (function(){
   }
 
   function getUserQueryUrl(hostname){
-    let userQueryUrl;
+    let userQuery = {};
     if (hostname === "www.opendesktop.cc"){
-      userQueryUrl = "https://www.opendesktop.cc/user/userdataajax";
+      userQuery.url = "https://www.opendesktop.cc/user/userdataajax";
+      userQuery.dataType = "jsonp";
     } else if (hostname === "gitlab.pling.cc"){
-      userQueryUrl = "https://gitlab.pling.cc/external/get_ocs_data.php?url=user/userdataajax";
+      userQuery.url = "https://gitlab.pling.cc/external/get_ocs_data.php?url=user/userdataajax";
+      userQuery.dataType = "jsonp";
     } else if (hostname === "forum.opendesktop.cc"){
-      userQueryUrl = "https://forum.opendesktop.cc:8443/get_ocs_data.php?url=user/userdataajax";
+      userQuery.url = "https://forum.opendesktop.cc:8443/get_ocs_data.php?url=user/userdataajax";
+      userQuery.dataType = "json";
     }
-    return userQueryUrl;
+    return userQuery;
   }
 
   function getDomainsQueryUrl(hostname){

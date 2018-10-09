@@ -21,14 +21,13 @@ class MetaHeader extends React.Component {
   }
 
   getUser(){
-    console.log('get user');
-    const userQueryUrl = appHelpers.getUserQueryUrl(window.location.hostname);
-    console.log(userQueryUrl);
+    const userQuery = appHelpers.getUserQueryUrl(window.location.hostname);
+    console.log(userQuery);
     const self = this;
     $.ajax({
-      url:userQueryUrl,
+      url:userQuery.url,
       method:'get',
-      dataType: 'jsonp',
+      dataType: userQuery.dataType,
       error: function(response){
         console.log('get user');
         console.log(response)
@@ -121,7 +120,7 @@ class MetaHeader extends React.Component {
         console.log(response);
         const res = JSON.parse(response.responseText);
         if (res.status === "success"){
-          console.log(res.data);          
+          console.log(res.data);
           self.setState({domains:res.data});
         }
       }
