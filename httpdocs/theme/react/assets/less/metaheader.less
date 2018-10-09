@@ -580,8 +580,10 @@ body {
           li.buttons {
             padding: 10px 20px;
             background-color: #f5f5f5;
+            width: 100%;
 
             .btn {
+              width: auto;
               display: block;
               border-radius: 2px;
               padding: 0 16px;
@@ -593,6 +595,10 @@ body {
               border: 1px solid #c6c6c6;
               float: left;
               clear: none;
+
+              &.pull-right {
+                float: right;
+              }
 
               &:hover {
                 -webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.1);
