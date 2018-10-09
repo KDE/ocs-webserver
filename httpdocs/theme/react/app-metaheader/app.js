@@ -265,12 +265,14 @@ class UserMenu extends React.Component {
     console.log(window.location);
     let plingListUrl = "https://www.opendesktop.cc/#plingList",
         ocsapiContentUrl = "https://www.opendesktop.cc/#ocsapiContent",
-        aboutContentUrl = "https://www.opendesktop.cc/#aboutContent";
-        
+        aboutContentUrl = "https://www.opendesktop.cc/#aboutContent",
+        linkTarget = "_blank";
+
     if (window.location.hostname === "www.opendesktop.cc"){
       plingListUrl = "https://www.opendesktop.cc/plings";
       ocsapiContentUrl = "https://www.opendesktop.cc/partials/ocsapicontent.phtml";
       aboutContentUrl = "https://www.opendesktop.cc/partials/about.phtml";
+      linkTarget = "";
     }
 
     return (
@@ -278,9 +280,9 @@ class UserMenu extends React.Component {
         <ul className="metaheader-menu" id="user-menu">
           <li><a href="https://www.opendesktop.cc/community">Community</a></li>
           <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
-          <li><a id="plingList" className="popuppanel" href={plingListUrl}>What are Plings?</a></li>
-          <li><a id="ocsapiContent" className="popuppanel" href={ocsapiContentUrl}>API</a></li>
-          <li><a id="aboutContent" className="popuppanel" href={aboutContentUrl} >About</a></li>
+          <li><a id="plingList" className="popuppanel" target={linkTarget} href={plingListUrl}>What are Plings?</a></li>
+          <li><a id="ocsapiContent" className="popuppanel" target={linkTarget} href={ocsapiContentUrl}>API</a></li>
+          <li><a id="aboutContent" className="popuppanel" target={linkTarget} href={aboutContentUrl} >About</a></li>
           {userAppsContextDisplay}
           {userDropdownDisplay}
         </ul>

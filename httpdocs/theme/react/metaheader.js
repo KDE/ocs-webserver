@@ -620,12 +620,14 @@ class UserMenu extends React.Component {
     console.log(window.location);
     let plingListUrl = "https://www.opendesktop.cc/#plingList",
         ocsapiContentUrl = "https://www.opendesktop.cc/#ocsapiContent",
-        aboutContentUrl = "https://www.opendesktop.cc/#aboutContent";
+        aboutContentUrl = "https://www.opendesktop.cc/#aboutContent",
+        linkTarget = "_blank";
 
     if (window.location.hostname === "www.opendesktop.cc") {
       plingListUrl = "https://www.opendesktop.cc/plings";
       ocsapiContentUrl = "https://www.opendesktop.cc/partials/ocsapicontent.phtml";
       aboutContentUrl = "https://www.opendesktop.cc/partials/about.phtml";
+      linkTarget = "";
     }
 
     return React.createElement(
@@ -657,7 +659,7 @@ class UserMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { id: "plingList", className: "popuppanel", href: plingListUrl },
+            { id: "plingList", className: "popuppanel", target: linkTarget, href: plingListUrl },
             "What are Plings?"
           )
         ),
@@ -666,7 +668,7 @@ class UserMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { id: "ocsapiContent", className: "popuppanel", href: ocsapiContentUrl },
+            { id: "ocsapiContent", className: "popuppanel", target: linkTarget, href: ocsapiContentUrl },
             "API"
           )
         ),
@@ -675,7 +677,7 @@ class UserMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { id: "aboutContent", className: "popuppanel", href: aboutContentUrl },
+            { id: "aboutContent", className: "popuppanel", target: linkTarget, href: aboutContentUrl },
             "About"
           )
         ),
