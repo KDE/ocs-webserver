@@ -552,7 +552,28 @@ var Popuppanel =  (function () {
 var PlingsRedirect = (function () {
     return {
         setup: function () {
+            if(window.location.hash) {
+                $link = $(window.location.hash);
+                $link.trigger("click");
+            } else if (document.location.hash) {
+                $link = $(document.location.hash);
+                $link.trigger("click");
+            }
+        }
+    }
+
+})();
+
+
+var ShowPopups = (function () {
+    return {
+        setup: function () {
+            if(window.location.hash) {
+                alert('Hash');
+                $('a[href="' + document.location.hash + '"]').trigger("click");
+            }
             if (document.location.hash) {
+                alert('Hash');
                 $('a[href="' + document.location.hash + '"]').trigger("click");
             }
         }
