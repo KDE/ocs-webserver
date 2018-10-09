@@ -30,11 +30,9 @@ class MetaHeader extends React.Component {
         console.log(response);
       },
       error: function(response){
-        console.log('error');
-        console.log(response);
-        const user = JSON.parse(response.responseText);
-        if (user.member_id){
-          self.setState({user:user,loading:false});
+        const res = JSON.parse(response.responseText);
+        if (res.status === "success"){
+          self.setState({user:res.data,loading:false});
         } else {
           self.setState({loading:false});
         }
@@ -42,12 +40,6 @@ class MetaHeader extends React.Component {
       success: function(response){
         console.log('success');
         console.log(response);
-        const user = JSON.parse(response.responseText);
-        if (user.member_id){
-          self.setState({user:user,loading:false});
-        } else {
-          self.setState({loading:false});
-        }
       }
     });
   }
