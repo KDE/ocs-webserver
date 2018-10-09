@@ -314,9 +314,9 @@ class MetaHeader extends React.Component {
     console.log('get user');
     const self = this;
     $.ajax({
-      url: 'https://cors-anywhere.herokuapp.com/https://www.opendesktop.cc/user/userdataajax',
+      url: 'https://www.opendesktop.cc/user/userdataajax',
       method: 'get',
-      dataType: 'json',
+      dataType: 'jsonp',
       done: function (response) {
         console.log('done');
         console.log(response);
@@ -341,7 +341,7 @@ class MetaHeader extends React.Component {
   getUrls() {
     const self = this;
     $.ajax({
-      url: 'https://cors-anywhere.herokuapp.com/https://www.opendesktop.cc/home/forumurlajax',
+      url: 'https://www.opendesktop.cc/home/forumurlajax',
       method: 'get',
       dataType: 'jsonp',
       error: function (response) {
@@ -356,7 +356,7 @@ class MetaHeader extends React.Component {
     });
 
     $.ajax({
-      url: 'https://cors-anywhere.herokuapp.com/https://www.opendesktop.cc/home/blogurlajax',
+      url: 'https://www.opendesktop.cc/home/blogurlajax',
       method: 'get',
       dataType: 'jsonp',
       error: function (response) {
@@ -371,7 +371,7 @@ class MetaHeader extends React.Component {
     });
 
     $.ajax({
-      url: 'https://cors-anywhere.herokuapp.com/https://www.opendesktop.cc/home/baseurlajax',
+      url: 'https://www.opendesktop.cc/home/baseurlajax',
       method: 'get',
       dataType: 'jsonp',
       error: function (response) {
@@ -618,13 +618,14 @@ class UserMenu extends React.Component {
     }
 
     console.log(window.location);
-    let plingListUrl = "https://www.opendesktop.cc/plings",
-        ocsapiContentUrl = "https://www.opendesktop.cc/partials/ocsapicontent.phtml",
-        aboutContentUrl = "https://www.opendesktop.cc/partials/about.phtml";
+    let plingListUrl = "https://www.opendesktop.cc/#plingList",
+        ocsapiContentUrl = "https://www.opendesktop.cc/#ocsapiContent",
+        aboutContentUrl = "https://www.opendesktop.cc/#aboutContent";
+
     if (window.location.hostname === "www.opendesktop.cc") {
-      plingListUrl = "https://www.opendesktop.cc/#plingList";
-      ocsapiContentUrl = "https://www.opendesktop.cc/#ocsapiContent";
-      aboutContentUrl = "https://www.opendesktop.cc/#aboutContent";
+      plingListUrl = "https://www.opendesktop.cc/plings";
+      ocsapiContentUrl = "https://www.opendesktop.cc/partials/ocsapicontent.phtml";
+      aboutContentUrl = "https://www.opendesktop.cc/partials/about.phtml";
     }
 
     return React.createElement(
