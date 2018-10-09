@@ -105,16 +105,14 @@ class HomeController extends Local_Controller_Action_DomainSwitch
         $this->_helper->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
         
+        header('Access-Control-Allow-Origin: *'); 
+        
         $this->getResponse()
-             ->setHeader('Access-Control-Allow-Origin', 'https://gitlab.opendesktop.cc')
-             ->setHeader('Access-Control-Allow-Origin', 'https://forum.opendesktop.cc')   
-             ->setHeader('Access-Control-Allow-Origin', 'https://gitlab.opendesktop.cc')
-             ->setHeader('Access-Control-Allow-Origin', 'http://david.pling.cc')
+             ->setHeader('Access-Control-Allow-Origin', '*')
              ->setHeader('Access-Control-Allow-Credentials', 'true')
              ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
              ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
         ;
-        
         
         $resultArray = array();
         
@@ -122,7 +120,11 @@ class HomeController extends Local_Controller_Action_DomainSwitch
 
         $resultArray['base_url'] = $baseurl;
         
-        $this->_helper->json($resultArray);
+        $resultAll = array();
+        $resultAll['status'] = "success";
+        $resultAll['data'] = $resultArray;
+        
+        $this->_helper->json($resultAll);
     }
     
     public function forumurlajaxAction()
@@ -130,11 +132,10 @@ class HomeController extends Local_Controller_Action_DomainSwitch
         $this->_helper->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
         
+        header('Access-Control-Allow-Origin: *'); 
+        
         $this->getResponse()
-             ->setHeader('Access-Control-Allow-Origin', 'https://gitlab.opendesktop.cc')
-             ->setHeader('Access-Control-Allow-Origin', 'https://forum.opendesktop.cc')   
-             ->setHeader('Access-Control-Allow-Origin', 'https://gitlab.opendesktop.cc')
-             ->setHeader('Access-Control-Allow-Origin', 'http://david.pling.cc')
+             ->setHeader('Access-Control-Allow-Origin', '*')
              ->setHeader('Access-Control-Allow-Credentials', 'true')
              ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
              ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
@@ -147,7 +148,11 @@ class HomeController extends Local_Controller_Action_DomainSwitch
 
         $resultArray['url_forum'] = $url_forum;
         
-        $this->_helper->json($resultArray);
+        $resultAll = array();
+        $resultAll['status'] = "success";
+        $resultAll['data'] = $resultArray;
+        
+        $this->_helper->json($resultAll);
     }
     
     public function blogurlajaxAction()
@@ -155,11 +160,10 @@ class HomeController extends Local_Controller_Action_DomainSwitch
         $this->_helper->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
         
+        header('Access-Control-Allow-Origin: *'); 
+        
         $this->getResponse()
-             ->setHeader('Access-Control-Allow-Origin', 'https://gitlab.opendesktop.cc')
-             ->setHeader('Access-Control-Allow-Origin', 'https://forum.opendesktop.cc')   
-             ->setHeader('Access-Control-Allow-Origin', 'https://gitlab.opendesktop.cc')
-             ->setHeader('Access-Control-Allow-Origin', 'http://david.pling.cc')
+             ->setHeader('Access-Control-Allow-Origin', '*')
              ->setHeader('Access-Control-Allow-Credentials', 'true')
              ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
              ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
@@ -171,7 +175,11 @@ class HomeController extends Local_Controller_Action_DomainSwitch
 
         $resultArray['url_blog'] = $url_blog;
         
-        $this->_helper->json($resultArray);
+        $resultAll = array();
+        $resultAll['status'] = "success";
+        $resultAll['data'] = $resultArray;
+        
+        $this->_helper->json($resultAll);
     }
     
     
@@ -180,11 +188,10 @@ class HomeController extends Local_Controller_Action_DomainSwitch
         $this->_helper->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
         
+        header('Access-Control-Allow-Origin: *'); 
+        
         $this->getResponse()
-             ->setHeader('Access-Control-Allow-Origin', 'https://gitlab.opendesktop.cc')
-             ->setHeader('Access-Control-Allow-Origin', 'https://forum.opendesktop.cc')   
-             ->setHeader('Access-Control-Allow-Origin', 'https://gitlab.opendesktop.cc')
-             ->setHeader('Access-Control-Allow-Origin', 'http://david.pling.cc')
+             ->setHeader('Access-Control-Allow-Origin', '*')
              ->setHeader('Access-Control-Allow-Credentials', 'true')
              ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
              ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
@@ -196,7 +203,11 @@ class HomeController extends Local_Controller_Action_DomainSwitch
 
         $resultArray['store_name'] = $sname;
         
-        $this->_helper->json($resultArray);
+        $resultAll = array();
+        $resultAll['status'] = "success";
+        $resultAll['data'] = $resultArray;
+        
+        $this->_helper->json($resultAll);
     }
     
     public function domainsajaxAction()
@@ -204,11 +215,10 @@ class HomeController extends Local_Controller_Action_DomainSwitch
         $this->_helper->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
         
+        header('Access-Control-Allow-Origin: *'); 
+        
         $this->getResponse()
-             ->setHeader('Access-Control-Allow-Origin', 'https://gitlab.opendesktop.cc')
-             ->setHeader('Access-Control-Allow-Origin', 'https://forum.opendesktop.cc')   
-             ->setHeader('Access-Control-Allow-Origin', 'https://gitlab.opendesktop.cc')
-             ->setHeader('Access-Control-Allow-Origin', 'http://david.pling.cc')
+             ->setHeader('Access-Control-Allow-Origin', '*')
              ->setHeader('Access-Control-Allow-Credentials', 'true')
              ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
              ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
@@ -222,7 +232,11 @@ class HomeController extends Local_Controller_Action_DomainSwitch
 
         $resultArray['domains'] = $domainshelper;
         
-        $this->_helper->json($resultArray);
+        $resultAll = array();
+        $resultAll['status'] = "success";
+        $resultAll['data'] = $resultArray;
+        
+        $this->_helper->json($resultAll);
     }
     
 
