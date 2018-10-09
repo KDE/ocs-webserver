@@ -424,7 +424,8 @@ class MetaHeader extends React.Component {
     this.getDomains();
     this.getUrls();
     var x = document.cookie;
-    console.log(x);
+    console.log('cookie');
+    console.log(JSON.parse(x));
   }
 
   getUser() {
