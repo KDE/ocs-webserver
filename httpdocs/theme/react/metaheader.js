@@ -440,7 +440,7 @@ class MetaHeader extends React.Component {
         if (res.status === "success") {
           self.setState({ user: res.data });
         } else {
-          this.getLogin();
+          self.getLogin();
         }
       }
     });
@@ -554,12 +554,6 @@ class MetaHeader extends React.Component {
   }
 
   render() {
-
-    let domains = this.state.domains;
-    console.log(this.state.domains);
-    if (!this.state.domains || this.state.domains && this.state.domains.length === 0) {
-      domains = appHelpers.getDomainsArray();
-    }
     return React.createElement(
       "nav",
       { id: "metaheader-nav", className: "metaheader" },
@@ -567,7 +561,7 @@ class MetaHeader extends React.Component {
         "div",
         { className: "metamenu" },
         React.createElement(DomainsMenu, {
-          domains: this.state.domains,
+          domains: appHelpers.getDomainsArray(),
           baseUrl: this.state.baseUrl,
           sName: this.state.sName
         }),
