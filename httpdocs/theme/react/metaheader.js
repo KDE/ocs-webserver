@@ -824,7 +824,7 @@ class UserContextMenuContainer extends React.Component {
     console.log('component will mount');
     window.MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
     // Find the element that you want to "watch"
-    var target = document.getElementById('#user-context-dropdown'),
+    var target = document.querySelector('#user-context-dropdown'),
 
     // create an observer instance
     observer = new MutationObserver(function (mutation) {
