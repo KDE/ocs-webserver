@@ -322,6 +322,7 @@ class MetaHeader extends React.Component {
         console.log(response);
       },
       error: function (response) {
+        console.log('error');
         console.log(response);
         const res = JSON.parse(response.responseText);
         if (res.status === "success") {
