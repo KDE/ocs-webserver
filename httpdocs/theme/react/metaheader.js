@@ -291,6 +291,8 @@ window.appHelpers = function () {
       userQueryUrl = "https://www.opendesktop.cc/user/userdataajax";
     } else if (hostname === "gitlab.pling.cc") {
       userQueryUrl = "";
+    } else if (hostname === "forum.opendesktop.cc") {
+      userQueryUrl = "http://159.89.104.141:8001/get_ocs_data.php?url=user/userdataajax";
     }
     return userQueryUrl;
   }
