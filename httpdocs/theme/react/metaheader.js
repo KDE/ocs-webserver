@@ -444,6 +444,7 @@ class DomainsMenu extends React.Component {
         sName: this.props.sName
       }));
     }
+
     return React.createElement(
       "ul",
       { className: "metaheader-menu left", id: "domains-menu" },
@@ -615,6 +616,8 @@ class UserMenu extends React.Component {
         )
       );
     }
+
+    console.log(window.location);
 
     return React.createElement(
       "div",
