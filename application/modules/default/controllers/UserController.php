@@ -270,7 +270,12 @@ class UserController extends Local_Controller_Action_DomainSwitch
              ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
         ;
         
-        if (Zend_Auth::getInstance()->hasIdentity()) {
+        $userid = (int)$this->getParam('id');
+        
+        $tableMember = new Default_Model_Member();
+        $user = $tableMember->find($userid)->current();
+        
+        if ($user) {
         
             $auth = Zend_Auth::getInstance();
             $user = $auth->getStorage()->read();
