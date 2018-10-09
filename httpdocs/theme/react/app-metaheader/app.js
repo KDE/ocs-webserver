@@ -77,7 +77,11 @@ class MetaHeader extends React.Component {
                 console.log(response);
                 const res = JSON.parse(response.responseText);
                 if (res.status === "success"){
-                  self.setState({baseUrl:res.data.base_url});
+                  let baseUrl = res.data.base_url;
+                  if (res.data.base_url.indexOf('http') === -1){
+                    baseUrl = "http://" + res.data.base_url;
+                  }
+                  self.setState({baseUrl:baseUrl});
                 }
               }
             });
