@@ -554,7 +554,9 @@ class MetaHeader extends React.Component {
   }
 
   render() {
+
     let domains = this.state.domains;
+    console.log(this.state.domains);
     if (!this.state.domains) {
       domains = appHelpers.getDomainsArray();
     }
