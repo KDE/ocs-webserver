@@ -553,7 +553,7 @@ var PlingsRedirect = (function () {
     return {
         setup: function () {
             if(window.location.hash) {
-                $('a[href="' + document.location.hash + '"]').trigger("click");
+                $('a[href="' + window.location.hash + '"]').trigger("click");
             } else if (document.location.hash) {
                 $('a[href="' + document.location.hash + '"]').trigger("click");
             }
