@@ -6,45 +6,35 @@ class MetaHeader extends React.Component {
       blogUrl:"https://blog.opendesktop.org",
       loginUrl:"https://www.opendesktop.cc/login/redirect/TFVIFZfgicowyCW5clpDz3sfM1rVUJsb_GwOHCL1oRyPOkMMVswIRPd2kvVz5oQW",
       user:user,
-      sName:sName,
-      loading:false
+      sName:sName
     };
     this.getUser = this.getUser.bind(this);
+    this.getDomains = this.getDomains.bind(this);
     this.getUrls = this.getUrls.bind(this);
   }
 
   componentDidMount() {
     console.log('component did mount');
     this.getUser();
+    this.getDomains();
     this.getUrls();
   }
 
   getUser(){
-    console.log('get user');
-    const userQueryUrl = appHelpers.getUserQueryUrl(window.location.hostname);
-    console.log(userQueryUrl);
+    const userQuery = appHelpers.getUserQueryUrl(window.location.hostname);
+    console.log(userQuery);
     const self = this;
     $.ajax({
-      url:userQueryUrl,
+      url:userQuery.url,
       method:'get',
-      dataType: 'jsonp',
-      done: function(response){
-        console.log('done');
-        console.log(response);
-      },
+      dataType: userQuery.dataType,
       error: function(response){
         console.log('get user');
         console.log(response)
         const res = JSON.parse(response.responseText);
         if (res.status === "success"){
-          self.setState({user:res.data,loading:false});
-        } else {
-          self.setState({loading:false});
+          self.setState({user:res.data});
         }
-      },
-      success: function(response){
-        console.log('success');
-        console.log(response);
       }
     });
   }
@@ -52,11 +42,11 @@ class MetaHeader extends React.Component {
   getUrls(){
     const self = this;
 
-    const forumQueryUrl = appHelpers.getForumQueryUrl(window.location.hostname);
+    const forumQuery = appHelpers.getForumQueryUrl(window.location.hostname);
     $.ajax({
-      url:forumQueryUrl,
+      url:forumQuery.url,
       method:'get',
-      dataType: 'jsonp',
+      dataType:forumQuery.dataType,
       error: function(response){
         console.log('get forum');
         console.log(response);
@@ -67,11 +57,11 @@ class MetaHeader extends React.Component {
       }
     });
 
-    const blogQueryUrl = appHelpers.getBlogQueryUrl(window.location.hostname);
+    const blogQuery = appHelpers.getBlogQueryUrl(window.location.hostname);
     $.ajax({
-      url:blogQueryUrl,
+      url:blogQuery.url,
       method:'get',
-      dataType: 'jsonp',
+      dataType:blogQuery.dataType,
       error: function(response){
         console.log('get blog');
         console.log(response);
@@ -82,14 +72,13 @@ class MetaHeader extends React.Component {
       }
     });
 
-    const baseQueryUrl = appHelpers.getBaseQueryUrl(window.location.hostname);
+    const baseQuery = appHelpers.getBaseQueryUrl(window.location.hostname);
     $.ajax({
-      url:baseQueryUrl,
+      url:baseQuery.url,
       method:'get',
-      dataType: 'jsonp',
+      dataType:baseQuery.dataType,
       error: function(response){
         console.log('get base')
-        console.log('error');
         console.log(response);
         const res = JSON.parse(response.responseText);
         if (res.status === "success"){
@@ -102,14 +91,13 @@ class MetaHeader extends React.Component {
       }
     });
 
-    const storeQueryUrl = appHelpers.getStoreQueryUrl(window.location.hostname);
+    const storeQuery = appHelpers.getStoreQueryUrl(window.location.hostname);
     $.ajax({
-      url:storeQueryUrl,
+      url:storeQuery.url,
       method:'get',
-      dataType: 'jsonp',
+      dataType:storeQuery.dataType,
       error: function(response){
         console.log('get store')
-        console.log('error');
         console.log(response);
         const res = JSON.parse(response.responseText);
         if (res.status === "success"){
@@ -120,13 +108,36 @@ class MetaHeader extends React.Component {
 
   }
 
+  getDomains(){
+    const self = this;
+    const domainsQuery = appHelpers.getDomainsQueryUrl(window.location.hostname);
+    $.ajax({
+      url:domainsQuery.url,
+      method:'get',
+      dataType:domainsQuery.dataType,
+      error: function(response){
+        console.log('get domains');
+        console.log(response);
+        const res = JSON.parse(response.responseText);
+        if (res.status === "success"){
+          console.log(res.data);
+          self.setState({domains:res.data});
+        }
+      }
+    });
+
+  }
+
   render(){
-    let metaMenuDisplay;
-    if (!this.state.loading){
-      metaMenuDisplay = (
+    let domains = this.state.domains;
+    if (!this.state.domains) {
+      domains = appHelpers.getDomainsArray();
+    }
+    return (
+      <nav id="metaheader-nav" className="metaheader">
         <div className="metamenu">
           <DomainsMenu
-            domains={appHelpers.getDomainsArray()}
+            domains={domains}
             baseUrl={this.state.baseUrl}
             sName={this.state.sName}
           />
@@ -136,12 +147,6 @@ class MetaHeader extends React.Component {
             loginUrl={this.state.loginUrl}
           />
         </div>
-      );
-    }
-
-    return (
-      <nav id="metaheader-nav" className="metaheader">
-        {metaMenuDisplay}
       </nav>
     )
   }
@@ -350,9 +355,9 @@ class UserContextMenuContainer extends React.Component {
             aria-haspopup="true"
             aria-expanded={this.state.ariaExpanded}
             onClick={this.toggleDropdown}>
-            <span className="glyphicon glyphicon-th"></span>
+            <span className="th-icon"></span>
           </button>
-          <ul className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu2">
+          <ul id="user-context-dropdown" className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu2">
             <li id="opencode-link-item">
               <a href="https://gitlab.opencode.net/dashboard/projects">
                 <div className="icon"></div>

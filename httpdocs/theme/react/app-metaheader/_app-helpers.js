@@ -152,69 +152,100 @@ window.appHelpers = (function(){
   }
 
   function getUserQueryUrl(hostname){
-    let userQueryUrl;
+    let userQuery = {};
     if (hostname === "www.opendesktop.cc"){
-      userQueryUrl = "https://www.opendesktop.cc/user/userdataajax";
+      userQuery.url = "https://www.opendesktop.cc/user/userdataajax";
+      userQuery.dataType = "jsonp";
     } else if (hostname === "gitlab.pling.cc"){
-      userQueryUrl = "https://gitlab.pling.cc/external/get_ocs_data.php?url=user/userdataajax";
+      userQuery.url = "https://gitlab.pling.cc/external/get_ocs_data.php?url=user/userdataajax";
+      userQuery.dataType = "jsonp";
     } else if (hostname === "forum.opendesktop.cc"){
-      userQueryUrl = "https://forum.opendesktop.cc:8443/get_ocs_data.php?url=user/userdataajax";
+      userQuery.url = "https://forum.opendesktop.cc:8443/get_ocs_data.php?url=user/userdataajax";
+      userQuery.dataType = "json";
     }
-    return userQueryUrl;
+    return userQuery;
+  }
+
+  function getDomainsQueryUrl(hostname){
+    let domainsQuery = {};
+    if (hostname === "www.opendesktop.cc"){
+      domainsQuery.url = "https://www.opendesktop.cc/home/domainsajax";
+      domainsQuery.dataType = "jsonp";
+    } else if (hostname === "gitlab.pling.cc"){
+      domainsQuery.url = "https://gitlab.pling.cc/external/get_ocs_data.php?url=home/domainsajax";
+      domainsQuery.dataType = "jsonp";
+    } else if (hostname === "forum.opendesktop.cc"){
+      domainsQuery.url = "https://forum.opendesktop.cc:8443/get_ocs_data.php?url=home/domainsajax";
+      domainsQuery.dataType = "json";
+    }
+    return domainsQuery;
   }
 
   function getBaseQueryUrl(hostname){
-    let baseQueryUrl;
+    let baseQuery = {};
     if (hostname === "www.opendesktop.cc"){
-      baseQueryUrl = "https://www.opendesktop.cc/home/baseurlajax";
+      baseQuery.url = "https://www.opendesktop.cc/home/baseurlajax";
+      baseQuery.dataType = "jsonp";
     } else if (hostname === "gitlab.pling.cc"){
-      baseQueryUrl = "https://gitlab.pling.cc/external/get_ocs_data.php?url=home/baseurlajax";
+      baseQuery.url = "https://gitlab.pling.cc/external/get_ocs_data.php?url=home/baseurlajax";
+      baseQuery.dataType = "jsonp";
     } else if (hostname === "forum.opendesktop.cc"){
-      baseQueryUrl = "https://forum.opendesktop.cc:8443/get_ocs_data.php?url=home/baseurlajax";
+      baseQuery.url = "https://forum.opendesktop.cc:8443/get_ocs_data.php?url=home/baseurlajax";
+      baseQuery.dataType = "json";
     }
-    return baseQueryUrl;
+    return baseQuery;
   }
 
   function getForumQueryUrl(hostname){
-    let forumQueryUrl;
+    let forumQuery = {};
     if (hostname === "www.opendesktop.cc"){
-      forumQueryUrl = "https://www.opendesktop.cc/home/forumurlajax";
+      forumQuery.url = "https://www.opendesktop.cc/home/forumurlajax";
+      forumQuery.dataType = "jsonp";
     } else if (hostname === "gitlab.pling.cc"){
-      forumQueryUrl = "https://gitlab.pling.cc/external/get_ocs_data.php?url=home/forumurlajax";
+      forumQuery.url = "https://gitlab.pling.cc/external/get_ocs_data.php?url=home/forumurlajax";
+      forumQuery.dataType = "jsonp";
     } else if (hostname === "forum.opendesktop.cc"){
-      forumQueryUrl = "https://forum.opendesktop.cc:8443/get_ocs_data.php?url=home/forumurlajax";
+      forumQuery.url = "https://forum.opendesktop.cc:8443/get_ocs_data.php?url=home/forumurlajax";
+      forumQuery.dataType = "json";
     }
-    return forumQueryUrl;
+    return forumQuery;
   }
 
   function getBlogQueryUrl(hostname){
-    let blogQueryUrl;
+    let blogQuery = {};
     if (hostname === "www.opendesktop.cc"){
-      blogQueryUrl = "https://www.opendesktop.cc/home/blogurlajax";
+      blogQuery.url = "https://www.opendesktop.cc/home/blogurlajax";
+      blogQuery.dataType = "jsonp";
     } else if (hostname === "gitlab.pling.cc"){
-      blogQueryUrl = "https://gitlab.pling.cc/external/get_ocs_data.php?url=home/blogurlajax";
-    }  else if (hostname === "forum.opendesktop.cc"){
-      blogQueryUrl = "https://forum.opendesktop.cc:8443/get_ocs_data.php?url=home/blogurlajax";
+      blogQuery.url = "https://gitlab.pling.cc/external/get_ocs_data.php?url=home/blogurlajax";
+      blogQuery.dataType = "jsonp";
+    } else if (hostname === "forum.opendesktop.cc"){
+      blogQuery.url = "https://forum.opendesktop.cc:8443/get_ocs_data.php?url=home/blogurlajax";
+      blogQuery.dataType = "json";
     }
-    return blogQueryUrl;
+    return blogQuery;
   }
 
   function getStoreQueryUrl(hostname){
-    let storeQueryUrl;
+    let storeQuery = {};
     if (hostname === "www.opendesktop.cc"){
-      storeQueryUrl = "";
+      storeQuery.url = "";
+      storeQuery.dataType = "jsonp";
     } else if (hostname === "gitlab.pling.cc"){
-      storeQueryUrl = "https://gitlab.pling.cc/external/get_ocs_data.php?url=home/storenameajax";
+      storeQuery.url = "https://gitlab.pling.cc/external/get_ocs_data.php?url=home/storenameajax";
+      storeQuery.dataType = "jsonp";
     }  else if (hostname === "forum.opendesktop.cc"){
-      storeQueryUrl = "https://forum.opendesktop.cc:8443/get_ocs_data.php?url=home/storenameajax";
+      storeQuery.url = "https://forum.opendesktop.cc:8443/get_ocs_data.php?url=home/storenameajax";
+      storeQuery.dataType = "json";
     }
-    return storeQueryUrl;
+    return storeQuery;
   }
 
   return {
     generateMenuGroupsArray,
     getDomainsArray,
     getUserQueryUrl,
+    getDomainsQueryUrl,
     getForumQueryUrl,
     getBaseQueryUrl,
     getBlogQueryUrl,

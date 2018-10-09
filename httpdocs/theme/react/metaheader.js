@@ -286,69 +286,100 @@ window.appHelpers = function () {
   }
 
   function getUserQueryUrl(hostname) {
-    let userQueryUrl;
+    let userQuery = {};
     if (hostname === "www.opendesktop.cc") {
-      userQueryUrl = "https://www.opendesktop.cc/user/userdataajax";
+      userQuery.url = "https://www.opendesktop.cc/user/userdataajax";
+      userQuery.dataType = "jsonp";
     } else if (hostname === "gitlab.pling.cc") {
-      userQueryUrl = "https://gitlab.pling.cc/external/get_ocs_data.php?url=user/userdataajax";
+      userQuery.url = "https://gitlab.pling.cc/external/get_ocs_data.php?url=user/userdataajax";
+      userQuery.dataType = "jsonp";
     } else if (hostname === "forum.opendesktop.cc") {
-      userQueryUrl = "https://forum.opendesktop.cc:8443/get_ocs_data.php?url=user/userdataajax";
+      userQuery.url = "https://forum.opendesktop.cc:8443/get_ocs_data.php?url=user/userdataajax";
+      userQuery.dataType = "json";
     }
-    return userQueryUrl;
+    return userQuery;
+  }
+
+  function getDomainsQueryUrl(hostname) {
+    let domainsQuery = {};
+    if (hostname === "www.opendesktop.cc") {
+      domainsQuery.url = "https://www.opendesktop.cc/home/domainsajax";
+      domainsQuery.dataType = "jsonp";
+    } else if (hostname === "gitlab.pling.cc") {
+      domainsQuery.url = "https://gitlab.pling.cc/external/get_ocs_data.php?url=home/domainsajax";
+      domainsQuery.dataType = "jsonp";
+    } else if (hostname === "forum.opendesktop.cc") {
+      domainsQuery.url = "https://forum.opendesktop.cc:8443/get_ocs_data.php?url=home/domainsajax";
+      domainsQuery.dataType = "json";
+    }
+    return domainsQuery;
   }
 
   function getBaseQueryUrl(hostname) {
-    let baseQueryUrl;
+    let baseQuery = {};
     if (hostname === "www.opendesktop.cc") {
-      baseQueryUrl = "https://www.opendesktop.cc/home/baseurlajax";
+      baseQuery.url = "https://www.opendesktop.cc/home/baseurlajax";
+      baseQuery.dataType = "jsonp";
     } else if (hostname === "gitlab.pling.cc") {
-      baseQueryUrl = "https://gitlab.pling.cc/external/get_ocs_data.php?url=home/baseurlajax";
+      baseQuery.url = "https://gitlab.pling.cc/external/get_ocs_data.php?url=home/baseurlajax";
+      baseQuery.dataType = "jsonp";
     } else if (hostname === "forum.opendesktop.cc") {
-      baseQueryUrl = "https://forum.opendesktop.cc:8443/get_ocs_data.php?url=home/baseurlajax";
+      baseQuery.url = "https://forum.opendesktop.cc:8443/get_ocs_data.php?url=home/baseurlajax";
+      baseQuery.dataType = "json";
     }
-    return baseQueryUrl;
+    return baseQuery;
   }
 
   function getForumQueryUrl(hostname) {
-    let forumQueryUrl;
+    let forumQuery = {};
     if (hostname === "www.opendesktop.cc") {
-      forumQueryUrl = "https://www.opendesktop.cc/home/forumurlajax";
+      forumQuery.url = "https://www.opendesktop.cc/home/forumurlajax";
+      forumQuery.dataType = "jsonp";
     } else if (hostname === "gitlab.pling.cc") {
-      forumQueryUrl = "https://gitlab.pling.cc/external/get_ocs_data.php?url=home/forumurlajax";
+      forumQuery.url = "https://gitlab.pling.cc/external/get_ocs_data.php?url=home/forumurlajax";
+      forumQuery.dataType = "jsonp";
     } else if (hostname === "forum.opendesktop.cc") {
-      forumQueryUrl = "https://forum.opendesktop.cc:8443/get_ocs_data.php?url=home/forumurlajax";
+      forumQuery.url = "https://forum.opendesktop.cc:8443/get_ocs_data.php?url=home/forumurlajax";
+      forumQuery.dataType = "json";
     }
-    return forumQueryUrl;
+    return forumQuery;
   }
 
   function getBlogQueryUrl(hostname) {
-    let blogQueryUrl;
+    let blogQuery = {};
     if (hostname === "www.opendesktop.cc") {
-      blogQueryUrl = "https://www.opendesktop.cc/home/blogurlajax";
+      blogQuery.url = "https://www.opendesktop.cc/home/blogurlajax";
+      blogQuery.dataType = "jsonp";
     } else if (hostname === "gitlab.pling.cc") {
-      blogQueryUrl = "https://gitlab.pling.cc/external/get_ocs_data.php?url=home/blogurlajax";
+      blogQuery.url = "https://gitlab.pling.cc/external/get_ocs_data.php?url=home/blogurlajax";
+      blogQuery.dataType = "jsonp";
     } else if (hostname === "forum.opendesktop.cc") {
-      blogQueryUrl = "https://forum.opendesktop.cc:8443/get_ocs_data.php?url=home/blogurlajax";
+      blogQuery.url = "https://forum.opendesktop.cc:8443/get_ocs_data.php?url=home/blogurlajax";
+      blogQuery.dataType = "json";
     }
-    return blogQueryUrl;
+    return blogQuery;
   }
 
   function getStoreQueryUrl(hostname) {
-    let storeQueryUrl;
+    let storeQuery = {};
     if (hostname === "www.opendesktop.cc") {
-      storeQueryUrl = "";
+      storeQuery.url = "";
+      storeQuery.dataType = "jsonp";
     } else if (hostname === "gitlab.pling.cc") {
-      storeQueryUrl = "https://gitlab.pling.cc/external/get_ocs_data.php?url=home/storenameajax";
+      storeQuery.url = "https://gitlab.pling.cc/external/get_ocs_data.php?url=home/storenameajax";
+      storeQuery.dataType = "jsonp";
     } else if (hostname === "forum.opendesktop.cc") {
-      storeQueryUrl = "https://forum.opendesktop.cc:8443/get_ocs_data.php?url=home/storenameajax";
+      storeQuery.url = "https://forum.opendesktop.cc:8443/get_ocs_data.php?url=home/storenameajax";
+      storeQuery.dataType = "json";
     }
-    return storeQueryUrl;
+    return storeQuery;
   }
 
   return {
     generateMenuGroupsArray,
     getDomainsArray,
     getUserQueryUrl,
+    getDomainsQueryUrl,
     getForumQueryUrl,
     getBaseQueryUrl,
     getBlogQueryUrl,
@@ -363,45 +394,35 @@ class MetaHeader extends React.Component {
       blogUrl: "https://blog.opendesktop.org",
       loginUrl: "https://www.opendesktop.cc/login/redirect/TFVIFZfgicowyCW5clpDz3sfM1rVUJsb_GwOHCL1oRyPOkMMVswIRPd2kvVz5oQW",
       user: user,
-      sName: sName,
-      loading: false
+      sName: sName
     };
     this.getUser = this.getUser.bind(this);
+    this.getDomains = this.getDomains.bind(this);
     this.getUrls = this.getUrls.bind(this);
   }
 
   componentDidMount() {
     console.log('component did mount');
     this.getUser();
+    this.getDomains();
     this.getUrls();
   }
 
   getUser() {
-    console.log('get user');
-    const userQueryUrl = appHelpers.getUserQueryUrl(window.location.hostname);
-    console.log(userQueryUrl);
+    const userQuery = appHelpers.getUserQueryUrl(window.location.hostname);
+    console.log(userQuery);
     const self = this;
     $.ajax({
-      url: userQueryUrl,
+      url: userQuery.url,
       method: 'get',
-      dataType: 'jsonp',
-      done: function (response) {
-        console.log('done');
-        console.log(response);
-      },
+      dataType: userQuery.dataType,
       error: function (response) {
         console.log('get user');
         console.log(response);
         const res = JSON.parse(response.responseText);
         if (res.status === "success") {
-          self.setState({ user: res.data, loading: false });
-        } else {
-          self.setState({ loading: false });
+          self.setState({ user: res.data });
         }
-      },
-      success: function (response) {
-        console.log('success');
-        console.log(response);
       }
     });
   }
@@ -409,11 +430,11 @@ class MetaHeader extends React.Component {
   getUrls() {
     const self = this;
 
-    const forumQueryUrl = appHelpers.getForumQueryUrl(window.location.hostname);
+    const forumQuery = appHelpers.getForumQueryUrl(window.location.hostname);
     $.ajax({
-      url: forumQueryUrl,
+      url: forumQuery.url,
       method: 'get',
-      dataType: 'jsonp',
+      dataType: forumQuery.dataType,
       error: function (response) {
         console.log('get forum');
         console.log(response);
@@ -424,11 +445,11 @@ class MetaHeader extends React.Component {
       }
     });
 
-    const blogQueryUrl = appHelpers.getBlogQueryUrl(window.location.hostname);
+    const blogQuery = appHelpers.getBlogQueryUrl(window.location.hostname);
     $.ajax({
-      url: blogQueryUrl,
+      url: blogQuery.url,
       method: 'get',
-      dataType: 'jsonp',
+      dataType: blogQuery.dataType,
       error: function (response) {
         console.log('get blog');
         console.log(response);
@@ -439,14 +460,13 @@ class MetaHeader extends React.Component {
       }
     });
 
-    const baseQueryUrl = appHelpers.getBaseQueryUrl(window.location.hostname);
+    const baseQuery = appHelpers.getBaseQueryUrl(window.location.hostname);
     $.ajax({
-      url: baseQueryUrl,
+      url: baseQuery.url,
       method: 'get',
-      dataType: 'jsonp',
+      dataType: baseQuery.dataType,
       error: function (response) {
         console.log('get base');
-        console.log('error');
         console.log(response);
         const res = JSON.parse(response.responseText);
         if (res.status === "success") {
@@ -459,14 +479,13 @@ class MetaHeader extends React.Component {
       }
     });
 
-    const storeQueryUrl = appHelpers.getStoreQueryUrl(window.location.hostname);
+    const storeQuery = appHelpers.getStoreQueryUrl(window.location.hostname);
     $.ajax({
-      url: storeQueryUrl,
+      url: storeQuery.url,
       method: 'get',
-      dataType: 'jsonp',
+      dataType: storeQuery.dataType,
       error: function (response) {
         console.log('get store');
-        console.log('error');
         console.log(response);
         const res = JSON.parse(response.responseText);
         if (res.status === "success") {
@@ -476,14 +495,38 @@ class MetaHeader extends React.Component {
     });
   }
 
+  getDomains() {
+    const self = this;
+    const domainsQuery = appHelpers.getDomainsQueryUrl(window.location.hostname);
+    $.ajax({
+      url: domainsQuery.url,
+      method: 'get',
+      dataType: domainsQuery.dataType,
+      error: function (response) {
+        console.log('get domains');
+        console.log(response);
+        const res = JSON.parse(response.responseText);
+        if (res.status === "success") {
+          console.log(res.data);
+          self.setState({ domains: res.data });
+        }
+      }
+    });
+  }
+
   render() {
-    let metaMenuDisplay;
-    if (!this.state.loading) {
-      metaMenuDisplay = React.createElement(
+    let domains = this.state.domains;
+    if (!this.state.domains) {
+      domains = appHelpers.getDomainsArray();
+    }
+    return React.createElement(
+      "nav",
+      { id: "metaheader-nav", className: "metaheader" },
+      React.createElement(
         "div",
         { className: "metamenu" },
         React.createElement(DomainsMenu, {
-          domains: appHelpers.getDomainsArray(),
+          domains: domains,
           baseUrl: this.state.baseUrl,
           sName: this.state.sName
         }),
@@ -492,13 +535,7 @@ class MetaHeader extends React.Component {
           blogUrl: this.state.blogUrl,
           loginUrl: this.state.loginUrl
         })
-      );
-    }
-
-    return React.createElement(
-      "nav",
-      { id: "metaheader-nav", className: "metaheader" },
-      metaMenuDisplay
+      )
     );
   }
 }
@@ -816,11 +853,11 @@ class UserContextMenuContainer extends React.Component {
             "aria-haspopup": "true",
             "aria-expanded": this.state.ariaExpanded,
             onClick: this.toggleDropdown },
-          React.createElement("span", { className: "glyphicon glyphicon-th" })
+          React.createElement("span", { className: "th-icon" })
         ),
         React.createElement(
           "ul",
-          { className: "dropdown-menu dropdown-menu-right", "aria-labelledby": "dropdownMenu2" },
+          { id: "user-context-dropdown", className: "dropdown-menu dropdown-menu-right", "aria-labelledby": "dropdownMenu2" },
           React.createElement(
             "li",
             { id: "opencode-link-item" },

@@ -8,6 +8,31 @@ body {
   .navbar-gitlab {
     top: 34px;
   }
+
+  &.ui-indigo  {
+    #metaheader {
+      position: fixed;
+      #metaheader-nav {
+        #user-context-menu-container {
+          .user-dropdown .dropdown-menu {
+            margin-top: 14px !important;
+          }
+          .user-dropdown .dropdown-menu::before {
+            right: 4px !important;
+          }
+        }
+
+        #user-login-menu-container {
+          .user-dropdown .dropdown-menu {
+            margin-top: 13px !important;
+          }
+          .user-dropdown .dropdown-menu::before {
+            right: 4px !important;
+          }
+        }
+      }
+    }
+  }
 }
 
 #metaheader {
@@ -16,7 +41,7 @@ body {
   height: 34px;
   font-family: "Helvetica","Arial",sans-serif !important;
   font-size: 14px !important;
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   z-index: 1001;
@@ -47,6 +72,11 @@ body {
     -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
     box-shadow: 0 6px 12px rgba(0,0,0,.175);
     background-color: white;
+
+    &.dropdown-menu-right {
+      right: 0;
+      left: auto;
+    }
 
     li {
       padding: 0;
@@ -359,6 +389,15 @@ body {
 
       .user-dropdown {
 
+        .th-icon {
+          height: 24px;
+          width: 24px;
+          display: block;
+          background-image: url(../img/glyphicons-th.svg);
+          background-size: 32px;
+          background-position: center -5px;
+        }
+
         .dropdown-menu  {
           padding: 23px 28px;
           right: -42px;
@@ -483,7 +522,7 @@ body {
             height: 26px;
             width: 26px;
             border-radius: 100%;
-            margin-top: -4px;
+            margin-top: -1px;
           }
         }
         .dropdown-menu {
@@ -580,8 +619,10 @@ body {
           li.buttons {
             padding: 10px 20px;
             background-color: #f5f5f5;
+            width: 100%;
 
             .btn {
+              width: auto;
               display: block;
               border-radius: 2px;
               padding: 0 16px;
@@ -593,6 +634,10 @@ body {
               border: 1px solid #c6c6c6;
               float: left;
               clear: none;
+
+              &.pull-right {
+                float: right;
+              }
 
               &:hover {
                 -webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.1);
