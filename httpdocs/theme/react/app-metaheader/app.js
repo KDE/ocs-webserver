@@ -52,6 +52,7 @@ class MetaHeader extends React.Component {
       dataType: 'jsonp',
       error: function(response){
         console.log('error');
+        console.log(response);        
         const res = JSON.parse(response.responseText);
         if (res.status === "success"){
           self.setState({forumUrl:res.data.url_forum});
@@ -62,6 +63,7 @@ class MetaHeader extends React.Component {
           dataType: 'jsonp',
           error: function(response){
             console.log('error');
+            console.log(response);
             const res = JSON.parse(response.responseText);
             if (res.status === "success"){
               self.setState({blogUrl:res.data.url_blog})
@@ -72,6 +74,7 @@ class MetaHeader extends React.Component {
               dataType: 'jsonp',
               error: function(response){
                 console.log('error');
+                console.log(response);
                 const res = JSON.parse(response.responseText);
                 if (res.status === "success"){
                   self.setState({baseUrl:res.data.url_base})
