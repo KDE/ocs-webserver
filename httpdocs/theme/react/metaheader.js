@@ -643,7 +643,7 @@ class UserMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { id: "plingList", className: "popuppanel", href: "https://www.opendesktop.cc/plings" },
+            { id: "plingList", className: "popuppanel", href: "https://www.opendesktop.cc/plings#plingList" },
             "What are Plings?"
           )
         ),
@@ -652,7 +652,7 @@ class UserMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { id: "ocsapiContent", className: "popuppanel", href: "https://www.opendesktop.cc/partials/ocsapicontent.phtml" },
+            { id: "ocsapiContent", className: "popuppanel", href: "https://www.opendesktop.cc/partials/ocsapicontent.phtml#ocsapiContent" },
             "API"
           )
         ),
@@ -661,7 +661,7 @@ class UserMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { id: "aboutContent", className: "popuppanel", href: "https://www.opendesktop.cc/partials/about.phtml" },
+            { id: "aboutContent", className: "popuppanel", href: "https://www.opendesktop.cc/partials/about.phtml#aboutContent" },
             "About"
           )
         ),
