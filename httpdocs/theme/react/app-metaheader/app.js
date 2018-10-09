@@ -9,7 +9,7 @@ class MetaHeader extends React.Component {
       sName:sName
     };
     this.getUser = this.getUser.bind(this);
-    this.getLogin = this.getLogin(this);
+    this.getLogin = this.getLogin.bind(this);
     this.getDomains = this.getDomains.bind(this);
     this.getUrls = this.getUrls.bind(this);
   }
