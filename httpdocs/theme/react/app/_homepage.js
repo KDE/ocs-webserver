@@ -211,13 +211,7 @@ class ProductCarousel extends React.Component {
 
     let carouselItemsDisplay;
     if (this.props.products && this.props.products.length > 0){
-
-      // DUPLICATE
-      let productsArray = this.props.products.concat(this.props.products);
-      productsArray = productsArray.concat(this.props.products);
-      // DUPLICATE
-
-      carouselItemsDisplay = productsArray.map((product,index) => (
+      carouselItemsDisplay = this.props.products.map((product,index) => (
         <ProductCarouselItem
           key={index}
           product={product}
