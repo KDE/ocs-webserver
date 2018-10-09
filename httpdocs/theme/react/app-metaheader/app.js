@@ -371,7 +371,7 @@ class UserContextMenuContainer extends React.Component {
             aria-haspopup="true"
             aria-expanded={this.state.ariaExpanded}
             onClick={this.toggleDropdown}>
-            <span className="glyphicon glyphicon-th"></span>
+            <span className="th-icon"></span>
           </button>
           <ul className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu2">
             <li id="opencode-link-item">

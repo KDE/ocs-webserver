@@ -849,7 +849,7 @@ class UserContextMenuContainer extends React.Component {
             "aria-haspopup": "true",
             "aria-expanded": this.state.ariaExpanded,
             onClick: this.toggleDropdown },
-          React.createElement("span", { className: "glyphicon glyphicon-th" })
+          React.createElement("span", { className: "th-icon" })
         ),
         React.createElement(
           "ul",
