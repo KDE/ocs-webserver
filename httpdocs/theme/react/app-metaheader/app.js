@@ -19,6 +19,8 @@ class MetaHeader extends React.Component {
     this.getUser();
     this.getDomains();
     this.getUrls();
+    var x = document.cookie;
+    console.log(x);
   }
 
   getUser(){
@@ -43,7 +45,7 @@ class MetaHeader extends React.Component {
   }
 
   getLogin(){
-    const loginQuery = appHelpers.getUserQueryUrl(window.location.hostname);
+    const loginQuery = appHelpers.getLoginQueryUrl(window.location.hostname);
     console.log(loginQuery);
     const self = this;
     $.ajax({
@@ -152,11 +154,12 @@ class MetaHeader extends React.Component {
   }
 
   render(){
+    const domains = appHelpers.getDomainsArray();
     return (
       <nav id="metaheader-nav" className="metaheader">
         <div className="metamenu">
           <DomainsMenu
-            domains={appHelpers.getDomainsArray()}
+            domains={domains}
             baseUrl={this.state.baseUrl}
             sName={this.state.sName}
           />
@@ -259,8 +262,6 @@ class DomainsMenuGroup extends React.Component {
   }
 
   render(){
-    let domainsDisplay;
-    if (this.props.domains && this.props.domains.length > 0){
       const domainsDisplay = this.props.domains.filter(this.filterDomainsByMenuGroup).map((domain,index) => {
         let domainPrefix = "http://";
         if (domain.menuhref.indexOf('pling.cc') === -1 && domain.menuhref.indexOf('www') === -1){
@@ -272,7 +273,6 @@ class DomainsMenuGroup extends React.Component {
           </li>
         );
       });
-    }
 
     return (
       <li>

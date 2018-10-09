@@ -309,7 +309,7 @@ window.appHelpers = function () {
       userQuery.url = "https://gitlab.pling.cc/external/get_ocs_data.php?url=user/userdataajax";
       userQuery.dataType = "jsonp";
     } else if (hostname === "forum.opendesktop.cc") {
-      userQuery.url = "https://forum.opendesktop.cc:8443/get_ocs_data.php?url=user/userdataajax";
+      userQuery.url = "https://forum.opendesktop.cc:8443/get_ocs_userdata.php";
       userQuery.dataType = "json";
     }
     return userQuery;
@@ -423,6 +423,8 @@ class MetaHeader extends React.Component {
     this.getUser();
     this.getDomains();
     this.getUrls();
+    var x = document.cookie;
+    console.log(x);
   }
 
   getUser() {
@@ -447,7 +449,7 @@ class MetaHeader extends React.Component {
   }
 
   getLogin() {
-    const loginQuery = appHelpers.getUserQueryUrl(window.location.hostname);
+    const loginQuery = appHelpers.getLoginQueryUrl(window.location.hostname);
     console.log(loginQuery);
     const self = this;
     $.ajax({
@@ -554,6 +556,7 @@ class MetaHeader extends React.Component {
   }
 
   render() {
+    const domains = appHelpers.getDomainsArray();
     return React.createElement(
       "nav",
       { id: "metaheader-nav", className: "metaheader" },
@@ -561,7 +564,7 @@ class MetaHeader extends React.Component {
         "div",
         { className: "metamenu" },
         React.createElement(DomainsMenu, {
-          domains: appHelpers.getDomainsArray(),
+          domains: domains,
           baseUrl: this.state.baseUrl,
           sName: this.state.sName
         }),
@@ -711,24 +714,21 @@ class DomainsMenuGroup extends React.Component {
   }
 
   render() {
-    let domainsDisplay;
-    if (this.props.domains && this.props.domains.length > 0) {
-      const domainsDisplay = this.props.domains.filter(this.filterDomainsByMenuGroup).map((domain, index) => {
-        let domainPrefix = "http://";
-        if (domain.menuhref.indexOf('pling.cc') === -1 && domain.menuhref.indexOf('www') === -1) {
-          domainPrefix += "www.";
-        }
-        return React.createElement(
-          "li",
-          { key: index },
-          React.createElement(
-            "a",
-            { href: domainPrefix + domain.menuhref },
-            domain.name
-          )
-        );
-      });
-    }
+    const domainsDisplay = this.props.domains.filter(this.filterDomainsByMenuGroup).map((domain, index) => {
+      let domainPrefix = "http://";
+      if (domain.menuhref.indexOf('pling.cc') === -1 && domain.menuhref.indexOf('www') === -1) {
+        domainPrefix += "www.";
+      }
+      return React.createElement(
+        "li",
+        { key: index },
+        React.createElement(
+          "a",
+          { href: domainPrefix + domain.menuhref },
+          domain.name
+        )
+      );
+    });
 
     return React.createElement(
       "li",
