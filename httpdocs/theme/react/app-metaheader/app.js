@@ -157,6 +157,7 @@ class DomainsMenu extends React.Component {
         />
       ));
     }
+
     return (
       <ul className="metaheader-menu left" id="domains-menu">
         <li className="active">
@@ -260,6 +261,8 @@ class UserMenu extends React.Component {
         <li id="user-login-container"><a href={this.props.loginUrl} className="btn btn-metaheader">Login</a></li>
       )
     }
+
+    console.log(window.location);
 
     return (
       <div id="user-menu-container" className="right">
