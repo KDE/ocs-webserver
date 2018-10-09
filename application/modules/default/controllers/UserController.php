@@ -279,9 +279,20 @@ class UserController extends Local_Controller_Action_DomainSwitch
             $resultArray['username'] = $user->username;
             $resultArray['mail'] = $user->mail;
             $resultArray['avatar'] = $user->profile_image_url;
+            
+            
+        } else {
+            $resultArray['member_id'] = null;
+            $resultArray['username'] = null;
+            $resultArray['mail'] = null;
+            $resultArray['avatar'] = null;
         }
         
-        $this->_helper->json($resultArray);
+        $resultAll = array();
+        $resultAll['status'] = "success";
+        $resultAll['data'] = $resultArray;
+        
+        $this->_helper->json($resultAll);
     }
 
     public function followsAction()
