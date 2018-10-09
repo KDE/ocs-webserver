@@ -152,17 +152,11 @@ class MetaHeader extends React.Component {
   }
 
   render(){
-
-    let domains = this.state.domains;
-    console.log(this.state.domains);
-    if (!this.state.domains || this.state.domains && this.state.domains.length === 0) {
-      domains = appHelpers.getDomainsArray();
-    }
     return (
       <nav id="metaheader-nav" className="metaheader">
         <div className="metamenu">
           <DomainsMenu
-            domains={this.state.domains}
+            domains={appHelpers.getDomainsArray()}
             baseUrl={this.state.baseUrl}
             sName={this.state.sName}
           />
