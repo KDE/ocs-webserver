@@ -316,7 +316,7 @@ class MetaHeader extends React.Component {
     $.ajax({
       url: 'https://www.opendesktop.cc/user/userdataajax',
       method: 'get',
-      dataType: 'json',
+      dataType: 'jsonp',
       done: function (response) {
         console.log('done');
         console.log(response);
@@ -618,13 +618,14 @@ class UserMenu extends React.Component {
     }
 
     console.log(window.location);
-    let plingListUrl = "https://www.opendesktop.cc/plings",
-        ocsapiContentUrl = "https://www.opendesktop.cc/partials/ocsapicontent.phtml",
-        aboutContentUrl = "https://www.opendesktop.cc/partials/about.phtml";
+    let plingListUrl = "https://www.opendesktop.cc/#plingList",
+        ocsapiContentUrl = "https://www.opendesktop.cc/#ocsapiContent",
+        aboutContentUrl = "https://www.opendesktop.cc/#aboutContent";
+
     if (window.location.hostname === "www.opendesktop.cc") {
-      plingListUrl = "https://www.opendesktop.cc/#plingList";
-      ocsapiContentUrl = "https://www.opendesktop.cc/#ocsapiContent";
-      aboutContentUrl = "https://www.opendesktop.cc/#aboutContent";
+      plingListUrl = "https://www.opendesktop.cc/plings";
+      ocsapiContentUrl = "https://www.opendesktop.cc/partials/ocsapicontent.phtml";
+      aboutContentUrl = "https://www.opendesktop.cc/partials/about.phtml";
     }
 
     return React.createElement(
