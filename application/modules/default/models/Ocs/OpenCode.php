@@ -58,6 +58,8 @@ class Default_Model_Ocs_OpenCode
             return false;
         }
 
+        $this->messages = array();
+
         $data = $this->mapUserData($member_data);
 
         $user = $this->getUser($data['extern_uid'], $data['username']);
@@ -104,7 +106,8 @@ class Default_Model_Ocs_OpenCode
         $data = array(
             'email'            => $paramEmail,
             'username'         => strtolower($user['username']),
-            'name'             => (false == empty($user['lastname'])) ? trim($user['firstname'] . ' ' . $user['lastname']) : $user['username'],
+            'name'             => (false == empty($user['lastname'])) ? trim($user['firstname'] . ' ' . $user['lastname'])
+                : $user['username'],
             'password'         => $user['password'],
             'provider'         => 'all',
             'extern_uid'       => $user['external_id'],
@@ -117,6 +120,40 @@ class Default_Model_Ocs_OpenCode
         );
 
         return $data;
+    }
+
+    /**
+     * @param $extern_uid
+     * @param $username
+     *
+     * @return array|null
+     * @throws Default_Model_Ocs_Exception
+     * @throws Zend_Exception
+     * @throws Zend_Http_Client_Exception
+     * @throws Zend_Json_Exception
+     */
+    private function getUser($extern_uid, $username)
+    {
+        $user_by_uid = $this->getUserByExternUid($extern_uid);
+        $user_by_dn = $this->getUserByDN($username);
+
+        if (empty($user_by_uid) AND empty($user_by_dn)) {
+            return null;
+        }
+
+        if (!empty($user_by_uid) AND empty($user_by_dn)) {
+            return $user_by_uid;
+        }
+
+        if (empty($user_by_uid) AND !empty($user_by_dn)) {
+            return $user_by_dn;
+        }
+
+        if ($user_by_dn['id'] == $user_by_uid['id']) {
+            return $user_by_dn;
+        }
+
+        return $user_by_dn;
     }
 
     /**
@@ -547,40 +584,6 @@ class Default_Model_Ocs_OpenCode
         $this->messages[] = "Success";
 
         return true;
-    }
-
-    /**
-     * @param $extern_uid
-     * @param $username
-     *
-     * @return array|null
-     * @throws Default_Model_Ocs_Exception
-     * @throws Zend_Exception
-     * @throws Zend_Http_Client_Exception
-     * @throws Zend_Json_Exception
-     */
-    private function getUser($extern_uid, $username)
-    {
-        $user_by_uid = $this->getUserByExternUid($extern_uid);
-        $user_by_dn = $this->getUserByDN($username);
-
-        if (empty($user_by_uid) AND empty($user_by_dn)) {
-            return null;
-        }
-
-        if (!empty($user_by_uid) AND empty($user_by_dn)) {
-            return $user_by_uid;
-        }
-
-        if (empty($user_by_uid) AND !empty($user_by_dn)) {
-            return $user_by_dn;
-        }
-
-        if ($user_by_dn['id'] == $user_by_uid['id']) {
-            return $user_by_dn;
-        }
-
-        return $user_by_dn;
     }
 
 }

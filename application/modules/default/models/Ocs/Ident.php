@@ -49,6 +49,21 @@ class Default_Model_Ocs_Ident
     }
 
     /**
+     * @return string
+     * @throws Zend_Exception
+     */
+    public static function getBaseDn()
+    {
+        try {
+            return Zend_Registry::get('config')->settings->server->ldap->baseDn;
+        } catch (Zend_Exception $e) {
+            Zend_Registry::get('logger')->err($e->getMessage());
+
+            return '';
+        }
+    }
+
+    /**
      * @param int $member_id
      *
      * @return bool
@@ -86,65 +101,6 @@ class Default_Model_Ocs_Ident
 
         return true;
     }
-    
-    
-    /**
-     * @param int $member_id
-     *
-     * @return bool
-     * @throws Zend_Exception
-     * @throws Zend_Ldap_Exception
-     */
-    public function updateAvatar($member_id)
-    {
-
-        $member_data = $this->getMemberData($member_id);
-        $imgTempPath = 'img/data/'.$member_id."_avatar.jpg";
-        $im = new imagick($member_data['profile_image_url']);
-        // convert to jpeg
-        $im->setImageFormat('jpeg');
-        //write image on server
-        $im->writeImage($imgTempPath);
-        $im->clear();
-        $im->destroy(); 
-        
-        $avatarJpeg = $imgTempPath;
-        
-        //$avatarJpeg = imagecreatetrucolor(file_get_contents($avatar), $imgTempPath);
-        //$avatarBase64 = base64_decode(file_get_contents($avatarJpeg));
-        $avatarBase64 = file_get_contents($avatarJpeg);
-
-
-        $connection = $this->getServerConnection();
-
-        try {
-            $entry = $this->getEntry($member_data, $connection);
-        } catch (Exception $e) {
-            $this->errMessages[] = "Failed.";
-            Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . $e->getMessage());
-
-            return false;
-        }
-        if (empty($entry)) {
-            $this->errMessages[] = "Failed.";
-            Zend_Registry::get('logger')->err(__METHOD__ . ' - ldap entry for member does not exists. Going to create it.');
-
-            return false;
-        }
-
-        Zend_Ldap_Attribute::removeFromAttribute($entry, 'jpegPhoto', Zend_Ldap_Attribute::getAttribute($entry, 'jpegPhoto'));
-        
-        Zend_Ldap_Attribute::setAttribute($entry, 'jpegPhoto', $avatarBase64);
-        
-        $dn = $entry['dn'];
-        $connection->update($dn, $entry);
-        $connection->getLastError($this->errCode, $this->errMessages);
-        
-        unlink($imgTempPath);
-
-        return true;
-    }
-    
 
     /**
      * @return null|Zend_Ldap
@@ -341,6 +297,8 @@ class Default_Model_Ocs_Ident
         $entry = $this->createIdentEntry($member_data);
         $username = strtolower($member_data['username']);
         $connection->add("cn={$username},{$this->baseDn}", $entry);
+        //set avatar
+        $this->updateAvatar($member_id);
         $connection->getLastError($this->errCode, $this->errMessages);
 
         return true;
@@ -376,6 +334,61 @@ class Default_Model_Ocs_Ident
         }
 
         return $entry;
+    }
+
+    /**
+     * @param int $member_id
+     *
+     * @return bool
+     * @throws Zend_Exception
+     * @throws Zend_Ldap_Exception
+     */
+    public function updateAvatar($member_id)
+    {
+
+        $member_data = $this->getMemberData($member_id);
+        $imgTempPath = 'img/data/' . $member_id . "_avatar.jpg";
+        $im = new imagick($member_data['profile_image_url']);
+        $im = $im->flattenImages();
+
+        // convert to jpeg
+        $im->setImageFormat('jpeg');
+        //write image on server
+        $im->writeImage($imgTempPath);
+        $im->clear();
+        $im->destroy();
+
+        $avatarJpeg = $imgTempPath;
+        $avatarBase64 = file_get_contents($avatarJpeg);
+
+        $connection = $this->getServerConnection();
+
+        try {
+            $entry = $this->getEntry($member_data, $connection);
+        } catch (Exception $e) {
+            $this->errMessages[] = "Failed.";
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . $e->getMessage());
+
+            return false;
+        }
+        if (empty($entry)) {
+            $this->errMessages[] = "Failed.";
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ldap entry for member does not exists. Going to create it.');
+
+            return false;
+        }
+
+        Zend_Ldap_Attribute::removeFromAttribute($entry, 'jpegPhoto', Zend_Ldap_Attribute::getAttribute($entry, 'jpegPhoto'));
+
+        Zend_Ldap_Attribute::setAttribute($entry, 'jpegPhoto', $avatarBase64);
+
+        $dn = $entry['dn'];
+        $connection->update($dn, $entry);
+        $connection->getLastError($this->errCode, $this->errMessages);
+
+        unlink($imgTempPath);
+
+        return true;
     }
 
     private function updateIdentEntry($member_data, $oldEntry)
@@ -414,6 +427,22 @@ class Default_Model_Ocs_Ident
             Zend_Ldap_Attribute::removeFromAttribute($entry, 'sn', Zend_Ldap_Attribute::getAttribute($oldEntry, 'sn'));
             Zend_Ldap_Attribute::setAttribute($entry, 'sn', $member_data['lastname']);
         }
+
+        //Avatar
+        $imgTempPath = 'img/data/' . $member_data['member_id'] . "_avatar.jpg";
+        $im = new imagick($member_data['profile_image_url']);
+        $im = $im->flattenImages();
+
+        // convert to jpeg
+        $im->setImageFormat('jpeg');
+        //write image on server
+        $im->writeImage($imgTempPath);
+        $im->clear();
+        $im->destroy();
+        $avatarJpeg = $imgTempPath;
+        $avatarFileData = file_get_contents($avatarJpeg);
+        Zend_Ldap_Attribute::removeFromAttribute($entry, 'jpegPhoto', Zend_Ldap_Attribute::getAttribute($entry, 'jpegPhoto'));
+        Zend_Ldap_Attribute::setAttribute($entry, 'jpegPhoto', $avatarFileData);
 
         return $entry;
     }
@@ -469,32 +498,89 @@ class Default_Model_Ocs_Ident
     }
 
     /**
-     * @param $member_data
+     * @param      $member_data
+     *
+     * @param bool $force
      *
      * @return array
      * @throws Zend_Ldap_Exception
-     * @throws Default_Model_Ocs_Exception
      */
-    public function createUserInLdap($member_data)
+    public function createUserInLdap($member_data, $force = false)
     {
+        $this->errMessages = array();
+
         $entry = $this->createIdentEntry($member_data);
         $connection = $this->getServerConnection();
         $username = strtolower($member_data['username']);
         $dn = "cn={$username},{$this->baseDn}";
-        if ($this->userExists($member_data['member_id'])) {
-            $connection->getLastError($this->errCode, $this->errMessages);
-            if (empty($this->errCode)) {
-                $this->errCode = 999;
-                $this->errMessages[] = "user already exists.";
-            }
+
+        try {
+            $user = $this->getUser($member_data['member_id'], $member_data['username']);
+        } catch (Exception $e) {
+            $this->errCode = 998;
+            $this->errMessages[] = $e->getMessage();
+            $user = null;
 
             return array();
         }
 
-        $connection->add($dn, $entry);
-        $connection->getLastError($this->errCode, $this->errMessages);
+        if (empty($user)) {
+            $connection->add($dn, $entry);
+            $connection->getLastError($this->errCode, $this->errMessages);
 
-        return $entry;
+            return $entry;
+        }
+
+        if (true === $force) {
+            $connection->update($dn, $entry);
+            $connection->getLastError($this->errCode, $this->errMessages);
+            $this->errMessages[] = "overwritten : " . json_encode($user);
+
+            return $entry;
+        }
+
+        $this->errCode = 999;
+        $this->errMessages[] = "user already exists.";
+
+        return $user;
+    }
+
+    /**
+     * @param $member_id
+     * @param $username
+     *
+     * @return array|null
+     * @throws Default_Model_Ocs_Exception
+     * @throws Zend_Ldap_Exception
+     */
+    public function getUser($member_id, $username)
+    {
+        if (empty($member_id)) {
+            throw new Default_Model_Ocs_Exception('given $member_id empty');
+        }
+
+        $ldap = $this->getServerConnection();
+        $filter = "(uidNumber={$member_id})";
+        $entries = $ldap->searchEntries($filter, $this->baseDn);
+
+        if (count($entries) > 1) {
+            throw new Default_Model_Ocs_Exception("{$member_id} is ambiguous");
+        }
+
+        $username = strtolower($username);
+        $entry = $ldap->getEntry("cn={$username},{$this->baseDn}");
+
+        if (empty($entry) AND empty($entries)) {
+            return null;
+        }
+        if (empty($entry) AND !empty($entries)) {
+            return $entries[0];
+        }
+        if (!empty($entry) AND empty($entries)) {
+            return $entry;
+        }
+
+        return $entry;;
     }
 
     /**
@@ -504,7 +590,7 @@ class Default_Model_Ocs_Ident
      * @throws Default_Model_Ocs_Exception
      * @throws Zend_Ldap_Exception
      */
-    public function userExists($member_id)
+    public function userExists($member_id, $username = null)
     {
         if (empty($member_id)) {
             throw new Default_Model_Ocs_Exception('given $member_id empty');
@@ -569,20 +655,6 @@ class Default_Model_Ocs_Ident
         $this->errMessages = $errMessages;
 
         return $this;
-    }
-
-    /**
-     * @return string
-     * @throws Zend_Exception
-     */
-    public static function getBaseDn()
-    {
-        try {
-            return Zend_Registry::get('config')->settings->server->ldap->baseDn;
-        } catch (Zend_Exception $e) {
-            Zend_Registry::get('logger')->err($e->getMessage());
-            return '';
-        }
     }
 
 }
