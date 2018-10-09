@@ -310,7 +310,7 @@ class MetaHeader extends React.Component {
     this.getUrls();
   }
 
-  getData() {
+  getUser() {
     console.log('get data');
     const self = this;
     $.ajax({
