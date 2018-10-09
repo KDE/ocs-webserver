@@ -23,6 +23,10 @@ body {
   background-color: white;
 
 
+  .glyphicon-th:before {
+      content: "\e011";
+  }
+
   .dropdown-menu {
     position: absolute;
     z-index: 1000;
@@ -247,6 +251,7 @@ body {
               width: 200px;
               top: 60px;
               right: -43px;
+              min-height: 77px;
 
               &::before {
                 right: 156px;
@@ -287,7 +292,8 @@ body {
       height: 40px;
       z-index: 1000;
 
-      &.open {
+      &.open,
+      &.show {
 
         .dropdown-menu {
           display: block;
@@ -296,8 +302,10 @@ body {
 
       .dropdown-toggle {
         padding: 0;
+        background: none !important;
         background-color: white;
         color: #6a7686;
+        border: 0;
 
         &:active {
           background-color: white;
