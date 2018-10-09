@@ -552,7 +552,26 @@ var Popuppanel =  (function () {
 var PlingsRedirect = (function () {
     return {
         setup: function () {
+            if(window.location.hash) {
+                $('a[href="' + document.location.hash + '"]').trigger("click");
+            } else if (document.location.hash) {
+                $('a[href="' + document.location.hash + '"]').trigger("click");
+            }
+        }
+    }
+
+})();
+
+
+var ShowPopups = (function () {
+    return {
+        setup: function () {
+            if(window.location.hash) {
+                alert('Hash');
+                $('a[href="' + document.location.hash + '"]').trigger("click");
+            }
             if (document.location.hash) {
+                alert('Hash');
                 $('a[href="' + document.location.hash + '"]').trigger("click");
             }
         }
