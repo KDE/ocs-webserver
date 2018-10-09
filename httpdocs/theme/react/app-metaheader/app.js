@@ -42,11 +42,11 @@ class MetaHeader extends React.Component {
   getUrls(){
     const self = this;
 
-    const forumQueryUrl = appHelpers.getForumQueryUrl(window.location.hostname);
+    const forumQuery = appHelpers.getForumQueryUrl(window.location.hostname);
     $.ajax({
-      url:forumQueryUrl,
+      url:forumQuery.url,
       method:'get',
-      dataType: 'jsonp',
+      dataType:forumQuery.dataType,
       error: function(response){
         console.log('get forum');
         console.log(response);
@@ -57,11 +57,11 @@ class MetaHeader extends React.Component {
       }
     });
 
-    const blogQueryUrl = appHelpers.getBlogQueryUrl(window.location.hostname);
+    const blogQuery = appHelpers.getBlogQueryUrl(window.location.hostname);
     $.ajax({
-      url:blogQueryUrl,
+      url:blogQuery.url,
       method:'get',
-      dataType: 'jsonp',
+      dataType:blogQuery.dataType,
       error: function(response){
         console.log('get blog');
         console.log(response);
@@ -72,11 +72,11 @@ class MetaHeader extends React.Component {
       }
     });
 
-    const baseQueryUrl = appHelpers.getBaseQueryUrl(window.location.hostname);
+    const blogQuery = appHelpers.getBaseQueryUrl(window.location.hostname);
     $.ajax({
-      url:baseQueryUrl,
+      url:blogQuery.url,
       method:'get',
-      dataType: 'jsonp',
+      dataType:blogQuery.dataType,
       error: function(response){
         console.log('get base')
         console.log(response);
@@ -91,11 +91,11 @@ class MetaHeader extends React.Component {
       }
     });
 
-    const storeQueryUrl = appHelpers.getStoreQueryUrl(window.location.hostname);
+    const storeQuery = appHelpers.getStoreQueryUrl(window.location.hostname);
     $.ajax({
-      url:storeQueryUrl,
+      url:storeQuery.url,
       method:'get',
-      dataType: 'jsonp',
+      dataType:storeQuery.dataType,
       error: function(response){
         console.log('get store')
         console.log(response);
@@ -110,11 +110,11 @@ class MetaHeader extends React.Component {
 
   getDomains(){
     const self = this;
-    const domainsQueryUrl = appHelpers.getDomainsQueryUrl(window.location.hostname);
+    const domainsQuery = appHelpers.getDomainsQueryUrl(window.location.hostname);
     $.ajax({
-      url:domainsQueryUrl,
+      url:domainsQuery.url,
       method:'get',
-      dataType: 'jsonp',
+      dataType:domainsQuery.dataType,
       error: function(response){
         console.log('get domains');
         console.log(response);
