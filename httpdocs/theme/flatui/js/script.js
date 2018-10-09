@@ -553,8 +553,10 @@ var PlingsRedirect = (function () {
     return {
         setup: function () {
             if(window.location.hash) {
+                alert('Show Popup window: ' + window.location.hash);
                 $('a[href="' + window.location.hash + '"]').trigger("click");
             } else if (document.location.hash) {
+                alert('Show Popup document: ' + document.location.hash);
                 $('a[href="' + document.location.hash + '"]').trigger("click");
             }
         }
