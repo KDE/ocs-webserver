@@ -423,46 +423,36 @@ class MetaHeader extends React.Component {
     this.getUser();
     this.getDomains();
     this.getUrls();
-    // var x = document.cookie;
-    console.log('coockie');
-    var decodedCookie = decodeURIComponent(document.cookie);
-    console.log(decodedCookie);
-    /*function getCookie(cname) {
-        var name = cname + "=";
-        var decodedCookie = decodeURIComponent(document.cookie);
-        var ca = decodedCookie.split(';');
-        for(var i = 0; i <ca.length; i++) {
-            var c = ca[i];
-            while (c.charAt(0) == ' ') {
-                c = c.substring(1);
-            }
-            if (c.indexOf(name) == 0) {
-                return c.substring(name.length, c.length);
-            }
-        }
-        return "";
-    }*/
   }
 
   getUser() {
-    const userQuery = appHelpers.getUserQueryUrl(window.location.hostname);
-    console.log(userQuery);
-    const self = this;
-    $.ajax({
-      url: userQuery.url,
-      method: 'get',
-      dataType: userQuery.dataType,
-      error: function (response) {
-        console.log('get user');
-        console.log(response);
-        const res = JSON.parse(response.responseText);
-        if (res.status === "success") {
-          self.setState({ user: res.data });
-        } else {
-          self.getLogin();
+
+    if (window.location.hostname === "forum.opendesktop.cc") {
+      // var x = document.cookie;
+      console.log('coockie');
+      const decodedCookie = decodeURIComponent(document.cookie);
+      const ocs_data = decodedCookie.split('ocs_data=')[1];
+      const user = JSON.parse(ocs_data);
+      this.setState({ user: user });
+    } else {
+      const userQuery = appHelpers.getUserQueryUrl(window.location.hostname);
+      const self = this;
+      $.ajax({
+        url: userQuery.url,
+        method: 'get',
+        dataType: userQuery.dataType,
+        error: function (response) {
+          console.log('get user');
+          console.log(response);
+          const res = JSON.parse(response.responseText);
+          if (res.status === "success") {
+            self.setState({ user: res.data });
+          } else {
+            self.getLogin();
+          }
         }
-      }
-    });
+      });
+    }
   }
 
   getLogin() {
