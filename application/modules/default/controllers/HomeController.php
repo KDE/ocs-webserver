@@ -100,47 +100,6 @@ class HomeController extends Local_Controller_Action_DomainSwitch
     }
     
     
-    public function userdataajaxAction()
-    {
-        $this->_helper->layout()->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
-        $resultArray = array();
-        
-        header('Access-Control-Allow-Origin: *'); 
-        
-        $this->getResponse()
-             ->setHeader('Access-Control-Allow-Origin', '*')
-             ->setHeader('Access-Control-Allow-Credentials', 'true')
-             ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
-             ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
-        ;
-        
-        if (Zend_Auth::getInstance()->hasIdentity()) {
-        
-            $auth = Zend_Auth::getInstance();
-            $user = $auth->getStorage()->read();
-
-            $resultArray['member_id'] = $user->member_id;
-            $resultArray['username'] = $user->username;
-            $resultArray['mail'] = $user->mail;
-            $resultArray['avatar'] = $user->profile_image_url;
-            
-            
-        } else {
-            $resultArray['member_id'] = null;
-            $resultArray['username'] = null;
-            $resultArray['mail'] = null;
-            $resultArray['avatar'] = null;
-        }
-        
-        $resultAll = array();
-        $resultAll['status'] = "success";
-        $resultAll['data'] = $resultArray;
-        
-        $this->_helper->json($resultAll);
-    }
-    
-    
     public function baseurlajaxAction()
     {
         $this->_helper->layout()->disableLayout();
@@ -250,6 +209,38 @@ class HomeController extends Local_Controller_Action_DomainSwitch
         
         $this->_helper->json($resultAll);
     }
+    
+    
+    public function loginurlajaxAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        
+        header('Access-Control-Allow-Origin: *'); 
+        
+        $this->getResponse()
+             ->setHeader('Access-Control-Allow-Origin', '*')
+             ->setHeader('Access-Control-Allow-Credentials', 'true')
+             ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+             ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
+        ;
+        
+        $resultArray = array();
+        
+        $url = $this->getParam('url');
+        
+        $loginUrl = '/login?redirect=' . $this->encryptUrl($url, false);
+        
+        $resultArray['login_url'] = $loginUrl;
+        
+        $resultAll = array();
+        $resultAll['status'] = "success";
+        $resultAll['data'] = $resultArray;
+        
+        $this->_helper->json($resultAll);
+    }
+    
+    
     
     public function domainsajaxAction()
     {
