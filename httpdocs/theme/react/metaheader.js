@@ -314,7 +314,7 @@ class MetaHeader extends React.Component {
     console.log('get user');
     const self = this;
     $.ajax({
-      url: 'https://pling:cappu123.@www.opendesktop.cc/home/userdataajax',
+      url: 'https://www.opendesktop.cc/home/userdataajax',
       method: 'get',
       dataType: 'jsonp',
       done: function (response) {
@@ -322,6 +322,7 @@ class MetaHeader extends React.Component {
         console.log(response);
       },
       error: function (response) {
+        console.log(response);
         const res = JSON.parse(response.responseText);
         if (res.status === "success") {
           self.setState({ user: res.data, loading: false });
