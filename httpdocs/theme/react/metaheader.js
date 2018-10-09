@@ -294,7 +294,7 @@ class MetaHeader extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      baseUrl: "opendesktop.cc",
+      baseUrl: "https://wwww.opendesktop.cc",
       blogUrl: "https://blog.opendesktop.org",
       loginUrl: "https://www.opendesktop.cc/login/redirect/TFVIFZfgicowyCW5clpDz3sfM1rVUJsb_GwOHCL1oRyPOkMMVswIRPd2kvVz5oQW",
       user: user,
@@ -342,7 +342,7 @@ class MetaHeader extends React.Component {
     const self = this;
     console.log('get forum');
     $.ajax({
-      url: 'https://pling:cappu123.@www.opendesktop.cc/home/forumurlajax',
+      url: 'https://www.opendesktop.cc/home/forumurlajax',
       method: 'get',
       dataType: 'jsonp',
       error: function (response) {
@@ -354,7 +354,7 @@ class MetaHeader extends React.Component {
         }
         console.log('get blog');
         $.ajax({
-          url: 'https://pling:cappu123.@www.opendesktop.cc/home/blogurlajax',
+          url: 'https://www.opendesktop.cc/home/blogurlajax',
           method: 'get',
           dataType: 'jsonp',
           error: function (response) {
@@ -366,7 +366,7 @@ class MetaHeader extends React.Component {
             }
             console.log('get base');
             $.ajax({
-              url: 'https://pling:cappu123.@www.opendesktop.cc/home/baseurlajax',
+              url: 'https://www.opendesktop.cc/home/baseurlajax',
               method: 'get',
               dataType: 'jsonp',
               error: function (response) {
