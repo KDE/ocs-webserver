@@ -399,23 +399,13 @@ class MetaHeader extends React.Component {
       url: userQueryUrl,
       method: 'get',
       dataType: 'jsonp',
-      done: function (response) {
-        console.log('done');
-        console.log(response);
-      },
       error: function (response) {
         console.log('get user');
         console.log(response);
         const res = JSON.parse(response.responseText);
         if (res.status === "success") {
-          self.setState({ user: res.data, loading: false });
-        } else {
-          self.setState({ loading: false });
+          self.setState({ user: res.data });
         }
-      },
-      success: function (response) {
-        console.log('success');
-        console.log(response);
       }
     });
   }
@@ -460,7 +450,6 @@ class MetaHeader extends React.Component {
       dataType: 'jsonp',
       error: function (response) {
         console.log('get base');
-        console.log('error');
         console.log(response);
         const res = JSON.parse(response.responseText);
         if (res.status === "success") {
@@ -480,7 +469,6 @@ class MetaHeader extends React.Component {
       dataType: 'jsonp',
       error: function (response) {
         console.log('get store');
-        console.log('error');
         console.log(response);
         const res = JSON.parse(response.responseText);
         if (res.status === "success") {
@@ -502,6 +490,7 @@ class MetaHeader extends React.Component {
         console.log(response);
         const res = JSON.parse(response.responseText);
         if (res.status === "success") {
+          console.log(res.data);
           self.setState({ domains: res.data });
         }
       }
