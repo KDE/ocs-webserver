@@ -151,6 +151,21 @@ window.appHelpers = (function(){
     return domains;
   }
 
+  function getLoginQueryUrl(hostname){
+    let loginQuery = {};
+    if (hostname === "www.opendesktop.cc"){
+      loginQuery.url = "https://www.opendesktop.cc/user/loginurlajax&returnurl=https://www.opendesktop.cc";
+      loginQuery.dataType = "jsonp";
+    } else if (hostname === "gitlab.pling.cc"){
+      loginQuery.url = "https://gitlab.pling.cc/external/get_ocs_data.php?url=home/loginurlajax&returnurl=https://gitlab.pling.cc";
+      loginQuery.dataType = "jsonp";
+    } else if (hostname === "forum.opendesktop.cc"){
+      loginQuery.url = "https://forum.opendesktop.cc:8443/get_ocs_data.php?url=home/loginurlajax&returnurl=https://forum.opendesktop.cc";
+      loginQuery.dataType = "json";
+    }
+    return loginQuery;
+  }
+
   function getUserQueryUrl(hostname){
     let userQuery = {};
     if (hostname === "www.opendesktop.cc"){
@@ -244,6 +259,7 @@ window.appHelpers = (function(){
   return {
     generateMenuGroupsArray,
     getDomainsArray,
+    getLoginQueryUrl,
     getUserQueryUrl,
     getDomainsQueryUrl,
     getForumQueryUrl,
