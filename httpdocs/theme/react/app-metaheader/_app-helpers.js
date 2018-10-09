@@ -158,7 +158,7 @@ window.appHelpers = (function(){
     } else if (hostname === "gitlab.pling.cc"){
       userQueryUrl = "https://gitlab.pling.cc/external/get_ocs_data.php?url=user/userdataajax";
     } else if (hostname === "forum.opendesktop.cc"){
-      userQueryUrl = "http://159.89.104.141:8001/get_ocs_data.php?url=user/userdataajax";
+      userQueryUrl = "https://forum.opendesktop.cc:8443/get_ocs_data.php?url=user/userdataajax";
     }
     return userQueryUrl;
   }
@@ -169,6 +169,8 @@ window.appHelpers = (function(){
       baseQueryUrl = "https://www.opendesktop.cc/home/baseurlajax";
     } else if (hostname === "gitlab.pling.cc"){
       baseQueryUrl = "https://gitlab.pling.cc/external/get_ocs_data.php?url=home/baseurlajax";
+    } else if (hostname === "forum.opendesktop.cc"){
+      baseQueryUrl = "https://forum.opendesktop.cc:8443/get_ocs_data.php?url=home/baseurlajax";
     }
     return baseQueryUrl;
   }
@@ -179,6 +181,8 @@ window.appHelpers = (function(){
       forumQueryUrl = "https://www.opendesktop.cc/home/forumurlajax";
     } else if (hostname === "gitlab.pling.cc"){
       forumQueryUrl = "https://gitlab.pling.cc/external/get_ocs_data.php?url=home/forumurlajax";
+    } else if (hostname === "forum.opendesktop.cc"){
+      forumQueryUrl = "https://forum.opendesktop.cc:8443/get_ocs_data.php?url=home/forumurlajax";
     }
     return forumQueryUrl;
   }
@@ -189,6 +193,8 @@ window.appHelpers = (function(){
       blogQueryUrl = "https://www.opendesktop.cc/home/blogurlajax";
     } else if (hostname === "gitlab.pling.cc"){
       blogQueryUrl = "https://gitlab.pling.cc/external/get_ocs_data.php?url=home/blogurlajax";
+    }  else if (hostname === "forum.opendesktop.cc"){
+      blogQueryUrl = "https://forum.opendesktop.cc:8443/get_ocs_data.php?url=home/blogurlajax";
     }
     return blogQueryUrl;
   }
@@ -199,6 +205,8 @@ window.appHelpers = (function(){
       storeQueryUrl = "";
     } else if (hostname === "gitlab.pling.cc"){
       storeQueryUrl = "https://gitlab.pling.cc/external/get_ocs_data.php?url=home/storenameajax";
+    }  else if (hostname === "forum.opendesktop.cc"){
+      storeQueryUrl = "https://forum.opendesktop.cc:8443/get_ocs_data.php?url=home/storenameajax";
     }
     return storeQueryUrl;
   }
