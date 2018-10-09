@@ -52,7 +52,7 @@ class MetaHeader extends React.Component {
       dataType: 'jsonp',
       error: function(response){
         console.log('error');
-        console.log(response);        
+        console.log(response);
         const res = JSON.parse(response.responseText);
         if (res.status === "success"){
           self.setState({forumUrl:res.data.url_forum});
@@ -66,7 +66,7 @@ class MetaHeader extends React.Component {
             console.log(response);
             const res = JSON.parse(response.responseText);
             if (res.status === "success"){
-              self.setState({blogUrl:res.data.url_blog})
+              self.setState({blogUrl:res.data.url_blog});
             }
             $.ajax({
               url:'https://www.opendesktop.cc/home/baseurlajax',
@@ -77,7 +77,7 @@ class MetaHeader extends React.Component {
                 console.log(response);
                 const res = JSON.parse(response.responseText);
                 if (res.status === "success"){
-                  self.setState({baseUrl:res.data.url_base})
+                  self.setState({baseUrl:res.data.base_url});
                 }
               }
             });
