@@ -152,6 +152,10 @@ class MetaHeader extends React.Component {
   }
 
   render(){
+    let domains = this.state.domains;
+    if (!this.state.domains) {
+      domains = appHelpers.getDomainsArray();
+    }
     return (
       <nav id="metaheader-nav" className="metaheader">
         <div className="metamenu">
