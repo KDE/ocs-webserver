@@ -270,15 +270,20 @@ class UserController extends Local_Controller_Action_DomainSwitch
              ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
         ;
         
-        if (Zend_Auth::getInstance()->hasIdentity()) {
+        $userid = (int)$this->getParam('id');
+        
+        $modelMember = new Default_Model_Member();
+        $user = $modelMember->fetchMember($userid)->toArray();
+        
+        if ($user) {
         
             $auth = Zend_Auth::getInstance();
             $user = $auth->getStorage()->read();
 
-            $resultArray['member_id'] = $user->member_id;
-            $resultArray['username'] = $user->username;
-            $resultArray['mail'] = $user->mail;
-            $resultArray['avatar'] = $user->profile_image_url;
+            $resultArray['member_id'] = $user['member_id'];
+            $resultArray['username'] = $user['username'];
+            $resultArray['mail'] = $user['mail'];
+            $resultArray['avatar'] = $user['profile_image_url'];
             
             
         } else {
