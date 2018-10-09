@@ -314,7 +314,7 @@ class MetaHeader extends React.Component {
     console.log('get user');
     const self = this;
     $.ajax({
-      url: 'https://www.opendesktop.cc/home/userdataajax',
+      url: 'https://pling:cappu123.@www.opendesktop.cc/user/userdataajax',
       method: 'get',
       dataType: 'jsonp',
       done: function (response) {
