@@ -351,7 +351,7 @@ class MetaHeader extends React.Component {
           self.setState({ forumUrl: forumUrl.url_forum });
         }
         $.ajax({
-          url: 'https://www.opendesktop.cc/home/blogurllajax',
+          url: 'https://www.opendesktop.cc/home/blogurlajax',
           method: 'get',
           dataType: 'jsonp',
           error: function (response) {
