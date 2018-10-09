@@ -316,7 +316,7 @@ window.appHelpers = function () {
   }
 
   function getBaseQueryUrl(hostname) {
-    let baseQuery;
+    let baseQuery = {};
     if (hostname === "www.opendesktop.cc") {
       baseQuery.url = "https://www.opendesktop.cc/home/baseurlajax";
       baseQuery.dataType = "jsonp";
@@ -331,7 +331,7 @@ window.appHelpers = function () {
   }
 
   function getForumQueryUrl(hostname) {
-    let forumQuery;
+    let forumQuery = {};
     if (hostname === "www.opendesktop.cc") {
       forumQuery.url = "https://www.opendesktop.cc/home/forumurlajax";
       forumQuery.dataType = "jsonp";
@@ -346,7 +346,7 @@ window.appHelpers = function () {
   }
 
   function getBlogQueryUrl(hostname) {
-    let blogQuery;
+    let blogQuery = {};
     if (hostname === "www.opendesktop.cc") {
       blogQuery.url = "https://www.opendesktop.cc/home/blogurlajax";
       blogQuery.dataType = "jsonp";
@@ -361,7 +361,7 @@ window.appHelpers = function () {
   }
 
   function getStoreQueryUrl(hostname) {
-    let storeQuery;
+    let storeQuery = {};
     if (hostname === "www.opendesktop.cc") {
       storeQuery.url = "";
       storeQuery.dataType = "jsonp";
