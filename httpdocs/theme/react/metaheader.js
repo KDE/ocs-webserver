@@ -821,10 +821,10 @@ class UserContextMenuContainer extends React.Component {
   }
 
   componentWillMount() {
-
+    console.log('component will mount');
     window.MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
     // Find the element that you want to "watch"
-    var target = document.getElementById('#user-context-menu-container'),
+    var target = document.getElementById('#user-context-dropdown'),
 
     // create an observer instance
     observer = new MutationObserver(function (mutation) {
@@ -885,7 +885,7 @@ class UserContextMenuContainer extends React.Component {
         ),
         React.createElement(
           "ul",
-          { className: "dropdown-menu dropdown-menu-right", "aria-labelledby": "dropdownMenu2" },
+          { id: "user-context-dropdown", className: "dropdown-menu dropdown-menu-right", "aria-labelledby": "dropdownMenu2" },
           React.createElement(
             "li",
             { id: "opencode-link-item" },

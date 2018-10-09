@@ -348,10 +348,10 @@ class UserContextMenuContainer extends React.Component {
   }
 
   componentWillMount() {
-
+    console.log('component will mount');
     window.MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
     // Find the element that you want to "watch"
-    var target = document.getElementById('#user-context-menu-container'),
+    var target = document.getElementById('#user-context-dropdown'),
     // create an observer instance
     observer = new MutationObserver(function(mutation) {
       console.log('hi');
@@ -404,7 +404,7 @@ class UserContextMenuContainer extends React.Component {
             onClick={this.toggleDropdown}>
             <span className="th-icon"></span>
           </button>
-          <ul className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu2">
+          <ul id="user-context-dropdown" className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu2">
             <li id="opencode-link-item">
               <a href="https://gitlab.opencode.net/dashboard/projects">
                 <div className="icon"></div>
