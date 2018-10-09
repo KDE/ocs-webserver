@@ -36,7 +36,7 @@ class MetaHeader extends React.Component {
         if (res.status === "success"){
           self.setState({user:res.data});
         } else {
-          this.getLogin();
+          self.getLogin();
         }
       }
     });
