@@ -386,3 +386,611 @@ window.appHelpers = function () {
     getStoreQueryUrl
   };
 }();
+class MetaHeader extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      baseUrl: "https://www.opendesktop.cc",
+      blogUrl: "https://blog.opendesktop.org",
+      loginUrl: "https://www.opendesktop.cc/login/redirect/TFVIFZfgicowyCW5clpDz3sfM1rVUJsb_GwOHCL1oRyPOkMMVswIRPd2kvVz5oQW",
+      user: user,
+      sName: sName
+    };
+    this.getUser = this.getUser.bind(this);
+    this.getDomains = this.getDomains.bind(this);
+    this.getUrls = this.getUrls.bind(this);
+  }
+
+  componentDidMount() {
+    console.log('component did mount');
+    this.getUser();
+    this.getDomains();
+    this.getUrls();
+  }
+
+  getUser() {
+    const userQuery = appHelpers.getUserQueryUrl(window.location.hostname);
+    console.log(userQuery);
+    const self = this;
+    $.ajax({
+      url: userQuery.url,
+      method: 'get',
+      dataType: userQuery.dataType,
+      error: function (response) {
+        console.log('get user');
+        console.log(response);
+        const res = JSON.parse(response.responseText);
+        if (res.status === "success") {
+          self.setState({ user: res.data });
+        }
+      }
+    });
+  }
+
+  getUrls() {
+    const self = this;
+
+    const forumQuery = appHelpers.getForumQueryUrl(window.location.hostname);
+    $.ajax({
+      url: forumQuery.url,
+      method: 'get',
+      dataType: forumQuery.dataType,
+      error: function (response) {
+        console.log('get forum');
+        console.log(response);
+        const res = JSON.parse(response.responseText);
+        if (res.status === "success") {
+          self.setState({ forumUrl: res.data.url_forum });
+        }
+      }
+    });
+
+    const blogQuery = appHelpers.getBlogQueryUrl(window.location.hostname);
+    $.ajax({
+      url: blogQuery.url,
+      method: 'get',
+      dataType: blogQuery.dataType,
+      error: function (response) {
+        console.log('get blog');
+        console.log(response);
+        const res = JSON.parse(response.responseText);
+        if (res.status === "success") {
+          self.setState({ blogUrl: res.data.url_blog });
+        }
+      }
+    });
+
+    const baseQuery = appHelpers.getBaseQueryUrl(window.location.hostname);
+    $.ajax({
+      url: baseQuery.url,
+      method: 'get',
+      dataType: baseQuery.dataType,
+      error: function (response) {
+        console.log('get base');
+        console.log(response);
+        const res = JSON.parse(response.responseText);
+        if (res.status === "success") {
+          let baseUrl = res.data.base_url;
+          if (res.data.base_url.indexOf('http') === -1) {
+            baseUrl = "http://" + res.data.base_url;
+          }
+          self.setState({ baseUrl: baseUrl });
+        }
+      }
+    });
+
+    const storeQuery = appHelpers.getStoreQueryUrl(window.location.hostname);
+    $.ajax({
+      url: storeQuery.url,
+      method: 'get',
+      dataType: storeQuery.dataType,
+      error: function (response) {
+        console.log('get store');
+        console.log(response);
+        const res = JSON.parse(response.responseText);
+        if (res.status === "success") {
+          self.setState({ sName: res.data.store_name });
+        }
+      }
+    });
+  }
+
+  getDomains() {
+    const self = this;
+    const domainsQuery = appHelpers.getDomainsQueryUrl(window.location.hostname);
+    $.ajax({
+      url: domainsQuery.url,
+      method: 'get',
+      dataType: domainsQuery.dataType,
+      error: function (response) {
+        console.log('get domains');
+        console.log(response);
+        const res = JSON.parse(response.responseText);
+        if (res.status === "success") {
+          console.log(res.data);
+          self.setState({ domains: res.data });
+        }
+      }
+    });
+  }
+
+  render() {
+    let domains = this.state.domains;
+    if (!this.state.domains) {
+      domains = appHelpers.getDomainsArray();
+    }
+    return React.createElement(
+      "nav",
+      { id: "metaheader-nav", className: "metaheader" },
+      React.createElement(
+        "div",
+        { className: "metamenu" },
+        React.createElement(DomainsMenu, {
+          domains: domains,
+          baseUrl: this.state.baseUrl,
+          sName: this.state.sName
+        }),
+        React.createElement(UserMenu, {
+          user: this.state.user,
+          blogUrl: this.state.blogUrl,
+          loginUrl: this.state.loginUrl
+        })
+      )
+    );
+  }
+}
+
+class DomainsMenu extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  componentDidMount() {
+    const menuGroups = appHelpers.generateMenuGroupsArray(this.props.domains);
+    this.setState({ menuGroups: menuGroups });
+  }
+
+  render() {
+    let menuGroupsDisplayLeft, menuGroupsDisplayRight;
+    if (this.state.menuGroups) {
+      menuGroupsDisplayLeft = this.state.menuGroups.slice(0, 2).map((mg, i) => React.createElement(DomainsMenuGroup, {
+        key: i,
+        domains: this.props.domains,
+        menuGroup: mg,
+        sName: this.props.sName
+      }));
+      menuGroupsDisplayRight = this.state.menuGroups.slice(2).map((mg, i) => React.createElement(DomainsMenuGroup, {
+        key: i,
+        domains: this.props.domains,
+        menuGroup: mg,
+        sName: this.props.sName
+      }));
+    }
+
+    return React.createElement(
+      "ul",
+      { className: "metaheader-menu left", id: "domains-menu" },
+      React.createElement(
+        "li",
+        { className: "active" },
+        React.createElement(
+          "a",
+          { href: this.props.baseUrl },
+          React.createElement("img", { src: this.props.baseUrl + "/images/system/ocs-logo-rounded-16x16.png", className: "logo" }),
+          "openDesktop.org :"
+        )
+      ),
+      React.createElement(
+        "li",
+        { id: "domains-dropdown-menu", className: "dropdown" },
+        React.createElement(
+          "a",
+          { id: "dropdownMenu3",
+            "data-toggle": "dropdown",
+            "aria-haspopup": "true",
+            "aria-expanded": "true" },
+          "Themes & Apps"
+        ),
+        React.createElement(
+          "ul",
+          { className: "dropdown-menu dropdown-menu-right", "aria-labelledby": "dropdownMenu3" },
+          React.createElement(
+            "li",
+            { className: "submenu-container" },
+            React.createElement(
+              "ul",
+              null,
+              menuGroupsDisplayLeft
+            )
+          ),
+          React.createElement(
+            "li",
+            { className: "submenu-container" },
+            React.createElement(
+              "ul",
+              null,
+              menuGroupsDisplayRight
+            )
+          )
+        )
+      ),
+      React.createElement(
+        "li",
+        { id: "discussion-boards", className: "dropdown" },
+        React.createElement(
+          "a",
+          { id: "dropdownMenu4",
+            "data-toggle": "dropdown",
+            "aria-haspopup": "true",
+            "aria-expanded": "true" },
+          "Discussion Boards"
+        ),
+        React.createElement(
+          "ul",
+          { className: "dropdown-menu dropdown-menu-right", "aria-labelledby": "dropdownMenu4" },
+          React.createElement(
+            "li",
+            null,
+            React.createElement(
+              "a",
+              { href: "https://forum.opendesktop.org/c/general" },
+              "General"
+            )
+          ),
+          React.createElement(
+            "li",
+            null,
+            React.createElement(
+              "a",
+              { href: "https://forum.opendesktop.org/c/themes-and-apps" },
+              "Themes & Apps"
+            )
+          ),
+          React.createElement(
+            "li",
+            null,
+            React.createElement(
+              "a",
+              { href: "https://www.opencode.net/" },
+              "Coding"
+            )
+          )
+        )
+      )
+    );
+  }
+}
+
+class DomainsMenuGroup extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+    this.filterDomainsByMenuGroup = this.filterDomainsByMenuGroup.bind(this);
+  }
+
+  filterDomainsByMenuGroup(domain) {
+    if (domain.menugroup === this.props.menuGroup) {
+      return domain;
+    }
+  }
+
+  render() {
+    const domainsDisplay = this.props.domains.filter(this.filterDomainsByMenuGroup).map((domain, index) => {
+      let domainPrefix = "http://";
+      if (domain.menuhref.indexOf('pling.cc') === -1 && domain.menuhref.indexOf('www') === -1) {
+        domainPrefix += "www.";
+      }
+      return React.createElement(
+        "li",
+        { key: index },
+        React.createElement(
+          "a",
+          { href: domainPrefix + domain.menuhref },
+          domain.name
+        )
+      );
+    });
+
+    return React.createElement(
+      "li",
+      null,
+      React.createElement(
+        "a",
+        { className: "groupname" },
+        React.createElement(
+          "b",
+          null,
+          this.props.menuGroup
+        )
+      ),
+      React.createElement(
+        "ul",
+        { className: "domains-sub-menu" },
+        domainsDisplay
+      )
+    );
+  }
+}
+
+class UserMenu extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  render() {
+    let userDropdownDisplay, userAppsContextDisplay;
+    if (this.props.user.member_id) {
+      userDropdownDisplay = React.createElement(UserLoginMenuContainer, {
+        user: this.props.user
+      });
+      userAppsContextDisplay = React.createElement(UserContextMenuContainer, {
+        user: this.props.user
+      });
+    } else {
+      userDropdownDisplay = React.createElement(
+        "li",
+        { id: "user-login-container" },
+        React.createElement(
+          "a",
+          { href: this.props.loginUrl, className: "btn btn-metaheader" },
+          "Login"
+        )
+      );
+    }
+
+    let plingListUrl = "https://www.opendesktop.cc/#plingList",
+        ocsapiContentUrl = "https://www.opendesktop.cc/#ocsapiContent",
+        aboutContentUrl = "https://www.opendesktop.cc/#aboutContent",
+        linkTarget = "_blank";
+
+    if (window.location.hostname === "www.opendesktop.cc") {
+      plingListUrl = "https://www.opendesktop.cc/plings";
+      ocsapiContentUrl = "https://www.opendesktop.cc/partials/ocsapicontent.phtml";
+      aboutContentUrl = "https://www.opendesktop.cc/partials/about.phtml";
+      linkTarget = "";
+    }
+
+    return React.createElement(
+      "div",
+      { id: "user-menu-container", className: "right" },
+      React.createElement(
+        "ul",
+        { className: "metaheader-menu", id: "user-menu" },
+        React.createElement(
+          "li",
+          null,
+          React.createElement(
+            "a",
+            { href: "https://www.opendesktop.cc/community" },
+            "Community"
+          )
+        ),
+        React.createElement(
+          "li",
+          null,
+          React.createElement(
+            "a",
+            { href: this.props.blogUrl, target: "_blank" },
+            "Blog"
+          )
+        ),
+        React.createElement(
+          "li",
+          null,
+          React.createElement(
+            "a",
+            { id: "plingList", className: "popuppanel", target: linkTarget, href: plingListUrl },
+            "What are Plings?"
+          )
+        ),
+        React.createElement(
+          "li",
+          null,
+          React.createElement(
+            "a",
+            { id: "ocsapiContent", className: "popuppanel", target: linkTarget, href: ocsapiContentUrl },
+            "API"
+          )
+        ),
+        React.createElement(
+          "li",
+          null,
+          React.createElement(
+            "a",
+            { id: "aboutContent", className: "popuppanel", target: linkTarget, href: aboutContentUrl },
+            "About"
+          )
+        ),
+        userAppsContextDisplay,
+        userDropdownDisplay
+      )
+    );
+  }
+}
+
+class UserContextMenuContainer extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: true,
+      ariaExpanded: false
+    };
+    this.toggleDropdown = this.toggleDropdown.bind(this);
+  }
+
+  componentDidMount() {
+    const self = this;
+    $.ajax({ url: "https://gitlab.opencode.net/api/v4/users?username=" + this.props.user.username, cache: false }).done(function (response) {
+      const gitlabLink = "https://gitlab.opencode.net/dashboard/issues?assignee_id=" + response[0].id;
+      self.setState({ gitlabLink: gitlabLink, loading: false });
+    });
+  }
+
+  toggleDropdown(e) {
+    const ariaExpanded = this.state.ariaExpanded === true ? false : true;
+    this.setState({ ariaExpanded: ariaExpanded });
+  }
+
+  render() {
+
+    const messagesLink = "https://forum.opendesktop.org/u/" + this.props.user.username + "/messages";
+
+    return React.createElement(
+      "li",
+      { id: "user-context-menu-container" },
+      React.createElement(
+        "div",
+        { className: "user-dropdown" },
+        React.createElement(
+          "button",
+          {
+            className: "btn btn-default dropdown-toggle",
+            type: "button",
+            id: "dropdownMenu2",
+            "data-toggle": "dropdown",
+            "aria-haspopup": "true",
+            "aria-expanded": this.state.ariaExpanded,
+            onClick: this.toggleDropdown },
+          React.createElement("span", { className: "th-icon" })
+        ),
+        React.createElement(
+          "ul",
+          { id: "user-context-dropdown", className: "dropdown-menu dropdown-menu-right", "aria-labelledby": "dropdownMenu2" },
+          React.createElement(
+            "li",
+            { id: "opencode-link-item" },
+            React.createElement(
+              "a",
+              { href: "https://gitlab.opencode.net/dashboard/projects" },
+              React.createElement("div", { className: "icon" }),
+              React.createElement(
+                "span",
+                null,
+                "Projects"
+              )
+            )
+          ),
+          React.createElement(
+            "li",
+            { id: "issues-link-item" },
+            React.createElement(
+              "a",
+              { href: this.state.gitlabLink },
+              React.createElement("div", { className: "icon" }),
+              React.createElement(
+                "span",
+                null,
+                "Issues"
+              )
+            )
+          ),
+          React.createElement(
+            "li",
+            { id: "messages-link-item" },
+            React.createElement(
+              "a",
+              { href: messagesLink },
+              React.createElement("div", { className: "icon" }),
+              React.createElement(
+                "span",
+                null,
+                "Messages"
+              )
+            )
+          )
+        )
+      )
+    );
+  }
+}
+
+class UserLoginMenuContainer extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  render() {
+    return React.createElement(
+      "li",
+      { id: "user-login-menu-container" },
+      React.createElement(
+        "div",
+        { className: "user-dropdown" },
+        React.createElement(
+          "button",
+          {
+            className: "btn btn-default dropdown-toggle",
+            type: "button",
+            id: "userLoginDropdown",
+            "data-toggle": "dropdown",
+            "aria-haspopup": "true",
+            "aria-expanded": "true" },
+          React.createElement("img", { src: this.props.user.avatar })
+        ),
+        React.createElement(
+          "ul",
+          { className: "dropdown-menu dropdown-menu-right", "aria-labelledby": "userLoginDropdown" },
+          React.createElement(
+            "li",
+            { id: "user-info-menu-item" },
+            React.createElement(
+              "div",
+              { id: "user-info-section" },
+              React.createElement(
+                "div",
+                { className: "user-avatar" },
+                React.createElement(
+                  "div",
+                  { className: "no-avatar-user-letter" },
+                  React.createElement("img", { src: this.props.user.avatar })
+                )
+              ),
+              React.createElement(
+                "div",
+                { className: "user-details" },
+                React.createElement(
+                  "ul",
+                  null,
+                  React.createElement(
+                    "li",
+                    null,
+                    React.createElement(
+                      "b",
+                      null,
+                      this.props.user.username
+                    )
+                  ),
+                  React.createElement(
+                    "li",
+                    null,
+                    this.props.user.mail
+                  )
+                )
+              )
+            )
+          ),
+          React.createElement("li", { id: "main-seperator", role: "separator", className: "divider" }),
+          React.createElement(
+            "li",
+            { className: "buttons" },
+            React.createElement(
+              "a",
+              { href: "https://www.opendesktop.cc/settings/", className: "btn btn-default btn-metaheader" },
+              "Settings"
+            ),
+            React.createElement(
+              "a",
+              { href: "https://www.opendesktop.cc/logout/", className: "btn btn-default pull-right btn-metaheader" },
+              "Logout"
+            )
+          )
+        )
+      )
+    );
+  }
+}
+
+ReactDOM.render(React.createElement(MetaHeader, null), document.getElementById('metaheader'));

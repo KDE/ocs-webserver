@@ -72,11 +72,11 @@ class MetaHeader extends React.Component {
       }
     });
 
-    const blogQuery = appHelpers.getBaseQueryUrl(window.location.hostname);
+    const baseQuery = appHelpers.getBaseQueryUrl(window.location.hostname);
     $.ajax({
-      url:blogQuery.url,
+      url:baseQuery.url,
       method:'get',
-      dataType:blogQuery.dataType,
+      dataType:baseQuery.dataType,
       error: function(response){
         console.log('get base')
         console.log(response);
