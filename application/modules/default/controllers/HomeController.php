@@ -268,10 +268,10 @@ class HomeController extends Local_Controller_Action_DomainSwitch
         
         $resultArray = array();
         
-        $domainshelper = new Default_View_Helper_FetchDomains();
-        $this->domainobjects = $domainshelper->fetchDomainObjects();  
+        
+        $domainobjects = $this->fetchMetaheaderMenuJson();
 
-        $resultArray['domains'] = $domainshelper;
+        $resultArray['domains'] = $domainobjects;
         
         $resultAll = array();
         $resultAll['status'] = "success";
@@ -290,6 +290,90 @@ class HomeController extends Local_Controller_Action_DomainSwitch
         }else{
             $this->_helper->layout()->setLayout('home_template');
         }        
+    }
+    
+    
+    private function fetchMetaheaderMenuJson()
+    {        
+
+       $sname = Zend_Registry::get('store_host');
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');        
+        $cacheName = __FUNCTION__ . md5($sname);       
+
+        if (false == ($domainobjects = $cache->load($cacheName))) {
+            $tbl = new Default_Model_DbTable_ConfigStore();
+            $result = $tbl->fetchDomainObjects();
+                // sort Desktop manuelly to the front
+            $arrayDesktop = array();
+            $arrayRest =  array();  
+           
+            foreach ($result as $obj) {
+                $o =  $obj['order'];   
+                $curOrder = floor($obj['order']/1000);      
+                if($curOrder<10 or $curOrder>50) continue;
+                $obj['calcOrder'] = $curOrder;              
+
+                $tmp = array();
+                $tmp['order'] = $obj['order'];
+                $tmp['calcOrder'] = $obj['calcOrder'];
+                $tmp['host'] = $obj['host'];
+                $tmp['name'] = $obj['name'];                
+
+                if($curOrder==30) {
+                    // Desktop set calcOrder = 9 manuelly put desktop in front                    
+                    $tmp['calcOrder'] = 9;
+                    $arrayDesktop[] = $tmp;    
+                }else{
+                    $arrayRest[] = $tmp;    
+                }                        
+            }
+            $domainobjects = array_merge($arrayDesktop, $arrayRest);
+
+            
+            $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
+            // set group name manully
+            foreach ($domainobjects as &$obj) {
+
+                    if($sname == $obj['host']){
+                        $obj['menuactive'] = 1;
+                    }else{
+                        $obj['menuactive'] = 0;
+                    }
+
+                    $order =  $obj['order'];
+                     // z.b 150001 ende ==1 go real link otherwise /s/$name
+                    $last_char_check = substr($order, -1);
+                    if($last_char_check=='1')
+                    {
+                        $obj['menuhref'] = $obj['host'];
+                    }else{
+                        $obj['menuhref'] = $baseurl.'/s/'.$obj['name'];
+                    }
+
+                    switch ($obj['calcOrder']) {
+                        case 9:
+                            $obj['menugroup']='Desktops';
+                            break;
+                        case 10:
+                            $obj['menugroup']='Applications';
+                            break;
+                        case 20:
+                            $obj['menugroup']='Addons';
+                            break;
+                        case 40:
+                            $obj['menugroup']='Artwork';
+                            break;                       
+                        case 50:
+                        $obj['menugroup']='Other';
+                        break;
+                    }
+                         
+            }
+
+            $cache->save($domainobjects, $cacheName, array(), 28800);
+        }
+        return  Zend_Json::encode($domainobjects);
     }
 
 }
