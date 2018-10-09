@@ -339,8 +339,9 @@ class MetaHeader extends React.Component {
 
   getUrls() {
     const self = this;
+    console.log('get forum');
     $.ajax({
-      url: 'https://www.opendesktop.cc/home/forumurlajax',
+      url: 'https://pling:cappu123.@www.opendesktop.cc/home/forumurlajax',
       method: 'get',
       dataType: 'jsonp',
       error: function (response) {
@@ -350,8 +351,9 @@ class MetaHeader extends React.Component {
         if (res.status === "success") {
           self.setState({ forumUrl: res.data.url_forum });
         }
+        console.log('get blog');
         $.ajax({
-          url: 'https://www.opendesktop.cc/home/blogurlajax',
+          url: 'https://pling:cappu123.@www.opendesktop.cc/home/blogurlajax',
           method: 'get',
           dataType: 'jsonp',
           error: function (response) {
@@ -361,8 +363,9 @@ class MetaHeader extends React.Component {
             if (res.status === "success") {
               self.setState({ blogUrl: res.data.url_blog });
             }
+            console.log('get base');
             $.ajax({
-              url: 'https://www.opendesktop.cc/home/baseurlajax',
+              url: 'https://pling:cappu123.@www.opendesktop.cc/home/baseurlajax',
               method: 'get',
               dataType: 'jsonp',
               error: function (response) {
