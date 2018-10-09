@@ -152,15 +152,11 @@ class MetaHeader extends React.Component {
   }
 
   render(){
-    let domains = this.state.domains;
-    if (!this.state.domains) {
-      domains = appHelpers.getDomainsArray();
-    }
     return (
       <nav id="metaheader-nav" className="metaheader">
         <div className="metamenu">
           <DomainsMenu
-            domains={domains}
+            domains={this.state.domains}
             baseUrl={this.state.baseUrl}
             sName={this.state.sName}
           />
@@ -348,9 +344,7 @@ class UserContextMenuContainer extends React.Component {
   	super(props);
   	this.state = {
       loading:true,
-      ariaExpanded:false
     };
-    this.toggleDropdown = this.toggleDropdown.bind(this);
   }
 
   componentDidMount() {
@@ -359,11 +353,6 @@ class UserContextMenuContainer extends React.Component {
       const gitlabLink = "https://gitlab.opencode.net/dashboard/issues?assignee_id="+response[0].id;
       self.setState({gitlabLink:gitlabLink,loading:false});
     });
-  }
-
-  toggleDropdown(e){
-    const ariaExpanded = this.state.ariaExpanded === true ? false : true;
-    this.setState({ariaExpanded:ariaExpanded});
   }
 
   render(){
@@ -379,8 +368,7 @@ class UserContextMenuContainer extends React.Component {
             id="dropdownMenu2"
             data-toggle="dropdown"
             aria-haspopup="true"
-            aria-expanded={this.state.ariaExpanded}
-            onClick={this.toggleDropdown}>
+            aria-expanded="true">
             <span className="th-icon"></span>
           </button>
           <ul id="user-context-dropdown" className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu2">
