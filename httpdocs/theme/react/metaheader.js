@@ -554,6 +554,8 @@ class MetaHeader extends React.Component {
   }
 
   render() {
+    const domains = appHelpers.getDomainsArray();
+
     return React.createElement(
       "nav",
       { id: "metaheader-nav", className: "metaheader" },
@@ -561,7 +563,7 @@ class MetaHeader extends React.Component {
         "div",
         { className: "metamenu" },
         React.createElement(DomainsMenu, {
-          domains: appHelpers.getDomainsArray(),
+          domains: domains,
           baseUrl: this.state.baseUrl,
           sName: this.state.sName
         }),
@@ -711,24 +713,21 @@ class DomainsMenuGroup extends React.Component {
   }
 
   render() {
-    let domainsDisplay;
-    if (this.props.domains && this.props.domains.length > 0) {
-      const domainsDisplay = this.props.domains.filter(this.filterDomainsByMenuGroup).map((domain, index) => {
-        let domainPrefix = "http://";
-        if (domain.menuhref.indexOf('pling.cc') === -1 && domain.menuhref.indexOf('www') === -1) {
-          domainPrefix += "www.";
-        }
-        return React.createElement(
-          "li",
-          { key: index },
-          React.createElement(
-            "a",
-            { href: domainPrefix + domain.menuhref },
-            domain.name
-          )
-        );
-      });
-    }
+    const domainsDisplay = this.props.domains.filter(this.filterDomainsByMenuGroup).map((domain, index) => {
+      let domainPrefix = "http://";
+      if (domain.menuhref.indexOf('pling.cc') === -1 && domain.menuhref.indexOf('www') === -1) {
+        domainPrefix += "www.";
+      }
+      return React.createElement(
+        "li",
+        { key: index },
+        React.createElement(
+          "a",
+          { href: domainPrefix + domain.menuhref },
+          domain.name
+        )
+      );
+    });
 
     return React.createElement(
       "li",
