@@ -50,8 +50,9 @@ class MetaHeader extends React.Component {
   }
 
   getUrls(){
-    const forumQueryUrl = appHelpers.getForumQueryUrl(window.location.hostname);
     const self = this;
+    
+    const forumQueryUrl = appHelpers.getForumQueryUrl(window.location.hostname);
     $.ajax({
       url:forumQueryUrl,
       method:'get',
@@ -66,9 +67,9 @@ class MetaHeader extends React.Component {
       }
     });
 
-    const baseQueryUrl = appHelpers.getBaseQueryUrl(window.location.hostname);
+    const blogQueryUrl = appHelpers.getBlogQueryUrl(window.location.hostname);
     $.ajax({
-      url:baseQueryUrl,
+      url:blogQueryUrl,
       method:'get',
       dataType: 'jsonp',
       error: function(response){
@@ -81,9 +82,9 @@ class MetaHeader extends React.Component {
       }
     });
 
-    const blogQueryUrl = appHelpers.getBlogQueryUrl(window.location.hostname);
+    const baseQueryUrl = appHelpers.getBaseQueryUrl(window.location.hostname);
     $.ajax({
-      url:blogQueryUrl,
+      url:baseQueryUrl,
       method:'get',
       dataType: 'jsonp',
       error: function(response){

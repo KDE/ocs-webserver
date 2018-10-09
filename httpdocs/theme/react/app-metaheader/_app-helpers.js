@@ -189,7 +189,7 @@ window.appHelpers = (function(){
     } else if (hostname === "gitlab.pling.cc"){
       blogQueryUrl = "https://gitlab.pling.cc/external/get_ocs_data.php?url=home/blogurlajax";
     }
-    return baseQueryUrl;
+    return blogQueryUrl;
   }
 
   return {
