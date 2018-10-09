@@ -2,7 +2,7 @@ class MetaHeader extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {
-      baseUrl:"https://wwww.opendesktop.cc",
+      baseUrl:"https://www.opendesktop.cc",
       blogUrl:"https://blog.opendesktop.org",
       loginUrl:"https://www.opendesktop.cc/login/redirect/TFVIFZfgicowyCW5clpDz3sfM1rVUJsb_GwOHCL1oRyPOkMMVswIRPd2kvVz5oQW",
       user:user,
@@ -157,7 +157,7 @@ class DomainsMenu extends React.Component {
     return (
       <ul className="metaheader-menu left" id="domains-menu">
         <li className="active">
-          <a href={"http://"+this.props.baseUrl}>
+          <a href={this.props.baseUrl}>
             <img src={this.props.baseUrl + "/images/system/ocs-logo-rounded-16x16.png"} className="logo"/>
             openDesktop.org :
           </a>
