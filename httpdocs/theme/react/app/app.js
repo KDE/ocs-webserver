@@ -32,6 +32,8 @@ class App extends React.Component {
     if (window.view) store.dispatch(setView(view));
 
     // products
+    console.log('products');
+    console.log(window.products);
     if (window.products) {
       store.dispatch(setProducts(products));
     }
