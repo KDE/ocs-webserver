@@ -1972,7 +1972,7 @@ class ProductCarousel extends React.Component {
 
   updateDimensions() {
     const containerWidth = $('#introduction').find('.container').width();
-    const sliderWidth = containerWidth * 4;
+    const sliderWidth = containerWidth * 2;
     const itemWidth = containerWidth / 5;
     this.setState({
       sliderPosition: 0,
@@ -4216,6 +4216,8 @@ class App extends React.Component {
     if (window.view) store.dispatch(setView(view));
 
     // products
+    console.log('products');
+    console.log(window.products);
     if (window.products) {
       store.dispatch(setProducts(products));
     }

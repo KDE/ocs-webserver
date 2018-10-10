@@ -5,7 +5,7 @@ class MetaHeader extends React.Component {
       baseUrl:"https://www.opendesktop.cc",
       blogUrl:"https://blog.opendesktop.org",
       loginUrl:"https://www.opendesktop.cc/login/redirect/TFVIFZfgicowyCW5clpDz3sfM1rVUJsb_GwOHCL1oRyPOkMMVswIRPd2kvVz5oQW",
-      user:user,
+      user:{},
       sName:sName
     };
     this.getUser = this.getUser.bind(this);
@@ -161,6 +161,7 @@ class MetaHeader extends React.Component {
   }
 
   render(){
+    console.log('render metaheader app');
     const domains = appHelpers.getDomainsArray();
     return (
       <nav id="metaheader-nav" className="metaheader">
