@@ -405,6 +405,12 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         $auth = Zend_Auth::getInstance();
         $userId = $auth->getStorage()->read()->member_id;
 
+        $jwt = Default_Model_Jwt::encode($userId);
+        $time = new DateTime();
+        $timeout = DateInterval::createFromDateString(Zend_Registry::get('config')->settings->jwt->expire->cookie);
+        setcookie('ltat', $jwt, $time->add($timeout)->getTimestamp(), '/',
+            Local_Tools_ParseDomain::get_domain($this->getRequest()->getHttpHost()), null, true);
+
         //If the user is a hive user, we have to update his password
         $this->changePasswordIfNeeded($userId, $values['password']);
         

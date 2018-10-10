@@ -108,9 +108,10 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
     private function fetchUserByEmail()
     {
         $sql = "
-            SELECT `m`.*, `member_email`.`email_verification_value`, `member_email`.`email_checked` 
+            SELECT `m`.*, `member_email`.`email_verification_value`, `member_email`.`email_checked`, `mei`.`external_id` 
             FROM {$this->_tableName} AS m
             JOIN member_email ON m.member_id = member_email.email_member_id AND member_email.email_primary = 1
+            LEFT JOIN `member_external_id` AS `mei` ON `mei`.`member_id` = `m`.`member_id`
             WHERE  
             m.is_active = :active AND
             m.is_deleted = :deleted AND 
@@ -154,9 +155,10 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
     private function fetchUserByUsername()
     {
         $sql = "
-            SELECT `m`.*, `member_email`.`email_verification_value`, `member_email`.`email_checked` 
+            SELECT `m`.*, `member_email`.`email_verification_value`, `member_email`.`email_checked`, `mei`.`external_id` 
             FROM `member` AS m
             JOIN `member_email` ON m.member_id = member_email.email_member_id AND member_email.email_primary = 1
+            LEFT JOIN `member_external_id` AS `mei` ON `mei`.`member_id` = `m`.`member_id`
             WHERE  
             m.`is_active` = :active AND 
             m.`is_deleted` = :deleted AND 
