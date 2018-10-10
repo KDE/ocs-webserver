@@ -861,6 +861,7 @@ class UserContextMenuContainer extends React.Component {
       loading: true
     };
     this.handleClick = this.handleClick.bind(this);
+    this.toggleDropDown = this.toggleDropDown.bind(this);
   }
 
   componentWillMount() {
@@ -887,6 +888,12 @@ class UserContextMenuContainer extends React.Component {
     this.setState({ dropdownClass: dropdownClass });
   }
 
+  toggleDropDown() {
+    if (this.state.dropdownClass === "open") {
+      this.setState({ dropdownClass: "" });
+    }
+  }
+
   render() {
 
     const messagesLink = "https://forum.opendesktop.org/u/" + this.props.user.username + "/messages";
@@ -900,7 +907,7 @@ class UserContextMenuContainer extends React.Component {
         React.createElement(
           'button',
           {
-            className: 'btn btn-default dropdown-toggle', type: 'button' },
+            className: 'btn btn-default dropdown-toggle', type: 'button', onClick: this.toggleDropDown },
           React.createElement('span', { className: 'th-icon' })
         ),
         React.createElement(

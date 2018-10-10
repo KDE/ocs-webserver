@@ -352,6 +352,7 @@ class UserContextMenuContainer extends React.Component {
       loading:true,
     };
     this.handleClick = this.handleClick.bind(this);
+    this.toggleDropDown = this.toggleDropDown.bind(this);
   }
 
   componentWillMount() {
@@ -375,7 +376,13 @@ class UserContextMenuContainer extends React.Component {
     if (this.node.contains(e.target)){
       dropdownClass = "open";
     }
-    this.setState({dropdownClass:dropdownClass})
+    this.setState({dropdownClass:dropdownClass});
+  }
+
+  toggleDropDown(){
+    if (this.state.dropdownClass === "open"){
+      this.setState({dropdownClass:""});      
+    }
   }
 
   render(){
@@ -386,7 +393,7 @@ class UserContextMenuContainer extends React.Component {
       <li ref={node => this.node = node} id="user-context-menu-container">
         <div className={"user-dropdown " + this.state.dropdownClass}>
           <button
-            className="btn btn-default dropdown-toggle" type="button">
+            className="btn btn-default dropdown-toggle" type="button" onClick={this.toggleDropDown}>
             <span className="th-icon"></span>
           </button>
           <ul id="user-context-dropdown" className="dropdown-menu dropdown-menu-right">
