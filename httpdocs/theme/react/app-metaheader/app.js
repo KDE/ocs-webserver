@@ -1,6 +1,11 @@
 class MetaHeader extends React.Component {
   constructor(props){
   	super(props);
+    console.log(window.domains);
+    console.log(window.baseUrl);
+    console.log(window.blogUrl);
+    console.log(window.forumUrl);
+    console.log(window.sName);
   	this.state = {
       baseUrl:"https://www.opendesktop.cc",
       blogUrl:"https://blog.opendesktop.org",
@@ -353,6 +358,15 @@ class UserContextMenuContainer extends React.Component {
   	this.state = {
       loading:true,
     };
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  componentWillMount() {
+    document.addEventListener('mousedown',this.handleClick, false);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown',this.handleClick, false);
   }
 
   componentDidMount() {
@@ -363,23 +377,29 @@ class UserContextMenuContainer extends React.Component {
     });
   }
 
+  handleClick(){
+    let dropdownClass = "";
+    if (this.node.contains(e.target)){
+      console.log('inside div');
+      dropdownClass = "open";
+    } else {
+      console.log('outside div');
+    }
+    this.setState({dropdownClass:dropdownClass})
+  }
+
   render(){
 
     const messagesLink = "https://forum.opendesktop.org/u/"+this.props.user.username+"/messages";
 
     return (
-      <li id="user-context-menu-container">
+      <li ref={node => this.node = node} id="user-context-menu-container" className={this.state.dropdownClass}>
         <div className="user-dropdown">
           <button
-            className="btn btn-default dropdown-toggle"
-            type="button"
-            id="dropdownMenu2"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="true">
+            className="btn btn-default dropdown-toggle" type="button">
             <span className="th-icon"></span>
           </button>
-          <ul id="user-context-dropdown" className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu2">
+          <ul id="user-context-dropdown" className="dropdown-menu dropdown-menu-right">
             <li id="opencode-link-item">
               <a href="https://gitlab.opencode.net/dashboard/projects">
                 <div className="icon"></div>
