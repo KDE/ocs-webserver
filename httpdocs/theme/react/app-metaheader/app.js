@@ -277,7 +277,6 @@ class UserContextMenuContainer extends React.Component {
 
   render(){
 
-    const messagesLink = ;
     return (
       <li ref={node => this.node = node} id="user-context-menu-container">
         <div className={"user-dropdown " + this.state.dropdownClass}>
