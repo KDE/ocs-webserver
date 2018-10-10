@@ -769,7 +769,7 @@ class UserContextMenuContainer extends React.Component {
     if (this.node.contains(e.target)) {
       if (this.state.dropdownClass === "open") {
         console.log(e.target.className);
-        if (e.target.className === "th-icon") {
+        if (e.target.className === "th-icon" || e.target.className === "btn btn-default dropdown-toggle") {
           dropdownClass = "";
         } else {
           dropdownClass = "open";
@@ -867,7 +867,8 @@ class UserLoginMenuContainer extends React.Component {
     let dropdownClass = "";
     if (this.node.contains(e.target)) {
       if (this.state.dropdownClass === "open") {
-        if (e.target.className === "th-icon") {
+        console.log(e.target.className);
+        if (e.target.className === "th-icon" || e.target.className === "btn btn-default dropdown-toggle") {
           dropdownClass = "";
         } else {
           dropdownClass = "open";
