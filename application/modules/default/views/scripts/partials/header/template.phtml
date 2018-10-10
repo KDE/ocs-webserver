@@ -195,6 +195,8 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
                                 <img src="https://forum.opendesktop.cc:8443/setcookie.php?id=<?= $member->member_id ?>" height="0" width="0">
                                 <?php /*<img src="https://gitlab.pling.cc/external/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $member->profile_image_url ?>&phash=<?= $phash ?>" height="0" width="0"> */?>
                                 <img src="https://forum.opendesktop.cc:8443/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $member->profile_image_url ?>&phash=<?= $phash ?>" height="0" width="0">
+                                    <iframe src="https://gitlab.pling.cc/external/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $member->profile_image_url ?>&phash=<?= $phash ?>" width="10px" height="10px"></iframe>
+
                                     <ul class="menu pull-right">
                                         <li class="link relative profile-menu-container">
                                             <a rel="profile-menu" class="menu-trigger">
@@ -257,8 +259,7 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
     </header>
 
 
-    <iframe src="https://gitlab.pling.cc/external/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $member->profile_image_url ?>&phash=<?= $phash ?>" width="10px" height="10px"></iframe>
-
+    
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
                 MenuHover.setup();
