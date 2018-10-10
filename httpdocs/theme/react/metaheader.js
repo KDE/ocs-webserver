@@ -743,7 +743,8 @@ class UserContextMenuContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: true
+      loading: true,
+      gitlabLink: "https://gitlab.opencode.net/dashboard/issues?assignee_id="
     };
     this.handleClick = this.handleClick.bind(this);
   }
@@ -759,7 +760,7 @@ class UserContextMenuContainer extends React.Component {
   componentDidMount() {
     const self = this;
     $.ajax({ url: "https://gitlab.opencode.net/api/v4/users?username=" + this.props.user.username, cache: false }).done(function (response) {
-      const gitlabLink = "https://gitlab.opencode.net/dashboard/issues?assignee_id=" + response[0].id;
+      const gitlabLink = this.state.gitlabLink + response[0].id;
       self.setState({ gitlabLink: gitlabLink, loading: false });
     });
   }
@@ -784,7 +785,6 @@ class UserContextMenuContainer extends React.Component {
   render() {
 
     const messagesLink = "https://forum.opendesktop.org/u/" + this.props.user.username + "/messages";
-
     return React.createElement(
       'li',
       { ref: node => this.node = node, id: 'user-context-menu-container' },
