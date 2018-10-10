@@ -155,7 +155,6 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
         .metamenu ul.dropdown-menu  li.active span{ color:#eee; }
     </style>
 
-
     <header id="page_header" xmlns="http://www.w3.org/1999/html">
         <div class="container header" style="position: relative;">
 
@@ -194,7 +193,7 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
                                 <?php if ($auth->hasIdentity() && !empty($member->username)) { ?>
                                 <img src="https://gitlab.pling.cc/external/setcookie.php?id=<?= $member->member_id ?>" height="0" width="0">
                                 <img src="https://forum.opendesktop.cc:8443/setcookie.php?id=<?= $member->member_id ?>" height="0" width="0">
-                                <img src="https://gitlab.pling.cc/external/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $member->profile_image_url ?>&phash=<?= $phash ?>" height="0" width="0">
+                                <?php /*<img src="https://gitlab.pling.cc/external/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $member->profile_image_url ?>&phash=<?= $phash ?>" height="0" width="0"> */?>
                                 <img src="https://forum.opendesktop.cc:8443/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $member->profile_image_url ?>&phash=<?= $phash ?>" height="0" width="0">
                                     <ul class="menu pull-right">
                                         <li class="link relative profile-menu-container">
@@ -256,6 +255,9 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
         <?php endif; ?>
         </div>
     </header>
+
+
+    <iframe src="https://gitlab.pling.cc/external/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $member->profile_image_url ?>&phash=<?= $phash ?>" width="10px" height="10px"></iframe>
 
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
