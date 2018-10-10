@@ -883,15 +883,10 @@ class UserContextMenuContainer extends React.Component {
   handleClick(e) {
     let dropdownClass = "";
     if (this.node.contains(e.target)) {
+      console.log(e.target);
       dropdownClass = "open";
     }
     this.setState({ dropdownClass: dropdownClass });
-  }
-
-  toggleDropDown() {
-    if (this.state.dropdownClass === "open") {
-      this.setState({ dropdownClass: "" });
-    }
   }
 
   render() {
@@ -987,7 +982,7 @@ class UserLoginMenuContainer extends React.Component {
   render() {
     return React.createElement(
       'li',
-      { id: 'user-login-menu-container' },
+      { id: 'user-login-menu-container', ref: node => this.node = node },
       React.createElement(
         'div',
         { className: "user-dropdown " + this.state.dropdownClass },

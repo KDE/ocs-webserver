@@ -374,15 +374,10 @@ class UserContextMenuContainer extends React.Component {
   handleClick(e){
     let dropdownClass = "";
     if (this.node.contains(e.target)){
+      console.log(e.target);
       dropdownClass = "open";
     }
     this.setState({dropdownClass:dropdownClass});
-  }
-
-  toggleDropDown(){
-    if (this.state.dropdownClass === "open"){
-      this.setState({dropdownClass:""});      
-    }
   }
 
   render(){
@@ -448,7 +443,7 @@ class UserLoginMenuContainer extends React.Component {
 
   render(){
     return (
-      <li id="user-login-menu-container">
+      <li id="user-login-menu-container" ref={node => this.node = node}>
         <div className={"user-dropdown " + this.state.dropdownClass}>
           <button
             className="btn btn-default dropdown-toggle"
