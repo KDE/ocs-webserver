@@ -742,10 +742,7 @@ class UserMenu extends React.Component {
 class UserContextMenuContainer extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      loading: true,
-      gitlabLink: "https://gitlab.opencode.net/dashboard/issues?assignee_id="
-    };
+    this.state = {};
     this.handleClick = this.handleClick.bind(this);
   }
 
@@ -760,9 +757,9 @@ class UserContextMenuContainer extends React.Component {
   componentDidMount() {
     console.log('get git lab id');
     const self = this;
-    $.ajax({ url: "https://gitlab.opencode.net/api/v4/users?username=" + this.props.user.username, cache: false }).done(function (response) {
+    $.ajax({ url: window.gitlabUrl + "/api/v4/users?username=" + this.props.user.username, cache: false }).done(function (response) {
       console.log('git lab id:' + response[0].id);
-      const gitlabLink = self.state.gitlabLink + response[0].id;
+      const gitlabLink = "https://gitlab.opencode.net/dashboard/issues?assignee_id=" + response[0].id;
       self.setState({ gitlabLink: gitlabLink, loading: false });
     });
   }
