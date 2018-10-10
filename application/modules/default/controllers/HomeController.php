@@ -100,6 +100,33 @@ class HomeController extends Local_Controller_Action_DomainSwitch
     }
     
     
+    public function metamenujsAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        
+        header('Access-Control-Allow-Origin: *'); 
+        
+        $this->getResponse()
+             ->setHeader('Access-Control-Allow-Origin', '*')
+             ->setHeader('Access-Control-Allow-Credentials', 'true')
+             ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+             ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
+        ;
+        
+        
+        $this->view->baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
+        $this->view->url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
+        $this->view->url_blog = Zend_Registry::get('config')->settings->client->default->url_blog;
+
+        $this->view->sname = Zend_Registry::get('store_host');
+        $this->view->json_menu = $this->fetchMetaheaderMenuJson();
+        
+        
+        
+        
+    }
+    
+    
     public function baseurlajaxAction()
     {
         $this->_helper->layout()->disableLayout();
