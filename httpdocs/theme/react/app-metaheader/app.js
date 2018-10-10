@@ -352,7 +352,6 @@ class UserContextMenuContainer extends React.Component {
       loading:true,
     };
     this.handleClick = this.handleClick.bind(this);
-    this.toggleDropDown = this.toggleDropDown.bind(this);
   }
 
   componentWillMount() {
