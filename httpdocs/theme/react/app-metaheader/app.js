@@ -257,6 +257,7 @@ class UserContextMenuContainer extends React.Component {
     let dropdownClass = "";
     if (this.node.contains(e.target)){
       console.log(e.target.className);
+      console.log(this.state.dropdownClass);
       dropdownClass = "open";
     }
     this.setState({dropdownClass:dropdownClass});
