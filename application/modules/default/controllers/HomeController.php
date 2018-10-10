@@ -100,6 +100,40 @@ class HomeController extends Local_Controller_Action_DomainSwitch
     }
     
     
+    public function metamenujsAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        
+        header('Access-Control-Allow-Origin: *'); 
+        
+        $this->getResponse()
+             ->setHeader('Access-Control-Allow-Origin', '*')
+             ->setHeader('Access-Control-Allow-Credentials', 'true')
+             ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+             ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
+        ;
+        
+        
+        $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
+        $url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
+        $url_blog = Zend_Registry::get('config')->settings->client->default->url_blog;
+
+        $sname = Zend_Registry::get('store_host');
+        $json_menu = $this->fetchMetaheaderMenuJson();
+        
+        echo '<script>';
+        echo '    var domains = '.$json_menu.';';
+        //echo '    var user = '.$json_user.';';
+        echo '    var baseUrl = '."$baseurl".';';
+        echo '    var blogUrl = '."$url_blog".';';
+        //echo '    var loginUrl = '."$loginUrl".';';
+        echo '    var sName = '."$sname".';';
+        echo '</script>';
+        
+    }
+    
+    
     public function baseurlajaxAction()
     {
         $this->_helper->layout()->disableLayout();
