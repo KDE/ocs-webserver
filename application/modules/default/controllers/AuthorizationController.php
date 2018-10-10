@@ -395,6 +395,11 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             . PHP_EOL . ' - auth_user: ' . print_r($values['mail'], true)
             . PHP_EOL . ' - ip: ' . $this->_request->getClientIp()
         );
+        
+        
+        $filter = new Local_Filter_Url_Encrypt();
+        $p = $filter->filter($values['password']);
+        Zend_Registry::set('phash', $p);
 
         $auth = Zend_Auth::getInstance();
         $userId = $auth->getStorage()->read()->member_id;
