@@ -256,9 +256,13 @@ class UserContextMenuContainer extends React.Component {
   handleClick(e){
     let dropdownClass = "";
     if (this.node.contains(e.target)){
-      console.log(e.target.className);
-      console.log(this.state.dropdownClass);
-      dropdownClass = "open";
+      if (this.state.dropdownClass === "open"){
+        if (e.target.className === "th-icon"){
+          dropdownClass = "";
+        }
+      } else {
+        dropdownClass = "open";
+      }
     }
     this.setState({dropdownClass:dropdownClass});
   }
@@ -318,7 +322,13 @@ class UserLoginMenuContainer extends React.Component {
   handleClick(e){
     let dropdownClass = "";
     if (this.node.contains(e.target)){
-      dropdownClass = "open";
+      if (this.state.dropdownClass === "open"){
+        if (e.target.className === "th-icon"){
+          dropdownClass = "";
+        }
+      } else {
+        dropdownClass = "open";
+      }
     }
     this.setState({dropdownClass:dropdownClass})
   }
@@ -332,7 +342,7 @@ class UserLoginMenuContainer extends React.Component {
             className="btn btn-default dropdown-toggle"
             type="button"
             id="userLoginDropdown">
-            <img src={this.props.user.avatar}/>
+            <img className="th-icon" src={this.props.user.avatar}/>
           </button>
           <ul className="dropdown-menu dropdown-menu-right">
             <li id="user-info-menu-item">
