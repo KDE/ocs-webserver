@@ -426,9 +426,10 @@ class MetaHeader extends React.Component {
     if (window.location.hostname === "forum.opendesktop.cc") {
       // var x = document.cookie;
       const decodedCookie = decodeURIComponent(document.cookie);
-      const ocs_data = decodedCookie.split('ocs_data=')[1];
-      console.log(ocs_data);
-      console.log(typeof ocs_data);
+      let ocs_data = decodedCookie.split('ocs_data=')[1];
+      if (ocs_data.indexOf(';') > -1) {
+        ocs_data = ocs_data.split(';')[0];
+      }
       const user = JSON.parse(ocs_data);
       this.setState({ user: user });
     } else {
