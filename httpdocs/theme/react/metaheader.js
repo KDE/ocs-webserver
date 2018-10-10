@@ -405,6 +405,11 @@ window.appHelpers = function () {
 class MetaHeader extends React.Component {
   constructor(props) {
     super(props);
+    console.log(window.domains);
+    console.log(window.baseUrl);
+    console.log(window.blogUrl);
+    console.log(window.forumUrl);
+    console.log(window.sName);
     this.state = {
       baseUrl: "https://www.opendesktop.cc",
       blogUrl: "https://blog.opendesktop.org",
