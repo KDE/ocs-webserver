@@ -353,6 +353,15 @@ class UserContextMenuContainer extends React.Component {
   	this.state = {
       loading:true,
     };
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  componentWillMount() {
+    document.addEventListener('mousedown',this.handleClick, false);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown',this.handleClick, false);
   }
 
   componentDidMount() {
@@ -363,12 +372,16 @@ class UserContextMenuContainer extends React.Component {
     });
   }
 
+  handleClick(){
+    console.log('handle click');
+  }
+
   render(){
 
     const messagesLink = "https://forum.opendesktop.org/u/"+this.props.user.username+"/messages";
 
     return (
-      <li id="user-context-menu-container">
+      <li ref={node => this.node = node} id="user-context-menu-container">
         <div className="user-dropdown">
           <button
             className="btn btn-default dropdown-toggle"
