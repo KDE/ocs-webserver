@@ -378,7 +378,14 @@ class UserContextMenuContainer extends React.Component {
   }
 
   handleClick(){
-    console.log('handle click');
+    let dropdownClass = "";
+    if (this.node.contains(e.target)){
+      console.log('inside div');
+      dropdownClass = "open";
+    } else {
+      console.log('outside div');
+    }
+    this.setState({dropdownClass:dropdownClass})
   }
 
   render(){
@@ -386,18 +393,13 @@ class UserContextMenuContainer extends React.Component {
     const messagesLink = "https://forum.opendesktop.org/u/"+this.props.user.username+"/messages";
 
     return (
-      <li ref={node => this.node = node} id="user-context-menu-container">
+      <li ref={node => this.node = node} id="user-context-menu-container" className={this.state.dropdownClass}>
         <div className="user-dropdown">
           <button
-            className="btn btn-default dropdown-toggle"
-            type="button"
-            id="dropdownMenu2"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="true">
+            className="btn btn-default dropdown-toggle" type="button">
             <span className="th-icon"></span>
           </button>
-          <ul id="user-context-dropdown" className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu2">
+          <ul id="user-context-dropdown" className="dropdown-menu dropdown-menu-right">
             <li id="opencode-link-item">
               <a href="https://gitlab.opencode.net/dashboard/projects">
                 <div className="icon"></div>

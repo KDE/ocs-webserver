@@ -887,7 +887,14 @@ class UserContextMenuContainer extends React.Component {
   }
 
   handleClick() {
-    console.log('handle click');
+    let dropdownClass = "";
+    if (this.node.contains(e.target)) {
+      console.log('inside div');
+      dropdownClass = "open";
+    } else {
+      console.log('outside div');
+    }
+    this.setState({ dropdownClass: dropdownClass });
   }
 
   render() {
@@ -896,24 +903,19 @@ class UserContextMenuContainer extends React.Component {
 
     return React.createElement(
       "li",
-      { ref: node => this.node = node, id: "user-context-menu-container" },
+      { ref: node => this.node = node, id: "user-context-menu-container", className: this.state.dropdownClass },
       React.createElement(
         "div",
         { className: "user-dropdown" },
         React.createElement(
           "button",
           {
-            className: "btn btn-default dropdown-toggle",
-            type: "button",
-            id: "dropdownMenu2",
-            "data-toggle": "dropdown",
-            "aria-haspopup": "true",
-            "aria-expanded": "true" },
+            className: "btn btn-default dropdown-toggle", type: "button" },
           React.createElement("span", { className: "th-icon" })
         ),
         React.createElement(
           "ul",
-          { id: "user-context-dropdown", className: "dropdown-menu dropdown-menu-right", "aria-labelledby": "dropdownMenu2" },
+          { id: "user-context-dropdown", className: "dropdown-menu dropdown-menu-right" },
           React.createElement(
             "li",
             { id: "opencode-link-item" },
