@@ -409,7 +409,12 @@ class MetaHeader extends React.Component {
       baseUrl: "https://www.opendesktop.cc",
       blogUrl: "https://blog.opendesktop.org",
       loginUrl: "https://www.opendesktop.cc/login/redirect/TFVIFZfgicowyCW5clpDz3sfM1rVUJsb_GwOHCL1oRyPOkMMVswIRPd2kvVz5oQW",
-      user: {},
+      user: {
+        "member_id": "24",
+        "username": "dummy",
+        "mail": "dummy@dummy.de",
+        "avatar": "https://cn.pling.it/cache/200x200-2/img/4/c/5/7/ae1733cd353f99cf5295c2fd11c9e552db3f.png"
+      },
       sName: sName
     };
     this.getUser = this.getUser.bind(this);
@@ -563,6 +568,7 @@ class MetaHeader extends React.Component {
   }
 
   render() {
+    console.log('render metaheader app');
     const domains = appHelpers.getDomainsArray();
     return React.createElement(
       "nav",
