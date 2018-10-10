@@ -42,10 +42,9 @@ $url_blog = Zend_Registry::get('config')->settings->client->default->url_blog;
 
 $json_menu = $this->fetchMetaheaderMenuJson();
 
+$phash = null;
 if (Zend_Registry::isRegistered('phash')) {
     $phash = Zend_Registry::set('phash');
-} else {
-    $phash = null;
 }
 
 echo $this->render('partials/header/metaheader.phtml'); ?>
