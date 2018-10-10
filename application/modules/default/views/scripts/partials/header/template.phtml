@@ -50,6 +50,11 @@ if (Zend_Registry::isRegistered('phash')) {
 
 echo "<!-- phash: ". $phash . " -->";
 
+Zend_Registry::set('phash', 'test');
+
+echo "<!-- phash: ". $phash . " -->";
+
+
 echo $this->render('partials/header/metaheader.phtml'); ?>
 
     <style>
