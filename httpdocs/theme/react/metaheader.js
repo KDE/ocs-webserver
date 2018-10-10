@@ -746,7 +746,7 @@ class UserContextMenuContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      gitlabLink: "https://gitlab.opencode.net/dashboard/issues?assignee_id="
+      gitlabLink: window.gitlabUrl + "/dashboard/issues?assignee_id="
     };
     this.handleClick = this.handleClick.bind(this);
   }
@@ -787,7 +787,6 @@ class UserContextMenuContainer extends React.Component {
 
   render() {
 
-    const messagesLink = "https://forum.opendesktop.org/u/" + this.props.user.username + "/messages";
     return React.createElement(
       'li',
       { ref: node => this.node = node, id: 'user-context-menu-container' },
@@ -808,7 +807,7 @@ class UserContextMenuContainer extends React.Component {
             { id: 'opencode-link-item' },
             React.createElement(
               'a',
-              { href: 'https://gitlab.opencode.net/dashboard/projects' },
+              { href: window.gitlabUrl + "/dashboard/projects" },
               React.createElement('div', { className: 'icon' }),
               React.createElement(
                 'span',
@@ -836,7 +835,7 @@ class UserContextMenuContainer extends React.Component {
             { id: 'messages-link-item' },
             React.createElement(
               'a',
-              { href: messagesLink },
+              { href: window.forumUrl + "/u/" + this.props.user.username + "/messages" },
               React.createElement('div', { className: 'icon' }),
               React.createElement(
                 'span',
