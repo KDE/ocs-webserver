@@ -415,23 +415,21 @@ class MetaHeader extends React.Component {
       user: {}
     };
     this.getUser = this.getUser.bind(this);
-    this.getLogin = this.getLogin.bind(this);
-    this.getDomains = this.getDomains.bind(this);
-    this.getUrls = this.getUrls.bind(this);
   }
 
   componentDidMount() {
-    this.getLogin();
     this.getUser();
   }
 
   getUser() {
-
+    console.log('get user');
     if (window.location.hostname === "forum.opendesktop.cc") {
       // var x = document.cookie;
-      console.log('coockie');
       const decodedCookie = decodeURIComponent(document.cookie);
-      const ocs_data = decodedCookie.split('ocs_data=')[1];
+      let ocs_data = decodedCookie.split('ocs_data=')[1];
+      if (ocs_data.indexOf(';') > -1) {
+        ocs_data = ocs_data.split(';')[0];
+      }
       const user = JSON.parse(ocs_data);
       this.setState({ user: user });
     } else {
@@ -442,124 +440,14 @@ class MetaHeader extends React.Component {
         method: 'get',
         dataType: userQuery.dataType,
         error: function (response) {
-          console.log('get user');
           console.log(response);
           const res = JSON.parse(response.responseText);
           if (res.status === "success") {
             self.setState({ user: res.data });
-          } else {
-            self.getLogin();
           }
         }
       });
     }
-  }
-
-  getLogin() {
-    const loginQuery = appHelpers.getLoginQueryUrl(window.location.hostname);
-    console.log(loginQuery);
-    const self = this;
-    $.ajax({
-      url: loginQuery.url,
-      method: 'get',
-      dataType: loginQuery.dataType,
-      error: function (response) {
-        console.log('get login');
-        console.log(response);
-        const res = JSON.parse(response.responseText);
-        if (res.status === "success") {
-          console.log(res);
-          self.setState({ loginUrl: res.data.login_url });
-        }
-      }
-    });
-  }
-
-  getUrls() {
-    const self = this;
-
-    const forumQuery = appHelpers.getForumQueryUrl(window.location.hostname);
-    $.ajax({
-      url: forumQuery.url,
-      method: 'get',
-      dataType: forumQuery.dataType,
-      error: function (response) {
-        console.log('get forum');
-        console.log(response);
-        const res = JSON.parse(response.responseText);
-        if (res.status === "success") {
-          self.setState({ forumUrl: res.data.url_forum });
-        }
-      }
-    });
-
-    const blogQuery = appHelpers.getBlogQueryUrl(window.location.hostname);
-    $.ajax({
-      url: blogQuery.url,
-      method: 'get',
-      dataType: blogQuery.dataType,
-      error: function (response) {
-        console.log('get blog');
-        console.log(response);
-        const res = JSON.parse(response.responseText);
-        if (res.status === "success") {
-          self.setState({ blogUrl: res.data.url_blog });
-        }
-      }
-    });
-
-    const baseQuery = appHelpers.getBaseQueryUrl(window.location.hostname);
-    $.ajax({
-      url: baseQuery.url,
-      method: 'get',
-      dataType: baseQuery.dataType,
-      error: function (response) {
-        console.log('get base');
-        console.log(response);
-        const res = JSON.parse(response.responseText);
-        if (res.status === "success") {
-          let baseUrl = res.data.base_url;
-          if (res.data.base_url.indexOf('http') === -1) {
-            baseUrl = "http://" + res.data.base_url;
-          }
-          self.setState({ baseUrl: baseUrl });
-        }
-      }
-    });
-
-    const storeQuery = appHelpers.getStoreQueryUrl(window.location.hostname);
-    $.ajax({
-      url: storeQuery.url,
-      method: 'get',
-      dataType: storeQuery.dataType,
-      error: function (response) {
-        console.log('get store');
-        console.log(response);
-        const res = JSON.parse(response.responseText);
-        if (res.status === "success") {
-          self.setState({ sName: res.data.store_name });
-        }
-      }
-    });
-  }
-
-  getDomains() {
-    const self = this;
-    const domainsQuery = appHelpers.getDomainsQueryUrl(window.location.hostname);
-    $.ajax({
-      url: domainsQuery.url,
-      method: 'get',
-      dataType: domainsQuery.dataType,
-      error: function (response) {
-        console.log('get domains');
-        console.log(response);
-        const res = JSON.parse(response.responseText);
-        if (res.status === "success") {
-          console.log(res.data);
-          self.setState({ domains: res.data });
-        }
-      }
-    });
   }
 
   render() {
@@ -858,7 +746,7 @@ class UserContextMenuContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: true
+      gitlabLink: "https://gitlab.opencode.net/dashboard/issues?assignee_id="
     };
     this.handleClick = this.handleClick.bind(this);
   }
@@ -872,9 +760,11 @@ class UserContextMenuContainer extends React.Component {
   }
 
   componentDidMount() {
+    console.log('get git lab id');
     const self = this;
-    $.ajax({ url: "https://gitlab.opencode.net/api/v4/users?username=" + this.props.user.username, cache: false }).done(function (response) {
-      const gitlabLink = "https://gitlab.opencode.net/dashboard/issues?assignee_id=" + response[0].id;
+    $.ajax({ url: window.gitlabUrl + "/api/v4/users?username=" + this.props.user.username, cache: false }).done(function (response) {
+      console.log('git lab id:' + response[0].id);
+      const gitlabLink = self.state.gitlabLink + response[0].id;
       self.setState({ gitlabLink: gitlabLink, loading: false });
     });
   }
@@ -882,7 +772,15 @@ class UserContextMenuContainer extends React.Component {
   handleClick(e) {
     let dropdownClass = "";
     if (this.node.contains(e.target)) {
-      dropdownClass = "open";
+      if (this.state.dropdownClass === "open") {
+        if (e.target.className === "th-icon" || e.target.className === "btn btn-default dropdown-toggle") {
+          dropdownClass = "";
+        } else {
+          dropdownClass = "open";
+        }
+      } else {
+        dropdownClass = "open";
+      }
     }
     this.setState({ dropdownClass: dropdownClass });
   }
@@ -890,7 +788,6 @@ class UserContextMenuContainer extends React.Component {
   render() {
 
     const messagesLink = "https://forum.opendesktop.org/u/" + this.props.user.username + "/messages";
-
     return React.createElement(
       'li',
       { ref: node => this.node = node, id: 'user-context-menu-container' },
@@ -900,7 +797,7 @@ class UserContextMenuContainer extends React.Component {
         React.createElement(
           'button',
           {
-            className: 'btn btn-default dropdown-toggle', type: 'button' },
+            className: 'btn btn-default dropdown-toggle', type: 'button', onClick: this.toggleDropDown },
           React.createElement('span', { className: 'th-icon' })
         ),
         React.createElement(
@@ -972,7 +869,16 @@ class UserLoginMenuContainer extends React.Component {
   handleClick(e) {
     let dropdownClass = "";
     if (this.node.contains(e.target)) {
-      dropdownClass = "open";
+      if (this.state.dropdownClass === "open") {
+        console.log(e.target.className);
+        if (e.target.className === "th-icon" || e.target.className === "btn btn-default dropdown-toggle") {
+          dropdownClass = "";
+        } else {
+          dropdownClass = "open";
+        }
+      } else {
+        dropdownClass = "open";
+      }
     }
     this.setState({ dropdownClass: dropdownClass });
   }
@@ -980,7 +886,7 @@ class UserLoginMenuContainer extends React.Component {
   render() {
     return React.createElement(
       'li',
-      { id: 'user-login-menu-container' },
+      { id: 'user-login-menu-container', ref: node => this.node = node },
       React.createElement(
         'div',
         { className: "user-dropdown " + this.state.dropdownClass },
@@ -990,7 +896,7 @@ class UserLoginMenuContainer extends React.Component {
             className: 'btn btn-default dropdown-toggle',
             type: 'button',
             id: 'userLoginDropdown' },
-          React.createElement('img', { src: this.props.user.avatar })
+          React.createElement('img', { className: 'th-icon', src: this.props.user.avatar })
         ),
         React.createElement(
           'ul',
@@ -1034,7 +940,6 @@ class UserLoginMenuContainer extends React.Component {
               )
             )
           ),
-          React.createElement('li', { id: 'main-seperator', role: 'separator', className: 'divider' }),
           React.createElement(
             'li',
             { className: 'buttons' },

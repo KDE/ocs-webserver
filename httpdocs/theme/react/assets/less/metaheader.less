@@ -12,25 +12,15 @@ body {
   &.ui-indigo  {
     #metaheader {
       position: fixed;
-      #metaheader-nav {
-        #user-context-menu-container {
-          .user-dropdown .dropdown-menu {
-            margin-top: 14px !important;
-          }
-          .user-dropdown .dropdown-menu::before {
-            right: 4px !important;
-          }
-        }
+    }
+  }
 
-        #user-login-menu-container {
-          .user-dropdown .dropdown-menu {
-            margin-top: 13px !important;
-          }
-          .user-dropdown .dropdown-menu::before {
-            right: 4px !important;
-          }
-        }
-      }
+  &.navigation-topics {
+    #metaheader #metaheader-nav #user-context-menu-container .user-dropdown .th-icon {
+      margin-top: -6px;
+    }
+    #metaheader #metaheader-nav #user-login-menu-container .user-dropdown .dropdown-toggle img {
+      margin-top: -7px;
     }
   }
 }
@@ -47,9 +37,9 @@ body {
   z-index: 1001;
   background-color: white;
 
-
-  .glyphicon-th:before {
-      content: "\e011";
+  * {
+    outline: none !important;
+    box-sizing: border-box;
   }
 
   .dropdown-menu {
@@ -95,6 +85,7 @@ body {
   #metaheader-nav {
     width: 100%;
     float: left;
+    height: 34px;
 
     .btn-metaheader {
       padding: 0 12px !important;
@@ -111,6 +102,7 @@ body {
 
     #user-menu-container {
       float: right;
+      height: 34px;
     }
 
     ul.metaheader-menu {
@@ -281,7 +273,7 @@ body {
               width: 200px;
               top: 60px;
               right: -43px;
-              min-height: 77px;
+              min-height: 84px;
 
               &::before {
                 right: 156px;
@@ -327,6 +319,7 @@ body {
 
         .dropdown-menu {
           display: block;
+          right: -6px;
         }
       }
 
@@ -531,7 +524,12 @@ body {
         }
         .dropdown-menu {
           &::before {
-            right: 6px;
+            right: 9px;
+          }
+
+          #user-info-menu-item {
+            width: 100%;
+            border-bottom: 1px solid #ccc;
           }
 
           #user-info-section {
@@ -539,6 +537,11 @@ body {
             padding: 20px;
             background: white;
             float: left;
+            padding-left: 116px;
+            position: relative;
+            width: 100%;
+            min-height: 136px;
+            box-sizing: border-box;
 
             .user-avatar {
               height: 96px;
@@ -546,6 +549,9 @@ body {
               float: left;
               border-radius: 100%;
               overflow: hidden;
+              position: absolute;
+              top: 20px;
+              left: 20px;
 
               .no-avatar-user-letter {
                 border-radius: 100%;
