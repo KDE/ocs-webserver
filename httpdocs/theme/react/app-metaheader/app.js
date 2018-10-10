@@ -235,7 +235,7 @@ class UserContextMenuContainer extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {
-      gitlabLink:"https://gitlab.opencode.net/dashboard/issues?assignee_id="
+      gitlabLink:window.gitlabUrl+"/dashboard/issues?assignee_id="
     };
     this.handleClick = this.handleClick.bind(this);
   }
@@ -277,7 +277,7 @@ class UserContextMenuContainer extends React.Component {
 
   render(){
 
-    const messagesLink = "https://forum.opendesktop.org/u/"+this.props.user.username+"/messages";
+    const messagesLink = ;
     return (
       <li ref={node => this.node = node} id="user-context-menu-container">
         <div className={"user-dropdown " + this.state.dropdownClass}>
@@ -287,7 +287,7 @@ class UserContextMenuContainer extends React.Component {
           </button>
           <ul id="user-context-dropdown" className="dropdown-menu dropdown-menu-right">
             <li id="opencode-link-item">
-              <a href="https://gitlab.opencode.net/dashboard/projects">
+              <a href={window.gitlabUrl+"/dashboard/projects"}>
                 <div className="icon"></div>
                 <span>Projects</span>
               </a>
@@ -299,7 +299,7 @@ class UserContextMenuContainer extends React.Component {
               </a>
             </li>
             <li id="messages-link-item">
-              <a href={messagesLink}>
+              <a href={window.forumUrl+"/u/"+this.props.user.username+"/messages"}>
                 <div className="icon"></div>
                 <span>Messages</span>
               </a>
