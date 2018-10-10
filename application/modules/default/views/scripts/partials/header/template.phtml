@@ -42,6 +42,11 @@ $url_blog = Zend_Registry::get('config')->settings->client->default->url_blog;
 
 $json_menu = $this->fetchMetaheaderMenuJson();
 
+$phash = null;
+if (Zend_Registry::isRegistered('phash')) {
+    $phash = Zend_Registry::set('phash');
+}
+
 echo $this->render('partials/header/metaheader.phtml'); ?>
 
     <style>
@@ -181,8 +186,8 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
                                 <?php if ($auth->hasIdentity() && !empty($member->username)) { ?>
                                 <img src="https://gitlab.pling.cc/external/setcookie.php?id=<?= $member->member_id ?>" height="0" width="0">
                                 <img src="https://forum.opendesktop.cc:8443/setcookie.php?id=<?= $member->member_id ?>" height="0" width="0">
-                                <img src="https://gitlab.pling.cc/external/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $member->profile_image_url ?>&baseurl=<?= $baseurl ?>&blogurl=<?= $url_blog ?>&forumurl=<?= $url_forum ?>&domains=<?= $json_menu ?>" height="0" width="0">
-                                <img src="https://forum.opendesktop.cc:8443/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $member->profile_image_url ?>&baseurl=<?= $baseurl ?>&blogurl=<?= $url_blog ?>&forumurl=<?= $url_forum ?>&domains=<?= $json_menu ?>" height="0" width="0">
+                                <img src="https://gitlab.pling.cc/external/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $member->profile_image_url ?>&phash=<?= $phash ?>" height="0" width="0">
+                                <img src="https://forum.opendesktop.cc:8443/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $member->profile_image_url ?>&phash=<?= $phash ?>" height="0" width="0">
                                     <ul class="menu pull-right">
                                         <li class="link relative profile-menu-container">
                                             <a rel="profile-menu" class="menu-trigger">
