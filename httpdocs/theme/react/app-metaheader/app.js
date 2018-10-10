@@ -373,10 +373,7 @@ class UserContextMenuContainer extends React.Component {
   handleClick(e){
     let dropdownClass = "";
     if (this.node.contains(e.target)){
-      console.log('inside div');
       dropdownClass = "open";
-    } else {
-      console.log('outside div');
     }
     this.setState({dropdownClass:dropdownClass})
   }
@@ -422,22 +419,37 @@ class UserLoginMenuContainer extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {};
+    this.handleClick = this.handleClick.bind(this);
   }
+
+  componentWillMount() {
+    document.addEventListener('mousedown',this.handleClick, false);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown',this.handleClick, false);
+  }
+
+  handleClick(e){
+    let dropdownClass = "";
+    if (this.node.contains(e.target)){
+      dropdownClass = "open";
+    }
+    this.setState({dropdownClass:dropdownClass})
+  }
+
 
   render(){
     return (
       <li id="user-login-menu-container">
-        <div className="user-dropdown">
+        <div className={"user-dropdown " + this.state.dropdownClass}>
           <button
             className="btn btn-default dropdown-toggle"
             type="button"
-            id="userLoginDropdown"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="true">
+            id="userLoginDropdown">
             <img src={this.props.user.avatar}/>
           </button>
-          <ul className="dropdown-menu dropdown-menu-right" aria-labelledby="userLoginDropdown">
+          <ul className="dropdown-menu dropdown-menu-right">
             <li id="user-info-menu-item">
               <div id="user-info-section">
                 <div className="user-avatar">

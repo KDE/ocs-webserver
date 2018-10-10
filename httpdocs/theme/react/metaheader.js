@@ -882,10 +882,7 @@ class UserContextMenuContainer extends React.Component {
   handleClick(e) {
     let dropdownClass = "";
     if (this.node.contains(e.target)) {
-      console.log('inside div');
       dropdownClass = "open";
-    } else {
-      console.log('outside div');
     }
     this.setState({ dropdownClass: dropdownClass });
   }
@@ -961,6 +958,23 @@ class UserLoginMenuContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  componentWillMount() {
+    document.addEventListener('mousedown', this.handleClick, false);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown', this.handleClick, false);
+  }
+
+  handleClick(e) {
+    let dropdownClass = "";
+    if (this.node.contains(e.target)) {
+      dropdownClass = "open";
+    }
+    this.setState({ dropdownClass: dropdownClass });
   }
 
   render() {
@@ -969,21 +983,18 @@ class UserLoginMenuContainer extends React.Component {
       { id: 'user-login-menu-container' },
       React.createElement(
         'div',
-        { className: 'user-dropdown' },
+        { className: "user-dropdown " + this.state.dropdownClass },
         React.createElement(
           'button',
           {
             className: 'btn btn-default dropdown-toggle',
             type: 'button',
-            id: 'userLoginDropdown',
-            'data-toggle': 'dropdown',
-            'aria-haspopup': 'true',
-            'aria-expanded': 'true' },
+            id: 'userLoginDropdown' },
           React.createElement('img', { src: this.props.user.avatar })
         ),
         React.createElement(
           'ul',
-          { className: 'dropdown-menu dropdown-menu-right', 'aria-labelledby': 'userLoginDropdown' },
+          { className: 'dropdown-menu dropdown-menu-right' },
           React.createElement(
             'li',
             { id: 'user-info-menu-item' },
