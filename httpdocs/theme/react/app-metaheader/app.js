@@ -1,17 +1,14 @@
 class MetaHeader extends React.Component {
   constructor(props){
   	super(props);
-    console.log(window.domains);
-    console.log(window.baseUrl);
-    console.log(window.blogUrl);
-    console.log(window.forumUrl);
-    console.log(window.sName);
   	this.state = {
-      baseUrl:"https://www.opendesktop.cc",
-      blogUrl:"https://blog.opendesktop.org",
-      loginUrl:"https://www.opendesktop.cc/login/redirect/TFVIFZfgicowyCW5clpDz3sfM1rVUJsb_GwOHCL1oRyPOkMMVswIRPd2kvVz5oQW",
+      domains:window.domains,
+      baseUrl:window.baseUrl,
+      blogUrl:window.blogUrl,
+      forumUrl:window.forumUrl,
+      loginUrl:window.loginUrl,
+      sName:window.sName,
       user:{},
-      sName:sName
     };
     this.getUser = this.getUser.bind(this);
     this.getLogin = this.getLogin.bind(this);
@@ -22,8 +19,6 @@ class MetaHeader extends React.Component {
   componentDidMount() {
     this.getLogin();
     this.getUser();
-    this.getDomains();
-    this.getUrls();
   }
 
   getUser(){
@@ -166,8 +161,6 @@ class MetaHeader extends React.Component {
   }
 
   render(){
-    console.log('render metaheader app');
-    const domains = appHelpers.getDomainsArray();
     return (
       <nav id="metaheader-nav" className="metaheader">
         <div className="metamenu">

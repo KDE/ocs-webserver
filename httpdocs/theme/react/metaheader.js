@@ -405,17 +405,14 @@ window.appHelpers = function () {
 class MetaHeader extends React.Component {
   constructor(props) {
     super(props);
-    console.log(window.domains);
-    console.log(window.baseUrl);
-    console.log(window.blogUrl);
-    console.log(window.forumUrl);
-    console.log(window.sName);
     this.state = {
-      baseUrl: "https://www.opendesktop.cc",
-      blogUrl: "https://blog.opendesktop.org",
-      loginUrl: "https://www.opendesktop.cc/login/redirect/TFVIFZfgicowyCW5clpDz3sfM1rVUJsb_GwOHCL1oRyPOkMMVswIRPd2kvVz5oQW",
-      user: {},
-      sName: sName
+      domains: window.domains,
+      baseUrl: window.baseUrl,
+      blogUrl: window.blogUrl,
+      forumUrl: window.forumUrl,
+      loginUrl: window.loginUrl,
+      sName: window.sName,
+      user: {}
     };
     this.getUser = this.getUser.bind(this);
     this.getLogin = this.getLogin.bind(this);
@@ -426,8 +423,6 @@ class MetaHeader extends React.Component {
   componentDidMount() {
     this.getLogin();
     this.getUser();
-    this.getDomains();
-    this.getUrls();
   }
 
   getUser() {
@@ -568,14 +563,12 @@ class MetaHeader extends React.Component {
   }
 
   render() {
-    console.log('render metaheader app');
-    const domains = appHelpers.getDomainsArray();
     return React.createElement(
-      "nav",
-      { id: "metaheader-nav", className: "metaheader" },
+      'nav',
+      { id: 'metaheader-nav', className: 'metaheader' },
       React.createElement(
-        "div",
-        { className: "metamenu" },
+        'div',
+        { className: 'metamenu' },
         React.createElement(DomainsMenu, {
           domains: domains,
           baseUrl: this.state.baseUrl,
@@ -620,46 +613,46 @@ class DomainsMenu extends React.Component {
     }
 
     return React.createElement(
-      "ul",
-      { className: "metaheader-menu left", id: "domains-menu" },
+      'ul',
+      { className: 'metaheader-menu left', id: 'domains-menu' },
       React.createElement(
-        "li",
-        { className: "active" },
+        'li',
+        { className: 'active' },
         React.createElement(
-          "a",
+          'a',
           { href: this.props.baseUrl },
-          React.createElement("img", { src: this.props.baseUrl + "/images/system/ocs-logo-rounded-16x16.png", className: "logo" }),
-          "openDesktop.org :"
+          React.createElement('img', { src: this.props.baseUrl + "/images/system/ocs-logo-rounded-16x16.png", className: 'logo' }),
+          'openDesktop.org :'
         )
       ),
       React.createElement(
-        "li",
-        { id: "domains-dropdown-menu", className: "dropdown" },
+        'li',
+        { id: 'domains-dropdown-menu', className: 'dropdown' },
         React.createElement(
-          "a",
-          { id: "dropdownMenu3",
-            "data-toggle": "dropdown",
-            "aria-haspopup": "true",
-            "aria-expanded": "true" },
-          "Themes & Apps"
+          'a',
+          { id: 'dropdownMenu3',
+            'data-toggle': 'dropdown',
+            'aria-haspopup': 'true',
+            'aria-expanded': 'true' },
+          'Themes & Apps'
         ),
         React.createElement(
-          "ul",
-          { className: "dropdown-menu dropdown-menu-right", "aria-labelledby": "dropdownMenu3" },
+          'ul',
+          { className: 'dropdown-menu dropdown-menu-right', 'aria-labelledby': 'dropdownMenu3' },
           React.createElement(
-            "li",
-            { className: "submenu-container" },
+            'li',
+            { className: 'submenu-container' },
             React.createElement(
-              "ul",
+              'ul',
               null,
               menuGroupsDisplayLeft
             )
           ),
           React.createElement(
-            "li",
-            { className: "submenu-container" },
+            'li',
+            { className: 'submenu-container' },
             React.createElement(
-              "ul",
+              'ul',
               null,
               menuGroupsDisplayRight
             )
@@ -667,44 +660,44 @@ class DomainsMenu extends React.Component {
         )
       ),
       React.createElement(
-        "li",
-        { id: "discussion-boards", className: "dropdown" },
+        'li',
+        { id: 'discussion-boards', className: 'dropdown' },
         React.createElement(
-          "a",
-          { id: "dropdownMenu4",
-            "data-toggle": "dropdown",
-            "aria-haspopup": "true",
-            "aria-expanded": "true" },
-          "Discussion Boards"
+          'a',
+          { id: 'dropdownMenu4',
+            'data-toggle': 'dropdown',
+            'aria-haspopup': 'true',
+            'aria-expanded': 'true' },
+          'Discussion Boards'
         ),
         React.createElement(
-          "ul",
-          { className: "dropdown-menu dropdown-menu-right", "aria-labelledby": "dropdownMenu4" },
+          'ul',
+          { className: 'dropdown-menu dropdown-menu-right', 'aria-labelledby': 'dropdownMenu4' },
           React.createElement(
-            "li",
+            'li',
             null,
             React.createElement(
-              "a",
-              { href: "https://forum.opendesktop.org/c/general" },
-              "General"
+              'a',
+              { href: 'https://forum.opendesktop.org/c/general' },
+              'General'
             )
           ),
           React.createElement(
-            "li",
+            'li',
             null,
             React.createElement(
-              "a",
-              { href: "https://forum.opendesktop.org/c/themes-and-apps" },
-              "Themes & Apps"
+              'a',
+              { href: 'https://forum.opendesktop.org/c/themes-and-apps' },
+              'Themes & Apps'
             )
           ),
           React.createElement(
-            "li",
+            'li',
             null,
             React.createElement(
-              "a",
-              { href: "https://www.opencode.net/" },
-              "Coding"
+              'a',
+              { href: 'https://www.opencode.net/' },
+              'Coding'
             )
           )
         )
@@ -733,10 +726,10 @@ class DomainsMenuGroup extends React.Component {
         domainPrefix += "www.";
       }
       return React.createElement(
-        "li",
+        'li',
         { key: index },
         React.createElement(
-          "a",
+          'a',
           { href: domainPrefix + domain.menuhref },
           domain.name
         )
@@ -744,20 +737,20 @@ class DomainsMenuGroup extends React.Component {
     });
 
     return React.createElement(
-      "li",
+      'li',
       null,
       React.createElement(
-        "a",
-        { className: "groupname" },
+        'a',
+        { className: 'groupname' },
         React.createElement(
-          "b",
+          'b',
           null,
           this.props.menuGroup
         )
       ),
       React.createElement(
-        "ul",
-        { className: "domains-sub-menu" },
+        'ul',
+        { className: 'domains-sub-menu' },
         domainsDisplay
       )
     );
@@ -781,12 +774,12 @@ class UserMenu extends React.Component {
       });
     } else {
       userDropdownDisplay = React.createElement(
-        "li",
-        { id: "user-login-container" },
+        'li',
+        { id: 'user-login-container' },
         React.createElement(
-          "a",
-          { href: this.props.loginUrl, className: "btn btn-metaheader" },
-          "Login"
+          'a',
+          { href: this.props.loginUrl, className: 'btn btn-metaheader' },
+          'Login'
         )
       );
     }
@@ -804,54 +797,54 @@ class UserMenu extends React.Component {
     }
 
     return React.createElement(
-      "div",
-      { id: "user-menu-container", className: "right" },
+      'div',
+      { id: 'user-menu-container', className: 'right' },
       React.createElement(
-        "ul",
-        { className: "metaheader-menu", id: "user-menu" },
+        'ul',
+        { className: 'metaheader-menu', id: 'user-menu' },
         React.createElement(
-          "li",
+          'li',
           null,
           React.createElement(
-            "a",
-            { href: "https://www.opendesktop.cc/community" },
-            "Community"
+            'a',
+            { href: 'https://www.opendesktop.cc/community' },
+            'Community'
           )
         ),
         React.createElement(
-          "li",
+          'li',
           null,
           React.createElement(
-            "a",
-            { href: this.props.blogUrl, target: "_blank" },
-            "Blog"
+            'a',
+            { href: this.props.blogUrl, target: '_blank' },
+            'Blog'
           )
         ),
         React.createElement(
-          "li",
+          'li',
           null,
           React.createElement(
-            "a",
-            { id: "plingList", className: "popuppanel", target: linkTarget, href: plingListUrl },
-            "What are Plings?"
+            'a',
+            { id: 'plingList', className: 'popuppanel', target: linkTarget, href: plingListUrl },
+            'What are Plings?'
           )
         ),
         React.createElement(
-          "li",
+          'li',
           null,
           React.createElement(
-            "a",
-            { id: "ocsapiContent", className: "popuppanel", target: linkTarget, href: ocsapiContentUrl },
-            "API"
+            'a',
+            { id: 'ocsapiContent', className: 'popuppanel', target: linkTarget, href: ocsapiContentUrl },
+            'API'
           )
         ),
         React.createElement(
-          "li",
+          'li',
           null,
           React.createElement(
-            "a",
-            { id: "aboutContent", className: "popuppanel", target: linkTarget, href: aboutContentUrl },
-            "About"
+            'a',
+            { id: 'aboutContent', className: 'popuppanel', target: linkTarget, href: aboutContentUrl },
+            'About'
           )
         ),
         userAppsContextDisplay,
@@ -902,59 +895,59 @@ class UserContextMenuContainer extends React.Component {
     const messagesLink = "https://forum.opendesktop.org/u/" + this.props.user.username + "/messages";
 
     return React.createElement(
-      "li",
-      { ref: node => this.node = node, id: "user-context-menu-container", className: this.state.dropdownClass },
+      'li',
+      { ref: node => this.node = node, id: 'user-context-menu-container', className: this.state.dropdownClass },
       React.createElement(
-        "div",
-        { className: "user-dropdown" },
+        'div',
+        { className: 'user-dropdown' },
         React.createElement(
-          "button",
+          'button',
           {
-            className: "btn btn-default dropdown-toggle", type: "button" },
-          React.createElement("span", { className: "th-icon" })
+            className: 'btn btn-default dropdown-toggle', type: 'button' },
+          React.createElement('span', { className: 'th-icon' })
         ),
         React.createElement(
-          "ul",
-          { id: "user-context-dropdown", className: "dropdown-menu dropdown-menu-right" },
+          'ul',
+          { id: 'user-context-dropdown', className: 'dropdown-menu dropdown-menu-right' },
           React.createElement(
-            "li",
-            { id: "opencode-link-item" },
+            'li',
+            { id: 'opencode-link-item' },
             React.createElement(
-              "a",
-              { href: "https://gitlab.opencode.net/dashboard/projects" },
-              React.createElement("div", { className: "icon" }),
+              'a',
+              { href: 'https://gitlab.opencode.net/dashboard/projects' },
+              React.createElement('div', { className: 'icon' }),
               React.createElement(
-                "span",
+                'span',
                 null,
-                "Projects"
+                'Projects'
               )
             )
           ),
           React.createElement(
-            "li",
-            { id: "issues-link-item" },
+            'li',
+            { id: 'issues-link-item' },
             React.createElement(
-              "a",
+              'a',
               { href: this.state.gitlabLink },
-              React.createElement("div", { className: "icon" }),
+              React.createElement('div', { className: 'icon' }),
               React.createElement(
-                "span",
+                'span',
                 null,
-                "Issues"
+                'Issues'
               )
             )
           ),
           React.createElement(
-            "li",
-            { id: "messages-link-item" },
+            'li',
+            { id: 'messages-link-item' },
             React.createElement(
-              "a",
+              'a',
               { href: messagesLink },
-              React.createElement("div", { className: "icon" }),
+              React.createElement('div', { className: 'icon' }),
               React.createElement(
-                "span",
+                'span',
                 null,
-                "Messages"
+                'Messages'
               )
             )
           )
@@ -972,57 +965,57 @@ class UserLoginMenuContainer extends React.Component {
 
   render() {
     return React.createElement(
-      "li",
-      { id: "user-login-menu-container" },
+      'li',
+      { id: 'user-login-menu-container' },
       React.createElement(
-        "div",
-        { className: "user-dropdown" },
+        'div',
+        { className: 'user-dropdown' },
         React.createElement(
-          "button",
+          'button',
           {
-            className: "btn btn-default dropdown-toggle",
-            type: "button",
-            id: "userLoginDropdown",
-            "data-toggle": "dropdown",
-            "aria-haspopup": "true",
-            "aria-expanded": "true" },
-          React.createElement("img", { src: this.props.user.avatar })
+            className: 'btn btn-default dropdown-toggle',
+            type: 'button',
+            id: 'userLoginDropdown',
+            'data-toggle': 'dropdown',
+            'aria-haspopup': 'true',
+            'aria-expanded': 'true' },
+          React.createElement('img', { src: this.props.user.avatar })
         ),
         React.createElement(
-          "ul",
-          { className: "dropdown-menu dropdown-menu-right", "aria-labelledby": "userLoginDropdown" },
+          'ul',
+          { className: 'dropdown-menu dropdown-menu-right', 'aria-labelledby': 'userLoginDropdown' },
           React.createElement(
-            "li",
-            { id: "user-info-menu-item" },
+            'li',
+            { id: 'user-info-menu-item' },
             React.createElement(
-              "div",
-              { id: "user-info-section" },
+              'div',
+              { id: 'user-info-section' },
               React.createElement(
-                "div",
-                { className: "user-avatar" },
+                'div',
+                { className: 'user-avatar' },
                 React.createElement(
-                  "div",
-                  { className: "no-avatar-user-letter" },
-                  React.createElement("img", { src: this.props.user.avatar })
+                  'div',
+                  { className: 'no-avatar-user-letter' },
+                  React.createElement('img', { src: this.props.user.avatar })
                 )
               ),
               React.createElement(
-                "div",
-                { className: "user-details" },
+                'div',
+                { className: 'user-details' },
                 React.createElement(
-                  "ul",
+                  'ul',
                   null,
                   React.createElement(
-                    "li",
+                    'li',
                     null,
                     React.createElement(
-                      "b",
+                      'b',
                       null,
                       this.props.user.username
                     )
                   ),
                   React.createElement(
-                    "li",
+                    'li',
                     null,
                     this.props.user.mail
                   )
@@ -1030,19 +1023,19 @@ class UserLoginMenuContainer extends React.Component {
               )
             )
           ),
-          React.createElement("li", { id: "main-seperator", role: "separator", className: "divider" }),
+          React.createElement('li', { id: 'main-seperator', role: 'separator', className: 'divider' }),
           React.createElement(
-            "li",
-            { className: "buttons" },
+            'li',
+            { className: 'buttons' },
             React.createElement(
-              "a",
-              { href: "https://www.opendesktop.cc/settings/", className: "btn btn-default btn-metaheader" },
-              "Settings"
+              'a',
+              { href: 'https://www.opendesktop.cc/settings/', className: 'btn btn-default btn-metaheader' },
+              'Settings'
             ),
             React.createElement(
-              "a",
-              { href: "https://www.opendesktop.cc/logout/", className: "btn btn-default pull-right btn-metaheader" },
-              "Logout"
+              'a',
+              { href: 'https://www.opendesktop.cc/logout/', className: 'btn btn-default pull-right btn-metaheader' },
+              'Logout'
             )
           )
         )
