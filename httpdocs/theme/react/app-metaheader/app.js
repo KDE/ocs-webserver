@@ -386,8 +386,8 @@ class UserContextMenuContainer extends React.Component {
     const messagesLink = "https://forum.opendesktop.org/u/"+this.props.user.username+"/messages";
 
     return (
-      <li ref={node => this.node = node} id="user-context-menu-container" className={this.state.dropdownClass}>
-        <div className="user-dropdown">
+      <li ref={node => this.node = node} id="user-context-menu-container">
+        <div className={"user-dropdown " + this.state.dropdownClass}>
           <button
             className="btn btn-default dropdown-toggle" type="button">
             <span className="th-icon"></span>

@@ -896,10 +896,10 @@ class UserContextMenuContainer extends React.Component {
 
     return React.createElement(
       'li',
-      { ref: node => this.node = node, id: 'user-context-menu-container', className: this.state.dropdownClass },
+      { ref: node => this.node = node, id: 'user-context-menu-container' },
       React.createElement(
         'div',
-        { className: 'user-dropdown' },
+        { className: "user-dropdown " + this.state.dropdownClass },
         React.createElement(
           'button',
           {
