@@ -103,7 +103,6 @@ class HomeController extends Local_Controller_Action_DomainSwitch
     public function metamenujsAction()
     {
         $this->_helper->layout()->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
         
         header('Access-Control-Allow-Origin: *'); 
         
@@ -115,21 +114,15 @@ class HomeController extends Local_Controller_Action_DomainSwitch
         ;
         
         
-        $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
-        $url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
-        $url_blog = Zend_Registry::get('config')->settings->client->default->url_blog;
+        $this->view->baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
+        $this->view->url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
+        $this->view->url_blog = Zend_Registry::get('config')->settings->client->default->url_blog;
 
-        $sname = Zend_Registry::get('store_host');
-        $json_menu = $this->fetchMetaheaderMenuJson();
+        $this->view->sname = Zend_Registry::get('store_host');
+        $this->view->json_menu = $this->fetchMetaheaderMenuJson();
         
-        echo '<script>';
-        echo '    var domains = '.$json_menu.';';
-        //echo '    var user = '.$json_user.';';
-        echo '    var baseUrl = '."$baseurl".';';
-        echo '    var blogUrl = '."$url_blog".';';
-        //echo '    var loginUrl = '."$loginUrl".';';
-        echo '    var sName = '."$sname".';';
-        echo '</script>';
+        
+        
         
     }
     
