@@ -620,8 +620,8 @@ class DomainsMenu extends React.Component {
         { className: 'active' },
         React.createElement(
           'a',
-          { href: this.props.baseUrl },
-          React.createElement('img', { src: this.props.baseUrl + "/images/system/ocs-logo-rounded-16x16.png", className: 'logo' }),
+          { href: "http://" + this.props.baseUrl },
+          React.createElement('img', { src: "http://" + this.props.baseUrl + "/images/system/ocs-logo-rounded-16x16.png", className: 'logo' }),
           'openDesktop.org :'
         )
       ),
@@ -879,7 +879,7 @@ class UserContextMenuContainer extends React.Component {
     });
   }
 
-  handleClick() {
+  handleClick(e) {
     let dropdownClass = "";
     if (this.node.contains(e.target)) {
       console.log('inside div');
