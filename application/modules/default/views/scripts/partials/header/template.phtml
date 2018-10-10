@@ -47,6 +47,9 @@ if (Zend_Registry::isRegistered('phash')) {
     $phash = Zend_Registry::get('phash');
 }
 
+
+echo "<!-- phash: ". $phash . " -->";
+
 echo $this->render('partials/header/metaheader.phtml'); ?>
 
     <style>
