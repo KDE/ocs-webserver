@@ -44,7 +44,7 @@ $json_menu = $this->fetchMetaheaderMenuJson();
 
 $phash = null;
 if (Zend_Registry::isRegistered('phash')) {
-    $phash = Zend_Registry::set('phash');
+    $phash = Zend_Registry::get('phash');
 }
 
 echo $this->render('partials/header/metaheader.phtml'); ?>

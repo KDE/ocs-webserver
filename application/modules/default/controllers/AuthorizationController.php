@@ -250,13 +250,6 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         $userTabel = new Default_Model_Member();
         $showMember = $userTabel->fetchMember($member_id);
         $memberSettings = $showMember;
-        
-        
-        //Set password
-        $filter = new Local_Filter_Url_Encrypt();
-        $p = $filter->filter($password);
-        Zend_Registry::set('phash', $p);
-        
 
         //User with OCS Password
         if ($showMember->password_type == Default_Model_Member::PASSWORD_TYPE_OCS) {
