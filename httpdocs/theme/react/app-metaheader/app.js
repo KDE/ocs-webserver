@@ -366,7 +366,6 @@ class UserLoginMenuContainer extends React.Component {
                 </div>
               </div>
             </li>
-            <li id="main-seperator" role="separator" className="divider"></li>
             <li className="buttons">
               <a href="https://www.opendesktop.cc/settings/" className="btn btn-default btn-metaheader">Settings</a>
               <a href="https://www.opendesktop.cc/logout/" className="btn btn-default pull-right btn-metaheader">Logout</a>

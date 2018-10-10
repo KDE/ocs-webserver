@@ -937,7 +937,6 @@ class UserLoginMenuContainer extends React.Component {
               )
             )
           ),
-          React.createElement('li', { id: 'main-seperator', role: 'separator', className: 'divider' }),
           React.createElement(
             'li',
             { className: 'buttons' },
