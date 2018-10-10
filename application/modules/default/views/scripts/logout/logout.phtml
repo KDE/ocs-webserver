@@ -15,7 +15,7 @@
 $config = Zend_Registry::get('config')->settings->domain;
 ?>
 <img src="//<?=$config->openid->host?>/logout" style="display:none;" />
-<img src="//<?=$config->forum->host?>/logout" style="display:none;" />
-<img src="//<?=$config->opencode->host?>/logout" style="display:none;" />
+<img src="//<?=$config->opencode->host?>/users/sign_out" style="display:none;" />
+<img src="//<?=$config->forum->host?>/session/logout" style="display:none;" />
 </body>
 </html>
