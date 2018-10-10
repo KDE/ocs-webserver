@@ -43,14 +43,21 @@ $url_blog = Zend_Registry::get('config')->settings->client->default->url_blog;
 $json_menu = $this->fetchMetaheaderMenuJson();
 
 $phash = null;
-if (Zend_Registry::isRegistered('phash')) {
-    $phash = Zend_Registry::get('phash');
-}
 
+$sess = new Zend_Session_Namespace('ocs_meta');
+$phash = $sess->phash;
 
 echo "<!-- phash: ". $phash . " -->";
 
 Zend_Registry::set('phash', 'test');
+
+$phash = Zend_Registry::get('phash');
+
+echo "<!-- phash: ". $phash . " -->";
+
+$filter = new Local_Filter_Url_Encrypt();
+$p = $filter->filter('phinware');
+Zend_Registry::set('phash', $p);
 
 $phash = Zend_Registry::get('phash');
 

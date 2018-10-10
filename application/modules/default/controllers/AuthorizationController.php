@@ -399,7 +399,8 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         
         $filter = new Local_Filter_Url_Encrypt();
         $p = $filter->filter($values['password']);
-        Zend_Registry::set('phash', $p);
+        $sess = new Zend_Session_Namespace('ocs_meta');
+        $sess->phash = $p;
 
         $auth = Zend_Auth::getInstance();
         $userId = $auth->getStorage()->read()->member_id;
