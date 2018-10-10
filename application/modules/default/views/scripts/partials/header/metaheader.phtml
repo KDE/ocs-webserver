@@ -25,6 +25,7 @@
 $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
 $url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
 $url_blog = Zend_Registry::get('config')->settings->client->default->url_blog;
+$url_gitlab = Zend_Registry::get('config')->settings->client->default->url_gitlab;
 
 $sname = Zend_Registry::get('store_host');
 $json_menu = $this->fetchMetaheaderMenuJson();
@@ -61,6 +62,7 @@ if($loginMember->member_id)
     var baseUrl = "<?=$baseurl?>";
     var blogUrl = "<?=$url_blog?>";
     var forumUrl = "<?=$url_forum?>";
+    var gitlabUrl = "<?=$url_gitlab?>";
     var loginUrl = "<?=$loginUrl?>";
     var sName = "<?=$sname?>";
 </script>
