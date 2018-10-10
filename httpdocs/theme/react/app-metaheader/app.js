@@ -370,7 +370,7 @@ class UserContextMenuContainer extends React.Component {
     });
   }
 
-  handleClick(){
+  handleClick(e){
     let dropdownClass = "";
     if (this.node.contains(e.target)){
       console.log('inside div');
