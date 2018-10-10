@@ -257,9 +257,14 @@ class UserContextMenuContainer extends React.Component {
     let dropdownClass = "";
     if (this.node.contains(e.target)){
       if (this.state.dropdownClass === "open"){
-        console.log(e.target.className);
+        if (e.target.className === "th-icon"){
+          dropdownClass = "";
+        } else {
+          dropdownClass = "open";
+        }
+      } else {
+        dropdownClass = "open";
       }
-      dropdownClass = "open";      
     }
     this.setState({dropdownClass:dropdownClass});
   }
@@ -320,7 +325,11 @@ class UserLoginMenuContainer extends React.Component {
     let dropdownClass = "";
     if (this.node.contains(e.target)){
       if (this.state.dropdownClass === "open"){
-        // onsole.log(e.target.className);
+        if (e.target.className === "th-icon"){
+          dropdownClass = "";
+        } else {
+          dropdownClass = "open";
+        }
       } else {
         dropdownClass = "open";
       }
