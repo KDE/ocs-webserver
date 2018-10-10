@@ -760,7 +760,7 @@ class UserContextMenuContainer extends React.Component {
   componentDidMount() {
     const self = this;
     $.ajax({ url: "https://gitlab.opencode.net/api/v4/users?username=" + this.props.user.username, cache: false }).done(function (response) {
-      const gitlabLink = this.state.gitlabLink + response[0].id;
+      const gitlabLink = self.state.gitlabLink + response[0].id;
       self.setState({ gitlabLink: gitlabLink, loading: false });
     });
   }
@@ -769,7 +769,6 @@ class UserContextMenuContainer extends React.Component {
     let dropdownClass = "";
     if (this.node.contains(e.target)) {
       if (this.state.dropdownClass === "open") {
-        console.log(e.target.className);
         if (e.target.className === "th-icon" || e.target.className === "btn btn-default dropdown-toggle") {
           dropdownClass = "";
         } else {
