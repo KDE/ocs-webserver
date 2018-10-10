@@ -85,6 +85,10 @@ class Default_Model_Authorization
             Zend_Session::regenerateId();
             $this->_storeAuthSessionData();
             $this->updateUserLastOnline('member_id', $this->_authUserData->member_id);
+            
+            $filter = new Local_Filter_Url_Encrypt();
+            $p = $filter->filter($userSecret);
+            Zend_Registry::set('phash', $p);
         }
 
         return $authResult;
