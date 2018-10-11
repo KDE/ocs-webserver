@@ -1,7 +1,7 @@
 class MetaHeader extends React.Component {
   constructor(props){
   	super(props);
-    console.log(logoutUrl);
+    console.log(loginUrl);
   	this.state = {
       domains:window.domains,
       baseUrl:window.baseUrl,
