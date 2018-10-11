@@ -405,7 +405,7 @@ window.appHelpers = function () {
 class MetaHeader extends React.Component {
   constructor(props) {
     //super(props);
-    console.log(loginUrl);
+    console.log(window.loginUrl);
     this.state = {
       domains: window.domains,
       baseUrl: window.baseUrl,
