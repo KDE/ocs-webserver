@@ -888,6 +888,19 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 )
             )
         );
+        
+        
+        $router->addRoute(
+            'redirectme',
+            new Zend_Controller_Router_Route(
+                '/redirectme',
+                array(
+                    'module'     => 'default',
+                    'controller' => 'authorization',
+                    'action'     => 'redirectme'
+                )
+            )
+        );
 
         $router->addRoute(
             'content',

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+        function loadComplete(){
+            //document.location.href = "<?= $this->redirect ?>";
+            alert("Redir: <?= $this->redirect ?>");
+        }
+    </script>
+</head>
+<body onload="loadComplete()">
+<p>
+    Please Wait...
+</p>
+<?php
+$config = Zend_Registry::get('config')->settings->domain;
+$member = $getAuthUser->getAuthUser();
+$phash = null;
+if($member) {
+    $sess = new Zend_Session_Namespace('ocs_meta');
+    $phash = $sess->phash;
+} 
+?>
+    <img src="/external/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $member->profile_image_url ?>&phash=<?= $phash ?>" height="0" width="0">
+    <img src="<?= $url_gitlab ?>/external/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $member->profile_image_url ?>&phash=<?= $phash ?>" height="0" width="0">
+    <img src="<?= $url_forum ?>:8443/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $member->profile_image_url ?>&phash=<?= $phash ?>" height="0" width="0">
+
+    
+</body>
+</html>

@@ -27,6 +27,12 @@ $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $helperImage = new Default_View_Helper_Image();
 $auth = Zend_Auth::getInstance();
 $member = $getAuthUser->getAuthUser();
+$phash = null;
+if($member) {
+    $sess = new Zend_Session_Namespace('ocs_meta');
+    $phash = $sess->phash;
+} 
+
 $serverUrl = $this->serverUrl();
 
 $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
@@ -39,23 +45,8 @@ $last_char_store_order = substr($store_order, -1);
 
 $url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
 $url_gitlab = Zend_Registry::get('config')->settings->client->default->url_gitlab;
-
 $url_blog = Zend_Registry::get('config')->settings->client->default->url_blog;
-
 $json_menu = $this->fetchMetaheaderMenuJson();
-
-$phash = null;
-
-$sess = new Zend_Session_Namespace('ocs_meta');
-$phash = $sess->phash;
-
-echo "<!-- phash: ". $phash . " -->";
-
-$filter = new Local_Filter_Url_Decrypt();
-$p = $filter->filter($phash);
-
-echo "<!-- phash de: ". $p . " -->";
-
 
 echo $this->render('partials/header/metaheader.phtml'); ?>
 

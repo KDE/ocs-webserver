@@ -25,12 +25,7 @@ $buildMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $url_param_redirect = isset($this->redirect) ? 'redirect/'.$this->redirect : null;
 $this->headMeta()->setName('robots', 'noindex, nofollow');
 
-
-if(isset($this->loginok) && $this->loginok == true) {
-    echo "Please wait...";
-} else {
 ?>
-
   <link href="/theme/flatui/css/bootstrap/social-buttons.css" rel="stylesheet" type="text/css">
   <style>
     .btn-github {
@@ -153,10 +148,6 @@ if(isset($this->loginok) && $this->loginok == true) {
         }
     })();
 </script>
-
-<?php
-}
-?>
 
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){

@@ -472,6 +472,8 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             if ($this->_request->isXmlHttpRequest()) {
                 $this->_helper->json(array('status' => 'ok', 'redirect' => $redirect));
             } else {
+                
+                //
                 $this->redirect($redirect);
             }
         } else {
@@ -482,6 +484,26 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
                 $this->redirect('/member/' . $userId . '/activities/', $this->getAllParams());
             }
         }
+    }
+    
+    /**
+     * @throws Exception
+     * @throws Zend_Exception
+     * @throws Zend_Form_Exception
+     */
+    public function redirectmeAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        //$this->_helper->viewRenderer->setNoRender(true);
+        
+        $redir = "/";
+        if(isset($_GET['redirect'])) {
+            $redir = $_GET['redirect'];
+            $filter = new Local_Filter_Url_Decrypt();
+            $redir = $filter->filter($redir);
+            
+        }
+        $this->view->redirect = $redir;
     }
 
     /**
