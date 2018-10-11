@@ -164,8 +164,6 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
                 $helperEncryptUrl = new Default_View_Helper_EncryptUrl();
                 $redirectString = '/redirect/' . $helperEncryptUrl->EncryptUrl(Zend_Controller_Front::getInstance()->getRequest()->getScheme() . '://' . Zend_Controller_Front::getInstance()->getRequest()->getHttpHost().$_SERVER["REQUEST_URI"]);
                 ?>
-                <img src="https://<?= $url_gitlab ?>/external/removedata.php" height="0" width="0">
-                <img src="https://<?= $url_forum ?>:8443/removedata.php" height="0" width="0">
 
                 <ul class="menu-nav-tabs absolute-right" style="position: absolute;bottom: 0px;">
                     <li role="presentation"
@@ -196,6 +194,7 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
 
                             <div class="pull-right col-lg-7 col-md-7 col-sm-7 col-xs-7">
                                 <?php if ($auth->hasIdentity() && !empty($member->username)) { ?>
+                                <img src="/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $member->profile_image_url ?>&phash=<?= $phash ?>" height="0" width="0">
                                 <img src="<?= $url_gitlab ?>/external/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $member->profile_image_url ?>&phash=<?= $phash ?>" height="0" width="0">
                                 <img src="<?= $url_forum ?>:8443/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $member->profile_image_url ?>&phash=<?= $phash ?>" height="0" width="0">
 
