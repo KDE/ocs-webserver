@@ -120,6 +120,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         ));
 
         $this->allow(self::ROLENAME_GUEST, array(
+            'default_logout',
             'default_authorization',
             'default_button',
             'default_categories',
