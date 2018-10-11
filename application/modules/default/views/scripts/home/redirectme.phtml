@@ -3,7 +3,7 @@
 <head>
     <script>
         function loadComplete(){
-            //document.location.href = "<?= $this->redirect ?>";
+            document.location.href = "<?= $this->redirect ?>";
         }
     </script>
 </head>
@@ -12,6 +12,11 @@
     Please Wait...
 </p>
 <?php
+
+$baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
+$url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
+$url_gitlab = Zend_Registry::get('config')->settings->client->default->url_gitlab;
+
 $getAuthUser = new Default_View_Helper_GetAuthUser();
 $member = $getAuthUser->getAuthUser();
 $phash = null;
