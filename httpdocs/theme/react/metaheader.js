@@ -411,7 +411,7 @@ class MetaHeader extends React.Component {
       blogUrl: window.blogUrl,
       forumUrl: window.forumUrl,
       loginUrl: window.loginUrl,
-      logoutURl: window.logoutURl,
+      logoutUrl: window.logoutUrl,
       sName: window.sName,
       user: {}
     };
@@ -419,6 +419,7 @@ class MetaHeader extends React.Component {
   }
 
   componentDidMount() {
+    console.log(this.state);
     this.getUser();
   }
 
