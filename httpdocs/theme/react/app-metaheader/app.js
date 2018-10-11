@@ -44,7 +44,9 @@ class MetaHeader extends React.Component {
           <UserMenu
             user={this.state.user}
             blogUrl={this.state.blogUrl}
+            forumUrl={this.state.forumUrl}
             loginUrl={this.state.loginUrl}
+            logoutUrl={this.state.logoutUrl}
           />
         </div>
       </nav>
@@ -175,11 +177,13 @@ class UserMenu extends React.Component {
       userDropdownDisplay = (
         <UserLoginMenuContainer
           user={this.props.user}
+          logoutUrl={this.props.logoutUrl}
         />
       );
       userAppsContextDisplay = (
         <UserContextMenuContainer
           user={this.props.user}
+          forumUrl={this.props.forumUrl}
         />
       )
     } else {
@@ -357,7 +361,7 @@ class UserLoginMenuContainer extends React.Component {
             </li>
             <li className="buttons">
               <a href="https://www.opendesktop.cc/settings/" className="btn btn-default btn-metaheader">Settings</a>
-              <a href={window.logoutUrl} className="btn btn-default pull-right btn-metaheader">Logout</a>
+              <a href={this.props.logoutUrl} className="btn btn-default pull-right btn-metaheader">Logout</a>
             </li>
           </ul>
         </div>

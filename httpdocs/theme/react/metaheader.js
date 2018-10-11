@@ -451,7 +451,9 @@ class MetaHeader extends React.Component {
         React.createElement(UserMenu, {
           user: this.state.user,
           blogUrl: this.state.blogUrl,
-          loginUrl: this.state.loginUrl
+          forumUrl: this.state.forumUrl,
+          loginUrl: this.state.loginUrl,
+          logoutUrl: this.state.logoutUrl
         })
       )
     );
@@ -641,10 +643,12 @@ class UserMenu extends React.Component {
     let userDropdownDisplay, userAppsContextDisplay;
     if (this.props.user && this.props.user.member_id) {
       userDropdownDisplay = React.createElement(UserLoginMenuContainer, {
-        user: this.props.user
+        user: this.props.user,
+        logoutUrl: this.props.logoutUrl
       });
       userAppsContextDisplay = React.createElement(UserContextMenuContainer, {
-        user: this.props.user
+        user: this.props.user,
+        forumUrl: this.props.forumUrl
       });
     } else {
       userDropdownDisplay = React.createElement(
@@ -935,7 +939,7 @@ class UserLoginMenuContainer extends React.Component {
             ),
             React.createElement(
               'a',
-              { href: window.logoutUrl, className: 'btn btn-default pull-right btn-metaheader' },
+              { href: this.props.logoutUrl, className: 'btn btn-default pull-right btn-metaheader' },
               'Logout'
             )
           )
