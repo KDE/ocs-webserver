@@ -19,31 +19,15 @@ class MetaHeader extends React.Component {
 
   getUser(){
     console.log('get user');
-    if (window.location.hostname === "forum.opendesktop.cc"){
-      // var x = document.cookie;
-      const decodedCookie = decodeURIComponent(document.cookie);
-      let ocs_data = decodedCookie.split('ocs_data=')[1];
-      if (ocs_data.indexOf(';') > -1){
-        ocs_data = ocs_data.split(';')[0];
-      }
-      const user = JSON.parse(ocs_data);
-      this.setState({user:user});
-    } else {
-      const userQuery = appHelpers.getUserQueryUrl(window.location.hostname);
-      const self = this;
-      $.ajax({
-        url:userQuery.url,
-        method:'get',
-        dataType: userQuery.dataType,
-        error: function(response){
-          console.log(response)
-          const res = JSON.parse(response.responseText);
-          if (res.status === "success"){
-            self.setState({user:res.data});
-          }
-        }
-      });
+    const decodedCookie = decodeURIComponent(document.cookie);
+    let ocs_data = decodedCookie.split('ocs_data=')[1];
+    console.log(ocs_data);
+    if (ocs_data.indexOf(';') > -1){
+      ocs_data = ocs_data.split(';')[0];
     }
+    const user = JSON.parse(ocs_data);
+    console.log(user);
+    this.setState({user:user});
   }
 
   render(){
