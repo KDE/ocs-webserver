@@ -473,7 +473,9 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
                 $this->_helper->json(array('status' => 'ok', 'redirect' => $redirect));
             } else {
                 
-                //
+                //show rediretme page
+                //$this->redirect($redirect);
+                $redirect = '/home/redirectme?redirect='. $this->view->redirect;
                 $this->redirect($redirect);
             }
         } else {
