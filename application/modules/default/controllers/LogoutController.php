@@ -39,18 +39,18 @@ class LogoutController extends Local_Controller_Action_DomainSwitch
         if (Zend_Auth::getInstance()->hasIdentity()) {
             $user_id = Zend_Auth::getInstance()->getStorage()->read()->member_id;
 
-            //$modelAuth = new Default_Model_Authorization();
-            //$modelAuth->logout();
-            //
-            //$modelToken = new Default_Model_SingleSignOnToken();
-            //$data = array(
-            //    'remember_me' => false,
-            //    'redirect'    => $this->getParam('redirect'),
-            //    'action'      => Default_Model_SingleSignOnToken::ACTION_LOGOUT
-            //);
-            //$token_id = $modelToken->createToken($data);
-            //setcookie(Default_Model_SingleSignOnToken::ACTION_LOGOUT, $token_id, time() + 120, '/',
-            //    Local_Tools_ParseDomain::get_domain($this->getRequest()->getHttpHost()), null, true);
+            $modelAuth = new Default_Model_Authorization();
+            $modelAuth->logout();
+            
+            $modelToken = new Default_Model_SingleSignOnToken();
+            $data = array(
+                'remember_me' => false,
+                'redirect'    => $this->getParam('redirect'),
+                'action'      => Default_Model_SingleSignOnToken::ACTION_LOGOUT
+            );
+            $token_id = $modelToken->createToken($data);
+            setcookie(Default_Model_SingleSignOnToken::ACTION_LOGOUT, $token_id, time() + 120, '/',
+                Local_Tools_ParseDomain::get_domain($this->getRequest()->getHttpHost()), null, true);
 
             $config = Zend_Registry::get('config')->settings->domain;
 
