@@ -835,7 +835,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 '/logout',
                 array(
                     'module'     => 'default',
-                    'controller' => 'authorization',
+                    'controller' => 'logout',
                     'action'     => 'logout'
                 )
             )
