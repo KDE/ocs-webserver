@@ -413,6 +413,7 @@ class MetaHeader extends React.Component {
       forumUrl: window.forumUrl,
       loginUrl: window.loginUrl,
       logoutUrl: window.logoutUrl,
+      gitlabUrl: window.gitlabUrl,
       sName: window.sName,
       user: {}
     };
@@ -454,7 +455,8 @@ class MetaHeader extends React.Component {
           blogUrl: this.state.blogUrl,
           forumUrl: this.state.forumUrl,
           loginUrl: this.state.loginUrl,
-          logoutUrl: this.state.logoutUrl
+          logoutUrl: this.state.logoutUrl,
+          gitlabUrl: this.state.gitlabUrl
         })
       )
     );
@@ -649,7 +651,8 @@ class UserMenu extends React.Component {
       });
       userAppsContextDisplay = React.createElement(UserContextMenuContainer, {
         user: this.props.user,
-        forumUrl: this.props.forumUrl
+        forumUrl: this.props.forumUrl,
+        gitlabUrl: this.props.gitlabUrl
       });
     } else {
       userDropdownDisplay = React.createElement(
@@ -798,7 +801,7 @@ class UserContextMenuContainer extends React.Component {
             { id: 'opencode-link-item' },
             React.createElement(
               'a',
-              { href: window.gitlabUrl + "/dashboard/projects" },
+              { href: this.props.gitlabUrl + "/dashboard/projects" },
               React.createElement('div', { className: 'icon' }),
               React.createElement(
                 'span',
@@ -826,7 +829,7 @@ class UserContextMenuContainer extends React.Component {
             { id: 'messages-link-item' },
             React.createElement(
               'a',
-              { href: window.forumUrl + "/u/" + this.props.user.username + "/messages" },
+              { href: this.props.forumUrl + "/u/" + this.props.user.username + "/messages" },
               React.createElement('div', { className: 'icon' }),
               React.createElement(
                 'span',

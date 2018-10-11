@@ -9,6 +9,7 @@ class MetaHeader extends React.Component {
       forumUrl:window.forumUrl,
       loginUrl:window.loginUrl,
       logoutUrl:window.logoutUrl,
+      gitlabUrl:window.gitlabUrl,
       sName:window.sName,
       user:{},
     };
@@ -48,6 +49,7 @@ class MetaHeader extends React.Component {
             forumUrl={this.state.forumUrl}
             loginUrl={this.state.loginUrl}
             logoutUrl={this.state.logoutUrl}
+            gitlabUrl={this.state.gitlabUrl}
           />
         </div>
       </nav>
@@ -185,6 +187,7 @@ class UserMenu extends React.Component {
         <UserContextMenuContainer
           user={this.props.user}
           forumUrl={this.props.forumUrl}
+          gitlabUrl={this.props.gitlabUrl}
         />
       )
     } else {
@@ -277,7 +280,7 @@ class UserContextMenuContainer extends React.Component {
           </button>
           <ul id="user-context-dropdown" className="dropdown-menu dropdown-menu-right">
             <li id="opencode-link-item">
-              <a href={window.gitlabUrl+"/dashboard/projects"}>
+              <a href={this.props.gitlabUrl+"/dashboard/projects"}>
                 <div className="icon"></div>
                 <span>Projects</span>
               </a>
@@ -289,7 +292,7 @@ class UserContextMenuContainer extends React.Component {
               </a>
             </li>
             <li id="messages-link-item">
-              <a href={window.forumUrl+"/u/"+this.props.user.username+"/messages"}>
+              <a href={this.props.forumUrl+"/u/"+this.props.user.username+"/messages"}>
                 <div className="icon"></div>
                 <span>Messages</span>
               </a>
