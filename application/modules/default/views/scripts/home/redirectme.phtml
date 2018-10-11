@@ -31,7 +31,7 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
 <img src="/external/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $member->profile_image_url ?>&phash=<?= $phash ?>" height="0" width="0">
 <img src="<?= $url_gitlab ?>/external/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $member->profile_image_url ?>&phash=<?= $phash ?>" height="0" width="0">
 <img src="<?= $url_forum ?>:8443/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $member->profile_image_url ?>&phash=<?= $phash ?>" height="0" width="0">
-<img src="//<?= $config->openid->host ?>/login/session?ltat=<?= $ltat ?>" style="display:none;" />
+<img src="https://<?= $config->openid->host ?>/login/session?ltat=<?= $ltat ?>" height="0" width="0" />
 
 </body>
 </html>
