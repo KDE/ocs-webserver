@@ -389,7 +389,7 @@ window.appHelpers = function () {
     }
     return storeQuery;
   }
-/*
+
   return {
     generateMenuGroupsArray,
     getDomainsArray,
@@ -401,12 +401,11 @@ window.appHelpers = function () {
     getBlogQueryUrl,
     getStoreQueryUrl
   };
-  */
 }();
 class MetaHeader extends React.Component {
   constructor(props) {
     super(props);
-    console.log(window.loginUrl);
+    console.log(logoutUrl);
     this.state = {
       domains: window.domains,
       baseUrl: window.baseUrl,
