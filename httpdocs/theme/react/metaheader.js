@@ -445,6 +445,7 @@ class MetaHeader extends React.Component {
         React.createElement(DomainsMenu, {
           domains: domains,
           baseUrl: this.state.baseUrl,
+          forumUrl: this.state.forumUrl,
           sName: this.state.sName
         }),
         React.createElement(UserMenu, {
@@ -555,7 +556,7 @@ class DomainsMenu extends React.Component {
             null,
             React.createElement(
               'a',
-              { href: 'https://forum.opendesktop.org/c/general' },
+              { href: this.props.forumUrl + "/c/general" },
               'General'
             )
           ),
@@ -564,7 +565,7 @@ class DomainsMenu extends React.Component {
             null,
             React.createElement(
               'a',
-              { href: 'https://forum.opendesktop.org/c/themes-and-apps' },
+              { href: this.props.forumUrl + "/c/themes-and-apps" },
               'Themes & Apps'
             )
           ),
