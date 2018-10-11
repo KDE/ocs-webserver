@@ -454,7 +454,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
 
         // handle redirect
         $this->view->loginok = true;
-        //$this->handleRedirect($userId);
+        $this->handleRedirect($userId);
     }
 
     /**
