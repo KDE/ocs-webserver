@@ -26,7 +26,7 @@ $url_param_redirect = isset($this->redirect) ? 'redirect/'.$this->redirect : nul
 $this->headMeta()->setName('robots', 'noindex, nofollow');
 
 
-if(isset($this->loginok) && loginok == true) {
+if(isset($this->loginok) && $this->loginok == true) {
     echo "Please wait...";
 } else {
 ?>
