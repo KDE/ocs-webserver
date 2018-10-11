@@ -27,24 +27,31 @@ $url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
 $url_blog = Zend_Registry::get('config')->settings->client->default->url_blog;
 $url_gitlab = Zend_Registry::get('config')->settings->client->default->url_gitlab;
 
+$filter = new Local_Filter_Url_Encrypt();
+
+$url_login;
+$url_logout;
+
+$target = 'opendesktop';
+if(isset($_GET['target'])) {
+    $target = $_GET['target'];
+}
+
+if($target == 'opendesktop') {
+    $url_login = $baseurl."/login/redirect/".$filter->filter("/");
+    $url_logout = $baseurl."/logout?redirect=".$filter->filter("/");
+} else if($target == 'gitlab') {
+    $url_login = $url_gitlab."/login/redirect/".$filter->filter("/");
+    $url_logout = $url_gitlab."/logout?redirect=".$filter->filter("/");
+} else if($target == 'forum') {
+    $url_login = $url_forum."/login/redirect/".$filter->filter("/");
+    $url_logout = $url_forum."/logout?redirect=".$filter->filter("/");
+}
+
+
+
 $sname = Zend_Registry::get('store_host');
 $json_menu = $this->fetchMetaheaderMenuJson();
-$loginMember = $this->getAuthUser();
-if($loginMember->member_id)
-{
-    $json_user = Zend_Json::encode($loginMember);
-    $username = $loginMember->username;
-    $profile_image_url = $loginMember->profile_image_url;
-    $loginUrl = null;
-}else{
-    $json_user = Zend_Json::encode(null);
-    $username = null;
-    $profile_image_url = null;
-    $serverUrl = $this->serverUrl();
-    $helperEncryptUrl = new Default_View_Helper_EncryptUrl();
-    $redirectString = '/redirect/' . $helperEncryptUrl->EncryptUrl(Zend_Controller_Front::getInstance()->getRequest()->getScheme() . '://' . Zend_Controller_Front::getInstance()->getRequest()->getHttpHost().$_SERVER["REQUEST_URI"]);
-    $loginUrl = $serverUrl.'/login'.(strpos($_SERVER["REQUEST_URI"], 'login')?'':$redirectString);
-}
 
 ?>
 
@@ -55,5 +62,6 @@ var baseUrl = "<?=$baseurl?>";
 var blogUrl = "<?=$url_blog?>";
 var forumUrl = "<?=$url_forum?>";
 var gitlabUrl = "<?=$url_gitlab?>";
-var loginUrl = "<?=$loginUrl?>";
+var loginUrl = "<?=$url_login?>";
+var logoutUrl = "<?=$url_logout?>";
 var sName = "<?=$sname?>";
