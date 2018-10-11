@@ -5,6 +5,19 @@
         function loadComplete() {
             document.location.href = "<?= $this->redirect ?>";
         }
+
+        function loadForum() {
+            var img = document.getElementById('forum-login');
+            var img_src = img.getAttribute('data-src');
+            img.setAttribute('src', img_src);
+            // var allimages = document.getElementsByTagName('img');
+            // for (var i = 0; i < allimages.length; i++) {
+            //     if (allimages[i].getAttribute('data-src')) {
+            //         allimages[i].setAttribute('src', allimages[i].getAttribute('data-src'));
+            //     }
+            // }
+            return true;
+        }
     </script>
 </head>
 <body onload="loadComplete()">
@@ -34,8 +47,8 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
 <img src="/external/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $member->profile_image_url ?>&phash=<?= $phash ?>" height="0" width="0">
 <img src="<?= $url_gitlab ?>/external/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $member->profile_image_url ?>&phash=<?= $phash ?>" height="0" width="0">
 <img src="<?= $url_forum ?>:8443/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $member->profile_image_url ?>&phash=<?= $phash ?>" height="0" width="0">
-<img src="<?=$http_scheme?>://<?= $config->openid->host ?>/login/setsession?ltat=<?= $ltat ?>" height="0" width="0" />
-
+<img src="<?=$http_scheme?>://<?= $config->openid->host ?>/login/setsession?ltat=<?= $ltat ?>" height="0" width="0" onload="loadForum();"/>
+<img data-src="<?=$http_scheme?>://<?= $config->forum->host ?>/session/sso?return_path=%2F" height="0" width="0" id="forum-login" />
 
 </body>
 </html>
