@@ -196,9 +196,6 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
 
                             <div class="pull-right col-lg-7 col-md-7 col-sm-7 col-xs-7">
                                 <?php if ($auth->hasIdentity() && !empty($member->username)) { ?>
-                                <img src="<?= $url_gitlab ?>/external/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $member->profile_image_url ?>&phash=<?= $phash ?>" height="0" width="0">
-                                <img src="<?= $url_forum ?>:8443/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $member->profile_image_url ?>&phash=<?= $phash ?>" height="0" width="0">
-
                                     <ul class="menu pull-right">
                                         <li class="link relative profile-menu-container">
                                             <a rel="profile-menu" class="menu-trigger">
