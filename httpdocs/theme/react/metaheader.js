@@ -666,15 +666,15 @@ class UserMenu extends React.Component {
       );
     }
 
-    let plingListUrl = "https://www.opendesktop.cc/#plingList",
-        ocsapiContentUrl = "https://www.opendesktop.cc/#ocsapiContent",
-        aboutContentUrl = "https://www.opendesktop.cc/#aboutContent",
+    let plingListUrl = "/#plingList",
+        ocsapiContentUrl = "/#ocsapiContent",
+        aboutContentUrl = "/#aboutContent",
         linkTarget = "_blank";
 
     if (window.location.hostname === "www.opendesktop.cc") {
-      plingListUrl = "https://www.opendesktop.cc/plings";
-      ocsapiContentUrl = "https://www.opendesktop.cc/partials/ocsapicontent.phtml";
-      aboutContentUrl = "https://www.opendesktop.cc/partials/about.phtml";
+      plingListUrl = "/plings";
+      ocsapiContentUrl = "/ocsapicontent.phtml";
+      aboutContentUrl = "/about.phtml";
       linkTarget = "";
     }
 
@@ -689,7 +689,7 @@ class UserMenu extends React.Component {
           null,
           React.createElement(
             'a',
-            { href: 'https://www.opendesktop.cc/community' },
+            { href: this.props.baseUrl + "/community" },
             'Community'
           )
         ),
@@ -707,7 +707,7 @@ class UserMenu extends React.Component {
           null,
           React.createElement(
             'a',
-            { id: 'plingList', className: 'popuppanel', target: linkTarget, href: plingListUrl },
+            { id: 'plingList', className: 'popuppanel', target: linkTarget, href: this.props.baseUrl + plingListUrl },
             'What are Plings?'
           )
         ),
@@ -716,7 +716,7 @@ class UserMenu extends React.Component {
           null,
           React.createElement(
             'a',
-            { id: 'ocsapiContent', className: 'popuppanel', target: linkTarget, href: ocsapiContentUrl },
+            { id: 'ocsapiContent', className: 'popuppanel', target: linkTarget, href: this.props.baseUrl + ocsapiContentUrl },
             'API'
           )
         ),
@@ -725,7 +725,7 @@ class UserMenu extends React.Component {
           null,
           React.createElement(
             'a',
-            { id: 'aboutContent', className: 'popuppanel', target: linkTarget, href: aboutContentUrl },
+            { id: 'aboutContent', className: 'popuppanel', target: linkTarget, href: this.props.baseUrl + aboutContentUrl },
             'About'
           )
         ),
