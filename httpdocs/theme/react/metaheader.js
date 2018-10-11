@@ -427,13 +427,15 @@ class MetaHeader extends React.Component {
     const decodedCookie = decodeURIComponent(document.cookie);
     console.log(decodedCookie);
     let ocs_data = decodedCookie.split('ocs_data=')[1];
-    console.log(ocs_data);
-    if (ocs_data.indexOf(';') > -1) {
-      ocs_data = ocs_data.split(';')[0];
+    if (ocs_data) {
+      console.log(ocs_data);
+      if (ocs_data.indexOf(';') > -1) {
+        ocs_data = ocs_data.split(';')[0];
+      }
+      const user = JSON.parse(ocs_data);
+      console.log(user);
+      this.setState({ user: user });
     }
-    const user = JSON.parse(ocs_data);
-    console.log(user);
-    this.setState({ user: user });
   }
 
   render() {
