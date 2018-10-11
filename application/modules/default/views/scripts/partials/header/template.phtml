@@ -50,6 +50,11 @@ $url_gitlab = Zend_Registry::get('config')->settings->client->default->url_gitla
 $url_blog = Zend_Registry::get('config')->settings->client->default->url_blog;
 $config_domain = $config = Zend_Registry::get('config')->settings->domain;
 $url_openid = $config_domain->openid->host;
+
+/** @var Zend_Controller_Request_Http $request */
+$request = Zend_Controller_Front::getInstance()->getRequest();
+$http_scheme = $request->getScheme();
+
 $json_menu = $this->fetchMetaheaderMenuJson();
 
 echo $this->render('partials/header/metaheader.phtml'); ?>
@@ -192,7 +197,7 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
                                     <img src="/external/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $member->profile_image_url ?>&phash=<?= $phash ?>" height="0" width="0">
                                     <img src="<?= $url_gitlab ?>/external/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $member->profile_image_url ?>&phash=<?= $phash ?>" height="0" width="0">
                                     <img src="<?= $url_forum ?>:8443/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $member->profile_image_url ?>&phash=<?= $phash ?>" height="0" width="0">
-                                    <img src="https://<?= $url_openid ?>/login/session?ltat=<?= $ltat ?>"  height="0" width="0" />
+                                    <img src="<?=$http_scheme?>://<?= $url_openid ?>/login/setsession?ltat=<?= $ltat ?>"  height="0" width="0" />
 
                                     <ul class="menu pull-right">
                                         <li class="link relative profile-menu-container">
