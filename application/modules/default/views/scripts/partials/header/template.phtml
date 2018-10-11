@@ -162,6 +162,9 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
                 $helperEncryptUrl = new Default_View_Helper_EncryptUrl();
                 $redirectString = '/redirect/' . $helperEncryptUrl->EncryptUrl(Zend_Controller_Front::getInstance()->getRequest()->getScheme() . '://' . Zend_Controller_Front::getInstance()->getRequest()->getHttpHost().$_SERVER["REQUEST_URI"]);
                 ?>
+                <img src="https://gitlab.pling.cc/external/removedata.php" height="0" width="0">
+                <img src="https://forum.opendesktop.cc:8443/removedata.php" height="0" width="0">
+
                 <ul class="menu-nav-tabs absolute-right" style="position: absolute;bottom: 0px;">
                     <li role="presentation"
                         class="<?php echo(strpos($_SERVER["REQUEST_URI"], 'register') ? 'active' : '') ?>">
