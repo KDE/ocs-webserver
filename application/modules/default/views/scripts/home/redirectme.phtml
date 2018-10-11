@@ -4,7 +4,6 @@
     <script>
         function loadComplete(){
             //document.location.href = "<?= $this->redirect ?>";
-            alert("Redir: <?= $this->redirect ?>");
         }
     </script>
 </head>
@@ -13,7 +12,7 @@
     Please Wait...
 </p>
 <?php
-$config = Zend_Registry::get('config')->settings->domain;
+$getAuthUser = new Default_View_Helper_GetAuthUser();
 $member = $getAuthUser->getAuthUser();
 $phash = null;
 if($member) {
