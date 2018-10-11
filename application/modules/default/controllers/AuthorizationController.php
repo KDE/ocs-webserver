@@ -406,11 +406,13 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         $userId = $auth->getStorage()->read()->member_id;
 
         $jwt = Default_Model_Jwt::encode($userId);
-        $time = new DateTime();
-        $timeout = DateInterval::createFromDateString(Zend_Registry::get('config')->settings->jwt->expire->cookie);
-        $cookie_name = Zend_Registry::get('config')->settings->domain->openid->cookie_name;
-        $host = Zend_Registry::get('config')->settings->domain->openid->host;
-        setcookie($cookie_name, $jwt, $time->add($timeout)->getTimestamp(), '/', $host, null, true);
+        $sess->openid = $jwt;
+
+        //$time = new DateTime();
+        //$timeout = DateInterval::createFromDateString(Zend_Registry::get('config')->settings->jwt->expire->cookie);
+        //$cookie_name = Zend_Registry::get('config')->settings->domain->openid->cookie_name;
+        //$host = Zend_Registry::get('config')->settings->domain->openid->host;
+        //setcookie($cookie_name, $jwt, $time->add($timeout)->getTimestamp(), '/', $host, null, true);
 
         //If the user is a hive user, we have to update his password
         $this->changePasswordIfNeeded($userId, $values['password']);
