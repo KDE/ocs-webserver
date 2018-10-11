@@ -449,6 +449,7 @@ class MetaHeader extends React.Component {
         }),
         React.createElement(UserMenu, {
           user: this.state.user,
+          baseUrl: this.state.baseUrl,
           blogUrl: this.state.blogUrl,
           forumUrl: this.state.forumUrl,
           loginUrl: this.state.loginUrl,
