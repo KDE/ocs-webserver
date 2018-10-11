@@ -935,7 +935,7 @@ class UserLoginMenuContainer extends React.Component {
             ),
             React.createElement(
               'a',
-              { href: 'https://www.opendesktop.cc/logout/', className: 'btn btn-default pull-right btn-metaheader' },
+              { href: window.logoutUrl, className: 'btn btn-default pull-right btn-metaheader' },
               'Logout'
             )
           )
