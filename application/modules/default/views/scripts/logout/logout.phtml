@@ -3,7 +3,7 @@
 <head>
     <script>
         function loadComplete(){
-            alert("Completed Setting Cookies");
+            document.location.herf = <?= $this->redirect ?>;
         }
     </script>
 </head>
@@ -18,7 +18,7 @@ $config = Zend_Registry::get('config')->settings->domain;
     <img src="//<?=$config->opencode->host?>/users/sign_out" style="display:none;" />
     <img src="//<?=$config->opencode->host?>/external/removedata.php" style="display:none;" />
     <img src="//<?=$config->forum->host?>/session/logout" style="display:none;" />
-    <img src="//<?=$config->forum->host?>/removedata.php" style="display:none;" />
+    <img src="//<?=$config->forum->host?>:8443/removedata.php" style="display:none;" />
     
 </body>
 </html>

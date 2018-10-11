@@ -29,6 +29,12 @@ class LogoutController extends Local_Controller_Action_DomainSwitch
     {
         $this->_helper->layout()->disableLayout();
         //$this->_helper->viewRenderer->setNoRender(true);
+        
+        $redir = "/";
+        if(isset($_GET['redirect'])) {
+            $redir = $_GET['redirect'];
+        }
+        $this->view->redirect = $redir;
 
         if (Zend_Auth::getInstance()->hasIdentity()) {
             $user_id = Zend_Auth::getInstance()->getStorage()->read()->member_id;
