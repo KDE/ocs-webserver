@@ -194,9 +194,9 @@ class UserMenu extends React.Component {
     }
 
 
-    let plingListUrl = "/partials/#plingList",
-        ocsapiContentUrl = "/partials/#ocsapiContent",
-        aboutContentUrl = "/partials/#aboutContent",
+    let plingListUrl = "/#plingList",
+        ocsapiContentUrl = "/#ocsapiContent",
+        aboutContentUrl = "/#aboutContent",
         linkTarget = "_blank";
 
     if (window.location.hostname === "www.opendesktop.cc"){
