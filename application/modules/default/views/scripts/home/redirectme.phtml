@@ -3,7 +3,7 @@
 <head>
     <script>
         function loadComplete() {
-            //document.location.href = "<?= $this->redirect ?>";
+            document.location.href = "<?= $this->redirect ?>";
         }
     </script>
 </head>
@@ -33,7 +33,6 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
 <img src="<?= $url_forum ?>:8443/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $member->profile_image_url ?>&phash=<?= $phash ?>" height="0" width="0">
 <img src="https://<?= $config->openid->host ?>/login/session?ltat=<?= $ltat ?>" height="0" width="0" />
 
-<iframe src="https://<?= $config->openid->host ?>/login/session?ltat=<?= $ltat ?>"></iframe>
 
 </body>
 </html>
