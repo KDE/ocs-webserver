@@ -19,33 +19,6 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-
-
-
-$baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
-$url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
-$url_blog = Zend_Registry::get('config')->settings->client->default->url_blog;
-$url_gitlab = Zend_Registry::get('config')->settings->client->default->url_gitlab;
-
-$sname = Zend_Registry::get('store_host');
-$json_menu = $this->fetchMetaheaderMenuJson();
-$loginMember = $this->getAuthUser();
-if($loginMember->member_id)
-{
-    $json_user = Zend_Json::encode($loginMember);
-    $username = $loginMember->username;
-    $profile_image_url = $loginMember->profile_image_url;
-    $loginUrl = null;
-}else{
-    $json_user = Zend_Json::encode(null);
-    $username = null;
-    $profile_image_url = null;
-    $serverUrl = $this->serverUrl();
-    $helperEncryptUrl = new Default_View_Helper_EncryptUrl();
-    $redirectString = '/redirect/' . $helperEncryptUrl->EncryptUrl(Zend_Controller_Front::getInstance()->getRequest()->getScheme() . '://' . Zend_Controller_Front::getInstance()->getRequest()->getHttpHost().$_SERVER["REQUEST_URI"]);
-    $loginUrl = $serverUrl.'/login'.(strpos($_SERVER["REQUEST_URI"], 'login')?'':$redirectString);
-}
-
 ?>
 
 <link href="https://www.opendesktop.cc/theme/react/assets/css/metaheader.css" rel="stylesheet">
@@ -56,17 +29,7 @@ if($loginMember->member_id)
 <script type="text/javascript" src="https://www.opendesktop.cc/theme/react/lib/react-dom/react-dom.js"></script>
 <div id="metaheader"></div>
 
-<script>
-    var domains = <?=$json_menu?>;
-    var user = null;
-    var baseUrl = "<?=$baseurl?>";
-    var blogUrl = "<?=$url_blog?>";
-    var forumUrl = "<?=$url_forum?>";
-    var gitlabUrl = "<?=$url_gitlab?>";
-    var loginUrl = "<?=$loginUrl?>";
-    var sName = "<?=$sname?>";
-</script>
-    
+<script src="https://www.opendesktop.cc/home/metamenujs?target=opendesktop" ></script>
 
 <script type="text/javascript" src="https://www.opendesktop.cc/theme/react/metaheader.js"></script>
 
