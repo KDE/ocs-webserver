@@ -405,7 +405,6 @@ window.appHelpers = function () {
 class MetaHeader extends React.Component {
   constructor(props) {
     super(props);
-    console.log(logoutUrl);
     this.state = {
       domains: window.domains,
       baseUrl: window.baseUrl,
@@ -421,13 +420,12 @@ class MetaHeader extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.state);
     this.getUser();
   }
 
   getUser() {
-    console.log('get user');
     const decodedCookie = decodeURIComponent(document.cookie);
+    console.log(decodedCookie);
     let ocs_data = decodedCookie.split('ocs_data=')[1];
     console.log(ocs_data);
     if (ocs_data.indexOf(';') > -1) {
@@ -754,10 +752,8 @@ class UserContextMenuContainer extends React.Component {
   }
 
   componentDidMount() {
-    console.log('get git lab id');
     const self = this;
     $.ajax({ url: window.gitlabUrl + "/api/v4/users?username=" + this.props.user.username, cache: false }).done(function (response) {
-      console.log('git lab id:' + response[0].id);
       const gitlabLink = self.state.gitlabLink + response[0].id;
       self.setState({ gitlabLink: gitlabLink, loading: false });
     });
@@ -863,7 +859,6 @@ class UserLoginMenuContainer extends React.Component {
     let dropdownClass = "";
     if (this.node.contains(e.target)) {
       if (this.state.dropdownClass === "open") {
-        console.log(e.target.className);
         if (e.target.className === "th-icon" || e.target.className === "btn btn-default dropdown-toggle") {
           dropdownClass = "";
         } else {
