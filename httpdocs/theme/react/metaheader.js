@@ -411,6 +411,7 @@ class MetaHeader extends React.Component {
       blogUrl: window.blogUrl,
       forumUrl: window.forumUrl,
       loginUrl: window.loginUrl,
+      logoutURl: window.logoutURl,
       sName: window.sName,
       user: {}
     };
@@ -492,8 +493,8 @@ class DomainsMenu extends React.Component {
         { className: 'active' },
         React.createElement(
           'a',
-          { href: "http://" + this.props.baseUrl },
-          React.createElement('img', { src: "http://" + this.props.baseUrl + "/images/system/ocs-logo-rounded-16x16.png", className: 'logo' }),
+          { href: this.props.baseUrl },
+          React.createElement('img', { src: this.props.baseUrl + "/images/system/ocs-logo-rounded-16x16.png", className: 'logo' }),
           'openDesktop.org :'
         )
       ),
