@@ -38,6 +38,8 @@ $is_show_title = $store_config->is_show_title;
 $last_char_store_order = substr($store_order, -1); 
 
 $url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
+$url_gitlab = Zend_Registry::get('config')->settings->client->default->url_gitlab;
+
 $url_blog = Zend_Registry::get('config')->settings->client->default->url_blog;
 
 $json_menu = $this->fetchMetaheaderMenuJson();
@@ -155,7 +157,6 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
         .metamenu ul.dropdown-menu  li.active span{ color:#eee; }
     </style>
 
-
     <header id="page_header" xmlns="http://www.w3.org/1999/html">
         <div class="container header" style="position: relative;">
 
@@ -163,6 +164,7 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
                 $helperEncryptUrl = new Default_View_Helper_EncryptUrl();
                 $redirectString = '/redirect/' . $helperEncryptUrl->EncryptUrl(Zend_Controller_Front::getInstance()->getRequest()->getScheme() . '://' . Zend_Controller_Front::getInstance()->getRequest()->getHttpHost().$_SERVER["REQUEST_URI"]);
                 ?>
+
                 <ul class="menu-nav-tabs absolute-right" style="position: absolute;bottom: 0px;">
                     <li role="presentation"
                         class="<?php echo(strpos($_SERVER["REQUEST_URI"], 'register') ? 'active' : '') ?>">
@@ -192,10 +194,10 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
 
                             <div class="pull-right col-lg-7 col-md-7 col-sm-7 col-xs-7">
                                 <?php if ($auth->hasIdentity() && !empty($member->username)) { ?>
-                                <img src="https://gitlab.pling.cc/external/setcookie.php?id=<?= $member->member_id ?>" height="0" width="0">
-                                <img src="https://forum.opendesktop.cc:8443/setcookie.php?id=<?= $member->member_id ?>" height="0" width="0">
-                                <img src="https://gitlab.pling.cc/external/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $member->profile_image_url ?>&phash=<?= $phash ?>" height="0" width="0">
-                                <img src="https://forum.opendesktop.cc:8443/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $member->profile_image_url ?>&phash=<?= $phash ?>" height="0" width="0">
+                                <img src="/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $member->profile_image_url ?>&phash=<?= $phash ?>" height="0" width="0">
+                                <img src="<?= $url_gitlab ?>/external/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $member->profile_image_url ?>&phash=<?= $phash ?>" height="0" width="0">
+                                <img src="<?= $url_forum ?>:8443/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $member->profile_image_url ?>&phash=<?= $phash ?>" height="0" width="0">
+
                                     <ul class="menu pull-right">
                                         <li class="link relative profile-menu-container">
                                             <a rel="profile-menu" class="menu-trigger">
@@ -257,6 +259,8 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
         </div>
     </header>
 
+
+    
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
                 MenuHover.setup();
