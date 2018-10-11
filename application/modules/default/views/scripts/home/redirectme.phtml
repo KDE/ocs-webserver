@@ -2,7 +2,7 @@
 <html>
 <head>
     <script>
-        function loadComplete(){
+        function loadComplete() {
             document.location.href = "<?= $this->redirect ?>";
         }
     </script>
@@ -16,19 +16,22 @@
 $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
 $url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
 $url_gitlab = Zend_Registry::get('config')->settings->client->default->url_gitlab;
+$config = Zend_Registry::get('config')->settings->domain;
 
 $getAuthUser = new Default_View_Helper_GetAuthUser();
 $member = $getAuthUser->getAuthUser();
 $phash = null;
-if($member) {
+$ltat = '';
+if (Zend_Auth::getInstance()->hasIdentity()) {
     $sess = new Zend_Session_Namespace('ocs_meta');
     $phash = $sess->phash;
-} 
+    $ltat = $sess->openid;
+}
 ?>
-    <img src="/external/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $member->profile_image_url ?>&phash=<?= $phash ?>" height="0" width="0">
-    <img src="<?= $url_gitlab ?>/external/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $member->profile_image_url ?>&phash=<?= $phash ?>" height="0" width="0">
-    <img src="<?= $url_forum ?>:8443/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $member->profile_image_url ?>&phash=<?= $phash ?>" height="0" width="0">
+<img src="/external/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $member->profile_image_url ?>&phash=<?= $phash ?>" height="0" width="0">
+<img src="<?= $url_gitlab ?>/external/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $member->profile_image_url ?>&phash=<?= $phash ?>" height="0" width="0">
+<img src="<?= $url_forum ?>:8443/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $member->profile_image_url ?>&phash=<?= $phash ?>" height="0" width="0">
+<img src="//<?= $config->openid->host ?>/login/session?ltat=<?= $ltat ?>" style="display:none;" />
 
-    
 </body>
 </html>
