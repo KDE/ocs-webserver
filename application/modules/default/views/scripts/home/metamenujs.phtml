@@ -41,11 +41,11 @@ if($target == 'opendesktop') {
     $url_login = $baseurl."/login/redirect/".$filter->filter("/");
     $url_logout = $baseurl."/logout?redirect=".$filter->filter("/");
 } else if($target == 'gitlab') {
-    $url_login = $url_gitlab."/login/redirect/".$filter->filter("/");
-    $url_logout = $url_gitlab."/logout?redirect=".$filter->filter("/");
+    $url_login = $baseurl."/login/redirect/".$filter->filter($url_gitlab);
+    $url_logout = $baseurl."/logout?redirect=".$filter->filter($url_gitlab);
 } else if($target == 'forum') {
-    $url_login = $url_forum."/login/redirect/".$filter->filter("/");
-    $url_logout = $url_forum."/logout?redirect=".$filter->filter("/");
+    $url_login = $baseurl."/login/redirect/".$filter->filter($url_forum);
+    $url_logout = $baseurl."/logout?redirect=".$filter->filter($url_forum);
 }
 
 
