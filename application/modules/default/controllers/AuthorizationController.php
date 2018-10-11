@@ -491,26 +491,6 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
      * @throws Zend_Exception
      * @throws Zend_Form_Exception
      */
-    public function redirectmeAction()
-    {
-        $this->_helper->layout()->disableLayout();
-        //$this->_helper->viewRenderer->setNoRender(true);
-        
-        $redir = "/";
-        if(isset($_GET['redirect'])) {
-            $redir = $_GET['redirect'];
-            $filter = new Local_Filter_Url_Decrypt();
-            $redir = $filter->filter($redir);
-            
-        }
-        $this->view->redirect = $redir;
-    }
-
-    /**
-     * @throws Exception
-     * @throws Zend_Exception
-     * @throws Zend_Form_Exception
-     */
     public function registerAction()
     {
         $this->view->redirect = $this->getParam('redirect');
