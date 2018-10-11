@@ -470,6 +470,8 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
                 $redirect = '/member/' . $userId . '/activities/';
             }
             if ($this->_request->isXmlHttpRequest()) {
+                
+                $redirect = '/home/redirectme?redirect='. $this->view->redirect;
                 $this->_helper->json(array('status' => 'ok', 'redirect' => $redirect));
             } else {
                 
