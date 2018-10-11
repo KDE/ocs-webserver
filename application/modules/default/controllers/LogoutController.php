@@ -33,6 +33,9 @@ class LogoutController extends Local_Controller_Action_DomainSwitch
         $redir = "/";
         if(isset($_GET['redirect'])) {
             $redir = $_GET['redirect'];
+            $filter = new Local_Filter_Url_Decrypt();
+            $redir = $filter->filter($redir);
+            
         }
         $this->view->redirect = $redir;
 
