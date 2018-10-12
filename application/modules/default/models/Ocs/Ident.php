@@ -30,6 +30,7 @@ class Default_Model_Ocs_Ident
     protected $config;
     protected $errMessages;
     protected $errCode;
+    protected $baseGroupDn;
     /** @var Zend_Ldap */
     private $identServer;
 
@@ -44,6 +45,7 @@ class Default_Model_Ocs_Ident
             $this->config = Zend_Registry::get('config')->settings->server->ldap;
         }
         $this->baseDn = $this->config->baseDn;
+        $this->baseGroupDn = $this->config->baseGroupDn;
         $this->errMessages = array();
         $this->errCode = 0;
     }
@@ -342,6 +344,7 @@ class Default_Model_Ocs_Ident
      * @param int $member_id
      *
      * @return bool
+     * @throws ImagickException
      * @throws Zend_Exception
      * @throws Zend_Ldap_Exception
      */
@@ -657,6 +660,33 @@ class Default_Model_Ocs_Ident
         $this->errMessages = $errMessages;
 
         return $this;
+    }
+
+    /**
+     * @param string $name
+     * @param int    $group_id
+     * @param string $full_path
+     *
+     * @throws Zend_Ldap_Exception
+     */
+    public function createGroup($name, $group_id, $full_path)
+    {
+        $newGroup = $this->createGroupEntry($name, $group_id);
+        $connection = $this->getServerConnection();
+
+        $connection->add("cn={$name},{$this->baseGroupDn}", $newGroup);
+        $connection->getLastError($this->errCode, $this->errMessages);
+    }
+
+    private function createGroupEntry($name, $group_id)
+    {
+        $entry = array();
+        Zend_Ldap_Attribute::setAttribute($entry, 'objectClass', 'top');
+        Zend_Ldap_Attribute::setAttribute($entry, 'objectClass', 'groupOfNames', true);
+        Zend_Ldap_Attribute::setAttribute($entry, 'cn', $name);
+        Zend_Ldap_Attribute::setAttribute($entry, 'gidNumber', $group_id);
+
+        return $entry;
     }
 
 }

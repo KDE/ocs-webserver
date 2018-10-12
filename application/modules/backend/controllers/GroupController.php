@@ -36,10 +36,17 @@ class Backend_GroupController extends Local_Controller_Action_Backend
         Zend_Registry::get('logger')->info(__METHOD__ . ' - gitlab event data header: ' . implode(";;",$header));
         $body = $request->getRawBody();
         Zend_Registry::get('logger')->info(__METHOD__ . ' - gitlab event data body: ' . $body);
-        $json = Zend_Json::decode($request);
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - gitlab event data decoded json: ' . implode(";;",$json));
+        $data = Zend_Json::decode($body);
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - gitlab event data decoded json: ' . implode(";;",$data));
 
-        //$this->_helper->json(array('status'=> 'ok', 'msg'=>'success'));
+        $modelGroup = new Backend_Model_Group();
+
+        try {
+            $modelGroup->processEventData($data);
+        } catch (Exception $e) {
+            Zend_Registry::get('logger')->warn($e->getMessage() .PHP_EOL . $e->getTraceAsString());
+        }
+
     }
 
     private function getHeaders()
