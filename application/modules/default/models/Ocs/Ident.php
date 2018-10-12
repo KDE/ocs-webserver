@@ -32,6 +32,8 @@ class Default_Model_Ocs_Ident
     protected $errCode;
     protected $baseGroupDn;
     /** @var Zend_Ldap */
+    protected $identGroupServer;
+    /** @var Zend_Ldap */
     private $identServer;
 
     /**
@@ -667,12 +669,13 @@ class Default_Model_Ocs_Ident
      * @param int    $group_id
      * @param string $full_path
      *
+     * @throws Zend_Exception
      * @throws Zend_Ldap_Exception
      */
     public function createGroup($name, $group_id, $full_path)
     {
         $newGroup = $this->createGroupEntry($name, $group_id);
-        $connection = $this->getServerConnection();
+        $connection = $this->getServerGroupConnection();
 
         $connection->add("cn={$name},{$this->baseGroupDn}", $newGroup);
         $connection->getLastError($this->errCode, $this->errMessages);
@@ -688,5 +691,24 @@ class Default_Model_Ocs_Ident
 
         return $entry;
     }
+
+    /**
+     * @return null|Zend_Ldap
+     * @throws Zend_Exception
+     * @throws Zend_Ldap_Exception
+     */
+    private function getServerGroupConnection()
+    {
+        if (false === empty($this->identGroupServer)) {
+            return $this->identGroupServer;
+        }
+        $config = $this->config;
+        $config->baseDn = Zend_Registry::get('config')->settings->server->ldap_group->baseDn;
+        $this->identGroupServer = new Zend_Ldap($config);
+        $this->identGroupServer->bind();
+
+        return $this->identGroupServer;
+    }
+
 
 }
