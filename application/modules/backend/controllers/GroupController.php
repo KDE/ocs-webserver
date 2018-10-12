@@ -31,12 +31,33 @@ class Backend_GroupController extends Local_Controller_Action_Backend
         //$this->_helper->viewRenderer->setNoRender(true);
 
         /** @var Zend_Controller_Request_Http $request */
-        $request = $this->_request->getRawBody();
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - gitlab event data: ' . $request);
+        $request = $this->_request;
+        $header = $this->getHeaders();
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - gitlab event data header: ' . implode(";;",$header));
+        $body = $request->getRawBody();
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - gitlab event data body: ' . $body);
         $json = Zend_Json::decode($request);
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - gitlab event data: ' . $json);
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - gitlab event data decoded json: ' . implode(";;",$json));
 
         //$this->_helper->json(array('status'=> 'ok', 'msg'=>'success'));
+    }
+
+    private function getHeaders()
+    {
+        if (false === function_exists('getallheaders'))
+        {
+            $headers = [];
+            foreach ($_SERVER as $name => $value)
+            {
+                if (substr($name, 0, 5) == 'HTTP_')
+                {
+                    $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+                }
+            }
+            return $headers;
+        }
+
+        return getallheaders();
     }
 
 }
