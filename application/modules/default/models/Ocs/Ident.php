@@ -677,7 +677,8 @@ class Default_Model_Ocs_Ident
         $newGroup = $this->createGroupEntry($name, $group_id);
         $connection = $this->getServerGroupConnection();
 
-        $connection->add("cn={$name},{$this->baseGroupDn}", $newGroup);
+        $baseDn = Zend_Registry::get('config')->settings->server->ldap_group->baseDn;
+        $connection->add("cn={$name},{$baseDn}", $newGroup);
         $connection->getLastError($this->errCode, $this->errMessages);
     }
 
