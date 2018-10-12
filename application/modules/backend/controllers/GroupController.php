@@ -32,6 +32,7 @@ class Backend_GroupController extends Local_Controller_Action_Backend
 
         /** @var Zend_Controller_Request_Http $request */
         $request = $this->_request->getRawBody();
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - gitlab event data: ' . $request);
         $json = Zend_Json::decode($request);
         Zend_Registry::get('logger')->info(__METHOD__ . ' - gitlab event data: ' . $json);
 
