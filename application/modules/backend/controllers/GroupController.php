@@ -28,14 +28,14 @@ class Backend_GroupController extends Local_Controller_Action_Backend
     public function newgroupAction()
     {
         $this->_helper->layout()->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
+        //$this->_helper->viewRenderer->setNoRender(true);
 
         /** @var Zend_Controller_Request_Http $request */
         $request = $this->_request->getRawBody();
         $json = Zend_Json::decode($request);
         Zend_Registry::get('logger')->info(__METHOD__ . ' - gitlab event data: ' . $json);
 
-        $this->_helper->json(array('status'=> 'ok', 'msg'=>'sucess'));
+        //$this->_helper->json(array('status'=> 'ok', 'msg'=>'success'));
     }
 
 }
