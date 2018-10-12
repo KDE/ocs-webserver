@@ -33,7 +33,7 @@ class Backend_Model_Group
                 $this->addGroup2Ldap($data['name'], $data['group_id'], $data['full_path']);
                 break;
             case 'user_add_to_group':
-                $this->addUser($data['group_name'], $data['group_id'], $data['user_id'], $data['user_name'], $data['user_email'], $data['group_access']);
+                $this->addUser($data['group_id'], $data['user_id'], $data['user_name'], $data['user_email'], $data['group_access']);
                 break;
             default: Zend_Registry::get('logger')->info(__METHOD__ . ' - unhandled git event: ' . json_encode($data));
         }
