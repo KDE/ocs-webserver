@@ -33,11 +33,11 @@ class Backend_GroupController extends Local_Controller_Action_Backend
         /** @var Zend_Controller_Request_Http $request */
         $request = $this->_request;
         $header = $this->getHeaders();
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - gitlab event data header: ' . implode(";;",$header));
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - gitlab event data header: ' . json_encode($header));
         $body = $request->getRawBody();
         Zend_Registry::get('logger')->info(__METHOD__ . ' - gitlab event data body: ' . $body);
         $data = Zend_Json::decode($body);
-        Zend_Registry::get('logger')->info(__METHOD__ . ' - gitlab event data decoded json: ' . implode(";;",$data));
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - gitlab event data decoded: ' . PHP_EOL . print_r($data, true));
 
         $modelGroup = new Backend_Model_Group();
 

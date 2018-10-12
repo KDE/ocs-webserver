@@ -45,19 +45,19 @@ class Backend_Model_Group
 
         $db = Zend_Db_Table::getDefaultAdapter();
 
-        $statement = $db->query($sql, array('groupName'=>$group_name, 'groupId'=>$group_id, 'group_full_path'=>$full_path));
+        $statement = $db->query($sql, array('groupName'=>$group_name, 'groupId'=>$group_id, 'fullPath'=>$full_path));
 
         return $statement->rowCount();
     }
 
-    public function addUser($group_name, $group_id, $user_id, $user_name, $user_email, $group_access)
+    public function addUser($group_id, $user_id, $user_name, $user_email, $group_access)
     {
-        $sql = "INSERT INTO git_group_user (`group_name`, `group_id`, `user_id`, `user_name`, `user_email`, `group_access`) 
-                       VALUES (:groupName, :groupId, :userId, :userName, :userEmail, :groupAccess)";
+        $sql = "INSERT INTO git_group_user (`group_id`, `user_id`, `user_name`, `user_email`, `group_access`) 
+                       VALUES (:groupId, :userId, :userName, :userEmail, :groupAccess)";
 
         $db = Zend_Db_Table::getDefaultAdapter();
 
-        $statement = $db->query($sql, array('groupName'=>$group_name, 'groupId'=>$group_id, 'userId'=>$user_id, 'userName'=>$user_name, 'userEmail'=>$user_email, 'groupAccess'=>$group_access));
+        $statement = $db->query($sql, array('groupId'=>$group_id, 'userId'=>$user_id, 'userName'=>$user_name, 'userEmail'=>$user_email, 'groupAccess'=>$group_access));
 
         return $statement->rowCount();
     }
