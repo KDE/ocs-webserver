@@ -112,6 +112,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addResource(new Zend_Acl_Resource ('backend_tags'));
         $this->addResource(new Zend_Acl_Resource ('backend_ghnsexcluded'));
         $this->addResource(new Zend_Acl_Resource ('backend_letteravatar'));
+        $this->addResource(new Zend_Acl_Resource ('backend_group'));
 
         $this->addResource(new Zend_Acl_Resource ('statistics_data'));
 
@@ -194,11 +195,13 @@ class Default_Plugin_AclRules extends Zend_Acl
             'backend_reportcomments',
             'backend_reportproducts',
             'backend_search',
+            'backend_group'
         ));
 
         $this->allow(self::ROLENAME_ADMIN);
 
         // resource access rights in detail
+        $this->allow(self::ROLENAME_GUEST, 'backend_group', array('newgroup'));
 
         // resource default_product
         $this->allow(self::ROLENAME_GUEST, 'default_product', array(
