@@ -145,7 +145,7 @@ class DomainsMenuGroup extends React.Component {
       const domainsDisplay = this.props.domains.filter(this.filterDomainsByMenuGroup).map((domain,index) => {
         let domainPrefix = "";
         if (domain.menuhref.indexOf('https://') === -1 && domain.menuhref.indexOf('http://') === -1){
-          domainPrefix += "https://";
+          domainPrefix += "http://";
         }
         return (
           <li key={index}>
