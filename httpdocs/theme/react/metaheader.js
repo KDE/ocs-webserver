@@ -361,22 +361,22 @@ class DomainsMenuGroup extends React.Component {
 
   render() {
     const domainsDisplay = this.props.domains.filter(this.filterDomainsByMenuGroup).map((domain, index) => {
-      /*let domainPrefix = "";
-      if (domain.menuhref.indexOf('https://') === -1 || domain.menuhref.indexOf('http://') === -1){
-        domainPrefix += "https://"
-        if (domain.menuhref.indexOf('pling.cc') === -1 && domain.menuhref.indexOf('www') === -1){
+      let domainPrefix = "";
+      if (domain.menuhref.indexOf('https://') === -1 && domain.menuhref.indexOf('http://') === -1) {
+        domainPrefix += "https://";
+        if (domain.menuhref.indexOf('www') === -1) {
           domainPrefix += "www.";
         }
       }
       console.log(domain.menuhref);
-      const domainHref = domainPrefix + domain.menuhref
-      console.log(domainHref);*/
+      const domainHref = domainPrefix + domain.menuhref;
+      console.log(domainHref);
       return React.createElement(
         'li',
         { key: index },
         React.createElement(
           'a',
-          { href: domain.menuhref },
+          { href: domainHref },
           domain.name
         )
       );
