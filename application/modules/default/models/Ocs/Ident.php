@@ -518,8 +518,7 @@ class Default_Model_Ocs_Ident
 
         $entry = $this->createIdentEntry($member_data);
         $connection = $this->getServerConnection();
-        $username = strtolower($member_data['username']);
-        $dn = "cn={$username},{$this->baseDn}";
+        $dn = $this->getUserDn($member_data['username']);
 
         try {
             $user = $this->getUser($member_data['member_id'], $member_data['username']);
@@ -587,7 +586,7 @@ class Default_Model_Ocs_Ident
             return $entry;
         }
 
-        return $entry;;
+        return $entry;
     }
 
     /**
@@ -687,7 +686,9 @@ class Default_Model_Ocs_Ident
         $entry = array();
         Zend_Ldap_Attribute::setAttribute($entry, 'objectClass', 'top');
         Zend_Ldap_Attribute::setAttribute($entry, 'objectClass', 'groupOfNames', true);
+        Zend_Ldap_Attribute::setAttribute($entry, 'objectClass', 'extensibleObject', true);
         Zend_Ldap_Attribute::setAttribute($entry, 'cn', $name);
+        Zend_Ldap_Attribute::setAttribute($entry, 'member', null);
         Zend_Ldap_Attribute::setAttribute($entry, 'gidNumber', $group_id);
 
         return $entry;
@@ -711,5 +712,86 @@ class Default_Model_Ocs_Ident
         return $this->identGroupServer;
     }
 
+    public function updateGroupMember($user_username, $group_id, $group_path, $group_name, $group_access)
+    {
+        $group = $this->createGroupEntry($group_name, $group_id);
+        $dnGroup = $this->getGroupDn($group_name);
+        $connection = $this->getServerGroupConnection();
+
+        //Only update, if group do not exists
+        try {
+            $entry = $connection->getEntry($dnGroup);
+        } catch (Exception $e) {
+            $this->errMessages[] = "Failed.";
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . $e->getMessage());
+
+            return false;
+        }
+        if (empty($entry)) {
+            $this->errMessages[] = "group not exists. nothing to update.";
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ldap entry for group does not exists.');
+
+            return false;
+        }
+
+        //Only update, if member exists
+        try {
+            $entry = $connection->getEntry($this->getUserDn($user_username));
+        } catch (Exception $e) {
+            $this->errMessages[] = "Failed.";
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . $e->getMessage());
+
+            return false;
+        }
+        if (empty($entry)) {
+            $this->errMessages[] = "user not exists. nothing to update.";
+            Zend_Registry::get('logger')->err(__METHOD__ . ' - ldap entry for user does not exists.');
+
+            return false;
+        }
+
+        $group = $this->addMemberToGroupEntry($group, $user_username, $group_access);
+        $connection->update($dnGroup, $group);
+        $connection->getLastError($this->errCode, $this->errMessages);
+    }
+
+    private function addMemberToGroupEntry($group, $user_username, $group_access)
+    {
+        $dn = $this->getUserDn($user_username);
+        Zend_Ldap_Attribute::setAttribute($group, 'member', $dn);
+        if ('owner' == strtolower($group_access)) {
+            Zend_Ldap_Attribute::setAttribute($group, 'owner', $dn);
+        }
+        Zend_Ldap_Attribute::removeDuplicatesFromAttribute($group, 'member');
+        Zend_Ldap_Attribute::removeDuplicatesFromAttribute($group, 'owner');
+        return $group;
+    }
+
+    /**
+     * @param string $user_name
+     *
+     * @return string
+     */
+    private function getUserDn($user_name)
+    {
+        $username = strtolower($user_name);
+        $dn = "cn={$username},{$this->baseDn}";
+
+        return $dn;
+    }
+
+    /**
+     * @param $group_name
+     *
+     * @return string
+     * @throws Zend_Exception
+     */
+    private function getGroupDn($group_name)
+    {
+        $baseDn = Zend_Registry::get('config')->settings->server->ldap_group->baseDn;
+        $dnGroup = "cn={$group_name},{$baseDn}";
+
+        return $dnGroup;
+    }
 
 }
