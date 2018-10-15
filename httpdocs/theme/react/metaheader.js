@@ -182,7 +182,6 @@ class MetaHeader extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.state.baseUrl);
     this.getUser();
   }
 
@@ -412,7 +411,8 @@ class UserMenu extends React.Component {
     if (this.props.user && this.props.user.member_id) {
       userDropdownDisplay = React.createElement(UserLoginMenuContainer, {
         user: this.props.user,
-        logoutUrl: this.props.logoutUrl
+        logoutUrl: this.props.logoutUrl,
+        baseUrl: this.props.baseUrl
       });
       userAppsContextDisplay = React.createElement(UserContextMenuContainer, {
         user: this.props.user,
@@ -436,7 +436,7 @@ class UserMenu extends React.Component {
         aboutContentUrl = "/#aboutContent",
         linkTarget = "_blank";
 
-    if (window.location.hostname === this.props.baseUrl) {
+    if (window.location.hostname === this.props.baseUrl.split('https://')[1]) {
       plingListUrl = "/plings";
       ocsapiContentUrl = "/partials/ocsapicontent.phtml";
       aboutContentUrl = "/partials/about.phtml";
@@ -700,7 +700,7 @@ class UserLoginMenuContainer extends React.Component {
             { className: 'buttons' },
             React.createElement(
               'a',
-              { href: 'https://www.opendesktop.cc/settings/', className: 'btn btn-default btn-metaheader' },
+              { href: this.props.baseUrl + "/settings/", className: 'btn btn-default btn-metaheader' },
               'Settings'
             ),
             React.createElement(

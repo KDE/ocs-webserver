@@ -16,7 +16,6 @@ class MetaHeader extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.state.baseUrl);
     this.getUser();
   }
 
@@ -182,6 +181,7 @@ class UserMenu extends React.Component {
         <UserLoginMenuContainer
           user={this.props.user}
           logoutUrl={this.props.logoutUrl}
+          baseUrl={this.props.baseUrl}
         />
       );
       userAppsContextDisplay = (
@@ -203,7 +203,7 @@ class UserMenu extends React.Component {
         aboutContentUrl = "/#aboutContent",
         linkTarget = "_blank";
 
-    if (window.location.hostname === this.props.baseUrl){
+    if (window.location.hostname === this.props.baseUrl.split('https://')[1]){
       plingListUrl = "/plings";
       ocsapiContentUrl = "/partials/ocsapicontent.phtml";
       aboutContentUrl = "/partials/about.phtml";
@@ -362,7 +362,7 @@ class UserLoginMenuContainer extends React.Component {
               </div>
             </li>
             <li className="buttons">
-              <a href="https://www.opendesktop.cc/settings/" className="btn btn-default btn-metaheader">Settings</a>
+              <a href={this.props.baseUrl + "/settings/"} className="btn btn-default btn-metaheader">Settings</a>
               <a href={this.props.logoutUrl} className="btn btn-default pull-right btn-metaheader">Logout</a>
             </li>
           </ul>
