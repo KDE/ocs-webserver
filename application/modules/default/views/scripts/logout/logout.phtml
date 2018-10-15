@@ -12,9 +12,13 @@
     Please Wait...
 </p>
 <?php
+/** @var Zend_Controller_Request_Http $request */
+$request = Zend_Controller_Front::getInstance()->getRequest();
+$http_scheme = $request->getScheme();
+
 $config = Zend_Registry::get('config')->settings->domain;
 ?>
-    <img src="https://<?=$config->openid->host?>/logout" style="display:none;" />
+    <img src="<?=$http_scheme?>://<?=$config->openid->host?>/logout" style="display:none;" />
     <img src="https://<?=$config->opencode->host?>/users/sign_out" style="display:none;" />
     <img src="https://<?=$config->opencode->host?>/external/removedata.php" style="display:none;" />
     <img src="https://<?=$config->forum->host?>/session/logout" style="display:none;" />

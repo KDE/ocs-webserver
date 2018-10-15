@@ -33,7 +33,8 @@ class Backend_Model_Group
                 $this->addGroup2Ldap($data['name'], $data['group_id'], $data['full_path']);
                 break;
             case 'user_add_to_group':
-                $this->addUser($data['group_id'], $data['user_id'], $data['user_name'], $data['user_email'], $data['group_access']);
+                $this->addUser($data['group_id'], $data['user_id'], $data['user_username'], $data['user_email'], $data['group_access']);
+                $this->updateGroup2Ldap($data['group_id'], $data['group_path'], $data['group_name'], $data['user_username'], $data['group_access']);
                 break;
             default: Zend_Registry::get('logger')->info(__METHOD__ . ' - unhandled git event: ' . json_encode($data));
         }
@@ -66,6 +67,12 @@ class Backend_Model_Group
     {
         $modelLdap = new Default_Model_Ocs_Ident();
         $modelLdap->createGroup($name, $group_id, $full_path);
+    }
+
+    public function updateGroup2Ldap($group_id, $group_path, $group_name, $user_username, $group_access)
+    {
+        $modelLdap = new Default_Model_Ocs_Ident();
+        $modelLdap->updateGroupMember($user_username, $group_id, $group_path, $group_name, $group_access);
     }
 
 }
