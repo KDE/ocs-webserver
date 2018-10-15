@@ -200,10 +200,12 @@ class UserMenu extends React.Component {
 
 
     let plingListUrl = "/#plingList",
-        ocsapiContentUrl = "/#ocsapiContent",
-        aboutContentUrl = "/#aboutContent",
+        ocsapiContentUrl = "/partials/#ocsapiContent",
+        aboutContentUrl = "/partials/#aboutContent",
         linkTarget = "_blank";
 
+    console.log(window.location.hostname);
+    console.log(this.props.baseUrl);
     if (window.location.hostname === this.props.baseUrl){
       plingListUrl = "/plings";
       ocsapiContentUrl = "/partials/ocsapicontent.phtml";
