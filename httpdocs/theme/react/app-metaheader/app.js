@@ -16,6 +16,7 @@ class MetaHeader extends React.Component {
   }
 
   componentDidMount() {
+    console.log(window.domains);
     this.getUser();
   }
 
