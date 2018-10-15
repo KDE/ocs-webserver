@@ -150,9 +150,6 @@ class DomainsMenuGroup extends React.Component {
             domainPrefix += "www.";
           }
         }
-        console.log(domain.menuhref);
-        const domainHref = domainPrefix + domain.menuhref
-        console.log(domainHref);
         return (
           <li key={index}>
             <a href={domainHref}>{domain.name}</a>
