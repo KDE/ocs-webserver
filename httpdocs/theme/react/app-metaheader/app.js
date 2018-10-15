@@ -203,7 +203,7 @@ class UserMenu extends React.Component {
         aboutContentUrl = "/#aboutContent",
         linkTarget = "_blank";
 
-    if (window.location.hostname === "www.opendesktop.cc"){
+    if (window.location.hostname === this.props.baseUrl){
       plingListUrl = "/plings";
       ocsapiContentUrl = "/partials/ocsapicontent.phtml";
       aboutContentUrl = "/partials/about.phtml";
