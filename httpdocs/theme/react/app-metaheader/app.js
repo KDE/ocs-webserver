@@ -206,7 +206,7 @@ class UserMenu extends React.Component {
 
     console.log(window.location.hostname);
     console.log(this.props.baseUrl);
-    if (window.location.hostname === this.props.baseUrl){
+    if (window.location.hostname === this.props.baseUrl.split('https://')[1]){
       plingListUrl = "/plings";
       ocsapiContentUrl = "/partials/ocsapicontent.phtml";
       aboutContentUrl = "/partials/about.phtml";
