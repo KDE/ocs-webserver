@@ -16,7 +16,6 @@ class MetaHeader extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.state.baseUrl);
     this.getUser();
   }
 
@@ -204,8 +203,6 @@ class UserMenu extends React.Component {
         aboutContentUrl = "/#aboutContent",
         linkTarget = "_blank";
 
-    console.log(window.location.hostname);
-    console.log(this.props.baseUrl);
     if (window.location.hostname === this.props.baseUrl.split('https://')[1]){
       plingListUrl = "/plings";
       ocsapiContentUrl = "/partials/ocsapicontent.phtml";
