@@ -153,7 +153,7 @@ class DomainsMenuGroup extends React.Component {
         }
         return (
           <li key={index}>
-            <a href={domainHref}>{domain.name}</a>
+            <a href={domainPrefix + domain.menuhref}>{domain.name}</a>
           </li>
         );
       });
