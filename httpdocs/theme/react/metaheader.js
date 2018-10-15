@@ -433,8 +433,8 @@ class UserMenu extends React.Component {
     }
 
     let plingListUrl = "/#plingList",
-        ocsapiContentUrl = "/partials/#ocsapiContent",
-        aboutContentUrl = "/partials/#aboutContent",
+        ocsapiContentUrl = "/#ocsapiContent",
+        aboutContentUrl = "/#aboutContent",
         linkTarget = "_blank";
 
     console.log(window.location.hostname);
