@@ -182,7 +182,6 @@ class MetaHeader extends React.Component {
   }
 
   componentDidMount() {
-    console.log(window.domains);
     this.getUser();
   }
 
@@ -237,7 +236,6 @@ class DomainsMenu extends React.Component {
   }
 
   render() {
-    console.log(this.props.domains);
     let menuGroupsDisplayLeft, menuGroupsDisplayRight;
     if (this.state.menuGroups) {
       menuGroupsDisplayLeft = this.state.menuGroups.slice(0, 2).map((mg, i) => React.createElement(DomainsMenuGroup, {
@@ -362,18 +360,23 @@ class DomainsMenuGroup extends React.Component {
   }
 
   render() {
-    console.log(this.props.domains);
     const domainsDisplay = this.props.domains.filter(this.filterDomainsByMenuGroup).map((domain, index) => {
-      let domainPrefix = "http://";
-      if (domain.menuhref.indexOf('pling.cc') === -1 && domain.menuhref.indexOf('www') === -1) {
-        domainPrefix += "www.";
+      let domainPrefix = "";
+      if (domain.menuhref.indexOf('https://') === -1 || domain.menuhref.indexOf('http://') === -1) {
+        domainPrefix += "https://";
+        if (domain.menuhref.indexOf('pling.cc') === -1 && domain.menuhref.indexOf('www') === -1) {
+          domainPrefix += "www.";
+        }
       }
+      console.log(domain.menuhref);
+      const domainHref = domainPrefix + domain.menuhref;
+      console.log(domainHref);
       return React.createElement(
         'li',
         { key: index },
         React.createElement(
           'a',
-          { href: domainPrefix + domain.menuhref },
+          { href: domainHref },
           domain.name
         )
       );
