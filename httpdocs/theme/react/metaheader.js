@@ -364,9 +364,6 @@ class DomainsMenuGroup extends React.Component {
       let domainPrefix = "";
       if (domain.menuhref.indexOf('https://') === -1 && domain.menuhref.indexOf('http://') === -1) {
         domainPrefix += "https://";
-        if (domain.menuhref.indexOf('www') === -1) {
-          domainPrefix += "www.";
-        }
       }
       return React.createElement(
         'li',
