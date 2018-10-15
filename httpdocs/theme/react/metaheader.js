@@ -517,23 +517,10 @@ class UserContextMenuContainer extends React.Component {
 
   componentDidMount() {
     const self = this;
-    /*$.ajax({url: window.gitlabUrl+"/api/v4/users?username="+this.props.user.username,cache: false})
-      .done(function(response){
-        const gitlabLink = self.state.gitlabLink + response[0].id;
-        self.setState({gitlabLink:gitlabLink,loading:false});
-      });*/
-
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', window.gitlabUrl + "/api/v4/users?username=" + this.props.user.username);
-    xhr.onload = function () {
-      console.log(xhr);
-      if (xhr.status === 200) {
-        alert('User\'s name is ' + xhr.responseText);
-      } else {
-        alert('Request failed.  Returned status of ' + xhr.status);
-      }
-    };
-    xhr.send();
+    $.ajax({ url: window.gitlabUrl + "/api/v4/users?username=" + this.props.user.username, cache: false }).done(function (response) {
+      const gitlabLink = self.state.gitlabLink + response[0].id;
+      self.setState({ gitlabLink: gitlabLink, loading: false });
+    });
   }
 
   handleClick(e) {
