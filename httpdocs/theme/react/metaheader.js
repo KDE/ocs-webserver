@@ -227,15 +227,7 @@ class MetaHeader extends React.Component {
 class DomainsMenu extends React.Component {
   constructor(props) {
     super(props);
-    let domainsDropdownHeight;
-    if (this.props.baseUrl === "https://www.opendesktop.cc") {
-      domainsDropdownHeight = "296";
-    } else {
-      domainsDropdownHeight = "500";
-    }
-    this.state = {
-      domainsDropdownHeight: domainsDropdownHeight
-    };
+    this.state = {};
   }
 
   componentDidMount() {
