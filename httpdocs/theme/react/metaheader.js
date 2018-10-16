@@ -516,6 +516,8 @@ class UserContextMenuContainer extends React.Component {
   }
 
   componentDidMount() {
+    const elm = $('a[href="https://www.opendesktop.cc/s/Music"]');
+    console.log(elm);
     const self = this;
     $.ajax({ url: window.gitlabUrl + "/api/v4/users?username=" + this.props.user.username, cache: false }).done(function (response) {
       const gitlabLink = self.state.gitlabLink + response[0].id;
