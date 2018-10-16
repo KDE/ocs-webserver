@@ -12,10 +12,25 @@ class MetaHeader extends React.Component {
       sName:window.sName,
       user:{},
     };
+    this.initMetaHeader = this.initMetaHeader.bind(this);
     this.getUser = this.getUser.bind(this);
   }
 
+
+  componentWillMount() {
+    this.updateDimensions();
+  }
+
   componentDidMount() {
+    this.initMetaHeader();
+  }
+
+  componentWillUnmount(){
+    window.removeEventListener("resize", this.updateDimensions);
+  }
+
+  initMetaHeader(){
+    window.addEventListener("resize", this.updateDimensions);
     this.getUser();
   }
 
@@ -28,6 +43,14 @@ class MetaHeader extends React.Component {
       this.setState({user:user});
     }
   }
+
+
+    updateDimensions(){
+      const device = appHelpers.getDeviceFromWidth(window.innerWidth);
+      this.setState({device:device},function(){
+        console.log(this.state.device);
+      });
+    }
 
   render(){
     return (
