@@ -194,6 +194,7 @@ class MetaHeader extends React.Component {
       user: {}
     };
     this.initMetaHeader = this.initMetaHeader.bind(this);
+    this.updateDimensions = this.updateDimensions.bind(this);
     this.getUser = this.getUser.bind(this);
   }
 
