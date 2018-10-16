@@ -12,11 +12,11 @@ window.appHelpers = (function(){
 
   function getDeviceFromWidth(width){
     let device;
-    if (width < 1250 && width >= 1000){
+    if (width >= 910){
       device = "large";
-    } else if (width < 1000 && width >= 661){
+    } else if (width < 910 && width >= 600){
       device = "mid";
-    } else if (width < 661 && width >= 400){
+    } else if (width < 599 && width >= 400){
       device = "tablet";
     } else if (width < 400){
       device = "phone"

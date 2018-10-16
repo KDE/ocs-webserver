@@ -58,12 +58,16 @@ class MetaHeader extends React.Component {
       <nav id="metaheader-nav" className="metaheader">
         <div className="metamenu">
           <DomainsMenu
+            device={this.state.device}
             domains={domains}
+            user={this.state.user}
             baseUrl={this.state.baseUrl}
+            blogUrl={this.state.blogUrl}
             forumUrl={this.state.forumUrl}
             sName={this.state.sName}
           />
           <UserMenu
+            device={this.state.device}
             user={this.state.user}
             baseUrl={this.state.baseUrl}
             blogUrl={this.state.blogUrl}
@@ -90,7 +94,6 @@ class DomainsMenu extends React.Component {
     this.setState({menuGroups:menuGroups});
   }
 
-
   render(){
     let menuGroupsDisplayLeft, menuGroupsDisplayRight;
     if (this.state.menuGroups){
@@ -110,6 +113,37 @@ class DomainsMenu extends React.Component {
           sName={this.props.sName}
         />
       ));
+    }
+
+    let moreMenuItemDisplay;
+    if (this.props.device !== "large"){
+
+      let plingListUrl = "/#plingList",
+          ocsapiContentUrl = "/#ocsapiContent",
+          aboutContentUrl = "/#aboutContent",
+          linkTarget = "_blank";
+      if (window.location.hostname === this.props.baseUrl.split('https://')[1]){
+        plingListUrl = "/plings";
+        ocsapiContentUrl = "/partials/ocsapicontent.phtml";
+        aboutContentUrl = "/partials/about.phtml";
+        linkTarget = "";
+      }
+
+      moreMenuItemDisplay = (
+        <li id="more-dropdown-menu" className="dropdown">
+          <a id="dropdownMenu5"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="true">Discussion Boards</a>
+          <ul className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu5">
+            <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
+            <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
+            <li><a id="plingList" className="popuppanel" target={linkTarget} href={this.props.baseUrl + plingListUrl}>What are Plings?</a></li>
+            <li><a id="ocsapiContent" className="popuppanel" target={linkTarget} href={this.props.baseUrl + ocsapiContentUrl}>API</a></li>
+            <li><a id="aboutContent" className="popuppanel" target={linkTarget} href={this.props.baseUrl + aboutContentUrl} >About</a></li>
+          </ul>
+        </li>
+      )
     }
 
     return (
@@ -149,6 +183,7 @@ class DomainsMenu extends React.Component {
             <li><a href={this.props.forumUrl + "/c/coding"}>Coding</a></li>
           </ul>
         </li>
+        {moreMenuItemDisplay}
       </ul>
     )
   }
@@ -220,21 +255,21 @@ class UserMenu extends React.Component {
       )
     }
 
+    let userMenuContainerDisplay;
+    if (this.props.device === "large"){
 
-    let plingListUrl = "/#plingList",
-        ocsapiContentUrl = "/#ocsapiContent",
-        aboutContentUrl = "/#aboutContent",
-        linkTarget = "_blank";
+      let plingListUrl = "/#plingList",
+          ocsapiContentUrl = "/#ocsapiContent",
+          aboutContentUrl = "/#aboutContent",
+          linkTarget = "_blank";
+      if (window.location.hostname === this.props.baseUrl.split('https://')[1]){
+        plingListUrl = "/plings";
+        ocsapiContentUrl = "/partials/ocsapicontent.phtml";
+        aboutContentUrl = "/partials/about.phtml";
+        linkTarget = "";
+      }
 
-    if (window.location.hostname === this.props.baseUrl.split('https://')[1]){
-      plingListUrl = "/plings";
-      ocsapiContentUrl = "/partials/ocsapicontent.phtml";
-      aboutContentUrl = "/partials/about.phtml";
-      linkTarget = "";
-    }
-
-    return (
-      <div id="user-menu-container" className="right">
+      userMenuContainerDisplay = (
         <ul className="metaheader-menu" id="user-menu">
           <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
           <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
@@ -244,6 +279,20 @@ class UserMenu extends React.Component {
           {userAppsContextDisplay}
           {userDropdownDisplay}
         </ul>
+      );
+    } else {
+      userMenuContainerDisplay = (
+        <ul className="metaheader-menu" id="user-menu">
+          {userAppsContextDisplay}
+          {userDropdownDisplay}
+        </ul>
+      );
+    }
+
+
+    return (
+      <div id="user-menu-container" className="right">
+        {userMenuContainerDisplay}
       </div>
     )
   }

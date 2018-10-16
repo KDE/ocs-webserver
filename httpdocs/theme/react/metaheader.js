@@ -162,11 +162,11 @@ window.appHelpers = function () {
 
   function getDeviceFromWidth(width) {
     let device;
-    if (width < 1250 && width >= 1000) {
+    if (width >= 910) {
       device = "large";
-    } else if (width < 1000 && width >= 661) {
+    } else if (width < 910 && width >= 600) {
       device = "mid";
-    } else if (width < 661 && width >= 400) {
+    } else if (width < 599 && width >= 400) {
       device = "tablet";
     } else if (width < 400) {
       device = "phone";
@@ -242,12 +242,16 @@ class MetaHeader extends React.Component {
         "div",
         { className: "metamenu" },
         React.createElement(DomainsMenu, {
+          device: this.state.device,
           domains: domains,
+          user: this.state.user,
           baseUrl: this.state.baseUrl,
+          blogUrl: this.state.blogUrl,
           forumUrl: this.state.forumUrl,
           sName: this.state.sName
         }),
         React.createElement(UserMenu, {
+          device: this.state.device,
           user: this.state.user,
           baseUrl: this.state.baseUrl,
           blogUrl: this.state.blogUrl,
@@ -287,6 +291,83 @@ class DomainsMenu extends React.Component {
         menuGroup: mg,
         sName: this.props.sName
       }));
+    }
+
+    let moreMenuItemDisplay;
+    if (this.props.device !== "large") {
+
+      let plingListUrl = "/#plingList",
+          ocsapiContentUrl = "/#ocsapiContent",
+          aboutContentUrl = "/#aboutContent",
+          linkTarget = "_blank";
+      if (window.location.hostname === this.props.baseUrl.split('https://')[1]) {
+        plingListUrl = "/plings";
+        ocsapiContentUrl = "/partials/ocsapicontent.phtml";
+        aboutContentUrl = "/partials/about.phtml";
+        linkTarget = "";
+      }
+
+      moreMenuItemDisplay = React.createElement(
+        "li",
+        { id: "more-dropdown-menu", className: "dropdown" },
+        React.createElement(
+          "a",
+          { id: "dropdownMenu5",
+            "data-toggle": "dropdown",
+            "aria-haspopup": "true",
+            "aria-expanded": "true" },
+          "Discussion Boards"
+        ),
+        React.createElement(
+          "ul",
+          { className: "dropdown-menu dropdown-menu-right", "aria-labelledby": "dropdownMenu5" },
+          React.createElement(
+            "li",
+            null,
+            React.createElement(
+              "a",
+              { href: this.props.baseUrl + "/community" },
+              "Community"
+            )
+          ),
+          React.createElement(
+            "li",
+            null,
+            React.createElement(
+              "a",
+              { href: this.props.blogUrl, target: "_blank" },
+              "Blog"
+            )
+          ),
+          React.createElement(
+            "li",
+            null,
+            React.createElement(
+              "a",
+              { id: "plingList", className: "popuppanel", target: linkTarget, href: this.props.baseUrl + plingListUrl },
+              "What are Plings?"
+            )
+          ),
+          React.createElement(
+            "li",
+            null,
+            React.createElement(
+              "a",
+              { id: "ocsapiContent", className: "popuppanel", target: linkTarget, href: this.props.baseUrl + ocsapiContentUrl },
+              "API"
+            )
+          ),
+          React.createElement(
+            "li",
+            null,
+            React.createElement(
+              "a",
+              { id: "aboutContent", className: "popuppanel", target: linkTarget, href: this.props.baseUrl + aboutContentUrl },
+              "About"
+            )
+          )
+        )
+      );
     }
 
     return React.createElement(
@@ -378,7 +459,8 @@ class DomainsMenu extends React.Component {
             )
           )
         )
-      )
+      ),
+      moreMenuItemDisplay
     );
   }
 }
@@ -465,22 +547,21 @@ class UserMenu extends React.Component {
       );
     }
 
-    let plingListUrl = "/#plingList",
-        ocsapiContentUrl = "/#ocsapiContent",
-        aboutContentUrl = "/#aboutContent",
-        linkTarget = "_blank";
+    let userMenuContainerDisplay;
+    if (this.props.device === "large") {
 
-    if (window.location.hostname === this.props.baseUrl.split('https://')[1]) {
-      plingListUrl = "/plings";
-      ocsapiContentUrl = "/partials/ocsapicontent.phtml";
-      aboutContentUrl = "/partials/about.phtml";
-      linkTarget = "";
-    }
+      let plingListUrl = "/#plingList",
+          ocsapiContentUrl = "/#ocsapiContent",
+          aboutContentUrl = "/#aboutContent",
+          linkTarget = "_blank";
+      if (window.location.hostname === this.props.baseUrl.split('https://')[1]) {
+        plingListUrl = "/plings";
+        ocsapiContentUrl = "/partials/ocsapicontent.phtml";
+        aboutContentUrl = "/partials/about.phtml";
+        linkTarget = "";
+      }
 
-    return React.createElement(
-      "div",
-      { id: "user-menu-container", className: "right" },
-      React.createElement(
+      userMenuContainerDisplay = React.createElement(
         "ul",
         { className: "metaheader-menu", id: "user-menu" },
         React.createElement(
@@ -530,7 +611,20 @@ class UserMenu extends React.Component {
         ),
         userAppsContextDisplay,
         userDropdownDisplay
-      )
+      );
+    } else {
+      userMenuContainerDisplay = React.createElement(
+        "ul",
+        { className: "metaheader-menu", id: "user-menu" },
+        userAppsContextDisplay,
+        userDropdownDisplay
+      );
+    }
+
+    return React.createElement(
+      "div",
+      { id: "user-menu-container", className: "right" },
+      userMenuContainerDisplay
     );
   }
 }
