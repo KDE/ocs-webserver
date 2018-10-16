@@ -57,13 +57,15 @@ class MetaHeader extends React.Component {
 class DomainsMenu extends React.Component {
   constructor(props){
   	super(props);
-  	this.state = {};
+  	this.state = {
+    };
   }
 
   componentDidMount() {
     const menuGroups = appHelpers.generateMenuGroupsArray(this.props.domains);
     this.setState({menuGroups:menuGroups});
   }
+
 
   render(){
     let menuGroupsDisplayLeft, menuGroupsDisplayRight;
