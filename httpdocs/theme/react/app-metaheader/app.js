@@ -113,7 +113,7 @@ class DomainsMenu extends React.Component {
           data-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="true">Themes & Apps</a>
-          <ul className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu3" style={{"height":this.state.domainsDropdownHeight + "px"}}>
+          <ul className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu3">
             <li className="submenu-container">
               <ul>
                 {menuGroupsDisplayLeft}

@@ -292,7 +292,7 @@ class DomainsMenu extends React.Component {
         ),
         React.createElement(
           'ul',
-          { className: 'dropdown-menu dropdown-menu-right', 'aria-labelledby': 'dropdownMenu3', style: { "height": this.state.domainsDropdownHeight + "px" } },
+          { className: 'dropdown-menu dropdown-menu-right', 'aria-labelledby': 'dropdownMenu3' },
           React.createElement(
             'li',
             { className: 'submenu-container' },
