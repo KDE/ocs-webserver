@@ -316,7 +316,7 @@ class DomainsMenu extends React.Component {
             "data-toggle": "dropdown",
             "aria-haspopup": "true",
             "aria-expanded": "true" },
-          "Discussion Boards"
+          "More"
         ),
         React.createElement(
           "ul",
