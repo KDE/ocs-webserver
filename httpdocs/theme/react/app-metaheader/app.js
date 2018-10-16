@@ -120,7 +120,7 @@ class DomainsMenu extends React.Component {
           <ul className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu4">
             <li><a href={this.props.forumUrl + "/c/general"}>General</a></li>
             <li><a href={this.props.forumUrl + "/c/themes-and-apps"}>Themes & Apps</a></li>
-            <li><a href="https://www.opencode.net/">Coding</a></li>
+            <li><a href={this.props.forumUrl + "/c/coding"}>Coding</a></li>
           </ul>
         </li>
       </ul>

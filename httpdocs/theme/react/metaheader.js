@@ -336,7 +336,7 @@ class DomainsMenu extends React.Component {
             null,
             React.createElement(
               'a',
-              { href: 'https://www.opencode.net/' },
+              { href: this.props.forumUrl + "/c/coding" },
               'Coding'
             )
           )
