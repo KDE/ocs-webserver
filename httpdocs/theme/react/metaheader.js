@@ -516,8 +516,6 @@ class UserContextMenuContainer extends React.Component {
   }
 
   componentDidMount() {
-    const elm = $('a[href$="/users/sign_in?redirect_to_referer=yes"]');
-    console.log(elm);
     const self = this;
     $.ajax({ url: window.gitlabUrl + "/api/v4/users?username=" + this.props.user.username, cache: false }).done(function (response) {
       const gitlabLink = self.state.gitlabLink + response[0].id;
