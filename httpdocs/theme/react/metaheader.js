@@ -320,7 +320,7 @@ class DomainsMenu extends React.Component {
         ),
         React.createElement(
           "ul",
-          { className: "dropdown-menu dropdown-menu-right", "aria-labelledby": "dropdownMenu5" },
+          { className: "dropdown-menu", "aria-labelledby": "dropdownMenu5" },
           React.createElement(
             "li",
             null,

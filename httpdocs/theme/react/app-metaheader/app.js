@@ -135,7 +135,7 @@ class DomainsMenu extends React.Component {
           data-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="true">More</a>
-          <ul className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu5">
+          <ul className="dropdown-menu" aria-labelledby="dropdownMenu5">
             <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
             <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
             <li><a id="plingList" className="popuppanel" target={linkTarget} href={this.props.baseUrl + plingListUrl}>What are Plings?</a></li>
