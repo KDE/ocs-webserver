@@ -61,8 +61,14 @@ class DomainsMenu extends React.Component {
   }
 
   componentDidMount() {
+    this.setDomainsDropDownHeight();
     const menuGroups = appHelpers.generateMenuGroupsArray(this.props.domains);
     this.setState({menuGroups:menuGroups});
+  }
+
+  setDomainsDropDownHeight(){
+    const height = $('li#domains-dropdown-menu').find('ul.dropdown-menu').find('li:first').height();
+    console.log(height);
   }
 
   render(){
