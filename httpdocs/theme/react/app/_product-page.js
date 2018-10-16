@@ -310,16 +310,36 @@ class ProductViewHeaderRatings extends React.Component {
 
     let ratingsFormModalDisplay;
     if (this.state.showModal === true){
-      ratingsFormModalDisplay = (
-        <RatingsFormModal
-          user={this.props.user}
-          userIsOwner={this.state.userIsOwner}
-          userRating={this.state.userRating}
-          action={this.state.action}
-          product={this.props.product}
-          onRatingFormResponse={this.onRatingFormResponse}
-        />
-      );
+      if (this.props.user.username){
+        ratingsFormModalDisplay = (
+          <RatingsFormModal
+            user={this.props.user}
+            userIsOwner={this.state.userIsOwner}
+            userRating={this.state.userRating}
+            action={this.state.action}
+            product={this.props.product}
+            onRatingFormResponse={this.onRatingFormResponse}
+          />
+        );
+      } else {
+        ratingsFormModalDisplay = (
+          <div className="modal please-login" id="ratings-form-modal" tabIndex="-1" role="dialog">
+            <div className="modal-dialog" role="document">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h4 className="modal-title">Please Login</h4>
+                  <button type="button" id="review-modal-close" className="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div className="modal-body">
+                  <a href="/login/">Login</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      }
     }
 
     return (
@@ -770,7 +790,7 @@ class ProductNavBar extends React.Component {
       <div className="wrapper">
         <div className="container">
           <div className="explore-top-bar">
-            <a className={this.props.tab === "comments" ? "item active" : "item"} onClick={() => this.props.onTabToggle('comments')}>Comments</a>
+            <a className={this.props.tab === "comments" ? "item active" : "item"} onClick={() => this.props.onTabToggle('comments')}>Comments ({this.props.product.r_comments.length})</a>
             {filesMenuItem}
             {ratingsMenuItem}
             {favsMenuItem}
@@ -847,7 +867,7 @@ class ProductCommentsContainer extends React.Component {
       const comments = cArray.map((c,index) => {
         if (c.level === 1){
           return (
-            <CommentItem product={product} comment={c.comment} key={index} level={1}/>
+            <CommentItem user={this.props.user} product={product} comment={c.comment} key={index} level={1}/>
           )
         }
       });
@@ -860,10 +880,6 @@ class ProductCommentsContainer extends React.Component {
 
     return (
       <div className="product-view-section" id="product-comments-container">
-        <div className="section-header">
-          <h3>Comments</h3>
-          <span className="comments-counter">{cArray.length} comments</span>
-        </div>
         <CommentForm
           user={this.props.user}
           product={this.props.product}
@@ -880,7 +896,8 @@ class CommentForm extends React.Component {
     this.state = {
       text:'',
       errorMsg:'',
-      errorTitle:''
+      errorTitle:'',
+      loading:false
     };
     this.updateCommentText = this.updateCommentText.bind(this);
     this.submitComment = this.submitComment.bind(this);
@@ -892,87 +909,100 @@ class CommentForm extends React.Component {
   }
 
   submitComment(){
-    const msg = this.state.text;
-    const self = this;
-    jQuery.ajax({
-      data:{
+    this.setState({loading:true},function(){
+      const msg = this.state.text;
+      const self = this;
+      let data = {
         p:this.props.product.project_id,
         m:this.props.user.member_id,
         msg:this.state.text
-      },
-      url:'/productcomment/addreply/',
-      type:'post',
-      dataType:'json',
-      error:function(jqXHR,textStatus,errorThrown){
-        const results = JSON && JSON.parse(jqXHR.responseText) || $.parseJSON(jqXHR.responseText);
-        self.setState(
-          {
-            errorMsg:results.message,
-            errorTitle:results.title,
-            login_url:results.login_url,
-            status:'error'
-          }
-        );
-      },
-      success:function(results){
-        let baseUrl;
-        if (store.getState().env === 'live') {
-          baseUrl = 'cn.pling.com';
-        } else {
-          baseUrl = 'cn.pling.it';
-        }
-
-        $.ajax({url: '/productcomment?p='+self.props.product.project_id,cache: false}).done(function(response){
-          self.updateComments(response);
-        });
       }
-    })
+      if (this.props.comment){
+        data.i = this.props.comment.comment_id;
+      }
+      jQuery.ajax({
+        data:data,
+        url:'/productcomment/addreply/',
+        type:'post',
+        dataType:'json',
+        error:function(jqXHR,textStatus,errorThrown){
+          const results = JSON && JSON.parse(jqXHR.responseText) || $.parseJSON(jqXHR.responseText);
+          self.setState({
+              errorMsg:results.message,
+              errorTitle:results.title,
+              login_url:results.login_url,
+              status:'error'});
+        },
+        success:function(results){
+          let baseUrl;
+          if (store.getState().env === 'live') {
+            baseUrl = 'cn.pling.com';
+          } else {
+            baseUrl = 'cn.pling.it';
+          }
+          $.ajax({url: '/productcomment?p='+self.props.product.project_id,cache: false}).done(function(response){
+            self.updateComments(response);
+          });
+        }
+      });
+    });
   }
 
   updateComments(response){
     store.dispatch(setProductComments(response));
-    this.setState({text:''});
+    this.setState({text:'',loading:false},function(){
+      if (this.props.hideReplyForm){
+        this.props.hideReplyForm();
+      }
+    });
   }
 
   render(){
 
     let commentFormDisplay;
-    if (this.props.user){
-
-      let submitBtnDisplay;
-      if (this.state.text.length === 0){
-        submitBtnDisplay = (
-          <button disabled="disabled" type="button" className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary">
-            send
-          </button>
+    if (this.props.user.username){
+      if (this.state.loading){
+        commentFormDisplay = (
+          <div className="comment-form-container">
+            <p><span className="glyphicon glyphicon-refresh spinning"></span> posting comment</p>
+          </div>
         );
       } else {
-        submitBtnDisplay = (
-          <button onClick={this.submitComment} type="button" className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary">
-            <span className="glyphicon glyphicon-send"></span>
-            send
-          </button>
+        let submitBtnDisplay;
+        if (this.state.text.length === 0){
+          submitBtnDisplay = (
+            <button disabled="disabled" type="button" className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary">
+              send
+            </button>
+          );
+        } else {
+          submitBtnDisplay = (
+            <button onClick={this.submitComment} type="button" className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary">
+              <span className="glyphicon glyphicon-send"></span>
+              send
+            </button>
+          );
+        }
+
+        let errorDisplay;
+        if (this.state.status === 'error'){
+          errorDisplay = (
+            <div className="comment-form-error-display-container">
+              <div dangerouslySetInnerHTML={{__html:this.state.errorTitle}}></div>
+              <div dangerouslySetInnerHTML={{__html:this.state.errorMsg}}></div>
+            </div>
+          )
+        }
+
+        commentFormDisplay = (
+          <div className="comment-form-container">
+            <span>Add Comment</span>
+            <textarea className="form-control" onChange={this.updateCommentText} value={this.state.text}></textarea>
+            {errorDisplay}
+            {submitBtnDisplay}
+          </div>
         );
       }
-
-      let errorDisplay;
-      if (this.state.status === 'error'){
-        errorDisplay = (
-          <div className="comment-form-error-display-container">
-            <div dangerouslySetInnerHTML={{__html:this.state.errorTitle}}></div>
-            <div dangerouslySetInnerHTML={{__html:this.state.errorMsg}}></div>
-          </div>
-        )
-      }
-
-      commentFormDisplay = (
-        <div className="comment-form-container">
-          <span>Add Comment</span>
-          <textarea className="form-control" onChange={this.updateCommentText} value={this.state.text}></textarea>
-          {errorDisplay}
-          {submitBtnDisplay}
-        </div>
-      );
     } else {
       commentFormDisplay = (
         <p>Please <a href="/login?redirect=ohWn43n4SbmJZWlKUZNl2i1_s5gggiCE">login</a> or <a href="/register">register</a> to add a comment</p>
@@ -991,8 +1021,13 @@ class CommentForm extends React.Component {
 class CommentItem extends React.Component {
   constructor(props){
   	super(props);
-  	this.state = {};
+  	this.state = {
+      showCommentReplyForm:false
+    };
     this.filterByCommentLevel = this.filterByCommentLevel.bind(this);
+    this.onToggleReplyForm = this.onToggleReplyForm.bind(this);
+    this.onReportComment = this.onReportComment.bind(this);
+    this.onConfirmReportClick = this.onConfirmReportClick.bind(this);
   }
 
   filterByCommentLevel(val){
@@ -1001,13 +1036,60 @@ class CommentItem extends React.Component {
     }
   }
 
+  onToggleReplyForm(){
+    const showCommentReplyForm = this.state.showCommentReplyForm === true ? false : true;
+    this.setState({showCommentReplyForm:showCommentReplyForm});
+  }
+
+  onReportComment(){
+    $('#report-'+this.props.comment.comment_id).modal('show');
+  }
+
+  onConfirmReportClick(commentId,productId){
+    console.log(commentId,productId);
+    jQuery.ajax({
+        data: {
+          i:commentId,
+          p:productId
+        },
+        url: "/report/comment/",
+        type: "POST",
+        dataType: "json",
+        error: function (jqXHR, textStatus, errorThrown) {
+            var results = JSON && JSON.parse(jqXHR.responseText) || $.parseJSON(jqXHR.responseText);
+            $("#report-"+commentId).find('.modal-header-text').empty().append(results.title);
+            $("#report-"+commentId).find('.modal-body').empty().append(results.message);
+            setTimeout(function () {
+                $("#report-"+commentId).modal('hide');
+            }, 2000);
+        },
+        success: function (results) {
+          if (results.status == 'ok') {
+            $("#report-"+commentId).find(".comment-report-p").empty().html(results.message.split('</p>')[0].split('<p>')[1]);
+          }
+          if (results.status == 'error') {
+            if (results.message != '') {
+              $("#report-"+commentId).find(".comment-report-p").empty().html(results.message);
+            } else {
+              $("#report-"+commentId).find(".comment-report-p").empty().html('Service is temporarily unavailable.');
+            }
+          }
+          setTimeout(function () {
+              $("#report-"+commentId).modal('hide');
+          }, 2000);
+        }
+    });
+  }
+
   render(){
+    console.log(this.props.comment);
     let commentRepliesContainer;
     const filteredComments = categoryHelpers.convertCatChildrenObjectToArray(this.props.product.r_comments).filter(this.filterByCommentLevel);
     if (filteredComments.length > 0){
       const product = this.props.product;
+      const user = this.props.user;
       const comments = filteredComments.map((c,index) => (
-        <CommentItem product={product} comment={c.comment} key={index} level={c.level}/>
+        <CommentItem user={user} product={product} comment={c.comment} key={index} level={c.level}/>
       ));
       commentRepliesContainer = (
         <div className="comment-item-replies-container">
@@ -1018,35 +1100,125 @@ class CommentItem extends React.Component {
 
     let displayIsSupporter;
     if (this.props.comment.issupporter === "1"){
-      displayIsSupporter = <span className="is-supporter-display">S</span>
+      displayIsSupporter = (
+        <li>
+          <span className="is-supporter-display uc-icon">S</span>
+        </li>
+      );
     }
 
     let displayIsCreater;
     if (this.props.comment.member_id === this.props.product.member_id){
-      displayIsCreater = <span className="is-creater-display">C</span>
+      displayIsCreater = (
+        <li>
+          <span className="is-creater-display uc-icon">C</span>
+        </li>
+      );
+    }
+
+    let commentReplyFormDisplay;
+    if (this.state.showCommentReplyForm){
+      commentReplyFormDisplay = (
+        <CommentForm
+          comment={this.props.comment}
+          user={this.props.user}
+          product={this.props.product}
+          hideReplyForm={this.onToggleReplyForm}
+        />
+      );
     }
 
     return(
       <div className="comment-item">
         <div className="comment-user-avatar">
           <img src={this.props.comment.profile_image_url}/>
-          {displayIsSupporter}
-          {displayIsCreater}
         </div>
         <div className="comment-item-content">
           <div className="comment-item-header">
-            <a className="comment-username" href={"/member/"+this.props.comment.member_id}>{this.props.comment.username}</a>
-            <span className="comment-created-at">
-              {appHelpers.getTimeAgo(this.props.comment.comment_created_at)}
-            </span>
+            <ul>
+              <li>
+                <a className="comment-username" href={"/member/"+this.props.comment.member_id}>{this.props.comment.username}</a>
+              </li>
+              {displayIsSupporter}
+              {displayIsCreater}
+              <li>
+                <span className="comment-created-at">
+                  {appHelpers.getTimeAgo(this.props.comment.comment_created_at)}
+                </span>
+              </li>
+            </ul>
           </div>
           <div className="comment-item-text">
             {this.props.comment.comment_text}
           </div>
+          <div className="comment-item-actions">
+            <a onClick={this.onToggleReplyForm}>
+              <i className="material-icons reverse">reply</i>
+              <span>Reply</span>
+            </a>
+            <a onClick={this.onReportComment}>
+              <i className="material-icons">warning</i>
+              <span>Report</span>
+            </a>
+            <ReportCommentModal
+              comment={this.props.comment}
+              product={this.props.product}
+              user={this.props.user}
+              onConfirmReportClick={this.onConfirmReportClick}
+            />
+          </div>
         </div>
+        {commentReplyFormDisplay}
         {commentRepliesContainer}
       </div>
     );
+  }
+}
+
+class ReportCommentModal extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {
+      status:"ready"
+    };
+  }
+
+  onConfirmReportClick(commmentId,productId){
+    this.setState({status:"loading"},function(){
+      this.props.onConfirmReportClick(commmentId,productId);
+    });
+  }
+
+  render(){
+    let confirmActionButtonIconDisplay;
+    if (this.state.status === "ready"){
+      confirmActionButtonIconDisplay = (<i className="material-icons reverse">reply</i>);
+    } else if (this.state.status === "loading"){
+      confirmActionButtonIconDisplay = (<span className="glyphicon glyphicon-refresh spinning"></span>);
+    }
+
+    return (
+      <div className="modal report-comment-modal" id={"report-"+this.props.comment.comment_id} tabIndex="-1" role="dialog">
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h4 className="modal-title">Report Comment</h4>
+              <button type="button" id="review-modal-close" className="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div className="modal-body">
+              <p className="comment-report-p">Do you really want to report this comment?</p>
+            </div>
+            <div className="modal-footer">
+              <a onClick={() => this.onConfirmReportClick(this.props.comment.comment_id,this.props.product.project_id)}>
+                {confirmActionButtonIconDisplay} yes
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
   }
 }
 
@@ -1134,17 +1306,7 @@ class ProductViewFilesTabItem extends React.Component {
                        "%2Fu%2F"+this.props.product.member_id+
                        "%2F"+f.title;
 
-
-    /*https://david.pling.cc/p/747/startdownload?file_id=1519124607&amp;
-    file_name=1519124607-download-app-old.png&amp;
-    file_type=image/png&amp;
-    file_size=21383&amp;
-    url=https%3A%2F%2Fcc.ppload.com%2Fapi%2Ffiles%2Fdownloadfile%2Fid
-    %2F1519124607%2Fs
-    %2Fd66c71127c9aae29e58e03ddd85de57a%2Ft
-    %2F1532003618%2Fu
-    %2F%2F1519124607-download-app-old.png
-    */
+    console.log(fileDownloadHash);
     this.setState({downloadLink:downloadLink});
   }
 
@@ -1315,7 +1477,7 @@ class ProductViewFavTab extends React.Component {
         />
       ));
       favsDisplay = (
-        <div className="favs-list cards">{favs}</div>
+        <div className="favs-list supporter-list">{favs}</div>
       );
     }
     return (
@@ -1341,7 +1503,7 @@ class ProductViewPlingsTab extends React.Component {
         />
       ));
       plingsDisplay = (
-        <div className="plings-list cards">{plings}</div>
+        <div className="plings-list supporter-list">{plings}</div>
       );
     }
     return (
@@ -1377,8 +1539,8 @@ class UserCardItem extends React.Component {
     }
 
     return (
-      <div className="user-card-item">
-        <div className="card-content">
+      <div className="supporter-list-item">
+        <div className="item-content">
           <div className="user-avatar">
             <img src={item.profile_image_url}/>
           </div>

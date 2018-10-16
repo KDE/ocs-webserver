@@ -81,16 +81,9 @@ window.appHelpers = function () {
     } else {
       salt = "Kcn6cv7&dmvkS40Hna§4ffcvl=021nfMs2sdlPs123MChf4s0K";
     }
-
     const timestamp = Math.floor(new Date().getTime() / 1000 + 3600);
-    const hash = md5(salt, file.collection_id + timestamp);
+    const hash = md5(salt + file.collection_id + timestamp);
     return hash;
-    /*
-    $salt = PPLOAD_DOWNLOAD_SECRET;
-    $collectionID = $productInfo->ppload_collection_id;
-    $timestamp = time() + 3600; // one hour valid
-    $hash = md5($salt . $collectionID . $timestamp);
-    */
   }
 
   return {
@@ -1979,7 +1972,7 @@ class ProductCarousel extends React.Component {
 
   updateDimensions() {
     const containerWidth = $('#introduction').find('.container').width();
-    const sliderWidth = containerWidth * 4;
+    const sliderWidth = containerWidth * 2;
     const itemWidth = containerWidth / 5;
     this.setState({
       sliderPosition: 0,
@@ -2021,13 +2014,7 @@ class ProductCarousel extends React.Component {
 
     let carouselItemsDisplay;
     if (this.props.products && this.props.products.length > 0) {
-
-      // DUPLICATE
-      let productsArray = this.props.products.concat(this.props.products);
-      productsArray = productsArray.concat(this.props.products);
-      // DUPLICATE
-
-      carouselItemsDisplay = productsArray.map((product, index) => React.createElement(ProductCarouselItem, {
+      carouselItemsDisplay = this.props.products.map((product, index) => React.createElement(ProductCarouselItem, {
         key: index,
         product: product,
         itemWidth: this.state.itemWidth
@@ -2514,14 +2501,56 @@ class ProductViewHeaderRatings extends React.Component {
 
     let ratingsFormModalDisplay;
     if (this.state.showModal === true) {
-      ratingsFormModalDisplay = React.createElement(RatingsFormModal, {
-        user: this.props.user,
-        userIsOwner: this.state.userIsOwner,
-        userRating: this.state.userRating,
-        action: this.state.action,
-        product: this.props.product,
-        onRatingFormResponse: this.onRatingFormResponse
-      });
+      if (this.props.user.username) {
+        ratingsFormModalDisplay = React.createElement(RatingsFormModal, {
+          user: this.props.user,
+          userIsOwner: this.state.userIsOwner,
+          userRating: this.state.userRating,
+          action: this.state.action,
+          product: this.props.product,
+          onRatingFormResponse: this.onRatingFormResponse
+        });
+      } else {
+        ratingsFormModalDisplay = React.createElement(
+          'div',
+          { className: 'modal please-login', id: 'ratings-form-modal', tabIndex: '-1', role: 'dialog' },
+          React.createElement(
+            'div',
+            { className: 'modal-dialog', role: 'document' },
+            React.createElement(
+              'div',
+              { className: 'modal-content' },
+              React.createElement(
+                'div',
+                { className: 'modal-header' },
+                React.createElement(
+                  'h4',
+                  { className: 'modal-title' },
+                  'Please Login'
+                ),
+                React.createElement(
+                  'button',
+                  { type: 'button', id: 'review-modal-close', className: 'close', 'data-dismiss': 'modal', 'aria-label': 'Close' },
+                  React.createElement(
+                    'span',
+                    { 'aria-hidden': 'true' },
+                    '\xD7'
+                  )
+                )
+              ),
+              React.createElement(
+                'div',
+                { className: 'modal-body' },
+                React.createElement(
+                  'a',
+                  { href: '/login/' },
+                  'Login'
+                )
+              )
+            )
+          )
+        );
+      }
     }
 
     return React.createElement(
@@ -3133,7 +3162,9 @@ class ProductNavBar extends React.Component {
           React.createElement(
             'a',
             { className: this.props.tab === "comments" ? "item active" : "item", onClick: () => this.props.onTabToggle('comments') },
-            'Comments'
+            'Comments (',
+            this.props.product.r_comments.length,
+            ')'
           ),
           filesMenuItem,
           ratingsMenuItem,
@@ -3205,7 +3236,7 @@ class ProductCommentsContainer extends React.Component {
       const product = this.props.product;
       const comments = cArray.map((c, index) => {
         if (c.level === 1) {
-          return React.createElement(CommentItem, { product: product, comment: c.comment, key: index, level: 1 });
+          return React.createElement(CommentItem, { user: this.props.user, product: product, comment: c.comment, key: index, level: 1 });
         }
       });
       commentsDisplay = React.createElement(
@@ -3218,21 +3249,6 @@ class ProductCommentsContainer extends React.Component {
     return React.createElement(
       'div',
       { className: 'product-view-section', id: 'product-comments-container' },
-      React.createElement(
-        'div',
-        { className: 'section-header' },
-        React.createElement(
-          'h3',
-          null,
-          'Comments'
-        ),
-        React.createElement(
-          'span',
-          { className: 'comments-counter' },
-          cArray.length,
-          ' comments'
-        )
-      ),
       React.createElement(CommentForm, {
         user: this.props.user,
         product: this.props.product
@@ -3248,7 +3264,8 @@ class CommentForm extends React.Component {
     this.state = {
       text: '',
       errorMsg: '',
-      errorTitle: ''
+      errorTitle: '',
+      loading: false
     };
     this.updateCommentText = this.updateCommentText.bind(this);
     this.submitComment = this.submitComment.bind(this);
@@ -3260,89 +3277,109 @@ class CommentForm extends React.Component {
   }
 
   submitComment() {
-    const msg = this.state.text;
-    const self = this;
-    jQuery.ajax({
-      data: {
+    this.setState({ loading: true }, function () {
+      const msg = this.state.text;
+      const self = this;
+      let data = {
         p: this.props.product.project_id,
         m: this.props.user.member_id,
         msg: this.state.text
-      },
-      url: '/productcomment/addreply/',
-      type: 'post',
-      dataType: 'json',
-      error: function (jqXHR, textStatus, errorThrown) {
-        const results = JSON && JSON.parse(jqXHR.responseText) || $.parseJSON(jqXHR.responseText);
-        self.setState({
-          errorMsg: results.message,
-          errorTitle: results.title,
-          login_url: results.login_url,
-          status: 'error'
-        });
-      },
-      success: function (results) {
-        let baseUrl;
-        if (store.getState().env === 'live') {
-          baseUrl = 'cn.pling.com';
-        } else {
-          baseUrl = 'cn.pling.it';
-        }
-
-        $.ajax({ url: '/productcomment?p=' + self.props.product.project_id, cache: false }).done(function (response) {
-          self.updateComments(response);
-        });
+      };
+      if (this.props.comment) {
+        data.i = this.props.comment.comment_id;
       }
+      jQuery.ajax({
+        data: data,
+        url: '/productcomment/addreply/',
+        type: 'post',
+        dataType: 'json',
+        error: function (jqXHR, textStatus, errorThrown) {
+          const results = JSON && JSON.parse(jqXHR.responseText) || $.parseJSON(jqXHR.responseText);
+          self.setState({
+            errorMsg: results.message,
+            errorTitle: results.title,
+            login_url: results.login_url,
+            status: 'error' });
+        },
+        success: function (results) {
+          let baseUrl;
+          if (store.getState().env === 'live') {
+            baseUrl = 'cn.pling.com';
+          } else {
+            baseUrl = 'cn.pling.it';
+          }
+          $.ajax({ url: '/productcomment?p=' + self.props.product.project_id, cache: false }).done(function (response) {
+            self.updateComments(response);
+          });
+        }
+      });
     });
   }
 
   updateComments(response) {
     store.dispatch(setProductComments(response));
-    this.setState({ text: '' });
+    this.setState({ text: '', loading: false }, function () {
+      if (this.props.hideReplyForm) {
+        this.props.hideReplyForm();
+      }
+    });
   }
 
   render() {
 
     let commentFormDisplay;
-    if (this.props.user) {
-
-      let submitBtnDisplay;
-      if (this.state.text.length === 0) {
-        submitBtnDisplay = React.createElement(
-          'button',
-          { disabled: 'disabled', type: 'button', className: 'mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary' },
-          'send'
+    if (this.props.user.username) {
+      if (this.state.loading) {
+        commentFormDisplay = React.createElement(
+          'div',
+          { className: 'comment-form-container' },
+          React.createElement(
+            'p',
+            null,
+            React.createElement('span', { className: 'glyphicon glyphicon-refresh spinning' }),
+            ' posting comment'
+          )
         );
       } else {
-        submitBtnDisplay = React.createElement(
-          'button',
-          { onClick: this.submitComment, type: 'button', className: 'mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary' },
-          React.createElement('span', { className: 'glyphicon glyphicon-send' }),
-          'send'
-        );
-      }
+        let submitBtnDisplay;
+        if (this.state.text.length === 0) {
+          submitBtnDisplay = React.createElement(
+            'button',
+            { disabled: 'disabled', type: 'button', className: 'mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary' },
+            'send'
+          );
+        } else {
+          submitBtnDisplay = React.createElement(
+            'button',
+            { onClick: this.submitComment, type: 'button', className: 'mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary' },
+            React.createElement('span', { className: 'glyphicon glyphicon-send' }),
+            'send'
+          );
+        }
 
-      let errorDisplay;
-      if (this.state.status === 'error') {
-        errorDisplay = React.createElement(
+        let errorDisplay;
+        if (this.state.status === 'error') {
+          errorDisplay = React.createElement(
+            'div',
+            { className: 'comment-form-error-display-container' },
+            React.createElement('div', { dangerouslySetInnerHTML: { __html: this.state.errorTitle } }),
+            React.createElement('div', { dangerouslySetInnerHTML: { __html: this.state.errorMsg } })
+          );
+        }
+
+        commentFormDisplay = React.createElement(
           'div',
-          { className: 'comment-form-error-display-container' },
-          React.createElement('div', { dangerouslySetInnerHTML: { __html: this.state.errorTitle } }),
-          React.createElement('div', { dangerouslySetInnerHTML: { __html: this.state.errorMsg } })
+          { className: 'comment-form-container' },
+          React.createElement(
+            'span',
+            null,
+            'Add Comment'
+          ),
+          React.createElement('textarea', { className: 'form-control', onChange: this.updateCommentText, value: this.state.text }),
+          errorDisplay,
+          submitBtnDisplay
         );
       }
-
-      commentFormDisplay = React.createElement(
-        'div',
-        { className: 'comment-form-container' },
-        React.createElement(
-          'span',
-          null,
-          'Add Comment'
-        ),
-        React.createElement('textarea', { className: 'form-control', onChange: this.updateCommentText, value: this.state.text }),
-        errorDisplay,
-        submitBtnDisplay
-      );
     } else {
       commentFormDisplay = React.createElement(
         'p',
@@ -3374,8 +3411,13 @@ class CommentForm extends React.Component {
 class CommentItem extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      showCommentReplyForm: false
+    };
     this.filterByCommentLevel = this.filterByCommentLevel.bind(this);
+    this.onToggleReplyForm = this.onToggleReplyForm.bind(this);
+    this.onReportComment = this.onReportComment.bind(this);
+    this.onConfirmReportClick = this.onConfirmReportClick.bind(this);
   }
 
   filterByCommentLevel(val) {
@@ -3384,12 +3426,59 @@ class CommentItem extends React.Component {
     }
   }
 
+  onToggleReplyForm() {
+    const showCommentReplyForm = this.state.showCommentReplyForm === true ? false : true;
+    this.setState({ showCommentReplyForm: showCommentReplyForm });
+  }
+
+  onReportComment() {
+    $('#report-' + this.props.comment.comment_id).modal('show');
+  }
+
+  onConfirmReportClick(commentId, productId) {
+    console.log(commentId, productId);
+    jQuery.ajax({
+      data: {
+        i: commentId,
+        p: productId
+      },
+      url: "/report/comment/",
+      type: "POST",
+      dataType: "json",
+      error: function (jqXHR, textStatus, errorThrown) {
+        var results = JSON && JSON.parse(jqXHR.responseText) || $.parseJSON(jqXHR.responseText);
+        $("#report-" + commentId).find('.modal-header-text').empty().append(results.title);
+        $("#report-" + commentId).find('.modal-body').empty().append(results.message);
+        setTimeout(function () {
+          $("#report-" + commentId).modal('hide');
+        }, 2000);
+      },
+      success: function (results) {
+        if (results.status == 'ok') {
+          $("#report-" + commentId).find(".comment-report-p").empty().html(results.message.split('</p>')[0].split('<p>')[1]);
+        }
+        if (results.status == 'error') {
+          if (results.message != '') {
+            $("#report-" + commentId).find(".comment-report-p").empty().html(results.message);
+          } else {
+            $("#report-" + commentId).find(".comment-report-p").empty().html('Service is temporarily unavailable.');
+          }
+        }
+        setTimeout(function () {
+          $("#report-" + commentId).modal('hide');
+        }, 2000);
+      }
+    });
+  }
+
   render() {
+    console.log(this.props.comment);
     let commentRepliesContainer;
     const filteredComments = categoryHelpers.convertCatChildrenObjectToArray(this.props.product.r_comments).filter(this.filterByCommentLevel);
     if (filteredComments.length > 0) {
       const product = this.props.product;
-      const comments = filteredComments.map((c, index) => React.createElement(CommentItem, { product: product, comment: c.comment, key: index, level: c.level }));
+      const user = this.props.user;
+      const comments = filteredComments.map((c, index) => React.createElement(CommentItem, { user: user, product: product, comment: c.comment, key: index, level: c.level }));
       commentRepliesContainer = React.createElement(
         'div',
         { className: 'comment-item-replies-container' },
@@ -3400,19 +3489,37 @@ class CommentItem extends React.Component {
     let displayIsSupporter;
     if (this.props.comment.issupporter === "1") {
       displayIsSupporter = React.createElement(
-        'span',
-        { className: 'is-supporter-display' },
-        'S'
+        'li',
+        null,
+        React.createElement(
+          'span',
+          { className: 'is-supporter-display uc-icon' },
+          'S'
+        )
       );
     }
 
     let displayIsCreater;
     if (this.props.comment.member_id === this.props.product.member_id) {
       displayIsCreater = React.createElement(
-        'span',
-        { className: 'is-creater-display' },
-        'C'
+        'li',
+        null,
+        React.createElement(
+          'span',
+          { className: 'is-creater-display uc-icon' },
+          'C'
+        )
       );
+    }
+
+    let commentReplyFormDisplay;
+    if (this.state.showCommentReplyForm) {
+      commentReplyFormDisplay = React.createElement(CommentForm, {
+        comment: this.props.comment,
+        user: this.props.user,
+        product: this.props.product,
+        hideReplyForm: this.onToggleReplyForm
+      });
     }
 
     return React.createElement(
@@ -3421,9 +3528,7 @@ class CommentItem extends React.Component {
       React.createElement(
         'div',
         { className: 'comment-user-avatar' },
-        React.createElement('img', { src: this.props.comment.profile_image_url }),
-        displayIsSupporter,
-        displayIsCreater
+        React.createElement('img', { src: this.props.comment.profile_image_url })
       ),
       React.createElement(
         'div',
@@ -3432,23 +3537,154 @@ class CommentItem extends React.Component {
           'div',
           { className: 'comment-item-header' },
           React.createElement(
-            'a',
-            { className: 'comment-username', href: "/member/" + this.props.comment.member_id },
-            this.props.comment.username
-          ),
-          React.createElement(
-            'span',
-            { className: 'comment-created-at' },
-            appHelpers.getTimeAgo(this.props.comment.comment_created_at)
+            'ul',
+            null,
+            React.createElement(
+              'li',
+              null,
+              React.createElement(
+                'a',
+                { className: 'comment-username', href: "/member/" + this.props.comment.member_id },
+                this.props.comment.username
+              )
+            ),
+            displayIsSupporter,
+            displayIsCreater,
+            React.createElement(
+              'li',
+              null,
+              React.createElement(
+                'span',
+                { className: 'comment-created-at' },
+                appHelpers.getTimeAgo(this.props.comment.comment_created_at)
+              )
+            )
           )
         ),
         React.createElement(
           'div',
           { className: 'comment-item-text' },
           this.props.comment.comment_text
+        ),
+        React.createElement(
+          'div',
+          { className: 'comment-item-actions' },
+          React.createElement(
+            'a',
+            { onClick: this.onToggleReplyForm },
+            React.createElement(
+              'i',
+              { className: 'material-icons reverse' },
+              'reply'
+            ),
+            React.createElement(
+              'span',
+              null,
+              'Reply'
+            )
+          ),
+          React.createElement(
+            'a',
+            { onClick: this.onReportComment },
+            React.createElement(
+              'i',
+              { className: 'material-icons' },
+              'warning'
+            ),
+            React.createElement(
+              'span',
+              null,
+              'Report'
+            )
+          ),
+          React.createElement(ReportCommentModal, {
+            comment: this.props.comment,
+            product: this.props.product,
+            user: this.props.user,
+            onConfirmReportClick: this.onConfirmReportClick
+          })
         )
       ),
+      commentReplyFormDisplay,
       commentRepliesContainer
+    );
+  }
+}
+
+class ReportCommentModal extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      status: "ready"
+    };
+  }
+
+  onConfirmReportClick(commmentId, productId) {
+    this.setState({ status: "loading" }, function () {
+      this.props.onConfirmReportClick(commmentId, productId);
+    });
+  }
+
+  render() {
+    let confirmActionButtonIconDisplay;
+    if (this.state.status === "ready") {
+      confirmActionButtonIconDisplay = React.createElement(
+        'i',
+        { className: 'material-icons reverse' },
+        'reply'
+      );
+    } else if (this.state.status === "loading") {
+      confirmActionButtonIconDisplay = React.createElement('span', { className: 'glyphicon glyphicon-refresh spinning' });
+    }
+
+    return React.createElement(
+      'div',
+      { className: 'modal report-comment-modal', id: "report-" + this.props.comment.comment_id, tabIndex: '-1', role: 'dialog' },
+      React.createElement(
+        'div',
+        { className: 'modal-dialog', role: 'document' },
+        React.createElement(
+          'div',
+          { className: 'modal-content' },
+          React.createElement(
+            'div',
+            { className: 'modal-header' },
+            React.createElement(
+              'h4',
+              { className: 'modal-title' },
+              'Report Comment'
+            ),
+            React.createElement(
+              'button',
+              { type: 'button', id: 'review-modal-close', className: 'close', 'data-dismiss': 'modal', 'aria-label': 'Close' },
+              React.createElement(
+                'span',
+                { 'aria-hidden': 'true' },
+                '\xD7'
+              )
+            )
+          ),
+          React.createElement(
+            'div',
+            { className: 'modal-body' },
+            React.createElement(
+              'p',
+              { className: 'comment-report-p' },
+              'Do you really want to report this comment?'
+            )
+          ),
+          React.createElement(
+            'div',
+            { className: 'modal-footer' },
+            React.createElement(
+              'a',
+              { onClick: () => this.onConfirmReportClick(this.props.comment.comment_id, this.props.product.project_id) },
+              confirmActionButtonIconDisplay,
+              ' yes'
+            )
+          )
+        )
+      )
     );
   }
 }
@@ -3585,16 +3821,7 @@ class ProductViewFilesTabItem extends React.Component {
     const fileDownloadHash = appHelpers.generateFileDownloadHash(f, store.getState().env);
     let downloadLink = "https://" + baseUrl + "/p/" + this.props.product.project_id + "/startdownload?file_id=" + f.id + "&file_name=" + f.title + "&file_type=" + f.type + "&file_size=" + f.size + "&url=" + downloadLinkUrlAttr + "files%2Fdownload%2Fid%2F" + f.id + "%2Fs%2F" + fileDownloadHash + "%2Ft%2F" + timestamp + "%2Fu%2F" + this.props.product.member_id + "%2F" + f.title;
 
-    /*https://david.pling.cc/p/747/startdownload?file_id=1519124607&amp;
-    file_name=1519124607-download-app-old.png&amp;
-    file_type=image/png&amp;
-    file_size=21383&amp;
-    url=https%3A%2F%2Fcc.ppload.com%2Fapi%2Ffiles%2Fdownloadfile%2Fid
-    %2F1519124607%2Fs
-    %2Fd66c71127c9aae29e58e03ddd85de57a%2Ft
-    %2F1532003618%2Fu
-    %2F%2F1519124607-download-app-old.png
-    */
+    console.log(fileDownloadHash);
     this.setState({ downloadLink: downloadLink });
   }
 
@@ -3863,7 +4090,7 @@ class ProductViewFavTab extends React.Component {
       }));
       favsDisplay = React.createElement(
         'div',
-        { className: 'favs-list cards' },
+        { className: 'favs-list supporter-list' },
         favs
       );
     }
@@ -3889,7 +4116,7 @@ class ProductViewPlingsTab extends React.Component {
       }));
       plingsDisplay = React.createElement(
         'div',
-        { className: 'plings-list cards' },
+        { className: 'plings-list supporter-list' },
         plings
       );
     }
@@ -3923,10 +4150,10 @@ class UserCardItem extends React.Component {
 
     return React.createElement(
       'div',
-      { className: 'user-card-item' },
+      { className: 'supporter-list-item' },
       React.createElement(
         'div',
-        { className: 'card-content' },
+        { className: 'item-content' },
         React.createElement(
           'div',
           { className: 'user-avatar' },
@@ -3989,6 +4216,8 @@ class App extends React.Component {
     if (window.view) store.dispatch(setView(view));
 
     // products
+    console.log('products');
+    console.log(window.products);
     if (window.products) {
       store.dispatch(setProducts(products));
     }

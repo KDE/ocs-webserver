@@ -24,6 +24,7 @@ $users = $this->newUsers($limit = 216,'created_at','DESC');
 $buildMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $url_param_redirect = isset($this->redirect) ? 'redirect/'.$this->redirect : null;
 $this->headMeta()->setName('robots', 'noindex, nofollow');
+
 ?>
   <link href="/theme/flatui/css/bootstrap/social-buttons.css" rel="stylesheet" type="text/css">
   <style>

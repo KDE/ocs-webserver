@@ -395,12 +395,29 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             . PHP_EOL . ' - auth_user: ' . print_r($values['mail'], true)
             . PHP_EOL . ' - ip: ' . $this->_request->getClientIp()
         );
+        
+        
+        $filter = new Local_Filter_Url_Encrypt();
+        $p = $filter->filter($values['password']);
+        $sess = new Zend_Session_Namespace('ocs_meta');
+        $sess->phash = $p;
 
         $auth = Zend_Auth::getInstance();
         $userId = $auth->getStorage()->read()->member_id;
 
+        $jwt = Default_Model_Jwt::encode($userId);
+        $sess->openid = $jwt;
+
+        //$time = new DateTime();
+        //$timeout = DateInterval::createFromDateString(Zend_Registry::get('config')->settings->jwt->expire->cookie);
+        //$cookie_name = Zend_Registry::get('config')->settings->domain->openid->cookie_name;
+        //$host = Zend_Registry::get('config')->settings->domain->openid->host;
+        //setcookie($cookie_name, $jwt, $time->add($timeout)->getTimestamp(), '/', $host, null, true);
+
         //If the user is a hive user, we have to update his password
         $this->changePasswordIfNeeded($userId, $values['password']);
+        
+        
 
         $modelToken = new Default_Model_SingleSignOnToken();
         $data = array(
@@ -438,6 +455,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         }
 
         // handle redirect
+        $this->view->loginok = true;
         $this->handleRedirect($userId);
     }
 
@@ -454,8 +472,14 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
                 $redirect = '/member/' . $userId . '/activities/';
             }
             if ($this->_request->isXmlHttpRequest()) {
+                
+                $redirect = '/home/redirectme?redirect='. $this->view->redirect;
                 $this->_helper->json(array('status' => 'ok', 'redirect' => $redirect));
             } else {
+                
+                //show rediretme page
+                //$this->redirect($redirect);
+                $redirect = '/home/redirectme?redirect='. $this->view->redirect;
                 $this->redirect($redirect);
             }
         } else {
@@ -467,7 +491,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             }
         }
     }
-
+    
     /**
      * @throws Exception
      * @throws Zend_Exception

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+        function loadComplete(){
+            document.location.href = "<?= $this->redirect ?>";
+        }
+    </script>
+</head>
+<body onload="loadComplete()">
+<p>
+    Please Wait...
+</p>
+<?php
+/** @var Zend_Controller_Request_Http $request */
+$request = Zend_Controller_Front::getInstance()->getRequest();
+$http_scheme = $request->getScheme();
+
+$config = Zend_Registry::get('config')->settings->domain;
+?>
+    <img src="<?=$http_scheme?>://<?=$config->openid->host?>/logout" style="display:none;" />
+    <img src="https://<?=$config->opencode->host?>/users/sign_out" style="display:none;" />
+    <img src="https://<?=$config->opencode->host?>/external/removedata.php" style="display:none;" />
+    <img src="https://<?=$config->forum->host?>/session/logout" style="display:none;" />
+    <img src="https://<?=$config->forum->host?>:8443/removedata.php" style="display:none;" />
+    <img src="https://<?=$config->base->host?>/external/removedata.php" style="display:none;" />
+    
+</body>
+</html>

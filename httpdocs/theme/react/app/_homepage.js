@@ -167,7 +167,7 @@ class ProductCarousel extends React.Component {
 
   updateDimensions(){
     const containerWidth = $('#introduction').find('.container').width();
-    const sliderWidth = containerWidth * 4;
+    const sliderWidth = containerWidth * 2;
     const itemWidth = containerWidth / 5;
     this.setState({
       sliderPosition:0,
@@ -211,13 +211,7 @@ class ProductCarousel extends React.Component {
 
     let carouselItemsDisplay;
     if (this.props.products && this.props.products.length > 0){
-
-      // DUPLICATE
-      let productsArray = this.props.products.concat(this.props.products);
-      productsArray = productsArray.concat(this.props.products);
-      // DUPLICATE
-
-      carouselItemsDisplay = productsArray.map((product,index) => (
+      carouselItemsDisplay = this.props.products.map((product,index) => (
         <ProductCarouselItem
           key={index}
           product={product}

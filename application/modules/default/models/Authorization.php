@@ -85,6 +85,7 @@ class Default_Model_Authorization
             Zend_Session::regenerateId();
             $this->_storeAuthSessionData();
             $this->updateUserLastOnline('member_id', $this->_authUserData->member_id);
+            
         }
 
         return $authResult;
@@ -159,6 +160,7 @@ class Default_Model_Authorization
         if (isset($this->_loginMethod) AND $this->_loginMethod == self::LOGIN_REMEMBER_ME) {
             $modelMember = new Default_Model_Member();
             $memberData = $modelMember->fetchMemberData($authUserData->member_id);
+            $extendedAuthUserData->external_id = $memberData->external_id;
             $extendedAuthUserData->username = $memberData->username;
             $extendedAuthUserData->roleId = $memberData->roleId;
             $extendedAuthUserData->avatar = $memberData->avatar;

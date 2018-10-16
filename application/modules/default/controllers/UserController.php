@@ -254,6 +254,59 @@ class UserController extends Local_Controller_Action_DomainSwitch
             $tableProject->fetchAllProjectsForMember($this->_memberId, $pageLimit, ($page - 1) * $pageLimit, true);
         $this->_helper->viewRenderer('/partials/aboutmeProducts');
     }
+    
+    public function userdataajaxAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        $resultArray = array();
+        
+        header('Access-Control-Allow-Origin: *'); 
+        
+        $this->getResponse()
+             ->setHeader('Access-Control-Allow-Origin', '*')
+             ->setHeader('Access-Control-Allow-Credentials', 'true')
+             ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+             ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
+        ;
+        
+        
+        $userid = $this->getParam('id');
+        
+        $modelMember = new Default_Model_Member();
+        $user = $modelMember->find($userid)->current();
+        
+        if (Zend_Auth::getInstance()->hasIdentity()) {
+        
+            $auth = Zend_Auth::getInstance();
+            $user = $auth->getStorage()->read();
+
+            $resultArray['member_id'] = $user->member_id;
+            $resultArray['username'] = $user->username;
+            $resultArray['mail'] = $user->mail;
+            $resultArray['avatar'] = $user->profile_image_url;
+            
+            
+        } else if (null != $userid && null != $user) {
+        
+            $resultArray['member_id'] = $user['member_id'];
+            $resultArray['username'] = $user['username'];
+            $resultArray['mail'] = $user['mail'];
+            $resultArray['avatar'] = $user['profile_image_url'];
+
+        } else {
+            $resultArray['member_id'] = null;
+            $resultArray['username'] = null;
+            $resultArray['mail'] = null;
+            $resultArray['avatar'] = null;
+        }
+        
+        $resultAll = array();
+        $resultAll['status'] = "success";
+        $resultAll['data'] = $resultArray;
+        
+        $this->_helper->json($resultAll);
+    }
 
     public function followsAction()
     {

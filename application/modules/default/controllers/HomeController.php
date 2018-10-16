@@ -98,6 +98,196 @@ class HomeController extends Local_Controller_Action_DomainSwitch
             // $this->_helper->json($featureProducts);
         }
     }
+    
+    
+    public function metamenujsAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        
+        header('Access-Control-Allow-Origin: *'); 
+        
+        $this->getResponse()
+             ->setHeader('Access-Control-Allow-Origin', '*')
+             ->setHeader('Access-Control-Allow-Credentials', 'true')
+             ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+             ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
+        ;
+        
+    }
+    
+    
+    public function baseurlajaxAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        
+        header('Access-Control-Allow-Origin: *'); 
+        
+        $this->getResponse()
+             ->setHeader('Access-Control-Allow-Origin', '*')
+             ->setHeader('Access-Control-Allow-Credentials', 'true')
+             ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+             ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
+        ;
+        
+        $resultArray = array();
+        
+        $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
+
+        $resultArray['base_url'] = $baseurl;
+        
+        $resultAll = array();
+        $resultAll['status'] = "success";
+        $resultAll['data'] = $resultArray;
+        
+        $this->_helper->json($resultAll);
+    }
+    
+    public function forumurlajaxAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        
+        header('Access-Control-Allow-Origin: *'); 
+        
+        $this->getResponse()
+             ->setHeader('Access-Control-Allow-Origin', '*')
+             ->setHeader('Access-Control-Allow-Credentials', 'true')
+             ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+             ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
+        ;
+        
+        
+        $resultArray = array();
+        
+        $url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
+
+        $resultArray['url_forum'] = $url_forum;
+        
+        $resultAll = array();
+        $resultAll['status'] = "success";
+        $resultAll['data'] = $resultArray;
+        
+        $this->_helper->json($resultAll);
+    }
+    
+    public function blogurlajaxAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        
+        header('Access-Control-Allow-Origin: *'); 
+        
+        $this->getResponse()
+             ->setHeader('Access-Control-Allow-Origin', '*')
+             ->setHeader('Access-Control-Allow-Credentials', 'true')
+             ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+             ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
+        ;
+        
+        $resultArray = array();
+        
+        $url_blog = Zend_Registry::get('config')->settings->client->default->url_blog;
+
+        $resultArray['url_blog'] = $url_blog;
+        
+        $resultAll = array();
+        $resultAll['status'] = "success";
+        $resultAll['data'] = $resultArray;
+        
+        $this->_helper->json($resultAll);
+    }
+    
+    
+    public function storenameajaxAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        
+        header('Access-Control-Allow-Origin: *'); 
+        
+        $this->getResponse()
+             ->setHeader('Access-Control-Allow-Origin', '*')
+             ->setHeader('Access-Control-Allow-Credentials', 'true')
+             ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+             ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
+        ;
+        
+        $resultArray = array();
+        
+        $sname = Zend_Registry::get('store_host');  
+
+        $resultArray['store_name'] = $sname;
+        
+        $resultAll = array();
+        $resultAll['status'] = "success";
+        $resultAll['data'] = $resultArray;
+        
+        $this->_helper->json($resultAll);
+    }
+    
+    
+    public function loginurlajaxAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        
+        header('Access-Control-Allow-Origin: *'); 
+        
+        $this->getResponse()
+             ->setHeader('Access-Control-Allow-Origin', '*')
+             ->setHeader('Access-Control-Allow-Credentials', 'true')
+             ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+             ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
+        ;
+        
+        $resultArray = array();
+        
+        $url = $this->getParam('url');
+        $filterRedirect = new Local_Filter_Url_Encrypt();
+        
+        $loginUrl = '/login?redirect=' . $filterRedirect->filter($url);
+        
+        $resultArray['login_url'] = $loginUrl;
+        
+        $resultAll = array();
+        $resultAll['status'] = "success";
+        $resultAll['data'] = $resultArray;
+        
+        $this->_helper->json($resultAll);
+    }
+    
+    
+    
+    public function domainsajaxAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        
+        header('Access-Control-Allow-Origin: *'); 
+        
+        $this->getResponse()
+             ->setHeader('Access-Control-Allow-Origin', '*')
+             ->setHeader('Access-Control-Allow-Credentials', 'true')
+             ->setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+             ->setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
+        ;
+        
+        
+        $resultArray = array();
+        
+        
+        $domainobjects = $this->fetchMetaheaderMenuJson();
+
+        $resultArray['domains'] = $domainobjects;
+        
+        $resultAll = array();
+        $resultAll['status'] = "success";
+        $resultAll['data'] = $resultArray;
+        
+        $this->_helper->json($resultAll);
+    }
+    
 
     protected function setLayout()
     {
@@ -108,6 +298,111 @@ class HomeController extends Local_Controller_Action_DomainSwitch
         }else{
             $this->_helper->layout()->setLayout('home_template');
         }        
+    }
+    
+    
+    private function fetchMetaheaderMenuJson()
+    {        
+
+       $sname = Zend_Registry::get('store_host');
+        /** @var Zend_Cache_Core $cache */
+        $cache = Zend_Registry::get('cache');        
+        $cacheName = __FUNCTION__ . md5($sname);       
+
+        if (false == ($domainobjects = $cache->load($cacheName))) {
+            $tbl = new Default_Model_DbTable_ConfigStore();
+            $result = $tbl->fetchDomainObjects();
+                // sort Desktop manuelly to the front
+            $arrayDesktop = array();
+            $arrayRest =  array();  
+           
+            foreach ($result as $obj) {
+                $o =  $obj['order'];   
+                $curOrder = floor($obj['order']/1000);      
+                if($curOrder<10 or $curOrder>50) continue;
+                $obj['calcOrder'] = $curOrder;              
+
+                $tmp = array();
+                $tmp['order'] = $obj['order'];
+                $tmp['calcOrder'] = $obj['calcOrder'];
+                $tmp['host'] = $obj['host'];
+                $tmp['name'] = $obj['name'];                
+
+                if($curOrder==30) {
+                    // Desktop set calcOrder = 9 manuelly put desktop in front                    
+                    $tmp['calcOrder'] = 9;
+                    $arrayDesktop[] = $tmp;    
+                }else{
+                    $arrayRest[] = $tmp;    
+                }                        
+            }
+            $domainobjects = array_merge($arrayDesktop, $arrayRest);
+
+            
+            $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
+            // set group name manully
+            foreach ($domainobjects as &$obj) {
+
+                    if($sname == $obj['host']){
+                        $obj['menuactive'] = 1;
+                    }else{
+                        $obj['menuactive'] = 0;
+                    }
+
+                    $order =  $obj['order'];
+                     // z.b 150001 ende ==1 go real link otherwise /s/$name
+                    $last_char_check = substr($order, -1);
+                    if($last_char_check=='1')
+                    {
+                        $obj['menuhref'] = $obj['host'];
+                    }else{
+                        $obj['menuhref'] = $baseurl.'/s/'.$obj['name'];
+                    }
+
+                    switch ($obj['calcOrder']) {
+                        case 9:
+                            $obj['menugroup']='Desktops';
+                            break;
+                        case 10:
+                            $obj['menugroup']='Applications';
+                            break;
+                        case 20:
+                            $obj['menugroup']='Addons';
+                            break;
+                        case 40:
+                            $obj['menugroup']='Artwork';
+                            break;                       
+                        case 50:
+                        $obj['menugroup']='Other';
+                        break;
+                    }
+                         
+            }
+
+            $cache->save($domainobjects, $cacheName, array(), 28800);
+        }
+        return  Zend_Json::encode($domainobjects);
+    }
+    
+    
+    /**
+     * @throws Exception
+     * @throws Zend_Exception
+     * @throws Zend_Form_Exception
+     */
+    public function redirectmeAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        //$this->_helper->viewRenderer->setNoRender(true);
+        
+        $redir = "/";
+        if(isset($_GET['redirect'])) {
+            $redir = $_GET['redirect'];
+            $filter = new Local_Filter_Url_Decrypt();
+            $redir = $filter->filter($redir);
+            
+        }
+        $this->view->redirect = $redir;
     }
 
 }

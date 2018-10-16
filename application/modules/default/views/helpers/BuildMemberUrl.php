@@ -57,7 +57,7 @@ class Default_View_Helper_BuildMemberUrl extends Zend_View_Helper_Abstract
             $memberLink = "member";
         }
 
-        return "{$http_scheme}://{$baseurl}/{$memberLink}/{$member_ident}/{$action}{$url_param}";
+        return "{$baseurl}/{$memberLink}/{$member_ident}/{$action}{$url_param}";
     }
 
 

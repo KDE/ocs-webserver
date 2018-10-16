@@ -27,17 +27,136 @@ $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $helperImage = new Default_View_Helper_Image();
 $auth = Zend_Auth::getInstance();
 $member = $getAuthUser->getAuthUser();
+$phash = null;
+$ltat = null;
+if ($auth->hasIdentity()) {
+    $sess = new Zend_Session_Namespace('ocs_meta');
+    $phash = $sess->phash;
+    $ltat = $sess->openid;
+}
+
 $serverUrl = $this->serverUrl();
 
 $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
-$sname = Zend_Registry::get('store_host');  
+$sname = Zend_Registry::get('store_host');
 $store_config = Zend_Registry::get('store_config');
 $store_order = $store_config->order;
 $store_name = $store_config->name;
 $is_show_title = $store_config->is_show_title;
-$last_char_store_order = substr($store_order, -1); 
+$last_char_store_order = substr($store_order, -1);
+
+$url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
+$url_gitlab = Zend_Registry::get('config')->settings->client->default->url_gitlab;
+$url_blog = Zend_Registry::get('config')->settings->client->default->url_blog;
+$config_domain = $config = Zend_Registry::get('config')->settings->domain;
+$url_openid = $config_domain->openid->host;
+
+/** @var Zend_Controller_Request_Http $request */
+$request = Zend_Controller_Front::getInstance()->getRequest();
+$http_scheme = $request->getScheme();
+
+$json_menu = $this->fetchMetaheaderMenuJson();
 
 echo $this->render('partials/header/metaheader.phtml'); ?>
+
+    <style>
+
+        header a {
+            color:  <?=$this->template['header-nav-tabs']['link']['color']?>;
+        }
+
+        header div.container.header {
+            background-image: <?=$this->template['header']['background-image']?>;
+            background-color: <?=$this->template['header']['background-color']?>;
+            color: <?=$this->template['header']['color']?>;
+            height: <?=$this->template['header']['height']?>;
+        }
+
+        header .logo-header {
+            background-image: <?=$this->template['header-logo']['background-image']?>;
+            display: block;
+            height: <?=$this->template['header-logo']['height']?>;
+            left: <?=$this->template['header-logo']['left']?>;
+            position: absolute;
+            top: <?=$this->template['header-logo']['top']?>;
+            width: <?=$this->template['header-logo']['width']?>;
+            z-index: 999;
+            overflow: hidden;
+        }
+
+        header ul li:active {
+            background: <?=$this->template['header-nav-tabs']['background-color-active']?> none repeat scroll 0 0;
+        }
+        header ul li:hover {
+            background: <?=$this->template['header-nav-tabs']['background-color-hover']?> none repeat scroll 0 0;
+        }
+
+        header ul li ul li:active {
+            background: <?=$this->template['header-nav-tabs']['background-color-active']?> none repeat scroll 0 0;
+        }
+
+        header ul li ul li:hover {
+            background: <?=$this->template['header-nav-tabs']['background-color-hover']?> none repeat scroll 0 0;
+        }
+        header ul li:active > a {
+            color: <?=$this->template['header-nav-tabs']['link']['color-active']?>;
+        }
+        header ul li:hover > a {
+            color: <?=$this->template['header-nav-tabs']['link']['color-hover']?>;
+        }
+        header ul li ul li:hover a {
+            color: <?=$this->template['header-nav-tabs']['link']['color-hover']?>;
+        }
+
+        ul.menu-nav-tabs li {
+            background-color: <?=$this->template['header-nav-tabs']['background-color']?>;
+            border-color: <?=$this->template['header-nav-tabs']['border-color']?>;
+            border-image: none;
+            border-radius: <?=$this->template['header-nav-tabs']['border-radius']?>;
+            border-style: <?=$this->template['header-nav-tabs']['border-style']?>;
+            border-width: <?=$this->template['header-nav-tabs']['border-with']?>;
+            height: <?=$this->template['header-nav-tabs']['height']?>;
+            line-height: 24px;
+            margin-right: <?=$this->template['header-nav-tabs']['margin-right']?>;
+        }
+
+
+        ul.menu-nav-tabs li.active {
+            background: <?=$this->template['header-nav-tabs']['background-color-active']?> none repeat scroll 0 0;
+        }
+
+        .absolute-left {
+            left: <?=$tabs_left?>px;
+        }
+
+        .absolute-right {
+            right: <?=$this->template['header-nav-tabs']['absolute-right']?>;
+        }
+
+        .header_cat_link {
+              bottom: 0; position: absolute; color: blue; font-size: 18pt; left: <?= $cat_title_left ?>px;
+        } 
+
+        .nav-divider-pling{
+            color:#E2E2E2;
+        }
+        .nav-pills > li + li {
+                margin-left: 10px;
+            }
+            .dropdown-menu > li > a{
+                font-size: 12px;
+            }
+        .metamenu .dropdown:hover .dropdown-menu {
+            margin-left: -16px;
+        }
+        .metamenu .dropdown-menu li{
+            width: 100%;
+        }
+
+        .metamenu ul.dropdown-menu  li span{ color:#999; }
+        .metamenu ul.dropdown-menu  li.active span{ color:#eee; }
+    </style>
+
     <header id="page_header" xmlns="http://www.w3.org/1999/html">
         <div class="container header" style="position: relative;">
 
@@ -45,6 +164,7 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
                 $helperEncryptUrl = new Default_View_Helper_EncryptUrl();
                 $redirectString = '/redirect/' . $helperEncryptUrl->EncryptUrl(Zend_Controller_Front::getInstance()->getRequest()->getScheme() . '://' . Zend_Controller_Front::getInstance()->getRequest()->getHttpHost().$_SERVER["REQUEST_URI"]);
                 ?>
+
                 <ul class="menu-nav-tabs absolute-right" style="position: absolute;bottom: 0px;">
                     <li role="presentation"
                         class="<?php echo(strpos($_SERVER["REQUEST_URI"], 'register') ? 'active' : '') ?>">
@@ -74,6 +194,11 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
 
                             <div class="pull-right col-lg-7 col-md-7 col-sm-7 col-xs-7">
                                 <?php if ($auth->hasIdentity() && !empty($member->username)) { ?>
+                                    <img src="/external/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $this->Image($member->profile_image_url,array('width' => 210, 'height' => 210, 'crop' => 2)) ?>&phash=<?= $phash ?>" height="0" width="0">
+                                    <img src="<?= $url_gitlab ?>/external/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $this->Image($member->profile_image_url,array('width' => 210, 'height' => 210, 'crop' => 2)) ?>&phash=<?= $phash ?>" height="0" width="0">
+                                    <img src="<?= $url_forum ?>:8443/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $this->Image($member->profile_image_url,array('width' => 210, 'height' => 210, 'crop' => 2)) ?>&phash=<?= $phash ?>" height="0" width="0">
+                                    <img src="<?=$http_scheme?>://<?= $url_openid ?>/login/setsession?ltat=<?= $ltat ?>"  height="0" width="0" />
+
                                     <ul class="menu pull-right">
                                         <li class="link relative profile-menu-container">
                                             <a rel="profile-menu" class="menu-trigger">
@@ -135,6 +260,8 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
         </div>
     </header>
 
+
+    
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
                 MenuHover.setup();

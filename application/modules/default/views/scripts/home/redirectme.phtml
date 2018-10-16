@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+        function loadComplete() {
+            document.location.href = "<?= $this->redirect ?>";
+        }
+
+        function loadForum() {
+            var img = document.getElementById('forum-login');
+            var img_src = img.getAttribute('data-src');
+            img.setAttribute('src', img_src);
+            // var allimages = document.getElementsByTagName('img');
+            // for (var i = 0; i < allimages.length; i++) {
+            //     if (allimages[i].getAttribute('data-src')) {
+            //         allimages[i].setAttribute('src', allimages[i].getAttribute('data-src'));
+            //     }
+            // }
+            return true;
+        }
+    </script>
+</head>
+<body onload="loadComplete()">
+<p>
+    Please Wait...
+</p>
+<?php
+/** @var Zend_Controller_Request_Http $request */
+$request = Zend_Controller_Front::getInstance()->getRequest();
+$http_scheme = $request->getScheme();
+
+$baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
+$url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
+$url_gitlab = Zend_Registry::get('config')->settings->client->default->url_gitlab;
+$config = Zend_Registry::get('config')->settings->domain;
+
+$getAuthUser = new Default_View_Helper_GetAuthUser();
+$member = $getAuthUser->getAuthUser();
+$phash = null;
+$ltat = '';
+if (Zend_Auth::getInstance()->hasIdentity()) {
+    $sess = new Zend_Session_Namespace('ocs_meta');
+    $phash = $sess->phash;
+    $ltat = $sess->openid;
+}
+
+?>
+<img src="/external/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $this->Image($member->profile_image_url,array('width' => 210, 'height' => 210, 'crop' => 2)) ?>&phash=<?= $phash ?>" height="0" width="0">
+<img src="<?= $url_gitlab ?>/external/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $this->Image($member->profile_image_url,array('width' => 210, 'height' => 210, 'crop' => 2)) ?>&phash=<?= $phash ?>" height="0" width="0">
+<img src="<?= $url_forum ?>:8443/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $this->Image($member->profile_image_url,array('width' => 210, 'height' => 210, 'crop' => 2)) ?>&phash=<?= $phash ?>" height="0" width="0">
+<img src="<?=$http_scheme?>://<?= $config->openid->host ?>/login/setsession?ltat=<?= $ltat ?>" height="0" width="0" onload="loadForum();"/>
+<img data-src="<?=$http_scheme?>://<?= $config->forum->host ?>/session/sso?return_path=%2F" height="0" width="0" id="forum-login" />
+
+</body>
+</html>

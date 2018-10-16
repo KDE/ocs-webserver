@@ -112,6 +112,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addResource(new Zend_Acl_Resource ('backend_tags'));
         $this->addResource(new Zend_Acl_Resource ('backend_ghnsexcluded'));
         $this->addResource(new Zend_Acl_Resource ('backend_letteravatar'));
+        $this->addResource(new Zend_Acl_Resource ('backend_group'));
 
         $this->addResource(new Zend_Acl_Resource ('statistics_data'));
 
@@ -120,6 +121,7 @@ class Default_Plugin_AclRules extends Zend_Acl
         ));
 
         $this->allow(self::ROLENAME_GUEST, array(
+            'default_logout',
             'default_authorization',
             'default_button',
             'default_categories',
@@ -193,11 +195,13 @@ class Default_Plugin_AclRules extends Zend_Acl
             'backend_reportcomments',
             'backend_reportproducts',
             'backend_search',
+            'backend_group'
         ));
 
         $this->allow(self::ROLENAME_ADMIN);
 
         // resource access rights in detail
+        $this->allow(self::ROLENAME_GUEST, 'backend_group', array('newgroup'));
 
         // resource default_product
         $this->allow(self::ROLENAME_GUEST, 'default_product', array(
@@ -288,9 +292,12 @@ class Default_Plugin_AclRules extends Zend_Acl
             'gitlink',
             'link',
         ), new Default_Plugin_Acl_IsProjectOwnerAssertion());
+        
+        // resource default_user
+        $this->allow(self::ROLENAME_GUEST, 'default_home', array('baseurlajax','forumurlajax','blogurlajax','storenameajax','domainsajax', 'userdataajax', 'loginurlajax', 'metamenujs'));
 
         // resource default_user
-        $this->allow(self::ROLENAME_GUEST, 'default_user', array('index', 'aboutme', 'share', 'report', 'about', 'tooltip', 'avatar'));
+        $this->allow(self::ROLENAME_GUEST, 'default_user', array('index', 'aboutme', 'share', 'report', 'about', 'tooltip', 'avatar', 'userdataajax'));
 
         $this->allow(self::ROLENAME_COOKIEUSER, 'default_user', array(
             'follow',

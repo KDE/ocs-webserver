@@ -1,6 +1,6 @@
 CREATE TABLE  `member_avatar_type` (
   `member_avatar_type_id` INT NOT NULL ,
-  `title` VARCHAR(45) NULL,
+  `title` VARCHAR(45) ,
   PRIMARY KEY (`member_avatar_type_id`));
 
 
