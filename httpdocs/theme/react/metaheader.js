@@ -160,7 +160,7 @@ window.appHelpers = function () {
     return menuGroups;
   }
 
-  function getDeviceFromWidth() {
+  function getDeviceFromWidth(width) {
     let device;
     if (width < 1250 && width >= 1000) {
       device = "large";
