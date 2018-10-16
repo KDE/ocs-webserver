@@ -227,7 +227,10 @@ class MetaHeader extends React.Component {
 class DomainsMenu extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    console.log(this.props.baseUrl);
+    this.state = {
+      domainsDropdownHeight: "500"
+    };
   }
 
   componentDidMount() {
@@ -284,7 +287,7 @@ class DomainsMenu extends React.Component {
         ),
         React.createElement(
           'ul',
-          { className: 'dropdown-menu dropdown-menu-right', 'aria-labelledby': 'dropdownMenu3' },
+          { className: 'dropdown-menu dropdown-menu-right', 'aria-labelledby': 'dropdownMenu3', style: { "height": this.state.domainsDropdownHeight + "px" } },
           React.createElement(
             'li',
             { className: 'submenu-container' },
