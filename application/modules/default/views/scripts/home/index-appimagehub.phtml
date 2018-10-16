@@ -29,9 +29,9 @@
     $this->topGames = $modelInfo->getTopProductsForHostStores(7,"112",$package_type);
     $this->topApps = $modelInfo->getTopProductsForHostStores(7,"33",$package_type);
   } else {
-    $this->LatestProducts = $modelInfo->getLastProductsForHostStores(7,"6,234,239,243,244,245,388,391,392,450,481,492",$package_type);
-    $this->topGames = $modelInfo->getTopProductsForHostStores(7,"6",$package_type);
-    $this->topApps = $modelInfo->getTopProductsForHostStores(7,"234,239,243,244,245,388,391,392,450,481,492",$package_type);
+    $this->LatestProducts = $modelInfo->getLastProductsForHostStores(15,"6,234,239,243,244,245,388,391,392,450,481,492",$package_type);
+    $this->topGames = $modelInfo->getTopProductsForHostStores(15,"6",$package_type);
+    $this->topApps = $modelInfo->getTopProductsForHostStores(15,"234,239,243,244,245,388,391,392,450,481,492",$package_type);
   }
 
 ?>
