@@ -683,7 +683,7 @@ class MobileLeftSidePanel extends React.Component {
           <ul>
             {panelMenuGroupsDisplay}
             <li>
-              <a className="groupname">Discussion Boards</a>
+              <a className="groupname"><b>Discussion Boards</b></a>
               <ul>
                 <li><a href={this.props.forumUrl + "/c/general"}>General</a></li>
                 <li><a href={this.props.forumUrl + "/c/themes-and-apps"}>Themes & Apps</a></li>
@@ -691,7 +691,7 @@ class MobileLeftSidePanel extends React.Component {
               </ul>
             </li>
             <li>
-              <a className="groupname">More</a>
+              <a className="groupname"><b>More</b></a>
               <ul>
                 <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
                 <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>

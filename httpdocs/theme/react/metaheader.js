@@ -935,7 +935,11 @@ class MobileLeftSidePanel extends React.Component {
             React.createElement(
               "a",
               { className: "groupname" },
-              "Discussion Boards"
+              React.createElement(
+                "b",
+                null,
+                "Discussion Boards"
+              )
             ),
             React.createElement(
               "ul",
@@ -975,7 +979,11 @@ class MobileLeftSidePanel extends React.Component {
             React.createElement(
               "a",
               { className: "groupname" },
-              "More"
+              React.createElement(
+                "b",
+                null,
+                "More"
+              )
             ),
             React.createElement(
               "ul",
