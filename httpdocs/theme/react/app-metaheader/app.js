@@ -113,6 +113,7 @@ class DomainsMenu extends React.Component {
     if (this.props.device !== "large"){
       moreMenuItemDisplay = (
         <MoreDropDownMenu
+          domains={this.props.domains}
           baseUrl={this.props.baseUrl}
           blogUrl={this.props.blogUrl}
         />
@@ -608,8 +609,6 @@ class MobileLeftMenu extends React.Component {
   }
 
   handleClick(e){
-    console.log(e.target.id);
-    console.log(e.target);
     let overlayClass = "";
     if (this.node.contains(e.target)){
       if (this.state.overlayClass === "open"){
@@ -630,10 +629,36 @@ class MobileLeftMenu extends React.Component {
       <div ref={node => this.node = node}  id="metaheader-left-mobile" className={this.state.overlayClass}>
         <a onClick={this.toggleLeftSideOverlay} className="menu-toggle" id="menu-toggle-item"></a>
         <div id="left-side-overlay">
-          <div id="left-side-panel"></div>
+          <MobileLeftSidePanel
+            baseUrl={this.props.baseUrl}
+          />
         </div>
       </div>
     );
+  }
+}
+
+class MobileLeftSidePanel extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+  }
+
+  componentDidMount() {
+    const menuGroups = appHelpers.generateMenuGroupsArray(this.props.domains);
+    this.setState({menuGroups:menuGroups});
+  }
+
+  render(){
+    console.log(this.state.menuGroups);
+    return (
+      <div id="left-side-panel">
+        <a href={this.props.baseUrl}>
+          <img src={this.props.baseUrl + "/images/system/ocs-logo-rounded-16x16.png"} className="logo"/>
+          openDesktop.org :
+        </a>
+      </div>
+    )
   }
 }
 

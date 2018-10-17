@@ -288,6 +288,7 @@ class DomainsMenu extends React.Component {
     let moreMenuItemDisplay;
     if (this.props.device !== "large") {
       moreMenuItemDisplay = React.createElement(MoreDropDownMenu, {
+        domains: this.props.domains,
         baseUrl: this.props.baseUrl,
         blogUrl: this.props.blogUrl
       });
@@ -995,8 +996,6 @@ class MobileLeftMenu extends React.Component {
   }
 
   handleClick(e) {
-    console.log(e.target.id);
-    console.log(e.target);
     let overlayClass = "";
     if (this.node.contains(e.target)) {
       if (this.state.overlayClass === "open") {
@@ -1020,7 +1019,35 @@ class MobileLeftMenu extends React.Component {
       React.createElement(
         "div",
         { id: "left-side-overlay" },
-        React.createElement("div", { id: "left-side-panel" })
+        React.createElement(MobileLeftSidePanel, {
+          baseUrl: this.props.baseUrl
+        })
+      )
+    );
+  }
+}
+
+class MobileLeftSidePanel extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  componentDidMount() {
+    const menuGroups = appHelpers.generateMenuGroupsArray(this.props.domains);
+    this.setState({ menuGroups: menuGroups });
+  }
+
+  render() {
+    console.log(this.state.menuGroups);
+    return React.createElement(
+      "div",
+      { id: "left-side-panel" },
+      React.createElement(
+        "a",
+        { href: this.props.baseUrl },
+        React.createElement("img", { src: this.props.baseUrl + "/images/system/ocs-logo-rounded-16x16.png", className: "logo" }),
+        "openDesktop.org :"
       )
     );
   }
