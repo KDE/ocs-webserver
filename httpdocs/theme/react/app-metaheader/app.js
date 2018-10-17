@@ -588,6 +588,14 @@ class MobileLeftMenu extends React.Component {
     this.toggleLeftSideOverlay = this.toggleLeftSideOverlay.bind(this);
   }
 
+  componentWillMount() {
+    document.addEventListener('mousedown',this.handleClick, false);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown',this.handleClick, false);
+  }
+
   toggleLeftSideOverlay(){
     let overlayClass = "open";
     if (this.state.overlayClass === "open") {
@@ -596,10 +604,26 @@ class MobileLeftMenu extends React.Component {
     this.setState({overlayClass:overlayClass});
   }
 
+  handleClick(e){
+    let overlayClass = "";
+    if (this.node.contains(e.target)){
+      if (this.state.dropdownClass === "open"){
+        if (e.target.className === "menu-toggle"){
+          overlayClass = "";
+        } else {
+          overlayClass = "open";
+        }
+      } else {
+        overlayClass = "open";
+      }
+    }
+    this.setState({overlayClass:overlayClass});
+  }
+
   render(){
     return (
-      <div id="metaheader-left-mobile" className={this.state.overlayClass}>
-        <a onClick={this.toggleLeftSideOverlay} id="menu-toggle-item"></a>
+      <div ref={node => this.node = node}  id="metaheader-left-mobile" className={this.state.overlayClass}>
+        <a onClick={this.toggleLeftSideOverlay} className="menu-toggle" id="menu-toggle-item"></a>
         <div id="left-side-overlay">
           <div id="left-side-panel"></div>
         </div>
