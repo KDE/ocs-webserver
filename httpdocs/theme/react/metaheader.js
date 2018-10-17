@@ -271,27 +271,7 @@ class DomainsMenu extends React.Component {
     this.state = {};
   }
 
-  componentDidMount() {
-    const menuGroups = appHelpers.generateMenuGroupsArray(this.props.domains);
-    this.setState({ menuGroups: menuGroups });
-  }
-
   render() {
-    let menuGroupsDisplayLeft, menuGroupsDisplayRight;
-    if (this.state.menuGroups) {
-      menuGroupsDisplayLeft = this.state.menuGroups.slice(0, 2).map((mg, i) => React.createElement(DomainsMenuGroup, {
-        key: i,
-        domains: this.props.domains,
-        menuGroup: mg,
-        sName: this.props.sName
-      }));
-      menuGroupsDisplayRight = this.state.menuGroups.slice(2).map((mg, i) => React.createElement(DomainsMenuGroup, {
-        key: i,
-        domains: this.props.domains,
-        menuGroup: mg,
-        sName: this.props.sName
-      }));
-    }
 
     let moreMenuItemDisplay;
     if (this.props.device !== "large") {
@@ -383,40 +363,9 @@ class DomainsMenu extends React.Component {
           "openDesktop.org :"
         )
       ),
-      React.createElement(
-        "li",
-        { id: "domains-dropdown-menu", className: "dropdown" },
-        React.createElement(
-          "a",
-          { id: "dropdownMenu3",
-            "data-toggle": "dropdown",
-            "aria-haspopup": "true",
-            "aria-expanded": "true" },
-          "Themes & Apps"
-        ),
-        React.createElement(
-          "ul",
-          { className: "dropdown-menu dropdown-menu-right", "aria-labelledby": "dropdownMenu3" },
-          React.createElement(
-            "li",
-            { className: "submenu-container" },
-            React.createElement(
-              "ul",
-              null,
-              menuGroupsDisplayLeft
-            )
-          ),
-          React.createElement(
-            "li",
-            { className: "submenu-container" },
-            React.createElement(
-              "ul",
-              null,
-              menuGroupsDisplayRight
-            )
-          )
-        )
-      ),
+      React.createElement(DomainsDropDownMenu, {
+        domains: this.props.domains
+      }),
       React.createElement(
         "li",
         { id: "discussion-boards", className: "dropdown" },
@@ -461,6 +410,86 @@ class DomainsMenu extends React.Component {
         )
       ),
       moreMenuItemDisplay
+    );
+  }
+}
+
+class DomainsDropDownMenu extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  componentDidMount() {
+    const menuGroups = appHelpers.generateMenuGroupsArray(this.props.domains);
+    this.setState({ menuGroups: menuGroups });
+  }
+
+  handleClick(e) {
+    let dropdownClass = "";
+    if (this.node.contains(e.target)) {
+      if (this.state.dropdownClass === "open") {
+        if (e.target.className === "domains-menu-link-item") {
+          dropdownClass = "";
+        } else {
+          dropdownClass = "open";
+        }
+      } else {
+        dropdownClass = "open";
+      }
+    }
+    this.setState({ dropdownClass: dropdownClass });
+  }
+
+  render() {
+
+    let menuGroupsDisplayLeft, menuGroupsDisplayRight;
+    if (this.state.menuGroups) {
+      menuGroupsDisplayLeft = this.state.menuGroups.slice(0, 2).map((mg, i) => React.createElement(DomainsMenuGroup, {
+        key: i,
+        domains: this.props.domains,
+        menuGroup: mg,
+        sName: this.props.sName
+      }));
+      menuGroupsDisplayRight = this.state.menuGroups.slice(2).map((mg, i) => React.createElement(DomainsMenuGroup, {
+        key: i,
+        domains: this.props.domains,
+        menuGroup: mg,
+        sName: this.props.sName
+      }));
+    }
+
+    return React.createElement(
+      "li",
+      { ref: node => this.node = node, id: "domains-dropdown-menu", className: this.state.dropdownClass },
+      React.createElement(
+        "a",
+        { className: "domains-menu-link-item", onClick: this.toggleDropDown },
+        "Themes & Apps"
+      ),
+      React.createElement(
+        "ul",
+        { className: "dropdown-menu dropdown-menu-right" },
+        React.createElement(
+          "li",
+          { className: "submenu-container" },
+          React.createElement(
+            "ul",
+            null,
+            menuGroupsDisplayLeft
+          )
+        ),
+        React.createElement(
+          "li",
+          { className: "submenu-container" },
+          React.createElement(
+            "ul",
+            null,
+            menuGroupsDisplayRight
+          )
+        )
+      )
     );
   }
 }

@@ -89,31 +89,7 @@ class DomainsMenu extends React.Component {
     };
   }
 
-  componentDidMount() {
-    const menuGroups = appHelpers.generateMenuGroupsArray(this.props.domains);
-    this.setState({menuGroups:menuGroups});
-  }
-
   render(){
-    let menuGroupsDisplayLeft, menuGroupsDisplayRight;
-    if (this.state.menuGroups){
-      menuGroupsDisplayLeft = this.state.menuGroups.slice(0,2).map((mg,i) => (
-        <DomainsMenuGroup
-          key={i}
-          domains={this.props.domains}
-          menuGroup={mg}
-          sName={this.props.sName}
-        />
-      ));
-      menuGroupsDisplayRight = this.state.menuGroups.slice(2).map((mg,i) => (
-        <DomainsMenuGroup
-          key={i}
-          domains={this.props.domains}
-          menuGroup={mg}
-          sName={this.props.sName}
-        />
-      ));
-    }
 
     let moreMenuItemDisplay;
     if (this.props.device !== "large"){
@@ -154,24 +130,9 @@ class DomainsMenu extends React.Component {
             openDesktop.org :
           </a>
         </li>
-        <li id="domains-dropdown-menu" className="dropdown">
-          <a id="dropdownMenu3"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="true">Themes & Apps</a>
-          <ul className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu3">
-            <li className="submenu-container">
-              <ul>
-                {menuGroupsDisplayLeft}
-              </ul>
-            </li>
-            <li className="submenu-container">
-              <ul>
-                {menuGroupsDisplayRight}
-              </ul>
-            </li>
-          </ul>
-        </li>
+        <DomainsDropDownMenu
+          domains={this.props.domains}
+        />
         <li id="discussion-boards" className="dropdown">
           <a id="dropdownMenu4"
           data-toggle="dropdown"
@@ -186,6 +147,76 @@ class DomainsMenu extends React.Component {
         {moreMenuItemDisplay}
       </ul>
     )
+  }
+}
+
+class DomainsDropDownMenu extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  componentDidMount() {
+    const menuGroups = appHelpers.generateMenuGroupsArray(this.props.domains);
+    this.setState({menuGroups:menuGroups});
+  }
+
+  handleClick(e){
+    let dropdownClass = "";
+    if (this.node.contains(e.target)){
+      if (this.state.dropdownClass === "open"){
+        if (e.target.className === "domains-menu-link-item"){
+          dropdownClass = "";
+        } else {
+          dropdownClass = "open";
+        }
+      } else {
+        dropdownClass = "open";
+      }
+    }
+    this.setState({dropdownClass:dropdownClass});
+  }
+
+  render(){
+
+    let menuGroupsDisplayLeft, menuGroupsDisplayRight;
+    if (this.state.menuGroups){
+      menuGroupsDisplayLeft = this.state.menuGroups.slice(0,2).map((mg,i) => (
+        <DomainsMenuGroup
+          key={i}
+          domains={this.props.domains}
+          menuGroup={mg}
+          sName={this.props.sName}
+        />
+      ));
+      menuGroupsDisplayRight = this.state.menuGroups.slice(2).map((mg,i) => (
+        <DomainsMenuGroup
+          key={i}
+          domains={this.props.domains}
+          menuGroup={mg}
+          sName={this.props.sName}
+        />
+      ));
+    }
+
+    return (
+      <li ref={node => this.node = node} id="domains-dropdown-menu" className={this.state.dropdownClass}>
+        <a className="domains-menu-link-item" onClick={this.toggleDropDown}>Themes & Apps</a>
+        <ul className="dropdown-menu dropdown-menu-right">
+          <li className="submenu-container">
+            <ul>
+              {menuGroupsDisplayLeft}
+            </ul>
+          </li>
+          <li className="submenu-container">
+            <ul>
+              {menuGroupsDisplayRight}
+            </ul>
+          </li>
+        </ul>
+      </li>
+    );
   }
 }
 
