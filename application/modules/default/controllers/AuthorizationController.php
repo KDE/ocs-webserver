@@ -232,7 +232,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         
         //Send user to LDAP
         try {
-            $ldap_server = new Default_Model_Ocs_Ident();
+            $ldap_server = new Default_Model_Ocs_Ldap();
             $ldap_server->createUser($userId);
             Zend_Registry::get('logger')->debug(__METHOD__ . ' - ldap : ' . implode(PHP_EOL." - ", $ldap_server->getMessages()));
         } catch (Exception $e) {
@@ -275,7 +275,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
                 Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
             }
             try {
-                $ldap_server = new Default_Model_Ocs_Ident();
+                $ldap_server = new Default_Model_Ocs_Ldap();
                 $ldap_server->updatePassword($memberSettings->member_id);
             } catch (Exception $e) {
                 Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
@@ -719,7 +719,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }
         try {
-            $ldap_server = new Default_Model_Ocs_Ident();
+            $ldap_server = new Default_Model_Ocs_Ldap();
             $ldap_server->createUser($authUser->member_id);
             Zend_Registry::get('logger')->debug(__METHOD__ . ' - ldap : ' . implode(PHP_EOL." - ", $ldap_server->getMessages()));
         } catch (Exception $e) {

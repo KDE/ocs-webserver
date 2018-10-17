@@ -79,6 +79,11 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
 
             return;
         }
+        if ('validate' == $method) {
+            $this->validateMembers($members);
+
+            return;
+        }
     }
 
     /**
@@ -117,6 +122,7 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
               AND LOCATE('_deactivated', `me`.`email_address`) = 0
             " . $filter . "
             ORDER BY `m`.`member_id` ASC
+            limit 100
         ";
 
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql);
@@ -138,7 +144,7 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
     {
         $usernameValidChars = new Local_Validate_UsernameValid();
         $mailAddressValid = new Zend_Validate_EmailAddress();
-        $modelOcsIdent = new Default_Model_Ocs_Ident();
+        $modelOcsIdent = new Default_Model_Ocs_Ldap();
 
         while ($member = $members->fetch()) {
             $this->log->info("process " . json_encode($member));
@@ -152,7 +158,7 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
                 continue;
             }
             try {
-                $modelOcsIdent->createUserInLdap($member, $force);
+                $modelOcsIdent->createUserFromArray($member, $force);
             } catch (Zend_Ldap_Exception $e) {
                 $this->log->info($e->getMessage() . PHP_EOL . $e->getTraceAsString());
             }
@@ -174,7 +180,7 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
     {
         $usernameValidChars = new Local_Validate_UsernameValid();
         $mailAddressValid = new Zend_Validate_EmailAddress();
-        $modelOcsIdent = new Default_Model_Ocs_Ident();
+        $modelOcsIdent = new Default_Model_Ocs_Ldap();
 
         while ($member = $members->fetch()) {
             //if (false === $usernameValidChars->isValid($member['username'])) {
@@ -187,7 +193,7 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
             }
             $this->log->info("process " . json_encode($member));
             try {
-                $modelOcsIdent->updateUserInLdap($member);
+                $modelOcsIdent->updateUserFromArray($member);
             } catch (Zend_Ldap_Exception $e) {
                 $this->log->info($e->getMessage() . PHP_EOL . $e->getTraceAsString());
             }
@@ -251,5 +257,84 @@ gidNumber: {$member['roleId']}
 memberUid: {$member['external_id']}
 ";
     }
+
+    /**
+     * @param $members
+     *
+     * @return bool
+     * @throws Zend_Exception
+     * @throws Zend_Validate_Exception
+     */
+    private function validateMembers($members)
+    {
+        $usernameValidChars = new Local_Validate_UsernameValid();
+        $mailAddressValid = new Zend_Validate_EmailAddress();
+        $modelOcsIdent = new Default_Model_Ocs_Ldap();
+
+        $this->prepareLogTable();
+
+        while ($member = $members->fetch()) {
+            $this->log->info("process " . json_encode($member));
+            try {
+                $ldapEntry = $modelOcsIdent->hasUser($member['member_id'], $member['username']);
+                $result = $this->validateEntry($member, $ldapEntry);
+                if (isset($result)) {
+                    $this->dbLog($member['member_id'], 'fail', implode("<=>", $result), Zend_Ldap_Attribute::getAttribute($ldapEntry, $result[1], 0), $member[$result[0]]);
+                }
+            } catch (Zend_Ldap_Exception $e) {
+                $this->log->info($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+            }
+            $messages = $modelOcsIdent->getMessages();
+            $this->log->info(json_encode($messages));
+        }
+
+        return true;
+    }
+
+    private function dbLog($member_id, $string, $string1, $encode, $encode1)
+    {
+        $sql = "insert into `_ldap_user_validate` (`member_id`, `status`, `msg`, `json_ldap`, `json_db`) values (:memberId, :statusVal, :msgVal, :ldapVal, :dbVal)";
+        $db = Zend_Db_Table::getDefaultAdapter();
+        $db->query($sql, array('memberId' => $member_id, 'statusVal'=>$string, 'msgVal'=>$string1, 'ldapVal'=>$encode, 'dbVal'=>$encode1));
+
+    }
+
+    private function validateEntry($member, $ldapEntry)
+    {
+        $attr = Zend_Ldap_Attribute::getAttribute($ldapEntry, 'uidNumber', 0);
+        if ($member['member_id'] != $attr) return array('member_id', 'uidNumber');
+        $attr = Zend_Ldap_Attribute::getAttribute($ldapEntry, 'memberUid', 0);
+        if ($member['external_id'] != $attr) return array('external_id','memberUid');
+        $attr = Zend_Ldap_Attribute::getAttribute($ldapEntry, 'cn', 0);
+        if ($member['username'] != $attr) return array('username', 'cn');
+        $attr = Zend_Ldap_Attribute::getAttribute($ldapEntry, 'email', 0);
+        if ($member['email_address'] != $attr) return array('email_address', 'email');
+        $attr = Zend_Ldap_Attribute::getAttribute($ldapEntry, 'userPassword', 0);
+        $password = '{MD5}' . base64_encode(pack("H*", $member['password']));
+        if ($password != $attr) return array('password', 'userPassword');
+        //if ($member['member_id'] != Zend_Ldap_Attribute::getAttribute($ldapEntry, 'uidNumber')) return false;
+        //if ($member['member_id'] != Zend_Ldap_Attribute::getAttribute($ldapEntry, 'uidNumber')) return false;
+        return null;
+    }
+
+    private function prepareLogTable()
+    {
+        $db = Zend_Db_Table::getDefaultAdapter();
+        $db->query('truncate `_ldap_user_validate`;');
+    }
+
+    /**
+ * CREATE TABLE `_ldap_user_validate` (
+`id` int(11) NOT NULL AUTO_INCREMENT,
+`member_id` int(11) NOT NULL,
+`status` varchar(45) COLLATE latin1_general_ci NOT NULL,
+`msg` varchar(255) COLLATE latin1_general_ci DEFAULT NULL,
+`json_ldap` varchar(255) COLLATE latin1_general_ci DEFAULT NULL,
+`json_db` varchar(255) COLLATE latin1_general_ci DEFAULT NULL,
+PRIMARY KEY (`id`),
+KEY `idx_member_id` (`member_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+
+ */
 
 }
