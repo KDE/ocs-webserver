@@ -54,18 +54,26 @@ class MetaHeader extends React.Component {
     }
 
   render(){
+    let domainsMenuDisplay;
+    if (this.state.device === "tablet"){
+      domainsMenuDisplay = <p>hamburger</p>
+    } else {
+      domainsMenuDisplay = (
+        <DomainsMenu
+          device={this.state.device}
+          domains={domains}
+          user={this.state.user}
+          baseUrl={this.state.baseUrl}
+          blogUrl={this.state.blogUrl}
+          forumUrl={this.state.forumUrl}
+          sName={this.state.sName}
+        />
+      )
+    }
     return (
       <nav id="metaheader-nav" className="metaheader">
         <div className="metamenu">
-          <DomainsMenu
-            device={this.state.device}
-            domains={domains}
-            user={this.state.user}
-            baseUrl={this.state.baseUrl}
-            blogUrl={this.state.blogUrl}
-            forumUrl={this.state.forumUrl}
-            sName={this.state.sName}
-          />
+          {domainsMenuDisplay}
           <UserMenu
             device={this.state.device}
             user={this.state.user}
