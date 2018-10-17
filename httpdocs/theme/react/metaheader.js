@@ -1041,6 +1041,17 @@ class MobileLeftSidePanel extends React.Component {
 
   render() {
     console.log(this.state.menuGroups);
+
+    let panelMenuGroupsDisplay;
+    if (this.state.menuGroups) {
+      panelMenuGroupsDisplay = this.state.menuGroups.map((mg, i) => React.createElement(DomainsMenuGroup, {
+        key: i,
+        domains: this.props.domains,
+        menuGroup: mg,
+        sName: this.props.sName
+      }));
+    }
+
     return React.createElement(
       "div",
       { id: "left-side-panel" },
@@ -1054,7 +1065,15 @@ class MobileLeftSidePanel extends React.Component {
           "openDesktop.org :"
         )
       ),
-      React.createElement("div", { id: "panel-menu" })
+      React.createElement(
+        "div",
+        { id: "panel-menu" },
+        React.createElement(
+          "ul",
+          null,
+          panelMenuGroupsDisplay
+        )
+      )
     );
   }
 }

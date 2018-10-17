@@ -652,6 +652,19 @@ class MobileLeftSidePanel extends React.Component {
 
   render(){
     console.log(this.state.menuGroups);
+
+    let panelMenuGroupsDisplay;
+    if (this.state.menuGroups){
+      panelMenuGroupsDisplay = this.state.menuGroups.map((mg,i) => (
+        <DomainsMenuGroup
+          key={i}
+          domains={this.props.domains}
+          menuGroup={mg}
+          sName={this.props.sName}
+        />
+      ));
+    }
+
     return (
       <div id="left-side-panel">
         <div id="panel-header">
@@ -661,7 +674,7 @@ class MobileLeftSidePanel extends React.Component {
           </a>
         </div>
         <div id="panel-menu">
-
+          <ul>{panelMenuGroupsDisplay}</ul>
         </div>
       </div>
     )
