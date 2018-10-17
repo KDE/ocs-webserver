@@ -504,7 +504,7 @@ class DiscussionBoardsDropDownMenu extends React.Component {
       ),
       React.createElement(
         "ul",
-        { className: "discussion-menu dropdown-menu-right" },
+        { className: "discussion-menu dropdown-menu dropdown-menu-right" },
         React.createElement(
           "li",
           null,
