@@ -56,7 +56,17 @@ class MetaHeader extends React.Component {
   render(){
     let domainsMenuDisplay;
     if (this.state.device === "tablet"){
-      domainsMenuDisplay = <p>hamburger</p>
+      domainsMenuDisplay = (
+        <MobileLeftMenu
+          device={this.state.device}
+          domains={domains}
+          user={this.state.user}
+          baseUrl={this.state.baseUrl}
+          blogUrl={this.state.blogUrl}
+          forumUrl={this.state.forumUrl}
+          sName={this.state.sName}
+        />
+      )
     } else {
       domainsMenuDisplay = (
         <DomainsMenu
@@ -564,6 +574,31 @@ class UserLoginMenuContainer extends React.Component {
         </div>
       </li>
     )
+  }
+}
+
+/** MOBILE SPECIFIC **/
+
+class MobileLeftMenu extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+    this.toggleLeftSideOverlay = this.toggleLeftSideOverlay.bind(this);
+  }
+
+  toggleLeftSideOverlay(){
+    console.log('toggle left side overlay');
+  }
+
+  render(){
+    return (
+      <div id="metaheader-left-mobile">
+        <a onClick={this.toggleLeftSideOverlay} id="menu-toggle-item"></a>
+        <div id="left-side-overlay">
+          left side overlay
+        </div>
+      </div>
+    );
   }
 }
 

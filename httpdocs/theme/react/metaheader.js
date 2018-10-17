@@ -237,11 +237,15 @@ class MetaHeader extends React.Component {
   render() {
     let domainsMenuDisplay;
     if (this.state.device === "tablet") {
-      domainsMenuDisplay = React.createElement(
-        "p",
-        null,
-        "hamburger"
-      );
+      domainsMenuDisplay = React.createElement(MobileLeftMenu, {
+        device: this.state.device,
+        domains: domains,
+        user: this.state.user,
+        baseUrl: this.state.baseUrl,
+        blogUrl: this.state.blogUrl,
+        forumUrl: this.state.forumUrl,
+        sName: this.state.sName
+      });
     } else {
       domainsMenuDisplay = React.createElement(DomainsMenu, {
         device: this.state.device,
@@ -957,6 +961,33 @@ class UserLoginMenuContainer extends React.Component {
             )
           )
         )
+      )
+    );
+  }
+}
+
+/** MOBILE SPECIFIC **/
+
+class MobileLeftMenu extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+    this.toggleLeftSideOverlay = this.toggleLeftSideOverlay.bind(this);
+  }
+
+  toggleLeftSideOverlay() {
+    console.log('toggle left side overlay');
+  }
+
+  render() {
+    return React.createElement(
+      "div",
+      { id: "metaheader-left-mobile" },
+      React.createElement("a", { onClick: this.toggleLeftSideOverlay, id: "menu-toggle-item" }),
+      React.createElement(
+        "div",
+        { id: "left-side-overlay" },
+        "left side overlay"
       )
     );
   }
