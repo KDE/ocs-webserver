@@ -496,7 +496,7 @@ class DiscussionBoardsDropDownMenu extends React.Component {
   render() {
     return React.createElement(
       "li",
-      { ref: node => this.node = node, id: "discussion-boards", className: "dropdown", className: this.state.dropdownClass },
+      { ref: node => this.node = node, id: "discussion-boards", className: this.state.dropdownClass },
       React.createElement(
         "a",
         null,
