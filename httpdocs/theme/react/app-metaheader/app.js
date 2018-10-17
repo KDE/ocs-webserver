@@ -48,9 +48,7 @@ class MetaHeader extends React.Component {
 
     updateDimensions(){
       const device = appHelpers.getDeviceFromWidth(window.innerWidth);
-      this.setState({device:device},function(){
-        console.log(this.state.device);
-      });
+      this.setState({device:device});
     }
 
   render(){
@@ -651,8 +649,6 @@ class MobileLeftSidePanel extends React.Component {
   }
 
   render(){
-    console.log(this.state.menuGroups);
-
     let panelMenuGroupsDisplay;
     if (this.state.menuGroups){
       panelMenuGroupsDisplay = this.state.menuGroups.map((mg,i) => (
@@ -669,7 +665,7 @@ class MobileLeftSidePanel extends React.Component {
       <div id="left-side-panel">
         <div id="panel-header">
           <a href={this.props.baseUrl}>
-            <img src={this.props.baseUrl + "/images/system/ocs-logo-rounded-16x16.png"} className="logo"/> openDesktop.org
+            <img src={this.props.baseUrl + "/images/system/opendesktop-logo.png"} className="logo"/> openDesktop.org
           </a>
         </div>
         <div id="panel-menu">

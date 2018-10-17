@@ -227,9 +227,7 @@ class MetaHeader extends React.Component {
 
   updateDimensions() {
     const device = appHelpers.getDeviceFromWidth(window.innerWidth);
-    this.setState({ device: device }, function () {
-      console.log(this.state.device);
-    });
+    this.setState({ device: device });
   }
 
   render() {
@@ -1040,8 +1038,6 @@ class MobileLeftSidePanel extends React.Component {
   }
 
   render() {
-    console.log(this.state.menuGroups);
-
     let panelMenuGroupsDisplay;
     if (this.state.menuGroups) {
       panelMenuGroupsDisplay = this.state.menuGroups.map((mg, i) => React.createElement(DomainsMenuGroup, {
@@ -1061,7 +1057,7 @@ class MobileLeftSidePanel extends React.Component {
         React.createElement(
           "a",
           { href: this.props.baseUrl },
-          React.createElement("img", { src: this.props.baseUrl + "/images/system/ocs-logo-rounded-16x16.png", className: "logo" }),
+          React.createElement("img", { src: this.props.baseUrl + "/images/system/opendesktop-logo.png", className: "logo" }),
           " openDesktop.org"
         )
       ),
