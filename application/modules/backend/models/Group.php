@@ -65,14 +65,14 @@ class Backend_Model_Group
 
     public function addGroup2Ldap($name, $group_id, $full_path)
     {
-        $modelLdap = new Default_Model_Ocs_Ident();
+        $modelLdap = new Default_Model_Ocs_Ldap();
         $modelLdap->createGroup($name, $group_id, $full_path);
     }
 
     public function updateGroup2Ldap($group_id, $group_path, $group_name, $user_username, $group_access)
     {
-        $modelLdap = new Default_Model_Ocs_Ident();
-        $modelLdap->updateGroupMember($user_username, $group_id, $group_path, $group_name, $group_access);
+        $modelLdap = new Default_Model_Ocs_Ldap();
+        $modelLdap->addGroupMember($user_username, $group_id, $group_path, $group_name, $group_access);
     }
 
 }

@@ -144,7 +144,7 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
     {
         $usernameValidChars = new Local_Validate_UsernameValid();
         $mailAddressValid = new Zend_Validate_EmailAddress();
-        $modelOcsIdent = new Default_Model_Ocs_Ident();
+        $modelOcsIdent = new Default_Model_Ocs_Ldap();
 
         while ($member = $members->fetch()) {
             $this->log->info("process " . json_encode($member));
@@ -158,7 +158,7 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
                 continue;
             }
             try {
-                $modelOcsIdent->createUserInLdap($member, $force);
+                $modelOcsIdent->createUserFromArray($member, $force);
             } catch (Zend_Ldap_Exception $e) {
                 $this->log->info($e->getMessage() . PHP_EOL . $e->getTraceAsString());
             }
@@ -180,7 +180,7 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
     {
         $usernameValidChars = new Local_Validate_UsernameValid();
         $mailAddressValid = new Zend_Validate_EmailAddress();
-        $modelOcsIdent = new Default_Model_Ocs_Ident();
+        $modelOcsIdent = new Default_Model_Ocs_Ldap();
 
         while ($member = $members->fetch()) {
             //if (false === $usernameValidChars->isValid($member['username'])) {
@@ -193,7 +193,7 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
             }
             $this->log->info("process " . json_encode($member));
             try {
-                $modelOcsIdent->updateUserInLdap($member);
+                $modelOcsIdent->updateUserFromArray($member);
             } catch (Zend_Ldap_Exception $e) {
                 $this->log->info($e->getMessage() . PHP_EOL . $e->getTraceAsString());
             }
@@ -269,14 +269,14 @@ memberUid: {$member['external_id']}
     {
         $usernameValidChars = new Local_Validate_UsernameValid();
         $mailAddressValid = new Zend_Validate_EmailAddress();
-        $modelOcsIdent = new Default_Model_Ocs_Ident();
+        $modelOcsIdent = new Default_Model_Ocs_Ldap();
 
         $this->prepareLogTable();
 
         while ($member = $members->fetch()) {
             $this->log->info("process " . json_encode($member));
             try {
-                $ldapEntry = $modelOcsIdent->getUser($member['member_id'], $member['username']);
+                $ldapEntry = $modelOcsIdent->hasUser($member['member_id'], $member['username']);
                 $result = $this->validateEntry($member, $ldapEntry);
                 if (isset($result)) {
                     $this->dbLog($member['member_id'], 'fail', implode("<=>", $result), Zend_Ldap_Attribute::getAttribute($ldapEntry, $result[1], 0), $member[$result[0]]);
