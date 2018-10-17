@@ -17,6 +17,17 @@ $request = Zend_Controller_Front::getInstance()->getRequest();
 $http_scheme = $request->getScheme();
 
 $config = Zend_Registry::get('config')->settings->domain;
+
+
+$info = new Default_Model_Info();
+$domains = $info->getActiveStoresForCrossDomainLogin();
+
+foreach ($domains as $domain) {
+
+    echo '<img src="https://'.$domain.'/external/removedata.php" height="0" width="0">';
+    
+}
+
 ?>
     <img src="<?=$http_scheme?>://<?=$config->openid->host?>/logout" style="display:none;" />
     <img src="https://<?=$config->opencode->host?>/users/sign_out" style="display:none;" />
