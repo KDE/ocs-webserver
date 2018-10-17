@@ -515,7 +515,7 @@ class MoreDropDownMenu extends React.Component {
 
     return React.createElement(
       "li",
-      { id: "more-dropdown-menu", className: this.state.dropdownClass },
+      { ref: node => this.node = node, id: "more-dropdown-menu", className: this.state.dropdownClass },
       React.createElement(
         "a",
         { className: "more-menu-link-item" },
