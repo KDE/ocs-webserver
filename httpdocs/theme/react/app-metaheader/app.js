@@ -653,10 +653,15 @@ class MobileLeftSidePanel extends React.Component {
     console.log(this.state.menuGroups);
     return (
       <div id="left-side-panel">
-        <a href={this.props.baseUrl}>
-          <img src={this.props.baseUrl + "/images/system/ocs-logo-rounded-16x16.png"} className="logo"/>
-          openDesktop.org :
-        </a>
+        <div id="panel-header">
+          <a href={this.props.baseUrl}>
+            <img src={this.props.baseUrl + "/images/system/ocs-logo-rounded-16x16.png"} className="logo"/>
+            openDesktop.org :
+          </a>
+        </div>
+        <div id="panel-menu">
+          
+        </div>
       </div>
     )
   }
