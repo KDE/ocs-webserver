@@ -1117,7 +1117,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }
         try {
-            $ldap_server = new Default_Model_Ocs_Ident();
+            $ldap_server = new Default_Model_Ocs_Ldap();
             $ldap_server->deleteUser($member_id);
             Zend_Registry::get('logger')->debug(__METHOD__ . ' - ldap : ' . implode(PHP_EOL." - ", $ldap_server->getMessages()));
         } catch (Exception $e) {

@@ -57,6 +57,23 @@ $http_scheme = $request->getScheme();
 
 $json_menu = $this->fetchMetaheaderMenuJson();
 
+
+$cat_title = $helperFetchCategory->catTitle($this->cat_id);
+$category_id = $this->cat_id;
+$category_id_parent = $helperFetchCatParent->getCatParentId(array('project_category_id' =>  $category_id));
+$cat_title_length = strlen($cat_title);
+//check logo-width:
+$logoWidth = (int)$this->template['header-logo']['width'];
+$cat_title_left = $logoWidth+60;
+$tabs_left = (int)$this->template['header-nav-tabs']['absolute-left'];
+$tabs_left += $cat_title_length*10;
+$idCat = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
+
+$helperUserRole = new Backend_View_Helper_UserRole();
+$userRoleName = $helperUserRole->userRole();
+$forum_url_postfix = Zend_Auth::getInstance()->hasIdentity() ? '/session/sso' : '';
+
+
 echo $this->render('partials/header/metaheader.phtml'); ?>
 
     <style>

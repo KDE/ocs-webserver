@@ -48,7 +48,7 @@ class Zend_Ldap_Attribute
      *
      * @param  array                    $data
      * @param  string                   $attribName
-     * @param  scalar|array|Traversable $value
+     * @param  mixed|array|Traversable $value
      * @param  boolean                  $append
      * @return void
      */
