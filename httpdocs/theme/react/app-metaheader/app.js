@@ -162,6 +162,14 @@ class DomainsDropDownMenu extends React.Component {
     this.setState({menuGroups:menuGroups});
   }
 
+  componentWillMount() {
+    document.addEventListener('mousedown',this.handleClick, false);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown',this.handleClick, false);
+  }
+
   handleClick(e){
     let dropdownClass = "";
     if (this.node.contains(e.target)){
