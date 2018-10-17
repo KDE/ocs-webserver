@@ -155,7 +155,7 @@ $tabs_left += $cat_title_length*10;
         <figure class="logo-header">
             <?php
                 $storeUrl = $last_char_store_order=='1'?$sname:$baseurl.'/s/'.$store_name;
-                if (strpos($storeUrl, 'http') != 0) {
+                if (strpos($storeUrl, 'http') === false) {
                     // It starts not with 'http'
                     $storeUrl = 'https://' . $storeUrl;
                 }
