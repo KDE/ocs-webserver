@@ -182,15 +182,15 @@ class Default_Model_Ocs_Ldap
     }
 
     /**
-     * @param array     $member_data
-     * @param Zend_Ldap $ldap_connection
+     * @param string $username
      *
      * @return mixed
      * @throws Zend_Ldap_Exception
      */
-    public function getEntryByDN($member_data, $ldap_connection)
+    public function getEntryUserByDN($username)
     {
-        $username = strtolower($member_data['username']);
+        $username = strtolower($username);
+        $ldap_connection = $this->getConnectionUser();
         $entry = $ldap_connection->getEntry("cn={$username},{$this->baseDnUser}");
 
         return $entry;
@@ -800,10 +800,26 @@ class Default_Model_Ocs_Ldap
         return $dnGroup;
     }
 
-    public function addGroupMember($user_username, $group_name, $group_access, $group_path)
+    public function addGroupMember($user_username, $group_name, $group_access, $group_id = null, $group_path = null)
     {
         $connection = $this->getConnectionGroup();
         $dnGroup = $this->getDnGroup($group_name);
+
+        //Only update, if member exists
+        try {
+            $entry = $this->getEntryUserByDN($user_username);
+        } catch (Exception $e) {
+            $this->errMessages[] = "Failed.";
+            Zend_Registry::get('logger')->warn(__METHOD__ . ' - ' . $e->getMessage());
+
+            return false;
+        }
+        if (empty($entry)) {
+            $this->errMessages[] = "user not exists. nothing to update.";
+            Zend_Registry::get('logger')->warn(__METHOD__ . ' - ldap entry for new group user does not exists.' . $user_username);
+
+            return false;
+        }
 
         //Only update, if group exists
         try {
@@ -814,28 +830,23 @@ class Default_Model_Ocs_Ldap
 
             return false;
         }
-        if (empty($entry)) {
+        if (empty($entry) AND (strtolower($group_access) != 'owner')) {
             $this->errMessages[] = "group not exists. nothing to update.";
             Zend_Registry::get('logger')->warn(__METHOD__ . ' - ldap entry for group does not exists.');
 
             return false;
         }
+        if (empty($entry) AND (strtolower($group_access) == 'owner')) {
+            if (empty($group_id) OR empty($group_path)) {
+                Zend_Registry::get('logger')->warn(__METHOD__ . ' - ldap entry for group does not exists and owner is given. But group_id or group_path is empty.');
 
-        //Only update, if member exists
-        try {
-            $entry = $connection->getEntry($this->getDnUser($user_username));
-        } catch (Exception $e) {
-            $this->errMessages[] = "Failed.";
-            Zend_Registry::get('logger')->warn(__METHOD__ . ' - ' . $e->getMessage());
+                return false;
+            }
+            $group = $this->createGroup($group_name, $group_id, $group_path, $user_username, $group_access);
 
-            return false;
+            return $group;
         }
-        if (empty($entry)) {
-            $this->errMessages[] = "user not exists. nothing to update.";
-            Zend_Registry::get('logger')->warn(__METHOD__ . ' - ldap entry for user does not exists.');
 
-            return false;
-        }
 
         $group = $this->addMemberToGroupEntry($entry, $user_username, $group_access);
 
