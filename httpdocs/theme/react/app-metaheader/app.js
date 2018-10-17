@@ -631,6 +631,7 @@ class MobileLeftMenu extends React.Component {
         <div id="left-side-overlay">
           <MobileLeftSidePanel
             baseUrl={this.props.baseUrl}
+            domains={this.props.domains}
           />
         </div>
       </div>
@@ -660,7 +661,7 @@ class MobileLeftSidePanel extends React.Component {
           </a>
         </div>
         <div id="panel-menu">
-          
+
         </div>
       </div>
     )
