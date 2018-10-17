@@ -595,7 +595,7 @@ class MobileLeftMenu extends React.Component {
       <div id="metaheader-left-mobile">
         <a onClick={this.toggleLeftSideOverlay} id="menu-toggle-item"></a>
         <div id="left-side-overlay">
-          left side overlay
+          <div id="left-side-panel"></div>
         </div>
       </div>
     );
