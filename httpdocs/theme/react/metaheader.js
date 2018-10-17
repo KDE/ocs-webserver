@@ -997,7 +997,7 @@ class MobileLeftMenu extends React.Component {
     console.log(e.target);
     let overlayClass = "";
     if (this.node.contains(e.target)) {
-      if (this.state.dropdownClass === "open") {
+      if (this.state.overlayClass === "open") {
         if (e.target.id === "left-side-overlay") {
           overlayClass = "";
         } else {
