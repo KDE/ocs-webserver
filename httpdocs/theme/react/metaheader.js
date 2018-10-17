@@ -166,10 +166,8 @@ window.appHelpers = function () {
       device = "large";
     } else if (width < 910 && width >= 600) {
       device = "mid";
-    } else if (width < 600 && width >= 400) {
+    } else if (width < 600) {
       device = "tablet";
-    } else if (width < 400) {
-      device = "phone";
     }
     return device;
   }
@@ -237,11 +235,15 @@ class MetaHeader extends React.Component {
   render() {
     let domainsMenuDisplay;
     if (this.state.device === "tablet") {
-      domainsMenuDisplay = React.createElement(
-        "p",
-        null,
-        "hamburger"
-      );
+      domainsMenuDisplay = React.createElement(MobileLeftMenu, {
+        device: this.state.device,
+        domains: domains,
+        user: this.state.user,
+        baseUrl: this.state.baseUrl,
+        blogUrl: this.state.blogUrl,
+        forumUrl: this.state.forumUrl,
+        sName: this.state.sName
+      });
     } else {
       domainsMenuDisplay = React.createElement(DomainsMenu, {
         device: this.state.device,
@@ -286,6 +288,7 @@ class DomainsMenu extends React.Component {
     let moreMenuItemDisplay;
     if (this.props.device !== "large") {
       moreMenuItemDisplay = React.createElement(MoreDropDownMenu, {
+        domains: this.props.domains,
         baseUrl: this.props.baseUrl,
         blogUrl: this.props.blogUrl
       });
@@ -956,6 +959,119 @@ class UserLoginMenuContainer extends React.Component {
               "Logout"
             )
           )
+        )
+      )
+    );
+  }
+}
+
+/** MOBILE SPECIFIC **/
+
+class MobileLeftMenu extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      overlayClass: ""
+    };
+    this.toggleLeftSideOverlay = this.toggleLeftSideOverlay.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  componentWillMount() {
+    window.addEventListener('mousedown', this.handleClick, false);
+    window.addEventListener('touchend', this.handleClick, false);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('mousedown', this.handleClick, false);
+    window.addEventListener('touchend', this.handleClick, false);
+  }
+
+  toggleLeftSideOverlay() {
+    let overlayClass = "open";
+    if (this.state.overlayClass === "open") {
+      overlayClass = "";
+    }
+    this.setState({ overlayClass: overlayClass });
+  }
+
+  handleClick(e) {
+    let overlayClass = "";
+    if (this.node.contains(e.target)) {
+      if (this.state.overlayClass === "open") {
+        if (e.target.id === "left-side-overlay" || e.target.id === "menu-toggle-item") {
+          overlayClass = "";
+        } else {
+          overlayClass = "open";
+        }
+      } else {
+        overlayClass = "open";
+      }
+    }
+    this.setState({ overlayClass: overlayClass });
+  }
+
+  render() {
+    return React.createElement(
+      "div",
+      { ref: node => this.node = node, id: "metaheader-left-mobile", className: this.state.overlayClass },
+      React.createElement("a", { onClick: this.toggleLeftSideOverlay, className: "menu-toggle", id: "menu-toggle-item" }),
+      React.createElement(
+        "div",
+        { id: "left-side-overlay" },
+        React.createElement(MobileLeftSidePanel, {
+          baseUrl: this.props.baseUrl,
+          domains: this.props.domains
+        })
+      )
+    );
+  }
+}
+
+class MobileLeftSidePanel extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  componentDidMount() {
+    const menuGroups = appHelpers.generateMenuGroupsArray(this.props.domains);
+    this.setState({ menuGroups: menuGroups });
+  }
+
+  render() {
+    console.log(this.state.menuGroups);
+
+    let panelMenuGroupsDisplay;
+    if (this.state.menuGroups) {
+      panelMenuGroupsDisplay = this.state.menuGroups.map((mg, i) => React.createElement(DomainsMenuGroup, {
+        key: i,
+        domains: this.props.domains,
+        menuGroup: mg,
+        sName: this.props.sName
+      }));
+    }
+
+    return React.createElement(
+      "div",
+      { id: "left-side-panel" },
+      React.createElement(
+        "div",
+        { id: "panel-header" },
+        React.createElement(
+          "a",
+          { href: this.props.baseUrl },
+          React.createElement("img", { src: this.props.baseUrl + "/images/system/ocs-logo-rounded-16x16.png", className: "logo" }),
+          " openDesktop.org"
+        )
+      ),
+      React.createElement(
+        "div",
+        { id: "panel-menu" },
+        React.createElement(
+          "ul",
+          null,
+          panelMenuGroupsDisplay
         )
       )
     );
