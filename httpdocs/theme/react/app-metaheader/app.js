@@ -675,7 +675,7 @@ class MobileLeftSidePanel extends React.Component {
               domains={this.props.domains}
               baseUrl={this.props.baseUrl}
               blogUrl={this.props.blogUrl}
-            />          
+            />
           </ul>
         </div>
       </div>
