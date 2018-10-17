@@ -977,11 +977,13 @@ class MobileLeftMenu extends React.Component {
   }
 
   componentWillMount() {
-    document.addEventListener('mousedown', this.handleClick, false);
+    window.addEventListener('mousedown', this.handleClick, false);
+    window.addEventListener('touchmove', this.handleClick, false);
   }
 
   componentWillUnmount() {
-    document.removeEventListener('mousedown', this.handleClick, false);
+    window.removeEventListener('mousedown', this.handleClick, false);
+    window.addEventListener('touchmove', this.handleClick, false);
   }
 
   toggleLeftSideOverlay() {
