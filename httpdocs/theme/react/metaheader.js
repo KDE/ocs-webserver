@@ -924,6 +924,46 @@ class MobileLeftSidePanel extends React.Component {
             React.createElement(
               "a",
               { className: "groupname" },
+              "Discussion Boards"
+            ),
+            React.createElement(
+              "ul",
+              null,
+              React.createElement(
+                "li",
+                null,
+                React.createElement(
+                  "a",
+                  { href: this.props.forumUrl + "/c/general" },
+                  "General"
+                )
+              ),
+              React.createElement(
+                "li",
+                null,
+                React.createElement(
+                  "a",
+                  { href: this.props.forumUrl + "/c/themes-and-apps" },
+                  "Themes & Apps"
+                )
+              ),
+              React.createElement(
+                "li",
+                null,
+                React.createElement(
+                  "a",
+                  { href: this.props.forumUrl + "/c/coding" },
+                  "Coding"
+                )
+              )
+            )
+          ),
+          React.createElement(
+            "li",
+            null,
+            React.createElement(
+              "a",
+              { className: "groupname" },
               "More"
             ),
             React.createElement(
