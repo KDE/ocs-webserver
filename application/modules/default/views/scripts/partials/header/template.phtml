@@ -20,63 +20,38 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-$helperFetchCategory = new Default_View_Helper_CatTitle();
-$helperFetchCatParent = new Default_View_Helper_CatParent();
+$baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
+$sname = Zend_Registry::get('store_host');
+$store_config = Zend_Registry::get('store_config');
+
 $getAuthUser = new Default_View_Helper_GetAuthUser();
 $helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
 $helperImage = new Default_View_Helper_Image();
 $auth = Zend_Auth::getInstance();
 $member = $getAuthUser->getAuthUser();
-$phash = null;
-$ltat = null;
-if ($auth->hasIdentity()) {
-    $sess = new Zend_Session_Namespace('ocs_meta');
-    $phash = $sess->phash;
-    $ltat = $sess->openid;
-}
-
 $serverUrl = $this->serverUrl();
 
-$baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
-$sname = Zend_Registry::get('store_host');
-$store_config = Zend_Registry::get('store_config');
 $store_order = $store_config->order;
 $store_name = $store_config->name;
 $is_show_title = $store_config->is_show_title;
 $last_char_store_order = substr($store_order, -1);
 
-$url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
-$url_gitlab = Zend_Registry::get('config')->settings->client->default->url_gitlab;
-$url_blog = Zend_Registry::get('config')->settings->client->default->url_blog;
-$config_domain = $config = Zend_Registry::get('config')->settings->domain;
-$url_openid = $config_domain->openid->host;
-
-/** @var Zend_Controller_Request_Http $request */
-$request = Zend_Controller_Front::getInstance()->getRequest();
-$http_scheme = $request->getScheme();
-
-$json_menu = $this->fetchMetaheaderMenuJson();
-
-
+$helperFetchCategory = new Default_View_Helper_CatTitle();
 $cat_title = $helperFetchCategory->catTitle($this->cat_id);
-$category_id = $this->cat_id;
-$category_id_parent = $helperFetchCatParent->getCatParentId(array('project_category_id' =>  $category_id));
 $cat_title_length = strlen($cat_title);
 //check logo-width:
 $logoWidth = (int)$this->template['header-logo']['width'];
 $cat_title_left = $logoWidth+60;
 $tabs_left = (int)$this->template['header-nav-tabs']['absolute-left'];
 $tabs_left += $cat_title_length*10;
-$idCat = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
-
-$helperUserRole = new Backend_View_Helper_UserRole();
-$userRoleName = $helperUserRole->userRole();
-$forum_url_postfix = Zend_Auth::getInstance()->hasIdentity() ? '/session/sso' : '';
 
 
-echo $this->render('partials/header/metaheader.phtml'); ?>
+?>
+<?php 
+    echo $this->render('partials/header/metaheader_react.phtml');
+?>
 
-    <style>
+  <style>
 
         header a {
             color:  <?=$this->template['header-nav-tabs']['link']['color']?>;
@@ -136,8 +111,8 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
             line-height: 24px;
             margin-right: <?=$this->template['header-nav-tabs']['margin-right']?>;
         }
-
-
+    
+        
         ul.menu-nav-tabs li.active {
             background: <?=$this->template['header-nav-tabs']['background-color-active']?> none repeat scroll 0 0;
         }
@@ -153,138 +128,110 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
         .header_cat_link {
               bottom: 0; position: absolute; color: blue; font-size: 18pt; left: <?= $cat_title_left ?>px;
         } 
-
-        .nav-divider-pling{
-            color:#E2E2E2;
-        }
-        .nav-pills > li + li {
-                margin-left: 10px;
-            }
-            .dropdown-menu > li > a{
-                font-size: 12px;
-            }
-        .metamenu .dropdown:hover .dropdown-menu {
-            margin-left: -16px;
-        }
-        .metamenu .dropdown-menu li{
-            width: 100%;
-        }
-
-        .metamenu ul.dropdown-menu  li span{ color:#999; }
-        .metamenu ul.dropdown-menu  li.active span{ color:#eee; }
+    
+       
     </style>
 
-    <header id="page_header" xmlns="http://www.w3.org/1999/html">
-        <div class="container header" style="position: relative;">
+<header id="main-header" xmlns="http://www.w3.org/1999/html">
 
-            <?php if (false === $auth->hasIdentity() && empty($member->username)) {
-                $helperEncryptUrl = new Default_View_Helper_EncryptUrl();
-                $redirectString = '/redirect/' . $helperEncryptUrl->EncryptUrl(Zend_Controller_Front::getInstance()->getRequest()->getScheme() . '://' . Zend_Controller_Front::getInstance()->getRequest()->getHttpHost().$_SERVER["REQUEST_URI"]);
-                ?>
 
-                <ul class="menu-nav-tabs absolute-right" style="position: absolute;bottom: 0px;">
-                    <li role="presentation"
-                        class="<?php echo(strpos($_SERVER["REQUEST_URI"], 'register') ? 'active' : '') ?>">
-                        <a href="<?=$serverUrl?>/register" rel="nofollow">Register</a></li>
-                    <li role="presentation"
-                        class="<?php echo(strpos($_SERVER["REQUEST_URI"], 'login') ? 'active' : '') ?>">
-                        <a href="<?=$serverUrl?>/login<?php echo strpos($_SERVER["REQUEST_URI"], 'login') ? '' : $redirectString ?>" rel="nofollow">Login</a>
-                    </li>
-                </ul>
-            <?php } ?>
+        <?php if (false === $auth->hasIdentity() && empty($member->username)) {
+            $helperEncryptUrl = new Default_View_Helper_EncryptUrl();
+            $redirectString = '/redirect/' . $helperEncryptUrl->EncryptUrl(Zend_Controller_Front::getInstance()->getRequest()->getScheme() . '://' . Zend_Controller_Front::getInstance()->getRequest()->getHttpHost().$_SERVER["REQUEST_URI"]);
+            ?>
+            <div class="user-menu-container">
+              <ul>
+                  <li role="presentation"
+                      class="<?php echo(strpos($_SERVER["REQUEST_URI"], 'register') ? 'active' : '') ?>">
+                      <a href="<?=$serverUrl?>/register" rel="nofollow">Register</a></li>
+                  <li role="presentation"
+                      class="<?php echo(strpos($_SERVER["REQUEST_URI"], 'login') ? 'active' : '') ?>">
+                      <a href="<?=$serverUrl?>/login<?php echo strpos($_SERVER["REQUEST_URI"], 'login') ? '' : $redirectString ?>" rel="nofollow">Login</a>
+                  </li>
+              </ul>
+            </div>
+        <?php } ?>
 
-            <section class="container">
-            <section class="wrapper">
+        <figure class="logo-header">
+            <?php
+                $storeUrl = $last_char_store_order=='1'?$sname:$baseurl.'/s/'.$store_name;
+                if (strpos($storeUrl, 'http') === false) {
+                    // It starts not with 'http'
+                    $storeUrl = 'https://' . $storeUrl;
+                }
+            ?>
+          <a href="<?php echo $storeUrl ?>">
+            <img width="<?= $this->template['header-logo']['width'] ?>" border="0"
+                 src="<?= $this->template['header-logo']['image-src'] ?>">
+          </a>
+        </figure>
+        <nav id="nav-top">
+            <div class="pull-left col-lg-5 col-md-5 col-sm-5 col-xs-5">
+            </div>
+            <div id="nav-left" class="pull-right col-lg-7 col-md-7 col-sm-7 col-xs-7">
+                <?php if ($auth->hasIdentity() && !empty($member->username)) { ?>
+                    <ul class="menu pull-right">
+                        <li class="link relative profile-menu-container">
+                            <a rel="profile-menu" class="menu-trigger">
+                                <div class="absolute header-profile-image">
+                                            <img
+                                            src="<?= $helperImage->Image($member->profile_image_url,
+                                                array('width' => 30, 'height' => 30)) ?>"/>
 
-                    <section>
-
-                        <figure class="logo-header">                           
-                           <a href="http://<?php echo $last_char_store_order=='1'?$sname:$baseurl.'/s/'.$store_name ?>">
-                                <img width="<?= $this->template['header-logo']['width'] ?>" border="0"
-                                     src="<?= $this->template['header-logo']['image-src'] ?>">
+                                </div>
+                                <span><?= $member->username ?></span>
                             </a>
-                        </figure>
+                            <ul class="profile-menu menu-dropdown">
+                                <div class="dropdown-header"></div>
+                                <li class="link first">
+                                    <a href="/product/add/"><?= $this->translate('Add Product') ?></a>
+                                </li>
+                                <li class="link">
+                                    <a href="<?= $helperBuildMemberUrl->buildMemberUrl($member->username, 'products') ?>"><?= $this->translate('Products') ?></a>
+                                </li>
+                                <li class="link">
+                                    <a href="<?= $helperBuildMemberUrl->buildMemberUrl($member->username, 'plings') ?>"><?= $this->translate('Plings') ?></a>
+                                </li>
+                                <li class="link">
+                                    <a href="/settings/"><?= $this->translate('Settings') ?></a>
+                                </li>
+                                <li class="link">
+                                    <a href="<?=$serverUrl?>/logout/"><?= $this->translate('Logout') ?></a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                <?php } else { ?>
+                <?php } ?>
+                <form id="search" class="pull-right" action="/search">
+                    <input type="text" name="projectSearchText" class="content-search">
 
-                        <nav id="nav-top">
-                            <div class="pull-left col-lg-5 col-md-5 col-sm-5 col-xs-5">
-                            </div>
+                    <div class="icon-search-input absolute cursor-hand"
+                         onclick="$('#search').submit()"></div>
+                </form>
+            </div>
+        </nav>
 
-                            <div class="pull-right col-lg-7 col-md-7 col-sm-7 col-xs-7">
-                                <?php if ($auth->hasIdentity() && !empty($member->username)) { ?>
-                                    <img src="/external/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $this->Image($member->profile_image_url,array('width' => 210, 'height' => 210, 'crop' => 2)) ?>&phash=<?= $phash ?>" height="0" width="0">
-                                    <img src="<?= $url_gitlab ?>/external/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $this->Image($member->profile_image_url,array('width' => 210, 'height' => 210, 'crop' => 2)) ?>&phash=<?= $phash ?>" height="0" width="0">
-                                    <img src="<?= $url_forum ?>:8443/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $this->Image($member->profile_image_url,array('width' => 210, 'height' => 210, 'crop' => 2)) ?>&phash=<?= $phash ?>" height="0" width="0">
-                                    <img src="<?=$http_scheme?>://<?= $url_openid ?>/login/setsession?ltat=<?= $ltat ?>"  height="0" width="0" />
+        <?php if($is_show_title==1): ?>
 
-                                    <ul class="menu pull-right">
-                                        <li class="link relative profile-menu-container">
-                                            <a rel="profile-menu" class="menu-trigger">
-                                                <div class="absolute header-profile-image">                                                        
-                                                            <img
-                                                            src="<?= $helperImage->Image($member->profile_image_url,
-                                                                array('width' => 30, 'height' => 30)) ?>"/>
-                                                        
-                                                </div>
-                                                <span><?= $member->username ?></span>
-                                            </a>
-                                            <ul class="profile-menu menu-dropdown">
-                                                <div class="dropdown-header"></div>
-                                                <li class="link first">
-                                                    <a href="/product/add/"><?= $this->translate('Add Product') ?></a>
-                                                </li>
-                                                <li class="link">
-                                                    <a href="<?= $helperBuildMemberUrl->buildMemberUrl($member->username, 'products') ?>"><?= $this->translate('Products') ?></a>
-                                                </li>
-                                                <li class="link">
-                                                    <a href="<?= $helperBuildMemberUrl->buildMemberUrl($member->username, 'plings') ?>"><?= $this->translate('Plings') ?></a>
-                                                </li>
-                                                <li class="link">
-                                                    <a href="/settings/"><?= $this->translate('Settings') ?></a>
-                                                </li>
-                                                <li class="link">
-                                                    <a href="<?=$serverUrl?>/logout/"><?= $this->translate('Logout') ?></a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                <?php } else { ?>
-                                <?php } ?>
-                                <form id="search" class="pull-right" action="/search">
-                                    <input type="text" name="projectSearchText" class="content-search">
-
-                                    <div class="icon-search-input absolute cursor-hand"
-                                         onclick="$('#search').submit()"></div>
-                                </form>
-                            </div>
-                        </nav>
-                    </section>
-
-                </section>
+        <section class="container">
+            <section class="wrapper">
+                <span class="header_cat_link" id="header_cat_link">
+                   <?php /* <a href="/browse/cat/<?= isset($this->cat_id) ? $this->cat_id : 'all' ?>/order/latest"> */?>
+                    <a href="http://<?php echo $last_char_store_order=='1'?$sname:$baseurl.'/s/'.$store_name ?>">
+                        <?=$store_name?>
+                    </a>
+                </span>
             </section>
+        </section>
 
-            <?php if($is_show_title==1): ?>
-            <section class="container">
-                <section class="wrapper">
-                    <span class="header_cat_link" id="header_cat_link">
-                       <?php /* <a href="/browse/cat/<?= isset($this->cat_id) ? $this->cat_id : 'all' ?>/order/latest"> */?>
-                        <a href="http://<?php echo $last_char_store_order=='1'?$sname:$baseurl.'/s/'.$store_name ?>">
-                            <?=$store_name?>
-                        </a>
-                    </span>
-                </section>
-            </section>
-        <?php endif; ?>
-        </div>
-    </header>
-
-
-    
+      <?php endif; ?>
+</header>
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
                 MenuHover.setup();
-                Popuppanel.setup();                    
+                Popuppanel.setup();
                 LoginContainer.update();
                 PlingsRedirect.setup();
             });
         ');
-
