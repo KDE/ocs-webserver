@@ -174,7 +174,7 @@ class DomainsDropDownMenu extends React.Component {
     this.setState({dropdownClass:dropdownClass});
   }
 
-  render(){
+  render(){ 
 
     let menuGroupsDisplayLeft, menuGroupsDisplayRight;
     if (this.state.menuGroups){
