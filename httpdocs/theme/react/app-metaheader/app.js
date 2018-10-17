@@ -671,11 +671,16 @@ class MobileLeftSidePanel extends React.Component {
         <div id="panel-menu">
           <ul>
             {panelMenuGroupsDisplay}
-            <MoreDropDownMenu
-              domains={this.props.domains}
-              baseUrl={this.props.baseUrl}
-              blogUrl={this.props.blogUrl}
-            />
+            <li>
+              <a className="groupname">More</a>
+              <ul>
+                <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
+                <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
+                <li><a id="plingList" className="popuppanel" target={linkTarget} href={this.props.baseUrl + plingListUrl}>What are Plings?</a></li>
+                <li><a id="ocsapiContent" className="popuppanel" target={linkTarget} href={this.props.baseUrl + ocsapiContentUrl}>API</a></li>
+                <li><a id="aboutContent" className="popuppanel" target={linkTarget} href={this.props.baseUrl + aboutContentUrl} >About</a></li>
+              </ul>
+            </li>
           </ul>
         </div>
       </div>

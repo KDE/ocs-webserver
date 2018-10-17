@@ -918,11 +918,64 @@ class MobileLeftSidePanel extends React.Component {
           "ul",
           null,
           panelMenuGroupsDisplay,
-          React.createElement(MoreDropDownMenu, {
-            domains: this.props.domains,
-            baseUrl: this.props.baseUrl,
-            blogUrl: this.props.blogUrl
-          })
+          React.createElement(
+            "li",
+            null,
+            React.createElement(
+              "a",
+              { className: "groupname" },
+              "More"
+            ),
+            React.createElement(
+              "ul",
+              null,
+              React.createElement(
+                "li",
+                null,
+                React.createElement(
+                  "a",
+                  { href: this.props.baseUrl + "/community" },
+                  "Community"
+                )
+              ),
+              React.createElement(
+                "li",
+                null,
+                React.createElement(
+                  "a",
+                  { href: this.props.blogUrl, target: "_blank" },
+                  "Blog"
+                )
+              ),
+              React.createElement(
+                "li",
+                null,
+                React.createElement(
+                  "a",
+                  { id: "plingList", className: "popuppanel", target: linkTarget, href: this.props.baseUrl + plingListUrl },
+                  "What are Plings?"
+                )
+              ),
+              React.createElement(
+                "li",
+                null,
+                React.createElement(
+                  "a",
+                  { id: "ocsapiContent", className: "popuppanel", target: linkTarget, href: this.props.baseUrl + ocsapiContentUrl },
+                  "API"
+                )
+              ),
+              React.createElement(
+                "li",
+                null,
+                React.createElement(
+                  "a",
+                  { id: "aboutContent", className: "popuppanel", target: linkTarget, href: this.props.baseUrl + aboutContentUrl },
+                  "About"
+                )
+              )
+            )
+          )
         )
       )
     );
