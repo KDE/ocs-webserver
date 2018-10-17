@@ -153,7 +153,14 @@ $tabs_left += $cat_title_length*10;
         <?php } ?>
 
         <figure class="logo-header">
-          <a href="<?php echo $last_char_store_order=='1'?$sname:$baseurl.'/s/'.$store_name ?>">
+            <?php
+                $storeUrl = $last_char_store_order=='1'?$sname:$baseurl.'/s/'.$store_name;
+                if (strpos($storeUrl, 'http') != 0) {
+                    // It starts not with 'http'
+                    $storeUrl = 'https://' . $storeUrl;
+                }
+            ?>
+          <a href="<?php echo $storeUrl ?>">
             <img width="<?= $this->template['header-logo']['width'] ?>" border="0"
                  src="<?= $this->template['header-logo']['image-src'] ?>">
           </a>
