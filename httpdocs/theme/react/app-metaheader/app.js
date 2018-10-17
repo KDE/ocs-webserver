@@ -152,10 +152,12 @@ class DomainsDropDownMenu extends React.Component {
 
   componentWillMount() {
     document.addEventListener('mousedown',this.handleClick, false);
+    document.addEventListener('touchend',this.handleClick, false);
   }
 
   componentWillUnmount() {
     document.removeEventListener('mousedown',this.handleClick, false);
+    document.removeEventListener('touchend',this.handleClick, false);
   }
 
   handleClick(e){
@@ -225,10 +227,12 @@ class DiscussionBoardsDropDownMenu extends React.Component {
 
   componentWillMount() {
     document.addEventListener('mousedown',this.handleClick, false);
+    document.addEventListener('touchend',this.handleClick, false);
   }
 
   componentWillUnmount() {
     document.removeEventListener('mousedown',this.handleClick, false);
+    document.removeEventListener('touchend',this.handleClick, false);
   }
 
   handleClick(e){
@@ -271,10 +275,12 @@ class MoreDropDownMenu extends React.Component {
 
   componentWillMount() {
     document.addEventListener('mousedown',this.handleClick, false);
+    document.addEventListener('touchend',this.handleClick, false);
   }
 
   componentWillUnmount() {
     document.removeEventListener('mousedown',this.handleClick, false);
+    document.removeEventListener('touchend',this.handleClick, false);
   }
 
   handleClick(e){
@@ -441,10 +447,12 @@ class UserContextMenuContainer extends React.Component {
 
   componentWillMount() {
     document.addEventListener('mousedown',this.handleClick, false);
+    document.addEventListener('touchend',this.handleClick, false);
   }
 
   componentWillUnmount() {
     document.removeEventListener('mousedown',this.handleClick, false);
+    document.removeEventListener('touchend',this.handleClick, false);
   }
 
   componentDidMount() {
@@ -516,10 +524,12 @@ class UserLoginMenuContainer extends React.Component {
 
   componentWillMount() {
     document.addEventListener('mousedown',this.handleClick, false);
+    document.addEventListener('touchend',this.handleClick, false);
   }
 
   componentWillUnmount() {
     document.removeEventListener('mousedown',this.handleClick, false);
+    document.removeEventListener('touchend',this.handleClick, false);
   }
 
   handleClick(e){
