@@ -89,12 +89,76 @@ class DomainsMenu extends React.Component {
     };
   }
 
+  render(){
+
+    let moreMenuItemDisplay;
+    if (this.props.device !== "large"){
+      moreMenuItemDisplay = (
+        <MoreDropDownMenu
+          baseUrl={this.props.baseUrl}
+          blogUrl={this.props.blogUrl}
+        />
+      )
+    }
+
+    return (
+      <ul className="metaheader-menu left" id="domains-menu">
+        <li className="active">
+          <a href={this.props.baseUrl}>
+            <img src={this.props.baseUrl + "/images/system/ocs-logo-rounded-16x16.png"} className="logo"/>
+            openDesktop.org :
+          </a>
+        </li>
+        <DomainsDropDownMenu
+          domains={this.props.domains}
+        />
+        <DiscussionBoardsDropDownMenu
+          forumUrl={this.props.forumUrl}
+        />
+        {moreMenuItemDisplay}
+      </ul>
+    )
+  }
+}
+
+class DomainsDropDownMenu extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+    this.handleClick = this.handleClick.bind(this);
+  }
+
   componentDidMount() {
     const menuGroups = appHelpers.generateMenuGroupsArray(this.props.domains);
     this.setState({menuGroups:menuGroups});
   }
 
+  componentWillMount() {
+    document.addEventListener('mousedown',this.handleClick, false);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown',this.handleClick, false);
+  }
+
+  handleClick(e){
+    let dropdownClass = "";
+    if (this.node.contains(e.target)){
+      if (this.state.dropdownClass === "open"){
+        if (e.target.className === "domains-menu-link-item"){
+          dropdownClass = "";
+        } else {
+          dropdownClass = "open";
+        }
+      } else {
+        dropdownClass = "open";
+      }
+    }
+    this.setState({dropdownClass:dropdownClass});
+  }
+
   render(){
+
     let menuGroupsDisplayLeft, menuGroupsDisplayRight;
     if (this.state.menuGroups){
       menuGroupsDisplayLeft = this.state.menuGroups.slice(0,2).map((mg,i) => (
@@ -115,76 +179,127 @@ class DomainsMenu extends React.Component {
       ));
     }
 
-    let moreMenuItemDisplay;
-    if (this.props.device !== "large"){
+    return (
+      <li ref={node => this.node = node} id="domains-dropdown-menu" className={this.state.dropdownClass}>
+        <a className="domains-menu-link-item">Themes & Apps</a>
+        <ul className="dropdown-menu dropdown-menu-right">
+          <li className="submenu-container">
+            <ul>
+              {menuGroupsDisplayLeft}
+            </ul>
+          </li>
+          <li className="submenu-container">
+            <ul>
+              {menuGroupsDisplayRight}
+            </ul>
+          </li>
+        </ul>
+      </li>
+    );
+  }
+}
 
-      let plingListUrl = "/#plingList",
-          ocsapiContentUrl = "/#ocsapiContent",
-          aboutContentUrl = "/#aboutContent",
-          linkTarget = "_blank";
-      if (window.location.hostname === this.props.baseUrl.split('https://')[1]){
-        plingListUrl = "/plings";
-        ocsapiContentUrl = "/partials/ocsapicontent.phtml";
-        aboutContentUrl = "/partials/about.phtml";
-        linkTarget = "";
+class DiscussionBoardsDropDownMenu extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  componentWillMount() {
+    document.addEventListener('mousedown',this.handleClick, false);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown',this.handleClick, false);
+  }
+
+  handleClick(e){
+    let dropdownClass = "";
+    if (this.node.contains(e.target)){
+      if (this.state.dropdownClass === "open"){
+        if (e.target.className === "discussion-menu-link-item"){
+          dropdownClass = "";
+        } else {
+          dropdownClass = "open";
+        }
+      } else {
+        dropdownClass = "open";
       }
+    }
+    this.setState({dropdownClass:dropdownClass});
+  }
 
-      moreMenuItemDisplay = (
-        <li id="more-dropdown-menu" className="dropdown">
-          <a id="dropdownMenu5"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="true">More</a>
-          <ul className="dropdown-menu" aria-labelledby="dropdownMenu5">
-            <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
-            <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
-            <li><a id="plingList" className="popuppanel" target={linkTarget} href={this.props.baseUrl + plingListUrl}>What are Plings?</a></li>
-            <li><a id="ocsapiContent" className="popuppanel" target={linkTarget} href={this.props.baseUrl + ocsapiContentUrl}>API</a></li>
-            <li><a id="aboutContent" className="popuppanel" target={linkTarget} href={this.props.baseUrl + aboutContentUrl} >About</a></li>
-          </ul>
-        </li>
-      )
+  render(){
+    return (
+      <li ref={node => this.node = node}  id="discussion-boards" className={this.state.dropdownClass}>
+        <a>Discussion Boards</a>
+        <ul className="discussion-menu dropdown-menu dropdown-menu-right">
+          <li><a href={this.props.forumUrl + "/c/general"}>General</a></li>
+          <li><a href={this.props.forumUrl + "/c/themes-and-apps"}>Themes & Apps</a></li>
+          <li><a href={this.props.forumUrl + "/c/coding"}>Coding</a></li>
+        </ul>
+      </li>
+    );
+  }
+
+}
+
+class MoreDropDownMenu extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  componentWillMount() {
+    document.addEventListener('mousedown',this.handleClick, false);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown',this.handleClick, false);
+  }
+
+  handleClick(e){
+    let dropdownClass = "";
+    if (this.node.contains(e.target)){
+      if (this.state.dropdownClass === "open"){
+        if (e.target.className === "more-menu-link-item"){
+          dropdownClass = "";
+        } else {
+          dropdownClass = "open";
+        }
+      } else {
+        dropdownClass = "open";
+      }
+    }
+    this.setState({dropdownClass:dropdownClass});
+  }
+
+  render(){
+
+    let plingListUrl = "/#plingList",
+        ocsapiContentUrl = "/#ocsapiContent",
+        aboutContentUrl = "/#aboutContent",
+        linkTarget = "_blank";
+    if (window.location.hostname === this.props.baseUrl.split('https://')[1]){
+      plingListUrl = "/plings";
+      ocsapiContentUrl = "/partials/ocsapicontent.phtml";
+      aboutContentUrl = "/partials/about.phtml";
+      linkTarget = "";
     }
 
-    return (
-      <ul className="metaheader-menu left" id="domains-menu">
-        <li className="active">
-          <a href={this.props.baseUrl}>
-            <img src={this.props.baseUrl + "/images/system/ocs-logo-rounded-16x16.png"} className="logo"/>
-            openDesktop.org :
-          </a>
-        </li>
-        <li id="domains-dropdown-menu" className="dropdown">
-          <a id="dropdownMenu3"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="true">Themes & Apps</a>
-          <ul className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu3">
-            <li className="submenu-container">
-              <ul>
-                {menuGroupsDisplayLeft}
-              </ul>
-            </li>
-            <li className="submenu-container">
-              <ul>
-                {menuGroupsDisplayRight}
-              </ul>
-            </li>
-          </ul>
-        </li>
-        <li id="discussion-boards" className="dropdown">
-          <a id="dropdownMenu4"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="true">Discussion Boards</a>
-          <ul className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu4">
-            <li><a href={this.props.forumUrl + "/c/general"}>General</a></li>
-            <li><a href={this.props.forumUrl + "/c/themes-and-apps"}>Themes & Apps</a></li>
-            <li><a href={this.props.forumUrl + "/c/coding"}>Coding</a></li>
-          </ul>
-        </li>
-        {moreMenuItemDisplay}
-      </ul>
+    return(
+      <li ref={node => this.node = node} id="more-dropdown-menu" className={this.state.dropdownClass}>
+        <a className="more-menu-link-item">More</a>
+        <ul className="dropdown-menu">
+          <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
+          <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
+          <li><a id="plingList" className="popuppanel" target={linkTarget} href={this.props.baseUrl + plingListUrl}>What are Plings?</a></li>
+          <li><a id="ocsapiContent" className="popuppanel" target={linkTarget} href={this.props.baseUrl + ocsapiContentUrl}>API</a></li>
+          <li><a id="aboutContent" className="popuppanel" target={linkTarget} href={this.props.baseUrl + aboutContentUrl} >About</a></li>
+        </ul>
+      </li>
     )
   }
 }

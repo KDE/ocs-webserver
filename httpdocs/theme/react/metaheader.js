@@ -271,12 +271,78 @@ class DomainsMenu extends React.Component {
     this.state = {};
   }
 
+  render() {
+
+    let moreMenuItemDisplay;
+    if (this.props.device !== "large") {
+      moreMenuItemDisplay = React.createElement(MoreDropDownMenu, {
+        baseUrl: this.props.baseUrl,
+        blogUrl: this.props.blogUrl
+      });
+    }
+
+    return React.createElement(
+      "ul",
+      { className: "metaheader-menu left", id: "domains-menu" },
+      React.createElement(
+        "li",
+        { className: "active" },
+        React.createElement(
+          "a",
+          { href: this.props.baseUrl },
+          React.createElement("img", { src: this.props.baseUrl + "/images/system/ocs-logo-rounded-16x16.png", className: "logo" }),
+          "openDesktop.org :"
+        )
+      ),
+      React.createElement(DomainsDropDownMenu, {
+        domains: this.props.domains
+      }),
+      React.createElement(DiscussionBoardsDropDownMenu, {
+        forumUrl: this.props.forumUrl
+      }),
+      moreMenuItemDisplay
+    );
+  }
+}
+
+class DomainsDropDownMenu extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+    this.handleClick = this.handleClick.bind(this);
+  }
+
   componentDidMount() {
     const menuGroups = appHelpers.generateMenuGroupsArray(this.props.domains);
     this.setState({ menuGroups: menuGroups });
   }
 
+  componentWillMount() {
+    document.addEventListener('mousedown', this.handleClick, false);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown', this.handleClick, false);
+  }
+
+  handleClick(e) {
+    let dropdownClass = "";
+    if (this.node.contains(e.target)) {
+      if (this.state.dropdownClass === "open") {
+        if (e.target.className === "domains-menu-link-item") {
+          dropdownClass = "";
+        } else {
+          dropdownClass = "open";
+        }
+      } else {
+        dropdownClass = "open";
+      }
+    }
+    this.setState({ dropdownClass: dropdownClass });
+  }
+
   render() {
+
     let menuGroupsDisplayLeft, menuGroupsDisplayRight;
     if (this.state.menuGroups) {
       menuGroupsDisplayLeft = this.state.menuGroups.slice(0, 2).map((mg, i) => React.createElement(DomainsMenuGroup, {
@@ -293,174 +359,217 @@ class DomainsMenu extends React.Component {
       }));
     }
 
-    let moreMenuItemDisplay;
-    if (this.props.device !== "large") {
-
-      let plingListUrl = "/#plingList",
-          ocsapiContentUrl = "/#ocsapiContent",
-          aboutContentUrl = "/#aboutContent",
-          linkTarget = "_blank";
-      if (window.location.hostname === this.props.baseUrl.split('https://')[1]) {
-        plingListUrl = "/plings";
-        ocsapiContentUrl = "/partials/ocsapicontent.phtml";
-        aboutContentUrl = "/partials/about.phtml";
-        linkTarget = "";
-      }
-
-      moreMenuItemDisplay = React.createElement(
-        "li",
-        { id: "more-dropdown-menu", className: "dropdown" },
+    return React.createElement(
+      "li",
+      { ref: node => this.node = node, id: "domains-dropdown-menu", className: this.state.dropdownClass },
+      React.createElement(
+        "a",
+        { className: "domains-menu-link-item" },
+        "Themes & Apps"
+      ),
+      React.createElement(
+        "ul",
+        { className: "dropdown-menu dropdown-menu-right" },
         React.createElement(
-          "a",
-          { id: "dropdownMenu5",
-            "data-toggle": "dropdown",
-            "aria-haspopup": "true",
-            "aria-expanded": "true" },
-          "More"
+          "li",
+          { className: "submenu-container" },
+          React.createElement(
+            "ul",
+            null,
+            menuGroupsDisplayLeft
+          )
         ),
         React.createElement(
-          "ul",
-          { className: "dropdown-menu", "aria-labelledby": "dropdownMenu5" },
+          "li",
+          { className: "submenu-container" },
           React.createElement(
-            "li",
+            "ul",
             null,
-            React.createElement(
-              "a",
-              { href: this.props.baseUrl + "/community" },
-              "Community"
-            )
-          ),
-          React.createElement(
-            "li",
-            null,
-            React.createElement(
-              "a",
-              { href: this.props.blogUrl, target: "_blank" },
-              "Blog"
-            )
-          ),
-          React.createElement(
-            "li",
-            null,
-            React.createElement(
-              "a",
-              { id: "plingList", className: "popuppanel", target: linkTarget, href: this.props.baseUrl + plingListUrl },
-              "What are Plings?"
-            )
-          ),
-          React.createElement(
-            "li",
-            null,
-            React.createElement(
-              "a",
-              { id: "ocsapiContent", className: "popuppanel", target: linkTarget, href: this.props.baseUrl + ocsapiContentUrl },
-              "API"
-            )
-          ),
-          React.createElement(
-            "li",
-            null,
-            React.createElement(
-              "a",
-              { id: "aboutContent", className: "popuppanel", target: linkTarget, href: this.props.baseUrl + aboutContentUrl },
-              "About"
-            )
+            menuGroupsDisplayRight
           )
         )
-      );
+      )
+    );
+  }
+}
+
+class DiscussionBoardsDropDownMenu extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  componentWillMount() {
+    document.addEventListener('mousedown', this.handleClick, false);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown', this.handleClick, false);
+  }
+
+  handleClick(e) {
+    let dropdownClass = "";
+    if (this.node.contains(e.target)) {
+      if (this.state.dropdownClass === "open") {
+        if (e.target.className === "discussion-menu-link-item") {
+          dropdownClass = "";
+        } else {
+          dropdownClass = "open";
+        }
+      } else {
+        dropdownClass = "open";
+      }
+    }
+    this.setState({ dropdownClass: dropdownClass });
+  }
+
+  render() {
+    return React.createElement(
+      "li",
+      { ref: node => this.node = node, id: "discussion-boards", className: this.state.dropdownClass },
+      React.createElement(
+        "a",
+        null,
+        "Discussion Boards"
+      ),
+      React.createElement(
+        "ul",
+        { className: "discussion-menu dropdown-menu dropdown-menu-right" },
+        React.createElement(
+          "li",
+          null,
+          React.createElement(
+            "a",
+            { href: this.props.forumUrl + "/c/general" },
+            "General"
+          )
+        ),
+        React.createElement(
+          "li",
+          null,
+          React.createElement(
+            "a",
+            { href: this.props.forumUrl + "/c/themes-and-apps" },
+            "Themes & Apps"
+          )
+        ),
+        React.createElement(
+          "li",
+          null,
+          React.createElement(
+            "a",
+            { href: this.props.forumUrl + "/c/coding" },
+            "Coding"
+          )
+        )
+      )
+    );
+  }
+
+}
+
+class MoreDropDownMenu extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  componentWillMount() {
+    document.addEventListener('mousedown', this.handleClick, false);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown', this.handleClick, false);
+  }
+
+  handleClick(e) {
+    let dropdownClass = "";
+    if (this.node.contains(e.target)) {
+      if (this.state.dropdownClass === "open") {
+        if (e.target.className === "more-menu-link-item") {
+          dropdownClass = "";
+        } else {
+          dropdownClass = "open";
+        }
+      } else {
+        dropdownClass = "open";
+      }
+    }
+    this.setState({ dropdownClass: dropdownClass });
+  }
+
+  render() {
+
+    let plingListUrl = "/#plingList",
+        ocsapiContentUrl = "/#ocsapiContent",
+        aboutContentUrl = "/#aboutContent",
+        linkTarget = "_blank";
+    if (window.location.hostname === this.props.baseUrl.split('https://')[1]) {
+      plingListUrl = "/plings";
+      ocsapiContentUrl = "/partials/ocsapicontent.phtml";
+      aboutContentUrl = "/partials/about.phtml";
+      linkTarget = "";
     }
 
     return React.createElement(
-      "ul",
-      { className: "metaheader-menu left", id: "domains-menu" },
+      "li",
+      { ref: node => this.node = node, id: "more-dropdown-menu", className: this.state.dropdownClass },
       React.createElement(
-        "li",
-        { className: "active" },
-        React.createElement(
-          "a",
-          { href: this.props.baseUrl },
-          React.createElement("img", { src: this.props.baseUrl + "/images/system/ocs-logo-rounded-16x16.png", className: "logo" }),
-          "openDesktop.org :"
-        )
+        "a",
+        { className: "more-menu-link-item" },
+        "More"
       ),
       React.createElement(
-        "li",
-        { id: "domains-dropdown-menu", className: "dropdown" },
+        "ul",
+        { className: "dropdown-menu" },
         React.createElement(
-          "a",
-          { id: "dropdownMenu3",
-            "data-toggle": "dropdown",
-            "aria-haspopup": "true",
-            "aria-expanded": "true" },
-          "Themes & Apps"
+          "li",
+          null,
+          React.createElement(
+            "a",
+            { href: this.props.baseUrl + "/community" },
+            "Community"
+          )
         ),
         React.createElement(
-          "ul",
-          { className: "dropdown-menu dropdown-menu-right", "aria-labelledby": "dropdownMenu3" },
+          "li",
+          null,
           React.createElement(
-            "li",
-            { className: "submenu-container" },
-            React.createElement(
-              "ul",
-              null,
-              menuGroupsDisplayLeft
-            )
-          ),
-          React.createElement(
-            "li",
-            { className: "submenu-container" },
-            React.createElement(
-              "ul",
-              null,
-              menuGroupsDisplayRight
-            )
+            "a",
+            { href: this.props.blogUrl, target: "_blank" },
+            "Blog"
           )
-        )
-      ),
-      React.createElement(
-        "li",
-        { id: "discussion-boards", className: "dropdown" },
-        React.createElement(
-          "a",
-          { id: "dropdownMenu4",
-            "data-toggle": "dropdown",
-            "aria-haspopup": "true",
-            "aria-expanded": "true" },
-          "Discussion Boards"
         ),
         React.createElement(
-          "ul",
-          { className: "dropdown-menu dropdown-menu-right", "aria-labelledby": "dropdownMenu4" },
+          "li",
+          null,
           React.createElement(
-            "li",
-            null,
-            React.createElement(
-              "a",
-              { href: this.props.forumUrl + "/c/general" },
-              "General"
-            )
-          ),
+            "a",
+            { id: "plingList", className: "popuppanel", target: linkTarget, href: this.props.baseUrl + plingListUrl },
+            "What are Plings?"
+          )
+        ),
+        React.createElement(
+          "li",
+          null,
           React.createElement(
-            "li",
-            null,
-            React.createElement(
-              "a",
-              { href: this.props.forumUrl + "/c/themes-and-apps" },
-              "Themes & Apps"
-            )
-          ),
+            "a",
+            { id: "ocsapiContent", className: "popuppanel", target: linkTarget, href: this.props.baseUrl + ocsapiContentUrl },
+            "API"
+          )
+        ),
+        React.createElement(
+          "li",
+          null,
           React.createElement(
-            "li",
-            null,
-            React.createElement(
-              "a",
-              { href: this.props.forumUrl + "/c/coding" },
-              "Coding"
-            )
+            "a",
+            { id: "aboutContent", className: "popuppanel", target: linkTarget, href: this.props.baseUrl + aboutContentUrl },
+            "About"
           )
         )
-      ),
-      moreMenuItemDisplay
+      )
     );
   }
 }
