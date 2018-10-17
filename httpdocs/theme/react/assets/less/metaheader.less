@@ -738,17 +738,29 @@ body {
             li {
               width: 100%;
               float: left;
-              margin-bottom: 10px;
 
               a {
                 width: 100%;
                 height: 24px;
                 line-height: 24px;
                 display: block;
+                padding: 0 10px;
+                .transition();
               }
 
               ul {
                 padding-left: 15px;
+
+                li {
+                  margin-bottom: 10px;
+
+                  a {
+
+                    &:hover {
+                      background-color: #efefef;
+                    }
+                  }
+                }
               }
             }
           }
