@@ -551,7 +551,7 @@ class Default_Model_OAuth_Github implements Default_Model_OAuth_Interface
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }
         try {
-            $ldap_server = new Default_Model_Ocs_Ident();
+            $ldap_server = new Default_Model_Ocs_Ldap();
             $ldap_server->createUser($member['member_id']);
             Zend_Registry::get('logger')->debug(__METHOD__ . ' - ldap : ' . implode(PHP_EOL." - ", $ldap_server->getMessages()));
         } catch (Exception $e) {

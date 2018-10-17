@@ -239,7 +239,7 @@ class Default_Model_Ocs_OpenCode
     private function buildUserDn($extern_uid)
     {
         $username = strtolower($extern_uid);
-        $baseDn = Default_Model_Ocs_Ident::getBaseDn();
+        $baseDn = Default_Model_Ocs_Ldap::getBaseDn();
         $dn = "cn={$username},{$baseDn}";
 
         return $dn;

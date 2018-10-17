@@ -327,6 +327,8 @@ var ProductPage = (function () {
     return {
 
         setup: function () {
+            
+            $(".dropdown-toggle").dropdown();
 
             $('.scroll-pane').jScrollPane({
                 mouseWheelSpeed: 30,

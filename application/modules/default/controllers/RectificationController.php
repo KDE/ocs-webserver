@@ -91,7 +91,7 @@ class RectificationController extends Local_Controller_Action_DomainSwitch
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }
         try {
-            $ldap_server = new Default_Model_Ocs_Ident();
+            $ldap_server = new Default_Model_Ocs_Ldap();
             $ldap_server->createUser($this->_authMember->member_id);
             if (isset($oldUsername)) {
                 $ldap_server->deleteByUsername($oldUsername);

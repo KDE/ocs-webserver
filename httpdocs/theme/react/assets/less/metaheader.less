@@ -13,6 +13,9 @@ body {
     #metaheader {
       position: fixed;
     }
+    .nav-sidebar {
+      top:88px;  
+    }
   }
 
   &.navigation-topics {
@@ -81,6 +84,9 @@ body {
     }
   }
 
+  .metamenu {
+    height: 34px;
+  }
 
   #metaheader-nav {
     width: 100%;
@@ -679,6 +685,100 @@ body {
 
             }
           }
+        }
+      }
+    }
+  }
+
+  #metaheader-left-mobile {
+    float: left;
+    height: 34px;
+    width: 34px;
+
+    a#menu-toggle-item {
+      cursor: pointer;
+      height: 34px;
+      width: 34px;
+      display: block;
+      float: left;
+      background-image: url(../img/hamburger-menu-icon.png);
+      background-size: 20px 16px;
+      background-repeat: no-repeat;
+      background-position: center center;
+    }
+
+    #left-side-overlay {
+      position: fixed;
+      width: 0;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 1001;
+      overflow: hidden;
+
+      #left-side-panel {
+        height: 100%;
+        width: 0;
+        background-color: white;
+        -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+        box-shadow: 0 6px 12px rgba(0,0,0,.175);
+        background-color: white;
+        overflow: scroll;
+        .transition();
+
+        #panel-header {
+          background: #efefef;
+          padding: 20px;
+          text-align: center;
+          margin-bottom: 10px;
+        }
+
+        #panel-menu {
+          width: 100%;
+          ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            width: 100%;
+            float: left;
+
+            li {
+              width: 100%;
+              float: left;
+
+              a {
+                width: 100%;
+                line-height: 24px;
+                display: block;
+                padding: 0 10px;
+                .transition();
+              }
+
+              ul {
+                padding: 0 10px;
+                margin-bottom: 15px;
+
+                li {
+                  margin-bottom: 0;
+
+                  a {
+
+                    &:hover {
+                      background-color: #efefef;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    &.open {
+      #left-side-overlay {
+        width: 100%;
+        #left-side-panel {
+          width: 50%;
         }
       }
     }
