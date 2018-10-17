@@ -366,49 +366,9 @@ class DomainsMenu extends React.Component {
       React.createElement(DomainsDropDownMenu, {
         domains: this.props.domains
       }),
-      React.createElement(
-        "li",
-        { id: "discussion-boards", className: "dropdown" },
-        React.createElement(
-          "a",
-          { id: "dropdownMenu4",
-            "data-toggle": "dropdown",
-            "aria-haspopup": "true",
-            "aria-expanded": "true" },
-          "Discussion Boards"
-        ),
-        React.createElement(
-          "ul",
-          { className: "dropdown-menu dropdown-menu-right", "aria-labelledby": "dropdownMenu4" },
-          React.createElement(
-            "li",
-            null,
-            React.createElement(
-              "a",
-              { href: this.props.forumUrl + "/c/general" },
-              "General"
-            )
-          ),
-          React.createElement(
-            "li",
-            null,
-            React.createElement(
-              "a",
-              { href: this.props.forumUrl + "/c/themes-and-apps" },
-              "Themes & Apps"
-            )
-          ),
-          React.createElement(
-            "li",
-            null,
-            React.createElement(
-              "a",
-              { href: this.props.forumUrl + "/c/coding" },
-              "Coding"
-            )
-          )
-        )
-      ),
+      React.createElement(DiscussionBoardsDropDownMenu, {
+        forumUrl: this.props.forumUrl
+      }),
       moreMenuItemDisplay
     );
   }
@@ -473,7 +433,7 @@ class DomainsDropDownMenu extends React.Component {
       { ref: node => this.node = node, id: "domains-dropdown-menu", className: this.state.dropdownClass },
       React.createElement(
         "a",
-        { className: "domains-menu-link-item", onClick: this.toggleDropDown },
+        { className: "domains-menu-link-item" },
         "Themes & Apps"
       ),
       React.createElement(
@@ -500,6 +460,82 @@ class DomainsDropDownMenu extends React.Component {
       )
     );
   }
+}
+
+class DiscussionBoardsDropDownMenu extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  componentWillMount() {
+    document.addEventListener('mousedown', this.handleClick, false);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown', this.handleClick, false);
+  }
+
+  handleClick(e) {
+    let dropdownClass = "";
+    if (this.node.contains(e.target)) {
+      if (this.state.dropdownClass === "open") {
+        if (e.target.className === "discussion-menu-link-item") {
+          dropdownClass = "";
+        } else {
+          dropdownClass = "open";
+        }
+      } else {
+        dropdownClass = "open";
+      }
+    }
+    this.setState({ dropdownClass: dropdownClass });
+  }
+
+  render() {
+    return React.createElement(
+      "li",
+      { ref: node => this.node = node, id: "discussion-boards", className: "dropdown", className: this.state.dropdownClass },
+      React.createElement(
+        "a",
+        null,
+        "Discussion Boards"
+      ),
+      React.createElement(
+        "ul",
+        { className: "discussion-menu dropdown-menu-right" },
+        React.createElement(
+          "li",
+          null,
+          React.createElement(
+            "a",
+            { href: this.props.forumUrl + "/c/general" },
+            "General"
+          )
+        ),
+        React.createElement(
+          "li",
+          null,
+          React.createElement(
+            "a",
+            { href: this.props.forumUrl + "/c/themes-and-apps" },
+            "Themes & Apps"
+          )
+        ),
+        React.createElement(
+          "li",
+          null,
+          React.createElement(
+            "a",
+            { href: this.props.forumUrl + "/c/coding" },
+            "Coding"
+          )
+        )
+      )
+    );
+  }
+
 }
 
 class DomainsMenuGroup extends React.Component {
