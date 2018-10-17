@@ -166,7 +166,7 @@ window.appHelpers = function () {
       device = "large";
     } else if (width < 910 && width >= 600) {
       device = "mid";
-    } else if (width < 599 && width >= 400) {
+    } else if (width < 600 && width >= 400) {
       device = "tablet";
     } else if (width < 400) {
       device = "phone";
@@ -235,21 +235,31 @@ class MetaHeader extends React.Component {
   }
 
   render() {
+    let domainsMenuDisplay;
+    if (this.state.device === "tablet") {
+      domainsMenuDisplay = React.createElement(
+        "p",
+        null,
+        "hamburger"
+      );
+    } else {
+      domainsMenuDisplay = React.createElement(DomainsMenu, {
+        device: this.state.device,
+        domains: domains,
+        user: this.state.user,
+        baseUrl: this.state.baseUrl,
+        blogUrl: this.state.blogUrl,
+        forumUrl: this.state.forumUrl,
+        sName: this.state.sName
+      });
+    }
     return React.createElement(
       "nav",
       { id: "metaheader-nav", className: "metaheader" },
       React.createElement(
         "div",
         { className: "metamenu" },
-        React.createElement(DomainsMenu, {
-          device: this.state.device,
-          domains: domains,
-          user: this.state.user,
-          baseUrl: this.state.baseUrl,
-          blogUrl: this.state.blogUrl,
-          forumUrl: this.state.forumUrl,
-          sName: this.state.sName
-        }),
+        domainsMenuDisplay,
         React.createElement(UserMenu, {
           device: this.state.device,
           user: this.state.user,
