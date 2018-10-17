@@ -153,7 +153,7 @@ $tabs_left += $cat_title_length*10;
         <?php } ?>
 
         <figure class="logo-header">
-          <a href="http://<?php echo $last_char_store_order=='1'?$sname:$baseurl.'/s/'.$store_name ?>">
+          <a href="<?php echo $last_char_store_order=='1'?$sname:$baseurl.'/s/'.$store_name ?>">
             <img width="<?= $this->template['header-logo']['width'] ?>" border="0"
                  src="<?= $this->template['header-logo']['image-src'] ?>">
           </a>
