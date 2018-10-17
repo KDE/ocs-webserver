@@ -174,7 +174,7 @@ class DomainsDropDownMenu extends React.Component {
     this.setState({dropdownClass:dropdownClass});
   }
 
-  render(){ 
+  render(){
 
     let menuGroupsDisplayLeft, menuGroupsDisplayRight;
     if (this.state.menuGroups){
@@ -625,7 +625,7 @@ class MobileLeftMenu extends React.Component {
   render(){
     return (
       <div ref={node => this.node = node}  id="metaheader-left-mobile" className={this.state.overlayClass}>
-        <a onClick={this.toggleLeftSideOverlay} className="menu-toggle" id="menu-toggle-item"></a>
+        <a className="menu-toggle" id="menu-toggle-item"></a>
         <div id="left-side-overlay">
           <MobileLeftSidePanel
             baseUrl={this.props.baseUrl}

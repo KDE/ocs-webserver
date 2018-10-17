@@ -863,7 +863,7 @@ class MobileLeftMenu extends React.Component {
     return React.createElement(
       "div",
       { ref: node => this.node = node, id: "metaheader-left-mobile", className: this.state.overlayClass },
-      React.createElement("a", { onClick: this.toggleLeftSideOverlay, className: "menu-toggle", id: "menu-toggle-item" }),
+      React.createElement("a", { className: "menu-toggle", id: "menu-toggle-item" }),
       React.createElement(
         "div",
         { id: "left-side-overlay" },

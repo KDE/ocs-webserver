@@ -705,6 +705,11 @@ body {
       background-size: 20px 16px;
       background-repeat: no-repeat;
       background-position: center center;
+      position: absolute;
+      left: 0;
+      background-color: white;
+      z-index: 1003;
+      .transition();
     }
 
     #left-side-overlay {
@@ -777,6 +782,11 @@ body {
     }
 
     &.open {
+      a#menu-toggle-item {
+        left: 50%;
+        background-color: #efefef;
+        z-index: 1003;
+      }
       #left-side-overlay {
         width: 100%;
         #left-side-panel {
