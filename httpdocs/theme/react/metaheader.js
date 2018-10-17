@@ -1062,7 +1062,7 @@ class MobileLeftSidePanel extends React.Component {
           "a",
           { href: this.props.baseUrl },
           React.createElement("img", { src: this.props.baseUrl + "/images/system/ocs-logo-rounded-16x16.png", className: "logo" }),
-          "openDesktop.org :"
+          " openDesktop.org"
         )
       ),
       React.createElement(

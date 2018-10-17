@@ -669,8 +669,7 @@ class MobileLeftSidePanel extends React.Component {
       <div id="left-side-panel">
         <div id="panel-header">
           <a href={this.props.baseUrl}>
-            <img src={this.props.baseUrl + "/images/system/ocs-logo-rounded-16x16.png"} className="logo"/>
-            openDesktop.org :
+            <img src={this.props.baseUrl + "/images/system/ocs-logo-rounded-16x16.png"} className="logo"/> openDesktop.org
           </a>
         </div>
         <div id="panel-menu">
