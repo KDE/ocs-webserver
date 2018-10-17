@@ -586,6 +586,7 @@ class MobileLeftMenu extends React.Component {
       overlayClass:""
     };
     this.toggleLeftSideOverlay = this.toggleLeftSideOverlay.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   componentWillMount() {
