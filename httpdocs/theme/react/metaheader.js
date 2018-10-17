@@ -898,6 +898,17 @@ class MobileLeftSidePanel extends React.Component {
       }));
     }
 
+    let plingListUrl = "/#plingList",
+        ocsapiContentUrl = "/#ocsapiContent",
+        aboutContentUrl = "/#aboutContent",
+        linkTarget = "_blank";
+    if (window.location.hostname === this.props.baseUrl.split('https://')[1]) {
+      plingListUrl = "/plings";
+      ocsapiContentUrl = "/partials/ocsapicontent.phtml";
+      aboutContentUrl = "/partials/about.phtml";
+      linkTarget = "";
+    }
+
     return React.createElement(
       "div",
       { id: "left-side-panel" },
