@@ -710,6 +710,7 @@ body {
       height: 100%;
       background: rgba(0,0,0,0.5);
       z-index: 1001;
+      .transition();
 
       #left-side-panel {
         height: 100%;
@@ -718,6 +719,16 @@ body {
         -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
         box-shadow: 0 6px 12px rgba(0,0,0,.175);
         background-color: white;
+        .transition();
+      }
+    }
+
+    &.open {
+      #left-side-overlay {
+        width: 100%;
+        #left-side-panel {
+          width: 50%;
+        }
       }
     }
   }

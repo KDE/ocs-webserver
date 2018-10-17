@@ -582,17 +582,23 @@ class UserLoginMenuContainer extends React.Component {
 class MobileLeftMenu extends React.Component {
   constructor(props){
   	super(props);
-  	this.state = {};
+  	this.state = {
+      overlayClass:""
+    };
     this.toggleLeftSideOverlay = this.toggleLeftSideOverlay.bind(this);
   }
 
   toggleLeftSideOverlay(){
-    console.log('toggle left side overlay');
+    let overlayClass = "open";
+    if (this.state.overlayClass === "open") {
+      overlayClass = "";
+    }
+    this.setState({overlayClass:overlayClass});
   }
 
   render(){
     return (
-      <div id="metaheader-left-mobile">
+      <div id="metaheader-left-mobile" className={this.state.overlayClass}>
         <a onClick={this.toggleLeftSideOverlay} id="menu-toggle-item"></a>
         <div id="left-side-overlay">
           <div id="left-side-panel"></div>
