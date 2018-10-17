@@ -67,6 +67,34 @@ class Default_Model_Info
             }
         }
     }
+    
+    public function getActiveStoresForCrossDomainLogin($limit = null)
+    {
+        $sql = '
+        SELECT DISTINCT
+            config_store.host
+        FROM
+            config_store
+        WHERE config_store.cross_domain_login = 1
+        ORDER BY config_store.order;
+        ';
+
+        if (isset($limit)) {
+            $sql .= ' limit ' . (int)$limit;
+        }
+
+        $resultSet = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
+
+        if (count($resultSet) > 0) {
+            $values = array_map(function ($row) {
+                return $row['host'];
+            }, $resultSet);
+
+            return $values;
+        } else {
+            return array();
+        }
+    }
 
     public function getActiveCategoriesForAllStores($limit = null)
     {
