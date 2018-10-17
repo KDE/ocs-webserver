@@ -275,79 +275,10 @@ class DomainsMenu extends React.Component {
 
     let moreMenuItemDisplay;
     if (this.props.device !== "large") {
-
-      let plingListUrl = "/#plingList",
-          ocsapiContentUrl = "/#ocsapiContent",
-          aboutContentUrl = "/#aboutContent",
-          linkTarget = "_blank";
-      if (window.location.hostname === this.props.baseUrl.split('https://')[1]) {
-        plingListUrl = "/plings";
-        ocsapiContentUrl = "/partials/ocsapicontent.phtml";
-        aboutContentUrl = "/partials/about.phtml";
-        linkTarget = "";
-      }
-
-      moreMenuItemDisplay = React.createElement(
-        "li",
-        { id: "more-dropdown-menu", className: "dropdown" },
-        React.createElement(
-          "a",
-          { id: "dropdownMenu5",
-            "data-toggle": "dropdown",
-            "aria-haspopup": "true",
-            "aria-expanded": "true" },
-          "More"
-        ),
-        React.createElement(
-          "ul",
-          { className: "dropdown-menu", "aria-labelledby": "dropdownMenu5" },
-          React.createElement(
-            "li",
-            null,
-            React.createElement(
-              "a",
-              { href: this.props.baseUrl + "/community" },
-              "Community"
-            )
-          ),
-          React.createElement(
-            "li",
-            null,
-            React.createElement(
-              "a",
-              { href: this.props.blogUrl, target: "_blank" },
-              "Blog"
-            )
-          ),
-          React.createElement(
-            "li",
-            null,
-            React.createElement(
-              "a",
-              { id: "plingList", className: "popuppanel", target: linkTarget, href: this.props.baseUrl + plingListUrl },
-              "What are Plings?"
-            )
-          ),
-          React.createElement(
-            "li",
-            null,
-            React.createElement(
-              "a",
-              { id: "ocsapiContent", className: "popuppanel", target: linkTarget, href: this.props.baseUrl + ocsapiContentUrl },
-              "API"
-            )
-          ),
-          React.createElement(
-            "li",
-            null,
-            React.createElement(
-              "a",
-              { id: "aboutContent", className: "popuppanel", target: linkTarget, href: this.props.baseUrl + aboutContentUrl },
-              "About"
-            )
-          )
-        )
-      );
+      moreMenuItemDisplay = React.createElement(MoreDropDownMenu, {
+        baseUrl: this.props.baseUrl,
+        blogUrl: this.props.blogUrl
+      });
     }
 
     return React.createElement(
@@ -536,6 +467,111 @@ class DiscussionBoardsDropDownMenu extends React.Component {
     );
   }
 
+}
+
+class MoreDropDownMenu extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  componentWillMount() {
+    document.addEventListener('mousedown', this.handleClick, false);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown', this.handleClick, false);
+  }
+
+  handleClick(e) {
+    let dropdownClass = "";
+    if (this.node.contains(e.target)) {
+      if (this.state.dropdownClass === "open") {
+        if (e.target.className === "more-menu-link-item") {
+          dropdownClass = "";
+        } else {
+          dropdownClass = "open";
+        }
+      } else {
+        dropdownClass = "open";
+      }
+    }
+    this.setState({ dropdownClass: dropdownClass });
+  }
+
+  render() {
+
+    let plingListUrl = "/#plingList",
+        ocsapiContentUrl = "/#ocsapiContent",
+        aboutContentUrl = "/#aboutContent",
+        linkTarget = "_blank";
+    if (window.location.hostname === this.props.baseUrl.split('https://')[1]) {
+      plingListUrl = "/plings";
+      ocsapiContentUrl = "/partials/ocsapicontent.phtml";
+      aboutContentUrl = "/partials/about.phtml";
+      linkTarget = "";
+    }
+
+    return React.createElement(
+      "li",
+      { id: "more-dropdown-menu", className: this.state.dropdownClass },
+      React.createElement(
+        "a",
+        { className: "more-menu-link-item" },
+        "More"
+      ),
+      React.createElement(
+        "ul",
+        { className: "dropdown-menu" },
+        React.createElement(
+          "li",
+          null,
+          React.createElement(
+            "a",
+            { href: this.props.baseUrl + "/community" },
+            "Community"
+          )
+        ),
+        React.createElement(
+          "li",
+          null,
+          React.createElement(
+            "a",
+            { href: this.props.blogUrl, target: "_blank" },
+            "Blog"
+          )
+        ),
+        React.createElement(
+          "li",
+          null,
+          React.createElement(
+            "a",
+            { id: "plingList", className: "popuppanel", target: linkTarget, href: this.props.baseUrl + plingListUrl },
+            "What are Plings?"
+          )
+        ),
+        React.createElement(
+          "li",
+          null,
+          React.createElement(
+            "a",
+            { id: "ocsapiContent", className: "popuppanel", target: linkTarget, href: this.props.baseUrl + ocsapiContentUrl },
+            "API"
+          )
+        ),
+        React.createElement(
+          "li",
+          null,
+          React.createElement(
+            "a",
+            { id: "aboutContent", className: "popuppanel", target: linkTarget, href: this.props.baseUrl + aboutContentUrl },
+            "About"
+          )
+        )
+      )
+    );
+  }
 }
 
 class DomainsMenuGroup extends React.Component {

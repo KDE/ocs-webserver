@@ -93,32 +93,11 @@ class DomainsMenu extends React.Component {
 
     let moreMenuItemDisplay;
     if (this.props.device !== "large"){
-
-      let plingListUrl = "/#plingList",
-          ocsapiContentUrl = "/#ocsapiContent",
-          aboutContentUrl = "/#aboutContent",
-          linkTarget = "_blank";
-      if (window.location.hostname === this.props.baseUrl.split('https://')[1]){
-        plingListUrl = "/plings";
-        ocsapiContentUrl = "/partials/ocsapicontent.phtml";
-        aboutContentUrl = "/partials/about.phtml";
-        linkTarget = "";
-      }
-
       moreMenuItemDisplay = (
-        <li id="more-dropdown-menu" className="dropdown">
-          <a id="dropdownMenu5"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="true">More</a>
-          <ul className="dropdown-menu" aria-labelledby="dropdownMenu5">
-            <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
-            <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
-            <li><a id="plingList" className="popuppanel" target={linkTarget} href={this.props.baseUrl + plingListUrl}>What are Plings?</a></li>
-            <li><a id="ocsapiContent" className="popuppanel" target={linkTarget} href={this.props.baseUrl + ocsapiContentUrl}>API</a></li>
-            <li><a id="aboutContent" className="popuppanel" target={linkTarget} href={this.props.baseUrl + aboutContentUrl} >About</a></li>
-          </ul>
-        </li>
+        <MoreDropDownMenu
+          baseUrl={this.props.baseUrl}
+          blogUrl={this.props.blogUrl}
+        />
       )
     }
 
@@ -264,6 +243,65 @@ class DiscussionBoardsDropDownMenu extends React.Component {
     );
   }
 
+}
+
+class MoreDropDownMenu extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  componentWillMount() {
+    document.addEventListener('mousedown',this.handleClick, false);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown',this.handleClick, false);
+  }
+
+  handleClick(e){
+    let dropdownClass = "";
+    if (this.node.contains(e.target)){
+      if (this.state.dropdownClass === "open"){
+        if (e.target.className === "more-menu-link-item"){
+          dropdownClass = "";
+        } else {
+          dropdownClass = "open";
+        }
+      } else {
+        dropdownClass = "open";
+      }
+    }
+    this.setState({dropdownClass:dropdownClass});
+  }
+
+  render(){
+
+    let plingListUrl = "/#plingList",
+        ocsapiContentUrl = "/#ocsapiContent",
+        aboutContentUrl = "/#aboutContent",
+        linkTarget = "_blank";
+    if (window.location.hostname === this.props.baseUrl.split('https://')[1]){
+      plingListUrl = "/plings";
+      ocsapiContentUrl = "/partials/ocsapicontent.phtml";
+      aboutContentUrl = "/partials/about.phtml";
+      linkTarget = "";
+    }
+
+    return(
+      <li id="more-dropdown-menu" className={this.state.dropdownClass}>
+        <a className="more-menu-link-item">More</a>
+        <ul className="dropdown-menu">
+          <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
+          <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
+          <li><a id="plingList" className="popuppanel" target={linkTarget} href={this.props.baseUrl + plingListUrl}>What are Plings?</a></li>
+          <li><a id="ocsapiContent" className="popuppanel" target={linkTarget} href={this.props.baseUrl + ocsapiContentUrl}>API</a></li>
+          <li><a id="aboutContent" className="popuppanel" target={linkTarget} href={this.props.baseUrl + aboutContentUrl} >About</a></li>
+        </ul>
+      </li>
+    )
+  }
 }
 
 class DomainsMenuGroup extends React.Component {
