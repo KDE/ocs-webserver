@@ -669,7 +669,14 @@ class MobileLeftSidePanel extends React.Component {
           </a>
         </div>
         <div id="panel-menu">
-          <ul>{panelMenuGroupsDisplay}</ul>
+          <ul>
+            {panelMenuGroupsDisplay}
+            <MoreDropDownMenu
+              domains={this.props.domains}
+              baseUrl={this.props.baseUrl}
+              blogUrl={this.props.blogUrl}
+            />          
+          </ul>
         </div>
       </div>
     )

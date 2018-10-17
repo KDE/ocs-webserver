@@ -917,7 +917,12 @@ class MobileLeftSidePanel extends React.Component {
         React.createElement(
           "ul",
           null,
-          panelMenuGroupsDisplay
+          panelMenuGroupsDisplay,
+          React.createElement(MoreDropDownMenu, {
+            domains: this.props.domains,
+            baseUrl: this.props.baseUrl,
+            blogUrl: this.props.blogUrl
+          })
         )
       )
     );
