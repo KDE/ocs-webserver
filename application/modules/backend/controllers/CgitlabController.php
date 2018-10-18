@@ -24,21 +24,44 @@
  */
 class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
 {
-    const filename = "members.log";
-    const filename_errors = "members.error.log";
+
+    const filename = "members";
+    const filename_errors = "members";
 
     protected $logfile;
     protected $errorlogfile;
+    /** @var Zend_Config */
+    protected $config;
+    protected $log;
 
+    /**
+     * @inheritDoc
+     */
+    public function __construct(
+        Zend_Controller_Request_Abstract $request,
+        Zend_Controller_Response_Abstract $response,
+        array $invokeArgs = array()
+    ) {
+        parent::__construct($request, $response, $invokeArgs);
+        $this->config = Zend_Registry::get('config')->settings->server->opencode;
+        $this->log = new Local_Log_File($this->config->user_logfilename, self::filename);
+        $this->_helper->viewRenderer->setNoRender(false);
+    }
+
+
+    /**
+     * @throws Zend_Db_Statement_Exception
+     * @throws Zend_Exception
+     */
     public function runAction()
     {
         ini_set('memory_limit', '1024M');
-        $logFileName = Zend_Registry::get('config')->settings->server->opencode->user_logfilename;
-        $this->logfile = realpath(APPLICATION_DATA . "/logs") . DIRECTORY_SEPARATOR . $logFileName . '_' . self::filename;
-        $this->errorlogfile = realpath(APPLICATION_DATA . "/logs") . DIRECTORY_SEPARATOR . $logFileName . '_' . self::filename_errors;
-        $this->initFiles($this->logfile, $this->errorlogfile);
 
         $force = (boolean)$this->getParam('force', false);
+        $method = $this->getParam('method', 'create');
+
+        $this->log->info("METHOD: {$method}\n--------------\n");
+        $this->log->err("METHOD: {$method}\n--------------\n");
 
         if ($this->hasParam('member_id')) {
             $memberId = $this->getParam('member_id');
@@ -48,22 +71,22 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
             $members = $this->getMemberList();
         }
 
-        $this->exportMembers($members, $force);
-    }
+        if ('create' == $method) {
+            $this->exportMembers($members, $force);
 
-    /**
-     * @param string $file
-     * @param string $errorfile
-     */
-    private function initFiles($file, $errorfile)
-    {
-        if (file_exists($file)) {
-            file_put_contents($file, "1");
-            unlink($file);
+            return;
         }
-        if (file_exists($errorfile)) {
-            file_put_contents($errorfile, "1");
-            unlink($errorfile);
+        if ('update' == $method) {
+            //$this->updateMembers($members);
+            echo "not implemented";
+
+            return;
+        }
+        if ('validate' == $method) {
+            //$this->validateMembers($members);
+            echo "not implemented";
+
+            return;
         }
     }
 
@@ -107,7 +130,7 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
 
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql);
 
-        file_put_contents($this->logfile, "Select " . $result->rowCount() . " Members.\nSql: " . $sql . "\n", FILE_APPEND);
+        $this->log->info("Load : " . $result->rowCount() . " members...");
 
         return $result;
     }
@@ -126,26 +149,30 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
         // only usernames which are valid in github/gitlab
         $usernameValidChars = new Local_Validate_UsernameValid();
         $emailValidate = new Zend_Validate_EmailAddress();
-        $modelOpenCode = new Default_Model_Ocs_OpenCode(Zend_Registry::get('config')->settings->server->opencode);
+        $modelOpenCode = new Default_Model_Ocs_OpenCode($this->config);
 
         while ($member = $members->fetch()) {
+            $this->log->info("process " . Zend_Json::encode($member));
+            echo "process " . Zend_Json::encode($member) . PHP_EOL;
+
             //if (false === $usernameValidChars->isValid($member['username'])) {
             //    file_put_contents($this->errorlogfile, print_r($member, true) . "user name validation error" . "\n\n", FILE_APPEND);
             //    continue;
             //}
             if (false === $emailValidate->isValid($member["email_address"])) {
-                file_put_contents($this->errorlogfile, print_r($member, true) . "email validation error" . "\n\n", FILE_APPEND);
+                $this->log->info("messages [\"email address validation error\"] ");
+                echo "response [\"email address validation error\"]" . PHP_EOL;
                 continue;
             }
-            file_put_contents($this->logfile, Zend_Json::encode($member) . PHP_EOL, FILE_APPEND);
             try {
                 //Export User, if he not exists
-                $modelOpenCode->exportUser($member, $force);
+                $modelOpenCode->createUserFromArray($member, $force);
             } catch (Exception $e) {
-                Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+                $this->log->info($e->getMessage() . PHP_EOL . $e->getTraceAsString());
             }
             $messages = $modelOpenCode->getMessages();
-            file_put_contents($this->logfile, Zend_Json::encode($messages) . PHP_EOL, FILE_APPEND);
+            $this->log->info("messages " . Zend_Json::encode($messages));
+            echo "response " . Zend_Json::encode($messages) . PHP_EOL;
         }
 
         return true;
