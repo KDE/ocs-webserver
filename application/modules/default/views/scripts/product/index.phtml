@@ -277,11 +277,10 @@ $xdgTypeJson = Zend_Json::encode($helperCatXdgType->catXdgType($this->product->p
 
     <main id="product-page-content">
         <div class="flex-column">
-            <div class="flex-item-4 sidebar-left" style="">
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-12 sidebar-left" style="">
                 <?php  echo $this->render('explore/partials/filter.phtml'); ?>
             </div>
-
-            <div class="flex-item-16 " id="product-main">
+            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12" id="product-main">
                 <div class="flex-row imgsmall" id="product-main-img-container">
                     <div class="product-main-img flex-item-24" id="product-main-img">
                         <div id="product-title-div" class="product-title-div">
@@ -661,7 +660,7 @@ $xdgTypeJson = Zend_Json::encode($helperCatXdgType->catXdgType($this->product->p
 
 
             </div>
-            <div class="flex-item-4 flex-right" id="product-maker">
+            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 flex-right" id="product-maker">
                 <div>
                     <div class="project-share-new col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
@@ -902,9 +901,7 @@ $xdgTypeJson = Zend_Json::encode($helperCatXdgType->catXdgType($this->product->p
                 </div>
 
             </div>
-
         </div>
-
          <div class="tooltip_templates" style="display: none">
             <span id="tooltip_content">
                 <i class="fa fa-spinner"></i>
