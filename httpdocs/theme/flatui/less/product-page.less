@@ -2,12 +2,10 @@ out: ../css/product-page.css, sourcemap: true, compress: true
 
 #product-page-view {
   #product-title-div {
-    .product-logo-container {
-      #product-header-info-container {
-        margin-left:95px;
-        .product_category {
-          margin-bottom: 5px;
-        }
+    #product-header-info-container {
+      margin-left:95px;
+      .product_category {
+        margin-bottom: 5px;
       }
     }
   }
@@ -25,7 +23,34 @@ out: ../css/product-page.css, sourcemap: true, compress: true
           float: left;
           width: 100%;
 
+          .product-title {
+            float: left;
+            width: 100%;
+          }
+
+          #product-header-info-container {
+            #product-header-title {
+              height: 85px;
+            }
+            .product_category {
+              float: left;
+              width: 100%;
+            }
+            p.light.small {
+              float: left;
+              width: 100%;
+            }
+          }
+
           .product-title-right {
+            flex: none;
+            float: left;
+            width: 100%;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #fafafa;
+            margin-bottom: 20px;
+
+
             .projectdtailHeart {
               margin: 0 auto;
               width: 45px;
@@ -46,9 +71,14 @@ out: ../css/product-page.css, sourcemap: true, compress: true
             }
           }
         }
+
         #carouselContainer {
           width: 100%;
           float: left;
+
+          .carousel-indicators {
+            bottom: -40px;
+          }
         }
       }
       #product-tabs-container {
@@ -56,6 +86,17 @@ out: ../css/product-page.css, sourcemap: true, compress: true
           margin: 0 -15px;
           padding: 0;
           .pling-nav-tabs ul.nav-tabs>li>a{font-size: 12px;}
+        }
+      }
+      #product-panels {
+        padding: 0;
+        margin-bottom: 40px;
+        .tab-pane {
+          padding: 0;
+
+          &#about-panel #product-about {
+            padding: 0;
+          }
         }
       }
     }
