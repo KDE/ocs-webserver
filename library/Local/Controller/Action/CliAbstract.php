@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -19,13 +20,13 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-
 abstract class Local_Controller_Action_CliAbstract extends Zend_Controller_Action implements Local_Controller_Action_CliInterface
 {
 
     public function preDispatch()
     {
         parent::preDispatch();
+        $this->_helper->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
     }
 
@@ -37,7 +38,6 @@ abstract class Local_Controller_Action_CliAbstract extends Zend_Controller_Actio
             foreach ($exceptionsList as $element) {
                 $errorString = "\n" . $element->__toString();
             }
-
         }
         echo $errorString . "\n";
     }

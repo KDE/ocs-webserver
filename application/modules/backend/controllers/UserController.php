@@ -210,7 +210,7 @@ class Backend_UserController extends Local_Controller_Action_Backend
             $record = $modelMember->fetchMemberData($memberId, false);
 
             $modelOpenCode = new Default_Model_Ocs_OpenCode();
-            $modelOpenCode->exportUser($record->toArray(), true);
+            $modelOpenCode->createUserFromArray($record->toArray(), true);
 
             $modelIdent = new Default_Model_Ocs_Ldap();
             $modelIdent->createUser($record->member_id);

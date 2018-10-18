@@ -132,7 +132,7 @@ class Backend_CexportController extends Local_Controller_Action_CliAbstract
     {
         try {
             $modelOpenCode = new Default_Model_Ocs_OpenCode(Zend_Registry::get('config')->settings->server->opencode);
-            $modelOpenCode->exportUser($member);
+            $modelOpenCode->createUserFromArray($member);
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }
