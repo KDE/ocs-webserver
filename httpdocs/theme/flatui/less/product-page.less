@@ -18,10 +18,44 @@ out: ../css/product-page.css, sourcemap: true, compress: true
     #product-page-view{
       #product-main-img {
         #product-title-div {
-            padding-left: 0;
-            min-height: 130px;
-            padding-top: 0;
-            display: block;
+          padding-left: 0;
+          min-height: 130px;
+          padding-top: 0;
+          display: block;
+          float: left;
+          width: 100%;
+
+          .product-title-right {
+            .projectdtailHeart {
+              margin: 0 auto;
+              width: 45px;
+              float: none;
+              .container-pling {
+                width: 45px;
+              }
+            }
+            .projectdetailRating {
+              width: 100%;
+
+              #widget-rating {
+                border: 0px !important;
+                width: 100% !important;
+                padding: 0;
+                margin: 10px 0;
+              }
+            }
+          }
+        }
+        #carouselContainer {
+          width: 100%;
+          float: left;
+        }
+      }
+      #product-tabs-container {
+        #product-tabs {
+          margin: 0 -15px;
+          padding: 0;
+          .pling-nav-tabs ul.nav-tabs>li>a{font-size: 12px;}
         }
       }
     }
