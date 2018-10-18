@@ -601,7 +601,7 @@ $xdgTypeJson = Zend_Json::encode($helperCatXdgType->catXdgType($this->product->p
                         <!-- ratings panel -->
                         <?php  if (count($this->ratings) > 0) { ?>
                         <div class="tab-pane" id="ratings-panel">
-                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                            <div id="ratings-panel-wrapper" class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
                             <article>
                                 <div id="productRatingContainer">
                                 <?php

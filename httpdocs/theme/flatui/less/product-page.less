@@ -74,6 +74,10 @@ out: ../css/product-page.css, sourcemap: true, compress: true
                 .rating {
                   margin-top: -10px;
                 }
+
+                a.partialreview {
+                  padding: 10px 13px;
+                }
               }
             }
           }
@@ -97,7 +101,12 @@ out: ../css/product-page.css, sourcemap: true, compress: true
         #product-tabs {
           margin: 0 -15px;
           padding: 0;
+          margin-bottom: 20px;
           .pling-nav-tabs ul.nav-tabs>li>a{font-size: 12px;}
+          .productRating-row {
+            float: left;
+            width: 100%;
+          }
         }
       }
       #product-panels {
@@ -105,6 +114,11 @@ out: ../css/product-page.css, sourcemap: true, compress: true
         margin-bottom: 40px;
         .tab-pane {
           padding: 0;
+          #ratings-panel {
+            #ratings-panel-wrapper {
+              padding: 0;
+            }
+          }
 
           &#about-panel #product-about {
             padding: 0;
