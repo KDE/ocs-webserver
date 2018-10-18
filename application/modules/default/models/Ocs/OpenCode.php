@@ -349,7 +349,7 @@ class Default_Model_Ocs_OpenCode
         $member_data = $this->getMemberData($member_id, false);
         $data = $this->mapUserData($member_data);
 
-        $user = $this->getUser($data['extern_uid']);
+        $user = $this->getUser($data['extern_uid'], $data['username']);
 
         if (empty($user)) {
             $this->messages[0] = 'Not deleted. User not exists. ';
@@ -503,7 +503,7 @@ class Default_Model_Ocs_OpenCode
         $member_data = $this->getMemberData($member_id);
         $data = $this->mapUserData($member_data);
 
-        $userId = $this->getUser($data['extern_uid']);
+        $userId = $this->getUser($data['extern_uid'], $data['username']);
 
         if (empty($userId)) {
             $data['skip_confirmation'] = 'true';
@@ -573,7 +573,7 @@ class Default_Model_Ocs_OpenCode
         }
 
         $member_data = $this->getMemberData($member_id, false);
-        $entry = $this->getUser($member_data['external_id']);
+        $entry = $this->getUser($member_data['external_id'], $member_data['username']);
 
         if (empty($entry)) {
             $this->messages[] = "Failed. User not found;";
