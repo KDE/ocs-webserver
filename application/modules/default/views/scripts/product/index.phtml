@@ -274,9 +274,10 @@ $xdgTypeJson = Zend_Json::encode($helperCatXdgType->catXdgType($this->product->p
     <?php } ?>
 
 
+    <link href="/theme/react/assets/css/product-page.css" type="text/css" rel="stylesheet"/>
 
     <main id="product-page-content">
-        <div class="flex-column">
+        <div id="product-page-view">
             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-12 sidebar-left" style="">
                 <?php  echo $this->render('explore/partials/filter.phtml'); ?>
             </div>
@@ -289,7 +290,7 @@ $xdgTypeJson = Zend_Json::encode($helperCatXdgType->catXdgType($this->product->p
                                   <img class="logo" src="<?= $helpImage->Image($this->product->image_small,
                                       array('width' => 85, 'height' => 85, 'crop' => 'crop')); ?>"/>
                                 </div>
-                                <div style="margin-left: 95px">
+                                <div id="product-header-info-container">
 
                                     <div>
                                     <?php if (false === empty($this->product->link_1)): ?><a
@@ -315,7 +316,7 @@ $xdgTypeJson = Zend_Json::encode($helperCatXdgType->catXdgType($this->product->p
                                     </div>
 
 
-                                    <p class="product_category" style="margin-bottom: 5px">
+                                    <p class="product_category">
                                     <?php
                                     echo '<a href="/browse/cat/' . $this->product->project_category_id . '/order/latest">' . $this->product->cat_title . ' </a>';
                                     ?>

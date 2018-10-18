@@ -1,0 +1,31 @@
+out: ../css/product-page.css, sourcemap: true, compress: true
+
+#product-page-view {
+  #product-title-div {
+    .product-logo-container {
+      #product-header-info-container {
+        margin-left:95px;
+        .product_category {
+          margin-bottom: 5px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  #product-page-content {
+    #product-page-view{
+      #product-main-img {
+        #product-title-div {
+          .product-title {
+            padding-left: 0;
+            min-height: 130px;
+            padding-top: 0;
+            display: block;            
+          }
+        }
+      }
+    }
+  }
+}
