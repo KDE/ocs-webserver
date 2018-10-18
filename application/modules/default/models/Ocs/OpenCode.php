@@ -47,12 +47,12 @@ class Default_Model_Ocs_OpenCode
      *
      * @param bool $force
      *
-     * @return bool
+     * @return array|bool
      * @throws Zend_Exception
      * @throws Zend_Http_Client_Exception
      * @throws Zend_Json_Exception
      */
-    public function exportUser($member_data, $force = false)
+    public function createUserFromArray($member_data, $force = false)
     {
         if (empty($member_data)) {
             return false;
@@ -67,17 +67,35 @@ class Default_Model_Ocs_OpenCode
         if (empty($user)) {
             $data['skip_confirmation'] = 'true';
 
-            return $this->httpUserCreate($data);
+            try {
+                $this->httpUserCreate($data);
+            } catch (Zend_Exception $e) {
+                $this->messages[] = "Fail " . $e->getMessage();
+
+                return false;
+            }
+            $this->messages[] = "Success";
+
+            return $data;
         }
 
         if ($force === true) {
             $data['skip_reconfirmation'] = 'true';
             unset($data['password']);
 
-            return $this->httpUserUpdate($data, $user['id']);
+            try {
+                $this->httpUserUpdate($data, $user['id']);
+            } catch (Zend_Exception $e) {
+                $this->messages[] = "Fail " . $e->getMessage();
+
+                return false;
+            }
+            $this->messages[] = "overwritten : " . json_encode($user);
+
+            return $user;
         }
 
-        $this->messages[0] = 'User exists and we do not update. Use the force parameter instead.';
+        $this->messages[0] = 'user already exists.';
 
         return false;
     }
@@ -114,9 +132,6 @@ class Default_Model_Ocs_OpenCode
             'bio'              => $bio,
             'admin'            => $user['roleId'] == 100 ? 'true' : 'false',
             'can_create_group' => 'true'
-            //'skip_confirmation' => 'true',
-            //'skip_reconfirmation' => 'true',
-            //'confirm'           => 'no'
         );
 
         return $data;
@@ -149,11 +164,7 @@ class Default_Model_Ocs_OpenCode
             return $user_by_dn;
         }
 
-        if ($user_by_dn['id'] == $user_by_uid['id']) {
-            return $user_by_dn;
-        }
-
-        return $user_by_dn;
+        return $user_by_uid;
     }
 
     /**
@@ -266,7 +277,7 @@ class Default_Model_Ocs_OpenCode
         $this->httpClient->setParameterPost($data);
 
         $response = $this->httpClient->request();
-        if ($response->getStatus() < 200 AND $response->getStatus() >= 300) {
+        if ($response->getStatus() < 200 OR $response->getStatus() >= 300) {
             throw new Default_Model_Ocs_Exception('push user data failed. OCS OpenCode server send message: '
                 . $response->getRawBody());
         }
@@ -278,9 +289,6 @@ class Default_Model_Ocs_OpenCode
 
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - request: ' . $uri);
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - response: ' . $response->getRawBody());
-
-        $this->messages[0] =
-            ' - response for creation request: ' . $response->getRawBody() . PHP_EOL . " - userdata: " . implode(";", $data);
 
         return true;
     }
@@ -307,7 +315,7 @@ class Default_Model_Ocs_OpenCode
         $this->httpClient->setParameterPost($data);
 
         $response = $this->httpClient->request();
-        if ($response->getStatus() < 200 AND $response->getStatus() >= 300) {
+        if ($response->getStatus() < 200 OR $response->getStatus() >= 300) {
             throw new Default_Model_Ocs_Exception('update user data failed. OCS OpenCode server send message: '
                 . $response->getRawBody());
         }
@@ -319,10 +327,6 @@ class Default_Model_Ocs_OpenCode
 
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - request: ' . $uri);
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - response: ' . $response->getRawBody());
-
-        $this->messages[0] =
-            ' - response for update request: ' . $response->getRawBody() . PHP_EOL . " - userdata: " . implode(';', $data) . PHP_EOL
-            . " - opencode id: " . $id;
 
         return true;
     }
