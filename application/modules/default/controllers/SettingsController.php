@@ -929,7 +929,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                 $form->populate($this->_memberSettings->toArray());
 
                 try {
-                    $id_server = new Default_Model_Ocs_OpenId();
+                    $id_server = new Default_Model_Ocs_OAuth();
                     $id_server->updateAvatarForUser($this->_memberSettings->member_id);
                 } catch (Exception $e) {
                     Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
@@ -1074,7 +1074,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
 
                     //Update Auth-Services
                     try {
-                        $id_server = new Default_Model_Ocs_OpenId();
+                        $id_server = new Default_Model_Ocs_OAuth();
                         $id_server->updatePasswordForUser($this->_memberSettings->member_id);
                     } catch (Exception $e) {
                         Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
@@ -1413,7 +1413,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
 
         if (true === $result) {
             try {
-                $id_server = new Default_Model_Ocs_OpenId();
+                $id_server = new Default_Model_Ocs_OAuth();
                 $id_server->updateMailForUser($this->_authMember->member_id);
             } catch (Exception $e) {
                 Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
@@ -1426,7 +1426,7 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
                 Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
             }
             try {
-                $openCode = new Default_Model_Ocs_OpenCode();
+                $openCode = new Default_Model_Ocs_Gitlab();
                 $openCode->updateMail($this->_authMember->member_id);
                 Zend_Registry::get('logger')->debug(__METHOD__ . ' - opencode : ' . implode(PHP_EOL." - ", $openCode->getMessages()));
             } catch (Exception $e) {

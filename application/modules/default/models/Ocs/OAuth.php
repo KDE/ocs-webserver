@@ -22,21 +22,22 @@
  *
  * Created: 19.06.2018
  */
-class Default_Model_Ocs_OpenId
+class Default_Model_Ocs_OAuth
 {
-    private $id_server;
+    private $httpServer;
+    protected $messages;
 
     /**
      * @inheritDoc
      */
-    public function __construct($id_server = null)
+    public function __construct($config = null)
     {
-        if (isset($id_server)) {
-            $this->id_server = $id_server;
+        if (isset($config)) {
+            $this->config = $config;
         } else {
-            $config = Zend_Registry::get('config')->settings->server->oauth;
-            $this->id_server = new Default_Model_Ocs_HttpTransport_OpenIdServer($config);
+            $this->config = Zend_Registry::get('config')->settings->server->opencode;
         }
+        $this->httpServer = new Default_Model_Ocs_HttpTransport_OAuthServer($config);
     }
 
     /**
@@ -56,7 +57,7 @@ class Default_Model_Ocs_OpenId
         $user = $this->getUserData($member_id);
         $data = $this->mapUserData($user);
 
-        return $this->id_server->pushHttpUserData($data);
+        return $this->httpServer->pushHttpUserData($data);
     }
 
     /**
@@ -142,7 +143,7 @@ class Default_Model_Ocs_OpenId
 
         $options = array('bypassEmailCheck' => 'true', 'bypassUsernameCheck' => 'true', 'update' => 'true');
 
-        return $this->id_server->pushHttpUserData($data, $options);
+        return $this->httpServer->pushHttpUserData($data, $options);
     }
 
     /**
@@ -203,28 +204,47 @@ class Default_Model_Ocs_OpenId
     }
 
     /**
-     * @param array $user
-     * @param bool  $create
+     * @param array $member_data
+     * @param bool  $force
      *
      * @return bool
      * @throws Zend_Cache_Exception
      * @throws Zend_Exception
      * @throws Zend_Http_Client_Exception
      */
-    public function exportUser($user, $create = false)
+    public function createUserFromArray($member_data, $force = false)
     {
-        if (empty($user)) {
+        if (empty($member_data)) {
             return false;
         }
 
-        $data = $this->mapUserData($user);
+        $this->messages = array();
+
+        $data = $this->mapUserData($member_data);
 
         $options = array();
-        if (false === $create) {
+        if (true === $force) {
             $options = array('bypassEmailCheck' => 'true', 'bypassUsernameCheck' => 'true', 'update' => 'true');
         }
 
-        return $this->id_server->pushHttpUserData($data, $options);
+        try {
+            $this->httpServer->pushHttpUserData($data, $options);
+        } catch (Zend_Exception $e) {
+            $this->messages[] = "Fail " . $e->getMessage();
+
+            return false;
+        }
+        $this->messages[] = $this->httpServer->getMessages();
+
+        return $data;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMessages()
+    {
+        return $this->messages;
     }
 
 }

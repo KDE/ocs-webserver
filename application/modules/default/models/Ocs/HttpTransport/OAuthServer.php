@@ -20,9 +20,10 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-class Default_Model_Ocs_HttpTransport_OpenIdServer
+class Default_Model_Ocs_HttpTransport_OAuthServer
 {
 
+    protected $messages;
     private $_config;
     private $_cache;
 
@@ -31,6 +32,7 @@ class Default_Model_Ocs_HttpTransport_OpenIdServer
      * @param Zend_Db_Adapter_Abstract|null $dbAdapter
      * @param null                          $tableName
      * @param Zend_Config                   $config
+     *
      * @throws Zend_Exception
      */
     public function __construct(Zend_Config $config)
@@ -64,6 +66,7 @@ class Default_Model_Ocs_HttpTransport_OpenIdServer
 
     /**
      * @param array $userdata
+     *
      * @return bool
      * @throws Zend_Cache_Exception
      * @throws Zend_Exception
@@ -71,6 +74,7 @@ class Default_Model_Ocs_HttpTransport_OpenIdServer
      */
     public function pushHttpUserData($userdata, $options = null)
     {
+        $this->messages = array();
         $access_token = $this->getAccessToken();
         $map_user_data = array(
             'user' => array(
@@ -112,8 +116,11 @@ class Default_Model_Ocs_HttpTransport_OpenIdServer
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - response: ' . $response->getBody());
 
         if ($response->getStatus() != 200) {
-            throw new Zend_Exception('push user data failed. OCS ID server send message: ' . $response->getBody() . PHP_EOL . $jsonUserData . PHP_EOL);
+            throw new Zend_Exception('push user data failed. OCS ID server send message: ' . $response->getBody() . PHP_EOL
+                . $jsonUserData . PHP_EOL);
         }
+
+        $this->messages[] = $response->getBody();
 
         return true;
     }
@@ -126,14 +133,16 @@ class Default_Model_Ocs_HttpTransport_OpenIdServer
      */
     protected function getAccessToken()
     {
-        $cache_name = 'id_server_token'.$this->_config->client_id;
+        $cache_name = 'id_server_token' . $this->_config->client_id;
         $token = $this->_cache->load($cache_name);
         if (false === $token) {
             $token = $this->requestHttpAccessToken();
             $token->expire_at = microtime(true) + $token->expires_in;
             $this->_cache->save($token, $cache_name, array(), false);
         }
-        Zend_Registry::get('logger')->debug(__METHOD__ . " - microtime:" . microtime(true)." expire_at: " . print_r($token->expire_at, true));
+        Zend_Registry::get('logger')->debug(__METHOD__ . " - microtime:" . microtime(true) . " expire_at: "
+            . print_r($token->expire_at, true))
+        ;
         if (isset($token) AND (microtime(true) > $token->expire_at)) {
             $token = $this->requestHttRefreshToken($token->refresh_token);
             $token->expire_at = microtime(true) + $token->expires_in;
@@ -179,6 +188,7 @@ class Default_Model_Ocs_HttpTransport_OpenIdServer
 
     /**
      * @param Zend_Http_Response $response
+     *
      * @return mixed
      * @throws Zend_Json_Exception
      */
@@ -191,6 +201,7 @@ class Default_Model_Ocs_HttpTransport_OpenIdServer
 
     /**
      * @param $refresh_token
+     *
      * @return mixed
      * @throws Zend_Exception
      * @throws Zend_Http_Client_Exception
@@ -221,6 +232,14 @@ class Default_Model_Ocs_HttpTransport_OpenIdServer
         $data = $this->parseResponse($response);
 
         return $data;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMessages()
+    {
+        return $this->messages;
     }
 
 }

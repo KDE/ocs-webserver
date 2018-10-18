@@ -124,7 +124,7 @@ class Backend_CldapController extends Local_Controller_Action_CliAbstract
               AND LOCATE('_deactivated', `me`.`email_address`) = 0
             " . $filter . "
             ORDER BY `m`.`member_id` ASC
-            LIMIT 100
+            # LIMIT 100
         ";
 
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql);

@@ -209,13 +209,13 @@ class Backend_UserController extends Local_Controller_Action_Backend
             $modelMember = new  Default_Model_Member();
             $record = $modelMember->fetchMemberData($memberId, false);
 
-            $modelOpenCode = new Default_Model_Ocs_OpenCode();
+            $modelOpenCode = new Default_Model_Ocs_Gitlab();
             $modelOpenCode->createUserFromArray($record->toArray(), true);
 
             $modelIdent = new Default_Model_Ocs_Ldap();
             $modelIdent->createUser($record->member_id);
 
-            $modelId = new Default_Model_Ocs_OpenId();
+            $modelId = new Default_Model_Ocs_OAuth();
             $modelId->createUser($record->member_id);
 
             $jTableResult = array();

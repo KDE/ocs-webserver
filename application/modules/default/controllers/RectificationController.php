@@ -85,7 +85,7 @@ class RectificationController extends Local_Controller_Action_DomainSwitch
         Zend_Auth::getInstance()->getStorage()->write($this->_authMember);
 
         try {
-            $id_server = new Default_Model_Ocs_OpenId();
+            $id_server = new Default_Model_Ocs_OAuth();
             $id_server->createUser($this->_authMember->member_id);
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());

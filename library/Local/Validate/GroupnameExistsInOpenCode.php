@@ -55,7 +55,7 @@ class Local_Validate_GroupnameExistsInOpenCode extends Zend_Validate_Abstract
      */
     private function checkNameExist($value)
     {
-        $modelOpenCode = new Default_Model_Ocs_OpenCode();
+        $modelOpenCode = new Default_Model_Ocs_Gitlab();
 
         return $modelOpenCode->groupExists($value) ? false : true;
     }
