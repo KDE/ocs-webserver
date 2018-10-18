@@ -863,7 +863,7 @@ class MobileLeftMenu extends React.Component {
     return React.createElement(
       "div",
       { ref: node => this.node = node, id: "metaheader-left-mobile", className: this.state.overlayClass },
-      React.createElement("a", { onClick: this.toggleLeftSideOverlay, className: "menu-toggle", id: "menu-toggle-item" }),
+      React.createElement("a", { className: "menu-toggle", id: "menu-toggle-item" }),
       React.createElement(
         "div",
         { id: "left-side-overlay" },
@@ -898,6 +898,17 @@ class MobileLeftSidePanel extends React.Component {
       }));
     }
 
+    let plingListUrl = "/#plingList",
+        ocsapiContentUrl = "/#ocsapiContent",
+        aboutContentUrl = "/#aboutContent",
+        linkTarget = "_blank";
+    if (window.location.hostname === this.props.baseUrl.split('https://')[1]) {
+      plingListUrl = "/plings";
+      ocsapiContentUrl = "/partials/ocsapicontent.phtml";
+      aboutContentUrl = "/partials/about.phtml";
+      linkTarget = "";
+    }
+
     return React.createElement(
       "div",
       { id: "left-side-panel" },
@@ -917,7 +928,113 @@ class MobileLeftSidePanel extends React.Component {
         React.createElement(
           "ul",
           null,
-          panelMenuGroupsDisplay
+          panelMenuGroupsDisplay,
+          React.createElement(
+            "li",
+            null,
+            React.createElement(
+              "a",
+              { className: "groupname" },
+              React.createElement(
+                "b",
+                null,
+                "Discussion Boards"
+              )
+            ),
+            React.createElement(
+              "ul",
+              null,
+              React.createElement(
+                "li",
+                null,
+                React.createElement(
+                  "a",
+                  { href: this.props.forumUrl + "/c/general" },
+                  "General"
+                )
+              ),
+              React.createElement(
+                "li",
+                null,
+                React.createElement(
+                  "a",
+                  { href: this.props.forumUrl + "/c/themes-and-apps" },
+                  "Themes & Apps"
+                )
+              ),
+              React.createElement(
+                "li",
+                null,
+                React.createElement(
+                  "a",
+                  { href: this.props.forumUrl + "/c/coding" },
+                  "Coding"
+                )
+              )
+            )
+          ),
+          React.createElement(
+            "li",
+            null,
+            React.createElement(
+              "a",
+              { className: "groupname" },
+              React.createElement(
+                "b",
+                null,
+                "More"
+              )
+            ),
+            React.createElement(
+              "ul",
+              null,
+              React.createElement(
+                "li",
+                null,
+                React.createElement(
+                  "a",
+                  { href: this.props.baseUrl + "/community" },
+                  "Community"
+                )
+              ),
+              React.createElement(
+                "li",
+                null,
+                React.createElement(
+                  "a",
+                  { href: this.props.blogUrl, target: "_blank" },
+                  "Blog"
+                )
+              ),
+              React.createElement(
+                "li",
+                null,
+                React.createElement(
+                  "a",
+                  { id: "plingList", className: "popuppanel", target: linkTarget, href: this.props.baseUrl + plingListUrl },
+                  "What are Plings?"
+                )
+              ),
+              React.createElement(
+                "li",
+                null,
+                React.createElement(
+                  "a",
+                  { id: "ocsapiContent", className: "popuppanel", target: linkTarget, href: this.props.baseUrl + ocsapiContentUrl },
+                  "API"
+                )
+              ),
+              React.createElement(
+                "li",
+                null,
+                React.createElement(
+                  "a",
+                  { id: "aboutContent", className: "popuppanel", target: linkTarget, href: this.props.baseUrl + aboutContentUrl },
+                  "About"
+                )
+              )
+            )
+          )
         )
       )
     );

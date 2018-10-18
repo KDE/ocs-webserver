@@ -14,7 +14,7 @@ body {
       position: fixed;
     }
     .nav-sidebar {
-      top:88px;  
+      top:88px;
     }
   }
 
@@ -705,6 +705,10 @@ body {
       background-size: 20px 16px;
       background-repeat: no-repeat;
       background-position: center center;
+      position: absolute;
+      left: 0;
+      background-color: white;
+      z-index: 1000;
     }
 
     #left-side-overlay {
@@ -723,7 +727,6 @@ body {
         box-shadow: 0 6px 12px rgba(0,0,0,.175);
         background-color: white;
         overflow: scroll;
-        .transition();
 
         #panel-header {
           background: #efefef;
@@ -750,18 +753,17 @@ body {
                 line-height: 24px;
                 display: block;
                 padding: 0 10px;
+                text-decoration: none;
+                color: #6a7686;
                 .transition();
               }
 
               ul {
                 padding: 0 10px;
                 margin-bottom: 15px;
-
                 li {
                   margin-bottom: 0;
-
                   a {
-
                     &:hover {
                       background-color: #efefef;
                     }
@@ -783,4 +785,8 @@ body {
       }
     }
   }
+}
+
+@media (max-width: 600px) {
+  #metaheader #metaheader-nav ul.metaheader-menu#user-menu {margin-right: 0;}
 }

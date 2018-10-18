@@ -174,7 +174,7 @@ class DomainsDropDownMenu extends React.Component {
     this.setState({dropdownClass:dropdownClass});
   }
 
-  render(){ 
+  render(){
 
     let menuGroupsDisplayLeft, menuGroupsDisplayRight;
     if (this.state.menuGroups){
@@ -625,7 +625,7 @@ class MobileLeftMenu extends React.Component {
   render(){
     return (
       <div ref={node => this.node = node}  id="metaheader-left-mobile" className={this.state.overlayClass}>
-        <a onClick={this.toggleLeftSideOverlay} className="menu-toggle" id="menu-toggle-item"></a>
+        <a className="menu-toggle" id="menu-toggle-item"></a>
         <div id="left-side-overlay">
           <MobileLeftSidePanel
             baseUrl={this.props.baseUrl}
@@ -661,6 +661,17 @@ class MobileLeftSidePanel extends React.Component {
       ));
     }
 
+    let plingListUrl = "/#plingList",
+        ocsapiContentUrl = "/#ocsapiContent",
+        aboutContentUrl = "/#aboutContent",
+        linkTarget = "_blank";
+    if (window.location.hostname === this.props.baseUrl.split('https://')[1]){
+      plingListUrl = "/plings";
+      ocsapiContentUrl = "/partials/ocsapicontent.phtml";
+      aboutContentUrl = "/partials/about.phtml";
+      linkTarget = "";
+    }
+
     return (
       <div id="left-side-panel">
         <div id="panel-header">
@@ -669,7 +680,27 @@ class MobileLeftSidePanel extends React.Component {
           </a>
         </div>
         <div id="panel-menu">
-          <ul>{panelMenuGroupsDisplay}</ul>
+          <ul>
+            {panelMenuGroupsDisplay}
+            <li>
+              <a className="groupname"><b>Discussion Boards</b></a>
+              <ul>
+                <li><a href={this.props.forumUrl + "/c/general"}>General</a></li>
+                <li><a href={this.props.forumUrl + "/c/themes-and-apps"}>Themes & Apps</a></li>
+                <li><a href={this.props.forumUrl + "/c/coding"}>Coding</a></li>
+              </ul>
+            </li>
+            <li>
+              <a className="groupname"><b>More</b></a>
+              <ul>
+                <li><a href={this.props.baseUrl + "/community"}>Community</a></li>
+                <li><a href={this.props.blogUrl} target="_blank">Blog</a></li>
+                <li><a id="plingList" className="popuppanel" target={linkTarget} href={this.props.baseUrl + plingListUrl}>What are Plings?</a></li>
+                <li><a id="ocsapiContent" className="popuppanel" target={linkTarget} href={this.props.baseUrl + ocsapiContentUrl}>API</a></li>
+                <li><a id="aboutContent" className="popuppanel" target={linkTarget} href={this.props.baseUrl + aboutContentUrl} >About</a></li>
+              </ul>
+            </li>
+          </ul>
         </div>
       </div>
     )
