@@ -630,6 +630,9 @@ class MobileLeftMenu extends React.Component {
           <MobileLeftSidePanel
             baseUrl={this.props.baseUrl}
             domains={this.props.domains}
+            baseUrl={this.props.baseUrl}
+            blogUrl={this.props.blogUrl}
+            forumUrl={this.props.forumUrl}
           />
         </div>
       </div>
