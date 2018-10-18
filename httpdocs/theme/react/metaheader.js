@@ -869,7 +869,10 @@ class MobileLeftMenu extends React.Component {
         { id: "left-side-overlay" },
         React.createElement(MobileLeftSidePanel, {
           baseUrl: this.props.baseUrl,
-          domains: this.props.domains
+          domains: this.props.domains,
+          baseUrl: this.props.baseUrl,
+          blogUrl: this.props.blogUrl,
+          forumUrl: this.props.forumUrl
         })
       )
     );
