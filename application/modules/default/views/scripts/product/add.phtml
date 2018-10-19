@@ -277,6 +277,17 @@ $this->inlineScript()->appendScript('
                                 <?= $this->form->google_code ?>
 
                             </section>
+                            
+                            <h3>Git</h3>
+                            <section id="git">
+                                <div class="form-group">
+                                <div class="col-sm-12 margin-top-15">
+                                 <?= $this->form->is_gitlab ?>  This project is on git.opendesktop.org      
+                                </div>
+                                </div>
+                                <?= $this->form->gitlab_project_name ?>
+                                
+                            </section>    
 
                             <h3>Files</h3>
                             <section id="files">

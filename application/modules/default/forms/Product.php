@@ -72,7 +72,9 @@ class Default_Form_Product extends Zend_Form
             ->addElement($this->getSubmitElement())
             ->addElement($this->getCancelElement())
             ->addElement($this->getLicenseIdElement())
-            ->addElement($this->getIsOriginal())            
+            ->addElement($this->getIsOriginal())  
+            ->addElement($this->getIsGitlab())  
+            ->addElement($this->getGitlabProjectName())  
 
             //->addElement($this->getCCAttribution())
             //->addElement($this->getCCComercial())
@@ -589,6 +591,42 @@ class Default_Form_Product extends Zend_Form
                'checked_value' => 1,
                'unchecked_value' => 0
                ));       
+    }
+    
+    private function getIsGitlab()
+    {
+        $element = new Zend_Form_Element_Checkbox('is_gitlab_project');
+        return $element
+               ->setOptions(array(
+               'label' =>' This project is on git.opendesktop.org ',
+               'use_hidden_element' => false,
+               'checked_value' => 1,
+               'unchecked_value' => 0
+               ));       
+    }
+    
+    private function getGitlabProjectName()
+    {
+        return $this->createElement('text', 'gitlab_project_name')
+            ->setRequired(false)
+            ->addValidators(array(
+                array('StringLength', false, array(3, 60)),
+            	array('Regex', false, array('pattern' => '/^[\w.-]*$/i')),
+            	array('Regex', false, array('pattern' => '/[ .\-_A-z0-9]{1,}/i')),
+//            	array('Regex', false, array('pattern' => '/^[^\\\"\';\^\$\*!]*$/', 'messages' => array(Zend_Validate_Regex::NOT_MATCH => "'%value%' is not valid. Please try again without using any character like \\, !, ', \", $, *, ^")))
+//                $checkTitleExist
+            ))
+            ->setFilters(array('StringTrim'))
+            ->setDecorators(
+                array(
+                    array(
+                        'ViewScript',
+                        array(
+                            'viewScript' => 'product/viewscripts/input_gitlab_project_name.phtml',
+                            'placement' => false
+                        )
+                    )
+                ));
     }
 
     private function getTagElement()
