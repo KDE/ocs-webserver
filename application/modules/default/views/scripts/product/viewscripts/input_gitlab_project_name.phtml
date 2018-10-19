@@ -32,7 +32,7 @@ $member = $getAuthUser->getAuthUser();
     </div>
     <div class="col-sm-12">
         https://git.opendesktop.org/<?= $member->username ?>/ <input id="<?= $this->escape($this->element->getName()) ?>"
-               class="required form-control"
+               class="form-control"
                type="text"
                maxlength="60"
                value="<?= $this->escape($this->element->getValue()) ?>"
