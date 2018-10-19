@@ -598,7 +598,7 @@ class Default_Form_Product extends Zend_Form
         $element = new Zend_Form_Element_Checkbox('is_gitlab_project');
         return $element
                ->setOptions(array(
-               'label' =>' This project is on git.opendesktop.org ',
+               'label' =>' Git-Project ',
                'use_hidden_element' => false,
                'checked_value' => 1,
                'unchecked_value' => 0
