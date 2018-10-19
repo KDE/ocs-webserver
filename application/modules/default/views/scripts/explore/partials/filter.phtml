@@ -163,7 +163,7 @@ $this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
 </div>
 <script type="application/javascript">
     var catTree = <?= $jsonTree ?>;
-    var catSelected = <?= $this->cat_id ?>;
+    var catSelected = <?php null != $this->cat_id?$this->cat_id:null; ?>;
 
     $(document).ready(function(){
         var hierarchy = (function () {
