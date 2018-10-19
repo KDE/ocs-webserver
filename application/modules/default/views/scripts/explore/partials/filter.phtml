@@ -28,7 +28,7 @@ $this->navBackgroundColorActive = $this->template['header-nav-tabs']['background
 $this->navBackgroundColor = $this->template['header-nav-tabs']['background-color'];
 $this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
 ?><style type="text/css">
-   
+
     .naviblock {
         list-style-type: none;
         margin: 0;
@@ -38,7 +38,7 @@ $this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
         font-size: 12px;
         border: none;
         width: 100%;
-        color: #2673b0;        
+        color: #2673b0;
     }
     .navilink {
         color: #2673b0;
@@ -90,17 +90,17 @@ $this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
     }
 
     /*
-    li.navilink.active.parent a.child{       
+    li.navilink.active.parent a.child{
         color:  <?=$this->navBackgroundColorActive?>;
     }
    */
-</style> 
+</style>
 <div class="panel-group" id="accordion">
     <div class="panel panel-default accordion-group">
             <div style="margin-left: -10px">
             <?php
             function build_tree($rows, $selectedOrder, $addAllItem = false)
-            {                
+            {
                 if(!is_array($rows))
                 {
                     $rows = array($rows);
@@ -148,10 +148,10 @@ $this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
                 $urlExplore = $helpExploreUrl->buildExploreUrl(null, null, $selectedOrder);
                 return "<li class='navilink parent'><span class='title'><a class='parent' href='{$urlExplore}' data-id='0'><span class='cat-title'>All</span></a></span></li>";
             }
-            
-            
+
+
             $jsonTree = json_encode($this->categories);
-            
+
 
             $selectedOrder = isset($this->filters['order']) ? $this->filters['order'] : null;
             echo build_tree($this->categories, $selectedOrder, true);
@@ -159,10 +159,12 @@ $this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
             </div>
     </div>
 </div>
+<div id="category-tree-container">
+</div>
 <script type="application/javascript">
     var catTree = <?= $jsonTree ?>;
     var catSelected = <?= $this->cat_id ?>;
-    
+
     $(document).ready(function(){
         var hierarchy = (function () {
             return {
@@ -176,3 +178,4 @@ $this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
         hierarchy.setup(<?=$this->cat_id?>);
     });
 </script>
+<script type="application/javascript" src="/theme/react/cat-tree.js"></script>
