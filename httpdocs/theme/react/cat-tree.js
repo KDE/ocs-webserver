@@ -3,6 +3,12 @@ class CategoryTree extends React.Component {
     super(props);
     this.state = {};
   }
+
+  componentDidMount() {
+    console.log(window.catTree);
+    console.log(window.catSelected);
+  }
+
   render() {
     return React.createElement("div", { id: "category-tree" });
   }
