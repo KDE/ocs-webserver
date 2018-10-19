@@ -14,4 +14,4 @@ class CategoryTree extends React.Component {
   }
 }
 
-ReactDOM.render(React.createElement(MetaHeader, null), document.getElementById('category-tree-container'));
+ReactDOM.render(React.createElement(CategoryTree, null), document.getElementById('category-tree-container'));
