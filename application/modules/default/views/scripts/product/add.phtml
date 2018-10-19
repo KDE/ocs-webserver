@@ -129,6 +129,12 @@ $this->inlineScript()->appendScript('
             width: 25px;
             float: left;
         }
+        
+        #is_gitlab_project
+        {
+            width: 25px;
+            float: left;
+        }
     </style>
     <main class="user-admin-page">
 
@@ -281,12 +287,11 @@ $this->inlineScript()->appendScript('
                             <h3>Git</h3>
                             <section id="git">
                                 <div class="form-group">
-                                <div class="col-sm-12 margin-top-15">
-                                 <?= $this->form->is_gitlab_project ?>  Check this box, if this a public project on git.opendesktop.org      
-                                </div>
+                                    <div class="col-sm-12 margin-top-15">
+                                     <?= $this->form->is_gitlab_project ?>  Check this box, if this a public project on git.opendesktop.org      
+                                    </div>
                                 </div>
                                 <?= $this->form->gitlab_project_name ?>
-                                
                             </section>    
 
                             <h3>Files</h3>
