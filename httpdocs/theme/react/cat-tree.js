@@ -11,7 +11,7 @@ window.appHelpers = function () {
   function getSelectedCategory(categories, categoryId) {
     let selectedCategory;
     categories.forEach(function (cat, catIndex) {
-      if (cat.id === categoryId) {
+      if (parseInt(cat.id) === categoryId) {
         selectedCategory = cat;
       } else if (cat.has_children === true) {
         const catChildren = appHelpers.convertObjectToArray(cat.children);
