@@ -17,15 +17,15 @@ class CategoryTree extends React.Component {
   }
 
   getSelectedCategories(categories,catId){
-    const selectedCategory = appHelpers.getSelectedCategory(this.state.categories,this.state.categoryId);
+    const selectedCategory = appHelpers.getSelectedCategory(this.state.categories,catId);
     console.log('final selected category - ');
     console.log(selectedCategory);
     const selectedCategories = this.state.selectedCategories;
     selectedCategories.push(selectedCategory);
     this.setState({selectedCategories:selectedCategories},function(){
-      if (selectedCategory.parent_id){
+      if (typeof(selectedCategory.parent_id) === 'string'){
         console.log(selectedCategory.parent_id);
-        //this.getSelectedCategories(categories,parseInt(selectedCategory.parent_id));
+        this.getSelectedCategories(categories,parseInt(selectedCategory.parent_id));
       } else {
         console.log(this.state);
       }

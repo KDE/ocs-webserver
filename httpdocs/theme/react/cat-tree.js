@@ -51,15 +51,15 @@ class CategoryTree extends React.Component {
   }
 
   getSelectedCategories(categories, catId) {
-    const selectedCategory = appHelpers.getSelectedCategory(this.state.categories, this.state.categoryId);
+    const selectedCategory = appHelpers.getSelectedCategory(this.state.categories, catId);
     console.log('final selected category - ');
     console.log(selectedCategory);
     const selectedCategories = this.state.selectedCategories;
     selectedCategories.push(selectedCategory);
     this.setState({ selectedCategories: selectedCategories }, function () {
-      if (selectedCategory.parent_id) {
+      if (typeof selectedCategory.parent_id === 'string') {
         console.log(selectedCategory.parent_id);
-        //this.getSelectedCategories(categories,parseInt(selectedCategory.parent_id));
+        this.getSelectedCategories(categories, parseInt(selectedCategory.parent_id));
       } else {
         console.log(this.state);
       }
@@ -78,10 +78,10 @@ class CategoryTree extends React.Component {
     }
 
     return React.createElement(
-      "div",
-      { id: "category-tree" },
+      'div',
+      { id: 'category-tree' },
       React.createElement(
-        "ul",
+        'ul',
         null,
         categoryTreeDisplay
       )
@@ -113,7 +113,7 @@ class CategoryItem extends React.Component {
       }));
 
       categoryChildrenDisplay = React.createElement(
-        "ul",
+        'ul',
         null,
         categoryChildren
       );
@@ -125,15 +125,15 @@ class CategoryItem extends React.Component {
     }
 
     return React.createElement(
-      "li",
+      'li',
       { id: "cat-" - this.props.category.id, className: categoryItemClass },
       React.createElement(
-        "a",
+        'a',
         { href: window.baseUrl + "/browse/cat/" + this.props.category.id },
         this.props.category.title,
         React.createElement(
-          "span",
-          { className: "product-counter" },
+          'span',
+          { className: 'product-counter' },
           this.props.product_count
         )
       ),
