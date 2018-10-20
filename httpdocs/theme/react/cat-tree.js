@@ -84,10 +84,12 @@ class CategoryTree extends React.Component {
     if (!this.state.loading) {
       if (this.state.categories) {
         const categoryId = this.state.categoryId;
+        const selectedCategories = this.state.selectedCategories;
         categoryTreeDisplay = this.state.categories.map((cat, index) => React.createElement(CategoryItem, {
           key: index,
           category: cat,
-          categoryId: categoryId
+          categoryId: categoryId,
+          selectedCategories: selectedCategories
         }));
       }
     }
@@ -119,12 +121,14 @@ class CategoryItem extends React.Component {
 
       const categoryId = this.props.categoryId;
       const category = this.props.category;
+      const selectedCategories = this.props.selectedCategories;
       const children = appHelpers.convertObjectToArray(this.props.category.children);
 
       const categoryChildren = children.map((cat, index) => React.createElement(CategoryItem, {
         key: index,
         category: cat,
         categoryId: categoryId,
+        selectedCategories: selectedCategories,
         parent: category
       }));
 
