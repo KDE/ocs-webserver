@@ -20,8 +20,8 @@ class CategoryTree extends React.Component {
 
       categoryTreeDisplay = this.state.categories.map((cat,index) => (
         <CategoryItem
+          key={index}
           category={cat}
-          categories={categories}
           categoryId={categoryId}
         />
       ));

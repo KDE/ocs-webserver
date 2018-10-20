@@ -17,8 +17,8 @@ class CategoryTree extends React.Component {
       const categoryId = this.state.categoryId;
 
       categoryTreeDisplay = this.state.categories.map((cat, index) => React.createElement(CategoryItem, {
+        key: index,
         category: cat,
-        categories: categories,
         categoryId: categoryId
       }));
     }
