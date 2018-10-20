@@ -147,6 +147,11 @@ class CategoryItem extends React.Component {
       categoryItemClass += " active";
     }
 
+    let productCountDisplay;
+    if (this.props.category.product_count !== "0") {
+      productCountDisplay = this.props.category.product_count;
+    }
+
     return React.createElement(
       "li",
       { id: "cat-" + this.props.category.id, className: categoryItemClass },
@@ -157,7 +162,7 @@ class CategoryItem extends React.Component {
         React.createElement(
           "span",
           { className: "product-counter" },
-          this.props.category.product_count
+          productCountDisplay
         )
       ),
       categoryChildrenDisplay

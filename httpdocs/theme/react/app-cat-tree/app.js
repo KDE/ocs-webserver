@@ -102,11 +102,16 @@ class CategoryItem extends React.Component {
       categoryItemClass += " active";
     }
 
+    let productCountDisplay;
+    if (this.props.category.product_count !== "0"){
+      productCountDisplay = this.props.category.product_count;
+    }
+
     return(
       <li id={"cat-"+this.props.category.id} className={categoryItemClass}>
         <a href={window.baseUrl + "/browse/cat/" + this.props.category.id}>
           {this.props.category.title}
-          <span className="product-counter">{this.props.category.product_count}</span>
+          <span className="product-counter">{productCountDisplay}</span>
         </a>
         {categoryChildrenDisplay}
       </li>
