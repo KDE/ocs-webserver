@@ -44,17 +44,20 @@ class CategoryItem extends React.Component {
     let categoryChildrenDisplay;
     if (this.props.category.has_children) {
       const categoryId = this.props.categoryId;
-      const categoryChildren = this.props.category.children.map((category, index) => React.createElement(CategoryItem, {
-        key: index,
-        category: cat,
-        categoryId: categoryId,
-        parent: category
-      }));
-      categoryChildrenDisplay = React.createElement(
-        "ul",
-        null,
-        categoryChildren
-      );
+      console.log(this.props.category);
+      /*const categoryChildren = this.props.category.children.map((category,index) => (
+        <CategoryItem
+          key={index}
+          category={cat}
+          categoryId={categoryId}
+          parent={category}
+        />
+      ));
+      categoryChildrenDisplay = (
+        <ul>
+          {categoryChildren}
+        </ul>
+      )*/
     }
 
     let categoryItemClass = "cat-item";
