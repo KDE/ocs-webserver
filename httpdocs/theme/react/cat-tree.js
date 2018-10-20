@@ -40,10 +40,17 @@ window.appHelpers = function () {
     return categoryType;
   }
 
+  function generateCategoryLink(baseUrl, catId, locationHref) {
+    let link;
+    console.log(locationHref);
+    return link;
+  }
+
   return {
     convertObjectToArray,
     getSelectedCategory,
-    getCategoryType
+    getCategoryType,
+    generateCategoryLink
   };
 }();
 class CategoryTree extends React.Component {
