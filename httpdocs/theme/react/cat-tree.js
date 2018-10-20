@@ -13,10 +13,9 @@ window.appHelpers = function () {
     categories.forEach(function (cat, catIndex) {
       if (!selectedCategory) {
         if (parseInt(cat.id) === categoryId) {
-          console.log('its the same id - ' + parseInt(cat.id) + ' ' + categoryId);
           selectedCategory = cat;
+          console.log(selectedCategory);
         } else {
-          console.log('its not the same id - ' + parseInt(cat.id) + ' ' + categoryId);
           if (cat.has_children === true) {
             const catChildren = appHelpers.convertObjectToArray(cat.children);
             selectedCategory = appHelpers.getSelectedCategory(catChildren, categoryId);
@@ -59,7 +58,8 @@ class CategoryTree extends React.Component {
     selectedCategories.push(selectedCategory);
     this.setState({ selectedCategories: selectedCategories }, function () {
       if (selectedCategory.parent_id) {
-        this.getSelectedCategories(categories, parseInt(selectedCategory.parent_id));
+        console.log(selectedCategory.parent_id);
+        //this.getSelectedCategories(categories,parseInt(selectedCategory.parent_id));
       } else {
         console.log(this.state);
       }
