@@ -3,16 +3,30 @@ class CategoryTree extends React.Component {
   	super(props);
   	this.state = {
       categories:window.catTree,
-      categoryId:window.categoryId
+      categoryId:window.categoryId,
+      selectedCategories:[]
     };
+    this.getSelectedCategories = this.getSelectedCategories.bind(this);
   }
 
   componentDidMount() {
     console.log(this.state);
     if (this.state.categoryId){
-      const selectedCategory = appHelpers.getSelectedCategory(this.state.categories,this.state.categoryId);
-      console.log(selectedCategory);
+      this.getSelectedCategories(this.state.categories,this.state.categoryId);
     }
+  }
+
+  getSelectedCategories(categories,catId){
+    const selectedCategory = appHelpers.getSelectedCategory(this.state.categories,this.state.categoryId);
+    const selectedCategories = this.state.selectedCategories;
+    selectedCategories.push(selectedCategory);
+    this.setState({selectedCategories:selectedCategories},function(){
+      if (selectedCategory.parent_id){
+        this.getSelectedCategories(categories,parseInt(selectedCategory.parent_id));
+      } else {
+        console.log(this.state);
+      }
+    });
   }
 
   render(){
