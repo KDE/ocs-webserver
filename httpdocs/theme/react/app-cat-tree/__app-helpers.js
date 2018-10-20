@@ -10,12 +10,23 @@ window.appHelpers = (function(){
 
   function getSelectedCategory(categories,categoryId){
     let selectedCategory;
-    categories.forEach(function(cat){
+    categories.forEach(function(cat,catIndex){
       if (cat.id === categoryId){
         selectedCategory = cat;
       }
       if (cat.has_children){
         console.log('Catgeory has children');
+
+        const catChildren = this.convertObjectToArray(cat.children);
+        selectedCategory = this.getSelectedCategory(catChildren,categoryId);
+        /*catChildren.forEach(function(child,childIndex){
+          if (child.id === categoryId){
+            selectedCategory = cat;
+          }
+          if (child.has_children){
+
+          }
+        });*/
       }
     });
     return selectedCategory;
