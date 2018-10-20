@@ -14,10 +14,7 @@ class CategoryTree extends React.Component {
   render(){
     let categoryTreeDisplay;
     if (this.state.categories){
-
-      const categories = this.state.categories;
       const categoryId = this.state.categoryId;
-
       categoryTreeDisplay = this.state.categories.map((cat,index) => (
         <CategoryItem
           key={index}
@@ -44,13 +41,40 @@ class CategoryItem extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.props);
+
   }
 
   render(){
+    let categoryChildrenDisplay;
+    if (this.props.category.has_children){
+      const categoryId = this.props.categoryId;
+      const categoryChildren = this.props.category.children.map((category,index) => (
+        <CategoryItem
+          key={index}
+          category={cat}
+          categoryId={categoryId}
+          parent={category}
+        />
+      ));
+      categoryChildrenDisplay = (
+        <ul>
+          {categoryChildren}
+        </ul>
+      )
+    }
+
+    let categoryItemClass = "cat-item";
+    if (this.props.categoryId === this.props.category.id){
+      categoryItemClass += " active";
+    }
+
     return(
-      <li id={"cat-"-this.props.category.cat_id}>
-        {this.props.category.cat_id}
+      <li id={"cat-"-this.props.category.id} className={categoryItemClass}>
+        <a href={window.baseUrl + "/browse/cat/" + this.props.category.id}>
+          {this.props.category.title}
+          <span className="product-counter">{this.props.product_count}</span>
+        </a>
+        {categoryChildrenDisplay}
       </li>
     )
   }
