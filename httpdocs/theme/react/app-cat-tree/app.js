@@ -8,7 +8,7 @@ class CategoryTree extends React.Component {
   }
 
   componentDidMount() {
-    //const selectedCategory = appHelpers.getSelectedCategory(this.state.cateogry,this.state.categoryId);
+    const selectedCategory = appHelpers.getSelectedCategory(this.state.cateogries,this.state.categoryId);
   }
 
   render(){
