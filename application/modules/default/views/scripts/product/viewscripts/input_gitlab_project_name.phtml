@@ -24,26 +24,32 @@ $member = $getAuthUser->getAuthUser();
 ?>
 
 <div class="form-group">
-    <div class="col-sm-12 margin-top-15">
-        <?php if ($this->element->isRequired()) { ?>
-            <div class="small grey bold-font pull-left margin-right-5">*</div>
-        <?php } ?>
-        <label class="form-label" for="<?= $this->escape($this->element->getName()) ?>">Your Project Name</label>
-    </div>
-    <div class="col-sm-12">
-        https://git.opendesktop.org/<?= $member->username ?>/ <input id="<?= $this->escape($this->element->getName()) ?>"
-               class="form-control"
-               type="text"
-               maxlength="60"
-               value="<?= $this->escape($this->element->getValue()) ?>"
-               name="<?= $this->escape($this->element->getName()) ?>"/>
-        <?php if ($this->element->getMessages()) {
-            $errorHtml = '';
-            foreach ($this->element->getMessages() as $currentError) {
-                $errorHtml .= '<label id="<?=$this->escape($this->element->getName())?>-error" class="error" for="<?=$this->escape($this->element->getName())?>">' . $currentError . '</label>';
-            }
-            ?>
-            <?php echo $errorHtml ?>
-        <?php } ?>
+    <div  class="col-sm-12 margin-top-15">
+        <dt id="gitlab_project_name-label">
+            <?php if ($this->element->isRequired()) { ?>
+                <div class="small grey bold-font pull-left margin-right-5">*</div>
+            <?php } ?>
+            <label class="form-label" for="<?= $this->escape($this->element->getName()) ?>">Your Project Name</label>
+        </dt>
+        <dd id="gitlab_project_name-element">
+            https://git.opendesktop.org/<?= $member->username ?>/ 
+        </dd>
+        <input id="<?= $this->escape($this->element->getName()) ?>"
+                   class="form-control"
+                   type="text"
+                   maxlength="60"
+                   size="60"
+                   value="<?= $this->escape($this->element->getValue()) ?>"
+                   name="<?= $this->escape($this->element->getName()) ?>"/>
+
+
+            <?php if ($this->element->getMessages()) {
+                $errorHtml = '';
+                foreach ($this->element->getMessages() as $currentError) {
+                    $errorHtml .= '<label id="<?=$this->escape($this->element->getName())?>-error" class="error" for="<?=$this->escape($this->element->getName())?>">' . $currentError . '</label>';
+                }
+                ?>
+                <?php echo $errorHtml ?>
+            <?php } ?>
     </div>
 </div>
