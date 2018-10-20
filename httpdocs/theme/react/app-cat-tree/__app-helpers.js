@@ -13,10 +13,8 @@ window.appHelpers = (function(){
     categories.forEach(function(cat,catIndex){
       if (cat.id === categoryId){
         selectedCategory = cat;
-      }
-      if (cat.has_children){
-        console.log('Catgeory has children');
-
+      } else if (cat.has_children){
+        console.log('Catgeory ' + cat.id + ' has children');
         const catChildren = this.convertObjectToArray(cat.children);
         selectedCategory = this.getSelectedCategory(catChildren,categoryId);
         /*catChildren.forEach(function(child,childIndex){
