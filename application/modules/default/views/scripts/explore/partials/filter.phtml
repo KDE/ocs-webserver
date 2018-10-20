@@ -162,9 +162,6 @@ $this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
 <div id="category-tree-container">
 </div>
 <script type="application/javascript">
-    var catTree = <?= $jsonTree ?>;
-    var catSelected = <?php $this->cat_id ?>;
-
     $(document).ready(function(){
         var hierarchy = (function () {
             return {
@@ -177,5 +174,9 @@ $this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
 
         hierarchy.setup(<?=$this->cat_id?>);
     });
+</script>
+<script type="application/javascript">
+  var catTree = <?= $jsonTree ?>;
+  var catSelected = <?php $this->cat_id ?>;
 </script>
 <script type="application/javascript" src="/theme/react/cat-tree.js"></script>
