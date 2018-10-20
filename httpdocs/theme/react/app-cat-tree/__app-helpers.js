@@ -14,7 +14,7 @@ window.appHelpers = (function(){
       if (!selectedCategory){
         if (parseInt(cat.id) === categoryId){
           selectedCategory = cat;
-          console.log(selectedCategory);          
+          console.log(selectedCategory);
         } else {
           if (cat.has_children === true){
             const catChildren = appHelpers.convertObjectToArray(cat.children);
@@ -23,7 +23,6 @@ window.appHelpers = (function(){
         }
       }
     });
-    console.log(selectedCategory);
     return selectedCategory;
   }
 

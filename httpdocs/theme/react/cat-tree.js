@@ -23,7 +23,6 @@ window.appHelpers = function () {
         }
       }
     });
-    console.log(selectedCategory);
     return selectedCategory;
   }
 
