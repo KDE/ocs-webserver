@@ -11,15 +11,17 @@ window.appHelpers = (function(){
   function getSelectedCategory(categories,categoryId){
     let selectedCategory;
     categories.forEach(function(cat,catIndex){
-      console.log(parseInt(cat.id));
-      console.log(categoryId);
       if (parseInt(cat.id) === categoryId){
+        console.log(cat.id);
+        console.log('its the same id');
         selectedCategory = cat;
+        console.log(selectedCategory);
       } else if (cat.has_children === true){
         const catChildren = appHelpers.convertObjectToArray(cat.children);
         selectedCategory = appHelpers.getSelectedCategory(catChildren,categoryId);
       }
     });
+    console.log(selectedCategory);
     return selectedCategory;
   }
 
