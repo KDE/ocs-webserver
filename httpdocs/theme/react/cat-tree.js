@@ -157,7 +157,7 @@ class CategoryItem extends React.Component {
         React.createElement(
           "span",
           { className: "product-counter" },
-          this.props.product_count
+          this.props.category.product_count
         )
       ),
       categoryChildrenDisplay

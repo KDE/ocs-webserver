@@ -106,7 +106,7 @@ class CategoryItem extends React.Component {
       <li id={"cat-"+this.props.category.id} className={categoryItemClass}>
         <a href={window.baseUrl + "/browse/cat/" + this.props.category.id}>
           {this.props.category.title}
-          <span className="product-counter">{this.props.product_count}</span>
+          <span className="product-counter">{this.props.category.product_count}</span>
         </a>
         {categoryChildrenDisplay}
       </li>
