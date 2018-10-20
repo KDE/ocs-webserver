@@ -26,9 +26,24 @@ window.appHelpers = (function(){
     return selectedCategory;
   }
 
+  function getCategoryType(selectedCategories,selectedCategoryId,categoryId){
+    let categoryType;
+    if (parseInt(categoryId) === selectedCategoryId){
+      categoryType = "selected";
+    } else {
+      selectedCategories.forEach(function(selectedCat,index){
+        if (parseInt(selectedCat.id) === categoryId){
+          categoryType = "parent";
+        }
+      });
+    }
+    return categoryType;
+  }
+
   return {
     convertObjectToArray,
-    getSelectedCategory
+    getSelectedCategory,
+    getCategoryType
   }
 
 }());
