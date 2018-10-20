@@ -159,7 +159,7 @@ class CategoryItem extends React.Component {
       productCountDisplay = this.props.category.product_count;
     }
 
-    const categoryItemLink = app.generateCategoryLink(window.baseUrl, this.props.category.id, window.location.href);
+    const categoryItemLink = appHelpers.generateCategoryLink(window.baseUrl, this.props.category.id, window.location.href);
     console.log(categoryItemLink);
     return React.createElement(
       "li",
