@@ -13,9 +13,9 @@ window.appHelpers = (function(){
     categories.forEach(function(cat,catIndex){
       if (cat.id === categoryId){
         selectedCategory = cat;
-      } else if (cat.has_children){
-        console.log('Catgeory ' + cat.id + ' has children');
+      } else if (cat.has_children === true){
         const catChildren = appHelpers.convertObjectToArray(cat.children);
+        console.log('Catgeory ' + cat.id + ' has ' + catChildren.length + ' children');
         selectedCategory = appHelpers.getSelectedCategory(catChildren,categoryId);
         /*catChildren.forEach(function(child,childIndex){
           if (child.id === categoryId){

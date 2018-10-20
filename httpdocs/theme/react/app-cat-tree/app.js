@@ -11,6 +11,7 @@ class CategoryTree extends React.Component {
     console.log(this.state);
     if (this.state.categoryId){
       const selectedCategory = appHelpers.getSelectedCategory(this.state.categories,this.state.categoryId);
+      console.log(selectedCategory);
     }
   }
 
@@ -49,7 +50,7 @@ class CategoryItem extends React.Component {
 
   render(){
     let categoryChildrenDisplay;
-    if (this.props.category.has_children){
+    if (this.props.category.has_children === true){
 
       const categoryId = this.props.categoryId;
       const category = this.props.category;

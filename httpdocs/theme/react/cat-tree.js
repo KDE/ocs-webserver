@@ -13,9 +13,9 @@ window.appHelpers = function () {
     categories.forEach(function (cat, catIndex) {
       if (cat.id === categoryId) {
         selectedCategory = cat;
-      } else if (cat.has_children) {
-        console.log('Catgeory ' + cat.id + ' has children');
+      } else if (cat.has_children === true) {
         const catChildren = appHelpers.convertObjectToArray(cat.children);
+        console.log('Catgeory ' + cat.id + ' has ' + catChildren.length + ' children');
         selectedCategory = appHelpers.getSelectedCategory(catChildren, categoryId);
         /*catChildren.forEach(function(child,childIndex){
           if (child.id === categoryId){
@@ -47,6 +47,7 @@ class CategoryTree extends React.Component {
     console.log(this.state);
     if (this.state.categoryId) {
       const selectedCategory = appHelpers.getSelectedCategory(this.state.categories, this.state.categoryId);
+      console.log(selectedCategory);
     }
   }
 
@@ -83,7 +84,7 @@ class CategoryItem extends React.Component {
 
   render() {
     let categoryChildrenDisplay;
-    if (this.props.category.has_children) {
+    if (this.props.category.has_children === true) {
 
       const categoryId = this.props.categoryId;
       const category = this.props.category;
