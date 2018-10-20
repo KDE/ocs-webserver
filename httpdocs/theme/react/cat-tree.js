@@ -43,7 +43,7 @@ window.appHelpers = function () {
   function generateCategoryLink(baseUrl, catId, locationHref) {
     let link = baseUrl + "/browse/cat/" + catId;
     if (locationHref.indexOf('ord') > -1) {
-      link = locationHref.split('/ord/')[1];
+      link += "/ord/" + locationHref.split('/ord/')[1];
     }
     return link;
   }
