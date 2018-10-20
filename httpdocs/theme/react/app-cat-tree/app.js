@@ -1,18 +1,58 @@
 class CategoryTree extends React.Component {
   constructor(props){
   	super(props);
+  	this.state = {
+      categories:window.catTree,
+      categoryId:window.categoryId
+    };
+  }
+
+  componentDidMount() {
+
+  }
+
+  render(){
+    let categoryTreeDisplay;
+    if (this.state.categories){
+
+      const categories = this.state.categories;
+      const categoryId = this.state.categoryId;
+
+      categoryTreeDisplay = this.state.categories.map((cat,index) => (
+        <CategoryItem
+          category={cat}
+          categories={categories}
+          categoryId={categoryId}
+        />
+      ));
+    }
+
+    return(
+      <div id="category-tree">
+        <ul>
+          {categoryTreeDisplay}
+        </ul>
+      </div>
+    );
+  }
+}
+
+class CategoryItem extends React.Component {
+  constructor(props){
+  	super(props);
   	this.state = {};
   }
 
   componentDidMount() {
-    console.log(window.catTree);
-    console.log(window.catSelected);
+    console.log(this.props);
   }
 
   render(){
     return(
-      <div id="category-tree"></div>
-    );
+      <li id={"cat-"-this.props.category.cat_id}>
+        {this.props.category.cat_id}
+      </li>
+    )
   }
 }
 
