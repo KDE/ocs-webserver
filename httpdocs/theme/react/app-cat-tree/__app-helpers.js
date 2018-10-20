@@ -28,11 +28,14 @@ window.appHelpers = (function(){
 
   function getCategoryType(selectedCategories,selectedCategoryId,categoryId){
     let categoryType;
+    console.log(selectedCategories)
+    console.log(selectedCategoryId)
+    console.log(categoryId);
     if (parseInt(categoryId) === selectedCategoryId){
       categoryType = "selected";
     } else {
       selectedCategories.forEach(function(selectedCat,index){
-        if (parseInt(selectedCat.id) === categoryId){
+        if (selectedCat.id === categoryId){
           categoryType = "parent";
         }
       });
