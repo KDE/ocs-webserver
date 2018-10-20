@@ -67,14 +67,16 @@ class CategoryItem extends React.Component {
     let categoryChildrenDisplay;
 
     const categoryType = appHelpers.getCategoryType(this.props.selectedCategories,this.props.categoryId,this.props.category.id);
-    console.log(categoryType);
-
-    if (this.props.category.has_children === true){
+    if (this.props.category.has_children === true && categoryType && this.props.lastChild !== true){
 
       const categoryId = this.props.categoryId;
       const category = this.props.category;
       const selectedCategories = this.props.selectedCategories;
       const children = appHelpers.convertObjectToArray(this.props.category.children);
+      let lastChild;
+      if (categoryType === "selected"){
+        lastChild = true;
+      }
 
       const categoryChildren = children.map((cat,index) => (
         <CategoryItem
@@ -82,6 +84,7 @@ class CategoryItem extends React.Component {
           category={cat}
           categoryId={categoryId}
           selectedCategories={selectedCategories}
+          lastChild={lastChild}
           parent={category}
         />
       ));
@@ -95,12 +98,12 @@ class CategoryItem extends React.Component {
     }
 
     let categoryItemClass = "cat-item";
-    if (this.props.categoryId === this.props.category.id){
+    if (this.props.categoryId === parseInt(this.props.category.id)){
       categoryItemClass += " active";
     }
 
     return(
-      <li id={"cat-"-this.props.category.id} className={categoryItemClass}>
+      <li id={"cat-"+this.props.category.id} className={categoryItemClass}>
         <a href={window.baseUrl + "/browse/cat/" + this.props.category.id}>
           {this.props.category.title}
           <span className="product-counter">{this.props.product_count}</span>
