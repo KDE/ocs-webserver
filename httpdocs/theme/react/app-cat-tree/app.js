@@ -18,6 +18,8 @@ class CategoryTree extends React.Component {
 
   getSelectedCategories(categories,catId){
     const selectedCategory = appHelpers.getSelectedCategory(this.state.categories,this.state.categoryId);
+    console.log('final selected category - ');
+    console.log(selectedCategory);
     const selectedCategories = this.state.selectedCategories;
     selectedCategories.push(selectedCategory);
     this.setState({selectedCategories:selectedCategories},function(){

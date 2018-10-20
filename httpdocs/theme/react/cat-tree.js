@@ -12,13 +12,14 @@ window.appHelpers = function () {
     let selectedCategory;
     categories.forEach(function (cat, catIndex) {
       if (parseInt(cat.id) === categoryId) {
-        console.log(cat.id);
-        console.log('its the same id');
+        console.log('its the same id - ' + parseInt(cat.id) + ' ' + categoryId);
         selectedCategory = cat;
-        console.log(selectedCategory);
-      } else if (cat.has_children === true) {
-        const catChildren = appHelpers.convertObjectToArray(cat.children);
-        selectedCategory = appHelpers.getSelectedCategory(catChildren, categoryId);
+      } else {
+        console.log('its not the same id - ' + parseInt(cat.id) + ' ' + categoryId);
+        if (cat.has_children === true) {
+          const catChildren = appHelpers.convertObjectToArray(cat.children);
+          selectedCategory = appHelpers.getSelectedCategory(catChildren, categoryId);
+        }
       }
     });
     console.log(selectedCategory);
@@ -50,6 +51,8 @@ class CategoryTree extends React.Component {
 
   getSelectedCategories(categories, catId) {
     const selectedCategory = appHelpers.getSelectedCategory(this.state.categories, this.state.categoryId);
+    console.log('final selected category - ');
+    console.log(selectedCategory);
     const selectedCategories = this.state.selectedCategories;
     selectedCategories.push(selectedCategory);
     this.setState({ selectedCategories: selectedCategories }, function () {
