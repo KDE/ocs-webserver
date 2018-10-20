@@ -27,10 +27,7 @@ window.appHelpers = (function(){
   }
 
   function getCategoryType(selectedCategories,selectedCategoryId,categoryId){
-    let categoryType;
-    console.log(selectedCategories)
-    console.log(selectedCategoryId)
-    console.log(categoryId);
+    let categoryType; 
     if (parseInt(categoryId) === selectedCategoryId){
       categoryType = "selected";
     } else {
