@@ -15,8 +15,8 @@ window.appHelpers = function () {
         selectedCategory = cat;
       } else if (cat.has_children) {
         console.log('Catgeory ' + cat.id + ' has children');
-        const catChildren = this.convertObjectToArray(cat.children);
-        selectedCategory = this.getSelectedCategory(catChildren, categoryId);
+        const catChildren = appHelpers.convertObjectToArray(cat.children);
+        selectedCategory = appHelpers.getSelectedCategory(catChildren, categoryId);
         /*catChildren.forEach(function(child,childIndex){
           if (child.id === categoryId){
             selectedCategory = cat;
