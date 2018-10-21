@@ -73,8 +73,8 @@ class Default_Form_Product extends Zend_Form
             ->addElement($this->getCancelElement())
             ->addElement($this->getLicenseIdElement())
             ->addElement($this->getIsOriginal())  
-            ->addElement($this->getIsGitlab())  
-            ->addElement($this->getGitlabProjectName())  
+            //->addElement($this->getIsGitlab())  
+            //->addElement($this->getGitlabProjectName())  
 
             //->addElement($this->getCCAttribution())
             //->addElement($this->getCCComercial())
