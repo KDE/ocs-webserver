@@ -38,7 +38,7 @@ class CategoryTree extends React.Component {
       if (this.state.categories){
         const categoryId = this.state.categoryId;
         const selectedCategories = this.state.selectedCategories;
-        categoryTreeDisplay = this.state.categories.sort((a, b) => a.title - b.title).map((cat,index) => (
+        categoryTreeDisplay = this.state.categories.sort(appHelpers.sortArrayAlphabeticallyByTitle).map((cat,index) => (
           <CategoryItem
             key={index}
             category={cat}

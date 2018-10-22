@@ -48,11 +48,18 @@ window.appHelpers = (function(){
     return link;
   }
 
+  function sortArrayAlphabeticallyByTitle(a, b){
+    if(a.title < b.title) { return -1; }
+    if(a.title > b.title) { return 1; }
+    return 0;
+  }
+
   return {
     convertObjectToArray,
     getSelectedCategory,
     getCategoryType,
-    generateCategoryLink
+    generateCategoryLink,
+    sortArrayAlphabeticallyByTitle
   }
 
 }());

@@ -48,11 +48,22 @@ window.appHelpers = function () {
     return link;
   }
 
+  function sortArrayAlphabeticallyByTitle(a, b) {
+    if (a.title < b.title) {
+      return -1;
+    }
+    if (a.title > b.title) {
+      return 1;
+    }
+    return 0;
+  }
+
   return {
     convertObjectToArray,
     getSelectedCategory,
     getCategoryType,
-    generateCategoryLink
+    generateCategoryLink,
+    sortArrayAlphabeticallyByTitle
   };
 }();
 class CategoryTree extends React.Component {
@@ -95,7 +106,7 @@ class CategoryTree extends React.Component {
       if (this.state.categories) {
         const categoryId = this.state.categoryId;
         const selectedCategories = this.state.selectedCategories;
-        categoryTreeDisplay = this.state.categories.sort((a, b) => a.title - b.title).map((cat, index) => React.createElement(CategoryItem, {
+        categoryTreeDisplay = this.state.categories.sort(appHelpers.sortArrayAlphabeticallyByTitle).map((cat, index) => React.createElement(CategoryItem, {
           key: index,
           category: cat,
           categoryId: categoryId,
