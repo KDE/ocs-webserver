@@ -125,63 +125,44 @@ class CategoryTree extends React.Component {
 
   updateDimensions() {
     const device = appHelpers.getDeviceFromWidth(window.innerWidth);
-    this.setState({ device: device }, function () {
-      let showCategories = true;
-      if (this.state.device === "tablet") {
-        showCategories = false;
-      }
-      this.setState({ showCategories: showCategories });
-    });
+    this.setState({ device: device });
   }
 
   render() {
     let categoryTreeDisplay;
     if (!this.state.loading) {
-      let showCategories = true;
-      if (this.state.device === "tablet") {
-        if (this.state.showCategories === false) {
-          showCategories = false;
-        }
-      }
-      if (this.state.categories && showCategories) {
+      if (this.state.categories) {
         const categoryId = this.state.categoryId;
         const selectedCategories = this.state.selectedCategories;
-        const categoryTree = this.state.categories.sort(appHelpers.sortArrayAlphabeticallyByTitle).map((cat, index) => React.createElement(CategoryItem, {
+        categoryTreeDisplay = this.state.categories.sort(appHelpers.sortArrayAlphabeticallyByTitle).map((cat, index) => React.createElement(CategoryItem, {
           key: index,
           category: cat,
           categoryId: categoryId,
           selectedCategories: selectedCategories
         }));
-        categoryTreeDisplay = React.createElement(
-          "ul",
-          null,
-          React.createElement(
-            "li",
-            { className: "cat-item" },
-            React.createElement(
-              "a",
-              { href: window.baseUrl + "/browse/" },
-              React.createElement(
-                "span",
-                { className: "title" },
-                "All"
-              )
-            )
-          ),
-          categoryTreeDisplay
-        );
-      } else {
-        categoryTreeDisplay = React.createElement(
-          "p",
-          null,
-          "show selected category here"
-        );
       }
     }
     return React.createElement(
       "div",
       { id: "category-tree" },
-      categoryTreeDisplay
+      React.createElement(
+        "ul",
+        null,
+        React.createElement(
+          "li",
+          { className: "cat-item" },
+          React.createElement(
+            "a",
+            { href: window.baseUrl + "/browse/" },
+            React.createElement(
+              "span",
+              { className: "title" },
+              "All"
+            )
+          )
+        ),
+        categoryTreeDisplay
+      )
     );
   }
 }
