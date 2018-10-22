@@ -145,7 +145,7 @@ class CategoryTree extends React.Component {
         selectedCategoryDisplay = React.createElement(SelectedCategory, {
           categoryId: this.state.categoryId,
           selectedCategory: this.state.selectedCategories[0],
-          selectedCategories: this.staet.selectedCategories,
+          selectedCategories: this.state.selectedCategories,
           onCatTreeToggle: this.toggleCatTree
         });
       }
