@@ -38,7 +38,6 @@ class CategoryTree extends React.Component {
       if (this.state.categories){
         const categoryId = this.state.categoryId;
         const selectedCategories = this.state.selectedCategories;
-        console.log(this.state.categories.sort(appHelpers.sortArrayAlphabeticallyByTitle));
         categoryTreeDisplay = this.state.categories.sort(appHelpers.sortArrayAlphabeticallyByTitle).map((cat,index) => (
           <CategoryItem
             key={index}
@@ -83,7 +82,7 @@ class CategoryItem extends React.Component {
         lastChild = true;
       }
 
-      const categoryChildren = children.sort((a, b) => a.title - b.title).map((cat,index) => (
+      const categoryChildren = children.sort(appHelpers.sortArrayAlphabeticallyByTitle).map((cat,index) => (
         <CategoryItem
           key={index}
           category={cat}
@@ -113,7 +112,7 @@ class CategoryItem extends React.Component {
     }
 
     const categoryItemLink = appHelpers.generateCategoryLink(window.baseUrl,this.props.category.id,window.location.href);
-    console.log(categoryItemLink);
+
     return(
       <li id={"cat-"+this.props.category.id} className={categoryItemClass}>
         <a href={categoryItemLink}>
