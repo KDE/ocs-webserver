@@ -114,7 +114,11 @@ class CategoryTree extends React.Component {
           React.createElement(
             "a",
             { href: window.baseUrl + "/browse/" },
-            "All"
+            React.createElement(
+              "span",
+              { className: "title" },
+              "All"
+            )
           )
         ),
         categoryTreeDisplay
@@ -178,7 +182,11 @@ class CategoryItem extends React.Component {
       React.createElement(
         "a",
         { href: categoryItemLink },
-        this.props.category.title,
+        React.createElement(
+          "span",
+          { className: "title" },
+          this.props.category.title
+        ),
         React.createElement(
           "span",
           { className: "product-counter" },

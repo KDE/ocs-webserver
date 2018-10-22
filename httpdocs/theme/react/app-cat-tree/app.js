@@ -51,7 +51,7 @@ class CategoryTree extends React.Component {
       <div id="category-tree">
         <ul>
           <li className="cat-item">
-            <a href={window.baseUrl + "/browse/"}>All</a>
+            <a href={window.baseUrl + "/browse/"}><span className="title">All</span></a>
           </li>
           {categoryTreeDisplay}
         </ul>
@@ -115,7 +115,7 @@ class CategoryItem extends React.Component {
     return(
       <li id={"cat-"+this.props.category.id} className={categoryItemClass}>
         <a href={categoryItemLink}>
-          {this.props.category.title}
+          <span className="title">{this.props.category.title}</span>
           <span className="product-counter">{productCountDisplay}</span>
         </a>
         {categoryChildrenDisplay}
