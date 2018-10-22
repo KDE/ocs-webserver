@@ -263,7 +263,7 @@ class SelectedCategory extends React.Component {
         category = cat;
       }
     });
-    this.setState({ category: category });
+    this.setState({ category: category, loading: false });
   }
 
   render() {
