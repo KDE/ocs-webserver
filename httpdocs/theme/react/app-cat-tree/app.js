@@ -183,8 +183,9 @@ class SelectedCategory extends React.Component {
 
     let selectedCategoriesDisplay;
     if (this.props.selectedCategories){
-      selectedCategoriesDisplay = this.props.selectedCategories.map((sc,index) => (
-        <span key={index}>{sc.title}</span>
+      const selectedCategoriesReverse = appHelpers.sortArrayDesc
+      selectedCategoriesDisplay = this.props.selectedCategories.reverse().map((sc,index) => (
+        <a key={index}>{sc.title}</a>
       ));
     }
 

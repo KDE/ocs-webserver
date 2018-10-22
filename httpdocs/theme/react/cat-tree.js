@@ -279,8 +279,9 @@ class SelectedCategory extends React.Component {
 
     let selectedCategoriesDisplay;
     if (this.props.selectedCategories) {
-      selectedCategoriesDisplay = this.props.selectedCategories.map((sc, index) => React.createElement(
-        "span",
+      const selectedCategoriesReverse = appHelpers.sortArrayDesc;
+      selectedCategoriesDisplay = this.props.selectedCategories.reverse().map((sc, index) => React.createElement(
+        "a",
         { key: index },
         sc.title
       ));
