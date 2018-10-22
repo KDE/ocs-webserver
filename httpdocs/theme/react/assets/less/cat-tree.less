@@ -30,6 +30,11 @@ out: ../css/cat-tree.css, sourcemap: true, compress: true
         padding-left: 5px;
         .transition();
 
+        &:hover {
+          background-color: #60bcff;
+          color: #ffffff;
+        }
+
 
         span {
           float: right;
@@ -41,7 +46,6 @@ out: ../css/cat-tree.css, sourcemap: true, compress: true
         padding-left: 10px;
       }
 
-      &:hover,
       &.active {
         > a {
           background-color: #60bcff;
