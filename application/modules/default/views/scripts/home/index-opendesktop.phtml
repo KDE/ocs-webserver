@@ -32,7 +32,8 @@ $this->productsIconsCursors= $modelInfo->getLastProductsForHostStores(5,"386,107
 $this->productsScreenshots= $modelInfo->getLastProductsForHostStores(5,"225,445");
 $this->productsApps = $modelInfo->getLastProductsForHostStores(5,233);
 $this->productsAddons = $modelInfo->getLastProductsForHostStores(5,"152");
-$this->productsWallpapers = $modelInfo->getLastProductsForHostStores(5,"295,158");
+$this->productsWallpapersOriginal = $modelInfo->getLastProductsForHostStores(5,"295,158",null,true);
+$this->productsWallpapers = $modelInfo->getLastProductsForHostStores(5,"295,158",null,false);
 $this->countSupporters = $modelInfo->getCountActiveSupporters();
 
 $featuredProducts = $modelInfo->getFeaturedProductsForHostStores(100);
@@ -112,8 +113,8 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                                     );                                                                     
 
                                     echo $this->partial('/home/partials/product_group.phtml', array(
-                                            "title"  => "Artwork, Wallpapers",
-                                            "products" => $this->productsWallpapers,
+                                            "title"  => "Artwork, Wallpapers (Original)",
+                                            "products" => $this->productsWallpapersOriginal,
                                             "catIDs" =>"158,295"   
 
                                         )
@@ -137,6 +138,18 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                                      );      
                                                         
                          ?>                                         
+                        </div>
+
+                        <div class="row blockpadding">
+                        <?php                                 
+                                                                                                  
+                                    echo $this->partial('/home/partials/product_group.phtml', array(
+                                            "title"  => "Artwork, Wallpapers (Not Original)",
+                                            "products" => $this->productsWallpapers,
+                                            "catIDs" =>"158,295"   
+                                        )
+                                    );                                        
+                        ?>                                                                                                          
                         </div>
 
                         <?php /*
