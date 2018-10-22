@@ -25,6 +25,8 @@ class Default_Model_Info
 
     const WALLPAPERCATEGORYID = '295';
 
+    const TAG_ISORIGINAL = 'original-product';
+
     public function getLast200ImgsProductsForAllStores($limit = 200)
     {
 
@@ -394,7 +396,7 @@ class Default_Model_Info
         }
     }
 
-    public function getLastProductsForHostStores($limit = 10, $project_category_id = null, $package_type = null)
+    public function getLastProductsForHostStores($limit = 10, $project_category_id = null, $package_type = null,$tag_isoriginal = null)
     {
         /** @var Zend_Cache_Core $cache */
       
@@ -406,7 +408,7 @@ class Default_Model_Info
         }
         $cache = Zend_Registry::get('cache');
         $cacheName =
-            __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host') . (int)$limit .$catids.$package_type);
+            __FUNCTION__ . '_' . md5(Zend_Registry::get('store_host') . (int)$limit .$catids.$package_type.$tag_isoriginal);
 
         if (($resultSet = $cache->load($cacheName))) {
             return $resultSet;
@@ -446,6 +448,15 @@ class Default_Model_Info
             $sql .= ' AND find_in_set('.$package_type.', package_types)';
         }
         
+        if(isset($tag_isoriginal)) {
+            if($tag_isoriginal)
+            {
+                $sql .= ' AND find_in_set("'.self::TAG_ISORIGINAL.'", tags)';    
+            }else{
+                $sql .= ' AND NOT find_in_set("'.self::TAG_ISORIGINAL.'", tags)';    
+            }            
+        }
+
         $sql .= ' ORDER BY IFNULL(p.changed_at,p.created_at)  DESC
             ';
         if (isset($limit)) {
@@ -463,7 +474,7 @@ class Default_Model_Info
         }        
     }
     
-    
+  
     public function getTopProductsForHostStores($limit = 10, $project_category_id = null, $package_type = null)
     {
         /** @var Zend_Cache_Core $cache */
