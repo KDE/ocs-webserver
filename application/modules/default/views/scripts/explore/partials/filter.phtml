@@ -98,7 +98,6 @@ $this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
 
 </style>
 
-<?php /*
 <div class="panel-group" id="accordion">
     <div class="panel panel-default accordion-group">
             <div style="margin-left: -10px">
@@ -146,7 +145,7 @@ $this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
              * @param string $selectedOrder
              * @return string
              */
-            /*function addRoot($selectedOrder)
+            function addRoot($selectedOrder)
             {
                 $helpExploreUrl = new Default_View_Helper_BuildExploreUrl();
                 $urlExplore = $helpExploreUrl->buildExploreUrl(null, null, $selectedOrder);
@@ -163,10 +162,9 @@ $this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
             </div>
     </div>
 </div>
-*/
-?>
+
 <script type="application/javascript">
-    /*$(document).ready(function(){
+    $(document).ready(function(){
         var hierarchy = (function () {
             return {
                 setup: function (cat_id) {
@@ -177,13 +175,12 @@ $this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
         })();
 
         hierarchy.setup(<?=$this->cat_id?>);
-    });*/
+    });
 </script>
 <link rel="stylesheet" href="/theme/react/assets/css/cat-tree.css"/>
 <div id="category-tree-container">
 </div>
 <script type="application/javascript">
-  <?php $jsonTree = json_encode($this->categories); ?>
   var catTree = <?= $jsonTree ?>;
   <?php
     $catIdExists = isset($this->cat_id);
