@@ -288,7 +288,7 @@ class SelectedCategory extends React.Component {
 
     return React.createElement(
       "div",
-      { id: "slected-category-tree-item" },
+      { onClick: this.props.onCatTreeToggle, id: "slected-category-tree-item" },
       selectedCategoriesDisplay
     );
   }

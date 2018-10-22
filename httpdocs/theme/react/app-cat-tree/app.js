@@ -189,7 +189,7 @@ class SelectedCategory extends React.Component {
     }
 
     return (
-      <div id="slected-category-tree-item">
+      <div onClick={this.props.onCatTreeToggle} id="slected-category-tree-item">
         {selectedCategoriesDisplay}
       </div>
     )
