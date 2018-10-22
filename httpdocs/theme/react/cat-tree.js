@@ -134,7 +134,6 @@ class CategoryTree extends React.Component {
   toggleCatTree() {
     const showCatTree = this.state.showCatTree === true ? false : true;
     this.setState({ showCatTree: showCatTree });
-    console.log('toggle cat tree');
   }
 
   render() {
