@@ -47,7 +47,6 @@ class CategoryTree extends React.Component {
   }
 
   render(){
-    console.log(this.state);
     let categoryTreeDisplay;
     if (!this.state.loading){
       if (this.state.categories){
@@ -65,6 +64,10 @@ class CategoryTree extends React.Component {
     }
     return(
       <div id="category-tree">
+        <SelectedCategory
+          categoryId={this.state.categoryId}
+          selectedCategories={this.state.selectedCategories}
+        />
         <ul>
           <li className="cat-item">
             <a href={window.baseUrl + "/browse/"}><span className="title">All</span></a>
@@ -136,6 +139,45 @@ class CategoryItem extends React.Component {
         </a>
         {categoryChildrenDisplay}
       </li>
+    )
+  }
+}
+
+class SelectedCategory extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {
+      loading:true
+    };
+    this.getSelectedCategory = this.getSelectedCategory.bind(this);
+  }
+
+  componentDidMount() {
+    this.getSelectedCategory();
+  }
+
+  getSelectedCategory(){
+    let category;
+    const categoryId = this.props.categoryId;
+    this.props.selectedCategories.forEach(function(cat,index){
+      if (parseInt(cat.id) === categoryId){
+        category = cat;
+      }
+    });
+    this.setState({category:category});
+  }
+
+  render(){
+    let selectedCategoryDisplay;
+    if (!this.state.loading){
+      selectedCategoryDisplay = (
+        <a>{this.state.category.title}</a>
+      );
+    }
+    return (
+      <div id="slected-category-tree-item">
+        {selectedCategoryDisplay}
+      </div>
     )
   }
 }
