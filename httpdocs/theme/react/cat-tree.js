@@ -136,7 +136,7 @@ class CategoryTree extends React.Component {
       if (this.state.selectedCategories) {
         selectedCategoryDisplay = React.createElement(SelectedCategory, {
           categoryId: this.state.categoryId,
-          selectedCategories: this.state.selectedCategories
+          selectedCategory: this.state.selectedCategories[0]
         });
       }
 
@@ -253,38 +253,15 @@ class SelectedCategory extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
-    this.getSelectedCategory = this.getSelectedCategory.bind(this);
-  }
-
-  componentDidMount() {
-    this.getSelectedCategory();
-  }
-
-  getSelectedCategory() {
-    console.log('get selectedCategory');
-    console.log(this.props);
-    let category;
-    const categoryId = this.props.categoryId;
-    this.props.selectedCategories.forEach(function (cat, index) {
-      console.log(cat);
-      console.log(cat.id);
-      if (parseInt(cat.id) === categoryId) {
-        category = cat;
-      }
-    });
-    console.log(category);
-    this.setState({ category: category }, function () {
-      console.log('wtf');
-    });
   }
 
   render() {
     let selectedCategoryDisplay;
-    if (this.state.category) {
+    if (this.props.selectedCategory) {
       selectedCategoryDisplay = React.createElement(
         "a",
         null,
-        this.state.category.title
+        this.props.selectedCategory.title
       );
     }
     return React.createElement(
