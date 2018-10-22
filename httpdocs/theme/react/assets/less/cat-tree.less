@@ -81,10 +81,21 @@ out: ../css/cat-tree.css, sourcemap: true, compress: true
     }
   }
 
-  #slected-category-tree-item {
+  #selected-category-tree-item {
     background-color: #fafafa;
     margin-bottom: 5px;
+    position: relative;
     .mobile-menu-item;
+
+    .selected-category-arrow-down {
+      display: block;
+      position: absolute;
+      top: 5px;
+      right:20px;
+      height: 20px;
+      width: 100%;
+      background-image: url('../img/chevron_down.png');
+    }
 
     a {
       display: block;
@@ -117,6 +128,14 @@ out: ../css/cat-tree.css, sourcemap: true, compress: true
       }
       &.main-list {
         border: 0;
+      }
+    }
+  }
+
+  &.open {
+    #selected-category-tree-item {
+      .selected-category-arrow-down {
+        .rotation(180deg);
       }
     }
   }

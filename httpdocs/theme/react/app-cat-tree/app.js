@@ -6,7 +6,8 @@ class CategoryTree extends React.Component {
       categoryId:window.categoryId,
       selectedCategories:[],
       loading:true,
-      showCatTree:false
+      showCatTree:false,
+      catTreeCssClass:""
     };
     this.getSelectedCategories = this.getSelectedCategories.bind(this);
     this.updateDimensions = this.updateDimensions.bind(this);
@@ -54,6 +55,7 @@ class CategoryTree extends React.Component {
 
   toggleCatTree(){
     const showCatTree = this.state.showCatTree === true ? false : true;
+    const catTreeCssClass = this.state.catTreeCssClass === "open" ? "" : "open";
     this.setState({showCatTree:showCatTree});
   }
 
@@ -97,7 +99,7 @@ class CategoryTree extends React.Component {
     }
 
     return(
-      <div id="category-tree" className={this.state.device}>
+      <div id="category-tree" className={this.state.device + " " + this.state.catTreeCssClass}>
         {selectedCategoryDisplay}
         {categoryTreeDisplay}
       </div>
@@ -194,6 +196,7 @@ class SelectedCategory extends React.Component {
     return (
       <div onClick={this.props.onCatTreeToggle} id="slected-category-tree-item">
         {selectedCategoriesDisplay}
+        <span className="selected-category-arrow-down"></span>
       </div>
     )
   }
