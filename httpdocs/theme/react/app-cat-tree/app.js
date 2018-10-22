@@ -23,6 +23,7 @@ class CategoryTree extends React.Component {
 
   componentDidMount() {
     window.addEventListener("resize", this.updateDimensions);
+    console.log(this.state);
     if (this.state.categoryId !== 0){
       this.getSelectedCategories(this.state.categories,this.state.categoryId);
     } else {
