@@ -126,7 +126,7 @@ class CategoryTree extends React.Component {
   updateDimensions() {
     const device = appHelpers.getDeviceFromWidth(window.innerWidth);
     this.setState({ device: device }, function () {
-      showCategories = true;
+      let showCategories = true;
       if (this.state.device === "tablet") {
         showCategories = false;
       }
