@@ -82,6 +82,7 @@ class CategoryItem extends React.Component {
         lastChild = true;
       }
 
+      console.log(children.sort(appHelpers.sortArrayAlphabeticallyByTitle));
       const categoryChildren = children.sort(appHelpers.sortArrayAlphabeticallyByTitle).map((cat,index) => (
         <CategoryItem
           key={index}

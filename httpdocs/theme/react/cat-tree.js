@@ -162,6 +162,7 @@ class CategoryItem extends React.Component {
         lastChild = true;
       }
 
+      console.log(children.sort(appHelpers.sortArrayAlphabeticallyByTitle));
       const categoryChildren = children.sort(appHelpers.sortArrayAlphabeticallyByTitle).map((cat, index) => React.createElement(CategoryItem, {
         key: index,
         category: cat,
