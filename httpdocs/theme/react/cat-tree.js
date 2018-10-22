@@ -14,7 +14,6 @@ window.appHelpers = function () {
       if (!selectedCategory) {
         if (parseInt(cat.id) === categoryId) {
           selectedCategory = cat;
-          console.log(selectedCategory);
         } else {
           if (cat.has_children === true) {
             const catChildren = appHelpers.convertObjectToArray(cat.children);
@@ -81,7 +80,6 @@ class CategoryTree extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.state);
     if (this.state.categoryId) {
       this.getSelectedCategories(this.state.categories, this.state.categoryId);
     } else {
@@ -162,7 +160,6 @@ class CategoryItem extends React.Component {
         lastChild = true;
       }
 
-      console.log(children.sort(appHelpers.sortArrayAlphabeticallyByTitle));
       const categoryChildren = children.sort(appHelpers.sortArrayAlphabeticallyByTitle).map((cat, index) => React.createElement(CategoryItem, {
         key: index,
         category: cat,

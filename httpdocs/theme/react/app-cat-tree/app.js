@@ -11,7 +11,6 @@ class CategoryTree extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.state);
     if (this.state.categoryId){
       this.getSelectedCategories(this.state.categories,this.state.categoryId);
     } else {
@@ -82,7 +81,6 @@ class CategoryItem extends React.Component {
         lastChild = true;
       }
 
-      console.log(children.sort(appHelpers.sortArrayAlphabeticallyByTitle));
       const categoryChildren = children.sort(appHelpers.sortArrayAlphabeticallyByTitle).map((cat,index) => (
         <CategoryItem
           key={index}
