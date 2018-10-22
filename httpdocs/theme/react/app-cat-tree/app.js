@@ -25,11 +25,13 @@ class CategoryTree extends React.Component {
   componentDidMount() {
     window.addEventListener("resize", this.updateDimensions);
     const urlContext = appHelpers.getUrlContext(window.location.href);
-    if (this.state.categoryId && this.state.categoryId !== 0){
-      this.getSelectedCategories(this.state.categories,this.state.categoryId);
-    } else {
-      this.setState({loading:false});
-    }
+    this.setState({urlContext:urlContext},function(){
+      if (this.state.categoryId && this.state.categoryId !== 0){
+        this.getSelectedCategories(this.state.categories,this.state.categoryId);
+      } else {
+        this.setState({loading:false});
+      }
+    });
   }
 
   getSelectedCategories(categories,catId){
@@ -75,6 +77,7 @@ class CategoryTree extends React.Component {
       }
       if (this.state.device === "tablet" && this.state.showCatTree || this.state.device !== "tablet" || this.state.selectedCategories && this.state.selectedCategories.length === 0) {
         if (this.state.categories){
+          const urlContext = this.state.urlContext;
           const categoryId = this.state.categoryId;
           const selectedCategories = this.state.selectedCategories;
           const categoryTree = this.state.categories.sort(appHelpers.sortArrayAlphabeticallyByTitle).map((cat,index) => (
@@ -82,6 +85,7 @@ class CategoryTree extends React.Component {
               key={index}
               category={cat}
               categoryId={categoryId}
+              urlContext={urlContext}
               selectedCategories={selectedCategories}
             />
           ));
@@ -90,7 +94,7 @@ class CategoryTree extends React.Component {
           if (this.state.categoryId && this.state.categoryId !== 0){
             allCatItemCssClass = "";
           } else {
-            if (window.location.href === window.baseUrl + "/browse/"){
+            if (window.location.href === window.baseUrl + this.state.urlContext + "/browse/"){
               allCatItemCssClass = "active";
             }
           }
@@ -98,7 +102,7 @@ class CategoryTree extends React.Component {
           categoryTreeDisplay = (
             <ul className="main-list">
               <li className={"cat-item" + " " + allCatItemCssClass}>
-                <a href={window.baseUrl + "/browse/"}><span className="title">All</span></a>
+                <a href={window.baseUrl + this.state.urlContext +"/browse/"}><span className="title">All</span></a>
               </li>
               {categoryTree}
             </ul>
@@ -129,6 +133,7 @@ class CategoryItem extends React.Component {
     const categoryType = appHelpers.getCategoryType(this.props.selectedCategories,this.props.categoryId,this.props.category.id);
     if (this.props.category.has_children === true && categoryType && this.props.lastChild !== true){
 
+      const urlContext = this.props.urlContext;
       const categoryId = this.props.categoryId;
       const category = this.props.category;
       const selectedCategories = this.props.selectedCategories;
@@ -143,6 +148,7 @@ class CategoryItem extends React.Component {
           key={index}
           category={cat}
           categoryId={categoryId}
+          urlContext={urlContext}
           selectedCategories={selectedCategories}
           lastChild={lastChild}
           parent={category}
@@ -167,7 +173,7 @@ class CategoryItem extends React.Component {
       productCountDisplay = this.props.category.product_count;
     }
 
-    const categoryItemLink = appHelpers.generateCategoryLink(window.baseUrl,this.props.category.id,window.location.href);
+    const categoryItemLink = appHelpers.generateCategoryLink(window.baseUrl,this.props.urlContext,this.props.category.id,window.location.href);
 
     return(
       <li id={"cat-"+this.props.category.id} className={categoryItemClass}>

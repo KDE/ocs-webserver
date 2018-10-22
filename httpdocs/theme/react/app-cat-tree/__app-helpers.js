@@ -39,8 +39,8 @@ window.appHelpers = (function(){
     return categoryType;
   }
 
-  function generateCategoryLink(baseUrl,catId,locationHref){
-    let link = baseUrl + "/browse/cat/" + catId;
+  function generateCategoryLink(baseUrl,urlContext,catId,locationHref){
+    let link = baseUrl + urlContext + "/browse/cat/" + catId;
     if (locationHref.indexOf('ord') > -1){
       link += "/ord/" + locationHref.split('/ord/')[1];
     }
@@ -68,7 +68,11 @@ window.appHelpers = (function(){
   }
 
   function getUrlContext(href){
-    console.log(href);
+    let urlContext = "";
+    if (href.indexOf('/s/') > -1){
+      urlContext = "/s/" + href.split('/s/')[1].split('/')[0];
+    }
+    return urlContext;
   }
 
   return {

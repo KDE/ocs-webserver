@@ -39,8 +39,8 @@ window.appHelpers = function () {
     return categoryType;
   }
 
-  function generateCategoryLink(baseUrl, catId, locationHref) {
-    let link = baseUrl + "/browse/cat/" + catId;
+  function generateCategoryLink(baseUrl, urlContext, catId, locationHref) {
+    let link = baseUrl + urlContext + "/browse/cat/" + catId;
     if (locationHref.indexOf('ord') > -1) {
       link += "/ord/" + locationHref.split('/ord/')[1];
     }
@@ -72,7 +72,11 @@ window.appHelpers = function () {
   }
 
   function getUrlContext(href) {
-    console.log(href);
+    let urlContext = "";
+    if (href.indexOf('/s/') > -1) {
+      urlContext = "/s/" + href.split('/s/')[1].split('/')[0];
+    }
+    return urlContext;
   }
 
   return {
@@ -112,11 +116,13 @@ class CategoryTree extends React.Component {
   componentDidMount() {
     window.addEventListener("resize", this.updateDimensions);
     const urlContext = appHelpers.getUrlContext(window.location.href);
-    if (this.state.categoryId && this.state.categoryId !== 0) {
-      this.getSelectedCategories(this.state.categories, this.state.categoryId);
-    } else {
-      this.setState({ loading: false });
-    }
+    this.setState({ urlContext: urlContext }, function () {
+      if (this.state.categoryId && this.state.categoryId !== 0) {
+        this.getSelectedCategories(this.state.categories, this.state.categoryId);
+      } else {
+        this.setState({ loading: false });
+      }
+    });
   }
 
   getSelectedCategories(categories, catId) {
@@ -160,12 +166,14 @@ class CategoryTree extends React.Component {
       }
       if (this.state.device === "tablet" && this.state.showCatTree || this.state.device !== "tablet" || this.state.selectedCategories && this.state.selectedCategories.length === 0) {
         if (this.state.categories) {
+          const urlContext = this.state.urlContext;
           const categoryId = this.state.categoryId;
           const selectedCategories = this.state.selectedCategories;
           const categoryTree = this.state.categories.sort(appHelpers.sortArrayAlphabeticallyByTitle).map((cat, index) => React.createElement(CategoryItem, {
             key: index,
             category: cat,
             categoryId: categoryId,
+            urlContext: urlContext,
             selectedCategories: selectedCategories
           }));
 
@@ -173,7 +181,7 @@ class CategoryTree extends React.Component {
           if (this.state.categoryId && this.state.categoryId !== 0) {
             allCatItemCssClass = "";
           } else {
-            if (window.location.href === window.baseUrl + "/browse/") {
+            if (window.location.href === window.baseUrl + this.state.urlContext + "/browse/") {
               allCatItemCssClass = "active";
             }
           }
@@ -186,7 +194,7 @@ class CategoryTree extends React.Component {
               { className: "cat-item" + " " + allCatItemCssClass },
               React.createElement(
                 "a",
-                { href: window.baseUrl + "/browse/" },
+                { href: window.baseUrl + this.state.urlContext + "/browse/" },
                 React.createElement(
                   "span",
                   { className: "title" },
@@ -221,6 +229,7 @@ class CategoryItem extends React.Component {
     const categoryType = appHelpers.getCategoryType(this.props.selectedCategories, this.props.categoryId, this.props.category.id);
     if (this.props.category.has_children === true && categoryType && this.props.lastChild !== true) {
 
+      const urlContext = this.props.urlContext;
       const categoryId = this.props.categoryId;
       const category = this.props.category;
       const selectedCategories = this.props.selectedCategories;
@@ -234,6 +243,7 @@ class CategoryItem extends React.Component {
         key: index,
         category: cat,
         categoryId: categoryId,
+        urlContext: urlContext,
         selectedCategories: selectedCategories,
         lastChild: lastChild,
         parent: category
@@ -256,7 +266,7 @@ class CategoryItem extends React.Component {
       productCountDisplay = this.props.category.product_count;
     }
 
-    const categoryItemLink = appHelpers.generateCategoryLink(window.baseUrl, this.props.category.id, window.location.href);
+    const categoryItemLink = appHelpers.generateCategoryLink(window.baseUrl, this.props.urlContext, this.props.category.id, window.location.href);
 
     return React.createElement(
       "li",
