@@ -278,8 +278,8 @@ class SelectedCategory extends React.Component {
 
     let selectedCategoriesDisplay;
     if (this.props.selectedCategories) {
-      const selectedCategoriesReverse = this.props.selectedCategories.reverse();
-      selectedCategoriesDisplay = selectedCategoriesReverse.map((sc, index) => React.createElement(
+      const selectedCategoriesReverse = this.props.selectedCategories.slice(0);
+      selectedCategoriesDisplay = selectedCategoriesReverse.reverse().map((sc, index) => React.createElement(
         "a",
         { key: index },
         sc.title
