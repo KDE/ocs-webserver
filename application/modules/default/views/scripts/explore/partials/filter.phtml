@@ -64,7 +64,8 @@ $this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
     {
         color:  <?=$this->navBackgroundColorActive?>;
     }
-    ul.naviblock a.active.child
+    ul.naviblock a.active.child,
+    ul.main-list li.active > a
     {
         background-color:  <?=$this->navBackgroundColorActive?>;
         color:  <?=$this->navColorActive?>;
@@ -182,8 +183,6 @@ $this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
 </div>
 <script type="application/javascript">
   var catTree = <?= $jsonTree ?>;
-  var a = <?= $this->navColorActive ?>;
-  console.log(a);
   <?php
     $catIdExists = isset($this->cat_id);
     if ($catIdExists){
