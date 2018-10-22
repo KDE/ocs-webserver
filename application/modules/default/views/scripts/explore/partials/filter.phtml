@@ -180,7 +180,7 @@ $this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
 <script type="application/javascript">
   var catTree = <?= $jsonTree ?>;
   <?php
-    var $isExist = empty($this->cat_id);
+    $isExist = empty($this->cat_id);
     if ($isExist) {
   ?>
       var categoryId = <?= $this->cat_id;?>;
