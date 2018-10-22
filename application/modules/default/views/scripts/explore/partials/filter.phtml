@@ -182,6 +182,8 @@ $this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
 </div>
 <script type="application/javascript">
   var catTree = <?= $jsonTree ?>;
+  var a = <?= $this->navColorActive ?>;
+  console.log(a);
   <?php
     $catIdExists = isset($this->cat_id);
     if ($catIdExists){
