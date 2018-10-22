@@ -179,6 +179,11 @@ $this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
 </script>
 <script type="application/javascript">
   var catTree = <?= $jsonTree ?>;
-  var categoryId = <?=echo $this->cat_id ?: "not set";?>;
+  <?php
+    $catIdExists = isset($this->cat_id);
+    if ($catIdExists){
+      echo "var categoryId = ".<?=this->cat_id?>.";"
+    }
+  ?>
 </script>
 <script type="application/javascript" src="/theme/react/cat-tree.js"></script>
