@@ -77,7 +77,7 @@ class CategoryTree extends React.Component {
     return(
       <div id="category-tree">
         {selectedCategoryDisplay}
-        <ul>
+        <ul className="main-list">
           <li className="cat-item">
             <a href={window.baseUrl + "/browse/"}><span className="title">All</span></a>
           </li>

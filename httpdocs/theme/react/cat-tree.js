@@ -157,7 +157,7 @@ class CategoryTree extends React.Component {
       selectedCategoryDisplay,
       React.createElement(
         "ul",
-        null,
+        { className: "main-list" },
         React.createElement(
           "li",
           { className: "cat-item" },
