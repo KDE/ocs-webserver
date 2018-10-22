@@ -139,7 +139,7 @@ class CategoryTree extends React.Component {
     if (!this.state.loading) {
       let showCategories = true;
       if (this.state.device === "tablet") {
-        if (this.staet.showCategories === false) {
+        if (this.state.showCategories === false) {
           showCategories = false;
         }
       }
