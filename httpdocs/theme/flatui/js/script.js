@@ -1924,6 +1924,8 @@ var TagingProductDetail = (function () {
                         }
 })();
 
+
+
 var TagingProductDetailSelect2 = (function () {
     return {
         setup: function () {
@@ -2144,4 +2146,24 @@ var productRatingToggle = (function () {
             });
         }
     }
+})();
+
+var FilterBrowseOriginalFn= (function () {
+                        return {
+                            setup: function () {                                          
+                                           $('body').on('click', 'input#filter_browse_original', function (event) {
+                                                var checked = $(this).is( ":checked" );
+                                                var url  = window.location.href;
+                                                if(url.indexOf("filteroriginal")>0)
+                                                {
+                                                    url = url.substring(0,url.indexOf("filteroriginal"));
+                                                }
+                                                if(checked){                                                
+                                                   window.location.href = url+'filteroriginal/1';                                                                                                           
+                                                }else{
+                                                    window.location.href = url+'filteroriginal/0';
+                                                }
+                                           });
+                            }
+                        }
 })();

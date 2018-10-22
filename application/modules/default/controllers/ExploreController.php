@@ -23,7 +23,7 @@
 class ExploreController extends Local_Controller_Action_DomainSwitch
 {
     const DEFAULT_ORDER = 'latest';
-
+    const TAG_ISORIGINAL = 'original-product';
     /** @var  string */
     protected $_browserTitlePrepend;
 
@@ -121,6 +121,27 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         // Filter-Parameter
         $inputCatId = (int)$this->getParam('cat', null);
 
+
+        $inputFilterOriginal =$this->getParam('filteroriginal', null);
+
+        if(isset($inputFilterOriginal))
+        {            
+            //set to cookie session
+            $config = Zend_Registry::get('config');
+            $cookieName = $config->settings->auth_session->filter_browse_original;            
+            $remember_me_seconds = $config->settings->auth_session->remember_me->timeout;
+            $domain = Local_Tools_ParseDomain::get_domain($this->getRequest()->getHttpHost());
+            $cookieExpire = time() + $remember_me_seconds;            
+            setcookie($cookieName, $inputFilterOriginal, $cookieExpire, '/');
+        }
+        else
+        {           
+            $config = Zend_Registry::get('config');
+            $cookieName = $config->settings->auth_session->filter_browse_original;             
+            $inputFilterOriginal = $_COOKIE[$cookieName];             
+        }
+        $this->view->inputFilterOriginal = $inputFilterOriginal;
+
         if ($inputCatId) {
             $this->view->isFilterCat = true;
             $this->view->filterCat = $inputCatId;
@@ -136,6 +157,10 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
 
         $filter['category'] = $inputCatId ? $inputCatId : $storeCatIds;
         $filter['order'] = preg_replace('/[^-a-zA-Z0-9_]/', '', $this->getParam('ord', self::DEFAULT_ORDER));
+        if($inputFilterOriginal==1)
+        {
+            $filter['original']  = self::TAG_ISORIGINAL;
+        }
 
         $page = (int)$this->getParam('page', 1);
                 
