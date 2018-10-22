@@ -85,7 +85,7 @@ class Default_Model_MemberEmail
      */
     private function resetDefaultMailAddress($member_id)
     {
-        $sql = "UPDATE member_email SET email_primary = 0 WHERE email_member_id = :member_id AND email_primary = 1";
+        $sql = "UPDATE `member_email` SET `email_primary` = 0 WHERE `email_member_id` = :member_id AND `email_primary` = 1";
 
         return $this->_dataTable->getAdapter()->query($sql, array('member_id' => $member_id))->execute();
     }
@@ -144,7 +144,7 @@ class Default_Model_MemberEmail
     public function verificationEmail($verification)
     {
         $sql =
-            "UPDATE member_email SET `email_checked` = NOW() WHERE `email_verification_value` = :verification AND `email_deleted` = 0 AND `email_checked` IS NULL";
+            "UPDATE `member_email` SET `email_checked` = NOW() WHERE `email_verification_value` = :verification AND `email_deleted` = 0 AND `email_checked` IS NULL";
         $stmnt = $this->_dataTable->getAdapter()->query($sql, array('verification' => $verification));
 
         return $stmnt->rowCount();
@@ -182,6 +182,11 @@ class Default_Model_MemberEmail
     public static function getVerificationValue($user_name, $member_email)
     {
         return md5($user_name . $member_email . time());
+    }
+
+    public static function getHashForMailAddress($mail_address)
+    {
+        return md5($mail_address);
     }
 
     /**
@@ -223,6 +228,17 @@ class Default_Model_MemberEmail
         return $result;
     }
 
+    private function resetOtherPrimaryEmail($user_id, $user_mail)
+    {
+        $sql = "
+                UPDATE `member_email`
+                SET `email_primary` = 0
+                WHERE `email_member_id` = :user_id AND `email_address` <> :user_mail; 
+                ";
+        $result = $this->_dataTable->getAdapter()->query($sql, array('user_id' => $user_id, 'user_mail' => $user_mail));
+
+    }
+
     /**
      * @param $member_id
      *
@@ -235,6 +251,7 @@ class Default_Model_MemberEmail
         if (count($memberData) == 0) {
             return null;
         }
+
         return $memberData['email_verification_value'];
     }
 
@@ -289,17 +306,6 @@ class Default_Model_MemberEmail
         $request = Zend_Controller_Front::getInstance()->getRequest();
 
         return $request->getHttpHost();
-    }
-
-    private function resetOtherPrimaryEmail($user_id, $user_mail)
-    {
-        $sql = "
-                UPDATE `member_email`
-                SET `email_primary` = 0
-                WHERE `email_member_id` = :user_id AND `email_address` <> :user_mail; 
-                ";
-        $result = $this->_dataTable->getAdapter()->query($sql, array('user_id' => $user_id, 'user_mail' => $user_mail));
-
     }
 
 }

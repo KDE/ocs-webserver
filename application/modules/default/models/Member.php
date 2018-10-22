@@ -1090,10 +1090,10 @@ class Default_Model_Member extends Default_Model_DbTable_Member
     public function findActiveMemberByMail($identity)
     {
         $sqlMail = "
-                    SELECT `m`.*, `member_email`.`email_address` AS `mail`, IF(ISNULL(`member_email`.`email_checked`),0,1) AS `mail_checked`
+                    SELECT `m`.*, `me`.`email_address` AS `mail`, IF(ISNULL(`me`.`email_checked`),0,1) AS `mail_checked`
                     FROM `member` AS `m`
                     JOIN `member_email` AS `me` ON `me`.`email_member_id` = `m`.`member_id` AND `me`.`email_primary` = 1
-                    WHERE `is_active` = :active AND `is_deleted` = :deleted AND `member_email`.`email_address` = :identity
+                    WHERE `is_active` = :active AND `is_deleted` = :deleted AND `me`.`email_address` = :identity
         ";
 
         // test identity as mail
