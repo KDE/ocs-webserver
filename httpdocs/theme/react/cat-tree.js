@@ -134,7 +134,7 @@ class CategoryTree extends React.Component {
     }
     selectedCategories.push(selectedCategory);
     this.setState({ selectedCategories: selectedCategories }, function () {
-      if (selectedCategory.parent_id && typeof selectedCategory.parent_id === 'string') {
+      if (selectedCategory && selectedCategory.parent_id) {
         this.getSelectedCategories(categories, parseInt(selectedCategory.parent_id));
       } else {
         this.setState({ loading: false });
