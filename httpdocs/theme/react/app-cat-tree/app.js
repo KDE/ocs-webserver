@@ -94,7 +94,7 @@ class CategoryTree extends React.Component {
     }
 
     return(
-      <div id="category-tree">
+      <div id="category-tree" className={this.state.device}>
         {selectedCategoryDisplay}
         {categoryTreeDisplay}
       </div>

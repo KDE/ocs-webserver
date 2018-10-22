@@ -182,7 +182,7 @@ class CategoryTree extends React.Component {
 
     return React.createElement(
       "div",
-      { id: "category-tree" },
+      { id: "category-tree", className: this.state.device },
       selectedCategoryDisplay,
       categoryTreeDisplay
     );
