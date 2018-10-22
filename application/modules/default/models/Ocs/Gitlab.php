@@ -22,7 +22,7 @@
  *
  * Created: 19.06.2018
  */
-class Default_Model_Ocs_OpenCode
+class Default_Model_Ocs_Gitlab
 {
     protected $config;
     protected $messages;

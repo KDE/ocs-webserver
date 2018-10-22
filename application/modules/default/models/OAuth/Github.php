@@ -545,7 +545,7 @@ class Default_Model_OAuth_Github implements Default_Model_OAuth_Interface
         
         //Send user to subsystems
         try {
-            $id_server = new Default_Model_Ocs_OpenId();
+            $id_server = new Default_Model_Ocs_OAuth();
             $id_server->createUser($member['member_id']);
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
@@ -558,7 +558,7 @@ class Default_Model_OAuth_Github implements Default_Model_OAuth_Interface
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }
         try {
-            $openCode = new Default_Model_Ocs_OpenCode();
+            $openCode = new Default_Model_Ocs_Gitlab();
             $openCode->createUser($member['member_id']);
             Zend_Registry::get('logger')->debug(__METHOD__ . ' - opencode : ' . implode(PHP_EOL." - ", $openCode->getMessages()));
         } catch (Exception $e) {

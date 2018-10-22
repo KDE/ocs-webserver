@@ -131,7 +131,7 @@ class Backend_CexportController extends Local_Controller_Action_CliAbstract
     private function export2OpenCode($member)
     {
         try {
-            $modelOpenCode = new Default_Model_Ocs_OpenCode(Zend_Registry::get('config')->settings->server->opencode);
+            $modelOpenCode = new Default_Model_Ocs_Gitlab(Zend_Registry::get('config')->settings->server->opencode);
             $modelOpenCode->createUserFromArray($member);
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
@@ -158,9 +158,9 @@ class Backend_CexportController extends Local_Controller_Action_CliAbstract
     private function export2OpenId($member)
     {
         $error = '';
-        $id_server = new Default_Model_Ocs_OpenId();
+        $id_server = new Default_Model_Ocs_OAuth();
         try {
-            $id_server->exportUser($member, true); // try create
+            $id_server->createUserFromArray($member, true); // try create
             return;
         } catch (Exception $e) {
             $error = $e->getMessage();
@@ -168,7 +168,7 @@ class Backend_CexportController extends Local_Controller_Action_CliAbstract
         }
         if (strpos($error, 'duplicate') !== false) {
             try {
-                $id_server->exportUser($member);
+                $id_server->createUserFromArray($member);
             } catch (Zend_Exception $e) {
                 $this->logErrorMsg($e->getMessage() . PHP_EOL . $e->getTraceAsString());
             }

@@ -232,7 +232,7 @@ class PasswordController extends Local_Controller_Action_DomainSwitch
 
         //Update Auth-Services
         try {
-            $id_server = new Default_Model_Ocs_OpenId();
+            $id_server = new Default_Model_Ocs_OAuth();
             $id_server->updatePasswordForUser($member_data->member_id);
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
@@ -300,7 +300,7 @@ class PasswordController extends Local_Controller_Action_DomainSwitch
 
         //Update Auth-Services
         try {
-            $id_server = new Default_Model_Ocs_OpenId();
+            $id_server = new Default_Model_Ocs_OAuth();
             $id_server->updatePasswordForUser($member_data->member_id);
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());

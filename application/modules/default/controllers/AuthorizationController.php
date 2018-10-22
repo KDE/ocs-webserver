@@ -269,7 +269,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
 
             //Update Auth-Services
             try {
-                $id_server = new Default_Model_Ocs_OpenId();
+                $id_server = new Default_Model_Ocs_OAuth();
                 $id_server->updatePasswordForUser($memberSettings->member_id);
             } catch (Exception $e) {
                 Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
@@ -713,7 +713,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         Zend_Registry::get('logger')->info(__METHOD__ . ' - user activated. member_id: ' . print_r($authUser->member_id, true));
 
         try {
-            $id_server = new Default_Model_Ocs_OpenId();
+            $id_server = new Default_Model_Ocs_OAuth();
             $id_server->createUser($authUser->member_id);
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
@@ -726,7 +726,7 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }
         try {
-            $openCode = new Default_Model_Ocs_OpenCode();
+            $openCode = new Default_Model_Ocs_Gitlab();
             $openCode->createUser($authUser->member_id);
             Zend_Registry::get('logger')->debug(__METHOD__ . ' - opencode : ' . implode(PHP_EOL." - ", $openCode->getMessages()));
         } catch (Exception $e) {

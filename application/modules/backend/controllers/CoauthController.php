@@ -22,7 +22,7 @@
  *
  * Created: 06.08.2018
  */
-class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
+class Backend_CoauthController extends Local_Controller_Action_CliAbstract
 {
 
     const filename = "members";
@@ -43,8 +43,8 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
         array $invokeArgs = array()
     ) {
         parent::__construct($request, $response, $invokeArgs);
-        $this->config = Zend_Registry::get('config')->settings->server->opencode;
-        $this->log = new Local_Log_File($this->config->user_logfilename, self::filename);
+        $this->config = Zend_Registry::get('config')->settings->server->oauth;
+        $this->log = new Local_Log_File('oauth', self::filename);
         $this->_helper->viewRenderer->setNoRender(false);
     }
 
@@ -114,7 +114,7 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
         }
 
         $sql = "
-            SELECT `mei`.`external_id`,`m`.`member_id`, `m`.`username`, `me`.`email_address`, `m`.`password`, `m`.`roleId`, `m`.`firstname`, `m`.`lastname`, `m`.`profile_image_url`, `m`.`created_at`, `m`.`changed_at`, `m`.`source_id`, `m`.`biography`
+            SELECT `mei`.`external_id`,`m`.`member_id`, `m`.`username`, `me`.`email_address`, `m`.`password`, `m`.`roleId`, `m`.`firstname`, `m`.`lastname`, `m`.`profile_image_url`, `m`.`created_at`, `m`.`changed_at`, `m`.`source_id`, `m`.`biography`, `me`.`email_address` as `mail`, IF(ISNULL(`me`.`email_checked`),0,1) AS `mail_checked`, `m`.`password_type`, `m`.`is_active`, `m`.`is_deleted`
             FROM `member` AS `m`
             LEFT JOIN `member_email` AS `me` ON `me`.`email_member_id` = `m`.`member_id` AND `me`.`email_primary` = 1
             LEFT JOIN `member_external_id` AS `mei` ON `mei`.`member_id` = `m`.`member_id`
@@ -149,7 +149,7 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
         // only usernames which are valid in github/gitlab
         $usernameValidChars = new Local_Validate_UsernameValid();
         $emailValidate = new Zend_Validate_EmailAddress();
-        $modelOpenCode = new Default_Model_Ocs_Gitlab($this->config);
+        $modelOAuth = new Default_Model_Ocs_OAuth($this->config);
 
         while ($member = $members->fetch()) {
             $this->log->info("process " . Zend_Json::encode($member));
@@ -166,11 +166,11 @@ class Backend_CgitlabController extends Local_Controller_Action_CliAbstract
             }
             try {
                 //Export User, if he not exists
-                $modelOpenCode->createUserFromArray($member, $force);
+                $modelOAuth->createUserFromArray($member, $force);
             } catch (Exception $e) {
                 $this->log->info($e->getMessage() . PHP_EOL . $e->getTraceAsString());
             }
-            $messages = $modelOpenCode->getMessages();
+            $messages = $modelOAuth->getMessages();
             $this->log->info("messages " . Zend_Json::encode($messages));
             echo "response " . Zend_Json::encode($messages) . PHP_EOL;
         }

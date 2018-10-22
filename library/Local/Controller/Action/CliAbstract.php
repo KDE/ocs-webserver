@@ -26,7 +26,6 @@ abstract class Local_Controller_Action_CliAbstract extends Zend_Controller_Actio
     public function preDispatch()
     {
         parent::preDispatch();
-        $this->_helper->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
     }
 
