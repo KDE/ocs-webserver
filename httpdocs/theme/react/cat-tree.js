@@ -163,12 +163,22 @@ class CategoryTree extends React.Component {
             categoryId: categoryId,
             selectedCategories: selectedCategories
           }));
+
+          let allCatItemCssClass;
+          if (this.state.categoryId && this.state.categoryId !== 0) {
+            allCatItemCssClass = "";
+          } else {
+            if (window.location.href === window.baseUrl + "/browse/") {
+              allCatItemCssClass = "active";
+            }
+          }
+
           categoryTreeDisplay = React.createElement(
             "ul",
             { className: "main-list" },
             React.createElement(
               "li",
-              { className: "cat-item" },
+              { className: "cat-item" + " " + allCatItemCssClass },
               React.createElement(
                 "a",
                 { href: window.baseUrl + "/browse/" },

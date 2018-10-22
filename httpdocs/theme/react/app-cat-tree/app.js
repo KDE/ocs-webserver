@@ -85,9 +85,19 @@ class CategoryTree extends React.Component {
               selectedCategories={selectedCategories}
             />
           ));
+
+          let allCatItemCssClass;
+          if (this.state.categoryId && this.state.categoryId !== 0){
+            allCatItemCssClass = "";
+          } else {
+            if (window.location.href === window.baseUrl + "/browse/"){
+              allCatItemCssClass = "active";              
+            }
+          }
+
           categoryTreeDisplay = (
             <ul className="main-list">
-              <li className="cat-item">
+              <li className={"cat-item" + " " + allCatItemCssClass}>
                 <a href={window.baseUrl + "/browse/"}><span className="title">All</span></a>
               </li>
               {categoryTree}
