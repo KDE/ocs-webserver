@@ -89,11 +89,12 @@ out: ../css/cat-tree.css, sourcemap: true, compress: true
 
     .selected-category-arrow-down {
       display: block;
+      background-size: 15px;
       position: absolute;
       top: 5px;
-      right:20px;
-      height: 20px;
-      width: 100%;
+      right: 5px;
+      height: 15px;
+      width: 15px;
       background-image: url('../img/chevron_down.png');
     }
 
@@ -119,7 +120,7 @@ out: ../css/cat-tree.css, sourcemap: true, compress: true
     }
   }
 
-  #categoryTree.tablet {
+  #category-tree.tablet {
     ul {
       li {
         a {
@@ -132,7 +133,7 @@ out: ../css/cat-tree.css, sourcemap: true, compress: true
     }
   }
 
-  &.open {
+  #category-tree.open {
     #selected-category-tree-item {
       .selected-category-arrow-down {
         .rotation(180deg);
