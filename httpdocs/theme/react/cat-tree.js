@@ -114,6 +114,7 @@ class CategoryTree extends React.Component {
   }
 
   componentDidMount() {
+    console.log(this.state);
     window.addEventListener("resize", this.updateDimensions);
     const urlContext = appHelpers.getUrlContext(window.location.href);
     this.setState({ urlContext: urlContext }, function () {
