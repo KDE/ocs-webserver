@@ -129,8 +129,16 @@ class CategoryTree extends React.Component {
   }
 
   render() {
-    let categoryTreeDisplay;
+    let categoryTreeDisplay, selectedCategoriesDisplay;
     if (!this.state.loading) {
+
+      if (this.state.selectedCategories) {
+        selectedCategoryDisplay = React.createElement(SelectedCategory, {
+          categoryId: this.state.categoryId,
+          selectedCategories: this.state.selectedCategories
+        });
+      }
+
       if (this.state.categories) {
         const categoryId = this.state.categoryId;
         const selectedCategories = this.state.selectedCategories;
@@ -142,13 +150,11 @@ class CategoryTree extends React.Component {
         }));
       }
     }
+
     return React.createElement(
       "div",
       { id: "category-tree" },
-      React.createElement(SelectedCategory, {
-        categoryId: this.state.categoryId,
-        selectedCategories: this.state.selectedCategories
-      }),
+      selectedCategoryDisplay,
       React.createElement(
         "ul",
         null,

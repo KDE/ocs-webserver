@@ -47,8 +47,18 @@ class CategoryTree extends React.Component {
   }
 
   render(){
-    let categoryTreeDisplay;
+    let categoryTreeDisplay, selectedCategoriesDisplay;
     if (!this.state.loading){
+
+      if (this.state.selectedCategories){
+        selectedCategoryDisplay = (
+          <SelectedCategory
+            categoryId={this.state.categoryId}
+            selectedCategories={this.state.selectedCategories}
+          />
+        );
+      }
+
       if (this.state.categories){
         const categoryId = this.state.categoryId;
         const selectedCategories = this.state.selectedCategories;
@@ -61,13 +71,12 @@ class CategoryTree extends React.Component {
           />
         ));
       }
+
     }
+
     return(
       <div id="category-tree">
-        <SelectedCategory
-          categoryId={this.state.categoryId}
-          selectedCategories={this.state.selectedCategories}
-        />
+        {selectedCategoryDisplay}
         <ul>
           <li className="cat-item">
             <a href={window.baseUrl + "/browse/"}><span className="title">All</span></a>
