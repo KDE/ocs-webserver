@@ -43,25 +43,13 @@ class CategoryTree extends React.Component {
 
   updateDimensions(){
     const device = appHelpers.getDeviceFromWidth(window.innerWidth);
-    this.setState({device:device},function(){
-      let showCategories = true;
-      if (this.state.device === "tablet"){
-        showCategories = false
-      }
-      this.setState({showCategories:showCategories});
-    });
+    this.setState({device:device});
   }
 
   render(){
     let categoryTreeDisplay;
     if (!this.state.loading){
-      let showCategories = true;
-      if (this.state.device === "tablet"){
-        if (this.state.showCategories === false){
-          showCategories = false;
-        }
-      }
-      if (this.state.categories && showCategories){
+      if (this.state.categories){
         const categoryId = this.state.categoryId;
         const selectedCategories = this.state.selectedCategories;
         const categoryTree = this.state.categories.sort(appHelpers.sortArrayAlphabeticallyByTitle).map((cat,index) => (
