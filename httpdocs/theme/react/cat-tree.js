@@ -108,6 +108,15 @@ class CategoryTree extends React.Component {
       React.createElement(
         "ul",
         null,
+        React.createElement(
+          "li",
+          { className: "cat-item" },
+          React.createElement(
+            "a",
+            { href: window.baseUrl + "/browse/" },
+            "All"
+          )
+        ),
         categoryTreeDisplay
       )
     );
