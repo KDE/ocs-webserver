@@ -128,8 +128,10 @@ class CategoryTree extends React.Component {
 
   getSelectedCategories(categories, catId) {
     const selectedCategory = appHelpers.getSelectedCategory(this.state.categories, catId);
+    console.log(selectedCategory);
     const selectedCategories = this.state.selectedCategories;
-    if (selectedCategory) {
+    if (typeof selectedCategory !== 'undefined') {
+      console.log('there is a selected category');
       selectedCategory.selectedIndex = selectedCategories.length;
       selectedCategories.push(selectedCategory);
     }
