@@ -35,7 +35,7 @@ class CategoryTree extends React.Component {
     const selectedCategory = appHelpers.getSelectedCategory(this.state.categories,catId);
     const selectedCategories = this.state.selectedCategories;
     if (selectedCategory){
-      selectedCategory.selectedIndex = selectedCategories.length;      
+      selectedCategory.selectedIndex = selectedCategories.length;
     }
     selectedCategories.push(selectedCategory);
     this.setState({selectedCategories:selectedCategories},function(){
@@ -61,7 +61,7 @@ class CategoryTree extends React.Component {
     let categoryTreeDisplay, selectedCategoryDisplay;
     if (!this.state.loading){
 
-      if (this.state.device === "tablet" && this.state.selectedCategories){
+      if (this.state.device === "tablet" && this.state.selectedCategories &&  this.state.selectedCategories.length > 0){
         selectedCategoryDisplay = (
           <SelectedCategory
             categoryId={this.state.categoryId}
@@ -71,7 +71,7 @@ class CategoryTree extends React.Component {
           />
         );
       }
-      if (this.state.device === "tablet" && this.state.showCatTree || this.state.device !== "tablet" || !this.state.selectedCategories) {
+      if (this.state.device === "tablet" && this.state.showCatTree || this.state.device !== "tablet" || this.state.selectedCategories && this.state.selectedCategories.length > 0) {
         if (this.state.categories){
           const categoryId = this.state.categoryId;
           const selectedCategories = this.state.selectedCategories;

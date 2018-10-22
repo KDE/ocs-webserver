@@ -143,7 +143,7 @@ class CategoryTree extends React.Component {
     let categoryTreeDisplay, selectedCategoryDisplay;
     if (!this.state.loading) {
 
-      if (this.state.device === "tablet" && this.state.selectedCategories) {
+      if (this.state.device === "tablet" && this.state.selectedCategories && this.state.selectedCategories.length > 0) {
         selectedCategoryDisplay = React.createElement(SelectedCategory, {
           categoryId: this.state.categoryId,
           selectedCategory: this.state.selectedCategories[0],
@@ -151,7 +151,7 @@ class CategoryTree extends React.Component {
           onCatTreeToggle: this.toggleCatTree
         });
       }
-      if (this.state.device === "tablet" && this.state.showCatTree || this.state.device !== "tablet" || !this.state.selectedCategories) {
+      if (this.state.device === "tablet" && this.state.showCatTree || this.state.device !== "tablet" || this.state.selectedCategories && this.state.selectedCategories.length > 0) {
         if (this.state.categories) {
           const categoryId = this.state.categoryId;
           const selectedCategories = this.state.selectedCategories;
