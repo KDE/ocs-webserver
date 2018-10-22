@@ -82,7 +82,7 @@ class CategoryItem extends React.Component {
         lastChild = true;
       }
 
-      const categoryChildren = children.map((cat,index) => (
+      const categoryChildren = children.sort((a, b) => a.title - b.title).map((cat,index) => (
         <CategoryItem
           key={index}
           category={cat}
