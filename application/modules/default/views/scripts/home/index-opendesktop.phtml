@@ -104,13 +104,14 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                         </div>
 
                         <div class="row blockpadding">
-                        <?php                                 
-                                    echo $this->partial('/home/partials/product_group.phtml', array(
-                                            "title"  => "Concepts, Screenshots",
-                                            "products" => $this->productsScreenshots,
-                                            "catIDs" =>"445,225"   
-                                        )
-                                    );                                                                     
+                        <?php   
+                                echo $this->partial('/home/partials/product_group.phtml', array(
+                                        "title"  => "Artwork, Wallpapers ",
+                                        "products" => $this->productsWallpapers,
+                                        "catIDs" =>"158,295"   
+                                    )
+                                );                                     
+                                                                                                     
 
                                     echo $this->partial('/home/partials/product_group.phtml', array(
                                             "title"  => "Artwork, Wallpapers (Original)",
@@ -142,13 +143,13 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
 
                         <div class="row blockpadding">
                         <?php                                 
-                                                                                                  
-                                    echo $this->partial('/home/partials/product_group.phtml', array(
-                                            "title"  => "Artwork, Wallpapers (Not Original)",
-                                            "products" => $this->productsWallpapers,
-                                            "catIDs" =>"158,295"   
+                                           echo $this->partial('/home/partials/product_group.phtml', array(
+                                            "title"  => "Concepts, Screenshots",
+                                            "products" => $this->productsScreenshots,
+                                            "catIDs" =>"445,225"   
                                         )
-                                    );                                        
+                                    );                                                           
+                                                                  
                         ?>                                                                                                          
                         </div>
 
