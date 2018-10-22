@@ -37,7 +37,7 @@ class Default_Model_Ocs_OAuth
         } else {
             $this->config = Zend_Registry::get('config')->settings->server->opencode;
         }
-        $this->httpServer = new Default_Model_Ocs_HttpTransport_OAuthServer($config);
+        $this->httpServer = new Default_Model_Ocs_HttpTransport_OAuthServer($this->config);
     }
 
     /**
