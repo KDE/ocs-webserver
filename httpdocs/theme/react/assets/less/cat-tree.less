@@ -28,6 +28,8 @@ out: ../css/cat-tree.css, sourcemap: true, compress: true
         background-color: transparent;
         color: #2673b0;
         padding-left: 5px;
+        padding-right: 30px;
+        position: relative;
         .transition();
 
         &:hover {
@@ -36,7 +38,15 @@ out: ../css/cat-tree.css, sourcemap: true, compress: true
         }
 
 
-        span {
+        span.title {
+          display: block;
+          width: 100%;
+          overflow:hidden;
+        }
+
+        span.product-counter {
+          position: absolute;
+          right: 15px;
           float: right;
           margin-right: 15px;
         }
