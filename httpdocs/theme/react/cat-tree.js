@@ -59,12 +59,25 @@ window.appHelpers = function () {
     return 0;
   }
 
+  function getDeviceFromWidth(width) {
+    let device;
+    if (width >= 910) {
+      device = "large";
+    } else if (width < 910 && width >= 610) {
+      device = "mid";
+    } else if (width < 610) {
+      device = "tablet";
+    }
+    return device;
+  }
+
   return {
     convertObjectToArray,
     getSelectedCategory,
     getCategoryType,
     generateCategoryLink,
-    sortArrayAlphabeticallyByTitle
+    sortArrayAlphabeticallyByTitle,
+    getDeviceFromWidth
   };
 }();
 class CategoryTree extends React.Component {
@@ -77,9 +90,19 @@ class CategoryTree extends React.Component {
       loading: true
     };
     this.getSelectedCategories = this.getSelectedCategories.bind(this);
+    this.updateDimensions = this.updateDimensions.bind(this);
+  }
+
+  componentWillMount() {
+    this.updateDimensions();
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.updateDimensions);
   }
 
   componentDidMount() {
+    window.addEventListener("resize", this.updateDimensions);
     if (this.state.categoryId) {
       this.getSelectedCategories(this.state.categories, this.state.categoryId);
     } else {
@@ -100,41 +123,65 @@ class CategoryTree extends React.Component {
     });
   }
 
+  updateDimensions() {
+    const device = appHelpers.getDeviceFromWidth(window.innerWidth);
+    this.setState({ device: device }, function () {
+      showCategories = true;
+      if (this.state.device === "tablet") {
+        showCategories = false;
+      }
+      this.setState({ showCategories: showCategories });
+    });
+  }
+
   render() {
     let categoryTreeDisplay;
     if (!this.state.loading) {
-      if (this.state.categories) {
+      let showCategories = true;
+      if (this.state.device === "tablet") {
+        if (this.staet.showCategories === false) {
+          showCategories = false;
+        }
+      }
+      if (this.state.categories && showCategories) {
         const categoryId = this.state.categoryId;
         const selectedCategories = this.state.selectedCategories;
-        categoryTreeDisplay = this.state.categories.sort(appHelpers.sortArrayAlphabeticallyByTitle).map((cat, index) => React.createElement(CategoryItem, {
+        const categoryTree = this.state.categories.sort(appHelpers.sortArrayAlphabeticallyByTitle).map((cat, index) => React.createElement(CategoryItem, {
           key: index,
           category: cat,
           categoryId: categoryId,
           selectedCategories: selectedCategories
         }));
+        categoryTreeDisplay = React.createElement(
+          "ul",
+          null,
+          React.createElement(
+            "li",
+            { className: "cat-item" },
+            React.createElement(
+              "a",
+              { href: window.baseUrl + "/browse/" },
+              React.createElement(
+                "span",
+                { className: "title" },
+                "All"
+              )
+            )
+          ),
+          categoryTreeDisplay
+        );
+      } else {
+        categoryTreeDisplay = React.createElement(
+          "p",
+          null,
+          "show selected category here"
+        );
       }
     }
     return React.createElement(
       "div",
       { id: "category-tree" },
-      React.createElement(
-        "ul",
-        null,
-        React.createElement(
-          "li",
-          { className: "cat-item" },
-          React.createElement(
-            "a",
-            { href: window.baseUrl + "/browse/" },
-            React.createElement(
-              "span",
-              { className: "title" },
-              "All"
-            )
-          )
-        ),
-        categoryTreeDisplay
-      )
+      categoryTreeDisplay
     );
   }
 }

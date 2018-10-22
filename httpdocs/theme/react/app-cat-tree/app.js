@@ -8,9 +8,19 @@ class CategoryTree extends React.Component {
       loading:true
     };
     this.getSelectedCategories = this.getSelectedCategories.bind(this);
+    this.updateDimensions = this.updateDimensions.bind(this);
+  }
+
+  componentWillMount() {
+    this.updateDimensions();
+  }
+
+  componentWillUnmount(){
+    window.removeEventListener("resize", this.updateDimensions);
   }
 
   componentDidMount() {
+    window.addEventListener("resize", this.updateDimensions);
     if (this.state.categoryId){
       this.getSelectedCategories(this.state.categories,this.state.categoryId);
     } else {
@@ -31,13 +41,30 @@ class CategoryTree extends React.Component {
     });
   }
 
+  updateDimensions(){
+    const device = appHelpers.getDeviceFromWidth(window.innerWidth);
+    this.setState({device:device},function(){
+      showCategories = true;
+      if (this.state.device === "tablet"){
+        showCategories = false
+      }
+      this.setState({showCategories:showCategories});
+    });
+  }
+
   render(){
     let categoryTreeDisplay;
     if (!this.state.loading){
-      if (this.state.categories){
+      let showCategories = true;
+      if (this.state.device === "tablet"){
+        if (this.staet.showCategories === false){
+          showCategories = false;
+        }
+      }
+      if (this.state.categories && showCategories){
         const categoryId = this.state.categoryId;
         const selectedCategories = this.state.selectedCategories;
-        categoryTreeDisplay = this.state.categories.sort(appHelpers.sortArrayAlphabeticallyByTitle).map((cat,index) => (
+        const categoryTree = this.state.categories.sort(appHelpers.sortArrayAlphabeticallyByTitle).map((cat,index) => (
           <CategoryItem
             key={index}
             category={cat}
@@ -45,16 +72,23 @@ class CategoryTree extends React.Component {
             selectedCategories={selectedCategories}
           />
         ));
+        categoryTreeDisplay = (
+          <ul>
+            <li className="cat-item">
+              <a href={window.baseUrl + "/browse/"}><span className="title">All</span></a>
+            </li>
+            {categoryTreeDisplay}
+          </ul>
+        );
+      } else {
+        categoryTreeDisplay = (
+          <p>show selected category here</p>
+        )
       }
     }
     return(
       <div id="category-tree">
-        <ul>
-          <li className="cat-item">
-            <a href={window.baseUrl + "/browse/"}><span className="title">All</span></a>
-          </li>
-          {categoryTreeDisplay}
-        </ul>
+        {categoryTreeDisplay}
       </div>
     );
   }

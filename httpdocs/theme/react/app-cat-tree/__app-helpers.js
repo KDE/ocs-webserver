@@ -55,12 +55,25 @@ window.appHelpers = (function(){
     return 0;
   }
 
+  function getDeviceFromWidth(width){
+    let device;
+    if (width >= 910){
+      device = "large";
+    } else if (width < 910 && width >= 610){
+      device = "mid";
+    } else if (width < 610){
+      device = "tablet";
+    }
+    return device;
+  }
+
   return {
     convertObjectToArray,
     getSelectedCategory,
     getCategoryType,
     generateCategoryLink,
-    sortArrayAlphabeticallyByTitle
+    sortArrayAlphabeticallyByTitle,
+    getDeviceFromWidth
   }
 
 }());
