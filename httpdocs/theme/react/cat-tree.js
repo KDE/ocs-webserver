@@ -145,6 +145,7 @@ class CategoryTree extends React.Component {
         selectedCategoryDisplay = React.createElement(SelectedCategory, {
           categoryId: this.state.categoryId,
           selectedCategory: this.state.selectedCategories[0],
+          selectedCategories: this.staet.selectedCategories,
           onCatTreeToggle: this.toggleCatTree
         });
       }
@@ -275,10 +276,20 @@ class SelectedCategory extends React.Component {
         this.props.selectedCategory.title
       );
     }
+
+    let selectedCategoriesDisplay;
+    if (this.props.selectedCategories) {
+      selectedCategoriesDisplay = this.props.selectedCategories.map((sc, index) => React.createElement(
+        "span",
+        { key: index },
+        sc.title
+      ));
+    }
+
     return React.createElement(
       "div",
       { id: "slected-category-tree-item" },
-      selectedCategoryDisplay
+      selectedCategoriesDisplay
     );
   }
 }

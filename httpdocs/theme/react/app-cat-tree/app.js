@@ -64,6 +64,7 @@ class CategoryTree extends React.Component {
           <SelectedCategory
             categoryId={this.state.categoryId}
             selectedCategory={this.state.selectedCategories[0]}
+            selectedCategories={this.staet.selectedCategories}
             onCatTreeToggle={this.toggleCatTree}
           />
         );
@@ -179,9 +180,17 @@ class SelectedCategory extends React.Component {
         <a onClick={this.props.onCatTreeToggle}>{this.props.selectedCategory.title}</a>
       );
     }
+
+    let selectedCategoriesDisplay;
+    if (this.props.selectedCategories){
+      selectedCategoriesDisplay = this.props.selectedCategories.map((sc,index) => (
+        <span key={index}>{sc.title}</span>
+      ));
+    }
+
     return (
       <div id="slected-category-tree-item">
-        {selectedCategoryDisplay}
+        {selectedCategoriesDisplay}
       </div>
     )
   }
