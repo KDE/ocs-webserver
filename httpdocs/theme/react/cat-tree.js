@@ -158,12 +158,6 @@ class CategoryTree extends React.Component {
           ),
           categoryTreeDisplay
         );
-      } else {
-        categoryTreeDisplay = React.createElement(
-          "p",
-          null,
-          "show selected category here"
-        );
       }
     }
     return React.createElement(

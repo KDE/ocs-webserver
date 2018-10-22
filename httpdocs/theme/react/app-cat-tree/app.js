@@ -68,10 +68,6 @@ class CategoryTree extends React.Component {
             {categoryTreeDisplay}
           </ul>
         );
-      } else {
-        categoryTreeDisplay = (
-          <p>show selected category here</p>
-        )
       }
     }
     return(
