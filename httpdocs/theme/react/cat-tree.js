@@ -181,7 +181,7 @@ class CategoryTree extends React.Component {
           if (this.state.categoryId && this.state.categoryId !== 0) {
             allCatItemCssClass = "";
           } else {
-            if (window.location.href === window.baseUrl + this.state.urlContext + "/browse/") {
+            if (window.location.href === window.baseUrl + this.state.urlContext + "/browse/" || window.location.href === window.baseUrl + this.state.urlContext) {
               allCatItemCssClass = "active";
             }
           }
