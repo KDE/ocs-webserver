@@ -47,6 +47,7 @@ class CategoryTree extends React.Component {
   }
 
   render(){
+    console.log(this.state);
     let categoryTreeDisplay;
     if (!this.state.loading){
       if (this.state.categories){
