@@ -67,13 +67,18 @@ window.appHelpers = (function(){
     return device;
   }
 
+  function getUrlContext(href){
+    console.log(href);
+  }
+
   return {
     convertObjectToArray,
     getSelectedCategory,
     getCategoryType,
     generateCategoryLink,
     sortArrayAlphabeticallyByTitle,
-    getDeviceFromWidth
+    getDeviceFromWidth,
+    getUrlContext
   }
 
 }());

@@ -24,7 +24,7 @@ class CategoryTree extends React.Component {
 
   componentDidMount() {
     window.addEventListener("resize", this.updateDimensions);
-    console.log(this.state);
+    const urlContext = appHelpers.getUrlContext(window.location.href);
     if (this.state.categoryId && this.state.categoryId !== 0){
       this.getSelectedCategories(this.state.categories,this.state.categoryId);
     } else {
@@ -91,7 +91,7 @@ class CategoryTree extends React.Component {
             allCatItemCssClass = "";
           } else {
             if (window.location.href === window.baseUrl + "/browse/"){
-              allCatItemCssClass = "active";              
+              allCatItemCssClass = "active";
             }
           }
 

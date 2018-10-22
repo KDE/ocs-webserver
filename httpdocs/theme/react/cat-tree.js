@@ -71,13 +71,18 @@ window.appHelpers = function () {
     return device;
   }
 
+  function getUrlContext(href) {
+    console.log(href);
+  }
+
   return {
     convertObjectToArray,
     getSelectedCategory,
     getCategoryType,
     generateCategoryLink,
     sortArrayAlphabeticallyByTitle,
-    getDeviceFromWidth
+    getDeviceFromWidth,
+    getUrlContext
   };
 }();
 class CategoryTree extends React.Component {
@@ -106,7 +111,7 @@ class CategoryTree extends React.Component {
 
   componentDidMount() {
     window.addEventListener("resize", this.updateDimensions);
-    console.log(this.state);
+    const urlContext = appHelpers.getUrlContext(window.location.href);
     if (this.state.categoryId && this.state.categoryId !== 0) {
       this.getSelectedCategories(this.state.categories, this.state.categoryId);
     } else {
