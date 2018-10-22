@@ -61,17 +61,22 @@ class PasswordController extends Local_Controller_Action_DomainSwitch
         }
 
         $modelMember = new Default_Model_Member();
-        $member = $modelMember->findActiveMemberByIdentity($email);
+        $member = $modelMember->findActiveMemberByMail($email);
 
         if (empty($member->member_id)) {
-            Zend_Registry::get('logger')->debug(__METHOD__ . ' - no active member found');
 
-            return;
+            $member = $modelMember->findActiveMemberByMail($email.'_deactivated');
+
+            if (empty($member->member_id)) {
+                Zend_Registry::get('logger')->debug(__METHOD__ . ' - no active member found. ' . $email);
+
+                return;
+            }
         }
 
         $url = $this->generateUrl($member);
 
-        $this->sendMail($member->mail, $url, 'Reset your password');
+        $this->sendMail($email, $url, 'Reset your password');
         $this->redirect("/login");
     }
 
