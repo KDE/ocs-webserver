@@ -146,9 +146,7 @@ class CategoryItem extends React.Component {
 class SelectedCategory extends React.Component {
   constructor(props){
   	super(props);
-  	this.state = {
-      loading:true
-    };
+  	this.state = {};
     this.getSelectedCategory = this.getSelectedCategory.bind(this);
   }
 
@@ -158,6 +156,7 @@ class SelectedCategory extends React.Component {
 
   getSelectedCategory(){
     console.log('get selectedCategory');
+    console.log(this.props);
     let category;
     const categoryId = this.props.categoryId;
     this.props.selectedCategories.forEach(function(cat,index){
@@ -165,14 +164,15 @@ class SelectedCategory extends React.Component {
         category = cat;
       }
     });
-    this.setState({category:category,loading:false},function(){
+    console.log(category);
+    this.setState({category:category},function(){
       console.log('wtf');
     });
   }
 
   render(){
     let selectedCategoryDisplay;
-    if (!this.state.loading){
+    if (this.state.category){
       selectedCategoryDisplay = (
         <a>{this.state.category.title}</a>
       );
