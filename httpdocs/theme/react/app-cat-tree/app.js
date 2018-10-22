@@ -160,6 +160,8 @@ class SelectedCategory extends React.Component {
     let category;
     const categoryId = this.props.categoryId;
     this.props.selectedCategories.forEach(function(cat,index){
+      console.log(cat);
+      console.log(cat.id);
       if (parseInt(cat.id) === categoryId){
         category = cat;
       }
