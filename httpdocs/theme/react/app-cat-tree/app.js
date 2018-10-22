@@ -157,6 +157,7 @@ class SelectedCategory extends React.Component {
   }
 
   getSelectedCategory(){
+    console.log('get selectedCategory');
     let category;
     const categoryId = this.props.categoryId;
     this.props.selectedCategories.forEach(function(cat,index){
@@ -164,7 +165,9 @@ class SelectedCategory extends React.Component {
         category = cat;
       }
     });
-    this.setState({category:category,loading:false});
+    this.setState({category:category,loading:false},function(){
+      console.log('wtf');
+    });
   }
 
   render(){
