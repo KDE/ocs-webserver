@@ -151,7 +151,7 @@ class CategoryTree extends React.Component {
           onCatTreeToggle: this.toggleCatTree
         });
       }
-      if (this.state.device === "tablet" && this.state.showCatTree || this.state.device !== "tablet" || this.state.selectedCategories && this.state.selectedCategories.length > 0) {
+      if (this.state.device === "tablet" && this.state.showCatTree || this.state.device !== "tablet" || this.state.selectedCategories && this.state.selectedCategories.length === 0) {
         if (this.state.categories) {
           const categoryId = this.state.categoryId;
           const selectedCategories = this.state.selectedCategories;
