@@ -92,6 +92,7 @@ class CategoryTree extends React.Component {
     };
     this.getSelectedCategories = this.getSelectedCategories.bind(this);
     this.updateDimensions = this.updateDimensions.bind(this);
+    this.toggleCatTree = this.toggleCatTree.bind(this);
   }
 
   componentWillMount() {
@@ -130,14 +131,19 @@ class CategoryTree extends React.Component {
     this.setState({ device: device });
   }
 
+  toggleCatTree() {
+    console.log('toggle cat tree');
+  }
+
   render() {
-    let categoryTreeDisplay;
+    let categoryTreeDisplay, selectedCategoryDisplay;
     if (!this.state.loading) {
 
-      if (this.state.device === "tablet" && !this.state.showCatTree && this.state.selectedCategories) {
-        categoryTreeDisplay = React.createElement(SelectedCategory, {
+      if (this.state.device === "tablet" && this.state.selectedCategories) {
+        selectedCategoryDisplay = React.createElement(SelectedCategory, {
           categoryId: this.state.categoryId,
-          selectedCategory: this.state.selectedCategories[0]
+          selectedCategory: this.state.selectedCategories[0],
+          onCatTreeToggle: this.toggleCatTree
         });
       } else {
         if (this.state.categories) {
@@ -174,6 +180,7 @@ class CategoryTree extends React.Component {
     return React.createElement(
       "div",
       { id: "category-tree" },
+      selectedCategoryDisplay,
       categoryTreeDisplay
     );
   }
@@ -261,7 +268,7 @@ class SelectedCategory extends React.Component {
     if (this.props.selectedCategory) {
       selectedCategoryDisplay = React.createElement(
         "a",
-        null,
+        { onClick: this.props.onCatTreeToggle },
         this.props.selectedCategory.title
       );
     }
