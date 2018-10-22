@@ -68,6 +68,7 @@ class CategoryTree extends React.Component {
   }
 
   componentDidMount() {
+    console.log(this.state);
     if (this.state.categoryId) {
       this.getSelectedCategories(this.state.categories, this.state.categoryId);
     } else {
@@ -94,7 +95,7 @@ class CategoryTree extends React.Component {
       if (this.state.categories) {
         const categoryId = this.state.categoryId;
         const selectedCategories = this.state.selectedCategories;
-        categoryTreeDisplay = this.state.categories.map((cat, index) => React.createElement(CategoryItem, {
+        categoryTreeDisplay = this.state.categories.sort((a, b) => a.title - b.title).map((cat, index) => React.createElement(CategoryItem, {
           key: index,
           category: cat,
           categoryId: categoryId,
