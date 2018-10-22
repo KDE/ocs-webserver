@@ -47,7 +47,7 @@ class CategoryTree extends React.Component {
   }
 
   render(){
-    let categoryTreeDisplay, selectedCategoriesDisplay;
+    let categoryTreeDisplay, selectedCategoryDisplay;
     if (!this.state.loading){
 
       if (this.state.selectedCategories){
