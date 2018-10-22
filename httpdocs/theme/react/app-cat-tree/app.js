@@ -40,8 +40,8 @@ class CategoryTree extends React.Component {
     const selectedCategories = this.state.selectedCategories;
     if (selectedCategory){
       selectedCategory.selectedIndex = selectedCategories.length;
+      selectedCategories.push(selectedCategory);
     }
-    selectedCategories.push(selectedCategory);
     this.setState({selectedCategories:selectedCategories},function(){
       if (selectedCategory && selectedCategory.parent_id){
         this.getSelectedCategories(categories,parseInt(selectedCategory.parent_id));
