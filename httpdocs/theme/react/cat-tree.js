@@ -40,9 +40,9 @@ window.appHelpers = function () {
   }
 
   function generateCategoryLink(baseUrl, urlContext, catId, locationHref) {
-    let link = baseUrl + urlContext + "/browse/cat/" + catId;
+    let link = baseUrl + urlContext + "/browse/cat/" + catId + "/";
     if (locationHref.indexOf('ord') > -1) {
-      link += "/ord/" + locationHref.split('/ord/')[1];
+      link += "ord/" + locationHref.split('/ord/')[1];
     }
     return link;
   }
