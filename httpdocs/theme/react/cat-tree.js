@@ -170,15 +170,14 @@ class CategoryTree extends React.Component {
       }
       if (this.state.device === "tablet" && this.state.showCatTree || this.state.device !== "tablet" || this.state.selectedCategories && this.state.selectedCategories.length === 0) {
         if (this.state.categories) {
-          const urlContext = this.state.urlContext;
-          const categoryId = this.state.categoryId;
-          const selectedCategories = this.state.selectedCategories;
+          const self = this;
           const categoryTree = this.state.categories.sort(appHelpers.sortArrayAlphabeticallyByTitle).map((cat, index) => React.createElement(CategoryItem, {
             key: index,
             category: cat,
-            categoryId: categoryId,
-            urlContext: urlContext,
-            selectedCategories: selectedCategories
+            categoryId: self.state.categoryId,
+            urlContext: self.state.urlContext,
+            selectedCategories: self.state.selectedCategories,
+            backendView: self.state.backendView
           }));
 
           let allCatItemCssClass;
@@ -231,7 +230,7 @@ class CategoryItem extends React.Component {
     let categoryChildrenDisplay;
 
     const categoryType = appHelpers.getCategoryType(this.props.selectedCategories, this.props.categoryId, this.props.category.id);
-    if (this.props.category.has_children === true && categoryType && this.props.lastChild !== true) {
+    if (this.props.category.has_children === true && categoryType && this.props.lastChild !== true || this.props.category.has_children === true && this.props.backendView === true) {
 
       const urlContext = this.props.urlContext;
       const categoryId = this.props.categoryId;
