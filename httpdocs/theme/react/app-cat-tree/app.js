@@ -4,10 +4,11 @@ class CategoryTree extends React.Component {
   	this.state = {
       categories:window.catTree,
       categoryId:window.categoryId,
-      selectedCategories:[],
-      loading:true,
-      showCatTree:false,
       catTreeCssClass:""
+      selectedCategories:[],
+      showCatTree:false,
+      backendView:window.backendView,
+      loading:true,
     };
     this.getSelectedCategories = this.getSelectedCategories.bind(this);
     this.updateDimensions = this.updateDimensions.bind(this);
