@@ -23,7 +23,7 @@
 $modelCategory = new Default_Model_ProjectCategory();
 //$this->categories = $modelCategory->fetchCategoryTreeCurrentStore();
 $this->categories = $modelCategory->fetchTreeForView();
-
+$jsonTree = json_encode($this->categories);
 $this->navBackgroundColorActive = $this->template['header-nav-tabs']['background-color-active'];
 $this->navBackgroundColor = $this->template['header-nav-tabs']['background-color'];
 $this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
@@ -104,7 +104,7 @@ $this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
 
 </style>
 
-<div class="panel-group old-cat-tree-container" id="accordion">
+<?php /* <div class="panel-group old-cat-tree-container" id="accordion">
     <div class="panel panel-default accordion-group">
             <div style="margin-left: -10px">
             <?php
@@ -150,7 +150,7 @@ $this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
             /**
              * @param string $selectedOrder
              * @return string
-             */
+             *
             function addRoot($selectedOrder)
             {
                 $helpExploreUrl = new Default_View_Helper_BuildExploreUrl();
@@ -159,18 +159,15 @@ $this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
             }
 
 
-            $jsonTree = json_encode($this->categories);
-
-
             $selectedOrder = isset($this->filters['order']) ? $this->filters['order'] : null;
             echo build_tree($this->categories, $selectedOrder, true);
             ?>
             </div>
     </div>
 </div>
-
+*/ ?>
 <script type="application/javascript">
-    $(document).ready(function(){
+    /*$(document).ready(function(){
         var hierarchy = (function () {
             return {
                 setup: function (cat_id) {
@@ -181,7 +178,7 @@ $this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
         })();
 
         hierarchy.setup(<?=$this->cat_id?>);
-    });
+    });*/
 </script>
 <link rel="stylesheet" href="/theme/react/assets/css/cat-tree.css"/>
 <div id="category-tree-container">
