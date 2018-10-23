@@ -222,6 +222,8 @@ class Statistics_Model_Data
 
     public function getPayoutCategoryMonthly($yyyymm){
             $sql = "
+                          select * from
+                          (
                             select project_category_id
                                 ,(select title from category as c where c.project_category_id = v.project_category_id) as title
                                 ,round(sum(probably_payout_amount)) as amount
@@ -232,6 +234,7 @@ class Statistics_Model_Data
                             where yearmonth =:yyyymm
                             group by v.project_category_id
                             order by amount desc
+                          ) tmp where amount>0
                         ";
             $result = $this->_db->fetchAll($sql, array("yyyymm"=>$yyyymm));
             return $result;  

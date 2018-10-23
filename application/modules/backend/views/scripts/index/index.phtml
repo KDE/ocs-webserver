@@ -25,6 +25,7 @@ $this->categories = $modelCategory->fetchTreeForView(25);
 $jsonTree = json_encode($this->categories);
 ?>
 <?= $this->partial('yui.phtml'); ?>
+
 <style type="text/css">
     table.tablestati {
         display: block;
@@ -53,12 +54,12 @@ $jsonTree = json_encode($this->categories);
     path {
         stroke: steelblue;
         stroke-width: 2;
-        fill: none;
+       /* fill: none;  */
     }
 
     .axis path,
     .axis line {
-        fill: none;
+       /*  fill: none;*/
         stroke: grey;
         stroke-width: 1;
         shape-rendering: crispEdges;
@@ -70,8 +71,7 @@ $jsonTree = json_encode($this->categories);
         text-anchor: middle;
     }
 </style>
-<link href="/theme/react/lib/mdl/material.min.css" rel="stylesheet">
-<link href="/theme/react/assets/css/style.css" rel="stylesheet">
+
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="/theme/flatui/js/lib/d3pie.min.js"></script>
