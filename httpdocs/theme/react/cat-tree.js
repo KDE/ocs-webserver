@@ -184,7 +184,7 @@ class CategoryTree extends React.Component {
           if (this.state.categoryId && this.state.categoryId !== 0) {
             allCatItemCssClass = "";
           } else {
-            if (window.location.href === window.baseUrl + this.state.urlContext + "/browse/" || window.location.href === window.baseUrl + this.state.urlContext) {
+            if (window.location.href === window.baseUrl + this.state.urlContext || window.location.href === window.baseUrl + this.state.urlContext + "/browse/" || window.location.href === window.baseUrl + this.state.urlContext + "/browse/ord/latest/" || window.location.href === window.baseUrl + this.state.urlContext + "/browse/ord/top/" || window.location.href === "https://store.kde.org" || window.location.href === "https://store.kde.org/browse/ord/latest/" || window.location.href === "https://store.kde.org/browse/ord/top/") {
               allCatItemCssClass = "active";
             }
           }
