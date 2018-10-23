@@ -138,12 +138,14 @@ class CategoryItem extends React.Component {
     if (this.props.category.has_children === true && categoryType && this.props.lastChild !== true ||
         this.props.category.has_children === true && this.props.backendView === true){
 
-      const children = appHelpers.convertObjectToArray(this.props.category.children);
+      const self = this;
+
       let lastChild;
       if (categoryType === "selected"){
         lastChild = true;
       }
 
+      const children = appHelpers.convertObjectToArray(this.props.category.children);
       const categoryChildren = children.sort(appHelpers.sortArrayAlphabeticallyByTitle).map((cat,index) => (
         <CategoryItem
           key={index}
