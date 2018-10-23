@@ -4,7 +4,7 @@ class CategoryTree extends React.Component {
   	this.state = {
       categories:window.catTree,
       categoryId:window.categoryId,
-      catTreeCssClass:""
+      catTreeCssClass:"",
       selectedCategories:[],
       showCatTree:false,
       backendView:window.backendView,
