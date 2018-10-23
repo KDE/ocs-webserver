@@ -75,6 +75,22 @@ window.appHelpers = (function(){
     return urlContext;
   }
 
+  function allCatItemCssClass(href,baseUrl,urlContext,categoryId){
+    let allCatItemCssClass;
+    if (categoryId && categoryId !== 0){
+      allCatItemCssClass = "";
+    } else {
+      if (href === baseUrl + urlContext ||
+          href === baseUrl + urlContext + "/browse/" || href === baseUrl + urlContext + "/browse/ord/latest/" || href === baseUrl + urlContext + "/browse/ord/top/" ||
+          href === "https://store.kde.org" || href === "https://store.kde.org/browse/ord/latest/" ||  href === "https://store.kde.org/browse/ord/top/" ||
+          href === "https://addons.videolan.org" || href === "https://addons.videolan.org/browse/ord/latest/" ||  href === "https://addons.videolan.org/browse/ord/top/" ||
+          href === "https://share.krita.org/" || href === "https://share.krita.org/browse/ord/latest/" ||  href === "https://share.krita.org/browse/ord/top/"){
+            allCatItemCssClass = "active";
+      }
+    }
+    return allCatItemCssClass;
+  }
+
   return {
     convertObjectToArray,
     getSelectedCategory,
@@ -82,7 +98,8 @@ window.appHelpers = (function(){
     generateCategoryLink,
     sortArrayAlphabeticallyByTitle,
     getDeviceFromWidth,
-    getUrlContext
+    getUrlContext,
+    allCatItemCssClass
   }
 
 }());

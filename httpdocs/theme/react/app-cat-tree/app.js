@@ -93,17 +93,7 @@ class CategoryTree extends React.Component {
             />
           ));
 
-          let allCatItemCssClass;
-          if (this.state.categoryId && this.state.categoryId !== 0){
-            allCatItemCssClass = "";
-          } else {
-            if (window.location.href === window.baseUrl + this.state.urlContext ||
-                window.location.href === window.baseUrl + this.state.urlContext + "/browse/" || window.location.href === window.baseUrl + this.state.urlContext + "/browse/ord/latest/" || window.location.href === window.baseUrl + this.state.urlContext + "/browse/ord/top/" ||              
-                window.location.href === "https://store.kde.org" || window.location.href === "https://store.kde.org/browse/ord/latest/" ||  window.location.href === "https://store.kde.org/browse/ord/top/" ){
-                  allCatItemCssClass = "active";
-            }
-          }
-
+          const allCatItemCssClass = appHelpers.getAllCatItemCssClass(window.location.href,baseUrl,this.state.urlContext, this.state.categoryId);
           categoryTreeDisplay = (
             <ul className="main-list">
               <li className={"cat-item" + " " + allCatItemCssClass}>

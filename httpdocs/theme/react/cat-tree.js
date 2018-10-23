@@ -79,6 +79,18 @@ window.appHelpers = function () {
     return urlContext;
   }
 
+  function allCatItemCssClass(href, baseUrl, urlContext, categoryId) {
+    let allCatItemCssClass;
+    if (categoryId && categoryId !== 0) {
+      allCatItemCssClass = "";
+    } else {
+      if (href === baseUrl + urlContext || href === baseUrl + urlContext + "/browse/" || href === baseUrl + urlContext + "/browse/ord/latest/" || href === baseUrl + urlContext + "/browse/ord/top/" || href === "https://store.kde.org" || href === "https://store.kde.org/browse/ord/latest/" || href === "https://store.kde.org/browse/ord/top/" || href === "https://addons.videolan.org" || href === "https://addons.videolan.org/browse/ord/latest/" || href === "https://addons.videolan.org/browse/ord/top/" || href === "https://share.krita.org/" || href === "https://share.krita.org/browse/ord/latest/" || href === "https://share.krita.org/browse/ord/top/") {
+        allCatItemCssClass = "active";
+      }
+    }
+    return allCatItemCssClass;
+  }
+
   return {
     convertObjectToArray,
     getSelectedCategory,
@@ -86,7 +98,8 @@ window.appHelpers = function () {
     generateCategoryLink,
     sortArrayAlphabeticallyByTitle,
     getDeviceFromWidth,
-    getUrlContext
+    getUrlContext,
+    allCatItemCssClass
   };
 }();
 class CategoryTree extends React.Component {
@@ -180,15 +193,7 @@ class CategoryTree extends React.Component {
             backendView: self.state.backendView
           }));
 
-          let allCatItemCssClass;
-          if (this.state.categoryId && this.state.categoryId !== 0) {
-            allCatItemCssClass = "";
-          } else {
-            if (window.location.href === window.baseUrl + this.state.urlContext || window.location.href === window.baseUrl + this.state.urlContext + "/browse/" || window.location.href === window.baseUrl + this.state.urlContext + "/browse/ord/latest/" || window.location.href === window.baseUrl + this.state.urlContext + "/browse/ord/top/" || window.location.href === "https://store.kde.org" || window.location.href === "https://store.kde.org/browse/ord/latest/" || window.location.href === "https://store.kde.org/browse/ord/top/") {
-              allCatItemCssClass = "active";
-            }
-          }
-
+          const allCatItemCssClass = appHelpers.getAllCatItemCssClass(window.location.href, baseUrl, this.state.urlContext, this.state.categoryId);
           categoryTreeDisplay = React.createElement(
             "ul",
             { className: "main-list" },
