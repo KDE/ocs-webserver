@@ -138,10 +138,6 @@ class CategoryItem extends React.Component {
     if (this.props.category.has_children === true && categoryType && this.props.lastChild !== true ||
         this.props.category.has_children === true && this.props.backendView === true){
 
-      const urlContext = this.props.urlContext;
-      const categoryId = this.props.categoryId;
-      const category = this.props.category;
-      const selectedCategories = this.props.selectedCategories;
       const children = appHelpers.convertObjectToArray(this.props.category.children);
       let lastChild;
       if (categoryType === "selected"){
@@ -152,11 +148,12 @@ class CategoryItem extends React.Component {
         <CategoryItem
           key={index}
           category={cat}
-          categoryId={categoryId}
-          urlContext={urlContext}
-          selectedCategories={selectedCategories}
+          categoryId={self.props.categoryId}
+          urlContext={self.props.urlContext}
+          selectedCategories={self.props.selectedCategories}
           lastChild={lastChild}
-          parent={category}
+          parent={self.props.category}
+          backendView={self.props.backendView}
         />
       ));
 
