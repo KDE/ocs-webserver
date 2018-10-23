@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  *  ocs-webserver
  *
@@ -20,6 +20,33 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 ?>
+
+<style>
+
+@media (max-width:767px) {
+  main#reg-page section#register-wrap {
+    position: absolute;
+    top: 150px;
+    margin: 0;
+    width: 90%;
+    left: 5%;
+  }
+  main#reg-page section#register-wrap button#login {
+    margin-top: 8px;
+    width: 100%;
+  }
+  main#reg-page section#register-wrap #register #social-register {
+    float: right;
+    width: 100%;
+    padding: 0;
+  }
+  main#reg-page section#register-wrap #register #social-register #social-login-elements {
+    margin: 0;
+  }
+}
+
+</style>
+
 <div id="login-form-box" class="well">
     <h3><?= $this->translate('Log into your account') ?></h3>
 
@@ -54,10 +81,10 @@
     <div class="small light lightgrey center margin-top-15">
         <a href="/password/request" class="lightblue"><?= $this->translate('Forgot your password?') ?></a>
     </div>
-    
+
     <div class="small light lightgrey margin-top-15">
         * for github login, please use "<a href="/password/request" class="lightblue"><?= $this->translate('reset password') ?></a>" and then login with your username and new password
-        
+
     </div>
 
 </div>
