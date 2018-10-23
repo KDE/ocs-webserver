@@ -75,7 +75,7 @@ window.appHelpers = (function(){
     return urlContext;
   }
 
-  function allCatItemCssClass(href,baseUrl,urlContext,categoryId){
+  function getAllCatItemCssClass(href,baseUrl,urlContext,categoryId){
     let allCatItemCssClass;
     if (categoryId && categoryId !== 0){
       allCatItemCssClass = "";
@@ -99,7 +99,7 @@ window.appHelpers = (function(){
     sortArrayAlphabeticallyByTitle,
     getDeviceFromWidth,
     getUrlContext,
-    allCatItemCssClass
+    getAllCatItemCssClass
   }
 
 }());
