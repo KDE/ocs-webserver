@@ -193,7 +193,7 @@ class CategoryTree extends React.Component {
             backendView: self.state.backendView
           }));
 
-          const allCatItemCssClass = appHelpers.getAllCatItemCssClass(window.location.href, baseUrl, this.state.urlContext, this.state.categoryId);
+          const allCatItemCssClass = appHelpers.getAllCatItemCssClass(window.location.href, window.baseUrl, this.state.urlContext, this.state.categoryId);
           categoryTreeDisplay = React.createElement(
             "ul",
             { className: "main-list" },

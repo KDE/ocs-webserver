@@ -93,7 +93,7 @@ class CategoryTree extends React.Component {
             />
           ));
 
-          const allCatItemCssClass = appHelpers.getAllCatItemCssClass(window.location.href,baseUrl,this.state.urlContext, this.state.categoryId);
+          const allCatItemCssClass = appHelpers.getAllCatItemCssClass(window.location.href,window.baseUrl,this.state.urlContext, this.state.categoryId);
           categoryTreeDisplay = (
             <ul className="main-list">
               <li className={"cat-item" + " " + allCatItemCssClass}>
