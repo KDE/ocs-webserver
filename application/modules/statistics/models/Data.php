@@ -61,7 +61,9 @@ class Statistics_Model_Data
     
     public function getPayout($yyyymm){
         
-        $sql = "SELECT * FROM dwh.member_payout where yearmonth = :yyyymm order by amount desc";
+        $sql = "SELECT * ,
+          (select username from member m where m.member_id = p.member_id) username
+        FROM dwh.member_payout p where yearmonth = :yyyymm order by amount desc";
         $result = $this->_db->fetchAll($sql, array("yyyymm"=>$yyyymm));
         return $result;  
     }

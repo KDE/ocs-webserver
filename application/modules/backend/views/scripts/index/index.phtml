@@ -19,6 +19,10 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
+
+$modelCategory = new Default_Model_ProjectCategory();
+$this->categories = $modelCategory->fetchTreeForView(25);
+$jsonTree = json_encode($this->categories);
 ?>
 <?= $this->partial('yui.phtml'); ?>
 <style type="text/css">
@@ -66,10 +70,19 @@
         text-anchor: middle;
     }
 </style>
-
+<link href="/theme/react/lib/mdl/material.min.css" rel="stylesheet">
+<link href="/theme/react/assets/css/style.css" rel="stylesheet">
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="/theme/flatui/js/lib/d3pie.min.js"></script>
+
+ <script type="text/javascript" src="/theme/react/lib/react/react.js"></script>
+<script type="text/javascript" src="/theme/react/lib/react-dom/react-dom.js"></script>
+<script type="text/javascript" src="/theme/react/lib/redux/redux.min.js"></script>
+<script type="text/javascript" src="/theme/react/lib/redux/react-redux.min.js"></script>
+<script type="text/javascript" src="/theme/react/lib/mdl/material.min.js"></script>
+<script type="text/javascript" src="/theme/react/lib/timeago/timeago.min.js"></script>
+<script type="text/javascript" src="/theme/react/lib/md5/md5.js"></script>
 
 <div class="pling-nav-tabs">
     <ul class="nav nav-tabs ">
@@ -79,11 +92,12 @@
         <!-- <li ><a class="downloadsundpayoutsdailyTab" href="#downloadsundpayoutsdailyTab" data-toggle="tab">Downloads vs Payouts daily</a></li> -->
 
         <li><a class="topDownloadsPerDayTab" href="#topDownloadsPerDayTab" data-toggle="tab">Top Download/Day</a></li>
-        <li><a class="payoutTab" href="#payoutTab" data-toggle="tab">Payout</a></li>
+        <li><a class="payoutTab" href="#payoutTab" data-toggle="tab">Payout Member</a></li>
         <li><a class="payoutNewcomerTab" href="#payoutNewcomerTab" data-toggle="tab">Payout Newcomer</a></li>
         <li><a class="payoutNewloserTab" href="#payoutNewloserTab" data-toggle="tab">Payout Newloser</a></li>
         <li><a class="payoutMonthDiffTab" href="#payoutMonthDiffTab" data-toggle="tab">Payout Month Diff</a></li>
-        <li><a class="payoutCategoryMonthlyTab" href="#payoutCategoryMonthlyTab" data-toggle="tab">Payout Category monthly</a></li>
+        <li><a class="payoutCategoryMonthlyTab" href="#payoutCategoryMonthlyTab" data-toggle="tab">Payout Categories</a></li>
+        <li><a class="payoutCategoryTab" href="#payoutCategoryTab" data-toggle="tab">Payout Category monthly</a></li>
 
 
     </ul>
@@ -163,9 +177,25 @@
             <div id="pieCategoryMonthly" style="padding:50px; "></div>
         </div>
 
+          <div id="payoutCategoryTab" class="tab-pane">
+                <div id="category-tree-container">
+                </div>
+            <div id="pieCategory" style="padding:50px; ">
+                    
+
+
+            </div>
+        </div>
+
     </div>
 </div> <!--end of tab-->
 
+
+
+<script type="application/javascript">
+  var catTree = <?= $jsonTree ?>;  
+</script>
+<script type="application/javascript" src="/theme/react/cat-tree.js"></script>
 
 <script type="text/javascript">
 
@@ -313,6 +343,11 @@
     });
     // payout Category Monthly tab end
 
+
+    $(".payoutCategoryTab").click(function () {
+        $.getScript("/theme/flatui/js/stati/payoutCategory.js");
+    });
+    
 
     $('#payoutNewcomerTab').prepend(createMonthFilter('selectmonthNewcomer'));
     $('#selectmonthNewcomer').change(function () {
