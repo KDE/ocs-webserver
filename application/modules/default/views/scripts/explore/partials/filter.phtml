@@ -60,21 +60,26 @@ $this->navColorActive = $this->template['header-nav-tabs']['link']['color'];
           display: block;
             width:100%;
     }
+
     li.navilink.parentactive.parent a
     {
         color:  <?=$this->navBackgroundColorActive?>;
     }
+
     ul.naviblock a.active.child
     {
         background-color:  <?=$this->navBackgroundColorActive?>;
         color:  <?=$this->navColorActive?>;
     }
+
     li.navilink.active.parent a.active.parent,
-    #category-tree-container #category-tree ul li.active > a
+    #category-tree-container #category-tree ul li.active > a,
+    #category-tree-container #category-tree ul li:hover > a
     {
-        background-color:  <?=$this->navBackgroundColorActive?>;
-        color:  <?=$this->navColorActive?>;
+        background-color:  <?=$this->navBackgroundColorActive?> !important;
+        color:  <?=$this->navColorActive?> !important;
     }
+
     li.navilink span.cat-title {
         display: inline-block;
         white-space: nowrap;
