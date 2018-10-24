@@ -80,6 +80,7 @@ window.appHelpers = function () {
   }
 
   function getAllCatItemCssClass(href, baseUrl, urlContext, categoryId) {
+    console.log(window.location);
     let allCatItemCssClass;
     if (categoryId && categoryId !== 0) {
       allCatItemCssClass = "";

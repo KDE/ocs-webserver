@@ -152,7 +152,7 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
 
         .header_cat_link {
               bottom: 0; position: absolute; color: blue; font-size: 18pt; left: <?= $cat_title_left ?>px;
-        } 
+        }
 
         .nav-divider-pling{
             color:#E2E2E2;
@@ -197,14 +197,14 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
             <section class="wrapper">
 
                     <section>
-                        <?php 
+                        <?php
                             $storeUrl = $last_char_store_order=='1'?$sname:$baseurl.'/s/'.$store_name;
                             if (strpos($storeUrl, 'http') === false) {
                                 // It starts not with 'http'
                                 $storeUrl = 'https://' . $storeUrl;
                             }
                         ?>
-                        <figure class="logo-header">                           
+                        <figure class="logo-header">
                            <a href="<?php echo $storeUrl ?>">
                                 <img width="<?= $this->template['header-logo']['width'] ?>" border="0"
                                      src="<?= $this->template['header-logo']['image-src'] ?>">
@@ -225,11 +225,11 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
                                     <ul class="menu pull-right">
                                         <li class="link relative profile-menu-container">
                                             <a rel="profile-menu" class="menu-trigger">
-                                                <div class="absolute header-profile-image">                                                        
+                                                <div class="absolute header-profile-image">
                                                             <img
                                                             src="<?= $helperImage->Image($member->profile_image_url,
                                                                 array('width' => 30, 'height' => 30)) ?>"/>
-                                                        
+
                                                 </div>
                                                 <span><?= $member->username ?></span>
                                             </a>
@@ -284,13 +284,12 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
     </header>
 
 
-    
-<?php $this->inlineScript()->appendScript(
-    '    $(document).ready(function(){
-                MenuHover.setup();
-                Popuppanel.setup();                    
-                LoginContainer.update();
-                PlingsRedirect.setup();
-            });
-        ');
 
+<?php $this->inlineScript()->appendScript(
+    '$(document).ready(function(){
+        MenuHover.setup();
+        Popuppanel.setup();
+        LoginContainer.update();
+        PlingsRedirect.setup();
+    });'
+);
