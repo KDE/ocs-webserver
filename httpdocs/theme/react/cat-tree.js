@@ -40,6 +40,8 @@ window.appHelpers = function () {
   }
 
   function generateCategoryLink(baseUrl, urlContext, catId, locationHref) {
+    console.log(window.baseUrl);
+    console.log(window.location.origin);
     if (window.baseUrl !== window.location.origin) {
       baseUrl = window.location.origin;
     }
@@ -47,6 +49,7 @@ window.appHelpers = function () {
     if (locationHref.indexOf('ord') > -1) {
       link += "ord/" + locationHref.split('/ord/')[1];
     }
+    console.log(link);
     return link;
   }
 
@@ -284,7 +287,6 @@ class CategoryItem extends React.Component {
     }
 
     const categoryItemLink = appHelpers.generateCategoryLink(window.baseUrl, this.props.urlContext, this.props.category.id, window.location.href);
-
     return React.createElement(
       "li",
       { id: "cat-" + this.props.category.id, className: categoryItemClass },
