@@ -373,7 +373,7 @@ $jsonTree = json_encode($this->categories);
             event.stopPropagation();            
             var start = this.href.indexOf("cat");
             if(start<0) return;
-            var catid = this.href.substring(start+4);
+            var catid = this.href.substring(start+4, (this.href.length-1));
             var title = $(this).find('span.title').text();
             
             $("#payoutCategoryLineChart").empty();             
