@@ -201,6 +201,11 @@ class CategoryTree extends React.Component {
           if (window.baseUrl !== window.location.origin) {
             baseUrl = window.location.origin;
           }
+
+          let urlContext = "";
+          if (this.state.urlContext) {
+            urlContext = this.state.urlContext;
+          }
           categoryTreeDisplay = React.createElement(
             "ul",
             { className: "main-list" },
@@ -209,7 +214,7 @@ class CategoryTree extends React.Component {
               { className: "cat-item" + " " + allCatItemCssClass },
               React.createElement(
                 "a",
-                { href: baseUrl + this.state.urlContext + "/browse/" },
+                { href: baseUrl + urlContext + "/browse/" },
                 React.createElement(
                   "span",
                   { className: "title" },
