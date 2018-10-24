@@ -24,7 +24,6 @@ class CategoryTree extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.state);
     window.addEventListener("resize", this.updateDimensions);
     const urlContext = appHelpers.getUrlContext(window.location.href);
     this.setState({urlContext:urlContext},function(){
@@ -38,10 +37,8 @@ class CategoryTree extends React.Component {
 
   getSelectedCategories(categories,catId){
     const selectedCategory = appHelpers.getSelectedCategory(this.state.categories,catId);
-    console.log(selectedCategory);
     const selectedCategories = this.state.selectedCategories;
     if (typeof(selectedCategory) !== 'undefined'){
-      console.log('there is a selected category')
       selectedCategory.selectedIndex = selectedCategories.length;
       selectedCategories.push(selectedCategory);
     }
@@ -98,10 +95,13 @@ class CategoryTree extends React.Component {
           if (window.baseUrl !== window.location.origin){
             baseUrl = window.location.origin;
           }
+
+          const categoryItemLink = appHelpers.generateCategoryLink(window.baseUrl,this.state.urlContext,"all",window.location.href);
+
           categoryTreeDisplay = (
             <ul className="main-list">
               <li className={"cat-item" + " " + allCatItemCssClass}>
-                <a href={baseUrl + this.state.urlContext +"/browse/"}><span className="title">All</span></a>
+                <a href={categoryItemLink}><span className="title">All</span></a>
               </li>
               {categoryTree}
             </ul>
