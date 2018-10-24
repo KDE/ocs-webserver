@@ -173,7 +173,6 @@ class CategoryItem extends React.Component {
     }
 
     const categoryItemLink = appHelpers.generateCategoryLink(window.baseUrl,this.props.urlContext,this.props.category.id,window.location.href);
-
     return(
       <li id={"cat-"+this.props.category.id} className={categoryItemClass}>
         <a href={categoryItemLink}>
