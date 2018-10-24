@@ -43,7 +43,10 @@ window.appHelpers = (function(){
     if (window.baseUrl !== window.location.origin){
       baseUrl = window.location.origin;
     }
-    let link = baseUrl + urlContext + "/browse/cat/" + catId + "/";
+    let link = baseUrl + urlContext + "/browse/";
+    if (catId !== "all"){
+      link += "cat/" + catId + "/";
+    }
     if (locationHref.indexOf('ord') > -1){
       link += "ord/" + locationHref.split('/ord/')[1];
     }

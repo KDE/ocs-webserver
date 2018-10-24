@@ -43,7 +43,10 @@ window.appHelpers = function () {
     if (window.baseUrl !== window.location.origin) {
       baseUrl = window.location.origin;
     }
-    let link = baseUrl + urlContext + "/browse/cat/" + catId + "/";
+    let link = baseUrl + urlContext + "/browse/";
+    if (catId !== "all") {
+      link += "cat/" + catId + "/";
+    }
     if (locationHref.indexOf('ord') > -1) {
       link += "ord/" + locationHref.split('/ord/')[1];
     }
@@ -202,10 +205,8 @@ class CategoryTree extends React.Component {
             baseUrl = window.location.origin;
           }
 
-          let urlContext = "/";
-          if (typeof this.state.urlContext !== 'undefined') {
-            urlContext = this.state.urlContext;
-          }
+          const categoryItemLink = appHelpers.generateCategoryLink(window.baseUrl, this.state.urlContext, "all", window.location.href);
+
           categoryTreeDisplay = React.createElement(
             "ul",
             { className: "main-list" },
@@ -214,7 +215,7 @@ class CategoryTree extends React.Component {
               { className: "cat-item" + " " + allCatItemCssClass },
               React.createElement(
                 "a",
-                { href: baseUrl + urlContext + "/browse/" },
+                { href: categoryItemLink },
                 React.createElement(
                   "span",
                   { className: "title" },

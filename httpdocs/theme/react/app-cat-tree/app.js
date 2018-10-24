@@ -96,14 +96,12 @@ class CategoryTree extends React.Component {
             baseUrl = window.location.origin;
           }
 
-          let urlContext = "/";
-          if (typeof(this.state.urlContext) !== 'undefined'){
-            urlContext = this.state.urlContext;
-          }
+          const categoryItemLink = appHelpers.generateCategoryLink(window.baseUrl,this.state.urlContext,"all",window.location.href);
+
           categoryTreeDisplay = (
             <ul className="main-list">
               <li className={"cat-item" + " " + allCatItemCssClass}>
-                <a href={baseUrl + urlContext +"/browse/"}><span className="title">All</span></a>
+                <a href={categoryItemLink}><span className="title">All</span></a>
               </li>
               {categoryTree}
             </ul>
