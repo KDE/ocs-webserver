@@ -27,6 +27,15 @@ $this->dataCategory = $modelCategory->findSingleRow($this->cat_id);
 $this->countSupporters = $modelInfo->getCountActiveSupporters();
 $this->supporters = $modelInfo->getNewActiveSupporters(7);
 $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
+
+if($this->inputFilterOriginal ==1)
+{
+    $checkedOriginal = ' checked';
+}else
+{
+   $checkedOriginal = '';
+}
+
 ?>
 <main id="explore-content">
     <section class="wrapper" id="products-wrapper">
@@ -51,7 +60,9 @@ $this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
                       <a href="<?= $helperBuildExploreUrl->buildExploreUrl($this->filters['category'], null,
                           'top') ?>"><span><?= $this->translate('Top') ?></span></a>
                   </li>      
-                  
+                  <li style="float: right">
+                      <input type="checkbox" name="filter_browse_original" value="1" id="filter_browse_original" <?=$checkedOriginal?> >  Original
+                  </li>
               </ul>
             </div>
 
@@ -136,6 +147,7 @@ $time_start = microtime(true);
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){          
             TooltipUser.setup("tooltipuserleft","left");  
-            TooltipUser.setup("tooltipuser","right");              
+            TooltipUser.setup("tooltipuser","right");         
+            FilterBrowseOriginalFn.setup();     
         });
     ');

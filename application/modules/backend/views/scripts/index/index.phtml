@@ -19,57 +19,25 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
+
+$modelCategory = new Default_Model_ProjectCategory();
+$this->categories = $modelCategory->fetchTreeForView(25);
+$jsonTree = json_encode($this->categories);
 ?>
 <?= $this->partial('yui.phtml'); ?>
-<style type="text/css">
-    table.tablestati {
-        display: block;
-        background-color: #ccc;
-        margin-top: 40px;
-        float: left;
-        margin-left: 20px;
-    }
-
-    table.tablestati thead td {
-        font-weight: bold;
-        background-color: #fff;
-    }
-
-    table.tablestati td {
-        padding: 1px;
-        margin: 1px;
-    }
-
-    table.tablestati td.number {
-        text-align: right;
-        width: 80px;
-        padding-right: 10px;
-    }
-
-    path {
-        stroke: steelblue;
-        stroke-width: 2;
-        fill: none;
-    }
-
-    .axis path,
-    .axis line {
-        fill: none;
-        stroke: grey;
-        stroke-width: 1;
-        shape-rendering: crispEdges;
-    }
-
-    .legend {
-        font-size: 16px;
-        font-weight: bold;
-        text-anchor: middle;
-    }
-</style>
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="/theme/flatui/js/lib/d3pie.min.js"></script>
+<script src="/theme/flatui/js/lib/multiline.js"></script>
+
+ <script type="text/javascript" src="/theme/react/lib/react/react.js"></script>
+<script type="text/javascript" src="/theme/react/lib/react-dom/react-dom.js"></script>
+<script type="text/javascript" src="/theme/react/lib/redux/redux.min.js"></script>
+<script type="text/javascript" src="/theme/react/lib/redux/react-redux.min.js"></script>
+<script type="text/javascript" src="/theme/react/lib/mdl/material.min.js"></script>
+<script type="text/javascript" src="/theme/react/lib/timeago/timeago.min.js"></script>
+<script type="text/javascript" src="/theme/react/lib/md5/md5.js"></script>
 
 <div class="pling-nav-tabs">
     <ul class="nav nav-tabs ">
@@ -79,11 +47,12 @@
         <!-- <li ><a class="downloadsundpayoutsdailyTab" href="#downloadsundpayoutsdailyTab" data-toggle="tab">Downloads vs Payouts daily</a></li> -->
 
         <li><a class="topDownloadsPerDayTab" href="#topDownloadsPerDayTab" data-toggle="tab">Top Download/Day</a></li>
-        <li><a class="payoutTab" href="#payoutTab" data-toggle="tab">Payout</a></li>
+        <li><a class="payoutTab" href="#payoutTab" data-toggle="tab">Payout Member</a></li>
         <li><a class="payoutNewcomerTab" href="#payoutNewcomerTab" data-toggle="tab">Payout Newcomer</a></li>
         <li><a class="payoutNewloserTab" href="#payoutNewloserTab" data-toggle="tab">Payout Newloser</a></li>
         <li><a class="payoutMonthDiffTab" href="#payoutMonthDiffTab" data-toggle="tab">Payout Month Diff</a></li>
-        <li><a class="payoutCategoryMonthlyTab" href="#payoutCategoryMonthlyTab" data-toggle="tab">Payout Category monthly</a></li>
+        <li><a class="payoutCategoryMonthlyTab" href="#payoutCategoryMonthlyTab" data-toggle="tab">Payout Categories</a></li>
+        <li><a class="payoutCategoryTab" href="#payoutCategoryTab" data-toggle="tab">Payout Category monthly</a></li>
 
 
     </ul>
@@ -92,6 +61,7 @@
             <div style="width: 100%; padding: 20px">
 
                 <div id='d3linelableinline'></div>
+
 
             </div>
         </div>
@@ -163,9 +133,24 @@
             <div id="pieCategoryMonthly" style="padding:50px; "></div>
         </div>
 
+          <div id="payoutCategoryTab" class="tab-pane">
+                <div id="category-tree-container">
+                </div>
+            <div id="payoutCategoryLineChart" class="chart-wrapper" style="width: 800px; height: 1000px; display: block; float: right">
+                    
+            </div>
+        </div>
+
     </div>
 </div> <!--end of tab-->
 
+
+
+<script type="application/javascript">
+  var catTree = <?= $jsonTree ?>;  
+  var backendView = true;
+</script>
+<script type="application/javascript" src="/theme/react/cat-tree.js"></script>
 
 <script type="text/javascript">
 
@@ -314,6 +299,11 @@
     // payout Category Monthly tab end
 
 
+    $(".payoutCategoryTab").click(function () {
+        $.getScript("/theme/flatui/js/stati/payoutCategory.js");
+    });
+
+
     $('#payoutNewcomerTab').prepend(createMonthFilter('selectmonthNewcomer'));
     $('#selectmonthNewcomer').change(function () {
         $(".payoutNewcomerTab").trigger('click');
@@ -372,4 +362,41 @@
             $('#payoutMonthDiffTabContainer').html(table);
         });
     });
+</script>
+
+
+<script type="text/javascript">
+    var parseTime = d3.timeParse("%Y%m");
+    $(document).ready(function () { 
+        $('body').on('click', '#category-tree a', function (event) {
+            event.preventDefault();
+            event.stopPropagation();            
+            var start = this.href.indexOf("cat");
+            if(start<0) return;
+            var catid = this.href.substring(start+4, (this.href.length-1));
+            var title = $(this).find('span.title').text();
+            
+            $("#payoutCategoryLineChart").empty();             
+                d3.json("/backend/index/getpayoutcategory?catid="+catid, function(error, data) {        
+                if (error) throw error;
+                data = data.results;   
+                if(!data){
+                     $("#payoutCategoryLineChart").text('no data found!');
+                    return;
+                }
+                data.forEach(function (d) {                   
+                   d.year = parseTime(d.yearmonth);
+                   d.variableA = +d.amount;                   
+               });
+                var chart = makeLineChart(data, 'year', {
+                    'Payout': {column: 'variableA'},                  
+                }, {xAxis: 'Month', yAxis: 'Amount'});
+                chart.bind("#payoutCategoryLineChart");
+                chart.render();
+
+            });
+            
+        });         
+    });
+
 </script>

@@ -61,7 +61,9 @@ class Statistics_Model_Data
     
     public function getPayout($yyyymm){
         
-        $sql = "SELECT * FROM dwh.member_payout where yearmonth = :yyyymm order by amount desc";
+        $sql = "SELECT * ,
+          (select username from member m where m.member_id = p.member_id) username
+        FROM dwh.member_payout p where yearmonth = :yyyymm order by amount desc";
         $result = $this->_db->fetchAll($sql, array("yyyymm"=>$yyyymm));
         return $result;  
     }
@@ -220,6 +222,8 @@ class Statistics_Model_Data
 
     public function getPayoutCategoryMonthly($yyyymm){
             $sql = "
+                          select * from
+                          (
                             select project_category_id
                                 ,(select title from category as c where c.project_category_id = v.project_category_id) as title
                                 ,round(sum(probably_payout_amount)) as amount
@@ -230,8 +234,36 @@ class Statistics_Model_Data
                             where yearmonth =:yyyymm
                             group by v.project_category_id
                             order by amount desc
+                          ) tmp where amount>0
                         ";
             $result = $this->_db->fetchAll($sql, array("yyyymm"=>$yyyymm));
+            return $result;  
+    }
+
+     public function getPayoutCategory($catid){
+
+            $modelProjectCategories = new Default_Model_DbTable_ProjectCategory();
+            $ids = $modelProjectCategories->fetchChildIds($catid);
+            array_push($ids, $catid);            
+            $idstring = implode(',', $ids);
+            
+            $sql = "
+                          select * from
+                          (
+                               select project_category_id
+                                ,(select title from category as c where c.project_category_id = v.project_category_id) as title
+                                  , yearmonth
+                                ,round(sum(probably_payout_amount)) as amount
+                                ,count(*) anzahlproject
+                                ,sum(probably_payout_amount)/count(*) avgamount
+                                ,sum(v.num_downloads) as num_downloads
+                               from member_dl_plings_v as v
+                              where project_category_id IN (?)
+                              group by v.yearmonth
+                              order by yearmonth asc
+                          ) tmp where amount>0
+                        ";
+            $result = $this->_db->fetchAll($sql, $idstring);
             return $result;  
     }
 

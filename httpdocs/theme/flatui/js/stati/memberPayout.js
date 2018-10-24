@@ -11,14 +11,16 @@
     
     // format the data
     data.forEach(function(d) {
-        d.label = d.member_id+'['+d.amount+']';
+        //d.label = d.member_id+'['+d.amount+']';
+        d.label = d.username+'['+d.amount+']';
         d.value = +d.amount;
         d.member = +d.member_id;
+        d.username = d.username;      
     });
 
     var pie = new d3pie("pie", {
         size: {
-          canvasWidth: 590,
+          canvasWidth: 650,
           pieOuterRadius: "90%"           
         },
         header: {
@@ -47,11 +49,12 @@
                 d3.select('#detailContainer').html('');
                 let member_id = a.data.member;
                 let paypal_mail = a.data.paypal_mail;
+                let username = a.data.username;
                 
                 d3.json("/backend/index/getpayoutmember?member="+a.data.member, function(error, data) {                  
                             console.log(data);
                             da = data.results;
-                            var dh = '<a target="_blank" href="https://opendesktop.org/member/'+member_id+'">'+member_id+'</a>'+paypal_mail;
+                            var dh = '<a target="_blank" href="https://opendesktop.org/member/'+member_id+'">'+username + '['+member_id+'] '+'</a>'+paypal_mail;
                             dh= dh+'<table>';       
                             dh=dh+'<tr><td>yyyymm</td><td>Amount</td></tr>';                                                   
                              da.forEach(function(d, i) {

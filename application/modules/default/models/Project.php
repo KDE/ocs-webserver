@@ -27,6 +27,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
     const FILTER_NAME_RANKING = 'ranking';
     const FILTER_NAME_CATEGORY = 'category';
     const FILTER_NAME_PACKAGETYPE = 'package_type';
+    const FILTER_NAME_ORIGINAL = 'original';
     const FILTER_NAME_MEMBER = 'member';
     const FILTER_NAME_ORDER = 'order';
     const FILTER_NAME_LOCATION = 'location';
@@ -539,6 +540,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         return $this->fetchAll($q);
     }
 
+
     /**
      * @param Zend_Db_Select $statement
      * @param array          $filterArrayValue
@@ -560,6 +562,29 @@ class Default_Model_Project extends Default_Model_DbTable_Project
             ), 'project.project_id = package_type.project_id', array());
         } else {
             $statement->where('find_in_set(?, package_types)', $filter);
+        }
+
+        return $statement;
+    }
+
+    /**
+     * @param Zend_Db_Select $statement
+     * @param array          $filterArrayValue
+     *
+     * @return Zend_Db_Select
+     */
+    protected function generateOriginalFilter(Zend_Db_Select $statement, $filterArrayValue)
+    {
+        if (false == isset($filterArrayValue[self::FILTER_NAME_ORIGINAL])) {
+            return $statement;
+        }
+
+        $filter = $filterArrayValue[self::FILTER_NAME_ORIGINAL];
+
+        if (is_array($filter)) {
+            // todo maybe for other tags filter 
+        } else {
+            $statement->where('find_in_set(?, tags)', $filter);
         }
 
         return $statement;
@@ -1129,6 +1154,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         $statement = $this->generateCategoryFilter($statement, $inputFilterParams);
         $statement = $this->generateOrderFilter($statement, $inputFilterParams);
         $statement = $this->generatePackageTypeFilter($statement, $inputFilterParams);
+        $statement = $this->generateOriginalFilter($statement, $inputFilterParams);
         $statement = $this->generateReportedSpamFilter($statement);
 
         $statement->limit($limit, $offset);

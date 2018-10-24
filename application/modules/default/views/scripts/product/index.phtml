@@ -274,14 +274,14 @@ $xdgTypeJson = Zend_Json::encode($helperCatXdgType->catXdgType($this->product->p
     <?php } ?>
 
 
+    <link href="/theme/flatui/css/product-page.css" type="text/css" rel="stylesheet"/>
 
     <main id="product-page-content">
-        <div class="flex-column">
-            <div class="flex-item-4 sidebar-left" style="">
+        <div id="product-page-view">
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-12 sidebar-left" style="">
                 <?php  echo $this->render('explore/partials/filter.phtml'); ?>
             </div>
-
-            <div class="flex-item-16 " id="product-main">
+            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12" id="product-main">
                 <div class="flex-row imgsmall" id="product-main-img-container">
                     <div class="product-main-img flex-item-24" id="product-main-img">
                         <div id="product-title-div" class="product-title-div">
@@ -290,9 +290,9 @@ $xdgTypeJson = Zend_Json::encode($helperCatXdgType->catXdgType($this->product->p
                                   <img class="logo" src="<?= $helpImage->Image($this->product->image_small,
                                       array('width' => 85, 'height' => 85, 'crop' => 'crop')); ?>"/>
                                 </div>
-                                <div style="margin-left: 95px">
+                                <div id="product-header-info-container">
 
-                                    <div>
+                                    <div id="product-header-title">
                                     <?php if (false === empty($this->product->link_1)): ?><a
                                         href="<?php echo $this->product->link_1; ?>"
                                         target="_NEW"
@@ -316,7 +316,7 @@ $xdgTypeJson = Zend_Json::encode($helperCatXdgType->catXdgType($this->product->p
                                     </div>
 
 
-                                    <p class="product_category" style="margin-bottom: 5px">
+                                    <p class="product_category">
                                     <?php
                                     echo '<a href="/browse/cat/' . $this->product->project_category_id . '/order/latest">' . $this->product->cat_title . ' </a>';
                                     ?>
@@ -521,7 +521,7 @@ $xdgTypeJson = Zend_Json::encode($helperCatXdgType->catXdgType($this->product->p
                         <div class="tab-pane active" id="about-panel">
 
 
-                            <div id="product-about" class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                            <div id="product-about" class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
 
                                 <div>
                                     <article>
@@ -601,7 +601,7 @@ $xdgTypeJson = Zend_Json::encode($helperCatXdgType->catXdgType($this->product->p
                         <!-- ratings panel -->
                         <?php  if (count($this->ratings) > 0) { ?>
                         <div class="tab-pane" id="ratings-panel">
-                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                            <div id="ratings-panel-wrapper" class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
                             <article>
                                 <div id="productRatingContainer">
                                 <?php
@@ -616,7 +616,7 @@ $xdgTypeJson = Zend_Json::encode($helperCatXdgType->catXdgType($this->product->p
                         <!-- likes panel -->
                         <?php  if (count($this->likes) > 0) { ?>
                         <div class="tab-pane" id="likes-panel">
-                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
                             <article>
                                 <div id="productLikesContainer">
                                 <?php
@@ -631,7 +631,7 @@ $xdgTypeJson = Zend_Json::encode($helperCatXdgType->catXdgType($this->product->p
                         <!-- plings panel -->
                         <?php  if (count($this->projectplings) > 0) { ?>
                         <div class="tab-pane" id="plings-panel">
-                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
                             <article>
                                 <div id="productPlingsContainer">
                                 <?php
@@ -661,7 +661,7 @@ $xdgTypeJson = Zend_Json::encode($helperCatXdgType->catXdgType($this->product->p
 
 
             </div>
-            <div class="flex-item-4 flex-right" id="product-maker">
+            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 flex-right" id="product-maker">
                 <div>
                     <div class="project-share-new col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
@@ -902,9 +902,7 @@ $xdgTypeJson = Zend_Json::encode($helperCatXdgType->catXdgType($this->product->p
                 </div>
 
             </div>
-
         </div>
-
          <div class="tooltip_templates" style="display: none">
             <span id="tooltip_content">
                 <i class="fa fa-spinner"></i>
@@ -967,8 +965,6 @@ $xdgTypeJson = Zend_Json::encode($helperCatXdgType->catXdgType($this->product->p
   var filesJson  = <?php echo $filesJson ?>;
   var xdgTypeJson = <?php echo $xdgTypeJson ?>;
 </script>
-
-<script type="text/javascript" src="/theme/react/getit.js"></script>
 
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
