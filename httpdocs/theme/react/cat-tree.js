@@ -139,7 +139,6 @@ class CategoryTree extends React.Component {
   componentDidMount() {
     window.addEventListener("resize", this.updateDimensions);
     const urlContext = appHelpers.getUrlContext(window.location.href);
-    console.log('url context: ' + urlContext);
     this.setState({ urlContext: urlContext }, function () {
       if (this.state.categoryId && this.state.categoryId !== 0) {
         this.getSelectedCategories(this.state.categories, this.state.categoryId);
