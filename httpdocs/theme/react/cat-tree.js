@@ -202,7 +202,7 @@ class CategoryTree extends React.Component {
             baseUrl = window.location.origin;
           }
 
-          let urlContext = "";
+          let urlContext = "/";
           if (this.state.urlContext) {
             urlContext = this.state.urlContext;
           }
