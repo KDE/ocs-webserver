@@ -45,7 +45,7 @@ window.appHelpers = function () {
     }
     let link = baseUrl + urlContext + "/browse/";
     if (catId !== "all") {
-      link += "/browse/cat/" + catId + "/";
+      link += "cat/" + catId + "/";
     }
     if (locationHref.indexOf('ord') > -1) {
       link += "ord/" + locationHref.split('/ord/')[1];
