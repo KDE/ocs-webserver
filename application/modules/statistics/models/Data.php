@@ -246,24 +246,24 @@ class Statistics_Model_Data
             $ids = $modelProjectCategories->fetchChildIds($catid);
             array_push($ids, $catid);            
             $idstring = implode(',', $ids);
-            
+            // Zend_Registry::get('logger')->info(__METHOD__ . ' - ===================================' );
+            // Zend_Registry::get('logger')->info(__METHOD__ . ' - ' . $idstring);
             $sql = "
                           select * from
                           (
-                               select project_category_id
-                                ,(select title from category as c where c.project_category_id = v.project_category_id) as title
-                                  , yearmonth
+                               select
+                               yearmonth
                                 ,round(sum(probably_payout_amount)) as amount
                                 ,count(*) anzahlproject
                                 ,sum(probably_payout_amount)/count(*) avgamount
                                 ,sum(v.num_downloads) as num_downloads
                                from member_dl_plings_v as v
-                              where project_category_id IN (?)
+                              where project_category_id IN (".$idstring.")
                               group by v.yearmonth
                               order by yearmonth asc
                           ) tmp where amount>0
                         ";
-            $result = $this->_db->fetchAll($sql, $idstring);
+            $result = $this->_db->fetchAll($sql);
             return $result;  
     }
 

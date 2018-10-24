@@ -2154,6 +2154,10 @@ var FilterBrowseOriginalFn= (function () {
                                            $('body').on('click', 'input#filter_browse_original', function (event) {
                                                 var checked = $(this).is( ":checked" );
                                                 var url  = window.location.href;
+                                                if(url.indexOf("browse")<0)
+                                                {
+                                                    url = url+'/browse/';
+                                                }
                                                 if(url.indexOf("filteroriginal")>0)
                                                 {
                                                     url = url.substring(0,url.indexOf("filteroriginal"));
