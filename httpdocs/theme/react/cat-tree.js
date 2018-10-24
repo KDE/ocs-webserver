@@ -40,6 +40,9 @@ window.appHelpers = function () {
   }
 
   function generateCategoryLink(baseUrl, urlContext, catId, locationHref) {
+    if (window.baseUrl !== window.location.origin) {
+      baseUrl = window.location.origin;
+    }
     let link = baseUrl + urlContext + "/browse/cat/" + catId + "/";
     if (locationHref.indexOf('ord') > -1) {
       link += "ord/" + locationHref.split('/ord/')[1];
@@ -80,6 +83,9 @@ window.appHelpers = function () {
   }
 
   function getAllCatItemCssClass(href, baseUrl, urlContext, categoryId) {
+    if (baseUrl !== window.location.origin) {
+      baseUrl = window.location.origin;
+    }
     let allCatItemCssClass;
     if (categoryId && categoryId !== 0) {
       allCatItemCssClass = "";
@@ -194,6 +200,10 @@ class CategoryTree extends React.Component {
           }));
 
           const allCatItemCssClass = appHelpers.getAllCatItemCssClass(window.location.href, window.baseUrl, this.state.urlContext, this.state.categoryId);
+          let baseUrl;
+          if (window.baseUrl !== window.location.origin) {
+            baseUrl = window.location.origin;
+          }
           categoryTreeDisplay = React.createElement(
             "ul",
             { className: "main-list" },
@@ -202,7 +212,7 @@ class CategoryTree extends React.Component {
               { className: "cat-item" + " " + allCatItemCssClass },
               React.createElement(
                 "a",
-                { href: window.baseUrl + this.state.urlContext + "/browse/" },
+                { href: baseUrl + this.state.urlContext + "/browse/" },
                 React.createElement(
                   "span",
                   { className: "title" },

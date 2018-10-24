@@ -40,6 +40,9 @@ window.appHelpers = (function(){
   }
 
   function generateCategoryLink(baseUrl,urlContext,catId,locationHref){
+    if (window.baseUrl !== window.location.origin){
+      baseUrl = window.location.origin;
+    }
     let link = baseUrl + urlContext + "/browse/cat/" + catId + "/";
     if (locationHref.indexOf('ord') > -1){
       link += "ord/" + locationHref.split('/ord/')[1];
@@ -76,6 +79,9 @@ window.appHelpers = (function(){
   }
 
   function getAllCatItemCssClass(href,baseUrl,urlContext,categoryId){
+    if (baseUrl !== window.location.origin){
+      baseUrl = window.location.origin;
+    }
     let allCatItemCssClass;
     if (categoryId && categoryId !== 0){
       allCatItemCssClass = "";
