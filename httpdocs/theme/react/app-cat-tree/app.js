@@ -97,7 +97,7 @@ class CategoryTree extends React.Component {
           }
 
           let urlContext = "/";
-          if (this.state.urlContext){
+          if (typeof(this.state.urlContext) !== 'undefined'){
             urlContext = this.state.urlContext;
           }
           categoryTreeDisplay = (
