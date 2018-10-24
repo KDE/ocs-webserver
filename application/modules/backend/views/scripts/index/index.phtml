@@ -39,6 +39,10 @@ $jsonTree = json_encode($this->categories);
 <script type="text/javascript" src="/theme/react/lib/timeago/timeago.min.js"></script>
 <script type="text/javascript" src="/theme/react/lib/md5/md5.js"></script>
 
+
+    <div id='d3linelableinlinetest'></div>
+
+
 <div class="pling-nav-tabs">
     <ul class="nav nav-tabs ">
         <li class="active"><a class="newuserprojectTab" href="#d3-line" data-toggle="tab">New Members & Projects </a></li>
@@ -62,6 +66,7 @@ $jsonTree = json_encode($this->categories);
 
                 <div id='d3linelableinline'></div>
 
+                
 
             </div>
         </div>
@@ -366,7 +371,7 @@ $jsonTree = json_encode($this->categories);
 
 
 <script type="text/javascript">
-    var parseTime = d3.timeParse("%Y%m");
+    var parseTime = d3.timeParse("%Y%m"); 
     $(document).ready(function () { 
         $('body').on('click', '#category-tree a', function (event) {
             event.preventDefault();
@@ -377,7 +382,7 @@ $jsonTree = json_encode($this->categories);
             var title = $(this).find('span.title').text();
             
             $("#payoutCategoryLineChart").empty();             
-                d3.json("/backend/index/getpayoutcategory?catid="+catid, function(error, data) {        
+                d3.json("/backend/index/getpayoutcategory?catid="+catid, function(error, data) {                                                        
                 if (error) throw error;
                 data = data.results;   
                 if(!data){
