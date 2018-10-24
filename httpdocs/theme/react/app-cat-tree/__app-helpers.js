@@ -77,6 +77,9 @@ window.appHelpers = (function(){
 
   function getAllCatItemCssClass(href,baseUrl,urlContext,categoryId){
     console.log(window.location);
+    if (baseUrl !== window.location.origin){
+      baseUrl = window.location.origin;
+    }
     let allCatItemCssClass;
     if (categoryId && categoryId !== 0){
       allCatItemCssClass = "";
