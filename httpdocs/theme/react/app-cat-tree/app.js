@@ -139,7 +139,7 @@ class CategoryItem extends React.Component {
 
     const categoryType = appHelpers.getCategoryType(this.props.selectedCategories,this.props.categoryId,this.props.category.id);
     if (this.props.category.has_children === true && categoryType && this.props.lastChild !== true ||
-        this.props.category.has_children === true && this.props.backendView === true){
+        this.props.category.has_children === true && this.props.backendView === true && this.state.showSubmenu === true){
 
       const self = this;
 
@@ -183,8 +183,6 @@ class CategoryItem extends React.Component {
     const categoryItemLink = appHelpers.generateCategoryLink(window.baseUrl,this.props.urlContext,this.props.category.id,window.location.href);
 
     let submenuToggleDisplay;
-    console.log(this.props.backendView);
-    console.log(this.props.has_children);
     if (this.props.backendView === true && this.props.category.has_children === true){
       if (this.state.showSubmenu === true){
         submenuToggleDisplay = (<span onclick={this.toggleSubmenu}>[-]</span>);
