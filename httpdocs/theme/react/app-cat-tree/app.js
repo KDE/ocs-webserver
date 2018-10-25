@@ -123,7 +123,17 @@ class CategoryTree extends React.Component {
 class CategoryItem extends React.Component {
   constructor(props){
   	super(props);
-  	this.state = {};
+  	this.state = {
+      showSubmenu:false
+    };
+    this.toggleSubmenu = this.toggleSubmenu.bind(this);
+  }
+
+  toggleSubmenu(){
+    console.log('toggle sub menu');
+    const showSubmenu = this.state.showSubmenu === true ? false : true;
+    console.log(showSubmenu);
+    this.setState({showSubmenu:showSubmenu});
   }
 
   render(){
@@ -131,7 +141,7 @@ class CategoryItem extends React.Component {
 
     const categoryType = appHelpers.getCategoryType(this.props.selectedCategories,this.props.categoryId,this.props.category.id);
     if (this.props.category.has_children === true && categoryType && this.props.lastChild !== true ||
-        this.props.category.has_children === true && this.props.backendView === true){
+        this.props.category.has_children === true && this.props.backendView === true && this.state.showSubmenu === true){
 
       const self = this;
 
@@ -173,12 +183,36 @@ class CategoryItem extends React.Component {
     }
 
     const categoryItemLink = appHelpers.generateCategoryLink(window.baseUrl,this.props.urlContext,this.props.category.id,window.location.href);
-    return(
-      <li id={"cat-"+this.props.category.id} className={categoryItemClass}>
+
+    let catItemContentDisplay;
+    if (this.props.backendView === true){
+
+      let submenuToggleDisplay;
+      if (this.state.showSubmenu === true){
+        submenuToggleDisplay = (<span className="submenu-toggle" onClick={this.toggleSubmenu}>[-]</span>);
+      } else {
+        submenuToggleDisplay = (<span className="submenu-toggle" onClick={this.toggleSubmenu}>[+]</span>);
+      }
+
+      catItemContentDisplay = (
+        <span>
+          <span className="title"><a href={categoryItemLink}>{this.props.category.title}</a></span>
+          <span className="product-counter">{productCountDisplay}</span>
+          {submenuToggleDisplay}
+        </span>
+      );
+    } else {
+      catItemContentDisplay = (
         <a href={categoryItemLink}>
           <span className="title">{this.props.category.title}</span>
           <span className="product-counter">{productCountDisplay}</span>
         </a>
+      );
+    }
+
+    return(
+      <li id={"cat-"+this.props.category.id} className={categoryItemClass}>
+        {catItemContentDisplay}
         {categoryChildrenDisplay}
       </li>
     )

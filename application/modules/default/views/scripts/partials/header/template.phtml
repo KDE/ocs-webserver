@@ -172,6 +172,88 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
 
         .metamenu ul.dropdown-menu  li span{ color:#999; }
         .metamenu ul.dropdown-menu  li.active span{ color:#eee; }
+
+
+        @media (max-width:767px){
+
+          header .logo-header {
+            width: 100%;
+            text-align: center;
+            position: relative;
+            height: 100px;
+            float: left;
+            top: 0;
+          }
+
+          header div.container.header {
+            height: 180px;
+            padding: 0;
+          }
+
+          header .container.header ul.menu-nav-tabs {
+            right: 0;
+          }
+
+          header .container.header section.container#first-container {
+            padding: 0;
+            height: 180px;
+            margin: 0;
+            width: 100%;
+          }
+
+          header .container.header section.container#second-container {
+            position: absolute;
+            bottom: 20px;
+            padding: 0;
+          }
+
+          header .container.header section.container#second-container .wrapper {
+            padding: 0;
+            width: 100%;
+            text-align: center;
+          }
+
+          header .container.header section.container#second-container .wrapper .header_cat_link {
+            position: relative;
+            left: 0;
+          }
+
+          header .container.header section.container section.wrapper {
+            padding: 0;
+          }
+
+          header#page_header nav#nav-top {
+            margin: 0;
+            width: 100%;
+            float: left;
+            height: 80px;
+            position: relative;
+          }
+
+          header#page_header nav#nav-top  > .pull-right {
+            height: 100%;
+            width: 100% !important;
+          }
+
+          header#page_header nav#nav-top  > .pull-right .menu {
+            position: absolute;
+            bottom: 5px;
+            right: 0;
+            z-index: 100000;
+          }
+
+          header .container.header nav #search {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50%;
+            margin: 5px;
+          }
+
+          header .container.header nav #search input.content-search {
+            width: 100%;
+          }
+        }
     </style>
 
     <header id="page_header" xmlns="http://www.w3.org/1999/html">
@@ -193,9 +275,8 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
                 </ul>
             <?php } ?>
 
-            <section class="container">
-            <section class="wrapper">
-
+            <section id="first-container" class="container">
+              <section class="wrapper">
                     <section>
                         <?php
                             $storeUrl = $last_char_store_order=='1'?$sname:$baseurl.'/s/'.$store_name;
@@ -210,7 +291,6 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
                                      src="<?= $this->template['header-logo']['image-src'] ?>">
                             </a>
                         </figure>
-
                         <nav id="nav-top">
                             <div class="pull-left col-lg-5 col-md-5 col-sm-5 col-xs-5">
                             </div>
@@ -264,12 +344,11 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
                             </div>
                         </nav>
                     </section>
-
-                </section>
+              </section>
             </section>
 
             <?php if($is_show_title==1): ?>
-            <section class="container">
+            <section id="second-container" class="container">
                 <section class="wrapper">
                     <span class="header_cat_link" id="header_cat_link">
                        <?php /* <a href="/browse/cat/<?= isset($this->cat_id) ? $this->cat_id : 'all' ?>/order/latest"> */?>

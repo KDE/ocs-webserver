@@ -242,27 +242,50 @@ class Statistics_Model_Data
 
      public function getPayoutCategory($catid){
 
-            $modelProjectCategories = new Default_Model_DbTable_ProjectCategory();
-            $ids = $modelProjectCategories->fetchChildIds($catid);
-            array_push($ids, $catid);            
-            $idstring = implode(',', $ids);
-            // Zend_Registry::get('logger')->info(__METHOD__ . ' - ===================================' );
-            // Zend_Registry::get('logger')->info(__METHOD__ . ' - ' . $idstring);
-            $sql = "
-                          select * from
-                          (
-                               select
-                               yearmonth
-                                ,round(sum(probably_payout_amount)) as amount
-                                ,count(*) anzahlproject
-                                ,sum(probably_payout_amount)/count(*) avgamount
-                                ,sum(v.num_downloads) as num_downloads
-                               from member_dl_plings_v as v
-                              where project_category_id IN (".$idstring.")
-                              group by v.yearmonth
-                              order by yearmonth asc
-                          ) tmp where amount>0
-                        ";
+          if($catid==0)
+          {
+              $sql = "
+                            select * from
+                            (
+                                 select
+                                  'All' as symbol
+                                  ,yearmonth
+                                  ,round(sum(probably_payout_amount)) as amount
+                                  ,count(*) anzahlproject
+                                  ,sum(probably_payout_amount)/count(*) avgamount
+                                  ,sum(v.num_downloads) as num_downloads
+                                 from member_dl_plings_v as v                          
+                                group by v.yearmonth
+                                order by yearmonth asc
+                            ) tmp where amount>0
+                          ";              
+
+          }
+          else
+          {
+                $modelProjectCategories = new Default_Model_DbTable_ProjectCategory();
+                $ids = $modelProjectCategories->fetchChildIds($catid);
+                array_push($ids, $catid);            
+                $idstring = implode(',', $ids);
+                // Zend_Registry::get('logger')->info(__METHOD__ . ' - ===================================' );
+                // Zend_Registry::get('logger')->info(__METHOD__ . ' - ' . $idstring);
+                $sql = "
+                              select * from
+                              (
+                                   select
+                                     yearmonth
+                                      ,(select title from category as c where c.project_category_id = ".$catid.") as symbol                            
+                                    ,round(sum(probably_payout_amount)) as amount
+                                    ,count(*) anzahlproject
+                                    ,sum(probably_payout_amount)/count(*) avgamount
+                                    ,sum(v.num_downloads) as num_downloads
+                                   from member_dl_plings_v as v
+                                  where project_category_id IN (".$idstring.")
+                                  group by v.yearmonth
+                                  order by yearmonth asc
+                              ) tmp where amount>0
+                            ";
+            }
             $result = $this->_db->fetchAll($sql);
             return $result;  
     }

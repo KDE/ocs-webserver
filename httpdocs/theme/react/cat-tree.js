@@ -241,14 +241,24 @@ class CategoryTree extends React.Component {
 class CategoryItem extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      showSubmenu: false
+    };
+    this.toggleSubmenu = this.toggleSubmenu.bind(this);
+  }
+
+  toggleSubmenu() {
+    console.log('toggle sub menu');
+    const showSubmenu = this.state.showSubmenu === true ? false : true;
+    console.log(showSubmenu);
+    this.setState({ showSubmenu: showSubmenu });
   }
 
   render() {
     let categoryChildrenDisplay;
 
     const categoryType = appHelpers.getCategoryType(this.props.selectedCategories, this.props.categoryId, this.props.category.id);
-    if (this.props.category.has_children === true && categoryType && this.props.lastChild !== true || this.props.category.has_children === true && this.props.backendView === true) {
+    if (this.props.category.has_children === true && categoryType && this.props.lastChild !== true || this.props.category.has_children === true && this.props.backendView === true && this.state.showSubmenu === true) {
 
       const self = this;
 
@@ -287,10 +297,46 @@ class CategoryItem extends React.Component {
     }
 
     const categoryItemLink = appHelpers.generateCategoryLink(window.baseUrl, this.props.urlContext, this.props.category.id, window.location.href);
-    return React.createElement(
-      "li",
-      { id: "cat-" + this.props.category.id, className: categoryItemClass },
-      React.createElement(
+
+    let catItemContentDisplay;
+    if (this.props.backendView === true) {
+
+      let submenuToggleDisplay;
+      if (this.state.showSubmenu === true) {
+        submenuToggleDisplay = React.createElement(
+          "span",
+          { className: "submenu-toggle", onClick: this.toggleSubmenu },
+          "[-]"
+        );
+      } else {
+        submenuToggleDisplay = React.createElement(
+          "span",
+          { className: "submenu-toggle", onClick: this.toggleSubmenu },
+          "[+]"
+        );
+      }
+
+      catItemContentDisplay = React.createElement(
+        "span",
+        null,
+        React.createElement(
+          "span",
+          { className: "title" },
+          React.createElement(
+            "a",
+            { href: categoryItemLink },
+            this.props.category.title
+          )
+        ),
+        React.createElement(
+          "span",
+          { className: "product-counter" },
+          productCountDisplay
+        ),
+        submenuToggleDisplay
+      );
+    } else {
+      catItemContentDisplay = React.createElement(
         "a",
         { href: categoryItemLink },
         React.createElement(
@@ -303,7 +349,13 @@ class CategoryItem extends React.Component {
           { className: "product-counter" },
           productCountDisplay
         )
-      ),
+      );
+    }
+
+    return React.createElement(
+      "li",
+      { id: "cat-" + this.props.category.id, className: categoryItemClass },
+      catItemContentDisplay,
       categoryChildrenDisplay
     );
   }
