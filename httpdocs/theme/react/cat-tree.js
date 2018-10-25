@@ -289,7 +289,7 @@ class CategoryItem extends React.Component {
     const categoryItemLink = appHelpers.generateCategoryLink(window.baseUrl, this.props.urlContext, this.props.category.id, window.location.href);
 
     let submenuToggleDisplay;
-    if (this.props.has_children === true) {
+    if (this.props.backendView === true && this.props.has_children === true) {
       if (this.state.showSubmenu === true) {
         submenuToggleDisplay = React.createElement(
           "span",
