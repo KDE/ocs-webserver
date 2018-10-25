@@ -303,6 +303,8 @@ class CategoryItem extends React.Component {
 
       let submenuToggleDisplay;
       if (this.props.category.has_children) {
+        console.log(this.props.category.title);
+        console.log(this.props.category.has_children);
         if (this.state.showSubmenu === true) {
           submenuToggleDisplay = "[-]";
         } else {
