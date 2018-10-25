@@ -377,9 +377,15 @@ $jsonTree = json_encode($this->categories);
             event.preventDefault();
             event.stopPropagation();            
             var start = this.href.indexOf("cat");
-            if(start<0) return;
-            var catid = this.href.substring(start+4, (this.href.length-1));
-            var title = $(this).find('span.title').text();
+            var catid;
+            var title;
+            if(start<0) {
+                catid = 0;
+            }else
+            {
+                catid = this.href.substring(start+4, (this.href.length-1));
+                title = $(this).find('span.title').text();
+            }
             
             $("#payoutCategoryLineChart").empty();             
                 d3.json("/backend/index/getpayoutcategory?catid="+catid, function(error, data) {                                                        
