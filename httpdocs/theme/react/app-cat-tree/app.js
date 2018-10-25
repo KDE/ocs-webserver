@@ -187,9 +187,9 @@ class CategoryItem extends React.Component {
     let submenuToggleDisplay;
     if (this.props.backendView === true && this.props.category.has_children === true){
       if (this.state.showSubmenu === true){
-        submenuToggleDisplay = (<span onClick={this.toggleSubmenu}>[-]</span>);
+        submenuToggleDisplay = (<span className="submenu-toggle" onClick={this.toggleSubmenu}>[-]</span>);
       } else {
-        submenuToggleDisplay = (<span onClick={this.toggleSubmenu}>[+]</span>);
+        submenuToggleDisplay = (<span className="submenu-toggle" onClick={this.toggleSubmenu}>[+]</span>);
       }
     }
 

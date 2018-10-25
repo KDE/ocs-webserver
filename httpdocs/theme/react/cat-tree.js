@@ -303,13 +303,13 @@ class CategoryItem extends React.Component {
       if (this.state.showSubmenu === true) {
         submenuToggleDisplay = React.createElement(
           "span",
-          { onClick: this.toggleSubmenu },
+          { className: "submenu-toggle", onClick: this.toggleSubmenu },
           "[-]"
         );
       } else {
         submenuToggleDisplay = React.createElement(
           "span",
-          { onClick: this.toggleSubmenu },
+          { className: "submenu-toggle", onClick: this.toggleSubmenu },
           "[+]"
         );
       }
