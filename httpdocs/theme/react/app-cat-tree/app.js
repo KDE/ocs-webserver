@@ -196,18 +196,18 @@ class CategoryItem extends React.Component {
     let catItemContentDisplay;
     if (this.props.backendView === true){
       catItemContentDisplay = (
-        <a href={categoryItemLink}>
-          <span className="title">{this.props.category.title}</span>
-          <span className="product-counter">{productCountDisplay}</span>
-        </a>
-      );
-    } else {
-      catItemContentDisplay = (
         <span>
           <span className="title"><a href={categoryItemLink}>{this.props.category.title}</a></span>
           <span className="product-counter">{productCountDisplay}</span>
           {submenuToggleDisplay}
         </span>
+      );
+    } else {
+      catItemContentDisplay = (
+        <a href={categoryItemLink}>
+          <span className="title">{this.props.category.title}</span>
+          <span className="product-counter">{productCountDisplay}</span>
+        </a>
       );
     }
 

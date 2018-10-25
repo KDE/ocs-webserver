@@ -318,21 +318,6 @@ class CategoryItem extends React.Component {
     let catItemContentDisplay;
     if (this.props.backendView === true) {
       catItemContentDisplay = React.createElement(
-        "a",
-        { href: categoryItemLink },
-        React.createElement(
-          "span",
-          { className: "title" },
-          this.props.category.title
-        ),
-        React.createElement(
-          "span",
-          { className: "product-counter" },
-          productCountDisplay
-        )
-      );
-    } else {
-      catItemContentDisplay = React.createElement(
         "span",
         null,
         React.createElement(
@@ -350,6 +335,21 @@ class CategoryItem extends React.Component {
           productCountDisplay
         ),
         submenuToggleDisplay
+      );
+    } else {
+      catItemContentDisplay = React.createElement(
+        "a",
+        { href: categoryItemLink },
+        React.createElement(
+          "span",
+          { className: "title" },
+          this.props.category.title
+        ),
+        React.createElement(
+          "span",
+          { className: "product-counter" },
+          productCountDisplay
+        )
       );
     }
 
