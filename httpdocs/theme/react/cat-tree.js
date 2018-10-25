@@ -298,8 +298,10 @@ class CategoryItem extends React.Component {
 
     const categoryItemLink = appHelpers.generateCategoryLink(window.baseUrl, this.props.urlContext, this.props.category.id, window.location.href);
 
-    let submenuToggleDisplay;
-    if (this.props.backendView === true && this.props.category.has_children === true) {
+    let catItemContentDisplay;
+    if (this.props.backendView === true) {
+
+      let submenuToggleDisplay;
       if (this.state.showSubmenu === true) {
         submenuToggleDisplay = React.createElement(
           "span",
@@ -313,10 +315,7 @@ class CategoryItem extends React.Component {
           "[+]"
         );
       }
-    }
 
-    let catItemContentDisplay;
-    if (this.props.backendView === true) {
       catItemContentDisplay = React.createElement(
         "span",
         null,

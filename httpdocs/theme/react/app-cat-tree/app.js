@@ -184,17 +184,16 @@ class CategoryItem extends React.Component {
 
     const categoryItemLink = appHelpers.generateCategoryLink(window.baseUrl,this.props.urlContext,this.props.category.id,window.location.href);
 
-    let submenuToggleDisplay;
-    if (this.props.backendView === true && this.props.category.has_children === true){
+    let catItemContentDisplay;
+    if (this.props.backendView === true){
+
+      let submenuToggleDisplay;
       if (this.state.showSubmenu === true){
         submenuToggleDisplay = (<span className="submenu-toggle" onClick={this.toggleSubmenu}>[-]</span>);
       } else {
         submenuToggleDisplay = (<span className="submenu-toggle" onClick={this.toggleSubmenu}>[+]</span>);
       }
-    }
 
-    let catItemContentDisplay;
-    if (this.props.backendView === true){
       catItemContentDisplay = (
         <span>
           <span className="title"><a href={categoryItemLink}>{this.props.category.title}</a></span>
