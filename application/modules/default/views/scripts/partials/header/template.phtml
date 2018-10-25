@@ -191,6 +191,10 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
             width: 100%;
           }
 
+          header .container.header section.container section.wrapper {
+            padding: 0;
+          }
+
           header#page_header nav#nav-top {
             margin: 0;
             width: 100%;
@@ -199,7 +203,7 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
             position: relative;
           }
 
-          header#page_header nav#nav-top .pull-right {
+          header#page_header nav#nav-top  > .pull-right {
             height: 100%;
             width: 100% !important;
           }
