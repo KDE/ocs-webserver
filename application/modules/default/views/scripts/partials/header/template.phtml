@@ -172,6 +172,50 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
 
         .metamenu ul.dropdown-menu  li span{ color:#999; }
         .metamenu ul.dropdown-menu  li.active span{ color:#eee; }
+
+
+        @media (max-width:767px){
+          header div.container.header {
+            height: 180px;
+            padding: 0;
+          }
+
+          header .container.header ul.menu-nav-tabs {
+            right: 0;
+          }
+
+          header .container.header section.container {
+            padding: 0;
+            height: 180px;
+            margin: 0;
+            width: 100%;
+          }
+
+          header#page_header nav#nav-top {
+            margin: 0;
+            width: 100%;
+            float: left;
+            height: 90px;
+            position: relative;
+          }
+
+          header#page_header nav#nav-top .pull-right {
+            height: 100%;
+            width: 100% !important;
+          }
+
+          header .container.header nav #search {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50%;
+            margin: 5px;
+          }
+
+          header .container.header nav #search input.content-search {
+            width: 100%;
+          }
+        }
     </style>
 
     <header id="page_header" xmlns="http://www.w3.org/1999/html">
@@ -194,8 +238,7 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
             <?php } ?>
 
             <section class="container">
-            <section class="wrapper">
-
+              <section class="wrapper">
                     <section>
                         <?php
                             $storeUrl = $last_char_store_order=='1'?$sname:$baseurl.'/s/'.$store_name;
@@ -210,7 +253,6 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
                                      src="<?= $this->template['header-logo']['image-src'] ?>">
                             </a>
                         </figure>
-
                         <nav id="nav-top">
                             <div class="pull-left col-lg-5 col-md-5 col-sm-5 col-xs-5">
                             </div>
@@ -264,8 +306,7 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
                             </div>
                         </nav>
                     </section>
-
-                </section>
+              </section>
             </section>
 
             <?php if($is_show_title==1): ?>
