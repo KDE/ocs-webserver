@@ -39,10 +39,6 @@ $jsonTree = json_encode($this->categories);
 <script type="text/javascript" src="/theme/react/lib/timeago/timeago.min.js"></script>
 <script type="text/javascript" src="/theme/react/lib/md5/md5.js"></script>
 
-
-    <div id='d3linelableinlinetest'></div>
-
-
 <div class="pling-nav-tabs">
     <ul class="nav nav-tabs ">
         <li class="active"><a class="newuserprojectTab" href="#d3-line" data-toggle="tab">New Members & Projects </a></li>
@@ -139,9 +135,10 @@ $jsonTree = json_encode($this->categories);
         </div>
 
           <div id="payoutCategoryTab" class="tab-pane">
+                <button id="clearChartPanel">clear</button>
                 <div id="category-tree-container">
                 </div>
-            <div id="payoutCategoryLineChart" class="chart-wrapper" style="width: 800px; height: 1000px; display: block; float: right">
+            <div id="payoutCategoryLineChart" class="chart-wrapper" style="width: 1000px; height: 1000px; display: block; float: right; overflow-y: auto">
                     
             </div>
         </div>
@@ -305,7 +302,7 @@ $jsonTree = json_encode($this->categories);
 
 
     $(".payoutCategoryTab").click(function () {
-        $.getScript("/theme/flatui/js/stati/payoutCategory.js");
+        
     });
 
 
@@ -372,42 +369,32 @@ $jsonTree = json_encode($this->categories);
 
 <script type="text/javascript">
     var parseTime = d3.timeParse("%Y%m"); 
-    $(document).ready(function () { 
-        $('body').on('click', '#category-tree a', function (event) {
-            event.preventDefault();
-            event.stopPropagation();            
-            var start = this.href.indexOf("cat");
-            var catid;
-            var title;
-            if(start<0) {
-                catid = 0;
-            }else
-            {
-                catid = this.href.substring(start+4, (this.href.length-1));
-                title = $(this).find('span.title').text();
-            }
-            
-            $("#payoutCategoryLineChart").empty();             
-                d3.json("/backend/index/getpayoutcategory?catid="+catid, function(error, data) {                                                        
-                if (error) throw error;
-                data = data.results;   
-                if(!data){
-                     $("#payoutCategoryLineChart").text('no data found!');
-                    return;
-                }
-                data.forEach(function (d) {                   
-                   d.year = parseTime(d.yearmonth);
-                   d.variableA = +d.amount;                   
-               });
-                var chart = makeLineChart(data, 'year', {
-                    'Payout': {column: 'variableA'},                  
-                }, {xAxis: 'Month', yAxis: 'Amount'});
-                chart.bind("#payoutCategoryLineChart");
-                chart.render();
+    window.selectedCatid = 0;
 
+    $(document).ready(function () { 
+
+            $('body').on('click', '#category-tree a', function (event) {
+                event.preventDefault();
+                event.stopPropagation();            
+                var start = this.href.indexOf("cat");
+                var catid;
+                var title;
+                if(start<0) {
+                    catid = 0;
+                }else
+                {
+                    catid = this.href.substring(start+4, (this.href.length-1));
+                    title = $(this).find('span.title').text();
+                }
+                window.selectedCatid = catid;
+                $.getScript("/theme/flatui/js/stati/payoutCategory.js");
             });
-            
-        });         
+
+            $('#clearChartPanel').on('click',function(){
+                 $("#payoutCategoryLineChart").empty();
+            });
+
     });
+   
 
 </script>

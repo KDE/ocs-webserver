@@ -248,7 +248,8 @@ class Statistics_Model_Data
                             select * from
                             (
                                  select
-                                 yearmonth
+                                  'All' as symbol
+                                  ,yearmonth
                                   ,round(sum(probably_payout_amount)) as amount
                                   ,count(*) anzahlproject
                                   ,sum(probably_payout_amount)/count(*) avgamount
@@ -272,7 +273,8 @@ class Statistics_Model_Data
                               select * from
                               (
                                    select
-                                   yearmonth
+                                     yearmonth
+                                      ,(select title from category as c where c.project_category_id = ".$catid.") as symbol                            
                                     ,round(sum(probably_payout_amount)) as amount
                                     ,count(*) anzahlproject
                                     ,sum(probably_payout_amount)/count(*) avgamount
