@@ -193,26 +193,26 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
             right: 0;
           }
 
-          header .container.header section.container:first-of-type {
+          header .container.header section.container#first-container {
             padding: 0;
             height: 180px;
             margin: 0;
             width: 100%;
           }
 
-          header .container.header section.container:last-of-type {
+          header .container.header section.container#second-container {
             position: absolute;
             bottom: 20px;
             padding: 0;
           }
 
-          header .container.header section.container:last-of-type .wrapper {
+          header .container.header section.container#second-container .wrapper {
             padding: 0;
             width: 100%;
             text-align: center;
           }
 
-          header .container.header section.container:last-of-type .wrapper .header_cat_link {
+          header .container.header section.container#second-container .wrapper .header_cat_link {
             position: relative;
             left: 0;
           }
@@ -232,6 +232,13 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
           header#page_header nav#nav-top  > .pull-right {
             height: 100%;
             width: 100% !important;
+          }
+
+          header#page_header nav#nav-top  > .pull-right .menu {
+            position: absolute;
+            bottom: 5px;
+            right: 0;
+            z-index: 100000;
           }
 
           header .container.header nav #search {
@@ -267,7 +274,7 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
                 </ul>
             <?php } ?>
 
-            <section class="container">
+            <section id="first-container" class="container">
               <section class="wrapper">
                     <section>
                         <?php
@@ -340,7 +347,7 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
             </section>
 
             <?php if($is_show_title==1): ?>
-            <section class="container">
+            <section id="second-container" class="container">
                 <section class="wrapper">
                     <span class="header_cat_link" id="header_cat_link">
                        <?php /* <a href="/browse/cat/<?= isset($this->cat_id) ? $this->cat_id : 'all' ?>/order/latest"> */?>
