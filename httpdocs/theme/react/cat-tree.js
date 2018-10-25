@@ -302,18 +302,12 @@ class CategoryItem extends React.Component {
     if (this.props.backendView === true) {
 
       let submenuToggleDisplay;
-      if (this.state.showSubmenu === true) {
-        submenuToggleDisplay = React.createElement(
-          "span",
-          { className: "submenu-toggle", onClick: this.toggleSubmenu },
-          "[-]"
-        );
-      } else {
-        submenuToggleDisplay = React.createElement(
-          "span",
-          { className: "submenu-toggle", onClick: this.toggleSubmenu },
-          "[+]"
-        );
+      if (this.props.category.has_children) {
+        if (this.state.showSubmenu === true) {
+          submenuToggleDisplay = "[-]";
+        } else {
+          submenuToggleDisplay = "[+]";
+        }
       }
 
       catItemContentDisplay = React.createElement(
@@ -333,7 +327,11 @@ class CategoryItem extends React.Component {
           { className: "product-counter" },
           productCountDisplay
         ),
-        submenuToggleDisplay
+        React.createElement(
+          "span",
+          { className: "submenu-toggle", onClick: this.toggleSubmenu },
+          submenuToggleDisplay
+        )
       );
     } else {
       catItemContentDisplay = React.createElement(
