@@ -241,7 +241,15 @@ class CategoryTree extends React.Component {
 class CategoryItem extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      showSubmenu: false
+    };
+    this.toggleSubmenu = this.toggleSubmenu.bind(this);
+  }
+
+  toggleSubmenu() {
+    const showSubmenu = this.state.showSubmenu === true ? false : true;
+    this.setState({ showSubmenu: showSubmenu });
   }
 
   render() {
@@ -291,7 +299,7 @@ class CategoryItem extends React.Component {
     let submenuToggleDisplay;
     console.log(this.props.backendView);
     console.log(this.props.has_children);
-    if (this.props.backendView === true && this.props.has_children === true) {
+    if (this.props.backendView === true && this.props.category.has_children === true) {
       if (this.state.showSubmenu === true) {
         submenuToggleDisplay = React.createElement(
           "span",
