@@ -175,6 +175,15 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
 
 
         @media (max-width:767px){
+
+          header .logo-header {
+            width: 100%;
+                text-align: center;
+                position: relative;
+                padding-top: 10px;
+                height: 100px;
+          }
+
           header div.container.header {
             height: 180px;
             padding: 0;
@@ -184,11 +193,28 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
             right: 0;
           }
 
-          header .container.header section.container {
+          header .container.header section.container:first-of-type {
             padding: 0;
             height: 180px;
             margin: 0;
             width: 100%;
+          }
+
+          header .container.header section.container:last-of-type {
+            position: absolute;
+            bottom: 20px;
+            padding: 0;
+          }
+
+          header .container.header section.container:last-of-type .wrapper {
+            padding: 0;
+            width: 100%;
+            text-align: center;
+          }
+
+          header .container.header section.container:last-of-type .wrapper .header_cat_link {
+            position: relative;
+            left: 0;
           }
 
           header .container.header section.container section.wrapper {
@@ -199,7 +225,7 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
             margin: 0;
             width: 100%;
             float: left;
-            height: 90px;
+            height: 80px;
             position: relative;
           }
 
