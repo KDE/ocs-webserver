@@ -303,13 +303,13 @@ class CategoryItem extends React.Component {
       if (this.state.showSubmenu === true) {
         submenuToggleDisplay = React.createElement(
           "span",
-          { onClick: this.toggleSubmenu },
+          null,
           "[-]"
         );
       } else {
         submenuToggleDisplay = React.createElement(
           "span",
-          { onClick: this.toggleSubmenu },
+          null,
           "[+]"
         );
       }
@@ -317,7 +317,7 @@ class CategoryItem extends React.Component {
 
     return React.createElement(
       "li",
-      { id: "cat-" + this.props.category.id, className: categoryItemClass },
+      { id: "cat-" + this.props.category.id, onClick: this.toggleSubmenu, className: categoryItemClass },
       React.createElement(
         "a",
         { href: categoryItemLink },

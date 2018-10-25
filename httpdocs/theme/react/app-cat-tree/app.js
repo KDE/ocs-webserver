@@ -187,14 +187,14 @@ class CategoryItem extends React.Component {
     let submenuToggleDisplay;
     if (this.props.backendView === true && this.props.category.has_children === true){
       if (this.state.showSubmenu === true){
-        submenuToggleDisplay = (<span onClick={this.toggleSubmenu}>[-]</span>);
+        submenuToggleDisplay = (<span>[-]</span>);
       } else {
-        submenuToggleDisplay = (<span onClick={this.toggleSubmenu}>[+]</span>);
+        submenuToggleDisplay = (<span>[+]</span>);
       }
     }
 
     return(
-      <li id={"cat-"+this.props.category.id} className={categoryItemClass}>
+      <li id={"cat-"+this.props.category.id} onClick={this.toggleSubmenu} className={categoryItemClass}>
         <a href={categoryItemLink}>
           <span className="title">{this.props.category.title}</span>
           <span className="product-counter">{productCountDisplay}</span>
