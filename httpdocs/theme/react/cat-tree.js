@@ -314,6 +314,7 @@ class CategoryItem extends React.Component {
         );
       }
     }
+    console.log(submenuToggleDisplay);
 
     return React.createElement(
       "li",

@@ -192,6 +192,7 @@ class CategoryItem extends React.Component {
         submenuToggleDisplay = (<span>[+]</span>);
       }
     }
+    console.log(submenuToggleDisplay);
 
     return(
       <li id={"cat-"+this.props.category.id} onClick={this.toggleSubmenu} className={categoryItemClass}>
