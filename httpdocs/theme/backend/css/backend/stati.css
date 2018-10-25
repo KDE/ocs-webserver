@@ -187,6 +187,15 @@ path {
     font-size: smaller;
 }
 #category-tree-container  ul{
+    list-style: none;
+}
+
+#category-tree-container  span.submenu-toggle
+{
+    float: left;
+    padding-right: 10px;
+    
+    font-weight: bold;
     
 }
 
@@ -296,4 +305,24 @@ path {
 @media (max-width:500px){
     .chart-wrapper .line {stroke-width: 3px;}
     .chart-wrapper .legend {font-size: 14px;}
+}
+
+
+/*payout monthly line chart*/
+.payoutCategoryLineChart path{ 
+    stroke: steelblue;
+    stroke-width: 2;
+    fill: none;
+}
+.payoutCategoryLineChart .axis path,
+.payoutCategoryLineChart .axis line {
+    fill: none;
+    stroke: grey;
+    stroke-width: 1;
+    shape-rendering: crispEdges;
+}
+.payoutCategoryLineChart .legend {
+    font-size: 16px;
+    font-weight: bold;
+    text-anchor: middle;
 }
