@@ -173,11 +173,22 @@ class CategoryItem extends React.Component {
     }
 
     const categoryItemLink = appHelpers.generateCategoryLink(window.baseUrl,this.props.urlContext,this.props.category.id,window.location.href);
+
+    let submenuToggleDisplay;
+    if (this.props.has_children === true){
+      if (this.state.showSubmenu === true){
+        submenuToggleDisplay = (<span onclick={this.toggleSubmenu}>[-]</span>);
+      } else {
+        submenuToggleDisplay = (<span onclick={this.toggleSubmenu}>[+]</span>);
+      }
+    }
+
     return(
       <li id={"cat-"+this.props.category.id} className={categoryItemClass}>
         <a href={categoryItemLink}>
           <span className="title">{this.props.category.title}</span>
           <span className="product-counter">{productCountDisplay}</span>
+          {submenuToggleDisplay}
         </a>
         {categoryChildrenDisplay}
       </li>
