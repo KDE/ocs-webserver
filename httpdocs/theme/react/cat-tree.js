@@ -302,7 +302,7 @@ class CategoryItem extends React.Component {
     if (this.props.backendView === true) {
 
       let submenuToggleDisplay;
-      if (this.props.category.has_children) {
+      if (this.props.category.has_children === true) {
         console.log(this.props.category.title);
         console.log(this.props.category.has_children);
         if (this.state.showSubmenu === true) {
