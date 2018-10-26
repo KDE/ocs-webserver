@@ -67,14 +67,17 @@ $logoWidth = (int)$this->template['header-logo']['width'];
 $cat_title_left = $logoWidth+60;
 $tabs_left = (int)$this->template['header-nav-tabs']['absolute-left'];
 $tabs_left += $cat_title_length*10;
-$idCat = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
+//$idCat = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
 
-$helperUserRole = new Backend_View_Helper_UserRole();
-$userRoleName = $helperUserRole->userRole();
-$forum_url_postfix = Zend_Auth::getInstance()->hasIdentity() ? '/session/sso' : '';
+//$helperUserRole = new Backend_View_Helper_UserRole();
+//$userRoleName = $helperUserRole->userRole();
+//$forum_url_postfix = Zend_Auth::getInstance()->hasIdentity() ? '/session/sso' : '';
 
 
-echo $this->render('partials/header/metaheader.phtml'); ?>
+echo $this->render('partials/header/metaheader.phtml'); 
+
+?>
+
 
     <style>
 
@@ -363,6 +366,20 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
     </header>
 
 
+<script type="text/javascript">
+        var json_member = <?php if( $auth->hasIdentity() ) {echo Zend_Json::encode($member);} else { echo Zend_Json::encode(null);}?>;
+        var json_serverUrl = <?php echo Zend_Json::encode($serverUrl); ?>;
+        var json_baseurl = <?php echo  Zend_Json::encode($baseurl);?>;
+        var json_sname =  <?php echo  Zend_Json::encode($sname);?>;
+        var json_store_order =  <?php echo  Zend_Json::encode($store_order);?>;
+        var json_store_name =  <?php echo  Zend_Json::encode($store_name);?>;
+        var json_is_show_title =  <?php echo  Zend_Json::encode($is_show_title);?>;
+        var json_last_char_store_order = <?php echo  Zend_Json::encode($last_char_store_order);?>;
+        var json_cat_title=  <?php echo  Zend_Json::encode($cat_title);?>;
+        var json_logoWidth = <?php echo  Zend_Json::encode($logoWidth);?>;
+        var json_cat_title_left = <?php echo  Zend_Json::encode($cat_title_left);?>;
+        var json_tabs_left= <?php echo  Zend_Json::encode($tabs_left);?>;
+</script>
 
 <?php $this->inlineScript()->appendScript(
     '$(document).ready(function(){
