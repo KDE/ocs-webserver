@@ -197,7 +197,7 @@ path {
     font-weight: bold;
     display: block;         
     min-width: 25px;min-height: 15px;
-    
+    cursor: default;  
 }
 
 /*multiline.css*/
