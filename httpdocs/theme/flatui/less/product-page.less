@@ -1,7 +1,5 @@
 out: ../css/product-page.css, sourcemap: true, compress: true
-#product-main {
-  margin-top: 40px;
-}
+
 #product-page-view {
   #product-title-div {
     #product-header-info-container {
@@ -11,11 +9,54 @@ out: ../css/product-page.css, sourcemap: true, compress: true
       }
     }
   }
+  #product-maker {
+    padding: 0;
+    .project-share-new {
+      padding-left: 0;
+    }
+  }
 }
+
+@media (max-width:1750px) and (min-width:1471px){
+  #product-page-view {
+    #product-main {
+      width: 63.3%;
+    }
+    #product-maker {
+      width: 20%;
+    }
+  }
+}
+
+@media (max-width:1470px) and (min-width:1180px){
+  #product-page-view {
+    #product-main {
+      width: 60.3%;
+    }
+    #product-maker {
+      width: 23%;
+    }
+  }
+}
+
+@media (max-width:1180px) and (min-width:999px){
+  #product-page-view {
+    #product-main {
+      width: 57.3%;
+    }
+    #product-maker {
+      width: 25%;
+    }
+  }
+}
+
 
 @media (max-width: 767px) {
   #product-page-content {
     #product-page-view{
+      #product-main {
+        margin-top: 40px;
+      }
       #product-main-img {
         #product-title-div {
           padding-left: 0;

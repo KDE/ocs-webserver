@@ -190,12 +190,13 @@ path {
     list-style: none;
 }
 
-#category-tree-container  span.submenu-toggle
+#category-tree-container  ul li span.submenu-toggle
 {
     float: left;
-    padding-right: 10px;
-    
+    padding-right: 10px;    
     font-weight: bold;
+    display: block;         
+    min-width: 25px;min-height: 15px;
     
 }
 
