@@ -37,16 +37,16 @@ if(isset($tagsArray) && (count($tagsArray) == 1)) {
     <span class="title"> Details </span>
 
     <div class="row">
-        <span class="col-lg-6">license</span>
-        <div class="col-lg-6">
+        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">license</span>
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
             <span class="value">
             <?= $this->product->project_license_title; ?> </span>
         </div>
     </div>
 
     <div class="row">
-        <span class="col-lg-6">version</span>
-        <div class="col-lg-6">
+        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">version</span>
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
             <span class="value">
             <?= Default_Model_HtmlPurify::purify($this->product->project_version); ?> </span>
         </div>
@@ -54,35 +54,35 @@ if(isset($tagsArray) && (count($tagsArray) == 1)) {
 
     <?php if ($this->product->project_changed_at) { ?>
         <div class="row">
-            <span class="col-lg-6">updated</span>
-            <span class="col-lg-6 value"> <?= $this->printDate($this->product->project_changed_at) ?></span>
+            <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">updated</span>
+            <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <?= $this->printDate($this->product->project_changed_at) ?></span>
         </div>
     <?php } ?>
 
     <div class="row">
-        <span class="col-lg-6">added</span>
-        <span class="col-lg-6 value"> <?= $this->printDate($this->product->project_created_at) ?></span>
+        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">added</span>
+        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <?= $this->printDate($this->product->project_created_at) ?></span>
     </div>
     <div class="row">
-        <span class=" col-lg-6">downloads today</span>
-        <span class="col-lg-6 value"> <div id="downloadscnt">0</div></span>
+        <span class=" col-lg-6 col-md-6 col-sm-6 col-xs-6">downloads today</span>
+        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <div id="downloadscnt">0</div></span>
     </div>
 
     <div class="row">
-        <span class=" col-lg-6">page views today </span>
-        <span class="col-lg-6 value"> <?= $this->projectPageviewsToday($this->product->project_id) ?></span>
+        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">page views today </span>
+        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <?= $this->projectPageviewsToday($this->product->project_id) ?></span>
     </div>
-    
+
     <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
-     
+
     <div class="row">
-        <span class=" col-lg-6">spam reports</span>
-        <span class="col-lg-6 value"> <?= $this->fetchReportsSpamCnt($this->product->project_id) ?></span>
+        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">spam reports</span>
+        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <?= $this->fetchReportsSpamCnt($this->product->project_id) ?></span>
     </div>
 
     <div class="row">
-        <span class=" col-lg-6">misuse reports</span>
-        <span class="col-lg-6 value"> <?= $this->fetchReportsMisuseCnt($this->product->project_id)?></span>
+        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">misuse reports</span>
+        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <?= $this->fetchReportsMisuseCnt($this->product->project_id)?></span>
     </div>
      <?php endif; ?>
 
@@ -108,7 +108,7 @@ if(isset($tagsArray) && (count($tagsArray) == 1)) {
                 <div class="small " id="product-actions">
 
                       <span style="padding-right: 20px;">
-                            <?php if (Zend_Auth::getInstance()->hasIdentity()) {  ?>    
+                            <?php if (Zend_Auth::getInstance()->hasIdentity()) {  ?>
                                 <a data-toggle="modal" data-target="#report-product-fraud-<?= $this->product->project_id ?>" role="button"
                                    href="#report-product-fraud-<?= $this->product->project_id ?>">
                                     <span class="glyphicon glyphicon-alert"></span> Report Misuse
@@ -120,9 +120,9 @@ if(isset($tagsArray) && (count($tagsArray) == 1)) {
                             <?php } ?>
                     </span>
 
-                  
 
-                    <?php if (Zend_Auth::getInstance()->hasIdentity()) {  ?>    
+
+                    <?php if (Zend_Auth::getInstance()->hasIdentity()) {  ?>
                            <a data-toggle="modal" data-target="#report-product-<?= $this->product->project_id ?>" role="button"
                            href="#report-product-<?= $this->product->project_id ?>">
                             <span class="glyphicon glyphicon-alert"></span> Report SPAM
@@ -133,13 +133,13 @@ if(isset($tagsArray) && (count($tagsArray) == 1)) {
                             </a>
                     <?php } ?>
 
-                  
-                  
+
+
                 </div>
             </div>
         </div>
-   
-  
+
+
     <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
         <span class="page-views">
             <a target="_NEW" href="http://cp1.hive01.com/content/show.php?content=<?= $this->product->project_source_pk ?>">link to hive</a>
@@ -245,7 +245,7 @@ if(isset($tagsArray) && (count($tagsArray) == 1)) {
 
             });
 
-           
+
 
             // $('#ghns_excluded-this-checkbox').on('click', function (event) {
             //     event.stopPropagation();
@@ -278,8 +278,8 @@ if(isset($tagsArray) && (count($tagsArray) == 1)) {
 
             //     return false;
             // });
-            
-          
+
+
             $('#pling-excluded-checkbox').on('click', function (event) {
                 event.stopPropagation();
                 var status = 0;
@@ -344,17 +344,17 @@ if(isset($tagsArray) && (count($tagsArray) == 1)) {
             <input type="checkbox" id="ghns_excluded-this-checkbox" <?php echo $this->product->ghns_excluded == 1 ? ' checked=\'checked\' ' : ''; ?> />  ghns-excluded
         </span>
         <script>
-          
+
             // $('#ghns_excluded-this-checkbox').on('click', function (event) {
             //     event.stopPropagation();
             //     var status = 1;
             //     var title = '';
             //     if (this.checked) {
             //         status = 1;
-                
+
             //     } else {
             //         status = 0;
-                  
+
             //     }
 
             //     var target = "/backend/project/doghnsexclude?project_id=<?= $this->product->project_id ?>&ghns_excluded=" + status;
@@ -381,7 +381,7 @@ if(isset($tagsArray) && (count($tagsArray) == 1)) {
             // });
         </script>
     <?php endif; ?>
-        
+
 
     <script>
         (function (collection_id) {
@@ -415,13 +415,13 @@ if(isset($tagsArray) && (count($tagsArray) == 1)) {
     </script>
 </div>
 
-<?php 
+<?php
 if(Default_Model_DbTable_MemberRole::ROLE_NAME_MODERATOR == $userRoleName ||
     Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName
     ){
             $this->inlineScript()->appendScript(
-                '    $(document).ready(function(){       
-                        GhnsExcludedClick.setup('.$this->product->project_id.');                           
+                '    $(document).ready(function(){
+                        GhnsExcludedClick.setup('.$this->product->project_id.');
                     });
                 ');
 }
