@@ -367,6 +367,9 @@ echo $this->render('partials/header/metaheader.phtml');
 
 
 <script type="text/javascript">
+        var json_hasIdentity = <?php  if( $auth->hasIdentity() ) { echo '1' ;} else { echo '0';} ?>;
+        var json_redirectString = <?php  if( $auth->hasIdentity() ) { echo '' ;} else { echo Zend_Json::encode($redirectString);} ?>;
+        var json_serverUri = <?php echo Zend_Json::encode($_SERVER["REQUEST_URI"]);?>;
         var json_member = <?php if( $auth->hasIdentity() ) {echo Zend_Json::encode($member);} else { echo Zend_Json::encode(null);}?>;
         var json_serverUrl = <?php echo Zend_Json::encode($serverUrl); ?>;
         var json_baseurl = <?php echo  Zend_Json::encode($baseurl);?>;
