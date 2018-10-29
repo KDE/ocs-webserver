@@ -1249,11 +1249,11 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         Zend_Session::destroy();
 
         $config = Zend_Registry::get('config');
-        $cookieName = $config->settings->auth_session->remember_me->name;
+        $cookieName = $config->settings->session->remember_me->name;
         $cookieData = $this->_request->getCookie($cookieName, null);
         if ($cookieData) {
             $cookieData = unserialize($cookieData);
-            $remember_me_seconds = $config->settings->auth_session->remember_me->timeout;
+            $remember_me_seconds = $config->settings->session->remember_me->cookie_lifetime;
             $domain = Local_Tools_ParseDomain::get_domain($this->getRequest()->getHttpHost());
             $cookieExpire = time() - $remember_me_seconds;
 
