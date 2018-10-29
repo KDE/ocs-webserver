@@ -97,6 +97,10 @@ $userRoleName = $helperUserRole->userRole();
 $helperCatXdgType = new Default_View_Helper_CatXdgType();
 $xdgTypeJson = Zend_Json::encode($helperCatXdgType->catXdgType($this->product->project_category_id));
 
+$isowner = false;
+if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->product->member_id){
+    $isowner = true;
+}
 ?>
 
     <link href="/theme/react/assets/css/get-it.css" type="text/css" rel="stylesheet"/>
@@ -335,7 +339,7 @@ $xdgTypeJson = Zend_Json::encode($helperCatXdgType->catXdgType($this->product->p
                                         }
                                      }
                                      echo '</span><!--end of topicslink-->';
-                                     if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->product->member_id){
+                                     if($isowner){
                                             $this->headLink()->appendStylesheet('/theme/flatui/css/select2.min.css');
                                             $this->headLink()->appendStylesheet('/theme/flatui/css/select2.custmized.css');
                                             $this->inlineScript()->appendFile('/theme/flatui/js/lib/select2.min.js');
@@ -376,7 +380,10 @@ $xdgTypeJson = Zend_Json::encode($helperCatXdgType->catXdgType($this->product->p
                                     <?php if (false === empty($this->product->source_url)):
                                         echo '<a target="_blank" href="' . $this->product->source_url . '" rel="nofollow">' . $this->product->source_url
                                             . ' <span class="fa fa-external-link"></span></a>';
-                                    endif;
+                                        //elseif ($isowner) :
+                                            else :
+                                            echo '<span class="source" > Add the source-code for this project on </span><a href="https://git.opendesktop.org/'.$this->product->username.'">git.opendesktop.org</a>';                                                                            
+                                       endif;
                                     ?>
 
 

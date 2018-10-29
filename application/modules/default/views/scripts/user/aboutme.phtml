@@ -68,7 +68,14 @@ $isSupporter = $this->stat['donationIssupporter'];
                                     <?php }?>
                                 </figure>
                                 
-                                <h1><span class="lightblue"><?php echo $this->member->username; ?></span></h1>
+                                <h1><span class="lightblue"><?php echo $this->member->username; ?></span>    
+                                 <span style="padding-left: 20px">
+                                 <a href="https://git.opendesktop.org/<?php echo $this->member->username;?>">
+                                 <img src="/theme/react/assets/img/logo-opencode.png" style="width: 25px; height: 25px; ">
+                                    <span style="font-size: 16px; font-weight: normal;">git-userpage </span>
+                               </a>
+                               </span>
+                               </h1>
                                 <?php if($this->member->firstname ) :?>
                                 <span class="glyphicon glyphicon-user"></span>
                                 <span class="text"><?php echo $this->member->firstname; ?>&nbsp;<?php echo $this->member->lastname; ?> </span>
@@ -78,6 +85,8 @@ $isSupporter = $this->stat['donationIssupporter'];
                                 <span class="glyphicon glyphicon-map-marker"></span>
                                 <span class="text"><?php echo $textCountryCity ?></span>
                                <?php endif; ?>
+
+                           
                             </div>
                             <div class="about-footer">                                                            
                              
