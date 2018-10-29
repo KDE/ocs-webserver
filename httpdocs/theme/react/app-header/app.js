@@ -28,7 +28,27 @@ class SiteHeader extends React.Component {
 
   render(){
     return (
-      <section id="site-header"></section>
+      <section id="site-header">
+        <SiteHeaderLogoContainer
+          serverUrl={this.state.serverUrl}
+          serverUri={this.state.serverUri}
+        />
+      </section>
+    )
+  }
+}
+
+class SiteHeaderLogoContainer extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+  }
+  render(){
+    return(
+      <div id="site-header-logo-container">
+        <a href={this.props.serverUrl + this.props.serverUri}>
+        </a>
+      </div>
     )
   }
 }

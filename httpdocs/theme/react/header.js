@@ -27,7 +27,28 @@ class SiteHeader extends React.Component {
   }
 
   render() {
-    return React.createElement("section", { id: "site-header" });
+    return React.createElement(
+      "section",
+      { id: "site-header" },
+      React.createElement(SiteHeaderLogoContainer, {
+        serverUrl: this.state.serverUrl,
+        serverUri: this.state.serverUri
+      })
+    );
+  }
+}
+
+class SiteHeaderLogoContainer extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+  render() {
+    return React.createElement(
+      "div",
+      { id: "site-header-logo-container" },
+      React.createElement("a", { href: this.props.serverUrl + this.props.serverUri })
+    );
   }
 }
 
