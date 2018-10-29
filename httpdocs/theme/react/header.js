@@ -1,7 +1,6 @@
 class SiteHeader extends React.Component {
   constructor(props) {
     super(props);
-    console.log(json_sname);
     this.state = {
       baseUrl: window.json_baseurl,
       cat_title: window.json_cat_title,
