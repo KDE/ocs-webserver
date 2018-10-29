@@ -18,7 +18,8 @@ class SiteHeader extends React.Component {
       user: window.json_member,
       logo: window.json_logoWidth,
       cat_title_left: window.json_cat_title_left,
-      tabs_left: window.tabs_left
+      tabs_left: window.tabs_left,
+      template: window.json_template
     };
   }
 
@@ -32,7 +33,8 @@ class SiteHeader extends React.Component {
       { id: "site-header" },
       React.createElement(SiteHeaderLogoContainer, {
         serverUrl: this.state.serverUrl,
-        serverUri: this.state.serverUri
+        serverUri: this.state.serverUri,
+        template: this.state.template
       })
     );
   }
