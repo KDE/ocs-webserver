@@ -44,36 +44,28 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
      */
     protected function _initSessionManagement()
     {
-        $config = $this->getOption('settings');
-        if ($config['session']['saveHandler']['replace']['enabled'] == false) {
-            return;
-        }
+        $config = $this->getOption('settings')['session'];
+
         $domain = ($_SERVER['HTTP_HOST'] != 'localhost') ? $_SERVER['HTTP_HOST'] : false;
-//        if (APPLICATION_ENV != 'development') {
-//            $domain = $this->get_domain($_SERVER['SERVER_NAME']);
-//        } else {
-//            $domain = $_SERVER['SERVER_NAME'];
-//        }
 
-        $cacheClass = 'Zend_Cache_Backend_'.$config['session']['saveHandler']['cache']['type'];
-        $_cache = new $cacheClass($config['session']['saveHandler']['options']);
-        Zend_Loader::loadClass($config['session']['saveHandler']['class']);
-        Zend_Session::setSaveHandler(new $config['session']['saveHandler']['class']($_cache));
-        Zend_Session::setOptions(array('cookie_domain' => $domain, 'cookie_path' => '/', 'cookie_httponly' => true));
-        Zend_Session::start();
-    }
-
-    /**
-     * @param string $domain
-     *
-     * @return bool|string
-     */
-    private function get_domain($domain)
-    {
-        if (preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $domain, $regs)) {
-            return $regs['domain'];
+        if ($config['saveHandler']['replace']['enabled']) {
+            $cacheClass = 'Zend_Cache_Backend_' . $config['saveHandler']['cache']['type'];
+            $_cache = new $cacheClass($config['saveHandler']['options']);
+            Zend_Loader::loadClass($config['saveHandler']['class']);
+            Zend_Session::setSaveHandler(new $config['saveHandler']['class']($_cache));
+            Zend_Session::setOptions(array(
+                'cookie_domain' => $domain,
+                'cookie_path' => $config['auth']['cookie_path'],
+                'cookie_lifetime' => $config['auth']['cookie_lifetime'],
+                'cookie_httponly' => $config['auth']['cookie_httponly'])
+            );
+            Zend_Session::start();
         }
-        return false;
+
+        $session_namespace = new Zend_Session_Namespace($config['auth']['name']);
+        $session_namespace->setExpirationSeconds($config['auth']['cookie_lifetime']);
+
+        Zend_Auth::getInstance()->setStorage(new Zend_Auth_Storage_Session($session_namespace->getNamespace()));
     }
 
     protected function _initConfig()
@@ -317,16 +309,16 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     /**
      * @throws Zend_Session_Exception
      */
-    protected function _initAuthSessionNamespace()
-    {
-        $config = $this->getResource('config');
-        $auth_config = $config->settings->auth_session;
-
-        $objSessionNamespace = new Zend_Session_Namespace($auth_config->name);
-        $objSessionNamespace->setExpirationSeconds($auth_config->timeout);
-
-        Zend_Auth::getInstance()->setStorage(new Zend_Auth_Storage_Session($auth_config->name));
-    }
+    //protected function _initAuthSessionNamespace()
+    //{
+    //    $config = $this->getResource('config');
+    //    $auth_config = $config->settings->auth_session;
+    //
+    //    $objSessionNamespace = new Zend_Session_Namespace($auth_config->name);
+    //    $objSessionNamespace->setExpirationSeconds($auth_config->timeout);
+    //
+    //    Zend_Auth::getInstance()->setStorage(new Zend_Auth_Storage_Session($auth_config->name));
+    //}
 
     protected function _initThirdParty()
     {
