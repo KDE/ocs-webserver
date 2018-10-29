@@ -27,11 +27,7 @@ class SiteHeader extends React.Component {
   }
 
   render() {
-    return React.createElement(
-      "section",
-      { id: "site-header" },
-      "site header"
-    );
+    return React.createElement("section", { id: "site-header" });
   }
 }
 

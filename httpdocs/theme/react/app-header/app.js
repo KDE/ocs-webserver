@@ -28,9 +28,7 @@ class SiteHeader extends React.Component {
 
   render(){
     return (
-      <section id="site-header">
-        site header
-      </section>
+      <section id="site-header"></section>
     )
   }
 }
