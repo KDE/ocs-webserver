@@ -74,7 +74,7 @@ $tabs_left += $cat_title_length*10;
 //$forum_url_postfix = Zend_Auth::getInstance()->hasIdentity() ? '/session/sso' : '';
 
 
-echo $this->render('partials/header/metaheader.phtml'); 
+echo $this->render('partials/header/metaheader.phtml');
 
 ?>
 
@@ -383,6 +383,10 @@ echo $this->render('partials/header/metaheader.phtml');
         var json_cat_title_left = <?php echo  Zend_Json::encode($cat_title_left);?>;
         var json_tabs_left= <?php echo  Zend_Json::encode($tabs_left);?>;
 </script>
+
+<section id="site-header-container"></section>
+
+<script src="/theme/react/app-header/header.js" type="text/javascript"></script>
 
 <?php $this->inlineScript()->appendScript(
     '$(document).ready(function(){
