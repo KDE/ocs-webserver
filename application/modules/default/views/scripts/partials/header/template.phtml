@@ -367,21 +367,21 @@ echo $this->render('partials/header/metaheader.phtml');
 
 
 <script type="text/javascript">
-        var json_hasIdentity = <?php  if( $auth->hasIdentity() ) { echo '1' ;} else { echo '0';} ?>;
-        var json_redirectString = <?php  if( $auth->hasIdentity() ) { echo null ;} else { echo Zend_Json::encode($redirectString);} ?>;
-        var json_serverUri = <?php echo Zend_Json::encode($_SERVER["REQUEST_URI"]);?>;
-        var json_member = <?php if( $auth->hasIdentity() ) {echo Zend_Json::encode($member);} else { echo Zend_Json::encode(null);}?>;
-        var json_serverUrl = <?php echo Zend_Json::encode($serverUrl); ?>;
-        var json_baseurl = <?php echo  Zend_Json::encode($baseurl);?>;
-        var json_sname =  <?php echo  Zend_Json::encode($sname);?>;
-        var json_store_order =  <?php echo  Zend_Json::encode($store_order);?>;
-        var json_store_name =  <?php echo  Zend_Json::encode($store_name);?>;
-        var json_is_show_title =  <?php echo  Zend_Json::encode($is_show_title);?>;
-        var json_last_char_store_order = <?php echo  Zend_Json::encode($last_char_store_order);?>;
-        var json_cat_title=  <?php echo  Zend_Json::encode($cat_title);?>;
-        var json_logoWidth = <?php echo  Zend_Json::encode($logoWidth);?>;
-        var json_cat_title_left = <?php echo  Zend_Json::encode($cat_title_left);?>;
-        var json_tabs_left= <?php echo  Zend_Json::encode($tabs_left);?>;
+    var json_hasIdentity = <?php  if( $auth->hasIdentity() ) { echo '1' ;} else { echo '0';} ?>;
+    var json_redirectString = <?php  if( $auth->hasIdentity() ) { echo null ;} else { echo Zend_Json::encode($redirectString);} ?>;
+    var json_serverUri = <?php echo Zend_Json::encode($_SERVER["REQUEST_URI"]);?>;
+    var json_member = <?php if( $auth->hasIdentity() ) {echo Zend_Json::encode($member);} else { echo Zend_Json::encode(null);}?>;
+    var json_serverUrl = <?php echo Zend_Json::encode($serverUrl); ?>;
+    var json_baseurl = <?php echo  Zend_Json::encode($baseurl);?>;
+    var json_sname =  <?php echo  Zend_Json::encode($sname);?>;
+    var json_store_order =  <?php echo  Zend_Json::encode($store_order);?>;
+    var json_store_name =  <?php echo  Zend_Json::encode($store_name);?>;
+    var json_is_show_title =  <?php echo  Zend_Json::encode($is_show_title);?>;
+    var json_last_char_store_order = <?php echo  Zend_Json::encode($last_char_store_order);?>;
+    var json_cat_title=  <?php echo  Zend_Json::encode($cat_title);?>;
+    var json_logoWidth = <?php echo  Zend_Json::encode($logoWidth);?>;
+    var json_cat_title_left = <?php echo  Zend_Json::encode($cat_title_left);?>;
+    var json_tabs_left= <?php echo  Zend_Json::encode($tabs_left);?>;
 </script>
 
 <section id="site-header-container"></section>
