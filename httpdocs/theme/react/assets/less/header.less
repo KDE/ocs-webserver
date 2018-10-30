@@ -6,22 +6,29 @@ out: ../css/header.css, sourcemap: true, compress: true
 }
 
 #site-header {
-  #site-header-logo-container {
+  padding: 0 50px;
+  #site-header-wrapper {
+    position: relative;
+    width: 100%;
     float: left;
-    > a {
-      width: 100%;
-      display: block;
-      img {
+    height: 100%;
+    #site-header-logo-container {
+      position: absolute;
+      > a {
         width: 100%;
+        display: block;
+        img {
+          width: 100%;
+        }
       }
     }
-  }
-  #site-header-store-name-container {
-    float: left;
-    height: 100%;
-  }
-  #site-header-right {
-    float: right;
-    height: 100%;
+    #site-header-store-name-container {
+      float: left;
+      height: 100%;
+    }
+    #site-header-right {
+      float: right;
+      height: 100%;
+    }
   }
 }

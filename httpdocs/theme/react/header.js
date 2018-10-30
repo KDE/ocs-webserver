@@ -55,28 +55,32 @@ class SiteHeader extends React.Component {
       "section",
       { id: "site-header", style: this.state.template.header },
       React.createElement(
-        "div",
-        { id: "site-header-logo-container", style: this.state.template['header-logo'] },
-        React.createElement(
-          "a",
-          { href: this.state.serverUrl + this.state.serverUri },
-          React.createElement("img", { src: this.state.template.logo })
-        )
-      ),
-      siteHeaderStoreNameDisplay,
-      React.createElement(
-        "div",
-        { id: "site-header-right" },
+        "section",
+        { id: "site-header-wrapper" },
         React.createElement(
           "div",
-          { id: "site-header-right-top" },
-          React.createElement(SiteHeaderSearchForm, null),
-          userMenuDisplay
+          { id: "site-header-logo-container", style: this.state.template['header-logo'] },
+          React.createElement(
+            "a",
+            { href: this.state.serverUrl + this.state.serverUri },
+            React.createElement("img", { src: this.state.template.logo })
+          )
         ),
+        siteHeaderStoreNameDisplay,
         React.createElement(
           "div",
-          { id: "site-header-right-bottom" },
-          loginMenuDisplay
+          { id: "site-header-right" },
+          React.createElement(
+            "div",
+            { id: "site-header-right-top" },
+            React.createElement(SiteHeaderSearchForm, null),
+            userMenuDisplay
+          ),
+          React.createElement(
+            "div",
+            { id: "site-header-right-bottom" },
+            loginMenuDisplay
+          )
         )
       )
     );

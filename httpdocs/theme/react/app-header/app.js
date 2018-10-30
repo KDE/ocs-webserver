@@ -55,21 +55,23 @@ class SiteHeader extends React.Component {
 
     return (
       <section id="site-header" style={this.state.template.header}>
-        <div id="site-header-logo-container" style={this.state.template['header-logo']}>
-          <a href={this.state.serverUrl + this.state.serverUri}>
-            <img src={this.state.template.logo}/>
-          </a>
-        </div>
-        {siteHeaderStoreNameDisplay}
-        <div id="site-header-right">
-          <div id="site-header-right-top">
-            <SiteHeaderSearchForm />
-            {userMenuDisplay}
+        <section id="site-header-wrapper">
+          <div id="site-header-logo-container" style={this.state.template['header-logo']}>
+            <a href={this.state.serverUrl + this.state.serverUri}>
+              <img src={this.state.template.logo}/>
+            </a>
           </div>
-          <div id="site-header-right-bottom">
-            {loginMenuDisplay}
+          {siteHeaderStoreNameDisplay}
+          <div id="site-header-right">
+            <div id="site-header-right-top">
+              <SiteHeaderSearchForm />
+              {userMenuDisplay}
+            </div>
+            <div id="site-header-right-bottom">
+              {loginMenuDisplay}
+            </div>
           </div>
-        </div>
+        </section>
       </section>
     )
   }
