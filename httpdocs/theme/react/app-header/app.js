@@ -78,12 +78,25 @@ class SiteHeader extends React.Component {
 class SiteHeaderSearchForm extends React.Component {
   constructor(props){
   	super(props);
-  	this.state = {};
+  	this.state = {
+      searchText:''
+    };
+    this.onSearchText = this.onSearchText.bind(this);
   }
+
+  onSearchText(){
+    console.log(this.state.searchText);
+  }
+
   render(){
     return (
       <div id="site-header-search-form">
-        search form
+        <div id="search-form">
+          <input value={this.state.searchText} type="text" name="projectSearchText" />
+          <a onClick={this.onSearchText}>
+            <i className="icon-search-input absolute cursor-hand"></i>
+          </a>
+        </div>
       </div>
     )
   }
