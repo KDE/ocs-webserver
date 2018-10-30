@@ -128,8 +128,8 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         {            
             //set to cookie session
             $config = Zend_Registry::get('config');
-            $cookieName = $config->settings->auth_session->filter_browse_original;            
-            $remember_me_seconds = $config->settings->auth_session->remember_me->timeout;
+            $cookieName = $config->settings->session->filter_browse_original;
+            $remember_me_seconds = $config->settings->session->remember_me->cookie_lifetime;
             $domain = Local_Tools_ParseDomain::get_domain($this->getRequest()->getHttpHost());
             $cookieExpire = time() + $remember_me_seconds;            
             setcookie($cookieName, $inputFilterOriginal, $cookieExpire, '/');
@@ -137,8 +137,10 @@ class ExploreController extends Local_Controller_Action_DomainSwitch
         else
         {           
             $config = Zend_Registry::get('config');
-            $cookieName = $config->settings->auth_session->filter_browse_original;             
-            $inputFilterOriginal = $_COOKIE[$cookieName];             
+            $cookieName = $config->settings->session->filter_browse_original;
+            if (isset($_COOKIE[$cookieName])) {
+                $inputFilterOriginal = $_COOKIE[$cookieName];
+            }
         }
         $this->view->inputFilterOriginal = $inputFilterOriginal;
 

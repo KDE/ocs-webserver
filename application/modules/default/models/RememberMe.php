@@ -59,8 +59,8 @@ class Default_Model_RememberMe
         $this->dataTable = new $this->dataTableName;
 
         $config = Zend_Registry::get('config');
-        $this->cookieName = $config->settings->auth_session->remember_me->name;
-        $this->cookieTimeout = $config->settings->auth_session->remember_me->timeout;
+        $this->cookieName = $config->settings->session->remember_me->name;
+        $this->cookieTimeout = $config->settings->session->remember_me->cookie_lifetime;
     }
 
     /**
