@@ -63,7 +63,7 @@ class SiteHeader extends React.Component {
           React.createElement(
             "a",
             { href: this.state.serverUrl + this.state.serverUri },
-            React.createElement("img", { src: this.state.template.logo })
+            React.createElement("img", { src: this.state.template['header-logo']['image-src'] })
           )
         ),
         siteHeaderStoreNameDisplay,
