@@ -385,6 +385,12 @@ echo $this->render('partials/header/metaheader.phtml');
     var json_tabs_left= <?php echo  Zend_Json::encode($tabs_left);?>;
 </script>
 
+<style>
+  #site-header-container {
+    display: none;
+  }
+</style>
+
 <section id="site-header-container"></section>
 
 <script src="/theme/react/header.js" type="text/javascript"></script>
