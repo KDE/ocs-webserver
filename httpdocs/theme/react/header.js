@@ -43,7 +43,7 @@ class SiteHeader extends React.Component {
       { id: "site-header", style: this.state.template.header },
       React.createElement(
         "div",
-        { id: "site-header-logo-container", style: this.state.template.header - logo },
+        { id: "site-header-logo-container", style: this.state.template['header-logo'] },
         React.createElement(
           "a",
           { href: this.state.serverUrl + this.state.serverUri },
