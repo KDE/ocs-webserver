@@ -1,20 +1,21 @@
 .chart {
-        width: 700px;
-        height: 450px;
-        margin-bottom: 10px;
-    }
+    width: 700px;
+    height: 450px;
+    margin-bottom: 10px;
+}
 
-    .chart_title {
-        display: block;
-        font-size: 1.2em;
-        font-weight: bold;
-        margin-bottom: 0.4em;
-    }
+.chart_title {
+    display: block;
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 0.4em;
+}
 
-    #tabContainer {
-        width: 720px;
-    }
+#tabContainer {
+    width: 720px;
+}
 
+/*
    path {  stroke: #fff; }
     path:hover {  opacity:0.9; }
     rect:hover {  fill:blue; }
@@ -64,6 +65,7 @@
   display: none;
 }
 
+*/
 .d3-tip {
   line-height: 1;
   font-weight: bold;
@@ -103,35 +105,33 @@
 
 
 
-text {
+.d3linepath text {
   font: 10px sans-serif;
 }
 
-.axis path,
-.axis line {
+.d3linepath .axis path,
+.d3linepath .axis line {
   fill: none;
   stroke: #000;
   shape-rendering: crispEdges;
 }
 
-.line {
+.d3linepath .line {
   fill: none;
   stroke-width: 1.5px;
 }
 
-.label {
+.d3linepath .label {
   text-anchor: middle;
 }
 
-.label rect {
+.d3linepath .label rect {
   fill: #ECECEC;
 }
 
-.label-key {
+.d3linepath .label-key {
   font-weight: bold;
 }
-
-
 
 table.tablestati {
     display: block;
@@ -157,25 +157,27 @@ table.tablestati td.number {
     padding-right: 10px;
 }
 
-path {
+
+.d3linepath path {
     stroke: steelblue;
     stroke-width: 2;
-   /* fill: none;  */
+  
 }
 
-.axis path,
-.axis line {
-   /*  fill: none;*/
+.d3linepath .axis path,
+.d3linepath .axis line {
+  
     stroke: grey;
     stroke-width: 1;
     shape-rendering: crispEdges;
 }
 
-.legend {
+.d3linepath .legend {
     font-size: 16px;
     font-weight: bold;
     text-anchor: middle;
 }
+
 #category-tree-container{
   max-height: 750px;
 
@@ -203,7 +205,7 @@ path {
 /*multiline.css*/
 .chart-wrapper {
     max-width: 950px;
-    min-width: 304px;
+    min-width: 804px;
     margin: 0 auto;
     background-color: #FAF7F7;
 }
@@ -310,6 +312,7 @@ path {
 
 
 /*payout monthly line chart*/
+/*
 .payoutCategoryLineChart path{ 
     stroke: steelblue;
     stroke-width: 2;
@@ -327,3 +330,20 @@ path {
     font-weight: bold;
     text-anchor: middle;
 }
+.payoutCategoryLineChart .overlay {
+  fill: none;
+  pointer-events: all;
+}
+
+.payoutCategoryLineChart .focus circle {
+  fill: #F1F3F3;
+  stroke: #6F257F;
+  stroke-width: 5px;
+}
+  
+.payoutCategoryLineChart .hover-line {
+  stroke: #6F257F;
+  stroke-width: 2px;
+  stroke-dasharray: 3,3;
+}
+*/

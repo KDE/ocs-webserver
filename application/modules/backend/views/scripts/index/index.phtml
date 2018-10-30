@@ -60,7 +60,7 @@ $jsonTree = json_encode($this->categories);
         <div id="d3-line" class="tab-pane active ">
             <div style="width: 100%; padding: 20px">
 
-                <div id='d3linelableinline'></div>
+                <div id='d3linelableinline' class="d3linepath"></div>
 
                 
 
@@ -82,7 +82,7 @@ $jsonTree = json_encode($this->categories);
                 <option>11</option>
                 <option>12</option>
             </select>
-            <div id="downloadsdailyTabContainer"></div>
+            <div id="downloadsdailyTabContainer" class="d3linepath"></div>
         </div>
 
         <!--
@@ -112,7 +112,7 @@ $jsonTree = json_encode($this->categories);
 
         <div id="payoutTab" class="tab-pane ">
 
-            <div id="payoutyear" style="display: block; float: left; padding-right: 20px"></div>
+            <div id="payoutyear" style="display: block; float: left; padding-right: 20px" class="d3linepath"></div>
             <div id="pie" style="padding:50px; "></div>
             <div style="display: block; float: right; width: 300px" id="detailContainer"></div>
 
@@ -138,7 +138,7 @@ $jsonTree = json_encode($this->categories);
                 <button id="clearChartPanel">clear</button>
                 <div id="category-tree-container">
                 </div>
-            <div id="payoutCategoryLineChart" class="chart-wrapper" style="width: 1000px; height: 1000px; display: block; float: right; overflow-y: auto">
+            <div id="payoutCategoryLineChart"  style="width: 1000px; height: 1000px; display: block; float: right; overflow-y: auto">
                     
             </div>
         </div>
@@ -381,13 +381,20 @@ $jsonTree = json_encode($this->categories);
                 var title;
                 if(start<0) {
                     catid = 0;
+                    title = 'All';
                 }else
                 {
-                    catid = this.href.substring(start+4, (this.href.length-1));
-                    title = $(this).find('span.title').text();
+                    catid = this.href.substring(start+4, (this.href.length-1));  
+                    title = $(this).text();
+
                 }
                 window.selectedCatid = catid;
-                $.getScript("/theme/flatui/js/stati/payoutCategory.js");
+                window.selectedCatTitle = title;
+                if($('#payoutCategoryLineChart').find('#payoutCategoryLineChart'+catid).length==0)
+                {
+                    $('#payoutCategoryLineChart').append('<div class="chart-wrapper" id="payoutCategoryLineChart'+catid+'"></div>');
+                    $.getScript("/theme/flatui/js/stati/payoutCategory.js");
+                }
             });
 
             $('#clearChartPanel').on('click',function(){
