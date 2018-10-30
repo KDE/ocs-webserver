@@ -93,8 +93,8 @@ class SiteHeaderSearchForm extends React.Component {
     this.state = {
       searchText: ''
     };
-    this.onSearchText = this.onSearchText.bind(this);
     this.onSearchTextChange = this.onSearchTextChange.bind(this);
+    this.onSearchFormSubmit = this.onSearchFormSubmit.bind(this);
   }
 
   onSearchTextChange(e) {
