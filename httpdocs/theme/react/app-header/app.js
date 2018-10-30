@@ -84,9 +84,14 @@ class SiteHeaderSearchForm extends React.Component {
       searchText:''
     };
     this.onSearchText = this.onSearchText.bind(this);
+    this.onSearchTextChange = this.onSearchTextChange.bind(this);
   }
 
-  onSearchText(){
+  onSearchTextChange(e){
+    this.setState({searchText:e.target.value});
+  }
+
+  onSearchFormSubmit(){
     console.log(this.state.searchText);
   }
 
@@ -94,8 +99,8 @@ class SiteHeaderSearchForm extends React.Component {
     return (
       <div id="site-header-search-form">
         <div id="search-form">
-          <input value={this.state.searchText} type="text" name="projectSearchText" />
-          <a onClick={this.onSearchText}></a>
+          <input onChange={() => this.onSearchTextChange()} value={this.state.searchText} type="text" name="projectSearchText" />
+          <a onClick={this.onSearchFormSubmit}></a>
         </div>
       </div>
     )
