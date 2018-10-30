@@ -240,54 +240,103 @@ class Statistics_Model_Data
             return $result;  
     }
 
-     public function getPayoutCategory($catid){
+    private function getPayoutCategorySingle($catid)
+    {
+
+        $modelProjectCategories = new Default_Model_DbTable_ProjectCategory();
+        $ids = $modelProjectCategories->fetchChildIds($catid);
+        array_push($ids, $catid);            
+        $idstring = implode(',', $ids);
+        // Zend_Registry::get('logger')->info(__METHOD__ . ' - ===================================' );
+        // Zend_Registry::get('logger')->info(__METHOD__ . ' - ' . $idstring);
+        $sql = "
+                      select * from
+                      (
+                           select
+                             yearmonth
+                              ,(select title from category as c where c.project_category_id = ".$catid.") as symbol                            
+                            ,round(sum(probably_payout_amount)) as amount                            
+                           from member_dl_plings_v as v
+                          where project_category_id IN (".$idstring.")
+                          group by v.yearmonth
+                          order by yearmonth asc
+                      ) tmp where amount>0
+                    ";
+        $result = $this->_db->fetchAll($sql);
+        return $result;
+    }
+
+     public function getPayoutCategory_($catid){
 
           if($catid==0)
-          {
+          {                          
+              $pids = array(152, 233,158, 148,491,445,295);
               $sql = "
                             select * from
                             (
                                  select
                                   'All' as symbol
                                   ,yearmonth
-                                  ,round(sum(probably_payout_amount)) as amount
-                                  ,count(*) anzahlproject
-                                  ,sum(probably_payout_amount)/count(*) avgamount
-                                  ,sum(v.num_downloads) as num_downloads
+                                  ,round(sum(probably_payout_amount)) as amount                                  
                                  from member_dl_plings_v as v                          
                                 group by v.yearmonth
                                 order by yearmonth asc
                             ) tmp where amount>0
-                          ";              
-
+                          ";            
+              $result = $this->_db->fetchAll($sql);
+              foreach ($pids as $catid) {
+                  $t = self::getPayoutCategorySingle($catid);    
+                  $result = array_merge($result, $t);
+              }                                        
           }
           else
           {
-                $modelProjectCategories = new Default_Model_DbTable_ProjectCategory();
-                $ids = $modelProjectCategories->fetchChildIds($catid);
-                array_push($ids, $catid);            
-                $idstring = implode(',', $ids);
-                // Zend_Registry::get('logger')->info(__METHOD__ . ' - ===================================' );
-                // Zend_Registry::get('logger')->info(__METHOD__ . ' - ' . $idstring);
-                $sql = "
-                              select * from
-                              (
-                                   select
-                                     yearmonth
-                                      ,(select title from category as c where c.project_category_id = ".$catid.") as symbol                            
-                                    ,round(sum(probably_payout_amount)) as amount
-                                    ,count(*) anzahlproject
-                                    ,sum(probably_payout_amount)/count(*) avgamount
-                                    ,sum(v.num_downloads) as num_downloads
-                                   from member_dl_plings_v as v
-                                  where project_category_id IN (".$idstring.")
-                                  group by v.yearmonth
-                                  order by yearmonth asc
-                              ) tmp where amount>0
-                            ";
-            }
-            $result = $this->_db->fetchAll($sql);
-            return $result;  
+                $result = self::getPayoutCategorySingle($catid);                
+          }
+            
+          return $result;  
+   
+    }
+
+    public function getPayoutCategory($catid){
+
+          if($catid==0)
+          {                          
+              $pids = array(152, 233,158,404, 148,491,445,295);
+              $sql = "
+                            select * from
+                            (
+                                 select
+                                  'All' as symbol
+                                  ,yearmonth
+                                  ,round(sum(probably_payout_amount)) as amount                                  
+                                 from member_dl_plings_v as v                          
+                                group by v.yearmonth
+                                order by yearmonth asc
+                            ) tmp where amount>0
+                          ";            
+              $result = $this->_db->fetchAll($sql);
+              foreach ($pids as $c) {
+                  $tmp = self::getPayoutCategorySingle($c);                                 
+                  foreach ($result as &$row) {                                                                            
+                     $row['amount'.$c] = 0;
+                     foreach ($tmp as $t) {                    
+                        if($t['yearmonth']==$row['yearmonth'])
+                        {                          
+                          $row['amount'.$c] = $t['amount'];
+                          break;
+                        }
+                     }
+                  }
+              }                                        
+          }
+          else
+          {
+                $result = self::getPayoutCategorySingle($catid);                
+          }
+            
+          return $result;  
+   
     }
 
 
