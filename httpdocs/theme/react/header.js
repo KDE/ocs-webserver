@@ -40,7 +40,7 @@ class SiteHeader extends React.Component {
 
     return React.createElement(
       "section",
-      { id: "site-header" },
+      { id: "site-header", style: { "display": "none" } },
       React.createElement(
         "div",
         { id: "site-header-logo-container" },

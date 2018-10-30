@@ -43,7 +43,7 @@ class SiteHeader extends React.Component {
     }
 
     return (
-      <section id="site-header">
+      <section id="site-header" style={{"display":"none"}}>
         <div id="site-header-logo-container">
           <a href={this.state.serverUrl + this.state.serverUri}>
             <img src={this.state.template.logo}/>
