@@ -62,8 +62,17 @@ class SiteHeader extends React.Component {
       React.createElement(
         "div",
         { id: "site-header-right" },
-        React.createElement(SiteHeaderSearchForm, null),
-        userMenuDisplay
+        React.createElement(
+          "div",
+          { id: "site-header-right-top" },
+          React.createElement(SiteHeaderSearchForm, null),
+          userMenuDisplay
+        ),
+        React.createElement(
+          "div",
+          { id: "site-header-right-bottom" },
+          loginMenuDisplay
+        )
       )
     );
   }
@@ -79,6 +88,34 @@ class SiteHeaderSearchForm extends React.Component {
       "div",
       { id: "site-header-search-form" },
       "search form"
+    );
+  }
+}
+
+class SiteHeaderLoginMenu extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+  render() {
+    return React.createElement(
+      "div",
+      { id: "site-header-login-menu" },
+      "login menu"
+    );
+  }
+}
+
+class SiteHeaderUserMenu extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+  render() {
+    return React.createElement(
+      "div",
+      { id: "site-header-user-menu-container" },
+      "user menu container"
     );
   }
 }

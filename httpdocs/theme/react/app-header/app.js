@@ -38,9 +38,7 @@ class SiteHeader extends React.Component {
       );
     } else {
       loginMenuDisplay = (
-        <SiteHeaderLoginMenu
-
-        />
+        <SiteHeaderLoginMenu />
       );
     }
 
@@ -57,8 +55,13 @@ class SiteHeader extends React.Component {
           </a>
         </div>
         <div id="site-header-right">
-          <SiteHeaderSearchForm />
-          {userMenuDisplay}
+          <div id="site-header-right-top">
+            <SiteHeaderSearchForm />
+            {userMenuDisplay}
+          </div>
+          <div id="site-header-right-bottom">
+            {loginMenuDisplay}
+          </div>
         </div>
       </section>
     )
@@ -74,6 +77,34 @@ class SiteHeaderSearchForm extends React.Component {
     return (
       <div id="site-header-search-form">
         search form
+      </div>
+    )
+  }
+}
+
+class SiteHeaderLoginMenu extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+  }
+  render(){
+    return (
+      <div id="site-header-login-menu">
+        login menu
+      </div>
+    )
+  }
+}
+
+class SiteHeaderUserMenu extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+  }
+  render(){
+    return (
+      <div id="site-header-user-menu-container">
+        user menu container
       </div>
     )
   }
