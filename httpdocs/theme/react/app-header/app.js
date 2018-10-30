@@ -95,9 +95,7 @@ class SiteHeaderSearchForm extends React.Component {
       <div id="site-header-search-form">
         <div id="search-form">
           <input value={this.state.searchText} type="text" name="projectSearchText" />
-          <a onClick={this.onSearchText}>
-            <i className="icon-search-input absolute cursor-hand"></i>
-          </a>
+          <a onClick={this.onSearchText}></a>
         </div>
       </div>
     )

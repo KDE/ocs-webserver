@@ -108,11 +108,7 @@ class SiteHeaderSearchForm extends React.Component {
         "div",
         { id: "search-form" },
         React.createElement("input", { value: this.state.searchText, type: "text", name: "projectSearchText" }),
-        React.createElement(
-          "a",
-          { onClick: this.onSearchText },
-          React.createElement("i", { className: "icon-search-input absolute cursor-hand" })
-        )
+        React.createElement("a", { onClick: this.onSearchText })
       )
     );
   }

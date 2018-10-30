@@ -29,6 +29,40 @@ out: ../css/header.css, sourcemap: true, compress: true
     #site-header-right {
       float: right;
       height: 100%;
+
+      #search {
+        height: 25px;
+        padding: 0;
+        margin: 6.5px 15px;
+        line-height: 25px;
+        position: relative;
+
+        input[type="text"]{
+          width: 16em;
+          height: 25px;
+          padding: 0;
+          border: 1px solid #fff;
+          margin-bottom: -1px;
+          padding-right: 30px;
+          text-indent: 5px;
+          color: #6a7686;
+          float: left;
+          border-radius: 6px;
+          box-shadow: none;
+        }
+
+        > a {
+          top: 2px;
+          right: 0;
+          display: block;
+          width: 25px;
+          height: 25px;
+          background-image: url(/theme/flatui/img/icon-search-input-2.png);
+          background-position: center center;
+          position: absolute;
+          cursor: pointer;
+        }
+      }
     }
   }
 }
