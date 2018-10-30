@@ -112,7 +112,7 @@ class SiteHeaderSearchForm extends React.Component {
       React.createElement(
         "div",
         { id: "search-form" },
-        React.createElement("input", { onChange: () => this.onSearchTextChange(e), value: this.state.searchText, type: "text", name: "projectSearchText" }),
+        React.createElement("input", { onChange: this.onSearchTextChange, value: this.state.searchText, type: "text", name: "projectSearchText" }),
         React.createElement("a", { onClick: this.onSearchFormSubmit })
       )
     );
