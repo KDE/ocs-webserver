@@ -207,7 +207,7 @@ class Default_Model_Ocs_Gitlab
     }
 
     /**
-     * @param string $extern_uid
+     * @param $username
      *
      * @return array
      * @throws Default_Model_Ocs_Exception
