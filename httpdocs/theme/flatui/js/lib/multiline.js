@@ -35,7 +35,7 @@ function makeLineChart(dataset, xName, yObjs, axisLables) {
     chartObj.formatAsNumber = d3.format(".0f");
     chartObj.formatAsDecimal = d3.format(".2f");
     chartObj.formatAsCurrency = d3.format("$.2f");
-    chartObj.formatAsDate = d3.timeFormat("%Y-%m");
+    chartObj.formatAsYYYYMM = d3.timeFormat("%Y-%m");
     
     chartObj.formatAsFloat = function (d) {
         if (d % 1 !== 0) {
@@ -46,13 +46,14 @@ function makeLineChart(dataset, xName, yObjs, axisLables) {
         
     };
 
-    chartObj.xFormatter = chartObj.formatAsDate;
+    chartObj.xFormatter = chartObj.formatAsYYYYMM;
     chartObj.yFormatter = chartObj.formatAsFloat;
 
     chartObj.bisectYear = d3.bisector(chartObj.xFunct).left; //< Can be overridden in definition
 
 //Create scale functions
-    chartObj.xScale = d3.scaleLinear().range([0, chartObj.width]).domain(d3.extent(chartObj.data, chartObj.xFunct)); //< Can be overridden in definition
+    //chartObj.xScale = d3.scaleLinear().range([0, chartObj.width]).domain(d3.extent(chartObj.data, chartObj.xFunct)); 
+    chartObj.xScale = d3.scaleTime().range([0, chartObj.width]).domain(d3.extent(chartObj.data, chartObj.xFunct));                                                  
 
 // Get the max of every yFunct
     chartObj.max = function (fn) {
@@ -143,8 +144,17 @@ function makeLineChart(dataset, xName, yObjs, axisLables) {
         }
         
 
+        // .selectAll("text")
+        //     .attr("y", 0)
+        //     .attr("x", 9)
+        //     .attr("dy", ".35em")
+        //     .attr("transform", "rotate(90)")
+        //     .style("text-anchor", "start")
+
         // Draw Axis
         chartObj.svg.append("g").attr("class", "x axis").attr("transform", "translate(0," + chartObj.height + ")").call(chartObj.xAxis).append("text").attr("class", "label").attr("x", chartObj.width / 2).attr("y", 30).style("text-anchor", "middle").text(chartObj.xAxisLable);
+            
+
 
         chartObj.svg.append("g").attr("class", "y axis").call(chartObj.yAxis).append("text").attr("class", "label").attr("transform", "rotate(-90)").attr("y", -42).attr("x", -chartObj.height / 2).attr("dy", ".71em").style("text-anchor", "middle").text(chartObj.yAxisLable);
 
