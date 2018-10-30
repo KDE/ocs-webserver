@@ -28,19 +28,48 @@ class SiteHeader extends React.Component {
   }
 
   render() {
+
+    let userMenuDisplay, loginMenuDisplay;
+    if (this.state.user) {
+      userMenuDisplay = React.createElement(SiteHeaderUserMenu, {
+        user: this.state.user
+      });
+    } else {
+      loginMenuDisplay = React.createElement(SiteHeaderLoginMenu, null);
+    }
+
     return React.createElement(
       "section",
       { id: "site-header" },
-      React.createElement(SiteHeaderLogoContainer, {
-        serverUrl: this.state.serverUrl,
-        serverUri: this.state.serverUri,
-        template: this.state.template
-      })
+      React.createElement(
+        "div",
+        { id: "site-header-logo-container" },
+        React.createElement(
+          "a",
+          { href: this.state.serverUrl + this.state.serverUri },
+          React.createElement("img", { src: this.state.template.logo })
+        )
+      ),
+      React.createElement(
+        "div",
+        { id: "site-header-store-name-container" },
+        React.createElement(
+          "a",
+          { href: this.state.serverUrl + this.state.serverUri },
+          this.state.store.name
+        )
+      ),
+      React.createElement(
+        "div",
+        { id: "site-header-right" },
+        React.createElement(SiteHeaderSearchForm, null),
+        userMenuDisplay
+      )
     );
   }
 }
 
-class SiteHeaderLogoContainer extends React.Component {
+class SiteHeaderSearchForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -48,8 +77,8 @@ class SiteHeaderLogoContainer extends React.Component {
   render() {
     return React.createElement(
       "div",
-      { id: "site-header-logo-container" },
-      React.createElement("a", { href: this.props.serverUrl + this.props.serverUri })
+      { id: "site-header-search-form" },
+      "search form"
     );
   }
 }

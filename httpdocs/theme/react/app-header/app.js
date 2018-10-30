@@ -28,33 +28,56 @@ class SiteHeader extends React.Component {
   }
 
   render(){
+
+    let userMenuDisplay, loginMenuDisplay;
+    if (this.state.user){
+      userMenuDisplay = (
+        <SiteHeaderUserMenu
+          user={this.state.user}
+        />
+      );
+    } else {
+      loginMenuDisplay = (
+        <SiteHeaderLoginMenu
+
+        />
+      );
+    }
+
     return (
       <section id="site-header">
-        <SiteHeaderLogoContainer
-          serverUrl={this.state.serverUrl}
-          serverUri={this.state.serverUri}
-          template={this.state.template}
-        />
+        <div id="site-header-logo-container">
+          <a href={this.state.serverUrl + this.state.serverUri}>
+            <img src={this.state.template.logo}/>
+          </a>
+        </div>
+        <div id="site-header-store-name-container">
+          <a href={this.state.serverUrl + this.state.serverUri}>
+            {this.state.store.name}
+          </a>
+        </div>
+        <div id="site-header-right">
+          <SiteHeaderSearchForm />
+          {userMenuDisplay}
+        </div>
       </section>
     )
   }
 }
 
-class SiteHeaderLogoContainer extends React.Component {
+class SiteHeaderSearchForm extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {};
   }
   render(){
-    return(
-      <div id="site-header-logo-container">
-        <a href={this.props.serverUrl + this.props.serverUri}>
-        </a>
+    return (
+      <div id="site-header-search-form">
+        search form
       </div>
     )
   }
 }
-
 
 ReactDOM.render(
     <SiteHeader />,
