@@ -42,6 +42,17 @@ class SiteHeader extends React.Component {
       );
     }
 
+    let siteHeaderStoreNameDisplay;
+    if (this.state.is_show_title === "1"){
+      siteHeaderStoreNameDisplay = (
+        <div id="site-header-store-name-container">
+          <a href={this.state.serverUrl + this.state.serverUri}>
+            {this.state.store.name}
+          </a>
+        </div>
+      );
+    }
+
     return (
       <section id="site-header" style={this.state.template.header}>
         <div id="site-header-logo-container" style={this.state.template['header-logo']}>
@@ -49,11 +60,7 @@ class SiteHeader extends React.Component {
             <img src={this.state.template.logo}/>
           </a>
         </div>
-        <div id="site-header-store-name-container">
-          <a href={this.state.serverUrl + this.state.serverUri}>
-            {this.state.store.name}
-          </a>
-        </div>
+        {siteHeaderStoreNameDisplay}
         <div id="site-header-right">
           <div id="site-header-right-top">
             <SiteHeaderSearchForm />
