@@ -55,7 +55,7 @@ class SiteHeader extends React.Component {
 
     return (
       <section id="site-header" style={this.state.template.header}>
-        <section id="site-header-wrapper">
+        <section id="site-header-wrapper" style={{"paddingLeft":this.state.template['header-logo']['width']}}>
           <div id="site-header-logo-container" style={this.state.template['header-logo']}>
             <a href={this.state.serverUrl + this.state.serverUri}>
               <img src={this.state.template['header-logo']['image-src']}/>

@@ -56,7 +56,7 @@ class SiteHeader extends React.Component {
       { id: "site-header", style: this.state.template.header },
       React.createElement(
         "section",
-        { id: "site-header-wrapper" },
+        { id: "site-header-wrapper", style: { "paddingLeft": this.state.template['header-logo']['width'] } },
         React.createElement(
           "div",
           { id: "site-header-logo-container", style: this.state.template['header-logo'] },
