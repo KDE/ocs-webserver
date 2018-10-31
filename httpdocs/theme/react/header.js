@@ -51,12 +51,13 @@ class SiteHeader extends React.Component {
 
   render() {
 
-    let userMenuDisplay, loginMenuDisplay;
+    let userMenuDisplay, loginMenuDisplay, siteHeaderTopRightCssClass;
     if (this.state.user) {
       userMenuDisplay = React.createElement(SiteHeaderUserMenu, {
         baseUrl: this.state.baseUrl,
         user: this.state.user
       });
+      siteHeaderTopRightCssClass = "w-user";
     } else {
       loginMenuDisplay = React.createElement(SiteHeaderLoginMenu, {
         baseUrl: this.state.baseUrl,
@@ -102,7 +103,7 @@ class SiteHeader extends React.Component {
           { id: "site-header-right" },
           React.createElement(
             "div",
-            { id: "site-header-right-top" },
+            { id: "site-header-right-top", className: siteHeaderTopRightCssClass },
             React.createElement(SiteHeaderSearchForm, null),
             userMenuDisplay
           ),

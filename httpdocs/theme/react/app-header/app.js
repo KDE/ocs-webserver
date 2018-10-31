@@ -29,7 +29,7 @@ class SiteHeader extends React.Component {
 
   render(){
 
-    let userMenuDisplay, loginMenuDisplay;
+    let userMenuDisplay, loginMenuDisplay, siteHeaderTopRightCssClass;
     if (this.state.user){
       userMenuDisplay = (
         <SiteHeaderUserMenu
@@ -37,6 +37,7 @@ class SiteHeader extends React.Component {
           user={this.state.user}
         />
       );
+      siteHeaderTopRightCssClass = "w-user";
     } else {
       loginMenuDisplay = (
         <SiteHeaderLoginMenu
@@ -66,10 +67,10 @@ class SiteHeader extends React.Component {
                 <img src={this.state.template['header-logo']['image-src']}/>
               </a>
             </div>
-            {siteHeaderStoreNameDisplay}            
+            {siteHeaderStoreNameDisplay}
           </div>
           <div id="site-header-right">
-            <div id="site-header-right-top">
+            <div id="site-header-right-top" className={siteHeaderTopRightCssClass}>
               <SiteHeaderSearchForm />
               {userMenuDisplay}
             </div>
