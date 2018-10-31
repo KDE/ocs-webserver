@@ -181,6 +181,7 @@ class SiteHeaderUserMenu extends React.Component {
             <span>{this.props.user.username}</span>
           </a>
           <ul id="user-profile-menu" className={this.state.dropdownClass}>
+            <div className="dropdown-header"></div>
             <li><a href="/product/add">Add Product</a></li>
             <li><a href={this.props.baseUrl + "/u/" + this.props.user.username + "/products"}>Products</a></li>
             <li><a href={this.props.baseUrl + "/u/" + this.props.user.username + "/plings"}>Plings</a></li>

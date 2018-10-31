@@ -243,6 +243,7 @@ class SiteHeaderUserMenu extends React.Component {
         React.createElement(
           "ul",
           { id: "user-profile-menu", className: this.state.dropdownClass },
+          React.createElement("div", { className: "dropdown-header" }),
           React.createElement(
             "li",
             null,
