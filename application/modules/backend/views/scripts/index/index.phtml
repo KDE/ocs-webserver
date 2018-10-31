@@ -392,7 +392,7 @@ $jsonTree = json_encode($this->categories);
                 window.selectedCatTitle = title;
                 if($('#payoutCategoryLineChart').find('#payoutCategoryLineChart'+catid).length==0)
                 {
-                    $('#payoutCategoryLineChart').append('<div class="chart-wrapper" id="payoutCategoryLineChart'+catid+'"></div>');
+                    $('#payoutCategoryLineChart').append('<div class="chart-wrapper" id="payoutCategoryLineChart'+catid+'"> loading ... </div>');
                     $.getScript("/theme/flatui/js/stati/payoutCategory.js");
                 }
             });

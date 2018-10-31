@@ -326,6 +326,22 @@ class Default_Model_ProjectCategory
 
     /**
      * @return array
+     * @throws Zend_Exception
+     */
+    public function fetchCatNamesForID($list_cat_id)
+    {
+        
+        $sql = "SELECT title FROM project_category WHERE project_category_id IN (" . implode(',', $list_cat_id)
+            . ") order by title " ;
+
+        $results = $this->_dataTable->getAdapter()->fetchAll($sql);       
+        $values = array_map(function($row) { return $row['title']; }, $results);
+        return $values;
+    }
+
+
+    /**
+     * @return array
      */
     public function fetchCatNames()
     {

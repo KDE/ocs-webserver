@@ -22,6 +22,7 @@
  **/
 class Backend_IndexController extends Local_Controller_Action_Backend
 {
+    
 
     public function indexAction()
     {
@@ -147,12 +148,43 @@ class Backend_IndexController extends Local_Controller_Action_Backend
         $this->sendJson($modelData->getPayoutCategoryMonthly($yyyymm));
     }
     public function getpayoutcategoryAction()
-    {
+    {   
+
         $this->_helper->layout->disableLayout();
         $catid = (int)$this->getParam('catid', 0);
         
         $modelData = new Statistics_Model_Data(Zend_Registry::get('config')->settings->dwh->toArray());
-        $this->sendJson($modelData->getPayoutCategory($catid));
+
+        $result = $modelData->getPayoutCategory($catid);
+        if($catid==0)
+        {
+            $modelCategoryStore = new Default_Model_DbTable_ConfigStoreCategory();
+            $pids = $modelCategoryStore->fetchCatIdsForStore(Statistics_Model_Data::DEFAULT_STORE_ID);
+        }else{
+            $modelCategoriesTable = new Default_Model_DbTable_ProjectCategory();
+            $pids = $modelCategoriesTable->fetchImmediateChildrenIds($catid);
+        }
+        
+        if($pids)
+        {
+            $modelCategories = new Default_Model_ProjectCategory();
+           $pidsname = $modelCategories->fetchCatNamesForID($pids);    
+        }else
+        {
+            $pidsname=[];
+        }
+        
+
+        $msg = array(
+            'status'  => 'ok',
+            'msg'     => '',
+            'pids'     => $pids,
+            'pidsname' => $pidsname,
+            'results' => $result
+        );
+        return $this->_helper->json->sendJson($msg);
+
+        //$this->sendJson($modelData->getPayoutCategory($catid));
     }
 
     public function newcomerAction()
