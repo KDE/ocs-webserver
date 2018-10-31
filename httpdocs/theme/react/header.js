@@ -198,6 +198,14 @@ class SiteHeaderUserMenu extends React.Component {
     this.handleClick = this.handleClick.bind(this);
   }
 
+  componentWillMount() {
+    document.addEventListener('mousedown', this.handleClick, false);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown', this.handleClick, false);
+  }
+
   handleClick(e) {
     console.log(e);
     let dropdownClass = "";

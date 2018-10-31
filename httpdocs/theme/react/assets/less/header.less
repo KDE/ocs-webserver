@@ -125,6 +125,7 @@ out: ../css/header.css, sourcemap: true, compress: true
           }
 
           ul {
+            display: none;
             width: 165px;
             margin-left: 0;
             position: absolute;
@@ -192,6 +193,12 @@ out: ../css/header.css, sourcemap: true, compress: true
                 height: 40px;
                 line-height: 40px;
               }
+            }
+          }
+
+          &.open {
+            ul {
+              display: block;
             }
           }
         }
