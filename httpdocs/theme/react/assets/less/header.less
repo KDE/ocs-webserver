@@ -79,6 +79,7 @@ out: ../css/header.css, sourcemap: true, compress: true
 
         input[type="text"]{
           width: 100%;
+          min-width: 16em;
           height: 25px;
           padding: 0;
           border: 1px solid #fff;
@@ -309,6 +310,10 @@ out: ../css/header.css, sourcemap: true, compress: true
           #site-header-search-form {
             width: 100%;
             max-width: 100%;
+
+            input[type="text"]{
+              min-width: 100%;
+            }
           }
 
           ul#site-header-user-menu-container {
