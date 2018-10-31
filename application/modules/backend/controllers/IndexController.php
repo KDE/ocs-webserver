@@ -165,10 +165,15 @@ class Backend_IndexController extends Local_Controller_Action_Backend
             $pids = $modelCategoriesTable->fetchImmediateChildrenIds($catid);
         }
         
-
-        $modelCategories = new Default_Model_ProjectCategory();
-        $pidsname = $modelCategories->fetchCatNamesForID($pids);
-
+        if($pids)
+        {
+            $modelCategories = new Default_Model_ProjectCategory();
+           $pidsname = $modelCategories->fetchCatNamesForID($pids);    
+        }else
+        {
+            $pidsname=[];
+        }
+        
 
         $msg = array(
             'status'  => 'ok',
