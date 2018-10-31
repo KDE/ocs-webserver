@@ -47,6 +47,7 @@
 
 
     updateDimensions(){
+      const width = window.innerWidth;
       let device;
       if (width >= 910){
         device = "large";
@@ -55,6 +56,7 @@
       } else if (width < 610){
         device = "tablet";
       }
+      return device;
       this.setState({device:device});
     }
 

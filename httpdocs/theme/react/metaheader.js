@@ -76,6 +76,7 @@ class MetaHeader extends React.Component {
   }
 
   updateDimensions() {
+    const width = window.innerWidth;
     let device;
     if (width >= 910) {
       device = "large";
@@ -84,6 +85,7 @@ class MetaHeader extends React.Component {
     } else if (width < 610) {
       device = "tablet";
     }
+    return device;
     this.setState({ device: device });
   }
 
