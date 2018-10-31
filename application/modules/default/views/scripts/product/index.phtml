@@ -385,6 +385,14 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                                             echo '<span class="source" > Add the source-code for this project on </span><a href="https://git.opendesktop.org/'.$this->product->username.'">git.opendesktop.org</a>';                                                                            
                                        endif;
                                     ?>
+                                    <p class="light small">
+                                    <?php if (false === empty($this->product->gitlab_project_id)):
+                                        echo '<img src="/theme/react/assets/img/logo-opencode.png" width="15"> <a target="_blank" href="' . $this->gitlab_project->web_url . '" rel="nofollow">' . $this->gitlab_project->web_url
+                                            . ' <span class="fa fa-external-link"></span></a>';
+                                        
+                                       endif;
+                                    ?>
+                                    
 
 
                                 </div>
@@ -900,6 +908,33 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                         <?php echo $this->render('partials/sidebarCcLicense.phtml'); ?>
 
                         <?php echo $this->render('product/partials/details.phtml'); ?>
+                        
+                        <!-- gitlab issues -->
+                        <?php 
+                            if($this->product->show_gitlab_project_issues) {
+                                $helpPrintDate = new Default_View_Helper_PrintDate();
+                        ?>
+                        <div class="prod-widget-box right details">
+                            <span class="title"> Git Issues </span>
+                                
+                            <?php
+                              $issues = $this->gitlab_project_issues;
+                              $i = 0;
+                              foreach ($issues as $issue){
+                                  $date = date('Y-m-d H:i:s', strtotime($issue->created_at));
+                                  echo '<div class="commentstore"><a href="'.$issue->web_url.'"><span class="title">' . $issue->title . '</span></a><div class="newsrow"><span class="date">'.$helpPrintDate->printDate($date).'</span></div></div>';
+                                  $i ++;
+                                  if($i>5) {
+                                      break;
+                                  }
+                              }
+                              
+                              ?>
+                                
+                                
+                            <span class="center"><a href="<?= $this->gitlab_project_issues_url ?>" target="_NEW">Show all <?= count($issues) ?> Issues</a></span>
+                        </div>
+                        <?php } ?>
 
                       <?php echo $this->render('product/partials/tags.phtml'); ?>
 
