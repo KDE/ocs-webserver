@@ -33,6 +33,7 @@ class SiteHeader extends React.Component {
     if (this.state.user){
       userMenuDisplay = (
         <SiteHeaderUserMenu
+          baseUrl={this.state.baseUrl}
           user={this.state.user}
         />
       );
@@ -143,6 +144,23 @@ class SiteHeaderUserMenu extends React.Component {
   constructor(props){
   	super(props);
   	this.state = {};
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick(e){
+    let dropdownClass = "";
+    if (this.node.contains(e.target)){
+      if (this.state.dropdownClass === "open"){
+        if (e.target.className === "profile-menu-toggle"){
+          dropdownClass = "";
+        } else {
+          dropdownClass = "open";
+        }
+      } else {
+        dropdownClass = "open";
+      }
+    }
+    this.setState({dropdownClass:dropdownClass});
   }
 
   render(){
@@ -156,12 +174,19 @@ class SiteHeaderUserMenu extends React.Component {
     }
 
     return (
-      <ul id="site-header-user-menu-container">
+      <ul ref={node => this.node = node} id="site-header-user-menu-container">
         <li id="user-menu-toggle">
-          <a>
+          <a className="profile-menu-toggle">
             <img src={imageBaseUrl + this.props.user.avatar}/>
-            <span>{this.props.user.username}</span>            
+            <span>{this.props.user.username}</span>
           </a>
+          <ul id="user-profile-menu" className={dropdownClass}>
+            <li><a href="/product/add">Add Product</a></li>
+            <li><a href={this.props.baseUrl + "/u/" + this.props.user.username + "/products"}></a></li>
+            <li><a href={this.props.baseUrl + "/u/" + this.props.user.username + "/plings"}></a></li>
+            <li><a href="/settings"></a></li>
+            <li><a href="/logout"></a></li>
+          </ul>
         </li>
       </ul>
     )

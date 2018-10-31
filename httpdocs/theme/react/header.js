@@ -54,6 +54,7 @@ class SiteHeader extends React.Component {
     let userMenuDisplay, loginMenuDisplay;
     if (this.state.user) {
       userMenuDisplay = React.createElement(SiteHeaderUserMenu, {
+        baseUrl: this.state.baseUrl,
         user: this.state.user
       });
     } else {
@@ -194,6 +195,23 @@ class SiteHeaderUserMenu extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick(e) {
+    let dropdownClass = "";
+    if (this.node.contains(e.target)) {
+      if (this.state.dropdownClass === "open") {
+        if (e.target.className === "profile-menu-toggle") {
+          dropdownClass = "";
+        } else {
+          dropdownClass = "open";
+        }
+      } else {
+        dropdownClass = "open";
+      }
+    }
+    this.setState({ dropdownClass: dropdownClass });
   }
 
   render() {
@@ -208,18 +226,51 @@ class SiteHeaderUserMenu extends React.Component {
 
     return React.createElement(
       "ul",
-      { id: "site-header-user-menu-container" },
+      { ref: node => this.node = node, id: "site-header-user-menu-container" },
       React.createElement(
         "li",
         { id: "user-menu-toggle" },
         React.createElement(
           "a",
-          null,
+          { className: "profile-menu-toggle" },
           React.createElement("img", { src: imageBaseUrl + this.props.user.avatar }),
           React.createElement(
             "span",
             null,
             this.props.user.username
+          )
+        ),
+        React.createElement(
+          "ul",
+          { id: "user-profile-menu", className: dropdownClass },
+          React.createElement(
+            "li",
+            null,
+            React.createElement(
+              "a",
+              { href: "/product/add" },
+              "Add Product"
+            )
+          ),
+          React.createElement(
+            "li",
+            null,
+            React.createElement("a", { href: this.props.baseUrl + "/u/" + this.props.user.username + "/products" })
+          ),
+          React.createElement(
+            "li",
+            null,
+            React.createElement("a", { href: this.props.baseUrl + "/u/" + this.props.user.username + "/plings" })
+          ),
+          React.createElement(
+            "li",
+            null,
+            React.createElement("a", { href: "/settings" })
+          ),
+          React.createElement(
+            "li",
+            null,
+            React.createElement("a", { href: "/logout" })
           )
         )
       )
