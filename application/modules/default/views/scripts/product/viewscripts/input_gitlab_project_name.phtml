@@ -31,17 +31,7 @@ $member = $getAuthUser->getAuthUser();
             <?php } ?>
             <label class="form-label" for="<?= $this->escape($this->element->getName()) ?>">Your Project Name</label>
         </dt>
-        <dd id="gitlab_project_name-element">
-            https://git.opendesktop.org/<?= $member->username ?>/ 
-        </dd>
-        <input id="<?= $this->escape($this->element->getName()) ?>"
-                   class="form-control"
-                   type="text"
-                   maxlength="60"
-                   size="60"
-                   value="<?= $this->escape($this->element->getValue()) ?>"
-                   name="<?= $this->escape($this->element->getName()) ?>"/>
-
+        <div id="wrapper_gitlab_projects">
 
             <?php if ($this->element->getMessages()) {
                 $errorHtml = '';

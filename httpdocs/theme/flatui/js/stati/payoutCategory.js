@@ -1,9 +1,12 @@
 !(function (d3) {
 
             var parseTime = d3.timeParse("%Y%m");
-                       
-                d3.json("/backend/index/getpayoutcategory?catid="+window.selectedCatid, function(error, data) {                                                        
+                    
+
+                d3.json("/backend/index/getpayoutcategory?catid="+window.selectedCatid, function(error, data) {                                           
                 if (error) throw error;
+
+
                 var pids = data.pids;
                 var pidsname = data.pidsname;                
                 data = data.results;   
@@ -28,7 +31,8 @@
                     chartColumns[key] ={column:'amount'+pids[i]};                        
                 });                    
                 var chart = makeLineChart(data, 'year',chartColumns , {xAxis: 'Month', yAxis: 'Amount'});
-                
+
+                $('#payoutCategoryLineChart'+window.selectedCatid).empty();
                 chart.bind("#payoutCategoryLineChart"+window.selectedCatid);
                 chart.render();
 

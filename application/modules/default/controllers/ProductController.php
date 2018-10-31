@@ -220,6 +220,22 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $fmodel =new  Default_Model_DbTable_PploadFiles();
         $files = $fmodel->fetchFilesForProject($this->view->product->ppload_collection_id);
         $this->view->filesJson = Zend_Json::encode($files);
+        
+        
+        //gitlab
+        if($this->view->product->is_gitlab_project) {
+            $gitProject = $this->fetchGitlabProject($this->view->product->gitlab_project_id)[0];
+            $this->view->gitlab_project = $gitProject;
+            
+            //show issues?
+            if($this->view->product->show_gitlab_project_issues) {
+                $issues = $this->fetchGitlabProjectIssues($this->view->product->gitlab_project_id);
+                $this->view->gitlab_project_issues = $issues;
+                $this->view->gitlab_project_issues_url = $this->view->gitlab_project->web_url . '/issues/';
+            }
+            
+        }
+        
 
         $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;              
         if($storeConfig->layout_pagedetail && $storeConfig->isRenderReact()){           
@@ -338,6 +354,12 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $modelTags->saveLicenseTagForProject($newProject->project_id, $licenseTag);
             $activityLog = new Default_Model_ActivityLog();
             $activityLog->logActivity($newProject->project_id, $newProject->project_id, $this->_authMember->member_id, Default_Model_ActivityLog::PROJECT_LICENSE_CHANGED, array('title' => 'Set new License Tag', 'description' => 'New TagId: '.$licenseTag));
+        }
+        
+        $isGitlabProject = $form->getElement('is_gitlab_project')->getValue();
+        $gitlabProjectId = $form->getElement('gitlab_project_id')->getValue();
+        if($isGitlabProject && $gitlabProjectId == 0) {
+            $values['gitlab_project_id'] = null;
         }
 
 
@@ -479,6 +501,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         //set ppload-collection-id in view
         $this->view->ppload_collection_id = $projectData->ppload_collection_id;
         $this->view->project_id = $projectData->project_id;
+        $this->view->product = $projectData;
 
         //create ppload download hash: secret + collection_id + expire-timestamp
         $salt = PPLOAD_DOWNLOAD_SECRET;
@@ -495,6 +518,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         //read the already existing gallery pics and add them to the form
         $sources = $projectModel->getGalleryPictureSources($this->_projectId);
+        
+        //get the gitlab projects for this user
 
         //setup form
         $form = new Default_Form_Product(array('pictures' => $sources));
@@ -559,6 +584,13 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $modelTags->saveLicenseTagForProject($this->_projectId, $licenseTag);
             $activityLog = new Default_Model_ActivityLog();
             $activityLog->logActivity($this->_projectId, $this->_projectId, $this->_authMember->member_id, Default_Model_ActivityLog::PROJECT_LICENSE_CHANGED, array('title' => 'License Tag', 'description' => 'Old TagId: '.$oldLicenseTagId.' - New TagId: '.$licenseTag));
+        }
+        
+        //gitlab project
+        $isGitlabProject = $form->getElement('is_gitlab_project')->getValue();
+        $gitlabProjectId = $form->getElement('gitlab_project_id')->getValue();
+        if($isGitlabProject && $gitlabProjectId == 0) {
+            $values['gitlab_project_id'] = null;
         }
 
 
@@ -2508,4 +2540,31 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $this->_helper->layout()->setLayout($layoutName);
         }        
     }
+    
+    
+    private function fetchGitlabProject($gitProjectId)
+    {
+        $gitlab = new Local_Gitlab_Api(array(
+            'apiUri'   => GITLAB_API_URI,
+            'token' => GITLAB_TOKEN
+        ));
+        
+        $gitProject = $gitlab->getProject($gitProjectId);
+        
+        return $gitProject;
+    }
+    
+    private function fetchGitlabProjectIssues($gitProjectId)
+    {
+        $gitlab = new Local_Gitlab_Api(array(
+            'apiUri'   => GITLAB_API_URI,
+            'token' => GITLAB_TOKEN
+        ));
+        
+        $gitProjectIssues = $gitlab->getProjectIssues($gitProjectId);
+        
+        return $gitProjectIssues;
+    }
+
+
 }
