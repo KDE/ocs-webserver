@@ -148,6 +148,7 @@ class SiteHeaderUserMenu extends React.Component {
   }
 
   handleClick(e){
+    console.log(e);
     let dropdownClass = "";
     if (this.node.contains(e.target)){
       if (this.state.dropdownClass === "open"){
@@ -174,13 +175,13 @@ class SiteHeaderUserMenu extends React.Component {
     }
 
     return (
-      <ul ref={node => this.node = node} id="site-header-user-menu-container">
+      <ul ref={node => this.node = node} id="site-header-user-menu-container" className={this.state.dropdownClass}>
         <li id="user-menu-toggle">
           <a className="profile-menu-toggle">
             <img src={imageBaseUrl + this.props.user.avatar}/>
             <span>{this.props.user.username}</span>
           </a>
-          <ul id="user-profile-menu" className={this.state.dropdownClass}>
+          <ul id="user-profile-menu" >
             <div className="dropdown-header"></div>
             <li><a href="/product/add">Add Product</a></li>
             <li><a href={this.props.baseUrl + "/u/" + this.props.user.username + "/products"}>Products</a></li>
