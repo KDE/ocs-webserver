@@ -207,13 +207,21 @@ class SiteHeaderUserMenu extends React.Component {
     }
 
     return React.createElement(
-      "div",
+      "ul",
       { id: "site-header-user-menu-container" },
       React.createElement(
-        "div",
+        "li",
         { id: "user-menu-toggle" },
-        React.createElement("img", { src: imageBaseUrl + this.props.user.avatar }),
-        this.props.user.username
+        React.createElement(
+          "a",
+          null,
+          React.createElement("img", { src: imageBaseUrl + this.props.user.avatar }),
+          React.createElement(
+            "span",
+            null,
+            this.props.user.username
+          )
+        )
       )
     );
   }

@@ -156,12 +156,14 @@ class SiteHeaderUserMenu extends React.Component {
     }
 
     return (
-      <div id="site-header-user-menu-container">
-        <div id="user-menu-toggle">
-          <img src={imageBaseUrl + this.props.user.avatar}/>
-          {this.props.user.username}
-        </div>
-      </div>
+      <ul id="site-header-user-menu-container">
+        <li id="user-menu-toggle">
+          <a>
+            <img src={imageBaseUrl + this.props.user.avatar}/>
+            <span>{this.props.user.username}</span>            
+          </a>
+        </li>
+      </ul>
     )
   }
 }
