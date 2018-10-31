@@ -45,10 +45,6 @@ class SiteHeader extends React.Component {
     };
   }
 
-  componentDidMount() {
-    console.log(this.state);
-  }
-
   render() {
 
     let userMenuDisplay, loginMenuDisplay, siteHeaderTopRightCssClass;
@@ -105,7 +101,9 @@ class SiteHeader extends React.Component {
           React.createElement(
             "div",
             { id: "site-header-right-top", className: siteHeaderTopRightCssClass },
-            React.createElement(SiteHeaderSearchForm, null),
+            React.createElement(SiteHeaderSearchForm, {
+              baseUrl: this.state.baseUrl
+            }),
             userMenuDisplay
           ),
           React.createElement(
@@ -134,7 +132,7 @@ class SiteHeaderSearchForm extends React.Component {
   }
 
   onSearchFormSubmit() {
-    console.log(this.state.searchText);
+    window.location.href = this.props.baseUrl + "/search?projectSearchText=" + this.state.searchText;
   }
 
   render() {
@@ -229,11 +227,10 @@ class SiteHeaderUserMenu extends React.Component {
   }
 
   handleClick(e) {
-    console.log(e);
     let dropdownClass = "";
     if (this.node.contains(e.target)) {
       if (this.state.dropdownClass === "open") {
-        if (e.target.className === "profile-menu-toggle") {
+        if (e.target.className === "profile-menu-toggle" || e.target.className === "profile-menu-image" || e.target.className === "profile-menu-username") {
           dropdownClass = "";
         } else {
           dropdownClass = "open";
@@ -256,10 +253,10 @@ class SiteHeaderUserMenu extends React.Component {
         React.createElement(
           "a",
           { className: "profile-menu-toggle" },
-          React.createElement("img", { src: this.state.imageBaseUrl + this.props.user.avatar }),
+          React.createElement("img", { className: "profile-menu-image", src: this.state.imageBaseUrl + this.props.user.avatar }),
           React.createElement(
             "span",
-            null,
+            { className: "profile-menu-username" },
             this.props.user.username
           )
         ),

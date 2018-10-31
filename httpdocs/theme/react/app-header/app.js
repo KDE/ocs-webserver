@@ -23,10 +23,6 @@ class SiteHeader extends React.Component {
     };
   }
 
-  componentDidMount() {
-    console.log(this.state);
-  }
-
   render(){
 
     let userMenuDisplay, loginMenuDisplay, siteHeaderTopRightCssClass;
@@ -72,7 +68,9 @@ class SiteHeader extends React.Component {
           </div>
           <div id="site-header-right">
             <div id="site-header-right-top" className={siteHeaderTopRightCssClass}>
-              <SiteHeaderSearchForm />
+              <SiteHeaderSearchForm
+                baseUrl={this.state.baseUrl}
+              />
               {userMenuDisplay}
             </div>
             <div id="site-header-right-bottom">
@@ -100,7 +98,7 @@ class SiteHeaderSearchForm extends React.Component {
   }
 
   onSearchFormSubmit(){
-    console.log(this.state.searchText);
+    window.location.href = this.props.baseUrl + "/search?projectSearchText=" + this.state.searchText;
   }
 
   render(){
@@ -176,11 +174,12 @@ class SiteHeaderUserMenu extends React.Component {
   }
 
   handleClick(e){
-    console.log(e);
     let dropdownClass = "";
     if (this.node.contains(e.target)){
       if (this.state.dropdownClass === "open"){
-        if (e.target.className === "profile-menu-toggle"){
+        if (e.target.className === "profile-menu-toggle" ||
+            e.target.className === "profile-menu-image" || 
+            e.target.className === "profile-menu-username"){
           dropdownClass = "";
         } else {
           dropdownClass = "open";
@@ -198,8 +197,8 @@ class SiteHeaderUserMenu extends React.Component {
       <ul id="site-header-user-menu-container">
         <li ref={node => this.node = node} id="user-menu-toggle" className={this.state.dropdownClass}>
           <a className="profile-menu-toggle">
-            <img src={this.state.imageBaseUrl + this.props.user.avatar}/>
-            <span>{this.props.user.username}</span>
+            <img className="profile-menu-image" src={this.state.imageBaseUrl + this.props.user.avatar}/>
+            <span className="profile-menu-username">{this.props.user.username}</span>
           </a>
           <ul id="user-profile-menu" >
             <div className="dropdown-header"></div>
