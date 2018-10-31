@@ -61,7 +61,7 @@ out: ../css/header.css, sourcemap: true, compress: true
         position: relative;
 
         input[type="text"]{
-          width: 16em;
+          width: 100%;
           height: 25px;
           padding: 0;
           border: 1px solid #fff;
@@ -285,8 +285,26 @@ out: ../css/header.css, sourcemap: true, compress: true
       }
 
       #site-header-right {
+        position: absolute;
+        bottom: 0;
+        left: 0;
         width: 100%;
         height: 40px;
+
+        #site-header-right-top {
+          width: 100%;
+          padding-right: 170px;
+
+          #site-header-search-form {
+            width: 100%;
+          }
+
+          ul#site-header-user-menu-container {
+            position: absolute;
+            top: 0;
+            right: 0;
+          }
+        }
 
         #user-profile-menu {
           left: -34px;
