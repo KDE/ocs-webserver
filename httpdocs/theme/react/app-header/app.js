@@ -116,11 +116,23 @@ class SiteHeaderLoginMenu extends React.Component {
   	this.state = {};
   }
   render(){
+
+    let registerButtonCssClass,
+        loginButtonCssClass;
+
+    if (window.location.href.indexOf('/register') > -1){
+      registerButtonCssClass = "active";
+    }
+
+    if (window.location.href.indexOf('/login') > -1){
+      loginButtonCssClass = "active";
+    }
+
     return (
       <div id="site-header-login-menu">
         <ul>
-          <li><a href={this.props.baseUrl + "/register"}>Register</a></li>
-          <li><a href={this.props.baseUrl + "/login" + this.props.redirectString}>Login</a></li>
+          <li className={registerButtonCssClass}><a href={this.props.baseUrl + "/register"}>Register</a></li>
+          <li className={loginButtonCssClass}><a href={this.props.baseUrl + "/login" + this.props.redirectString}>Login</a></li>
         </ul>
       </div>
     )

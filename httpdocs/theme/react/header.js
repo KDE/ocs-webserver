@@ -128,6 +128,17 @@ class SiteHeaderLoginMenu extends React.Component {
     this.state = {};
   }
   render() {
+
+    let registerButtonCssClass, loginButtonCssClass;
+
+    if (window.location.href.indexOf('/register') > -1) {
+      registerButtonCssClass = "active";
+    }
+
+    if (window.location.href.indexOf('/login') > -1) {
+      loginButtonCssClass = "active";
+    }
+
     return React.createElement(
       "div",
       { id: "site-header-login-menu" },
@@ -136,7 +147,7 @@ class SiteHeaderLoginMenu extends React.Component {
         null,
         React.createElement(
           "li",
-          null,
+          { className: registerButtonCssClass },
           React.createElement(
             "a",
             { href: this.props.baseUrl + "/register" },
@@ -145,7 +156,7 @@ class SiteHeaderLoginMenu extends React.Component {
         ),
         React.createElement(
           "li",
-          null,
+          { className: loginButtonCssClass },
           React.createElement(
             "a",
             { href: this.props.baseUrl + "/login" + this.props.redirectString },
