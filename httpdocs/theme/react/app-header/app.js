@@ -33,14 +33,15 @@ class SiteHeader extends React.Component {
     if (this.state.user){
       userMenuDisplay = (
         <SiteHeaderUserMenu
-          baseUrl={this.state.baseUrl}
-          redirectString={this.state.redirectString}
           user={this.state.user}
         />
       );
     } else {
       loginMenuDisplay = (
-        <SiteHeaderLoginMenu />
+        <SiteHeaderLoginMenu
+          baseUrl={this.state.baseUrl}
+          redirectString={this.state.redirectString}
+        />
       );
     }
 

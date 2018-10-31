@@ -32,12 +32,13 @@ class SiteHeader extends React.Component {
     let userMenuDisplay, loginMenuDisplay;
     if (this.state.user) {
       userMenuDisplay = React.createElement(SiteHeaderUserMenu, {
-        baseUrl: this.state.baseUrl,
-        redirectString: this.state.redirectString,
         user: this.state.user
       });
     } else {
-      loginMenuDisplay = React.createElement(SiteHeaderLoginMenu, null);
+      loginMenuDisplay = React.createElement(SiteHeaderLoginMenu, {
+        baseUrl: this.state.baseUrl,
+        redirectString: this.state.redirectString
+      });
     }
 
     let siteHeaderStoreNameDisplay;
