@@ -61,7 +61,8 @@ class SiteHeader extends React.Component {
     } else {
       loginMenuDisplay = React.createElement(SiteHeaderLoginMenu, {
         baseUrl: this.state.baseUrl,
-        redirectString: this.state.redirectString
+        redirectString: this.state.redirectString,
+        template: this.state.template
       });
     }
 

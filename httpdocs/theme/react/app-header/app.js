@@ -43,6 +43,7 @@ class SiteHeader extends React.Component {
         <SiteHeaderLoginMenu
           baseUrl={this.state.baseUrl}
           redirectString={this.state.redirectString}
+          template={this.state.template}
         />
       );
     }
