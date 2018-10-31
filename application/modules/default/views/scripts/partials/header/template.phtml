@@ -104,27 +104,34 @@ echo $this->render('partials/header/metaheader.phtml');
             overflow: hidden;
         }
 
-        header ul li:active {
+        header ul li:active,
+        #site-header ul li:active {
             background: <?=$this->template['header-nav-tabs']['background-color-active']?> none repeat scroll 0 0;
         }
-        header ul li:hover {
+        header ul li:hover,
+        #site-header ul li:hover {
             background: <?=$this->template['header-nav-tabs']['background-color-hover']?> none repeat scroll 0 0;
         }
 
-        header ul li ul li:active {
+        header ul li ul li:active,
+        #site-header ul li ul li:active {
             background: <?=$this->template['header-nav-tabs']['background-color-active']?> none repeat scroll 0 0;
         }
 
-        header ul li ul li:hover {
+        header ul li ul li:hover,
+        #site-header ul li ul li:hover {
             background: <?=$this->template['header-nav-tabs']['background-color-hover']?> none repeat scroll 0 0;
         }
-        header ul li:active > a {
+        header ul li:active > a,
+        #site-header ul li:active > a {
             color: <?=$this->template['header-nav-tabs']['link']['color-active']?>;
         }
-        header ul li:hover > a {
+        header ul li:hover > a,
+        #site-header ul li:hover > a {
             color: <?=$this->template['header-nav-tabs']['link']['color-hover']?>;
         }
-        header ul li ul li:hover a {
+        header ul li ul li:hover a,
+        #site-header ul li ul li:hover > a {
             color: <?=$this->template['header-nav-tabs']['link']['color-hover']?>;
         }
 
