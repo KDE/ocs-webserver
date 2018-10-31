@@ -180,7 +180,7 @@ class SiteHeaderUserMenu extends React.Component {
             <img src={imageBaseUrl + this.props.user.avatar}/>
             <span>{this.props.user.username}</span>
           </a>
-          <ul id="user-profile-menu" className={dropdownClass}>
+          <ul id="user-profile-menu" className={this.state.dropdownClass}>
             <li><a href="/product/add">Add Product</a></li>
             <li><a href={this.props.baseUrl + "/u/" + this.props.user.username + "/products"}></a></li>
             <li><a href={this.props.baseUrl + "/u/" + this.props.user.username + "/plings"}></a></li>
