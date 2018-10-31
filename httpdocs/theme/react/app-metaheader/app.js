@@ -160,7 +160,6 @@ class DomainsDropDownMenu extends React.Component {
         menuGroups.push(domain.menugroup);
       }
     });
-    console.log(menuGroups);
     this.setState({menuGroups:menuGroups});
   }
 
@@ -661,7 +660,12 @@ class MobileLeftSidePanel extends React.Component {
   }
 
   componentDidMount() {
-    const menuGroups = appHelpers.generateMenuGroupsArray(this.props.domains);
+    let menuGroups = [];
+    this.props.domains.forEach(function(domain,index){
+      if (menuGroups.indexOf(domain.menugroup) === -1){
+        menuGroups.push(domain.menugroup);
+      }
+    });
     this.setState({menuGroups:menuGroups});
   }
 
