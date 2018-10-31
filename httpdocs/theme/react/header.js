@@ -202,6 +202,17 @@ class SiteHeaderUserMenu extends React.Component {
     document.addEventListener('mousedown', this.handleClick, false);
   }
 
+  componentDidMount() {
+    let imageBaseUrl;
+    const env = appHelpers.getEnv(window.location.href);
+    if (env === "live") {
+      imageBaseUrl = "https://cn.pling.com/cache/200x200-2/img/";
+    } else {
+      imageBaseUrl = "https://cn.pling.it/cache/200x200-2/img/";
+    }
+    this.setState({ imageBaseUrl: imageBaseUrl });
+  }
+
   componentWillUnmount() {
     document.removeEventListener('mousedown', this.handleClick, false);
   }
@@ -225,14 +236,6 @@ class SiteHeaderUserMenu extends React.Component {
 
   render() {
 
-    let imageBaseUrl;
-    const env = appHelpers.getEnv(window.location.href);
-    if (env === "live") {
-      imageBaseUrl = "https://cn.pling.com/cache/200x200-2/img/";
-    } else {
-      imageBaseUrl = "https://cn.pling.it/cache/200x200-2/img/";
-    }
-
     return React.createElement(
       "ul",
       { id: "site-header-user-menu-container" },
@@ -242,7 +245,7 @@ class SiteHeaderUserMenu extends React.Component {
         React.createElement(
           "a",
           { className: "profile-menu-toggle" },
-          React.createElement("img", { src: imageBaseUrl + this.props.user.avatar }),
+          React.createElement("img", { src: this.state.imageBaseUrl + this.props.user.avatar }),
           React.createElement(
             "span",
             null,
