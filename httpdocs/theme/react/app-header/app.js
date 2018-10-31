@@ -33,6 +33,8 @@ class SiteHeader extends React.Component {
     if (this.state.user){
       userMenuDisplay = (
         <SiteHeaderUserMenu
+          baseUrl={this.state.baseUrl}
+          redirectString={this.state.redirectString}
           user={this.state.user}
         />
       );
@@ -115,7 +117,10 @@ class SiteHeaderLoginMenu extends React.Component {
   render(){
     return (
       <div id="site-header-login-menu">
-        login menu
+        <ul>
+          <li><a href={this.props.baseUrl + "/register"}>Register</a></li>
+          <li><a href={this.props.baseUrl + "/login/" + this.props.redirectString}>Login</a></li>
+        </ul>
       </div>
     )
   }

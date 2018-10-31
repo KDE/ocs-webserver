@@ -32,6 +32,8 @@ class SiteHeader extends React.Component {
     let userMenuDisplay, loginMenuDisplay;
     if (this.state.user) {
       userMenuDisplay = React.createElement(SiteHeaderUserMenu, {
+        baseUrl: this.state.baseUrl,
+        redirectString: this.state.redirectString,
         user: this.state.user
       });
     } else {
@@ -128,7 +130,28 @@ class SiteHeaderLoginMenu extends React.Component {
     return React.createElement(
       "div",
       { id: "site-header-login-menu" },
-      "login menu"
+      React.createElement(
+        "ul",
+        null,
+        React.createElement(
+          "li",
+          null,
+          React.createElement(
+            "a",
+            { href: this.props.baseUrl + "/register" },
+            "Register"
+          )
+        ),
+        React.createElement(
+          "li",
+          null,
+          React.createElement(
+            "a",
+            { href: this.props.baseUrl + "/login/" + this.props.redirectString },
+            "Login"
+          )
+        )
+      )
     );
   }
 }
