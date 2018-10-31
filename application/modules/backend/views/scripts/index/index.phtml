@@ -29,7 +29,6 @@ $jsonTree = json_encode($this->categories);
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="/theme/flatui/js/lib/d3pie.min.js"></script>
-<script src="/theme/flatui/js/lib/multiline.js"></script>
 
  <script type="text/javascript" src="/theme/react/lib/react/react.js"></script>
 <script type="text/javascript" src="/theme/react/lib/react-dom/react-dom.js"></script>
@@ -113,8 +112,8 @@ $jsonTree = json_encode($this->categories);
         <div id="payoutTab" class="tab-pane ">
 
             <div id="payoutyear" style="display: block; float: left; padding-right: 20px" class="d3linepath"></div>
-            <div id="pie" style="padding:50px; "></div>
-            <div style="display: block; float: right; width: 300px" id="detailContainer"></div>
+            <div id="pie" style="padding:50px; display:block; clear:left "></div>
+            <div style="display: block; float: left; " id="detailContainer"></div>
 
         </div>
 
@@ -405,3 +404,6 @@ $jsonTree = json_encode($this->categories);
    
 
 </script>
+
+
+<script src="/theme/flatui/js/lib/multiline.js"></script>

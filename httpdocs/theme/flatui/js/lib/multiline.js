@@ -52,8 +52,8 @@ function makeLineChart(dataset, xName, yObjs, axisLables) {
     chartObj.bisectYear = d3.bisector(chartObj.xFunct).left; //< Can be overridden in definition
 
 //Create scale functions
-    //chartObj.xScale = d3.scaleLinear().range([0, chartObj.width]).domain(d3.extent(chartObj.data, chartObj.xFunct)); 
-    chartObj.xScale = d3.scaleTime().range([0, chartObj.width]).domain(d3.extent(chartObj.data, chartObj.xFunct));                                                  
+    chartObj.xScale = d3.scaleLinear().range([0, chartObj.width]).domain(d3.extent(chartObj.data, chartObj.xFunct)); 
+    //chartObj.xScale = d3.scaleTime().range([0, chartObj.width]).domain(d3.extent(chartObj.data, chartObj.xFunct));                                                  
 
 // Get the max of every yFunct
     chartObj.max = function (fn) {
@@ -161,6 +161,7 @@ function makeLineChart(dataset, xName, yObjs, axisLables) {
         //Draw tooltips
         var focus = chartObj.svg.append("g").attr("class", "focus").style("display", "none");
 
+
         for (var y  in yObjs) {
             yObjs[y].tooltip = focus.append("g");
             yObjs[y].tooltip.append("circle").attr("r", 5);
@@ -191,10 +192,13 @@ function makeLineChart(dataset, xName, yObjs, axisLables) {
 
         return chartObj;
         function mousemove() {
+            
             var x0 = chartObj.xScale.invert(d3.mouse(this)[0]), i = chartObj.bisectYear(dataset, x0, 1), d0 = chartObj.data[i - 1], d1 = chartObj.data[i];
+
             try {
                 var d = x0 - chartObj.xFunct(d0) > chartObj.xFunct(d1) - x0 ? d1 : d0;
-            } catch (e) { return;}
+
+            } catch (e) {  console.log(e); return;}
             minY = chartObj.height;
             for (var y  in yObjs) {
                 yObjs[y].tooltip.attr("transform", "translate(" + chartObj.xScale(chartObj.xFunct(d)) + "," + chartObj.yScale(yObjs[y].yFunct(d)) + ")");
