@@ -25,6 +25,8 @@
 class Statistics_Model_Data
 {
 
+    const DEFAULT_STORE_ID = 22; //opendesktop
+
     /** @var Zend_Db_Adapter_Pdo_Abstract */
     protected $_db;
 
@@ -299,6 +301,64 @@ class Statistics_Model_Data
     }
 
     public function getPayoutCategory($catid){
+
+          if($catid==0)
+          {                          
+              // $pids = array(152, 233,158,404, 148,491,445,295);
+              $modelCategoryStore = new Default_Model_DbTable_ConfigStoreCategory();
+              $pids = $modelCategoryStore->fetchCatIdsForStore(self::DEFAULT_STORE_ID);
+              $sql = "
+                            select * from
+                            (
+                                 select
+                                  'All' as symbol
+                                  ,yearmonth
+                                  ,round(sum(probably_payout_amount)) as amount                                  
+                                 from member_dl_plings_v as v                          
+                                group by v.yearmonth
+                                order by yearmonth asc
+                            ) tmp where amount>0
+                          ";            
+              $result = $this->_db->fetchAll($sql);
+              foreach ($pids as $c) {
+                  $tmp = self::getPayoutCategorySingle($c);                                 
+                  foreach ($result as &$row) {                                                                            
+                     $row['amount'.$c] = 0;
+                     foreach ($tmp as $t) {                    
+                        if($t['yearmonth']==$row['yearmonth'])
+                        {                          
+                          $row['amount'.$c] = $t['amount'];
+                          break;
+                        }
+                     }
+                  }
+              }                                        
+          }
+          else
+          {
+                $result = self::getPayoutCategorySingle($catid);                
+                $modelCategoriesTable = new Default_Model_DbTable_ProjectCategory();
+                $pids = $modelCategoriesTable->fetchImmediateChildrenIds($catid);
+                foreach ($pids as $c) {
+                  $tmp = self::getPayoutCategorySingle($c);                                 
+                  foreach ($result as &$row) {                                                                            
+                     $row['amount'.$c] = 0;
+                     foreach ($tmp as $t) {                    
+                        if($t['yearmonth']==$row['yearmonth'])
+                        {                          
+                          $row['amount'.$c] = $t['amount'];
+                          break;
+                        }
+                     }
+                  }
+                } 
+          }
+            
+          return $result;  
+    
+    }
+
+    public function _getPayoutCategory($catid){
 
           if($catid==0)
           {                          
