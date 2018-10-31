@@ -120,7 +120,7 @@ class SiteHeaderLoginMenu extends React.Component {
       <div id="site-header-login-menu">
         <ul>
           <li><a href={this.props.baseUrl + "/register"}>Register</a></li>
-          <li><a href={this.props.baseUrl + "/login/" + this.props.redirectString}>Login</a></li>
+          <li><a href={this.props.baseUrl + "/login" + this.props.redirectString}>Login</a></li>
         </ul>
       </div>
     )

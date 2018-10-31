@@ -148,7 +148,7 @@ class SiteHeaderLoginMenu extends React.Component {
           null,
           React.createElement(
             "a",
-            { href: this.props.baseUrl + "/login/" + this.props.redirectString },
+            { href: this.props.baseUrl + "/login" + this.props.redirectString },
             "Login"
           )
         )
