@@ -255,22 +255,38 @@ class SiteHeaderUserMenu extends React.Component {
           React.createElement(
             "li",
             null,
-            React.createElement("a", { href: this.props.baseUrl + "/u/" + this.props.user.username + "/products" })
+            React.createElement(
+              "a",
+              { href: this.props.baseUrl + "/u/" + this.props.user.username + "/products" },
+              "Products"
+            )
           ),
           React.createElement(
             "li",
             null,
-            React.createElement("a", { href: this.props.baseUrl + "/u/" + this.props.user.username + "/plings" })
+            React.createElement(
+              "a",
+              { href: this.props.baseUrl + "/u/" + this.props.user.username + "/plings" },
+              "Plings"
+            )
           ),
           React.createElement(
             "li",
             null,
-            React.createElement("a", { href: "/settings" })
+            React.createElement(
+              "a",
+              { href: "/settings" },
+              "Settings"
+            )
           ),
           React.createElement(
             "li",
             null,
-            React.createElement("a", { href: "/logout" })
+            React.createElement(
+              "a",
+              { href: "/logout" },
+              "Logout"
+            )
           )
         )
       )
