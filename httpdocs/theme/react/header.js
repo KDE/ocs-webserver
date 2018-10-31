@@ -227,10 +227,10 @@ class SiteHeaderUserMenu extends React.Component {
 
     return React.createElement(
       "ul",
-      { ref: node => this.node = node, id: "site-header-user-menu-container", className: this.state.dropdownClass },
+      { id: "site-header-user-menu-container" },
       React.createElement(
         "li",
-        { id: "user-menu-toggle" },
+        { ref: node => this.node = node, id: "user-menu-toggle", className: this.state.dropdownClass },
         React.createElement(
           "a",
           { className: "profile-menu-toggle" },

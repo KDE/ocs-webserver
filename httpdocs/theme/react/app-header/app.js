@@ -175,8 +175,8 @@ class SiteHeaderUserMenu extends React.Component {
     }
 
     return (
-      <ul ref={node => this.node = node} id="site-header-user-menu-container" className={this.state.dropdownClass}>
-        <li id="user-menu-toggle">
+      <ul id="site-header-user-menu-container">
+        <li ref={node => this.node = node} id="user-menu-toggle" className={this.state.dropdownClass}>
           <a className="profile-menu-toggle">
             <img src={imageBaseUrl + this.props.user.avatar}/>
             <span>{this.props.user.username}</span>
