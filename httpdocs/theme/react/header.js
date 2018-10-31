@@ -85,14 +85,18 @@ class SiteHeader extends React.Component {
         { id: "site-header-wrapper", style: { "paddingLeft": this.state.template['header-logo']['width'] } },
         React.createElement(
           "div",
-          { id: "site-header-logo-container", style: this.state.template['header-logo'] },
+          { id: "siter-header-left" },
           React.createElement(
-            "a",
-            { href: this.state.serverUrl + this.state.serverUri },
-            React.createElement("img", { src: this.state.template['header-logo']['image-src'] })
-          )
+            "div",
+            { id: "site-header-logo-container", style: this.state.template['header-logo'] },
+            React.createElement(
+              "a",
+              { href: this.state.serverUrl + this.state.serverUri },
+              React.createElement("img", { src: this.state.template['header-logo']['image-src'] })
+            )
+          ),
+          siteHeaderStoreNameDisplay
         ),
-        siteHeaderStoreNameDisplay,
         React.createElement(
           "div",
           { id: "site-header-right" },
