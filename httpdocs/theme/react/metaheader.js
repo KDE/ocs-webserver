@@ -85,7 +85,6 @@ class MetaHeader extends React.Component {
     } else if (width < 610) {
       device = "tablet";
     }
-    return device;
     this.setState({ device: device });
   }
 

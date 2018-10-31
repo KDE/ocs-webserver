@@ -56,7 +56,6 @@
       } else if (width < 610){
         device = "tablet";
       }
-      return device;
       this.setState({device:device});
     }
 
