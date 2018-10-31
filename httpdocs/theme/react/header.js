@@ -1,3 +1,25 @@
+window.appHelpers = function () {
+
+  function getEnv(domain) {
+    let env;
+    if (this.splitByLastDot(domain) === 'com' || this.splitByLastDot(domain) === 'org') {
+      env = 'live';
+    } else {
+      env = 'test';
+    }
+    return env;
+  }
+
+  function splitByLastDot(text) {
+    var index = text.lastIndexOf('.');
+    return text.slice(index + 1);
+  }
+
+  return {
+    getEnv,
+    splitByLastDot
+  };
+}();
 class SiteHeader extends React.Component {
   constructor(props) {
     super(props);
@@ -173,11 +195,26 @@ class SiteHeaderUserMenu extends React.Component {
     super(props);
     this.state = {};
   }
+
   render() {
+
+    let imageBaseUrl;
+    const env = appHelpers.getEnv(window.location.href);
+    if (env === "live") {
+      imageBaseUrl = "https://cn.pling.com/cache/200x200-2/img/";
+    } else {
+      imageBaseUrl = "https://cn.pling.it/cache/200x200-2/img/";
+    }
+
     return React.createElement(
       "div",
       { id: "site-header-user-menu-container" },
-      "user menu container"
+      React.createElement(
+        "div",
+        { id: "user-menu-toggle" },
+        React.createElement("img", { src: imageBaseUrl + this.props.user.avatar }),
+        this.props.user.username
+      )
     );
   }
 }

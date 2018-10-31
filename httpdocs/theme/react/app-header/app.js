@@ -144,10 +144,23 @@ class SiteHeaderUserMenu extends React.Component {
   	super(props);
   	this.state = {};
   }
+
   render(){
+
+    let imageBaseUrl;
+    const env = appHelpers.getEnv(window.location.href);
+    if (env === "live"){
+      imageBaseUrl = "https://cn.pling.com/cache/200x200-2/img/";
+    } else {
+      imageBaseUrl = "https://cn.pling.it/cache/200x200-2/img/";
+    }
+
     return (
       <div id="site-header-user-menu-container">
-        user menu container
+        <div id="user-menu-toggle">
+          <img src={imageBaseUrl + this.props.user.avatar}/>
+          {this.props.user.username}
+        </div>
       </div>
     )
   }
