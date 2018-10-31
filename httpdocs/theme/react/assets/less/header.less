@@ -254,3 +254,45 @@ out: ../css/header.css, sourcemap: true, compress: true
     }
   }
 }
+
+@media (min-width:990px){
+  #site-header {
+    padding: 0 7% 0 5%;
+    font-size: 14px;
+  }
+}
+
+@media (max-width:767px) {
+  #site-header {
+    height: 180px;
+    padding: 0 5px;
+
+    #site-header-wrapper {
+
+      #site-header-logo-container {
+        margin: 0 auto;
+        position: relative;
+      }
+
+      #site-header-store-name-container {
+        width: 100%;
+        text-align: center;
+        padding: 15px 0;
+        height: auto;
+      }
+
+      #site-header-right {
+        width: 100%;
+        height: 40px;
+
+        #user-profile-menu {
+          left: -34px;
+
+          .dropdown-header {
+            background-position: -348px 0;
+          }
+        }
+      }
+    }
+  }
+}
