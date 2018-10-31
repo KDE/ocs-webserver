@@ -188,6 +188,7 @@ class DomainsDropDownMenu extends React.Component {
         menuGroups.push(domain.menugroup);
       }
     });
+    console.log(menuGroups);
     this.setState({ menuGroups: menuGroups });
   }
 
