@@ -167,6 +167,11 @@ class SiteHeaderLoginMenu extends React.Component {
       loginButtonCssClass = "active";
     }
 
+    const menuItemCssClass = {
+      "borderColor": this.props.template['header-nav-tabs']['border-color'],
+      "backgroundColor": this.props.template['header-nav-tabs']['background-color']
+    };
+
     return React.createElement(
       "div",
       { id: "site-header-login-menu" },
@@ -175,7 +180,7 @@ class SiteHeaderLoginMenu extends React.Component {
         null,
         React.createElement(
           "li",
-          { className: registerButtonCssClass },
+          { style: menuItemCssClass, className: registerButtonCssClass },
           React.createElement(
             "a",
             { href: this.props.baseUrl + "/register" },
@@ -184,7 +189,7 @@ class SiteHeaderLoginMenu extends React.Component {
         ),
         React.createElement(
           "li",
-          { className: loginButtonCssClass },
+          { style: menuItemCssClass, className: loginButtonCssClass },
           React.createElement(
             "a",
             { href: this.props.baseUrl + "/login" + this.props.redirectString },
