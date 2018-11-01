@@ -489,7 +489,7 @@ class Default_Model_Ocs_Gitlab
     /**
      * @param int $member_id
      *
-     * @return bool
+     * @return array|bool
      * @throws Zend_Exception
      * @throws Zend_Http_Client_Exception
      * @throws Zend_Json_Exception
@@ -508,10 +508,19 @@ class Default_Model_Ocs_Gitlab
         if (empty($userId)) {
             $data['skip_confirmation'] = 'true';
 
-            return $this->httpUserCreate($data);
+            try {
+                $this->httpUserCreate($data);
+            } catch (Zend_Exception $e) {
+                $this->messages[] = "Fail " . $e->getMessage();
+
+                return false;
+            }
+            $this->messages[] = "Success";
+
+            return $data;
         }
 
-        $this->messages[0] = 'User exists and we do not update. Use the force parameter instead.';
+        $this->messages[0] = 'user already exists.';
 
         return false;
     }

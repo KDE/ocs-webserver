@@ -14,8 +14,12 @@
 <?php
 /** @var Zend_Controller_Request_Http $request */
 $request = Zend_Controller_Front::getInstance()->getRequest();
-$http_scheme = $request->getScheme();
+$http_scheme = 'https';
+if (APPLICATION_ENV == 'development') {
+    $http_scheme = $request->getScheme();
+}
 
+$baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
 $config = Zend_Registry::get('config')->settings->domain;
 
 
@@ -30,10 +34,11 @@ foreach ($domains as $domain) {
 
 ?>
     <img src="<?=$http_scheme?>://<?=$config->openid->host?>/logout" style="display:none;" />
-    <img src="https://<?=$config->opencode->host?>/users/sign_out" style="display:none;" />
-    <img src="https://<?=$config->opencode->host?>/external/removedata.php" style="display:none;" />
-    <img src="https://<?=$config->forum->host?>:8443/removedata.php" style="display:none;" />
-    <img src="https://<?=$config->base->host?>/external/removedata.php" style="display:none;" />
+    <img src="<?=$http_scheme?>://<?=$config->opencode->host?>/users/sign_out" style="display:none;" />
+    <img src="<?=$http_scheme?>://<?=$config->opencode->host?>/external/removedata.php" style="display:none;" />
+    <img src="<?=$http_scheme?>://<?=$config->forum->host?>:8443/removedata.php" style="display:none;" />
+    <img src="<?=$http_scheme?>://<?=$config->base->host?>/logout" style="display:none;" />
+    <img src="/external/removedata.php" style="display:none;" />
     
 </body>
 </html>

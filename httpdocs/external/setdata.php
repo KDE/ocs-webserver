@@ -15,7 +15,3 @@
    }
 
    setcookie("ocs_data", json_encode($user), time()+36000000, '/');
-
-
-
-?>

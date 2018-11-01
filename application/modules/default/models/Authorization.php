@@ -85,7 +85,6 @@ class Default_Model_Authorization
             Zend_Session::regenerateId();
             $this->_storeAuthSessionData();
             $this->updateUserLastOnline('member_id', $this->_authUserData->member_id);
-            
         }
 
         return $authResult;
@@ -312,10 +311,11 @@ class Default_Model_Authorization
     public function getAuthUserDataFromUnverified($identity)
     {
         $sql = "
-            SELECT `member_email`.`email_checked`, `member_email`.`email_address`, `member`.*
+            SELECT `m`.*, `member_email`.`email_verification_value`, `member_email`.`email_checked`, `mei`.`external_id` 
             FROM `member_email`
-            JOIN `member` ON `member`.`member_id` = `member_email`.`email_member_id`
-            WHERE `email_deleted` = 0 AND `member_email`.`email_verification_value` = :verification
+            JOIN `member` AS `m` ON `m`.`member_id` = `member_email`.`email_member_id`
+            LEFT JOIN `member_external_id` AS `mei` ON `mei`.`member_id` = `m`.`member_id`
+            WHERE `member_email`.`email_deleted` = 0 AND `member_email`.`email_verification_value` = :verification AND `m`.`is_deleted` = 0
         ";
         $resultRow = $this->_dataTable->getAdapter()->fetchRow($sql, array('verification' => $identity));
         if ($resultRow) {
@@ -357,7 +357,6 @@ class Default_Model_Authorization
      */
     public function removeAllCookieInformation($identifier, $identity)
     {
-
         $dataTable = new Default_Model_DbTable_Session();
         $where = $dataTable->getAdapter()->quoteInto($dataTable->getAdapter()->quoteIdentifier($identifier, true) . ' = ?', $identity);
 
