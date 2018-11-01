@@ -131,7 +131,8 @@ class SiteHeaderSearchForm extends React.Component {
     this.setState({ searchText: e.target.value });
   }
 
-  onSearchFormSubmit() {
+  onSearchFormSubmit(e) {
+    e.preventDefault();
     window.location.href = this.props.baseUrl + "/search?projectSearchText=" + this.state.searchText;
   }
 
