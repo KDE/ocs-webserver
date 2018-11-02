@@ -153,6 +153,12 @@ $this->inlineScript()->appendScript('
             width: 25px;
             float: left;
         }
+        
+        #use_gitlab_project_readme
+        {
+            width: 25px;
+            float: left;
+        }
     </style>
     <main class="user-admin-page">
 
@@ -331,6 +337,17 @@ $this->inlineScript()->appendScript('
                                         }
                                     ?>
                                      <?= $this->form->show_gitlab_project_issues ?>  Check this box, if you want to show the issue list      
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <div class="col-sm-12 margin-top-15">
+                                    <?php
+                                        if($this->product->is_gitlab_project == 0) {
+                                            $this->form->use_gitlab_project_readme->setAttrib('disabled', 'disabled');
+                                        }
+                                    ?>
+                                     <?= $this->form->use_gitlab_project_readme ?>  Check this box, if you want to show the README.md as project description      
                                     </div>
                                 </div>
                                 

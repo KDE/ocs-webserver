@@ -539,11 +539,25 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                             <div id="product-about" class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
 
                                 <div>
+                                    <?php
+                                        if($this->product->is_gitlab_project && $this->product->use_gitlab_project_readme && null != $this->gitlab_project['readme_url']) {
+                                    ?>
+                                    <article>
+                                        <b>Description:</b> <br/><br/>
+                                        <?=$this->readme ?>
+                                    </article>
+                                    <?php
+                                        } else {
+                                    ?>
                                     <article>
                                         <b>Description:</b> <br/><br/>
                                         <?=$this->product->description ?>
                                     </article>
-
+                                    
+                                    <?php
+                                        }
+                                    ?>
+                                    
 
 
                                         <?php

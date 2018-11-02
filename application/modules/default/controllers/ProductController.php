@@ -234,6 +234,35 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 $this->view->gitlab_project_issues_url = $this->view->gitlab_project['web_url'] . '/issues/';
             }
             
+            //show readme.md?
+            if($this->view->product->use_gitlab_project_readme && null != $this->view->gitlab_project['readme_url']) {
+                $config = Zend_Registry::get('config')->settings->server->opencode;
+                $readme = $this->view->gitlab_project['web_url'].'/raw/master/README.md?inline=false';
+                
+                $httpClient = new Zend_Http_Client($readme, array('keepalive' => true, 'strictredirects' => true));
+                $httpClient->resetParameters();
+                $httpClient->setUri($readme);
+                $httpClient->setHeaders('Private-Token', $config->private_token);
+                $httpClient->setHeaders('Sudo', $config->user_sudo);
+                $httpClient->setHeaders('User-Agent', $config->user_agent);
+                $httpClient->setMethod(Zend_Http_Client::GET);
+
+                $response = $httpClient->request();
+
+                $body = $response->getRawBody();
+
+                if (count($body) == 0) {
+                    return array();
+                }
+                include_once('Parsedown.php');
+                $Parsedown = new Parsedown();
+
+                $this->view->readme = $Parsedown->text($body);
+                
+            } else {
+                $this->view->readme = null;
+            }
+            
         }
         
 

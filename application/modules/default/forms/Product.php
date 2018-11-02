@@ -76,6 +76,7 @@ class Default_Form_Product extends Zend_Form
             ->addElement($this->getIsGitlab())  
             ->addElement($this->getGitlabProjectId())  
             ->addElement($this->getShowGitlabProjectIssues())
+            ->addElement($this->getUseGitlabProjectReadme())
 
             //->addElement($this->getCCAttribution())
             //->addElement($this->getCCComercial())
@@ -613,6 +614,19 @@ class Default_Form_Product extends Zend_Form
         return $element
                ->setOptions(array(
                'label' =>' Git-Issues ',
+               'use_hidden_element' => false,
+               'checked_value' => 1,
+               'unchecked_value' => 0
+               ));       
+    }
+    
+    private function getUseGitlabProjectReadme()
+    {
+        $element = new Zend_Form_Element_Checkbox('use_gitlab_project_readme');
+        
+        return $element
+               ->setOptions(array(
+               'label' =>'README.md',
                'use_hidden_element' => false,
                'checked_value' => 1,
                'unchecked_value' => 0
