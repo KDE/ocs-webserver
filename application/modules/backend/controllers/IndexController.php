@@ -147,6 +147,16 @@ class Backend_IndexController extends Local_Controller_Action_Backend
         $modelData = new Statistics_Model_Data(Zend_Registry::get('config')->settings->dwh->toArray());
         $this->sendJson($modelData->getPayoutCategoryMonthly($yyyymm));
     }
+
+    public function getpayoutmemberpercategoryAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $yyyymm = $this->getParam('yyyymm', '201708');
+        $catid = (int)$this->getParam('catid', 0);
+        $modelData = new Statistics_Model_Data(Zend_Registry::get('config')->settings->dwh->toArray());
+        $this->sendJson($modelData->getPayoutMemberPerCategory($yyyymm,$catid));
+    }
+
     public function getpayoutcategoryAction()
     {   
 
