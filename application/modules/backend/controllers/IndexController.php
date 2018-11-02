@@ -172,7 +172,7 @@ class Backend_IndexController extends Local_Controller_Action_Backend
             $pids = $modelCategoryStore->fetchCatIdsForStore(Statistics_Model_Data::DEFAULT_STORE_ID);
         }else{
             $modelCategoriesTable = new Default_Model_DbTable_ProjectCategory();
-            $pids = $modelCategoriesTable->fetchImmediateChildrenIds($catid);
+            $pids = $modelCategoriesTable->fetchImmediateChildrenIds($catid,$modelCategoriesTable::ORDERED_TITLE);
         }
         
         if($pids)
