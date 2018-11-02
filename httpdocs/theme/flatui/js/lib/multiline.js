@@ -1,7 +1,14 @@
+
 function makeLineChart(dataset, xName, yObjs, axisLables) {
     var chartObj = {};
-    var color = d3.scaleOrdinal(d3.schemeCategory20);
-    //var color = d3.scaleOrdinal.range(["#A07A19", "#AC30C0", "#EB9A72", "#BA86F5", "#EA22A8"]);
+  
+    var color = d3.scaleOrdinal().range(["#1F77B4", "#aec7e8", "#ff7f0e", "#ffbb78", "#2ca02c"
+        ,"#98df8a","#d62728","#ff9896","#9467bd","#c5b0d5"
+        ,"#8c564b","#c49c94","#e377c2","#f7b6d2","#7f7f7f"
+        ,"#c7c7c7","#bcbd22","#dbdb8d","#17becf","#9edae5"
+        ,"#393b79","#5254a3","#6b6ecf","#9c9ede","#637939"
+        ,"#b5cf6b","#cedb9c","#8c6d31","#bd9e39","#e7ba52"
+        ,"#ad494a","#d6616b","#7b4173","#a55194","#ce6dbd"]);
     chartObj.xAxisLable = axisLables.xAxis;
     chartObj.yAxisLable = axisLables.yAxis;
     /*
