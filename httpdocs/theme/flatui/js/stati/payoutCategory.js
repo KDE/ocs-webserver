@@ -8,7 +8,11 @@
 
 
                 var pids = data.pids;
-                var pidsname = data.pidsname;                
+                var pidsname = data.pidsname;   
+                console.log('-----------pids---------------');
+                console.log(pids);
+                console.log('-----------pidsname---------------');
+                console.log(pidsname);             
                 data = data.results;   
                 if(!data){
                      $("#payoutCategoryLineChart"+window.selectedCatid).text('no data found!');
