@@ -23,6 +23,12 @@
         d.username = d.username;      
     });
 
+    var amountTotal = 0;
+    data.forEach(function(d) {
+        value = +d.amount;
+        amountTotal = amountTotal+value;         
+    });
+
     var pie = new d3pie("pie", {
         size: {
           canvasWidth: 650,
@@ -30,7 +36,7 @@
         },
         header: {
             title: {
-              text: "Member payout_"+yyyymm,
+              text: "Member payout_"+yyyymm+' $'+Math.round( amountTotal ),
               fontSize: 24,
               font: "open sans"
               }
