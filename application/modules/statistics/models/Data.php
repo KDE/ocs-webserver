@@ -440,7 +440,7 @@ class Statistics_Model_Data
 
 
     public function getPayoutOfMember($member_id){       
-        $sql = "select * from dwh.member_payout where member_id = :member_id order by yearmonth desc";
+        $sql = "select * from dwh.member_payout where member_id = :member_id order by yearmonth asc";
         $result = $this->_db->fetchAll($sql, array("member_id"=>$member_id));
         return $result;  
     }
