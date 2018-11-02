@@ -13,7 +13,7 @@
         $("#pie").text("no data found ! "+yyyymm); 
         return;
     }
-    
+     
     // format the data
     data.forEach(function(d) {
         //d.label = d.member_id+'['+d.amount+']';

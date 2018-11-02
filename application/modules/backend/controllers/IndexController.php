@@ -123,7 +123,7 @@ class Backend_IndexController extends Local_Controller_Action_Backend
         $modelData = new Statistics_Model_Data(Zend_Registry::get('config')->settings->dwh->toArray());
         $this->sendJson($modelData->getDownloadsDomainStati($dateBegin, $dateEnd));
     }
-
+ 
     public function getpayoutmemberAction()
     {
 

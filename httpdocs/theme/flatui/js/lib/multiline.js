@@ -15,7 +15,7 @@ function makeLineChart(dataset, xName, yObjs, axisLables) {
 
 // So we can pass the x and y as strings when creating the function
     chartObj.xFunct = function(d){return d[xName]};
-
+ 
 // For each yObjs argument, create a yFunction
     function getYFn(column) {
         return function (d) {

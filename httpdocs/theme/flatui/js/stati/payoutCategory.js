@@ -3,7 +3,7 @@
             var parseTime = d3.timeParse("%Y%m");
                     
 
-                d3.json("/backend/index/getpayoutcategory?catid="+window.selectedCatid, function(error, data) {                                           
+                d3.json("/backend/index/getpayoutcategory?catid="+window.selectedCatid, function(error, data) {                                            
                 if (error) throw error;
 
 
