@@ -335,10 +335,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         defined('PPLOAD_SECRET') || define('PPLOAD_SECRET', $pploadConfig->secret);
         defined('PPLOAD_DOWNLOAD_SECRET') || define('PPLOAD_DOWNLOAD_SECRET', $pploadConfig->download_secret);
         
-        // gitlab
-        $gitlabConfig = $appConfig->third_party->gitlab;
-        defined('GITLAB_API_URI') || define('GITLAB_API_URI', $gitlabConfig->api_uri);
-        defined('GITLAB_TOKEN') || define('GITLAB_TOKEN', $gitlabConfig->token);
     }
 
     /**

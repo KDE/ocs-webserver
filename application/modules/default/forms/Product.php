@@ -624,10 +624,7 @@ class Default_Form_Product extends Zend_Form
         $element = new Zend_Form_Element_Select('gitlab_project_id', array('multiple' => false ));
         $element->setIsArray(true);
         
-        $gitlab = new Local_Gitlab_Api(array(
-            'apiUri'   => GITLAB_API_URI,
-            'token' => GITLAB_TOKEN
-        ));
+        $gitlab = new Default_Model_Ocs_Gitlab();
         
         $optionArray = array();
         
@@ -637,12 +634,12 @@ class Default_Form_Product extends Zend_Form
             $user = $auth->getStorage()->read();
             $gitUser = $gitlab->getUserWithName($user->username);
             
-            if($gitUser && is_array($gitUser) & null != $gitUser[0]) {
+            if($gitUser && null != $gitUser) {
                 //now get his projects
-                $gitProjects = $gitlab->getUserProjects($gitUser[0]->id);
+                $gitProjects = $gitlab->getUserProjects($gitUser['id']);
                 
                 foreach ($gitProjects as $proj) {
-                    $optionArray[$proj->id] = $proj->name; 
+                    $optionArray[$proj['id']] = $proj['name']; 
                 }
             }
             

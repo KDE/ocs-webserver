@@ -224,14 +224,14 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         
         //gitlab
         if($this->view->product->is_gitlab_project) {
-            $gitProject = $this->fetchGitlabProject($this->view->product->gitlab_project_id)[0];
+            $gitProject = $this->fetchGitlabProject($this->view->product->gitlab_project_id);
             $this->view->gitlab_project = $gitProject;
             
             //show issues?
             if($this->view->product->show_gitlab_project_issues) {
                 $issues = $this->fetchGitlabProjectIssues($this->view->product->gitlab_project_id);
                 $this->view->gitlab_project_issues = $issues;
-                $this->view->gitlab_project_issues_url = $this->view->gitlab_project->web_url . '/issues/';
+                $this->view->gitlab_project_issues_url = $this->view->gitlab_project['web_url'] . '/issues/';
             }
             
         }
@@ -2544,10 +2544,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
     
     private function fetchGitlabProject($gitProjectId)
     {
-        $gitlab = new Local_Gitlab_Api(array(
-            'apiUri'   => GITLAB_API_URI,
-            'token' => GITLAB_TOKEN
-        ));
+        $gitlab = new Default_Model_Ocs_Gitlab();
         
         $gitProject = $gitlab->getProject($gitProjectId);
         
@@ -2556,10 +2553,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
     
     private function fetchGitlabProjectIssues($gitProjectId)
     {
-        $gitlab = new Local_Gitlab_Api(array(
-            'apiUri'   => GITLAB_API_URI,
-            'token' => GITLAB_TOKEN
-        ));
+        $gitlab = new Default_Model_Ocs_Gitlab();
         
         $gitProjectIssues = $gitlab->getProjectIssues($gitProjectId);
         
