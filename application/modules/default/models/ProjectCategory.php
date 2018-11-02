@@ -202,7 +202,7 @@ class Default_Model_ProjectCategory
         }
 
         return $tree;
-    }
+    } 
 
     private function buildTree($list, $parent_id = null, $store_id = null)
     {

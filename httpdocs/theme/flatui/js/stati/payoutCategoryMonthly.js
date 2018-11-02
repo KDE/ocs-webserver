@@ -51,7 +51,7 @@
                 if($('#pieCategoryMonthlyDetail').length==0)
                 {
                     $('#pieCategoryMonthly').append('<div class="chart-wrapper" style="float:right" id="pieCategoryMonthlyDetail"> </div>');
-                  }
+                  } 
                 var parseTime = d3.timeParse("%Y%m");                        
                 d3.json("/backend/index/getpayoutcategory?catid="+project_category_id, function(error, data) {                                           
                     if (error) throw error;

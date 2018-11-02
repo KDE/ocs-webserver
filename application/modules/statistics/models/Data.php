@@ -228,7 +228,7 @@ class Statistics_Model_Data
             $result = $this->_db->fetchAll($sql,array("date_start"=>$date_start,"date_end"=>$date_end));
             return $result;             
     }
-
+ 
     public function getDownloadsDomainStati($begin, $end){
             $date_start =$begin.' 00:00:00';
             $date_end =$end.' 23:59:59';    
