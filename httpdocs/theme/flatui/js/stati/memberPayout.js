@@ -75,7 +75,8 @@
                           //d3.select('#detailContainer').html(dh);
 
                       $('#detailContainer').append('<div class="chart-wrapper" id="detailContainerLinechart"></div>');
-                            data = data.results;
+                           data = data.results;
+                           console.log(data);
                            data.forEach(function (d) {                   
                              d.year = parseTime(d.yearmonth);
                              d.amount = +d.amount;                               
