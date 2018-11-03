@@ -350,12 +350,21 @@ class Default_Model_OAuth_Github implements Default_Model_OAuth_Interface
                 array('More than one record matches the supplied identity.'));
         }
 
+        if (empty($resultSet[0]['email_checked'])) {
+            return $this->createAuthResult(Local_Auth_Result::MAIL_ADDRESS_NOT_VALIDATED, $resultSet[0]['member_id'],
+                array('Mail address not validated.'));
+        }
+
+        if ($resultSet[0]['is_active'] == 0) {
+            return $this->createAuthResult(Local_Auth_Result::ACCOUNT_INACTIVE, $userEmail,
+                array('User account is inactive.'));
+        }
+
         $this->memberData = array_shift($resultSet);
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - this->memberData: ' . Zend_Json::encode($this->memberData));
 
         if ($this->memberData['is_deleted'] == 1) {
-            return $this->createAuthResult(Zend_Auth_Result::FAILURE, $userEmail,
-                array('User is deleted.'));
+            return $this->createAuthResult(Zend_Auth_Result::FAILURE, $userEmail, array('User is deleted.'));
         }
 
         return $this->createAuthResult(Zend_Auth_Result::SUCCESS, $userEmail, array('Authentication successful.'));
@@ -369,15 +378,23 @@ class Default_Model_OAuth_Github implements Default_Model_OAuth_Interface
      */
     private function fetchUserByEmail($userEmail)
     {
-        $sql = "
-            SELECT * 
-            FROM {$this->_tableName} 
-            WHERE 
-            LOWER(mail) = LOWER(:mail)";
+        $sql = "            
+            SELECT `m`.*, `member_email`.`email_verification_value`, `member_email`.`email_checked`, `mei`.`external_id` 
+            FROM `member` AS `m`
+            JOIN `member_email` ON `m`.`member_id` = `member_email`.`email_member_id` 
+            LEFT JOIN `member_external_id` AS `mei` ON `mei`.`member_id` = `m`.`member_id`
+            WHERE  
+              `m`.`is_deleted` = 0 
+            AND 
+              `member_email`.`email_deleted` = 0
+            AND
+              `member_email`.`email_primary` = 1
+            AND
+            ( LOWER(`member_email`.`email_address`) = LOWER(:mail) OR LOWER(`member_email`.`email_address`) = CONCAT(LOWER(:mail),'_deactivated') )";
 
         $this->_db->getProfiler()->setEnabled(true);
         $resultSet = $this->_db->fetchAll($sql, array(
-            'mail'    => $userEmail
+            'mail' => $userEmail
         ));
         Zend_Registry::get('logger')->info(__METHOD__ . ' - seconds: ' . $this->_db->getProfiler()->getLastQueryProfile()
                                                                                    ->getElapsedSecs())
@@ -447,7 +464,6 @@ class Default_Model_OAuth_Github implements Default_Model_OAuth_Interface
         if ($member->is_active == Default_Model_Member::MEMBER_INACTIVE) {
             $modelMember->setActive($member->member_id, $userEmail['email']);
         }
-
     }
 
     /**
@@ -498,7 +514,7 @@ class Default_Model_OAuth_Github implements Default_Model_OAuth_Interface
      */
     public function registerLocal()
     {
-        $userInfo = $this->getUserInfo(); 
+        $userInfo = $this->getUserInfo();
         $usermail = $this->getUserEmail();
         $userInfo['email'] = $usermail['email'];
         $userInfo['verified'] = $usermail['verified'] ? 1 : 0;
@@ -542,7 +558,7 @@ class Default_Model_OAuth_Github implements Default_Model_OAuth_Interface
             return $this->createAuthResult(Zend_Auth_Result::FAILURE, $member['mail'],
                 array('A user with given data could not registered.'));
         }
-        
+
         //Send user to subsystems
         try {
             $id_server = new Default_Model_Ocs_OAuth();
@@ -553,18 +569,17 @@ class Default_Model_OAuth_Github implements Default_Model_OAuth_Interface
         try {
             $ldap_server = new Default_Model_Ocs_Ldap();
             $ldap_server->createUser($member['member_id']);
-            Zend_Registry::get('logger')->debug(__METHOD__ . ' - ldap : ' . implode(PHP_EOL." - ", $ldap_server->getMessages()));
+            Zend_Registry::get('logger')->debug(__METHOD__ . ' - ldap : ' . implode(PHP_EOL . " - ", $ldap_server->getMessages()));
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }
         try {
             $openCode = new Default_Model_Ocs_Gitlab();
             $openCode->createUser($member['member_id']);
-            Zend_Registry::get('logger')->debug(__METHOD__ . ' - opencode : ' . implode(PHP_EOL." - ", $openCode->getMessages()));
+            Zend_Registry::get('logger')->debug(__METHOD__ . ' - opencode : ' . implode(PHP_EOL . " - ", $openCode->getMessages()));
         } catch (Exception $e) {
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }
-        
 
         Default_Model_ActivityLog::logActivity($member['main_project_id'], null, $member['member_id'],
             Default_Model_ActivityLog::MEMBER_JOINED, array());

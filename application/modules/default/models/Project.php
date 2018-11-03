@@ -998,7 +998,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         // set personal page deleted
         $sql = "UPDATE project SET `status` = :statusCode, deleted_at = NOW() WHERE member_id = :memberId AND type_id = :typeId";
         $this->_db->query($sql, array(
-            'statusCode' => self::PROJECT_ACTIVE,
+            'statusCode' => self::PROJECT_DELETED,
             'memberId'   => $member_id,
             'typeId'     => self::PROJECT_TYPE_PERSONAL
         ))->execute();

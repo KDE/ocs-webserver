@@ -38,7 +38,7 @@ class Default_Model_Ocs_Forum
         } else {
             $this->config = Zend_Registry::get('config')->settings->server->forum;
         }
-        $uri = $this->config->host . $this->config->url->user_create;;
+        $uri = $this->config->host;
         $this->httpClient = new Zend_Http_Client($uri, array('keepalive' => true, 'strictredirects' => true));
     }
 
