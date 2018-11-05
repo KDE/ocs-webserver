@@ -53,9 +53,6 @@ out: ../css/header.css, sourcemap: true, compress: true
         height: 40px;
         width: 100%;
         padding-right: 5px;
-        &.w-user {
-          padding-right: 155px;
-        }
       }
 
       #site-header-search-form {
@@ -66,12 +63,6 @@ out: ../css/header.css, sourcemap: true, compress: true
         #search-form {
           margin: 6.5px 0;
         }
-      }
-
-      #site-header-user-menu-container {
-        position: absolute;
-        top: 0;
-        right: 0;
       }
 
       #search-form {
@@ -112,10 +103,10 @@ out: ../css/header.css, sourcemap: true, compress: true
       #site-header-user-menu-container {
         float: right;
         margin-right: 6px;
+        margin-left: 6px;
 
         #user-menu-toggle {
           position: relative;
-          width: 130px;
           height: 40px;
           float: right;
           cursor: pointer;
@@ -125,7 +116,8 @@ out: ../css/header.css, sourcemap: true, compress: true
             display: block;
             width: 100%;
             height: 100%;
-            padding-left: 60px;
+            padding-left: 50px;
+            padding-right: 15px;
           }
 
           img {
