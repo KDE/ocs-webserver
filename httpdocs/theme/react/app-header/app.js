@@ -25,8 +25,6 @@ class SiteHeader extends React.Component {
 
   render(){
 
-    console.log(this.state);
-
     let userMenuDisplay, loginMenuDisplay, siteHeaderTopRightCssClass;
     if (this.state.user){
       userMenuDisplay = (
@@ -167,7 +165,7 @@ class SiteHeaderUserMenu extends React.Component {
   componentDidMount() {
     let imageBaseUrl;
     const env = appHelpers.getEnv(this.props.serverUrl);
-    console.log(env);
+
     if (env === "live"){
       imageBaseUrl = "https://cn.pling.com/cache/200x200-2/img/";
     } else {
@@ -204,7 +202,7 @@ class SiteHeaderUserMenu extends React.Component {
       <ul id="site-header-user-menu-container">
         <li ref={node => this.node = node} id="user-menu-toggle" className={this.state.dropdownClass}>
           <a className="profile-menu-toggle">
-            <img className="profile-menu-image" src={this.state.imageBaseUrl + this.props.user.profile_image_url}/>
+            <img className="profile-menu-image" src={this.props.user.profile_image_url}/>
             <span className="profile-menu-username">{this.props.user.username}</span>
           </a>
           <ul id="user-profile-menu" >

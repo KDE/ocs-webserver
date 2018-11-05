@@ -25,8 +25,6 @@ class SiteHeader extends React.Component {
 
   render() {
 
-    console.log(this.state);
-
     let userMenuDisplay, loginMenuDisplay, siteHeaderTopRightCssClass;
     if (this.state.user) {
       userMenuDisplay = React.createElement(SiteHeaderUserMenu, {
@@ -198,7 +196,7 @@ class SiteHeaderUserMenu extends React.Component {
   componentDidMount() {
     let imageBaseUrl;
     const env = appHelpers.getEnv(this.props.serverUrl);
-    console.log(env);
+
     if (env === "live") {
       imageBaseUrl = "https://cn.pling.com/cache/200x200-2/img/";
     } else {
@@ -238,7 +236,7 @@ class SiteHeaderUserMenu extends React.Component {
         React.createElement(
           "a",
           { className: "profile-menu-toggle" },
-          React.createElement("img", { className: "profile-menu-image", src: this.state.imageBaseUrl + this.props.user.profile_image_url }),
+          React.createElement("img", { className: "profile-menu-image", src: this.props.user.profile_image_url }),
           React.createElement(
             "span",
             { className: "profile-menu-username" },
