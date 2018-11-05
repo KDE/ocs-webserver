@@ -267,7 +267,7 @@ echo $this->render('partials/header/metaheader.phtml');
         }
     </style>
 
-    <header id="page_header" xmlns="http://www.w3.org/1999/html">
+<?php /*    <header id="page_header" xmlns="http://www.w3.org/1999/html">
         <div class="container header" style="position: relative;">
 
             <?php if (false === $auth->hasIdentity() && empty($member->username)) {
@@ -362,7 +362,7 @@ echo $this->render('partials/header/metaheader.phtml');
             <section id="second-container" class="container">
                 <section class="wrapper">
                     <span class="header_cat_link" id="header_cat_link">
-                       <?php /* <a href="/browse/cat/<?= isset($this->cat_id) ? $this->cat_id : 'all' ?>/order/latest"> */?>
+                       <?php /* <a href="/browse/cat/<?= isset($this->cat_id) ? $this->cat_id : 'all' ?>/order/latest"> *//*?>
                         <a href="http://<?php echo $last_char_store_order=='1'?$sname:$baseurl.'/s/'.$store_name ?>">
                             <?=$store_name?>
                         </a>
@@ -372,7 +372,7 @@ echo $this->render('partials/header/metaheader.phtml');
         <?php endif; ?>
         </div>
     </header>
-
+  */?>
 
 <script type="text/javascript">
     var json_hasIdentity = <?php  if( $auth->hasIdentity() ) { echo '1' ;} else { echo '0';} ?>;
