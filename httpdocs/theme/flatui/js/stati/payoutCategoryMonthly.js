@@ -3,9 +3,10 @@
   $("#pieCategoryMonthly").empty();
   // pie payout
 
-  let yyyymm = $( "#selectmonthCategoryMonthly option:selected" ).text();
+  var yyyymm = $( "#selectmonthCategoryMonthly option:selected" ).text();
 
   d3.json("/backend/index/getpayoutcategorymonthly?yyyymm="+yyyymm, function(error, data) {        
+
     if (error) throw error;
     data = data.results;
     
@@ -42,25 +43,86 @@
           onClickSegment: function(a) {
             if(!a.data.isGrouped)
             {
-                //var url='https://opendesktop.org/member/'+a.data.member;
-                //window.open(url,'_blank');
+                console.log(a.data);
                 d3.select('#detailContainer').html('');
-                let member_id = a.data.member;
-                let paypal_mail = a.data.paypal_mail;
+                var project_category_id = a.data.project_category_id;
+                var title = a.data.title;
                 
-                d3.json("/backend/index/getpayoutmember?member="+a.data.member, function(error, data) {                  
-                            console.log(data);
-                            da = data.results;
-                            var dh = '<a target="_blank" href="https://opendesktop.org/member/'+member_id+'">'+member_id+'</a>'+paypal_mail;
-                            dh= dh+'<table>';       
-                            dh=dh+'<tr><td>yyyymm</td><td>Amount</td></tr>';                                                   
-                             da.forEach(function(d, i) {
-                                  dh=dh+'<tr><td>'+d.yearmonth+'</td><td style="text-align:right">'+d.amount+'</td></tr>';                      
-                              });
-                             dh=dh+'</table>';
-                              d3.select('#detailContainer').html(dh);
-  
-                  });
+                if($('#pieCategoryMonthlyDetail').length==0)
+                {
+                    $('#pieCategoryMonthly').append('<div class="chart-wrapper" style="float:right" id="pieCategoryMonthlyDetail"> </div>');
+                  } 
+                var parseTime = d3.timeParse("%Y%m");                        
+                d3.json("/backend/index/getpayoutcategory?catid="+project_category_id, function(error, data) {                                           
+                    if (error) throw error;
+
+                    data = data.results;   
+                    data.forEach(function (d) {                   
+                       d.year = parseTime(d.yearmonth);
+                       d.amount = +d.amount;                          
+                    });                    
+                    var chartColumns ={
+                        [title]: {column: 'amount'}                       
+                    };
+                                    
+                    var chart = makeLineChart(data, 'year',chartColumns , {xAxis: 'Month', yAxis: 'Amount'});
+
+                    $('#pieCategoryMonthlyDetail').empty();
+                    chart.bind("#pieCategoryMonthlyDetail");
+                    chart.render();
+
+                });      
+
+
+                if($('#pieMemberCategoryMonthly').length==0)
+                {
+                    $('#pieCategoryMonthly').append('<div  style="float:right" id="pieMemberCategoryMonthly"> </div>');
+                }else{
+                  $('#pieMemberCategoryMonthly').empty();
+                }
+
+
+                d3.json("/backend/index/getpayoutmemberpercategory?yyyymm="+yyyymm+'&catid='+project_category_id, function(error, data) { 
+
+                      if (error) throw error;
+                      data = data.results;
+                      
+                      // format the data
+                      data.forEach(function(d) {
+                          d.label = d.username+'['+d.amount+']';
+                          d.value = +d.amount;
+                          d.member = +d.member_id;
+                      });
+
+                      var pie = new d3pie("pieMemberCategoryMonthly", {
+                          size: {
+                            canvasWidth: 690,
+                            pieOuterRadius: "90%"           
+                          },
+                          header: {
+                              title: {
+                                text: "member "+yyyymm,
+                                fontSize: 24,
+                                font: "open sans"
+                                }
+                            },
+                          data: {
+                            sortOrder: "value-desc",
+                            smallSegmentGrouping: {
+                              enabled: true,
+                              value: 1,
+                              valueType: "percentage",
+                              label: "<2%"
+                            },
+                            content: data
+                          }
+                        });
+
+
+                }); 
+
+
+
             }else{
                 console.log(a);
                 d3.select('#detailContainer').html('');
@@ -74,19 +136,7 @@
                  dh=dh+'</table>';
                 d3.select('#detailContainer').html(dh);
             }              
-          }
-          /*,
-          onMouseoverSegment: function(info) {
-                    console.log("mouseover:", info);
-                    d3.select('#detailContainer').html('');
-                    if(!info.data.isGrouped){
-                          d3.json("/backend/index/getpayoutmember?member="+info.data.member, function(error, data) { 
-                                console.log(data);
-
-                          });
-                    }
-            }
-            */
+          }          
         }
       });
 

@@ -95,6 +95,15 @@ class Local_Auth_Adapter_RememberMe implements Local_Auth_Adapter_Interface
                 array('More than one record matches the supplied identity.'));
         }
 
+        if (empty($resultSet[0]['email_checked'])) {
+            return $this->createAuthResult(Local_Auth_Result::MAIL_ADDRESS_NOT_VALIDATED, $resultSet[0]['member_id'],
+                array('Mail address not validated.'));
+        }
+
+        if ($resultSet[0]['is_active'] == 0) {
+            return $this->createAuthResult(Local_Auth_Result::ACCOUNT_INACTIVE, $this->_identity, array('User account is inactive.'));
+        }
+
         $this->_resultRow = array_shift($resultSet);
 
         return $this->createAuthResult(Zend_Auth_Result::SUCCESS, $this->_identity, array('Authentication successful.'));
@@ -107,12 +116,14 @@ class Local_Auth_Adapter_RememberMe implements Local_Auth_Adapter_Interface
     private function fetchUserData()
     {
         $sql = "
-            SELECT `member`.* 
+            SELECT `m`.*, `me`.`email_verification_value`, `me`.`email_checked`, `mei`.`external_id` 
             FROM `session`
-            JOIN `member` ON `member`.`member_id` = `session`.`member_id`
-            WHERE `member`.`is_active` = :active
-            AND `member`.`is_deleted` = :deleted
-            AND `member`.`login_method` = :login
+            JOIN `member` AS `m` ON `m`.`member_id` = `session`.`member_id`
+            JOIN member_email AS `me` ON m.member_id = me.email_member_id AND me.email_primary = 1
+            LEFT JOIN `member_external_id` AS `mei` ON `mei`.`member_id` = `m`.`member_id`
+            WHERE `m`.`is_active` = :active
+            AND `m`.`is_deleted` = :deleted
+            AND `m`.`login_method` = :login
             AND `session`.`member_id` = :member
             AND `session`.`remember_me_id` = :uuid
             AND `session`.`expiry` >= NOW()

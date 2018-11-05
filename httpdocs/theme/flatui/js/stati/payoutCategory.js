@@ -3,12 +3,16 @@
             var parseTime = d3.timeParse("%Y%m");
                     
 
-                d3.json("/backend/index/getpayoutcategory?catid="+window.selectedCatid, function(error, data) {                                           
+                d3.json("/backend/index/getpayoutcategory?catid="+window.selectedCatid, function(error, data) {                                            
                 if (error) throw error;
 
 
                 var pids = data.pids;
-                var pidsname = data.pidsname;                
+                var pidsname = data.pidsname;   
+                console.log('-----------pids---------------');
+                console.log(pids);
+                console.log('-----------pidsname---------------');
+                console.log(pidsname);             
                 data = data.results;   
                 if(!data){
                      $("#payoutCategoryLineChart"+window.selectedCatid).text('no data found!');

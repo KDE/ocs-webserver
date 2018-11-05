@@ -87,7 +87,7 @@ class Local_Controller_Action_DomainSwitch extends Zend_Controller_Action
     }
 
     /**
-     * Returns the name for the emporium client. If no name were found, the name for the standard client will be returned.
+     * Returns the name for the client. If no name were found, the name for the standard client will be returned.
      *
      * @return string
      */

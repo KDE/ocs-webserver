@@ -123,7 +123,7 @@ class Backend_IndexController extends Local_Controller_Action_Backend
         $modelData = new Statistics_Model_Data(Zend_Registry::get('config')->settings->dwh->toArray());
         $this->sendJson($modelData->getDownloadsDomainStati($dateBegin, $dateEnd));
     }
-
+ 
     public function getpayoutmemberAction()
     {
 
@@ -147,6 +147,16 @@ class Backend_IndexController extends Local_Controller_Action_Backend
         $modelData = new Statistics_Model_Data(Zend_Registry::get('config')->settings->dwh->toArray());
         $this->sendJson($modelData->getPayoutCategoryMonthly($yyyymm));
     }
+
+    public function getpayoutmemberpercategoryAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $yyyymm = $this->getParam('yyyymm', '201708');
+        $catid = (int)$this->getParam('catid', 0);
+        $modelData = new Statistics_Model_Data(Zend_Registry::get('config')->settings->dwh->toArray());
+        $this->sendJson($modelData->getPayoutMemberPerCategory($yyyymm,$catid));
+    }
+
     public function getpayoutcategoryAction()
     {   
 
@@ -162,7 +172,7 @@ class Backend_IndexController extends Local_Controller_Action_Backend
             $pids = $modelCategoryStore->fetchCatIdsForStore(Statistics_Model_Data::DEFAULT_STORE_ID);
         }else{
             $modelCategoriesTable = new Default_Model_DbTable_ProjectCategory();
-            $pids = $modelCategoriesTable->fetchImmediateChildrenIds($catid);
+            $pids = $modelCategoriesTable->fetchImmediateChildrenIds($catid,$modelCategoriesTable::ORDERED_TITLE);
         }
         
         if($pids)

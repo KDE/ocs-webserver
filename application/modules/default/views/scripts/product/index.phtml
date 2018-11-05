@@ -387,7 +387,7 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                                     ?>
                                     <p class="light small">
                                     <?php if (false === empty($this->product->gitlab_project_id)):
-                                        echo '<img src="/theme/react/assets/img/logo-opencode.png" width="15"> <a target="_blank" href="' . $this->gitlab_project->web_url . '" rel="nofollow">' . $this->gitlab_project->web_url
+                                        echo '<img src="/theme/react/assets/img/logo-opencode.png" width="15"> <a target="_blank" href="' . $this->gitlab_project['web_url'] . '" rel="nofollow">' . $this->gitlab_project['web_url']
                                             . ' <span class="fa fa-external-link"></span></a>';
                                         
                                        endif;
@@ -539,11 +539,25 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                             <div id="product-about" class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
 
                                 <div>
+                                    <?php
+                                        if($this->product->is_gitlab_project && $this->product->use_gitlab_project_readme && null != $this->gitlab_project['readme_url']) {
+                                    ?>
+                                    <article>
+                                        <b>Description:</b> <br/><br/>
+                                        <?=$this->readme ?>
+                                    </article>
+                                    <?php
+                                        } else {
+                                    ?>
                                     <article>
                                         <b>Description:</b> <br/><br/>
                                         <?=$this->product->description ?>
                                     </article>
-
+                                    
+                                    <?php
+                                        }
+                                    ?>
+                                    
 
 
                                         <?php
@@ -921,8 +935,8 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                               $issues = $this->gitlab_project_issues;
                               $i = 0;
                               foreach ($issues as $issue){
-                                  $date = date('Y-m-d H:i:s', strtotime($issue->created_at));
-                                  echo '<div class="commentstore"><a href="'.$issue->web_url.'"><span class="title">' . $issue->title . '</span></a><div class="newsrow"><span class="date">'.$helpPrintDate->printDate($date).'</span></div></div>';
+                                  $date = date('Y-m-d H:i:s', strtotime($issue['created_at']));
+                                  echo '<div class="commentstore"><a href="'.$issue['web_url'].'"><span class="title">' . $issue['title'] . '</span></a><div class="newsrow"><span class="date">'.$helpPrintDate->printDate($date).'</span></div></div>';
                                   $i ++;
                                   if($i>5) {
                                       break;

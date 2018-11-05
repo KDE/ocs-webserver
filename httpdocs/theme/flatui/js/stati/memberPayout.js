@@ -1,14 +1,19 @@
 !(function (d3) {
 
   $("#pie").empty();
-  // pie payout
-
-  let yyyymm = $( "#selectmonth option:selected" ).text();
+  $('#detailContainer').empty();
+  // pie payout  
+  
+  var yyyymm = $( "#selectmonth option:selected" ).text();
 
   d3.json("/backend/index/getpayout?yyyymm="+yyyymm, function(error, data) {        
     if (error) throw error;
     data = data.results;
-    
+    if(!data){
+        $("#pie").text("no data found ! "+yyyymm); 
+        return;
+    }
+     
     // format the data
     data.forEach(function(d) {
         //d.label = d.member_id+'['+d.amount+']';
@@ -18,6 +23,12 @@
         d.username = d.username;      
     });
 
+    var amountTotal = 0;
+    data.forEach(function(d) {
+        value = +d.amount;
+        amountTotal = amountTotal+value;         
+    });
+
     var pie = new d3pie("pie", {
         size: {
           canvasWidth: 650,
@@ -25,7 +36,7 @@
         },
         header: {
             title: {
-              text: "Member payout_"+yyyymm,
+              text: "Member payout_"+yyyymm+' $'+Math.round( amountTotal ),
               fontSize: 24,
               font: "open sans"
               }
@@ -44,24 +55,41 @@
           onClickSegment: function(a) {
             if(!a.data.isGrouped)
             {
-                //var url='https://opendesktop.org/member/'+a.data.member;
-                //window.open(url,'_blank');
-                d3.select('#detailContainer').html('');
-                let member_id = a.data.member;
-                let paypal_mail = a.data.paypal_mail;
-                let username = a.data.username;
                 
-                d3.json("/backend/index/getpayoutmember?member="+a.data.member, function(error, data) {                  
-                            console.log(data);
-                            da = data.results;
-                            var dh = '<a target="_blank" href="https://opendesktop.org/member/'+member_id+'">'+username + '['+member_id+'] '+'</a>'+paypal_mail;
-                            dh= dh+'<table>';       
-                            dh=dh+'<tr><td>yyyymm</td><td>Amount</td></tr>';                                                   
-                             da.forEach(function(d, i) {
-                                  dh=dh+'<tr><td>'+d.yearmonth+'</td><td style="text-align:right">'+d.amount+'</td></tr>';                      
-                              });
-                             dh=dh+'</table>';
-                              d3.select('#detailContainer').html(dh);
+                d3.select('#detailContainer').html('');
+                var member_id = a.data.member;
+                var paypal_mail = a.data.paypal_mail;
+                var username = a.data.username;
+
+                var parseTime = d3.timeParse("%Y%m");
+                d3.json("/backend/index/getpayoutmember?member="+a.data.member, function(error, data) {               if (error) throw error;
+                            // console.log(data);
+                            // da = data.results;
+                            // var dh = '<div style="display:block;float:left"><a target="_blank" href="https://opendesktop.org/member/'+member_id+'">'+username + '['+member_id+'] '+'</a>'+paypal_mail+'</div>';
+                            // // dh= dh+'<table>';       
+                            // // dh=dh+'<tr><td>yyyymm</td><td>Amount</td></tr>';                                                   
+                            // //  da.forEach(function(d, i) {
+                            // //       dh=dh+'<tr><td>'+d.yearmonth+'</td><td style="text-align:right">'+d.amount+'</td></tr>';                      
+                            // //   });
+                            // //  dh=dh+'</table>';
+                          //d3.select('#detailContainer').html(dh);
+
+                      $('#detailContainer').append('<div class="chart-wrapper" id="detailContainerLinechart"></div>');
+                           data = data.results;
+                           console.log(data);
+                           data.forEach(function (d) {                   
+                             d.year = parseTime(d.yearmonth);
+                             d.amount = +d.amount;                               
+                          });                             
+                            var columnName = username+'['+member_id+']';
+                              var chartColumns ={
+                                  [columnName]: {column: 'amount'}                       
+                              };
+                            var chart = makeLineChart(data, 'year',chartColumns , {xAxis: 'Month', yAxis: 'Amount'});                          
+                            chart.bind("#detailContainerLinechart");
+                            chart.render();
+
+                         
   
                   });
             }else{

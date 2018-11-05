@@ -114,6 +114,12 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->addResource(new Zend_Acl_Resource ('backend_letteravatar'));
         $this->addResource(new Zend_Acl_Resource ('backend_group'));
 
+        $this->addResource(new Zend_Acl_Resource ('backend_cdiscourse'));
+        $this->addResource(new Zend_Acl_Resource ('backend_cgitlab'));
+        $this->addResource(new Zend_Acl_Resource ('backend_cldap'));
+        $this->addResource(new Zend_Acl_Resource ('backend_coauth'));
+        $this->addResource(new Zend_Acl_Resource ('backend_cexport'));
+
         $this->addResource(new Zend_Acl_Resource ('statistics_data'));
 
         $this->allow(self::ROLENAME_GUEST, array(

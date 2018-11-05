@@ -76,6 +76,7 @@ class Default_Form_Product extends Zend_Form
             ->addElement($this->getIsGitlab())  
             ->addElement($this->getGitlabProjectId())  
             ->addElement($this->getShowGitlabProjectIssues())
+            ->addElement($this->getUseGitlabProjectReadme())
 
             //->addElement($this->getCCAttribution())
             //->addElement($this->getCCComercial())
@@ -619,15 +620,25 @@ class Default_Form_Product extends Zend_Form
                ));       
     }
     
+    private function getUseGitlabProjectReadme()
+    {
+        $element = new Zend_Form_Element_Checkbox('use_gitlab_project_readme');
+        
+        return $element
+               ->setOptions(array(
+               'label' =>'README.md',
+               'use_hidden_element' => false,
+               'checked_value' => 1,
+               'unchecked_value' => 0
+               ));       
+    }
+    
     private function getGitlabProjectId()
     {
         $element = new Zend_Form_Element_Select('gitlab_project_id', array('multiple' => false ));
         $element->setIsArray(true);
         
-        $gitlab = new Local_Gitlab_Api(array(
-            'apiUri'   => GITLAB_API_URI,
-            'token' => GITLAB_TOKEN
-        ));
+        $gitlab = new Default_Model_Ocs_Gitlab();
         
         $optionArray = array();
         
@@ -637,12 +648,12 @@ class Default_Form_Product extends Zend_Form
             $user = $auth->getStorage()->read();
             $gitUser = $gitlab->getUserWithName($user->username);
             
-            if($gitUser && is_array($gitUser) & null != $gitUser[0]) {
+            if($gitUser && null != $gitUser) {
                 //now get his projects
-                $gitProjects = $gitlab->getUserProjects($gitUser[0]->id);
+                $gitProjects = $gitlab->getUserProjects($gitUser['id']);
                 
                 foreach ($gitProjects as $proj) {
-                    $optionArray[$proj->id] = $proj->name; 
+                    $optionArray[$proj['id']] = $proj['name']; 
                 }
             }
             
