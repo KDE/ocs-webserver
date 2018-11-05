@@ -56,7 +56,7 @@ class SiteHeader extends React.Component {
 
     console.log(this.state);
 
-    let logoLink = this.state.baseUrl;
+    let logoLink = this.state.serverUrl;
     if (this.state.serverUri.indexOf('/s/') > -1) {
       logoLink += "/s/" + this.state.store.name;
     }
