@@ -70,7 +70,7 @@ class SiteHeader extends React.Component {
             { id: "site-header-logo-container", style: this.state.template['header-logo'] },
             React.createElement(
               "a",
-              { href: this.state.serverUrl + this.state.serverUri },
+              { href: this.state.baseUrl },
               React.createElement("img", { src: this.state.template['header-logo']['image-src'] })
             )
           ),
