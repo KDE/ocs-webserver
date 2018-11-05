@@ -76,7 +76,15 @@ class MetaHeader extends React.Component {
   }
 
   updateDimensions() {
-    const device = appHelpers.getDeviceFromWidth(window.innerWidth);
+    const width = window.innerWidth;
+    let device;
+    if (width >= 910) {
+      device = "large";
+    } else if (width < 910 && width >= 610) {
+      device = "mid";
+    } else if (width < 610) {
+      device = "tablet";
+    }
     this.setState({ device: device });
   }
 
@@ -174,7 +182,12 @@ class DomainsDropDownMenu extends React.Component {
   }
 
   componentDidMount() {
-    const menuGroups = appHelpers.generateMenuGroupsArray(this.props.domains);
+    let menuGroups = [];
+    this.props.domains.forEach(function (domain, index) {
+      if (menuGroups.indexOf(domain.menugroup) === -1) {
+        menuGroups.push(domain.menugroup);
+      }
+    });
     this.setState({ menuGroups: menuGroups });
   }
 
@@ -886,7 +899,12 @@ class MobileLeftSidePanel extends React.Component {
   }
 
   componentDidMount() {
-    const menuGroups = appHelpers.generateMenuGroupsArray(this.props.domains);
+    let menuGroups = [];
+    this.props.domains.forEach(function (domain, index) {
+      if (menuGroups.indexOf(domain.menugroup) === -1) {
+        menuGroups.push(domain.menugroup);
+      }
+    });
     this.setState({ menuGroups: menuGroups });
   }
 

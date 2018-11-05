@@ -142,9 +142,21 @@ $this->inlineScript()->appendScript('
             float: left;
         }
         
-        #gitlab_project_name
+        #gitlab_project_id
         {
             width: 300px;
+            float: left;
+        }
+        
+        #show_gitlab_project_issues
+        {
+            width: 25px;
+            float: left;
+        }
+        
+        #use_gitlab_project_readme
+        {
+            width: 25px;
             float: left;
         }
     </style>
@@ -295,17 +307,71 @@ $this->inlineScript()->appendScript('
                                 <?= $this->form->google_code ?>
 
                             </section>
-                            <?php /*
+                            
                             <h3>Git</h3>
+                            
                             <section id="git">
+                                <?php
+                                    if(!empty($this->form->gitlab_project_id->getMultiOptions())) {
+                                ?>
+                            
+
                                 <div class="form-group">
                                     <div class="col-sm-12 margin-top-15">
                                      <?= $this->form->is_gitlab_project ?>  Check this box, if this a public project on git.opendesktop.org      
                                     </div>
                                 </div>
-                                <?= $this->form->gitlab_project_name ?>
+
+                                <?php
+                                    if($this->product->is_gitlab_project == 0) {
+                                        $this->form->gitlab_project_id->setAttrib('disabled', 'disabled');
+                                    }
+                                ?>
+                                <?= $this->form->gitlab_project_id ?>
+                                
+                                <div class="form-group">
+                                    <div class="col-sm-12 margin-top-15">
+                                    <?php
+                                        if($this->product->is_gitlab_project == 0) {
+                                            $this->form->show_gitlab_project_issues->setAttrib('disabled', 'disabled');
+                                        }
+                                    ?>
+                                     <?= $this->form->show_gitlab_project_issues ?>  Check this box, if you want to show the issue list      
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <div class="col-sm-12 margin-top-15">
+                                    <?php
+                                        if($this->product->is_gitlab_project == 0) {
+                                            $this->form->use_gitlab_project_readme->setAttrib('disabled', 'disabled');
+                                        }
+                                    ?>
+                                     <?= $this->form->use_gitlab_project_readme ?>  Check this box, if you want to show the README.md as project description      
+                                    </div>
+                                </div>
+                                
+                                <?php
+                                    } else {
+                                ?>
+                                
+                                <div class="form-group">
+                                    <div class="col-sm-12 margin-top-15">
+                                        <dt id="is_gitlab_project-label"><label for="is_gitlab_project" class="optional">Git-Project</label></dt>
+                                        <dd id="is_gitlab_project-element">
+                                            You can create a project on <a href="https://git.opendesktop.org">git.opendesktop.org</a> and link it with this project.
+                                        </dd>
+                                    </div>
+                                </div>
+                                
+                                <?php
+                                    }
+                                ?>
                             </section>    
-                            */ ?>
+                            
+                            
+                            
+                            
                             <h3>Files</h3>
                             <section id="files">
 
@@ -1763,11 +1829,12 @@ $this->inlineScript()->appendScript('
               errors: "",
               cat_id_data: <?=json_encode($categories)?>,
               cat_id_path: <?=json_encode($categoryPath)?>,
-
+              
 
               setup: function () {
                   this.setupCategorySelect();
                   this.setupCategoryAjax();
+                  this.setGitlabProjectNameSelect();
               },
 
               setupCategorySelect: function() {
@@ -1811,6 +1878,29 @@ $this->inlineScript()->appendScript('
                     }
                 });
               },
+                  
+              setGitlabProjectNameSelect: function() {
+                //project name is required if the checkbox is checked
+                $('body').on('change', '#is_gitlab_project', function () {
+                    if(this.checked) {
+                        $('#gitlab_project_id').attr('class','required form-control gitlab_project_id');
+                        $('#gitlab_project_id').prop('disabled', false);
+                        $('#show_gitlab_project_issues').prop('disabled', false);
+                    } else {
+                        //$('#gitlab_project_id').disable();
+                        $('#gitlab_project_id').val([]);
+                        $('#gitlab_project_id').removeClass('required');
+                        $('#gitlab_project_id').prop('disabled', true);
+                        $('#show_gitlab_project_issues').prop('disabled', true);
+                    }
+                });
+                
+                
+                
+                  
+                  
+                  
+              },    
 
               sortOptionByValue: function(element_id) {
                   var my_options = $("#"+element_id + " option");

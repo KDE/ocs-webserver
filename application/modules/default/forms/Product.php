@@ -73,8 +73,10 @@ class Default_Form_Product extends Zend_Form
             ->addElement($this->getCancelElement())
             ->addElement($this->getLicenseIdElement())
             ->addElement($this->getIsOriginal())  
-            //->addElement($this->getIsGitlab())  
-            //->addElement($this->getGitlabProjectName())  
+            ->addElement($this->getIsGitlab())  
+            ->addElement($this->getGitlabProjectId())  
+            ->addElement($this->getShowGitlabProjectIssues())
+            ->addElement($this->getUseGitlabProjectReadme())
 
             //->addElement($this->getCCAttribution())
             //->addElement($this->getCCComercial())
@@ -605,28 +607,73 @@ class Default_Form_Product extends Zend_Form
                ));       
     }
     
-    private function getGitlabProjectName()
+    private function getShowGitlabProjectIssues()
     {
-        return $this->createElement('text', 'gitlab_project_name')
-            ->setRequired(false)
-            ->addValidators(array(
-                array('StringLength', false, array(3, 60)),
-            	array('Regex', false, array('pattern' => '/^[\w.-]*$/i')),
-            	array('Regex', false, array('pattern' => '/[ .\-_A-z0-9]{1,}/i')),
-//            	array('Regex', false, array('pattern' => '/^[^\\\"\';\^\$\*!]*$/', 'messages' => array(Zend_Validate_Regex::NOT_MATCH => "'%value%' is not valid. Please try again without using any character like \\, !, ', \", $, *, ^")))
-//                $checkTitleExist
-            ))
-            ->setFilters(array('StringTrim'))
-            ->setDecorators(
-                array(
-                    array(
-                        'ViewScript',
+        $element = new Zend_Form_Element_Checkbox('show_gitlab_project_issues');
+        
+        return $element
+               ->setOptions(array(
+               'label' =>' Git-Issues ',
+               'use_hidden_element' => false,
+               'checked_value' => 1,
+               'unchecked_value' => 0
+               ));       
+    }
+    
+    private function getUseGitlabProjectReadme()
+    {
+        $element = new Zend_Form_Element_Checkbox('use_gitlab_project_readme');
+        
+        return $element
+               ->setOptions(array(
+               'label' =>'README.md',
+               'use_hidden_element' => false,
+               'checked_value' => 1,
+               'unchecked_value' => 0
+               ));       
+    }
+    
+    private function getGitlabProjectId()
+    {
+        $element = new Zend_Form_Element_Select('gitlab_project_id', array('multiple' => false ));
+        $element->setIsArray(true);
+        
+        $gitlab = new Default_Model_Ocs_Gitlab();
+        
+        $optionArray = array();
+        
+        if (Zend_Auth::getInstance()->hasIdentity()) {
+        
+            $auth = Zend_Auth::getInstance();
+            $user = $auth->getStorage()->read();
+            $gitUser = $gitlab->getUserWithName($user->username);
+            
+            if($gitUser && null != $gitUser) {
+                //now get his projects
+                $gitProjects = $gitlab->getUserProjects($gitUser['id']);
+                
+                foreach ($gitProjects as $proj) {
+                    $optionArray[$proj['id']] = $proj['name']; 
+                }
+            }
+            
+        }
+        
+        
+        
+        return $element
+                    ->setFilters(array('StringTrim'))
+                    ->setMultiOptions($optionArray)
+                    ->setDecorators(
                         array(
-                            'viewScript' => 'product/viewscripts/input_gitlab_project_name.phtml',
-                            'placement' => false
-                        )
-                    )
-                ));
+                            array(
+                                'ViewScript',
+                                array(
+                                    'viewScript' => 'product/viewscripts/input_gitlab_project_id.phtml',
+                                    'placement' => false
+                                )
+                            )
+                        ));
     }
 
     private function getTagElement()

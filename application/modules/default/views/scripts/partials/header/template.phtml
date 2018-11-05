@@ -67,16 +67,20 @@ $logoWidth = (int)$this->template['header-logo']['width'];
 $cat_title_left = $logoWidth+60;
 $tabs_left = (int)$this->template['header-nav-tabs']['absolute-left'];
 $tabs_left += $cat_title_length*10;
-$idCat = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
+//$idCat = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
 
-$helperUserRole = new Backend_View_Helper_UserRole();
-$userRoleName = $helperUserRole->userRole();
-$forum_url_postfix = Zend_Auth::getInstance()->hasIdentity() ? '/session/sso' : '';
+//$helperUserRole = new Backend_View_Helper_UserRole();
+//$userRoleName = $helperUserRole->userRole();
+//$forum_url_postfix = Zend_Auth::getInstance()->hasIdentity() ? '/session/sso' : '';
 
 
-echo $this->render('partials/header/metaheader.phtml'); ?>
+echo $this->render('partials/header/metaheader.phtml');
+
+?>
+
 
     <style>
+
 
         header a {
             color:  <?=$this->template['header-nav-tabs']['link']['color']?>;
@@ -101,28 +105,35 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
             overflow: hidden;
         }
 
-        header ul li:active {
-            background: <?=$this->template['header-nav-tabs']['background-color-active']?> none repeat scroll 0 0;
+        header ul li:active,
+        #site-header ul li:active {
+            background: <?=$this->template['header-nav-tabs']['background-color-active']?> none repeat scroll 0 0 !important;
         }
-        header ul li:hover {
-            background: <?=$this->template['header-nav-tabs']['background-color-hover']?> none repeat scroll 0 0;
-        }
-
-        header ul li ul li:active {
-            background: <?=$this->template['header-nav-tabs']['background-color-active']?> none repeat scroll 0 0;
+        header ul li:hover,
+        #site-header ul li:hover {
+            background: <?=$this->template['header-nav-tabs']['background-color-hover']?> none repeat scroll 0 0 !important;
         }
 
-        header ul li ul li:hover {
-            background: <?=$this->template['header-nav-tabs']['background-color-hover']?> none repeat scroll 0 0;
+        header ul li ul li:active,
+        #site-header ul li ul li:active {
+            background: <?=$this->template['header-nav-tabs']['background-color-active']?> none repeat scroll 0 0 !important;
         }
-        header ul li:active > a {
-            color: <?=$this->template['header-nav-tabs']['link']['color-active']?>;
+
+        header ul li ul li:hover,
+        #site-header ul li ul li:hover {
+            background: <?=$this->template['header-nav-tabs']['background-color-hover']?> none repeat scroll 0 0 !important;
         }
-        header ul li:hover > a {
-            color: <?=$this->template['header-nav-tabs']['link']['color-hover']?>;
+        header ul li:active > a,
+        #site-header ul li:active > a {
+            color: <?=$this->template['header-nav-tabs']['link']['color-active']?> !important;
         }
-        header ul li ul li:hover a {
-            color: <?=$this->template['header-nav-tabs']['link']['color-hover']?>;
+        header ul li:hover > a,
+        #site-header ul li:hover > a {
+            color: <?=$this->template['header-nav-tabs']['link']['color-hover']?> !important;
+        }
+        header ul li ul li:hover a,
+        #site-header ul li ul li:hover > a {
+            color: <?=$this->template['header-nav-tabs']['link']['color-hover']?> !important;
         }
 
         ul.menu-nav-tabs li {
@@ -256,7 +267,7 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
         }
     </style>
 
-    <header id="page_header" xmlns="http://www.w3.org/1999/html">
+<?php /*    <header id="page_header" xmlns="http://www.w3.org/1999/html">
         <div class="container header" style="position: relative;">
 
             <?php if (false === $auth->hasIdentity() && empty($member->username)) {
@@ -351,7 +362,7 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
             <section id="second-container" class="container">
                 <section class="wrapper">
                     <span class="header_cat_link" id="header_cat_link">
-                       <?php /* <a href="/browse/cat/<?= isset($this->cat_id) ? $this->cat_id : 'all' ?>/order/latest"> */?>
+                       <?php /* <a href="/browse/cat/<?= isset($this->cat_id) ? $this->cat_id : 'all' ?>/order/latest"> *//*?>
                         <a href="http://<?php echo $last_char_store_order=='1'?$sname:$baseurl.'/s/'.$store_name ?>">
                             <?=$store_name?>
                         </a>
@@ -361,8 +372,32 @@ echo $this->render('partials/header/metaheader.phtml'); ?>
         <?php endif; ?>
         </div>
     </header>
+  */?>
 
-
+<script type="text/javascript">
+    var json_hasIdentity = <?php  if( $auth->hasIdentity() ) { echo '1' ;} else { echo '0';} ?>;
+    var json_redirectString = <?php  if( $auth->hasIdentity() ) { echo Zend_Json::encode(null);} else { 
+            $helperEncryptUrl = new Default_View_Helper_EncryptUrl();
+            $redirectString = '/redirect/' . $helperEncryptUrl->EncryptUrl(Zend_Controller_Front::getInstance()->getRequest()->getScheme() . '://' . Zend_Controller_Front::getInstance()->getRequest()->getHttpHost().$_SERVER["REQUEST_URI"]);
+            echo Zend_Json::encode($redirectString);} ?>;
+    var json_serverUri = <?php echo Zend_Json::encode($_SERVER["REQUEST_URI"]);?>;
+    var json_member = <?php if( $auth->hasIdentity() ) {echo Zend_Json::encode($member);} else { echo Zend_Json::encode(null);}?>;
+    var json_template = <?php echo Zend_Json::encode($this->template); ?>;
+    var json_serverUrl = <?php echo Zend_Json::encode($serverUrl); ?>;
+    var json_baseurl = <?php echo  Zend_Json::encode($baseurl);?>;
+    var json_sname =  <?php echo  Zend_Json::encode($sname);?>;
+    var json_store_order =  <?php echo  Zend_Json::encode($store_order);?>;
+    var json_store_name =  <?php echo  Zend_Json::encode($store_name);?>;
+    var json_is_show_title =  <?php echo  Zend_Json::encode($is_show_title);?>;
+    var json_last_char_store_order = <?php echo  Zend_Json::encode($last_char_store_order);?>;
+    var json_cat_title =  <?php echo  Zend_Json::encode($cat_title);?>;
+    var json_logoWidth = <?php echo  Zend_Json::encode($logoWidth);?>;
+    var json_cat_title_left = <?php echo  Zend_Json::encode($cat_title_left);?>;
+    var json_tabs_left = <?php echo  Zend_Json::encode($tabs_left);?>;
+</script>
+<link href="/theme/react/assets/css/header.css" type="text/css" rel="stylesheet" />
+<section id="site-header-container"></section>
+<script src="/theme/react/header.js" type="text/javascript"></script>
 
 <?php $this->inlineScript()->appendScript(
     '$(document).ready(function(){

@@ -598,5 +598,205 @@ class Default_Model_Ocs_Gitlab
 
         return true;
     }
+    
+    
+    public function getUsers()
+    {
+        $this->httpClient->resetParameters();
+        $uri = $this->config->host . "/api/v4/users";
+        $this->httpClient->setUri($uri);
+        $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
+        $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
+        $this->httpClient->setHeaders('User-Agent', $this->config->user_agent);
+        $this->httpClient->setMethod(Zend_Http_Client::GET);
+
+        $response = $this->httpClient->request();
+
+        $body = Zend_Json::decode($response->getRawBody());
+
+        if (count($body) == 0) {
+            return array();
+        }
+
+        if (array_key_exists("message", $body)) {
+            $result_code = substr(trim($body["message"]), 0, 3);
+            if ((int)$result_code >= 300) {
+                throw new Default_Model_Ocs_Exception($body["message"]);
+            }
+        }
+
+        return $body;
+    }
+    
+    
+    public function getUserWithName($username)
+    {
+        $this->httpClient->resetParameters();
+        $uri = $this->config->host . "/api/v4/users?username=".$username;
+        $this->httpClient->setUri($uri);
+        $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
+        $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
+        $this->httpClient->setHeaders('User-Agent', $this->config->user_agent);
+        $this->httpClient->setMethod(Zend_Http_Client::GET);
+
+        $response = $this->httpClient->request();
+
+        $body = Zend_Json::decode($response->getRawBody());
+
+        if (count($body) == 0) {
+            return array();
+        }
+
+        if (array_key_exists("message", $body)) {
+            $result_code = substr(trim($body["message"]), 0, 3);
+            if ((int)$result_code >= 300) {
+                throw new Default_Model_Ocs_Exception($body["message"]);
+            }
+        }
+
+        return $body[0];
+    }
+
+    public function getUserWithId($id)
+    {
+        $this->httpClient->resetParameters();
+        $uri = $this->config->host . "/api/v4/users/".$id;
+        $this->httpClient->setUri($uri);
+        $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
+        $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
+        $this->httpClient->setHeaders('User-Agent', $this->config->user_agent);
+        $this->httpClient->setMethod(Zend_Http_Client::GET);
+
+        $response = $this->httpClient->request();
+
+        $body = Zend_Json::decode($response->getRawBody());
+
+        if (count($body) == 0) {
+            return array();
+        }
+
+        if (array_key_exists("message", $body)) {
+            $result_code = substr(trim($body["message"]), 0, 3);
+            if ((int)$result_code >= 300) {
+                throw new Default_Model_Ocs_Exception($body["message"]);
+            }
+        }
+
+        return $body[0];
+    }
+
+    public function getProjects()
+    {
+        $this->httpClient->resetParameters();
+        $uri = $this->config->host . "/api/v4/projects/";
+        $this->httpClient->setUri($uri);
+        $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
+        $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
+        $this->httpClient->setHeaders('User-Agent', $this->config->user_agent);
+        $this->httpClient->setMethod(Zend_Http_Client::GET);
+
+        $response = $this->httpClient->request();
+
+        $body = Zend_Json::decode($response->getRawBody());
+
+        if (count($body) == 0) {
+            return array();
+        }
+
+        if (array_key_exists("message", $body)) {
+            $result_code = substr(trim($body["message"]), 0, 3);
+            if ((int)$result_code >= 300) {
+                throw new Default_Model_Ocs_Exception($body["message"]);
+            }
+        }
+
+        return $body;
+    }
+
+    public function getProject($id)
+    {
+        $this->httpClient->resetParameters();
+        $uri = $this->config->host . "/api/v4/projects/".$id."/";
+        $this->httpClient->setUri($uri);
+        $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
+        $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
+        $this->httpClient->setHeaders('User-Agent', $this->config->user_agent);
+        $this->httpClient->setMethod(Zend_Http_Client::GET);
+
+        $response = $this->httpClient->request();
+
+        $body = Zend_Json::decode($response->getRawBody());
+        
+        if (count($body) == 0) {
+            return array();
+        }
+
+        if (array_key_exists("message", $body)) {
+            $result_code = substr(trim($body["message"]), 0, 3);
+            if ((int)$result_code >= 300) {
+                throw new Default_Model_Ocs_Exception($body["message"]);
+            }
+        }
+
+        return $body;
+    }
+    
+    public function getProjectIssues($id, $state='opened', $page=1, $limit=5)
+    {
+        $this->httpClient->resetParameters();
+        $uri = $this->config->host . '/api/v4/projects/'.$id.'/issues?state='.$state.'&page='.$page.'&per_page='.$limit;
+        $this->httpClient->setUri($uri);
+        $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
+        $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
+        $this->httpClient->setHeaders('User-Agent', $this->config->user_agent);
+        $this->httpClient->setMethod(Zend_Http_Client::GET);
+
+        $response = $this->httpClient->request();
+
+        $body = Zend_Json::decode($response->getRawBody());
+
+        if (count($body) == 0) {
+            return array();
+        }
+
+        if (array_key_exists("message", $body)) {
+            $result_code = substr(trim($body["message"]), 0, 3);
+            if ((int)$result_code >= 300) {
+                throw new Default_Model_Ocs_Exception($body["message"]);
+            }
+        }
+
+        return $body;
+    }
+
+    public function getUserProjects($user_id, $page=1, $limit=50)
+    {
+        $this->httpClient->resetParameters();
+        $uri = $this->config->host . '/api/v4/users/'.$user_id.'/projects?page='.$page.'&per_page='.$limit;
+        $this->httpClient->setUri($uri);
+        $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
+        $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
+        $this->httpClient->setHeaders('User-Agent', $this->config->user_agent);
+        $this->httpClient->setMethod(Zend_Http_Client::GET);
+
+        $response = $this->httpClient->request();
+
+        $body = Zend_Json::decode($response->getRawBody());
+
+        if (count($body) == 0) {
+            return array();
+        }
+
+        if (array_key_exists("message", $body)) {
+            $result_code = substr(trim($body["message"]), 0, 3);
+            if ((int)$result_code >= 300) {
+                throw new Default_Model_Ocs_Exception($body["message"]);
+            }
+        }
+
+        return $body;
+    }
+    
+    
 
 }

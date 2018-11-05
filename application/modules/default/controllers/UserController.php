@@ -307,7 +307,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
         
         $this->_helper->json($resultAll);
     }
-
+    
     public function followsAction()
     {
         $this->redirect($this->_helper->url('follows', 'member', null, $this->getAllParams()));
