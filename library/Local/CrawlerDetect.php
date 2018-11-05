@@ -34,7 +34,7 @@ function crawlerDetect($USER_AGENT)
         array('MegaIndex.ru' , 'MegaIndex.ru'),
         array('Baiduspider', 'Baiduspider'),
         array('YandexBot', 'YandexBot'),
-        array('AhrefsBot', 'AhrefsBot'),
+        array('AhrefsBot', 'ahrefs.com/robot'),
         array('ltx71', 'ltx71'),
         array('msnbot', 'MSN'),
         array('Rambler', 'Rambler'),
@@ -55,7 +55,9 @@ function crawlerDetect($USER_AGENT)
         array('IDBot', 'ID-Search Bot'),
         array('eStyle', 'eStyle Bot'),
         array('Scrubby', 'Scrubby robot'),
-        array('MJ12bot','http://mj12bot.com/')
+        array('MJ12bot','http://mj12bot.com/'),
+        array('SemrushBot', 'SemrushBot'),
+        array('bingbot','bingbot')
     );
 
     foreach ($crawlers as $c)
