@@ -58,8 +58,8 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
 
     public static function getEncryptedPassword($password, $passwordType)
     {
-        return $passwordType == Default_Model_DbTable_Member::PASSWORD_TYPE_HIVE ? sha1((self::PASSWORDSALT . $password . self::PASSWORDSALT))
-            : md5($password);
+        return $passwordType == Default_Model_DbTable_Member::PASSWORD_TYPE_HIVE ? sha1((self::PASSWORDSALT . $password
+            . self::PASSWORDSALT)) : md5($password);
     }
 
     /**
@@ -109,37 +109,37 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
     {
         $sql = "
             SELECT `m`.*, `member_email`.`email_verification_value`, `member_email`.`email_checked`, `mei`.`external_id` 
-            FROM {$this->_tableName} AS m
-            JOIN member_email ON m.member_id = member_email.email_member_id AND member_email.email_primary = 1
+            FROM `member` AS `m`
+            JOIN `member_email` ON `m`.`member_id` = `member_email`.`email_member_id` AND `member_email`.`email_primary` = 1 AND `member_email`.`email_deleted` = 0
             LEFT JOIN `member_external_id` AS `mei` ON `mei`.`member_id` = `m`.`member_id`
             WHERE  
-            m.is_active = :active AND
-            m.is_deleted = :deleted AND 
-            m.login_method = :login AND 
-            (LOWER(m.mail) = LOWER(:mail) OR
-            LOWER(m.mail) = CONCAT(LOWER(:mail),:user_deactivated)
+            `m`.`is_active` = :active AND
+            `m`.`is_deleted` = :deleted AND 
+            `m`.`login_method` = :login AND 
+            (LOWER(`m`.`mail`) = LOWER(:mail) OR
+            LOWER(`m`.`mail`) = CONCAT(LOWER(:mail),:user_deactivated)
             ) AND
-            m.`password` = :pwd";
+            `m`.`password` = :pwd";
 
         $this->_db->getProfiler()->setEnabled(true);
         $resultSet = $this->_db->fetchAll($sql, array(
-            'active'  => Default_Model_DbTable_Member::MEMBER_ACTIVE,
-            'deleted' => Default_Model_DbTable_Member::MEMBER_NOT_DELETED,
-            'login'   => Default_Model_DbTable_Member::MEMBER_LOGIN_LOCAL,
-            'mail'    => $this->_identity,
-            'user_deactivated'  => $this::USER_DEAVIVATED,
-            'pwd'     => $this->_credential
+            'active'           => Default_Model_DbTable_Member::MEMBER_ACTIVE,
+            'deleted'          => Default_Model_DbTable_Member::MEMBER_NOT_DELETED,
+            'login'            => Default_Model_DbTable_Member::MEMBER_LOGIN_LOCAL,
+            'mail'             => $this->_identity,
+            'user_deactivated' => $this::USER_DEAVIVATED,
+            'pwd'              => $this->_credential
         ));
-        
+
         $sql = str_replace(':active', Default_Model_DbTable_Member::MEMBER_ACTIVE, $sql);
         $sql = str_replace(':deleted', Default_Model_DbTable_Member::MEMBER_NOT_DELETED, $sql);
-        $sql = str_replace(':login',"'". Default_Model_DbTable_Member::MEMBER_LOGIN_LOCAL . "'", $sql);
-        $sql = str_replace(':mail', "'". $this->_identity . "'", $sql);
-        $sql = str_replace(':pwd', "'". $this->_credential . "'", $sql);
-        
-        
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - SQL: ' . $sql . ' - sql take seconds: ' . $this->_db->getProfiler()->getLastQueryProfile()
-                                                                                             ->getElapsedSecs())
+        $sql = str_replace(':login', "'" . Default_Model_DbTable_Member::MEMBER_LOGIN_LOCAL . "'", $sql);
+        $sql = str_replace(':mail', "'" . $this->_identity . "'", $sql);
+        $sql = str_replace(':pwd', "'" . $this->_credential . "'", $sql);
+
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - SQL: ' . $sql . ' - sql take seconds: ' . $this->_db->getProfiler()
+                                                                                                                 ->getLastQueryProfile()
+                                                                                                                 ->getElapsedSecs())
         ;
         $this->_db->getProfiler()->setEnabled(false);
 
@@ -148,7 +148,7 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
 
     /**
      * Fetches a user by username, username ist not case sensitve
-     * 
+     *
      * @return array
      * @throws Zend_Exception
      */
@@ -156,38 +156,39 @@ class Local_Auth_Adapter_Ocs implements Local_Auth_Adapter_Interface
     {
         $sql = "
             SELECT `m`.*, `member_email`.`email_verification_value`, `member_email`.`email_checked`, `mei`.`external_id` 
-            FROM `member` AS m
-            JOIN `member_email` ON m.member_id = member_email.email_member_id AND member_email.email_primary = 1
+            FROM `member` AS `m`
+            JOIN `member_email` ON `m`.`member_id` = `member_email`.`email_member_id` AND `member_email`.`email_primary` = 1 AND `member_email`.`email_deleted` = 0
             LEFT JOIN `member_external_id` AS `mei` ON `mei`.`member_id` = `m`.`member_id`
             WHERE  
-            m.`is_active` = :active AND 
-            m.`is_deleted` = :deleted AND 
-            m.`login_method` = :login AND 
-            (LOWER(m.`username`) = LOWER(:username) OR
-            LOWER(m.`username`) = CONCAT(LOWER(:username),:user_deactivated)
+            `m`.`is_active` = :active AND 
+            `m`.`is_deleted` = :deleted AND 
+            `m`.`login_method` = :login AND 
+            (LOWER(`m`.`username`) = LOWER(:username) OR
+            LOWER(`m`.`username`) = CONCAT(LOWER(:username),:user_deactivated)
             ) 
             AND 
-            m.`password` = :pwd";
+            `m`.`password` = :pwd";
 
         $this->_db->getProfiler()->setEnabled(true);
         $resultSet = $this->_db->fetchAll($sql, array(
-            'active'            => Default_Model_DbTable_Member::MEMBER_ACTIVE,
-            'deleted'           => Default_Model_DbTable_Member::MEMBER_NOT_DELETED,
-            'login'             => Default_Model_DbTable_Member::MEMBER_LOGIN_LOCAL,
-            'username'          => $this->_identity,
-            'user_deactivated'  => $this::USER_DEAVIVATED,
-            'pwd'               => $this->_credential
+            'active'           => Default_Model_DbTable_Member::MEMBER_ACTIVE,
+            'deleted'          => Default_Model_DbTable_Member::MEMBER_NOT_DELETED,
+            'login'            => Default_Model_DbTable_Member::MEMBER_LOGIN_LOCAL,
+            'username'         => $this->_identity,
+            'user_deactivated' => $this::USER_DEAVIVATED,
+            'pwd'              => $this->_credential
         ));
-        
+
         $sql = str_replace(':active', Default_Model_DbTable_Member::MEMBER_ACTIVE, $sql);
         $sql = str_replace(':deleted', Default_Model_DbTable_Member::MEMBER_NOT_DELETED, $sql);
-        $sql = str_replace(':login',"'". Default_Model_DbTable_Member::MEMBER_LOGIN_LOCAL . "'", $sql);
-        $sql = str_replace(':username', "'". $this->_identity . "'", $sql);
-        $sql = str_replace(':user_deactivated', "'". $this::USER_DEAVIVATED . "'", $sql);
-        $sql = str_replace(':pwd', "'". $this->_credential . "'", $sql);
-        
-        Zend_Registry::get('logger')->debug(__METHOD__. ' - SQL: ' . $sql . ' - sql take seconds: ' . $this->_db->getProfiler()->getLastQueryProfile()
-                                                                                             ->getElapsedSecs())
+        $sql = str_replace(':login', "'" . Default_Model_DbTable_Member::MEMBER_LOGIN_LOCAL . "'", $sql);
+        $sql = str_replace(':username', "'" . $this->_identity . "'", $sql);
+        $sql = str_replace(':user_deactivated', "'" . $this::USER_DEAVIVATED . "'", $sql);
+        $sql = str_replace(':pwd', "'" . $this->_credential . "'", $sql);
+
+        Zend_Registry::get('logger')->debug(__METHOD__ . ' - SQL: ' . $sql . ' - sql take seconds: ' . $this->_db->getProfiler()
+                                                                                                                 ->getLastQueryProfile()
+                                                                                                                 ->getElapsedSecs())
         ;
         $this->_db->getProfiler()->setEnabled(false);
 

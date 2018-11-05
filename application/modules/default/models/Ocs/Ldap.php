@@ -513,6 +513,11 @@ class Default_Model_Ocs_Ldap
 
             return false;
         }
+        if (empty($entry)) {
+            $this->errMessages[] = "Failed. user entry not exists.";
+
+            return false;
+        }
         $connection->delete($entry['dn']);
         $connection->getLastError($this->errCode, $this->errMessages);
 
