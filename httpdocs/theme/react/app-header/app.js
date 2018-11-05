@@ -162,18 +162,6 @@ class SiteHeaderUserMenu extends React.Component {
     document.addEventListener('mousedown',this.handleClick, false);
   }
 
-  componentDidMount() {
-    let imageBaseUrl;
-    const env = appHelpers.getEnv(this.props.serverUrl);
-
-    if (env === "live"){
-      imageBaseUrl = "https://cn.pling.com/cache/200x200-2/img/";
-    } else {
-      imageBaseUrl = "https://cn.pling.it/cache/200x200-2/img/";
-    }
-    this.setState({imageBaseUrl:imageBaseUrl});
-  }
-
   componentWillUnmount() {
     document.removeEventListener('mousedown',this.handleClick, false);
   }
