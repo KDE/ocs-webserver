@@ -41,6 +41,11 @@ class SiteHeader extends React.Component {
       });
     }
 
+    let logoLink = this.state.serverUrl;
+    if (this.state.serverUri.indexOf('/s/') > -1) {
+      logoLink += "/s/" + this.state.store.name;
+    }
+
     let siteHeaderStoreNameDisplay;
     if (this.state.is_show_title === "1") {
       siteHeaderStoreNameDisplay = React.createElement(
@@ -48,13 +53,11 @@ class SiteHeader extends React.Component {
         { id: "site-header-store-name-container" },
         React.createElement(
           "a",
-          { href: this.state.serverUrl + "/s/" + this.state.store.name },
+          { href: logoLink },
           this.state.store.name
         )
       );
     }
-
-    console.log(this.state);
 
     return React.createElement(
       "section",
@@ -70,7 +73,7 @@ class SiteHeader extends React.Component {
             { id: "site-header-logo-container", style: this.state.template['header-logo'] },
             React.createElement(
               "a",
-              { href: this.state.baseUrl },
+              { href: logoLink },
               React.createElement("img", { src: this.state.template['header-logo']['image-src'] })
             )
           ),

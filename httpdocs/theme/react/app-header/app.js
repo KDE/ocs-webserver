@@ -45,25 +45,29 @@ class SiteHeader extends React.Component {
       );
     }
 
+    let logoLink = this.state.serverUrl;
+    if (this.state.serverUri.indexOf('/s/') > -1){
+      logoLink += "/s/" + this.state.store.name;
+    }
+
+
     let siteHeaderStoreNameDisplay;
     if (this.state.is_show_title === "1"){
       siteHeaderStoreNameDisplay = (
         <div id="site-header-store-name-container">
-          <a href={this.state.serverUrl + "/s/" + this.state.store.name}>
+          <a href={logoLink}>
             {this.state.store.name}
           </a>
         </div>
       );
     }
 
-    console.log(this.state);
-
     return (
       <section id="site-header" style={this.state.template.header}>
         <section id="site-header-wrapper" style={{"paddingLeft":this.state.template['header-logo']['width']}}>
           <div id="siter-header-left">
             <div id="site-header-logo-container" style={this.state.template['header-logo']}>
-              <a href={this.state.baseUrl}>
+              <a href={logoLink}>
                 <img src={this.state.template['header-logo']['image-src']}/>
               </a>
             </div>
