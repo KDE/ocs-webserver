@@ -57,6 +57,8 @@ class SiteHeader extends React.Component {
       );
     }
 
+    console.log(this.state);
+
     return (
       <section id="site-header" style={this.state.template.header}>
         <section id="site-header-wrapper" style={{"paddingLeft":this.state.template['header-logo']['width']}}>
@@ -164,6 +166,7 @@ class SiteHeaderUserMenu extends React.Component {
   componentDidMount() {
     let imageBaseUrl;
     const env = appHelpers.getEnv(window.location.href);
+    console.log(env);
     if (env === "live"){
       imageBaseUrl = "https://cn.pling.com/cache/200x200-2/img/";
     } else {
