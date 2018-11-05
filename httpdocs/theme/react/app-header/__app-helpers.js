@@ -1,9 +1,17 @@
 window.appHelpers = (function(){
 
   function getEnv(domain){
-    console.log(domain);
+
     let env;
-    if (this.splitByLastDot(domain) === 'com' || this.splitByLastDot(domain) === 'org'){
+    let lastDotSplit = this.splitByLastDot(domain);
+
+    if (lastDotSplit.indexOf('/') > -1){
+      lastDotSplit = lastDotSplit.split('/')[0];
+    }
+
+    console.log(lastDotSplit);
+
+    if ( === 'com' || this.splitByLastDot(domain) === 'org'){
       env = 'live';
     } else {
       env = 'test';
