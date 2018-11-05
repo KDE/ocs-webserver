@@ -56,6 +56,11 @@ class SiteHeader extends React.Component {
 
     console.log(this.state);
 
+    let logoLink = this.state.baseUrl;
+    if (this.state.serverUri.indexOf('/s/') > -1) {
+      logoLink += "/s/" + this.state.store.name;
+    }
+
     return React.createElement(
       "section",
       { id: "site-header", style: this.state.template.header },
@@ -70,7 +75,7 @@ class SiteHeader extends React.Component {
             { id: "site-header-logo-container", style: this.state.template['header-logo'] },
             React.createElement(
               "a",
-              { href: this.state.baseUrl },
+              { href: logoLink },
               React.createElement("img", { src: this.state.template['header-logo']['image-src'] })
             )
           ),
