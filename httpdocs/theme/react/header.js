@@ -47,8 +47,6 @@ class SiteHeader extends React.Component {
 
   render() {
 
-    console.log(this.state);
-
     let userMenuDisplay, loginMenuDisplay, siteHeaderTopRightCssClass;
     if (this.state.user) {
       userMenuDisplay = React.createElement(SiteHeaderUserMenu, {
@@ -220,7 +218,8 @@ class SiteHeaderUserMenu extends React.Component {
     if (env === "live") {
       imageBaseUrl = "https://cn.pling.com/cache/200x200-2/img/";
     } else {
-      imageBaseUrl = "https://cn.pling.it/cache/200x200-2/img/";
+      imageBaseUrl = "https://cn.pling.com/cache/200x200-2/img/";
+      //imageBaseUrl = "https://cn.pling.it/cache/200x200-2/img/";
     }
     this.setState({ imageBaseUrl: imageBaseUrl });
   }
