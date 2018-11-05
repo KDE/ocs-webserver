@@ -95,8 +95,9 @@ class Default_Plugin_SendMail extends Zend_Controller_Plugin_Abstract
             $mail->addTo($this->getReceiverMail());
             $mail->setSubject($this->getSubject());
             $mail->send();
+            Zend_Registry::get('logger')->info(__METHOD__ . " - mail address: {$this->getReceiverMail()} - subject : {$this->getSubject()} - email sent.");
         } catch (Exception $e) {
-            Zend_Registry::get('logger')->err(__METHOD__ . " - " . $e->getMessage() . PHP_EOL);
+            Zend_Registry::get('logger')->err(__METHOD__ . " - mail address: {$this->getReceiverMail()} " . $e->getMessage() . PHP_EOL);
         }
     }
 

@@ -1279,7 +1279,10 @@ class SettingsController extends Local_Controller_Action_DomainSwitch
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer('partials/github');
 
-        $modelGithubOauth = new Default_Model_Oauth_Github();
+        $modelGithubOauth = new Default_Model_Oauth_Github(
+            Zend_Registry::get('db'),
+            'member',
+            Zend_Registry::get('config')->third_party->github);
         $modelGithubOauth->authStart('/settings');
     }
 

@@ -661,6 +661,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
      * @param string $email
      *
      * @return null|Zend_Db_Table_Row_Abstract
+     * @deprecated
      */
     public function fetchCheckedActiveLocalMemberByEmail($email)
     {
