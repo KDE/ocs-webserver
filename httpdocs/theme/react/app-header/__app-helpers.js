@@ -1,6 +1,7 @@
 window.appHelpers = (function(){
 
   function getEnv(domain){
+    console.log(domain);
     let env;
     if (this.splitByLastDot(domain) === 'com' || this.splitByLastDot(domain) === 'org'){
       env = 'live';

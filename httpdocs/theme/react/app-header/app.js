@@ -50,7 +50,7 @@ class SiteHeader extends React.Component {
     if (this.state.is_show_title === "1"){
       siteHeaderStoreNameDisplay = (
         <div id="site-header-store-name-container">
-          <a href={this.state.serverUrl + this.state.serverUri}>
+          <a href={this.state.serverUrl + "/s/" + this.state.store.name}>
             {this.state.store.name}
           </a>
         </div>

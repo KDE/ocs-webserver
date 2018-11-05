@@ -1,6 +1,7 @@
 window.appHelpers = function () {
 
   function getEnv(domain) {
+    console.log(domain);
     let env;
     if (this.splitByLastDot(domain) === 'com' || this.splitByLastDot(domain) === 'org') {
       env = 'live';
@@ -71,7 +72,7 @@ class SiteHeader extends React.Component {
         { id: "site-header-store-name-container" },
         React.createElement(
           "a",
-          { href: this.state.serverUrl + this.state.serverUri },
+          { href: this.state.serverUrl + "/s/" + this.state.store.name },
           this.state.store.name
         )
       );
