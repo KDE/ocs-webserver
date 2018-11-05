@@ -25,12 +25,11 @@ class SiteHeader extends React.Component {
 
   render(){
 
-    console.log(this.state);
-
     let userMenuDisplay, loginMenuDisplay, siteHeaderTopRightCssClass;
     if (this.state.user){
       userMenuDisplay = (
         <SiteHeaderUserMenu
+          serverUrl={this.state.serverUrl}
           baseUrl={this.state.baseUrl}
           user={this.state.user}
         />
@@ -50,19 +49,21 @@ class SiteHeader extends React.Component {
     if (this.state.is_show_title === "1"){
       siteHeaderStoreNameDisplay = (
         <div id="site-header-store-name-container">
-          <a href={this.state.serverUrl + this.state.serverUri}>
+          <a href={this.state.serverUrl + "/s/" + this.state.store.name}>
             {this.state.store.name}
           </a>
         </div>
       );
     }
 
+    console.log(this.state);
+
     return (
       <section id="site-header" style={this.state.template.header}>
         <section id="site-header-wrapper" style={{"paddingLeft":this.state.template['header-logo']['width']}}>
           <div id="siter-header-left">
             <div id="site-header-logo-container" style={this.state.template['header-logo']}>
-              <a href={this.state.serverUrl + this.state.serverUri}>
+              <a href={this.state.baseUrl}>
                 <img src={this.state.template['header-logo']['image-src']}/>
               </a>
             </div>
@@ -161,17 +162,6 @@ class SiteHeaderUserMenu extends React.Component {
     document.addEventListener('mousedown',this.handleClick, false);
   }
 
-  componentDidMount() {
-    let imageBaseUrl;
-    const env = appHelpers.getEnv(window.location.href);
-    if (env === "live"){
-      imageBaseUrl = "https://cn.pling.com/cache/200x200-2/img/";
-    } else {
-      imageBaseUrl = "https://cn.pling.it/cache/200x200-2/img/";
-    }
-    this.setState({imageBaseUrl:imageBaseUrl});
-  }
-
   componentWillUnmount() {
     document.removeEventListener('mousedown',this.handleClick, false);
   }
@@ -200,7 +190,7 @@ class SiteHeaderUserMenu extends React.Component {
       <ul id="site-header-user-menu-container">
         <li ref={node => this.node = node} id="user-menu-toggle" className={this.state.dropdownClass}>
           <a className="profile-menu-toggle">
-            <img className="profile-menu-image" src={this.state.imageBaseUrl + this.props.user.avatar}/>
+            <img className="profile-menu-image" src={this.props.user.profile_image_url}/>
             <span className="profile-menu-username">{this.props.user.username}</span>
           </a>
           <ul id="user-profile-menu" >

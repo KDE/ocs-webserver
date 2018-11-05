@@ -66,7 +66,12 @@ class Default_Model_Ocs_Forum
 
         if (empty($user)) {
             try {
-                $this->httpUserCreate($data);
+                $result = $this->httpUserCreate($data);
+                if (false === $result) {
+                    $this->messages[] = "Fail ";
+
+                    return false;
+                }
             } catch (Zend_Exception $e) {
                 $this->messages[] = "Fail " . $e->getMessage();
 
@@ -206,8 +211,9 @@ class Default_Model_Ocs_Forum
      */
     public function getUserByUsername($username)
     {
+        $encoded_username = urlencode($username);
         $this->httpClient->resetParameters();
-        $uri = $this->config->host . "/users/{$username}.json";
+        $uri = $this->config->host . "/users/{$encoded_username}.json";
         $this->httpClient->setUri($uri);
         $this->httpClient->setParameterGet('api_key', $this->config->private_token);
         $this->httpClient->setParameterGet('api_username', $this->config->user_sudo);
@@ -267,6 +273,12 @@ class Default_Model_Ocs_Forum
 
         if (array_key_exists("error_type", $body)) {
             $this->messages[] = "username: {$data['username']} " . $response->getBody();
+
+            return false;
+        }
+
+        if (array_key_exists('success', $body) AND $body['success'] == false) {
+            $this->messages[] = "username: {$data['username']} " . $body['message'];
 
             return false;
         }

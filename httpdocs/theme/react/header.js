@@ -1,25 +1,3 @@
-window.appHelpers = function () {
-
-  function getEnv(domain) {
-    let env;
-    if (this.splitByLastDot(domain) === 'com' || this.splitByLastDot(domain) === 'org') {
-      env = 'live';
-    } else {
-      env = 'test';
-    }
-    return env;
-  }
-
-  function splitByLastDot(text) {
-    var index = text.lastIndexOf('.');
-    return text.slice(index + 1);
-  }
-
-  return {
-    getEnv,
-    splitByLastDot
-  };
-}();
 class SiteHeader extends React.Component {
   constructor(props) {
     super(props);
@@ -50,6 +28,7 @@ class SiteHeader extends React.Component {
     let userMenuDisplay, loginMenuDisplay, siteHeaderTopRightCssClass;
     if (this.state.user) {
       userMenuDisplay = React.createElement(SiteHeaderUserMenu, {
+        serverUrl: this.state.serverUrl,
         baseUrl: this.state.baseUrl,
         user: this.state.user
       });
@@ -69,11 +48,13 @@ class SiteHeader extends React.Component {
         { id: "site-header-store-name-container" },
         React.createElement(
           "a",
-          { href: this.state.serverUrl + this.state.serverUri },
+          { href: this.state.serverUrl + "/s/" + this.state.store.name },
           this.state.store.name
         )
       );
     }
+
+    console.log(this.state);
 
     return React.createElement(
       "section",
@@ -89,7 +70,7 @@ class SiteHeader extends React.Component {
             { id: "site-header-logo-container", style: this.state.template['header-logo'] },
             React.createElement(
               "a",
-              { href: this.state.serverUrl + this.state.serverUri },
+              { href: this.state.baseUrl },
               React.createElement("img", { src: this.state.template['header-logo']['image-src'] })
             )
           ),
@@ -212,18 +193,6 @@ class SiteHeaderUserMenu extends React.Component {
     document.addEventListener('mousedown', this.handleClick, false);
   }
 
-  componentDidMount() {
-    let imageBaseUrl;
-    const env = appHelpers.getEnv(window.location.href);
-    if (env === "live") {
-      imageBaseUrl = "https://cn.pling.com/cache/200x200-2/img/";
-    } else {
-      imageBaseUrl = "https://cn.pling.com/cache/200x200-2/img/";
-      //imageBaseUrl = "https://cn.pling.it/cache/200x200-2/img/";
-    }
-    this.setState({ imageBaseUrl: imageBaseUrl });
-  }
-
   componentWillUnmount() {
     document.removeEventListener('mousedown', this.handleClick, false);
   }
@@ -255,7 +224,7 @@ class SiteHeaderUserMenu extends React.Component {
         React.createElement(
           "a",
           { className: "profile-menu-toggle" },
-          React.createElement("img", { className: "profile-menu-image", src: this.state.imageBaseUrl + this.props.user.avatar }),
+          React.createElement("img", { className: "profile-menu-image", src: this.props.user.profile_image_url }),
           React.createElement(
             "span",
             { className: "profile-menu-username" },
