@@ -64,7 +64,7 @@ class Backend_HiveController extends Local_Controller_Action_Backend
     {
         if (strtolower(php_uname("n")) == 'do-pling-com') {
             $this->_HIVE_BASE_URL = 'http://cp1.hive01.com';
-            $this->_OCS_CN_FILE_SYNC_URL = 'https://cn.pling.com';
+            $this->_OCS_CN_FILE_SYNC_URL = 'https://cn.opendesktop.com';
             $this->_OCS_FILE_SYNC_URL = 'https://www.ppload.com';
         } else {
             $this->_HIVE_BASE_URL = 'http://cp1.hive01.com';
@@ -473,7 +473,7 @@ class Backend_HiveController extends Local_Controller_Action_Backend
     private function getProjectPicture($hiveProjectId)
     {
         $imageModel = new Default_Model_DbTable_Image();
-        $path = 'https://cn.pling.com/img/hive/content-pre1/' . $hiveProjectId . '-1.';
+        $path = 'https://cn.opendesktop.com/img/hive/content-pre1/' . $hiveProjectId . '-1.';
         $fileUrl = null;
         $fileExtention = null;
         $info = '';
@@ -533,7 +533,7 @@ class Backend_HiveController extends Local_Controller_Action_Backend
              **/
             $info .= "ImageUpload successfull: " . $cnFileUrl;
         } else {
-            $path = 'https://cn.pling.com/img/hive/content-pre2/' . $hiveProjectId . '-2.';
+            $path = 'https://cn.opendesktop.com/img/hive/content-pre2/' . $hiveProjectId . '-2.';
             $fileUrl = null;
             $fileExtention = null;
             $info = '';
@@ -593,7 +593,7 @@ class Backend_HiveController extends Local_Controller_Action_Backend
                  **/
                 $info .= "ImageUpload successfull: " . $cnFileUrl;
             } else {
-                $path = 'https://cn.pling.com/img/hive/content-pre3/' . $hiveProjectId . '-3.';
+                $path = 'https://cn.opendesktop.com/img/hive/content-pre3/' . $hiveProjectId . '-3.';
                 $fileUrl = null;
                 $fileExtention = null;
                 $info = '';
