@@ -248,6 +248,7 @@ class DiscussionBoardsDropDownMenu extends React.Component {
     let dropdownClass = "";
     if (this.node.contains(e.target)){
       if (this.state.dropdownClass === "open"){
+        console.log(e.target.className);
         if (e.target.className === "discussion-menu-link-item"){
           dropdownClass = "";
         } else {
@@ -263,7 +264,7 @@ class DiscussionBoardsDropDownMenu extends React.Component {
   render(){
     return (
       <li ref={node => this.node = node}  id="discussion-boards" className={this.state.dropdownClass}>
-        
+
         <a className="discussion-menu-link-item">Discussion Boards</a>
         <ul className="discussion-menu dropdown-menu dropdown-menu-right">
           <li><a href={this.props.forumUrl + "/c/general"}>General</a></li>
