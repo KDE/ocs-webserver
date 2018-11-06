@@ -387,7 +387,7 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                                     ?>
                                     <p class="light small">
                                     <?php if (false === empty($this->product->gitlab_project_id)):
-                                        echo '<img src="/theme/react/assets/img/logo-opencode.png" width="15"> <a target="_blank" href="' . $this->gitlab_project['web_url'] . '" rel="nofollow">' . $this->gitlab_project['web_url']
+                                        echo '<img src="/images_sys/gitlab.png" width="15"> <a target="_blank" href="' . $this->gitlab_project['web_url'] . '" rel="nofollow">' . $this->gitlab_project['web_url']
                                             . ' <span class="fa fa-external-link"></span></a>';
                                         
                                        endif;
