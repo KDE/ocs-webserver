@@ -78,7 +78,7 @@ class Backend_MemberLetterAvatarCliController extends Local_Controller_Action_Cl
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql)->fetchAll();
         foreach ($result as $m) {                        
             //$file = 'https://cn.pling.it/img/'.$m['avatar'];                    // cc  
-            $file = 'https://cn.pling.com/img/'.$m['avatar'];                      //live
+            $file = 'https://cn.opendesktop.org/img/'.$m['avatar'];                      //live
                         
             // echo "\n";     
              try {                     

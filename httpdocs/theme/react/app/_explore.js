@@ -589,7 +589,7 @@ class ExploreTopProducts extends React.Component {
 
       let imageBaseUrl;
       if (store.getState().env === 'live') {
-        imageBaseUrl = 'cn.pling.com';
+        imageBaseUrl = 'cn.opendesktop.org';
       } else {
         imageBaseUrl = 'cn.pling.it';
       }

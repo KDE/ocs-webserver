@@ -123,7 +123,7 @@ class ProductViewHeader extends React.Component {
 
     let imageBaseUrl;
     if (store.getState().env === 'live') {
-      imageBaseUrl = 'cn.pling.com';
+      imageBaseUrl = 'cn.opendesktop.org';
     } else {
       imageBaseUrl = 'cn.pling.it';
     }
@@ -560,7 +560,7 @@ class ProductViewGallery extends React.Component {
 
       let imageBaseUrl;
       if (store.getState().env === 'live') {
-        imageBaseUrl = 'http://cn.pling.com';
+        imageBaseUrl = 'http://cn.opendesktop.org';
       } else {
         imageBaseUrl = 'http://cn.pling.it';
       }
@@ -692,7 +692,7 @@ class ProductGalleryLightbox extends React.Component {
 
     let imageBaseUrl;
     if (store.getState().env === 'live') {
-      imageBaseUrl = 'http://cn.pling.com';
+      imageBaseUrl = 'http://cn.opendesktop.org';
     } else {
       imageBaseUrl = 'http://cn.pling.it';
     }
@@ -936,7 +936,7 @@ class CommentForm extends React.Component {
         success:function(results){
           let baseUrl;
           if (store.getState().env === 'live') {
-            baseUrl = 'cn.pling.com';
+            baseUrl = 'cn.opendesktop.org';
           } else {
             baseUrl = 'cn.pling.it';
           }
