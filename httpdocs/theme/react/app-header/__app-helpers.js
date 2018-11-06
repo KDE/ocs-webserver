@@ -9,9 +9,7 @@ window.appHelpers = (function(){
       lastDotSplit = lastDotSplit.split('/')[0];
     }
 
-    console.log(lastDotSplit);
-
-    if ( === 'com' || this.splitByLastDot(domain) === 'org'){
+    if (lastDotSplit === 'com' || lastDotSplit === 'org'){
       env = 'live';
     } else {
       env = 'test';
