@@ -197,7 +197,7 @@ var ImagePreview = {
             return;
         }
         var imageTarget = $('#image_small').data('target');
-        $(imageTarget).attr('src', 'https://cn.pling.com/cache/200x200-2/img/' + $('#image_small').attr('value'));
+        $(imageTarget).attr('src', 'https://cn.opendesktop.com/cache/200x200-2/img/' + $('#image_small').attr('value'));
         $(imageTarget).show();
         $('button#add-product-picture').text('CHANGE LOGO');
     },
@@ -209,7 +209,7 @@ var ImagePreview = {
             return;
         }
         var imageTarget = $('#image_big').data('target');
-        $(imageTarget).attr('src', 'https://cn.pling.com/cache/200x200-2/img/' + $('#image_big').attr('value'));
+        $(imageTarget).attr('src', 'https://cn.opendesktop.com/cache/200x200-2/img/' + $('#image_big').attr('value'));
         $(imageTarget).show();
         $('button#add-title-picture').text('CHANGE BANNER');
     },
@@ -1787,11 +1787,11 @@ var TooltipUserPlings = (function () {
                                     if(index>10) return false;
                                     if(value.profile_image_url.indexOf('http')<0)
                                     {
-                                         value.profile_image_url = "https://cn.pling.com/cache/40x40-2/img/"+value.profile_image_url ;
+                                         value.profile_image_url = "https://cn.opendesktop.com/cache/40x40-2/img/"+value.profile_image_url ;
                                     }
                                     if(value.profile_image_url.indexOf('.gif')>0)
                                     {
-                                         value.profile_image_url = "https://cn.pling.com/img/"+value.profile_image_url ;
+                                         value.profile_image_url = "https://cn.opendesktop.com/img/"+value.profile_image_url ;
                                     }
                                     tmp = tmp+'<div class="user"><a href="/member/'+value.member_id+'"><img src="'+value.profile_image_url+'" /></a><span class="caption">'+value.username+'</span></div>';
                                 });
