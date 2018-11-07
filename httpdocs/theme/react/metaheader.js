@@ -56,10 +56,12 @@ class MetaHeader extends React.Component {
 
   componentWillUnmount() {
     window.removeEventListener("resize", this.updateDimensions);
+    window.removeEventListener("orientationchange", this.updateDimensions);
   }
 
   initMetaHeader() {
     window.addEventListener("resize", this.updateDimensions);
+    window.addEventListener("orientationchange", this.updateDimensions);
     this.getUser();
   }
 

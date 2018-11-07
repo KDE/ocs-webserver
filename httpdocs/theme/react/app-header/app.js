@@ -24,6 +24,7 @@ class SiteHeader extends React.Component {
   }
 
   render(){
+    
 
     let userMenuDisplay, loginMenuDisplay, siteHeaderTopRightCssClass;
     if (this.state.user){
@@ -194,7 +195,7 @@ class SiteHeaderUserMenu extends React.Component {
       <ul id="site-header-user-menu-container">
         <li ref={node => this.node = node} id="user-menu-toggle" className={this.state.dropdownClass}>
           <a className="profile-menu-toggle">
-            <img className="profile-menu-image" src={this.props.user.profile_image_url}/>
+            <img className="profile-menu-image" src={window.json_member_avatar}/>
             <span className="profile-menu-username">{this.props.user.username}</span>
           </a>
           <ul id="user-profile-menu" >
