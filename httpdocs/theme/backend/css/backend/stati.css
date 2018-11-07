@@ -1,3 +1,6 @@
+.pling-nav-tabs a{
+  cursor: pointer;
+}
 .spinning {
     animation: spin 1s infinite linear;
     -webkit-animation: spin2 1s infinite linear;
