@@ -54,6 +54,8 @@ class SiteHeader extends React.Component {
 
   render() {
 
+    console.log(this.state.user);
+
     let userMenuDisplay, loginMenuDisplay, siteHeaderTopRightCssClass;
     if (this.state.user) {
       userMenuDisplay = React.createElement(SiteHeaderUserMenu, {
