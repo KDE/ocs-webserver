@@ -376,21 +376,25 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                                      ?>
 
                                     <p class="light small">
-                                    <span class="source">Source (required if based on other people's work): </span>
-                                    <?php if (false === empty($this->product->source_url)):
-                                        echo '<a target="_blank" href="' . $this->product->source_url . '" rel="nofollow">' . $this->product->source_url
-                                            . ' <span class="fa fa-external-link"></span></a>';
-                                        //elseif ($isowner) :
-                                            else :
-                                            echo '<span class="source" > Add the source-code for this project on </span><a href="https://git.opendesktop.org/'.$this->product->username.'">git.opendesktop.org</a>';                                                                            
-                                       endif;
-                                    ?>
-                                    <p class="light small">
-                                    <?php if (false === empty($this->product->gitlab_project_id)):
+                                    <?php if (false === empty($this->product->gitlab_project_id)) {
                                         echo '<img src="/images_sys/gitlab.png" width="15"> <a target="_blank" href="' . $this->gitlab_project['web_url'] . '" rel="nofollow">' . $this->gitlab_project['web_url']
                                             . ' <span class="fa fa-external-link"></span></a>';
                                         
-                                       endif;
+                                    
+                                    } else if (false === empty($this->product->source_url)) {
+                                    ?>
+                                    <p class="light small">
+                                    <span class="source">Source (required if based on other people's work): </span>
+                                    <?php
+                                        echo '<a target="_blank" href="' . $this->product->source_url . '" rel="nofollow">' . $this->product->source_url
+                                            . ' <span class="fa fa-external-link"></span></a>';
+                                    } else {
+                                    ?>
+                                    <p class="light small">
+                                    <span class="source">Source (required if based on other people's work): </span>
+                                    <?php
+                                            echo '<span class="source" > Add the source-code for this project on </span><a href="https://git.opendesktop.org/'.$this->product->username.'">git.opendesktop.org</a>';                                                                                                                    
+                                    }
                                     ?>
                                     
 
