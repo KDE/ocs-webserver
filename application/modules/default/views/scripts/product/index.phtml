@@ -380,6 +380,7 @@ if(Zend_Auth::getInstance()->hasIdentity() && $identity->member_id==$this->produ
                                     <?php if (false === empty($this->product->gitlab_project_id)) {
                                         $url = $this->gitlab_project['web_url'];
                                         $url = str_replace("http;//", "https://", $url);
+                                        
                                         echo '<img src="/images_sys/gitlab.png" width="15"> <a target="_blank" href="' . $url . '" rel="nofollow">' . $url
                                             . ' <span class="fa fa-external-link"></span></a>';
                                     } else if (false === empty($this->product->source_url)) {
