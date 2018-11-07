@@ -258,7 +258,7 @@ class SiteHeaderUserMenu extends React.Component {
         React.createElement(
           "a",
           { className: "profile-menu-toggle" },
-          React.createElement("img", { className: "profile-menu-image", src: this.props.user.profile_image_url }),
+          React.createElement("img", { className: "profile-menu-image", src: window.json_member_avatar }),
           React.createElement(
             "span",
             { className: "profile-menu-username" },
