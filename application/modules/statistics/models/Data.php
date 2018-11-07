@@ -228,6 +228,72 @@ class Statistics_Model_Data
             $result = $this->_db->fetchAll($sql,array("date_start"=>$date_start,"date_end"=>$date_end));
             return $result;             
     }
+
+    public function getTopDownloadsPerMonth($month,$catid){
+
+            $sd = $month.'-01';
+            $date_start =date('Y-m-01', strtotime($sd)).' 00:00:00';
+            $date_end =date('Y-m-t', strtotime($sd)).' 23:59:59';    
+            
+            if($catid==0)
+            {
+
+              $sql = "
+                      select d.project_id
+                        , count(1) as cnt 
+                        ,(select p.title from project p where p.project_id = d.project_id) as ptitle
+                        ,(select p.created_at from project p where p.project_id = d.project_id) as pcreated_at
+                        ,(select c.title from category c where d.project_category_id=c.project_category_id) as ctitle
+                        ,(select username from member m where m.member_id = d.member_id) as username                  
+                        from dwh.files_downloads d
+                        where d.yyyymm = :month
+                        group by d.project_id,project_category_id,member_id
+                        order by cnt desc
+                        limit 50
+              ";
+
+              // $sql = "
+              //       select d.project_id
+              //       , count(1) as cnt 
+              //       ,(select p.title from project p where p.project_id = d.project_id) as ptitle
+              //       ,(select p.created_at from project p where p.project_id = d.project_id) as pcreated_at
+              //       ,(select c.title from category c, project p where p.project_id = d.project_id and p.project_category_id=c.project_category_id) as ctitle
+              //       ,(select username from member m , project p where m.member_id = p.member_id and p.project_id = d.project_id) as username                  
+              //       from dwh.files_downloads d
+              //       where d.downloaded_timestamp between :date_start and :date_end
+              //       group by d.project_id
+              //       order by cnt desc
+              //       limit 50
+              // ";       
+            }else
+            {
+                $modelProjectCategories = new Default_Model_DbTable_ProjectCategory();
+                $ids = $modelProjectCategories->fetchChildIds($catid);
+                array_push($ids, $catid);            
+                $idstring = implode(',', $ids); 
+                $sql = '
+                        select d.project_id
+                        , count(1) as cnt 
+                        ,(select p.title from project p where p.project_id = d.project_id) as ptitle
+                        ,(select p.created_at from project p where p.project_id = d.project_id) as pcreated_at
+                        ,(select c.title from category c where d.project_category_id=c.project_category_id) as ctitle
+                        ,(select username from member m where m.member_id = d.member_id) as username                  
+                        from dwh.files_downloads d
+                        where d.yyyymm = :month
+                        and d.project_category_id in ('.$idstring.')
+                        group by d.project_id,project_category_id,member_id
+                        order by cnt desc
+                        limit 50
+                ';       
+            }
+           
+            
+            
+
+            //$result = $this->_db->fetchAll($sql,array("date_start"=>$date_start,"date_end"=>$date_end));
+            $result = $this->_db->fetchAll($sql,array("month"=>$month));
+            return $result;             
+    }
  
     public function getDownloadsDomainStati($begin, $end){
             $date_start =$begin.' 00:00:00';
