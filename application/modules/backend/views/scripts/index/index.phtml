@@ -25,18 +25,20 @@ $this->categories = $modelCategory->fetchTreeForView(25);
 $jsonTree = json_encode($this->categories);
 ?>
 <?= $this->partial('yui.phtml'); ?>
+<link href="/theme/flatui/js/lib/jquerymonthpicker/MonthPicker.css" rel="stylesheet" type="text/css" />
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="/theme/flatui/js/lib/d3pie.min.js"></script>
 
- <script type="text/javascript" src="/theme/react/lib/react/react.js"></script>
+<script type="text/javascript" src="/theme/react/lib/react/react.js"></script>
 <script type="text/javascript" src="/theme/react/lib/react-dom/react-dom.js"></script>
 <script type="text/javascript" src="/theme/react/lib/redux/redux.min.js"></script>
 <script type="text/javascript" src="/theme/react/lib/redux/react-redux.min.js"></script>
 <script type="text/javascript" src="/theme/react/lib/mdl/material.min.js"></script>
 <script type="text/javascript" src="/theme/react/lib/timeago/timeago.min.js"></script>
 <script type="text/javascript" src="/theme/react/lib/md5/md5.js"></script>
+<script src="/theme/flatui/js/lib/jquerymonthpicker/MonthPicker.js"></script>
 
 <div class="pling-nav-tabs">
     <ul class="nav nav-tabs ">
@@ -45,7 +47,8 @@ $jsonTree = json_encode($this->categories);
         <li><a class="downloadsdailyTab" href="#downloadsdailyTab" data-toggle="tab">Downloads&Payouts daily</a></li>
         <!-- <li ><a class="downloadsundpayoutsdailyTab" href="#downloadsundpayoutsdailyTab" data-toggle="tab">Downloads vs Payouts daily</a></li> -->
 
-        <li><a class="topDownloadsPerDayTab" href="#topDownloadsPerDayTab" data-toggle="tab">Top Download/Day</a></li>
+        <li><a class="topDownloadsPerDayTab" href="#topDownloadsPerDayTab" data-toggle="tab">Product/Day</a></li>
+        <li><a class="topDownloadsPerMonthTab" href="#topDownloadsPerMonthTab" data-toggle="tab">Product/Month</a></li>
         <li><a class="payoutTab" href="#payoutTab" data-toggle="tab">Payout Member</a></li>
         <li><a class="payoutNewcomerTab" href="#payoutNewcomerTab" data-toggle="tab">Payout Newcomer</a></li>
         <li><a class="payoutNewloserTab" href="#payoutNewloserTab" data-toggle="tab">Payout Newloser</a></li>
@@ -109,6 +112,18 @@ $jsonTree = json_encode($this->categories);
             <div id="topDownloadsPerDayTabContainer" style="display: block;clear: left"></div>
         </div> 
 
+        <div id="topDownloadsPerMonthTab" class="tab-pane ">
+            <div style="display: block; clear: both" class="filter">
+                <input name="filterTopDownloadsMonth" id="filterTopDownloadsMonth" value="<?php echo date("Ym") ?>" />                
+                <script type="text/javascript">
+                    $('#filterTopDownloadsMonth').MonthPicker({ StartYear: 2018, ShowIcon: true,MonthFormat:'yymm',OnAfterChooseMonth: function() { 
+                                window.selectedMonth = $(this).val();
+                        }  });
+                </script>                                
+            </div>
+            <div id="topDownloadsPerMonthTabContainer" style="display: block;clear: left"></div>
+        </div> 
+
         <div id="payoutTab" class="tab-pane ">
 
             <div id="payoutyear" style="display: block; float: left; padding-right: 20px" class="d3linepath"></div>
@@ -134,9 +149,10 @@ $jsonTree = json_encode($this->categories);
         </div>
 
           <div id="payoutCategoryTab" class="tab-pane">
+            <div style="display: block; clear: both" class="filter">
                 <button id="clearChartPanel">clear</button>
-                <div id="category-tree-container">
-                </div>
+            </div>
+               
             <div id="payoutCategoryLineChart"  style="max-width: 1000px; height: 100%; display: block; float: right; ">
                     
             </div>
@@ -145,7 +161,9 @@ $jsonTree = json_encode($this->categories);
     </div>
 </div> <!--end of tab-->
 
-
+<div id="dataFilter" style="display: none">
+ <div id="category-tree-container"></div>
+ </div>
 
 <script type="application/javascript">
   var catTree = <?= $jsonTree ?>;  
@@ -154,7 +172,7 @@ $jsonTree = json_encode($this->categories);
 <script type="application/javascript" src="/theme/react/cat-tree.js"></script>
 
 <script type="text/javascript">
-
+var indicator = '<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>';
     function createMonthFilter(selectid, triggerEvent) {
         let html = '<select id="' + selectid + '" style="float: left;">';
         for (i = 1; i < 10; i++) {
@@ -202,18 +220,6 @@ $jsonTree = json_encode($this->categories);
     $('#numofmonthback').change(function () {
         $.getScript("/theme/flatui/js/stati/downloadsdaily.js");
     });
-
-    // downloads & payouts daily
-    /*
-    $('#downloadsundpayoutsdailyTab').prepend(createMonthFilterWithCurrent('selectmonthdownloadsundpayoutdaily'));
-     $('#selectmonthdownloadsundpayoutdaily').change(function() {
-           $.getScript("/theme/flatui/js/stati/downloadsundpayoutsdaily.js");
-      });
-    $(".downloadsundpayoutsdailyTab").click(function() {
-        $('#downloadsundpayoutsdailyTabContainer').empty();
-        $.getScript("/theme/flatui/js/stati/downloadsundpayoutsdaily.js");
-    });
-   */
 
 
     $('button.filterDownloadsDomainDate').click(function () {
@@ -274,6 +280,33 @@ $jsonTree = json_encode($this->categories);
         });
     } 
 
+    function loadTopdownloadspermonth() {
+        
+        console.log(window.selectedMonth);
+        
+        $('#topDownloadsPerMonthTabContainer').empty();
+        $('#topDownloadsPerMonthTabContainer').append(indicator);
+        $.getJSON("/backend/index/gettopdownloadspermonth?month=" + window.selectedMonth+'&catid='+window.selectedCatid, function (
+            response) {
+            let data = response.results;
+            let table = "<table class='tablestati'><thead><tr><td colspan='7'>" + window.selectedMonth+'_'+window.selectedCatTitle + "</td></tr><tr><td>ProjectID</td><td>Username</td><td class='number'>CNT</td><td>Title</td><td>Category</td><td>created_at</td></tr></thead>";
+            $.each(data, function (index, value) {
+                table = table + '<tr>'
+                    + '<td><a target="_blank" href="https://opendesktop.org/p/' + value.project_id + '">'
+                    + value.project_id + '</a></td>'
+                    + '<td>' + value.username + '</td>'
+                    + '<td class="number">' + value.cnt + '</td>'
+                    + '<td>' + value.ptitle + '</td>'
+                    + '<td>' + value.ctitle + '</td>'
+                    + '<td>' + value.pcreated_at + '</td>'
+                    + '</tr>';
+            });
+            table = table + "</table>";
+            $('#topDownloadsPerMonthTabContainer').empty();
+            $('#topDownloadsPerMonthTabContainer').append(table);
+        });
+    } 
+
     $(".topDownloadsPerDayTab").click(function () {
         $('#topDownloadsPerDayTabContainer').empty();
         loadTopdownloadsperday();
@@ -298,11 +331,6 @@ $jsonTree = json_encode($this->categories);
         $('.payoutCategoryMonthlyTab').trigger('click');
     });
     // payout Category Monthly tab end
-
-
-    $(".payoutCategoryTab").click(function () {
-        
-    });
 
 
     $('#payoutNewcomerTab').prepend(createMonthFilter('selectmonthNewcomer'));
@@ -369,8 +397,24 @@ $jsonTree = json_encode($this->categories);
 <script type="text/javascript">
     var parseTime = d3.timeParse("%Y%m"); 
     window.selectedCatid = 0;
+    window.selectedTab = '';
+    window.selectedMonth;
 
     $(document).ready(function () { 
+
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                var target = $(e.target).attr("href");
+                console.log(target);
+                if('#topDownloadsPerMonthTab' == target || '#payoutCategoryTab' ==target)
+                {
+                    var cattree = $('#category-tree-container');
+                    $(target).find('.filter').append(cattree);                   
+                } 
+                window.selectedTab = target;
+                window.selectedCatid = 0;
+                window.selectedCatTitle = '';
+                
+            });
 
             $('body').on('click', '#category-tree a', function (event) {
                 event.preventDefault();
@@ -385,14 +429,21 @@ $jsonTree = json_encode($this->categories);
                 {
                     catid = this.href.substring(start+4, (this.href.length-1));  
                     title = $(this).text();
-
                 }
                 window.selectedCatid = catid;
                 window.selectedCatTitle = title;
-                if($('#payoutCategoryLineChart').find('#payoutCategoryLineChart'+catid).length==0)
+                if(window.selectedTab=='#payoutCategoryTab')
                 {
-                    $('#payoutCategoryLineChart').append('<div class="chart-wrapper" id="payoutCategoryLineChart'+catid+'"> loading ... </div>');
-                    $.getScript("/theme/flatui/js/stati/payoutCategory.js");
+                    if($('#payoutCategoryLineChart').find('#payoutCategoryLineChart'+catid).length==0)
+                    {
+                        $('#payoutCategoryLineChart').append('<div class="chart-wrapper" id="payoutCategoryLineChart'+catid+'"> loading ... </div>');
+                        $.getScript("/theme/flatui/js/stati/payoutCategory.js");
+                    }
+                }
+                if(window.selectedTab=='#topDownloadsPerMonthTab')
+                {                    
+                    window.selectedMonth = $('#filterTopDownloadsMonth').val();
+                    loadTopdownloadspermonth();
                 }
             });
 
@@ -400,10 +451,17 @@ $jsonTree = json_encode($this->categories);
                  $("#payoutCategoryLineChart").empty();
             });
 
+
+           
+
     });
    
+
+
 
 </script>
 
 
 <script src="/theme/flatui/js/lib/multiline.js"></script>
+
+
