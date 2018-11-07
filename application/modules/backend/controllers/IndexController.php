@@ -113,6 +113,15 @@ class Backend_IndexController extends Local_Controller_Action_Backend
         $modelData = new Statistics_Model_Data(Zend_Registry::get('config')->settings->dwh->toArray());
         $this->sendJson($modelData->getTopDownloadsPerDate($date));
     }
+    public function gettopdownloadspermonthAction()
+    {
+
+        $this->_helper->layout->disableLayout();
+        $month = $this->getParam('month');
+        $catid = $this->getParam('catid');
+        $modelData = new Statistics_Model_Data(Zend_Registry::get('config')->settings->dwh->toArray());
+        $this->sendJson($modelData->getTopDownloadsPerMonth($month,$catid));
+    }
 
     public function getdownloadsdomainAction()
     {
