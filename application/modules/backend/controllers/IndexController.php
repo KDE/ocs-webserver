@@ -113,6 +113,26 @@ class Backend_IndexController extends Local_Controller_Action_Backend
         $modelData = new Statistics_Model_Data(Zend_Registry::get('config')->settings->dwh->toArray());
         $this->sendJson($modelData->getTopDownloadsPerDate($date));
     }
+
+    public function getproductmonthlyAction()
+    {
+
+        $this->_helper->layout->disableLayout();
+        $project_id = $this->getParam('project_id');
+        $modelData = new Statistics_Model_Data(Zend_Registry::get('config')->settings->dwh->toArray());
+        $this->sendJson($modelData->getProductMonthly($project_id));
+    }
+
+    public function getproductdaylyAction()
+    {
+
+        $this->_helper->layout->disableLayout();
+        $project_id = $this->getParam('project_id');
+        $modelData = new Statistics_Model_Data(Zend_Registry::get('config')->settings->dwh->toArray());
+        $this->sendJson($modelData->getProductDayly($project_id));
+    }
+
+
     public function gettopdownloadspermonthAction()
     {
 
