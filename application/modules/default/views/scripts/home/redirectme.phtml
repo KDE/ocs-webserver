@@ -6,10 +6,15 @@
             document.location.href = "<?= $this->redirect ?>";
         }
 
-        function loadForum() {
-            var img = document.getElementById('forum-login');
+        function loadSubSys() {
+            var img = document.getElementById('f-login');
             var img_src = img.getAttribute('data-src');
             img.setAttribute('src', img_src);
+
+            var img_g = document.getElementById('g-login');
+            var img_src_g = img_g.getAttribute('data-src');
+            img.setAttribute('src', img_src_g);
+
             return true;
         }
     </script>
@@ -50,10 +55,10 @@ foreach ($domains as $domain) {
 ?>
 <img src="/external/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $this->Image($member->profile_image_url,array('width' => 210, 'height' => 210, 'crop' => 2)) ?>" height="0" width="0">
 <img src="<?= $url_gitlab ?>/external/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $this->Image($member->profile_image_url,array('width' => 210, 'height' => 210, 'crop' => 2)) ?>&phash=<?= $phash ?>" height="0" width="0">
-<img src="<?= $url_gitlab ?>/users/auth/oauth_opendesktop" height="0" width="0" />
 <img src="<?= $url_forum ?>:8443/setdata.php?id=<?= $member->member_id ?>&name=<?= $member->username ?>&mail=<?= $member->mail ?>&avatar=<?= $this->Image($member->profile_image_url,array('width' => 210, 'height' => 210, 'crop' => 2)) ?>" height="0" width="0">
-<img src="<?= $http_scheme?>://<?= $config->openid->host ?>/login/setsession?ltat=<?= $ltat ?>" height="0" width="0" onload="loadForum();"/>
-<img data-src="<?=$http_scheme?>://<?= $config->forum->host ?>/session/sso?return_path=%2F" height="0" width="0" id="forum-login" />
+<img src="<?= $http_scheme?>://<?= $config->openid->host ?>/login/setsession?ltat=<?= $ltat ?>" height="0" width="0" onload="loadSubSys();"/>
+<img data-src="<?=$http_scheme?>://<?= $config->forum->host ?>/session/sso?return_path=%2F" height="0" width="0" id="f-login" />
+<img data-src="<?= $url_gitlab ?>/users/auth/oauth_opendesktop" height="0" width="0" id="g-login"/>
 
 </body>
 </html>
