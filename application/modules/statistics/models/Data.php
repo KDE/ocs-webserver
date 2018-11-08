@@ -238,19 +238,31 @@ class Statistics_Model_Data
             if($catid==0)
             {
 
-              $sql = "
-                      select d.project_id
-                        , count(1) as cnt 
-                        ,(select p.title from project p where p.project_id = d.project_id) as ptitle
-                        ,(select p.created_at from project p where p.project_id = d.project_id) as pcreated_at
-                        ,(select c.title from category c where d.project_category_id=c.project_category_id) as ctitle
-                        ,(select username from member m where m.member_id = d.member_id) as username                  
-                        from dwh.files_downloads d
-                        where d.yyyymm = :month
-                        group by d.project_id,project_category_id,member_id
-                        order by cnt desc
-                        limit 50
-              ";
+              // $sql = "
+              //         select d.project_id
+              //           , count(1) as cnt 
+              //           ,(select p.title from project p where p.project_id = d.project_id) as ptitle
+              //           ,(select p.created_at from project p where p.project_id = d.project_id) as pcreated_at
+              //           ,(select c.title from category c where d.project_category_id=c.project_category_id) as ctitle
+              //           ,(select username from member m where m.member_id = d.member_id) as username                  
+              //           from dwh.files_downloads d
+              //           where d.yyyymm = :month
+              //           group by d.project_id,project_category_id,member_id
+              //           order by cnt desc
+              //           limit 50
+              // ";
+              $sql = "select d.project_id
+                      , sum(d.count) as cnt 
+                      ,p.title  as ptitle
+                      ,p.created_at as pcreated_at
+                      ,(select c.title from category c where d.project_category_id=c.project_category_id) as ctitle
+                      ,(select username from member m where m.member_id = p.member_id) as username                  
+                      from dwh.files_downloads_project_daily d
+                        join project p on d.project_id = p.project_id
+                      where d.yyyymm = :month
+                      group by d.project_id,d.project_category_id,p.member_id
+                      order by cnt desc
+                      limit 50";
                    
             }else
             {
@@ -258,20 +270,33 @@ class Statistics_Model_Data
                 $ids = $modelProjectCategories->fetchChildIds($catid);
                 array_push($ids, $catid);            
                 $idstring = implode(',', $ids); 
-                $sql = '
-                        select d.project_id
-                        , count(1) as cnt 
-                        ,(select p.title from project p where p.project_id = d.project_id) as ptitle
-                        ,(select p.created_at from project p where p.project_id = d.project_id) as pcreated_at
+                // $sql = '
+                //         select d.project_id
+                //         , count(1) as cnt 
+                //         ,(select p.title from project p where p.project_id = d.project_id) as ptitle
+                //         ,(select p.created_at from project p where p.project_id = d.project_id) as pcreated_at
+                //         ,(select c.title from category c where d.project_category_id=c.project_category_id) as ctitle
+                //         ,(select username from member m where m.member_id = d.member_id) as username                  
+                //         from dwh.files_downloads d
+                //         where d.yyyymm = :month
+                //         and d.project_category_id in ('.$idstring.')
+                //         group by d.project_id,project_category_id,member_id
+                //         order by cnt desc
+                //         limit 50
+                // ';       
+                $sql = 'select d.project_id
+                        , sum(d.count) as cnt 
+                        ,p.title  as ptitle
+                        ,p.created_at as pcreated_at
                         ,(select c.title from category c where d.project_category_id=c.project_category_id) as ctitle
-                        ,(select username from member m where m.member_id = d.member_id) as username                  
-                        from dwh.files_downloads d
+                        ,(select username from member m where m.member_id = p.member_id) as username                  
+                        from dwh.files_downloads_project_daily d
+                          join project p on d.project_id = p.project_id
                         where d.yyyymm = :month
                         and d.project_category_id in ('.$idstring.')
-                        group by d.project_id,project_category_id,member_id
+                        group by d.project_id,d.project_category_id,p.member_id
                         order by cnt desc
-                        limit 50
-                ';       
+                        limit 50';
             }
            
             $result = $this->_db->fetchAll($sql,array("month"=>$month));
@@ -281,13 +306,13 @@ class Statistics_Model_Data
     public function getProductMonthly($project_id)
     {
         $sql = "
-            select 
-            yyyymm as yearmonth
-            ,count(1) as amount
-            from dwh.files_downloads 
-            where project_id = :project_id
-            group by yyyymm
-            limit 100
+                select 
+                yyyymm as yearmonth
+               ,sum(count) as amount
+               from dwh.files_downloads_project_daily
+               where project_id = :project_id
+               group by yyyymm
+               limit 100
         ";
         $result = $this->_db->fetchAll($sql,array("project_id"=>$project_id));
         return $result;   
@@ -296,13 +321,10 @@ class Statistics_Model_Data
     public function getProductDayly($project_id)
     {
         $sql = "
-                select 
-                yyyymmdd as yearmonth
-                ,count(1) as amount
-                from dwh.files_downloads 
-                where project_id = :project_id
-                group by yyyymmdd
-                order by yyyymmdd desc
+              select yyyymmdd as yearmonth,count as amount 
+              from dwh.files_downloads_project_daily
+              where project_id = :project_id
+              order by yyyymmdd desc
                 limit 100
         ";
         $result = $this->_db->fetchAll($sql,array("project_id"=>$project_id));        
