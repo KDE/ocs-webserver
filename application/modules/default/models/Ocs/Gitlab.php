@@ -38,7 +38,7 @@ class Default_Model_Ocs_Gitlab
         } else {
             $this->config = Zend_Registry::get('config')->settings->server->opencode;
         }
-        $uri = $this->config->host . $this->config->url->user_create;
+        $uri = $this->config->host;
         $this->httpClient = new Zend_Http_Client($uri, array('keepalive' => true, 'strictredirects' => true));
     }
 
@@ -127,7 +127,7 @@ class Default_Model_Ocs_Gitlab
             'name'             => (false == empty($user['lastname'])) ? trim($user['firstname'] . ' ' . $user['lastname'])
                 : $user['username'],
             'password'         => $user['password'],
-            'provider'         => 'all',
+            'provider'         => $this->config->provider_name,
             'extern_uid'       => $user['external_id'],
             'bio'              => $bio,
             'admin'            => $user['roleId'] == 100 ? 'true' : 'false',

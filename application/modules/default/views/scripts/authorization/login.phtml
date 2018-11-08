@@ -57,7 +57,7 @@ $this->headMeta()->setName('robots', 'noindex, nofollow');
                     </a>
                   </div>
                   */ ?>
-                          
+
                   <div class="bottom margin-top-15">
                     <a  href="/login/ocs/<?=$url_param_redirect?>" class="btn btn-block btn-social btn-github">
                         <span class="glyphicon glyphicon-log-in"></span>
@@ -66,7 +66,8 @@ $this->headMeta()->setName('robots', 'noindex, nofollow');
                   </div>
 
                     <div class="bottom margin-top-15">
-                    <div id="show-login-description" class="small light lightgrey">Join us?</div>
+                      
+                    <div id="show-login-description" class="small light lightgrey">New user?</div>
                     <div class="login2">
                       <a href="/register/" id="show-login-form" class="btn btn-native btn-min-width">
                         <i class="icon-white icon-lock"></i>
@@ -87,13 +88,13 @@ $this->headMeta()->setName('robots', 'noindex, nofollow');
                     <a href="<?php echo $buildMemberUrl->buildMemberUrl($user['username']); ?>" title="<?=$user['profile_image_url']?>">
                         <span ></span>
                         <img src="<?php echo $this->Image($user['profile_image_url'],array('width' => 110, 'height' => 110, 'crop' => 2)); ?>"/>
-                        
+
                     </a>
                 </div>
 
             <?php } ?>
-        
-        
+
+
         </section>
 
     </main>

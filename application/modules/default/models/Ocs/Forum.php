@@ -63,10 +63,13 @@ class Default_Model_Ocs_Forum
         $data = $this->mapUserData($member_data);
 
         $user = $this->getUser($member_data['external_id'], $member_data['username']);
+        $uid = $data['username'];
 
         if (empty($user)) {
             try {
-                $result = $this->httpUserCreate($data);
+                $uri = $this->config->host . "/users";
+                $method = Zend_Http_Client::POST;
+                $result = $this->httpRequest($uri, $uid, $method, $data);
                 if (false === $result) {
                     $this->messages[] = "Fail ";
 
@@ -86,7 +89,9 @@ class Default_Model_Ocs_Forum
             unset($data['password']);
 
             try {
-                $this->httpUserUpdate($data, $user['username']);
+                $uri = $this->config->host . "/users/{$id}.json";
+                $method = Zend_Http_Client::PUT;
+                $this->httpRequest($uri, $uid, $method, $data);
             } catch (Zend_Exception $e) {
                 $this->messages[] = "Fail " . $e->getMessage();
 
@@ -117,12 +122,14 @@ class Default_Model_Ocs_Forum
         }
 
         $data = array(
-            'name'     => (false == empty($user['lastname'])) ? trim($user['firstname'] . ' ' . $user['lastname']) : $user['username'],
-            'email'    => $paramEmail,
-            'password' => $user['password'],
-            'username' => strtolower($user['username']),
-            'active'   => $user['is_active'] ? true : false,
-            'approved' => (false == empty($user['email_checked'])) ? true : false
+            'name'        => (false == empty($user['lastname'])) ? trim($user['firstname'] . ' ' . $user['lastname'])
+                : $user['username'],
+            'email'       => $paramEmail,
+            'password'    => $user['password'],
+            'username'    => strtolower($user['username']),
+            'active'      => $user['is_active'] ? true : false,
+            'approved'    => (false == empty($user['email_checked'])) ? true : false,
+            'user_fields' => array('2' => $user['external_id'])
         );
 
         return $data;
@@ -161,171 +168,113 @@ class Default_Model_Ocs_Forum
     /**
      * @param string $extern_uid
      *
-     * @return array
-     * @throws Default_Model_Ocs_Exception
-     * @throws Zend_Exception
+     * @return bool|array
      * @throws Zend_Http_Client_Exception
      * @throws Zend_Json_Exception
      */
     public function getUserByExternUid($extern_uid)
     {
-        $this->httpClient->resetParameters();
         $uri = $this->config->host . "/u/by-external/{$extern_uid}.json";
+        $method = Zend_Http_Client::GET;
+        $uid = 'external_id';
+
+        $user = $this->httpRequest($uri, $uid, $method);
+
+        if (false === $user) {
+            return false;
+        }
+
+        return $user;
+    }
+
+    /**
+     * @param string $uri
+     * @param string $uid
+     * @param string $method
+     * @param null   $post_param
+     *
+     * @return bool|array
+     * @throws Zend_Http_Client_Exception
+     * @throws Zend_Json_Exception
+     */
+    protected function httpRequest($uri, $uid, $method = Zend_Http_Client::GET, $post_param = null)
+    {
+        $this->httpClient->resetParameters();
         $this->httpClient->setUri($uri);
         $this->httpClient->setParameterGet('api_key', $this->config->private_token);
         $this->httpClient->setParameterGet('api_username', $this->config->user_sudo);
         $this->httpClient->setHeaders('User-Agent', $this->config->user_agent);
-        $this->httpClient->setMethod(Zend_Http_Client::GET);
+        $this->httpClient->setMethod($method);
+        if (isset($post_param)) {
+            $this->httpClient->setParameterPost($post_param);
+        }
 
         $response = $this->httpClient->request();
-
         if ($response->getStatus() < 200 OR $response->getStatus() >= 500) {
-            throw new Default_Model_Ocs_Exception('request user data failed. OCS Forum server send message: ' . $response->getBody());
+            $this->messages[] = 'Request failed.(' . $uri . ') OCS Forum server send message: ' . $response->getBody();
+
+            return false;
         }
 
         $body = Zend_Json::decode($response->getBody());
 
-        if (count($body) == 0) {
-            return array();
+        if (array_key_exists("error_type", $body) OR array_key_exists("errors", $body)) {
+            $this->messages[] = "id: {$uid} ($uri) - " . $response->getBody();
+
+            return false;
         }
 
-        if (array_key_exists("error_type", $body)) {
-            $this->messages[] = "external_id: {$extern_uid} " . $response->getBody();
+        if (array_key_exists('success', $body) AND $body['success'] == false) {
+            $this->messages[] = "id: {$uid} ($uri) - " . $body['message'];
 
-            return array();
+            return false;
         }
 
-        Zend_Registry::get('logger')->debug(__METHOD__ . " - body: " . $response->getBody());
-
-        return $body["user"];
+        return $body;
     }
 
     /**
      * @param $username
      *
-     * @return array
-     * @throws Default_Model_Ocs_Exception
-     * @throws Zend_Exception
+     * @return bool|array
      * @throws Zend_Http_Client_Exception
      * @throws Zend_Json_Exception
      */
     public function getUserByUsername($username)
     {
         $encoded_username = urlencode($username);
-        $this->httpClient->resetParameters();
         $uri = $this->config->host . "/users/{$encoded_username}.json";
-        $this->httpClient->setUri($uri);
-        $this->httpClient->setParameterGet('api_key', $this->config->private_token);
-        $this->httpClient->setParameterGet('api_username', $this->config->user_sudo);
-        $this->httpClient->setHeaders('User-Agent', $this->config->user_agent);
-        $this->httpClient->setMethod(Zend_Http_Client::GET);
+        $method = Zend_Http_Client::GET;
+        $uid = $username;
 
-        $response = $this->httpClient->request();
+        $user = $this->httpRequest($uri, $uid, $method);
 
-        if ($response->getStatus() < 200 AND $response->getStatus() >= 500) {
-            throw new Default_Model_Ocs_Exception('delete user failed. response: ' . $response->getBody() . PHP_EOL
-                . " - user id: {$username}");
+        if (false === $user) {
+            return false;
         }
 
-        $body = Zend_Json::decode($response->getBody());
-
-        if (array_key_exists("error_type", $body)) {
-            $this->messages[] = "username: {$username} " . $response->getBody();
-
-            return array();
-        }
-
-        if (count($body) == 0) {
-            return array();
-        }
-
-        Zend_Registry::get('logger')->debug(__METHOD__ . " - body: " . $response->getBody());
-
-        return $body['user'];
+        return $user;
     }
 
     /**
-     * @param $data
+     * @param string $email
      *
-     * @return bool
-     * @throws Default_Model_Ocs_Exception
-     * @throws Zend_Exception
+     * @return bool|array
      * @throws Zend_Http_Client_Exception
      * @throws Zend_Json_Exception
      */
-    private function httpUserCreate($data)
+    public function getUserByEmail($email)
     {
-        $this->httpClient->resetParameters();
-        $uri = $this->config->host . "/users";
-        $this->httpClient->setUri($uri);
-        $this->httpClient->setParameterGet('api_key', $this->config->private_token);
-        $this->httpClient->setParameterGet('api_username', $this->config->user_sudo);
-        $this->httpClient->setHeaders('User-Agent', $this->config->user_agent);
-        $this->httpClient->setMethod(Zend_Http_Client::POST);
-        $this->httpClient->setParameterPost($data);
+        $uri = $this->config->host . "/admin/users/list/all.json?email={$email}";
+        $method = Zend_Http_Client::GET;
 
-        $response = $this->httpClient->request();
-        if ($response->getStatus() < 200 OR $response->getStatus() >= 500) {
-            throw new Default_Model_Ocs_Exception('push user data failed. OCS Forum server send message: ' . $response->getBody());
-        }
+        $user = $this->httpRequest($uri, $email, $method);
 
-        $body = Zend_Json::decode($response->getBody());
-
-        if (array_key_exists("error_type", $body)) {
-            $this->messages[] = "username: {$data['username']} " . $response->getBody();
-
+        if (false === $user) {
             return false;
         }
 
-        if (array_key_exists('success', $body) AND $body['success'] == false) {
-            $this->messages[] = "username: {$data['username']} " . $body['message'];
-
-            return false;
-        }
-
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - request: ' . $uri);
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - response: ' . $response->getRawBody());
-
-        return true;
-    }
-
-    /**
-     * @param $data
-     *
-     * @return bool
-     * @throws Default_Model_Ocs_Exception
-     * @throws Zend_Exception
-     * @throws Zend_Http_Client_Exception
-     * @throws Zend_Json_Exception
-     */
-    private function httpUserUpdate($data, $id)
-    {
-        $this->httpClient->resetParameters();
-        $uri = $this->config->host . "/users/{$id}.json";
-        $this->httpClient->setUri($uri);
-        $this->httpClient->setParameterGet('api_key', $this->config->private_token);
-        $this->httpClient->setParameterGet('api_username', $this->config->user_sudo);
-        $this->httpClient->setHeaders('User-Agent', $this->config->user_agent);
-        $this->httpClient->setMethod(Zend_Http_Client::PUT);
-        $this->httpClient->setParameterPost($data);
-
-        $response = $this->httpClient->request();
-        if ($response->getStatus() < 200 OR $response->getStatus() >= 500) {
-            throw new Default_Model_Ocs_Exception('push user data failed. OCS Forum server send message: ' . $response->getBody());
-        }
-
-        $body = Zend_Json::decode($response->getBody());
-
-        if (array_key_exists("error_type", $body)) {
-            $this->messages[] = "username: {$data['username']} " . $response->getBody();
-
-            return false;
-        }
-
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - request: ' . $uri);
-        Zend_Registry::get('logger')->debug(__METHOD__ . ' - response: ' . $response->getRawBody());
-
-        return true;
+        return $user[0];
     }
 
     /**
@@ -356,7 +305,7 @@ class Default_Model_Ocs_Forum
         $user = $this->getUser($member_data['external_id'], $member_data['username']);
 
         if (empty($user)) {
-            $this->messages[] = 'Not deleted. User not exists. ';
+            $this->messages[] = 'Nothing to delete. User not found. ' . $member_data['external_id'] . ', ' . $member_data['username'];
 
             return false;
         }
@@ -373,7 +322,6 @@ class Default_Model_Ocs_Forum
      */
     private function getMemberData($member_id, $onlyActive = true)
     {
-
         $onlyActiveFilter = '';
         if ($onlyActive) {
             $onlyActiveFilter =
@@ -435,5 +383,93 @@ class Default_Model_Ocs_Forum
         return false;
     }
 
+    /**
+     * @return bool|array
+     */
+    public function getGroups()
+    {
+        $uri = $this->config->host . '/groups.json';
+        $uid = 'get groups';
+        $method = Zend_Http_Client::GET;
+
+        try {
+            $result = $this->httpRequest($uri, $uid, $method);
+        } catch (Zend_Exception $e) {
+            $this->messages[] = "Fail " . $e->getMessage();
+
+            return false;
+        }
+
+        if (false === $result) {
+            $this->messages[] = "Fail ";
+
+            return false;
+        }
+
+        $this->messages[] = "Success";
+
+        return $result;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return bool|array
+     */
+    public function createGroup($name)
+    {
+        $uri = $this->config->host . '/admin/groups';
+        $method = Zend_Http_Client::POST;
+        $data = array(
+            "group[name]" => $name
+        );
+
+        try {
+            $result = $this->httpRequest($uri, $name, $method, $data);
+        } catch (Zend_Exception $e) {
+            $this->messages[] = "Fail " . $e->getMessage();
+
+            return false;
+        }
+
+        if (false === $result) {
+            $this->messages[] = "Fail ";
+
+            return false;
+        }
+
+        $this->messages[] = "Success";
+
+        return $result['basic_group'];
+    }
+
+    public function deleteGroup($group_id)
+    {
+        $uri = $this->config->host . '/admin/groups/' . $group_id . '.json';
+        $method = Zend_Http_Client::DELETE;
+
+        try {
+            $result = $this->httpRequest($uri, $group_id, $method);
+        } catch (Zend_Exception $e) {
+            $this->messages[] = "Fail " . $e->getMessage();
+
+            return false;
+        }
+
+        if (false === $result) {
+            $this->messages[] = "Fail ";
+
+            return false;
+        }
+
+        $this->messages[] = "Success";
+
+        return $result;
+    }
+
+    public function addGroupMember($groupname, $members)
+    {
+
+    }
 
 }
