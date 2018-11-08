@@ -178,5 +178,25 @@ class Backend_CdiscourseController extends Local_Controller_Action_CliAbstract
         return true;
     }
 
+    public function groupAction()
+    {
+        $groupname = $this->getParam('name', null);
+
+        $modelSubSystem = new Default_Model_Ocs_Forum($this->config);
+
+        //$result = $modelSubSystem->createGroup($groupname);
+        //
+        //echo $result;
+        //
+        //$result = $modelSubSystem->deleteGroup($result);
+        //
+        //echo $result;
+
+        $result = $modelSubSystem->getUserByEmail("info@dschinnweb.de");
+
+        print_r($result);
+
+        echo json_encode($result);
+    }
 
 }

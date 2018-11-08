@@ -162,6 +162,30 @@ class Default_Model_Tags
     }
 
 
+    /**
+     * @param int $projectid
+     * @param int $tag
+     *
+     * @return string|null
+     */
+    public function isTagsUserExisting($project_id, $tagname)
+    {       
+        $sql_object= "select count(1) as cnt from tag_object JOIN tag ON tag.tag_id = tag_object.tag_id WHERE tag.tag_name = :tagname and tag_object.tag_group_id=:tag_group_id and tag_object.is_deleted=0 and tag_object.tag_object_id=:project_id and tag_object.tag_type_id=:tag_type_id";
+        $r = $this->getAdapter()->fetchRow($sql_object, array(
+             'tagname' => $tagname
+            ,'tag_group_id'=>Default_Model_Tags::TAG_USER_GROUPID
+            , 'project_id'=>$project_id
+            , 'tag_type_id'=>Default_Model_Tags::TAG_TYPE_PROJECT
+            ));
+        if($r['cnt'] ==0){            
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+
+
 
     /**
      * @param int $object_id
@@ -593,7 +617,14 @@ class Default_Model_Tags
         $tableTags = new Default_Model_DbTable_Tags();
         
         $tags = $tableTags->fetchLicenseTagsForProject($object_id);        
-        if(count($tags) >= 1) {
+        if(count($tags) ==0){
+            //insert new tag
+            if($tag_id) {
+                $sql = "INSERT IGNORE INTO tag_object (tag_id, tag_type_id, tag_object_id, tag_group_id) VALUES (:tag_id, :tag_type_id, :tag_object_id, :tag_group_id)";
+                $this->getAdapter()->query($sql, array('tag_id' => $tag_id, 'tag_type_id' => $this::TAG_TYPE_PROJECT, 'tag_object_id' => $object_id, 'tag_group_id' => $this::TAG_LICENSE_GROUPID));
+            }
+        }else
+        {
             $tag = $tags[0];
             
             //remove tag license
@@ -608,13 +639,30 @@ class Default_Model_Tags
                     $this->getAdapter()->query($sql, array('tagItemId' => $tag['tag_item_id'], 'tag_id' => $tag_id));
                 }
             }
-        } else {
-            //insert new tag
-            if($tag_id) {
-                $sql = "INSERT IGNORE INTO tag_object (tag_id, tag_type_id, tag_object_id, tag_group_id) VALUES (:tag_id, :tag_type_id, :tag_object_id, :tag_group_id)";
-                $this->getAdapter()->query($sql, array('tag_id' => $tag_id, 'tag_type_id' => $this::TAG_TYPE_PROJECT, 'tag_object_id' => $object_id, 'tag_group_id' => $this::TAG_LICENSE_GROUPID));
-            }
+
         }
+        // if(count($tags) >= 1) {
+        //     $tag = $tags[0];
+            
+        //     //remove tag license
+        //     if(!$tag_id) {
+        //         //$sql = "DELETE FROM tag_object WHERE tag_item_id = :tagItemId";
+        //         $sql = "UPDATE tag_object set tag_changed = NOW() , is_deleted = 1  WHERE tag_item_id = :tagItemId";
+        //         $this->getAdapter()->query($sql, array('tagItemId' => $tag['tag_item_id']));
+        //     } else {
+        //         //Update old tag
+        //         if($tag_id <> $tag['tag_id']) {
+        //             $sql = "UPDATE tag_object SET tag_changed = NOW(),tag_id = :tag_id WHERE tag_item_id = :tagItemId";
+        //             $this->getAdapter()->query($sql, array('tagItemId' => $tag['tag_item_id'], 'tag_id' => $tag_id));
+        //         }
+        //     }
+        // } else {
+        //     //insert new tag
+        //     if($tag_id) {
+        //         $sql = "INSERT IGNORE INTO tag_object (tag_id, tag_type_id, tag_object_id, tag_group_id) VALUES (:tag_id, :tag_type_id, :tag_object_id, :tag_group_id)";
+        //         $this->getAdapter()->query($sql, array('tag_id' => $tag_id, 'tag_type_id' => $this::TAG_TYPE_PROJECT, 'tag_object_id' => $object_id, 'tag_group_id' => $this::TAG_LICENSE_GROUPID));
+        //     }
+        // }
         
     }
     
