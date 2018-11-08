@@ -92,9 +92,9 @@ class SiteHeader extends React.Component {
       );
     }
 
-    let HeaderDisplay;
-    if (this.state.device !== "tablet"){
-      HeaderDisplay = (
+    //let HeaderDisplay;
+    // if (this.state.device !== "tablet"){
+    const  HeaderDisplay = (
         <section id="site-header-wrapper" style={{"paddingLeft":this.state.template['header-logo']['width']}}>
           <div id="siter-header-left">
             <div id="site-header-logo-container" style={this.state.template['header-logo']}>
@@ -117,7 +117,7 @@ class SiteHeader extends React.Component {
           </div>
         </section>
       );
-    } else {
+    /*} else {
       HeaderDisplay = (
         <section id="mobile-site-header">
           <div id="mobile-site-header-logo">
@@ -127,13 +127,13 @@ class SiteHeader extends React.Component {
           </div>
           <div id="mobile-site-header-menus-container">
             <div id="switch-menu">
-              <a id="search-menu-switch"></a>
-              <a id="user-menu-switch"></a>
+              <a id="search-menu-switch">more</a>
+              <a id="user-menu-switch">search</a>
             </div>
           </div>
         </section>
       );
-    }
+    }*/
 
     return (
       <section id="site-header" style={this.state.template.header}>
