@@ -232,7 +232,7 @@ $this->inlineScript()->appendScript('
                                                class="required form-control valid"
                                                type="text"
                                                name="title"
-                                               pattern="[^'\x22]+"
+                                               pattern="[^\x22]+"
                                                <?php //pattern="^[ .\-&_A-z0-9]{1,}$" ?>
                                                <?php //  pattern="^[^\\'\^;*!\u0022\$]{1,}$" ?>
                                                value="<?= $this->escape($this->form->title->getValue()) ?>"
