@@ -50,6 +50,34 @@ class SiteHeader extends React.Component {
       tabs_left: window.tabs_left,
       template: window.json_template
     };
+    this.updateDimensions = this.updateDimensions.bind(this);
+  }
+
+  componentWillMount() {
+    this.updateDimensions();
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.updateDimensions);
+    window.removeEventListener("orientationchange", this.updateDimensions);
+  }
+
+  initMetaHeader() {
+    window.addEventListener("resize", this.updateDimensions);
+    window.addEventListener("orientationchange", this.updateDimensions);
+  }
+
+  updateDimensions() {
+    const width = window.innerWidth;
+    let device;
+    if (width >= 910) {
+      device = "large";
+    } else if (width < 910 && width >= 610) {
+      device = "mid";
+    } else if (width < 610) {
+      device = "tablet";
+    }
+    this.setState({ device: device });
   }
 
   render() {
@@ -88,10 +116,9 @@ class SiteHeader extends React.Component {
       );
     }
 
-    return React.createElement(
-      "section",
-      { id: "site-header", style: this.state.template.header },
-      React.createElement(
+    let HeaderDisplay;
+    if (this.state.device !== "tablet") {
+      HeaderDisplay = React.createElement(
         "section",
         { id: "site-header-wrapper", style: { "paddingLeft": this.state.template['header-logo']['width'] } },
         React.createElement(
@@ -125,7 +152,37 @@ class SiteHeader extends React.Component {
             loginMenuDisplay
           )
         )
-      )
+      );
+    } else {
+      HeaderDisplay = React.createElement(
+        "section",
+        { id: "mobile-site-header" },
+        React.createElement(
+          "div",
+          { id: "mobile-site-header-logo" },
+          React.createElement(
+            "a",
+            { href: logoLink },
+            React.createElement("img", { src: this.state.template['header-logo']['image-src'] })
+          )
+        ),
+        React.createElement(
+          "div",
+          { id: "mobile-site-header-menus-container" },
+          React.createElement(
+            "div",
+            { id: "switch-menu" },
+            React.createElement("a", { id: "search-menu-switch" }),
+            React.createElement("a", { id: "user-menu-switch" })
+          )
+        )
+      );
+    }
+
+    return React.createElement(
+      "section",
+      { id: "site-header", style: this.state.template.header },
+      HeaderDisplay
     );
   }
 }

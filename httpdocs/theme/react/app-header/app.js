@@ -21,10 +21,39 @@ class SiteHeader extends React.Component {
       tabs_left:window.tabs_left,
       template:window.json_template
     };
+    this.updateDimensions = this.updateDimensions.bind(this);
+  }
+
+  componentWillMount() {
+    this.updateDimensions();
+  }
+
+  componentWillUnmount(){
+    window.removeEventListener("resize", this.updateDimensions);
+    window.removeEventListener("orientationchange",this.updateDimensions);
+
+  }
+
+  initMetaHeader(){
+    window.addEventListener("resize", this.updateDimensions);
+    window.addEventListener("orientationchange",this.updateDimensions);
+  }
+
+  updateDimensions(){
+    const width = window.innerWidth;
+    let device;
+    if (width >= 910){
+      device = "large";
+    } else if (width < 910 && width >= 610){
+      device = "mid";
+    } else if (width < 610){
+      device = "tablet";
+    }
+    this.setState({device:device});
   }
 
   render(){
-    
+
 
     let userMenuDisplay, loginMenuDisplay, siteHeaderTopRightCssClass;
     if (this.state.user){
@@ -63,8 +92,9 @@ class SiteHeader extends React.Component {
       );
     }
 
-    return (
-      <section id="site-header" style={this.state.template.header}>
+    let HeaderDisplay;
+    if (this.state.device !== "tablet"){
+      HeaderDisplay = (
         <section id="site-header-wrapper" style={{"paddingLeft":this.state.template['header-logo']['width']}}>
           <div id="siter-header-left">
             <div id="site-header-logo-container" style={this.state.template['header-logo']}>
@@ -86,6 +116,28 @@ class SiteHeader extends React.Component {
             </div>
           </div>
         </section>
+      );
+    } else {
+      HeaderDisplay = (
+        <section id="mobile-site-header">
+          <div id="mobile-site-header-logo">
+            <a href={logoLink}>
+              <img src={this.state.template['header-logo']['image-src']}/>
+            </a>
+          </div>
+          <div id="mobile-site-header-menus-container">
+            <div id="switch-menu">
+              <a id="search-menu-switch"></a>
+              <a id="user-menu-switch"></a>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    return (
+      <section id="site-header" style={this.state.template.header}>
+        {HeaderDisplay}
       </section>
     )
   }
