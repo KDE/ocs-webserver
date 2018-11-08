@@ -55,12 +55,25 @@ class TagController extends Zend_Controller_Action
         $model = new Default_Model_Tags();
         $cnt = $model->getTagsUserCount($projectid,Default_Model_Tags::TAG_TYPE_PROJECT);
         if($cnt<5){
-            $model->addTagUser($projectid,$tag,Default_Model_Tags::TAG_TYPE_PROJECT);    
-              $this->_helper->json(array(
-                'status'  => 'ok',
-                'message' => '',
-                'data'    => array('pid' => $projectid, 'tag' => $tag)
-            ));
+            if($model->isTagsUserExisting($projectid,$tag))
+            {
+                $this->_helper->json(array(
+                    'status'  => 'existing',
+                    'message' => 'tag existing.',
+                    'data'    => array('pid' => $projectid, 'tag' => $tag)
+                ));
+            }
+            else
+            {
+                $model->addTagUser($projectid,$tag,Default_Model_Tags::TAG_TYPE_PROJECT);        
+                $this->_helper->json(array(
+                    'status'  => 'ok',
+                    'message' => '',
+                    'data'    => array('pid' => $projectid, 'tag' => $tag)
+                ));
+            }
+            
+            
         }
         else
         {

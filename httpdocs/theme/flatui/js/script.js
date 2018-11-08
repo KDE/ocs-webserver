@@ -2071,6 +2071,8 @@ var TagingLoopMyProductsSelect2 = (function () {
                                                            if(data.status=='error'){
                                                                 $('#topic-tags-saved'+projectid).css({ color: "red" }).html(data.message).show().delay(2000).fadeOut();
                                                                 t.find("option[value='"+data.data.tag+"']").last().remove();
+                                                           }else if(data.status=='existing'){
+                                                                $('#topic-tags-saved'+projectid).css({ color: "red" }).html(data.message).show().delay(2000).fadeOut();
                                                            }
                                                            else
                                                            {
