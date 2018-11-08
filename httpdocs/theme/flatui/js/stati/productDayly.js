@@ -1,5 +1,43 @@
+!(function (d3) {
 
-function makeLineChart(dataset, xName, yObjs, axisLables) {
+            var parseTime = d3.timeParse("%Y%m%d");
+                    
+
+                d3.json("/backend/index/getproductdayly?project_id="+window.project_id, function(error, data) {                                            
+                if (error) throw error;
+
+             
+                data = data.results;   
+                if(!data){
+                     $("#topDownloadsPerMonthTabContainer_DetailDayly").text('no data found!');
+                    return;
+                }
+
+                data.forEach(function (d) {                   
+                   d.year = parseTime(d.yearmonth);
+                   d.amount = +d.amount;                      
+                });                
+                var title =project_id+'_daily';      
+                var chartColumns ={
+                    [title]: {column: 'amount'}                       
+                };
+
+                           
+                var chart = makeLineChart_date(data, 'year',chartColumns , {xAxis: 'Month', yAxis: 'Amount'});
+
+                $('#topDownloadsPerMonthTabContainer_DetailDayly').empty();
+                chart.bind("#topDownloadsPerMonthTabContainer_DetailDayly");
+                chart.render();
+
+            });
+
+
+})(d3);
+
+
+
+
+function makeLineChart_date(dataset, xName, yObjs, axisLables) {
     var chartObj = {};
   
     var color = d3.scaleOrdinal().range(["#1F77B4", "#aec7e8", "#ff7f0e", "#ffbb78", "#2ca02c"
@@ -43,7 +81,7 @@ function makeLineChart(dataset, xName, yObjs, axisLables) {
     chartObj.formatAsNumber = d3.format(".0f");
     chartObj.formatAsDecimal = d3.format(".2f");
     chartObj.formatAsCurrency = d3.format("$.2f");
-    chartObj.formatAsYYYYMM = d3.timeFormat("%Y-%m");
+    chartObj.formatAsYYYYMM = d3.timeFormat("%Y-%m-%d");
     
     chartObj.formatAsFloat = function (d) {
         if (d % 1 !== 0) {

@@ -382,7 +382,9 @@ echo $this->render('partials/header/metaheader.phtml');
     echo Zend_Json::encode($redirectString);} ?>;
     var json_serverUri = <?php echo Zend_Json::encode($_SERVER["REQUEST_URI"]);?>;
     var json_member = <?php if( $auth->hasIdentity() ) {echo Zend_Json::encode($member);} else { echo Zend_Json::encode(null);}?>;
-    var json_member_avatar = <?php if( $auth->hasIdentity() ) {echo Zend_Json::encode($this->image($member->profile_image_url));} else { echo Zend_Json::encode(null);}?>;
+    var json_member_avatar = <?php if( $auth->hasIdentity() ) {                
+        echo Zend_Json::encode($this->Image($member->profile_image_url,array('width' => 30, 'height' => 30)));
+    } else { echo Zend_Json::encode(null);}?>;
     var json_template = <?php echo Zend_Json::encode($this->template); ?>;
     var json_serverUrl = <?php echo Zend_Json::encode($serverUrl); ?>;
     var json_baseurl = <?php echo  Zend_Json::encode($baseurl);?>;
