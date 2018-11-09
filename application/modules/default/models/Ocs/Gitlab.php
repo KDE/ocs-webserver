@@ -43,6 +43,45 @@ class Default_Model_Ocs_Gitlab
     }
 
     /**
+     * @param string $uri
+     * @param string $uid
+     * @param string $method
+     * @param array|null $post_param
+     *
+     * @return bool|array
+     * @throws Zend_Http_Client_Exception
+     * @throws Zend_Json_Exception
+     */
+    protected function httpRequest($uri, $uid, $method = Zend_Http_Client::GET, $post_param = null)
+    {
+        $this->httpClient->resetParameters();
+        $this->httpClient->setUri($uri);
+        $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
+        $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
+        $this->httpClient->setHeaders('User-Agent', $this->config->user_agent);
+        $this->httpClient->setMethod($method);
+        if (isset($post_param)) {
+            $this->httpClient->setParameterPost($post_param);
+        }
+
+        $response = $this->httpClient->request();
+        if ($response->getStatus() < 200 OR $response->getStatus() >= 500) {
+            $this->messages[] = 'Request failed.(' . $uri . ') OCS Forum server send message: ' . $response->getBody();
+
+            return false;
+        }
+
+        $body = Zend_Json::decode($response->getBody());
+
+        if (array_key_exists("message", $body)) {
+            $this->messages[] = "id: {$uid} ($uri) - " . Zend_Json::encode($body["message"]);
+        }
+
+
+        return $body;
+    }
+
+    /**
      * @param      $member_data
      *
      * @param bool $force
@@ -124,8 +163,7 @@ class Default_Model_Ocs_Gitlab
         $data = array(
             'email'            => $paramEmail,
             'username'         => strtolower($user['username']),
-            'name'             => (false == empty($user['lastname'])) ? trim($user['firstname'] . ' ' . $user['lastname'])
-                : $user['username'],
+            'name'             => (false == empty($user['lastname'])) ? trim($user['firstname'] . ' ' . $user['lastname']) : $user['username'],
             'password'         => $user['password'],
             'provider'         => $this->config->provider_name,
             'extern_uid'       => $user['external_id'],
@@ -179,7 +217,7 @@ class Default_Model_Ocs_Gitlab
     public function getUserByExternUid($extern_uid)
     {
         $this->httpClient->resetParameters();
-        $uri = $this->config->host . "/api/v4/users?extern_uid={$extern_uid}&provider=all";
+        $uri = $this->config->host . "/api/v4/users?extern_uid={$extern_uid}&provider=".$this->config->provider_name;
         $this->httpClient->setUri($uri);
         $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
         $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
@@ -598,8 +636,8 @@ class Default_Model_Ocs_Gitlab
 
         return true;
     }
-    
-    
+
+
     public function getUsers()
     {
         $this->httpClient->resetParameters();
@@ -627,12 +665,12 @@ class Default_Model_Ocs_Gitlab
 
         return $body;
     }
-    
-    
+
+
     public function getUserWithName($username)
     {
         $this->httpClient->resetParameters();
-        $uri = $this->config->host . "/api/v4/users?username=".$username;
+        $uri = $this->config->host . "/api/v4/users?username=" . $username;
         $this->httpClient->setUri($uri);
         $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
         $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
@@ -660,7 +698,7 @@ class Default_Model_Ocs_Gitlab
     public function getUserWithId($id)
     {
         $this->httpClient->resetParameters();
-        $uri = $this->config->host . "/api/v4/users/".$id;
+        $uri = $this->config->host . "/api/v4/users/" . $id;
         $this->httpClient->setUri($uri);
         $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
         $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
@@ -716,7 +754,7 @@ class Default_Model_Ocs_Gitlab
     public function getProject($id)
     {
         $this->httpClient->resetParameters();
-        $uri = $this->config->host . "/api/v4/projects/".$id."/";
+        $uri = $this->config->host . "/api/v4/projects/" . $id . "/";
         $this->httpClient->setUri($uri);
         $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
         $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
@@ -726,7 +764,7 @@ class Default_Model_Ocs_Gitlab
         $response = $this->httpClient->request();
 
         $body = Zend_Json::decode($response->getRawBody());
-        
+
         if (count($body) == 0) {
             return array();
         }
@@ -740,11 +778,11 @@ class Default_Model_Ocs_Gitlab
 
         return $body;
     }
-    
-    public function getProjectIssues($id, $state='opened', $page=1, $limit=5)
+
+    public function getProjectIssues($id, $state = 'opened', $page = 1, $limit = 5)
     {
         $this->httpClient->resetParameters();
-        $uri = $this->config->host . '/api/v4/projects/'.$id.'/issues?state='.$state.'&page='.$page.'&per_page='.$limit;
+        $uri = $this->config->host . '/api/v4/projects/' . $id . '/issues?state=' . $state . '&page=' . $page . '&per_page=' . $limit;
         $this->httpClient->setUri($uri);
         $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
         $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
@@ -769,10 +807,10 @@ class Default_Model_Ocs_Gitlab
         return $body;
     }
 
-    public function getUserProjects($user_id, $page=1, $limit=50)
+    public function getUserProjects($user_id, $page = 1, $limit = 50)
     {
         $this->httpClient->resetParameters();
-        $uri = $this->config->host . '/api/v4/users/'.$user_id.'/projects?page='.$page.'&per_page='.$limit;
+        $uri = $this->config->host . '/api/v4/users/' . $user_id . '/projects?page=' . $page . '&per_page=' . $limit;
         $this->httpClient->setUri($uri);
         $this->httpClient->setHeaders('Private-Token', $this->config->private_token);
         $this->httpClient->setHeaders('Sudo', $this->config->user_sudo);
@@ -796,7 +834,6 @@ class Default_Model_Ocs_Gitlab
 
         return $body;
     }
-    
-    
+
 
 }
