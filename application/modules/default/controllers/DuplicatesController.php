@@ -52,7 +52,7 @@ class DuplicatesController extends Local_Controller_Action_DomainSwitch
     	$sorting = $this->getParam('jtSorting');
     	if($sorting==null)
     	{
-    		$sorting = 'source_url desc';
+    		$sorting = 'cnt desc';
     	}
     	
 
@@ -62,11 +62,15 @@ class DuplicatesController extends Local_Controller_Action_DomainSwitch
          Zend_Registry::get('logger')->info(__METHOD__ . ' - ===================================' );
         Zend_Registry::get('logger')->info(__METHOD__ . ' - ' . sizeof($reports));
 
-    	foreach ($reports as &$r) {
-            $pids = $r['pids'];
-            $list = $mod->fetchProjects($pids);
-            $r['projects'] = $list;
-        }
+        $helperTruncate = new Default_View_Helper_Truncate();   
+        foreach ($reports as &$r) {
+                    $r['pids'] = $helperTruncate->truncate($r['pids']);
+                }
+    	// foreach ($reports as &$r) {
+     //        $pids = $r['pids'];
+     //        $list = $mod->fetchProjects($pids);
+     //        $r['projects'] = $list;
+     //    }
 
 
     	$totalRecordCount = $mod->getTotalCountDuplicates();
