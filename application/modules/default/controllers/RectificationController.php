@@ -71,6 +71,7 @@ class RectificationController extends Local_Controller_Action_DomainSwitch
             $this->_authMember->username = $values['username'];
         }
         if (isset($values['mail'])) {
+            $oldEmailAddress = $member->mail;
             $member->mail_old = $member->mail;
             $member->mail = $values['mail'];
             
@@ -100,6 +101,37 @@ class RectificationController extends Local_Controller_Action_DomainSwitch
             Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }
 
+        //$modelMember = new  Default_Model_Member();
+        //$record = $modelMember->fetchMemberData($this->_authMember->member_id, false);
+        //
+        //try {
+        //    $id_server = new Default_Model_Ocs_OAuth();
+        //    $id_server->updateUserFromArray($record->toArray(), $oldUsername, $oldEmailAddress);
+        //} catch (Exception $e) {
+        //    Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+        //}
+        //try {
+        //    $ldap_server = new Default_Model_Ocs_Ldap();
+        //    $ldap_server->updateUserFromArray($record->toArray(), $oldUsername, $oldEmailAddress);
+        //    Zend_Registry::get('logger')->debug(__METHOD__ . ' - ldap : ' . implode(PHP_EOL." - ", $ldap_server->getMessages()));
+        //} catch (Exception $e) {
+        //    Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+        //}
+        //try {
+        //    $openCode = new Default_Model_Ocs_Gitlab();
+        //    $openCode->updateUserFromArray($record->toArray(), $oldUsername, $oldEmailAddress);
+        //    Zend_Registry::get('logger')->debug(__METHOD__ . ' - opencode : ' . implode(PHP_EOL." - ", $openCode->getMessages()));
+        //} catch (Exception $e) {
+        //    Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+        //}
+        //try {
+        //    $modelForum = new Default_Model_Ocs_Forum();
+        //    $modelForum->updateUserFromArray($record->toArray(), $oldUsername, $oldEmailAddress);
+        //} catch (Exception $e) {
+        //    Zend_Registry::get('logger')->err($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+        //}
+        //
+        //
         if ($this->_request->isXmlHttpRequest()) {
             $this->_helper->json(array('status' => 'ok', 'redirect' => '/'));
         } else {
