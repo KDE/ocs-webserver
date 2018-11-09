@@ -296,8 +296,12 @@ class MobileSiteHeader extends React.Component {
     if (this.state.status === "switch"){
       mobileMenuDisplay = (
         <div id="switch-menu">
-          <a className="menu-item" style={menuItemCssClass} onClick={this.showMobileSearchForm} id="user-menu-switch"><span className="glyphicon glyphicon-search"></span></a>
-          <a className="menu-item" style={menuItemCssClass} onClick={this.showMobileUserMenu} id="search-menu-switch"><span className="glyphicon glyphicon-option-horizontal"></span></a>
+          <a className="menu-item" style={menuItemCssClass} onClick={this.showMobileSearchForm} id="user-menu-switch">
+            <span className="glyphicon glyphicon-search"></span>
+          </a>
+          <a className="menu-item" style={menuItemCssClass} onClick={this.showMobileUserMenu} id="search-menu-switch">
+            <span className="glyphicon glyphicon-option-horizontal"></span>
+          </a>
         </div>
       );
     } else if (this.state.status === "user"){
