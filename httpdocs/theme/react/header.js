@@ -403,12 +403,12 @@ class MobileSiteHeader extends React.Component {
         { id: "switch-menu" },
         React.createElement(
           "a",
-          { style: menuItemCssClass, onClick: this.showMobileSearchForm, id: "user-menu-switch" },
+          { className: "menu-item", style: menuItemCssClass, onClick: this.showMobileSearchForm, id: "user-menu-switch" },
           React.createElement("span", { className: "glyphicon glyphicon-search" })
         ),
         React.createElement(
           "a",
-          { style: menuItemCssClass, onClick: this.showMobileUserMenu, id: "search-menu-switch" },
+          { className: "menu-item", style: menuItemCssClass, onClick: this.showMobileUserMenu, id: "search-menu-switch" },
           React.createElement("span", { className: "glyphicon glyphicon-option-horizontal" })
         )
       );
