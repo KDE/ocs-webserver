@@ -310,6 +310,7 @@ class MobileSiteHeader extends React.Component {
           <div className="menu-content-wrapper">
             <MobileUserContainer
               user={this.props.user}
+              baseUrl={this.props.baseUrl}              
             />
           </div>
           {closeMenuElementDisplay}
@@ -360,7 +361,11 @@ class MobileUserContainer extends React.Component {
     if (this.props.user){
       userDisplay = <p>user</p>
     } else {
-      userDisplay = <p>no user</p>
+      userDisplay = (
+        <SiteHeaderLoginMenu
+          baseUrl={this.props.baseUrl}
+        />
+      );
     }
 
     return (

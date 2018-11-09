@@ -420,7 +420,8 @@ class MobileSiteHeader extends React.Component {
           "div",
           { className: "menu-content-wrapper" },
           React.createElement(MobileUserContainer, {
-            user: this.props.user
+            user: this.props.user,
+            baseUrl: this.props.baseUrl
           })
         ),
         closeMenuElementDisplay
@@ -482,11 +483,9 @@ class MobileUserContainer extends React.Component {
         "user"
       );
     } else {
-      userDisplay = React.createElement(
-        "p",
-        null,
-        "no user"
-      );
+      userDisplay = React.createElement(SiteHeaderLoginMenu, {
+        baseUrl: this.props.baseUrl
+      });
     }
 
     return React.createElement(
