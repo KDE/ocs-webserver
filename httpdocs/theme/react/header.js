@@ -161,6 +161,8 @@ class SiteHeader extends React.Component {
       });
     }
 
+    console.log(this.state.device);
+
     return React.createElement(
       "section",
       { id: "site-header", style: this.state.template.header },

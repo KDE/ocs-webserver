@@ -93,7 +93,7 @@ class SiteHeader extends React.Component {
 
     let HeaderDisplay;
     if (this.state.device !== "tablet"){
-    HeaderDisplay = (
+      HeaderDisplay = (
         <section id="site-header-wrapper" style={{"paddingLeft":this.state.template['header-logo']['width']}}>
           <div id="siter-header-left">
             <div id="site-header-logo-container" style={this.state.template['header-logo']}>
@@ -125,6 +125,8 @@ class SiteHeader extends React.Component {
         />
       )
     }
+
+    console.log(this.state.device);
 
     return (
       <section id="site-header" style={this.state.template.header}>
