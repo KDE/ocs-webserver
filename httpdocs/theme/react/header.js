@@ -159,7 +159,8 @@ class SiteHeader extends React.Component {
       HeaderDisplay = React.createElement(MobileSiteHeader, {
         logoLink: logoLink,
         template: this.state.template,
-        user: this.state.user
+        user: this.state.user,
+        baseUrl: this.state.baseUrl
       });
     }
 
@@ -432,7 +433,13 @@ class MobileSiteHeader extends React.Component {
       mobileMenuDisplay = React.createElement(
         "div",
         { id: "mobile-search-menu" },
-        React.createElement("div", { className: "menu-content-wrapper" }),
+        React.createElement(
+          "div",
+          { className: "menu-content-wrapper" },
+          React.createElement(SiteHeaderSearchForm, {
+            baseUrl: this.props.baseUrl
+          })
+        ),
         React.createElement("span", { id: "switch-menu-seperator", style: switchMenuSeperatorCss }),
         closeMenuElementDisplay
       );
