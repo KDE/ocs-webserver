@@ -86,10 +86,11 @@ class Default_Model_Ocs_Forum
         }
 
         if ($force === true) {
+            $uid = $user['user']['username'];
             unset($data['password']);
 
             try {
-                $uri = $this->config->host . "/users/{$id}.json";
+                $uri = $this->config->host . "/users/{$uid}.json";
                 $method = Zend_Http_Client::PUT;
                 $this->httpRequest($uri, $uid, $method, $data);
             } catch (Zend_Exception $e) {
