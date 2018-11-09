@@ -122,6 +122,7 @@ class SiteHeader extends React.Component {
           logoLink={logoLink}
           template={this.state.template}
           user={this.state.user}
+          baseUrl={this.state.baseUrl}
         />
       )
     }
@@ -317,7 +318,11 @@ class MobileSiteHeader extends React.Component {
     } else if (this.state.status === "search"){
       mobileMenuDisplay = (
         <div id="mobile-search-menu">
-          <div className="menu-content-wrapper"></div>
+          <div className="menu-content-wrapper">
+            <SiteHeaderSearchForm
+              baseUrl={this.props.baseUrl}
+            />
+          </div>
           <span id="switch-menu-seperator" style={switchMenuSeperatorCss}></span>
           {closeMenuElementDisplay}
         </div>
