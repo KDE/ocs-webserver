@@ -19,23 +19,25 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
+## reCAPTCHA V3 key define ##
+#client-side
+define('RECAPTCHA_SITE_KEY',  Zend_Registry::get('config')->recaptcha->sitekey); // define here reCAPTCHA_site_key
+#server-side
+define('RECAPTCHA_SECRET_KEY',Zend_Registry::get('config')->recaptcha->secretkey); // define here reCAPTCHA_secret_key
+
 ?>
 <!DOCTYPE html>
 <html>
 <head>
     <title>Download/Install</title>
+    <script src='https://www.google.com/recaptcha/api.js'></script>
 </head>
 <body>
     <main id="ads-page">   
         <center>
-            <div style="height: 200px; width: 400px">            
+            <div style="height: 500px; width: 400px">            
                 <?php
-                ## reCAPTCHA V3 key define ##
-                #client-side
-                define('RECAPTCHA_SITE_KEY',  Zend_Registry::get('config')->recaptcha->sitekey); // define here reCAPTCHA_site_key
-                #server-side
-                define('RECAPTCHA_SECRET_KEY',Zend_Registry::get('config')->recaptcha->secretkey); // define here reCAPTCHA_secret_key
-
+                
                 class Captcha{
                     public function getCaptcha($SecretKey){
                         $Resposta=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=".RECAPTCHA_SECRET_KEY."&response={$SecretKey}");
@@ -67,36 +69,26 @@
                  //}else{   
                  // echo '<p style="color: #f80808;">reCAPTCHA error: Check to make sure your keys match the registered domain and are in the correct locations.<br> You may also want to doublecheck your code for typos or syntax errors.</p>';
                  }
-                } else {
+                }
                 ?>
 
                 <div class="">
                     <div class="" style="margin-top:0px;margin-bottom:15px;">
-                        <div class="" style="width:50%">   
-                   <form id="Form1" name="Form1" action="" method="POST">
-                    <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response"><br>
-                    <?php if($this->link_type == 'download') { ?>
-                    <input type="submit" value="Start Download">
-                    <?php } else { ?>
-                    <input type="submit" value="Start Installation">
-                    <?php } ?>
-                   </form>   
-                  </div>  
-                 </div>
+                        <div class="g-recaptcha" data-sitekey="<?= RECAPTCHA_SITE_KEY ?>"></div>
+                        <div class="" style="width:50%">
+                            
+                            <form id="Form1" name="Form1" action="" method="POST">
+                             <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response"><br>
+                             <?php if($this->link_type == 'download') { ?>
+                             <input type="submit" value="Start Download">
+                             <?php } else { ?>
+                             <input type="submit" value="Start Installation">
+                             <?php } ?>
+                            </form>   
+                        </div>  
+                    </div>
                 </div>
-
-                <script src="https://www.google.com/recaptcha/api.js?render=<?php echo RECAPTCHA_SITE_KEY; ?>"></script>
-                <script>
-                 grecaptcha.ready(function() {
-                 grecaptcha.execute('<?php echo RECAPTCHA_SITE_KEY; ?>', {action: 'homepage'}).then(function(token) {  
-                  document.getElementById('g-recaptcha-response').value=token;
-                 });
-                });
-                </script>        
-                <?php
-                }
-                ?>
-                        
+                      
             </div>
         </center>        
     </main>
