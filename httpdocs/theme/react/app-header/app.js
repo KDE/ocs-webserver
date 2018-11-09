@@ -287,6 +287,12 @@ class MobileSiteHeader extends React.Component {
       "borderRightColor":this.props.template['header-nav-tabs']['background-color']
     }
 
+    const closeMenuElementDisplay = (
+      <a onClick={this.showMobileSwitchMenu}>
+        <span style={{"color":this.props.template['header-nav-tabs']['background-color-active']}} className="glyphicon glyphicon-remove"></span>
+      </a>
+    );
+
     let mobileMenuDisplay;
     if (this.state.status === "switch"){
       mobileMenuDisplay = (
@@ -301,7 +307,7 @@ class MobileSiteHeader extends React.Component {
         <div id="mobile-user-menu">
           <span>user</span>
           <span id="switch-menu-seperator" style={switchMenuSeperatorCss}></span>
-          <a onClick={this.showMobileSwitchMenu}><span className="glyphicon glyphicon-remove"></span></a>
+          {closeMenuElementDisplay}
         </div>
       )
     } else if (this.state.status === "search"){
@@ -310,6 +316,7 @@ class MobileSiteHeader extends React.Component {
           <span>search</span>
           <span id="switch-menu-seperator" style={switchMenuSeperatorCss}></span>
           <a onClick={this.showMobileSwitchMenu}><span className="glyphicon glyphicon-remove"></span></a>
+          {closeMenuElementDisplay}
         </div>
       )
     }

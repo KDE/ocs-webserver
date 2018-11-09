@@ -391,6 +391,12 @@ class MobileSiteHeader extends React.Component {
       "borderRightColor": this.props.template['header-nav-tabs']['background-color']
     };
 
+    const closeMenuElementDisplay = React.createElement(
+      "a",
+      { onClick: this.showMobileSwitchMenu },
+      React.createElement("span", { style: { "color": this.props.template['header-nav-tabs']['background-color-active'] }, className: "glyphicon glyphicon-remove" })
+    );
+
     let mobileMenuDisplay;
     if (this.state.status === "switch") {
       mobileMenuDisplay = React.createElement(
@@ -418,11 +424,7 @@ class MobileSiteHeader extends React.Component {
           "user"
         ),
         React.createElement("span", { id: "switch-menu-seperator", style: switchMenuSeperatorCss }),
-        React.createElement(
-          "a",
-          { onClick: this.showMobileSwitchMenu },
-          React.createElement("span", { className: "glyphicon glyphicon-remove" })
-        )
+        closeMenuElementDisplay
       );
     } else if (this.state.status === "search") {
       mobileMenuDisplay = React.createElement(
@@ -438,7 +440,8 @@ class MobileSiteHeader extends React.Component {
           "a",
           { onClick: this.showMobileSwitchMenu },
           React.createElement("span", { className: "glyphicon glyphicon-remove" })
-        )
+        ),
+        closeMenuElementDisplay
       );
     }
 
