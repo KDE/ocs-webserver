@@ -64,7 +64,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
     public function pploadAction()
     {
         $this->_helper->layout->disableLayout();
-         $modelProduct = new Default_Model_Project();
+        $modelProduct = new Default_Model_Project();
         $productInfo = $modelProduct->fetchProductInfo($this->_projectId);
         //create ppload download hash: secret + collection_id + expire-timestamp
         $salt = PPLOAD_DOWNLOAD_SECRET;
@@ -2205,22 +2205,29 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         /**
          * Save Download-Data in Member_Download_History
          */
-        $urltring = $this->getParam('url');
         $file_id = $this->getParam('file_id');
         $file_type = $this->getParam('file_type');
         $file_name = $this->getParam('file_name');
         $file_size = $this->getParam('file_size');
         $projectId = $this->_projectId;
-        $memberId = $this->_authMember->member_id;
+        
+        $this->redirect('/dl?file_id='.$file_id.'&file_type='.$file_type.'&file_name='.$file_name.'&file_size='.$file_size.'&project_id='.$projectId);
+        
+        
+//        if ($_SERVER['REQUEST_METHOD'] == 'POST') { 
+/*            if(isset($file_id) && isset($projectId) && isset($memberId)) {
+                $memberDlHistory = new Default_Model_DbTable_MemberDownloadHistory();
+                $data = array('project_id' => $projectId, 'member_id' => $memberId, 'file_id' => $file_id, 'file_type' => $file_type, 'file_name' => $file_name, 'file_size' => $file_size);
+                $memberDlHistory->createRow($data)->save();
+            }
 
-        if(isset($file_id) && isset($projectId) && isset($memberId)) {
-            $memberDlHistory = new Default_Model_DbTable_MemberDownloadHistory();
-            $data = array('project_id' => $projectId, 'member_id' => $memberId, 'file_id' => $file_id, 'file_type' => $file_type, 'file_name' => $file_name, 'file_size' => $file_size);
-            $memberDlHistory->createRow($data)->save();
-        }
-
-        $url = urldecode($urltring);
-        $this->redirect($url);
+            $url = urldecode($urltring);
+            $this->redirect($url);
+ * 
+ */
+//        } else {
+//            $this->redirect('/ads?file_id='.$file_id);
+//        }
     }
 
     /**
