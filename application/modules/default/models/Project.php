@@ -1583,6 +1583,8 @@ class Default_Model_Project extends Default_Model_DbTable_Project
     public function fetchProjects($ids)
     {
         $sql = "SELECT * FROM stat_projects WHERE project_id in (".$ids.")";
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - ===================================' );
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - ' . $sql);
         $resultSet = $this->_db->fetchAll($sql);        
         return $this->generateRowSet($resultSet);
     }

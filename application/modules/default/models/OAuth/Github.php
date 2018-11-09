@@ -680,6 +680,14 @@ class Default_Model_OAuth_Github implements Default_Model_OAuth_Interface
             . "&scope=user&state={$token_id}";
 
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - redirectUrl: ' . print_r($requestUrl, true));
+        Zend_Registry::get('logger')->debug(__METHOD__ . '(' . __LINE__ . ') - ' . PHP_EOL
+            . 'HOST        :: ' . $_SERVER['HTTP_HOST'] . PHP_EOL
+            . 'USER_AGENT  :: ' . (isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : 'undefined') . PHP_EOL
+            . 'REQUEST_URI :: ' . $_SERVER['REQUEST_URI'] . PHP_EOL
+            . 'FORWARDED_IP:: ' . (isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : 'undefined') . PHP_EOL
+            . 'REMOTE_ADDR :: ' . $_SERVER['REMOTE_ADDR'] . PHP_EOL
+            . 'ENVIRONMENT :: ' . APPLICATION_ENV . PHP_EOL
+        );
 
         return $requestUrl;
     }
