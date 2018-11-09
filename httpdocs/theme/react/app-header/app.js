@@ -291,9 +291,9 @@ class MobileSiteHeader extends React.Component {
     if (this.state.status === "switch"){
       mobileMenuDisplay = (
         <div id="switch-menu" style={{"color":this.props.template['header-nav-tabs']['background-color-active']}}>
-          <a onClick={this.showMobileUserMenu} id="user-menu-switch"><span className="glyphicon glyphicon-search"></span></a>
+          <a onClick={this.showMobileSearchForm} id="user-menu-switch"><span className="glyphicon glyphicon-search"></span></a>
           <span id="switch-menu-seperator" style={switchMenuSeperatorCss}></span>
-          <a onClick={this.showMobileSearchForm} id="search-menu-switch"><span className="glyphicon glyphicon-option-horizontal"></span></a>
+          <a onClick={this.showMobileUserMenu} id="search-menu-switch"><span className="glyphicon glyphicon-option-horizontal"></span></a>
         </div>
       );
     } else if (this.state.status === "user"){
