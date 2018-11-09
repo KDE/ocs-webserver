@@ -633,11 +633,14 @@ var Partials = (function () {
 var OpendownloadfileWerbung= (function () {
     return {
         setup: function () {
-            var timer;
             $('body').on('click', 'a.opendownloadfile', function (event) {
                 event.preventDefault();
-                var url = $(this).attr("href");
-                var username = $(this).attr("data-username");
+                var file_id = $(this).attr("data-file_id");
+                var file_type = $(this).attr('data-file_type');
+                var file_name = $(this).attr('data-file_name');
+                var file_size = $(this).attr('data-file_size');
+                var project_id = $(this).attr('data-project_id');
+                var link_type = $(this).attr('data-link_type');
                 $.fancybox({
                     'hideOnContentClick': true,
                     'autoScale': true,
@@ -646,7 +649,8 @@ var OpendownloadfileWerbung= (function () {
                     'transitionIn': 'elastic',
                     'transitionOut': 'elastic',
                     'type': 'iframe',
-                    'width':'1140',
+                    'width':'400',
+                    'height':'200',
                     'iframe': {'scrolling': 'no'},
                     'autoSize':false,
                     helpers: {
@@ -654,17 +658,8 @@ var OpendownloadfileWerbung= (function () {
                             locked: false
                         }
                     },
-                    autoSize: true,
-                    href:'/ads?u='+username,
-                    afterLoad:function(){
-                        timer = window.setTimeout(function(){
-                             window.location.href = url;
-                             //$.fancybox.close();
-                        },10000);
-                    },
-                    afterClose:function(){
-                        window.clearTimeout(timer);
-                    }
+                    autoSize: false,
+                    href:'/dl?file_id='+file_id+'&file_type='+file_type+'&file_name='+file_name+'&file_size='+file_size+'&project_id='+project_id+'&link_type='+link_type
 
                 });
                 return false;
