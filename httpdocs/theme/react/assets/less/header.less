@@ -343,9 +343,18 @@ out: ../css/header.css, sourcemap: true, compress: true
 }
 */
 @media (max-width: 610px){
-  #mobile-site-header {
+
+  #site-header-container {
     height: 50px;
     overflow: hidden;
+
+    #site-header {
+      height: 50px !important;
+    }
+  }
+
+  #mobile-site-header {
+    height: 50px;
     padding: 5px 0;
 
     #mobile-site-header-logo {
