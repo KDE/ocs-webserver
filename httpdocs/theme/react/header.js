@@ -434,11 +434,6 @@ class MobileSiteHeader extends React.Component {
         { id: "mobile-search-menu" },
         React.createElement("div", { className: "menu-content-wrapper" }),
         React.createElement("span", { id: "switch-menu-seperator", style: switchMenuSeperatorCss }),
-        React.createElement(
-          "a",
-          { onClick: this.showMobileSwitchMenu },
-          React.createElement("span", { className: "glyphicon glyphicon-remove" })
-        ),
         closeMenuElementDisplay
       );
     }
