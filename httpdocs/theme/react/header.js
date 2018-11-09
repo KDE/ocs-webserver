@@ -370,9 +370,11 @@ class MobileSiteHeader extends React.Component {
   render() {
 
     const switchMenuSeperatorCss = {
-      "borderColorLeft": this.props.template['header-nav-tabs']['background-color-active'],
-      "borderColorRight": this.props.template['header-nav-tabs']['background-color']
+      "borderLeftColor": this.props.template['header-nav-tabs']['background-color-active'],
+      "borderRightColor": this.props.template['header-nav-tabs']['background-color']
     };
+
+    console.log(switchMenuSeperatorCss);
 
     return React.createElement(
       "section",
