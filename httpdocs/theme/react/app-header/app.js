@@ -123,6 +123,7 @@ class SiteHeader extends React.Component {
           user={this.state.user}
           baseUrl={this.state.baseUrl}
           store={this.state.store}
+          template={this.state.template}
         />
       )
     }
@@ -310,7 +311,8 @@ class MobileSiteHeader extends React.Component {
           <div className="menu-content-wrapper">
             <MobileUserContainer
               user={this.props.user}
-              baseUrl={this.props.baseUrl}              
+              baseUrl={this.props.baseUrl}
+              template={this.props.template}
             />
           </div>
           {closeMenuElementDisplay}
@@ -364,6 +366,7 @@ class MobileUserContainer extends React.Component {
       userDisplay = (
         <SiteHeaderLoginMenu
           baseUrl={this.props.baseUrl}
+          template={this.props.template}
         />
       );
     }

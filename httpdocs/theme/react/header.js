@@ -160,7 +160,8 @@ class SiteHeader extends React.Component {
         template: this.state.template,
         user: this.state.user,
         baseUrl: this.state.baseUrl,
-        store: this.state.store
+        store: this.state.store,
+        template: this.state.template
       });
     }
 
@@ -421,7 +422,8 @@ class MobileSiteHeader extends React.Component {
           { className: "menu-content-wrapper" },
           React.createElement(MobileUserContainer, {
             user: this.props.user,
-            baseUrl: this.props.baseUrl
+            baseUrl: this.props.baseUrl,
+            template: this.props.template
           })
         ),
         closeMenuElementDisplay
@@ -484,7 +486,8 @@ class MobileUserContainer extends React.Component {
       );
     } else {
       userDisplay = React.createElement(SiteHeaderLoginMenu, {
-        baseUrl: this.props.baseUrl
+        baseUrl: this.props.baseUrl,
+        template: this.props.template
       });
     }
 
