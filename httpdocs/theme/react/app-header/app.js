@@ -305,7 +305,11 @@ class MobileSiteHeader extends React.Component {
     } else if (this.state.status === "user"){
       mobileMenuDisplay = (
         <div id="mobile-user-menu">
-          <span>user</span>
+          <div className="menu-content-wrapper">
+            <MobileUserContainer
+              user={this.props.user}
+            />
+          </div>
           <span id="switch-menu-seperator" style={switchMenuSeperatorCss}></span>
           {closeMenuElementDisplay}
         </div>
@@ -313,7 +317,7 @@ class MobileSiteHeader extends React.Component {
     } else if (this.state.status === "search"){
       mobileMenuDisplay = (
         <div id="mobile-search-menu">
-          <span>search</span>
+          <div className="menu-content-wrapper"></div>
           <span id="switch-menu-seperator" style={switchMenuSeperatorCss}></span>
           <a onClick={this.showMobileSwitchMenu}><span className="glyphicon glyphicon-remove"></span></a>
           {closeMenuElementDisplay}
@@ -333,6 +337,29 @@ class MobileSiteHeader extends React.Component {
         </div>
       </section>
     );
+  }
+}
+
+class MobileUserContainer extends React.Component {
+  constructor(props){
+  	super(props);
+  	this.state = {};
+  }
+
+  render(){
+
+    let userDisplay;
+    if (this.props.user){
+      userDisplay = <p>user</p>
+    } else {
+      userDisplay = <p>no user</p>
+    }
+
+    return (
+      <div id="mobile-user-container">
+        {userDisplay}
+      </div>
+    )
   }
 }
 

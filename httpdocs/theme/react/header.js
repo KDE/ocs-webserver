@@ -419,9 +419,11 @@ class MobileSiteHeader extends React.Component {
         "div",
         { id: "mobile-user-menu" },
         React.createElement(
-          "span",
-          null,
-          "user"
+          "div",
+          { className: "menu-content-wrapper" },
+          React.createElement(MobileUserContainer, {
+            user: this.props.user
+          })
         ),
         React.createElement("span", { id: "switch-menu-seperator", style: switchMenuSeperatorCss }),
         closeMenuElementDisplay
@@ -430,11 +432,7 @@ class MobileSiteHeader extends React.Component {
       mobileMenuDisplay = React.createElement(
         "div",
         { id: "mobile-search-menu" },
-        React.createElement(
-          "span",
-          null,
-          "search"
-        ),
+        React.createElement("div", { className: "menu-content-wrapper" }),
         React.createElement("span", { id: "switch-menu-seperator", style: switchMenuSeperatorCss }),
         React.createElement(
           "a",
@@ -462,6 +460,37 @@ class MobileSiteHeader extends React.Component {
         { id: "mobile-site-header-menus-container" },
         mobileMenuDisplay
       )
+    );
+  }
+}
+
+class MobileUserContainer extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  render() {
+
+    let userDisplay;
+    if (this.props.user) {
+      userDisplay = React.createElement(
+        "p",
+        null,
+        "user"
+      );
+    } else {
+      userDisplay = React.createElement(
+        "p",
+        null,
+        "no user"
+      );
+    }
+
+    return React.createElement(
+      "div",
+      { id: "mobile-user-container" },
+      userDisplay
     );
   }
 }
