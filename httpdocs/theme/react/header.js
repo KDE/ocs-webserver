@@ -368,6 +368,12 @@ class MobileSiteHeader extends React.Component {
   }
 
   render() {
+
+    const switchMenuSeperatorCss = {
+      "borderColorLeft": this.props.template['header-nav-tabs']['background-color-active'],
+      "borderColorRight": this.props.template['header-nav-tabs']['background-color']
+    };
+
     return React.createElement(
       "section",
       { id: "mobile-site-header" },
@@ -385,12 +391,13 @@ class MobileSiteHeader extends React.Component {
         { id: "mobile-site-header-menus-container" },
         React.createElement(
           "div",
-          { id: "switch-menu", style: { "color": this.props.template['header-nav-tabs']['background-color'] } },
+          { id: "switch-menu", style: { "color": this.props.template['header-nav-tabs']['background-color-active'] } },
           React.createElement(
             "a",
             { id: "user-menu-switch" },
             React.createElement("span", { className: "glyphicon glyphicon-search" })
           ),
+          React.createElement("span", { id: "switch-menu-seperator", style: switchMenuSeperatorCss }),
           React.createElement(
             "a",
             { id: "search-menu-switch" },

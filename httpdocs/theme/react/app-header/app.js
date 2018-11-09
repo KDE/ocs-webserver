@@ -54,7 +54,7 @@ class SiteHeader extends React.Component {
   render(){
 
     console.log(this.state.template);
-    
+
     let userMenuDisplay, loginMenuDisplay, siteHeaderTopRightCssClass;
     if (this.state.user){
       userMenuDisplay = (
@@ -264,6 +264,12 @@ class MobileSiteHeader extends React.Component {
   }
 
   render(){
+
+    const switchMenuSeperatorCss = {
+      "borderColorLeft":this.props.template['header-nav-tabs']['background-color-active'],
+      "borderColorRight":this.props.template['header-nav-tabs']['background-color']
+    }
+
     return(
       <section id="mobile-site-header">
         <div id="mobile-site-header-logo">
@@ -272,8 +278,9 @@ class MobileSiteHeader extends React.Component {
           </a>
         </div>
         <div id="mobile-site-header-menus-container">
-          <div id="switch-menu" style={{"color":this.props.template['header-nav-tabs']['background-color']}}>
+          <div id="switch-menu" style={{"color":this.props.template['header-nav-tabs']['background-color-active']}}>
             <a id="user-menu-switch"><span className="glyphicon glyphicon-search"></span></a>
+            <span id="switch-menu-seperator" style={switchMenuSeperatorCss}></span>
             <a id="search-menu-switch"><span className="glyphicon glyphicon-option-horizontal"></span></a>
           </div>
         </div>
