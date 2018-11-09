@@ -174,13 +174,13 @@ class SiteHeader extends React.Component {
             { id: "switch-menu" },
             React.createElement(
               "a",
-              { id: "search-menu-switch" },
-              "more"
+              { id: "user-menu-switch" },
+              React.createElement("span", { className: "glyphicon glyphicon-search" })
             ),
             React.createElement(
               "a",
-              { id: "user-menu-switch" },
-              "search"
+              { id: "search-menu-switch" },
+              React.createElement("span", { className: "glyphicon glyphicon-option-horizontal" })
             )
           )
         )

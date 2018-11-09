@@ -127,8 +127,8 @@ class SiteHeader extends React.Component {
           </div>
           <div id="mobile-site-header-menus-container">
             <div id="switch-menu">
-              <a id="search-menu-switch">more</a>
-              <a id="user-menu-switch">search</a>
+              <a id="user-menu-switch"><span className="glyphicon glyphicon-search"></span></a>
+              <a id="search-menu-switch"><span className="glyphicon glyphicon-option-horizontal"></span></a>
             </div>
           </div>
         </section>
