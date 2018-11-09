@@ -53,7 +53,7 @@ define('RECAPTCHA_SECRET_KEY',Zend_Registry::get('config')->recaptcha->secretkey
                  $ObjCaptcha = new Captcha();
                  $Retorno = $ObjCaptcha->getCaptcha($_POST['g-recaptcha-response']); 
 
-                 //echo "<pre>"; print_r($Retorno); echo "</pre>";
+                 echo "<pre>"; print_r($Retorno); echo "</pre>";
 
                  if($Retorno->success){
                   //echo '<p style="color: #0a860a;">CAPTCHA was completed successfully!</p>';
