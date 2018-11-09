@@ -66,8 +66,8 @@ define('RECAPTCHA_SECRET_KEY',Zend_Registry::get('config')->recaptcha->secretkey
                   
                   echo '<script>document.location.href = "'.$this->url.'";</script>';
                   
-                 } else {
-                     echo $Retorno->error->codes[0];
+                 //} else {
+                 //    echo $Retorno->error->codes[0];
                  }
                 }
                 ?>
@@ -79,7 +79,6 @@ define('RECAPTCHA_SECRET_KEY',Zend_Registry::get('config')->recaptcha->secretkey
                             
                             <form id="Form1" name="Form1" action="" method="POST">
                              <div class="g-recaptcha" data-sitekey="<?= RECAPTCHA_SITE_KEY ?>"></div>   
-                             <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response"><br>
                              <?php if($this->link_type == 'download') { ?>
                              <input type="submit" value="Start Download">
                              <?php } else { ?>
