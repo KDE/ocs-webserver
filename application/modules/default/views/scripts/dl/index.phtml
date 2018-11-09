@@ -53,7 +53,7 @@ define('RECAPTCHA_SECRET_KEY',Zend_Registry::get('config')->recaptcha->secretkey
                  $ObjCaptcha = new Captcha();
                  $Retorno = $ObjCaptcha->getCaptcha($_POST['g-recaptcha-response']); 
 
-                 echo "<pre>"; print_r($Retorno); echo "</pre>";
+                 //echo "<pre>"; print_r($Retorno); echo "</pre>";
 
                  if($Retorno->success){
                   //echo '<p style="color: #0a860a;">CAPTCHA was completed successfully!</p>';
@@ -66,19 +66,19 @@ define('RECAPTCHA_SECRET_KEY',Zend_Registry::get('config')->recaptcha->secretkey
                   
                   echo '<script>document.location.href = "'.$this->url.'";</script>';
                   
-                 //}else{   
-                 // echo '<p style="color: #f80808;">reCAPTCHA error: Check to make sure your keys match the registered domain and are in the correct locations.<br> You may also want to doublecheck your code for typos or syntax errors.</p>';
+                 //} else {
+                 //    echo $Retorno->error->codes[0];
                  }
                 }
                 ?>
 
                 <div class="">
                     <div class="" style="margin-top:0px;margin-bottom:15px;">
-                        <div class="g-recaptcha" data-sitekey="<?= RECAPTCHA_SITE_KEY ?>"></div>
-                        <div class="" style="width:50%">
+                        
+                        <div class="" style="width:90%">
                             
                             <form id="Form1" name="Form1" action="" method="POST">
-                             <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response"><br>
+                             <div class="g-recaptcha" data-sitekey="<?= RECAPTCHA_SITE_KEY ?>"></div>   
                              <?php if($this->link_type == 'download') { ?>
                              <input type="submit" value="Start Download">
                              <?php } else { ?>
