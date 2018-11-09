@@ -302,7 +302,7 @@ class MobileSiteHeader extends React.Component {
       );
     } else if (this.state.status === "user"){
       mobileMenuDisplay = (
-        <div id="mobile-user-menu">
+        <div id="mobile-user-menu" style={{"color":this.props.template['header-nav-tabs']['background-color-active']}}>
           <div className="menu-content-wrapper">
             <MobileUserContainer
               user={this.props.user}
@@ -314,7 +314,7 @@ class MobileSiteHeader extends React.Component {
       )
     } else if (this.state.status === "search"){
       mobileMenuDisplay = (
-        <div id="mobile-search-menu">
+        <div id="mobile-search-menu" style={{"color":this.props.template['header-nav-tabs']['background-color-active']}}>
           <div className="menu-content-wrapper">
             <SiteHeaderSearchForm
               baseUrl={this.props.baseUrl}

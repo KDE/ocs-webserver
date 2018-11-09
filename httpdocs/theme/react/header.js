@@ -415,7 +415,7 @@ class MobileSiteHeader extends React.Component {
     } else if (this.state.status === "user") {
       mobileMenuDisplay = React.createElement(
         "div",
-        { id: "mobile-user-menu" },
+        { id: "mobile-user-menu", style: { "color": this.props.template['header-nav-tabs']['background-color-active'] } },
         React.createElement(
           "div",
           { className: "menu-content-wrapper" },
@@ -429,7 +429,7 @@ class MobileSiteHeader extends React.Component {
     } else if (this.state.status === "search") {
       mobileMenuDisplay = React.createElement(
         "div",
-        { id: "mobile-search-menu" },
+        { id: "mobile-search-menu", style: { "color": this.props.template['header-nav-tabs']['background-color-active'] } },
         React.createElement(
           "div",
           { className: "menu-content-wrapper" },
