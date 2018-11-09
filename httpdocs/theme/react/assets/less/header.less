@@ -413,16 +413,19 @@ out: ../css/header.css, sourcemap: true, compress: true
           line-height: 40px;
           padding: 0 5px;
 
+          #site-header-search-form {
+            width: 170px;
+          }
+
           #search-form {
             height: 25px;
             padding: 0;
-            margin: 6.5px 15px;
+            margin: 6.5px 0;
             line-height: 25px;
             position: relative;
 
             input[type="text"]{
               width: 100%;
-              min-width: 16em;
               height: 25px;
               padding: 0;
               border: 1px solid #fff;
@@ -433,7 +436,7 @@ out: ../css/header.css, sourcemap: true, compress: true
               float: left;
               border-radius: 6px;
               box-shadow: none;
-
+              font-size: 16px;
             }
 
             > a {
@@ -448,7 +451,7 @@ out: ../css/header.css, sourcemap: true, compress: true
               cursor: pointer;
             }
           }
-          
+
         }
       }
     }
