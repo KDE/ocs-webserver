@@ -277,7 +277,7 @@ class MobileSiteHeader extends React.Component {
   }
 
   showMobileSwitchMenu(){
-    this.setState({status:"search"});
+    this.setState({status:"switch"});
   }
 
   render(){
